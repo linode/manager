@@ -1,43 +1,43 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import SortUp from 'src/assets/icons/sort-up.svg';
-import Sort from 'src/assets/icons/unsorted.svg';
-import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell, { TableCellProps } from 'src/components/core/TableCell';
-import TableSortLabel from 'src/components/core/TableSortLabel';
+import classNames from "classnames";
+import * as React from "react";
+import SortUp from "src/assets/icons/sort-up.svg";
+import Sort from "src/assets/icons/unsorted.svg";
+import CircleProgress from "src/components/CircleProgress";
+import { makeStyles, Theme } from "src/components/core/styles";
+import TableCell, { TableCellProps } from "src/components/core/TableCell";
+import TableSortLabel from "src/components/core/TableSortLabel";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    '& svg': {
+    "& svg": {
       marginLeft: 4,
       width: 20,
     },
-    '&:hover': {
-      cursor: 'pointer',
-      '& span': {
+    "&:hover": {
+      cursor: "pointer",
+      "& span": {
         color: theme.cmrTextColors.linkActiveLight,
       },
-      '& .MuiTableSortLabel-icon': {
+      "& .MuiTableSortLabel-icon": {
         color: theme.cmrTextColors.linkActiveLight,
       },
-      '& svg g': {
+      "& svg g": {
         fill: theme.cmrTextColors.linkActiveLight,
       },
     },
   },
   label: {
     color: theme.cmrTextColors.tableHeader,
-    fontSize: '.875rem',
+    fontSize: ".875rem",
     minHeight: 20,
-    transition: 'none',
+    transition: "none",
   },
   initialIcon: {
     margin: 0,
     marginLeft: 4,
   },
   noWrap: {
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -45,8 +45,8 @@ export interface Props extends TableCellProps {
   active: boolean;
   isLoading?: boolean;
   label: string;
-  direction: 'asc' | 'desc';
-  handleClick: (key: string, order?: 'asc' | 'desc') => void;
+  direction: "asc" | "desc";
+  handleClick: (key: string, order?: "asc" | "desc") => void;
   noWrap?: boolean;
 }
 
@@ -69,7 +69,7 @@ export const TableSortCell: React.FC<CombinedProps> = (props) => {
 
   const onHandleClick = () => {
     const { label, direction, handleClick } = props;
-    const nextOrder = direction === 'asc' ? 'desc' : 'asc';
+    const nextOrder = direction === "asc" ? "desc" : "asc";
     return handleClick(label, nextOrder);
   };
 
@@ -88,7 +88,7 @@ export const TableSortCell: React.FC<CombinedProps> = (props) => {
         active={active}
         direction={direction}
         className={classes.label}
-        IconComponent={SortUp}
+        IconComponent={SortUp as any}
         hideSortIcon={true}
         aria-label={`Sort by ${label}`}
       >

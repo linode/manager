@@ -1,17 +1,17 @@
-import Check from '@material-ui/icons/Check';
-import Close from '@material-ui/icons/Close';
-import Edit from '@material-ui/icons/Edit';
-import classNames from 'classnames';
-import * as React from 'react';
-import Button from 'src/components/Button';
-import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { TextFieldProps } from 'src/components/core/TextField';
-import Typography from 'src/components/core/Typography';
-import TextField from 'src/components/TextField';
+import Check from "@material-ui/icons/Check";
+import Close from "@material-ui/icons/Close";
+import Edit from "@material-ui/icons/Edit";
+import classNames from "classnames";
+import * as React from "react";
+import Button from "src/components/Button";
+import ClickAwayListener from "src/components/core/ClickAwayListener";
+import { makeStyles, Theme } from "src/components/core/styles";
+import { TextFieldProps } from "src/components/core/TextField";
+import Typography from "src/components/core/Typography";
+import TextField from "src/components/TextField";
 
 const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
+  "@keyframes fadeIn": {
     from: {
       opacity: 0,
     },
@@ -20,33 +20,33 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   root: {
-    padding: '5px 8px',
-    display: 'inline-block',
-    transition: theme.transitions.create(['opacity']),
-    wordBreak: 'break-all',
-    textDecoration: 'inherit',
+    padding: "5px 8px",
+    display: "inline-block",
+    transition: theme.transitions.create(["opacity"]),
+    wordBreak: "break-all",
+    textDecoration: "inherit",
     lineHeight: 1,
   },
   container: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    position: 'relative',
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    position: "relative",
   },
   containerEditing: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    position: 'relative',
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    position: "relative",
   },
   initial: {
-    '&:hover, &:focus': {
-      '& $editIcon': {
+    "&:hover, &:focus": {
+      "& $editIcon": {
         opacity: 1,
       },
-      '& $icon': {
+      "& $icon": {
         color: theme.color.grey1,
-        '&:hover': {
+        "&:hover": {
           color: theme.color.black,
         },
       },
@@ -54,37 +54,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   edit: {
     fontSize: 22,
-    border: '1px solid transparent',
+    border: "1px solid transparent",
   },
   textField: {
     opacity: 0,
-    animation: '$fadeIn .3s ease-in-out forwards',
+    animation: "$fadeIn .3s ease-in-out forwards",
     margin: 0,
   },
   inputRoot: {
     maxWidth: 170,
     borderColor: `${theme.palette.primary.main} !important`,
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
+    backgroundColor: "transparent",
+    boxShadow: "none",
     minHeight: 40,
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up("md")]: {
       maxWidth: 415,
-      width: '100%',
+      width: "100%",
     },
   },
   button: {
     padding: 0,
     height: 24,
     width: 24,
-    minWidth: 'auto',
-    minHeight: 'auto',
+    minWidth: "auto",
+    minHeight: "auto",
     marginTop: 5,
-    background: 'transparent !important',
+    background: "transparent !important",
   },
   icon: {
-    margin: '0 10px',
+    margin: "0 10px",
     color: theme.palette.text.primary,
-    '&:hover, &:focus': {
+    "&:hover, &:focus": {
       color: theme.palette.primary.light,
     },
   },
@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 26,
   },
   input: {
-    padding: '5px 8px',
+    padding: "5px 8px",
     ...theme.typography.body1,
   },
   headline: {
@@ -109,19 +109,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.typography.h1,
   },
   editIcon: {
-    position: 'absolute',
-    marginTop: '0 !important',
+    position: "absolute",
+    marginTop: "0 !important",
     right: 10,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       opacity: 0,
-      '&:focus': {
+      "&:focus": {
         opacity: 1,
       },
     },
   },
 }));
 
-export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
+export type EditableTextVariant = "h1" | "h2" | "table-cell";
 
 interface Props {
   onEdit: () => void;
@@ -161,10 +161,10 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
 
   /** confirm or cancel edits if the enter or escape keys are pressed, respectively */
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       onEdit();
     }
-    if (e.key === 'Escape' || e.key === 'Esc') {
+    if (e.key === "Escape" || e.key === "Esc") {
       cancelEdit();
     }
   };
@@ -174,7 +174,7 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
   const labelText = (
     <Typography
       className={className ? className : classes.root}
-      variant={typeVariant === 'table-cell' ? 'body1' : 'h1'}
+      variant={typeVariant === "table-cell" ? "body1" : "h1"}
       aria-label={text}
       data-qa-editable-text
     >
@@ -185,7 +185,7 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
   return !isEditing && !errorText ? (
     <div
       className={`${classes.initial} ${className} ${classes.container}`}
-      data-testid={'editable-text'}
+      data-testid={"editable-text"}
     >
       <React.Fragment>
         {labelText}
@@ -214,14 +214,14 @@ export const EditableInput: React.FC<FinalProps> = (props) => {
           label="Edit Label"
           hideLabel
           onChange={(e: any) => onInputChange(e.target.value)}
-          onKeyDown={handleKeyPress}
+          onKeyDown={handleKeyPress as any}
           value={inputText}
           errorText={errorText}
           InputProps={{ className: classes.inputRoot }}
           inputProps={{
             className: classNames({
-              [classes.headline]: typeVariant === 'h1',
-              [classes.title]: typeVariant === 'h2',
+              [classes.headline]: typeVariant === "h1",
+              [classes.title]: typeVariant === "h2",
               [classes.input]: true,
             }),
           }}

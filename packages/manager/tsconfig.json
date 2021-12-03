@@ -35,6 +35,10 @@
     "build",
     "e2e",
     "scripts",
-    "jest"
+    "acceptance-tests",
+    "webpack",
+    "jest",
+    "src/setupTests.ts",
+    "src/components/Storyshots.test.tsx"
   ]
 }

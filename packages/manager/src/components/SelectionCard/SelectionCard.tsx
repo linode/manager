@@ -1,38 +1,38 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
-import Grid from 'src/components/Grid';
-import CardBase from './CardBase';
+import classNames from "classnames";
+import * as React from "react";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Tooltip from "src/components/core/Tooltip";
+import Grid from "src/components/Grid";
+import CardBase from "./CardBase";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minWidth: 200,
     padding: theme.spacing(2),
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
+    justifyContent: "center",
+    alignItems: "center",
+    display: "flex",
     outline: 0,
-    '&.checked .cardBaseGrid': {
+    "&.checked .cardBaseGrid": {
       borderColor: theme.palette.primary.main,
       backgroundColor: theme.cmrBGColors.bgCopyButton,
-      '& span': {
+      "& span": {
         color: theme.palette.primary.main,
       },
     },
-    '&:focus .cardBaseGrid': {
+    "&:focus .cardBaseGrid": {
       outline: `1px dotted ${theme.color.focusBorder}`,
     },
     '& [class^="fl-"]': {
-      transition: 'color 225ms ease-in-out',
+      transition: "color 225ms ease-in-out",
     },
   },
   showCursor: {
-    cursor: 'pointer',
+    cursor: "pointer",
   },
   disabled: {
-    cursor: 'not-allowed',
-    '& > div': {
+    cursor: "not-allowed",
+    "& > div": {
       opacity: 0.4,
     },
   },
@@ -111,7 +111,7 @@ const SelectionCard: React.FC<CombinedProps> = (props) => {
         className
       )}
       onClick={handleClick}
-      onKeyPress={handleKeyPress}
+      onKeyPress={handleKeyPress as any}
       data-qa-selection-card
     >
       {content}

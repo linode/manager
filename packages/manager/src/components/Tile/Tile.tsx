@@ -1,99 +1,99 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import Button from 'src/components/core/Button';
+import classNames from "classnames";
+import * as React from "react";
+import Button from "src/components/core/Button";
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
+} from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Link from "src/components/Link";
+import Notice from "src/components/Notice";
 
 type ClassNames =
-  | 'root'
-  | 'card'
-  | 'clickableTile'
-  | 'icon'
-  | 'tileTitle'
-  | 'buttonTitle';
+  | "root"
+  | "card"
+  | "clickableTile"
+  | "icon"
+  | "tileTitle"
+  | "buttonTitle";
 
 const styles = (theme: Theme) =>
   createStyles({
-    '@keyframes dash': {
+    "@keyframes dash": {
       to: {
-        'stroke-dashoffset': 0,
+        "stroke-dashoffset": 0,
       },
     },
     root: {},
     card: {
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
       backgroundColor: theme.color.white,
       padding: theme.spacing(4),
       border: `1px solid ${theme.color.grey2}`,
-      height: '100%',
+      height: "100%",
     },
     clickableTile: {
-      position: 'relative',
-      transition: 'border-color 225ms ease-in-out',
-      cursor: 'pointer',
-      '&:hover': {
-        '& $icon': {
+      position: "relative",
+      transition: "border-color 225ms ease-in-out",
+      cursor: "pointer",
+      "&:hover": {
+        "& $icon": {
           ...theme.animateCircleIcon,
         },
-        '& svg .outerCircle': {
+        "& svg .outerCircle": {
           fill: theme.palette.primary.main,
-          transition: 'fill .2s ease-in-out .2s',
+          transition: "fill .2s ease-in-out .2s",
         },
-        '& $buttonTitle': {
+        "& $buttonTitle": {
           color: theme.color.black,
-          textDecoration: 'underline',
+          textDecoration: "underline",
         },
       },
-      '& .tile-link::after': {
+      "& .tile-link::after": {
         content: "''",
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
+        position: "absolute",
+        width: "100%",
+        height: "100%",
         left: 0,
         top: 0,
       },
     },
     tileTitle: {
-      fontSize: '1.2rem',
+      fontSize: "1.2rem",
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1),
-      textAlign: 'center',
+      textAlign: "center",
     },
     icon: {
-      margin: '0 auto 16px',
-      display: 'block',
-      '& .outerCircle': {
+      margin: "0 auto 16px",
+      display: "block",
+      "& .outerCircle": {
         fill: theme.bg.offWhiteDT,
         stroke: theme.bg.main,
       },
-      '& .insidePath': {
-        fill: 'none',
-        stroke: '#3683DC',
+      "& .insidePath": {
+        fill: "none",
+        stroke: "#3683DC",
         strokeWidth: 1.25,
-        strokeLinejoin: 'round',
+        strokeLinejoin: "round",
       },
-      '& svg': {
+      "& svg": {
         width: 70,
         height: 70,
       },
     },
     buttonTitle: {
       padding: 0,
-      fontSize: '1.2rem',
-      cursor: 'pointer',
+      fontSize: "1.2rem",
+      cursor: "pointer",
       color: theme.color.black,
-      '&:hover': {
+      "&:hover": {
         color: theme.color.black,
-        textDecoration: 'underline',
+        textDecoration: "underline",
       },
     },
   });
@@ -117,7 +117,7 @@ class Tile extends React.Component<CombinedProps> {
   renderLink = () => {
     const { link, title, classes } = this.props;
 
-    if (typeof link === 'function') {
+    if (typeof link === "function") {
       return (
         <Button
           onClick={link}
@@ -160,8 +160,8 @@ class Tile extends React.Component<CombinedProps> {
           className
         )}
         data-qa-tile={title}
-        onClick={typeof link === 'function' ? link : undefined}
-        onKeyDown={typeof link === 'function' ? link : undefined}
+        onClick={typeof link === "function" ? link : undefined}
+        onKeyDown={typeof link === "function" ? (link as any) : undefined}
         role="link"
         tabIndex={0}
       >

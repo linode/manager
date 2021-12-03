@@ -4,14 +4,14 @@ import {
   MenuItem,
   MenuItems,
   MenuPopover,
-} from '@reach/menu-button';
-import '@reach/menu-button/styles.css';
-import { positionRight } from '@reach/popover';
-import classNames from 'classnames';
-import * as React from 'react';
-import KebabIcon from 'src/assets/icons/kebab.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import HelpIcon from 'src/components/HelpIcon';
+} from "@reach/menu-button";
+import "@reach/menu-button/styles.css";
+import { positionRight } from "@reach/popover";
+import classNames from "classnames";
+import * as React from "react";
+import KebabIcon from "src/assets/icons/kebab.svg";
+import { makeStyles, Theme } from "src/components/core/styles";
+import HelpIcon from "src/components/HelpIcon";
 
 export interface Action {
   title: string;
@@ -22,27 +22,27 @@ export interface Action {
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
-    '&[data-reach-menu-button]': {
-      display: 'flex',
-      alignItems: 'center',
-      background: 'none',
-      fontSize: '1rem',
-      border: 'none',
-      padding: '10px',
+    "&[data-reach-menu-button]": {
+      display: "flex",
+      alignItems: "center",
+      background: "none",
+      fontSize: "1rem",
+      border: "none",
+      padding: "10px",
       color: theme.cmrIconColors.iActiveLight,
-      cursor: 'pointer',
-      '&:hover': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: "#3683dc",
+        color: "#fff",
       },
       '&[aria-expanded="true"]': {
-        backgroundColor: '#3683dc',
-        color: '#fff',
+        backgroundColor: "#3683dc",
+        color: "#fff",
       },
     },
   },
   buttonWithLabel: {
-    padding: '15px 10px !important',
+    padding: "15px 10px !important",
   },
   buttonLabel: {
     margin: `0 0 0 ${theme.spacing() + 2}px`,
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: 1,
   },
   icon: {
-    '& svg': {
+    "& svg": {
       fill: theme.color.blue,
     },
   },
@@ -58,47 +58,47 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1,
   },
   itemsOuter: {
-    '&[data-reach-menu-items]': {
+    "&[data-reach-menu-items]": {
       padding: 0,
       minWidth: 200,
-      background: '#3683dc',
-      border: 'none',
+      background: "#3683dc",
+      border: "none",
       fontSize: 14,
-      color: '#fff',
-      textAlign: 'left',
+      color: "#fff",
+      textAlign: "left",
     },
   },
   item: {
-    '&[data-reach-menu-item]': {
-      display: 'flex',
-      justifyContent: 'space-between',
+    "&[data-reach-menu-item]": {
+      display: "flex",
+      justifyContent: "space-between",
       padding: theme.spacing(1) + 2,
-      paddingLeft: '16px',
-      borderBottom: '1px solid #5294e0',
-      background: '#3683dc',
-      color: '#fff',
+      paddingLeft: "16px",
+      borderBottom: "1px solid #5294e0",
+      background: "#3683dc",
+      color: "#fff",
     },
-    '&[data-reach-menu-item][data-selected]': {
-      background: '#226dc3',
+    "&[data-reach-menu-item][data-selected]": {
+      background: "#226dc3",
     },
   },
   disabled: {
-    '&[data-reach-menu-item]': {
-      color: '#93bcec',
-      cursor: 'auto',
+    "&[data-reach-menu-item]": {
+      color: "#93bcec",
+      cursor: "auto",
     },
-    '&[data-reach-menu-item][data-selected]': {
-      background: '#3683dc',
-      color: '#93bcec',
+    "&[data-reach-menu-item][data-selected]": {
+      background: "#3683dc",
+      color: "#93bcec",
     },
   },
   tooltip: {
-    color: '#fff',
-    '& :hover': {
-      color: '#4d99f1',
+    color: "#fff",
+    "& :hover": {
+      color: "#4d99f1",
     },
-    padding: '0 0 0 8px',
-    '& svg': {
+    padding: "0 0 0 8px",
+    "& svg": {
       height: 20,
       width: 20,
     },
@@ -131,7 +131,7 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyPress = (e: React.KeyboardEvent<Element>) => {
     if (toggleOpenCallback && e.keyCode === 13) {
       toggleOpenCallback();
     }
@@ -150,7 +150,7 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
         })}
         aria-label={ariaLabel}
         onMouseDown={handleClick}
-        onKeyDown={handleKeyPress}
+        onKeyDown={handleKeyPress as any}
       >
         <KebabIcon aria-hidden className={classes.icon} type="primary" />
         {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
