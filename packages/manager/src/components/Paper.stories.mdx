@@ -3,4 +3,37 @@ import Paper from '/src/components/core/Paper';
 
 <Meta title="Components/Papers" component={Paper} />
 
+export const PaperTemplate = (args, context) => (
+    <div id='paper-story'>
+        <Paper {...args}>
+            Hello World!
+        </Paper>
+    </div>
+)
+
 # Papers
+
+<hr />
+
+<Canvas>
+    <Story
+      name="Paper"
+      args={{
+        error: undefined
+      }}
+      argTypes={{
+          error: {
+              description: 'Error that will be shown on the paper.'
+          }
+      }}
+    >
+      {PaperTemplate.bind({})}
+    </Story>
+</Canvas>
+
+<ArgsTable
+    story="Paper"
+    exclude={[
+        'ref',
+    ]} 
+/>
