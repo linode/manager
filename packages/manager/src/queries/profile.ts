@@ -5,13 +5,16 @@ import {
   updateProfile,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, UseQueryResult } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
 
 export const queryKey = 'profile';
 
-export const useProfile = () =>
+export const useProfile = (
+  givenProfile?: UseQueryResult<Profile, APIError[]>
+) =>
+  givenProfile ??
   useQuery<Profile, APIError[]>(
     queryKey,
     getProfile,

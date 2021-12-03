@@ -51,3 +51,9 @@ export const parameters = {
     viewports: MINIMAL_VIEWPORTS,
   },
 };
+
+// Use the Mock Service Worker to mock API requests.
+if (typeof global.process === 'undefined') {
+  const { worker } = require('../src/mocks/testBrowser');
+  worker.start();
+}
