@@ -65,7 +65,7 @@ describe('Default Payment Method', () => {
         req.reply({});
       }
     ).as('changeDefault');
-    cy.wait('@getPaymentMethod');
+    cy.wait('@getPaymentMethod', { timeout: 20000 });
     cy.get(
       `[aria-label="Action menu for card ending in ${gpayLastFourCcDefault}"]`
     )
