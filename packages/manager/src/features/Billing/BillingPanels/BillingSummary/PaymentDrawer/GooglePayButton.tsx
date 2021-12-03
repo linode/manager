@@ -9,7 +9,7 @@ import { SetSuccess } from './types';
 import {
   initGooglePaymentInstance,
   gPay,
-} from 'src/features/Billing/Providers/GooglePay';
+} from 'src/features/Billing/GooglePayProvider';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';

@@ -7,7 +7,7 @@ import { makeStyles } from 'src/components/core/styles';
 import {
   initGooglePaymentInstance,
   gPay,
-} from 'src/features/Billing/Providers/GooglePay';
+} from 'src/features/Billing/GooglePayProvider';
 import CircleProgress from 'src/components/CircleProgress';
 import classNames from 'classnames';
 
