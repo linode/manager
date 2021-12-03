@@ -1,6 +1,6 @@
-import { pathOr } from 'ramda';
-import { event } from 'react-ga';
-import { dcDisplayNames, GA_ID } from 'src/constants';
+import { pathOr } from "ramda";
+import { event } from "react-ga";
+import { dcDisplayNames, GA_ID } from "src/constants";
 
 interface AnalyticsEvent {
   category: string;
@@ -30,7 +30,7 @@ export const sendLinodeActionEvent = (): void => {
 // LinodeCard.tsx
 export const sendLinodeActionMenuItemEvent = (eventAction: string): void => {
   sendEvent({
-    category: 'Linode Action Menu Item',
+    category: "Linode Action Menu Item",
     action: eventAction,
   });
 };
@@ -38,8 +38,8 @@ export const sendLinodeActionMenuItemEvent = (eventAction: string): void => {
 // AdaLink.tsx
 export const sendAdaEvent = (): void => {
   sendEvent({
-    category: 'Support Bot',
-    action: 'Open',
+    category: "Support Bot",
+    action: "Open",
     label: location.pathname,
   });
 };
@@ -51,7 +51,7 @@ export const sendPaginationEvent = (
 ): void => {
   sendEvent({
     category: eventCategory,
-    action: 'pagination',
+    action: "pagination",
     label: eventLabel,
   });
 };
@@ -63,8 +63,8 @@ export const sendCreateVolumeEvent = (
   eventAction?: string
 ): void => {
   sendEvent({
-    category: 'Create Volume',
-    action: eventAction || 'Create Volume',
+    category: "Create Volume",
+    action: eventAction || "Create Volume",
     label: eventLabel,
   });
 };
@@ -75,8 +75,8 @@ export const sendCreateDomainEvent = (
   eventAction?: string
 ): void => {
   sendEvent({
-    category: 'Create Domain',
-    action: eventAction || 'Create Domain',
+    category: "Create Domain",
+    action: eventAction || "Create Domain",
     label: eventLabel,
   });
 };
@@ -85,8 +85,8 @@ export const sendCreateDomainEvent = (
 // StackScriptBase.tsx
 export const sendStackscriptsSearchEvent = (eventLabel: string): void => {
   sendEvent({
-    category: 'stackscripts',
-    action: 'search',
+    category: "stackscripts",
+    action: "search",
     label: eventLabel,
   });
 };
@@ -97,8 +97,8 @@ export const sendFetchAllEvent = (
   eventValue: number
 ): void => {
   sendEvent({
-    category: 'Search',
-    action: 'Data fetch all entities',
+    category: "Search",
+    action: "Data fetch all entities",
     label: eventLabel,
     value: eventValue,
   });
@@ -110,8 +110,8 @@ export const sendImportDisplayGroupSubmitEvent = (
   eventValue: number
 ): void => {
   sendEvent({
-    category: 'dashboard',
-    action: 'import display groups',
+    category: "dashboard",
+    action: "import display groups",
     label: eventLabel,
     value: eventValue,
   });
@@ -141,8 +141,8 @@ export const sendThemeToggleEvent = (): void => {
 // LinodeBackup.tsx
 export const sendBackupsEnabledEvent = (eventLabel: string): void => {
   sendEvent({
-    category: 'Backups',
-    action: 'Enable All Backups',
+    category: "Backups",
+    action: "Enable All Backups",
     label: eventLabel,
   });
 };
@@ -150,9 +150,9 @@ export const sendBackupsEnabledEvent = (eventLabel: string): void => {
 // LinodeBackup.tsx
 export const sendBackupsDisabledEvent = (): void => {
   sendEvent({
-    category: 'Backups',
-    action: 'Disable Backups',
-    label: 'From Backups tab',
+    category: "Backups",
+    action: "Disable Backups",
+    label: "From Backups tab",
   });
 };
 
@@ -166,7 +166,7 @@ export const sendGroupByTagEnabledEvent = (
 ): void => {
   sendEvent({
     category: eventCategory,
-    action: 'group by tag',
+    action: "group by tag",
     label: String(eventLabel),
   });
 };
@@ -178,7 +178,7 @@ export const sendLinodesViewEvent = (
 ): void => {
   sendEvent({
     category: eventCategory,
-    action: 'switch view',
+    action: "switch view",
     label: eventLabel,
   });
 };
@@ -186,8 +186,8 @@ export const sendLinodesViewEvent = (
 // NodeBalancerCreate.tsx
 export const sendCreateNodeBalancerEvent = (eventLabel: string): void => {
   sendEvent({
-    category: 'NodeBalancer',
-    action: 'Create NodeBalancer',
+    category: "NodeBalancer",
+    action: "Create NodeBalancer",
     label: eventLabel,
   });
 };
@@ -198,7 +198,7 @@ export const sendCreateLinodeEvent = (
   eventLabel: string
 ): void => {
   sendEvent({
-    category: 'Create Linode',
+    category: "Create Linode",
     action: eventAction,
     label: eventLabel,
   });
@@ -207,8 +207,8 @@ export const sendCreateLinodeEvent = (
 // CreateBucketForm.tsx
 export const sendCreateBucketEvent = (eventLabel: string): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Create Bucket',
+    category: "Object Storage",
+    action: "Create Bucket",
     label: eventLabel,
   });
 };
@@ -216,16 +216,16 @@ export const sendCreateBucketEvent = (eventLabel: string): void => {
 // BucketsLanding.tsx
 export const sendDeleteBucketEvent = (eventLabel: string): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Delete Bucket',
+    category: "Object Storage",
+    action: "Delete Bucket",
     label: eventLabel,
   });
 };
 
 export const sendDeleteBucketFailedEvent = (eventLabel: string): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Delete Bucket Failed',
+    category: "Object Storage",
+    action: "Delete Bucket Failed",
     label: eventLabel,
   });
 };
@@ -233,24 +233,24 @@ export const sendDeleteBucketFailedEvent = (eventLabel: string): void => {
 // AccessKeyLanding.tsx
 export const sendCreateAccessKeyEvent = (): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Create Access Key',
+    category: "Object Storage",
+    action: "Create Access Key",
   });
 };
 
 // AccessKeyLanding.tsx
 export const sendEditAccessKeyEvent = (): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Edit Access Key',
+    category: "Object Storage",
+    action: "Edit Access Key",
   });
 };
 
 // AccessKeyLanding.tsx
 export const sendRevokeAccessKeyEvent = (): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Revoke Access Key',
+    category: "Object Storage",
+    action: "Revoke Access Key",
   });
 };
 
@@ -261,7 +261,7 @@ export const sendMigrationNavigationEvent = (
   pathNavigatedFrom: string
 ): void => {
   sendEvent({
-    category: 'Migration Navigation',
+    category: "Migration Navigation",
     action: `From ${pathNavigatedFrom}`,
   });
 };
@@ -275,58 +275,58 @@ export const sendMigrationInitiatedEvent = (
   const safeDestRegion = pathOr(destRegion, [destRegion], dcDisplayNames);
 
   sendEvent({
-    category: 'Inter-DC Migration Requested',
+    category: "Inter-DC Migration Requested",
     action: `Initiation Time: ${generateTimeOfDay(usersCurrentHour)}`,
     label: `${safeSourceRegion} to ${safeDestRegion}`,
   });
 };
 
 export const generateTimeOfDay = (currentHour: number): string => {
-  let currentTimeOfDay = 'Other';
+  let currentTimeOfDay = "Other";
 
   if (currentHour >= 0 && currentHour < 5) {
-    currentTimeOfDay = 'Early Morning';
+    currentTimeOfDay = "Early Morning";
   } else if (currentHour >= 5 && currentHour < 12) {
-    currentTimeOfDay = 'Morning';
+    currentTimeOfDay = "Morning";
   } else if (currentHour >= 12 && currentHour < 17) {
-    currentTimeOfDay = 'Midday';
+    currentTimeOfDay = "Midday";
   } else if (currentHour >= 17 && currentHour < 20) {
-    currentTimeOfDay = 'Evening';
+    currentTimeOfDay = "Evening";
   } else if (currentHour >= 20 && currentHour <= 24) {
-    currentTimeOfDay = 'Night';
+    currentTimeOfDay = "Night";
   }
 
   return currentTimeOfDay;
 };
 
 export const sendDomainStatusChangeEvent = (
-  action: 'Enable' | 'Disable'
+  action: "Enable" | "Disable"
 ): void => {
   return sendEvent({
-    category: 'Domain Status Change',
+    category: "Domain Status Change",
     action,
   });
 };
 
 export const sendDownloadObjectEvent = (): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Download Object',
+    category: "Object Storage",
+    action: "Download Object",
   });
 };
 
 export const sendObjectsQueuedForUploadEvent = (numObjects: number): void => {
   sendEvent({
-    category: 'Object Storage',
-    action: 'Objects queued for upload',
+    category: "Object Storage",
+    action: "Objects queued for upload",
     label: `${numObjects} objects`,
   });
 };
 
 export const sendSearchBarUsedEvent = (): void => {
   sendEvent({
-    category: 'Search',
-    action: 'Search Select',
+    category: "Search",
+    action: "Search Select",
     label: window.location.pathname,
   });
 };
@@ -334,44 +334,48 @@ export const sendSearchBarUsedEvent = (): void => {
 export const sendEntityTransferCreateEvent = (label: string): void => {
   sendEvent({
     // eslint-disable-next-line
-    category: 'Service Transfer',
-    action: 'Create',
+    category: "Service Transfer",
+    action: "Create",
     label,
   });
 };
 
 export const sendEntityTransferReceiveEvent = (label: string): void => {
   sendEvent({
-    category: 'Service Transfer',
-    action: 'Receive',
+    category: "Service Transfer",
+    action: "Receive",
     label,
   });
 };
 
 export const sendEntityTransferCancelEvent = (): void => {
   sendEvent({
-    category: 'Service Transfer',
-    action: 'Cancel',
+    category: "Service Transfer",
+    action: "Cancel",
   });
 };
 
 export const sendEntityTransferCopyTokenEvent = (): void => {
   sendEvent({
-    category: 'Entity Transfer',
-    action: 'Copy Transfer Token',
+    category: "Entity Transfer",
+    action: "Copy Transfer Token",
   });
 };
 
 export const sendEntityTransferCopyDraftEmailEvent = (): void => {
   sendEvent({
-    category: 'Entity Transfer',
-    action: 'Copy Draft Email',
+    category: "Entity Transfer",
+    action: "Copy Draft Email",
   });
 };
 
 export const sendHelpButtonClickEvent = (url: string, from?: string) => {
+  if (from === "Object Storage Landing") {
+    sendObjectStorageDocsEvent("Docs");
+  }
+
   sendEvent({
-    category: 'Help Button',
+    category: "Help Button",
     action: url,
     label: from,
   });
@@ -379,15 +383,29 @@ export const sendHelpButtonClickEvent = (url: string, from?: string) => {
 
 export const sendCLIClickEvent = (action: string) => {
   sendEvent({
-    category: 'Linode CLI Prompt',
+    category: "Linode CLI Prompt",
     action,
   });
 };
 
 export const sendImageUploadEvent = (action: string, imageSize: string) => {
   sendEvent({
-    category: 'Image Upload',
+    category: "Image Upload",
     action,
     label: imageSize,
+  });
+};
+
+export const sendLinodeCreateDocsEvent = (action: string) => {
+  sendEvent({
+    category: "Linode Create Contextual Help",
+    action,
+  });
+};
+
+export const sendObjectStorageDocsEvent = (action: string) => {
+  sendEvent({
+    category: "Object Storage Landing Contextual Help",
+    action,
   });
 };

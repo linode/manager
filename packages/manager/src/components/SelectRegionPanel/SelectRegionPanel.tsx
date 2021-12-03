@@ -1,28 +1,29 @@
-import * as React from 'react';
-import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
+import * as React from "react";
+import { compose } from "recompose";
+import Paper from "src/components/core/Paper";
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+} from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
 import RegionSelect, {
   ExtendedRegion,
-} from 'src/components/EnhancedSelect/variants/RegionSelect';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+} from "src/components/EnhancedSelect/variants/RegionSelect";
+import RenderGuard, { RenderGuardProps } from "src/components/RenderGuard";
+import { sendLinodeCreateDocsEvent } from "src/utilities/ga";
 
-type ClassNames = 'root';
+type ClassNames = "root";
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginTop: theme.spacing(3),
-      '& svg': {
-        '& g': {
+      "& svg": {
+        "& g": {
           // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
-          clipPath: 'none !important' as 'none',
+          clipPath: "none !important" as "none",
         },
       },
     },
@@ -64,6 +65,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
           {copy}
           {` `}
           <a
+            onClick={() => sendLinodeCreateDocsEvent("Speedtest Link")}
             target="_blank"
             aria-describedby="external-site"
             rel="noopener noreferrer"

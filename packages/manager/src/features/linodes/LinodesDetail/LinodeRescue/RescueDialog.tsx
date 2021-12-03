@@ -1,39 +1,39 @@
-import { rescueLinode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { useSnackbar } from 'notistack';
-import { assoc, clamp, equals, pathOr } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Dialog from 'src/components/Dialog';
-import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import withVolumes from 'src/containers/volumes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
-import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import usePrevious from 'src/hooks/usePrevious';
-import { MapState } from 'src/store/types';
+import { rescueLinode } from "@linode/api-v4/lib/linodes";
+import { APIError } from "@linode/api-v4/lib/types";
+import { useSnackbar } from "notistack";
+import { assoc, clamp, equals, pathOr } from "ramda";
+import * as React from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
+import { compose } from "recompose";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import Paper from "src/components/core/Paper";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Dialog from "src/components/Dialog";
+import ErrorState from "src/components/ErrorState";
+import Notice from "src/components/Notice";
+import SectionErrorBoundary from "src/components/SectionErrorBoundary";
+import withVolumes from "src/containers/volumes.container";
+import { resetEventsPolling } from "src/eventsPolling";
+import useExtendedLinode from "src/hooks/useExtendedLinode";
+import usePrevious from "src/hooks/usePrevious";
+import { MapState } from "src/store/types";
 import createDevicesFromStrings, {
   DevicesAsStrings,
-} from 'src/utilities/createDevicesFromStrings';
-import LinodePermissionsError from '../LinodePermissionsError';
+} from "src/utilities/createDevicesFromStrings";
+import LinodePermissionsError from "../LinodePermissionsError";
 import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
-} from './DeviceSelection';
-import RescueDescription from './RescueDescription';
+} from "./DeviceSelection";
+import RescueDescription from "./RescueDescription";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
-    '& .iconTextLink': {
-      display: 'inline-flex',
+    "& .iconTextLink": {
+      display: "inline-flex",
       margin: `${theme.spacing(3)}px 0 0 0`,
     },
   },
@@ -115,7 +115,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
   const linodeRegion = linode?.region;
   const linodeLabel = linode?.label;
   const linodeDisks = linode?._disks.map((disk) =>
-    assoc('_id', `disk-${disk.id}`, disk)
+    assoc("_id", `disk-${disk.id}`, disk)
   );
   const filteredVolumes = React.useMemo(() => {
     return volumesData
@@ -147,13 +147,13 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const [APIError, setAPIError] = React.useState<string>('');
+  const [APIError, setAPIError] = React.useState<string>("");
 
   React.useEffect(() => {
     if (!equals(deviceMap, prevDeviceMap)) {
       setCounter(initialCounter);
       setRescueDevices(deviceMap);
-      setAPIError('');
+      setAPIError("");
     }
   }, [open, initialCounter, deviceMap, prevDeviceMap]);
 
@@ -162,14 +162,14 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
     volumes: filteredVolumes ?? [],
   };
 
-  const unauthorized = linode?._permissions === 'read_only';
+  const unauthorized = linode?._permissions === "read_only";
   const disabled = unauthorized;
 
   const onSubmit = () => {
     rescueLinode(linodeId, createDevicesFromStrings(rescueDevices))
       .then((_) => {
-        enqueueSnackbar('Linode rescue started.', {
-          variant: 'info',
+        enqueueSnackbar("Linode rescue started.", {
+          variant: "info",
         });
         resetEventsPolling();
         onClose();
@@ -192,10 +192,10 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
 
   return (
     <Dialog
-      title={`Rescue Linode ${linodeLabel ?? ''}`}
+      title={`Rescue Linode ${linodeLabel ?? ""}`}
       open={open}
       onClose={() => {
-        setAPIError('');
+        setAPIError("");
         onClose();
       }}
       fullWidth
@@ -215,12 +215,12 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
         <div>
           <Paper className={classes.root}>
             {unauthorized && <LinodePermissionsError />}
-            <RescueDescription />
+            <RescueDescription linodeId={linodeId} />
             <DeviceSelection
-              slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
+              slots={["sda", "sdb", "sdc", "sdd", "sde", "sdf", "sdg"]}
               devices={devices}
               onChange={onChange}
-              getSelected={(slot) => pathOr('', [slot], rescueDevices)}
+              getSelected={(slot) => pathOr("", [slot], rescueDevices)}
               counter={counter}
               rescue
               disabled={disabled}

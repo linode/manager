@@ -1,5 +1,5 @@
-import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
-import { devToolsEnabled } from 'src/dev-tools/load';
+import { StackScriptPayload } from "@linode/api-v4/lib/stackscripts/types";
+import { devToolsEnabled } from "src/dev-tools/load";
 const localStorageCache = {};
 
 export const getStorage = (key: string, fallback?: any) => {
@@ -39,17 +39,17 @@ export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 };
 
-const PAGE_SIZE = 'PAGE_SIZE';
-const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
-const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
-const TOKEN = 'authentication/token';
-const NONCE = 'authentication/nonce';
-const SCOPES = 'authentication/scopes';
-const EXPIRE = 'authentication/expire';
-const SUPPORT = 'support';
-const TICKET = 'ticket';
-const STACKSCRIPT = 'stackscript';
-const DEV_TOOLS_ENV = 'devTools/env';
+const PAGE_SIZE = "PAGE_SIZE";
+const INFINITE_PAGE_SIZE = "INFINITE_PAGE_SIZE";
+const BACKUPSCTA_DISMISSED = "BackupsCtaDismissed";
+const TOKEN = "authentication/token";
+const NONCE = "authentication/nonce";
+const SCOPES = "authentication/scopes";
+const EXPIRE = "authentication/expire";
+const SUPPORT = "support";
+const TICKET = "ticket";
+const STACKSCRIPT = "stackscript";
+const DEV_TOOLS_ENV = "devTools/env";
 
 export type PageSize = number;
 
@@ -70,6 +70,7 @@ interface TicketReply {
 
 interface StackScriptData extends StackScriptPayload {
   id: number | string;
+  updated: string;
 }
 
 export interface DevToolsEnv {
@@ -96,7 +97,7 @@ export interface Storage {
   };
   BackupsCtaDismissed: {
     get: () => boolean;
-    set: (v: 'true' | 'false') => void;
+    set: (v: "true" | "false") => void;
   };
   supportText: {
     get: () => SupportText;
@@ -137,7 +138,7 @@ export const storage: Storage = {
   },
   pageSize: {
     get: () => {
-      return parseInt(getStorage(PAGE_SIZE, '25'), 10);
+      return parseInt(getStorage(PAGE_SIZE, "25"), 10);
     },
     set: (v) => setStorage(PAGE_SIZE, `${v}`),
   },
@@ -146,7 +147,7 @@ export const storage: Storage = {
     get: () => {
       // For backwards compatibility, we'll fall back to the value of PAGE_SIZE.
       // If that doesn't exist, we use '25' as a second fallback.
-      const fallback = parseInt(getStorage(PAGE_SIZE, '25'), 10);
+      const fallback = parseInt(getStorage(PAGE_SIZE, "25"), 10);
 
       // I used Number() instead of parseInt() here because parseInt() does not
       // parse the string "Infinity" as a Number.
@@ -156,22 +157,22 @@ export const storage: Storage = {
   },
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
-    set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
+    set: () => setStorage(BACKUPSCTA_DISMISSED, "true"),
   },
   supportText: {
-    get: () => getStorage(SUPPORT, { title: '', description: '' }),
+    get: () => getStorage(SUPPORT, { title: "", description: "" }),
     set: (v) => setStorage(SUPPORT, JSON.stringify(v)),
   },
   ticketReply: {
-    get: () => getStorage(TICKET, { text: '' }),
+    get: () => getStorage(TICKET, { text: "" }),
     set: (v) => setStorage(TICKET, JSON.stringify(v)),
   },
   stackScriptInProgress: {
     get: () =>
       getStorage(STACKSCRIPT, {
         id: -1,
-        script: '',
-        label: '',
+        script: "",
+        label: "",
         images: [],
       }),
     set: (s) => setStorage(STACKSCRIPT, JSON.stringify(s)),
@@ -198,7 +199,7 @@ export const {
 export const getEnvLocalStorageOverrides = () => {
   // This is broken into two logical branches so that local storage is accessed
   // ONLY if the dev tools are enabled and it's a development build.
-  if (devToolsEnabled() && process.env.NODE_ENV === 'development') {
+  if (devToolsEnabled() && process.env.NODE_ENV === "development") {
     const localStorageOverrides = storage.devToolsEnv.get();
     if (localStorageOverrides) {
       return localStorageOverrides;
@@ -209,9 +210,9 @@ export const getEnvLocalStorageOverrides = () => {
 
 export const isDevToolsEnvValid = (value: any) => {
   return (
-    typeof value?.apiRoot === 'string' &&
-    typeof value?.loginRoot === 'string' &&
-    typeof value?.clientID === 'string' &&
-    typeof value?.label === 'string'
+    typeof value?.apiRoot === "string" &&
+    typeof value?.loginRoot === "string" &&
+    typeof value?.clientID === "string" &&
+    typeof value?.label === "string"
   );
 };

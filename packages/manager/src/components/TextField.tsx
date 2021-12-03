@@ -1,28 +1,28 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import classNames from 'classnames';
-import { clamp } from 'ramda';
-import * as React from 'react';
-import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
-import FormHelperText from 'src/components/core/FormHelperText';
-import InputAdornment from 'src/components/core/InputAdornment';
-import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
-import TextField, { TextFieldProps } from 'src/components/core/TextField';
-import HelpIcon from 'src/components/HelpIcon';
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
+import KeyboardArrowDown from "@material-ui/icons/KeyboardArrowDown";
+import classNames from "classnames";
+import { clamp } from "ramda";
+import * as React from "react";
+import { compose } from "recompose";
+import CircleProgress from "src/components/CircleProgress";
+import FormHelperText from "src/components/core/FormHelperText";
+import InputAdornment from "src/components/core/InputAdornment";
+import InputLabel from "src/components/core/InputLabel";
+import { makeStyles, Theme, WithTheme } from "src/components/core/styles";
+import TextField, { TextFieldProps } from "src/components/core/TextField";
+import HelpIcon from "src/components/HelpIcon";
+import { convertToKebabCase } from "src/utilities/convertToKebobCase";
 
 const useStyles = makeStyles((theme: Theme) => ({
   helpWrapper: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    flexWrap: 'wrap',
+    display: "flex",
+    alignItems: "flex-end",
+    flexWrap: "wrap",
   },
   wrapper: {
     marginTop: theme.spacing(2),
   },
   noTransform: {
-    transform: 'none',
+    transform: "none",
   },
   label: {
     fontFamily: theme.font.normal,
@@ -32,38 +32,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
   helpWrapperContainer: {
-    display: 'flex',
-    width: '100%',
+    display: "flex",
+    width: "100%",
   },
   expand: {
-    maxWidth: '100%',
+    maxWidth: "100%",
   },
   root: {
     marginTop: 0,
   },
   helpWrapperTextField: {
     width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
+    [theme.breakpoints.down("xs")]: {
+      width: "100%",
     },
   },
   helpIcon: {
-    padding: '0px 0px 0px 8px',
+    padding: "0px 0px 0px 8px",
   },
   errorText: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     color: theme.color.red,
     top: 42,
     left: 5,
-    width: '100%',
+    width: "100%",
   },
   editable: {
-    wordBreak: 'keep-all',
+    wordBreak: "keep-all",
     paddingLeft: 1,
   },
   absolute: {
-    position: 'absolute',
+    position: "absolute",
   },
 }));
 
@@ -75,7 +75,7 @@ interface BaseProps {
   errorText?: string;
   expand?: boolean;
   hasAbsoluteError?: boolean;
-  helperTextPosition?: 'top' | 'bottom';
+  helperTextPosition?: "top" | "bottom";
   hideLabel?: boolean;
   inputId?: string;
   loading?: boolean;
@@ -89,6 +89,7 @@ interface BaseProps {
   optional?: boolean;
   required?: boolean;
   tooltipText?: string;
+  tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
   value?: Value;
 }
 
@@ -135,6 +136,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     theme,
     tooltipText,
+    tooltipOnMouseEnter,
     type,
     value,
     ...textFieldProps
@@ -147,10 +149,10 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
   }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const numberTypes = ['tel', 'number'];
+    const numberTypes = ["tel", "number"];
 
     // Because !!0 is falsy :(
-    const minAndMaxExist = typeof min === 'number' && typeof max === 'number';
+    const minAndMaxExist = typeof min === "number" && typeof max === "number";
 
     /**
      * If we've provided a min and max value, make sure the user
@@ -160,7 +162,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     const cleanedValue =
       minAndMaxExist &&
       numberTypes.some((eachType) => eachType === type) &&
-      e.target.value !== ''
+      e.target.value !== ""
         ? clamp(min, max, +e.target.value)
         : e.target.value;
 
@@ -168,7 +170,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
      * If the cleanedValue is undefined, set the value to an empty
      * string but this shouldn't happen.
      */
-    setValue(cleanedValue || '');
+    setValue(cleanedValue || "");
 
     // Invoke the onChange prop if one is provided with the cleaned value.
     if (onChange) {
@@ -199,7 +201,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  let errorScrollClassName = '';
+  let errorScrollClassName = "";
 
   if (errorText) {
     errorScrollClassName = errorGroup
@@ -222,7 +224,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         className={classNames({
           [classes.wrapper]: noMarginTop ? false : true,
           [classes.noTransform]: true,
-          'visually-hidden': hideLabel,
+          "visually-hidden": hideLabel,
         })}
         htmlFor={validInputId}
       >
@@ -234,7 +236,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         ) : null}
       </InputLabel>
 
-      {helperText && helperTextPosition === 'top' && (
+      {helperText && helperTextPosition === "top" && (
         <FormHelperText
           data-qa-textfield-helper-text
           className={classes.helperTextTop}
@@ -255,8 +257,8 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
            * Set _helperText_ and _label_ to no value because we want to
            * have the ability to put the helper text under the label at the top.
            */
-          label={''}
-          helperText={''}
+          label={""}
+          helperText={""}
           fullWidth
           /*
            * Let us explicitly pass an empty string to the input
@@ -270,7 +272,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             shrink: true,
           }}
           inputProps={{
-            'data-testid': 'textfield-input',
+            "data-testid": "textfield-input",
             id: validInputId,
             ...inputProps,
           }}
@@ -282,7 +284,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
               </InputAdornment>
             ),
             className: classNames(
-              'input',
+              "input",
               {
                 [classes.expand]: expand,
               },
@@ -295,10 +297,10 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             IconComponent: KeyboardArrowDown,
             MenuProps: {
               getContentAnchorEl: undefined,
-              anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-              transformOrigin: { vertical: 'top', horizontal: 'left' },
-              MenuListProps: { className: 'selectMenuList' },
-              PaperProps: { className: 'selectMenuDropdown' },
+              anchorOrigin: { vertical: "bottom", horizontal: "left" },
+              transformOrigin: { vertical: "top", horizontal: "left" },
+              MenuListProps: { className: "selectMenuList" },
+              PaperProps: { className: "selectMenuDropdown" },
             },
             ...SelectProps,
           }}
@@ -314,7 +316,11 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
           {children}
         </TextField>
         {tooltipText && (
-          <HelpIcon className={classes.helpIcon} text={tooltipText} />
+          <HelpIcon
+            className={classes.helpIcon}
+            text={tooltipText}
+            onMouseEnter={tooltipOnMouseEnter}
+          />
         )}
       </div>
       {errorText && (
@@ -331,7 +337,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         </FormHelperText>
       )}
       {helperText &&
-        (helperTextPosition === 'bottom' || !helperTextPosition) && (
+        (helperTextPosition === "bottom" || !helperTextPosition) && (
           <FormHelperText data-qa-textfield-helper-text>
             {helperText}
           </FormHelperText>

@@ -1,36 +1,30 @@
-import {
-  Event,
-  EventAction,
-  NotificationType,
-} from '@linode/api-v4/lib/account';
-import * as React from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
-import Chip from 'src/components/core/Chip';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
-import LinearProgress from 'src/components/LinearProgress';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import useNotifications from 'src/hooks/useNotifications';
-import { formatRegion } from 'src/utilities';
-import { ExtendedVolume } from './types';
-import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import useEvents from 'src/hooks/useEvents';
+import { Event } from "@linode/api-v4/lib/account";
+import * as React from "react";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { compose } from "recompose";
+import Chip from "src/components/core/Chip";
+import Hidden from "src/components/core/Hidden";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Grid from "src/components/Grid";
+import LinearProgress from "src/components/LinearProgress";
+import TableCell from "src/components/TableCell";
+import TableRow from "src/components/TableRow";
+import { formatRegion } from "src/utilities";
+import { ExtendedVolume } from "./types";
+import VolumesActionMenu, { ActionHandlers } from "./VolumesActionMenu";
 
 const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
-    width: '35%',
-    wordBreak: 'break-all',
+    width: "35%",
+    wordBreak: "break-all",
   },
   chipWrapper: {
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   chip: {
     borderRadius: 1,
-    fontSize: '0.65rem',
+    fontSize: "0.65rem",
     marginTop: 0,
     marginBottom: 0,
     marginLeft: theme.spacing(2),
@@ -40,17 +34,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   forceUpgradeChip: {
     backgroundColor: theme.color.chipButton,
-    '&:hover': {
+    "&:hover": {
       backgroundColor: theme.color.chipButtonHover,
     },
   },
   upgradePendingChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #ccc',
+    backgroundColor: "transparent",
+    border: "1px solid #ccc",
   },
   nvmeChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #02B159',
+    backgroundColor: "transparent",
+    border: "1px solid #02B159",
   },
 }));
 
@@ -61,7 +55,7 @@ const progressFromEvent = (e?: Event) => {
     return undefined;
   }
 
-  if (e.status === 'started' && e.percent_complete) {
+  if (e.status === "started" && e.percent_complete) {
     return e.percent_complete;
   }
 
@@ -90,37 +84,18 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     linodeLabel,
     linode_id: linodeId,
     linodeStatus,
+    eligibleForUpgradeToNVMe,
+    nvmeUpgradeScheduledByUserImminent,
+    nvmeUpgradeScheduledByUserInProgress,
   } = props;
 
-  const { events } = useEvents();
   const history = useHistory();
   const location = useLocation();
-  const notifications = useNotifications();
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
 
-  const isNVMe = hardwareType === 'nvme';
-
-  const eligibleForUpgradeToNVMe = notifications.some(
-    (notification) =>
-      notification.type ===
-        ('volume_migration_scheduled' as NotificationType) &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserImminent = notifications.some(
-    (notification) =>
-      notification.type === ('volume_migration_imminent' as NotificationType) &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserInProgress = events.some(
-    (event) =>
-      event.action === ('volume_migrate' as EventAction) &&
-      event.entity?.id === id &&
-      event.status === 'started'
-  );
+  const isNVMe = hardwareType === "nvme";
 
   return isUpdating ? (
     <TableRow
@@ -145,7 +120,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         <Grid
           container
           wrap="nowrap"
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="flex-end"
         >
           {isVolumesLanding ? (
@@ -219,7 +194,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         <VolumesActionMenu
           onShowConfig={openForConfig}
           filesystemPath={filesystemPath}
-          linodeLabel={linodeLabel || ''}
+          linodeLabel={linodeLabel || ""}
           regionID={region}
           volumeId={id}
           volumeTags={tags}
@@ -239,7 +214,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
           onAttach={handleAttach}
           onDetach={handleDetach}
-          poweredOff={linodeStatus === 'offline'}
+          poweredOff={linodeStatus === "offline"}
           onDelete={handleDelete}
         />
       </TableCell>

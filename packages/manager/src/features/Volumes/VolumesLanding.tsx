@@ -1,38 +1,41 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Config, Linode } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import { makeStyles } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable from 'src/components/EntityTable';
-import LandingHeader from 'src/components/LandingHeader';
-import Loading from 'src/components/LandingLoading';
-import Link from 'src/components/Link';
-import { PaginationProps } from 'src/components/Pagey';
-import Placeholder from 'src/components/Placeholder';
-import PreferenceToggle from 'src/components/PreferenceToggle';
-import { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
-import _withEvents, { EventsProps } from 'src/containers/events.container';
+import { Event, Notification } from "@linode/api-v4/lib/account";
+import { Config, Linode } from "@linode/api-v4/lib/linodes";
+import { Volume } from "@linode/api-v4/lib/volumes";
+import { withSnackbar, WithSnackbarProps } from "notistack";
+import * as React from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
+import { compose } from "recompose";
+import { bindActionCreators, Dispatch } from "redux";
+import VolumeIcon from "src/assets/icons/entityIcons/volume.svg";
+import { makeStyles } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import DismissibleBanner from "src/components/DismissibleBanner";
+import { DocumentTitleSegment } from "src/components/DocumentTitle";
+import EntityTable from "src/components/EntityTable";
+import LandingHeader from "src/components/LandingHeader";
+import Loading from "src/components/LandingLoading";
+import Link from "src/components/Link";
+import { PaginationProps } from "src/components/Pagey";
+import Placeholder from "src/components/Placeholder";
+import PreferenceToggle from "src/components/PreferenceToggle";
+import { ToggleProps } from "src/components/PreferenceToggle/PreferenceToggle";
+import _withEvents, { EventsProps } from "src/containers/events.container";
 import withVolumes, {
   StateProps as WithVolumesProps,
-} from 'src/containers/volumes.container';
+} from "src/containers/volumes.container";
 import withVolumesRequests, {
   VolumesRequests,
-} from 'src/containers/volumesRequests.container';
+} from "src/containers/volumesRequests.container";
 import withLinodes, {
   Props as WithLinodesProps,
-} from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
-import useFlags from 'src/hooks/useFlags';
-import useReduxLoad from 'src/hooks/useReduxLoad';
+} from "src/containers/withLinodes.container";
+import { resetEventsPolling } from "src/eventsPolling";
+import useFlags from "src/hooks/useFlags";
+import useReduxLoad from "src/hooks/useReduxLoad";
+import withNotifications, {
+  WithNotifications,
+} from "src/store/notification/notification.containers";
 import {
   LinodeOptions,
   openForClone,
@@ -41,13 +44,13 @@ import {
   openForEdit,
   openForResize,
   Origin as VolumeDrawerOrigin,
-} from 'src/store/volumeForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DestructiveVolumeDialog from './DestructiveVolumeDialog';
-import { ExtendedVolume } from './types';
-import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
-import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
-import VolumeTableRow from './VolumeTableRow';
+} from "src/store/volumeForm";
+import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
+import DestructiveVolumeDialog from "./DestructiveVolumeDialog";
+import { ExtendedVolume } from "./types";
+import VolumeAttachmentDrawer from "./VolumeAttachmentDrawer";
+import { ActionHandlers as VolumeHandlers } from "./VolumesActionMenu";
+import VolumeTableRow from "./VolumeTableRow";
 
 interface Props {
   isVolumesLanding?: boolean;
@@ -100,30 +103,31 @@ type CombinedProps = Props &
   DispatchProps &
   RouteProps &
   WithSnackbarProps &
-  WithMappedVolumesProps;
+  WithMappedVolumesProps &
+  WithNotifications;
 
 const volumeHeaders = [
   {
-    label: 'Label',
-    dataColumn: 'label',
+    label: "Label",
+    dataColumn: "label",
     sortable: true,
     widthPercent: 40,
   },
   {
-    label: 'Region',
-    dataColumn: 'region',
+    label: "Region",
+    dataColumn: "region",
     sortable: true,
     widthPercent: 15,
   },
   {
-    label: 'Size',
-    dataColumn: 'size',
+    label: "Size",
+    dataColumn: "size",
     sortable: true,
     widthPercent: 5,
   },
   {
-    label: 'Attached To',
-    dataColumn: 'Attached To',
+    label: "Attached To",
+    dataColumn: "Attached To",
     sortable: false,
     widthPercent: 25,
   },
@@ -131,8 +135,8 @@ const volumeHeaders = [
 
 export const useStyles = makeStyles(() => ({
   empty: {
-    '& svg': {
-      transform: 'scale(0.75)',
+    "& svg": {
+      transform: "scale(0.75)",
     },
   },
 }));
@@ -155,13 +159,13 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
     volumeId: 0,
-    volumeLabel: '',
-    linodeRegion: '',
+    volumeLabel: "",
+    linodeRegion: "",
   });
 
   const [destructiveDialog, setDestructiveDialog] = React.useState<{
     open: boolean;
-    mode: 'detach' | 'delete';
+    mode: "detach" | "delete";
     volumeId?: number;
     volumeLabel: string;
     linodeLabel: string;
@@ -169,15 +173,15 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     poweredOff?: boolean;
   }>({
     open: false,
-    mode: 'detach',
+    mode: "detach",
     volumeId: 0,
-    volumeLabel: '',
-    linodeLabel: '',
-    error: '',
+    volumeLabel: "",
+    linodeLabel: "",
+    error: "",
     poweredOff: false,
   });
 
-  const { _loading } = useReduxLoad(['volumes', 'linodes']);
+  const { _loading } = useReduxLoad(["volumes", "linodes"]);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer((attachmentDrawer) => ({
@@ -205,12 +209,12 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
-      mode: 'detach',
+      mode: "detach",
       volumeId,
       volumeLabel,
       linodeLabel,
       poweredOff,
-      error: '',
+      error: "",
     }));
   };
 
@@ -218,11 +222,11 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
       open: true,
-      mode: 'delete',
+      mode: "delete",
       volumeId,
       volumeLabel,
-      linodeLabel: '',
-      error: '',
+      linodeLabel: "",
+      error: "",
     }));
   };
 
@@ -243,8 +247,8 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     detachVolume({ volumeId })
       .then((_) => {
         /* @todo: show a progress bar for volume detachment */
-        props.enqueueSnackbar('Volume detachment started', {
-          variant: 'info',
+        props.enqueueSnackbar("Volume detachment started", {
+          variant: "info",
         });
         closeDestructiveDialog();
         resetEventsPolling();
@@ -252,7 +256,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       .catch((error) => {
         setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
+          error: getAPIErrorOrDefault(error, "Unable to detach Volume.")[0]
             .reason,
         }));
       });
@@ -274,7 +278,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       .catch((error) => {
         setDestructiveDialog((destructiveDialog) => ({
           ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
+          error: getAPIErrorOrDefault(error, "Unable to delete Volume.")[0]
             .reason,
         }));
       });
@@ -287,7 +291,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
         productInformationIndicator
       >
         <Typography>
-          Take advantage of high-performance{' '}
+          Take advantage of high-performance{" "}
           <Link to="https://www.linode.com/products/block-storage/">
             NVMe Block Storage
           </Link>
@@ -317,8 +321,8 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
           isEntity
           buttonProps={[
             {
-              onClick: () => props.history.push('/volumes/create'),
-              children: 'Create Volume',
+              onClick: () => props.history.push("/volumes/create"),
+              children: "Create Volume",
             },
           ]}
         >
@@ -372,7 +376,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
               <LandingHeader
                 title="Volumes"
                 entity="Volume"
-                onAddNew={() => props.history.push('/volumes/create')}
+                onAddNew={() => props.history.push("/volumes/create")}
                 docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
               />
               <EntityTable
@@ -381,13 +385,13 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
                 isGroupedByTag={volumesAreGrouped}
                 toggleGroupByTag={toggleGroupVolumes}
                 row={volumeRow}
-                initialOrder={{ order: 'asc', orderBy: 'label' }}
+                initialOrder={{ order: "asc", orderBy: "label" }}
               />
               <VolumeAttachmentDrawer
                 open={attachmentDrawer.open}
                 volumeId={attachmentDrawer.volumeId || 0}
-                volumeLabel={attachmentDrawer.volumeLabel || ''}
-                linodeRegion={attachmentDrawer.linodeRegion || ''}
+                volumeLabel={attachmentDrawer.volumeLabel || ""}
+                linodeRegion={attachmentDrawer.linodeRegion || ""}
                 onClose={handleCloseAttachDrawer}
               />
               <DestructiveVolumeDialog
@@ -457,8 +461,47 @@ const addRecentEventToVolume = (volume: Volume, events: Event[]) => {
 
 const filterVolumeEvents = (event: Event): boolean => {
   return (
-    !event._initial && Boolean(event.entity) && event.entity!.type === 'volume'
+    !event._initial && Boolean(event.entity) && event.entity!.type === "volume"
   );
+};
+
+const addNVMeBooleansToVolume = (
+  volumes: Volume[],
+  notifications: Notification[],
+  events: Event[]
+) => {
+  return volumes.reduce((acc: ExtendedVolume[], eachVolume) => {
+    const { id } = eachVolume;
+
+    const eligibleForUpgradeToNVMe = notifications.some(
+      (notification) =>
+        notification.type === "volume_migration_scheduled" &&
+        notification.entity?.id === id
+    );
+
+    const nvmeUpgradeScheduledByUserImminent = notifications.some(
+      (notification) =>
+        notification.type === "volume_migration_imminent" &&
+        notification.entity?.id === id
+    );
+
+    const nvmeUpgradeScheduledByUserInProgress = events.some(
+      (event) =>
+        event.action === "volume_migrate" &&
+        event.entity?.id === id &&
+        event.status === "started"
+    );
+
+    return [
+      ...acc,
+      {
+        ...eachVolume,
+        eligibleForUpgradeToNVMe,
+        nvmeUpgradeScheduledByUserImminent,
+        nvmeUpgradeScheduledByUserInProgress,
+      },
+    ];
+  }, []);
 };
 
 export default compose<CombinedProps, Props>(
@@ -468,6 +511,7 @@ export default compose<CombinedProps, Props>(
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents),
   })),
+  withNotifications(),
   withLinodes(),
   withVolumes(
     (
@@ -478,16 +522,24 @@ export default compose<CombinedProps, Props>(
       volumesResults,
       volumesError
     ) => {
-      const mappedVolumesDataWithLinodes = volumesData.map((volume) => {
-        const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
-          volume,
-          ownProps.linodesData
-        );
-        return addRecentEventToVolume(
-          volumeWithLinodeData,
-          ownProps.eventsData
-        );
-      });
+      const volumesWithNVMeBooleans = addNVMeBooleansToVolume(
+        volumesData,
+        ownProps.notifications,
+        ownProps.eventsData
+      );
+
+      const mappedVolumesDataWithLinodes = volumesWithNVMeBooleans.map(
+        (volume: ExtendedVolume) => {
+          const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
+            volume,
+            ownProps.linodesData
+          );
+          return addRecentEventToVolume(
+            volumeWithLinodeData,
+            ownProps.eventsData
+          );
+        }
+      );
       return {
         ...ownProps,
         volumesData,

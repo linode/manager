@@ -1,59 +1,59 @@
-import { Account, Grant } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
+import { Account, Grant } from "@linode/api-v4/lib/account";
+import { Image } from "@linode/api-v4/lib/images";
 import {
   createStackScript,
   getStackScript,
   StackScript,
   StackScriptPayload,
   updateStackScript,
-} from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
-import { equals } from 'ramda';
-import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+} from "@linode/api-v4/lib/stackscripts";
+import { APIError } from "@linode/api-v4/lib/types";
+import { equals } from "ramda";
+import * as React from "react";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import ActionsPanel from "src/components/ActionsPanel";
+import Breadcrumb from "src/components/Breadcrumb";
+import Button from "src/components/Button";
+import CircleProgress from "src/components/CircleProgress";
+import ConfirmationDialog from "src/components/ConfirmationDialog";
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
-import withImages from 'src/containers/withImages.container';
-import { StackScripts } from 'src/documentation';
+} from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import setDocs, { SetDocsProps } from "src/components/DocsSidebar/setDocs";
+import { DocumentTitleSegment } from "src/components/DocumentTitle";
+import { Item } from "src/components/EnhancedSelect/Select";
+import ErrorState from "src/components/ErrorState";
+import Grid from "src/components/Grid";
+import Notice from "src/components/Notice";
+import withImages from "src/containers/withImages.container";
+import { StackScripts } from "src/documentation";
 import {
   getGrants,
   hasGrant,
   isRestrictedUser,
-} from 'src/features/Profile/permissionsHelpers';
-import ScriptForm from 'src/features/StackScripts/StackScriptForm';
-import { filterImagesByType } from 'src/store/image/image.helpers';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { storage } from 'src/utilities/storage';
-import { debounce } from 'throttle-debounce';
-import { queryClient } from 'src/queries/base';
-import { queryKey } from 'src/queries/profile';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+} from "src/features/Profile/permissionsHelpers";
+import ScriptForm from "src/features/StackScripts/StackScriptForm";
+import { filterImagesByType } from "src/store/image/image.helpers";
+import getAPIErrorsFor from "src/utilities/getAPIErrorFor";
+import scrollErrorIntoView from "src/utilities/scrollErrorIntoView";
+import { storage } from "src/utilities/storage";
+import { debounce } from "throttle-debounce";
+import { queryClient } from "src/queries/base";
+import { queryKey } from "src/queries/profile";
+import withProfile, { ProfileProps } from "src/components/withProfile";
 
-type ClassNames = 'backButton' | 'createTitle';
+type ClassNames = "backButton" | "createTitle";
 
 const styles = (theme: Theme) =>
   createStyles({
     backButton: {
-      margin: '5px 0 0 -16px',
-      '& svg': {
+      margin: "5px 0 0 -16px",
+      "& svg": {
         width: 34,
         height: 34,
       },
@@ -75,10 +75,11 @@ interface State {
   dialogOpen: boolean;
   apiResponse?: StackScript;
   isLoadingStackScript: boolean;
+  updated: string;
 }
 
 interface Props {
-  mode: 'create' | 'edit';
+  mode: "create" | "edit";
 }
 
 type CombinedProps = Props &
@@ -89,22 +90,23 @@ type CombinedProps = Props &
   RouteComponentProps<{ stackScriptID: string }>;
 
 const errorResources = {
-  label: 'A label',
-  images: 'Images',
-  script: 'A script',
+  label: "A label",
+  images: "Images",
+  script: "A script",
 };
 
 export class StackScriptCreate extends React.Component<CombinedProps, State> {
   state: State = {
-    label: '',
-    description: '',
+    label: "",
+    description: "",
     images: [],
     /* available images to select from in the dropdown */
-    script: '',
-    revisionNote: '',
+    script: "",
+    revisionNote: "",
     isSubmitting: false,
     dialogOpen: false,
     isLoadingStackScript: false,
+    updated: "",
   };
 
   static docs = [StackScripts];
@@ -119,7 +121,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       },
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
-    const account = queryClient.getQueryData<Account>('account');
+    const account = queryClient.getQueryData<Account>("account");
 
     if (stackScriptID) {
       // If we have a stackScriptID we're in the edit flow and
@@ -127,13 +129,20 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       this.setState({ isLoadingStackScript: true });
       getStackScript(+stackScriptID)
         .then((response) => {
-          if (response.id === valuesFromStorage.id) {
+          const responseUpdated = Date.parse(response.updated);
+          const localUpdated = Date.parse(valuesFromStorage.updated);
+          const stackScriptHasBeenUpdatedElsewhere =
+            responseUpdated > localUpdated;
+          if (
+            response.id === valuesFromStorage.id &&
+            !stackScriptHasBeenUpdatedElsewhere
+          ) {
             this.setState({
-              label: valuesFromStorage.label ?? '',
-              description: valuesFromStorage.description ?? '',
+              label: valuesFromStorage.label ?? "",
+              description: valuesFromStorage.description ?? "",
               images: valuesFromStorage.images ?? [],
-              script: valuesFromStorage.script ?? '',
-              revisionNote: valuesFromStorage.rev_note ?? '',
+              script: valuesFromStorage.script ?? "",
+              revisionNote: valuesFromStorage.rev_note ?? "",
               isLoadingStackScript: false,
               apiResponse: response,
             });
@@ -146,6 +155,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               script: response.script,
               apiResponse: response, // Saved for use when resetting the form
               isLoadingStackScript: false,
+              updated: response.updated,
             });
           }
         })
@@ -159,11 +169,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
        * so load that in.
        */
       this.setState({
-        label: valuesFromStorage.label ?? '',
-        description: valuesFromStorage.description ?? '',
+        label: valuesFromStorage.label ?? "",
+        description: valuesFromStorage.description ?? "",
         images: valuesFromStorage.images ?? [],
-        script: valuesFromStorage.script ?? '',
-        revisionNote: valuesFromStorage.rev_note ?? '',
+        script: valuesFromStorage.script ?? "",
+        revisionNote: valuesFromStorage.rev_note ?? "",
       });
     }
   }
@@ -179,6 +189,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       script,
       images,
       revisionNote: rev_note,
+      updated,
     } = this.state;
     const {
       mode,
@@ -186,12 +197,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         params: { stackScriptID },
       },
     } = this.props;
-    const account = queryClient.getQueryData<Account>('account');
+    const account = queryClient.getQueryData<Account>("account");
 
     if (account) {
       // Use the euuid if we're creating to avoid loading another user's data
       // (if an expired token has left stale values in local storage)
-      const id = mode === 'create' ? account.euuid : +stackScriptID;
+      const id = mode === "create" ? account.euuid : +stackScriptID;
 
       storage.stackScriptInProgress.set({
         id,
@@ -200,6 +211,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         script,
         images,
         rev_note,
+        updated,
       });
     }
   };
@@ -242,11 +254,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.handleCloseDialog();
     this.setState(
       {
-        script: payload?.script ?? '',
-        label: payload?.label ?? '',
+        script: payload?.script ?? "",
+        label: payload?.label ?? "",
         images: payload?.images ?? [],
-        description: payload?.description ?? '',
-        revisionNote: payload?.rev_note ?? '',
+        description: payload?.description ?? "",
+        revisionNote: payload?.rev_note ?? "",
       },
       this.saveStateToLocalStorage
     );
@@ -283,7 +295,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields(updatedStackScript);
-        history.push('/stackscripts/account', {
+        history.push("/stackscripts/account", {
           successMessage: `${updatedStackScript.label} successfully updated`,
         });
       })
@@ -302,7 +314,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
-        history.push('/stackscripts/account', {
+        history.push("/stackscripts/account", {
           successMessage: `${stackScript.label} successfully created`,
         });
       })
@@ -358,7 +370,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
     this.setState({ isSubmitting: true });
 
-    if (mode === 'create') {
+    if (mode === "create") {
       this.handleCreateStackScript(payload);
     } else {
       this.handleUpdateStackScript(payload);
@@ -436,7 +448,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
-    const generalError = hasErrorFor('none');
+    const generalError = hasErrorFor("none");
 
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
@@ -446,21 +458,21 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         !thisImage.label.match(/kube/i)
     );
 
-    const stackScriptGrants = getGrants(grants.data, 'stackscript');
+    const stackScriptGrants = getGrants(grants.data, "stackscript");
 
     const grantsForThisStackScript = stackScriptGrants.find(
       (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
     );
 
     const userCannotCreateStackScripts =
-      isRestrictedUser() && !hasGrant('add_stackscripts');
+      isRestrictedUser() && !hasGrant("add_stackscripts");
     const userCannotModifyStackScript =
       isRestrictedUser() &&
-      grantsForThisStackScript?.permissions !== 'read_write';
+      grantsForThisStackScript?.permissions !== "read_write";
 
     const shouldDisable =
-      (mode === 'edit' && userCannotModifyStackScript) ||
-      (mode === 'create' && userCannotCreateStackScripts);
+      (mode === "edit" && userCannotModifyStackScript) ||
+      (mode === "create" && userCannotCreateStackScripts);
 
     if (!profile.data?.username) {
       return (
@@ -472,7 +484,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    const pageTitle = mode === 'create' ? 'Create' : 'Edit';
+    const pageTitle = mode === "create" ? "Create" : "Edit";
 
     return (
       <React.Fragment>
@@ -487,7 +499,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
               crumbOverrides={[
                 {
                   position: 1,
-                  label: 'StackScripts',
+                  label: "StackScripts",
                 },
               ]}
               data-qa-create-stackscript-breadcrumb
@@ -497,16 +509,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         {shouldDisable && (
           <Notice
             text={`You don't have permission to ${
-              mode === 'create'
-                ? 'create StackScripts'
-                : 'edit this StackScript'
+              mode === "create"
+                ? "create StackScripts"
+                : "edit this StackScript"
             }. Please contact an account administrator for details.`}
             error={true}
             important
           />
         )}
         <ScriptForm
-          currentUser={profile.data?.username || ''}
+          currentUser={profile.data?.username || ""}
           disableSubmit={!hasUnsavedChanges}
           disabled={shouldDisable}
           mode={mode}
@@ -554,7 +566,7 @@ const enhanced = compose<CombinedProps, Props>(
   setDocs(StackScriptCreate.docs),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: filterImagesByType(imagesData, 'public'),
+    imagesData: filterImagesByType(imagesData, "public"),
     imagesLoading,
     imagesError,
   })),

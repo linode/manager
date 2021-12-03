@@ -1,52 +1,52 @@
-import classNames from 'classnames';
-import * as React from 'react';
+import classNames from "classnames";
+import * as React from "react";
 
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import OpenInNew from "@material-ui/icons/OpenInNew";
 
-import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import Arrow from "src/assets/icons/diagonalArrow.svg";
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
-} from 'src/components/core/styles';
+} from "src/components/core/styles";
 
-type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black' | 'fixedIcon';
+type ClassNames = "root" | "icon" | "absoluteIcon" | "black" | "fixedIcon";
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      display: 'inline-flex',
-      alignItems: 'baseline',
-      '&:hover': {
-        '& $icon': {
+      display: "inline-flex",
+      alignItems: "baseline",
+      "&:hover": {
+        "& $icon": {
           opacity: 1,
         },
       },
     },
     icon: {
       color: theme.palette.primary.main,
-      position: 'relative',
+      position: "relative",
       left: theme.spacing(1),
       opacity: 0,
       width: 14,
       height: 14,
     },
     absoluteIcon: {
-      display: 'inline',
-      position: 'relative',
+      display: "inline",
+      position: "relative",
       paddingRight: 26,
-      '& $icon': {
-        position: 'absolute',
+      "& $icon": {
+        position: "absolute",
         right: 0,
         bottom: 2,
         opacity: 0,
-        left: 'initial',
+        left: "initial",
       },
     },
     fixedIcon: {
-      display: 'inline-block',
-      fontSize: '0.8em',
+      display: "inline-block",
+      fontSize: "0.8em",
     },
     black: {
       color: theme.palette.text.primary,
@@ -61,6 +61,7 @@ interface Props {
   black?: boolean;
   fixedIcon?: boolean;
   hideIcon?: boolean;
+  onClick?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -76,10 +77,12 @@ class ExternalLink extends React.Component<CombinedProps> {
       black,
       fixedIcon,
       hideIcon,
+      onClick,
     } = this.props;
 
     return (
       <a
+        onClick={onClick}
         target="_blank"
         aria-describedby="external-site"
         rel="noopener noreferrer"

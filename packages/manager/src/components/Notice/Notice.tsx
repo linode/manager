@@ -1,21 +1,21 @@
-import Close from '@material-ui/icons/Close';
-import classNames from 'classnames';
-import * as React from 'react';
-import Error from 'src/assets/icons/alert.svg';
-import Check from 'src/assets/icons/check.svg';
-import Flag from 'src/assets/icons/flag.svg';
-import Warning from 'src/assets/icons/warning.svg';
+import Close from "@material-ui/icons/Close";
+import classNames from "classnames";
+import * as React from "react";
+import Error from "src/assets/icons/alert.svg";
+import Check from "src/assets/icons/check.svg";
+import Flag from "src/assets/icons/flag.svg";
+import Warning from "src/assets/icons/warning.svg";
 import {
   makeStyles,
   Theme,
   withTheme,
   WithTheme,
-} from 'src/components/core/styles';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
-import Grid, { GridProps } from 'src/components/Grid';
+} from "src/components/core/styles";
+import Typography, { TypographyProps } from "src/components/core/Typography";
+import Grid, { GridProps } from "src/components/Grid";
 
 export const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
+  "@keyframes fadeIn": {
     from: {
       opacity: 0,
     },
@@ -24,22 +24,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   root: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     borderRadius: 1,
-    fontSize: '1rem',
+    fontSize: "1rem",
     marginBottom: theme.spacing(2),
-    maxWidth: '100%',
-    padding: '4px 16px',
+    maxWidth: "100%",
+    padding: "4px 16px",
     paddingRight: 18,
-    position: 'relative',
-    '& + .notice': {
+    position: "relative",
+    "& + .notice": {
       marginTop: `${theme.spacing()}px !important`,
     },
-    '& $important': {
+    "& $important": {
       backgroundColor: theme.cmrBGColors.bgPaper,
     },
-    '& $error': {
+    "& $error": {
       borderLeftColor: theme.cmrIconColors.iRed,
     },
   },
@@ -47,41 +47,41 @@ export const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.cmrBGColors.bgPaper,
     padding: theme.spacing(2),
     paddingRight: 18,
-    '& $noticeText': {
+    "& $noticeText": {
       fontFamily: theme.font.normal,
     },
   },
   icon: {
-    color: 'white',
-    position: 'absolute',
+    color: "white",
+    position: "absolute",
     left: -25, // This value must be static regardless of theme selection
   },
   closeIcon: {
     ...theme.applyLinkStyles,
-    display: 'flex',
+    display: "flex",
     color: theme.cmrTextColors.tableStatic,
     marginLeft: 20,
   },
   inner: {
-    width: '100%',
-    '& p': {
-      fontSize: '1rem',
+    width: "100%",
+    "& p": {
+      fontSize: "1rem",
     },
   },
   breakWords: {
-    '& $noticeText': {
-      wordBreak: 'break-all',
+    "& $noticeText": {
+      wordBreak: "break-all",
     },
   },
   noticeText: {
     fontFamily: theme.font.bold,
-    fontSize: '1rem',
-    lineHeight: '20px',
+    fontSize: "1rem",
+    lineHeight: "20px",
   },
   error: {
-    animation: '$fadeIn 225ms linear forwards',
+    animation: "$fadeIn 225ms linear forwards",
     borderLeft: `5px solid ${theme.palette.status.errorDark}`,
-    '&$important': {
+    "&$important": {
       borderLeftWidth: 32,
     },
   },
@@ -89,22 +89,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `5px solid ${theme.palette.status.errorDark}`,
   },
   warning: {
-    animation: '$fadeIn 225ms linear forwards',
+    animation: "$fadeIn 225ms linear forwards",
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
-    '&$important': {
+    "&$important": {
       borderLeftWidth: 32,
     },
-    '& $icon': {
-      color: '#555',
+    "& $icon": {
+      color: "#555",
     },
   },
   warningList: {
     borderLeft: `5px solid ${theme.palette.status.warningDark}`,
   },
   success: {
-    animation: '$fadeIn 225ms linear forwards',
+    animation: "$fadeIn 225ms linear forwards",
     borderLeft: `5px solid ${theme.palette.status.successDark}`,
-    '&$important': {
+    "&$important": {
       borderLeftWidth: 32,
     },
   },
@@ -128,7 +128,7 @@ interface Props extends GridProps {
   flag?: boolean;
   notificationList?: boolean;
   spacingTop?: 0 | 8 | 16 | 24;
-  spacingBottom?: 0 | 8 | 16 | 24;
+  spacingBottom?: 0 | 8 | 16 | 20 | 24;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   // Dismissible Props
@@ -180,7 +180,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
    * if it were passed as props.text.
    */
   const _children =
-    typeof children === 'string' ? (
+    typeof children === "string" ? (
       <Typography className={`${classes.noticeText} noticeText`}>
         {children}
       </Typography>
@@ -194,11 +194,11 @@ const Notice: React.FC<CombinedProps> = (props) => {
 
   const dataAttributes = !props.error
     ? {
-        'data-qa-notice': true,
+        "data-qa-notice": true,
       }
     : {
-        'data-qa-notice': true,
-        'data-qa-error': true,
+        "data-qa-notice": true,
+        "data-qa-error": true,
       };
 
   return (
@@ -241,7 +241,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
         <Grid item className={classes.closeIcon}>
           <Close
             style={{
-              cursor: 'pointer',
+              cursor: "pointer",
             }}
             onClick={onClose}
             data-testid="notice-dismiss"
