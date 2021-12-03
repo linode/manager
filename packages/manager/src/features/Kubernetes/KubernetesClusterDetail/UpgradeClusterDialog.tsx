@@ -9,6 +9,7 @@ import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 import { useSnackbar } from 'notistack';
+import Chip from 'src/components/core/Chip';
 
 interface Props {
   open: boolean;
@@ -95,6 +96,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
         onChange={toggleChecked}
         text="Enable HA Control Plane"
       />
+      <Chip label="BETA" />
     </ConfirmationDialog>
   );
 };
