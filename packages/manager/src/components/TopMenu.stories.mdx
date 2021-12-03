@@ -1,5 +1,4 @@
-import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import { useState } from 'react';
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import TopMenu from '/src/features/TopMenu';
 
 <Meta title="Components/Navigation/Top Menu" component={TopMenu} />
@@ -20,11 +19,13 @@ export const Template = () => {
       openSideMenu={() => null}
       desktopMenuToggle={() => null}
       isLoggedInAsCustomer={false}
-      username="Gritty"
+      username="Linny"
     />
   );
 };
 
 <Canvas style={{ background: '#f4f5f6' }}>
-  <Story name="Top Menu">{Template.bind({})}</Story>
+  <Story name="Top Menu">
+    <Template />
+  </Story>
 </Canvas>

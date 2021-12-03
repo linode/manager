@@ -1,13 +1,8 @@
-import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
 import { useState } from 'react';
+import Box from 'src/components/core/Box';
+import { makeStyles } from 'src/components/core/styles';
 import SideMenu from './SideMenu';
-
-export const decorators = [
-  (Story) => {
-    const [open, setOpen] = React.useState(true);
-    return Story({ open, setOpen });
-  },
-];
 
 <Meta title="Components/Navigation/Side Menu" component={SideMenu} />
 
@@ -17,7 +12,7 @@ export const decorators = [
 
 <hr />
 
-- The side navigation currently has 13 items in three groups.
+- The side menu currently has 13 items in three groups.
   - The plan is to eventually remove **Account** and **Help & Support** from the side menu since they are also available in the top menu.
 - The Linodes landing page is considered the homepage unless the account is managed. Otherwise, clicking on the Linode logo will take the user to the Managed landing page.
 
@@ -29,22 +24,47 @@ export const decorators = [
 - If the number of items in the side menu grows beyond 15, a second tier of items could be made available on hover. Careful consideration should be given to refactoring the information architecture and UI so that customers can easily accomplish their tasks.
 
 export const Template = (args, context) => {
-  const close = () => context.setOpen(false);
+  const useStyles = makeStyles(() => ({
+    menu: {
+      '& > div > div > div': { paddingBottom: 8, position: 'relative' },
+    },
+  }));
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(true);
+  const [desktopOpen, setDesktopOpen] = React.useState(false);
   return (
-    <>
-      <SideMenu open={true} desktopOpen={context.open} closeMenu={() => null} />
-      <button
-        onClick={() => context.setOpen(!context.open)}
-        style={{ float: 'right' }}
-      >
-        Click to toggle side menu
-      </button>
-    </>
+    <Box display="flex" justifyContent="space-between">
+      <div className={classes.menu}>
+        <SideMenu
+          open={open}
+          desktopOpen={desktopOpen}
+          closeMenu={() => setOpen(false)}
+        />
+      </div>
+      <Box display="flex" flexDirection="column" style={{ width: '50%' }}>
+        <div>
+          1.{` `}
+          <button onClick={() => setDesktopOpen(!desktopOpen)}>
+            Click to {desktopOpen ? 'expand' : 'collapse'} side menu
+          </button>
+        </div>
+        <br />
+        <div>
+          2.{` `}
+          <button onClick={() => setOpen(!open)}>
+            Click to show side menu
+          </button>
+          <div style={{ marginTop: 4, marginLeft: 16 }}>
+            Has no effect unless the viewport is less than 960px.
+          </div>
+        </div>
+      </Box>
+    </Box>
   );
 };
 
 <Canvas>
-  <Story name="Side Menu" decorators={decorators}>
-    {Template.bind({})}
+  <Story name="Side Menu">
+    <Template />
   </Story>
 </Canvas>
