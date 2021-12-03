@@ -16,7 +16,7 @@ const merchantInfo: google.payments.api.MerchantInfo = {
   merchantName: 'Linode',
 };
 
-let googlePaymentInstance: GooglePayment | undefined;
+let googlePaymentInstance: GooglePayment;
 
 const onPaymentAuthorized = (
   paymentData: google.payments.api.PaymentData
@@ -28,36 +28,32 @@ const onPaymentAuthorized = (
 
 export const initGooglePaymentInstance = async (
   client_token: string
-): Promise<void> => {
-  const braintreeClientToken = await braintree.client.create({
-    authorization: client_token,
-  });
+): Promise<{ error: boolean }> => {
+  try {
+    const braintreeClientToken = await braintree.client.create({
+      authorization: client_token,
+    });
 
-  googlePaymentInstance = await braintree.googlePayment.create({
-    client: braintreeClientToken,
-    googlePayVersion: 2,
-    googleMerchantId: GPAY_MERCHANT_ID,
-  });
+    googlePaymentInstance = await braintree.googlePayment.create({
+      client: braintreeClientToken,
+      googlePayVersion: 2,
+      googleMerchantId: GPAY_MERCHANT_ID,
+    });
+  } catch (error) {
+    reportException(error, {
+      message: 'Error initializing Google Pay.',
+    });
+    return { error: true };
+  }
+  return { error: false };
 };
 
-export const gPay = async (
-  action: 'one-time-payment' | 'add-recurring-payment',
+const tokenizePaymentDataRequest = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
-  },
-  setMessage: (
-    message: string,
-    variant: VariantType,
-    warnings?: APIWarning[]
-  ) => void,
-  setProcessing: (processing: boolean) => void
-) => {
-  if (!googlePaymentInstance) {
-    return setMessage('Unable to open Google Pay.', 'error');
   }
-
-  let paymentDataRequest;
-
+) => {
+  let paymentDataRequest: google.payments.api.PaymentDataRequest;
   try {
     paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
       merchantInfo,
@@ -69,7 +65,7 @@ export const gPay = async (
     reportException(error, {
       message: 'Unable to open Google Pay.',
     });
-    return setMessage('Unable to open Google Pay.', 'error');
+    return Promise.reject('Unable to open Google Pay.');
   }
 
   const googlePayClient = new google.payments.api.PaymentsClient({
@@ -85,30 +81,38 @@ export const gPay = async (
     allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
   });
   if (!isReadyToPay) {
-    return setMessage('Your device does not support Google Pay.', 'error');
+    return Promise.reject('Your device does not support Google Pay.');
   }
 
-  const isOneTimePayment = action === 'one-time-payment';
+  const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
 
-  try {
-    const paymentData = await googlePayClient.loadPaymentData(
-      paymentDataRequest
-    );
+  const { nonce: realNonce } = await googlePaymentInstance.parseResponse(
+    paymentData
+  );
 
-    const { nonce: realNonce } = await googlePaymentInstance.parseResponse(
-      paymentData
-    );
+  // Use the real nonce (real money) when the Google Merchant ID is provided and
+  // the Google Pay environment is set to production.
+  const nonce =
+    Boolean(GPAY_MERCHANT_ID) && GPAY_CLIENT_ENV === 'PRODUCTION'
+      ? realNonce
+      : 'fake-android-pay-nonce';
+  return Promise.resolve(nonce);
+};
 
-    // Use the real nonce (real money) when the Google Merchant ID is provided and
-    // the Google Pay environment is set to production.
-    const nonce =
-      Boolean(GPAY_MERCHANT_ID) && GPAY_CLIENT_ENV === 'PRODUCTION'
-        ? realNonce
-        : 'fake-android-pay-nonce';
-
-    setProcessing(true);
-
-    if (isOneTimePayment) {
+export const gPay = async (
+  action: 'one-time-payment' | 'add-recurring-payment',
+  transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
+    totalPrice?: string;
+  },
+  setMessage: (
+    message: string,
+    variant: VariantType,
+    warnings?: APIWarning[]
+  ) => void,
+  setProcessing: (processing: boolean) => void
+) => {
+  const makeOneTimePayment = async (nonce: string) => {
+    try {
       const response = await makePayment({
         nonce,
         usd: transactionInfo.totalPrice as string,
@@ -119,7 +123,16 @@ export const gPay = async (
         'success',
         response.warnings
       );
-    } else {
+    } catch (error) {
+      reportException(error, {
+        message: 'Unable to complete Google Pay payment',
+      });
+      setMessage('Unable to complete Google Pay payment', 'error');
+    }
+  };
+
+  const addRecurringPayment = async (nonce: string) => {
+    try {
       await addPaymentMethod({
         type: 'payment_method_nonce',
         data: { nonce },
@@ -127,24 +140,29 @@ export const gPay = async (
       });
       queryClient.invalidateQueries(`${accountPaymentKey}-all`);
       setMessage('Successfully added Google Pay', 'success');
+    } catch (error) {
+      reportException(error, {
+        message: 'Unable to add payment method',
+      });
+      // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
+      setMessage('Unable to add payment method', 'error');
     }
+  };
 
+  try {
+    const nonce = await tokenizePaymentDataRequest(transactionInfo);
+    setProcessing(true);
+    if (action === 'one-time-payment') {
+      await makeOneTimePayment(nonce);
+    } else {
+      await addRecurringPayment(nonce);
+    }
     setProcessing(false);
   } catch (error) {
-    setProcessing(false);
-
     if (error.statusCode === 'CANCELED') {
       return;
     }
-
-    const errorMsg = isOneTimePayment
-      ? 'Unable to complete Google Pay payment'
-      : 'Unable to add payment method';
-
-    reportException(error, {
-      message: errorMsg,
-    });
-    // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
-    setMessage(errorMsg, 'error');
+    // errorMsg from tokenizePaymentDataRequest
+    setMessage(error, 'error');
   }
 };
