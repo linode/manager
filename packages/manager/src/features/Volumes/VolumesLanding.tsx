@@ -106,7 +106,7 @@ type CombinedProps = Props &
   WithMappedVolumesProps &
   WithNotifications;
 
-const volumeHeaders = [
+export const volumeHeaders = [
   {
     label: 'Label',
     dataColumn: 'label',

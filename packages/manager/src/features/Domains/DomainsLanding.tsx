@@ -82,7 +82,7 @@ export type CombinedProps = DispatchProps &
   StateProps &
   WithSnackbarProps;
 
-const getHeaders = (
+export const getHeaders = (
   matchesXsDown: boolean,
   matchesSmDown: boolean,
   matchesMdDown: boolean

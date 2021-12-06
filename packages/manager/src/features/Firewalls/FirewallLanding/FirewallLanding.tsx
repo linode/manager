@@ -25,6 +25,42 @@ import FirewallRow from './FirewallRow';
 
 type CombinedProps = RouteComponentProps<{}>;
 
+export const headers = [
+  {
+    label: 'Firewall',
+    dataColumn: 'label',
+    sortable: true,
+    widthPercent: 25,
+  },
+  {
+    label: 'Status',
+    dataColumn: 'status',
+    sortable: true,
+    widthPercent: 15,
+  },
+  {
+    label: 'Rules',
+    dataColumn: 'rules',
+    sortable: false,
+    widthPercent: 25,
+    hideOnMobile: true,
+  },
+  {
+    label: 'Linodes',
+    dataColumn: 'devices',
+    sortable: false,
+    widthPercent: 25,
+    hideOnMobile: true,
+  },
+  {
+    label: 'Action Menu',
+    visuallyHidden: true,
+    dataColumn: '',
+    sortable: false,
+    widthPercent: 5,
+  },
+];
+
 const FirewallLanding: React.FC<CombinedProps> = () => {
   const { data: profile } = useProfile();
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
@@ -92,42 +128,6 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
     openModal('disable', id, label);
   };
-
-  const headers = [
-    {
-      label: 'Firewall',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 25,
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: true,
-      widthPercent: 15,
-    },
-    {
-      label: 'Rules',
-      dataColumn: 'rules',
-      sortable: false,
-      widthPercent: 25,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Linodes',
-      dataColumn: 'devices',
-      sortable: false,
-      widthPercent: 25,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 5,
-    },
-  ];
 
   const openDrawer = React.useCallback(() => toggleAddFirewallDrawer(true), [
     toggleAddFirewallDrawer,
