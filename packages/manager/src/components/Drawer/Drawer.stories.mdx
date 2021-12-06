@@ -25,7 +25,6 @@ export const decorators = [
 #### Behavior
 
 - Clicking a button on the screen opens the drawer.
-- Clicking off of the drawer closes it and data will not be saved.
 - Drawers can also be closed by clicking the “X” icon or the “Close” button.
 
 export const Template = (args, context) => {
@@ -60,7 +59,11 @@ export const Template = (args, context) => {
 };
 
 <Canvas>
-  <Story name="Default" decorators={decorators}>
+  <Story
+    name="Default"
+    decorators={decorators}
+    parameters={{ docs: { source: { code: DrawerSourceCode } } }}
+  >
     {Template.bind({})}
   </Story>
 </Canvas>
@@ -69,7 +72,7 @@ export const Template = (args, context) => {
 
 <hr />
 
-_Props extends MUI's DrawerProps_
+_Props extend MUI's DrawerProps_
 
 <Canvas>
   <Story
@@ -84,12 +87,24 @@ _Props extends MUI's DrawerProps_
     argTypes={{
       open: {
         description: 'Whether or not the Drawer is currently open',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+        type: {
+          required: true
+        }
       },
       onClose: {
         description: 'The handler called when the "X" button is clicked',
+        type: {
+          required: true
+        }
       },
       title: {
         description: 'The title displayed at the top of the Drawer',
+        type: {
+          required: true
+        }
       },
       wide: {
         description:
@@ -99,6 +114,7 @@ _Props extends MUI's DrawerProps_
         },
       },
     }}
+    parameters={{ docs: { source: { code: DrawerSourceCode } } }}
   >
     {Template.bind({})}
   </Story>
@@ -108,3 +124,26 @@ _Props extends MUI's DrawerProps_
   story="Component API"
   include={['open', 'onClose', 'title', 'wide']}
 />
+
+export const DrawerSourceCode = `
+  <Drawer title="My Drawer" open={open} onClose={close}>
+  <Typography>
+    This is some test copy which acts as content for this Drawer
+    component. It's very interesting and you should read all of it. This
+    text has to be sufficiently long to test that it doesn't expand the
+    drawer to an unreasonable width.
+  </Typography>
+  <TextField
+    label="Input Some Text"
+    placeholder="This is a placeholder"
+  />
+  <ActionsPanel>
+    <Button buttonType="primary" onClick={close}>
+      Save
+    </Button>
+    <Button buttonType="secondary" onClick={close}>
+      Cancel
+    </Button>
+  </ActionsPanel>
+</Drawer>
+`
