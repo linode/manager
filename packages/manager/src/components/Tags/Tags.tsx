@@ -1,11 +1,5 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
 
@@ -14,26 +8,15 @@ export interface Props {
   clickable?: boolean;
 }
 
-type ClassNames = 'root' | 'tag';
+type CombinedProps = Props;
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    tag: {
-      color: theme.palette.text.primary,
-      fontFamily: 'LatoWeb',
-    },
-  });
+export const Tags: React.FC<CombinedProps> = (props) => {
+  const { clickable, tags } = props;
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export class Tags extends React.Component<CombinedProps, {}> {
-  renderTags = (tags: string[]) => {
-    const { classes, clickable } = this.props;
+  const renderTags = (tags: string[]) => {
     return tags.map((eachTag) => {
       return (
         <Tag
-          className={classes.tag}
           label={eachTag}
           key={eachTag}
           clickable={clickable}
@@ -44,25 +27,21 @@ export class Tags extends React.Component<CombinedProps, {}> {
     });
   };
 
-  renderMoreTags = (tags: string[]) => {
-    return (
-      <ShowMore items={tags} render={this.renderTags} ariaItemType="tags" />
-    );
+  const renderMoreTags = (tags: string[]) => {
+    return <ShowMore items={tags} render={renderTags} ariaItemType="tags" />;
   };
 
-  render() {
-    const { tags } = this.props;
-    if (!tags) {
-      return null;
-    }
-    const [visibleTags, additionalTags] = splitAt(3, tags);
-    return (
-      <React.Fragment>
-        {this.renderTags(visibleTags)}
-        {!!additionalTags.length && this.renderMoreTags(additionalTags)}
-      </React.Fragment>
-    );
+  if (!tags) {
+    return null;
   }
-}
 
-export default withStyles(styles)(Tags);
+  const [visibleTags, additionalTags] = splitAt(3, tags);
+  return (
+    <>
+      {renderTags(visibleTags)}
+      {!!additionalTags.length && renderMoreTags(additionalTags)}
+    </>
+  );
+};
+
+export default Tags;

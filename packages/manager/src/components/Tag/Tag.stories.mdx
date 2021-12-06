@@ -1,0 +1,41 @@
+import { action } from '@storybook/addon-actions';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Tag from './Tag';
+import Tags from '../Tags';
+
+<Meta title="UI Elements/Tags" component={Tag} />
+
+# Tags
+
+### Default
+
+<Canvas>
+  <Story name="Default">
+    <Tag label="tag" />
+    <Tag label="tag" colorVariant="lightBlue" />
+    <Tag label="tag" colorVariant="blue" />
+    <Tag label="delete-tag" onDelete={action('click')} />
+  </Story>
+</Canvas>
+
+### Tags List
+
+<Canvas>
+  <Story name="Tags list">
+    <Tags tags={['tagOne', 'tagTwo', 'someStrangeLongTagWithNumber123']} />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Tags list with show more">
+    <Tags
+      tags={[
+        'tagOne',
+        'tagTwo',
+        'someStrangeLongTagWithNumber123',
+        'Tag1',
+        'Tag2',
+      ]}
+    />
+  </Story>
+</Canvas>
