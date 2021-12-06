@@ -25,7 +25,7 @@ export const decorators = [
 #### Behavior
 
 - Clicking a button on the screen opens the drawer.
-- Drawers can also be closed by clicking the “X” icon or the “Close” button.
+- Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
 
 export const Template = (args, context) => {
   const close = () => context.setOpen(false);
@@ -46,11 +46,11 @@ export const Template = (args, context) => {
           placeholder="This is a placeholder"
         />
         <ActionsPanel>
-          <Button buttonType="primary" onClick={close}>
-            Save
-          </Button>
           <Button buttonType="secondary" onClick={close}>
             Cancel
+          </Button>
+          <Button buttonType="primary" onClick={close}>
+            Save
           </Button>
         </ActionsPanel>
       </Drawer>
@@ -92,6 +92,9 @@ _Props extend MUI's DrawerProps_
         },
         type: {
           required: true
+        },
+        control: {
+          type: null
         }
       },
       onClose: {
@@ -138,11 +141,11 @@ export const DrawerSourceCode = `
     placeholder="This is a placeholder"
   />
   <ActionsPanel>
-    <Button buttonType="primary" onClick={close}>
-      Save
-    </Button>
     <Button buttonType="secondary" onClick={close}>
       Cancel
+    </Button>
+    <Button buttonType="primary" onClick={close}>
+      Save
     </Button>
   </ActionsPanel>
 </Drawer>
