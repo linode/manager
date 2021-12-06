@@ -28,9 +28,28 @@ import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
   component={EntityTable}
 />
 
-export const VolumesTable = () => {
-  const volumes = volumeFactory.buildList(10);
-  return (
+export const domainHeaders = () => {
+  const theme = useTheme();
+  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  return getDomainHeaders(
+    matchesXsDown,
+    matchesSmDown,
+    matchesMdDown
+  );
+}
+
+export const getNodeBalancers = () => {
+  const configs = nodeBalancerConfigFactory.buildList(2);
+  return nodeBalancerFactory.buildList(10).map(nb => ({ ...nb, configs }));
+}
+
+# Entity Detail
+
+## Volumes
+<Canvas>
+  <Story name="Volumes">
     <EntityTable
       entity="volume"
       toggleGroupByTag={() => false}
@@ -39,87 +58,76 @@ export const VolumesTable = () => {
       row={{
         handlers: {},
         Component: VolumeTableRow,
-        data: volumes,
+        data: volumeFactory.buildList(10),
         lastUpdated: 1637782175231,
       }}
       initialOrder={{ order: 'asc', orderBy: 'label' }}
     />
-  )
-}
+  </Story>
+</Canvas>
 
-export const DomainsTable = () => {
-  const theme = useTheme();
-  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
-  const domains = domainFactory.buildList(10);
-  const headers = getDomainHeaders(
-    matchesXsDown,
-    matchesSmDown,
-    matchesMdDown
-  );
-  return (
+## Domains
+<Canvas>
+  <Story name="Domains">
     <Provider store={store}>
       <Grid spacing={8}>
         <EntityTable
           entity="domains"
           toggleGroupByTag={() => false}
           isGroupedByTag={false}
-          headers={headers}
+          headers={getDomainHeaders()}
           row={{
             Component: DomainRow,
-            data: domains,
+            data: domainFactory.buildList(10),
             loading: false,
             lastUpdated: 1637782175231,
           }}
         />
       </Grid>
     </Provider>
-  )
-}
+  </Story>
+</Canvas>
 
-export const FirewallsTable = () => {
-  const firewalls = firewallFactory.buildList(10);
-  return (
+## Firewalls
+<Canvas>
+  <Story name="Firewalls">
     <EntityTable
       entity="firewall"
       headers={firewallHeaders}
       row={{
         handlers: {},
         Component: FirewallRow,
-        data: firewalls,
+        data: firewallFactory.buildList(10),
         loading: false,
         lastUpdated: 1637782175231,
         error: undefined,
       }}
       initialOrder={{ order: 'asc', orderBy: 'domain' }}
     />
-  )
-}
+  </Story>
+</Canvas>
 
-export const ImagesTable = () => {
-  const manualHeaders = getImageHeaders('manual');
-  const manualImages = imageFactory.buildList(10);
-  return (
+## Images
+<Canvas>
+  <Story name="Images">
     <EntityTable
       entity="image"
-      headers={manualHeaders}
+      headers={getImageHeaders('manual')}
       row={{
         Component: ImageRow,
-        data: manualImages,
+        data: imageFactory.buildList(10),
         loading: false,
         lastUpdated: 1637782175231,
         handlers: {},
       }}
       initialOrder={{ order: 'asc', orderBy: 'label' }}
     />
-  )
-}
+  </Story>
+</Canvas>
 
-export const NodeBalancersTable = () => {
-  const configs = nodeBalancerConfigFactory.buildList(2);
-  const nodeBalancers = nodeBalancerFactory.buildList(10).map(nb => ({ ...nb, configs }));
-  return (
+## NodeBalancers
+<Canvas>
+  <Story name="NodeBalancers">
     <EntityTable
       entity="nodebalancer"
       toggleGroupByTag={() => false}
@@ -127,49 +135,11 @@ export const NodeBalancersTable = () => {
       headers={nodeBalancerHeaders}
       row={{
         Component: NodeBalancerTableRow,
-        data: nodeBalancers,
+        data: getNodeBalancers(),
         handlers: {},
         lastUpdated: 1637782175231,
       }}
       initialOrder={{ order: 'asc', orderBy: 'label' }}
     />
-  )
-}
-
-# Entity Detail
-
-## Volumes
-<Canvas>
-  <Story name="Volumes">
-    <VolumesTable />
   </Story>
 </Canvas>
-
-## Domains
-<Canvas>
-  <Story name="Domains">
-    <DomainsTable />
-  </Story>
-</Canvas>
-
-## Firewalls
-<Canvas>
-  <Story name="Firewalls">
-    <FirewallsTable />
-  </Story>
-</Canvas>
-
-## Images
-<Canvas>
-  <Story name="Images">
-    <ImagesTable />
-  </Story>
-</Canvas>
-
-## NodeBalancers
-<Canvas>
-  <Story name="NodeBalancers">
-    <NodeBalancersTable />
-  </Story>
-</Canvas>
-
