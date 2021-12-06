@@ -77,7 +77,7 @@ A modal dialog is a window that appears on top of a parent screen. It's called '
   - Can require user to type the entity name to confirm deletion
 
 
-> ⚠️ Clicking off of the modal will not close it.
+> ℹ️️ Clicking off of the modal will not close it.
 > A modal can only be closed by taking direct action, clicking on a button or the “X” button, or using the `esc` key.
 
 ### Dialog
@@ -172,6 +172,7 @@ A Confirmation Dialog is used for confirming a simple task.
       },
       actions: {
         description: 'Items that get rendered in the footer of the Dialog. Typicaly you put an `<ActionsPanel />` with `<Button />`s in it.',
+        control: false,
       },
       onClose: {
         description: 'Callback fired when the component requests to be closed.',
