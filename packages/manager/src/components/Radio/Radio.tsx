@@ -8,7 +8,7 @@ import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     color: '#ccc',
-    padding: '6px 6px',
+    padding: '10px 10px',
     transition: theme.transitions.create(['color']),
     '& .defaultFill': {
       transition: theme.transitions.create(['fill']),
