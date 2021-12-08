@@ -10,6 +10,7 @@ import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 import { useSnackbar } from 'notistack';
 import Chip from 'src/components/core/Chip';
+import { makeStyles } from 'src/components/core/styles';
 
 interface Props {
   open: boolean;
@@ -45,6 +46,14 @@ const renderActions = (
   );
 };
 
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& label': {
+      backgroundColor: 'red',
+    }
+  }
+}));
+
 const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const { open, onClose, clusterID } = props;
   const { enqueueSnackbar } = useSnackbar();
@@ -54,6 +63,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const { updateKubernetesCluster } = useKubernetesClusters();
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
+  const classes = useStyles();
 
   const onUpgrade = () => {
     setSubmitting(true);
@@ -95,6 +105,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
         checked={checked}
         onChange={toggleChecked}
         text="Enable HA Control Plane"
+        className={classes.root}
       />
       <Chip label="BETA" />
     </ConfirmationDialog>
