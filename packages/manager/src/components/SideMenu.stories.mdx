@@ -4,10 +4,15 @@ import Box from 'src/components/core/Box';
 import { makeStyles } from 'src/components/core/styles';
 import SideMenu from './SideMenu';
 
-<Meta
-  title="Components/Navigation/Side Menu"
-  component={SideMenu}
-/>
+export const decorators = [
+  (Story) => {
+    const [open, setOpen] = React.useState(false);
+    const [desktopOpen, setDesktopOpen] = React.useState(false);
+    return Story({ open, setOpen, desktopOpen, setDesktopOpen });
+  },
+];
+
+<Meta title="Components/Navigation/Side Menu" component={SideMenu} />
 
 # Side Menu
 
@@ -27,24 +32,19 @@ import SideMenu from './SideMenu';
 - If the number of items in the side menu grows beyond 15, a second tier of items could be made available on hover. Careful consideration should be given to refactoring the information architecture and UI so that customers can easily accomplish their tasks.
 
 export const Template = (args) => {
-  return (
-    <SideMenu
-      {...args}
-    />
-  );
+  return <SideMenu {...args} />;
 };
 
 <Canvas>
   <Story
     name="Side Menu"
-    height="700px"
     args={{
       open: false,
-      desktopOpen: false
+      desktopOpen: false,
     }}
     argTypes={{
       desktopOpen: {
-        description: '...',
+        description: 'If false, menu is expanded.',
         table: {
           type: { summary: 'boolean' },
           defaultValue: { summary: 'false' },
@@ -58,15 +58,10 @@ export const Template = (args) => {
         },
       },
     }}
+    height="700px"
   >
     {Template.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable
-  story="Side Menu"
-  sort="requiredFirst"
-  exclude={[
-    'closeMenu'
-  ]}
-/>
+<ArgsTable story="Side Menu" sort="requiredFirst" exclude={['closeMenu']} />
