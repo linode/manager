@@ -46,14 +46,6 @@ const renderActions = (
   );
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    '& label': {
-      backgroundColor: 'red',
-    }
-  }
-}));
-
 const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const { open, onClose, clusterID } = props;
   const { enqueueSnackbar } = useSnackbar();
@@ -63,7 +55,6 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const { updateKubernetesCluster } = useKubernetesClusters();
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
-  const classes = useStyles();
 
   const onUpgrade = () => {
     setSubmitting(true);
@@ -81,6 +72,12 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
         setError(e[0].reason);
       });
   };
+
+  const checkboxText = (
+    <>
+      Enable HA Control Plane <Chip style={{marginLeft: 4}} label="BETA" />
+    </>
+  )
 
   return (
     <ConfirmationDialog
@@ -104,10 +101,8 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       <CheckBox
         checked={checked}
         onChange={toggleChecked}
-        text="Enable HA Control Plane"
-        className={classes.root}
+        text={checkboxText}
       />
-      <Chip label="BETA" />
     </ConfirmationDialog>
   );
 };
