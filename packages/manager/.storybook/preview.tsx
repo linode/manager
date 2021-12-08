@@ -41,6 +41,7 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 };
 
 export const parameters = {
+  controls: { expanded: true },
   options: {
     storySort: {
       method: 'alphabetical',

@@ -1,5 +1,4 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import { boolean } from '@storybook/addon-knobs';
 import { useState } from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles } from 'src/components/core/styles';
@@ -25,19 +24,19 @@ import SideMenu from './SideMenu';
 - If the number of items in the side menu grows beyond 15, a second tier of items could be made available on hover. Careful consideration should be given to refactoring the information architecture and UI so that customers can easily accomplish their tasks.
 
 export const Template = (args) => {
-  return <SideMenu {...args} onClose={() => context.setOpen(false)} />;
+  return <SideMenu {...args} />;
 };
 
 <Canvas>
   <Story
     name="Side Menu"
     args={{
-      desktopOpen: false,
+      collapse: false,
       open: false,
     }}
     argTypes={{
-      desktopOpen: {
-        description: 'If false, menu is expanded.',
+      collapse: {
+        description: 'If true, menu is collapsed.',
         table: {
           type: { summary: 'boolean' },
           defaultValue: { summary: 'false' },
@@ -50,11 +49,20 @@ export const Template = (args) => {
           defaultValue: { summary: 'false' },
         },
       },
+      closeMenu: { table: { disable: true } },
     }}
     height="700px"
+    parameters={{ docs: { source: { code: SideMenuSourceCode } } }}
   >
     {Template.bind({})}
   </Story>
 </Canvas>
 
 <ArgsTable story="Side Menu" sort="requiredFirst" exclude={['closeMenu']} />
+
+export const SideMenuSourceCode = `
+<SideMenu
+  collapse={collapse}
+  open={open}
+  closeMenu={() => setOpen(false)} 
+/>`;
