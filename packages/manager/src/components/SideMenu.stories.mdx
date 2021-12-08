@@ -1,4 +1,4 @@
-import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import { useState } from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles } from 'src/components/core/styles';
@@ -23,7 +23,7 @@ import SideMenu from './SideMenu';
 - 15 items is likely the maximum that should be displayed by default since more than that becomes difficult to scan.
 - If the number of items in the side menu grows beyond 15, a second tier of items could be made available on hover. Careful consideration should be given to refactoring the information architecture and UI so that customers can easily accomplish their tasks.
 
-export const Template = (args, context) => {
+export const Template = (args) => {
   const useStyles = makeStyles(() => ({
     menu: {
       '& > div > div > div': { paddingBottom: 8, position: 'relative' },
@@ -36,6 +36,7 @@ export const Template = (args, context) => {
     <Box display="flex" justifyContent="space-between">
       <div className={classes.menu}>
         <SideMenu
+          {...args}
           open={open}
           desktopOpen={desktopOpen}
           closeMenu={() => setOpen(false)}
@@ -64,7 +65,22 @@ export const Template = (args, context) => {
 };
 
 <Canvas>
-  <Story name="Side Menu">
-    <Template />
+  <Story
+    name="Side Menu"
+    argTypes={{
+      closeMenu: {
+        description: '...',
+      },
+      desktopOpen: {
+        description: '...',
+      },
+      open: {
+        description: '...',
+      },
+    }}
+  >
+    {Template.bind({})}
   </Story>
 </Canvas>
+
+<ArgsTable story="Side Menu" sort="requiredFirst" />

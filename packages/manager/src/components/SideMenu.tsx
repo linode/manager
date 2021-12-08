@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   open: boolean;
   desktopOpen: boolean;
   closeMenu: () => void;
