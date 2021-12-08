@@ -10,7 +10,6 @@ import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 import { useSnackbar } from 'notistack';
 import Chip from 'src/components/core/Chip';
-import { makeStyles } from 'src/components/core/styles';
 
 interface Props {
   open: boolean;
