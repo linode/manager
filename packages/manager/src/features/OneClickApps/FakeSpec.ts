@@ -1405,7 +1405,7 @@ export const oneClickApps: OCA[] = [
       'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols',
     related_guides: [
       {
-        title: 'Deploy UTunnel With Marketplace Apps',
+        title: 'Deploying UTunnel VPN through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/guides/deploying-utunnel-marketplace-app',
       },
