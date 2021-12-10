@@ -40,7 +40,7 @@ const createLinodeWithImageMock = () => {
   }).as('mockLinodeResponse');
 
   cy.visitWithLogin('/linodes/create?type=Images');
-  cy.wait('@mockImage'), { timeout: 200000 };
+  cy.wait('@mockImage');
   cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
     containsClick('Choose an image');
   });

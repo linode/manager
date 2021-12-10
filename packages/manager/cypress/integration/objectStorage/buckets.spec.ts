@@ -36,7 +36,7 @@ describe('create bucket flow, mocked data', () => {
       req.reply(mockBucket);
     }).as('getBuckets');
     cy.reload();
-    cy.wait('@getBuckets', { timeout: 20000 });
+    cy.wait('@getBuckets');
     cy.get('[data-qa-bucket-cell="cy-test-bucket"]').within(() => {
       fbtVisible(bucketLabel);
       fbtVisible(hostname);

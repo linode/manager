@@ -144,7 +144,7 @@ describe('volumes', () => {
     cy.visitWithLogin('/volumes');
     cy.wait('@getProfilePreferences');
     cy.wait('@getLinodes');
-    cy.wait('@getAttachedVolumes', { timeout: 20000 });
+    cy.wait('@getAttachedVolumes');
     cy.intercept('POST', '*/volumes/' + attachedVolumeId + '/detach', (req) => {
       req.reply({ statusCode: 200 });
     }).as('volumeDetached');

@@ -72,7 +72,7 @@ describe('Google Pay', () => {
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
     }).as('getPaymentMethod');
-    cy.wait('@getPaymentMethod', { timeout: 20000 });
+    cy.wait('@getPaymentMethod');
     fbtClick('Add Payment Method');
     getClick('[data-qa-button="gpayChip"]');
     cy.wait('@braintree');
@@ -83,7 +83,7 @@ describe('Google Pay', () => {
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpay);
     }).as('getPaymentMethod');
-    cy.wait('@getPaymentMethod', { timeout: 20000 });
+    cy.wait('@getPaymentMethod');
     cy.get(
       `[aria-label="Action menu for card ending in ${getPaymentMethodDataWithGpay.data[1].data.last_four}"]`
     )
