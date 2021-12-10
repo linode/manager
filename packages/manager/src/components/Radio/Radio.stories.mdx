@@ -42,7 +42,7 @@ export const Template = (args) => {
 
 <Canvas>
   <Story name="Controlled Radio">
-    <FormControlLabel label="Radio Label" control={<Radio />} />
+    <FormControlLabel style={{ marginLeft: 0 }} label="Radio Label" control={<Radio />} />
   </Story>
 </Canvas>
 
@@ -54,8 +54,13 @@ export const Template = (args) => {
       <FormControlLabel
         label="Disabled"
         control={<Radio disabled />}
+        style={{ marginLeft: 0 }}
       />
-      <FormControlLabel label="Default" control={<Radio />} />
+      <FormControlLabel
+        label="Default"
+        control={<Radio />}
+        style={{ marginLeft: 0 }}
+      />
     </RadioGroup>
   </Story>
 </Canvas>
@@ -119,7 +124,7 @@ export const Template = (args) => {
   exclude={[
     'ref',
     'action',
-    'edge',
+    'required',
     'color',
     'disableRipple',
     'inputProps',
