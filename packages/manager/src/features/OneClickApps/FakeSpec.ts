@@ -1399,17 +1399,22 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/minecraft_color.svg',
   },
   {
-    name: 'UTunnel',
-    description: `With a focus on simplicity, utunnel envisions simple secure VPN access for all with an intuitive UI and pricing structure.`,
-    summary: 'User-friendly and scalable VPN.',
+    name: 'UTunnel VPN',
+    description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
+    summary:
+      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols',
     related_guides: [
       {
-        title: 'Deploy UTunnel With Marketplace Apps',
+        title: 'Deploying UTunnel VPN through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/guides/deploying-utunnel-marketplace-app',
       },
     ],
     related_info: [
+      {
+        title: 'https://www.utunnel.io/linode-vpn-server.html',
+        href: 'https://www.utunnel.io/linode-vpn-server.html',
+      },
       {
         title: 'https://help.utunnel.io/',
         href: 'https://help.utunnel.io/',
