@@ -1,93 +1,53 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import Radio, { RadioProps } from 'src/components/core/Radio';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { default as _Radio, RadioProps } from 'src/components/core/Radio';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import RadioIcon from '../../assets/icons/radio.svg';
 import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 
-type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      color: '#ccc',
-      padding: '4px 10px',
-      transition: theme.transitions.create(['color']),
-      '& .defaultFill': {
-        transition: theme.transitions.create(['fill']),
-      },
-      '&:hover': {
-        color: theme.palette.primary.main,
-        fill: theme.color.white,
-        '& .defaultFill': {
-          fill: theme.color.white,
-        },
-      },
-      '&:hover$warning': {
-        color: '#ffd322',
-      },
-      '&:hover$error': {
-        color: '#cf1f1f',
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    color: '#ccc',
+    padding: '10px 10px',
+    transition: theme.transitions.create(['color']),
+    '& .defaultFill': {
+      transition: theme.transitions.create(['fill']),
     },
-    checked: {
+    '&:hover': {
       color: theme.palette.primary.main,
-    },
-    warning: {
-      color: theme.palette.status.warningDark,
+      fill: theme.color.white,
       '& .defaultFill': {
-        fill: theme.palette.status.warning,
-      },
-      '&$checked': {
-        color: theme.palette.status.warningDark,
+        fill: theme.color.white,
       },
     },
-    error: {
-      color: theme.palette.status.errorDark,
-      '& .defaultFill': {
-        fill: theme.palette.status.error,
-      },
-      '&$checked': {
-        color: theme.palette.status.errorDark,
-      },
+  },
+  checked: {
+    color: theme.palette.primary.main,
+  },
+  disabled: {
+    color: '#ccc !important',
+    fill: '#f4f4f4 !important',
+    pointerEvents: 'none',
+    '& .defaultFill': {
+      fill: '#f4f4f4',
     },
-    disabled: {
-      color: '#ccc !important',
-      fill: '#f4f4f4 !important',
-      pointerEvents: 'none',
-      '& .defaultFill': {
-        fill: '#f4f4f4',
-      },
-    },
-  });
+  },
+}));
 
-interface Props extends RadioProps {
-  variant?: 'warning' | 'error';
-}
-
-type FinalProps = Props & WithStyles<CSSClasses>;
-
-const LinodeRadioControl: React.FC<FinalProps> = (props) => {
-  const { classes, ...rest } = props;
+export const Radio: React.FC<RadioProps> = (props) => {
+  const classes = useStyles();
 
   const classnames = classNames({
     [classes.root]: true,
     [classes.disabled]: props.disabled === true,
     [classes.checked]: props.checked === true,
-    [classes.warning]: props.variant === 'warning',
-    [classes.error]: props.variant === 'error',
   });
 
   return (
-    <Radio
+    <_Radio
       color="primary"
       className={classnames}
-      {...rest}
+      {...props}
       icon={<RadioIcon />}
       checkedIcon={<RadioIconRadioed />}
       data-qa-radio={props.checked || false}
@@ -101,4 +61,4 @@ const LinodeRadioControl: React.FC<FinalProps> = (props) => {
   );
 };
 
-export default withStyles(styles)(LinodeRadioControl);
+export default Radio;

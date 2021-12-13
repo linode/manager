@@ -1078,6 +1078,12 @@ const themeDefaults: ThemeDefaults = () => {
           color: primaryColors.main,
           '&$checked': {
             color: primaryColors.main,
+            '&:hover': {
+              backgroundColor: 'rgba(36, 83, 233, 0.04)',
+            },
+          },
+          '&:hover': {
+            backgroundColor: 'rgba(36, 83, 233, 0.04)',
           },
         },
       },
