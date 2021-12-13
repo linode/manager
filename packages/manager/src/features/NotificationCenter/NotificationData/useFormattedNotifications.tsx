@@ -26,14 +26,16 @@ export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
 }
 
-export const useFormattedNotifications = (): NotificationItem[] => {
+export const useFormattedNotifications = (
+  givenNotifications?: Notification[]
+): NotificationItem[] => {
   const context = React.useContext(notificationContext);
   const {
     dismissNotifications,
     hasDismissedNotifications,
   } = useDismissibleNotifications();
 
-  const notifications = useNotifications();
+  const notifications = givenNotifications ?? useNotifications();
 
   const volumeMigrationScheduledIsPresent = notifications.some(
     (notification) =>

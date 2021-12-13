@@ -1,0 +1,152 @@
+import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
+import ActionsPanel from '../ActionsPanel';
+import TextField from '../TextField';
+import Drawer from './Drawer';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+
+export const decorators = [
+  (Story) => {
+    const [open, setOpen] = React.useState(false);
+    return Story({ open, setOpen });
+  },
+];
+
+<Meta title="Components/Drawer" component={Drawer} />
+
+# Drawer
+
+#### Overview
+
+- Drawers are essentially modal dialogs that appear on the right of the screen rather than the center.
+- Like traditional modals, they block interaction with the page content.
+- They are elevated above the app’s UI and don’t affect the screen’s layout grid.
+
+#### Behavior
+
+- Clicking a button on the screen opens the drawer.
+- Drawers can be closed by pressing the `esc` key, clicking the “X” icon, or clicking the “Cancel” button.
+
+export const Template = (args, context) => {
+  const close = () => context.setOpen(false);
+  return (
+    <>
+      <Button buttonType="primary" onClick={() => context.setOpen(true)}>
+        Click to open Drawer
+      </Button>
+      <Drawer title="My Drawer" {...args} open={context.open} onClose={close}>
+        <Typography>
+          This is some test copy which acts as content for this Drawer
+          component. It's very interesting and you should read all of it. This
+          text has to be sufficiently long to test that it doesn't expand the
+          drawer to an unreasonable width.
+        </Typography>
+        <TextField
+          label="Input Some Text"
+          placeholder="This is a placeholder"
+        />
+        <ActionsPanel>
+          <Button buttonType="secondary" onClick={close}>
+            Cancel
+          </Button>
+          <Button buttonType="primary" onClick={close}>
+            Save
+          </Button>
+        </ActionsPanel>
+      </Drawer>
+    </>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Default"
+    decorators={decorators}
+    parameters={{ docs: { source: { code: DrawerSourceCode } } }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+### Component API
+
+<hr />
+
+_Props extend MUI's DrawerProps_
+
+<Canvas>
+  <Story
+    name="Component API"
+    decorators={decorators}
+    args={{
+      open: false,
+      onClose: () => null,
+      title: 'My Drawer',
+      wide: false,
+    }}
+    argTypes={{
+      open: {
+        description: 'Whether or not the Drawer is currently open',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+        type: {
+          required: true
+        },
+        control: {
+          type: null
+        }
+      },
+      onClose: {
+        description: 'The handler called when the "X" button is clicked',
+        type: {
+          required: true
+        }
+      },
+      title: {
+        description: 'The title displayed at the top of the Drawer',
+        type: {
+          required: true
+        }
+      },
+      wide: {
+        description:
+          'Whether or not the drawer should be wide (at small viewports and above)',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+    }}
+    parameters={{ docs: { source: { code: DrawerSourceCode } } }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable
+  story="Component API"
+  include={['open', 'onClose', 'title', 'wide']}
+/>
+
+export const DrawerSourceCode = `
+  <Drawer title="My Drawer" open={open} onClose={close}>
+  <Typography>
+    This is some test copy which acts as content for this Drawer
+    component. It's very interesting and you should read all of it. This
+    text has to be sufficiently long to test that it doesn't expand the
+    drawer to an unreasonable width.
+  </Typography>
+  <TextField
+    label="Input Some Text"
+    placeholder="This is a placeholder"
+  />
+  <ActionsPanel>
+    <Button buttonType="secondary" onClick={close}>
+      Cancel
+    </Button>
+    <Button buttonType="primary" onClick={close}>
+      Save
+    </Button>
+  </ActionsPanel>
+</Drawer>
+`

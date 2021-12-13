@@ -18,8 +18,8 @@ const unwantedEvents: EventAction[] = [
   'volume_update',
 ];
 
-export const useEventNotifications = () => {
-  const { events } = useEvents();
+export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
+  const events = givenEvents ?? useEvents().events;
   const context = React.useContext(notificationContext);
 
   const _events = events.filter(

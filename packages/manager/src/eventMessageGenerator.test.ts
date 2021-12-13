@@ -68,7 +68,9 @@ describe('Event message generation', () => {
     });
 
     it('should return a safe default if the secondary entity is null', () => {
-      const mockEventWithoutSecondaryEntity = eventFactory.build();
+      const mockEventWithoutSecondaryEntity = eventFactory.build({
+        secondary_entity: null,
+      });
       expect(
         safeSecondaryEntityLabel(
           mockEventWithoutSecondaryEntity,

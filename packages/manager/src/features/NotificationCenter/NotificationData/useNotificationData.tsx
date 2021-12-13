@@ -1,3 +1,5 @@
+import { Notification } from '@linode/api-v4/lib/account';
+import { ExtendedEvent } from 'src/store/events/event.types';
 import { NotificationItem } from '../NotificationSection';
 import useEventNotifications from './useEventNotifications';
 import useFormattedNotifications from './useFormattedNotifications';
@@ -15,9 +17,12 @@ export interface NotificationData {
  * - The drawer needs to be able to display a chronological list
  * of all notifications, in addition to sorting them by type.
  */
-export const useNotificationData = (): NotificationData => {
-  const eventNotifications = useEventNotifications();
-  const formattedNotifications = useFormattedNotifications();
+const useNotificationData = (
+  givenEvents?: ExtendedEvent[],
+  givenNotifications?: Notification[]
+): NotificationData => {
+  const eventNotifications = useEventNotifications(givenEvents);
+  const formattedNotifications = useFormattedNotifications(givenNotifications);
 
   return {
     formattedNotifications,

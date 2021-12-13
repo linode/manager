@@ -12,8 +12,18 @@ export const entityFactory = Factory.Sync.makeFactory<Entity>({
 export const eventFactory = Factory.Sync.makeFactory<Event>({
   id: Factory.each((id) => id),
   created: DateTime.local().toISO(),
-  entity: null,
-  secondary_entity: null,
+  entity: {
+    id: 1,
+    label: 'my-linode',
+    type: 'linode',
+    url: '/v4/linode/instances/30499244',
+  },
+  secondary_entity: {
+    id: 1,
+    label: 'My Config',
+    type: 'linode_config',
+    url: '/v4/linode/instances/1/configs/1',
+  },
   status: 'started',
   rate: null,
   username: 'prod-test-001',

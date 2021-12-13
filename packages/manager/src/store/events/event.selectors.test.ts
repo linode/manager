@@ -18,6 +18,7 @@ describe('event selector helpers', () => {
     });
     const event2 = eventFactory.build({
       action: 'linode_create',
+      entity: entityFactory.build({ id: 100 }),
       secondary_entity: entityFactory.build({ id: 1 }),
     });
     const event3 = eventFactory.build({
