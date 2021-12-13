@@ -1,14 +1,12 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Paper from '/src/components/core/Paper';
 
-<Meta title="Components/Papers" component={Paper} />
+<Meta title="Components/Paper" component={Paper} />
 
 export const PaperTemplate = (args, context) => (
-    <div id='paper-story'>
-        <Paper {...args}>
-            Hello World!
-        </Paper>
-    </div>
+  <Paper {...args}>
+    Hello World!
+  </Paper>
 )
 
 # Papers
@@ -22,8 +20,12 @@ export const PaperTemplate = (args, context) => (
         error: undefined
       }}
       argTypes={{
-          error: {
-              description: 'Error that will be shown on the paper.'
+          variant: {
+            description: 'The variant to use when rendering thepaper.',
+            options: ['elevation', 'outlined', undefined],
+            control: {
+              type: 'radio',
+            },
           }
       }}
     >
@@ -35,5 +37,5 @@ export const PaperTemplate = (args, context) => (
     story="Paper"
     exclude={[
         'ref',
-    ]} 
+    ]}
 />
