@@ -34,6 +34,7 @@ Actionable Chips indicate a state and allow users to take action.
   </Story>
 </Canvas>
 
+
 ## Outlined
 
 Static Chips are an indication of status and are intended to be informational.
@@ -45,8 +46,17 @@ No action is required or enabled.
 
 **Visual style:** outline.
 
+
 <Canvas>
-  <Story name="Outline">
+  <Story name="Outlined">
+    <Chip label="Chip" variant="outlined" />
+  </Story>
+</Canvas>
+
+## Custom
+
+<Canvas>
+  <Story name="Custom">
     {() => {
       const classes = useStyles();
       return (
