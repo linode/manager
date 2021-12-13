@@ -102,7 +102,7 @@
     "precommit": "lint-staged && yarn typecheck",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "yarn run start-storybook -p 6006 --ci",
+    "storybook": "yarn run start-storybook -p 6006 --ci -s ./public",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",
