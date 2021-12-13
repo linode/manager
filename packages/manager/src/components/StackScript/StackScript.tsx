@@ -111,12 +111,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
 
       if (imageObj) {
         acc.push(
-          <Chip
-            key={imageObj.id}
-            label={imageObj.label}
-            component="span"
-            clickable={false}
-          />
+          <Chip key={imageObj.id} label={imageObj.label} component="span" />
         );
       }
 
