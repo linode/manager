@@ -8,7 +8,7 @@ import CopyableTextField from 'src/components/CopyableTextField';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import InformationDialog from 'src/components/InformationDialog';
+import Dialog from 'src/components/Dialog';
 import { parseAPIDate } from 'src/utilities/date';
 import {
   sendEntityTransferCopyDraftEmailEvent,
@@ -93,7 +93,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
   )}.`;
 
   return (
-    <InformationDialog
+    <Dialog
       title="Service Transfer Token"
       open={isOpen}
       onClose={onClose}
@@ -156,7 +156,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
           </div>
         </ToolTip>
       </div>
-    </InformationDialog>
+    </Dialog>
   );
 };
 

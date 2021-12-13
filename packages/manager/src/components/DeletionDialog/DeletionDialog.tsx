@@ -8,8 +8,9 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { titlecase } from 'src/features/linodes/presentation';
 import { capitalize } from 'src/utilities/capitalize';
+import { DialogProps } from '../Dialog';
 
-interface Props {
+interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
   error?: string;
   entity: string;
@@ -40,6 +41,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
     open,
     loading,
     typeToConfirm,
+    ...rest
   } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
   const renderActions = () => (
@@ -73,6 +75,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
       title={`Delete ${titlecase(entity)} ${label}?`}
       onClose={onClose}
       actions={renderActions}
+      {...rest}
     >
       {error && <Notice error text={error} />}
       <Typography>
