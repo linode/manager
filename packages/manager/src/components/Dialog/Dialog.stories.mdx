@@ -10,53 +10,44 @@ import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
   title="Components/Dialogs"
 />
 
-export const DeletionTemplate = (args, context) => (
-  <div id="delete-dialog-story">
-    <DeletionDialog
-      style={{ position: 'unset' }}
-      disableEnforceFocus
-      disableAutoFocus
-      disablePortal
-      disableScrollLock
-      container={() => document.getElementById('delete-modal-story')}
-      {...args}
-    >
-      {args.children}
-    </DeletionDialog>
-  </div>
+export const DeletionTemplate = (args) => (
+  <DeletionDialog
+    style={{ position: 'unset' }}
+    disableEnforceFocus
+    disableAutoFocus
+    disablePortal
+    disableScrollLock
+    {...args}
+  >
+    {args.children}
+  </DeletionDialog>
 );
 
 
-export const ConfirmationTemplate = (args, context) => (
-  <div id="confirm-dialog-story">
-    <ConfirmationDialog
-      style={{ position: 'unset' }}
-      disableEnforceFocus
-      disableAutoFocus
-      disablePortal
-      disableScrollLock
-      container={() => document.getElementById('confirm-modal-story')}
-      {...args}
-    >
-      {args.children}
-    </ConfirmationDialog>
-  </div>
+export const ConfirmationTemplate = (args) => (
+  <ConfirmationDialog
+    style={{ position: 'unset' }}
+    disableEnforceFocus
+    disableAutoFocus
+    disablePortal
+    disableScrollLock
+    {...args}
+  >
+    {args.children}
+  </ConfirmationDialog>
 );
 
-export const NormalTemplate = (args, context) => (
-  <div id="dialog-story">
-    <Dialog
-      style={{ position: 'unset' }}
-      disableEnforceFocus
-      disableAutoFocus
-      disablePortal
-      disableScrollLock
-      container={() => document.getElementById('dialog-story')}
-      {...args}
-    >
-      {args.children}
-    </Dialog>
-  </div>
+export const NormalTemplate = (args) => (
+  <Dialog
+    style={{ position: 'unset' }}
+    disableEnforceFocus
+    disableAutoFocus
+    disablePortal
+    disableScrollLock
+    {...args}
+  >
+    {args.children}
+  </Dialog>
 );
 
 # Dialogs
