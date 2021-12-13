@@ -10,12 +10,14 @@ import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
   merchantId: GPAY_MERCHANT_ID || '',
   merchantName: 'Linode',
 };
 
+const unableToOpenGPayError = 'Unable to open Google Pay.';
 let googlePaymentInstance: GooglePayment;
 
 const onPaymentAuthorized = (
@@ -51,29 +53,20 @@ export const initGooglePaymentInstance = async (
 const tokenizePaymentDataRequest = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
-  },
-  setMessage: (
-    message: string,
-    variant: VariantType,
-    warnings?: APIWarning[]
-  ) => void
+  }
 ) => {
-  let paymentDataRequest: google.payments.api.PaymentDataRequest;
+  if (!googlePaymentInstance) {
+    return Promise.reject(unableToOpenGPayError);
+  }
 
-  try {
-    paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest({
+  const paymentDataRequest = await googlePaymentInstance.createPaymentDataRequest(
+    {
       merchantInfo,
       // @ts-expect-error Braintree types are wrong
       transactionInfo,
       callbackIntents: ['PAYMENT_AUTHORIZATION'],
-    });
-  } catch (error) {
-    reportException(error, {
-      message: 'Unable to open Google Pay.',
-    });
-    setMessage('Unable to open Google Pay.', 'error');
-    return Promise.reject();
-  }
+    }
+  );
 
   const googlePayClient = new google.payments.api.PaymentsClient({
     environment: GPAY_CLIENT_ENV as google.payments.api.Environment,
@@ -82,14 +75,14 @@ const tokenizePaymentDataRequest = async (
       onPaymentAuthorized,
     },
   });
+
   const isReadyToPay = await googlePayClient.isReadyToPay({
     apiVersion: 2,
     apiVersionMinor: 0,
     allowedPaymentMethods: paymentDataRequest.allowedPaymentMethods,
   });
   if (!isReadyToPay) {
-    setMessage('Your device does not support Google Pay.', 'error');
-    return Promise.reject();
+    return Promise.reject('Your device does not support Google Pay.');
   }
 
   const paymentData = await googlePayClient.loadPaymentData(paymentDataRequest);
@@ -120,60 +113,59 @@ export const gPay = async (
   setProcessing: (processing: boolean) => void
 ) => {
   const makeOneTimePayment = async (nonce: string) => {
-    try {
-      const response = await makePayment({
-        nonce,
-        usd: transactionInfo.totalPrice as string,
-      });
-      queryClient.invalidateQueries(`${accountBillingKey}-payments`);
-      setMessage(
-        `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
-        'success',
-        response.warnings
-      );
-    } catch (error) {
-      reportException(error, {
-        message: 'Unable to complete Google Pay payment',
-      });
-    }
+    const response = await makePayment({
+      nonce,
+      usd: transactionInfo.totalPrice as string,
+    });
+    queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+    setMessage(
+      `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
+      'success',
+      response.warnings
+    );
   };
 
   const addRecurringPayment = async (nonce: string) => {
-    try {
-      await addPaymentMethod({
-        type: 'payment_method_nonce',
-        data: { nonce },
-        is_default: true,
-      });
-      queryClient.invalidateQueries(`${accountPaymentKey}-all`);
-      setMessage('Successfully added Google Pay', 'success');
-    } catch (error) {
-      reportException(error, {
-        message: 'Unable to add payment method',
-      });
-    }
+    await addPaymentMethod({
+      type: 'payment_method_nonce',
+      data: { nonce },
+      is_default: true,
+    });
+    queryClient.invalidateQueries(`${accountPaymentKey}-all`);
+    setMessage('Successfully added Google Pay', 'success');
   };
 
-  const isOneTimePayment = action === 'one-time-payment';
-  try {
-    const nonce = await tokenizePaymentDataRequest(transactionInfo, setMessage);
-    setProcessing(true);
-    if (isOneTimePayment) {
-      await makeOneTimePayment(nonce);
-    } else {
-      await addRecurringPayment(nonce);
-    }
-    setProcessing(false);
-  } catch (error) {
-    setProcessing(false);
-    if (!error || error.statusCode === 'CANCELED') {
-      return;
-    }
+  tokenizePaymentDataRequest(transactionInfo)
+    .then(async (nonce: string) => {
+      const isOneTimePayment = action === 'one-time-payment';
 
-    const errorMsg = isOneTimePayment
-      ? 'Unable to complete Google Pay payment'
-      : 'Unable to add payment method';
-    // @TODO Consider checking if error is an APIError so we can provide a more descriptive error message.
-    setMessage(errorMsg, 'error');
-  }
+      try {
+        setProcessing(true);
+        if (isOneTimePayment) {
+          await makeOneTimePayment(nonce);
+        } else {
+          await addRecurringPayment(nonce);
+        }
+        setProcessing(false);
+      } catch (error) {
+        setProcessing(false);
+
+        const errorMsg = isOneTimePayment
+          ? 'Unable to complete Google Pay payment'
+          : 'Unable to add payment method';
+        reportException(error, {
+          message: errorMsg,
+        });
+        setMessage(getAPIErrorOrDefault(error, errorMsg)[0].reason, 'error');
+      }
+    })
+    .catch((error) => {
+      if (!error || error.statusCode === 'CANCELED') {
+        return;
+      }
+      reportException(error, {
+        message: unableToOpenGPayError,
+      });
+      setMessage(unableToOpenGPayError, 'error');
+    });
 };
