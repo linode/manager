@@ -1,9 +1,9 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import TextField from 'src/components/TextField';
 
-<Meta title="Components/Forms/Text Fields" component={TextField} />
+<Meta title="Components/Forms/Input Fields" component={TextField} />
 
-# Text Fields
+# Text Field
 
 ### Overview
 
@@ -11,22 +11,21 @@ import TextField from 'src/components/TextField';
 
 Text fields allow users to enter text into a UI.
 
-| Elements    | Guidelines                                                                   |
-| :---------- | :--------------------------------------------------------------------------- |
-| Input Field | The size of the field should be proportional to the expected user input.     |
-| Label       | Avoid long labels; use succinct, short and descriptive labels (a word or two) so users can quickly scan your form. |
-|             | Label text shouldn’t take up multiple lines.                                 |
-| Placeholder | Placeholder is the text that users see before they interact with a field. It should be a useful guide to the input type and format  |
-|             | Don’t make the user guess what format they should use for the field. Tell this information up front. |
+| Elements    | Guidelines                                                                                                                         |
+|:------------|:-----------------------------------------------------------------------------------------------------------------------------------|
+| Input Field | The size of the field should be proportional to the expected user input.                                                           |
+| Label       | Avoid long labels; use succinct, short and descriptive labels (a word or two) so users can quickly scan your form.                 |
+|             | Label text shouldn’t take up multiple lines.                                                                                       |
+| Placeholder | Placeholder is the text that users see before they interact with a field. It should be a useful guide to the input type and format |
+|             | Don’t make the user guess what format they should use for the field. Tell this information up front.                               |
 
 ### Usage
 
 <hr />
 
-- Input fields should be sized to the data being entered.
-- Ensure that a text field can accommodate at least one more character than the defined maximum number.
-- Balance the goal of sizing fields to the expected user input with the visual benefit of fields of the same width.
-  - A form with fields of the same width looks easier to complete.
+- Input fields should be sized to the data being entered (example the entry for a street address should be wider than a zip code).
+- Ensure that the field can accommodate at least one more character than the maximum number to be entered.
+- Balance this goal with the visual benefits of fields of the same length. A somewhat outsized input that aligns with the fields above and below it might be the best choice.
 
 <Canvas>
   <Story name="Default">
