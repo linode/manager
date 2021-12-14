@@ -39,9 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
+  collapse: boolean;
   open: boolean;
-  desktopOpen: boolean;
   closeMenu: () => void;
 }
 
@@ -49,7 +49,7 @@ type CombinedProps = Props;
 
 export const SideMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { open, desktopOpen, closeMenu } = props;
+  const { collapse, open, closeMenu } = props;
 
   return (
     <>
@@ -72,7 +72,7 @@ export const SideMenu: React.FC<CombinedProps> = (props) => {
         <Drawer
           classes={{
             paper: `${classes.menuPaper} ${
-              desktopOpen && classes.collapsedDesktopMenu
+              collapse && classes.collapsedDesktopMenu
             }`,
             docked: classes.menuDocked,
           }}
@@ -80,7 +80,7 @@ export const SideMenu: React.FC<CombinedProps> = (props) => {
           open
           variant="permanent"
         >
-          <PrimaryNav closeMenu={closeMenu} isCollapsed={desktopOpen} />
+          <PrimaryNav closeMenu={closeMenu} isCollapsed={collapse} />
         </Drawer>
       </Hidden>
     </>
