@@ -405,21 +405,20 @@ export interface CreditCardData {
   card_type?: CardType;
 }
 
+interface PaymentMethodMetaData {
+  id: number;
+  is_default: boolean;
+  created: string;
+}
+
+interface PaymentMethodData<T, U> extends PaymentMethodMetaData {
+  type: T;
+  data: U;
+}
+
 export type PaymentMethod =
-  | {
-      id: number;
-      type: 'credit_card' | 'google_pay';
-      is_default: boolean;
-      created: string;
-      data: CreditCardData;
-    }
-  | {
-      id: number;
-      type: 'paypal';
-      is_default: boolean;
-      created: string;
-      data: PayPalData;
-    };
+  | PaymentMethodData<'credit_card' | 'google_pay', CreditCardData>
+  | PaymentMethodData<'paypal', PayPalData>;
 
 export interface ClientToken {
   client_token: string;
