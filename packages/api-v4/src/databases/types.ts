@@ -6,84 +6,115 @@ export interface DatabaseType {
     monthly: number;
   };
   memory: number;
+  transfer: number;
   disk: number;
-  transfer: number | null;
   vcpus: number;
-  availability: DatabaseAvailability;
+  deprecated: boolean;
+  addons: {
+    fallover_node: {
+      price: {
+        monthly: number;
+        hourly: number;
+      };
+    };
+  };
+}
+
+type Engine = 'mysql';
+export interface DatabaseVersion {
+  id: string;
+  label: string;
+  engine: Engine;
+  version: string;
+  deprecated: boolean;
 }
 
 export type DatabaseAvailability = 'standard' | 'high';
 
-export type DatabaseStatus = 'initializing' | 'ready' | 'error' | 'unknown';
-
-export type DatabaseBackupStatus =
+export type DatabaseStatus =
+  | 'creating'
   | 'running'
-  | 'starting'
   | 'failed'
-  | 'succeeded'
-  | 'unknown';
+  | 'degraded'
+  | 'updating'
+  | 'deleted';
+
+export type DatabaseBackupType = 'snapshot' | 'auto';
 
 export interface DatabaseBackup {
   id: string;
-  status: DatabaseBackupStatus;
+  type: DatabaseBackupType;
+  label: string;
   created: string;
-  finished: string | null;
 }
 
-export interface DatabaseMaintenanceSchedule {
-  day:
-    | 'Sunday'
-    | 'Monday'
-    | 'Tuesday'
-    | 'Wednesday'
-    | 'Thursday'
-    | 'Friday'
-    | 'Saturday';
-  window:
-    | 'W0'
-    | 'W2'
-    | 'W4'
-    | 'W6'
-    | 'W8'
-    | 'W10'
-    | 'W12'
-    | 'W14'
-    | 'W16'
-    | 'W18'
-    | 'W20'
-    | 'W22';
+export interface DatabaseCredentials {
+  username: string;
+  password: string;
 }
 
-export interface DatabaseConnection {
-  host: string;
-  port: number;
+export interface SSLFields {
+  public_key: string | null;
+  certificate: string | null;
 }
 
 export interface Database {
   id: number;
   label: string;
-  tags: string[];
+  engine: Engine;
+  type: DatabaseType;
+  region: string;
+  version: string;
   status: DatabaseStatus;
-  maintenance_schedule: DatabaseMaintenanceSchedule;
-  vcpus: number;
-  memory: number;
-  disk: number;
-  availability: DatabaseAvailability;
   updated: string;
   created: string;
+  instance_uri: string;
 }
 
+type StandbyCount = 1 | 3;
+export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
 export interface CreateDatabasePayload {
-  label?: string;
-  tags?: string[];
+  label: string;
   region: string;
-  maintenance_schedule?: DatabaseMaintenanceSchedule;
   type: string;
-  root_password: string;
+  standby_count?: StandbyCount;
+  engine?: Engine;
+  encrypted?: boolean;
+  ssl_connection?: boolean;
+  replication_type: ReplicationType;
+  allow_list?: string[];
+}
+
+type DriverTypes = 'jdbc' | 'odbc' | 'php' | 'python' | 'ruby' | 'node.js';
+interface ConnectionStrings {
+  driver: DriverTypes;
+  value: string;
+}
+export interface CreateDatabaseResponse {
+  id: number;
+  label: string;
+  region: string;
+  status: DatabaseStatus;
+  type: string;
+  standby_count: StandbyCount;
+  engine: Engine;
+  encrypted: boolean;
+  ipv4_public: string[];
+  port: string;
+  ssl_connection: boolean;
+  replication_type: ReplicationType;
+  allow_list: string[];
+  connection_strings: ConnectionStrings[];
+  created: string;
+  updated: string;
 }
 
 export interface UpdateDatabasePayload {
   label?: string;
-  tags?: string[];
-  maintenance_schedule?: DatabaseMaintenanceSchedule;
+  allow_list?: string[];
+}
+
+export interface UpdateDatabaseResponse {
+  label: string;
+  allow_list: string[];
 }
