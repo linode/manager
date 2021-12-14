@@ -19,8 +19,7 @@ type CombinedProps = Props;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const DatabaseDetail: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
-  const params = useParams<{ databaseId: string }>();
-  const databaseId = params.databaseId;
+  const { databaseId } = useParams<{ databaseId: string }>();
 
   const tabs = [
     {

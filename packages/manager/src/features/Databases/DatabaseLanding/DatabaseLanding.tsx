@@ -12,7 +12,6 @@ import TagDrawer, {
   OpenTagDrawer,
   TagDrawerProps,
 } from 'src/components/TagCell/TagDrawer';
-import { dbaasContext } from 'src/context';
 import useDatabases from 'src/hooks/useDatabases';
 import { useDialog } from 'src/hooks/useDialog';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -121,7 +120,6 @@ const DatabaseLanding: React.FC<{}> = (_) => {
   );
 
   const databaseData = Object.values(databases.itemsById ?? {});
-  const openCreateDialog = React.useContext(dbaasContext).open;
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
@@ -189,7 +187,7 @@ const DatabaseLanding: React.FC<{}> = (_) => {
   }
 
   if (databaseData.length === 0) {
-    return <DatabaseEmptyState openAddDatabaseDrawer={openCreateDialog} />;
+    return <DatabaseEmptyState />;
   }
 
   const { ready, error, initializing, unknown } = counts;
