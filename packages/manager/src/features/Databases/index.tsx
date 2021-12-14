@@ -30,9 +30,9 @@ const Database: React.FC<CombinedProps> = (props) => {
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Databases" />
       <Switch>
-        <Route component={DatabaseCreate} path={`${path}/create`} exact />
-        <Route component={DatabaseDetail} path={`${path}/:id`} exact strict />
-        <Route component={DatabaseLanding} exact />
+        <Route component={DatabaseCreate} path={`${path}/create`} />
+        <Route component={DatabaseDetail} path={`${path}/:databaseId`} />
+        <Route component={DatabaseLanding} />
       </Switch>
     </React.Suspense>
   );
