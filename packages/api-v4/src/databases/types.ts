@@ -29,8 +29,6 @@ export interface DatabaseVersion {
   deprecated: boolean;
 }
 
-export type DatabaseAvailability = 'standard' | 'high';
-
 export type DatabaseStatus =
   | 'creating'
   | 'running'
