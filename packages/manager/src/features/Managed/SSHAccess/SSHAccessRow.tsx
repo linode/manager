@@ -1,19 +1,9 @@
 import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu from './SSHAccessActionMenu';
-
-const useStyles = makeStyles(() => ({
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-  },
-}));
 
 interface Props {
   linodeSetting: ManagedLinodeSetting;
@@ -22,8 +12,6 @@ interface Props {
 }
 
 export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
-  const classes = useStyles();
-
   const { linodeSetting, updateOne, openDrawer } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;
@@ -46,7 +34,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
         </TableCell>
         <TableCell data-qa-managed-port>{linodeSetting.ssh.port}</TableCell>
       </Hidden>
-      <TableCell className={classes.actionCell}>
+      <TableCell actionCell>
         <ActionMenu
           linodeId={linodeSetting.id}
           isEnabled={isAccessEnabled}

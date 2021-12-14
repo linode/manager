@@ -56,6 +56,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     size = 24,
     leaveDelay,
     classes,
+    onMouseEnter,
   } = props;
 
   return (
@@ -68,6 +69,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
       interactive={interactive}
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       classes={classes}
+      onMouseEnter={onMouseEnter}
     >
       <IconButton className={`${className} ${styles.root}`} data-qa-help-button>
         {isError ? (

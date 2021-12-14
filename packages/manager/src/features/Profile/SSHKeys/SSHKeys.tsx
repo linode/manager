@@ -29,11 +29,7 @@ import { parseAPIDate } from 'src/utilities/date';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
-type ClassNames =
-  | 'sshKeysHeader'
-  | 'addNewWrapper'
-  | 'createdCell'
-  | 'actionCell';
+type ClassNames = 'sshKeysHeader' | 'addNewWrapper' | 'createdCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -52,9 +48,6 @@ const styles = (theme: Theme) =>
     },
     createdCell: {
       width: '16%',
-    },
-    actionCell: {
-      textAlign: 'right',
     },
   });
 
@@ -214,7 +207,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
             {key.created}
           </TableCell>
         </Hidden>
-        <TableCell className={classes.actionCell}>
+        <TableCell actionCell>
           <SSHKeyActionMenu
             id={key.id}
             label={key.label}

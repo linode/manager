@@ -3,23 +3,10 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme,
-} from 'src/components/core/styles';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { useProfile } from 'src/queries/profile';
 import { getStackScriptUrl, StackScriptCategory } from '../stackScriptUtils';
-
-const useStyles = makeStyles(() => ({
-  stackScriptActionsWrapper: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-}));
 
 interface Props {
   stackScriptID: number;
@@ -41,7 +28,6 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { data: profile } = useProfile();
@@ -118,7 +104,8 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   ].filter(Boolean) as Action[];
 
   return (
-    <div className={classes.stackScriptActionsWrapper}>
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
       {category === 'account' || matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -138,7 +125,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
           })}
         </Hidden>
       )}
-    </div>
+    </>
   );
 };
 
