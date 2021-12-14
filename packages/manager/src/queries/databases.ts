@@ -1,45 +1,33 @@
 import { useQuery, useMutation } from 'react-query';
-import { APIError } from '@linode/api-v4/lib/types';
-
-interface MutatableDatabaseValues {
-  label: string;
-  allow_list: string[];
-}
-
-interface Database extends MutatableDatabaseValues {
-  id: number;
-}
-
-interface CreateDatabasePayload {
-  label: string;
-  region: string;
-  type: string;
-  standby_count?: number;
-  replica_count?: number;
-  engine?: string;
-  encrypted?: boolean;
-  ssl_connection?: boolean;
-  replication_type: 'none';
-  allow_list?: string[];
-  tags?: string[];
-}
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  CreateDatabasePayload,
+  CreateDatabaseResponse,
+  Database,
+  UpdateDatabasePayload,
+  UpdateDatabaseResponse,
+} from '@linode/api-v4/lib/databases/types';
+import {
+  createDatabase,
+  deleteDatabase,
+  getDatabases,
+  getMySQLDatabase,
+  updateMySQLDatabase,
+} from '@linode/api-v4/lib/databases';
 
 export const queryKey = 'databases';
 
 export const useDatabaseQuery = (id: number) =>
-  useQuery<Database, APIError[]>([queryKey, id]);
+  useQuery<Database, APIError[]>([queryKey, id], () => getMySQLDatabase(id));
 
 export const useDatabasesQuery = () =>
-  useQuery<Database[], APIError[]>(queryKey);
+  useQuery<ResourcePage<Database>, APIError[]>(queryKey, getDatabases);
 
+// We may want to pass the id as a React Query variable depending on the
+// implementation at the component level.
 export const useDatabaseMutation = (id: number) =>
-  useMutation<MutatableDatabaseValues, APIError[], MutatableDatabaseValues>(
-    async () => {
-      return {
-        label: 'test',
-        allow_list: [],
-      };
-    },
+  useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
+    (data) => updateMySQLDatabase(id, data),
     {
       onSuccess: () => {
         // We need to update the cache for this database [queryKey, id], but do we need to update the cache
@@ -49,12 +37,8 @@ export const useDatabaseMutation = (id: number) =>
   );
 
 export const useCreateDatabaseMutation = () =>
-  useMutation<Database, APIError[], CreateDatabasePayload>(
-    async () => ({
-      id: 1,
-      label: '',
-      allow_list: [],
-    }),
+  useMutation<CreateDatabaseResponse, APIError[], CreateDatabasePayload>(
+    createDatabase,
     {
       onSuccess: () => {
         // Add database to the cache for /databases/instances
@@ -62,16 +46,11 @@ export const useCreateDatabaseMutation = () =>
     }
   );
 
-export const useDeleteDatabaseMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(
-    async ({ id }) => {
-      return {
-        // Replace this dummy function with the delete function from @linode/api-v4
-      };
+// We may want to pass the id as a React Query variable depending on the
+// implementation at the component level.
+export const useDeleteDatabaseMutation = (id: number) =>
+  useMutation<{}, APIError[]>(() => deleteDatabase(id), {
+    onSuccess: () => {
+      // Delete Database instance from the React Query Cache
     },
-    {
-      onSuccess: () => {
-        // Delete Database instance from the React Query Cache
-      },
-    }
-  );
+  });
