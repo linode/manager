@@ -9,12 +9,11 @@ import { SetSuccess } from './types';
 import {
   initGooglePaymentInstance,
   gPay,
-} from 'src/features/Billing/Providers/GooglePay';
+} from 'src/features/Billing/GooglePayProvider';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
-import { reportException } from 'src/exceptionReporting';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -103,12 +102,10 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   React.useEffect(() => {
     const init = async () => {
       if (status === 'ready' && data) {
-        try {
-          await initGooglePaymentInstance(data.client_token as string);
-        } catch (error) {
-          reportException(error, {
-            message: 'Error initializing Google Pay.',
-          });
+        const { error } = await initGooglePaymentInstance(
+          data.client_token as string
+        );
+        if (error) {
           setInitializationError(true);
         }
       }
