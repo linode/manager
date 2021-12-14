@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   price: {
     marginTop: theme.spacing(),
   },
+  chip: {
+    fontWeight: theme.typography.fontWeightRegular,
+  },
 }));
 
 export interface Props {
@@ -62,7 +65,8 @@ const HACheckbox: React.FC<Props> = (props) => {
         />
         <Box>
           <Typography className={classes.heading}>
-            Enable HA Control Plane <Chip label="BETA" />
+            Enable HA Control Plane{' '}
+            <Chip className={classes.chip} label="BETA" />
           </Typography>
           <HACopy />
         </Box>

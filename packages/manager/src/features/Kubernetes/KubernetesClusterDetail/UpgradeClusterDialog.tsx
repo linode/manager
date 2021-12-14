@@ -72,12 +72,6 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       });
   };
 
-  const checkboxText = (
-    <>
-      Enable HA Control Plane <Chip style={{marginLeft: 4}} label="BETA" />
-    </>
-  )
-
   return (
     <ConfirmationDialog
       open={open}
@@ -100,8 +94,9 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       <CheckBox
         checked={checked}
         onChange={toggleChecked}
-        text={checkboxText}
+        text="Enable HA Control Plane"
       />
+      <Chip style={{ marginLeft: -8 }} label="BETA" />
     </ConfirmationDialog>
   );
 };
