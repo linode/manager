@@ -29,7 +29,7 @@ const data = [
 
 export const DatabaseBackups: React.FC = () => {
   const { order, orderBy, handleOrderChange } = useOrder({
-    orderBy: 'status',
+    orderBy: 'created',
     order: 'desc',
   });
 
@@ -43,7 +43,6 @@ export const DatabaseBackups: React.FC = () => {
               direction={order}
               label="created"
               handleClick={handleOrderChange}
-              style={{ width: 'auto' }}
             >
               Date Created
             </TableSortCell>
