@@ -4,21 +4,26 @@ import {
   CreateDatabasePayload,
   CreateDatabaseResponse,
   Database,
+  DatabaseBackup,
+  Engine,
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
 } from '@linode/api-v4/lib/databases/types';
 import {
   createDatabase,
   deleteDatabase,
+  getDatabaseBackups,
   getDatabases,
-  getMySQLDatabase,
-  updateMySQLDatabase,
+  getEngineDatabase,
+  updateDatabase,
 } from '@linode/api-v4/lib/databases';
 
 export const queryKey = 'databases';
 
-export const useDatabaseQuery = (id: number) =>
-  useQuery<Database, APIError[]>([queryKey, id], () => getMySQLDatabase(id));
+export const useDatabaseQuery = (engine: Engine, id: number) =>
+  useQuery<Database, APIError[]>([queryKey, id], () =>
+    getEngineDatabase(engine, id)
+  );
 
 export const useDatabasesQuery = (params: any, filter: any) =>
   useQuery<ResourcePage<Database>, APIError[]>(
@@ -29,9 +34,9 @@ export const useDatabasesQuery = (params: any, filter: any) =>
 
 // We may want to pass the id as a React Query variable depending on the
 // implementation at the component level.
-export const useDatabaseMutation = (id: number) =>
+export const useDatabaseMutation = (engine: Engine, id: number) =>
   useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
-    (data) => updateMySQLDatabase(id, data),
+    (data) => updateDatabase(engine, id, data),
     {
       onSuccess: () => {
         // We need to update the cache for this database [queryKey, id], but do we need to update the cache
@@ -42,7 +47,7 @@ export const useDatabaseMutation = (id: number) =>
 
 export const useCreateDatabaseMutation = () =>
   useMutation<CreateDatabaseResponse, APIError[], CreateDatabasePayload>(
-    createDatabase,
+    (data) => createDatabase(data.engine || 'mysql', data),
     {
       onSuccess: () => {
         // Add database to the cache for /databases/instances
@@ -52,9 +57,15 @@ export const useCreateDatabaseMutation = () =>
 
 // We may want to pass the id as a React Query variable depending on the
 // implementation at the component level.
-export const useDeleteDatabaseMutation = (id: number) =>
-  useMutation<{}, APIError[]>(() => deleteDatabase(id), {
+export const useDeleteDatabaseMutation = (engine: Engine, id: number) =>
+  useMutation<{}, APIError[]>(() => deleteDatabase(engine, id), {
     onSuccess: () => {
       // Delete Database instance from the React Query Cache
     },
   });
+
+export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
+  useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
+    [`${queryKey}-backups`, id],
+    () => getDatabaseBackups(engine, id)
+  );
