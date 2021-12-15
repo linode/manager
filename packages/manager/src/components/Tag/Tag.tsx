@@ -101,7 +101,7 @@ export interface Props extends ChipProps {
   maxLength?: number;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = RouteComponentProps<{}> & Props;
 
 export const Tag: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -128,7 +128,7 @@ export const Tag: React.FC<CombinedProps> = (props) => {
     history.push(`/search/?query=tag:${label}`);
   };
 
-  // If maxWidth is set, truncate display to that length.
+  // If maxLength is set, truncate display to that length.
   const _label = maxLength ? truncateEnd(label, maxLength) : label;
 
   return (
