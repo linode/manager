@@ -20,8 +20,12 @@ export const queryKey = 'databases';
 export const useDatabaseQuery = (id: number) =>
   useQuery<Database, APIError[]>([queryKey, id], () => getMySQLDatabase(id));
 
-export const useDatabasesQuery = () =>
-  useQuery<ResourcePage<Database>, APIError[]>(queryKey, getDatabases);
+export const useDatabasesQuery = (params: any, filter: any) =>
+  useQuery<ResourcePage<Database>, APIError[]>(
+    queryKey,
+    () => getDatabases(params, filter),
+    { keepPreviousData: true }
+  );
 
 // We may want to pass the id as a React Query variable depending on the
 // implementation at the component level.
