@@ -135,32 +135,6 @@ export const getEngineDatabase = (engine: Engine, databaseID: number) =>
   );
 
 /**
- * getMySQLDatabases
- *
- * Return a paginated list of active MySQL databases belonging to user
- *
- */
-export const getMySQLDatabases = (params?: any, filters?: any) =>
-  Request<Page<Database>>(
-    setURL(`${API_ROOT}/databases/mysql/instances`),
-    setMethod('GET'),
-    setParams(params),
-    setXFilter(filters)
-  );
-
-/**
- * getMySQLDatabase
- *
- * Return details for a specific active MySQL database
- *
- */
-export const getMySQLDatabase = (mysqlDatabaseID: number) =>
-  Request<Database>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${mysqlDatabaseID}`),
-    setMethod('GET')
-  );
-
-/**
  * updateDatabase
  *
  * Update the label or allowed IPs of an
