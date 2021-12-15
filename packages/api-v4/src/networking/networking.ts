@@ -117,7 +117,7 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
  */
 export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
-    setURL(`${API_ROOT}/networking/ipv4/share`),
+    setURL(`${API_ROOT}/networking/ips/share`),
     setMethod('POST'),
     setData(payload, shareAddressesSchema)
   );
