@@ -20,7 +20,7 @@ export interface DatabaseType {
   };
 }
 
-type Engine = 'mysql';
+export type Engine = 'mysql';
 export interface DatabaseVersion {
   id: string;
   label: string;

@@ -19,6 +19,7 @@ import {
   DatabaseCredentials,
   DatabaseType,
   DatabaseVersion,
+  Engine,
   SSLFields,
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
@@ -93,39 +94,43 @@ export const getDatabaseVersion = (versionSlug: string) =>
 /**
  * createDatabase
  *
- * Create a new MySQL database in the specified region.
+ * Create a new database in the specified region.
  *
  */
-export const createDatabase = (data: CreateDatabasePayload) =>
+export const createDatabase = (engine: Engine, data: CreateDatabasePayload) =>
   Request<CreateDatabaseResponse>(
-    setURL(`${API_ROOT}/databases/mysql/instances`),
+    setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('POST'),
     setData(data, createDatabaseSchema)
   );
 
 /**
- * getMySQLDatabases
+ * getEngineDatabases
  *
- * Return a paginated list of active MySQL databases belonging to user
+ * Return a paginated list of active engine-specific (e.g. MySQL) databases belonging to user
  *
  */
-export const getMySQLDatabases = (params?: any, filters?: any) =>
+export const getEngineDatabases = (
+  engine: Engine,
+  params?: any,
+  filters?: any
+) =>
   Request<Page<Database>>(
-    setURL(`${API_ROOT}/databases/mysql/instances`),
+    setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
   );
 
 /**
- * getMySQLDatabase
+ * getEngineDatabase
  *
- * Return details for a specific active MySQL database
+ * Return details for a single specified active database
  *
  */
-export const getMySQLDatabase = (mysqlDatabaseID: number) =>
+export const getEngineDatabase = (engine: Engine, databaseID: number) =>
   Request<Database>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${mysqlDatabaseID}`),
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
     setMethod('GET')
   );
 
@@ -136,12 +141,13 @@ export const getMySQLDatabase = (mysqlDatabaseID: number) =>
  * existing database
  *
  */
-export const updateMySQLDatabase = (
+export const updateDatabase = (
+  engine: Engine,
   databaseID: number,
   data: UpdateDatabasePayload
 ) =>
   Request<UpdateDatabaseResponse>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
     setMethod('PUT'),
     setData(data, updateDatabaseSchema)
   );
@@ -151,9 +157,9 @@ export const updateMySQLDatabase = (
  *
  * Delete a single database
  */
-export const deleteDatabase = (databaseID: number) =>
+export const deleteDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
     setMethod('DELETE')
   );
 
@@ -163,9 +169,9 @@ export const deleteDatabase = (databaseID: number) =>
  * Return backups information for a database
  *
  */
-export const getDatabaseBackups = (databaseID: number) =>
+export const getDatabaseBackups = (engine: Engine, databaseID: number) =>
   Request<Page<DatabaseBackup>>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/backups`),
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
     setMethod('GET')
   );
 
@@ -175,10 +181,14 @@ export const getDatabaseBackups = (databaseID: number) =>
  * Return details for a specific database backup
  *
  */
-export const getDatabaseBackup = (databaseID: number, backupID: number) =>
+export const getDatabaseBackup = (
+  engine: Engine,
+  databaseID: number,
+  backupID: number
+) =>
   Request<DatabaseBackup>(
     setURL(
-      `${API_ROOT}/databases/mysql/instances/${databaseID}/backups/${backupID}`
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}`
     ),
     setMethod('GET')
   );
@@ -188,10 +198,14 @@ export const getDatabaseBackup = (databaseID: number, backupID: number) =>
  *
  * Fully restore a backup to the cluster
  */
-export const restoreWithBackup = (databaseID: number, backupID: number) =>
+export const restoreWithBackup = (
+  engine: Engine,
+  databaseID: number,
+  backupID: number
+) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/databases/mysql/instances/${databaseID}/backups/${backupID}/restore`
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}/restore`
     ),
     setMethod('POST')
   );
@@ -202,9 +216,11 @@ export const restoreWithBackup = (databaseID: number, backupID: number) =>
  * Return credentials (root username and password) for a database
  *
  */
-export const getDatabaseCredentials = (databaseID: number) =>
+export const getDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<DatabaseCredentials>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/credentials`),
+    setURL(
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/credentials`
+    ),
     setMethod('GET')
   );
 
@@ -213,10 +229,10 @@ export const getDatabaseCredentials = (databaseID: number) =>
  *
  * Resets the root credentials for a database
  */
-export const resetDatabaseCredentials = (databaseID: number) =>
+export const resetDatabaseCredentials = (engine: Engine, databaseID: number) =>
   Request<{}>(
     setURL(
-      `${API_ROOT}/databases/mysql/instances/${databaseID}/credentials/reset`
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/credentials/reset`
     ),
     setMethod('POST')
   );
@@ -226,8 +242,8 @@ export const resetDatabaseCredentials = (databaseID: number) =>
  *
  * Retrieve the certificate and public key for a database instance
  */
-export const getSSLFields = (databaseID: number) =>
+export const getSSLFields = (engine: Engine, databaseID: number) =>
   Request<SSLFields>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/ssl`),
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/ssl`),
     setMethod('GET')
   );
