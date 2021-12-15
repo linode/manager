@@ -34,8 +34,7 @@ export type DatabaseStatus =
   | 'running'
   | 'failed'
   | 'degraded'
-  | 'updating'
-  | 'deleted';
+  | 'updating';
 
 export type DatabaseBackupType = 'snapshot' | 'auto';
 
