@@ -32,6 +32,7 @@ export interface Flags {
   bareMetal: boolean;
   tpaProviders: Provider[];
   machineImages: boolean;
+  ipv6Sharing: boolean;
   additionalPaymentMethods: AdditionalPaymentMethod[];
   imagesPricingBanner: ImagesPricingBanner;
   imagesPricingCopy: ImagesPricingCopy;

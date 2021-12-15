@@ -1,7 +1,8 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { shareAddresses } from '@linode/api-v4/lib/networking';
+import { shareAddresses, IPRange } from '@linode/api-v4/lib/networking';
+import { getLinodeIPs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { flatten, remove, uniq, update } from 'ramda';
+import { flatten, remove, uniq, update, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -16,6 +17,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
+import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAllLinodesQuery } from 'src/queries/linodes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -67,34 +69,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
-  const choiceLabels = {};
-  const ipChoices = flatten<string>(
-    linodes
-      .filter((thisLinode: Linode) => {
-        // Filter out the current Linode
-        return thisLinode.id !== linodeID;
-      })
-      .map((thisLinode: Linode) => {
-        // side-effect of this mapping is saving the labels
-        thisLinode.ipv4.forEach((ip: string) => {
-          choiceLabels[ip] = thisLinode.label;
-        });
-        return thisLinode.ipv4;
-      })
-  );
-  /**
-   * NB: We were previously filtering private IP addresses out at this point,
-   * but it seems that the API (or our infra) doesn't care about this.
-   */
-  return {
-    ipChoices,
-    ipChoiceLabels: choiceLabels,
-  };
-};
-
 const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const flags = useFlags();
   const {
     linodeID,
     linodeIPs,
@@ -105,20 +82,77 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     linodeSharedIPs,
   } = props;
 
-  const { data, isLoading } = useAllLinodesQuery(
+  const resp = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
     {
       region: linodeRegion,
     },
-    open // Only run the query if the modal is open
+    true // always make the request so we have the data preloaded and don't need to wait to make further requests
   );
+
+  let isLoading = resp.isLoading;
+  const data = resp.data;
+
+  const getIPChoicesAndLabels = async (linodeID: number, linodes: Linode[]) => {
+    const choiceLabels = {};
+    const promisedChoices = linodes
+      .filter((thisLinode: Linode) => {
+        // Filter out the current Linode
+        return thisLinode.id !== linodeID;
+      })
+      .map(async (thisLinode: Linode) => {
+        // side-effect of this mapping is saving the labels
+        let ips: string[] = [];
+        const ipv6Ranges: string[] = [];
+        if (flags.ipv6Sharing) {
+          // TODO this fial for non netv4??
+          await getLinodeIPs(thisLinode.id).then((ips) => {
+            const ranges = pathOr([], ['ipv6', 'global'], ips);
+            ranges &&
+              ranges.forEach((i: IPRange) => {
+                ipv6Ranges.push(`${i.range}/${i.prefix}`);
+              });
+          });
+        }
+        ips = [...thisLinode.ipv4, ...ipv6Ranges];
+
+        ips.forEach((ip: string) => {
+          choiceLabels[ip] = thisLinode.label;
+        });
+
+        return ips;
+      });
+
+    return Promise.all(promisedChoices).then((ips) => {
+      return {
+        ipChoices: flatten<string>(ips),
+        ipChoiceLabels: choiceLabels,
+      };
+    });
+  };
 
   const linodes = Object.values(data?.linodes ?? []);
 
-  const { ipChoices, ipChoiceLabels } = React.useMemo(
-    () => getIPChoicesAndLabels(linodeID, linodes),
-    [linodeID, linodes]
-  );
+  const [ipChoices, setipChoices] = React.useState<string[]>([]);
+  const [ipChoiceLabels, setipChoiceLabels] = React.useState({});
+
+  React.useEffect(() => {
+    // don't try anything until we've finished the request for the Linodes data
+    if (isLoading) {
+      return;
+    }
+    isLoading = true;
+    load();
+    async function load() {
+      const { ipChoices, ipChoiceLabels } = await getIPChoicesAndLabels(
+        linodeID,
+        linodes
+      );
+      setipChoices(ipChoices);
+      setipChoiceLabels(ipChoiceLabels);
+      isLoading = false;
+    }
+  }, [linodeID, data]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<
@@ -220,6 +254,12 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 unresponsive. Only IPs in the same datacenter are offered for
                 sharing.
               </Typography>
+              {flags.ipv6Sharing && (
+                <Notice
+                  warning
+                  text="This is our placeholder text until it is decided what this should say."
+                />
+              )}
             </Grid>
             <Grid item xs={12}>
               <Grid container>
