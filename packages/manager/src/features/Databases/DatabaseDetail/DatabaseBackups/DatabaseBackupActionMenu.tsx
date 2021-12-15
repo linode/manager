@@ -1,34 +1,13 @@
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
-import ActionMenu from 'src/components/ActionMenu';
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { DatabaseBackup } from '@linode/api-v4/lib/databases';
+import { makeStyles } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-  },
-  button: {
-    ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
-    height: '100%',
-    minWidth: 'auto',
-    padding: '12px 10px',
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      backgroundColor: '#3683dc',
-      color: '#ffffff',
-    },
-    '&[disabled]': {
-      color: '#cdd0d5',
-      cursor: 'default',
-      '&:hover': {
-        backgroundColor: 'inherit',
-      },
-    },
   },
 }));
 
@@ -53,21 +32,13 @@ const DatabaseBackupActionMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.inlineActions}>
-      <Hidden smDown>
-        {actions.map((thisAction) => (
-          <InlineAction
-            key={thisAction.title}
-            actionText={thisAction.title}
-            onClick={thisAction.onClick}
-          />
-        ))}
-      </Hidden>
-      <Hidden mdUp>
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for database backup ${props.backup.id}`}
+      {actions.map((thisAction) => (
+        <InlineAction
+          key={thisAction.title}
+          actionText={thisAction.title}
+          onClick={thisAction.onClick}
         />
-      </Hidden>
+      ))}
     </div>
   );
 };
