@@ -11,13 +11,7 @@ const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {}
-
-type CombinedProps = Props;
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const DatabaseDetail: React.FC<CombinedProps> = (props) => {
+export const DatabaseDetail: React.FC = () => {
   const history = useHistory();
   const { databaseId } = useParams<{ databaseId: string }>();
 
@@ -36,16 +30,14 @@ export const DatabaseDetail: React.FC<CombinedProps> = (props) => {
     },
   ];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
-  };
-
-  const clampTabChoice = () => {
-    const tabChoice = tabs.findIndex((tab) => matches(tab.routeName));
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
     return tabChoice < 0 ? 0 : tabChoice;
   };
 
-  const navToURL = (index: number) => {
+  const handleTabChange = (index: number) => {
     history.push(tabs[index].routeName);
   };
 
@@ -59,7 +51,7 @@ export const DatabaseDetail: React.FC<CombinedProps> = (props) => {
     <>
       {/* <DocumentTitleSegment segment={thisDatabase.label} /> */}
       Database Details
-      <Tabs defaultIndex={clampTabChoice()} onChange={navToURL}>
+      <Tabs defaultIndex={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
