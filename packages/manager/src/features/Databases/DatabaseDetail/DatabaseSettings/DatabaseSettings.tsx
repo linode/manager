@@ -1,23 +1,22 @@
 import * as React from 'react';
-import useDatabases from 'src/hooks/useDatabases';
-import DatabaseSettingsLabelPanel from './DatabaseSettingsLabelPanel';
-import DatabaseSettingsMaintenancePanel from './DatabaseSettingsMaintenancePanel';
-import DatabaseSettingsPasswordPanel from './DatabaseSettingsPasswordPanel';
+// import useDatabases from 'src/hooks/useDatabases';
+// import DatabaseSettingsLabelPanel from './DatabaseSettingsLabelPanel';
+// import DatabaseSettingsMaintenancePanel from './DatabaseSettingsMaintenancePanel';
+// import DatabaseSettingsPasswordPanel from './DatabaseSettingsPasswordPanel';
 
 interface Props {
-  databaseID: number;
+  // databaseID: number;
 }
 
 export const DatabaseSettings: React.FC<Props> = (props) => {
-  const databases = useDatabases();
-
-  const { databaseID } = props;
-
-  const thisDatabase = databases.databases.itemsById[databaseID];
+  // const databases = useDatabases();
+  // const { databaseID } = props;
+  // const thisDatabase = databases.databases.itemsById[databaseID];
 
   return (
     <>
-      <DatabaseSettingsLabelPanel
+      Database Settings
+      {/* <DatabaseSettingsLabelPanel
         databaseID={thisDatabase.id}
         databaseLabel={thisDatabase.label}
       />
@@ -25,7 +24,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
       <DatabaseSettingsMaintenancePanel
         databaseID={thisDatabase.id}
         databaseMaintenanceSchedule={thisDatabase.maintenance_schedule}
-      />
+      /> */}
     </>
   );
 };

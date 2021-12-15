@@ -4,6 +4,7 @@ import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -13,14 +14,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
-interface Props {
-  openAddDatabaseDrawer?: () => void;
-}
 
-const FirewallEmptyState: React.FC<Props> = (props) => {
+const FirewallEmptyState: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
 
-  const { openAddDatabaseDrawer } = props;
   return (
     <Placeholder
       title={'Databases'}
@@ -29,7 +27,7 @@ const FirewallEmptyState: React.FC<Props> = (props) => {
       isEntity
       buttonProps={[
         {
-          onClick: openAddDatabaseDrawer,
+          onClick: () => history.push('/databases/create'),
           children: 'Add a Database',
         },
       ]}
