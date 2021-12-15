@@ -302,7 +302,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                   ) : null}
                   <SideMenu
                     open={menuIsOpen}
-                    desktopOpen={desktopMenuIsOpen || false}
+                    collapse={desktopMenuIsOpen || false}
                     closeMenu={() => toggleMenu(false)}
                   />
                   <div

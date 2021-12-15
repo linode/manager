@@ -7,9 +7,9 @@ import useNotifications from 'src/hooks/useNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
-import { NotificationData } from './NotificationData/useNotificationData';
-import Events from './Events';
-import Notifications from './Notifications';
+import { NotificationData } from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import Events from 'src/features/NotificationCenter/Events';
+import Notifications from 'src/features/NotificationCenter/Notifications';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   data: NotificationData;
   open: boolean;
   onClose: () => void;

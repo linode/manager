@@ -1,4 +1,4 @@
-function randomPass() {
+export function randomPass() {
   let pass = '';
   const chars =
     'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()1234567890';
@@ -9,7 +9,7 @@ function randomPass() {
   return pass;
 }
 
-function randomTitle(count) {
+export function randomTitle(count) {
   let text = '';
   const chars = 'abcdefghijklmnopqrstuvwxyz12343567890';
 

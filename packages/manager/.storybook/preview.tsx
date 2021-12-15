@@ -41,6 +41,7 @@ MINIMAL_VIEWPORTS.mobile1.styles = {
 };
 
 export const parameters = {
+  controls: { expanded: true },
   options: {
     storySort: {
       method: 'alphabetical',
@@ -51,3 +52,9 @@ export const parameters = {
     viewports: MINIMAL_VIEWPORTS,
   },
 };
+
+// Use the Mock Service Worker to mock API requests.
+if (typeof global.process === 'undefined') {
+  const { worker } = require('../src/mocks/testBrowser');
+  worker.start();
+}
