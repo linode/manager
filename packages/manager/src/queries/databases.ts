@@ -32,8 +32,6 @@ export const useDatabasesQuery = (params: any, filter: any) =>
     { keepPreviousData: true }
   );
 
-// We may want to pass the id as a React Query variable depending on the
-// implementation at the component level.
 export const useDatabaseMutation = (engine: Engine, id: number) =>
   useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
     (data) => updateDatabase(engine, id, data),
@@ -50,17 +48,15 @@ export const useCreateDatabaseMutation = () =>
     (data) => createDatabase(data.engine || 'mysql', data),
     {
       onSuccess: () => {
-        // Add database to the cache for /databases/instances
+        // Add database to the cache
       },
     }
   );
 
-// We may want to pass the id as a React Query variable depending on the
-// implementation at the component level.
 export const useDeleteDatabaseMutation = (engine: Engine, id: number) =>
   useMutation<{}, APIError[]>(() => deleteDatabase(engine, id), {
     onSuccess: () => {
-      // Delete Database instance from the React Query Cache
+      // Delete Database instance from the cache
     },
   });
 

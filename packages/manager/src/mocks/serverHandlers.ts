@@ -58,7 +58,6 @@ import { MockData } from 'src/dev-tools/mockDataController';
 import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { EventAction, NotificationType } from '@linode/api-v4';
-import { Database } from '@linode/api-v4/lib/databases';
 
 export const makeResourcePage = (
   e: any[],
@@ -131,27 +130,6 @@ const entityTransfers = [
 ];
 
 export const handlers = [
-  rest.get('*/databases/instances', (req, res, ctx) => {
-    return res(
-      ctx.json(
-        makeResourcePage([
-          {
-            id: 1,
-            label: 'test',
-            engine: 'MySQL',
-            type: '',
-            region: '',
-            version: '',
-            status: '',
-            created: '',
-            updated: '',
-            instance_uri:
-              'https://api.linode.com/v4/databases/{engine}/instances/{id}',
-          },
-        ])
-      )
-    );
-  }),
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({ restricted: false });
     return res(ctx.json(profile));
