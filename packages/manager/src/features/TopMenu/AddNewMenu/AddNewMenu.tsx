@@ -204,6 +204,20 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={NodebalancerIcon}
                     />
                   </MenuLink>
+                  {flags.databases ? (
+                    <MenuLink
+                      as={Link}
+                      to="/databases/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Database"
+                        body="High-performance database clusters"
+                        ItemIcon={DatabaseIcon}
+                        attr={{ 'data-qa-database-add-new': true }}
+                      />
+                    </MenuLink>
+                  ) : null}
                   {showFirewalls ? (
                     <MenuLink
                       as={Link}
@@ -262,20 +276,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       attr={{ 'data-qa-one-click-add-new': true }}
                     />
                   </MenuLink>
-                  {flags.databases ? (
-                    <MenuLink
-                      as={Link}
-                      to="/databases/create"
-                      className={classes.menuItemLink}
-                    >
-                      <AddNewMenuItem
-                        title="Database"
-                        body="High-performance database clusters"
-                        ItemIcon={DatabaseIcon}
-                        attr={{ 'data-qa-database-add-new': true }}
-                      />
-                    </MenuLink>
-                  ) : null}
                 </MenuItems>
               </MenuPopover>
             </Menu>
