@@ -564,7 +564,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           onClose={this.closeSharingDialog}
           linodeID={linodeID}
           linodeIPs={publicIPs}
-          linodeSharedIPs={sharedIPs}
+          linodeSharedIPs={[...sharedIPs, ...globalIPs]}
           linodeRegion={linodeRegion}
           refreshIPs={this.refreshIPs}
           updateFor={[
