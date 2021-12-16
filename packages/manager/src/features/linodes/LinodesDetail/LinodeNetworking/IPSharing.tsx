@@ -195,7 +195,11 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const onSubmit = () => {
-    const finalIPs = uniq(ipsToShare.filter(Boolean));
+    const finalIPs = uniq(
+      ipsToShare.filter(Boolean).map((ip) => {
+        return ip.includes('/') ? ip.substr(0, ip.indexOf('/')) : ip;
+      })
+    );
 
     setErrors(undefined);
     setSubmitting(true);
