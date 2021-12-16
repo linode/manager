@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   chip: {
     fontWeight: theme.typography.fontWeightRegular,
+    margin: 0,
   },
 }));
 
