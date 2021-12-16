@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Tag from './Tag';
 
@@ -36,9 +35,6 @@ export const Template = (args) => <Tag label="tag" {...args} />;
       },
       colorVariant: {
         description: 'The variant to use.',
-        table: {
-          type: { summary: 'string' },
-        },
         control: {
           type: 'radio',
           options: ['default', 'blue', 'lightBlue'],

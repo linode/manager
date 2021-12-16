@@ -1,0 +1,94 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import TagsInput from './TagsInput';
+
+<Meta title="UI Elements/Tags/Tags Input" component={TagsInput} />
+
+# Tags Input
+
+Currently used in:
+
+- `LabelAndTagsPanel`
+- `DomainDrawer`
+- `CreateVolumeForm`
+- `CreateVolumeForLinodeForm`
+- `EditVolumeForm`
+
+export const Template = (args) => {
+  const [tags, setTags] = React.useState([]);
+  const onChange = (tags) => {
+    setTags(tags);
+  };
+  return <TagsInput {...args} value={tags} onChange={onChange} />;
+};
+
+<Canvas>
+  <Story
+    name="Tags Input"
+    args={{
+      value: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
+      clickable: false,
+      disabled: false,
+      hideLabel: false,
+      label: '',
+      menuPlacement: 'bottom',
+      name: '',
+      tagError: '',
+    }}
+    argTypes={{
+      clickable: {
+        description:
+          'If `true`, the chip will appear clickable, and will raise when pressed, even if the onClick prop is not defined. If false, the chip will not be clickable, even if onClick prop is defined. This can be used, for example, along with the component prop to indicate an anchor Chip is clickable.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+      disabled: {
+        description: 'If true, the component is disabled.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+      hideLabel: {
+        description: 'Removes the label.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+      label: {
+        description: 'The content of the label.',
+        table: {
+          type: { summary: 'string' },
+        },
+      },
+      menuPlacement: {
+        description: 'Changes the placement of the menu.',
+        table: {
+          defaultValue: { summary: 'bottom' },
+        },
+      },
+      name: {
+        description: 'Name attribute of the input field.',
+      },
+      tagError: {
+        description: 'Displays error text below the input field.',
+      },
+      value: {
+        table: {
+          type: { summary: 'Tag[]' },
+        },
+      },
+    }}
+    height="300px"
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable
+  story="Tags Input"
+  sort="requiredFirst"
+  exclude={['onChange', 'tags']}
+/>
