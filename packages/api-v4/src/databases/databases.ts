@@ -169,10 +169,17 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
  * Return backups information for a database
  *
  */
-export const getDatabaseBackups = (engine: Engine, databaseID: number) =>
+export const getDatabaseBackups = (
+  engine: Engine,
+  databaseID: number,
+  params?: any,
+  filters?: any
+) =>
   Request<Page<DatabaseBackup>>(
     setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
 
 /**
