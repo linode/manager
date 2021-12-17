@@ -45,6 +45,11 @@ export const deleteById = (path: string, id: number) => {
     auth: {
       bearer: oauthtoken,
     },
+    // Sometimes a entity may fail to delete. This should not fail a test.
+    // Ex. A Linode created by Cypress may be cloning due to another E2E test
+    //     running and the API will return 400. We don't want to fail due
+    //     to another e2e in progress.
+    failOnStatusCode: false,
   });
 };
 

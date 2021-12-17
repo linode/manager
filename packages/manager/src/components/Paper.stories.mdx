@@ -1,29 +1,37 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Paper from '/src/components/core/Paper';
 
-<Meta title="Components/Papers" component={Paper} />
+<Meta title="Components/Paper" component={Paper} />
 
 export const PaperTemplate = (args, context) => (
-    <div id='paper-story'>
-        <Paper {...args}>
-            Hello World!
-        </Paper>
-    </div>
+  <Paper {...args}>
+    Hello World!
+  </Paper>
 )
 
 # Papers
 
-<hr />
+## Overview
+Papers are surfaces that display content and actions on a single topic.
+They should be easy to scan for relevant and actionable information. Elements like text and images should be placed on them in a way that clearly indicates hierarchy.
+
+## Usage
+- Papers are used for grouping information.
+- Papers allow for flexible layouts.
 
 <Canvas>
     <Story
       name="Paper"
       args={{
-        error: undefined
+        error: '',
       }}
       argTypes={{
-          error: {
-              description: 'Error that will be shown on the paper.'
+          variant: {
+            description: 'The variant to use when rendering thepaper.',
+            options: ['outlined', undefined],
+            control: {
+              type: 'radio',
+            },
           }
       }}
     >
@@ -35,5 +43,5 @@ export const PaperTemplate = (args, context) => (
     story="Paper"
     exclude={[
         'ref',
-    ]} 
+    ]}
 />
