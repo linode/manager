@@ -5,7 +5,7 @@ import {
   accountFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
-  // databaseFactory,
+  databaseFactory,
   domainFactory,
   domainRecordFactory,
   imageFactory,
@@ -126,6 +126,21 @@ const entityTransfers = [
   ),
   rest.delete('*/account/entity-transfers/:transferId', (req, res, ctx) => {
     return res(ctx.json({}));
+  }),
+];
+
+const databases = [
+  rest.get('*/databases/instances', (req, res, ctx) => {
+    console.log('Database Landing');
+
+    const databases = databaseFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(databases)));
+  }),
+
+  rest.get('*/databases/:databaseId', async (req, res, ctx) => {
+    const id = Number(req.params.databaseId);
+    const database = databaseFactory.build({ id });
+    return res(ctx.json(database));
   }),
 ];
 
@@ -845,6 +860,7 @@ export const handlers = [
   // }),
   ...entityTransfers,
   ...statusPage,
+  ...databases,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.
