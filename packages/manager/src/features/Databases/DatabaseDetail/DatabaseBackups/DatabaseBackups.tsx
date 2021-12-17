@@ -9,29 +9,52 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
-
-const data = [
-  {
-    id: 1,
-    type: 'auto',
-    label: 'backup',
-    description: 'backup of database before launch',
-    created: new Date(1639592380049).toLocaleString(),
-  },
-  {
-    id: 2,
-    type: 'auto',
-    label: 'backup',
-    description: 'backup of database after launch',
-    created: new Date().toLocaleString(),
-  },
-];
+import TableRowLoading from 'src/components/TableRowLoading';
+import TableRowError from 'src/components/TableRowError';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 
 export const DatabaseBackups: React.FC = () => {
+  const error = undefined;
+  const isLoading = false;
+
   const { order, orderBy, handleOrderChange } = useOrder({
     orderBy: 'created',
     order: 'desc',
   });
+
+  const data = [
+    {
+      id: 1,
+      type: 'auto',
+      label: 'backup',
+      description: 'backup of database before launch',
+      created: new Date(1639592380049).toLocaleString(),
+    },
+    {
+      id: 2,
+      type: 'auto',
+      label: 'backup',
+      description: 'backup of database after launch',
+      created: new Date().toLocaleString(),
+    },
+  ];
+
+  const renderTableBody = () => {
+    if (isLoading) {
+      return <TableRowLoading oneLine numberOfColumns={2} colSpan={2} />;
+    } else if (error) {
+      return <TableRowError message={error[0].reason} colSpan={2} />;
+    } else if (data?.results == 0) {
+      return (
+        <TableRowEmptyState message="No backups to display." colSpan={2} />
+      );
+    } else if (data) {
+      return data.map((backup) => (
+        <DatabaseBackupTableRow key={backup.id} backup={backup} />
+      ));
+    }
+    return null;
+  };
 
   return (
     <>
@@ -49,12 +72,7 @@ export const DatabaseBackups: React.FC = () => {
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {data.map((backup) => (
-            // @ts-expect-error type to come
-            <DatabaseBackupTableRow key={backup.id} backup={backup} />
-          ))}
-        </TableBody>
+        <TableBody>{renderTableBody()}</TableBody>
       </Table>
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Backup Schedule</Typography>
