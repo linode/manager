@@ -1,23 +1,30 @@
-import { rest, RequestHandler } from 'msw';
-
+import { EventAction, NotificationType } from '@linode/api-v4';
+import Build from '@material-ui/icons/Build';
+import { RequestHandler, rest } from 'msw';
+import cachedRegions from 'src/cachedData/regions.json';
+import { MockData } from 'src/dev-tools/mockDataController';
 import {
   // abuseTicketNotificationFactory,
   accountFactory,
+  accountMaintenanceFactory,
+  accountTransferFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
   databaseFactory,
+  databaseTypeFactory,
+  databaseVersionFactory,
   domainFactory,
   domainRecordFactory,
-  imageFactory,
   entityTransferFactory,
-  firewallFactory,
+  eventFactory,
   firewallDeviceFactory,
-  kubernetesAPIResponse,
-  kubeEndpointFactory,
+  firewallFactory,
+  imageFactory,
   incidentResponseFactory,
   invoiceFactory,
   invoiceItemFactory,
-  nodePoolFactory,
+  kubeEndpointFactory,
+  kubernetesAPIResponse,
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
@@ -27,37 +34,30 @@ import {
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
-  managedStatsFactory,
   maintenanceResponseFactory,
+  makeObjectsPage,
+  managedStatsFactory,
   monitorFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
+  nodePoolFactory,
   notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
+  paymentMethodFactory,
   profileFactory,
+  promoFactory,
   stackScriptFactory,
+  staticObjects,
   supportReplyFactory,
   supportTicketFactory,
-  volumeFactory,
-  accountTransferFactory,
-  eventFactory,
   tagFactory,
-  nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory,
   VLANFactory,
-  promoFactory,
-  staticObjects,
-  makeObjectsPage,
-  paymentMethodFactory,
-  accountMaintenanceFactory,
-  // gdprComplianceNotification,
+  volumeFactory,
 } from 'src/factories';
-
-import cachedRegions from 'src/cachedData/regions.json';
-import { MockData } from 'src/dev-tools/mockDataController';
-import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
-import { EventAction, NotificationType } from '@linode/api-v4';
+import { grantsFactory } from 'src/factories/grants';
 
 export const makeResourcePage = (
   e: any[],
@@ -131,8 +131,6 @@ const entityTransfers = [
 
 const databases = [
   rest.get('*/databases/instances', (req, res, ctx) => {
-    console.log('Database Landing');
-
     const databases = databaseFactory.buildList(5);
     return res(ctx.json(makeResourcePage(databases)));
   }),
@@ -141,6 +139,25 @@ const databases = [
     const id = Number(req.params.databaseId);
     const database = databaseFactory.build({ id });
     return res(ctx.json(database));
+  }),
+
+  rest.get('*/databases/types', (req, res, ctx) => {
+    const dbTypes = databaseTypeFactory.buildList(2);
+    return res(ctx.json(makeResourcePage(dbTypes)));
+  }),
+
+  rest.get('*/databases/versions', (req, res, ctx) => {
+    const version = databaseVersionFactory.build();
+    return res(ctx.json(version));
+  }),
+
+  rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
+    const body = req.body as any;
+    return res(ctx.json({ ...databaseFactory.build(), ...body }));
+  }),
+
+  rest.delete('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
+    return res(ctx.json({}));
   }),
 ];
 

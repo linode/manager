@@ -1,9 +1,10 @@
 import {
   Database,
-  DatabaseType,
-  DatabaseStatus,
   DatabaseBackup,
   DatabaseBackupType,
+  DatabaseStatus,
+  DatabaseType,
+  DatabaseVersion,
 } from '@linode/api-v4/lib/databases/types';
 import * as Factory from 'factory.ts';
 import { sample } from 'lodash';
@@ -58,3 +59,13 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   type: sample(['snapshot', 'auto']) as DatabaseBackupType,
   created: '2020-10-01T00:00:00',
 });
+
+export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
+  {
+    id: Factory.each((i) => `version-${i}`),
+    label: Factory.each((i) => `Example Version ${i}`),
+    engine: 'mysql',
+    version: Factory.each((i) => `v${i}`),
+    deprecated: false,
+  }
+);
