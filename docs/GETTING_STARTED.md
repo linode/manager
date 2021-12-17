@@ -1,4 +1,4 @@
-# Getting Started
+# etting Started
 
 ## Using the getting_started.sh script
 
