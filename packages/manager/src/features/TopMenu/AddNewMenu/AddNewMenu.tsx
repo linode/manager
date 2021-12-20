@@ -193,17 +193,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={VolumeIcon}
                     />
                   </MenuLink>
-                  <MenuLink
-                    as={Link}
-                    to="/nodebalancers/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="NodeBalancer"
-                      body="Ensure your services are highly available"
-                      ItemIcon={NodebalancerIcon}
-                    />
-                  </MenuLink>
                   {flags.databases ? (
                     <MenuLink
                       as={Link}
@@ -218,6 +207,17 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       />
                     </MenuLink>
                   ) : null}
+                  <MenuLink
+                    as={Link}
+                    to="/nodebalancers/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="NodeBalancer"
+                      body="Ensure your services are highly available"
+                      ItemIcon={NodebalancerIcon}
+                    />
+                  </MenuLink>
                   {showFirewalls ? (
                     <MenuLink
                       as={Link}
