@@ -354,5 +354,3 @@ const TagsPanel: React.FC<CombinedProps> = (props) => {
 };
 
 export default compose<CombinedProps, Props>(withSnackbar)(TagsPanel);
-
-// export default TagsPanel;

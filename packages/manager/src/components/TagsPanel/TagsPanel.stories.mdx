@@ -39,7 +39,29 @@ export const Template = (args) => {
 };
 
 <Canvas>
-  <Story name="Tags Panel" height="300px">
+  <Story
+    name="Tags Panel"
+    args={{
+      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
+      disabled: false,
+    }}
+    argTypes={{
+      tags: {
+        type: { required: true },
+        table: {
+          type: { summary: 'string[]' },
+        },
+      },
+      disabled: {
+        description: 'If true, the component is disabled.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+    }}
+    height="300px"
+  >
     {Template.bind({})}
   </Story>
 </Canvas>
