@@ -1,0 +1,69 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import TagsPanel from './TagsPanel';
+
+<Meta
+  title="UI Elements/Tags/Tags Panel"
+  component={TagsPanel}
+  decorators={[
+    (Story) => (
+      <div
+        style={{
+          paddingTop: 12,
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ]}
+/>
+
+# Tags Panel
+
+Currently used in:
+
+- `DomainRecordsWrapper`
+- `KubeSummaryPanel`
+- Linode and NodeBalancer - `SummaryPanel`
+
+export const Template = (args) => {
+  const [tags, setTags] = React.useState([]);
+  const updateTags = (tags) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        setTags(tags);
+        resolve();
+      }, 500);
+    });
+  };
+  return <TagsPanel {...args} tags={tags} updateTags={updateTags} />;
+};
+
+<Canvas>
+  <Story
+    name="Tags Panel"
+    args={{
+      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
+      disabled: false,
+    }}
+    argTypes={{
+      tags: {
+        type: { required: true },
+        table: {
+          type: { summary: 'string[]' },
+        },
+      },
+      disabled: {
+        description: 'If true, the component is disabled.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+    }}
+    height="300px"
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Tags Panel" sort="requiredFirst" />

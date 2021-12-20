@@ -153,7 +153,6 @@ interface State {
 }
 
 export interface Props {
-  align?: 'left' | 'right';
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
