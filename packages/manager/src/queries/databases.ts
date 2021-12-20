@@ -68,7 +68,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
 
 export const useCreateDatabaseMutation = () =>
   useMutation<CreateDatabaseResponse, APIError[], CreateDatabasePayload>(
-    (data) => createDatabase(data.engine || 'mysql', data),
+    (data) => createDatabase(data.engine, data),
     {
       onSuccess: (data) => {
         // Invalidate useDatabasesQuery to show include the new database.
@@ -94,7 +94,6 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) =>
 export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
   useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
     [`${queryKey}-backups`, id],
-    // We will need to handle pagination via params when we display more than 7 backups.
     () => getDatabaseBackups(engine, id)
   );
 
