@@ -270,12 +270,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                 unresponsive. Only IPs in the same datacenter are offered for
                 sharing.
               </Typography>
-              {flags.ipv6Sharing && (
-                <Notice
-                  warning
-                  text="This is our placeholder text until it is decided what this should say."
-                />
-              )}
             </Grid>
             <Grid item xs={12}>
               <Grid container>
