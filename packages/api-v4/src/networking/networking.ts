@@ -115,6 +115,27 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
  * You must have access to all of these addresses and they must be in the same
  * Region as the Linode.
  */
+export const shareAddressesv4 = (payload: IPSharingPayload) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/networking/ipv4/share`),
+    setMethod('POST'),
+    setData(payload, shareAddressesSchema)
+  );
+
+/**
+ * Configure shared IPs. A shared IP may be brought up on a Linode other than
+ * the one it lists in its response. This can be used to allow one Linode to
+ * begin serving requests should another become unresponsive.
+ *
+ * @param payload { Object }
+ * @param payload.linode_id { number } The ID of the Linode that the addresses
+ * will be shared with.
+ * @param payload.ips { string[] } A list of IPs that will be shared with this
+ * Linode. When this is finished, the given Linode will be able to bring up
+ * these addresses in addition to the Linodes that these addresses belong to.
+ * You must have access to all of these addresses and they must be in the same
+ * Region as the Linode.
+ */
 export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/networking/ips/share`),

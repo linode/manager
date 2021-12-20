@@ -1,5 +1,9 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { shareAddresses, IPRange } from '@linode/api-v4/lib/networking';
+import {
+  shareAddresses,
+  shareAddressesv4,
+  IPRange,
+} from '@linode/api-v4/lib/networking';
 import { getLinodeIPs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { flatten, remove, uniq, update, pathOr } from 'ramda';
@@ -105,7 +109,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
         let ips: string[] = [];
         const ipv6Ranges: string[] = [];
         if (flags.ipv6Sharing) {
-          // TODO this fial for non netv4??
+          // this fails for non datacenters that don't support sharing IPv6 addresses
+          // for now we just default to the given error message rather than preventing
+          // this from running
           await getLinodeIPs(thisLinode.id).then((ips) => {
             const ranges = pathOr([], ['ipv6', 'global'], ips);
             ranges &&
@@ -205,7 +211,14 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setSubmitting(true);
     setSuccessMessage(undefined);
 
-    shareAddresses({ linode_id: props.linodeID, ips: finalIPs })
+    let share;
+    if (flags.ipv6Sharing) {
+      share = shareAddresses;
+    } else {
+      share = shareAddressesv4;
+    }
+
+    share({ linode_id: props.linodeID, ips: finalIPs })
       .then((_) => {
         props.refreshIPs();
         setErrors(undefined);
@@ -234,7 +247,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
-
   return (
     <Dialog title="IP Sharing" open={open} onClose={handleClose}>
       <DialogContent loading={isLoading}>

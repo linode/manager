@@ -159,15 +159,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   refreshIPs = () => {
     this.setState({ IPRequestError: undefined });
-
     return getLinodeIPs(this.props.linode.id)
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
         const shouldSetIPv6Loading = this.state.initialLoading;
-
         this.setState({ linodeIPs: ips, initialLoading: false });
-
         // If this user is assigned an IPv6 range in the DC this Linode resides
         // in, we request all IPs on the account, so we can look for matching
         // RDNS addresses.
@@ -471,6 +468,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const sharedIPs = uniq<string>(
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
+    const sharedIPv6 = uniq<string>(
+      pathOr([], ['ipv6', 'global'], linodeIPs)
+        .filter((i: IPRange) => {
+          return i.route_target === null;
+        })
+        .map((i: IPRange) => `${i.range}/${i.prefix}`)
+    );
     const globalIPs = uniq<string>(
       pathOr([], ['ipv6', 'global'], linodeIPs).map(
         (i: IPRange) => `${i.range}/${i.prefix}`
@@ -564,7 +568,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           onClose={this.closeSharingDialog}
           linodeID={linodeID}
           linodeIPs={publicIPs}
-          linodeSharedIPs={[...sharedIPs, ...globalIPs]}
+          linodeSharedIPs={[...sharedIPs, ...sharedIPv6]}
           linodeRegion={linodeRegion}
           refreshIPs={this.refreshIPs}
           updateFor={[
