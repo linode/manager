@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const FirewallEmptyState: React.FC = () => {
+const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -28,7 +28,7 @@ const FirewallEmptyState: React.FC = () => {
       buttonProps={[
         {
           onClick: () => history.push('/databases/create'),
-          children: 'Add a Database',
+          children: 'Create a Database Cluster',
         },
       ]}
     >
@@ -42,4 +42,4 @@ const FirewallEmptyState: React.FC = () => {
   );
 };
 
-export default React.memo(FirewallEmptyState);
+export default React.memo(DatabaseEmptyState);
