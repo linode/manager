@@ -1,5 +1,4 @@
 import { EventAction, NotificationType } from '@linode/api-v4';
-import Build from '@material-ui/icons/Build';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -10,6 +9,7 @@ import {
   accountTransferFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
+  databaseBackupFactory,
   databaseFactory,
   databaseTypeFactory,
   databaseVersionFactory,
@@ -144,7 +144,13 @@ const databases = [
     const version = databaseVersionFactory.buildList(3);
     return res(ctx.json(makeResourcePage(version)));
   }),
-
+  rest.get(
+    '*/databases/mysql/instances/:databaseId/backups',
+    (req, res, ctx) => {
+      const backups = databaseBackupFactory.buildList(7);
+      return res(ctx.json(makeResourcePage(backups)));
+    }
+  ),
   rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
     const id = Number(req.params.databaseId);
     const body = req.body as any;

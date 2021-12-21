@@ -7,37 +7,31 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { useOrder } from 'src/hooks/useOrder';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { useOrder } from 'src/hooks/useOrder';
+import { useParams } from 'react-router-dom';
+import {
+  getDatabaseEngine,
+  useDatabaseBackupsQuery,
+} from 'src/queries/databases';
 
 export const DatabaseBackups: React.FC = () => {
-  const error = undefined;
-  const isLoading = false;
+  const { databaseId } = useParams<{ databaseId: string }>();
+
+  const id = Number(databaseId);
+
+  const { data, error, isLoading } = useDatabaseBackupsQuery(
+    getDatabaseEngine(id),
+    id
+  );
 
   const { order, orderBy, handleOrderChange } = useOrder({
     orderBy: 'created',
     order: 'desc',
   });
-
-  const data = [
-    {
-      id: 1,
-      type: 'auto',
-      label: 'backup',
-      description: 'backup of database before launch',
-      created: new Date(1639592380049).toLocaleString(),
-    },
-    {
-      id: 2,
-      type: 'auto',
-      label: 'backup',
-      description: 'backup of database after launch',
-      created: new Date().toLocaleString(),
-    },
-  ];
 
   const renderTableBody = () => {
     if (isLoading) {
@@ -49,7 +43,7 @@ export const DatabaseBackups: React.FC = () => {
         <TableRowEmptyState message="No backups to display." colSpan={2} />
       );
     } else if (data) {
-      return data.map((backup) => (
+      return data.data.map((backup) => (
         <DatabaseBackupTableRow key={backup.id} backup={backup} />
       ));
     }
