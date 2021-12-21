@@ -1,6 +1,7 @@
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
 import Box from 'src/components/core/Box';
+import Chip from 'src/components/core/Chip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
@@ -32,6 +33,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   price: {
     marginTop: theme.spacing(),
   },
+  chip: {
+    fontWeight: theme.typography.fontWeightRegular,
+    margin: 0,
+    marginTop: -1,
+  },
 }));
 
 export interface Props {
@@ -61,7 +67,8 @@ const HACheckbox: React.FC<Props> = (props) => {
         />
         <Box>
           <Typography className={classes.heading}>
-            Enable HA Control Plane
+            Enable HA Control Plane{' '}
+            <Chip className={classes.chip} label="BETA" />
           </Typography>
           <HACopy />
         </Box>
