@@ -37,7 +37,7 @@ export const DatabaseDetail: React.FC = () => {
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push('/databases');
+      history.push(`/databases/${databaseId}`);
       return 0;
     } else {
       return tabChoice;
