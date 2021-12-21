@@ -39,7 +39,7 @@ export type DatabaseStatus =
 export type DatabaseBackupType = 'snapshot' | 'auto';
 
 export interface DatabaseBackup {
-  id: string;
+  id: number;
   type: DatabaseBackupType;
   label: string;
   created: string;
