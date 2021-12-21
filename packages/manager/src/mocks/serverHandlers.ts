@@ -135,25 +135,20 @@ const databases = [
     return res(ctx.json(makeResourcePage(databases)));
   }),
 
-  rest.get('*/databases/:databaseId', async (req, res, ctx) => {
-    const id = Number(req.params.databaseId);
-    const database = databaseFactory.build({ id });
-    return res(ctx.json(database));
-  }),
-
   rest.get('*/databases/types', (req, res, ctx) => {
     const dbTypes = databaseTypeFactory.buildList(2);
     return res(ctx.json(makeResourcePage(dbTypes)));
   }),
 
   rest.get('*/databases/versions', (req, res, ctx) => {
-    const version = databaseVersionFactory.build();
-    return res(ctx.json(version));
+    const version = databaseVersionFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(version)));
   }),
 
   rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
+    const id = Number(req.params.databaseId);
     const body = req.body as any;
-    return res(ctx.json({ ...databaseFactory.build(), ...body }));
+    return res(ctx.json({ ...databaseFactory.build({ id }), ...body }));
   }),
 
   rest.delete('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
