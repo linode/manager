@@ -2,7 +2,7 @@ import { Database } from '@linode/api-v4/lib/databases';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -21,14 +21,7 @@ import { DatabaseRow } from './DatabaseRow';
 
 const preferenceKey = 'databases';
 
-const useStyles = makeStyles(() => ({
-  cell: {
-    width: '25%',
-  },
-}));
-
 const DatabaseLanding: React.FC = () => {
-  const classes = useStyles();
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 
@@ -87,29 +80,25 @@ const DatabaseLanding: React.FC = () => {
               direction={order}
               label="label"
               handleClick={handleOrderChange}
-              className={classes.cell}
             >
               Label
             </TableSortCell>
-            <TableCell className={classes.cell}>Configuration</TableCell>
-            <TableSortCell
-              active={orderBy === 'engine'}
-              direction={order}
-              label="engine"
-              handleClick={handleOrderChange}
-              className={classes.cell}
-            >
-              Engine
-            </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'created'}
-              direction={order}
-              label="created"
-              handleClick={handleOrderChange}
-              className={classes.cell}
-            >
-              Created
-            </TableSortCell>
+            <TableCell>Status</TableCell>
+            <TableCell>Configuration</TableCell>
+            <TableCell>Engine</TableCell>
+            <Hidden smDown>
+              <TableCell>Region</TableCell>
+            </Hidden>
+            <Hidden mdDown>
+              <TableSortCell
+                active={orderBy === 'created'}
+                direction={order}
+                label="created"
+                handleClick={handleOrderChange}
+              >
+                Created
+              </TableSortCell>
+            </Hidden>
           </TableRow>
         </TableHead>
         <TableBody>
