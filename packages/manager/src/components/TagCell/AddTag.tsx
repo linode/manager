@@ -83,7 +83,7 @@ export const AddTag: React.FC<Props> = (props) => {
       })}
       onChange={handleAddTag}
       options={tagOptions}
-      variant="creatable"
+      creatable
       value={null}
       onBlur={onClose}
       placeholder="Create or Select a Tag"
