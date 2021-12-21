@@ -114,10 +114,29 @@ interface CombinedHandlers extends DatabaseHandlers {
 
 const DatabaseLanding: React.FC<{}> = (_) => {
   const classes = useStyles();
-  const { databases, deleteDatabase, updateDatabase } = useDatabases();
+  const {
+    requestDatabases,
+    databases,
+    deleteDatabase,
+    updateDatabase,
+  } = useDatabases();
   const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
     deleteDatabase
   );
+
+  React.useEffect(() => {
+    if (
+      databases.lastUpdated === 0 &&
+      !(databases.loading || databases.error.read)
+    ) {
+      requestDatabases();
+    }
+  }, [
+    databases.error.read,
+    databases.lastUpdated,
+    databases.loading,
+    requestDatabases,
+  ]);
 
   const databaseData = Object.values(databases.itemsById ?? {});
 
