@@ -97,7 +97,10 @@ export const getDatabaseVersion = (versionSlug: string) =>
  * Create a new database in the specified region.
  *
  */
-export const createDatabase = (engine: Engine, data: CreateDatabasePayload) =>
+export const createDatabase = (
+  engine: Engine = 'mysql',
+  data: CreateDatabasePayload
+) =>
   Request<CreateDatabaseResponse>(
     setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('POST'),
@@ -169,10 +172,17 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
  * Return backups information for a database
  *
  */
-export const getDatabaseBackups = (engine: Engine, databaseID: number) =>
+export const getDatabaseBackups = (
+  engine: Engine,
+  databaseID: number,
+  params?: any,
+  filters?: any
+) =>
   Request<Page<DatabaseBackup>>(
     setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
 
 /**
