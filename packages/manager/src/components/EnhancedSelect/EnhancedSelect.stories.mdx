@@ -75,13 +75,9 @@ Use a drop down selector for multiple items where only one selection can be made
 - Consider using [radio buttons](?path=/docs/ui-elements-radio--interactive) if there are 3 or fewer items to select. While a dropdown looks simpler and saves space, it can be beneficial for a customer to see their options without needing to click.
 - [Check boxes](?path=/docs/ui-elements-check-box--interactive) are used if multiple items can be selected.
 
-## Creatable Selection Drop Down
-
-## Component API
-
 <Canvas>
   <Story
-    name="Component API"
+    name="Selection Drop Down"
     height="300px"
     args={{
       label: "Fruit",
@@ -93,24 +89,20 @@ Use a drop down selector for multiple items where only one selection can be made
       creatable: false,
     }}
     argTypes={{
-      value: {
-        description: "Currently selected item",
-        control: false,
-      },
       options: {
         description: 'An array of objects with label and value properties. The label property is what is displayed to the user.',
       },
       isLoading: {
-        description: 'When true the Selection Drop Down will have a spinning loading indicator.',
+        description: 'When true, the Selection Drop Down will have a spinning loading indicator.',
       },
       errorText: {
         description: 'Displays a message below the Selection Drop Down. The border of the Selection Drop Down will also turn red if this is set to a non-empty string',
       },
       isMulti: {
-        description: 'When true it allows the user to select multiple options',
+        description: 'When true, it allows the user to select multiple options',
       },
       creatable: {
-        description: 'When true the Selection Drop Down component allows the user to create new items to choose from',
+        description: 'When true, the Selection Drop Down component allows the user to create new items to choose from',
       },
     }}
   >
@@ -119,5 +111,5 @@ Use a drop down selector for multiple items where only one selection can be made
 </Canvas>
 
 <ArgsTable
-  story="Component API"
+  story="Selection Drop Down"
   exclude={['ref']} />
