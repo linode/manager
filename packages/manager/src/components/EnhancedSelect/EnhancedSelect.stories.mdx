@@ -1,5 +1,4 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-import timezones from 'src/assets/timezones/timezones';
 import Select, { Item } from './Select';
 
 <Meta
@@ -38,7 +37,7 @@ export const fruits = [
   },
 ];
 
-export const SelectTemplate = (args, context) => {
+export const SelectTemplate = (args) => {
   const { options, isMulti } = args
   const [selectedItem, setSelectedItem] = React.useState()
   const [selectedItems, setSelectedItems] = React.useState([])
