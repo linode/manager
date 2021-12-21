@@ -34,7 +34,14 @@ export const DatabaseDetail: React.FC = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
-    return tabChoice < 0 ? 0 : tabChoice;
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push('/databases');
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
   const handleTabChange = (index: number) => {
