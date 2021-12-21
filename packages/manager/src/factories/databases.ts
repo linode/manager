@@ -1,23 +1,22 @@
-import { Database, DatabaseType } from '@linode/api-v4/lib/databases/types';
+import {
+  Database,
+  DatabaseBackup,
+  DatabaseBackupType,
+  DatabaseStatus,
+  DatabaseType,
+  DatabaseVersion,
+} from '@linode/api-v4/lib/databases/types';
 import * as Factory from 'factory.ts';
+import { sample } from 'lodash';
+import { v4 } from 'uuid';
 
-export const databaseFactory = Factory.Sync.makeFactory<Database>({
-  id: Factory.each((i) => i),
-  label: Factory.each((i) => `database-${i}`),
-  status: 'ready',
-  // region: 'us-east', @todo add this in when the API supports it
-  maintenance_schedule: {
-    day: 'Wednesday',
-    window: 'W0',
-  },
-  tags: ['tag1', 'tag2'],
-  availability: 'standard',
-  vcpus: 1,
-  memory: 1024,
-  disk: 25,
-  created: '2020-10-01T00:00:00',
-  updated: '2020-10-20T17:15:12',
-});
+const possibleStatuses = [
+  'creating',
+  'running',
+  'failed',
+  'degraded',
+  'updating',
+];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   id: 'g1-mysql-ha-2',
@@ -27,8 +26,46 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
     monthly: 60,
   },
   memory: 2048,
+  transfer: 30,
   disk: 40,
-  transfer: null,
   vcpus: 2,
-  availability: 'high',
+  deprecated: false,
+  addons: {
+    fallover_node: {
+      price: {
+        monthly: 0.6,
+        hourly: 80,
+      },
+    },
+  },
 });
+
+export const databaseFactory = Factory.Sync.makeFactory<Database>({
+  id: Factory.each((i) => i),
+  label: Factory.each((i) => `database-${i}`),
+  engine: 'mysql',
+  type: databaseTypeFactory.build(),
+  region: 'us-east',
+  version: 'mysql/5.8.13',
+  status: sample(possibleStatuses) as DatabaseStatus,
+  updated: '2021-12-16T17:15:12',
+  created: '2021-12-09T17:15:12',
+  instance_uri: '',
+});
+
+export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
+  id: Factory.each(() => v4()),
+  label: Factory.each(() => `backup-${v4()}`),
+  type: sample(['snapshot', 'auto']) as DatabaseBackupType,
+  created: '2020-10-01T00:00:00',
+});
+
+export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
+  {
+    id: Factory.each((i) => `version-${i}`),
+    label: Factory.each((i) => `Example Version ${i}`),
+    engine: 'mysql',
+    version: Factory.each((i) => `v${i}`),
+    deprecated: false,
+  }
+);

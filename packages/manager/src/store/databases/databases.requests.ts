@@ -4,7 +4,6 @@ import {
   Database,
   getDatabases,
   updateDatabase as _update,
-  resetPassword as _reset,
 } from '@linode/api-v4/lib/databases';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';
