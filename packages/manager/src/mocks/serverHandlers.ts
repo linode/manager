@@ -144,6 +144,16 @@ const databases = [
     const version = databaseVersionFactory.buildList(3);
     return res(ctx.json(makeResourcePage(version)));
   }),
+
+  rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
+    const database = databaseFactory.build({
+      id: req.params.id,
+      label: `database-${req.params.id}`,
+      engine: req.params.engine,
+    });
+    return res(ctx.json(database));
+  }),
+
   rest.get(
     '*/databases/:engine/instances/:databaseId/backups',
     (req, res, ctx) => {
@@ -151,6 +161,14 @@ const databases = [
       return res(ctx.json(makeResourcePage(backups)));
     }
   ),
+
+  rest.post(
+    '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+
   rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
     const id = Number(req.params.databaseId);
     const body = req.body as any;

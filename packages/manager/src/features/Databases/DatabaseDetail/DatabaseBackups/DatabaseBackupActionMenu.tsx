@@ -13,20 +13,17 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   backup: DatabaseBackup;
+  onRestore: (id: number) => void;
 }
 
-type CombinedProps = Props;
-
-const DatabaseBackupActionMenu: React.FC<CombinedProps> = (props) => {
+const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const { backup, onRestore } = props;
 
-  // @todo add actions functionality when API work is finalized
   const actions = [
     {
       title: 'Restore',
-      onClick: () => {
-        alert('Restore');
-      },
+      onClick: () => onRestore(backup.id),
     },
   ];
 

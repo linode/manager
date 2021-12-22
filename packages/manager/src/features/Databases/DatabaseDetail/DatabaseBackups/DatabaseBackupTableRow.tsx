@@ -3,19 +3,21 @@ import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
+import formatDate from 'src/utilities/formatDate';
 
 interface Props {
   backup: DatabaseBackup;
+  onRestore: (id: number) => void;
 }
 
-const BackupTableRow: React.FC<Props> = ({ backup }) => {
+const BackupTableRow: React.FC<Props> = ({ backup, onRestore }) => {
   const { id, created } = backup;
 
   return (
     <TableRow key={id}>
-      <TableCell>{created}</TableCell>
+      <TableCell>{formatDate(created)}</TableCell>
       <TableCell>
-        <DatabaseBackupActionMenu backup={backup} />
+        <DatabaseBackupActionMenu backup={backup} onRestore={onRestore} />
       </TableCell>
     </TableRow>
   );

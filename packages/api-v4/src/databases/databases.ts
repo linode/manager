@@ -132,7 +132,7 @@ export const getEngineDatabases = (
  *
  */
 export const getEngineDatabase = (engine: Engine, databaseID: number) =>
-  Request<Database>(
+  Request<CreateDatabaseResponse>(
     setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
     setMethod('GET')
   );
