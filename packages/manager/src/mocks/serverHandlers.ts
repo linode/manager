@@ -145,7 +145,7 @@ const databases = [
     return res(ctx.json(makeResourcePage(version)));
   }),
   rest.get(
-    '*/databases/mysql/instances/:databaseId/backups',
+    '*/databases/:engine/instances/:databaseId/backups',
     (req, res, ctx) => {
       const backups = databaseBackupFactory.buildList(7);
       return res(ctx.json(makeResourcePage(backups)));
