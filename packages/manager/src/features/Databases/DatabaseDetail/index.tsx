@@ -5,6 +5,7 @@ import Tabs from 'src/components/core/ReachTabs';
 // import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
+import useFlags from 'src/hooks/useFlags';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -39,6 +40,12 @@ export const DatabaseDetail: React.FC = () => {
   const handleTabChange = (index: number) => {
     history.push(tabs[index].routeName);
   };
+
+  // @TODO: Remove when Database goes to GA
+  const flags = useFlags();
+  if (!flags.databases) {
+    return null;
+  }
 
   return (
     <>
