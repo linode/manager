@@ -55,7 +55,8 @@ export interface SSLFields {
   certificate: string | null;
 }
 
-export interface Database {
+// DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
+export interface DatabaseInstance {
   id: number;
   label: string;
   engine: Engine;
@@ -63,6 +64,7 @@ export interface Database {
   region: string;
   version: string;
   status: DatabaseStatus;
+  failover_count: number;
   updated: string;
   created: string;
   instance_uri: string;
@@ -87,17 +89,18 @@ interface ConnectionStrings {
   driver: DriverTypes;
   value: string;
 }
-export interface CreateDatabaseResponse {
+
+// Database is the interface for the shape of data returned by /databases/{engine}/instances
+export interface Database {
   id: number;
   label: string;
   region: string;
   status: DatabaseStatus;
-  type: string;
+  type: DatabaseType;
   failover_count: FailoverCount;
   engine: Engine;
   encrypted: boolean;
   ipv4_public: string[];
-  port: string;
   ssl_connection: boolean;
   replication_type: ReplicationType;
   allow_list: string[];
