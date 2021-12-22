@@ -54,7 +54,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
 });
 
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
-  id: Factory.each(() => v4()),
+  id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${v4()}`),
   type: sample(['snapshot', 'auto']) as DatabaseBackupType,
   created: '2020-10-01T00:00:00',
