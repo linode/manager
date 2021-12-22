@@ -68,13 +68,13 @@ export interface Database {
   instance_uri: string;
 }
 
-type StandbyCount = 1 | 3;
+type FailoverCount = 1 | 3;
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
 export interface CreateDatabasePayload {
   label: string;
   region: string;
   type: string;
-  standby_count?: StandbyCount;
+  failover_count?: FailoverCount;
   engine?: Engine;
   encrypted?: boolean;
   ssl_connection?: boolean;
@@ -93,7 +93,7 @@ export interface CreateDatabaseResponse {
   region: string;
   status: DatabaseStatus;
   type: string;
-  standby_count: StandbyCount;
+  failover_count: FailoverCount;
   engine: Engine;
   encrypted: boolean;
   ipv4_public: string[];
