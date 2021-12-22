@@ -1,9 +1,10 @@
 import * as React from 'react';
 // import useDatabases from 'src/hooks/useDatabases';
-// import DatabaseSummaryLabelPanel from './DatabaseSummaryLabelPanel';
-// import DatabaseSummaryMaintenancePanel from './DatabaseSummaryMaintenancePanel';
-// import DatabaseSummaryPasswordPanel from './DatabaseSummaryPasswordPanel';
+import DatabaseSummaryConnectionDetails from './DatabaseSummaryConnectionDetails';
+import DatabaseSummaryClusterConfiguration from './DatabaseSummaryClusterConfiguration';
+import DatabaseSummaryAccessControls from './DatabaseSummaryAccessControls';
 
+// 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {
   // databaseID: number;
@@ -18,15 +19,9 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   return (
     <>
       Database Summary
-      {/* <DatabaseSummaryLabelPanel
-        databaseID={thisDatabase.id}
-        databaseLabel={thisDatabase.label}
-      />
-      <DatabaseSummaryPasswordPanel databaseID={thisDatabase.id} />
-      <DatabaseSummaryMaintenancePanel
-        databaseID={thisDatabase.id}
-        databaseMaintenanceSchedule={thisDatabase.maintenance_schedule}
-      /> */}
+      <DatabaseSummaryConnectionDetails />
+      <DatabaseSummaryClusterConfiguration />
+      <DatabaseSummaryAccessControls />
     </>
   );
 };
