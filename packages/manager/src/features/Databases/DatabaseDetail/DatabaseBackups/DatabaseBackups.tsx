@@ -24,7 +24,9 @@ export const DatabaseBackups: React.FC = () => {
   const { databaseId } = useParams<{ databaseId: string }>();
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
-  const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<number | undefined>();
+  const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<
+    number | undefined
+  >();
 
   const id = Number(databaseId);
 
@@ -55,13 +57,13 @@ export const DatabaseBackups: React.FC = () => {
   );
 
   const renderTableBody = () => {
-    if (isDatabaseLoading || isBackupsLoading) {
-      return <TableRowLoading oneLine numberOfColumns={2} colSpan={2} />;
-    } else if (databaseError) {
+    if (databaseError) {
       return <TableRowError message={databaseError[0].reason} colSpan={2} />;
     } else if (backupsError) {
       return <TableRowError message={backupsError[0].reason} colSpan={2} />;
-    } else if (backups?.results == 0) {
+    } else if (isDatabaseLoading || isBackupsLoading) {
+      return <TableRowLoading oneLine numberOfColumns={2} colSpan={2} />;
+    } else if (backups?.results === 0) {
       return (
         <TableRowEmptyState message="No backups to display." colSpan={2} />
       );

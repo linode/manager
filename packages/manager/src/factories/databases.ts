@@ -8,6 +8,7 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 import * as Factory from 'factory.ts';
 import { sample } from 'lodash';
+import { randomDate } from 'src/utilities/random';
 import { v4 } from 'uuid';
 
 const possibleStatuses = [
@@ -57,7 +58,7 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${v4()}`),
   type: sample(['snapshot', 'auto']) as DatabaseBackupType,
-  created: '2020-10-01T00:00:00',
+  created: Factory.each(() => randomDate().toISOString()),
 });
 
 export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
