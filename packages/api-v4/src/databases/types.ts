@@ -11,7 +11,7 @@ export interface DatabaseType {
   vcpus: number;
   deprecated: boolean;
   addons: {
-    fallover_node: {
+    failover: {
       price: {
         monthly: number;
         hourly: number;
