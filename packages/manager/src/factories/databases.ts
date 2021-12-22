@@ -45,19 +45,21 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   },
 });
 
-export const instanceFactory = Factory.Sync.makeFactory<DatabaseInstance>({
-  id: Factory.each((i) => i),
-  label: Factory.each((i) => `database-${i}`),
-  engine: 'mysql',
-  type: databaseTypeFactory.build(),
-  region: 'us-east',
-  version: 'mysql/5.8.13',
-  status: sample(possibleStatuses) as DatabaseStatus,
-  failover_count: 3,
-  updated: '2021-12-16T17:15:12',
-  created: '2021-12-09T17:15:12',
-  instance_uri: '',
-});
+export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
+  {
+    id: Factory.each((i) => i),
+    label: Factory.each((i) => `database-${i}`),
+    engine: 'mysql',
+    type: databaseTypeFactory.build(),
+    region: 'us-east',
+    version: 'mysql/5.8.13',
+    status: sample(possibleStatuses) as DatabaseStatus,
+    failover_count: 3,
+    updated: '2021-12-16T17:15:12',
+    created: '2021-12-09T17:15:12',
+    instance_uri: '',
+  }
+);
 
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   id: Factory.each((i) => i),
