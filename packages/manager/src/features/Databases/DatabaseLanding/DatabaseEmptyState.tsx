@@ -9,7 +9,6 @@ import { useHistory } from 'react-router-dom';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& svg': {
-      marginTop: theme.spacing(1.5),
       transform: 'scale(0.8)',
     },
   },

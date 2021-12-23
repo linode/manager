@@ -145,7 +145,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           href: '/nodebalancers',
           icon: <NodeBalancer />,
         },
-
+        {
+          hide: !showDatabases,
+          display: 'Databases',
+          href: '/databases',
+          icon: <Database />,
+        },
         {
           hide: !showFirewalls,
           display: 'Firewalls',
@@ -181,12 +186,6 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           href: '/kubernetes/clusters',
           activeLinks: ['/kubernetes/create'],
           icon: <Kubernetes />,
-        },
-        {
-          hide: !showDatabases,
-          display: 'Databases',
-          href: '/databases',
-          icon: <Database />,
         },
         {
           display: 'Object Storage',
