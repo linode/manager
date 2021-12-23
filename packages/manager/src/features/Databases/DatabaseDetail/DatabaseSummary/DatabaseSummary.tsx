@@ -1,8 +1,8 @@
 import * as React from 'react';
 // import useDatabases from 'src/hooks/useDatabases';
-import DatabaseSummaryConnectionDetails from './DatabaseSummaryConnectionDetails';
-import DatabaseSummaryClusterConfiguration from './DatabaseSummaryClusterConfiguration';
-import DatabaseSummaryAccessControls from './DatabaseSummaryAccessControls';
+import ConnectionDetails from './DatabaseSummaryConnectionDetails';
+import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
+import AccessControls from './DatabaseSummaryAccessControls';
 
 // 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -19,9 +19,9 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
   return (
     <>
       Database Summary
-      <DatabaseSummaryConnectionDetails />
-      <DatabaseSummaryClusterConfiguration />
-      <DatabaseSummaryAccessControls />
+      <ConnectionDetails />
+      <ClusterConfiguration />
+      <AccessControls />
     </>
   );
 };
