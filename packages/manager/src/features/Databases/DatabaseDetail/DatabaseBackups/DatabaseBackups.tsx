@@ -19,6 +19,7 @@ import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
+import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId } = useParams<{ databaseId: string }>();
@@ -56,6 +57,13 @@ export const DatabaseBackups: React.FC = () => {
     (backup) => backup.id === idOfBackupToRestore
   );
 
+  const sorter = (a: DatabaseBackup, b: DatabaseBackup) => {
+    if (order === 'asc') {
+      return new Date(b.created).getTime() - new Date(a.created).getTime();
+    }
+    return new Date(a.created).getTime() - new Date(b.created).getTime();
+  };
+
   const renderTableBody = () => {
     if (databaseError) {
       return <TableRowError message={databaseError[0].reason} colSpan={2} />;
@@ -68,13 +76,15 @@ export const DatabaseBackups: React.FC = () => {
         <TableRowEmptyState message="No backups to display." colSpan={2} />
       );
     } else if (backups) {
-      return backups.data.map((backup) => (
-        <DatabaseBackupTableRow
-          key={backup.id}
-          backup={backup}
-          onRestore={onRestore}
-        />
-      ));
+      return backups.data
+        .sort(sorter)
+        .map((backup) => (
+          <DatabaseBackupTableRow
+            key={backup.id}
+            backup={backup}
+            onRestore={onRestore}
+          />
+        ));
     }
     return null;
   };
