@@ -19,8 +19,8 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import DocsLink from 'src/components/DocsLink';
+import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -251,6 +251,24 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     },
   ];
 
+  getDefaultTabIndex = () => {
+    const tabChoice = this.tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      this.props.history.push(`${this.props.match.url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
+  };
+
+  handleTabChange = (index: number) => {
+    this.props.history.push(this.tabs[index].routeName);
+  };
+
   updateNodeBalancerState = (data: NodeBalancer) => {
     if (this.state.nodeBalancer) {
       this.setState({
@@ -265,8 +283,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const matches = (pathName: string) =>
-      Boolean(matchPath(this.props.location.pathname, { path: pathName }));
     const { classes, error, loading } = this.props;
     const { nodeBalancer } = this.state;
 
@@ -299,10 +315,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       updateTags: this.updateTags,
     };
 
-    const navToURL = (index: number) => {
-      this.props.history.push(this.tabs[index].routeName);
-    };
-
     return (
       <NodeBalancerProvider value={p}>
         <React.Fragment>
@@ -329,14 +341,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           </Grid>
           {errorMap.none && <Notice error text={errorMap.none} />}
           <Tabs
-            index={Math.max(
-              this.tabs.findIndex((tab) => matches(tab.routeName)),
-              0
-            )}
-            onChange={navToURL}
+            index={this.getDefaultTabIndex()}
+            onChange={this.handleTabChange}
           >
             <TabLinkList tabs={this.tabs} />
-
             <TabPanels>
               <SafeTabPanel index={0}>
                 <NodeBalancerSummary
@@ -348,14 +356,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                   )}
                 />
               </SafeTabPanel>
-
               <SafeTabPanel index={1}>
                 <NodeBalancerConfigurations
                   nodeBalancerLabel={nodeBalancer.label}
                   nodeBalancerRegion={nodeBalancer.region}
                 />
               </SafeTabPanel>
-
               <SafeTabPanel index={2}>
                 <NodeBalancerSettings
                   nodeBalancerId={nodeBalancer.id}

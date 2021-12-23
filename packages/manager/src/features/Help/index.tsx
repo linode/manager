@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import StatusBanners from './StatusBanners';
 
 const HelpLanding = React.lazy(() => import('./HelpLanding'));
@@ -23,13 +23,24 @@ const HelpAndSupport: React.FC = () => {
         <Route
           component={SupportTicketDetail}
           path={`${path}/tickets/:ticketId`}
+          exact
+          strict
         />
-        <Route component={SupportTickets} path={`${path}/tickets`} />
-        <Route component={SupportSearchLanding} path={`${path}/search`} />
+        <Route
+          component={SupportTickets}
+          path={`${path}/tickets`}
+          exact
+          strict
+        />
+        <Route
+          component={SupportSearchLanding}
+          path={`${path}/search`}
+          exact
+          strict
+        />
         <Route path={path} exact strict>
           <HelpLanding />
         </Route>
-        <Redirect to={path} />
       </Switch>
     </>
   );

@@ -18,19 +18,9 @@ const DomainsRoutes: React.FC = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={DomainCreate} path={`${path}/create`} exact />
-        <Route
-          component={DomainDetail}
-          path={`${path}/:domainId/records`}
-          exact
-          strict
-        />
-        <Route
-          component={DomainDetail}
-          path={`${path}/:domainId`}
-          exact
-          strict
-        />
+        <Route component={DomainCreate} path={`${path}/create`} />
+        <Route component={DomainDetail} path={`${path}/:domainId/records`} />
+        <Route component={DomainDetail} path={`${path}/:domainId`} />
         <Route component={DomainsLanding} path={path} exact strict />
         <Redirect to={path} />
       </Switch>

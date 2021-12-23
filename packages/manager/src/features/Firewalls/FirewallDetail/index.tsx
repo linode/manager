@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -40,6 +40,7 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const history = useHistory();
 
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
@@ -61,12 +62,22 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
     },
   ];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${URL}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
   };
 
   const { data } = useFirewallQuery();
@@ -133,15 +144,8 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
           <DocsLink href="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/" />
         </Grid>
       </Grid>
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
+      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
-
         <TabPanels>
           <SafeTabPanel index={0}>
             <FirewallRulesLanding

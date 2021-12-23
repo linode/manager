@@ -58,12 +58,22 @@ const AccountLanding: React.FC<Props> = (props) => {
     },
   ].filter(Boolean) as Tab[];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}/billing`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
   };
 
   let idx = 0;
@@ -87,18 +97,12 @@ const AccountLanding: React.FC<Props> = (props) => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <DocumentTitleSegment segment="Account Settings" />
       <TaxBanner location={location} marginBottom={24} />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
+      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
@@ -123,7 +127,7 @@ const AccountLanding: React.FC<Props> = (props) => {
           </TabPanels>
         </React.Suspense>
       </Tabs>
-    </React.Fragment>
+    </>
   );
 };
 

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   Switch,
   useHistory,
@@ -31,18 +32,38 @@ export const StackScripts: React.FC = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={StackScriptsLanding} path={`${path}/account`} />
-        <Route component={StackScriptsLanding} path={`${path}/community`} />
+        <Route
+          component={StackScriptsLanding}
+          path={`${path}/account`}
+          exact
+          strict
+        />
+        <Route
+          component={StackScriptsLanding}
+          path={`${path}/community`}
+          exact
+          strict
+        />
         <Route component={StackScriptsLanding} path={path} exact strict />
         <Route
           render={() => <StackScriptCreate mode="create" />}
           path={`${path}/create`}
+          exact
+          strict
         />
         <Route
           render={() => <StackScriptCreate mode="edit" />}
           path={`${path}/:stackScriptId/edit`}
+          exact
+          strict
         />
-        <Route component={StackScriptsDetail} path={`${path}/:stackScriptId`} />
+        <Route
+          component={StackScriptsDetail}
+          path={`${path}/:stackScriptId`}
+          exact
+          strict
+        />
+        <Redirect to={path} />
       </Switch>
     </React.Suspense>
   );

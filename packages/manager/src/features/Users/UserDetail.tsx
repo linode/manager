@@ -68,6 +68,24 @@ const UserDetail: React.FC = () => {
     },
   ];
 
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`/account/users/${usernameParam}/profile`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
+  };
+
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
+  };
+
   React.useEffect(() => {
     getUser(usernameParam)
       .then((user) => {
@@ -92,6 +110,7 @@ const UserDetail: React.FC = () => {
         state: {},
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const clearNewUser = () => {
@@ -178,19 +197,6 @@ const UserDetail: React.FC = () => {
       });
   };
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
-  };
-
-  const clampTabChoice = () => {
-    const tabChoice = tabs.findIndex((tab) => matches(tab.routeName));
-    return tabChoice < 0 ? 0 : tabChoice;
-  };
-
-  const navToURL = (index: number) => {
-    history.push(tabs[index].routeName);
-  };
-
   if (error) {
     return (
       <React.Fragment>
@@ -226,7 +232,7 @@ const UserDetail: React.FC = () => {
         ]}
         removeCrumbX={4}
       />
-      <Tabs defaultIndex={clampTabChoice()} onChange={navToURL}>
+      <Tabs defaultIndex={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         {createdUsername && (

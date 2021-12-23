@@ -1,6 +1,6 @@
 import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -13,7 +13,6 @@ import TabLinkList from 'src/components/TabLinkList';
 import { BucketAccess } from './BucketAccess';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
-// const Access = React.lazy(() => import('./BucketAccess'));
 const BucketSSL = React.lazy(() => import('./BucketSSL'));
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,10 +35,8 @@ type CombinedProps = RouteComponentProps<MatchProps>;
 
 export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const history = useHistory();
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
   const { bucketName, clusterId } = props.match.params;
 
   const tabs = [
@@ -57,12 +54,21 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
     },
   ];
 
-  const [index, setIndex] = React.useState(
-    tabs.findIndex((tab) => matches(tab.routeName)) || 0
-  );
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
+  };
 
   const handleTabChange = (index: number) => {
-    setIndex(index);
     props.history.push(tabs[index].routeName);
   };
 
@@ -90,9 +96,8 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
         <DocsLink href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
 
-      <Tabs index={index} onChange={handleTabChange}>
+      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
-
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>

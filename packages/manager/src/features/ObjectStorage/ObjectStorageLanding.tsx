@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import {
   matchPath,
   RouteComponentProps,
+  useHistory,
   useRouteMatch,
 } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -56,6 +57,8 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['clusters']);
 
   const dispatch = useDispatch<Dispatch>();
+  const flags = useFlags();
+  const history = useHistory();
 
   // @todo: dispatch bucket drawer open action
 
@@ -91,6 +94,24 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
       routeName: `${props.match.url}/access-keys`,
     },
   ];
+
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
+  };
+
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
+  };
 
   const openDrawer = (mode: MODE) => {
     setMode(mode);
@@ -133,17 +154,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     setRoute(props.location.pathname.replace('/object-storage/', ''));
   }, [route, props.location.pathname]);
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    setRoute(props.location.pathname.replace('/object-storage/', ''));
-    props.history.push(tabs[index].routeName);
-  };
-
-  const flags = useFlags();
 
   const objPromotionalOffers = (
     flags.promotionalOffers ?? []
@@ -195,15 +205,8 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
         removeCrumbX={1}
         breadcrumbProps={{ pathname: '/object-storage' }}
       />
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
+      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
-
         {objPromotionalOffers.map((promotionalOffer) => (
           <PromotionalOfferCard
             key={promotionalOffer.name}

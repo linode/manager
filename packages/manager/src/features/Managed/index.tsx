@@ -8,7 +8,7 @@ const Managed: React.FC = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={ManagedLanding} exact strict />
+        <Route component={ManagedLanding} />
       </Switch>
     </React.Suspense>
   );

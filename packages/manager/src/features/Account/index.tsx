@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const AccountLanding = React.lazy(
@@ -13,32 +13,26 @@ const EntityTransfersCreate = React.lazy(
 );
 const UserDetail = React.lazy(() => import('src/features/Users/UserDetail'));
 
-type Props = RouteComponentProps<{}>;
+const Account: React.FC = () => {
+  const { path } = useRouteMatch();
 
-class Account extends React.Component<Props> {
-  render() {
-    const {
-      match: { path },
-    } = this.props;
+  return (
+    <React.Suspense fallback={<SuspenseLoader />}>
+      <Switch>
+        <Route component={UserDetail} path={`${path}/users/:username`} />
+        <Route
+          component={InvoiceDetail}
+          path={`${path}/billing/invoices/:invoiceId`}
+        />
+        <Route
+          component={EntityTransfersCreate}
+          path={`${path}/service-transfers/create`}
+        />
+        <Redirect from={path} to={`${path}/billing`} exact />
+        <Route component={AccountLanding} path={path} />
+      </Switch>
+    </React.Suspense>
+  );
+};
 
-    return (
-      <React.Suspense fallback={<SuspenseLoader />}>
-        <Switch>
-          <Route path={`${path}/users/:username`} component={UserDetail} />
-          <Route
-            exact
-            path={`${path}/billing/invoices/:invoiceId`}
-            component={InvoiceDetail}
-          />
-          <Route
-            path={`${path}/service-transfers/create`}
-            component={EntityTransfersCreate}
-          />
-          <Redirect exact from="/account" to="/account/billing" />
-          <Route path={`${path}`} component={AccountLanding} />
-        </Switch>
-      </React.Suspense>
-    );
-  }
-}
 export default Account;

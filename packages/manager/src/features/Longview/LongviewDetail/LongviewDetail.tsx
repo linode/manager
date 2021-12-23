@@ -1,7 +1,7 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -78,6 +78,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   const timezone = profile?.timezone || 'US/Eastern';
 
   const classes = useStyles();
+  const history = useHistory();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -162,16 +163,26 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
     },
   ];
 
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
+  };
+
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
+  };
+
   // Filtering out conditional tabs if they don't exist on client
   const tabs = tabOptions.filter((tab) => tab.display === true);
-
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
-  };
-
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
-  };
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
     return (
@@ -237,15 +248,11 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
         />
       ))}
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
+        index={getDefaultTabIndex()}
+        onChange={handleTabChange}
         className={classes.tabList}
       >
         <TabLinkList tabs={tabs} />
-
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>

@@ -15,7 +15,7 @@ const Volumes: React.FC = () => {
 
   return (
     <Switch>
-      <Route component={VolumeCreate} path={`${path}/create`} />
+      <Route component={VolumeCreate} path={`${path}/create`} exact strict />
       <Route
         render={(routeProps) => (
           <VolumesLanding isVolumesLanding removeBreadCrumb {...routeProps} />

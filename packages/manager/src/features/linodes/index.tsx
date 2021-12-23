@@ -18,7 +18,7 @@ const LinodesRoutes: React.FC = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={LinodesCreate} path={`${path}/create`} />
+        <Route component={LinodesCreate} path={`${path}/create`} exact strict />
         <Route component={LinodesDetail} path={`${path}/:linodeId`} />
         <Route component={LinodesLandingWrapper} path={path} exact strict />
         <Redirect to={path} />

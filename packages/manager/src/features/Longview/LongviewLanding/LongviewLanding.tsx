@@ -9,7 +9,7 @@ import {
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { matchPath, RouteComponentProps } from 'react-router-dom';
+import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -44,6 +44,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
     () => getLongviewSubscriptions().then((response) => response.data),
     []
   );
+  const history = useHistory();
 
   const { createLongviewClient } = props;
 
@@ -67,12 +68,22 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
     },
   ];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
   };
 
   const handleAddClient = () => {
@@ -133,15 +144,11 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
         removeCrumbX={1}
       />
       <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
+        index={getDefaultTabIndex()}
+        onChange={handleTabChange}
         style={{ marginTop: 0 }}
       >
         <TabLinkList tabs={tabs} />
-
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
