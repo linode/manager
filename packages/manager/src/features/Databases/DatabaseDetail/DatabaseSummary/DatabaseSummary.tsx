@@ -53,6 +53,8 @@ export const DatabaseSummary: React.FC = () => {
     return <CircleProgress />;
   }
 
+  const accessControlsList = data?.allow_list ?? [];
+
   return (
     <Paper>
       <Typography variant="h3">Cluster Configuration</Typography>
@@ -68,7 +70,7 @@ export const DatabaseSummary: React.FC = () => {
         databaseID={thisDatabase.id}
         databaseMaintenanceSchedule={thisDatabase.maintenance_schedule}
       /> */}
-      <AccessControls />
+      <AccessControls accessControlsList={accessControlsList} />
     </Paper>
   );
 };
