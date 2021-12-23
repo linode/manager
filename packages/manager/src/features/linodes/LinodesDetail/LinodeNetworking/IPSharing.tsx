@@ -243,7 +243,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setIpsToShare(linodeSharedIPs);
   };
 
-  const noChoices = ipChoices.length <= 1;
+  const noChoices = ipChoices.length === 0;
 
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
@@ -277,7 +277,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                   <Typography>IP Addresses</Typography>
                 </Grid>
               </Grid>
-              {ipChoices.length <= 1 ? (
+              {noChoices ? (
                 <Typography className={classes.noIPsMessage}>
                   You have no other Linodes in this Linode&apos;s datacenter
                   with which to share IPs.
