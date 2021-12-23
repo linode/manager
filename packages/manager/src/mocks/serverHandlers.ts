@@ -1,5 +1,4 @@
 import { EventAction, NotificationType } from '@linode/api-v4';
-import Build from '@material-ui/icons/Build';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -11,6 +10,7 @@ import {
   appTokenFactory,
   creditPaymentResponseFactory,
   databaseFactory,
+  databaseInstanceFactory,
   databaseTypeFactory,
   databaseVersionFactory,
   domainFactory,
@@ -131,7 +131,7 @@ const entityTransfers = [
 
 const databases = [
   rest.get('*/databases/instances', (req, res, ctx) => {
-    const databases = databaseFactory.buildList(5);
+    const databases = databaseInstanceFactory.buildList(5);
     return res(ctx.json(makeResourcePage(databases)));
   }),
 

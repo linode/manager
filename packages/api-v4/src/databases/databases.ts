@@ -13,8 +13,8 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 import {
   CreateDatabasePayload,
-  CreateDatabaseResponse,
   Database,
+  DatabaseInstance,
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseType,
@@ -32,7 +32,7 @@ import {
  *
  */
 export const getDatabases = (params?: any, filters?: any) =>
-  Request<Page<Database>>(
+  Request<Page<DatabaseInstance>>(
     setURL(`${API_ROOT}/databases/instances`),
     setMethod('GET'),
     setParams(params),
@@ -101,7 +101,7 @@ export const createDatabase = (
   engine: Engine = 'mysql',
   data: CreateDatabasePayload
 ) =>
-  Request<CreateDatabaseResponse>(
+  Request<Database>(
     setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('POST'),
     setData(data, createDatabaseSchema)
