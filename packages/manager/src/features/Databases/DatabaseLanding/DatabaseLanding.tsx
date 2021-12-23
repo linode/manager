@@ -1,4 +1,4 @@
-import { Database } from '@linode/api-v4/lib/databases';
+import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -102,7 +102,7 @@ const DatabaseLanding: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data?.data.map((database: Database) => (
+          {data?.data.map((database: DatabaseInstance) => (
             <DatabaseRow key={database.id} database={database} />
           ))}
         </TableBody>

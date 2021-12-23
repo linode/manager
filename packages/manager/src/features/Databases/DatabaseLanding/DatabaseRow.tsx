@@ -3,18 +3,20 @@ import classNames from 'classnames';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import StatusIcon from 'src/components/StatusIcon';
+import Hidden from 'src/components/core/Hidden';
+import Chip from 'src/components/core/Chip';
 import { Link } from 'react-router-dom';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { makeStyles } from 'src/components/core/styles';
 import { dcDisplayNames } from 'src/constants';
 import { formatDate } from 'src/utilities/formatDate';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
+import { useStyles as useChipStyles } from 'src/features/Volumes/VolumeTableRow';
 import {
-  Database,
+  DatabaseInstance,
   DatabaseStatus,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
-import Hidden from 'src/components/core/Hidden';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   creating: 'other',
@@ -38,16 +40,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const getDatabaseVersionNumber = (version: Database['version']) =>
-  version.split('/')[1];
+export const getDatabaseVersionNumber = (
+  version: DatabaseInstance['version']
+) => version.split('/')[1];
 
 interface Props {
-  database: Database;
+  database: DatabaseInstance;
 }
 
 export const DatabaseRow: React.FC<Props> = ({ database }) => {
-  const { id, label, engine, created, status, region, version } = database;
   const classes = useStyles();
+  const chipClasses = useChipStyles();
+  const {
+    id,
+    label,
+    engine,
+    created,
+    status,
+    region,
+    version,
+    failover_count,
+  } = database;
 
   return (
     <TableRow key={`database-row-${id}`} ariaLabel={`Database ${label}`}>
@@ -60,7 +73,19 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
           {status}
         </div>
       </TableCell>
-      <TableCell>Primary +2</TableCell>
+      <TableCell>
+        {failover_count <= 1 ? (
+          'Primary'
+        ) : (
+          <>
+            {`Primary +${failover_count}`}
+            <Chip
+              className={`${chipClasses.chip} ${chipClasses.nvmeChip}`}
+              label="HA"
+            />
+          </>
+        )}
+      </TableCell>
       <TableCell>
         {`${databaseEngineMap[engine]} v${getDatabaseVersionNumber(version)}`}
       </TableCell>
