@@ -70,7 +70,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   failover_count: 3,
   engine: 'mysql',
   encrypted: false,
-  ipv4_public: IPv4List,
+  ipv4_public: sample(IPv4List) as string,
   ssl_connection: false,
   replication_type: sample(possibleReplicationTypes) as ReplicationType,
   allow_list: [...IPv4List],

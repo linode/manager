@@ -100,7 +100,7 @@ export interface Database {
   failover_count: FailoverCount;
   engine: Engine;
   encrypted: boolean;
-  ipv4_public: string[];
+  ipv4_public: string;
   ssl_connection: boolean;
   replication_type: ReplicationType;
   allow_list: string[];
