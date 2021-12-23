@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
 import Divider from 'src/components/core/Divider';
 // import useDatabases from 'src/hooks/useDatabases';
 
@@ -30,8 +31,14 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
 
   return (
     <Paper>
-      <ConnectionDetails /> 
-      <ClusterConfiguration />
+      <Grid container>
+        <Grid item>
+          <ConnectionDetails /> 
+        </Grid>
+        <Grid item>
+          <ClusterConfiguration />
+        </Grid>
+      </Grid>
       <Divider className={classes.divider} />
       <AccessControls />
     </Paper>
