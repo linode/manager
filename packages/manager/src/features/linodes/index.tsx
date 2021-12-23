@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
@@ -13,13 +13,15 @@ const LinodesCreate = React.lazy(
 );
 
 const LinodesRoutes: React.FC = () => {
+  const { path } = useRouteMatch();
+
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={LinodesCreate} path="/linodes/create" />
-        <Route component={LinodesDetail} path="/linodes/:linodeId" />
-        <Route component={LinodesLandingWrapper} path="/linodes" exact strict />
-        <Redirect to="/linodes" />
+        <Route component={LinodesCreate} path={`${path}/create`} />
+        <Route component={LinodesDetail} path={`${path}/:linodeId`} />
+        <Route component={LinodesLandingWrapper} path={path} exact strict />
+        <Redirect to={path} />
       </Switch>
     </React.Suspense>
   );

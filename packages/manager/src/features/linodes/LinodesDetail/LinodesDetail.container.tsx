@@ -76,7 +76,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
     return <CircleProgress />;
   }
 
-  return <LinodesDetail linodeId={linodeId} />;
+  return <LinodesDetail />;
 };
 
 export default React.memo(LinodesDetailContainer);

@@ -1,34 +1,22 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 
 const FirewallLanding = React.lazy(() => import('./FirewallLanding'));
-
 const FirewallDetail = React.lazy(() => import('./FirewallDetail'));
 
-type Props = RouteComponentProps<{}>;
-
-type CombinedProps = Props;
-
-const Firewall: React.FC<CombinedProps> = (props) => {
-  const {
-    match: { path },
-  } = props;
-
+const Firewall: React.FC = () => {
+  const { path } = useRouteMatch();
   useReduxLoad(['firewalls']);
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
-      <React.Fragment>
-        <DocumentTitleSegment segment="Firewalls" />
-        <Switch>
-          <Route exact path={`${path}(/create)?`} component={FirewallLanding} />
-          <Route path={`${path}/:id`} component={FirewallDetail} />
-          <Route component={FirewallLanding} />
-        </Switch>
-      </React.Fragment>
+      <Switch>
+        <Route component={FirewallLanding} path={`${path}/create`} />
+        <Route component={FirewallDetail} path={`${path}/:id`} />
+        <Route component={FirewallLanding} exact strict />
+      </Switch>
     </React.Suspense>
   );
 };

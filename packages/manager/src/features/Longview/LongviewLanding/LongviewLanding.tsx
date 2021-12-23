@@ -13,6 +13,7 @@ import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -121,6 +122,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 
   return (
     <>
+      <DocumentTitleSegment segment="Longview" />
       <LandingHeader
         title="Longview"
         entity="Client"

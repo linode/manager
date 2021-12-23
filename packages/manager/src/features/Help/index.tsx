@@ -1,43 +1,35 @@
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import StatusBanners from './StatusBanners';
 
 const HelpLanding = React.lazy(() => import('./HelpLanding'));
-
 const SupportSearchLanding = React.lazy(
   () => import('src/features/Help/SupportSearchLanding')
-);
-
-const SupportTickets = React.lazy(
-  () => import('src/features/Support/SupportTickets')
 );
 const SupportTicketDetail = React.lazy(
   () => import('src/features/Support/SupportTicketDetail')
 );
+const SupportTickets = React.lazy(
+  () => import('src/features/Support/SupportTickets')
+);
 
-const HelpAndSupport: React.FC<{}> = (_) => {
+const HelpAndSupport: React.FC = () => {
+  const { path } = useRouteMatch();
+
   return (
     <>
       <StatusBanners />
       <Switch>
         <Route
-          exact
-          strict
-          path="/support/tickets"
-          component={SupportTickets}
-        />
-        <Route
-          path="/support/tickets/:ticketId"
           component={SupportTicketDetail}
-          exact
-          strict
+          path={`${path}/tickets/:ticketId`}
         />
-        <Route path="/support/search/" component={SupportSearchLanding} />
-
-        <Route path="/support">
+        <Route component={SupportTickets} path={`${path}/tickets`} />
+        <Route component={SupportSearchLanding} path={`${path}/search`} />
+        <Route path={path} exact strict>
           <HelpLanding />
         </Route>
-        <Redirect to={'/support'} />
+        <Redirect to={path} />
       </Switch>
     </>
   );

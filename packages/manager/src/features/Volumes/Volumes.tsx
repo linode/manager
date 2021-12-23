@@ -2,23 +2,20 @@ import * as React from 'react';
 import {
   Redirect,
   Route,
-  RouteComponentProps,
   Switch,
+  useRouteMatch,
   withRouter,
 } from 'react-router-dom';
 
 const VolumesLanding = React.lazy(() => import('./VolumesLanding'));
 const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
-type Props = RouteComponentProps<{}>;
-
-const Volumes: React.FC<Props> = (props) => {
-  const {
-    match: { path },
-  } = props;
+const Volumes: React.FC = () => {
+  const { path } = useRouteMatch();
 
   return (
     <Switch>
+      <Route component={VolumeCreate} path={`${path}/create`} />
       <Route
         render={(routeProps) => (
           <VolumesLanding isVolumesLanding removeBreadCrumb {...routeProps} />
@@ -27,7 +24,6 @@ const Volumes: React.FC<Props> = (props) => {
         exact
         strict
       />
-      <Route component={VolumeCreate} path={`${path}/create`} exact strict />
       <Redirect to={path} />
     </Switch>
   );

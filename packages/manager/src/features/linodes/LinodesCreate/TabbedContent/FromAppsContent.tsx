@@ -221,7 +221,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
 
         <AppDetailDrawer
           open={this.state.detailDrawerOpen}
-          stackscriptID={this.state.selectedScriptForDrawer}
+          stackscriptId={this.state.selectedScriptForDrawer}
           onClose={this.closeDrawer}
         />
       </React.Fragment>

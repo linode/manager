@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import {
   Redirect,
   Route,
-  RouteComponentProps,
   Switch,
+  useParams,
+  useRouteMatch,
   withRouter,
 } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -24,17 +25,9 @@ const LinodesDetailNavigation = React.lazy(
 );
 const CloneLanding = React.lazy(() => import('../CloneLanding'));
 
-interface Props {
-  linodeId: string;
-}
-
-type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
-
-const LinodeDetail: React.FC<CombinedProps> = (props) => {
-  const {
-    linodeId,
-    match: { path, url },
-  } = props;
+const LinodeDetail: React.FC = () => {
+  const { linodeId } = useParams<{ linodeId: string }>();
+  const { path, url } = useRouteMatch();
 
   const dispatch = useDispatch();
   const linode = useExtendedLinode(+linodeId);
@@ -59,7 +52,7 @@ const LinodeDetail: React.FC<CombinedProps> = (props) => {
 
           <Route
             render={() => (
-              <React.Fragment>
+              <>
                 <LinodesDetailHeader />
                 <LinodesDetailNavigation />
                 <Switch>
@@ -78,7 +71,7 @@ const LinodeDetail: React.FC<CombinedProps> = (props) => {
                     to={`${url}?upgrade=true`}
                   />
                 </Switch>
-              </React.Fragment>
+              </>
             )}
           />
         </Switch>
@@ -87,9 +80,6 @@ const LinodeDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  LinodeDetailErrorBoundary
-);
+const enhanced = compose(withRouter, LinodeDetailErrorBoundary);
 
 export default enhanced(LinodeDetail);

@@ -2,8 +2,8 @@ import * as React from 'react';
 import {
   Redirect,
   Route,
-  RouteComponentProps,
   Switch,
+  useRouteMatch,
   withRouter,
 } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -16,15 +16,10 @@ const ImageCreate = React.lazy(
   () => import('./ImagesCreate/ImageCreateContainer')
 );
 
-type Props = RouteComponentProps<{}>;
-
-export const ImagesRoutes: React.FC<Props> = (props) => {
-  const {
-    match: { path },
-  } = props;
-
+export const ImagesRoutes: React.FC = () => {
   const flags = useFlags();
   const { account } = useAccountManagement();
+  const { path } = useRouteMatch();
 
   const machineImagesEnabled = isFeatureEnabled(
     'Machine Images',
@@ -35,11 +30,11 @@ export const ImagesRoutes: React.FC<Props> = (props) => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={ImagesLanding} path={path} exact />
         {machineImagesEnabled ? (
           <Route component={ImageCreate} path={`${path}/create`} />
         ) : null}
-        <Redirect to="/images" />
+        <Route component={ImagesLanding} path={path} exact strict />
+        <Redirect to={path} />
       </Switch>
     </React.Suspense>
   );

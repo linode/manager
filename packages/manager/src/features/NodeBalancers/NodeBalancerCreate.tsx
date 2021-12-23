@@ -1,3 +1,4 @@
+import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   append,
@@ -40,6 +41,11 @@ import { dcDisplayCountry } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
+  queryKey,
+  reportAgreementSigningError,
+} from 'src/queries/accountAgreements';
+import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
@@ -48,7 +54,6 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import withAgreements, {
   AgreementsProps,
@@ -60,11 +65,6 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import {
-  queryKey,
-  reportAgreementSigningError,
-} from 'src/queries/accountAgreements';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -530,9 +530,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container className="m0">
-          <Grid item className={`mlMain p0`}>
+          <Grid item className="mlMain p0">
             <Breadcrumb
-              pathname="/NodeBalancers/Create"
+              pathname="/nodebalancers/create"
               data-qa-create-nodebalancer-header
             />
             {generalError && !this.disabled && (

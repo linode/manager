@@ -1,23 +1,22 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const ObjectStorageLanding = React.lazy(() => import('./ObjectStorageLanding'));
 const BucketDetail = React.lazy(() => import('./BucketDetail'));
 
-type CombinedProps = RouteComponentProps;
-
-export const ObjectStorage: React.FC<CombinedProps> = (props) => {
-  const path = props.match.path;
+export const ObjectStorage: React.FC = () => {
+  const { path } = useRouteMatch();
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
         <Route
-          path={`${path}/buckets/:clusterId/:bucketName`}
           component={BucketDetail}
+          path={`${path}/buckets/:clusterId/:bucketName`}
         />
-        <Route component={ObjectStorageLanding} path={path} />
+        <Route component={ObjectStorageLanding} path={path} exact strict />
+        <Redirect to={path} />
       </Switch>
     </React.Suspense>
   );

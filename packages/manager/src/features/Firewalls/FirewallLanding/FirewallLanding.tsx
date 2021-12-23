@@ -7,16 +7,17 @@ import {
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
+import { queryClient } from 'src/queries/base';
 import {
   useCreateFirewall,
   useDeleteFirewall,
   useFirewallQuery,
   useMutateFirewall,
 } from 'src/queries/firewalls';
-import { queryClient } from 'src/queries/base';
-import { useProfile, queryKey } from 'src/queries/profile';
+import { queryKey, useProfile } from 'src/queries/profile';
 import AddFirewallDrawer from './AddFirewallDrawer';
 import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
 import FirewallDialog, { Mode } from './FirewallDialog';
@@ -189,7 +190,8 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   };
 
   return (
-    <React.Fragment>
+    <>
+      <DocumentTitleSegment segment="Firewalls" />
       <LandingHeader
         title="Firewalls"
         entity="Firewall"
@@ -219,7 +221,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
         selectedFirewallLabel={selectedFirewallLabel}
         closeDialog={() => toggleModal(false)}
       />
-    </React.Fragment>
+    </>
   );
 };
 
