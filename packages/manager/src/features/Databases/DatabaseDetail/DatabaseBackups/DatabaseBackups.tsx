@@ -14,12 +14,12 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
+import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import {
   getDatabaseEngine,
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId } = useParams<{ databaseId: string }>();
@@ -30,18 +30,19 @@ export const DatabaseBackups: React.FC = () => {
   >();
 
   const id = Number(databaseId);
+  const engine = getDatabaseEngine(id);
 
   const {
     data: database,
     isLoading: isDatabaseLoading,
     error: databaseError,
-  } = useDatabaseQuery(getDatabaseEngine(id), id);
+  } = useDatabaseQuery(engine, id);
 
   const {
     data: backups,
     isLoading: isBackupsLoading,
     error: backupsError,
-  } = useDatabaseBackupsQuery(getDatabaseEngine(id), id);
+  } = useDatabaseBackupsQuery(engine, id);
 
   const { order, orderBy, handleOrderChange } = useOrder({
     orderBy: 'created',
