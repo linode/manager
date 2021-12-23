@@ -99,12 +99,13 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
   const getIPChoicesAndLabels = async (linodeID: number, linodes: Linode[]) => {
     const choiceLabels = {};
-    const promisedChoices = linodes
-      .filter((thisLinode: Linode) => {
+    const promisedChoices: string[] = await linodes.reduce(
+      async (acc, thisLinode) => {
         // Filter out the current Linode
-        return thisLinode.id !== linodeID;
-      })
-      .map(async (thisLinode: Linode) => {
+        if (thisLinode.id === linodeID) {
+          return acc;
+        }
+
         // side-effect of this mapping is saving the labels
         let ips: string[] = [];
         const ipv6Ranges: string[] = [];
@@ -127,7 +128,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
         });
 
         return ips;
-      });
+      },
+      Promise.resolve([])
+    );
 
     return Promise.all(promisedChoices).then((ips) => {
       return {
