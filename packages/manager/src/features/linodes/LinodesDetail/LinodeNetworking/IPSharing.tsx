@@ -113,13 +113,12 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           // this fails for non datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
-          await getLinodeIPs(thisLinode.id).then((ips) => {
-            const ranges = pathOr([], ['ipv6', 'global'], ips);
-            ranges &&
-              ranges.forEach((i: IPRange) => {
-                ipv6Ranges.push(`${i.range}/${i.prefix}`);
-              });
-          });
+          const linodeIPs = await getLinodeIPs(thisLinode.id);
+          const ranges = pathOr([], ['ipv6', 'global'], linodeIPs);
+          ranges &&
+            ranges.forEach((i: IPRange) => {
+              ipv6Ranges.push(`${i.range}/${i.prefix}`);
+            });
         }
         ips = [...thisLinode.ipv4, ...ipv6Ranges];
 
