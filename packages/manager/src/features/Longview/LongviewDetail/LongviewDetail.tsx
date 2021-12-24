@@ -1,7 +1,7 @@
 import { LongviewClient } from '@linode/api-v4/lib/longview';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -78,7 +78,6 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   const timezone = profile?.timezone || 'US/Eastern';
 
   const classes = useStyles();
-  const history = useHistory();
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
@@ -170,7 +169,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`${props.match.url}`);
+      props.history.push(`${props.match.url}`);
       return 0;
     } else {
       return tabChoice;
@@ -178,7 +177,7 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
   };
 
   const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
+    props.history.push(tabs[index].routeName);
   };
 
   // Filtering out conditional tabs if they don't exist on client

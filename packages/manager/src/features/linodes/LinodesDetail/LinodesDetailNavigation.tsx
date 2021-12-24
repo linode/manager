@@ -74,18 +74,21 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     },
   ].filter((thisTab) => !thisTab.hidden);
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
-  };
-
-  const getIndex = () => {
-    return Math.max(
-      tabs.findIndex((tab) => matches(tab.routeName)),
-      0
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      props.history.push(`${url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
+  const handleTabChange = (index: number) => {
     props.history.push(tabs[index].routeName);
   };
 
@@ -94,10 +97,12 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment
-        segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
+        segment={`${linodeLabel} - ${
+          tabs[getDefaultTabIndex()]?.title ?? 'Detail View'
+        }`}
       />
       <div style={{ marginTop: 8 }}>
-        <Tabs index={getIndex()} onChange={navToURL}>
+        <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
           <TabLinkList tabs={tabs} />
 
           <React.Suspense fallback={<SuspenseLoader />}>
@@ -105,7 +110,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
               <SafeTabPanel index={idx++}>
                 <LinodeSummary isBareMetalInstance={isBareMetalInstance} />
               </SafeTabPanel>
-
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
               </SafeTabPanel>
@@ -118,7 +122,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
                   <SafeTabPanel index={idx++}>
                     <LinodeConfigurations />
                   </SafeTabPanel>
-
                   <SafeTabPanel index={idx++}>
                     <LinodeBackup />
                   </SafeTabPanel>
@@ -128,7 +131,6 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
               <SafeTabPanel index={idx++}>
                 <LinodeActivity />
               </SafeTabPanel>
-
               <SafeTabPanel index={idx++}>
                 <LinodeSettings isBareMetalInstance={isBareMetalInstance} />
               </SafeTabPanel>

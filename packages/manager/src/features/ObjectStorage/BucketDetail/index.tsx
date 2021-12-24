@@ -1,6 +1,6 @@
 import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -35,7 +35,6 @@ type CombinedProps = RouteComponentProps<MatchProps>;
 
 export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const history = useHistory();
 
   const { bucketName, clusterId } = props.match.params;
 
@@ -61,7 +60,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`${props.match.url}`);
+      props.history.push(`${props.match.url}`);
       return 0;
     } else {
       return tabChoice;

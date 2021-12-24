@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
@@ -21,7 +21,6 @@ const LinodesRoutes: React.FC = () => {
         <Route component={LinodesCreate} path={`${path}/create`} exact strict />
         <Route component={LinodesDetail} path={`${path}/:linodeId`} />
         <Route component={LinodesLandingWrapper} path={path} exact strict />
-        <Redirect to={path} />
       </Switch>
     </React.Suspense>
   );

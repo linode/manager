@@ -215,7 +215,21 @@ class Lish extends React.Component<CombinedProps, State> {
         : null,
     ].filter(Boolean) as Tab[];
 
-    const navToURL = (index: number) => {
+    const getDefaultTabIndex = () => {
+      const tabChoice = tabs.findIndex((tab) =>
+        Boolean(matchPath(tab.routeName, { path: location.pathname }))
+      );
+
+      // Redirect to the landing page if the path does not exist
+      if (tabChoice < 0) {
+        this.props.history.push(`${this.props.match.url}`);
+        return 0;
+      } else {
+        return tabChoice;
+      }
+    };
+
+    const handleTabChange = (index: number) => {
       this.props.history.push(tabs[index].routeName);
     };
 
@@ -247,7 +261,11 @@ class Lish extends React.Component<CombinedProps, State> {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       <React.Fragment>
         {linode && token && (
-          <Tabs className={classes.tabs} onChange={navToURL}>
+          <Tabs
+            className={classes.tabs}
+            index={getDefaultTabIndex()}
+            onChange={handleTabChange}
+          >
             <TabLinkList className={classes.lish} tabs={tabs} />
             <TabPanels>
               <SafeTabPanel index={0} data-qa-tab="Weblish">

@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import {
   matchPath,
   RouteComponentProps,
-  useHistory,
   useRouteMatch,
 } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -58,7 +57,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
 
   const dispatch = useDispatch<Dispatch>();
   const flags = useFlags();
-  const history = useHistory();
 
   // @todo: dispatch bucket drawer open action
 
@@ -102,7 +100,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`${props.match.url}`);
+      props.history.push(`${props.match.url}`);
       return 0;
     } else {
       return tabChoice;
@@ -110,7 +108,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
+    props.history.push(tabs[index].routeName);
   };
 
   const openDrawer = (mode: MODE) => {

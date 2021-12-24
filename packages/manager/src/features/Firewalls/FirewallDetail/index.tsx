@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
@@ -16,8 +16,8 @@ import TabLinkList from 'src/components/TabLinkList';
 import withFirewalls, {
   Props as WithFirewallsProps,
 } from 'src/containers/firewalls.container';
-import { useProfile, useGrants } from 'src/queries/profile';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
+import { useGrants, useProfile } from 'src/queries/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 const FirewallRulesLanding = React.lazy(
@@ -40,7 +40,6 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
-  const history = useHistory();
 
   // Source the Firewall's ID from the /:id path param.
   const thisFirewallId = props.match.params.id;
@@ -69,7 +68,7 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`${URL}`);
+      props.history.push(`${URL}`);
       return 0;
     } else {
       return tabChoice;
@@ -77,7 +76,7 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   };
 
   const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
+    props.history.push(tabs[index].routeName);
   };
 
   const { data } = useFirewallQuery();

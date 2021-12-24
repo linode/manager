@@ -63,8 +63,8 @@ export const StackScripts: React.FC = () => {
           exact
           strict
         />
-        <Redirect to={path} />
       </Switch>
+      <Redirect to={path} />
     </React.Suspense>
   );
 };

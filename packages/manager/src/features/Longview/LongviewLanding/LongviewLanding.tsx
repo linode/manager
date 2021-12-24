@@ -9,7 +9,7 @@ import {
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
+import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -44,7 +44,6 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
     () => getLongviewSubscriptions().then((response) => response.data),
     []
   );
-  const history = useHistory();
 
   const { createLongviewClient } = props;
 
@@ -75,7 +74,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`${props.match.url}`);
+      props.history.push(`${props.match.url}`);
       return 0;
     } else {
       return tabChoice;
@@ -83,7 +82,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   };
 
   const handleTabChange = (index: number) => {
-    history.push(tabs[index].routeName);
+    props.history.push(tabs[index].routeName);
   };
 
   const handleAddClient = () => {

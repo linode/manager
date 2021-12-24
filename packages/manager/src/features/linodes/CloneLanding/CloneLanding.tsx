@@ -117,13 +117,22 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
     },
   ];
 
-  // Helper function for the <Tabs /> component
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: props.location.pathname }));
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
   };
 
   /**
@@ -152,10 +161,12 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
     });
     // We can't use `configs` and `disks` as deps, since they are arrays.
     // Instead we use a serialized representation of their IDs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stringifiedConfigIds, stringifiedDiskIds]);
 
   // A config and/or disk can be selected via query param. Memoized
   // so it can be used as a dep in the useEffects that consume it.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const queryParams = React.useMemo(() => getParamsFromUrl(location.search), [
     location.search,
   ]);
@@ -312,13 +323,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
               Clone
             </Typography>
 
-            <Tabs
-              index={Math.max(
-                tabs.findIndex((tab) => matches(tab.routeName)),
-                0
-              )}
-              onChange={navToURL}
-            >
+            <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
               <TabLinkList tabs={tabs} />
               <TabPanels>
                 <SafeTabPanel index={0}>
@@ -331,7 +336,6 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
                     />
                   </div>
                 </SafeTabPanel>
-
                 <SafeTabPanel index={1}>
                   <div className={classes.outerContainer}>
                     <Typography>

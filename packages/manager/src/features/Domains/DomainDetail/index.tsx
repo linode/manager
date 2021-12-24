@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import NotFound from 'src/components/NotFound';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useDomains from 'src/hooks/useDomains';
+
 const DomainsLanding = React.lazy(() => import('../DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
@@ -15,6 +16,7 @@ export const DomainDetailRouting: React.FC<
   const domainId = Number(props.match.params.domainId);
   const { domains, requestDomain } = useDomains();
   const request = useAPIRequest(() => requestDomain(domainId), undefined);
+  const history = useHistory();
 
   // The Domain from the store that matches this ID.
   const foundDomain = Object.values(domains.itemsById).find(
@@ -26,9 +28,13 @@ export const DomainDetailRouting: React.FC<
     if (!request.loading && request.lastUpdated > 0) {
       return <NotFound />;
     }
-    // If not, we don't know if the Domain exists yet so we have to stall
+    // If not, we don't know if the Domain exists yet so we have to stall.
+    setTimeout(() => {
+      history.push('/domains');
+    }, 5000);
     return <CircleProgress />;
   }
+
   // Primary Domains have a Detail page.
   if (foundDomain.type === 'master') {
     return <DomainDetail {...props} />;
