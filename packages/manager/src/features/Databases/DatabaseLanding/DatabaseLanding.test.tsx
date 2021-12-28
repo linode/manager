@@ -76,7 +76,7 @@ describe('Database Table', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     // Static text and table column headers
-    getAllByText('Label');
+    getAllByText('Cluster Label');
     getAllByText('Status');
     getAllByText('Configuration');
     getAllByText('Engine');
