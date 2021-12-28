@@ -1,14 +1,9 @@
-import {
-  Database,
-  DatabaseConnection,
-  DatabaseStatus,
-  getDatabaseConnection,
-} from '@linode/api-v4/lib/databases';
+import { DatabaseStatus } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
@@ -26,32 +21,40 @@ import InlineTextLoader from 'src/components/InlineTextLoader';
 import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useDatabases from 'src/hooks/useDatabases';
 import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
+import {
+  getDatabaseEngine,
+  useDatabaseQuery,
+  useDatabaseTypesQuery,
+  useDeleteDatabaseMutation,
+} from 'src/queries/databases';
 
-interface DatabaseEntityDetailProps {
-  database: Database;
-}
+const DatabaseEntityDetail: React.FC = () => {
+  const { databaseId } = useParams<{ databaseId: string }>();
 
-const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = (props) => {
-  const { database } = props;
+  const id = Number(databaseId);
+  const engine = getDatabaseEngine(id);
 
-  const { deleteDatabase } = useDatabases();
+  const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(engine, id);
+  const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
+  const { data: types } = useDatabaseTypesQuery();
+
+  const type = types?.find((type) => type.id === database?.type);
+
   const history = useHistory();
 
-  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
-    deleteDatabase
+  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(() =>
+    deleteDatabase()
   );
 
-  const connectionDetails = useAPIRequest<DatabaseConnection | null>(
-    () => getDatabaseConnection(database.id),
-    null
-  );
+  if (!database || !type) {
+    return null;
+  }
 
   return (
     <>
@@ -65,10 +68,10 @@ const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = (props) => {
         }
         body={
           <Body
-            numCPUs={database.vcpus}
+            numCPUs={type.vcpus}
             // Memory is returned by the API in MB.
-            gbRAM={database.memory / 1024}
-            gbStorage={database.disk}
+            gbRAM={type.memory / 1024}
+            gbStorage={type.disk}
             typeLabel="MySQL" // @todo: How to make this dynamic?
             connectionDetailsLoading={connectionDetails.loading}
             connectionDetailsData={connectionDetails.data}
@@ -95,7 +98,7 @@ const DatabaseEntityDetail: React.FC<DatabaseEntityDetailProps> = (props) => {
         loading={dialog.isLoading}
         onClose={closeDialog}
         onDelete={() => {
-          submitDialog(dialog.entityID).then(() => {
+          submitDialog(undefined).then(() => {
             history.push('/databases');
           });
         }}

@@ -145,6 +145,14 @@ const databases = [
     return res(ctx.json(makeResourcePage(version)));
   }),
 
+  rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
+    const database = databaseFactory.build({
+      id: req.params.id,
+      engine: req.params.engine,
+    });
+    return res(ctx.json(database));
+  }),
+
   rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
     const id = Number(req.params.databaseId);
     const body = req.body as any;

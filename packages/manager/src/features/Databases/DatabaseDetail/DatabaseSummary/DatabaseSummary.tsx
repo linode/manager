@@ -1,23 +1,37 @@
 import * as React from 'react';
-// import useDatabases from 'src/hooks/useDatabases';
-// import DatabaseSummaryLabelPanel from './DatabaseSummaryLabelPanel';
-// import DatabaseSummaryMaintenancePanel from './DatabaseSummaryMaintenancePanel';
-// import DatabaseSummaryPasswordPanel from './DatabaseSummaryPasswordPanel';
+import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
+import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useParams } from 'react-router-dom';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {
-  // databaseID: number;
-}
+export const DatabaseSummary: React.FC = () => {
+  const { databaseId } = useParams<{ databaseId: string }>();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const DatabaseSummary: React.FC<Props> = (props) => {
-  // const databases = useDatabases();
-  // const { databaseID } = props;
-  // const thisDatabase = databases.databases.itemsById[databaseID];
+  const id = Number(databaseId);
+
+  const { data, isLoading, error } = useDatabaseQuery(
+    getDatabaseEngine(id),
+    id
+  );
+
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your database.')[0].reason
+        }
+      />
+    );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <>
-      Database Summary
+      <pre>{JSON.stringify(data, undefined, 2)}</pre>
       {/* <DatabaseSummaryLabelPanel
         databaseID={thisDatabase.id}
         databaseLabel={thisDatabase.label}

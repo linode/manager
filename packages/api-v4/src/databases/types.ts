@@ -21,6 +21,7 @@ export interface DatabaseType {
 }
 
 export type Engine = 'mysql';
+
 export interface DatabaseVersion {
   id: string;
   label: string;
@@ -60,7 +61,7 @@ export interface DatabaseInstance {
   id: number;
   label: string;
   engine: Engine;
-  type: DatabaseType;
+  type: string;
   region: string;
   version: string;
   status: DatabaseStatus;
@@ -71,7 +72,9 @@ export interface DatabaseInstance {
 }
 
 type FailoverCount = 1 | 3;
+
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
+
 export interface CreateDatabasePayload {
   label: string;
   region: string;
@@ -96,7 +99,7 @@ export interface Database {
   label: string;
   region: string;
   status: DatabaseStatus;
-  type: DatabaseType;
+  type: string;
   failover_count: FailoverCount;
   engine: Engine;
   encrypted: boolean;
