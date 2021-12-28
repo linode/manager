@@ -1,18 +1,3 @@
-import { useQuery, useMutation } from 'react-query';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { getAll } from 'src/utilities/getAll';
-import {
-  CreateDatabasePayload,
-  CreateDatabaseResponse,
-  Database,
-  DatabaseBackup,
-  DatabaseCredentials,
-  DatabaseType,
-  DatabaseVersion,
-  Engine,
-  UpdateDatabasePayload,
-  UpdateDatabaseResponse,
-} from '@linode/api-v4/lib/databases/types';
 import {
   createDatabase,
   deleteDatabase,
@@ -25,6 +10,21 @@ import {
   restoreWithBackup,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
+import {
+  CreateDatabasePayload,
+  Database,
+  DatabaseBackup,
+  DatabaseCredentials,
+  DatabaseInstance,
+  DatabaseType,
+  DatabaseVersion,
+  Engine,
+  UpdateDatabasePayload,
+  UpdateDatabaseResponse,
+} from '@linode/api-v4/lib/databases/types';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery } from 'react-query';
+import { getAll } from 'src/utilities/getAll';
 import { queryClient } from './base';
 
 export const queryKey = 'databases';
@@ -35,7 +35,7 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
   );
 
 export const useDatabasesQuery = (params: any, filter: any) =>
-  useQuery<ResourcePage<Database>, APIError[]>(
+  useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),
     { keepPreviousData: true }
@@ -46,7 +46,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
     (data) => updateDatabase(engine, id, data),
     {
       onSuccess: (data) => {
-        queryClient.setQueryData<CreateDatabaseResponse | undefined>(
+        queryClient.setQueryData<Database | undefined>(
           `${queryKey}-${id}`,
           (oldEntity) => {
             if (oldEntity === undefined) {
@@ -68,7 +68,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
   );
 
 export const useCreateDatabaseMutation = () =>
-  useMutation<CreateDatabaseResponse, APIError[], CreateDatabasePayload>(
+  useMutation<Database, APIError[], CreateDatabasePayload>(
     (data) => createDatabase(data.engine, data),
     {
       onSuccess: (data) => {

@@ -2,9 +2,11 @@ import {
   Database,
   DatabaseBackup,
   DatabaseBackupType,
+  DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
   DatabaseVersion,
+  ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import * as Factory from 'factory.ts';
 import { sample } from 'lodash';
@@ -19,6 +21,9 @@ const possibleStatuses = [
   'updating',
 ];
 
+const possibleReplicationTypes = ['none', 'semi-synch', 'asynch'];
+const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
+
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   id: 'g1-mysql-ha-2',
   label: 'MySQL HA Tier 2',
@@ -32,26 +37,52 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   vcpus: 2,
   deprecated: false,
   addons: {
-    fallover_node: {
+    failover: {
       price: {
-        monthly: 0.6,
-        hourly: 80,
+        monthly: 80,
+        hourly: 0.6,
       },
     },
   },
 });
 
+export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
+  {
+    id: Factory.each((i) => i),
+    label: Factory.each((i) => `database-${i}`),
+    engine: 'mysql',
+    type: databaseTypeFactory.build().id,
+    region: 'us-east',
+    version: 'mysql/5.8.13',
+    status: sample(possibleStatuses) as DatabaseStatus,
+    failover_count: 3,
+    updated: '2021-12-16T17:15:12',
+    created: '2021-12-09T17:15:12',
+    instance_uri: '',
+  }
+);
+
 export const databaseFactory = Factory.Sync.makeFactory<Database>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `database-${i}`),
-  engine: 'mysql',
-  type: databaseTypeFactory.build(),
   region: 'us-east',
-  version: 'mysql/5.8.13',
   status: sample(possibleStatuses) as DatabaseStatus,
-  updated: '2021-12-16T17:15:12',
+  type: databaseTypeFactory.build().id,
+  failover_count: 3,
+  engine: 'mysql',
+  encrypted: false,
+  ipv4_public: sample(IPv4List) as string,
+  ssl_connection: false,
+  replication_type: sample(possibleReplicationTypes) as ReplicationType,
+  allow_list: [...IPv4List],
+  connection_strings: [
+    {
+      driver: 'python',
+      value: 'Testing',
+    },
+  ],
   created: '2021-12-09T17:15:12',
-  instance_uri: '',
+  updated: '2021-12-16T17:15:12',
 });
 
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({

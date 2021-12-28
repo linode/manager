@@ -11,6 +11,7 @@ import {
   creditPaymentResponseFactory,
   databaseBackupFactory,
   databaseFactory,
+  databaseInstanceFactory,
   databaseTypeFactory,
   databaseVersionFactory,
   domainFactory,
@@ -131,7 +132,7 @@ const entityTransfers = [
 
 const databases = [
   rest.get('*/databases/instances', (req, res, ctx) => {
-    const databases = databaseFactory.buildList(5);
+    const databases = databaseInstanceFactory.buildList(5);
     return res(ctx.json(makeResourcePage(databases)));
   }),
 
