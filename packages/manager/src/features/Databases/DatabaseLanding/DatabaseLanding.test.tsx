@@ -54,7 +54,7 @@ describe('Database Table Row', () => {
 });
 
 describe('Database Table', () => {
-  it('should render maintenance table with items', async () => {
+  it('should render database landing table with items', async () => {
     server.use(
       rest.get('*/databases/instances', (req, res, ctx) => {
         const databases = databaseInstanceFactory.buildList(1, {
@@ -87,7 +87,7 @@ describe('Database Table', () => {
     queryAllByText('Running');
   });
 
-  it('should render maintenance table with empty state', async () => {
+  it('should render database landing with empty state', async () => {
     server.use(
       rest.get('*/databases/instances', (req, res, ctx) => {
         return res(ctx.json(makeResourcePage([])));
