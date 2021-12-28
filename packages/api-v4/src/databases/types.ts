@@ -70,7 +70,7 @@ export interface DatabaseInstance {
   instance_uri: string;
 }
 
-type FailoverCount = 1 | 3;
+type FailoverCount = 0 | 2;
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
 export interface CreateDatabasePayload {
   label: string;

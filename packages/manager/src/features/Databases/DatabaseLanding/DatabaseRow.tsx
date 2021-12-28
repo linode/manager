@@ -74,7 +74,7 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
         </div>
       </TableCell>
       <TableCell>
-        {failover_count <= 1 ? (
+        {failover_count === 0 ? (
           'Primary'
         ) : (
           <>
