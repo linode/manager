@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import classNames from 'classnames';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';

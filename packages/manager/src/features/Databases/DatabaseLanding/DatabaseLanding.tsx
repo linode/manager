@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
