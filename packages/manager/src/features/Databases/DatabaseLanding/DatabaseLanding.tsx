@@ -84,7 +84,9 @@ const DatabaseLanding: React.FC = () => {
               Label
             </TableSortCell>
             <TableCell>Status</TableCell>
-            <TableCell>Configuration</TableCell>
+            <Hidden xsDown>
+              <TableCell>Configuration</TableCell>
+            </Hidden>
             <TableCell>Engine</TableCell>
             <Hidden smDown>
               <TableCell>Region</TableCell>

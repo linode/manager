@@ -62,6 +62,19 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
     failover_count,
   } = database;
 
+  const configuration =
+    failover_count === 0 ? (
+      'Primary'
+    ) : (
+      <>
+        {`Primary +${failover_count}`}
+        <Chip
+          className={`${chipClasses.chip} ${chipClasses.nvmeChip}`}
+          label="HA"
+        />
+      </>
+    );
+
   return (
     <TableRow key={`database-row-${id}`} ariaLabel={`Database ${label}`}>
       <TableCell>
@@ -73,19 +86,9 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
           {status}
         </div>
       </TableCell>
-      <TableCell>
-        {failover_count === 0 ? (
-          'Primary'
-        ) : (
-          <>
-            {`Primary +${failover_count}`}
-            <Chip
-              className={`${chipClasses.chip} ${chipClasses.nvmeChip}`}
-              label="HA"
-            />
-          </>
-        )}
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell>{configuration}</TableCell>
+      </Hidden>
       <TableCell>
         {`${databaseEngineMap[engine]} v${getDatabaseVersionNumber(version)}`}
       </TableCell>
