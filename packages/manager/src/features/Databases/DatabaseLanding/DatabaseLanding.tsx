@@ -81,7 +81,7 @@ const DatabaseLanding: React.FC = () => {
               label="label"
               handleClick={handleOrderChange}
             >
-              Label
+              Cluster Label
             </TableSortCell>
             <TableCell>Status</TableCell>
             <Hidden xsDown>
