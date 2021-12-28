@@ -1,9 +1,4 @@
-import {
-  Database,
-  DatabaseConnection,
-  DatabaseStatus,
-  getDatabaseConnection,
-} from '@linode/api-v4/lib/databases';
+import { DatabaseStatus } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';

@@ -29,7 +29,7 @@ import { queryClient } from './base';
 export const queryKey = 'databases';
 
 export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<CreateDatabaseResponse, APIError[]>([queryKey, id], () =>
+  useQuery<Database, APIError[]>([queryKey, id], () =>
     getEngineDatabase(engine, id)
   );
 
