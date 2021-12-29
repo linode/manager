@@ -12,11 +12,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
   // const { databaseID } = props;
   // const thisDatabase = databases.databases.itemsById[databaseID];
 
-  return (
-    <>
-        Database ClusterConfiguration
-    </>
-  );
+  return <>Cluster Configuration</>;
 };
 
 export default DatabaseSummaryClusterConfiguration;
