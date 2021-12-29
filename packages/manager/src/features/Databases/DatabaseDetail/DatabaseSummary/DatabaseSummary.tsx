@@ -23,10 +23,10 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
     <Paper>
       <Grid container>
         <Grid item>
-          <ConnectionDetails />
+          <ClusterConfiguration />
         </Grid>
         <Grid item>
-          <ClusterConfiguration />
+          <ConnectionDetails />
         </Grid>
       </Grid>
       <Divider spacingTop={1.5} spacingBottom={1} />
