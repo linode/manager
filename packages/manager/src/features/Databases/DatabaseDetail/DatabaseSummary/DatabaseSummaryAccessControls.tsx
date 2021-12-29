@@ -12,11 +12,7 @@ export const DatabaseSummaryAccessControls: React.FC<Props> = (props) => {
   // const { databaseID } = props;
   // const thisDatabase = databases.databases.itemsById[databaseID];
 
-  return (
-    <>
-      Database Access Controls
-    </>
-  );
+  return <> Access Controls </>;
 };
 
 export default DatabaseSummaryAccessControls;
