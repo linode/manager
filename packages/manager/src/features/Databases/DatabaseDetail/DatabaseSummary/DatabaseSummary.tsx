@@ -29,7 +29,7 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
           <ConnectionDetails />
         </Grid>
       </Grid>
-      <Divider spacingTop={1.5} spacingBottom={1} />
+      <Divider spacingTop={24} spacingBottom={16} />
       <AccessControls />
     </Paper>
   );
