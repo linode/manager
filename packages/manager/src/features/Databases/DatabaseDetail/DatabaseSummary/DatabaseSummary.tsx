@@ -33,10 +33,10 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
     <Paper>
       <Grid container>
         <Grid item>
-          <ConnectionDetails /> 
+          <ClusterConfiguration />
         </Grid>
         <Grid item>
-          <ClusterConfiguration />
+          <ConnectionDetails />
         </Grid>
       </Grid>
       <Divider className={classes.divider} />
