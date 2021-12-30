@@ -1,23 +1,40 @@
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
 import Divider from 'src/components/core/Divider';
-// import useDatabases from 'src/hooks/useDatabases';
-
+import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
+import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
 import AccessControls from './DatabaseSummaryAccessControls';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface Props {
-  // databaseID: number;
-}
+export const DatabaseSummary: React.FC = () => {
+  const { databaseId } = useParams<{ databaseId: string }>();
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const DatabaseSummary: React.FC<Props> = (props) => {
-  // const databases = useDatabases();
-  // const { databaseID } = props;
-  // const thisDatabase = databases.databases.itemsById[databaseID];
+  const id = Number(databaseId);
+
+  const { data, isLoading, error } = useDatabaseQuery(
+    getDatabaseEngine(id),
+    id
+  );
+
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your database.')[0].reason
+        }
+      />
+    );
+  }
+
+  if (isLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <Paper>
