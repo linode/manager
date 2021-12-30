@@ -1,6 +1,9 @@
+import { LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
+
 export interface DatabaseType {
   id: string;
   label: string;
+  class: LinodeTypeClass;
   price: {
     hourly: number;
     monthly: number;
