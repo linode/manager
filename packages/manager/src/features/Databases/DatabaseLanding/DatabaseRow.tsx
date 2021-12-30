@@ -28,6 +28,9 @@ export const databaseStatusMap: Record<DatabaseStatus, Status> = {
 
 export const databaseEngineMap: Record<Engine, string> = {
   mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  mongodb: 'MongoDB',
+  redis: 'Redis',
 };
 
 const useStyles = makeStyles(() => ({
