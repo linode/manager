@@ -20,7 +20,7 @@ export interface DatabaseType {
   };
 }
 
-export type Engine = 'mysql';
+export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
 
 export interface DatabaseVersion {
   id: string;
