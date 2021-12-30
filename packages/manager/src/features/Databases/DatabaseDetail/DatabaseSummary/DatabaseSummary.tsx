@@ -1,9 +1,16 @@
 import * as React from 'react';
+import { useParams } from 'react-router-dom';
+
+import Paper from 'src/components/core/Paper';
+import Grid from 'src/components/Grid';
+import Divider from 'src/components/core/Divider';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useParams } from 'react-router-dom';
+import ConnectionDetails from './DatabaseSummaryConnectionDetails';
+import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
+import AccessControls from './DatabaseSummaryAccessControls';
 
 export const DatabaseSummary: React.FC = () => {
   const { databaseId } = useParams<{ databaseId: string }>();
@@ -30,18 +37,18 @@ export const DatabaseSummary: React.FC = () => {
   }
 
   return (
-    <>
-      <pre>{JSON.stringify(data, undefined, 2)}</pre>
-      {/* <DatabaseSummaryLabelPanel
-        databaseID={thisDatabase.id}
-        databaseLabel={thisDatabase.label}
-      />
-      <DatabaseSummaryPasswordPanel databaseID={thisDatabase.id} />
-      <DatabaseSummaryMaintenancePanel
-        databaseID={thisDatabase.id}
-        databaseMaintenanceSchedule={thisDatabase.maintenance_schedule}
-      /> */}
-    </>
+    <Paper>
+      <Grid container>
+        <Grid item>
+          <ClusterConfiguration />
+        </Grid>
+        <Grid item>
+          <ConnectionDetails />
+        </Grid>
+      </Grid>
+      <Divider spacingTop={24} spacingBottom={16} />
+      <AccessControls />
+    </Paper>
   );
 };
 
