@@ -9,7 +9,7 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/account.svg';
+import UserIcon from 'src/assets/icons/account.svg?component';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';

@@ -4,7 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Plus from 'src/assets/icons/plusSign.svg';
+import Plus from 'src/assets/icons/plusSign.svg?component';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,

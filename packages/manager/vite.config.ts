@@ -8,7 +8,6 @@ export default defineConfig({
   plugins: [
     react(),
     reactSvgPlugin({
-      defaultExport: "component",
       svgoConfig: {
         removeViewBox: false,
       },

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import ToggleOff from 'src/assets/icons/toggleOff.svg';
-import ToggleOn from 'src/assets/icons/toggleOn.svg';
+import ToggleOff from 'src/assets/icons/toggleOff.svg?component';
+import ToggleOn from 'src/assets/icons/toggleOn.svg?component';
 import Switch, { SwitchProps } from 'src/components/core/Switch';
 import HelpIcon from 'src/components/HelpIcon';
 import './toggle.css';

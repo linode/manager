@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import Download from 'src/assets/icons/download.svg';
+import Download from 'src/assets/icons/download.svg?component';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/core/Grid';
 import {

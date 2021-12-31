@@ -1,18 +1,18 @@
 import * as React from 'react';
-import StorageIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
-import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg';
-import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
-import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
-import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
-import ManagedIcon from 'src/assets/icons/entityIcons/managed.svg';
-import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
-import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
-import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg';
-import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
-import LongviewIcon from 'src/assets/icons/longview.svg';
+import StorageIcon from 'src/assets/icons/entityIcons/bucket.svg?component';
+import DomainIcon from 'src/assets/icons/entityIcons/domain.svg?component';
+import FirewallIcon from 'src/assets/icons/entityIcons/firewall.svg?component';
+import FolderIcon from 'src/assets/icons/entityIcons/folder.svg?component';
+import ImageIcon from 'src/assets/icons/entityIcons/image.svg?component';
+import KubernetesIcon from 'src/assets/icons/entityIcons/kubernetes.svg?component';
+import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg?component';
+import ManagedIcon from 'src/assets/icons/entityIcons/managed.svg?component';
+import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg?component';
+import ObjectIcon from 'src/assets/icons/entityIcons/object.svg?component';
+import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg?component';
+import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg?component';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg?component';
+import LongviewIcon from 'src/assets/icons/longview.svg?component';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({

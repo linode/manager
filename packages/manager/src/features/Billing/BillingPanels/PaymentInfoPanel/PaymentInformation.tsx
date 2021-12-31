@@ -2,7 +2,7 @@ import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
+import PayPalIcon from 'src/assets/icons/payment/payPal.svg?component';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';

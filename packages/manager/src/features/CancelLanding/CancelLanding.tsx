@@ -4,7 +4,7 @@ import { Redirect, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
-import Logo from 'src/assets/logo/logo-footer.svg';
+import Logo from 'src/assets/logo/logo-footer.svg?component';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';

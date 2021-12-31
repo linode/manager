@@ -1,5 +1,5 @@
 import * as React from 'react';
-import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg?component';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';

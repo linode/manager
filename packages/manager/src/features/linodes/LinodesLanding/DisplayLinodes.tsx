@@ -15,8 +15,8 @@ import { ExtendedLinode } from "../LinodesDetail/types";
 import TableWrapper from "./TableWrapper";
 import IconButton from "src/components/core/IconButton";
 import Tooltip from "src/components/core/Tooltip";
-import GroupByTag from "src/assets/icons/group-by-tag.svg";
-import TableView from "src/assets/icons/table-view.svg";
+import GroupByTag from "src/assets/icons/group-by-tag.svg?component";
+import TableView from "src/assets/icons/table-view.svg?component";
 import { getParamsFromUrl } from "src/utilities/queryParams";
 
 const useStyles = makeStyles((theme: Theme) => ({

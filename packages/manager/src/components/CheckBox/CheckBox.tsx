@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import CheckboxIcon from 'src/assets/icons/checkbox.svg';
-import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
+import CheckboxIcon from 'src/assets/icons/checkbox.svg?component';
+import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg?component';
 import Checkbox, { CheckboxProps } from 'src/components/core/Checkbox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {

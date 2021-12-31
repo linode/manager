@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import Minus from 'src/assets/icons/minusSign.svg';
-import Plus from 'src/assets/icons/plusSign.svg';
+import Minus from 'src/assets/icons/minusSign.svg?component';
+import Plus from 'src/assets/icons/plusSign.svg?component';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';

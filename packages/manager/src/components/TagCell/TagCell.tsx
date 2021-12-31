@@ -1,7 +1,7 @@
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import classNames from 'classnames';
 import * as React from 'react';
-import Plus from 'src/assets/icons/plusSign.svg';
+import Plus from 'src/assets/icons/plusSign.svg?component';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';

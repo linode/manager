@@ -2,7 +2,7 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { decode } from 'he';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Info from 'src/assets/icons/info.svg';
+import Info from 'src/assets/icons/info.svg?component';
 import {
   createStyles,
   Theme,

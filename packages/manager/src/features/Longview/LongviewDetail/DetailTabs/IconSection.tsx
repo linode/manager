@@ -1,11 +1,11 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
-import DiskIcon from 'src/assets/icons/longview/disk.svg';
-import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
-import RamIcon from 'src/assets/icons/longview/ram-sticks.svg';
-import ServerIcon from 'src/assets/icons/longview/server-icon.svg';
+import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg?component';
+import DiskIcon from 'src/assets/icons/longview/disk.svg?component';
+import PackageIcon from 'src/assets/icons/longview/package-icon.svg?component';
+import RamIcon from 'src/assets/icons/longview/ram-sticks.svg?component';
+import ServerIcon from 'src/assets/icons/longview/server-icon.svg?component';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';

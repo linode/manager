@@ -1,10 +1,10 @@
 import Close from "@material-ui/icons/Close";
 import classNames from "classnames";
 import * as React from "react";
-import Error from "src/assets/icons/alert.svg";
-import Check from "src/assets/icons/check.svg";
-import Flag from "src/assets/icons/flag.svg";
-import Warning from "src/assets/icons/warning.svg";
+import Error from "src/assets/icons/alert.svg?component";
+import Check from "src/assets/icons/check.svg?component";
+import Flag from "src/assets/icons/flag.svg?component";
+import Warning from "src/assets/icons/warning.svg?component";
 import {
   makeStyles,
   Theme,

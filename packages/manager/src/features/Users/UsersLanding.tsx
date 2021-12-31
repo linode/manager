@@ -1,7 +1,7 @@
 import { deleteUser, User } from '@linode/api-v4/lib/account';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import UserIcon from 'src/assets/icons/user.svg';
+import UserIcon from 'src/assets/icons/user.svg?component';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   makeStyles,

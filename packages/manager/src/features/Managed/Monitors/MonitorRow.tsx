@@ -1,7 +1,7 @@
 import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import TicketIcon from 'src/assets/icons/ticket.svg';
+import TicketIcon from 'src/assets/icons/ticket.svg?component';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';

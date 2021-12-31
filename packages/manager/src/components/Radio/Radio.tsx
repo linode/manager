@@ -7,8 +7,8 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import RadioIcon from '../../assets/icons/radio.svg';
-import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
+import RadioIcon from '../../assets/icons/radio.svg?component';
+import RadioIconRadioed from '../../assets/icons/radioRadioed.svg?component';
 
 type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
 

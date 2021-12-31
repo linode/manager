@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { VariantType } from 'notistack';
-import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
+import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg?component';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles } from 'src/components/core/styles';

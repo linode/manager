@@ -1,5 +1,5 @@
 import * as React from 'react';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg?component';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import AddNewMenuItem from './AddNewMenuItem';
 import { Provider } from 'react-redux';

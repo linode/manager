@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/user.svg';
+import UserIcon from 'src/assets/icons/user.svg?component';
 import store from 'src/store';
 import Breadcrumb from './Breadcrumb';
 

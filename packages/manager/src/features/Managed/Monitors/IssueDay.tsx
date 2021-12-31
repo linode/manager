@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import Bad from 'src/assets/icons/monitor-failed.svg';
-import Good from 'src/assets/icons/monitor-ok.svg';
-import TicketIcon from 'src/assets/icons/ticket.svg';
+import Bad from 'src/assets/icons/monitor-failed.svg?component';
+import Good from 'src/assets/icons/monitor-ok.svg?component';
+import TicketIcon from 'src/assets/icons/ticket.svg?component';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';

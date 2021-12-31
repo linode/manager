@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import Flag from 'src/assets/icons/flag.svg';
+import Flag from 'src/assets/icons/flag.svg?component';
 import Hidden from 'src/components/core/Hidden';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';

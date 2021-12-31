@@ -1,9 +1,9 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Chat from 'src/assets/icons/chat.svg';
-import Community from 'src/assets/icons/community.svg';
-import Support from 'src/assets/icons/support.svg';
+import Chat from 'src/assets/icons/chat.svg?component';
+import Community from 'src/assets/icons/community.svg?component';
+import Support from 'src/assets/icons/support.svg?component';
 import {
   createStyles,
   Theme,

@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import * as React from "react";
-import SortUp from "src/assets/icons/sort-up.svg";
-import Sort from "src/assets/icons/unsorted.svg";
+import SortUp from "src/assets/icons/sort-up.svg?component";
+import Sort from "src/assets/icons/unsorted.svg?component";
 import CircleProgress from "src/components/CircleProgress";
 import { makeStyles, Theme } from "src/components/core/styles";
 import TableCell, { TableCellProps } from "src/components/core/TableCell";

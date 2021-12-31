@@ -1,8 +1,8 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import { compose } from 'ramda';
 import * as React from 'react';
-import GroupByTag from 'src/assets/icons/group-by-tag.svg';
-import TableView from 'src/assets/icons/table-view.svg';
+import GroupByTag from 'src/assets/icons/group-by-tag.svg?component';
+import TableView from 'src/assets/icons/table-view.svg?component';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';

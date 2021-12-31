@@ -1,5 +1,5 @@
 import * as React from 'react';
-import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
+import LinodeIcon from 'src/assets/addnewmenu/linode.svg?component';
 import Button, { ButtonProps } from 'src/components/Button';
 import {
   createStyles,
