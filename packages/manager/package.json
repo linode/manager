@@ -18,7 +18,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "build": "tsc && vite build",
+    "build": "ls && ls .. && ls ../api-v4/ && tsc && vite build",
     "serve": "vite preview",
     "postinstall": "patch-package",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
