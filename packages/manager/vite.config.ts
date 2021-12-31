@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 import reactSvgPlugin from "vite-plugin-react-svg";
 import alias from "@rollup/plugin-alias";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -23,6 +24,9 @@ export default defineConfig({
     },
   },
   build: {
+    rollupOptions: {
+      plugins: [nodeResolve()],
+    },
     // rollupOptions: {
     //   plugins: [
     //     alias({
