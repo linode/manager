@@ -4,63 +4,63 @@ import {
   Interface,
   Kernel,
   LinodeConfigCreationData,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
-import { useFormik } from 'formik';
-import { equals, pathOr, repeat } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormGroup from 'src/components/core/FormGroup';
-import FormHelperText from 'src/components/core/FormHelperText';
-import FormLabel from 'src/components/core/FormLabel';
-import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import ErrorState from 'src/components/ErrorState';
-import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
-import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
-import TextField from 'src/components/TextField';
-import Toggle from 'src/components/Toggle';
+} from "@linode/api-v4/lib/linodes";
+import { APIError } from "@linode/api-v4/lib/types";
+import { Volume } from "@linode/api-v4/lib/volumes";
+import { useFormik } from "formik";
+import { equals, pathOr, repeat } from "ramda";
+import * as React from "react";
+import { connect } from "react-redux";
+import { compose } from "recompose";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import CircleProgress from "src/components/CircleProgress";
+import Box from "src/components/core/Box";
+import Divider from "src/components/core/Divider";
+import FormControl from "src/components/core/FormControl";
+import FormControlLabel from "src/components/core/FormControlLabel";
+import FormGroup from "src/components/core/FormGroup";
+import FormHelperText from "src/components/core/FormHelperText";
+import FormLabel from "src/components/core/FormLabel";
+import RadioGroup from "src/components/core/RadioGroup";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Dialog from "src/components/Dialog";
+import Select, { Item } from "src/components/EnhancedSelect/Select";
+import ErrorState from "src/components/ErrorState";
+import ExternalLink from "src/components/ExternalLink";
+import Grid from "src/components/Grid";
+import HelpIcon from "src/components/HelpIcon";
+import Notice from "src/components/Notice";
+import Radio from "src/components/Radio";
+import TextField from "src/components/TextField";
+import Toggle from "src/components/Toggle";
 import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
-} from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import useFlags from 'src/hooks/useFlags';
-import { useAccount } from 'src/queries/account';
-import { queryClient } from 'src/queries/base';
-import { useRegionsQuery } from 'src/queries/regions';
-import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import { ApplicationState } from 'src/store';
+} from "src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection";
+import useFlags from "src/hooks/useFlags";
+import { useAccount } from "src/queries/account";
+import { queryClient } from "src/queries/base";
+import { useRegionsQuery } from "src/queries/regions";
+import { queryKey as vlansQueryKey } from "src/queries/vlans";
+import { ApplicationState } from "src/store";
 import createDevicesFromStrings, {
   DevicesAsStrings,
-} from 'src/utilities/createDevicesFromStrings';
-import createStringsFromDevices from 'src/utilities/createStringsFromDevices';
+} from "src/utilities/createDevicesFromStrings";
+import createStringsFromDevices from "src/utilities/createStringsFromDevices";
 import {
   handleFieldErrors,
   handleGeneralErrors,
-} from 'src/utilities/formikErrorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+} from "src/utilities/formikErrorUtils";
+import scrollErrorIntoView from "src/utilities/scrollErrorIntoView";
 import {
   CreateLinodeConfig,
   UpdateLinodeConfig,
   withLinodeDetailContext,
-} from '../linodeDetailContext';
-import InterfaceSelect, { ExtendedInterface } from './InterfaceSelect';
-import KernelSelect from './KernelSelect';
+} from "../linodeDetailContext";
+import InterfaceSelect, { ExtendedInterface } from "./InterfaceSelect";
+import KernelSelect from "./KernelSelect";
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -68,11 +68,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 1,
   },
   divider: {
-    margin: '36px 8px 12px',
+    margin: "36px 8px 12px",
     width: `calc(100% - ${theme.spacing(2)}px)`,
   },
   formControlToggle: {
-    '& button': {
+    "& button": {
       color: theme.cmrTextColors.tableHeader,
       order: 3,
     },
@@ -85,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 350,
   },
   formGroup: {
-    alignItems: 'flex-start',
+    alignItems: "flex-start",
     '&.MuiFormGroup-root[role="radiogroup"]': {
       marginBottom: 0,
     },
@@ -100,9 +100,9 @@ interface Helpers {
   devtmpfs_automount: boolean;
 }
 
-type RunLevel = 'default' | 'single' | 'binbash';
-type VirtMode = 'fullvirt' | 'paravirt';
-type MemoryLimit = 'no_limit' | 'set_limit';
+type RunLevel = "default" | "single" | "binbash";
+type VirtMode = "fullvirt" | "paravirt";
+type MemoryLimit = "no_limit" | "set_limit";
 
 interface EditableFields {
   useCustomRoot: boolean;
@@ -120,7 +120,7 @@ interface EditableFields {
 }
 
 interface Props {
-  linodeHypervisor: 'kvm' | 'xen';
+  linodeHypervisor: "kvm" | "xen";
   linodeRegion: string;
   maxMemory: number;
   open: boolean;
@@ -134,9 +134,9 @@ interface Props {
 type CombinedProps = LinodeContextProps & Props & StateProps;
 
 const defaultInterface = {
-  purpose: 'none',
-  label: '',
-  ipam_address: '',
+  purpose: "none",
+  label: "",
+  ipam_address: "",
 } as ExtendedInterface;
 
 /**
@@ -145,9 +145,9 @@ const defaultInterface = {
  * interfaces will be removed from the payload before submission,
  * they are only used as placeholders presented to the user as empty selects.
  */
-export const padList = <T,>(list: T[], filler: T, size: number = 3): T[] => {
+export function padList<T>(list: T[], filler: T, size: number = 3): T[] {
   return [...list, ...repeat(filler, Math.max(0, size - list.length))];
-};
+}
 
 const padInterfaceList = (interfaces: ExtendedInterface[]) => {
   return padList<ExtendedInterface>(interfaces, defaultInterface, 3);
@@ -155,14 +155,14 @@ const padInterfaceList = (interfaces: ExtendedInterface[]) => {
 
 const defaultInterfaceList = padInterfaceList([
   {
-    purpose: 'public',
-    label: '',
-    ipam_address: '',
+    purpose: "public",
+    label: "",
+    ipam_address: "",
   },
 ]);
 
 const defaultFieldsValues = {
-  comments: '',
+  comments: "",
   devices: {},
   helpers: {
     devtmpfs_automount: true,
@@ -171,26 +171,26 @@ const defaultFieldsValues = {
     network: true,
     updatedb_disabled: true,
   },
-  kernel: 'linode/latest-64bit',
+  kernel: "linode/latest-64bit",
   interfaces: defaultInterfaceList,
-  label: '',
+  label: "",
   memory_limit: 0,
-  root_device: '/dev/sda',
-  run_level: 'default' as RunLevel,
+  root_device: "/dev/sda",
+  run_level: "default" as RunLevel,
   useCustomRoot: false,
-  virt_mode: 'paravirt' as VirtMode,
-  setMemoryLimit: 'no_limit' as MemoryLimit,
+  virt_mode: "paravirt" as VirtMode,
+  setMemoryLimit: "no_limit" as MemoryLimit,
 };
 
 const pathsOptions = [
-  { label: '/dev/sda', value: '/dev/sda' },
-  { label: '/dev/sdb', value: '/dev/sdb' },
-  { label: '/dev/sdc', value: '/dev/sdc' },
-  { label: '/dev/sdd', value: '/dev/sdd' },
-  { label: '/dev/sde', value: '/dev/sde' },
-  { label: '/dev/sdf', value: '/dev/sdf' },
-  { label: '/dev/sdg', value: '/dev/sdg' },
-  { label: '/dev/sdh', value: '/dev/sdh' },
+  { label: "/dev/sda", value: "/dev/sda" },
+  { label: "/dev/sdb", value: "/dev/sdb" },
+  { label: "/dev/sdc", value: "/dev/sdc" },
+  { label: "/dev/sdd", value: "/dev/sdd" },
+  { label: "/dev/sde", value: "/dev/sde" },
+  { label: "/dev/sdf", value: "/dev/sdf" },
+  { label: "/dev/sdg", value: "/dev/sdg" },
+  { label: "/dev/sdh", value: "/dev/sdh" },
 ];
 
 const interfacesToState = (interfaces?: Interface[]) => {
@@ -210,11 +210,11 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
       // to receive an empty array.
       []
     : (interfaces.filter(
-        (thisInterface) => thisInterface.purpose !== 'none'
+        (thisInterface) => thisInterface.purpose !== "none"
       ) as Interface[]);
 };
 
-const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
+const deviceSlots = ["sda", "sdb", "sdc", "sdd", "sde", "sdf", "sdg", "sdh"];
 const deviceCounterDefault = 1;
 
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
@@ -246,10 +246,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const regionHasVLANS = regions.some(
     (thisRegion) =>
       thisRegion.id === linodeRegion &&
-      thisRegion.capabilities.includes('Vlans')
+      thisRegion.capabilities.includes("Vlans")
   );
   const showVlans =
-    capabilities.includes('Vlans') && flags.vlans && regionHasVLANS;
+    capabilities.includes("Vlans") && flags.vlans && regionHasVLANS;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,
@@ -282,7 +282,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       kernel,
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
-      memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
+      memory_limit: setMemoryLimit === "no_limit" ? 0 : memory_limit,
       interfaces: interfacesToPayload(interfaces),
       run_level,
       virt_mode,
@@ -301,17 +301,17 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     const eth1 = interfaces[1];
     const eth2 = interfaces[2];
 
-    if (eth1?.purpose === 'none' && eth2.purpose !== 'none') {
+    if (eth1?.purpose === "none" && eth2.purpose !== "none") {
       errors.interfaces =
-        'You cannot assign an interface to eth2 without an interface assigned to eth1.';
+        "You cannot assign an interface to eth2 without an interface assigned to eth1.";
       return errors;
     }
 
     // The API field is called "label" and thus the Validation package error
     // message is "Label is required." Our field in Cloud is called "VLAN".
     interfaces.forEach((thisInterface, idx) => {
-      if (thisInterface.purpose === 'vlan' && !thisInterface.label) {
-        errors[`interfaces[${idx}].label`] = 'VLAN is required.';
+      if (thisInterface.purpose === "vlan" && !thisInterface.label) {
+        errors[`interfaces[${idx}].label`] = "VLAN is required.";
       }
     });
 
@@ -334,10 +334,10 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       // If there's any chance a VLAN changed here, make sure our query data is up to date
       if (
         configData.interfaces?.some(
-          (thisInterface) => thisInterface.purpose === 'vlan'
+          (thisInterface) => thisInterface.purpose === "vlan"
         )
       ) {
-        queryClient.invalidateQueries('vlans');
+        queryClient.invalidateQueries("vlans");
       }
       onClose();
     };
@@ -349,8 +349,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       // override 'disk_id' and 'volume_id' value for 'field' key with 'devices' to map and surface errors appropriately
       const overrideFieldForDevices = (error: APIError[]) => {
         error.forEach((err) => {
-          if (err.field && ['disk_id', 'volume_id'].includes(err.field)) {
-            err.field = 'devices';
+          if (err.field && ["disk_id", "volume_id"].includes(err.field)) {
+            err.field = "devices";
           }
         });
       };
@@ -364,9 +364,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       handleGeneralErrors(
         mapErrorToStatus,
         error,
-        'An unexpected error occurred.'
+        "An unexpected error occurred."
       );
-      scrollErrorIntoView('linode-config-dialog');
+      scrollErrorIntoView("linode-config-dialog");
     };
 
     /** Editing */
@@ -428,7 +428,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             root_device: config.root_device,
             interfaces: interfacesToState(config.interfaces),
             setMemoryLimit:
-              config.memory_limit !== 0 ? 'set_limit' : 'no_limit',
+              config.memory_limit !== 0 ? "set_limit" : "no_limit",
           },
         });
       } else {
@@ -456,7 +456,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const handleChangeKernel = React.useCallback(
     (selected: Item<string>) => {
-      setFieldValue('kernel', selected?.value ?? '');
+      setFieldValue("kernel", selected?.value ?? "");
     },
     [setFieldValue]
   );
@@ -464,7 +464,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleDevicesChanges = React.useCallback(
     (slot: string, value: string) => {
       setFieldValue(`devices[${slot}]`, value);
-      formik.setFieldError('devices', '');
+      formik.setFieldError("devices", "");
     },
     [setFieldValue, formik]
   );
@@ -481,7 +481,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       setUseCustomRoot(e.target.checked);
       if (!e.target.checked) {
         // Toggling from custom to standard; reset any custom input
-        setFieldValue('root_device', pathsOptions[0].value);
+        setFieldValue("root_device", pathsOptions[0].value);
       }
     },
     [setUseCustomRoot, setFieldValue]
@@ -489,14 +489,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const handleRootDeviceChange = React.useCallback(
     (selected: Item<string>) => {
-      setFieldValue('root_device', selected.value);
+      setFieldValue("root_device", selected.value);
     },
     [setFieldValue]
   );
 
   return (
     <Dialog
-      title={`${linodeConfigId ? 'Edit' : 'Add'} Configuration`}
+      title={`${linodeConfigId ? "Edit" : "Add"} Configuration`}
       open={open}
       onClose={onClose}
       fullHeight
@@ -697,7 +697,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 </RadioGroup>
               </FormControl>
 
-              {values.setMemoryLimit === 'set_limit' && (
+              {values.setMemoryLimit === "set_limit" && (
                 <TextField
                   type="number"
                   name="memory_limit"
@@ -733,7 +733,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 slots={deviceSlots}
                 devices={availableDevices}
                 onChange={handleDevicesChanges}
-                getSelected={(slot) => pathOr('', [slot], values.devices)}
+                getSelected={(slot) => pathOr("", [slot], values.devices)}
                 errorText={formik.errors.devices as string}
                 disabled={readOnly}
               />
@@ -780,7 +780,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                     name="root_device"
                     value={values.root_device}
                     onChange={formik.handleChange}
-                    inputProps={{ name: 'root_device', id: 'root_device' }}
+                    inputProps={{ name: "root_device", id: "root_device" }}
                     fullWidth
                     errorText={formik.errors.root_device}
                     errorGroup="linode-config-dialog"
@@ -805,7 +805,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                         Configure the network that a selected interface will
                         connect to (either &quot;Public Internet&quot; or a
                         VLAN). Each Linode can have up to three Network
-                        Interfaces. For more information, see our{' '}
+                        Interfaces. For more information, see our{" "}
                         <ExternalLink
                           text="Network Interfaces guide"
                           link="https://linode.com/docs/products/networking/vlans/guides/linode-network-interfaces/"
@@ -950,7 +950,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
           disabled={readOnly}
           loading={formik.isSubmitting}
         >
-          {linodeConfigId ? 'Save Changes' : 'Add Configuration'}
+          {linodeConfigId ? "Save Changes" : "Add Configuration"}
         </Button>
       </ActionsPanel>
     </Dialog>
@@ -979,14 +979,14 @@ const DialogContent: React.FC<ConfigFormProps> = (props) => {
 
 const isUsingCustomRoot = (value: string) =>
   [
-    '/dev/sda',
-    '/dev/sdb',
-    '/dev/sdc',
-    '/dev/sdd',
-    '/dev/sde',
-    '/dev/sdf',
-    '/dev/sdg',
-    '/dev/sdh',
+    "/dev/sda",
+    "/dev/sdb",
+    "/dev/sdc",
+    "/dev/sdd",
+    "/dev/sde",
+    "/dev/sdf",
+    "/dev/sdg",
+    "/dev/sdh",
   ].includes(value) === false;
 
 interface StateProps {
@@ -1010,7 +1010,7 @@ const enhanced = compose<CombinedProps, Props>(
         _id: `disk-${disk.id}`,
       })),
       linodeId: linode.id,
-      readOnly: linode._permissions === 'read_only',
+      readOnly: linode._permissions === "read_only",
       createLinodeConfig,
       updateLinodeConfig,
     })

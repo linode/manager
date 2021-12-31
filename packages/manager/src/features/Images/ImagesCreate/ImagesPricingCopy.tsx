@@ -1,8 +1,8 @@
-import * as React from 'react';
+import * as React from "react";
 
-import Typography from 'src/components/core/Typography';
-import { ImagesPricingCopy } from 'src/featureFlags';
-import useFlags from 'src/hooks/useFlags';
+import Typography from "src/components/core/Typography";
+import { ImagesPricingCopy as _ImagesPricingCopy } from "src/featureFlags";
+import useFlags from "src/hooks/useFlags";
 
 // =============================================================================
 // <ImagesPricingCopy />
@@ -18,7 +18,7 @@ import useFlags from 'src/hooks/useFlags';
 // that ONLY if the imagesPricingCopy feature flag is NOT present.
 // =============================================================================
 interface Props {
-  type: keyof ImagesPricingCopy;
+  type: keyof _ImagesPricingCopy;
 }
 
 const ImagesPricingCopy: React.FC<Props> = (props) => {
