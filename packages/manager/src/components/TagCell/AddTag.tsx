@@ -1,25 +1,25 @@
-import { getTags } from '@linode/api-v4/lib/tags';
-import classNames from 'classnames';
-import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import { getTags } from "@linode/api-v4/lib/tags";
+import classNames from "classnames";
+import * as React from "react";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Select, { Item } from "src/components/EnhancedSelect/Select";
+import useAccountManagement from "src/hooks/useAccountManagement";
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
-    width: '100%',
-    padding: '0px',
+    width: "100%",
+    padding: "0px",
   },
   hasFixedMenu: {
-    '& .react-select__menu': {
-      margin: '2px 0 0 0',
+    "& .react-select__menu": {
+      margin: "2px 0 0 0",
     },
   },
   inDetailsContext: {
-    width: '415px',
-    flexBasis: '100%',
-    display: 'flex',
-    justifyContent: 'flex-end',
+    width: "415px",
+    flexBasis: "100%",
+    display: "flex",
+    justifyContent: "flex-end",
   },
 }));
 
@@ -83,17 +83,17 @@ export const AddTag: React.FC<Props> = (props) => {
       })}
       onChange={handleAddTag}
       options={tagOptions}
-      variant="creatable"
+      creatable
       value={null}
       onBlur={onClose}
       placeholder="Create or Select a Tag"
-      label={label ?? 'Add a tag'}
+      label={label ?? "Add a tag"}
       hideLabel={!label}
       // eslint-disable-next-line
       autoFocus
       createOptionPosition="first"
       blurInputOnSelect={true}
-      menuPosition={fixedMenu ? 'fixed' : 'absolute'}
+      menuPosition={fixedMenu ? "fixed" : "absolute"}
     />
   );
 };

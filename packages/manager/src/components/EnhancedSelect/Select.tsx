@@ -1,30 +1,30 @@
-import classNames from 'classnames';
-import * as React from 'react';
-import ReactSelect, { Props as SelectProps } from 'react-select';
+import classNames from "classnames";
+import * as React from "react";
+import ReactSelect, { Props as SelectProps } from "react-select";
 import CreatableSelect, {
   Props as CreatableSelectProps,
-} from 'react-select/creatable';
+} from "react-select/creatable";
 import {
   withStyles,
   WithStyles,
   withTheme,
   WithTheme,
-} from 'src/components/core/styles';
-import { Props as TextFieldProps } from 'src/components/TextField';
-import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
+} from "src/components/core/styles";
+import { Props as TextFieldProps } from "src/components/TextField";
+import { convertToKebabCase } from "src/utilities/convertToKebobCase";
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
-import DropdownIndicator from './components/DropdownIndicator';
-import Input from './components/Input';
-import LoadingIndicator from './components/LoadingIndicator';
-import MenuList from './components/MenuList';
-import MultiValueLabel from './components/MultiValueLabel';
-import MultiValueRemove from './components/MultiValueRemove';
-import NoOptionsMessage from './components/NoOptionsMessage';
-import Option from './components/Option';
-import Control from './components/SelectControl';
-import Placeholder from './components/SelectPlaceholder';
-import { ClassNames, styles, reactSelectStyles } from './Select.styles';
+import DropdownIndicator from "./components/DropdownIndicator";
+import Input from "./components/Input";
+import LoadingIndicator from "./components/LoadingIndicator";
+import MenuList from "./components/MenuList";
+import MultiValueLabel from "./components/MultiValueLabel";
+import MultiValueRemove from "./components/MultiValueRemove";
+import NoOptionsMessage from "./components/NoOptionsMessage";
+import Option from "./components/Option";
+import Control from "./components/SelectControl";
+import Placeholder from "./components/SelectPlaceholder";
+import { ClassNames, styles, reactSelectStyles } from "./Select.styles";
 
 export interface Item<T = string | number, L = string> {
   value: T;
@@ -81,12 +81,12 @@ type CombinedProps = OwnProps &
 
 // We extend TexFieldProps to still be able to pass
 // the required label to Select and not duplicated it to TextFieldProps
-interface ModifiedTextFieldProps extends Omit<TextFieldProps, 'label'> {
+interface ModifiedTextFieldProps extends Omit<TextFieldProps, "label"> {
   label?: string;
 }
 
 export interface BaseSelectProps
-  extends Omit<SelectProps<any>, 'onChange' | 'value' | 'onFocus'> {
+  extends Omit<SelectProps<any>, "onChange" | "value" | "onFocus"> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
@@ -105,7 +105,6 @@ export interface BaseSelectProps
   label: string;
   /** alias for isDisabled */
   disabled?: boolean;
-  variant?: 'creatable';
   /** retyped this */
   value?: Item | Item[] | null;
   /** making this required */
@@ -124,6 +123,8 @@ export interface BaseSelectProps
   guidance?: string | React.ReactNode;
   inputId?: any;
   required?: boolean;
+  creatable?: boolean;
+  variant?: "creatable";
 }
 
 interface CreatableProps extends CreatableSelectProps<any, any> {}
@@ -165,7 +166,6 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       onInputChange,
       options,
       value,
-      variant,
       noOptionsMessage,
       onMenuClose,
       onBlur,
@@ -182,6 +182,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       overflowPortal,
       theme,
       required,
+      creatable,
       ...restOfProps
     } = this.props;
 
@@ -202,8 +203,13 @@ class Select extends React.PureComponent<CombinedProps, {}> {
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
     type PossibleProps = BaseSelectProps | CreatableProps;
-    const BaseSelect: React.ComponentClass<PossibleProps> =
-      variant === 'creatable' ? CreatableSelect : ReactSelect;
+    const BaseSelect: React.ComponentClass<PossibleProps> = creatable
+      ? CreatableSelect
+      : ReactSelect;
+
+    if (creatable) {
+      restOfProps.variant = "creatable";
+    }
 
     if (overflowPortal) {
       restOfProps.menuPortalTarget = document.body;
@@ -259,16 +265,16 @@ class Select extends React.PureComponent<CombinedProps, {}> {
          * react-select wants you to pass "null" to clear out the value
          * so we need to allow the parent to pass that if it wants
          */
-        value={typeof value === 'undefined' ? undefined : value}
+        value={typeof value === "undefined" ? undefined : value}
         onBlur={onBlur}
         options={options}
         components={combinedComponents}
         onChange={this._onChange}
         onInputChange={onInputChange}
         onCreateOption={createNew}
-        placeholder={placeholder || 'Select a value...'}
-        noOptionsMessage={this.props.noOptionsMessage || (() => 'No results')}
-        menuPlacement={this.props.menuPlacement || 'auto'}
+        placeholder={placeholder || "Select a value..."}
+        noOptionsMessage={this.props.noOptionsMessage || (() => "No results")}
+        menuPlacement={this.props.menuPlacement || "auto"}
         onMenuClose={onMenuClose}
         onFocus={onFocus}
       />

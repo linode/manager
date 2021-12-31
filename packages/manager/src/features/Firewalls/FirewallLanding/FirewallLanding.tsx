@@ -1,29 +1,65 @@
-import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
-import * as React from 'react';
+import { CreateFirewallPayload, Firewall } from "@linode/api-v4/lib/firewalls";
+import * as React from "react";
 import {
   RouteComponentProps,
   useHistory,
   useRouteMatch,
-} from 'react-router-dom';
-import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
-import EntityTable from 'src/components/EntityTable';
-import LandingHeader from 'src/components/LandingHeader';
+} from "react-router-dom";
+import { compose } from "recompose";
+import CircleProgress from "src/components/CircleProgress";
+import EntityTable from "src/components/EntityTable";
+import LandingHeader from "src/components/LandingHeader";
 import {
   useCreateFirewall,
   useDeleteFirewall,
   useFirewallQuery,
   useMutateFirewall,
-} from 'src/queries/firewalls';
-import { queryClient } from 'src/queries/base';
-import { useProfile, queryKey } from 'src/queries/profile';
-import AddFirewallDrawer from './AddFirewallDrawer';
-import { ActionHandlers as FirewallHandlers } from './FirewallActionMenu';
-import FirewallDialog, { Mode } from './FirewallDialog';
-import FirewallEmptyState from './FirewallEmptyState';
-import FirewallRow from './FirewallRow';
+} from "src/queries/firewalls";
+import { queryClient } from "src/queries/base";
+import { useProfile, queryKey } from "src/queries/profile";
+import AddFirewallDrawer from "./AddFirewallDrawer";
+import { ActionHandlers as FirewallHandlers } from "./FirewallActionMenu";
+import FirewallDialog, { Mode } from "./FirewallDialog";
+import FirewallEmptyState from "./FirewallEmptyState";
+import FirewallRow from "./FirewallRow";
 
 type CombinedProps = RouteComponentProps<{}>;
+
+export const headers = [
+  {
+    label: "Firewall",
+    dataColumn: "label",
+    sortable: true,
+    widthPercent: 25,
+  },
+  {
+    label: "Status",
+    dataColumn: "status",
+    sortable: true,
+    widthPercent: 15,
+  },
+  {
+    label: "Rules",
+    dataColumn: "rules",
+    sortable: false,
+    widthPercent: 25,
+    hideOnMobile: true,
+  },
+  {
+    label: "Linodes",
+    dataColumn: "devices",
+    sortable: false,
+    widthPercent: 25,
+    hideOnMobile: true,
+  },
+  {
+    label: "Action Menu",
+    visuallyHidden: true,
+    dataColumn: "",
+    sortable: false,
+    widthPercent: 5,
+  },
+];
 
 const FirewallLanding: React.FC<CombinedProps> = () => {
   const { data: profile } = useProfile();
@@ -40,7 +76,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   ] = React.useState<boolean>(false);
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
-  const [dialogMode, setDialogMode] = React.useState<Mode>('enable');
+  const [dialogMode, setDialogMode] = React.useState<Mode>("enable");
 
   const [selectedFirewallID, setSelectedFirewallID] = React.useState<
     number | undefined
@@ -49,14 +85,14 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const [
     selectedFirewallLabel,
     setSelectedFirewallLabel,
-  ] = React.useState<string>('');
+  ] = React.useState<string>("");
 
   const enableFirewall = (id: number) => {
-    return updateFirewall({ id, payload: { status: 'enabled' } });
+    return updateFirewall({ id, payload: { status: "enabled" } });
   };
 
   const disableFirewall = (id: number) => {
-    return updateFirewall({ id, payload: { status: 'disabled' } });
+    return updateFirewall({ id, payload: { status: "disabled" } });
   };
 
   const createFirewall = (
@@ -82,59 +118,23 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   };
 
   const handleOpenDeleteFirewallModal = (id: number, label: string) => {
-    openModal('delete', id, label);
+    openModal("delete", id, label);
   };
 
   const handleOpenEnableFirewallModal = (id: number, label: string) => {
-    openModal('enable', id, label);
+    openModal("enable", id, label);
   };
 
   const handleOpenDisableFirewallModal = (id: number, label: string) => {
-    openModal('disable', id, label);
+    openModal("disable", id, label);
   };
-
-  const headers = [
-    {
-      label: 'Firewall',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 25,
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: true,
-      widthPercent: 15,
-    },
-    {
-      label: 'Rules',
-      dataColumn: 'rules',
-      sortable: false,
-      widthPercent: 25,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Linodes',
-      dataColumn: 'devices',
-      sortable: false,
-      widthPercent: 25,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 5,
-    },
-  ];
 
   const openDrawer = React.useCallback(() => toggleAddFirewallDrawer(true), [
     toggleAddFirewallDrawer,
   ]);
 
   // On-the-fly route matching so this component can open the drawer itself.
-  const createFirewallRouteMatch = Boolean(useRouteMatch('/firewalls/create'));
+  const createFirewallRouteMatch = Boolean(useRouteMatch("/firewalls/create"));
 
   React.useEffect(() => {
     if (createFirewallRouteMatch) {
@@ -146,7 +146,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
 
   const closeDrawer = React.useCallback(() => {
     toggleAddFirewallDrawer(false);
-    replace('/firewalls');
+    replace("/firewalls");
   }, [toggleAddFirewallDrawer, replace]);
 
   const handlers: FirewallHandlers = {
@@ -193,7 +193,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
       <LandingHeader
         title="Firewalls"
         entity="Firewall"
-        breadcrumbProps={{ pathname: '/firewalls' }}
+        breadcrumbProps={{ pathname: "/firewalls" }}
         onAddNew={openDrawer}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
       />
@@ -201,7 +201,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
         entity="firewall"
         row={firewallRow}
         headers={headers}
-        initialOrder={{ order: 'asc', orderBy: 'domain' }}
+        initialOrder={{ order: "asc", orderBy: "domain" }}
       />
       <AddFirewallDrawer
         open={addFirewallDrawerOpen}

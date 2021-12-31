@@ -1,25 +1,25 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
-import { partition } from 'ramda';
-import * as React from 'react';
-import useEvents from 'src/hooks/useEvents';
-import { isInProgressEvent } from 'src/store/events/event.helpers';
-import { ExtendedEvent } from 'src/store/events/event.types';
-import { NotificationItem } from '../NotificationSection';
-import RenderEvent from './RenderEvent';
-import RenderProgressEvent from './RenderProgressEvent';
-import { notificationContext } from '../NotificationContext';
+import { Event, EventAction } from "@linode/api-v4/lib/account/types";
+import { partition } from "ramda";
+import * as React from "react";
+import useEvents from "src/hooks/useEvents";
+import { isInProgressEvent } from "src/store/events/event.helpers";
+import { ExtendedEvent } from "src/store/events/event.types";
+import { NotificationItem } from "../NotificationSection";
+import RenderEvent from "./RenderEvent";
+import RenderProgressEvent from "./RenderProgressEvent";
+import { notificationContext } from "../NotificationContext";
 
 const unwantedEvents: EventAction[] = [
-  'account_update',
-  'account_settings_update',
-  'credit_card_updated',
-  'profile_update',
-  'ticket_attachment_upload',
-  'volume_update',
+  "account_update",
+  "account_settings_update",
+  "credit_card_updated",
+  "profile_update",
+  "ticket_attachment_upload",
+  "volume_update",
 ];
 
-export const useEventNotifications = () => {
-  const { events } = useEvents();
+export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
+  const events = givenEvents ?? useEvents().events;
   const context = React.useContext(notificationContext);
 
   const _events = events.filter(

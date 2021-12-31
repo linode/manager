@@ -1,14 +1,15 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
-import CheckBox from 'src/components/CheckBox';
-import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { HACopy } from '../KubeCheckoutBar/HACheckbox';
-import { useSnackbar } from 'notistack';
+import * as React from "react";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import ConfirmationDialog from "src/components/ConfirmationDialog";
+import Typography from "src/components/core/Typography";
+import Notice from "src/components/Notice";
+import CheckBox from "src/components/CheckBox";
+import useKubernetesClusters from "src/hooks/useKubernetesClusters";
+import { HIGH_AVAILABILITY_PRICE } from "src/constants";
+import { HACopy } from "../KubeCheckoutBar/HACheckbox";
+import { useSnackbar } from "notistack";
+import Chip from "src/components/core/Chip";
 
 interface Props {
   open: boolean;
@@ -27,7 +28,7 @@ const renderActions = (
         buttonType="secondary"
         onClick={onClose}
         data-qa-cancel
-        data-testid={'dialog-cancel'}
+        data-testid={"dialog-cancel"}
       >
         Cancel
       </Button>
@@ -36,7 +37,7 @@ const renderActions = (
         onClick={onUpgrade}
         disabled={disabled}
         data-qa-confirm
-        data-testid={'dialog-confirm'}
+        data-testid={"dialog-confirm"}
       >
         Upgrade to HA
       </Button>
@@ -62,7 +63,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
     })
       .then(() => {
         setSubmitting(false);
-        enqueueSnackbar('Enabled HA Control Plane', { variant: 'success' });
+        enqueueSnackbar("Enabled HA Control Plane", { variant: "success" });
         onClose();
       })
       .catch((e) => {
@@ -95,6 +96,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
         onChange={toggleChecked}
         text="Enable HA Control Plane"
       />
+      <Chip style={{ marginLeft: -8 }} label="BETA" />
     </ConfirmationDialog>
   );
 };

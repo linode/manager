@@ -1,48 +1,47 @@
-import * as React from 'react';
-import { APIWarning } from '@linode/api-v4/lib/types';
-import classNames from 'classnames';
-import { VariantType } from 'notistack';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { useScript } from 'src/hooks/useScript';
-import { useClientToken } from 'src/queries/accountPayment';
-import { SetSuccess } from './types';
+import * as React from "react";
+import { APIWarning } from "@linode/api-v4/lib/types";
+import classNames from "classnames";
+import { VariantType } from "notistack";
+import { makeStyles, Theme } from "src/components/core/styles";
+import { useScript } from "src/hooks/useScript";
+import { useClientToken } from "src/queries/accountPayment";
+import { SetSuccess } from "./types";
 import {
   initGooglePaymentInstance,
   gPay,
-} from 'src/features/Billing/Providers/GooglePay';
-import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg?component';
-import Tooltip from 'src/components/core/Tooltip';
-import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/Grid';
-import { reportException } from 'src/exceptionReporting';
+} from "src/features/Billing/GooglePayProvider";
+import GooglePayIcon from "src/assets/icons/payment/gPayButton.svg?component";
+import Tooltip from "src/components/core/Tooltip";
+import CircleProgress from "src/components/CircleProgress";
+import Grid from "src/components/Grid";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative',
+    position: "relative",
   },
   button: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: theme.cmrBGColors.bgGooglePay,
     border: 0,
     borderRadius: 4,
-    cursor: 'pointer',
+    cursor: "pointer",
     height: 35,
-    width: '100%',
-    transition: theme.transitions.create(['opacity']),
-    '&:hover': {
+    width: "100%",
+    transition: theme.transitions.create(["opacity"]),
+    "&:hover": {
       opacity: 0.8,
-      transition: 'none',
+      transition: "none",
       background: theme.cmrBGColors.bgGooglePay,
     },
-    '& svg': {
+    "& svg": {
       color: theme.cmrTextColors.textGooglePay,
       height: 16,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down("sm")]: {
       marginLeft: 0,
-      width: '101.5%',
+      width: "101.5%",
     },
   },
   loading: {
@@ -54,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   mask: {
     width: 200,
     height: 38,
-    position: 'absolute',
+    position: "absolute",
     zIndex: 10,
     left: 0,
     top: 0,
@@ -73,7 +72,7 @@ interface Props {
 
 export const GooglePayButton: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const status = useScript('https://pay.google.com/gp/p/js/pay.js');
+  const status = useScript("https://pay.google.com/gp/p/js/pay.js");
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
@@ -102,13 +101,11 @@ export const GooglePayButton: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     const init = async () => {
-      if (status === 'ready' && data) {
-        try {
-          await initGooglePaymentInstance(data.client_token as string);
-        } catch (error) {
-          reportException(error, {
-            message: 'Error initializing Google Pay.',
-          });
+      if (status === "ready" && data) {
+        const { error } = await initGooglePaymentInstance(
+          data.client_token as string
+        );
+        if (error) {
           setInitializationError(true);
         }
       }
@@ -121,23 +118,23 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     variant: VariantType,
     warning?: APIWarning[]
   ) => {
-    if (variant === 'error') {
+    if (variant === "error") {
       setError(message);
-    } else if (variant === 'success') {
+    } else if (variant === "success") {
       setSuccess(message, true, warning);
     }
   };
 
   const handlePay = () => {
-    gPay('one-time-payment', transactionInfo, handleMessage, setProcessing);
+    gPay("one-time-payment", transactionInfo, handleMessage, setProcessing);
   };
 
-  if (status === 'error' || clientTokenError) {
-    return renderError('Error loading Google Pay.');
+  if (status === "error" || clientTokenError) {
+    return renderError("Error loading Google Pay.");
   }
 
   if (initializationError) {
-    return renderError('Eror initializing Google Pay.');
+    return renderError("Eror initializing Google Pay.");
   }
 
   if (isLoading) {
@@ -158,7 +155,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
       {disabledDueToPrice && (
         <Tooltip
           title={`Payment amount must be between $5 and ${
-            balance > 2000 ? '$50000' : '$2000'
+            balance > 2000 ? "$50000" : "$2000"
           }`}
           data-qa-help-tooltip
           enterTouchDelay={0}

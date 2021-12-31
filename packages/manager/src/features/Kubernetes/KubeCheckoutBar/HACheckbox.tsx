@@ -1,16 +1,17 @@
-import * as React from 'react';
-import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import DisplayPrice from 'src/components/DisplayPrice';
-import Link from 'src/components/Link';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import * as React from "react";
+import CheckBox from "src/components/CheckBox";
+import Box from "src/components/core/Box";
+import Chip from "src/components/core/Chip";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import DisplayPrice from "src/components/DisplayPrice";
+import Link from "src/components/Link";
+import { HIGH_AVAILABILITY_PRICE } from "src/constants";
 
 export const HACopy = () => (
   <Typography>
     A high availability (HA) control plane is replicated on multiple master
-    nodes to provide 99.99% uptime, and is recommended for production workloads.{' '}
+    nodes to provide 99.99% uptime, and is recommended for production workloads.{" "}
     <Link to="https://www.linode.com/docs/guides/enable-lke-high-availability/">
       Learn more about the HA control plane
     </Link>
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   heading: {
     paddingTop: theme.spacing(0.5),
     paddingBottom: theme.spacing(),
-    fontSize: '16px',
+    fontSize: "16px",
     fontWeight: 600,
   },
   checkbox: {
@@ -31,6 +32,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   price: {
     marginTop: theme.spacing(),
+  },
+  chip: {
+    fontWeight: theme.typography.fontWeightRegular,
+    margin: 0,
+    marginTop: -1,
   },
 }));
 
@@ -61,7 +67,8 @@ const HACheckbox: React.FC<Props> = (props) => {
         />
         <Box>
           <Typography className={classes.heading}>
-            Enable HA Control Plane
+            Enable HA Control Plane{" "}
+            <Chip className={classes.chip} label="BETA" />
           </Typography>
           <HACopy />
         </Box>

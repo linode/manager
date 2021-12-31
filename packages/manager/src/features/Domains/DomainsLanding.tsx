@@ -1,64 +1,64 @@
-import { Domain, getDomains } from '@linode/api-v4/lib/domains';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
-import * as React from 'react';
-import { connect, MapStateToProps } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-import DomainIcon from 'src/assets/icons/entityIcons/domain.svg?component';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
+import { Domain, getDomains } from "@linode/api-v4/lib/domains";
+import { withSnackbar, WithSnackbarProps } from "notistack";
+import { pathOr } from "ramda";
+import * as React from "react";
+import { connect, MapStateToProps } from "react-redux";
+import { RouteComponentProps } from "react-router-dom";
+import { compose } from "recompose";
+import DomainIcon from "src/assets/icons/entityIcons/domain.svg?component";
+import Button from "src/components/Button";
+import CircleProgress from "src/components/CircleProgress";
 import {
   makeStyles,
   Theme,
   useMediaQuery,
   useTheme,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import DeletionDialog from 'src/components/DeletionDialog';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { EntityTableRow, HeaderCell } from 'src/components/EntityTable';
-import EntityTable from 'src/components/EntityTable';
-import ErrorState from 'src/components/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
-import { Order } from 'src/components/Pagey';
-import Placeholder from 'src/components/Placeholder';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+} from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import DeletionDialog from "src/components/DeletionDialog";
+import { DocumentTitleSegment } from "src/components/DocumentTitle";
+import { EntityTableRow, HeaderCell } from "src/components/EntityTable";
+import EntityTable from "src/components/EntityTable";
+import ErrorState from "src/components/ErrorState";
+import LandingHeader from "src/components/LandingHeader";
+import Link from "src/components/Link";
+import Notice from "src/components/Notice";
+import { Order } from "src/components/Pagey";
+import Placeholder from "src/components/Placeholder";
+import PreferenceToggle, { ToggleProps } from "src/components/PreferenceToggle";
 import domainsContainer, {
   Props as DomainProps,
-} from 'src/containers/domains.container';
-import { ApplicationState } from 'src/store';
+} from "src/containers/domains.container";
+import { ApplicationState } from "src/store";
 import {
   openForCloning,
   openForCreating,
   openForEditing as _openForEditing,
   Origin as DomainDrawerOrigin,
-} from 'src/store/domainDrawer';
-import { upsertMultipleDomains } from 'src/store/domains/domains.actions';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import DisableDomainDialog from './DisableDomainDialog';
-import { Handlers as DomainHandlers } from './DomainActionMenu';
-import DomainBanner from './DomainBanner';
-import DomainRow from './DomainTableRow';
-import DomainZoneImportDrawer from './DomainZoneImportDrawer';
+} from "src/store/domainDrawer";
+import { upsertMultipleDomains } from "src/store/domains/domains.actions";
+import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
+import { sendGroupByTagEnabledEvent } from "src/utilities/ga";
+import DisableDomainDialog from "./DisableDomainDialog";
+import { Handlers as DomainHandlers } from "./DomainActionMenu";
+import DomainBanner from "./DomainBanner";
+import DomainRow from "./DomainTableRow";
+import DomainZoneImportDrawer from "./DomainZoneImportDrawer";
 
-const DOMAIN_CREATE_ROUTE = '/domains/create';
+const DOMAIN_CREATE_ROUTE = "/domains/create";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     // Adds spacing when the docs button wraps to make it look a little less awkward
     [theme.breakpoints.down(380)]: {
-      '& .docsButton': {
+      "& .docsButton": {
         paddingBottom: theme.spacing(2),
       },
     },
   },
   importButton: {
     marginLeft: -theme.spacing(),
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
 }));
 
@@ -73,7 +73,7 @@ interface Props {
   };
 }
 
-const initialOrder = { order: 'asc' as Order, orderBy: 'domain' };
+const initialOrder = { order: "asc" as Order, orderBy: "domain" };
 
 export type CombinedProps = DispatchProps &
   DomainProps &
@@ -82,34 +82,34 @@ export type CombinedProps = DispatchProps &
   StateProps &
   WithSnackbarProps;
 
-const getHeaders = (
+export const getHeaders = (
   matchesXsDown: boolean,
   matchesSmDown: boolean,
   matchesMdDown: boolean
 ): HeaderCell[] =>
   [
     {
-      label: 'Domain',
-      dataColumn: 'domain',
+      label: "Domain",
+      dataColumn: "domain",
       sortable: true,
       widthPercent: matchesXsDown ? 50 : matchesSmDown ? 35 : 30,
     },
     {
-      label: 'Status',
-      dataColumn: 'status',
+      label: "Status",
+      dataColumn: "status",
       sortable: true,
       widthPercent: matchesXsDown ? 25 : 12,
     },
     {
-      label: 'Type',
-      dataColumn: 'type',
+      label: "Type",
+      dataColumn: "type",
       sortable: true,
       widthPercent: 12,
       hideOnMobile: true,
     },
     {
-      label: 'Last Modified',
-      dataColumn: 'updated',
+      label: "Last Modified",
+      dataColumn: "updated",
       sortable: true,
       widthPercent: matchesSmDown ? 25 : matchesMdDown ? 20 : 15,
       hideOnMobile: true,
@@ -119,9 +119,9 @@ const getHeaders = (
 export const DomainsLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesXsDown = useMediaQuery(theme.breakpoints.down("xs"));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down("sm"));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down("md"));
 
   const {
     domainForEditing,
@@ -139,7 +139,7 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const [selectedDomainLabel, setSelectedDomainLabel] = React.useState<string>(
-    ''
+    ""
   );
   const [selectedDomainID, setselectedDomainID] = React.useState<
     number | undefined
@@ -195,7 +195,7 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
   const openImportZoneDrawer = () => setImportDrawerOpen(true);
 
   const closeImportZoneDrawer = () => {
-    setSelectedDomainLabel('');
+    setSelectedDomainLabel("");
     setImportDrawerOpen(false);
   };
 
@@ -231,34 +231,34 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
         .catch((e) => {
           setRemoveDialogLoading(false);
           setRemoveDialogError(
-            getAPIErrorOrDefault(e, 'Error deleting Domain.')[0].reason
+            getAPIErrorOrDefault(e, "Error deleting Domain.")[0].reason
           );
         });
     } else {
       setRemoveDialogLoading(false);
-      setRemoveDialogError('Error deleting Domain.');
+      setRemoveDialogError("Error deleting Domain.");
     }
   };
 
   const handleClickEnableOrDisableDomain = (
-    action: 'enable' | 'disable',
+    action: "enable" | "disable",
     domain: string,
     domainId: number
   ) => {
-    if (action === 'enable') {
+    if (action === "enable") {
       props
         .updateDomain({
           domainId,
-          status: 'active',
+          status: "active",
         })
         .catch((e) => {
           return props.enqueueSnackbar(
             getAPIErrorOrDefault(
               e,
-              'There was an issue enabling your domain'
+              "There was an issue enabling your domain"
             )[0].reason,
             {
-              variant: 'error',
+              variant: "error",
             }
           );
         });
@@ -451,11 +451,11 @@ const RenderEmpty: React.FC<{
         buttonProps={[
           {
             onClick: props.onCreateDomain,
-            children: 'Create Domain',
+            children: "Create Domain",
           },
           {
             onClick: props.onImportZone,
-            children: 'Import a Zone',
+            children: "Import a Zone",
           },
         ]}
       >
@@ -500,10 +500,10 @@ const mapStateToProps: MapStateToProps<StateProps, {}, ApplicationState> = (
   state
 ) => ({
   howManyLinodesOnAccount: state.__resources.linodes.results,
-  linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
+  linodesLoading: pathOr(false, ["linodes", "loading"], state.__resources),
   isRestrictedUser: pathOr(
     true,
-    ['__resources', 'profile', 'data', 'restricted'],
+    ["__resources", "profile", "data", "restricted"],
     state
   ),
   isLargeAccount: state.__resources.accountManagement.isLargeAccount,

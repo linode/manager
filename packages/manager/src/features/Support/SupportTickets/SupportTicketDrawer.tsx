@@ -1,42 +1,42 @@
 import {
   createSupportTicket,
   uploadAttachment,
-} from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as Bluebird from 'bluebird';
-import { update } from 'ramda';
-import * as React from 'react';
-import { compose as recompose } from 'recompose';
-import Accordion from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Dialog from 'src/components/Dialog';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Notice from 'src/components/Notice';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import TextField from 'src/components/TextField';
-import useEntities, { Entity } from 'src/hooks/useEntities';
+} from "@linode/api-v4/lib/support";
+import { APIError } from "@linode/api-v4/lib/types";
+import * as Bluebird from "bluebird";
+import { update } from "ramda";
+import * as React from "react";
+import { compose as recompose } from "recompose";
+import Accordion from "src/components/Accordion";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import FormHelperText from "src/components/core/FormHelperText";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Dialog from "src/components/Dialog";
+import Select, { Item } from "src/components/EnhancedSelect/Select";
+import Notice from "src/components/Notice";
+import SectionErrorBoundary from "src/components/SectionErrorBoundary";
+import TextField from "src/components/TextField";
+import useEntities, { Entity } from "src/hooks/useEntities";
 import {
   getAPIErrorOrDefault,
   getErrorMap,
   getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { storage } from 'src/utilities/storage';
-import { debounce } from 'throttle-debounce';
-import AttachFileForm from '../AttachFileForm';
-import { FileAttachment } from '../index';
-import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
-import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
+} from "src/utilities/errorUtils";
+import scrollErrorIntoView from "src/utilities/scrollErrorIntoView";
+import { storage } from "src/utilities/storage";
+import { debounce } from "throttle-debounce";
+import AttachFileForm from "../AttachFileForm";
+import { FileAttachment } from "../index";
+import { AttachmentError } from "../SupportTicketDetail/SupportTicketDetail";
+import Reference from "../SupportTicketDetail/TabbedReply/MarkdownReference";
+import TabbedReply from "../SupportTicketDetail/TabbedReply/TabbedReply";
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
     backgroundColor:
-      theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
+      theme.name === "darkTheme" ? theme.bg.main : theme.bg.white,
     paddingTop: theme.spacing(1),
     borderTop: `1px solid ${theme.bg.main}`,
   },
@@ -64,13 +64,13 @@ interface AttachmentWithTarget {
 }
 
 export type EntityType =
-  | 'linode_id'
-  | 'volume_id'
-  | 'domain_id'
-  | 'nodebalancer_id'
-  | 'cluster_id'
-  | 'none'
-  | 'general';
+  | "linode_id"
+  | "volume_id"
+  | "domain_id"
+  | "nodebalancer_id"
+  | "lkecluster_id"
+  | "none"
+  | "general";
 
 export interface Props {
   open: boolean;
@@ -85,34 +85,34 @@ export interface Props {
 export type CombinedProps = Props;
 
 const entityMap: Record<string, EntityType> = {
-  Linodes: 'linode_id',
-  Volumes: 'volume_id',
-  Domains: 'domain_id',
-  NodeBalancers: 'nodebalancer_id',
-  Kubernetes: 'cluster_id',
+  Linodes: "linode_id",
+  Volumes: "volume_id",
+  Domains: "domain_id",
+  NodeBalancers: "nodebalancer_id",
+  Kubernetes: "lkecluster_id",
 };
 
 const entityIdToNameMap: Partial<Record<EntityType, string>> = {
-  linode_id: 'Linode',
-  volume_id: 'Volume',
-  domain_id: 'Domain',
-  nodebalancer_id: 'NodeBalancer',
-  cluster_id: 'Kubernetes Cluster',
+  linode_id: "Linode",
+  volume_id: "Volume",
+  domain_id: "Domain",
+  nodebalancer_id: "NodeBalancer",
+  lkecluster_id: "Kubernetes Cluster",
 };
 
 const entityIdToTypeMap: Record<EntityType, string> = {
-  linode_id: 'linodes',
-  volume_id: 'volumes',
-  domain_id: 'domains',
-  nodebalancer_id: 'nodeBalancers',
-  cluster_id: 'kubernetesClusters',
-  none: 'linodes',
-  general: 'linodes',
+  linode_id: "linodes",
+  volume_id: "volumes",
+  domain_id: "domains",
+  nodebalancer_id: "nodeBalancers",
+  lkecluster_id: "kubernetesClusters",
+  none: "linodes",
+  general: "linodes",
 };
 
 export const entitiesToItems = (type: string, entities: any) => {
   return entities.map((entity: any) => {
-    return type === 'domain_id'
+    return type === "domain_id"
       ? // Domains don't have labels
         { value: entity.id, label: entity.domain }
       : { value: entity.id, label: entity.label };
@@ -123,7 +123,7 @@ export const getInitialValue = (
   fromProps?: string,
   fromStorage?: string
 ): string => {
-  return fromProps ?? fromStorage ?? '';
+  return fromProps ?? fromStorage ?? "";
 };
 
 export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
@@ -138,8 +138,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const [description, setDescription] = React.useState<string>(
     getInitialValue(prefilledDescription, valuesFromStorage.description)
   );
-  const [entityType, setEntityType] = React.useState<EntityType>('general');
-  const [entityID, setEntityID] = React.useState<string>('');
+  const [entityType, setEntityType] = React.useState<EntityType>("general");
+  const [entityID, setEntityID] = React.useState<string>("");
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
@@ -202,23 +202,23 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
    */
   const loadSelectedEntities = (_entityType: string) => {
     switch (_entityType) {
-      case 'linode_id': {
+      case "linode_id": {
         handleSetOrRequestEntities(entities.linodes, _entityType);
         return;
       }
-      case 'volume_id': {
+      case "volume_id": {
         handleSetOrRequestEntities(entities.volumes, _entityType);
         return;
       }
-      case 'domain_id': {
+      case "domain_id": {
         handleSetOrRequestEntities(entities.domains, _entityType);
         return;
       }
-      case 'nodebalancer_id': {
+      case "nodebalancer_id": {
         handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
         return;
       }
-      case 'cluster_id': {
+      case "lkecluster_id": {
         handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
         return;
       }
@@ -235,15 +235,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
      * or reset to the default values (from props or localStorage) otherwise.
      */
     const _summary = clearValues
-      ? ''
+      ? ""
       : getInitialValue(prefilledTitle, valuesFromStorage.title);
     const _description = clearValues
-      ? ''
+      ? ""
       : getInitialValue(prefilledDescription, valuesFromStorage.description);
     setSummary(_summary);
     setDescription(_description);
-    setEntityID('');
-    setEntityType('general');
+    setEntityID("");
+    setEntityType("general");
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -252,7 +252,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setFiles([]);
 
     if (clearValues) {
-      saveText('', '');
+      saveText("", "");
     }
   };
 
@@ -271,7 +271,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       return;
     }
     setEntityType(e.value as EntityType);
-    setEntityID('');
+    setEntityID("");
     setErrors(undefined);
     setData([]);
 
@@ -279,18 +279,18 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   };
 
   const handleEntityIDChange = (selected: Item | null) => {
-    setEntityID(String(selected?.value) ?? '');
+    setEntityID(String(selected?.value) ?? "");
   };
 
   const getHasNoEntitiesMessage = (): string => {
-    if (['none', 'general'].includes(entityType)) {
-      return '';
+    if (["none", "general"].includes(entityType)) {
+      return "";
     } else if (data.length === 0 && !entityError) {
       // User has selected a type from the drop-down but the entity list is empty.
       return `You don't have any ${entityIdToNameMap[entityType]}s on your account.`;
     } else {
       // Default case
-      return '';
+      return "";
     }
   };
 
@@ -321,7 +321,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         setFiles((oldFiles: FileAttachment[]) =>
           update(
             idx,
-            { file: null, uploading: false, uploaded: true, name: '' },
+            { file: null, uploading: false, uploaded: true, name: "" },
             oldFiles
           )
         );
@@ -337,13 +337,13 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         );
         const newError = getErrorStringOrDefault(
           attachmentErrors,
-          'There was an error attaching this file. Please try again.'
+          "There was an error attaching this file. Please try again."
         );
         return {
           ...accumulator,
           errors: [
             ...accumulator.errors,
-            { error: newError, file: attachment.file.get('name') },
+            { error: newError, file: attachment.file.get("name") },
           ],
         };
       });
@@ -358,8 +358,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
           update(idx, { ...oldFiles[idx], uploading: true }, oldFiles)
         );
         const formData = new FormData();
-        formData.append('file', file.file ?? ''); // Safety check for TS only
-        formData.append('name', file.name);
+        formData.append("file", file.file ?? ""); // Safety check for TS only
+        formData.append("name", file.name);
         return { file: formData, ticketId };
       });
 
@@ -373,10 +373,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const onSubmit = () => {
     const { onSuccess } = props;
-    if (!['none', 'general'].includes(entityType) && !entityID) {
+    if (!["none", "general"].includes(entityType) && !entityID) {
       setErrors([
         {
-          field: 'input',
+          field: "input",
           reason: `Please select a ${entityIdToNameMap[entityType]}.`,
         },
       ]);
@@ -422,7 +422,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const requirementsMet = description.length > 0 && summary.length > 0;
 
-  const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
+  const hasErrorFor = getErrorMap(["summary", "description", "input"], errors);
   const summaryError = hasErrorFor.summary;
   const descriptionError = hasErrorFor.description;
   const generalError = hasErrorFor.none;
@@ -435,7 +435,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const hasNoEntitiesMessage = getHasNoEntitiesMessage();
 
   const topicOptions = [
-    { label: 'General/Account/Billing', value: 'general' },
+    { label: "General/Account/Billing", value: "general" },
     ...renderEntityTypes(),
   ];
 
@@ -492,7 +492,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
                 data-qa-ticket-entity-type
                 isClearable={false}
               />
-              {!['none', 'general'].includes(entityType) && (
+              {!["none", "general"].includes(entityType) && (
                 <>
                   <Select
                     options={data}
@@ -500,7 +500,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
                     disabled={data.length === 0}
                     errorText={entityError || inputError}
                     placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                    label={entityIdToNameMap[entityType] ?? 'Entity Select'}
+                    label={entityIdToNameMap[entityType] ?? "Entity Select"}
                     onChange={handleEntityIDChange}
                     data-qa-ticket-entity-id
                     isLoading={entitiesLoading}

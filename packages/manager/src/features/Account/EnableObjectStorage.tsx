@@ -1,46 +1,39 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Accordion from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
-import Grid from 'src/components/Grid';
-import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { AccountSettings } from "@linode/api-v4/lib/account";
+import { cancelObjectStorage } from "@linode/api-v4/lib/object-storage";
+import { APIError } from "@linode/api-v4/lib/types";
+import * as React from "react";
+import { Link } from "react-router-dom";
+import Accordion from "src/components/Accordion";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import ConfirmationDialog from "src/components/ConfirmationDialog";
+import Typography from "src/components/core/Typography";
+import ExternalLink from "src/components/ExternalLink";
+import Grid from "src/components/Grid";
+import { updateAccountSettingsData } from "src/queries/accountSettings";
 
 interface Props {
-  object_storage: AccountSettings['object_storage'];
+  object_storage: AccountSettings["object_storage"];
 }
 
 type CombinedProps = Props;
 
 interface ContentProps {
-  object_storage: AccountSettings['object_storage'];
+  object_storage: AccountSettings["object_storage"];
   openConfirmationModal: () => void;
 }
 
 export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
   const { object_storage, openConfirmationModal } = props;
 
-  if (object_storage !== 'disabled') {
+  if (object_storage !== "disabled") {
     return (
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body1">
-            Object Storage is enabled on your account. To cancel Object Storage,
-            all buckets must be removed from the account. For more information
-            on how to delete large amounts of objects within a bucket, consult
-            our guide on{' '}
-            <ExternalLink
-              fixedIcon
-              text="lifecycle policies."
-              link="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
-            />{' '}
-            Upon cancellation, all Object Storage Access Keys will be revoked.
+            Object Storage is enabled on your account. Upon cancelation, all
+            Object Storage Access Keys will be revoked, all buckets will be
+            removed, and their objects deleted.
           </Typography>
         </Grid>
         <Grid item>
@@ -56,9 +49,9 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
     <Typography variant="body1">
       Content storage and delivery for unstructured data. Great for multimedia,
       static sites, software delivery, archives, and data backups. To get
-      started with Object Storage, create a{' '}
-      <Link to="/object-storage/buckets">Bucket</Link> or an{' '}
-      <Link to="/object-storage/access-keys">Access Key.</Link>{' '}
+      started with Object Storage, create a{" "}
+      <Link to="/object-storage/buckets">Bucket</Link> or an{" "}
+      <Link to="/object-storage/access-keys">Access Key.</Link>{" "}
       <ExternalLink
         fixedIcon
         text="Learn more."
@@ -89,7 +82,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
     setError(undefined);
     cancelObjectStorage()
       .then(() => {
-        updateAccountSettingsData({ object_storage: 'disabled' });
+        updateAccountSettingsData({ object_storage: "disabled" });
         handleClose();
       })
       .catch(handleError);

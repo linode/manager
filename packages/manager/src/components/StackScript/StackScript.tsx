@@ -1,34 +1,34 @@
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { stringify } from 'qs';
-import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import Button from 'src/components/Button';
-import CopyTooltip from 'src/components/CopyTooltip';
-import Chip from 'src/components/core/Chip';
-import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
-import H1Header from 'src/components/H1Header';
-import ScriptCode from 'src/components/ScriptCode';
-import { useImages } from 'src/hooks/useImages';
-import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { StackScript } from "@linode/api-v4/lib/stackscripts";
+import { stringify } from "qs";
+import * as React from "react";
+import { Link, useHistory } from "react-router-dom";
+import Button from "src/components/Button";
+import CopyTooltip from "src/components/CopyTooltip";
+import Chip from "src/components/core/Chip";
+import Divider from "src/components/core/Divider";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import DateTimeDisplay from "src/components/DateTimeDisplay";
+import Grid from "src/components/Grid";
+import H1Header from "src/components/H1Header";
+import ScriptCode from "src/components/ScriptCode";
+import { useImages } from "src/hooks/useImages";
+import { useAccountManagement } from "src/hooks/useAccountManagement";
+import { useReduxLoad } from "src/hooks/useReduxLoad";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.cmrBGColors.bgPaper,
-    '.detailsWrapper &': {
+    ".detailsWrapper &": {
       padding: theme.spacing(4),
     },
   },
   headerLabel: {
-    marginLeft: '0.25em',
-    maxWidth: 'calc(100% - 80px)',
+    marginLeft: "0.25em",
+    maxWidth: "calc(100% - 80px)",
   },
   editBtn: {
-    minWidth: 'fit-content',
+    minWidth: "fit-content",
   },
   deployments: {
     marginTop: theme.spacing(1),
@@ -38,39 +38,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   description: {
-    whiteSpace: 'pre-wrap',
+    whiteSpace: "pre-wrap",
   },
   scriptHeading: {
     marginBottom: theme.spacing(1),
-    fontSize: '1rem',
+    fontSize: "1rem",
   },
   descriptionText: {
     marginBottom: theme.spacing(2),
   },
   deploymentSection: {
     marginTop: theme.spacing(1),
-    fontSize: '1rem',
+    fontSize: "1rem",
   },
   idSection: {
     marginTop: theme.spacing(1),
-    fontSize: '1rem',
+    fontSize: "1rem",
   },
   copyIcon: {
     color: theme.palette.primary.main,
-    position: 'relative',
-    display: 'inline-block',
-    transition: theme.transitions.create(['color']),
-    '& svg': {
-      width: '1em',
-      height: '1em',
+    position: "relative",
+    display: "inline-block",
+    transition: theme.transitions.create(["color"]),
+    "& svg": {
+      width: "1em",
+      height: "1em",
     },
   },
   dateTimeDisplay: {
-    display: 'inline-block',
-    fontSize: '1rem',
+    display: "inline-block",
+    fontSize: "1rem",
   },
   compatibleImages: {
-    display: 'block',
+    display: "block",
     marginTop: theme.spacing(1),
   },
 }));
@@ -102,8 +102,8 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const { profile } = useAccountManagement();
 
-  const { images: imagesData } = useImages('public');
-  useReduxLoad(['images']);
+  const { images: imagesData } = useImages("public");
+  useReduxLoad(["images"]);
 
   const compatibleImages = React.useMemo(() => {
     const imageChips = images.reduce((acc: any[], image: string) => {
@@ -111,12 +111,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
 
       if (imageObj) {
         acc.push(
-          <Chip
-            key={imageObj.id}
-            label={imageObj.label}
-            component="span"
-            clickable={false}
-          />
+          <Chip key={imageObj.id} label={imageObj.label} component="span" />
         );
       }
 
@@ -128,7 +123,7 @@ export const SStackScript: React.FC<CombinedProps> = (props) => {
   const queryString = stringify({ query: `username:${username}` });
   const link =
     profile?.username === username
-      ? '/stackscripts/account'
+      ? "/stackscripts/account"
       : `/stackscripts/community?${queryString}`;
 
   return (

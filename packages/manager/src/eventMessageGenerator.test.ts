@@ -1,43 +1,43 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { entityFactory, eventFactory } from 'src/factories/events';
+import { Event } from "@linode/api-v4/lib/account";
+import { entityFactory, eventFactory } from "src/factories/events";
 import getEventMessage, {
   eventMessageCreators,
   safeSecondaryEntityLabel,
-} from './eventMessageGenerator';
+} from "./eventMessageGenerator";
 
 beforeEach(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
-  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, "error").mockImplementation(() => {});
+  jest.spyOn(console, "log").mockImplementation(() => {});
 });
 
-describe('Event message generation', () => {
-  describe('getEventMessage', () => {
-    it('should filter unknown events', () => {
+describe("Event message generation", () => {
+  describe("getEventMessage", () => {
+    it("should filter unknown events", () => {
       const mockEvent = {
-        action: '__unknown__',
-        status: 'started',
+        action: "__unknown__",
+        status: "started",
       };
       const result = getEventMessage(mockEvent as Event);
 
-      expect(result).toBe('__unknown__');
+      expect(result).toBe("__unknown__");
     });
 
-    it('should filter mangled events', () => {
+    it("should filter mangled events", () => {
       const mockEvent = {
-        action: 'linode_reboot',
-        status: 'scheduled',
+        action: "linode_reboot",
+        status: "scheduled",
         entity: null,
       };
       const result = getEventMessage(mockEvent as Event);
 
-      expect(result).toBe('');
+      expect(result).toBe("");
     });
 
-    it('should call the message generator with the event', () => {
+    it("should call the message generator with the event", () => {
       const mockEvent = {
-        action: 'linode_reboot',
-        status: 'scheduled',
-        entity: { label: 'test-linode-123' },
+        action: "linode_reboot",
+        status: "scheduled",
+        entity: { label: "test-linode-123" },
       };
 
       /** Mock the message creator */
@@ -53,36 +53,38 @@ describe('Event message generation', () => {
     });
   });
 
-  describe('safeSecondaryEventLabel', () => {
-    it('should return a correct message if the secondary entity is present', () => {
+  describe("safeSecondaryEventLabel", () => {
+    it("should return a correct message if the secondary entity is present", () => {
       const mockEventWithSecondaryEntity = eventFactory.build({
-        secondary_entity: entityFactory.build({ label: 'secondary-entity' }),
+        secondary_entity: entityFactory.build({ label: "secondary-entity" }),
       });
       expect(
         safeSecondaryEntityLabel(
           mockEventWithSecondaryEntity,
-          'booted with',
-          'booted'
+          "booted with",
+          "booted"
         )
-      ).toMatch('booted with secondary-entity');
+      ).toMatch("booted with secondary-entity");
     });
 
-    it('should return a safe default if the secondary entity is null', () => {
-      const mockEventWithoutSecondaryEntity = eventFactory.build();
+    it("should return a safe default if the secondary entity is null", () => {
+      const mockEventWithoutSecondaryEntity = eventFactory.build({
+        secondary_entity: null,
+      });
       expect(
         safeSecondaryEntityLabel(
           mockEventWithoutSecondaryEntity,
-          'booted with',
-          'booted'
+          "booted with",
+          "booted"
         )
-      ).toMatch('booted');
+      ).toMatch("booted");
       expect(
         safeSecondaryEntityLabel(
           mockEventWithoutSecondaryEntity,
-          'booted with',
-          'booted'
+          "booted with",
+          "booted"
         )
-      ).not.toMatch('booted with');
+      ).not.toMatch("booted with");
     });
   });
 });

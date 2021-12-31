@@ -2,42 +2,44 @@ import {
   Notification,
   NotificationSeverity,
   NotificationType,
-} from '@linode/api-v4/lib/account';
-import { DateTime } from 'luxon';
-import { path } from 'ramda';
-import * as React from 'react';
-import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
-import { dcDisplayNames } from 'src/constants';
-import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
-import { reportException } from 'src/exceptionReporting';
-import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
-import useNotifications from 'src/hooks/useNotifications';
-import { formatDate } from 'src/utilities/formatDate';
-import { notificationContext } from '../NotificationContext';
-import { NotificationItem } from '../NotificationSection';
-import { checkIfMaintenanceNotification } from './notificationUtils';
-import RenderNotification from './RenderNotification';
+} from "@linode/api-v4/lib/account";
+import { DateTime } from "luxon";
+import { path } from "ramda";
+import * as React from "react";
+import Button from "src/components/Button";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import { Link } from "src/components/Link";
+import { dcDisplayNames } from "src/constants";
+import { complianceUpdateContext } from "src/context/complianceUpdateContext";
+import { reportException } from "src/exceptionReporting";
+import { useStyles } from "src/features/NotificationCenter/NotificationData/RenderNotification";
+import useDismissibleNotifications from "src/hooks/useDismissibleNotifications";
+import useNotifications from "src/hooks/useNotifications";
+import { formatDate } from "src/utilities/formatDate";
+import { notificationContext } from "../NotificationContext";
+import { NotificationItem } from "../NotificationSection";
+import { checkIfMaintenanceNotification } from "./notificationUtils";
+import RenderNotification from "./RenderNotification";
 
 export interface ExtendedNotification extends Notification {
   jsx?: JSX.Element;
 }
 
-export const useFormattedNotifications = (): NotificationItem[] => {
+export const useFormattedNotifications = (
+  givenNotifications?: Notification[]
+): NotificationItem[] => {
   const context = React.useContext(notificationContext);
   const {
     dismissNotifications,
     hasDismissedNotifications,
   } = useDismissibleNotifications();
 
-  const notifications = useNotifications();
+  const notifications = givenNotifications ?? useNotifications();
 
   const volumeMigrationScheduledIsPresent = notifications.some(
     (notification) =>
-      notification.type === ('volume_migration_scheduled' as NotificationType)
+      notification.type === ("volume_migration_scheduled" as NotificationType)
   );
 
   const classes = useStyles();
@@ -45,7 +47,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
   const dayOfMonth = DateTime.local().day;
 
   const handleClose = () => {
-    dismissNotifications(notifications, { prefix: 'notificationDrawer' });
+    dismissNotifications(notifications, { prefix: "notificationDrawer" });
     context.closeDrawer();
   };
 
@@ -60,8 +62,8 @@ export const useFormattedNotifications = (): NotificationItem[] => {
      * Also filter out volume_migration_scheduled notifications, since those will be condensed into a single customized one.
      */
     return (
-      !(thisNotification.type === 'payment_due' && dayOfMonth <= 3) &&
-      !['volume_migration_scheduled', 'volume_migration_imminent'].includes(
+      !(thisNotification.type === "payment_due" && dayOfMonth <= 3) &&
+      !["volume_migration_scheduled", "volume_migration_imminent"].includes(
         thisNotification.type
       )
     );
@@ -69,13 +71,13 @@ export const useFormattedNotifications = (): NotificationItem[] => {
 
   if (volumeMigrationScheduledIsPresent) {
     filteredNotifications.push({
-      type: 'volume_migration_scheduled' as NotificationType,
+      type: "volume_migration_scheduled" as NotificationType,
       entity: null,
       when: null,
       message:
-        'You have pending volume migrations. Check the maintenance page for more details.',
-      label: 'You have a scheduled Block Storage volume upgrade pending!',
-      severity: 'major',
+        "You have pending volume migrations. Check the maintenance page for more details.",
+      label: "You have a scheduled Block Storage volume upgrade pending!",
+      severity: "major",
       until: null,
       body: null,
     });
@@ -86,7 +88,7 @@ export const useFormattedNotifications = (): NotificationItem[] => {
       interceptNotification(notification, handleClose, classes),
       idx,
       handleClose,
-      !hasDismissedNotifications([notification], 'notificationDrawer')
+      !hasDismissedNotifications([notification], "notificationDrawer")
     )
   );
 };
@@ -106,29 +108,29 @@ const interceptNotification = (
   classes: any
 ): ExtendedNotification => {
   // Ticket interceptions
-  if (notification.type === 'ticket_abuse') {
+  if (notification.type === "ticket_abuse") {
     return {
       ...notification,
-      message: `${notification.message.replace('!', '')} (${
+      message: `${notification.message.replace("!", "")} (${
         notification?.entity?.label
       }): #${notification?.entity?.id}`,
     };
   }
 
-  if (notification.type === 'ticket_important') {
+  if (notification.type === "ticket_important") {
     if (!notification.entity?.id) {
       return notification;
     }
 
     const jsx = (
       <Typography>
-        You have an{' '}
+        You have an{" "}
         <Link
           to={`/support/tickets/${notification.entity?.id}`}
           onClick={onClose}
         >
           important ticket
-        </Link>{' '}
+        </Link>{" "}
         open!
       </Typography>
     );
@@ -142,30 +144,30 @@ const interceptNotification = (
   /** Linode Maintenance interception */
   if (
     checkIfMaintenanceNotification(notification.type) &&
-    notification.entity?.type === 'linode'
+    notification.entity?.type === "linode"
   ) {
     /** replace "this Linode" with the name of the Linode */
     const linodeAttachedToNotification: string | undefined = path(
-      ['label'],
+      ["label"],
       notification.entity
     );
 
     const jsx = (
       <Typography>
         <Link
-          to={`/linodes/${notification?.entity?.id ?? ''}`}
+          to={`/linodes/${notification?.entity?.id ?? ""}`}
           onClick={onClose}
         >
-          {notification?.entity?.label ?? 'One of your Linodes'}
-        </Link>{' '}
+          {notification?.entity?.label ?? "One of your Linodes"}
+        </Link>{" "}
         resides on a host that is pending critical maintenance. You should have
-        received a{' '}
-        <Link to={'/support/tickets?type=open'} onClick={onClose}>
+        received a{" "}
+        <Link to={"/support/tickets?type=open"} onClick={onClose}>
           support ticket
-        </Link>{' '}
+        </Link>{" "}
         that details how you will be affected. Please see the aforementioned
-        ticket and{' '}
-        <Link to={'https://status.linode.com/'}>status.linode.com</Link> for
+        ticket and{" "}
+        <Link to={"https://status.linode.com/"}>status.linode.com</Link> for
         more details.
       </Typography>
     );
@@ -177,7 +179,7 @@ const interceptNotification = (
       message: notification.body
         ? linodeAttachedToNotification
           ? notification.body.replace(
-              'This Linode',
+              "This Linode",
               linodeAttachedToNotification
             )
           : notification.body
@@ -187,14 +189,14 @@ const interceptNotification = (
   }
 
   // Migration interceptions
-  if (notification.type === 'migration_scheduled') {
+  if (notification.type === "migration_scheduled") {
     const jsx = (
       <Typography>
-        You have a scheduled migration for{' '}
+        You have a scheduled migration for{" "}
         <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
           {notification.entity?.label}
         </Link>
-        , which will automatically execute on{' '}
+        , which will automatically execute on{" "}
         {formatDate(notification.when as string)}.
       </Typography>
     );
@@ -205,13 +207,13 @@ const interceptNotification = (
     };
   }
 
-  if (notification.type === 'migration_pending') {
+  if (notification.type === "migration_pending") {
     const jsx = (
       <Typography>
-        You have a migration pending!{' '}
+        You have a migration pending!{" "}
         <Link to={`/linodes/${notification.entity?.id}`} onClick={onClose}>
           {notification.entity?.label}
-        </Link>{' '}
+        </Link>{" "}
         must be offline before starting the migration.
       </Typography>
     );
@@ -223,17 +225,17 @@ const interceptNotification = (
   }
 
   // Outage interception
-  if (notification.type === 'outage') {
+  if (notification.type === "outage") {
     /** this is an outage to one of the datacenters */
     if (
-      notification.type === 'outage' &&
-      notification.entity?.type === 'region'
+      notification.type === "outage" &&
+      notification.entity?.type === "region"
     ) {
       const convertedRegion = dcDisplayNames[notification.entity.id];
 
       if (!convertedRegion) {
         reportException(
-          'Could not find the DC name for the outage notification',
+          "Could not find the DC name for the outage notification",
           {
             rawRegion: notification.entity.id,
             convertedRegion,
@@ -243,13 +245,13 @@ const interceptNotification = (
 
       const jsx = (
         <Typography>
-          We are aware of an issue affecting service in{' '}
-          {convertedRegion || 'one of our facilities'}. If you are experiencing
+          We are aware of an issue affecting service in{" "}
+          {convertedRegion || "one of our facilities"}. If you are experiencing
           service issues in this facility, there is no need to open a support
-          ticket at this time. Please monitor our status blog at{' '}
-          <Link to={'https://status.linode.com/'}>
+          ticket at this time. Please monitor our status blog at{" "}
+          <Link to={"https://status.linode.com/"}>
             https://status.linode.com
-          </Link>{' '}
+          </Link>{" "}
           for further information. Thank you for your patience and
           understanding.
         </Typography>
@@ -264,12 +266,12 @@ const interceptNotification = (
     return notification;
   }
 
-  if (notification.type === 'payment_due') {
-    const criticalSeverity = notification.severity === 'critical';
+  if (notification.type === "payment_due") {
+    const criticalSeverity = notification.severity === "critical";
 
     if (!criticalSeverity) {
       // A critical severity indicates the user's balance is past due; temper the messaging a bit outside of that case by replacing the exclamation point.
-      notification.message = notification.message.replace('!', '.');
+      notification.message = notification.message.replace("!", ".");
     }
 
     const jsx = (
@@ -280,7 +282,7 @@ const interceptNotification = (
           className={criticalSeverity ? classes.redLink : classes.greyLink}
         >
           {notification.message}
-        </Link>{' '}
+        </Link>{" "}
         <Link to="/account/billing/make-payment" onClick={onClose}>
           Make a payment now.
         </Link>
@@ -303,18 +305,18 @@ const interceptNotification = (
     };
   }
 
-  if (notification.type === 'volume_migration_scheduled') {
+  if (notification.type === "volume_migration_scheduled") {
     const jsx = (
       <Typography>
         Attached Volumes are eligible for a free upgrade to NVMe-based Block
-        Storage. Visit the{' '}
-        <Link to={'/account/maintenance/'} onClick={onClose}>
+        Storage. Visit the{" "}
+        <Link to={"/account/maintenance/"} onClick={onClose}>
           Maintenance page
-        </Link>{' '}
-        to view scheduled upgrades or visit the{' '}
-        <Link to={'/volumes'} onClick={onClose}>
+        </Link>{" "}
+        to view scheduled upgrades or visit the{" "}
+        <Link to={"/volumes"} onClick={onClose}>
           Volumes page
-        </Link>{' '}
+        </Link>{" "}
         to begin self-service upgrades if available.
       </Typography>
     );
@@ -348,7 +350,7 @@ export const adjustSeverity = ({
   type,
 }: Notification): NotificationSeverity => {
   if (checkIfMaintenanceNotification(type)) {
-    return 'major';
+    return "major";
   }
 
   return severity;
@@ -384,6 +386,6 @@ const ComplianceNotification: React.FC<{}> = () => {
 
 export const isEUModelContractNotification = (notification: Notification) => {
   return (
-    notification.type === 'notice' && /eu-model/gi.test(notification.message)
+    notification.type === "notice" && /eu-model/gi.test(notification.message)
   );
 };

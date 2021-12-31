@@ -1,14 +1,14 @@
-import * as React from 'react';
-import Close from '@material-ui/icons/Close';
-import Button from 'src/components/Button';
+import * as React from "react";
+import Close from "@material-ui/icons/Close";
+import Button from "src/components/Button";
 import MUIDialog, {
   DialogProps as _DialogProps,
-} from 'src/components/core/Dialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
-import { convertForAria } from 'src/components/TabLink/TabLink';
-import Notice from 'src/components/Notice';
+} from "src/components/core/Dialog";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Grid from "src/components/Grid";
+import { convertForAria } from "src/components/TabLink/TabLink";
+import Notice from "src/components/Notice";
 
 export interface DialogProps extends _DialogProps {
   className?: string;
@@ -22,24 +22,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
     paddingTop: 0,
-    maxHeight: '100%',
-    '& .actionPanel': {
-      display: 'flex',
-      justifyContent: 'flex-end',
+    maxHeight: "100%",
+    "& .actionPanel": {
+      display: "flex",
+      justifyContent: "flex-end",
       marginTop: theme.spacing(2),
     },
-    '& .selectionCard': {
-      maxWidth: '100%',
-      flexBasis: '100%',
+    "& .selectionCard": {
+      maxWidth: "100%",
+      flexBasis: "100%",
     },
   },
   fullHeight: {
-    '& .MuiDialog-paper': {
-      height: '100vh',
+    "& .MuiDialog-paper": {
+      height: "100vh",
     },
   },
   settingsBackdrop: {
-    backgroundColor: 'rgba(0,0,0,.3)',
+    backgroundColor: "rgba(0,0,0,.3)",
   },
   drawerHeader: {
     padding: theme.spacing(2),
@@ -47,17 +47,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   dialogContent: {
     padding: theme.spacing(2),
     paddingTop: 0,
-    margin: 'auto',
   },
   button: {
-    minWidth: 'auto',
-    minHeight: 'auto',
+    minWidth: "auto",
+    minHeight: "auto",
     padding: 0,
-    '& > span': {
+    "& > span": {
       padding: 2,
     },
-    '& :hover, & :focus': {
-      color: 'white',
+    "& :hover, & :focus": {
+      color: "white",
       backgroundColor: theme.palette.primary.main,
     },
   },
@@ -66,23 +65,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sticky: {
     backgroundColor: theme.cmrBGColors.bgPaper,
-    position: 'sticky',
+    position: "sticky",
     top: 0,
     padding: theme.spacing(),
     paddingTop: theme.spacing(4),
     marginBottom: 20,
     zIndex: 1,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    width: "100%",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   titleBottomBorder: {
-    backgroundColor: '#e3e5e8',
+    backgroundColor: "#e3e5e8",
     height: 1,
-    width: '100%',
-    margin: '-2em 8px 0px 8px',
-    border: 'none',
+    width: "100%",
+    margin: "-2em 8px 0px 8px",
+    border: "none",
   },
   error: {
     color: theme.color.red,
@@ -108,7 +107,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
   return (
     <MUIDialog
       title={title}
-      maxWidth={props.maxWidth ?? 'md'}
+      maxWidth={props.maxWidth ?? "md"}
       {...rest}
       classes={{ paper: classes.paper }}
       data-qa-drawer

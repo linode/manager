@@ -1,29 +1,29 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Image } from '@linode/api-v4/lib/images';
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { Volume } from '@linode/api-v4/lib/volumes';
-import { createSelector } from 'reselect';
-import { displayType } from 'src/features/linodes/presentation';
+import { Domain } from "@linode/api-v4/lib/domains";
+import { Image } from "@linode/api-v4/lib/images";
+import { KubernetesCluster } from "@linode/api-v4/lib/kubernetes";
+import { Linode, LinodeType } from "@linode/api-v4/lib/linodes";
+import { NodeBalancer } from "@linode/api-v4/lib/nodebalancers";
+import { Volume } from "@linode/api-v4/lib/volumes";
+import { createSelector } from "reselect";
+import { displayType } from "src/features/linodes/presentation";
 import {
   extendCluster,
   getDescriptionForCluster,
-} from 'src/features/Kubernetes/kubeUtils';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
-import { SearchableItem } from 'src/features/Search/search.interfaces';
-import { ApplicationState } from 'src/store';
-import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { objectStorageClusterDisplay } from 'src/constants';
-import { readableBytes } from 'src/utilities/unitConversions';
+} from "src/features/Kubernetes/kubeUtils";
+import { ExtendedCluster } from "src/features/Kubernetes/types";
+import { SearchableItem } from "src/features/Search/search.interfaces";
+import { ApplicationState } from "src/store";
+import { ExtendedNodePool } from "src/store/kubernetes/nodePools.actions";
+import getLinodeDescription from "src/utilities/getLinodeDescription";
+import { ObjectStorageBucket } from "@linode/api-v4/lib/object-storage";
+import { objectStorageClusterDisplay } from "src/constants";
+import { readableBytes } from "src/utilities/unitConversions";
 
-type State = ApplicationState['__resources'];
+type State = ApplicationState["__resources"];
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
-  return ipv4.concat([ipv6 || '']);
+  return ipv4.concat([ipv6 || ""]);
 };
 
 export const getDomainIps = (domain: Domain): string[] => {
@@ -47,7 +47,7 @@ export const formatLinode = (
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
-  entityType: 'linode',
+  entityType: "linode",
   data: {
     tags: linode.tags,
     description: getLinodeDescription(
@@ -58,9 +58,9 @@ export const formatLinode = (
       linode.image,
       images
     ),
-    icon: 'linode',
+    icon: "linode",
     path: `/linodes/${linode.id}`,
-    searchText: '', // @todo update this, either here or in the consumer. Probably in the consumer.
+    searchText: "", // @todo update this, either here or in the consumer. Probably in the consumer.
     created: linode.created,
     region: linode.region,
     status: linode.status,
@@ -71,11 +71,11 @@ export const formatLinode = (
 export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
-  entityType: 'volume',
+  entityType: "volume",
   data: {
     tags: volume.tags,
-    description: volume.size + ' GB',
-    icon: 'volume',
+    description: volume.size + " GB",
+    icon: "volume",
     path: `/volumes/${volume.id}`,
     created: volume.created,
     region: volume.region,
@@ -90,12 +90,12 @@ const imageReducer = (accumulator: SearchableItem[], image: Image) =>
 export const imageToSearchableItem = (image: Image): SearchableItem => ({
   label: image.label,
   value: image.id,
-  entityType: 'image',
+  entityType: "image",
   data: {
     tags: [],
-    description: image.description || '',
+    description: image.description || "",
     /* TODO: Update this with the Images icon! */
-    icon: 'volume',
+    icon: "volume",
     /* TODO: Choose a real location for this to link to */
     path: `/images`,
     created: image.created,
@@ -105,12 +105,12 @@ export const imageToSearchableItem = (image: Image): SearchableItem => ({
 export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
-  entityType: 'domain',
+  entityType: "domain",
   data: {
     tags: domain.tags,
-    description: domain.type,
+    description: domain.type === "master" ? "primary" : "secondary",
     status: domain.status,
-    icon: 'domain',
+    icon: "domain",
     path: `/domains/${domain.id}`,
     ips: getDomainIps(domain),
   },
@@ -121,11 +121,11 @@ export const nodeBalToSearchableItem = (
 ): SearchableItem => ({
   label: nodebal.label,
   value: nodebal.id,
-  entityType: 'nodebalancer',
+  entityType: "nodebalancer",
   data: {
     tags: nodebal.tags,
     description: nodebal.hostname,
-    icon: 'nodebalancer',
+    icon: "nodebalancer",
     path: `/nodebalancers/${nodebal.id}`,
     created: nodebal.created,
     ips: getNodebalIps(nodebal),
@@ -138,9 +138,9 @@ export const kubernetesClusterToSearchableItem = (
 ): SearchableItem => ({
   label: kubernetesCluster.label,
   value: kubernetesCluster.id,
-  entityType: 'kubernetesCluster',
+  entityType: "kubernetesCluster",
   data: {
-    icon: 'kube',
+    icon: "kube",
     path: `/kubernetes/clusters/${kubernetesCluster.id}/summary`,
     status: kubernetesCluster.status,
     created: kubernetesCluster.created,
@@ -158,9 +158,9 @@ export const bucketToSearchableItem = (
 ): SearchableItem => ({
   label: bucket.label,
   value: `${bucket.cluster}/${bucket.label}`,
-  entityType: 'bucket',
+  entityType: "bucket",
   data: {
-    icon: 'bucket',
+    icon: "bucket",
     path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
     created: bucket.created,
     label: bucket.label,

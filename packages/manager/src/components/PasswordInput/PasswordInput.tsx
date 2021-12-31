@@ -1,11 +1,11 @@
-import { isEmpty } from 'ramda';
-import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
-import { Props as TextFieldProps } from 'src/components/TextField';
-import * as zxcvbn from 'zxcvbn';
-import StrengthIndicator from '../PasswordInput/StrengthIndicator';
-import HideShowText from './HideShowText';
+import { isEmpty } from "ramda";
+import * as React from "react";
+import { makeStyles } from "src/components/core/styles";
+import Grid from "src/components/Grid";
+import { Props as TextFieldProps } from "src/components/TextField";
+import * as zxcvbn from "zxcvbn";
+import StrengthIndicator from "../PasswordInput/StrengthIndicator";
+import HideShowText from "./HideShowText";
 
 type Props = TextFieldProps & {
   value?: string | undefined;
@@ -15,44 +15,13 @@ type Props = TextFieldProps & {
   hideValidation?: boolean;
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
-    position: 'relative',
-    paddingBottom: theme.spacing(1) / 2,
-  },
-  requirementsListOuter: {
-    margin: 0,
-    width: '100%',
-    padding: `${theme.spacing(1)}px ${theme.spacing(2) - 2}px `,
-    backgroundColor: theme.bg.offWhiteDT,
-    border: `1px solid ${theme.palette.divider}`,
-    [theme.breakpoints.up('sm')]: {
-      width: 415,
-    },
-  },
-  requirementsList: {
-    margin: 0,
-    padding: '0 20px',
-    '& li': {
-      margin: `${theme.spacing(1)}px 0`,
-      '& > span': {
-        display: 'block',
-      },
-    },
-  },
-  active: {
-    color: theme.color.red,
-    '&$valid': {
-      color: theme.color.green,
-    },
-  },
-  valid: {},
-  infoText: {
-    fontSize: '0.85rem',
-    marginTop: 12,
+    position: "relative",
+    paddingBottom: 4,
   },
   usernameInput: {
-    display: 'none',
+    display: "none",
   },
 }));
 

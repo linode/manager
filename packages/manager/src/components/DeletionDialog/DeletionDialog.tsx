@@ -1,15 +1,16 @@
-import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
-import { titlecase } from 'src/features/linodes/presentation';
-import { capitalize } from 'src/utilities/capitalize';
+import * as React from "react";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import ConfirmationDialog from "src/components/ConfirmationDialog";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Notice from "src/components/Notice";
+import TextField from "src/components/TextField";
+import { titlecase } from "src/features/linodes/presentation";
+import { capitalize } from "src/utilities/capitalize";
+import { DialogProps } from "../Dialog";
 
-interface Props {
+interface Props extends Omit<DialogProps, "title"> {
   open: boolean;
   error?: string;
   entity: string;
@@ -40,8 +41,9 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
     open,
     loading,
     typeToConfirm,
+    ...rest
   } = props;
-  const [confirmationText, setConfirmationText] = React.useState('');
+  const [confirmationText, setConfirmationText] = React.useState("");
   const renderActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
@@ -63,7 +65,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     /** Reset confirmation text when the modal opens */
     if (open) {
-      setConfirmationText('');
+      setConfirmationText("");
     }
   }, [open]);
 
@@ -73,6 +75,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
       title={`Delete ${titlecase(entity)} ${label}?`}
       onClose={onClose}
       actions={renderActions}
+      {...rest}
     >
       {error && <Notice error text={error} />}
       <Typography>

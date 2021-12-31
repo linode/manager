@@ -192,7 +192,7 @@ export const InterfaceSelect: React.FC<Props> = (props) => {
                 options={vlanOptions}
                 label="VLAN"
                 placeholder="Create or select a VLAN"
-                variant="creatable"
+                creatable
                 createOptionPosition="first"
                 value={
                   vlanOptions.find((thisVlan) => thisVlan.value === label) ??

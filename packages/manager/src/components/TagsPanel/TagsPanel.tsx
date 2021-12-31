@@ -1,38 +1,38 @@
-import { getTags } from '@linode/api-v4/lib/tags';
-import classNames from 'classnames';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { clone } from 'ramda';
-import * as React from 'react';
-import { compose } from 'recompose';
-import Plus from 'src/assets/icons/plusSign.svg?component';
-import CircleProgress from 'src/components/CircleProgress';
+import { getTags } from "@linode/api-v4/lib/tags";
+import classNames from "classnames";
+import { withSnackbar, WithSnackbarProps } from "notistack";
+import { clone } from "ramda";
+import * as React from "react";
+import { compose } from "recompose";
+import Plus from "src/assets/icons/plusSign.svg?component";
+import CircleProgress from "src/components/CircleProgress";
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Select from 'src/components/EnhancedSelect/Select';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import Tag from 'src/components/Tag';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+} from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Select from "src/components/EnhancedSelect/Select";
+import { isRestrictedUser } from "src/features/Profile/permissionsHelpers";
+import Tag from "src/components/Tag";
+import { getErrorStringOrDefault } from "src/utilities/errorUtils";
 
 type ClassNames =
-  | 'root'
-  | 'tag'
-  | 'addButtonWrapper'
-  | 'hasError'
-  | 'errorNotice'
-  | 'addTagButton'
-  | 'tagsPanelItemWrapper'
-  | 'selectTag'
-  | 'progress'
-  | 'loading';
+  | "root"
+  | "tag"
+  | "addButtonWrapper"
+  | "hasError"
+  | "errorNotice"
+  | "addTagButton"
+  | "tagsPanelItemWrapper"
+  | "selectTag"
+  | "progress"
+  | "loading";
 
 const styles = (theme: Theme) =>
   createStyles({
-    '@keyframes fadeIn': {
+    "@keyframes fadeIn": {
       from: {
         opacity: 0,
       },
@@ -45,39 +45,39 @@ const styles = (theme: Theme) =>
       marginRight: 4,
     },
     addButtonWrapper: {
-      display: 'flex',
-      justifyContent: 'flex-start',
-      width: '100%',
+      display: "flex",
+      justifyContent: "flex-start",
+      width: "100%",
     },
     hasError: {
       marginTop: 0,
     },
     errorNotice: {
-      animation: '$fadeIn 225ms linear forwards',
+      animation: "$fadeIn 225ms linear forwards",
       borderLeft: `5px solid ${theme.palette.status.errorDark}`,
-      '& .noticeText': {
+      "& .noticeText": {
         ...theme.typography.body1,
         fontFamily: '"Lato", sans-serif',
       },
       marginTop: 20,
       paddingLeft: 10,
-      textAlign: 'left',
+      textAlign: "left",
     },
     addTagButton: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
       backgroundColor: theme.color.tagButton,
-      border: 'none',
+      border: "none",
       borderRadius: 3,
       color: theme.cmrTextColors.linkActiveLight,
-      cursor: 'pointer',
+      cursor: "pointer",
       fontFamily: theme.font.normal,
-      fontSize: '0.875rem',
-      fontWeight: 'bold',
-      padding: '7px 10px',
-      whiteSpace: 'nowrap',
-      '& svg': {
+      fontSize: "0.875rem",
+      fontWeight: "bold",
+      padding: "7px 10px",
+      whiteSpace: "nowrap",
+      "& svg": {
         color: theme.color.tagIcon,
         marginLeft: 10,
         height: 10,
@@ -86,43 +86,43 @@ const styles = (theme: Theme) =>
     },
     tagsPanelItemWrapper: {
       marginBottom: theme.spacing(),
-      position: 'relative',
+      position: "relative",
     },
     selectTag: {
-      animation: '$fadeIn .3s ease-in-out forwards',
+      animation: "$fadeIn .3s ease-in-out forwards",
       marginTop: -3.5,
       minWidth: 275,
-      position: 'relative',
-      textAlign: 'left',
-      width: '100%',
+      position: "relative",
+      textAlign: "left",
+      width: "100%",
       zIndex: 3,
-      '& .error-for-scroll > div': {
-        flexDirection: 'row',
-        flexWrap: 'wrap-reverse',
+      "& .error-for-scroll > div": {
+        flexDirection: "row",
+        flexWrap: "wrap-reverse",
       },
-      '& .input': {
-        '& p': {
+      "& .input": {
+        "& p": {
           color: theme.color.grey1,
-          borderLeft: 'none',
-          fontSize: '.9rem',
+          borderLeft: "none",
+          fontSize: ".9rem",
         },
       },
-      '& .react-select__input': {
-        backgroundColor: 'transparent',
+      "& .react-select__input": {
+        backgroundColor: "transparent",
         color: theme.palette.text.primary,
-        fontSize: '.9rem',
+        fontSize: ".9rem",
       },
-      '& .react-select__value-container': {
-        padding: '6px',
+      "& .react-select__value-container": {
+        padding: "6px",
       },
     },
     progress: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      position: 'absolute',
-      height: '100%',
-      width: '100%',
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      position: "absolute",
+      height: "100%",
+      width: "100%",
       zIndex: 2,
     },
     loading: {
@@ -153,7 +153,7 @@ interface State {
 }
 
 export interface Props {
-  align?: 'left' | 'right';
+  align?: "left" | "right";
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
@@ -164,9 +164,9 @@ type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 class TagsPanel extends React.Component<CombinedProps, State> {
   state: State = {
     tagsToSuggest: [],
-    tagError: '',
+    tagError: "",
     isCreatingTag: false,
-    tagInputValue: '',
+    tagInputValue: "",
     listDeletingTags: [],
     loading: false,
   };
@@ -205,7 +205,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
   toggleTagInput = () => {
     if (!this.props.disabled) {
       this.setState({
-        tagError: '',
+        tagError: "",
         isCreatingTag: !this.state.isCreatingTag,
       });
     }
@@ -249,12 +249,12 @@ class TagsPanel extends React.Component<CombinedProps, State> {
                 (thisTag) => thisTag !== label
               ),
               loading: false,
-              tagError: '',
+              tagError: "",
             });
           })
           .catch((_) => {
             this.props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
-              variant: 'error',
+              variant: "error",
             });
             /*
              * Remove this tag from the current list of tags that are queued for deletion
@@ -281,8 +281,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
      * hitting the enter button or choosing a selection from the dropdown
      */
     if (
-      actionMeta.action !== 'select-option' &&
-      actionMeta.action !== 'create-option'
+      actionMeta.action !== "select-option" &&
+      actionMeta.action !== "create-option"
     ) {
       return;
     }
@@ -310,7 +310,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
       updateTags([...tags, value.label])
         .then(() => {
           // set the input value to blank on submit
-          this.setState({ tagInputValue: '' });
+          this.setState({ tagInputValue: "" });
           /*
            * Filter out the new tag out of the auto-suggestion list
            * since we can't attach this tag anymore
@@ -327,7 +327,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
         .catch((e) => {
           const tagError = getErrorStringOrDefault(
             e,
-            'Error while creating tag'
+            "Error while creating tag"
           );
           this.setState({ loading: false, tagError });
         });
@@ -351,7 +351,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           <Select
             onChange={this.handleCreateTag}
             options={tagsToSuggest}
-            variant="creatable"
+            creatable
             onBlur={this.toggleTagInput}
             placeholder="Create or Select a Tag"
             label="Create or Select a Tag"

@@ -1,46 +1,46 @@
-import { Image, ImageStatus } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
-import produce from 'immer';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { partition } from 'ramda';
-import * as React from 'react';
-import { connect, MapDispatchToProps, useDispatch } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
-import ImageIcon from 'src/assets/icons/entityIcons/image.svg?component';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Image, ImageStatus } from "@linode/api-v4/lib/images";
+import { APIError } from "@linode/api-v4/lib/types";
+import produce from "immer";
+import { withSnackbar, WithSnackbarProps } from "notistack";
+import { partition } from "ramda";
+import * as React from "react";
+import { connect, MapDispatchToProps, useDispatch } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+import ImageIcon from "src/assets/icons/entityIcons/image.svg?component";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import CircleProgress from "src/components/CircleProgress";
+import ConfirmationDialog from "src/components/ConfirmationDialog";
+import Paper from "src/components/core/Paper";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import { DocumentTitleSegment } from "src/components/DocumentTitle";
 import EntityTable, {
   EntityTableRow,
   HeaderCell,
-} from 'src/components/EntityTable';
-import ErrorState from 'src/components/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
-import { Order } from 'src/components/Pagey';
-import Placeholder from 'src/components/Placeholder';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import { ApplicationState } from 'src/store';
-import { DeleteImagePayload, removeImage } from 'src/store/image/image.actions';
+} from "src/components/EntityTable";
+import ErrorState from "src/components/ErrorState";
+import LandingHeader from "src/components/LandingHeader";
+import Link from "src/components/Link";
+import Notice from "src/components/Notice";
+import { Order } from "src/components/Pagey";
+import Placeholder from "src/components/Placeholder";
+import useReduxLoad from "src/hooks/useReduxLoad";
+import { ApplicationState } from "src/store";
+import { DeleteImagePayload, removeImage } from "src/store/image/image.actions";
 import {
   deleteImage as _deleteImage,
   requestImages as _requestImages,
-} from 'src/store/image/image.requests';
-import imageEvents from 'src/store/selectors/imageEvents';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import ImageRow, { ImageWithEvent } from './ImageRow';
-import { Handlers as ImageHandlers } from './ImagesActionMenu';
-import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import ImagesPricingBanner from './ImagesPricingBanner';
+} from "src/store/image/image.requests";
+import imageEvents from "src/store/selectors/imageEvents";
+import { getErrorStringOrDefault } from "src/utilities/errorUtils";
+import ImageRow, { ImageWithEvent } from "./ImageRow";
+import { Handlers as ImageHandlers } from "./ImagesActionMenu";
+import ImagesDrawer, { DrawerMode } from "./ImagesDrawer";
+import ImagesPricingBanner from "./ImagesPricingBanner";
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -56,47 +56,47 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
+export const getHeaders = (tableType: "automatic" | "manual"): HeaderCell[] =>
   [
     {
-      label: 'Image',
-      dataColumn: 'label',
+      label: "Image",
+      dataColumn: "label",
       sortable: true,
       widthPercent: 30,
     },
     {
-      label: 'Status',
-      dataColumn: 'status',
+      label: "Status",
+      dataColumn: "status",
       sortable: true,
       widthPercent: 15,
       hideOnMobile: true,
     },
     {
-      label: 'Created',
-      dataColumn: 'created',
+      label: "Created",
+      dataColumn: "created",
       sortable: false,
       widthPercent: 20,
       hideOnMobile: true,
     },
     {
-      label: 'Size',
-      dataColumn: 'size',
+      label: "Size",
+      dataColumn: "size",
       sortable: true,
       widthPercent: 15,
     },
-    tableType === 'automatic'
+    tableType === "automatic"
       ? {
-          label: 'Expires',
-          dataColumn: 'expires',
+          label: "Expires",
+          dataColumn: "expires",
           sortable: false,
           widthPercent: 20,
           hideOnMobile: true,
         }
       : null,
     {
-      label: 'Action Menu',
+      label: "Action Menu",
       visuallyHidden: true,
-      dataColumn: '',
+      dataColumn: "",
       sortable: false,
       widthPercent: 15,
     },
@@ -130,22 +130,22 @@ type CombinedProps = ImageDispatch &
 
 const defaultDrawerState = {
   open: false,
-  mode: 'edit' as DrawerMode,
-  label: '',
-  description: '',
+  mode: "edit" as DrawerMode,
+  label: "",
+  description: "",
   selectedDisk: null,
 };
 
 const defaultDialogState = {
   open: false,
   submitting: false,
-  image: '',
-  imageID: '',
+  image: "",
+  imageID: "",
   error: undefined,
 };
 
 export const ImagesLanding: React.FC<CombinedProps> = (props) => {
-  useReduxLoad(['images']);
+  useReduxLoad(["images"]);
 
   const classes = useStyles();
   const { imagesData, imagesLoading, imagesError, deleteImage } = props;
@@ -160,7 +160,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
    */
 
   const [manualImages, automaticImages] = partition(
-    (thisImage) => thisImage.type === 'manual',
+    (thisImage) => thisImage.type === "manual",
     imagesData ?? []
   );
 
@@ -174,11 +174,11 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 
   const dispatch = useDispatch();
 
-  const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
+  const dialogAction = dialog.status === "pending_upload" ? "cancel" : "delete";
   const dialogMessage =
-    dialogAction === 'cancel'
-      ? 'Are you sure you want to cancel this Image upload?'
-      : 'Are you sure you want to delete this Image?';
+    dialogAction === "cancel"
+      ? "Are you sure you want to cancel this Image upload?"
+      : "Are you sure you want to delete this Image?";
 
   const openDialog = (image: string, imageID: string, status: ImageStatus) => {
     setDialogState({
@@ -199,7 +199,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     if (!dialog.imageID) {
       setDialogState((dialog) => ({
         ...dialog,
-        error: 'Image is not available.',
+        error: "Image is not available.",
       }));
     }
     setDialogState((dialog) => ({
@@ -221,14 +221,14 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
          * from taking any action on the Image.
          */
         // this.props.onDelete();
-        props.enqueueSnackbar('Image has been scheduled for deletion.', {
-          variant: 'info',
+        props.enqueueSnackbar("Image has been scheduled for deletion.", {
+          variant: "info",
         });
       })
       .catch((err) => {
         const _error = getErrorStringOrDefault(
           err,
-          'There was an error deleting the image.'
+          "There was an error deleting the image."
         );
         setDialogState((dialog) => ({
           ...dialog,
@@ -239,7 +239,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCreateButtonClick = () => {
-    props.history.push('/images/create');
+    props.history.push("/images/create");
   };
 
   const onRetryClick = (
@@ -248,7 +248,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     imageDescription: string
   ) => {
     dispatch(removeImage(imageId));
-    props.history.push('/images/create/upload', {
+    props.history.push("/images/create/upload", {
       imageLabel,
       imageDescription,
     });
@@ -261,7 +261,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const openForEdit = (label: string, description: string, imageID: string) => {
     setDrawer({
       open: true,
-      mode: 'edit',
+      mode: "edit",
       description,
       imageID,
       label,
@@ -272,7 +272,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const openForRestore = (imageID: string) => {
     setDrawer({
       open: true,
-      mode: 'restore',
+      mode: "restore",
       imageID,
       selectedDisk: null,
     });
@@ -323,7 +323,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     return (
       <ActionsPanel>
         <Button buttonType="secondary" onClick={closeDialog} data-qa-cancel>
-          {dialogAction === 'cancel' ? 'Keep Image' : 'Cancel'}
+          {dialogAction === "cancel" ? "Keep Image" : "Cancel"}
         </Button>
         <Button
           buttonType="primary"
@@ -331,7 +331,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           loading={dialog.submitting}
           data-qa-submit
         >
-          {dialogAction === 'cancel' ? 'Cancel Upload' : 'Delete Image'}
+          {dialogAction === "cancel" ? "Cancel Upload" : "Delete Image"}
         </Button>
       </ActionsPanel>
     );
@@ -377,15 +377,15 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   // customer tag for this feature; if status is returned from the API,
   // we want to include it in the table.
   const machineImagesEnabled = imagesData.some((thisImage) =>
-    thisImage.hasOwnProperty('status')
+    thisImage.hasOwnProperty("status")
   );
 
-  const manualHeaders = getHeaders('manual');
-  const automaticHeaders = getHeaders('automatic');
+  const manualHeaders = getHeaders("manual");
+  const automaticHeaders = getHeaders("automatic");
 
   const initialOrder = {
-    order: 'asc' as Order,
-    orderBy: 'label',
+    order: "asc" as Order,
+    orderBy: "label",
   };
 
   const manualImageRow: EntityTableRow<Image> = {
@@ -428,7 +428,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           buttonProps={[
             {
               onClick: onCreateButtonClick,
-              children: 'Create Image',
+              children: "Create Image",
             },
           ]}
         >
@@ -486,7 +486,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={manualImageRow}
           headers={manualHeaders}
-          emptyMessage={'No Custom Images to display.'}
+          emptyMessage={"No Custom Images to display."}
           initialOrder={initialOrder}
         />
       </Paper>
@@ -502,7 +502,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           entity="image"
           row={autoImageRow}
           headers={automaticHeaders}
-          emptyMessage={'No Recovery Images to display.'}
+          emptyMessage={"No Recovery Images to display."}
           initialOrder={initialOrder}
         />
       </Paper>
@@ -510,8 +510,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       <ConfirmationDialog
         open={dialog.open}
         title={
-          dialogAction === 'cancel'
-            ? 'Cancel Upload'
+          dialogAction === "cancel"
+            ? "Cancel Upload"
             : `Delete Image ${dialog.image}`
         }
         onClose={closeDialog}
@@ -555,7 +555,7 @@ const withPrivateImages = connect(
               (thisEvent) =>
                 `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
                 (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                  thisEvent.status === 'failed')
+                  thisEvent.status === "failed")
             );
             if (matchingEvent) {
               draft.push({ ...thisImage, event: matchingEvent });

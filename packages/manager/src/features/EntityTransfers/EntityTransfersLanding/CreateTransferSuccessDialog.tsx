@@ -1,21 +1,21 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers/types';
-import * as copy from 'copy-to-clipboard';
-import { DateTime } from 'luxon';
-import { update } from 'ramda';
-import * as React from 'react';
-import Button from 'src/components/Button';
-import CopyableTextField from 'src/components/CopyableTextField';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import ToolTip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
-import InformationDialog from 'src/components/InformationDialog';
-import { parseAPIDate } from 'src/utilities/date';
+import { EntityTransfer } from "@linode/api-v4/lib/entity-transfers/types";
+import * as copy from "copy-to-clipboard";
+import { DateTime } from "luxon";
+import { update } from "ramda";
+import * as React from "react";
+import Button from "src/components/Button";
+import CopyableTextField from "src/components/CopyableTextField";
+import { makeStyles, Theme } from "src/components/core/styles";
+import ToolTip from "src/components/core/Tooltip";
+import Typography from "src/components/core/Typography";
+import Dialog from "src/components/Dialog";
+import { parseAPIDate } from "src/utilities/date";
 import {
   sendEntityTransferCopyDraftEmailEvent,
   sendEntityTransferCopyTokenEvent,
-} from 'src/utilities/ga';
-import { pluralize } from 'src/utilities/pluralize';
-import { debounce } from 'throttle-debounce';
+} from "src/utilities/ga";
+import { pluralize } from "src/utilities/pluralize";
+import { debounce } from "throttle-debounce";
 
 const debouncedSendEntityTransferCopyTokenEvent = debounce(
   10 * 1000,
@@ -34,19 +34,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(),
   },
   tokenInput: {
-    maxWidth: '100%',
+    maxWidth: "100%",
   },
   copyButton: {
     marginTop: theme.spacing(2),
     maxWidth: 220,
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
   text: {
     marginBottom: theme.spacing(),
   },
   inputSection: {
-    display: 'flex',
-    flexFlow: 'column nowrap',
+    display: "flex",
+    flexFlow: "column nowrap",
     paddingBottom: theme.spacing(1),
   },
 }));
@@ -77,8 +77,8 @@ export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
   }
 
   const pluralizedEntities = pluralize(
-    'Linode',
-    'Linodes',
+    "Linode",
+    "Linodes",
     transfer.entities.linodes.length
   );
 
@@ -93,7 +93,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
   )}.`;
 
   return (
-    <InformationDialog
+    <Dialog
       title="Service Transfer Token"
       open={isOpen}
       onClose={onClose}
@@ -156,7 +156,7 @@ This token will expire ${parseAPIDate(transfer.expiry).toLocaleString(
           </div>
         </ToolTip>
       </div>
-    </InformationDialog>
+    </Dialog>
   );
 };
 

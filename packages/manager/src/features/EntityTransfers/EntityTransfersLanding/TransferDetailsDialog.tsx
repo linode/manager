@@ -1,8 +1,8 @@
-import { TransferEntities } from '@linode/api-v4/lib/entity-transfers/types';
-import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import InformationDialog from 'src/components/InformationDialog';
+import { TransferEntities } from "@linode/api-v4/lib/entity-transfers/types";
+import * as React from "react";
+import { makeStyles, Theme } from "src/components/core/styles";
+import Typography from "src/components/core/Typography";
+import Dialog from "src/components/Dialog";
 
 const useStyles = makeStyles((theme: Theme) => ({
   token: {
@@ -29,7 +29,7 @@ export const TransferDetailsDialog: React.FC<Props> = (props) => {
   const { isOpen, onClose, token, entities } = props;
 
   return (
-    <InformationDialog
+    <Dialog
       title="Service Transfer Details"
       fullWidth
       open={isOpen}
@@ -49,7 +49,7 @@ export const TransferDetailsDialog: React.FC<Props> = (props) => {
           );
         })}
       </div>
-    </InformationDialog>
+    </Dialog>
   );
 };
 

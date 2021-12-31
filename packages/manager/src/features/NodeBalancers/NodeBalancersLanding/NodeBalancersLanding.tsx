@@ -1,44 +1,44 @@
 import {
   NodeBalancer,
   NodeBalancerConfig,
-} from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
-import { path } from 'ramda';
-import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+} from "@linode/api-v4/lib/nodebalancers";
+import { APIError } from "@linode/api-v4/lib/types";
+import { path } from "ramda";
+import * as React from "react";
+import { connect } from "react-redux";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { compose } from "recompose";
+import ActionsPanel from "src/components/ActionsPanel";
+import Button from "src/components/Button";
+import CircleProgress from "src/components/CircleProgress";
+import ConfirmationDialog from "src/components/ConfirmationDialog";
+import Typography from "src/components/core/Typography";
+import setDocs, { SetDocsProps } from "src/components/DocsSidebar/setDocs";
+import { DocumentTitleSegment } from "src/components/DocumentTitle";
 import EntityTable, {
   EntityTableRow,
   HeaderCell,
-} from 'src/components/EntityTable';
-import ErrorState from 'src/components/ErrorState';
-import LandingHeader from 'src/components/LandingHeader';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import TransferDisplay from 'src/components/TransferDisplay';
+} from "src/components/EntityTable";
+import ErrorState from "src/components/ErrorState";
+import LandingHeader from "src/components/LandingHeader";
+import PreferenceToggle, { ToggleProps } from "src/components/PreferenceToggle";
+import SectionErrorBoundary from "src/components/SectionErrorBoundary";
+import TransferDisplay from "src/components/TransferDisplay";
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference,
-} from 'src/documentation';
-import { ApplicationState } from 'src/store';
+} from "src/documentation";
+import { ApplicationState } from "src/store";
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
-} from 'src/store/nodeBalancer/nodeBalancer.containers';
-import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
-import NodeBalancerTableRow from './NodeBalancerTableRow';
+} from "src/store/nodeBalancer/nodeBalancer.containers";
+import { nodeBalancersWithConfigs } from "src/store/nodeBalancer/nodeBalancer.selectors";
+import { getAPIErrorOrDefault } from "src/utilities/errorUtils";
+import { sendGroupByTagEnabledEvent } from "src/utilities/ga";
+import scrollErrorIntoView from "src/utilities/scrollErrorIntoView";
+import NodeBalancersLandingEmptyState from "./NodeBalancersLandingEmptyState";
+import NodeBalancerTableRow from "./NodeBalancerTableRow";
 
 interface DeleteConfirmDialogState {
   open: boolean;
@@ -57,45 +57,45 @@ type CombinedProps = WithNodeBalancerActions &
   RouteComponentProps<{}> &
   SetDocsProps;
 
-const headers: HeaderCell[] = [
+export const headers: HeaderCell[] = [
   {
-    label: 'Name',
-    dataColumn: 'label',
+    label: "Name",
+    dataColumn: "label",
     sortable: true,
     widthPercent: 20,
   },
   {
-    label: 'Backend Status',
-    dataColumn: 'status',
+    label: "Backend Status",
+    dataColumn: "status",
     sortable: false,
     widthPercent: 15,
     hideOnMobile: true,
   },
   {
-    label: 'Transferred',
-    dataColumn: 'transfer:total',
+    label: "Transferred",
+    dataColumn: "transfer:total",
     sortable: true,
     widthPercent: 5,
     hideOnMobile: true,
     hideOnTablet: true,
   },
   {
-    label: 'Ports',
-    dataColumn: 'updated',
+    label: "Ports",
+    dataColumn: "updated",
     sortable: true,
     widthPercent: 5,
     hideOnMobile: true,
     hideOnTablet: true,
   },
   {
-    label: 'IP Address',
-    dataColumn: 'ip',
+    label: "IP Address",
+    dataColumn: "ip",
     sortable: false,
     widthPercent: 5,
   },
   {
-    label: 'Region',
-    dataColumn: 'region',
+    label: "Region",
+    dataColumn: "region",
     sortable: true,
     widthPercent: 5,
     hideOnMobile: true,
@@ -114,7 +114,7 @@ export class NodeBalancersLanding extends React.Component<
 
   state: State = {
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
-    selectedNodeBalancerLabel: '',
+    selectedNodeBalancerLabel: "",
   };
 
   pollInterval: number;
@@ -132,7 +132,7 @@ export class NodeBalancersLanding extends React.Component<
      * user is on this page.
      */
     this.pollInterval = window.setInterval(() => {
-      if (document.visibilityState === 'visible') {
+      if (document.visibilityState === "visible") {
         getAllNodeBalancersWithConfigs();
       }
     }, 30 * 1000);
@@ -190,7 +190,7 @@ export class NodeBalancersLanding extends React.Component<
               submitting: false,
               errors: getAPIErrorOrDefault(
                 err,
-                'There was an error deleting this NodeBalancer.'
+                "There was an error deleting this NodeBalancer."
               ),
             },
           },
@@ -254,7 +254,7 @@ export class NodeBalancersLanding extends React.Component<
                   title="NodeBalancers"
                   entity="NodeBalancer"
                   onAddNew={() =>
-                    this.props.history.push('/nodebalancers/create')
+                    this.props.history.push("/nodebalancers/create")
                   }
                   createButtonWidth={190}
                   docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
@@ -265,7 +265,7 @@ export class NodeBalancersLanding extends React.Component<
                   toggleGroupByTag={toggleNodeBalancerGroupByTag}
                   row={nodeBalancerRow}
                   headers={headers}
-                  initialOrder={{ order: 'asc', orderBy: 'label' }}
+                  initialOrder={{ order: "asc", orderBy: "label" }}
                 />
               </>
             );
@@ -277,7 +277,7 @@ export class NodeBalancersLanding extends React.Component<
           title={`Delete NodeBalancer ${this.state.selectedNodeBalancerLabel}?`}
           error={(this.state.deleteConfirmDialog.errors || [])
             .map((e) => e.reason)
-            .join(',')}
+            .join(",")}
           actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}
         >
@@ -348,7 +348,7 @@ export const enhanced = compose<CombinedProps, {}>(
     return {
       nodeBalancersCount: results,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
-      nodeBalancersError: path(['read'], error),
+      nodeBalancersError: path(["read"], error),
       // In this component we only want to show loading state on initial load
       nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0,
       nodeBalancersLastUpdated: lastUpdated,
@@ -371,7 +371,7 @@ const RenderError = ({ errors }: { errors: APIError[] }) => {
     <ErrorState
       errorText={
         errors[0].reason ||
-        'There was an error loading your NodeBalancers. Please try again later.'
+        "There was an error loading your NodeBalancers. Please try again later."
       }
     />
   );
