@@ -23,16 +23,16 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
-      plugins: [
-        alias({
-          entries: [
-            { find: "@linode/api-v4", replacement: "../api-v4" },
-            { find: "@linode/validation", replacement: "../validation" },
-          ],
-        }),
-      ],
-    },
+    // rollupOptions: {
+    //   plugins: [
+    //     alias({
+    //       entries: [
+    //         { find: "@linode/api-v4", replacement: "../api-v4" },
+    //         { find: "@linode/validation", replacement: "../validation" },
+    //       ],
+    //     }),
+    //   ],
+    // },
   },
   envPrefix: "REACT_APP_",
 });
