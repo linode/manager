@@ -7,6 +7,7 @@ lib
 **/api-v4/index.d.ts
 **/validation/index.js
 **/validation/index.d.ts
+**/validation/index.node.js
 
 # editor configuration
 .vscode

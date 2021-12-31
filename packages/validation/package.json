@@ -2,10 +2,12 @@
   "name": "@linode/validation",
   "version": "0.7.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
-  "main": "./index.js",
+  "main": "./index.node.js",
+  "browser": "./index.js",
   "types": "./lib/index.d.ts",
   "files": [
     "index.js",
+    "index.node.js",
     "index.d.ts",
     "lib/*",
     "package.json",
@@ -13,6 +15,7 @@
   ],
   "scripts": {
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "build:node": "yarn build --config webpack.node.config.js",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
