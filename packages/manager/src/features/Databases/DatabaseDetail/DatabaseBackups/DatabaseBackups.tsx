@@ -68,15 +68,19 @@ export const DatabaseBackups: React.FC = () => {
   const renderTableBody = () => {
     if (databaseError) {
       return <TableRowError message={databaseError[0].reason} colSpan={2} />;
-    } else if (backupsError) {
+    }
+    if (backupsError) {
       return <TableRowError message={backupsError[0].reason} colSpan={2} />;
-    } else if (isDatabaseLoading || isBackupsLoading) {
+    }
+    if (isDatabaseLoading || isBackupsLoading) {
       return <TableRowLoading oneLine numberOfColumns={2} colSpan={2} />;
-    } else if (backups?.results === 0) {
+    }
+    if (backups?.results === 0) {
       return (
         <TableRowEmptyState message="No backups to display." colSpan={2} />
       );
-    } else if (backups) {
+    }
+    if (backups) {
       return backups.data
         .sort(sorter)
         .map((backup) => (

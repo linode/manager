@@ -35,7 +35,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
     error,
   } = useRestoreFromBackupMutation(database.engine, database.id, backup.id);
 
-  const onRestore = () => {
+  const handleRestoreDatabase = () => {
     restore().then(() => {
       enqueueSnackbar('Your database has been scheduled to be restored.', {
         variant: 'success',
@@ -51,7 +51,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={onRestore}
+        onClick={handleRestoreDatabase}
         disabled={confirmationText !== database.label}
         loading={isLoading}
       >
@@ -74,7 +74,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
       onClose={onClose}
       actions={actions}
     >
-      {error && (
+      {error ? (
         <Notice
           error
           text={
@@ -82,14 +82,14 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
               .reason
           }
         />
-      )}
+      ) : null}
       <Notice
         warning
-        text="Restoring from a backup will erace all existing data on this cluster."
+        text="Restoring from a backup will erase all existing data on this cluster."
       />
       <Typography>
-        To confirm restoring from a backup, type the name of the database
-        cluster (<strong>{database.label}</strong>) in the field below.
+        To confirm restoration, type the name of the database cluster (
+        <strong>{database.label}</strong>) in the field below.
       </Typography>
       <TextField
         label="Database Label"
