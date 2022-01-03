@@ -110,7 +110,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
         let ips: string[] = [];
         let ipv6Ranges: string[] = [];
         if (flags.ipv6Sharing) {
-          // this fails for non datacenters that don't support sharing IPv6 addresses
+          // this fails for datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
           const linodeIPs = await getLinodeIPs(thisLinode.id);
