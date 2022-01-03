@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/networking';
 import { getLinodeIPs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { flatten, remove, uniq, update, pathOr } from 'ramda';
+import { flatten, remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -108,17 +108,16 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
         // side-effect of this mapping is saving the labels
         let ips: string[] = [];
-        const ipv6Ranges: string[] = [];
+        let ipv6Ranges: string[] = [];
         if (flags.ipv6Sharing) {
           // this fails for non datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
           const linodeIPs = await getLinodeIPs(thisLinode.id);
-          const ranges = pathOr([], ['ipv6', 'global'], linodeIPs);
-          ranges &&
-            ranges.forEach((i: IPRange) => {
-              ipv6Ranges.push(`${i.range}/${i.prefix}`);
-            });
+          const ranges = linodeIPs?.ipv6?.global ?? [];
+          ipv6Ranges = ranges.map((i: IPRange) => {
+            return `${i.range}/${i.prefix}`;
+          });
         }
         ips = [...thisLinode.ipv4, ...ipv6Ranges];
 

@@ -468,21 +468,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const sharedIPs = uniq<string>(
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
+    const ranges = linodeIPs?.ipv6?.global ?? [];
     const sharedIPv6 = uniq<string>(
-      pathOr([], ['ipv6', 'global'], linodeIPs).reduce(
-        (acc: string[], i: IPRange) => {
-          if (i.route_target !== null) {
-            return acc;
-          }
-          return acc.concat(`${i.range}/${i.prefix}`);
-        },
-        []
-      )
+      ranges.reduce((acc: string[], i: IPRange) => {
+        if (i.route_target !== null) {
+          return acc;
+        }
+        return acc.concat(`${i.range}/${i.prefix}`);
+      }, [])
     );
     const globalIPs = uniq<string>(
-      pathOr([], ['ipv6', 'global'], linodeIPs).map(
-        (i: IPRange) => `${i.range}/${i.prefix}`
-      )
+      ranges.map((i: IPRange) => `${i.range}/${i.prefix}`)
     );
 
     let selectedIPAddress;
