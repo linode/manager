@@ -251,7 +251,7 @@ export const removeICMPPort = (
     return thisRule;
   });
 
-const removeEmptyAdderessArrays = (rules: ExtendedFirewallRule[]) => {
+const removeEmptyAddressArrays = (rules: ExtendedFirewallRule[]) => {
   return rules.map((rule) => {
     const keepIPv4 = rule.addresses?.ipv4 && rule.addresses.ipv4.length > 0;
     const keepIPv6 = rule.addresses?.ipv6 && rule.addresses.ipv6.length > 0;
@@ -272,7 +272,7 @@ export const filterRulesPendingDeletion = (
   rules.filter((thisRule) => thisRule.status !== 'PENDING_DELETION');
 
 export const prepareRules = compose(
-  removeEmptyAdderessArrays,
+  removeEmptyAddressArrays,
   removeICMPPort,
   filterRulesPendingDeletion,
   editorStateToRules
