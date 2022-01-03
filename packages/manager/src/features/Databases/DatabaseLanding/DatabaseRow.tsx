@@ -96,7 +96,7 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
         {`${databaseEngineMap[engine]} v${getDatabaseVersionNumber(version)}`}
       </TableCell>
       <Hidden smDown>
-        <TableCell>{dcDisplayNames[region]}</TableCell>
+        <TableCell>{dcDisplayNames[region] || 'Unknown Region'}</TableCell>
       </Hidden>
       <Hidden mdDown>
         <TableCell>
