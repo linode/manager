@@ -26,18 +26,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   configs: {
     fontSize: '0.875rem',
-    // lineHeight: '22px',
+    lineHeight: '22px',
   },
   label: {
     fontWeight: 700,
+    lineHeight: '22px',
     width: theme.spacing(7),
-  },
-  capitalize: {
-    textTransform: 'capitalize',
   },
   status: {
     display: 'flex',
     alignItems: 'center',
+    textTransform: 'capitalize',
   },
 }));
 
@@ -96,7 +95,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC = () => {
   const configuration =
     database.failover_count === 0
       ? 'Primary'
-      : `Primary +${database.failover_count}`;
+      : `Primary +${database.failover_count} replicas`;
 
   return (
     <>
@@ -106,7 +105,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC = () => {
           <Typography className={classes.label}>Status</Typography>
           <span className={classes.status}>
             <StatusIcon status={databaseStatusMap[database.status]} />
-            <span className={classes.capitalize}>{database.status}</span>
+            {database.status}
           </span>
         </Box>
         <Box display="flex">
@@ -119,8 +118,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC = () => {
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Plan</Typography>
-          {/* TODO: format plan */}
-          {database.type}
+          {type.label}
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>RAM</Typography>

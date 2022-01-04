@@ -39,14 +39,14 @@ export const DatabaseSummary: React.FC = () => {
   return (
     <Paper>
       <Grid container>
-        <Grid item>
+        <Grid item xs={4}>
           <ClusterConfiguration />
         </Grid>
         <Grid item>
           <ConnectionDetails />
         </Grid>
       </Grid>
-      <Divider spacingTop={24} spacingBottom={16} />
+      <Divider spacingTop={28} spacingBottom={16} />
       <AccessControls />
     </Paper>
   );
