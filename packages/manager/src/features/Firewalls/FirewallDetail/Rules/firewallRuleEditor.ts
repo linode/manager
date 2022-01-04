@@ -251,12 +251,28 @@ export const removeICMPPort = (
     return thisRule;
   });
 
+const removeEmptyAddressArrays = (rules: ExtendedFirewallRule[]) => {
+  return rules.map((rule) => {
+    const keepIPv4 = rule.addresses?.ipv4 && rule.addresses.ipv4.length > 0;
+    const keepIPv6 = rule.addresses?.ipv6 && rule.addresses.ipv6.length > 0;
+
+    return {
+      ...rule,
+      addresses: {
+        ipv4: keepIPv4 ? rule.addresses?.ipv4 : undefined,
+        ipv6: keepIPv6 ? rule.addresses?.ipv6 : undefined,
+      },
+    };
+  });
+};
+
 export const filterRulesPendingDeletion = (
   rules: ExtendedFirewallRule[]
 ): ExtendedFirewallRule[] =>
   rules.filter((thisRule) => thisRule.status !== 'PENDING_DELETION');
 
 export const prepareRules = compose(
+  removeEmptyAddressArrays,
   removeICMPPort,
   filterRulesPendingDeletion,
   editorStateToRules
