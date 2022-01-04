@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { useHistory } from 'react-router-dom';
+import { makeStyles } from 'src/components/core/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& svg': {
-      marginTop: theme.spacing(1.5),
       transform: 'scale(0.8)',
     },
   },
@@ -21,7 +20,7 @@ const FirewallEmptyState: React.FC = () => {
 
   return (
     <Placeholder
-      title={'Databases'}
+      title="Databases"
       className={classes.root}
       icon={DatabaseIcon}
       isEntity

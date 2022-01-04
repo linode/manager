@@ -4,16 +4,22 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+// import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AccessControls from './AccessControls';
 
-// import useDatabases from 'src/hooks/useDatabases';
-// import DatabaseSummaryLabelPanel from './DatabaseSummaryLabelPanel';
-// import DatabaseSummaryMaintenancePanel from './DatabaseSummaryMaintenancePanel';
-// import DatabaseSummaryPasswordPanel from './DatabaseSummaryPasswordPanel';
+// import Paper from 'src/components/core/Paper';
+import Grid from 'src/components/Grid';
+// import Divider from 'src/components/core/Divider';
+// import CircleProgress from 'src/components/CircleProgress';
+// import ErrorState from 'src/components/ErrorState';
+// import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
+// import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import ConnectionDetails from './DatabaseSummaryConnectionDetails';
+import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
+// import AccessControls from './DatabaseSummaryAccessControls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
@@ -57,9 +63,6 @@ export const DatabaseSummary: React.FC = () => {
 
   return (
     <Paper>
-      <Typography variant="h3">Cluster Configuration</Typography>
-      <Typography variant="h3">Connection Details</Typography>
-      <Divider className={classes.divider} />
       <pre>{JSON.stringify(data, undefined, 2)}</pre>
       {/* <DatabaseSummaryLabelPanel
         databaseID={thisDatabase.id}
@@ -70,6 +73,16 @@ export const DatabaseSummary: React.FC = () => {
         databaseID={thisDatabase.id}
         databaseMaintenanceSchedule={thisDatabase.maintenance_schedule}
       /> */}
+      <Grid container>
+        <Grid item>
+          <ClusterConfiguration />
+        </Grid>
+        <Grid item>
+          <ConnectionDetails />
+        </Grid>
+      </Grid>
+      <Divider spacingTop={24} spacingBottom={16} />
+      {/*       <Divider className={classes.divider} /> */}
       <AccessControls accessControlsList={accessControlsList} />
     </Paper>
   );
