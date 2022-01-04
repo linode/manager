@@ -1,12 +1,12 @@
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
+import InlineAction from 'src/components/InlineMenuAction';
 import {
   makeStyles,
   Theme,
   useMediaQuery,
   useTheme,
 } from 'src/components/core/styles';
-import InlineAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({
   root: {
