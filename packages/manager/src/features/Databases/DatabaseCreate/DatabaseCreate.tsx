@@ -1,9 +1,18 @@
+import {
+  DatabaseType,
+  DatabaseVersion,
+} from '@linode/api-v4/lib/databases/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
+import { groupBy } from 'ramda';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
+import MySQLIcon from 'src/assets/icons/mysql.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Divider from 'src/components/core/Divider';
+import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Typography from 'src/components/core/Typography';
@@ -11,7 +20,9 @@ import BreadCrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import MultipleIPInput from 'src/components/MultipleIPInput';
@@ -19,19 +30,13 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import useFlags from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
 import {
   useDatabaseVersionsQuery,
   useDatabaseTypesQuery,
   useCreateDatabaseMutation,
 } from 'src/queries/databases';
-import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
-import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
-import MySQLIcon from 'src/assets/icons/mysql.svg';
-import { DatabaseType } from '@linode/api-v4/lib/databases/types';
-import { useHistory } from 'react-router-dom';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { useRegionsQuery } from 'src/queries/regions';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -107,10 +112,52 @@ const DatabaseCreate: React.FC<{}> = () => {
     setSubmitting(false);
   };
 
-  const engineOptions = versions?.map((version) => ({
-    ...version,
-    flag: engineIcons[version.engine],
-  }));
+  const getEngineOptions = (versions: DatabaseVersion[]) => {
+    const groupedVersions = groupBy<DatabaseVersion>((version) => {
+      if (version.engine.match(/mysql/i)) {
+        return 'MySQL';
+      }
+      if (version.engine.match(/postgresql/i)) {
+        return 'PostgreSQL';
+      }
+      if (version.engine.match(/mongodb/i)) {
+        return 'MongoDB';
+      }
+      if (version.engine.match(/redis/i)) {
+        return 'Redis';
+      }
+      return 'Other';
+    }, versions);
+    return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
+      (accum, thisGroup) => {
+        if (
+          !groupedVersions[thisGroup] ||
+          groupedVersions[thisGroup].length === 0
+        ) {
+          return accum;
+        }
+        return [
+          ...accum,
+          {
+            label: thisGroup,
+            options: groupedVersions[thisGroup].map((version) => ({
+              ...version,
+              value: `${version.engine}/${version.version}`,
+              flag: engineIcons[version.engine],
+            })),
+          },
+        ];
+      },
+      []
+    );
+  };
+
+  const engineOptions = React.useMemo(() => {
+    if (!versions) {
+      return;
+    }
+    return getEngineOptions(versions);
+  }, [versions]);
 
   const {
     values,
@@ -133,12 +180,12 @@ const DatabaseCreate: React.FC<{}> = () => {
         },
       ],
     },
-    validationSchema: createDatabaseSchema,
-    validateOnChange: false,
+    // validationSchema: createDatabaseSchema,
+    // validateOnChange: false,
     onSubmit: submitForm,
   });
 
-  console.log(errors)
+  // console.log(errors)
 
   const disableCreateButton =
     !values.label ||
@@ -209,13 +256,16 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Typography variant="h2">Select Engine and Region</Typography>
           <Select
             label="Database Engine"
-            value={values.engine}
+            value={getSelectedOptionFromGroupedOptions(
+              values.engine,
+              engineOptions
+            )}
             errorText={errors.engine}
             options={engineOptions}
             components={{ Option: RegionOption, SingleValue }}
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
-              setFieldValue('engine', selected);
+              setFieldValue('engine', selected.value);
             }}
             isClearable={false}
           />
