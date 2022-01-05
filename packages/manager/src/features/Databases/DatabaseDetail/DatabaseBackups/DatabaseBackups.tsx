@@ -114,7 +114,7 @@ export const DatabaseBackups: React.FC = () => {
       </Table>
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Backup Schedule</Typography>
-        <Typography>
+        <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
           A backup of this database is created every 24 hours at 0:00 UTC on a 7
           day cycle.
         </Typography>

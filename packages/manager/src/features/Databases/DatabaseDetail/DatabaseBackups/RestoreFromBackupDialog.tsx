@@ -6,10 +6,7 @@ import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import {
-  CreateDatabaseResponse,
-  DatabaseBackup,
-} from '@linode/api-v4/lib/databases';
+import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import formatDate from 'src/utilities/formatDate';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { useSnackbar } from 'notistack';
@@ -18,7 +15,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
   onClose: () => void;
-  database: CreateDatabaseResponse;
+  database: Database;
   backup: DatabaseBackup;
 }
 
