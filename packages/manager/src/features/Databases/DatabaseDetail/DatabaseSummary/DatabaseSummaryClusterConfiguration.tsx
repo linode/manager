@@ -14,7 +14,7 @@ import { useDatabaseTypesQuery } from 'src/queries/databases';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    fontWeight: 700,
+    fontFamily: theme.font.bold,
     marginBottom: theme.spacing(2),
   },
   configs: {
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '22px',
   },
   label: {
-    fontWeight: 700,
+    fontFamily: theme.font.bold,
     lineHeight: '22px',
     width: theme.spacing(7),
   },

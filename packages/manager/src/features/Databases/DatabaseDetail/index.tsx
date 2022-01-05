@@ -83,8 +83,15 @@ export const DatabaseDetail: React.FC = () => {
     <>
       <DocumentTitleSegment segment={database.label} />
       <Breadcrumb
-        pathname={`/Database Clusters/${database.label}`}
+        pathname={location.pathname}
+        labelTitle={database.label}
         firstAndLastOnly
+        crumbOverrides={[
+          {
+            position: 1,
+            label: 'Database Clusters',
+          },
+        ]}
         labelOptions={{ noCap: true }}
       />
       <Tabs defaultIndex={getDefaultTabIndex()} onChange={handleTabChange}>
