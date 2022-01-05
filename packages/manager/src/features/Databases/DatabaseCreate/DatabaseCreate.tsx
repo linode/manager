@@ -95,11 +95,8 @@ const DatabaseCreate: React.FC<{}> = () => {
     }
 
     setSubmitting(true);
-    const validatedIps = values.allow_list.map((value) => ({
-      address: value.address,
-    }));
-    const { allow_list, ...rest } = values;
-    const createPayload = { ...rest, allow_list: validatedIps };
+    const validatedIps = values.allow_list.map((value) => value.address);
+    const createPayload = { ...values, allow_list: validatedIps };
     console.log(createPayload)
 
     try {
@@ -169,7 +166,7 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useFormik({
     initialValues: {
       label: '',
-      engine: {},
+      engine: '',
       region: '',
       type: '',
       failover_count: 0,
@@ -192,8 +189,30 @@ const DatabaseCreate: React.FC<{}> = () => {
     !values.engine ||
     !values.region ||
     !values.type ||
-    !values.failover_count ||
     values.allow_list.some((item) => item.address === '');
+
+  const nodeOptions = [
+    {
+      value: 0,
+      label: (
+        <Typography>
+          1 Node
+          <br />
+          {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
+        </Typography>
+      ),
+    },
+    {
+      value: 2,
+      label: (
+        <Typography>
+          3 Nodes - High Availability (recommended)
+          <br />
+          {`$${multiNodePricing.monthly}/month $${multiNodePricing.hourly}/hr`}
+        </Typography>
+      ),
+    },
+  ];
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
@@ -258,7 +277,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             label="Database Engine"
             value={getSelectedOptionFromGroupedOptions(
               values.engine,
-              engineOptions
+              engineOptions || []
             )}
             errorText={errors.engine}
             options={engineOptions}
@@ -303,47 +322,32 @@ const DatabaseCreate: React.FC<{}> = () => {
             error={Boolean(errors.failover_count)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldValue('failover_count', +e.target.value);
-              setFieldValue('replication_type', 'semi-synch');
+              setFieldValue(
+                'replication_type',
+                +e.target.value === 0 ? 'none' : 'semi-synch'
+              );
             }}
           >
             <RadioGroup
               style={{ marginBottom: 0 }}
               value={values.failover_count}
             >
-              <FormControlLabel
-                className={classes.formControlLabel}
-                value={0}
-                label={
-                  <Typography>
-                    1 Node
-                    <br />
-                    {`$${type?.price.monthly || 0}/month $${
-                      type?.price.hourly || 0
-                    }/hr`}
-                  </Typography>
-                }
-                control={<Radio />}
-                data-qa-radio={'1 Node'}
-              />
-              <FormControlLabel
-                className={classes.formControlLabel}
-                value={2}
-                label={
-                  <Typography>
-                    3 Nodes - High Availability (recommended)
-                    <br />
-                    {`$${multiNodePricing.monthly}/month $${multiNodePricing.hourly}/hr`}
-                  </Typography>
-                }
-                control={<Radio />}
-                data-qa-radio={'3 Nodes - High Availability (recommended)'}
-              />
+              {nodeOptions.map((nodeOption) => (
+                <FormControlLabel
+                  key={nodeOption.value}
+                  value={nodeOption.value}
+                  label={nodeOption.label}
+                  control={<Radio />}
+                  data-qa-radio={nodeOption.label}
+                  className={classes.formControlLabel}
+                />
+              ))}
             </RadioGroup>
             <FormHelperText>{errors.failover_count}</FormHelperText>
           </FormControl>
         </Grid>
         <Divider spacingTop={30} />
-        <Grid item>
+        <Grid item style={{ maxWidth: 450 }}>
           <Typography variant="h2">Add Access Controls</Typography>
           <MultipleIPInput
             title="Inbound Sources"
