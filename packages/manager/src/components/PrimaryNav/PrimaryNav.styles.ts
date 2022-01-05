@@ -110,12 +110,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#222',
   },
   chip: {
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff',
     fontSize: '0.625rem',
     height: 15,
     marginTop: 2,
     marginLeft: theme.spacing(),
     letterSpacing: '.25px',
-    opacity: 0.4,
     textTransform: 'uppercase',
   },
 }));
