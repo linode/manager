@@ -7,6 +7,7 @@ import {
   getDatabaseTypes,
   getDatabaseVersions,
   getEngineDatabase,
+  restoreWithBackup,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import {
@@ -123,6 +124,15 @@ export const useDatabaseCredentialsQuery = (engine: Engine, id: number) =>
   useQuery<DatabaseCredentials, APIError[]>(
     [`${queryKey}-credentials`, id],
     () => getDatabaseCredentials(engine, id)
+  );
+
+export const useRestoreFromBackupMutation = (
+  engine: Engine,
+  databaseId: number,
+  backupId: number
+) =>
+  useMutation<{}, APIError[]>(() =>
+    restoreWithBackup(engine, databaseId, backupId)
   );
 
 // This may or may not be useful when we start implementing our components
