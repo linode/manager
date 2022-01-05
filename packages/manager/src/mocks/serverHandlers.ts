@@ -9,6 +9,7 @@ import {
   accountTransferFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
+  databaseBackupFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
@@ -148,10 +149,26 @@ const databases = [
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
     const database = databaseFactory.build({
       id: req.params.id,
+      label: `database-${req.params.id}`,
       engine: req.params.engine,
     });
     return res(ctx.json(database));
   }),
+
+  rest.get(
+    '*/databases/:engine/instances/:databaseId/backups',
+    (req, res, ctx) => {
+      const backups = databaseBackupFactory.buildList(7);
+      return res(ctx.json(makeResourcePage(backups)));
+    }
+  ),
+
+  rest.post(
+    '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
 
   rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
     const id = Number(req.params.databaseId);
