@@ -1,48 +1,26 @@
+import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
-
+import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import Divider from 'src/components/core/Divider';
-import CircleProgress from 'src/components/CircleProgress';
-import ErrorState from 'src/components/ErrorState';
-import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import ConnectionDetails from './DatabaseSummaryConnectionDetails';
-import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
 import AccessControls from './DatabaseSummaryAccessControls';
+import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
+import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 
-export const DatabaseSummary: React.FC = () => {
-  const { databaseId } = useParams<{ databaseId: string }>();
+interface Props {
+  database: Database;
+}
 
-  const id = Number(databaseId);
-
-  const { data, isLoading, error } = useDatabaseQuery(
-    getDatabaseEngine(id),
-    id
-  );
-
-  if (error) {
-    return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(error, 'Error loading your database.')[0].reason
-        }
-      />
-    );
-  }
-
-  if (isLoading) {
-    return <CircleProgress />;
-  }
+export const DatabaseSummary: React.FC<Props> = (props) => {
+  const { database } = props;
 
   return (
     <Paper>
       <Grid container>
-        <Grid item xs={4}>
-          <ClusterConfiguration />
+        <Grid item xs={12} sm={4}>
+          <ClusterConfiguration database={database} />
         </Grid>
-        <Grid item>
+        <Grid item xs={12} sm={8}>
           <ConnectionDetails />
         </Grid>
       </Grid>

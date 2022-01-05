@@ -1,23 +1,16 @@
 import {
+  Database,
   DatabaseInstance,
   DatabaseStatus,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
-import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
 import StatusIcon from 'src/components/StatusIcon';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
-import {
-  getDatabaseEngine,
-  useDatabaseQuery,
-  useDatabaseTypesQuery,
-} from 'src/queries/databases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useDatabaseTypesQuery } from 'src/queries/databases';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -55,41 +48,25 @@ export const databaseEngineMap: Record<Engine, string> = {
   redis: 'Redis',
 };
 
+interface Props {
+  database: Database;
+}
+
 export const getDatabaseVersionNumber = (
   version: DatabaseInstance['version']
 ) => version.split('/')[1];
 
-export const DatabaseSummaryClusterConfiguration: React.FC = () => {
+export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { databaseId } = useParams<{ databaseId: string }>();
+  const { database } = props;
 
-  const id = Number(databaseId);
-
-  const { data: database, isLoading, error } = useDatabaseQuery(
-    getDatabaseEngine(id),
-    id
-  );
   const { data: types } = useDatabaseTypesQuery();
 
   const type = types?.find((type) => type.id === database?.type);
 
   if (!database || !type) {
     return null;
-  }
-
-  if (error) {
-    return (
-      <ErrorState
-        errorText={
-          getAPIErrorOrDefault(error, 'Error loading your database.')[0].reason
-        }
-      />
-    );
-  }
-
-  if (isLoading) {
-    return <CircleProgress />;
   }
 
   const configuration =
