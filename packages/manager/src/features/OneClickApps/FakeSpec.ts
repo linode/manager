@@ -783,7 +783,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying OpenLiteSpeed Wordpress through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/openlitespeed-marketplace-app/',
+        href: 'https://www.linode.com/docs/guides/openlitespeed-wordpress-marketplace-app/',
       },
     ],
     related_info: [
