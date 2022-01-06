@@ -111,7 +111,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           choiceLabels[ip] = thisLinode.label;
         });
 
-        if (true) {
+        if (flags.ipv6Sharing) {
           // this fails for datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
