@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/networking';
 import { getLinodeIPs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { flatten, remove, uniq, update } from 'ramda';
+import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -101,48 +101,39 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     const choiceLabels = {};
     const promisedChoices: string[] = await linodes.reduce(
       async (acc, thisLinode) => {
-        const prev = await acc;
+        await acc;
         // Filter out the current Linode
         if (thisLinode.id === linodeID) {
-          return prev;
+          return acc;
         }
 
-        // side-effect of this mapping is saving the labels
-        let ips: string[] = [];
-        let ipv6Ranges: string[] = [];
+        thisLinode.ipv4.forEach((ip) => {
+          choiceLabels[ip] = thisLinode.label;
+        });
+
         if (true) {
           // this fails for datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
           const linodeIPs = await getLinodeIPs(thisLinode.id);
           const ranges = linodeIPs?.ipv6?.global ?? [];
-          ipv6Ranges = ranges.map((i: IPRange) => {
-            return `${i.range}/${i.prefix}`;
+          ranges.forEach((i: IPRange) => {
+            const address = `${i.range}/${i.prefix}`;
+            choiceLabels[address] = thisLinode.label;
           });
         }
-        ips = [...prev, ...thisLinode.ipv4, ...ipv6Ranges];
 
-        ips.forEach((ip: string) => {
-          choiceLabels[ip] = thisLinode.label;
-        });
-
-        return ips;
+        return [];
       },
       Promise.resolve([])
     );
 
-    return Promise.all(promisedChoices).then((ips) => {
-      return {
-        ipChoices: flatten<string>(ips),
-        ipChoiceLabels: choiceLabels,
-      };
-    });
+    return Promise.all(promisedChoices).then(() => choiceLabels);
   };
 
   const linodes = Object.values(data?.linodes ?? []);
 
-  const [ipChoices, setipChoices] = React.useState<string[]>([]);
-  const [ipChoiceLabels, setipChoiceLabels] = React.useState({});
+  const [ipChoices, setipChoices] = React.useState({});
 
   React.useEffect(() => {
     // don't try anything until we've finished the request for the Linodes data
@@ -152,12 +143,8 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     isLoading = true;
     load();
     async function load() {
-      const { ipChoices, ipChoiceLabels } = await getIPChoicesAndLabels(
-        linodeID,
-        linodes
-      );
+      const ipChoices = await getIPChoicesAndLabels(linodeID, linodes);
       setipChoices(ipChoices);
-      setipChoiceLabels(ipChoiceLabels);
       isLoading = false;
     }
   }, [linodeID, data]);
@@ -196,7 +183,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const remainingChoices = (selectedIP: string): string[] => {
-    return ipChoices.filter((ip: string) => {
+    return Object.keys(ipChoices).filter((ip: string) => {
       const hasBeenSelected = ipsToShare.includes(ip);
       return ip === selectedIP || !hasBeenSelected;
     });
@@ -245,7 +232,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setIpsToShare(linodeSharedIPs);
   };
 
-  const noChoices = ipChoices.length === 0;
+  const noChoices = Object.keys(ipChoices).length === 0;
 
   const errorMap = getErrorMap([], errors);
   const generalError = errorMap.none;
@@ -297,7 +284,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                       readOnly={Boolean(readOnly)}
                       handleDelete={onIPDelete}
                       handleSelect={onIPSelect}
-                      labels={ipChoiceLabels}
+                      labels={ipChoices}
                       getRemainingChoices={remainingChoices}
                     />
                   ))}
@@ -308,7 +295,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                       idx={ipsToShare.length}
                       readOnly={Boolean(readOnly)}
                       handleSelect={onIPSelect}
-                      labels={ipChoiceLabels}
+                      labels={ipChoices}
                       getRemainingChoices={remainingChoices}
                     />
                   )}
