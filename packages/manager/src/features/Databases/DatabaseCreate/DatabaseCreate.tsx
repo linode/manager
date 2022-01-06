@@ -1,6 +1,10 @@
 import {
+  CreateDatabasePayload,
   DatabaseType,
   DatabaseVersion,
+  Engine,
+  FailoverCount,
+  ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
@@ -28,6 +32,7 @@ import Grid from 'src/components/Grid';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
+import { validateIPs } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import useFlags from 'src/hooks/useFlags';
 import {
@@ -51,6 +56,46 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const engineIcons = {
   mysql: () => <MySQLIcon width="32" height="24" />,
+};
+
+const getEngineOptions = (versions: DatabaseVersion[]) => {
+  const groupedVersions = groupBy<DatabaseVersion>((version) => {
+    if (version.engine.match(/mysql/i)) {
+      return 'MySQL';
+    }
+    if (version.engine.match(/postgresql/i)) {
+      return 'PostgreSQL';
+    }
+    if (version.engine.match(/mongodb/i)) {
+      return 'MongoDB';
+    }
+    if (version.engine.match(/redis/i)) {
+      return 'Redis';
+    }
+    return 'Other';
+  }, versions);
+  return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
+    (accum, thisGroup) => {
+      if (
+        !groupedVersions[thisGroup] ||
+        groupedVersions[thisGroup].length === 0
+      ) {
+        return accum;
+      }
+      return [
+        ...accum,
+        {
+          label: thisGroup,
+          options: groupedVersions[thisGroup].map((version) => ({
+            ...version,
+            value: `${version.engine}/${version.version}`,
+            flag: engineIcons[version.engine],
+          })),
+        },
+      ];
+    },
+    []
+  );
 };
 
 interface NodePricing {
@@ -89,14 +134,28 @@ const DatabaseCreate: React.FC<{}> = () => {
     monthly: '0',
   });
 
+  const engineOptions = React.useMemo(() => {
+    if (!versions) {
+      return;
+    }
+    return getEngineOptions(versions);
+  }, [versions]);
+
   const submitForm = async () => {
-    if (errors.allow_list) {
+    const validatedIps = validateIPs(values.allow_list, {
+      errorMessage: 'Must be a valid IPv4 address',
+    });
+
+    if (validatedIps.some((ip) => ip.error)) {
+      setFieldValue('allow_list', validatedIps);
       return;
     }
 
     setSubmitting(true);
-    const validatedIps = values.allow_list.map((value) => value.address);
-    const createPayload = { ...values, allow_list: validatedIps };
+    const createPayload: CreateDatabasePayload = {
+      ...values,
+      allow_list: validatedIps.map((ip) => ip.address),
+    };
     console.log(createPayload)
 
     try {
@@ -109,53 +168,6 @@ const DatabaseCreate: React.FC<{}> = () => {
     setSubmitting(false);
   };
 
-  const getEngineOptions = (versions: DatabaseVersion[]) => {
-    const groupedVersions = groupBy<DatabaseVersion>((version) => {
-      if (version.engine.match(/mysql/i)) {
-        return 'MySQL';
-      }
-      if (version.engine.match(/postgresql/i)) {
-        return 'PostgreSQL';
-      }
-      if (version.engine.match(/mongodb/i)) {
-        return 'MongoDB';
-      }
-      if (version.engine.match(/redis/i)) {
-        return 'Redis';
-      }
-      return 'Other';
-    }, versions);
-    return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
-      (accum, thisGroup) => {
-        if (
-          !groupedVersions[thisGroup] ||
-          groupedVersions[thisGroup].length === 0
-        ) {
-          return accum;
-        }
-        return [
-          ...accum,
-          {
-            label: thisGroup,
-            options: groupedVersions[thisGroup].map((version) => ({
-              ...version,
-              value: `${version.engine}/${version.version}`,
-              flag: engineIcons[version.engine],
-            })),
-          },
-        ];
-      },
-      []
-    );
-  };
-
-  const engineOptions = React.useMemo(() => {
-    if (!versions) {
-      return;
-    }
-    return getEngineOptions(versions);
-  }, [versions]);
-
   const {
     values,
     errors,
@@ -166,23 +178,22 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useFormik({
     initialValues: {
       label: '',
-      engine: '',
+      engine: '' as Engine,
       region: '',
       type: '',
-      failover_count: 0,
-      replication_type: 'none',
+      failover_count: 0 as FailoverCount,
+      replication_type: 'none' as ReplicationType,
       allow_list: [
         {
           address: '',
+          error: '',
         },
       ],
     },
-    // validationSchema: createDatabaseSchema,
-    // validateOnChange: false,
+    validationSchema: createDatabaseSchema,
+    validateOnChange: false,
     onSubmit: submitForm,
   });
-
-  // console.log(errors)
 
   const disableCreateButton =
     !values.label ||
@@ -351,13 +362,8 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Typography variant="h2">Add Access Controls</Typography>
           <MultipleIPInput
             title="Inbound Sources"
-            ips={values.allow_list.map((value, idx) => ({
-              ...value,
-              error:
-                errors.allow_list && errors.allow_list[idx]
-                  ? errors.allow_list[idx].address
-                  : null,
-            }))}
+            placeholder="Add IP Address or range"
+            ips={values.allow_list}
             onChange={(address) => setFieldValue('allow_list', address)}
           />
         </Grid>

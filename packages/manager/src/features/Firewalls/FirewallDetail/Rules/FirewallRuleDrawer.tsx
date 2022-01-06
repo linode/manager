@@ -619,19 +619,27 @@ export const formValueToIPs = (
 // Adds an `error` message to each invalid IP in the list.
 export const validateIPs = (
   ips: ExtendedIP[],
-  options?: { allowEmptyAddress: boolean }
+  options?: {
+    allowEmptyAddress?: boolean;
+    errorMessage?: string;
+  }
 ): ExtendedIP[] => {
   return ips.map(({ address }) => {
     if (!options?.allowEmptyAddress && !address) {
       return { address, error: 'Please enter an IP address.' };
     }
-    // We accept IP ranges (i.e., CIDR notation). By the time this function is run,
-    // IP masks will have been enforced by enforceIPMasks().
+    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
+    // methods for each, so we check for a netmask to decide the method to use.
+    const [, mask] = address.split('/');
     try {
-      parseCIDR(address);
+      if (mask) {
+        parseCIDR(address);
+      } else {
+        parseIP(address);
+      }
     } catch (err) {
       if (address) {
-        return { address, error: IP_ERROR_MESSAGE };
+        return { address, error: options?.errorMessage ?? IP_ERROR_MESSAGE };
       }
     }
     return { address };
