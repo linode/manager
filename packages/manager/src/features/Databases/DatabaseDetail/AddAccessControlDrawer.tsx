@@ -1,18 +1,14 @@
-// import { allocateIPAddress } from '@linode/api-v4/lib/linodes';
-// import { createIPv6Range, IPv6Prefix } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import { Item } from 'src/components/EnhancedSelect/Select';
 import ExternalLink from 'src/components/Link';
+import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,28 +26,12 @@ interface Props {
   updateDatabase: any; // fix
   allowList: ExtendedIP[];
   handleIPChange: (ips: ExtendedIP[]) => void;
-  // linodeID: number;
-  // hasPrivateIPAddress: boolean;
-  // onSuccess: () => void;
-  // readOnly: boolean;
 }
 
 type CombinedProps = Props;
 
 const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
-  const {
-    open,
-    onClose,
-    updateDatabase,
-    allowList,
-    handleIPChange,
-    // linodeID,
-    // hasPrivateIPAddress,
-    // onSuccess,
-    // readOnly,
-  } = props;
-
-  // console.log(allowList);
+  const { open, onClose, updateDatabase, allowList, handleIPChange } = props;
 
   const classes = useStyles();
 
