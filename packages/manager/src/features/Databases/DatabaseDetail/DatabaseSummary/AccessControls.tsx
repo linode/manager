@@ -9,12 +9,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Typography from 'src/components/core/Typography';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import ExternalLink from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useDatabaseMutation } from 'src/queries/databases';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 import AddAccessControlDrawer from '../AddAccessControlDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -42,6 +43,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     float: 'right',
     paddingRight: 15,
   },
+  restrictWarning: {
+    width: '50%',
+  },
+  restrictWarningText: {
+    fontSize: '0.875rem,',
+  },
 }));
 
 interface Props {
@@ -50,14 +57,13 @@ interface Props {
 
 export const AccessControls: React.FC<Props> = (props) => {
   const {
-    databaseData: { id, engine, allow_list },
+    databaseData: { id, engine, allow_list: allowList },
   } = props;
 
   const classes = useStyles();
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const [isLoading, setLoading] = React.useState<boolean>(false);
   const [
     accessControlToBeRemoved,
     setAccessControlToBeRemoved,
@@ -68,7 +74,23 @@ export const AccessControls: React.FC<Props> = (props) => {
     setAddAccessControlDrawerOpen,
   ] = React.useState<boolean>(false);
 
+  const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
+
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
+
+  React.useEffect(() => {
+    if (allowList.length > 0) {
+      const allowListExtended: ExtendedIP[] = allowList.map((ip) => {
+        return {
+          address: ip,
+        };
+      });
+
+      setExtendedIPs(allowListExtended);
+    } else {
+      setExtendedIPs([]);
+    }
+  }, [allowList]);
 
   // Functions for "Add Access Control" button interactions.
   const handleAddAccessControlClick = () => {
@@ -79,39 +101,39 @@ export const AccessControls: React.FC<Props> = (props) => {
     setAddAccessControlDrawerOpen(false);
   };
 
-  // const handleAddAccessControlSuccess = () => {
-  //   setAddAccessControlDrawerOpen(false);
-  //   // RQ refresh?
-  // };
+  // TODO: add validation
+  const handleIPChange = React.useCallback(
+    (_ips: ExtendedIP[]) => {
+      setExtendedIPs(_ips);
+    },
+    [setExtendedIPs]
+  );
 
   // Functions for Access Control table "Remove" button interactions.
+  const handleClickRemove = (accessControl: string) => {
+    setError(undefined);
+    setDialogOpen(true);
+    setAccessControlToBeRemoved(accessControl);
+  };
+
   const handleDialogClose = () => {
     setDialogOpen(false);
-    setError(undefined);
-    setAccessControlToBeRemoved(null);
-    // setError(undefined);
   };
 
   const handleError = (e: APIError[]) => {
     setError(e[0].reason);
-    setLoading(false);
   };
 
-  const handleRemove = (accessControl: string) => {
-    setLoading(true);
-    setError(undefined);
+  const handleRemove = () => {
     updateDatabase({
-      allow_list: allow_list.filter((ipAddress) => ipAddress !== accessControl),
+      allow_list: allowList.filter(
+        (ipAddress) => ipAddress !== accessControlToBeRemoved
+      ),
     })
       .then(() => {
         handleDialogClose();
       })
       .catch(handleError);
-  };
-
-  const handleClickRemove = (accessControl: string) => {
-    setDialogOpen(true);
-    setAccessControlToBeRemoved(accessControl);
   };
 
   const action = {
@@ -120,13 +142,20 @@ export const AccessControls: React.FC<Props> = (props) => {
     onClick: (accessControl: string) => handleClickRemove(accessControl),
   };
 
+  const unrestrictedClusterAccess = allowList.length === 0;
+
   const ipTable = (accessControlsList: string[]) => {
     if (accessControlsList.length === 0) {
       return (
-        <TableRowEmptyState
-          colSpan={12}
-          message={"You don't have any Access Controls set."}
-        />
+        <Notice warning className={classes.restrictWarning}>
+          <Typography className={classes.restrictWarningText}>
+            Warning: your cluster is open to all incoming connections. Secure
+            this database cluster by restricting access.{' '}
+            <ExternalLink to="https://www.linode.com/docs">
+              Why is this important?
+            </ExternalLink>
+          </Typography>
+        </Notice>
       );
     }
 
@@ -157,19 +186,21 @@ export const AccessControls: React.FC<Props> = (props) => {
           <div className={classes.sectionHeader}>
             <Typography variant="h3">Access Controls</Typography>
           </div>
-          <div className={classes.sectionText}>
-            <Typography>Descriptive text...</Typography>
-          </div>
+          {!unrestrictedClusterAccess ? (
+            <div className={classes.sectionText}>
+              <Typography>Descriptive text...</Typography>
+            </div>
+          ) : null}
         </div>
         <AddNewLink
           label="Add Access Control"
           onClick={handleAddAccessControlClick}
         />
       </div>
-      {ipTable(allow_list)}
+      {ipTable(allowList)}
       <ConfirmationDialog
         open={isDialogOpen}
-        onClose={() => handleDialogClose()}
+        onClose={handleDialogClose}
         title={`Remove IP Address ${accessControlToBeRemoved}`}
         actions={() => (
           <ActionsPanel>
@@ -177,10 +208,7 @@ export const AccessControls: React.FC<Props> = (props) => {
               Cancel
             </Button>
 
-            <Button
-              buttonType="primary"
-              onClick={() => handleRemove(accessControlToBeRemoved)}
-            >
+            <Button buttonType="primary" onClick={handleRemove}>
               Remove
             </Button>
           </ActionsPanel>
@@ -196,8 +224,8 @@ export const AccessControls: React.FC<Props> = (props) => {
         open={addAccessControlDrawerOpen}
         onClose={handleDrawerClose}
         updateDatabase={updateDatabase}
-        allowList={allow_list}
-        // onSuccess={handleAddAccessControlSuccess}
+        handleIPChange={handleIPChange}
+        allowList={extendedIPs}
       />
     </>
   );

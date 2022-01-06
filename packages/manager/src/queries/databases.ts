@@ -46,7 +46,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
     {
       onSuccess: (data) => {
         queryClient.setQueryData<Database | undefined>(
-          `${queryKey}-${id}`,
+          [queryKey, Number(id)],
           (oldEntity) => {
             if (oldEntity === undefined) {
               return undefined;

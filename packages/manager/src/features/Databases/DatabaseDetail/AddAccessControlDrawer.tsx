@@ -13,6 +13,7 @@ import ExternalLink from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
+import { ExtendedIP } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   instructions: {
@@ -27,7 +28,8 @@ interface Props {
   open: boolean;
   onClose: () => void;
   updateDatabase: any; // fix
-  allowList: string[];
+  allowList: ExtendedIP[];
+  handleIPChange: (ips: ExtendedIP[]) => void;
   // linodeID: number;
   // hasPrivateIPAddress: boolean;
   // onSuccess: () => void;
@@ -42,33 +44,42 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     onClose,
     updateDatabase,
     allowList,
+    handleIPChange,
     // linodeID,
     // hasPrivateIPAddress,
     // onSuccess,
     // readOnly,
   } = props;
 
+  // console.log(allowList);
+
   const classes = useStyles();
 
   const [error, setError] = React.useState<string | undefined>('');
-  const [loading, setLoading] = React.useState<boolean>(false);
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (open) {
+      setSubmitting(false);
       setError('');
     }
   }, [open]);
 
   const handleAllowInboundSourcesClick = () => {
-    setLoading(true);
+    setSubmitting(true);
 
-    updateDatabase({ allow_list: [...allowList, '1.1.1.1'] })
+    // Get the IP address strings out of the objects and filter empty strings out.
+    const allowListRetracted = allowList
+      .map((extendedIP) => extendedIP.address)
+      .filter((ip) => ip !== '');
+
+    updateDatabase({ allow_list: [...allowListRetracted] })
       .then(() => {
-        setLoading(false);
+        setSubmitting(false);
         onClose();
       })
       .catch((e: APIError[]) => {
-        setLoading(false);
+        setSubmitting(false);
         setError(getErrorStringOrDefault(e));
       });
   };
@@ -89,7 +100,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         onClick={handleAllowInboundSourcesClick}
         disabled={false}
         style={{ marginBottom: 8 }}
-        loading={loading}
+        loading={submitting}
       >
         Allow Inbound Sources
       </Button>
@@ -112,9 +123,9 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
           title="Inbound Sources"
           aria-label="Inbound Sources"
           className={classes.ipSelect}
-          ips={[]}
-          onChange={() => null}
-          onBlur={() => null}
+          ips={allowList}
+          onChange={handleIPChange}
+          // onBlur={() => null}
           inputProps={{ autoFocus: true }}
           placeholder="Add IP address or range"
         />
