@@ -111,7 +111,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           choiceLabels[ip] = thisLinode.label;
         });
 
-        if (flags.ipv6Sharing) {
+        if (true) {
           // this fails for datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
@@ -136,17 +136,24 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const [ipChoices, setipChoices] = React.useState({});
 
   React.useEffect(() => {
+    // dont try to set state if the component isnt active
+    let active = true;
     // don't try anything until we've finished the request for the Linodes data
     if (isLoading) {
       return;
     }
     isLoading = true;
-    load();
     async function load() {
       const ipChoices = await getIPChoicesAndLabels(linodeID, linodes);
-      setipChoices(ipChoices);
-      isLoading = false;
+      if (active) {
+        setipChoices(ipChoices);
+        isLoading = false;
+      }
     }
+    load();
+    return () => {
+      active = false;
+    };
   }, [linodeID, data]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
