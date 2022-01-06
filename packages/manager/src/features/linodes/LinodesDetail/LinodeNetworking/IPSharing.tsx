@@ -101,15 +101,16 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     const choiceLabels = {};
     const promisedChoices: string[] = await linodes.reduce(
       async (acc, thisLinode) => {
+        const prev = await acc;
         // Filter out the current Linode
         if (thisLinode.id === linodeID) {
-          return acc;
+          return prev;
         }
 
         // side-effect of this mapping is saving the labels
         let ips: string[] = [];
         let ipv6Ranges: string[] = [];
-        if (flags.ipv6Sharing) {
+        if (true) {
           // this fails for datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
@@ -119,7 +120,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
             return `${i.range}/${i.prefix}`;
           });
         }
-        ips = [...thisLinode.ipv4, ...ipv6Ranges];
+        ips = [...prev, ...thisLinode.ipv4, ...ipv6Ranges];
 
         ips.forEach((ip: string) => {
           choiceLabels[ip] = thisLinode.label;
