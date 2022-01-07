@@ -15,7 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { useDatabaseMutation } from 'src/queries/databases';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
 import AddAccessControlDrawer from '../AddAccessControlDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -80,11 +80,7 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     if (allowList.length > 0) {
-      const allowListExtended: ExtendedIP[] = allowList.map((ip) => {
-        return {
-          address: ip,
-        };
-      });
+      const allowListExtended = allowList.map(stringToExtendedIP);
 
       setExtendedIPs(allowListExtended);
     } else {
@@ -100,14 +96,6 @@ export const AccessControls: React.FC<Props> = (props) => {
   const handleDrawerClose = () => {
     setAddAccessControlDrawerOpen(false);
   };
-
-  // TODO: add validation
-  const handleIPChange = React.useCallback(
-    (_ips: ExtendedIP[]) => {
-      setExtendedIPs(_ips);
-    },
-    [setExtendedIPs]
-  );
 
   // Functions for Access Control table "Remove" button interactions.
   const handleClickRemove = (accessControl: string) => {
@@ -224,7 +212,6 @@ export const AccessControls: React.FC<Props> = (props) => {
         open={addAccessControlDrawerOpen}
         onClose={handleDrawerClose}
         updateDatabase={updateDatabase}
-        handleIPChange={handleIPChange}
         allowList={extendedIPs}
       />
     </>

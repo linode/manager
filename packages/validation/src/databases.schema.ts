@@ -1,4 +1,5 @@
 import { array, object, string } from 'yup';
+import { IP_ERROR_MESSAGE, validateIP } from '../lib/firewalls.schema';
 
 const LABEL_MESSAGE = 'Label must be between 3 and 32 characters';
 
@@ -13,5 +14,13 @@ export const createDatabaseSchema = object({
 
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
-  allow_list: array().of(string()).notRequired(),
+  allow_list: array()
+    .of(
+      string().test({
+        name: 'validateIP',
+        message: IP_ERROR_MESSAGE,
+        test: validateIP,
+      })
+    )
+    .notRequired(),
 });

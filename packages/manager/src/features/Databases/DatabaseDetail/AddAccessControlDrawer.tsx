@@ -1,4 +1,7 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { updateDatabaseSchema } from '@linode/validation/lib/databases.schema';
+import { IP_ERROR_MESSAGE } from '@linode/validation/lib/firewalls.schema';
+import { useFormik } from 'formik';
+import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -8,8 +11,8 @@ import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedIP } from 'src/utilities/ipUtils';
+import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import { ExtendedIP, extendedIPToString } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   instructions: {
@@ -25,32 +28,44 @@ interface Props {
   onClose: () => void;
   updateDatabase: any; // fix
   allowList: ExtendedIP[];
-  handleIPChange: (ips: ExtendedIP[]) => void;
+}
+
+interface Values {
+  _allowList: ExtendedIP[];
 }
 
 type CombinedProps = Props;
 
 const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, onClose, updateDatabase, allowList, handleIPChange } = props;
+  const { open, onClose, updateDatabase, allowList } = props;
 
   const classes = useStyles();
 
   const [error, setError] = React.useState<string | undefined>('');
-  const [submitting, setSubmitting] = React.useState<boolean>(false);
+
+  // This will be set to `true` once a form field has been touched. This is used to disable the
+  // "Allow Inbound Sources" button unless there have been changes to the form.
+  const [formTouched, setFormTouched] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     if (open) {
-      setSubmitting(false);
       setError('');
     }
   }, [open]);
 
-  const handleAllowInboundSourcesClick = () => {
-    setSubmitting(true);
-
+  const handleAllowInboundSourcesClick = (
+    { _allowList }: Values,
+    {
+      setSubmitting,
+      setFieldError,
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      setFieldError: (field: string, reason: string) => void;
+    }
+  ) => {
     // Get the IP address strings out of the objects and filter empty strings out.
-    const allowListRetracted = allowList
-      .map((extendedIP) => extendedIP.address)
+    const allowListRetracted = _allowList
+      .map(extendedIPToString)
       .filter((ip) => ip !== '');
 
     updateDatabase({ allow_list: [...allowListRetracted] })
@@ -58,33 +73,53 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         setSubmitting(false);
         onClose();
       })
-      .catch((e: APIError[]) => {
+      .catch((errors: any) => {
+        handleAPIErrors(errors, setFieldError, setError);
         setSubmitting(false);
-        setError(getErrorStringOrDefault(e));
       });
   };
 
-  const buttonsJSX = (
-    <>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        disabled={false}
-        style={{ marginBottom: 8 }}
-        loading={false}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleAllowInboundSourcesClick}
-        disabled={false}
-        style={{ marginBottom: 8 }}
-        loading={submitting}
-      >
-        Allow Inbound Sources
-      </Button>
-    </>
+  const onValidate = ({ _allowList }: Values) => {
+    const validatedIPs = validateIPs(_allowList, {
+      allowEmptyAddress: false,
+    });
+
+    setValues({ _allowList: validatedIPs });
+
+    const ipsWithErrors = validatedIPs.filter((thisIP) =>
+      Boolean(thisIP.error)
+    );
+
+    if (ipsWithErrors.length === 0) {
+      return {};
+    }
+
+    return {
+      _allowList: ipsWithErrors,
+    };
+  };
+
+  const { values, isSubmitting, handleSubmit, setValues } = useFormik({
+    initialValues: {
+      _allowList: allowList,
+    },
+    enableReinitialize: true,
+    onSubmit: handleAllowInboundSourcesClick,
+    validateOnChange: false,
+    validateOnBlur: false,
+    validate: (values: Values) => onValidate(values),
+    validationSchema: updateDatabaseSchema,
+  });
+
+  const handleIPChange = React.useCallback(
+    (_ips: ExtendedIP[]) => {
+      if (!formTouched) {
+        setFormTouched(true);
+      }
+
+      setValues({ _allowList: _ips });
+    },
+    [formTouched, setValues]
   );
 
   return (
@@ -99,20 +134,67 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
             Learn more about securing your cluster.
           </ExternalLink>
         </Typography>
-        <MultipleIPInput
-          title="Inbound Sources"
-          aria-label="Inbound Sources"
-          className={classes.ipSelect}
-          ips={allowList}
-          onChange={handleIPChange}
-          // onBlur={() => null}
-          inputProps={{ autoFocus: true }}
-          placeholder="Add IP address or range"
-        />
-        <ActionsPanel>{buttonsJSX}</ActionsPanel>
+        <form onSubmit={handleSubmit}>
+          <MultipleIPInput
+            title="Inbound Sources"
+            aria-label="Inbound Sources"
+            className={classes.ipSelect}
+            ips={values._allowList}
+            onChange={handleIPChange}
+            inputProps={{ autoFocus: true }}
+            placeholder="Add IP address or range"
+          />
+          <ActionsPanel>
+            <Button
+              buttonType="secondary"
+              onClick={onClose}
+              disabled={isSubmitting}
+              style={{ marginBottom: 8 }}
+              loading={false}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              buttonType="primary"
+              disabled={!formTouched}
+              style={{ marginBottom: 8 }}
+              loading={isSubmitting}
+            >
+              Allow Inbound Sources
+            </Button>
+          </ActionsPanel>
+        </form>
       </React.Fragment>
     </Drawer>
   );
+};
+
+// Adds an `error` message to each invalid IP in the list.
+export const validateIPs = (
+  ips: ExtendedIP[],
+  options?: { allowEmptyAddress: boolean }
+): ExtendedIP[] => {
+  return ips.map(({ address }) => {
+    if (!options?.allowEmptyAddress && !address) {
+      return { address, error: 'Please enter an IP address.' };
+    }
+    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
+    // methods for each, so we check for a netmask to decide the method to use.
+    const [, mask] = address.split('/');
+    try {
+      if (mask) {
+        parseCIDR(address);
+      } else {
+        parseIP(address);
+      }
+    } catch (err) {
+      if (address) {
+        return { address, error: IP_ERROR_MESSAGE };
+      }
+    }
+    return { address };
+  });
 };
 
 export default AddAccessControlDrawer;
