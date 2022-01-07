@@ -419,6 +419,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   render() {
     const {
+      flags,
       readOnly,
       linode: {
         id: linodeID,
@@ -470,11 +471,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
     const ranges = linodeIPs?.ipv6?.global ?? [];
-    const sharedIPv6 = uniq<string>(
-      ranges.reduce((acc: string[], i: IPRange) => {
-        return i.route_target ? acc : acc.concat(`${i.range}/${i.prefix}`);
-      }, [])
-    );
+    const sharedIPv6 = flags.ipv6Sharing
+      ? uniq<string>(
+          ranges.reduce((acc: string[], i: IPRange) => {
+            return i.route_target ? acc : acc.concat(`${i.range}/${i.prefix}`);
+          }, [])
+        )
+      : [];
     const globalIPs = uniq<string>(
       ranges.map((i: IPRange) => `${i.range}/${i.prefix}`)
     );
