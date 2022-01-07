@@ -66,18 +66,18 @@ const field = (path: string[]) => lensPath(['fields', ...path]);
 
 const L = {
   fields: {
-    address_1: field(['address_1']),
-    address_2: field(['address_2']),
-    city: field(['city']),
-    company: field(['company']),
     email: field(['email']),
     first_name: field(['first_name']),
     last_name: field(['last_name']),
-    phone: field(['phone']),
-    tax_id: field(['tax_id']),
-    zip: field(['zip']),
+    company: field(['company']),
+    address_1: field(['address_1']),
+    address_2: field(['address_2']),
     country: field(['country']),
     state: field(['state']),
+    city: field(['city']),
+    zip: field(['zip']),
+    phone: field(['phone']),
+    tax_id: field(['tax_id']),
   },
 };
 
@@ -104,16 +104,16 @@ class UpdateContactInformationForm extends React.Component<
     // display in the form.
     const editableContactInformationFields = pick(
       [
+        'email',
         'first_name',
         'last_name',
         'company',
         'address_1',
         'address_2',
-        'city',
-        'state',
-        'zip',
         'country',
-        'email',
+        'state',
+        'city',
+        'zip',
         'phone',
         'tax_id',
       ],
@@ -204,296 +204,289 @@ class UpdateContactInformationForm extends React.Component<
     });
 
     return (
-      <form>
+      <Grid
+        container
+        className={classes.mainFormContainer}
+        data-qa-update-contact
+      >
+        {generalError && (
+          <Grid item xs={12}>
+            <Notice error text={generalError} />
+          </Grid>
+        )}
+        {success && (
+          <Grid item xs={12}>
+            <Notice success text={success} />
+          </Grid>
+        )}
+
         <Grid
-          container
-          className={classes.mainFormContainer}
-          data-qa-update-contact
+          item
+          xs={12}
+          updateFor={[account.email, fields.email, errorMap.email, classes]}
         >
-          {generalError && (
-            <Grid item xs={12}>
-              <Notice error text={generalError} />
-            </Grid>
-          )}
-          {success && (
-            <Grid item xs={12}>
-              <Notice success text={success} />
-            </Grid>
-          )}
+          <TextField
+            label="Email"
+            errorText={errorMap.email}
+            helperTextPosition="top"
+            inputRef={this.emailRef}
+            onChange={this.updateEmail}
+            required
+            type="email"
+            value={defaultTo(account.email, fields.email)}
+            data-qa-contact-email
+          />
+        </Grid>
 
-          <Grid
-            item
-            xs={12}
-            updateFor={[account.email, fields.email, errorMap.email, classes]}
-          >
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          sm={6}
+          updateFor={[
+            account.first_name,
+            fields.first_name,
+            errorMap.first_name,
+            classes,
+          ]}
+        >
+          <TextField
+            label="First Name"
+            errorText={errorMap.first_name}
+            onChange={this.updateFirstName}
+            value={defaultTo(account.first_name, fields.first_name)}
+            data-qa-contact-first-name
+          />
+        </Grid>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          sm={6}
+          updateFor={[
+            account.last_name,
+            fields.last_name,
+            errorMap.last_name,
+            classes,
+          ]}
+        >
+          <TextField
+            label="Last Name"
+            errorText={errorMap.last_name}
+            onChange={this.updateLastName}
+            value={defaultTo(account.last_name, fields.last_name)}
+            data-qa-contact-last-name
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          updateFor={[
+            account.company,
+            fields.company,
+            errorMap.company,
+            classes,
+          ]}
+        >
+          <Grid item xs={12}>
             <TextField
-              label="Email"
-              errorText={errorMap.email}
-              helperTextPosition="top"
-              inputRef={this.emailRef}
-              onChange={this.updateEmail}
-              required
-              type="email"
-              value={defaultTo(account.email, fields.email)}
-              data-qa-contact-email
-            />
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            sm={6}
-            updateFor={[
-              account.first_name,
-              fields.first_name,
-              errorMap.first_name,
-              classes,
-            ]}
-          >
-            <TextField
-              label="First Name"
-              errorText={errorMap.first_name}
-              onChange={this.updateFirstName}
-              value={defaultTo(account.first_name, fields.first_name)}
-              data-qa-contact-first-name
-            />
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            sm={6}
-            updateFor={[
-              account.last_name,
-              fields.last_name,
-              errorMap.last_name,
-              classes,
-            ]}
-          >
-            <TextField
-              label="Last Name"
-              errorText={errorMap.last_name}
-              onChange={this.updateLastName}
-              value={defaultTo(account.last_name, fields.last_name)}
-              data-qa-contact-last-name
-            />
-          </Grid>
-
-          <Grid
-            item
-            xs={12}
-            updateFor={[
-              account.company,
-              fields.company,
-              errorMap.company,
-              classes,
-            ]}
-          >
-            <Grid item xs={12}>
-              <TextField
-                label="Company Name"
-                errorText={errorMap.company}
-                onChange={this.updateCompany}
-                value={defaultTo(account.company, fields.company)}
-                data-qa-company
-              />
-            </Grid>
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            updateFor={[
-              account.address_1,
-              fields.address_1,
-              errorMap.address_1,
-              classes,
-            ]}
-          >
-            <TextField
-              label="Address"
-              errorText={errorMap.address_1}
-              onChange={this.updateAddress1}
-              value={defaultTo(account.address_1, fields.address_1)}
-              data-qa-contact-address-1
-            />
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            updateFor={[
-              account.address_2,
-              fields.address_2,
-              errorMap.address_2,
-              classes,
-            ]}
-          >
-            <TextField
-              label="Address 2"
-              errorText={errorMap.address_2}
-              onChange={this.updateAddress2}
-              value={defaultTo(account.address_2, fields.address_2)}
-              data-qa-contact-address-2
-            />
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            sm={6}
-            updateFor={[
-              account.country,
-              fields.country,
-              errorMap.country,
-              classes,
-            ]}
-          >
-            <EnhancedSelect
-              label="Country"
-              errorText={errorMap.country}
-              isClearable={false}
-              onChange={this.updateCountry}
-              options={countryResults}
-              placeholder="Select a Country"
-              required
-              value={countryResults.find(({ value }) =>
-                fields.country
-                  ? value === fields.country
-                  : value === account.country
-              )}
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-contact-country': true,
-                },
-              }}
-            />
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            sm={6}
-            updateFor={[
-              fields.state,
-              fields.zip,
-              fields.country,
-              errorMap.state,
-              errorMap.zip,
-              errorMap.country,
-              classes,
-            ]}
-          >
-            {fields.country === 'US' || fields.country == 'CA' ? (
-              <EnhancedSelect
-                label={`${fields.country === 'US' ? 'State' : 'Province'}`}
-                errorText={errorMap.state}
-                isClearable={false}
-                onChange={this.updateState}
-                options={regionResults}
-                placeholder="Select region"
-                required
-                value={
-                  regionResults.find(({ value }) =>
-                    fields.state
-                      ? value === fields.state
-                      : value === account.state
-                  ) ?? ''
-                }
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-contact-province': true,
-                  },
-                }}
-              />
-            ) : (
-              <TextField
-                label="State / Province"
-                errorText={errorMap.state}
-                onChange={(e) =>
-                  this.updateState({
-                    label: e.target.value,
-                    value: e.target.value,
-                  })
-                }
-                placeholder="Enter region"
-                required
-                value={fields.state || ''}
-                dataAttrs={{
-                  'data-qa-contact-province': true,
-                }}
-              />
-            )}
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            sm={6}
-            updateFor={[account.city, fields.city, errorMap.city, classes]}
-          >
-            <TextField
-              label="City"
-              errorText={errorMap.city}
-              onChange={this.updateCity}
-              value={defaultTo(account.city, fields.city)}
-              data-qa-contact-city
-            />
-          </Grid>
-
-          <Grid className={classes.removeTopMargin} item xs={12} sm={6}>
-            <TextField
-              label="Postal Code"
-              errorText={errorMap.zip}
-              onChange={this.updateZip}
-              value={defaultTo(account.zip, fields.zip)}
-              data-qa-contact-post-code
-            />
-          </Grid>
-
-          <Grid
-            item
-            xs={12}
-            updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
-          >
-            <TextField
-              label="Phone"
-              type="tel"
-              errorText={errorMap.phone}
-              onChange={this.updatePhone}
-              value={defaultTo(account.phone, fields.phone)}
-              data-qa-contact-phone
-            />
-          </Grid>
-
-          <Grid
-            className={classes.removeTopMargin}
-            item
-            xs={12}
-            updateFor={[
-              account.tax_id,
-              fields.tax_id,
-              errorMap.tax_id,
-              classes,
-            ]}
-          >
-            <TextField
-              label="Tax ID"
-              errorText={errorMap.tax_id}
-              onChange={this.updateTaxID}
-              value={defaultTo(account.tax_id, fields.tax_id)}
-              data-qa-contact-tax-id
+              label="Company Name"
+              errorText={errorMap.company}
+              onChange={this.updateCompany}
+              value={defaultTo(account.company, fields.company)}
+              data-qa-company
             />
           </Grid>
         </Grid>
-      </form>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          updateFor={[
+            account.address_1,
+            fields.address_1,
+            errorMap.address_1,
+            classes,
+          ]}
+        >
+          <TextField
+            label="Address"
+            errorText={errorMap.address_1}
+            onChange={this.updateAddress1}
+            value={defaultTo(account.address_1, fields.address_1)}
+            data-qa-contact-address-1
+          />
+        </Grid>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          updateFor={[
+            account.address_2,
+            fields.address_2,
+            errorMap.address_2,
+            classes,
+          ]}
+        >
+          <TextField
+            label="Address 2"
+            errorText={errorMap.address_2}
+            onChange={this.updateAddress2}
+            value={defaultTo(account.address_2, fields.address_2)}
+            data-qa-contact-address-2
+          />
+        </Grid>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          sm={6}
+          updateFor={[
+            account.country,
+            fields.country,
+            errorMap.country,
+            classes,
+          ]}
+        >
+          <EnhancedSelect
+            label="Country"
+            errorText={errorMap.country}
+            isClearable={false}
+            onChange={this.updateCountry}
+            options={countryResults}
+            placeholder="Select a Country"
+            required
+            value={countryResults.find(({ value }) =>
+              fields.country
+                ? value === fields.country
+                : value === account.country
+            )}
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-contact-country': true,
+              },
+            }}
+          />
+        </Grid>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          sm={6}
+          updateFor={[
+            fields.state,
+            fields.zip,
+            fields.country,
+            errorMap.state,
+            errorMap.zip,
+            errorMap.country,
+            classes,
+          ]}
+        >
+          {fields.country === 'US' || fields.country == 'CA' ? (
+            <EnhancedSelect
+              label={`${fields.country === 'US' ? 'State' : 'Province'}`}
+              errorText={errorMap.state}
+              isClearable={false}
+              onChange={this.updateState}
+              options={regionResults}
+              placeholder="Select region"
+              required
+              value={
+                regionResults.find(({ value }) =>
+                  fields.state
+                    ? value === fields.state
+                    : value === account.state
+                ) ?? ''
+              }
+              textFieldProps={{
+                dataAttrs: {
+                  'data-qa-contact-province': true,
+                },
+              }}
+            />
+          ) : (
+            <TextField
+              label="State / Province"
+              errorText={errorMap.state}
+              onChange={(e) =>
+                this.updateState({
+                  label: e.target.value,
+                  value: e.target.value,
+                })
+              }
+              placeholder="Enter region"
+              required
+              value={fields.state || ''}
+              dataAttrs={{
+                'data-qa-contact-province': true,
+              }}
+            />
+          )}
+        </Grid>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          sm={6}
+          updateFor={[account.city, fields.city, errorMap.city, classes]}
+        >
+          <TextField
+            label="City"
+            errorText={errorMap.city}
+            onChange={this.updateCity}
+            value={defaultTo(account.city, fields.city)}
+            data-qa-contact-city
+          />
+        </Grid>
+
+        <Grid className={classes.removeTopMargin} item xs={12} sm={6}>
+          <TextField
+            label="Postal Code"
+            errorText={errorMap.zip}
+            onChange={this.updateZip}
+            value={defaultTo(account.zip, fields.zip)}
+            data-qa-contact-post-code
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
+        >
+          <TextField
+            label="Phone"
+            type="tel"
+            errorText={errorMap.phone}
+            onChange={this.updatePhone}
+            value={defaultTo(account.phone, fields.phone)}
+            data-qa-contact-phone
+          />
+        </Grid>
+
+        <Grid
+          className={classes.removeTopMargin}
+          item
+          xs={12}
+          updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
+        >
+          <TextField
+            label="Tax ID"
+            errorText={errorMap.tax_id}
+            onChange={this.updateTaxID}
+            value={defaultTo(account.tax_id, fields.tax_id)}
+            data-qa-contact-tax-id
+          />
+        </Grid>
+      </Grid>
     );
   };
 
@@ -541,13 +534,12 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.composeState([set(L.fields.email, e.target.value)]);
-
     if (e.target.value === '') {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
     }
+    this.composeState([set(L.fields.email, e.target.value)]);
   };
 
   updateFirstName = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -563,18 +555,15 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateState = (selectedRegion: Item) => {
-    this.composeState([set(L.fields.state, selectedRegion.value)]);
-
     if (selectedRegion.value === undefined || selectedRegion.value === '') {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
     }
+    this.composeState([set(L.fields.state, selectedRegion.value)]);
   };
 
   updateCountry = (selectedCountry: Item) => {
-    this.composeState([set(L.fields.country, selectedCountry.value)]);
-
     this.setState({
       fields: {
         ...this.state.fields,
@@ -582,6 +571,7 @@ class UpdateContactInformationForm extends React.Component<
       },
       isValid: false,
     });
+    this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
