@@ -1,23 +1,20 @@
-export interface DatabaseType {
-  id: string;
-  label: string;
-  price: {
-    hourly: number;
-    monthly: number;
-  };
-  memory: number;
-  transfer: number;
-  disk: number;
-  vcpus: number;
+import { BaseType, PriceObject } from '../linodes/types';
+
+export type DatabaseTypeClass = 'standard' | 'dedicated';
+
+export interface DatabaseType extends BaseType {
+  class: DatabaseTypeClass;
   deprecated: boolean;
   addons: {
     failover: {
-      price: {
-        monthly: number;
-        hourly: number;
-      };
+      price: PriceObject;
     };
   };
+}
+
+export interface ExtendedDatabaseType extends DatabaseType {
+  heading: string;
+  subHeadings: [string, string];
 }
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';

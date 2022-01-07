@@ -136,48 +136,26 @@ const databases = [
   }),
 
   rest.get('*/databases/types', (req, res, ctx) => {
-    const nanode = databaseTypeFactory.build({
-      id: 'g6-nanode-1',
-      label: 'Nanode 1 GB',
-      class: 'nanode',
-    });
     const standardTypes = [];
     const dedicatedTypes = [];
-    const highMemTypes = [];
     for (let i = 1; i < 7; i++) {
       standardTypes.push(
         databaseTypeFactory.build({
           id: `g6-standard-${i}`,
           label: `Linode ${2 * i} GB`,
-          heading: `Linode ${2 * i} GB`,
+          class: 'standard',
         })
       );
       dedicatedTypes.push(
         databaseTypeFactory.build({
           id: `g6-dedicated-${i}`,
           label: `Dedicated ${4 * i} GB`,
-          heading: `Dedicated ${4 * i} GB`,
           class: 'dedicated',
-        })
-      );
-      highMemTypes.push(
-        databaseTypeFactory.build({
-          id: `g7-highmem-${i}`,
-          label: `Linode ${24 * i} GB`,
-          heading: `Linode ${24 * i} GB`,
-          class: 'highmem',
         })
       );
     }
     return res(
-      ctx.json(
-        makeResourcePage([
-          nanode,
-          ...standardTypes,
-          ...dedicatedTypes,
-          ...highMemTypes,
-        ])
-      )
+      ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
     );
   }),
 

@@ -37,7 +37,7 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   },
   memory: 2048,
   transfer: 30,
-  disk: 40,
+  disk: 20480,
   vcpus: 2,
   deprecated: false,
   addons: {

@@ -1,3 +1,4 @@
+import { ExtendedDatabaseType } from '@linode/api-v4/lib/databases/types';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
@@ -107,8 +108,10 @@ const styles = (theme: Theme) =>
     },
   });
 
+type ExtendedTypes = Array<ExtendedType | ExtendedDatabaseType>;
+
 interface Props {
-  types: ExtendedType[];
+  types: ExtendedTypes;
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -123,22 +126,22 @@ interface Props {
   isCreate?: boolean;
 }
 
-const getNanodes = (types: ExtendedType[]) =>
+const getNanodes = (types: ExtendedTypes) =>
   types.filter((t) => /nanode/.test(t.class));
 
-const getStandard = (types: ExtendedType[]) =>
+const getStandard = (types: ExtendedTypes) =>
   types.filter((t) => /standard/.test(t.class));
 
-const getHighMem = (types: ExtendedType[]) =>
+const getHighMem = (types: ExtendedTypes) =>
   types.filter((t) => /highmem/.test(t.class));
 
-const getDedicated = (types: ExtendedType[]) =>
+const getDedicated = (types: ExtendedTypes) =>
   types.filter((t) => /dedicated/.test(t.class));
 
-const getGPU = (types: ExtendedType[]) =>
+const getGPU = (types: ExtendedTypes) =>
   types.filter((t) => /gpu/.test(t.class));
 
-const getMetal = (types: ExtendedType[]) =>
+const getMetal = (types: ExtendedTypes) =>
   types.filter((t) => t.class === 'metal');
 
 type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
@@ -277,7 +280,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     );
   };
 
-  renderPlanContainer = (plans: ExtendedType[]) => {
+  renderPlanContainer = (plans: Array<ExtendedType | ExtendedDatabaseType>) => {
     const { classes, isCreate } = this.props;
 
     return (

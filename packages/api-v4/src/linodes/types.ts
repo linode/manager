@@ -268,21 +268,23 @@ export interface PriceObject {
   hourly: number | null;
 }
 
-export interface LinodeType {
+export interface BaseType {
   id: string;
-  disk: number;
-  class: LinodeTypeClass;
-  price: PriceObject;
-  successor: string | null;
   label: string;
-  addons: {
-    backups: { price: PriceObject };
-  };
-  network_out: number;
+  disk: number;
+  price: PriceObject;
   memory: number;
   transfer: number;
   vcpus: number;
+}
+export interface LinodeType extends BaseType {
+  class: LinodeTypeClass;
+  successor: string | null;
+  network_out: number;
   gpus: number;
+  addons: {
+    backups: { price: PriceObject };
+  };
 }
 
 export type LinodeTypeClass =

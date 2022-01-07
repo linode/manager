@@ -5,6 +5,7 @@ import {
   Engine,
   FailoverCount,
   ReplicationType,
+  ExtendedDatabaseType,
 } from '@linode/api-v4/lib/databases/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
@@ -42,6 +43,8 @@ import {
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -136,10 +139,35 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const engineOptions = React.useMemo(() => {
     if (!versions) {
-      return;
+      return [];
     }
     return getEngineOptions(versions);
   }, [versions]);
+
+  const displayTypes: ExtendedDatabaseType[] = React.useMemo(() => {
+    if (!dbtypes) {
+      return [];
+    }
+    return dbtypes.map((type) => {
+      const {
+        label,
+        memory,
+        vcpus,
+        disk,
+        price: { monthly, hourly },
+      } = type;
+      const formattedLabel = formatStorageUnits(label);
+      return {
+        ...type,
+        label: formattedLabel,
+        heading: formattedLabel,
+        subHeadings: [
+          `$${monthly}/mo ($${hourly}/hr)`,
+          typeLabelDetails(memory, disk, vcpus),
+        ] as [string, string],
+      };
+    });
+  }, [dbtypes]);
 
   const submitForm = async () => {
     const validatedIps = validateIPs(values.allow_list, {
@@ -288,7 +316,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             label="Database Engine"
             value={getSelectedOptionFromGroupedOptions(
               values.engine,
-              engineOptions || []
+              engineOptions
             )}
             errorText={errors.engine}
             options={engineOptions}
@@ -315,7 +343,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           <SelectPlanPanel
             data-qa-select-plan
             error={errors.type}
-            types={dbtypes}
+            types={displayTypes}
             onSelect={(selected: string) => setFieldValue('type', selected)}
             selectedID={values.type}
             updateFor={[values.type, errors]}
@@ -375,7 +403,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           disabled={false}
           loading={isSubmitting}
         >
-          Create Volume
+          Create Database
         </Button>
       </Grid>
     </form>
