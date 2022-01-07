@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { matchPath, useHistory, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import useFlags from 'src/hooks/useFlags';
-import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
+import { matchPath, useHistory, useParams } from 'react-router-dom';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { useDatabaseQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { Engine } from '@linode/api-v4/lib/databases/types';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
@@ -20,14 +21,14 @@ export const DatabaseDetail: React.FC = () => {
   const flags = useFlags();
   const history = useHistory();
 
-  const { databaseId } = useParams<{ databaseId: string }>();
+  const { databaseId, engine } = useParams<{
+    databaseId: string;
+    engine: Engine;
+  }>();
 
   const id = Number(databaseId);
 
-  const { data: database, isLoading, error } = useDatabaseQuery(
-    getDatabaseEngine(id),
-    id
-  );
+  const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
 
   if (error) {
     return (
@@ -50,15 +51,15 @@ export const DatabaseDetail: React.FC = () => {
   const tabs = [
     {
       title: 'Summary',
-      routeName: `/databases/${databaseId}/summary`,
+      routeName: `/databases/${engine}/${id}/summary`,
     },
     {
       title: 'Backups',
-      routeName: `/databases/${databaseId}/backups`,
+      routeName: `/databases/${engine}/${id}/backups`,
     },
     {
       title: 'Settings',
-      routeName: `/databases/${databaseId}/settings`,
+      routeName: `/databases/${engine}/${id}/settings`,
     },
   ];
 
@@ -69,7 +70,7 @@ export const DatabaseDetail: React.FC = () => {
 
     // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`/databases/${databaseId}`);
+      history.push(`/databases/${engine}/${id}`);
     }
 
     return tabChoice;

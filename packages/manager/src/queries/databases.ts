@@ -134,21 +134,3 @@ export const useRestoreFromBackupMutation = (
   useMutation<{}, APIError[]>(() =>
     restoreWithBackup(engine, databaseId, backupId)
   );
-
-// This may or may not be useful when we start implementing our components
-// since most of our queries require the engine to be passed and we will need the
-// engine synchronously.
-export const getDatabaseEngine = (id: number) => {
-  const queries = queryClient.getQueriesData<ResourcePage<Database>>(
-    `${queryKey}-list`
-  );
-
-  for (const query of queries) {
-    const database = query[1].data.find((database) => database.id === id);
-    if (database) {
-      return database.engine;
-    }
-  }
-
-  return 'mysql';
-};
