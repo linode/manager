@@ -47,7 +47,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
     {
       onSuccess: (data) => {
         queryClient.setQueryData<Database | undefined>(
-          `${queryKey}-${id}`,
+          [queryKey, id],
           (oldEntity) => {
             if (oldEntity === undefined) {
               return undefined;
@@ -77,7 +77,7 @@ export const useCreateDatabaseMutation = () =>
         // is API paginated.
         queryClient.invalidateQueries(`${queryKey}-list`);
         // Add database to the cache
-        queryClient.setQueryData(`${queryKey}-${data.id}`, data);
+        queryClient.setQueryData([queryKey, data.id], data);
       },
     }
   );
