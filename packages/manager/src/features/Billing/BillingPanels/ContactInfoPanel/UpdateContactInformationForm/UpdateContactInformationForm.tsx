@@ -399,20 +399,12 @@ class UpdateContactInformationForm extends React.Component<
                 options={regionResults}
                 placeholder="Select region"
                 required
-                // value={
-                //   regionResults.find(({ value }) =>
-                //     fields.state
-                //       ? value === fields.state
-                //       : value === account.state
-                //   ) || account.state
-                // }
                 value={
-                  fields.state
-                    ? {
-                        label: fields.state,
-                        value: fields.state,
-                      }
-                    : ''
+                  regionResults.find(({ value }) =>
+                    fields.state
+                      ? value === fields.state
+                      : value === account.state
+                  ) ?? ''
                 }
                 textFieldProps={{
                   dataAttrs: {
@@ -573,7 +565,7 @@ class UpdateContactInformationForm extends React.Component<
   updateState = (selectedRegion: Item) => {
     this.composeState([set(L.fields.state, selectedRegion.value)]);
 
-    if (selectedRegion.value === undefined) {
+    if (selectedRegion.value === undefined || selectedRegion.value === '') {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
@@ -581,13 +573,15 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateCountry = (selectedCountry: Item) => {
+    this.composeState([set(L.fields.country, selectedCountry.value)]);
+
     this.setState({
       fields: {
         ...this.state.fields,
         state: undefined,
       },
+      isValid: false,
     });
-    this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
