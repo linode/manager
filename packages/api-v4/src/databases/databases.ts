@@ -13,8 +13,8 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 import {
   CreateDatabasePayload,
-  CreateDatabaseResponse,
   Database,
+  DatabaseInstance,
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseType,
@@ -32,7 +32,7 @@ import {
  *
  */
 export const getDatabases = (params?: any, filters?: any) =>
-  Request<Page<Database>>(
+  Request<Page<DatabaseInstance>>(
     setURL(`${API_ROOT}/databases/instances`),
     setMethod('GET'),
     setParams(params),
@@ -97,8 +97,11 @@ export const getDatabaseVersion = (versionSlug: string) =>
  * Create a new database in the specified region.
  *
  */
-export const createDatabase = (engine: Engine, data: CreateDatabasePayload) =>
-  Request<CreateDatabaseResponse>(
+export const createDatabase = (
+  engine: Engine = 'mysql',
+  data: CreateDatabasePayload
+) =>
+  Request<Database>(
     setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('POST'),
     setData(data, createDatabaseSchema)
@@ -169,10 +172,17 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
  * Return backups information for a database
  *
  */
-export const getDatabaseBackups = (engine: Engine, databaseID: number) =>
+export const getDatabaseBackups = (
+  engine: Engine,
+  databaseID: number,
+  params?: any,
+  filters?: any
+) =>
   Request<Page<DatabaseBackup>>(
     setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
-    setMethod('GET')
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
   );
 
 /**

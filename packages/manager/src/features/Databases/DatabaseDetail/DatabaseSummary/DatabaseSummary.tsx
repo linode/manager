@@ -1,33 +1,32 @@
+import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
-// import useDatabases from 'src/hooks/useDatabases';
-// import DatabaseSummaryLabelPanel from './DatabaseSummaryLabelPanel';
-// import DatabaseSummaryMaintenancePanel from './DatabaseSummaryMaintenancePanel';
-// import DatabaseSummaryPasswordPanel from './DatabaseSummaryPasswordPanel';
+import Divider from 'src/components/core/Divider';
+import Paper from 'src/components/core/Paper';
+import Grid from 'src/components/Grid';
+import AccessControls from './DatabaseSummaryAccessControls';
+import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
+import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface Props {
-  // databaseID: number;
+  database: Database;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const DatabaseSummary: React.FC<Props> = (props) => {
-  // const databases = useDatabases();
-  // const { databaseID } = props;
-  // const thisDatabase = databases.databases.itemsById[databaseID];
+  const { database } = props;
 
   return (
-    <>
-      Database Summary
-      {/* <DatabaseSummaryLabelPanel
-        databaseID={thisDatabase.id}
-        databaseLabel={thisDatabase.label}
-      />
-      <DatabaseSummaryPasswordPanel databaseID={thisDatabase.id} />
-      <DatabaseSummaryMaintenancePanel
-        databaseID={thisDatabase.id}
-        databaseMaintenanceSchedule={thisDatabase.maintenance_schedule}
-      /> */}
-    </>
+    <Paper>
+      <Grid container>
+        <Grid item xs={12} sm={4}>
+          <ClusterConfiguration database={database} />
+        </Grid>
+        <Grid item xs={12} sm={8}>
+          <ConnectionDetails />
+        </Grid>
+      </Grid>
+      <Divider spacingTop={28} spacingBottom={16} />
+      <AccessControls />
+    </Paper>
   );
 };
 

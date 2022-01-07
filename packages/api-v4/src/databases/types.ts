@@ -11,7 +11,7 @@ export interface DatabaseType {
   vcpus: number;
   deprecated: boolean;
   addons: {
-    fallover_node: {
+    failover: {
       price: {
         monthly: number;
         hourly: number;
@@ -20,7 +20,8 @@ export interface DatabaseType {
   };
 }
 
-export type Engine = 'mysql';
+export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
+
 export interface DatabaseVersion {
   id: string;
   label: string;
@@ -39,7 +40,7 @@ export type DatabaseStatus =
 export type DatabaseBackupType = 'snapshot' | 'auto';
 
 export interface DatabaseBackup {
-  id: string;
+  id: number;
   type: DatabaseBackupType;
   label: string;
   created: string;
@@ -55,26 +56,30 @@ export interface SSLFields {
   certificate: string | null;
 }
 
-export interface Database {
+// DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
+export interface DatabaseInstance {
   id: number;
   label: string;
   engine: Engine;
-  type: DatabaseType;
+  type: string;
   region: string;
   version: string;
   status: DatabaseStatus;
+  failover_count: number;
   updated: string;
   created: string;
   instance_uri: string;
 }
 
-type StandbyCount = 1 | 3;
+type FailoverCount = 0 | 2;
+
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
+
 export interface CreateDatabasePayload {
   label: string;
   region: string;
   type: string;
-  standby_count?: StandbyCount;
+  failover_count?: FailoverCount;
   engine?: Engine;
   encrypted?: boolean;
   ssl_connection?: boolean;
@@ -87,17 +92,18 @@ interface ConnectionStrings {
   driver: DriverTypes;
   value: string;
 }
-export interface CreateDatabaseResponse {
+
+// Database is the interface for the shape of data returned by /databases/{engine}/instances
+export interface Database {
   id: number;
   label: string;
   region: string;
   status: DatabaseStatus;
   type: string;
-  standby_count: StandbyCount;
+  failover_count: FailoverCount;
   engine: Engine;
   encrypted: boolean;
-  ipv4_public: string[];
-  port: string;
+  ipv4_public: string;
   ssl_connection: boolean;
   replication_type: ReplicationType;
   allow_list: string[];
