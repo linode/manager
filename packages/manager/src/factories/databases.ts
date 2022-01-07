@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { pickRandom } from 'src/utilities/random';
+import { pickRandom, randomDate } from 'src/utilities/random';
 import { v4 } from 'uuid';
 import {
   Database,
@@ -71,6 +71,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   region: 'us-east',
   status: pickRandom(possibleStatuses),
   type: databaseTypeFactory.build().id,
+  version: '5.8.13',
   failover_count: 2,
   engine: 'mysql',
   encrypted: false,
@@ -92,7 +93,7 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${v4()}`),
   type: pickRandom(['snapshot', 'auto']),
-  created: '2020-10-01T00:00:00',
+  created: Factory.each(() => randomDate().toISOString()),
 });
 
 export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(

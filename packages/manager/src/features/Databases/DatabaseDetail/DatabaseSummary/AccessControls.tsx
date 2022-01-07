@@ -52,12 +52,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  databaseData: Database;
+  database: Database;
 }
 
 export const AccessControls: React.FC<Props> = (props) => {
   const {
-    databaseData: { id, engine, allow_list: allowList },
+    database: { id, engine, allow_list: allowList },
   } = props;
 
   const classes = useStyles();
