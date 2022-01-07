@@ -160,6 +160,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   refreshIPs = () => {
     this.setState({ IPRequestError: undefined });
     return getLinodeIPs(this.props.linode.id)
+      .request()
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 

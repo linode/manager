@@ -1,7 +1,12 @@
 import { IPAllocationSchema } from '@linode/validation/lib/linodes.schema';
 import { API_ROOT } from 'src/constants';
 import { IPAddress } from '../networking/types';
-import Request, { setData, setMethod, setURL } from '../request';
+import Request, {
+  CancellableRequest,
+  setData,
+  setMethod,
+  setURL,
+} from '../request';
 import { IPAllocationRequest, LinodeIPsResponse } from './types';
 
 /**
@@ -12,7 +17,7 @@ import { IPAllocationRequest, LinodeIPsResponse } from './types';
  * @param linodeId { number } The id of the Linode whose addresses you would like to retrieve.
  */
 export const getLinodeIPs = (id: number) =>
-  Request<LinodeIPsResponse>(
+  CancellableRequest<LinodeIPsResponse>(
     setURL(`${API_ROOT}/linode/instances/${id}/ips`),
     setMethod('GET')
   );

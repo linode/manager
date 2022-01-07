@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4/lib/networking';
 import { getLinodeIPs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
+import { GetLinodeIPsInstantiation } from '@linode/api-v4';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -86,6 +87,12 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     linodeSharedIPs,
   } = props;
 
+  // will later be set if we make getLinodeIPsRequest
+  // to figure out the shareable ipv6 ranges
+  // we check against this on unmount to cancel any outstanding requests
+  // and prevent memory leaks
+  let getLinodeIPsRequest: GetLinodeIPsInstantiation;
+
   const resp = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
     {
@@ -115,7 +122,8 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           // this fails for datacenters that don't support sharing IPv6 addresses
           // for now we just default to the given error message rather than preventing
           // this from running
-          const linodeIPs = await getLinodeIPs(thisLinode.id);
+          getLinodeIPsRequest = getLinodeIPs(thisLinode.id);
+          const linodeIPs = await getLinodeIPsRequest.request();
           const ranges = linodeIPs?.ipv6?.global ?? [];
           ranges.forEach((i: IPRange) => {
             const address = `${i.range}/${i.prefix}`;
@@ -136,8 +144,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const [ipChoices, setipChoices] = React.useState({});
 
   React.useEffect(() => {
-    // dont try to set state if the component isnt active
-    let active = true;
     // don't try anything until we've finished the request for the Linodes data
     if (isLoading) {
       return;
@@ -145,14 +151,15 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     isLoading = true;
     async function load() {
       const ipChoices = await getIPChoicesAndLabels(linodeID, linodes);
-      if (active) {
-        setipChoices(ipChoices);
-        isLoading = false;
-      }
+      setipChoices(ipChoices);
+      isLoading = false;
     }
     load();
     return () => {
-      active = false;
+      // unmount and cancel outstanding getLinodeIPsRequest's
+      if (getLinodeIPsRequest !== undefined) {
+        getLinodeIPsRequest.cancel();
+      }
     };
   }, [linodeID, data]);
 
