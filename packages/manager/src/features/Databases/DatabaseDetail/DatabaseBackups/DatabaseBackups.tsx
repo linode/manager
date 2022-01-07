@@ -16,7 +16,6 @@ import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import {
-  getDatabaseEngine,
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
@@ -30,19 +29,18 @@ export const DatabaseBackups: React.FC = () => {
   >();
 
   const id = Number(databaseId);
-  const engine = getDatabaseEngine(id);
 
   const {
     data: database,
     isLoading: isDatabaseLoading,
     error: databaseError,
-  } = useDatabaseQuery(engine, id);
+  } = useDatabaseQuery(id);
 
   const {
     data: backups,
     isLoading: isBackupsLoading,
     error: backupsError,
-  } = useDatabaseBackupsQuery(engine, id);
+  } = useDatabaseBackupsQuery(database?.engine, id);
 
   const { order, orderBy, handleOrderChange } = useOrder({
     orderBy: 'created',

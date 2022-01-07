@@ -28,7 +28,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { pluralize } from 'src/utilities/pluralize';
 import {
-  getDatabaseEngine,
   useDatabaseQuery,
   useDatabaseTypesQuery,
   useDeleteDatabaseMutation,
@@ -38,10 +37,12 @@ const DatabaseEntityDetail: React.FC = () => {
   const { databaseId } = useParams<{ databaseId: string }>();
 
   const id = Number(databaseId);
-  const engine = getDatabaseEngine(id);
 
-  const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(engine, id);
-  const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
+  const { data: database, isLoading, error } = useDatabaseQuery(id);
+  const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(
+    database!.engine,
+    id
+  );
   const { data: types } = useDatabaseTypesQuery();
 
   const type = types?.find((type) => type.id === database?.type);

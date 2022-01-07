@@ -6,7 +6,7 @@ import Grid from 'src/components/Grid';
 import Divider from 'src/components/core/Divider';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import { getDatabaseEngine, useDatabaseQuery } from 'src/queries/databases';
+import { useDatabaseQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
@@ -17,10 +17,7 @@ export const DatabaseSummary: React.FC = () => {
 
   const id = Number(databaseId);
 
-  const { data, isLoading, error } = useDatabaseQuery(
-    getDatabaseEngine(id),
-    id
-  );
+  const { data, isLoading, error } = useDatabaseQuery(id);
 
   if (error) {
     return (

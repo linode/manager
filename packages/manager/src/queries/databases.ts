@@ -29,16 +29,36 @@ import { queryClient } from './base';
 
 export const queryKey = 'databases';
 
-export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>([queryKey, id], () =>
-    getEngineDatabase(engine, id)
+export const useDatabaseQuery = (id: number) => {
+  const storedEngine = getDatabaseEngine(id);
+
+  const { data } = useAllDatabasesQuery(storedEngine === undefined);
+
+  const engineFromFetchAll = data?.find((database) => database.id === id)
+    ?.engine;
+
+  const foundEngine =
+    storedEngine !== undefined || engineFromFetchAll !== undefined;
+
+  return useQuery<Database, APIError[]>(
+    [queryKey, id],
+    () => getEngineDatabase(storedEngine || engineFromFetchAll!, id),
+    { enabled: foundEngine }
   );
+};
 
 export const useDatabasesQuery = (params: any, filter: any) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),
     { keepPreviousData: true }
+  );
+
+export const useAllDatabasesQuery = (enabled: boolean = true) =>
+  useQuery<DatabaseInstance[], APIError[]>(
+    [`${queryKey}-all-list`],
+    getAllDatabases,
+    { enabled }
   );
 
 export const useDatabaseMutation = (engine: Engine, id: number) =>
@@ -92,14 +112,23 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) =>
     },
   });
 
-export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
+export const useDatabaseBackupsQuery = (
+  engine: Engine | undefined,
+  id: number
+) =>
   useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
     [`${queryKey}-backups`, id],
-    () => getDatabaseBackups(engine, id)
+    () => getDatabaseBackups(engine!, id),
+    { enabled: !!engine }
   );
 
 export const getAllDatabaseVersions = () =>
   getAll<DatabaseVersion>((params) => getDatabaseVersions(params))().then(
+    (data) => data.data
+  );
+
+export const getAllDatabases = () =>
+  getAll<DatabaseInstance>((params) => getDatabases(params))().then(
     (data) => data.data
   );
 
@@ -135,10 +164,7 @@ export const useRestoreFromBackupMutation = (
     restoreWithBackup(engine, databaseId, backupId)
   );
 
-// This may or may not be useful when we start implementing our components
-// since most of our queries require the engine to be passed and we will need the
-// engine synchronously.
-export const getDatabaseEngine = (id: number) => {
+const getDatabaseEngine = (id: number) => {
   const queries = queryClient.getQueriesData<ResourcePage<Database>>(
     `${queryKey}-list`
   );
@@ -150,5 +176,5 @@ export const getDatabaseEngine = (id: number) => {
     }
   }
 
-  return 'mysql';
+  return undefined;
 };
