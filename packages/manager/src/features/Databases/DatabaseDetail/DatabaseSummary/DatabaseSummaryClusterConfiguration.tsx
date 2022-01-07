@@ -1,16 +1,14 @@
-import {
-  Database,
-  DatabaseInstance,
-  DatabaseStatus,
-  Engine,
-} from '@linode/api-v4/lib/databases/types';
+import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
-import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
+import {
+  databaseEngineMap,
+  databaseStatusMap,
+} from '../../DatabaseLanding/DatabaseRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -32,21 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'capitalize',
   },
 }));
-
-export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  creating: 'other',
-  running: 'active',
-  failed: 'error',
-  degraded: 'inactive',
-  updating: 'other',
-};
-
-export const databaseEngineMap: Record<Engine, string> = {
-  mysql: 'MySQL',
-  postgresql: 'PostgreSQL',
-  mongodb: 'MongoDB',
-  redis: 'Redis',
-};
 
 interface Props {
   database: Database;
