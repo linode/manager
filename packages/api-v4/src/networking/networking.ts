@@ -102,6 +102,7 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
   );
 
 /**
+ * [Legacy endpoint used until IPv6 sharing is flagged on everywhere]
  * Configure shared IPs. A shared IP may be brought up on a Linode other than
  * the one it lists in its response. This can be used to allow one Linode to
  * begin serving requests should another become unresponsive.
