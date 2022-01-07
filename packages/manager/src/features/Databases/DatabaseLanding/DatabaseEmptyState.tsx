@@ -12,6 +12,9 @@ const useStyles = makeStyles(() => ({
       transform: 'scale(0.8)',
     },
   },
+  entityDescription: {
+    marginBottom: '1rem',
+  },
 }));
 
 const DatabaseEmptyState: React.FC = () => {
@@ -27,14 +30,17 @@ const DatabaseEmptyState: React.FC = () => {
       buttonProps={[
         {
           onClick: () => history.push('/databases/create'),
-          children: 'Create a Database Cluster',
+          children: 'Create Cluster',
         },
       ]}
     >
       <Typography variant="subtitle1">
-        <div>Take control of your data with managed MySQL Databases.</div>
-        <Link to="https://www.linode.com/docs">
-          Get started with Databases.
+        <div className={classes.entityDescription}>
+          Fully managed and highly scalable database clusters. Choose your
+          Linode plan, select a database engine, and deploy in minutes.
+        </div>
+        <Link to="https://www.linode.com/docs/products/database">
+          Need help getting started? Browse database guides.
         </Link>
       </Typography>
     </Placeholder>
