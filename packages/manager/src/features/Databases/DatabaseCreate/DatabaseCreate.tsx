@@ -35,6 +35,7 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { validateIPs } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
 import {
   useDatabaseVersionsQuery,
@@ -42,9 +43,8 @@ import {
   useCreateDatabaseMutation,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -54,6 +54,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'end',
     marginTop: theme.spacing(2),
+  },
+  selectPlanPanel: {
+    padding: 0,
   },
 }));
 
@@ -131,7 +134,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [type, setType] = React.useState<DatabaseType | null>(null);
+  const [type, setType] = React.useState<DatabaseType | undefined>(undefined);
   const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
     hourly: '0',
     monthly: '0',
@@ -247,7 +250,9 @@ const DatabaseCreate: React.FC<{}> = () => {
         <Typography>
           3 Nodes - High Availability (recommended)
           <br />
-          {`$${multiNodePricing.monthly}/month $${multiNodePricing.hourly}/hr`}
+          {`$${multiNodePricing.monthly || 0}/month $${
+            multiNodePricing.hourly || 0
+          }/hr`}
         </Typography>
       ),
     },
@@ -259,7 +264,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     }
 
     const type = dbtypes.find((type) => type.id === values.type);
-    if (typeof type === 'undefined') {
+    if (!type) {
       return;
     }
 
@@ -347,10 +352,12 @@ const DatabaseCreate: React.FC<{}> = () => {
             onSelect={(selected: string) => setFieldValue('type', selected)}
             selectedID={values.type}
             updateFor={[values.type, errors]}
+            header="Choose a Plan"
+            className={classes.selectPlanPanel}
             isCreate
           />
         </Grid>
-        <Divider />
+        <Divider spacingTop={26} />
         <Grid item>
           <Typography variant="h2">Set Number of Nodes</Typography>
           <Typography>
@@ -385,7 +392,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             <FormHelperText>{errors.failover_count}</FormHelperText>
           </FormControl>
         </Grid>
-        <Divider spacingTop={30} />
+        <Divider spacingTop={26} />
         <Grid item style={{ maxWidth: 450 }}>
           <Typography variant="h2">Add Access Controls</Typography>
           <MultipleIPInput

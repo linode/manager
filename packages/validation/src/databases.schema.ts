@@ -1,5 +1,6 @@
 import { number } from 'yup';
 import { array, object, string } from 'yup';
+
 const LABEL_MESSAGE = 'Label must be between 3 and 32 characters';
 
 export const createDatabaseSchema = object({

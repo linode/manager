@@ -124,6 +124,7 @@ interface Props {
   tabbedPanelInnerClass?: string;
   ldClient?: LDClient;
   isCreate?: boolean;
+  className?: string;
 }
 
 const getNanodes = (types: ExtendedTypes) =>
@@ -281,7 +282,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   };
 
   renderPlanContainer = (plans: Array<ExtendedType | ExtendedDatabaseType>) => {
-    const { classes, isCreate } = this.props;
+    const { classes, isCreate, header } = this.props;
 
     return (
       <Grid container>
@@ -299,7 +300,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 <TableRow>
                   <TableCell className={classes.headerCell} />
                   <TableCell className={classes.headerCell} data-qa-plan-header>
-                    Linode Plan
+                    {header}
                   </TableCell>
                   <TableCell
                     className={classes.headerCell}
@@ -476,6 +477,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
+      className,
       copy,
       error,
       header,
@@ -505,7 +507,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
 
     return (
       <TabbedPanel
-        rootClass={`${classes.root} tabbedPanel`}
+        rootClass={`${classes.root} ${className} tabbedPanel`}
         innerClass={this.props.tabbedPanelInnerClass}
         error={error}
         header={header || 'Linode Plan'}
