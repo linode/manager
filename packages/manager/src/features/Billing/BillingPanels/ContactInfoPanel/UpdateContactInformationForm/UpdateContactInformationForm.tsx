@@ -201,10 +201,35 @@ class UpdateContactInformationForm extends React.Component<
     );
 
     const regionResults = countryRegions.map((region) => {
+      if (region.name === 'Virgin Islands') {
+        return {
+          value: region.shortCode,
+          label: 'Virgin Islands, U.S.',
+        };
+      }
+
       return {
         value: region.shortCode,
         label: region.name,
       };
+    });
+
+    const excludedUSRegions = [
+      'Micronesia',
+      'Marshall Islands',
+      'Palau',
+      'Armed Forces Americas',
+      'Armed Forces Europe, Canada, Africa and Middle East',
+      'Armed Forces Pacific',
+    ];
+
+    const filteredRegionResults = regionResults.filter(
+      (region) => !excludedUSRegions.includes(region.label)
+    );
+
+    filteredRegionResults.push({
+      value: 'UM',
+      label: 'United States Minor Outlying Islands',
     });
 
     return (
@@ -394,11 +419,11 @@ class UpdateContactInformationForm extends React.Component<
               errorText={errorMap.state}
               isClearable={false}
               onChange={this.updateState}
-              options={regionResults}
+              options={filteredRegionResults}
               placeholder="Select region"
               required
               value={
-                regionResults.find(({ value }) =>
+                filteredRegionResults.find(({ value }) =>
                   fields.state
                     ? value === fields.state
                     : value === account.state
