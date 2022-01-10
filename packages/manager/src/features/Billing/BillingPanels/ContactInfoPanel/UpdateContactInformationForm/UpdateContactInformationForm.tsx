@@ -15,6 +15,9 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { queryClient } from 'src/queries/base';
 import withNotifications, {
   WithNotifications,
@@ -60,7 +63,10 @@ interface State {
   errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithNotifications;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  WithNotifications &
+  FeatureFlagConsumerProps;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -152,7 +158,7 @@ class UpdateContactInformationForm extends React.Component<
   }
 
   renderForm = (account: Account) => {
-    const { classes } = this.props;
+    const { classes, flags } = this.props;
     const { fields, success } = this.state;
 
     const errorMap = getErrorMap(
@@ -389,7 +395,8 @@ class UpdateContactInformationForm extends React.Component<
             classes,
           ]}
         >
-          {fields.country === 'US' || fields.country == 'CA' ? (
+          {flags.avalara &&
+          (fields.country === 'US' || fields.country == 'CA') ? (
             <EnhancedSelect
               label={`${fields.country === 'US' ? 'State' : 'Province'}`}
               errorText={errorMap.state}
@@ -491,7 +498,7 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   renderFormActions = () => {
-    const { classes } = this.props;
+    const { classes, flags } = this.props;
 
     return (
       <ActionsPanel className={classes.actions}>
@@ -504,7 +511,7 @@ class UpdateContactInformationForm extends React.Component<
         </Button>
         <Button
           buttonType="primary"
-          disabled={!this.state.isValid}
+          disabled={flags.avalara && !this.state.isValid}
           onClick={this.submitForm}
           loading={this.state.submitting}
           data-qa-save-contact-info
@@ -534,7 +541,8 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === '') {
+    const { flags } = this.props;
+    if (flags.avalara && e.target.value === '') {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
@@ -555,7 +563,11 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateState = (selectedRegion: Item) => {
-    if (selectedRegion.value === undefined || selectedRegion.value === '') {
+    const { flags } = this.props;
+    if (
+      flags.avalara &&
+      (selectedRegion.value === undefined || selectedRegion.value === '')
+    ) {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
@@ -564,13 +576,20 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateCountry = (selectedCountry: Item) => {
+    const { flags } = this.props;
+
     this.setState({
       fields: {
         ...this.state.fields,
         state: undefined,
       },
-      isValid: false,
     });
+
+    if (flags.avalara) {
+      this.setState({
+        isValid: false,
+      });
+    }
     this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
@@ -631,6 +650,10 @@ class UpdateContactInformationForm extends React.Component<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled, withNotifications());
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withFeatureFlags,
+  withNotifications()
+);
 
 export default enhanced(UpdateContactInformationForm);
