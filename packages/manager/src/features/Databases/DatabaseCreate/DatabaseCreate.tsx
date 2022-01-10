@@ -35,7 +35,6 @@ import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
-import useFlags from 'src/hooks/useFlags';
 import {
   useDatabaseVersionsQuery,
   useDatabaseTypesQuery,
@@ -119,7 +118,6 @@ interface NodePricing {
 const DatabaseCreate: React.FC<{}> = () => {
   const classes = useStyles();
   const history = useHistory();
-  const flags = useFlags(); // @TODO: Remove when Database goes to GA
 
   const {
     data: regionsData,
@@ -288,10 +286,6 @@ const DatabaseCreate: React.FC<{}> = () => {
       ).toFixed(2),
     });
   }, [dbtypes, values.type]);
-
-  if (!flags.databases) {
-    return null;
-  }
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
