@@ -12,11 +12,6 @@ export interface DatabaseType extends BaseType {
   };
 }
 
-export interface ExtendedDatabaseType extends DatabaseType {
-  heading: string;
-  subHeadings: [string, string];
-}
-
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
 
 export interface DatabaseVersion {

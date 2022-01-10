@@ -5,7 +5,6 @@ import {
   Engine,
   FailoverCount,
   ReplicationType,
-  ExtendedDatabaseType,
 } from '@linode/api-v4/lib/databases/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
@@ -33,7 +32,6 @@ import Grid from 'src/components/Grid';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import { validateIPs } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import useFlags from 'src/hooks/useFlags';
@@ -45,6 +43,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { validateIPs } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -103,6 +102,11 @@ const getEngineOptions = (versions: DatabaseVersion[]) => {
     []
   );
 };
+
+export interface ExtendedDatabaseType extends DatabaseType {
+  heading: string;
+  subHeadings: [string, string];
+}
 
 interface NodePricing {
   hourly: string;
