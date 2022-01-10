@@ -325,6 +325,10 @@ export const handlers = [
       region: payload?.region ?? 'us-east',
     });
     return res(ctx.json(linode));
+    // return res(
+    //   ctx.status(400),
+    //   ctx.json({ errors: [{ reason: 'Invalid label', field: 'data.label' }] })
+    // );
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesAPIResponse.buildList(10);

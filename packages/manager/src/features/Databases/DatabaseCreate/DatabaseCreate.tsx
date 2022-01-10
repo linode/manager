@@ -30,6 +30,7 @@ import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/Re
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import MultipleIPInput from 'src/components/MultipleIPInput';
+import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -43,7 +44,9 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -139,6 +142,7 @@ const DatabaseCreate: React.FC<{}> = () => {
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
   const [type, setType] = React.useState<DatabaseType | undefined>(undefined);
+  const [createError, setCreateError] = React.useState<string>();
   const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
     hourly: '0',
     monthly: '0',
@@ -186,18 +190,19 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
+    setCreateError(undefined);
     setSubmitting(true);
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: validatedIps.map((ip) => ip.address),
     };
-    console.log(createPayload)
 
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.id}`);
     } catch (error) {
-      console.log(error)
+      handleAPIErrors(error, setFieldError, setCreateError);
+      scrollErrorIntoView();
     }
 
     setSubmitting(false);
@@ -209,6 +214,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     isSubmitting,
     handleSubmit,
     setFieldValue,
+    setFieldError,
     setSubmitting,
   } = useFormik({
     initialValues: {
@@ -308,6 +314,7 @@ const DatabaseCreate: React.FC<{}> = () => {
         ]}
       />
       <Paper>
+        {createError ? <Notice error text={createError} /> : null}
         <Grid item>
           <Typography variant="h2">Name Your Cluster</Typography>
           <TextField
@@ -411,7 +418,7 @@ const DatabaseCreate: React.FC<{}> = () => {
         <Button
           type="submit"
           buttonType="primary"
-          disabled={false}
+          disabled={disableCreateButton}
           loading={isSubmitting}
         >
           Create Database
