@@ -10,7 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Marketplace: Utunnel app name update
 - Override Domain type display in search results
 - Backup Auto Enrollment – Remove redundant head
-- Removed copy re: OBJ buckets needing to be empty prior to removal
+- Removed copy re: OBJ buckets needing to be empty prior to canceling Object Storage Subscription
 
 ### Fixed:
 - Customer unable to edit Cloud Firewall Rules
