@@ -20,7 +20,10 @@ const Database: React.FC = () => {
       <DocumentTitleSegment segment="Databases" />
       <Switch>
         <Route component={DatabaseCreate} path="/databases/create" />
-        <Route component={DatabaseDetail} path="/databases/:databaseId" />
+        <Route
+          component={DatabaseDetail}
+          path="/databases/:engine/:databaseId"
+        />
         <Route component={DatabaseLanding} exact strict />
       </Switch>
     </React.Suspense>

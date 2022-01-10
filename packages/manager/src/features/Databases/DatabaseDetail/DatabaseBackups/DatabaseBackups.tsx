@@ -14,15 +14,17 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
+import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
 import {
-  getDatabaseEngine,
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
 
 export const DatabaseBackups: React.FC = () => {
-  const { databaseId } = useParams<{ databaseId: string }>();
+  const { databaseId, engine } = useParams<{
+    databaseId: string;
+    engine: Engine;
+  }>();
 
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<
@@ -30,7 +32,6 @@ export const DatabaseBackups: React.FC = () => {
   >();
 
   const id = Number(databaseId);
-  const engine = getDatabaseEngine(id);
 
   const {
     data: database,
