@@ -27,12 +27,15 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { Country } from './types';
 
-type ClassNames = 'mainFormContainer' | 'actions' | 'removeTopMargin';
+type ClassNames = 'mainFormContainer' | 'actions';
 
 const styles = () =>
   createStyles({
     mainFormContainer: {
       maxWidth: 860,
+      '& .MuiGrid-item:not(:first-child) label': {
+        marginTop: 0,
+      },
     },
     actions: {
       display: 'flex',
@@ -40,11 +43,6 @@ const styles = () =>
       paddingBottom: 0,
       '& button': {
         marginBottom: 0,
-      },
-    },
-    removeTopMargin: {
-      '& label': {
-        marginTop: 0,
       },
     },
   });
@@ -245,7 +243,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           sm={6}
@@ -266,7 +263,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           sm={6}
@@ -308,7 +304,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           updateFor={[
@@ -328,7 +323,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           updateFor={[
@@ -348,7 +342,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           sm={6}
@@ -381,7 +374,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           sm={6}
@@ -395,7 +387,7 @@ class UpdateContactInformationForm extends React.Component<
             classes,
           ]}
         >
-          {flags.avalara &&
+          {flags.regionDropdown &&
           (fields.country === 'US' || fields.country == 'CA') ? (
             <EnhancedSelect
               label={`${fields.country === 'US' ? 'State' : 'Province'}`}
@@ -439,7 +431,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           sm={6}
@@ -454,7 +445,7 @@ class UpdateContactInformationForm extends React.Component<
           />
         </Grid>
 
-        <Grid className={classes.removeTopMargin} item xs={12} sm={6}>
+        <Grid item xs={12} sm={6}>
           <TextField
             label="Postal Code"
             errorText={errorMap.zip}
@@ -480,7 +471,6 @@ class UpdateContactInformationForm extends React.Component<
         </Grid>
 
         <Grid
-          className={classes.removeTopMargin}
           item
           xs={12}
           updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
@@ -511,7 +501,7 @@ class UpdateContactInformationForm extends React.Component<
         </Button>
         <Button
           buttonType="primary"
-          disabled={flags.avalara && !this.state.isValid}
+          disabled={flags.regionDropdown && !this.state.isValid}
           onClick={this.submitForm}
           loading={this.state.submitting}
           data-qa-save-contact-info
@@ -542,7 +532,7 @@ class UpdateContactInformationForm extends React.Component<
 
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { flags } = this.props;
-    if (flags.avalara && e.target.value === '') {
+    if (flags.regionDropdown && e.target.value === '') {
       this.setState({ isValid: false });
     } else {
       this.setState({ isValid: true });
@@ -565,7 +555,7 @@ class UpdateContactInformationForm extends React.Component<
   updateState = (selectedRegion: Item) => {
     const { flags } = this.props;
     if (
-      flags.avalara &&
+      flags.regionDropdown &&
       (selectedRegion.value === undefined || selectedRegion.value === '')
     ) {
       this.setState({ isValid: false });
@@ -585,7 +575,7 @@ class UpdateContactInformationForm extends React.Component<
       },
     });
 
-    if (flags.avalara) {
+    if (flags.regionDropdown) {
       this.setState({
         isValid: false,
       });
