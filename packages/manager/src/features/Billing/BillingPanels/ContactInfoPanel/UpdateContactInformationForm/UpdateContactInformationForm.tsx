@@ -201,7 +201,7 @@ class UpdateContactInformationForm extends React.Component<
     );
 
     const regionResults = countryRegions.map((region) => {
-      if (region.name === 'Virgin Islands') {
+      if (fields.country === 'US' && region.name === 'Virgin Islands') {
         return {
           value: region.shortCode,
           label: 'Virgin Islands, U.S.',
@@ -223,14 +223,20 @@ class UpdateContactInformationForm extends React.Component<
       'Armed Forces Pacific',
     ];
 
-    const filteredRegionResults = regionResults.filter(
-      (region) => !excludedUSRegions.includes(region.label)
-    );
+    let filteredRegionResults;
 
-    filteredRegionResults.push({
-      value: 'UM',
-      label: 'United States Minor Outlying Islands',
-    });
+    if (fields.country === 'US') {
+      filteredRegionResults = regionResults.filter(
+        (region) => !excludedUSRegions.includes(region.label)
+      );
+
+      filteredRegionResults.push({
+        value: 'UM',
+        label: 'United States Minor Outlying Islands',
+      });
+    } else {
+      filteredRegionResults = regionResults;
+    }
 
     return (
       <Grid
