@@ -378,6 +378,7 @@ const DatabaseCreate: React.FC<{}> = () => {
                 +e.target.value === 0 ? 'none' : 'semi-synch'
               );
             }}
+            data-testid="database-nodes"
           >
             <RadioGroup
               style={{ marginBottom: 0 }}
