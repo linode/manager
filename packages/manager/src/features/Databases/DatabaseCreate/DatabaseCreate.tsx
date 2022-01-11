@@ -3,6 +3,7 @@ import {
   DatabaseType,
   DatabaseVersion,
   Engine,
+  FailoverCount,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
@@ -185,10 +186,24 @@ const DatabaseCreate: React.FC<{}> = () => {
 
     if (validatedIps.some((ip) => ip.error)) {
       setFieldValue('allow_list', validatedIps);
+    } else {
+      setFieldValue(
+        'allow_list',
+        validatedIps.map((ip) => {
+          delete ip.error;
+          return {
+            ...ip,
+          };
+        })
+      );
     }
   };
 
   const submitForm = async () => {
+    if (values.allow_list.some((ip) => ip.error)) {
+      return;
+    }
+
     setCreateError(undefined);
     setSubmitting(true);
     const createPayload: CreateDatabasePayload = {
@@ -221,7 +236,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       engine: '' as Engine,
       region: '',
       type: '',
-      failover_count: undefined,
+      failover_count: -1 as FailoverCount,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
@@ -241,7 +256,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     !values.engine ||
     !values.region ||
     !values.type ||
-    !values.failover_count ||
+    values.failover_count < 0 ||
     values.allow_list.some((item) => item.address === '');
 
   const nodeOptions = [
