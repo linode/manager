@@ -237,7 +237,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
             Error retrieving status
           </Typography>
         ) : (
-          <Grid container alignItems="center">
+          <Grid container alignItems="center" wrap="nowrap">
             <StatusIcon status={iconStatus} />
             {displayStatus}
           </Grid>
