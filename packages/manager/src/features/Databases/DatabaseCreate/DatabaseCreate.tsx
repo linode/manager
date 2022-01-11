@@ -53,16 +53,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   btnCtn: {
     display: 'flex',
-    justifyContent: 'end',
+    justifyContent: 'flex-end',
     marginTop: theme.spacing(2),
   },
   selectPlanPanel: {
     padding: 0,
+    margin: 0,
   },
 }));
 
 const engineIcons = {
-  mysql: () => <MySQLIcon width="32" height="24" />,
+  mysql: () => <MySQLIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (versions: DatabaseVersion[]) => {
@@ -220,7 +221,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       engine: '' as Engine,
       region: '',
       type: '',
-      failover_count: 0 as FailoverCount,
+      failover_count: -1 as FailoverCount,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
@@ -239,6 +240,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     !values.engine ||
     !values.region ||
     !values.type ||
+    values.failover_count < 0 ||
     values.allow_list.some((item) => item.address === '');
 
   const nodeOptions = [
@@ -314,12 +316,12 @@ const DatabaseCreate: React.FC<{}> = () => {
           <TextField
             data-qa-label-input
             errorText={errors.label}
-            label="Database Label"
+            label="Cluster Label"
             onChange={(e) => setFieldValue('label', e.target.value)}
             value={values.label}
           />
         </Grid>
-        <Divider spacingTop={38} />
+        <Divider spacingTop={38} spacingBottom={12} />
         <Grid item>
           <Typography variant="h2">Select Engine and Region</Typography>
           <Select
@@ -348,7 +350,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             selectedID={values.region}
           />
         </Grid>
-        <Divider spacingTop={38} />
+        <Divider spacingTop={38} spacingBottom={12} />
         <Grid item>
           <SelectPlanPanel
             data-qa-select-plan
@@ -362,7 +364,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             isCreate
           />
         </Grid>
-        <Divider spacingTop={26} />
+        <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
           <Typography variant="h2">Set Number of Nodes</Typography>
           <Typography>
@@ -398,15 +400,20 @@ const DatabaseCreate: React.FC<{}> = () => {
             <FormHelperText>{errors.failover_count}</FormHelperText>
           </FormControl>
         </Grid>
-        <Divider spacingTop={26} />
+        <Divider spacingTop={26} spacingBottom={12} />
         <Grid item style={{ maxWidth: 450 }}>
           <Typography variant="h2">Add Access Controls</Typography>
-          <MultipleIPInput
-            title="Inbound Sources"
-            placeholder="Add IP Address or range"
-            ips={values.allow_list}
-            onChange={(address) => setFieldValue('allow_list', address)}
-          />
+          <Typography>
+            Explanatory text about adding inbound sources...
+          </Typography>
+          <Grid style={{ marginTop: 24 }}>
+            <MultipleIPInput
+              title="Inbound Sources"
+              placeholder="Add IP Address or range"
+              ips={values.allow_list}
+              onChange={(address) => setFieldValue('allow_list', address)}
+            />
+          </Grid>
         </Grid>
       </Paper>
       <Grid className={classes.btnCtn}>
@@ -416,7 +423,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           disabled={disableCreateButton}
           loading={isSubmitting}
         >
-          Create Database
+          Create Database Cluster
         </Button>
       </Grid>
     </form>
