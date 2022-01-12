@@ -140,7 +140,10 @@ export const AccessControls: React.FC<Props> = (props) => {
     if (accessControlsList.length === 0) {
       return (
         <Notice warning className={classes.restrictWarning}>
-          <Typography className={classes.restrictWarningText}>
+          <Typography
+            className={classes.restrictWarningText}
+            data-testid="notice-no-access-controls"
+          >
             Warning: your cluster is open to all incoming connections. Secure
             this database cluster by restricting access.{' '}
             <ExternalLink to="https://www.linode.com/docs">
@@ -218,8 +221,8 @@ export const AccessControls: React.FC<Props> = (props) => {
         <Typography variant="subtitle1">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable
-          access by adding the same IP address or IP range by selecting Add
-          Access Control.
+          access by clicking Add Access Control and adding the same IP address
+          or IP range.
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer
