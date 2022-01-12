@@ -18,7 +18,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'aaPanel',
     description: `Feature-rich alternative control panel for users who need critical control panel functionality but don’t need to pay for more niche premium features. aaPanel is open source and consistently maintained with weekly updates.`,
-    summary: 'Popular open source free control panel with robust features and a mobile app.',
+    summary:
+      'Popular open source free control panel with robust features and a mobile app.',
     related_guides: [
       {
         title: 'Deploying aaPanel through the Linode Marketplace',
@@ -40,7 +41,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Ant Media Server through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/antmediaserver-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/antmediaserver-marketplace-app/',
       },
     ],
     related_info: [
@@ -58,8 +60,10 @@ export const oneClickApps: OCA[] = [
     summary: `Multiplayer action-survival game. You have only one objective: survive.`,
     related_guides: [
       {
-        title: 'Deploying an ARK Survival Evolved Server through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/ark-survival-evolved-marketplace-app/',
+        title:
+          'Deploying an ARK Survival Evolved Server through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/guides/ark-survival-evolved-marketplace-app/',
       },
     ],
     related_info: [
@@ -91,7 +95,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'BeEF',
     description: `Test the security posture of a client or application using client-side vectors, all powered by a simple API. This project is developed solely for lawful research and penetration testing.`,
-    summary: 'Browser Exploitation Framework (BeEF) is an open source web browser penetration tool.',
+    summary:
+      'Browser Exploitation Framework (BeEF) is an open source web browser penetration tool.',
     related_guides: [
       {
         title: 'Deploying BeEF through the Linode Marketplace',
@@ -127,7 +132,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Chevereto',
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
-    summary: 'Self-host your own open source image library to easily upload, collaborate, and share images on your terms.',
+    summary:
+      'Self-host your own open source image library to easily upload, collaborate, and share images on your terms.',
     related_guides: [
       {
         title: 'Deploying Chevereto through the Linode Marketplace',
@@ -145,7 +151,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Cloudron',
     description: `Turnkey solution for running apps like WordPress, Rocket.Chat, NextCloud, GitLab, and OpenVPN.`,
-    summary: 'End-to-end deployment and automatic updates for a range of essential applications.',
+    summary:
+      'End-to-end deployment and automatic updates for a range of essential applications.',
     related_guides: [
       {
         title: 'Deploying Cloudron through the Linode Marketplace',
@@ -163,11 +170,13 @@ export const oneClickApps: OCA[] = [
   {
     name: 'ClusterControl',
     description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
-    summary: 'All-in-one database deployment, management, and monitoring system.',
+    summary:
+      'All-in-one database deployment, management, and monitoring system.',
     related_guides: [
       {
         title: 'Deploying ClusterControl through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/clustercontrol-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/clustercontrol-marketplace-app/',
       },
     ],
     related_info: [
@@ -181,11 +190,12 @@ export const oneClickApps: OCA[] = [
   {
     name: 'cPanel',
     description: `The cPanel &amp; WHM&reg; Marketplace App streamlines publishing and managing a website on your Linode. cPanel 	&amp; WHM is a Linux&reg; based web hosting control panel and platform that helps you create and manage websites, servers, databases and more with a suite of hosting automation and optimization tools.`,
-    summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
+    summary:
+      'The leading hosting automation platform that has simplified site and server management for 20 years.',
     related_guides: [
       {
-          title: 'Deploying cPanel through the Linode Marketplace',
-          href: 'https://www.linode.com/docs/guides/cpanel-marketplace-app/',
+        title: 'Deploying cPanel through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/cpanel-marketplace-app/',
       },
     ],
     related_info: [
@@ -202,8 +212,10 @@ export const oneClickApps: OCA[] = [
     summary: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
     related_guides: [
       {
-        title: 'Deploying Counter-Strike Global Offensive through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/counter-strike-go-marketplace-app/',
+        title:
+          'Deploying Counter-Strike Global Offensive through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/guides/counter-strike-go-marketplace-app/',
       },
     ],
     related_info: [
@@ -235,7 +247,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Discourse',
     description: `Launch a sleek forum with robust integrations to popular tools like Slack and WordPress to start more conversations.`,
-    summary: 'Open source community and discussion forum for customers, teams, fans, and more',
+    summary:
+      'Open source community and discussion forum for customers, teams, fans, and more',
     related_guides: [
       {
         title: 'Deploying Discourse through the Linode Marketplace',
@@ -259,7 +272,7 @@ export const oneClickApps: OCA[] = [
         title: 'Deploying Django through the Linode Marketplace',
         href: 'https://www.linode.com/docs/guides/django-marketplace-app/',
       },
-    ],    
+    ],
     related_info: [
       {
         title: 'https://www.djangoproject.com/',
@@ -362,7 +375,8 @@ export const oneClickApps: OCA[] = [
     name: 'GitLab',
     description: `GitLab is a complete solution for all aspects of your software development. At its core, GitLab serves as your centralized Git repository. GitLab also features built-in tools that represent every task in your development workflow, from planning to testing to releasing.
       Self-hosting your software development with GitLab offers total control of your codebase. At the same time, its familiar interface will ease collaboration for you and your team. GitLab is the most popular self-hosted Git repository, so you'll benefit from a robust set of integrated tools and an active community.`,
-    summary: 'More than a self-hosted Git repository: use GitLab to manage all the stages of your DevOps life cycle.',
+    summary:
+      'More than a self-hosted Git repository: use GitLab to manage all the stages of your DevOps life cycle.',
     related_guides: [
       {
         title: 'Deploying GitLab through the Linode Marketplace',
@@ -452,7 +466,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'JetBackup',
     description: `Powerful and customizable backups for several websites and data all in the same interface. JetBackup integrates with any control panel via API, and has native support for cPanel and DirectAdmin. Easily backup your data to storage you already use, including Linode’s S3-compatible Object Storage.`,
-    summary: 'Advanced customizable backups to integrate with your preferred control panel.',
+    summary:
+      'Advanced customizable backups to integrate with your preferred control panel.',
     related_guides: [
       {
         title: 'Deploying JetBackup through the Linode Marketplace',
@@ -535,7 +550,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying LiteSpeed cPanel through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/litespeed-cpanel-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/litespeed-cpanel-marketplace-app/',
       },
     ],
     related_info: [
@@ -549,7 +565,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'MagicSpam',
     description: `MagicSpam stops inbound spam from entering your server right at the SMTP layer to lower bandwidth and overhead, as well as secure mailboxes on your server from being compromised and used to send outbound spam. MagicSpam installs directly onto the email server without any need to change A/MX records to protect unlimited users and domains, and integrates natively with your control panel interface.`,
-    summary: 'Powerful anti-spam and email security solution for control panels (including cPanel and Plesk).',
+    summary:
+      'Powerful anti-spam and email security solution for control panels (including cPanel and Plesk).',
     related_guides: [
       {
         title: 'Deploying Magicspam through the Linode Marketplace',
@@ -619,7 +636,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Mist.io',
     description: `Streamline infrastructure management in one UI or by using the Mist.io RESTful API.`,
-    summary: 'Open source, unified interface and management platform for multi-cloud deployments',
+    summary:
+      'Open source, unified interface and management platform for multi-cloud deployments',
     related_guides: [
       {
         title: 'Deploying Mist.io through the Linode Marketplace',
@@ -655,7 +673,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Moodle',
     description: `Robust open-source learning platform enabling online education for more than 200 million users around the world. Create personalized learning environments within a secure and integrated system built for all education levels with an intuitive interface, drag-and-drop features, and accessible documentation.`,
-    summary: 'World’s most popular learning management system built and maintained by an active developer community.',
+    summary:
+      'World’s most popular learning management system built and maintained by an active developer community.',
     related_guides: [
       {
         title: 'Deploying Moodle through the Linode Marketplace',
@@ -707,7 +726,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'NirvaShare',
     description: `Securely share and collaborate Linode S3 object storage files/folders with your internal or external users such as customers, partners, vendors, etc with fine access control and a simple interface. Nirvashare easily integrates with many external identity providers such as Active Directory, GSuite, AWS SSO, KeyClock, etc.`,
-    summary: 'Secure file sharing for better collaboration with employees, partners, vendors, and more.',
+    summary:
+      'Secure file sharing for better collaboration with employees, partners, vendors, and more.',
     related_guides: [
       {
         title: 'Deploying NirvaShare through the Linode Marketplace',
@@ -729,7 +749,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying OpenLiteSpeed Django through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/openlitespeed-django-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/openlitespeed-django-marketplace-app/',
       },
     ],
     related_info: [
@@ -747,7 +768,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying OpenLiteSpeed Node.js through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/openlitespeed-nodejs-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/openlitespeed-nodejs-marketplace-app/',
       },
     ],
     related_info: [
@@ -765,7 +787,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying OpenLiteSpeed Rails through the Linode Marketplace ',
-        href: 'https://www.linode.com/docs/guides/openlitespeed-rails-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/openlitespeed-rails-marketplace-app/',
       },
     ],
     related_info: [
@@ -782,8 +805,10 @@ export const oneClickApps: OCA[] = [
     summary: 'Blazing fast, open source alternative to LiteSpeed Web Server',
     related_guides: [
       {
-        title: 'Deploying OpenLiteSpeed Wordpress through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/openlitespeed-wordpress-marketplace-app/',
+        title:
+          'Deploying OpenLiteSpeed Wordpress through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/guides/openlitespeed-wordpress-marketplace-app/',
       },
     ],
     related_info: [
@@ -815,7 +840,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Owncast',
     description: `A live streaming and chat server for use with existing popular broadcasting software.`,
-    summary: 'The standalone “Twitch in a Box” open source streaming and chat solution.',
+    summary:
+      'The standalone “Twitch in a Box” open source streaming and chat solution.',
     related_guides: [
       {
         title: 'Deploying Owncast through the Linode Marketplace',
@@ -851,17 +877,21 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Percona (PMM)',
     description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
-    summary: 'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
+    summary:
+      'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
     related_guides: [
       {
-        title: 'Deploying Percona Monitoring and Management (PMM) through the Linode Marketplace',
+        title:
+          'Deploying Percona Monitoring and Management (PMM) through the Linode Marketplace',
         href: 'https://www.linode.com/docs/guides/percona-marketplace-app/',
       },
     ],
     related_info: [
       {
-        title: 'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
-        href: 'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
+        title:
+          'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
+        href:
+          'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
       },
     ],
     logo_url: 'assets/percona_color.svg',
@@ -887,13 +917,14 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
-    summary: 'A secure, scalable, and versatile website and WordPress management platform.',
-      related_guides: [
-        {
-          title: 'Deploying Plesk through the Linode Marketplace',
-          href: 'https://www.linode.com/docs/guides/plesk-marketplace-app/',
-        },
-      ],
+    summary:
+      'A secure, scalable, and versatile website and WordPress management platform.',
+    related_guides: [
+      {
+        title: 'Deploying Plesk through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/plesk-marketplace-app/',
+      },
+    ],
     related_info: [
       {
         title: 'https://www.plesk.com/',
@@ -905,7 +936,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Plex',
     description: `Organize, stream, and share your media library with friends, in addition to free live TV in 220+ countries.`,
-    summary: 'Media server and streaming service to stay entertained across devices',
+    summary:
+      'Media server and streaming service to stay entertained across devices',
     related_guides: [
       {
         title: 'Deploying Plex Media Server through the Linode Marketplace',
@@ -945,8 +977,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Pritunl through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/guides/pritunl-marketplace-app/',
+        href: 'https://www.linode.com/docs/guides/pritunl-marketplace-app/',
       },
     ],
     related_info: [
@@ -960,14 +991,15 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Prometheus',
     description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
-    summary: 'Gain metrics and receive alerts with this open-source monitoring tool.',
+    summary:
+      'Gain metrics and receive alerts with this open-source monitoring tool.',
     related_guides: [
       {
         title: 'Deploying Prometheus through the Linode Marketplace',
         href: 'https://www.linode.com/docs/guides/prometheus-marketplace-app/',
       },
     ],
-      related_info: [
+    related_info: [
       {
         title: 'https://prometheus.io/',
         href: 'https://prometheus.io/',
@@ -996,7 +1028,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Redis',
     description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
-    summary: 'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+    summary:
+      'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
     related_guides: [
       {
         title: 'Deploying Redis through the Linode Marketplace',
@@ -1036,7 +1069,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Ruby on Rails through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/ruby-on-rails-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/guides/ruby-on-rails-marketplace-app/',
       },
     ],
     related_info: [
@@ -1054,8 +1088,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Rust through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/guides/rust-marketplace-app/',
+        href: 'https://www.linode.com/docs/guides/rust-marketplace-app/',
       },
     ],
     related_info: [
@@ -1081,12 +1114,12 @@ export const oneClickApps: OCA[] = [
   {
     name: 'ServerWand',
     description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
-    summary: 'Magical control panel for hosting websites and managing your servers.',
+    summary:
+      'Magical control panel for hosting websites and managing your servers.',
     related_guides: [
       {
         title: 'Deploying ServerWand through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/guides/serverwand-marketplace-app/',
+        href: 'https://www.linode.com/docs/guides/serverwand-marketplace-app/',
       },
     ],
     related_info: [
@@ -1099,8 +1132,10 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Shadowsocks',
-    description: 'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
-    summary: 'A secure socks5 proxy, designed to protect your Internet traffic.',
+    description:
+      'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
+    summary:
+      'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_guides: [
       {
         title: 'Deploying Splunk through the Linode Marketplace',
@@ -1118,7 +1153,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Splunk',
     description: `Popular data-to-everything platform with advanced security, observability, and automation features for machine learning and AI.`,
-    summary: 'All-in-one database deployment, management, and monitoring system.',
+    summary:
+      'All-in-one database deployment, management, and monitoring system.',
     related_guides: [
       {
         title: 'Deploying Splunk through the Linode Marketplace',
@@ -1158,8 +1194,10 @@ export const oneClickApps: OCA[] = [
     summary: `Choose from 9 unique classes in this highly original FPS. Compete against players around the world in a variety of modes such as capture the flag, king of the hill, and more.`,
     related_guides: [
       {
-        title: 'Deploying a Team Fortress 2 Server through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/team-fortress-2-marketplace-app/',
+        title:
+          'Deploying a Team Fortress 2 Server through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/guides/team-fortress-2-marketplace-app/',
       },
     ],
     related_info: [
@@ -1173,7 +1211,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'UTunnel VPN',
     description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
-    summary: 'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols',
+    summary:
+      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols',
     related_guides: [
       {
         title: 'Deploying UTunnel VPN through the Linode Marketplace',
@@ -1195,7 +1234,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Valheim',
     description: `In the relatively peaceful place called Valheim, traveling farther comes with a price: more enemies and greater challenges to stay alive. Experience a punishing combat system, intense boss battles, and a complex building system to construct Viking warships and more.`,
-    summary: 'Explore, build, and conquer in the popular open-world Viking survival game.',
+    summary:
+      'Explore, build, and conquer in the popular open-world Viking survival game.',
     related_guides: [
       {
         title: 'Deploying Valheim through the Linode Marketplace',
@@ -1303,7 +1343,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Webuzo',
     description: `Lightweight control panel with a suite of features to streamline app management.`,
-    summary: 'LAMP stack and single user control panel to simplify app deployment in the cloud',
+    summary:
+      'LAMP stack and single user control panel to simplify app deployment in the cloud.',
     related_guides: [
       {
         title: 'Deploying Webuzo through the Linode Marketplace',
@@ -1358,11 +1399,12 @@ export const oneClickApps: OCA[] = [
   {
     name: 'WordPress',
     description: `With 60 million users around the globe, WordPress is the industry standard for custom websites such as blogs, news sites, personal websites, and anything in-between. With a focus on best in class usability and flexibility, you can have a customized website up and running in minutes.`,
-    summary: 'Flexible, open source content management system (CMS) for content-focused websites of any kind.',
+    summary:
+      'Flexible, open source content management system (CMS) for content-focused websites of any kind.',
     related_guides: [
       {
         title: 'Deploying WordPress through the Linode Marketplace',
-        href:'https://www.linode.com/docs/guides/wordpress-marketplace-app/',
+        href: 'https://www.linode.com/docs/guides/wordpress-marketplace-app/',
       },
     ],
     related_info: [
