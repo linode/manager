@@ -85,6 +85,15 @@ const L = {
   },
 };
 
+const excludedUSRegions = [
+  'Micronesia',
+  'Marshall Islands',
+  'Palau',
+  'Armed Forces Americas',
+  'Armed Forces Europe, Canada, Africa and Middle East',
+  'Armed Forces Pacific',
+];
+
 class UpdateContactInformationForm extends React.Component<
   CombinedProps,
   State
@@ -213,15 +222,6 @@ class UpdateContactInformationForm extends React.Component<
         label: region.name,
       };
     });
-
-    const excludedUSRegions = [
-      'Micronesia',
-      'Marshall Islands',
-      'Palau',
-      'Armed Forces Americas',
-      'Armed Forces Europe, Canada, Africa and Middle East',
-      'Armed Forces Pacific',
-    ];
 
     let filteredRegionResults;
 
@@ -390,7 +390,7 @@ class UpdateContactInformationForm extends React.Component<
             onChange={this.updateCountry}
             options={countryResults}
             placeholder="Select a Country"
-            required
+            required={flags.regionDropdown}
             value={countryResults.find(({ value }) =>
               fields.country
                 ? value === fields.country
@@ -427,7 +427,7 @@ class UpdateContactInformationForm extends React.Component<
               onChange={this.updateState}
               options={filteredRegionResults}
               placeholder="Select region"
-              required
+              required={flags.regionDropdown}
               value={
                 filteredRegionResults.find(({ value }) =>
                   fields.state
@@ -452,7 +452,7 @@ class UpdateContactInformationForm extends React.Component<
                 })
               }
               placeholder="Enter region"
-              required
+              required={flags.regionDropdown}
               value={fields.state || ''}
               dataAttrs={{
                 'data-qa-contact-province': true,
