@@ -106,7 +106,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
       actions={
         <Actions
           onClose={props.closeDialog}
-          isCancelling={isClosingAccount}
+          isCanceling={isClosingAccount}
           onSubmit={handleCancelAccount}
           disabled={!canSubmit}
         />
@@ -148,7 +148,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
 interface ActionsProps {
   onClose: () => void;
   onSubmit: () => void;
-  isCancelling: boolean;
+  isCanceling: boolean;
   disabled: boolean;
 }
 
@@ -162,7 +162,7 @@ const Actions: React.FC<ActionsProps> = (props) => {
         buttonType="primary"
         onClick={props.onSubmit}
         disabled={props.disabled}
-        loading={props.isCancelling}
+        loading={props.isCanceling}
       >
         Close Account
       </Button>
