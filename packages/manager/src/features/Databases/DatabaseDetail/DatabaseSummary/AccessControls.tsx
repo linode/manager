@@ -32,12 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   table: {
     width: '50%',
+    border: `solid 1px ${theme.cmrBorderColors.divider}`,
+    '&:last-child': {
+      borderBottom: 'none',
+    },
   },
   cell: {
-    border: `solid 1px ${theme.cmrBorderColors.divider}`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    borderBottom: `solid 1px ${theme.cmrBorderColors.divider}`,
   },
   removeButton: {
     float: 'right',
@@ -176,7 +180,15 @@ export const AccessControls: React.FC<Props> = (props) => {
           </div>
           {!unrestrictedClusterAccess ? (
             <div className={classes.sectionText}>
-              <Typography>Descriptive text...</Typography>
+              <Typography>
+                Add the IP addresses or IP range(s) for other instances or users
+                that should have the authorization to view this cluster&apos;s
+                database. By default, all public and private connections are
+                denied.{' '}
+                <ExternalLink to="https://www.linode.com/docs">
+                  Learn more.
+                </ExternalLink>
+              </Typography>
             </div>
           ) : null}
         </div>
@@ -197,15 +209,17 @@ export const AccessControls: React.FC<Props> = (props) => {
             </Button>
 
             <Button buttonType="primary" onClick={handleRemove}>
-              Remove
+              Remove IP Address
             </Button>
           </ActionsPanel>
         )}
       >
         {error ? <Notice error text={error} /> : null}
         <Typography variant="subtitle1">
-          Are you sure you want to remove this IP address from the list of
-          access controls?
+          IP {accessControlToBeRemoved} will lose all access to the data on this
+          database cluster. This action cannot be undone, but you can re-enable
+          access by adding the same IP address or IP range by selecting Add
+          Access Control.
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer

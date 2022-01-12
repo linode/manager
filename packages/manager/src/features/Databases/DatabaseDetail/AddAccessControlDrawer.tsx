@@ -128,8 +128,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         {error ? <Notice error text={error} /> : null}
         <Typography variant="body1" className={classes.instructions}>
           To restrict connections to trusted sources, add at least one inbound
-          source below. When you do, all other public and private connections
-          will be denied.{' '}
+          source below.{' '}
           <ExternalLink to="https://www.linode.com/docs">
             Learn more about securing your cluster.
           </ExternalLink>
@@ -161,7 +160,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
               style={{ marginBottom: 8 }}
               loading={isSubmitting}
             >
-              Allow Inbound Sources
+              Add Inbound Sources
             </Button>
           </ActionsPanel>
         </form>
