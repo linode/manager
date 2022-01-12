@@ -272,7 +272,6 @@ export interface BaseType {
   id: string;
   label: string;
   disk: number;
-  price: PriceObject;
   memory: number;
   transfer: number;
   vcpus: number;
@@ -282,6 +281,7 @@ export interface LinodeType extends BaseType {
   successor: string | null;
   network_out: number;
   gpus: number;
+  price: PriceObject;
   addons: {
     backups: { price: PriceObject };
   };

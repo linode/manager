@@ -1,13 +1,19 @@
-import { BaseType, PriceObject } from '../linodes/types';
+import { BaseType } from '../linodes/types';
 
 export type DatabaseTypeClass = 'standard' | 'dedicated';
+
+interface DatabasePriceObject {
+  monthly: number;
+  hourly: number;
+}
 
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   deprecated: boolean;
+  price: DatabasePriceObject;
   addons: {
     failover: {
-      price: PriceObject;
+      price: DatabasePriceObject;
     };
   };
 }

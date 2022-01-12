@@ -140,7 +140,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [type, setType] = React.useState<DatabaseType | undefined>(undefined);
+  const [type, setType] = React.useState<DatabaseType>();
   const [createError, setCreateError] = React.useState<string>();
   const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
     hourly: '0',
@@ -216,7 +216,6 @@ const DatabaseCreate: React.FC<{}> = () => {
       history.push(`/databases/${response.id}`);
     } catch (error) {
       handleAPIErrors(error, setFieldError, setCreateError);
-      scrollErrorIntoView();
     }
 
     setSubmitting(false);
@@ -250,6 +249,12 @@ const DatabaseCreate: React.FC<{}> = () => {
     validate: handleIPValidation,
     onSubmit: submitForm,
   });
+
+  React.useEffect(() => {
+    if (errors) {
+      scrollErrorIntoView();
+    }
+  }, [errors]);
 
   const disableCreateButton =
     !values.label ||
