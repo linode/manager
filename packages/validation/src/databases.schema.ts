@@ -1,5 +1,5 @@
 import { array, object, string } from 'yup';
-import { IP_ERROR_MESSAGE, validateIP } from '../lib/firewalls.schema';
+import { IP_ERROR_MESSAGE, validateIP } from './firewalls.schema';
 
 const LABEL_MESSAGE = 'Label must be between 3 and 32 characters';
 
