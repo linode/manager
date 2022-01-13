@@ -308,7 +308,12 @@ const DatabaseCreate: React.FC<{}> = () => {
         type.price.monthly + type.addons.failover.price.monthly
       ).toFixed(2),
     });
-  }, [dbtypes, values.type]);
+    setFieldValue('failover_count', type.memory === 1024 ? 0 : 2);
+    setFieldValue(
+      'replication_type',
+      values.failover_count === 0 ? 'none' : 'semi-synch'
+    );
+  }, [dbtypes, setFieldValue, values.failover_count, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
@@ -377,7 +382,9 @@ const DatabaseCreate: React.FC<{}> = () => {
             data-qa-select-plan
             error={errors.type}
             types={displayTypes}
-            onSelect={(selected: string) => setFieldValue('type', selected)}
+            onSelect={(selected: string) => {
+              setFieldValue('type', selected);
+            }}
             selectedID={values.type}
             updateFor={[values.type, errors]}
             header="Choose a Plan"

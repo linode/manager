@@ -136,8 +136,22 @@ const databases = [
   }),
 
   rest.get('*/databases/types', (req, res, ctx) => {
-    const standardTypes = [];
-    const dedicatedTypes = [];
+    const standardTypes = [
+      databaseTypeFactory.build({
+        id: 'g6-standard-0',
+        label: `Linode 1 GB`,
+        class: 'standard',
+        memory: 1024,
+      }),
+    ];
+    const dedicatedTypes = [
+      databaseTypeFactory.build({
+        id: 'g6-dedicated-0',
+        label: `Dedicated 1 GB`,
+        class: 'dedicated',
+        memory: 1024,
+      }),
+    ];
     for (let i = 1; i < 7; i++) {
       standardTypes.push(
         databaseTypeFactory.build({
