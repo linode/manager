@@ -9,6 +9,7 @@ import ComplianceBanner from './ComplianceBanner';
 import ComplianceUpdateModal from './ComplianceUpdateModal';
 import { EmailBounceNotificationSection } from './EmailBounce';
 import RegionStatusBanner from './RegionStatusBanner';
+import TaxCollectionBanner from './TaxCollectionBanner';
 
 const GlobalNotifications: React.FC<{}> = () => {
   const flags = useFlags();
@@ -38,6 +39,7 @@ const GlobalNotifications: React.FC<{}> = () => {
       {!isEmpty(suppliedMaintenances) && !hasDismissedMaintenances ? (
         <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
       ) : null}
+      {flags.regionDropdown ? <TaxCollectionBanner /> : null}
     </>
   );
 };

@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
+import {
+  matchPath,
+  RouteComponentProps,
+  useHistory,
+  withRouter,
+} from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -58,12 +63,22 @@ const AccountLanding: React.FC<Props> = (props) => {
     },
   ].filter(Boolean) as Tab[];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    // Redirect to the landing page if the path does not exist
+    if (tabChoice < 0) {
+      history.push(`${props.match.url}/billing`);
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
   };
 
   let idx = 0;
@@ -92,13 +107,7 @@ const AccountLanding: React.FC<Props> = (props) => {
       <TaxBanner location={location} marginBottom={24} />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
+      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
@@ -127,4 +136,4 @@ const AccountLanding: React.FC<Props> = (props) => {
   );
 };
 
-export default AccountLanding;
+export default withRouter(AccountLanding);
