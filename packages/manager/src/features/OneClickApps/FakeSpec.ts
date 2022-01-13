@@ -37,8 +37,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Akaunting',
     description: `Akaunting is a universal accounting software that helps small businesses run more efficiently. Track expenses, generate reports, manage your books, and get the other essential features to run your business from a single dashboard.`,
-    summary:
-      'Free and open source accounting software you can use in your browser.',
+    summary: 'Free and open source accounting software you can use in your browser.',
     related_guides: [
       {
         title: 'Deploying Akaunting through the Linode Marketplace',
@@ -1290,14 +1289,11 @@ export const oneClickApps: OCA[] = [
   {
     name: 'VictoriaMetrics Single',
     description: `Victoriametrics is designed to collect, store, and process real-time metrics.`,
-    summary:
-      'Free and open source time series database (TSDB) and monitoring solution.',
+    summary: 'Free and open source time series database (TSDB) and monitoring solution.',
     related_guides: [
       {
-        title:
-          'Deploying VictoriaMetrics Single through the Linode Marketplace',
-        href:
-          'https://www.linode.com/docs/guides/victoriametrics-single-marketplace-app/',
+        title: 'Deploying VictoriaMetrics Single through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/victoriametrics-single-marketplace-app/',
       },
     ],
     related_info: [
