@@ -264,30 +264,37 @@ const DatabaseCreate: React.FC<{}> = () => {
     values.failover_count < 0 ||
     values.allow_list.some((item) => item.address === '');
 
-  const nodeOptions = [
-    {
-      value: 0,
-      label: (
-        <Typography>
-          1 Node
-          <br />
-          {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
-        </Typography>
-      ),
-    },
-    {
-      value: 2,
-      label: (
-        <Typography>
-          3 Nodes - High Availability (recommended)
-          <br />
-          {`$${multiNodePricing.monthly || 0}/month $${
-            multiNodePricing.hourly || 0
-          }/hr`}
-        </Typography>
-      ),
-    },
-  ];
+  const getNodeOptions = React.useCallback(
+    () => [
+      {
+        value: 0,
+        label: (
+          <Typography>
+            1 Node
+            <br />
+            {`$${type?.price.monthly || 0}/month $${
+              type?.price.hourly || 0
+            }/hr`}
+          </Typography>
+        ),
+        disabled: type?.memory === 1024,
+      },
+      {
+        value: 2,
+        label: (
+          <Typography>
+            3 Nodes - High Availability (recommended)
+            <br />
+            {`$${multiNodePricing.monthly || 0}/month $${
+              multiNodePricing.hourly || 0
+            }/hr`}
+          </Typography>
+        ),
+        disabled: type?.memory === 1024,
+      },
+    ],
+    [multiNodePricing, type]
+  );
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
@@ -299,6 +306,8 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
+    const is1GbPlan = type.memory === 1024;
+
     setType(type);
     setMultiNodePricing({
       hourly: Number(
@@ -308,12 +317,9 @@ const DatabaseCreate: React.FC<{}> = () => {
         type.price.monthly + type.addons.failover.price.monthly
       ).toFixed(2),
     });
-    setFieldValue('failover_count', type.memory === 1024 ? 0 : 2);
-    setFieldValue(
-      'replication_type',
-      values.failover_count === 0 ? 'none' : 'semi-synch'
-    );
-  }, [dbtypes, setFieldValue, values.failover_count, values.type]);
+    setFieldValue('failover_count', is1GbPlan ? 0 : 2);
+    setFieldValue('replication_type', is1GbPlan ? 'none' : 'semi-synch');
+  }, [dbtypes, setFieldValue, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
@@ -414,11 +420,12 @@ const DatabaseCreate: React.FC<{}> = () => {
               style={{ marginBottom: 0 }}
               value={values.failover_count}
             >
-              {nodeOptions.map((nodeOption) => (
+              {getNodeOptions().map((nodeOption) => (
                 <FormControlLabel
                   key={nodeOption.value}
                   value={nodeOption.value}
                   label={nodeOption.label}
+                  disabled={nodeOption.disabled}
                   control={<Radio />}
                   data-qa-radio={nodeOption.label}
                   className={classes.formControlLabel}
