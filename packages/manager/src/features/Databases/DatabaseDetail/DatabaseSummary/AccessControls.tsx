@@ -128,13 +128,7 @@ export const AccessControls: React.FC<Props> = (props) => {
       .catch(handleError);
   };
 
-  const action = {
-    title: 'Remove',
-    className: classes.removeButton,
-    onClick: (accessControl: string) => handleClickRemove(accessControl),
-  };
-
-  const unrestrictedClusterAccess = allowList.length === 0;
+  const allClusterAccessDenied = allowList.length === 0;
 
   const ipTable = (accessControlsList: string[]) => {
     if (accessControlsList.length === 0) {
@@ -162,9 +156,9 @@ export const AccessControls: React.FC<Props> = (props) => {
               <TableCell key={idx} className={classes.cell}>
                 {accessControl}
                 <InlineMenuAction
-                  actionText={action.title}
-                  className={action.className}
-                  onClick={() => action.onClick(accessControl)}
+                  actionText="Remove"
+                  className={classes.removeButton}
+                  onClick={() => handleClickRemove(accessControl)}
                 />
               </TableCell>
             </TableRow>
@@ -181,7 +175,7 @@ export const AccessControls: React.FC<Props> = (props) => {
           <div className={classes.sectionHeader}>
             <Typography variant="h3">Access Controls</Typography>
           </div>
-          {!unrestrictedClusterAccess ? (
+          {allClusterAccessDenied ? (
             <div className={classes.sectionText}>
               <Typography>
                 Add the IP addresses or IP range(s) for other instances or users
