@@ -115,7 +115,7 @@ describe('Billing Contact', () => {
       .click()
       .clear()
       .type(newAccountData['city']);
-    cy.findByLabelText('Zip / Postal Code')
+    cy.findByLabelText('Postal Code')
       .should('be.visible')
       .click()
       .clear()
