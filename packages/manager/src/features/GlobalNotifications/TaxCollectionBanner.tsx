@@ -49,12 +49,11 @@ const TaxCollectionBanner: React.FC<{}> = () => {
             : null}
         </Typography>
         {isTaxableCountry ? (
-          // Open billing contact info drawer
           <Button
             buttonType="primary"
             onClick={() => history.push('/account/billing/edit')}
           >
-            Action
+            Update Tax ID
           </Button>
         ) : null}
       </Box>
