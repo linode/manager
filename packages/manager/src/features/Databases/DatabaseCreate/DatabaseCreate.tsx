@@ -264,37 +264,33 @@ const DatabaseCreate: React.FC<{}> = () => {
     values.failover_count < 0 ||
     values.allow_list.some((item) => item.address === '');
 
-  const getNodeOptions = React.useCallback(
-    () => [
-      {
-        value: 0,
-        label: (
-          <Typography>
-            1 Node
-            <br />
-            {`$${type?.price.monthly || 0}/month $${
-              type?.price.hourly || 0
-            }/hr`}
-          </Typography>
-        ),
-        disabled: type?.memory === 1024,
-      },
-      {
-        value: 2,
-        label: (
-          <Typography>
-            3 Nodes - High Availability (recommended)
-            <br />
-            {`$${multiNodePricing.monthly || 0}/month $${
-              multiNodePricing.hourly || 0
-            }/hr`}
-          </Typography>
-        ),
-        disabled: type?.memory === 1024,
-      },
-    ],
-    [multiNodePricing, type]
-  );
+  const nodeOptions = [
+    {
+      value: 0,
+      label: (
+        <Typography>
+          1 Node
+          <br />
+          {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
+        </Typography>
+      ),
+      disabled: type?.memory === 1024,
+    },
+    {
+      value: 2,
+      label: (
+        <Typography>
+          3 Nodes - High Availability
+          {type?.memory !== 1024 ? '(recommended)' : ''}
+          <br />
+          {`$${multiNodePricing.monthly || 0}/month $${
+            multiNodePricing.hourly || 0
+          }/hr`}
+        </Typography>
+      ),
+      disabled: type?.memory === 1024,
+    },
+  ]
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
@@ -420,7 +416,7 @@ const DatabaseCreate: React.FC<{}> = () => {
               style={{ marginBottom: 0 }}
               value={values.failover_count}
             >
-              {getNodeOptions().map((nodeOption) => (
+              {nodeOptions.map((nodeOption) => (
                 <FormControlLabel
                   key={nodeOption.value}
                   value={nodeOption.value}
