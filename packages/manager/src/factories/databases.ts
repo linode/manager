@@ -28,8 +28,8 @@ const possibleReplicationTypes: ReplicationType[] = [
 const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
-  id: 'g6-standard-1',
-  label: 'Linode 2 GB',
+  id: Factory.each((i) => `g6-standard-${i}`),
+  label: Factory.each((i) => `Linode ${i} GB`),
   class: 'standard',
   price: {
     hourly: 0.4,

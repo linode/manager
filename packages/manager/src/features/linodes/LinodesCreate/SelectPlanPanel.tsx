@@ -281,7 +281,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     );
   };
 
-  renderPlanContainer = (plans: Array<ExtendedType | ExtendedDatabaseType>) => {
+  renderPlanContainer = (plans: ExtendedTypes) => {
     const { classes, isCreate, header } = this.props;
 
     return (
