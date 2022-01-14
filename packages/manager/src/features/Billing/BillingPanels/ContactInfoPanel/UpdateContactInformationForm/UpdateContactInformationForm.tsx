@@ -437,7 +437,9 @@ class UpdateContactInformationForm extends React.Component<
                     : value === account.state
                 ) ?? ''
               }
-              data-qa-contact-state-province
+              textFieldProps={{
+                'data-qa-contact-state-province': true,
+              }}
             />
           ) : (
             <TextField

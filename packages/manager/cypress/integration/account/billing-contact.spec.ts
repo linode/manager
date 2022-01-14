@@ -126,7 +126,7 @@ describe('Billing Contact', () => {
       .clear()
       .type(newAccountData['phone']);
     getClick('[data-qa-contact-country]').type('France{enter}');
-    cy.findByTestId('[data-qa-contact-state-province]')
+    getClick('[data-qa-contact-state-province]')
       .should('be.visible')
       .click()
       .clear()
