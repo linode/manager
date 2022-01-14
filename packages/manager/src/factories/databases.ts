@@ -25,7 +25,7 @@ const possibleReplicationTypes: ReplicationType[] = [
   'asynch',
 ];
 
-const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
+export const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   id: 'g1-mysql-ha-2',

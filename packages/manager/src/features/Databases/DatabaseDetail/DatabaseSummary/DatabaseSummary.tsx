@@ -3,7 +3,7 @@ import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
-import AccessControls from './AccessControls';
+import AccessControls from '../AccessControls';
 import ClusterConfiguration from './DatabaseSummaryClusterConfiguration';
 import ConnectionDetails from './DatabaseSummaryConnectionDetails';
 

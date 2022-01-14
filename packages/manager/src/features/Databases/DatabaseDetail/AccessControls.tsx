@@ -16,7 +16,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { useDatabaseMutation } from 'src/queries/databases';
 import { ExtendedIP, stringToExtendedIP } from 'src/utilities/ipUtils';
-import AddAccessControlDrawer from '../AddAccessControlDrawer';
+import AddAccessControlDrawer from './AddAccessControlDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   topSection: {
@@ -29,6 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sectionText: {
     marginBottom: '1rem',
+    width: '60%',
+    marginRight: 0,
+  },
+  addAccessControlBtn: {
+    minWidth: 180,
   },
   table: {
     width: '50%',
@@ -192,6 +197,7 @@ export const AccessControls: React.FC<Props> = (props) => {
         <AddNewLink
           label="Add Access Control"
           onClick={handleAddAccessControlClick}
+          className={classes.addAccessControlBtn}
         />
       </div>
       {ipTable(allowList)}
@@ -212,10 +218,7 @@ export const AccessControls: React.FC<Props> = (props) => {
         )}
       >
         {error ? <Notice error text={error} /> : null}
-        <Typography
-          variant="subtitle1"
-          data-testid="ip-removal-confirmation-warning"
-        >
+        <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable
           access by clicking Add Access Control and adding the same IP address
