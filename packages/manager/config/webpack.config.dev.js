@@ -63,6 +63,7 @@ module.exports = {
         .relative(paths.appSrc, info.absoluteResourcePath)
         .replace(/\\/g, '/');
     },
+    // Use a faster hash function
     hashFunction: 'xxhash64',
   },
   resolve: {
@@ -92,6 +93,7 @@ module.exports = {
       new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
     fallback: {
+      // Provide any Node.js polyfills here.
       stream: 'stream-browserify',
       crypto: 'crypto-browserify',
       Buffer: 'buffer/',
@@ -217,6 +219,7 @@ module.exports = {
       // set the current working directory for displaying module paths
       cwd: paths.appSrc,
     }),
+    // Allows us to use Node's Buffer in Cloud Manager
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
@@ -224,13 +227,13 @@ module.exports = {
   performance: {
     hints: false,
   },
+  // The settings below are added to speed up the dev server
+  // https://github.com/webpack/webpack/issues/12102#issuecomment-938544497
   optimization: {
-    // https://github.com/webpack/webpack/issues/12102#issuecomment-938544497
     sideEffects: false,
     providedExports: false,
   },
   experiments: {
-    // https://github.com/webpack/webpack/issues/12102#issuecomment-938544497
     cacheUnaffected: true,
   },
 };

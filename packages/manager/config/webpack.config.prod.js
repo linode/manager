@@ -90,6 +90,7 @@ module.exports = {
       new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
       new TsconfigPathsPlugin({ configFile: paths.appTsConfig }),
     ],
+    // Provide any Node.js polyfills here.
     fallback: {
       stream: 'stream-browserify',
       crypto: 'crypto-browserify',
@@ -99,15 +100,6 @@ module.exports = {
   module: {
     strictExportPresence: true,
     rules: [
-      // TODO: Disable require.ensure as it's not a standard language feature.
-      // We are waiting for https://github.com/facebookincubator/create-react-app/issues/2176.
-      // { parser: { requireEnsure: false } },
-      // {
-      //   test: /\.(js|jsx|mjs)$/,
-      //   loader: require.resolve('source-map-loader'),
-      //   enforce: 'pre',
-      //   include: paths.appSrc,
-      // },
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall
@@ -232,6 +224,7 @@ module.exports = {
       ),
       openAnalyzer: false,
     }),
+    // Allows us to use Node's Buffer in Cloud Manager
     new webpack.ProvidePlugin({
       Buffer: ['buffer', 'Buffer'],
     }),
