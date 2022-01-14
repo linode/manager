@@ -24,7 +24,7 @@
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
 
-import produce, { Draft, Immutable, castDraft } from 'immer';
+import produce, { Draft, castDraft } from 'immer';
 import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
@@ -42,7 +42,7 @@ export interface ExtendedFirewallRule extends FirewallRuleType {
   originalIndex: number;
 }
 
-export type RuleEditorState = Immutable<ExtendedFirewallRule[][]>;
+export type RuleEditorState = ExtendedFirewallRule[][];
 
 export type RuleEditorAction =
   | {
