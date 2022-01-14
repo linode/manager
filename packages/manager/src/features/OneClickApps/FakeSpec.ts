@@ -1248,7 +1248,7 @@ export const oneClickApps: OCA[] = [
     name: 'UTunnel VPN',
     description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
     summary:
-      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols',
+      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols.',
     related_guides: [
       {
         title: 'Deploying UTunnel VPN through the Linode Marketplace',
@@ -1288,7 +1288,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'VictoriaMetrics Single',
-    description: `Victoriametrics is designed to collect, store, and process real-time metrics.`,
+    description: `VictoriaMetrics is designed to collect, store, and process real-time metrics.`,
     summary: 'Free and open source time series database (TSDB) and monitoring solution.',
     related_guides: [
       {
