@@ -251,10 +251,10 @@ const DatabaseCreate: React.FC<{}> = () => {
   });
 
   React.useEffect(() => {
-    if (errors) {
+    if (errors || createError) {
       scrollErrorIntoView();
     }
-  }, [errors]);
+  }, [errors, createError]);
 
   const disableCreateButton =
     !values.label ||
@@ -280,7 +280,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       value: 2,
       label: (
         <Typography>
-          3 Nodes - High Availability
+          3 Nodes - High Availability{' '}
           {type?.memory !== 1024 ? '(recommended)' : ''}
           <br />
           {`$${multiNodePricing.monthly || 0}/month $${
