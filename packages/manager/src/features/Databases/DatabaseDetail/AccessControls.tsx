@@ -156,9 +156,12 @@ export const AccessControls: React.FC<Props> = (props) => {
     return (
       <Table className={classes.table}>
         <TableBody>
-          {accessControlsList.map((accessControl, idx) => (
-            <TableRow key={idx}>
-              <TableCell key={idx} className={classes.cell}>
+          {accessControlsList.map((accessControl) => (
+            <TableRow key={`${accessControl}-row`}>
+              <TableCell
+                key={`${accessControl}-tablecell`}
+                className={classes.cell}
+              >
                 {accessControl}
                 <InlineMenuAction
                   actionText="Remove"
