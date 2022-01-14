@@ -437,11 +437,7 @@ class UpdateContactInformationForm extends React.Component<
                     : value === account.state
                 ) ?? ''
               }
-              textFieldProps={{
-                dataAttrs: {
-                  'data-qa-contact-state-province': true,
-                },
-              }}
+              data-qa-contact-state-province
             />
           ) : (
             <TextField
@@ -456,9 +452,7 @@ class UpdateContactInformationForm extends React.Component<
               placeholder="Enter region"
               required={flags.regionDropdown}
               value={fields.state || ''}
-              dataAttrs={{
-                'data-qa-contact-state-province': true,
-              }}
+              data-qa-contact-state-province
             />
           )}
         </Grid>
