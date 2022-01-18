@@ -1,5 +1,3 @@
-import { IPAddress } from "src/networking";
-
 export interface DatabaseType {
   id: string;
   label: string;
@@ -111,7 +109,7 @@ export interface Database {
   ipv4_public: string;
   ssl_connection: boolean;
   replication_type: ReplicationType;
-  allow_list: IPAddress[];
+  allow_list: string[];
   connection_strings: ConnectionStrings[];
   created: string;
   updated: string;
