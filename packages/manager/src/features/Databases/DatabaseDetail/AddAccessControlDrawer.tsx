@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   open: boolean;
   onClose: () => void;
-  updateDatabase: any; // fix
+  updateDatabase: any;
   allowList: ExtendedIP[];
 }
 
