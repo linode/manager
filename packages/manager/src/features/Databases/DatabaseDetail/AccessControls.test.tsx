@@ -13,26 +13,6 @@ afterEach(() => {
 });
 
 describe('Access Controls', () => {
-  it('Should have a warning notice appear if there are no IPs allow listed', () => {
-    const database = databaseFactory.build({ allow_list: [] });
-
-    renderWithTheme(<AccessControls database={database} />);
-
-    expect(screen.getByTestId('notice-no-access-controls')).toBeInTheDocument();
-  });
-
-  it('Should not have a warning notice appear if there are IPs allow listed', () => {
-    const database = databaseFactory.build();
-
-    renderWithTheme(<AccessControls database={database} />);
-
-    expect(
-      screen.queryByText(
-        'Warning: your cluster is open to all incoming connections.'
-      )
-    ).not.toBeInTheDocument();
-  });
-
   it('Should have a Remove button for each IP listed in the table', () => {
     const allowList = ['1.1.1.1/32', '2.2.2.2', '3.3.3.3/128'];
     const database = databaseFactory.build({ allow_list: allowList });
