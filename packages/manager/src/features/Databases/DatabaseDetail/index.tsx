@@ -107,7 +107,9 @@ export const DatabaseDetail: React.FC = () => {
             <DatabaseBackups />
           </SafeTabPanel>
           <SafeTabPanel index={2}>
-            <DatabaseSettings />
+            <DatabaseSettings
+              databaseID={database.id}
+              databaseEngine={database.engine} />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>

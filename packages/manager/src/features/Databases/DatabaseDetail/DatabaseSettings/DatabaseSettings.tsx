@@ -5,6 +5,7 @@ import { Engine } from '@linode/api-v4/lib/databases/types';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
+import AccessControls from '../DatabaseSummary/DatabaseSummaryAccessControls.tsx';
 
 interface Props {
   databaseID: number;
@@ -12,7 +13,7 @@ interface Props {
 }
 
 export const DatabaseSettings: React.FC<Props> = (props) => {
-  // const { databaseID, databaseEngine } = props;
+  const { databaseID, databaseEngine } = props;
   const accessControlsCopy = "Add the IP addresses or IP range(s) for other instances or users that should have the authorization to view this cluster’s database. By default, all public and private connections are denied. Learn more.";
 
   const resetRootPasswordCopy = "Resetting your root password will automatically generate a new password. You can view the updated password on your Database Cluster Summary page. ";
@@ -52,8 +53,8 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           descriptiveText={accessControlsCopy}
           onClick={onAddAccessControl}
           sectionTitle="Access Controls">
-          Access Controls Component
-      </DatabaseSettingsMenuItem>
+          <AccessControls />
+        </DatabaseSettingsMenuItem>
         <Divider />
         <DatabaseSettingsMenuItem
           buttonText="Reset Root Password"
@@ -69,7 +70,9 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
       </Paper>
       <DatabaseSettingsDeleteClusterDialog
         open={isDeleteDialogOpen}
-        onClose={onDeleteClusterClose} />
+        onClose={onDeleteClusterClose}
+        databaseID={databaseID}
+        databaseEngine={databaseEngine} />
       <DatabaseSettingsResetPasswordDialog
         open={isResetRootPasswordDialogOpen}
         onClose={onResetRootPasswordClose} />
