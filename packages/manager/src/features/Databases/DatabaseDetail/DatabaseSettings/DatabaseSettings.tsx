@@ -75,7 +75,9 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
         databaseEngine={databaseEngine} />
       <DatabaseSettingsResetPasswordDialog
         open={isResetRootPasswordDialogOpen}
-        onClose={onResetRootPasswordClose} />
+        onClose={onResetRootPasswordClose}
+        databaseID={databaseID}
+        databaseEngine={databaseEngine} />
     </>
   );
 };
