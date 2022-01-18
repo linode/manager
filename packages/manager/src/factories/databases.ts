@@ -101,7 +101,7 @@ export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
     id: Factory.each((i) => `version-${i}`),
     label: Factory.each((i) => `MySQL v${i}`),
     engine: 'mysql',
-    version: Factory.each((i) => `v${i}`),
+    version: Factory.each((i) => `${i}`),
     deprecated: false,
   }
 );

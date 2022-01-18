@@ -33,6 +33,7 @@ import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
+import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
@@ -96,6 +97,9 @@ const getEngineOptions = (versions: DatabaseVersion[]) => {
           label: thisGroup,
           options: groupedVersions[thisGroup].map((version) => ({
             ...version,
+            label:
+              version.label ||
+              `${databaseEngineMap[version.engine]} v${version.version}`,
             value: `${version.engine}/${version.version}`,
             flag: engineIcons[version.engine],
           })),
@@ -290,7 +294,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       ),
       disabled: type?.memory === 1024,
     },
-  ]
+  ];
 
   React.useEffect(() => {
     if (values.type.length === 0 || !dbtypes) {
