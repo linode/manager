@@ -2,6 +2,7 @@ import {
   CreateDatabasePayload,
   Database,
   UpdateDatabasePayload,
+  Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
@@ -32,8 +33,8 @@ export const useDatabases = () => {
   const requestDatabases = () => dispatch(_request({}));
   const createDatabase = (payload: CreateDatabasePayload) =>
     dispatch(_create(payload));
-  const deleteDatabase = (databaseID: number) =>
-    dispatch(_delete({ databaseID }));
+  const deleteDatabase = ( engine: Engine, databaseID: number) =>
+    dispatch(_delete({ engine, databaseID }));
   const updateDatabase = (databaseID: number, payload: UpdateDatabasePayload) =>
     dispatch(_update({ databaseID, ...payload }));
   const resetPassword = (databaseID: number, root_password: string) =>

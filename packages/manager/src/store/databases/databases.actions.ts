@@ -2,6 +2,7 @@ import {
   CreateDatabasePayload,
   Database,
   UpdateDatabasePayload,
+  Engine,
 } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -25,7 +26,9 @@ export const createDatabaseActions = actionCreator.async<
 >(`create`);
 
 export const deleteDatabaseActions = actionCreator.async<
-  { databaseID: number },
+  { engine: Engine,
+    databaseID: number
+  },
   {},
   APIError[]
 >(`delete`);

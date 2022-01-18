@@ -32,7 +32,7 @@ export const createDatabase = createRequestThunk(
 
 export const deleteDatabase = createRequestThunk(
   deleteDatabaseActions,
-  ({ databaseID }) => _delete(databaseID)
+  ({ engine, databaseID }) => _delete(engine, databaseID)
 );
 
 export const updateDatabase = createRequestThunk(
