@@ -19,6 +19,8 @@ import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import useEntities, { Entity } from 'src/hooks/useEntities';
+import { useAllDatabasesQuery } from 'src/queries/databases';
+import { useAllFirewallsQuery, useFirewallQuery } from 'src/queries/firewalls';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -69,6 +71,8 @@ export type EntityType =
   | 'domain_id'
   | 'nodebalancer_id'
   | 'lkecluster_id'
+  | 'database_id'
+  | 'firewall_id'
   | 'none'
   | 'general';
 
@@ -90,6 +94,8 @@ const entityMap: Record<string, EntityType> = {
   Domains: 'domain_id',
   NodeBalancers: 'nodebalancer_id',
   Kubernetes: 'lkecluster_id',
+  Databases: 'database_id',
+  Firewalls: 'firewall_id',
 };
 
 const entityIdToNameMap: Partial<Record<EntityType, string>> = {
@@ -98,6 +104,8 @@ const entityIdToNameMap: Partial<Record<EntityType, string>> = {
   domain_id: 'Domain',
   nodebalancer_id: 'NodeBalancer',
   lkecluster_id: 'Kubernetes Cluster',
+  database_id: 'Database Cluster',
+  firewall_id: 'Firewall',
 };
 
 const entityIdToTypeMap: Record<EntityType, string> = {
@@ -106,6 +114,8 @@ const entityIdToTypeMap: Record<EntityType, string> = {
   domain_id: 'domains',
   nodebalancer_id: 'nodeBalancers',
   lkecluster_id: 'kubernetesClusters',
+  database_id: 'databases',
+  firewall_id: 'firewalls',
   none: 'linodes',
   general: 'linodes',
 };
@@ -160,6 +170,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
   }, [open]);
 
+  // React Query Enetities
+  const { data: databases, isLoading: databasesLoading } = useAllDatabasesQuery(
+    entityType === 'database_id'
+  );
+
+  const { data: firewalls, isLoading: firewallsLoading } = useAllFirewallsQuery(
+    entityType === 'firewall_id'
+  );
+
   const saveText = (_title: string, _description: string) => {
     storage.supportText.set({ title: _title, description: _description });
   };
@@ -171,6 +190,40 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     // Store in-progress work to localStorage
     debouncedSave(summary, description);
   }, [summary, description]);
+
+  React.useEffect(() => {
+    // Only execute state changes if database is selected
+    if (entityType === 'database_id') {
+      if (databases) {
+        setData(
+          databases.map((database) => ({
+            value: database,
+            label: database.label,
+          }))
+        );
+      }
+      if (entitiesLoading !== databasesLoading) {
+        setLoading(databasesLoading);
+      }
+    }
+  }, [databases, databasesLoading]);
+
+  React.useEffect(() => {
+    // Only execute state changes if firewalls is selected
+    if (entityType === 'firewall_id') {
+      if (firewalls) {
+        setData(
+          firewalls.map((database) => ({
+            value: database,
+            label: database.label,
+          }))
+        );
+      }
+      if (entitiesLoading !== firewallsLoading) {
+        setLoading(firewallsLoading);
+      }
+    }
+  }, [firewalls, firewallsLoading]);
 
   const handleSetOrRequestEntities = (
     _entity: Entity<any>,
@@ -200,7 +253,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
    * NOTE: Using a switch here rather than the entities[entityIdToTypeMap] logic
    * used for error handling below; it's more explicit and safer.
    */
-  const loadSelectedEntities = (_entityType: string) => {
+  const loadSelectedEntities = (_entityType: EntityType) => {
     switch (_entityType) {
       case 'linode_id': {
         handleSetOrRequestEntities(entities.linodes, _entityType);
@@ -220,6 +273,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       }
       case 'lkecluster_id': {
         handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
+        return;
+      }
+      case 'firewall_id':
+      case 'database_id': {
+        // intentionally do nothing for React Query entities
         return;
       }
       default: {
@@ -432,8 +490,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     ? `Error loading ${entityIdToNameMap[entityType]}s`
     : undefined;
 
-  const hasNoEntitiesMessage = getHasNoEntitiesMessage();
-
   const topicOptions = [
     { label: 'General/Account/Billing', value: 'general' },
     ...renderEntityTypes(),
@@ -443,8 +499,43 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     return eachTopic.value === entityType;
   });
 
+
+  const getEntityOptions = (): Item<any, string>[] => {
+    if (entityType === 'database_id') {
+      return (
+        databases?.map((database) => ({
+          value: database,
+          label: database.label,
+        })) || []
+      );
+    }
+    if (entityType === 'firewall_id') {
+      return (
+        firewalls?.map((firewall) => ({
+          value: firewall,
+          label: firewall.label,
+        })) || []
+      );
+    }
+    return data;
+  };
+
+  const getAreEntitiesLoading = () => {
+    if (entityType === 'database_id') {
+      return databasesLoading;
+    }
+    if (entityType === 'firewall_id') {
+      return firewallsLoading;
+    }
+    return entitiesLoading;
+  };
+
+  const entityOptions = getEntityOptions();
+  const areEntitiesLoading = getAreEntitiesLoading();
+
   const selectedEntity =
-    data.find((thisEntity) => String(thisEntity.value) === entityID) || null;
+    entityOptions.find((thisEntity) => String(thisEntity.value) === entityID) ||
+    null;
 
   return (
     <Dialog
@@ -495,20 +586,23 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
               {!['none', 'general'].includes(entityType) && (
                 <>
                   <Select
-                    options={data}
+                    options={entityOptions}
                     value={selectedEntity}
-                    disabled={data.length === 0}
+                    disabled={entityOptions.length === 0}
                     errorText={entityError || inputError}
                     placeholder={`Select a ${entityIdToNameMap[entityType]}`}
                     label={entityIdToNameMap[entityType] ?? 'Entity Select'}
                     onChange={handleEntityIDChange}
                     data-qa-ticket-entity-id
-                    isLoading={entitiesLoading}
+                    isLoading={areEntitiesLoading}
                     isClearable={false}
                   />
-                  {hasNoEntitiesMessage && (
-                    <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
-                  )}
+                  {!areEntitiesLoading && entityOptions.length === 0 ? (
+                    <FormHelperText>
+                      You don&apos;t have any ${entityIdToNameMap[entityType]}s
+                      on your account.
+                    </FormHelperText>
+                  ) : null}
                 </>
               )}
             </React.Fragment>

@@ -26,6 +26,11 @@ const getAllFirewallsRequest = () =>
     getFirewalls(passedParams, passedFilter)
   )().then((data) => listToItemsByID(data.data));
 
+const getAllPlainFirewallsRequest = () =>
+  getAll<Firewall>((passedParams, passedFilter) =>
+    getFirewalls(passedParams, passedFilter)
+  )().then((data) => data.data);
+
 const queryKey = 'queryFirewalls';
 
 export const useFirewallQuery = () => {
@@ -33,6 +38,14 @@ export const useFirewallQuery = () => {
     queryKey,
     getAllFirewallsRequest,
     queryPresets.longLived
+  );
+};
+
+export const useAllFirewallsQuery = (enabled: boolean = true) => {
+  return useQuery<Firewall[], APIError[]>(
+    `${queryKey}-all`,
+    getAllPlainFirewallsRequest,
+    { enabled }
   );
 };
 
