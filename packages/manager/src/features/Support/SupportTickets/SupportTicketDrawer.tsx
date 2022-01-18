@@ -170,7 +170,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
   }, [open]);
 
-  // React Query Enetities
+  // React Query entities
   const { data: databases, isLoading: databasesLoading } = useAllDatabasesQuery(
     entityType === 'database_id'
   );
