@@ -6,7 +6,6 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { getAllMySQLTypes } from 'src/store/databases/types.requests';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -41,8 +40,7 @@ export type ReduxEntity =
   | 'longview'
   | 'firewalls'
   | 'clusters'
-  | 'vlans'
-  | 'databaseTypes';
+  | 'vlans';
 
 // The Buckets request is a special case since it depends on Clusters.
 type RequestMap = Record<ReduxEntity, any>;
@@ -62,7 +60,6 @@ const requestMap: RequestMap = {
   firewalls: () => getAllFirewalls({}),
   clusters: requestClusters,
   vlans: () => getAllVlans({}),
-  databaseTypes: () => getAllMySQLTypes({}),
 };
 
 export const useReduxLoad = (
