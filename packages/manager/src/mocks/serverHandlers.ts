@@ -148,7 +148,7 @@ const databases = [
     const dedicatedTypes = [
       databaseTypeFactory.build({
         id: 'g6-dedicated-0',
-        label: `Dedicated 1 GB`,
+        label: `Linode 1 GB`,
         class: 'dedicated',
         memory: 1024,
       }),
