@@ -22,7 +22,6 @@ export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
 
 export interface DatabaseVersion {
   id: string;
-  label: string;
   engine: Engine;
   version: string;
   deprecated: boolean;

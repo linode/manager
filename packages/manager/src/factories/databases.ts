@@ -98,8 +98,7 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
 
 export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
   {
-    id: Factory.each((i) => `version-${i}`),
-    label: Factory.each((i) => `MySQL v${i}`),
+    id: Factory.each((i) => `mysql/${i}`),
     engine: 'mysql',
     version: Factory.each((i) => `${i}`),
     deprecated: false,
