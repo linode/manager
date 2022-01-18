@@ -20,7 +20,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import useEntities, { Entity } from 'src/hooks/useEntities';
 import { useAllDatabasesQuery } from 'src/queries/databases';
-import { useAllFirewallsQuery, useFirewallQuery } from 'src/queries/firewalls';
+import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -191,40 +191,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     debouncedSave(summary, description);
   }, [summary, description]);
 
-  React.useEffect(() => {
-    // Only execute state changes if database is selected
-    if (entityType === 'database_id') {
-      if (databases) {
-        setData(
-          databases.map((database) => ({
-            value: database,
-            label: database.label,
-          }))
-        );
-      }
-      if (entitiesLoading !== databasesLoading) {
-        setLoading(databasesLoading);
-      }
-    }
-  }, [databases, databasesLoading]);
-
-  React.useEffect(() => {
-    // Only execute state changes if firewalls is selected
-    if (entityType === 'firewall_id') {
-      if (firewalls) {
-        setData(
-          firewalls.map((database) => ({
-            value: database,
-            label: database.label,
-          }))
-        );
-      }
-      if (entitiesLoading !== firewallsLoading) {
-        setLoading(firewallsLoading);
-      }
-    }
-  }, [firewalls, firewallsLoading]);
-
   const handleSetOrRequestEntities = (
     _entity: Entity<any>,
     _entityType: string
@@ -338,18 +304,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const handleEntityIDChange = (selected: Item | null) => {
     setEntityID(String(selected?.value) ?? '');
-  };
-
-  const getHasNoEntitiesMessage = (): string => {
-    if (['none', 'general'].includes(entityType)) {
-      return '';
-    } else if (data.length === 0 && !entityError) {
-      // User has selected a type from the drop-down but the entity list is empty.
-      return `You don't have any ${entityIdToNameMap[entityType]}s on your account.`;
-    } else {
-      // Default case
-      return '';
-    }
   };
 
   const close = () => {
@@ -498,7 +452,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const selectedTopic = topicOptions.find((eachTopic) => {
     return eachTopic.value === entityType;
   });
-
 
   const getEntityOptions = (): Item<any, string>[] => {
     if (entityType === 'database_id') {
