@@ -129,7 +129,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         <Typography variant="body1" className={classes.instructions}>
           To restrict connections to trusted sources, add at least one inbound
           source below.{' '}
-          <ExternalLink to="https://www.linode.com/docs">
+          <ExternalLink to="https://www.linode.com/docs/products/database">
             Learn more about securing your cluster.
           </ExternalLink>
         </Typography>
