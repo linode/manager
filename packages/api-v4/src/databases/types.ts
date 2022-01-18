@@ -1,3 +1,5 @@
+import { IPAddress } from "src/networking";
+
 export interface DatabaseType {
   id: string;
   label: string;
@@ -72,6 +74,7 @@ export interface DatabaseInstance {
 }
 
 type FailoverCount = 0 | 2;
+type ReadonlyCount = 0 | 2;
 
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
 
@@ -97,16 +100,18 @@ interface ConnectionStrings {
 export interface Database {
   id: number;
   label: string;
+  type: string;
+  version: string;
   region: string;
   status: DatabaseStatus;
-  type: string;
   failover_count: FailoverCount;
+  readonly_count?: ReadonlyCount;
   engine: Engine;
   encrypted: boolean;
   ipv4_public: string;
   ssl_connection: boolean;
   replication_type: ReplicationType;
-  allow_list: string[];
+  allow_list: IPAddress[];
   connection_strings: ConnectionStrings[];
   created: string;
   updated: string;
