@@ -24,10 +24,6 @@ import clusters, {
   defaultState as defaultClustersState,
   State as ClustersState,
 } from 'src/store/clusters/clusters.reducer';
-import databases, {
-  defaultState as defaultDatabasesState,
-  State as DatabasesState,
-} from 'src/store/databases/databases.reducer';
 import databaseTypes, {
   defaultState as defaultDatabaseTypesState,
   State as DatabaseTypesState,
@@ -180,7 +176,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  databases: defaultDatabasesState,
   databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
   images: defaultImagesState,
@@ -203,7 +198,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  databases: DatabasesState;
   databaseTypes: DatabaseTypesState;
   domains: DomainsState;
   images: ImagesState;
@@ -277,7 +271,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  databases,
   databaseTypes,
   domains,
   images,

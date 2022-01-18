@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import useDatabases from 'src/hooks/useDatabases';
 // import DatabaseSettingsLabelPanel from './DatabaseSettingsLabelPanel';
 // import DatabaseSettingsMaintenancePanel from './DatabaseSettingsMaintenancePanel';
 // import DatabaseSettingsPasswordPanel from './DatabaseSettingsPasswordPanel';
