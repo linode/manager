@@ -88,7 +88,7 @@ interface BaseProps {
   noMarginTop?: boolean;
   optional?: boolean;
   required?: boolean;
-  tooltipText?: string;
+  tooltipText?: string | JSX.Element;
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
   value?: Value;
 }

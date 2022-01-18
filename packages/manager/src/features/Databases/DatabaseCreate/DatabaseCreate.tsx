@@ -29,6 +29,8 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
+import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -60,6 +62,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   selectPlanPanel: {
     padding: 0,
     margin: 0,
+  },
+  labelToolTipCtn: {
+    '& strong': {
+      padding: 8,
+    },
+    '& ul': {
+      margin: '4px',
+    },
+  },
+  nodeHelpIcon: {
+    padding: 0,
+  },
+  createText: {
+    [theme.breakpoints.down('xs')]: {
+      padding: `0 ${theme.spacing()}px`,
+    },
   },
 }));
 
@@ -260,6 +278,17 @@ const DatabaseCreate: React.FC<{}> = () => {
     }
   }, [errors, createError]);
 
+  const labelToolTip = (
+    <div className={classes.labelToolTipCtn}>
+      <strong>Label must:</strong>
+      <ul>
+        <li>Begin with an alpha character</li>
+        <li>Contain only alpha characters or single hyphens</li>
+        <li>Be between 3 - 32 characters</li>
+      </ul>
+    </div>
+  );
+
   const disableCreateButton =
     !values.label ||
     !values.engine ||
@@ -267,6 +296,8 @@ const DatabaseCreate: React.FC<{}> = () => {
     !values.type ||
     values.failover_count < 0 ||
     values.allow_list.some((item) => item.address === '');
+
+  const is1GbPlan = type?.memory === 1024;
 
   const nodeOptions = [
     {
@@ -278,7 +309,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
         </Typography>
       ),
-      disabled: type?.memory === 1024,
+      disabled: is1GbPlan,
     },
     {
       value: 2,
@@ -292,7 +323,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           }/hr`}
         </Typography>
       ),
-      disabled: type?.memory === 1024,
+      disabled: is1GbPlan,
     },
   ];
 
@@ -306,8 +337,6 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
-    const is1GbPlan = type.memory === 1024;
-
     setType(type);
     setMultiNodePricing({
       hourly: Number(
@@ -319,7 +348,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     });
     setFieldValue('failover_count', is1GbPlan ? 0 : 2);
     setFieldValue('replication_type', is1GbPlan ? 'none' : 'semi-synch');
-  }, [dbtypes, setFieldValue, values.type]);
+  }, [dbtypes, is1GbPlan, setFieldValue, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
@@ -349,6 +378,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             data-qa-label-input
             errorText={errors.label}
             label="Cluster Label"
+            tooltipText={labelToolTip}
             onChange={(e) => setFieldValue('label', e.target.value)}
             value={values.label}
           />
@@ -381,6 +411,18 @@ const DatabaseCreate: React.FC<{}> = () => {
             regions={regionsData}
             selectedID={values.region}
           />
+          <Typography style={{ marginTop: 8 }}>
+            <a
+              target="_blank"
+              aria-describedby="external-site"
+              rel="noopener noreferrer"
+              href="https://www.linode.com/speed-test/"
+            >
+              Use our speedtest page
+            </a>
+            {` `}
+            to find the best region for your current location.
+          </Typography>
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
         <Grid item>
@@ -400,7 +442,16 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
-          <Typography variant="h2">Set Number of Nodes</Typography>
+          <Typography variant="h2">
+            Set Number of Nodes{' '}
+            {is1GbPlan ? (
+              <HelpIcon
+                className={classes.nodeHelpIcon}
+                text="1 GB Linodes are only available for single-node database deployments."
+                tooltipPosition="right"
+              />
+            ) : null}
+          </Typography>
           <Typography>
             We recommend 3 nodes in a database cluster to avoid downtime during
             upgrades and maintenance.
@@ -436,12 +487,19 @@ const DatabaseCreate: React.FC<{}> = () => {
           </FormControl>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
-        <Grid item style={{ maxWidth: 450 }}>
+        <Grid item>
           <Typography variant="h2">Add Access Controls</Typography>
           <Typography>
-            Explanatory text about adding inbound sources...
+            Add the IP addresses or IP range(s) for other instances or users
+            that should have the authorization to view this cluster’s database.
           </Typography>
-          <Grid style={{ marginTop: 24 }}>
+          <Typography>
+            By default, all public and private connections are denied.{' '}
+            <Link to="https://www.linode.com/docs/products/database">
+              Learn more.
+            </Link>
+          </Typography>
+          <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             <MultipleIPInput
               title="Inbound Sources"
               placeholder="Add IP Address or range"
@@ -460,6 +518,12 @@ const DatabaseCreate: React.FC<{}> = () => {
         >
           Create Database Cluster
         </Button>
+      </Grid>
+      <Grid className={classes.btnCtn}>
+        <Typography className={classes.createText}>
+          Your database node(s) will take approximately 15-30 minutes to
+          provision.
+        </Typography>
       </Grid>
     </form>
   );
