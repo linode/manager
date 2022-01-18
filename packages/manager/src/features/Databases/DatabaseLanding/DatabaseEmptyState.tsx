@@ -30,7 +30,7 @@ const DatabaseEmptyState: React.FC = () => {
       buttonProps={[
         {
           onClick: () => history.push('/databases/create'),
-          children: 'Create Cluster',
+          children: 'Create Database Cluster',
         },
       ]}
     >
