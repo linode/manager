@@ -26,8 +26,8 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
         <Typography>{descriptiveText}</Typography>
         {children}
       </Grid>
-      <Grid>
-        <Button buttonType="primary" onClick={onClick}>
+      <Grid item lg={3}>
+        <Button buttonType="primary" onClick={onClick} fullWidth>
           {buttonText}
         </Button>
       </Grid>
