@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sectionText: {
     marginBottom: '1rem',
-    width: '60%',
+    width: '65%',
     marginRight: 0,
   },
   addAccessControlBtn: {
@@ -133,24 +133,9 @@ export const AccessControls: React.FC<Props> = (props) => {
       .catch(handleError);
   };
 
-  const allClusterAccessDenied = allowList.length === 0;
-
   const ipTable = (accessControlsList: string[]) => {
     if (accessControlsList.length === 0) {
-      return (
-        <Notice warning className={classes.restrictWarning}>
-          <Typography
-            className={classes.restrictWarningText}
-            data-testid="notice-no-access-controls"
-          >
-            Warning: your cluster is open to all incoming connections. Secure
-            this database cluster by restricting access.{' '}
-            <ExternalLink to="https://www.linode.com/docs">
-              Why is this important?
-            </ExternalLink>
-          </Typography>
-        </Notice>
-      );
+      return null;
     }
 
     return (
@@ -183,19 +168,17 @@ export const AccessControls: React.FC<Props> = (props) => {
           <div className={classes.sectionHeader}>
             <Typography variant="h3">Access Controls</Typography>
           </div>
-          {allClusterAccessDenied ? (
-            <div className={classes.sectionText}>
-              <Typography>
-                Add the IP addresses or IP range(s) for other instances or users
-                that should have the authorization to view this cluster&apos;s
-                database. By default, all public and private connections are
-                denied.{' '}
-                <ExternalLink to="https://www.linode.com/docs">
-                  Learn more.
-                </ExternalLink>
-              </Typography>
-            </div>
-          ) : null}
+          <div className={classes.sectionText}>
+            <Typography>
+              Add the IP addresses or IP range(s) for other instances or users
+              that should have the authorization to view this cluster&apos;s
+              database. By default, all public and private connections are
+              denied.{' '}
+              <ExternalLink to="https://www.linode.com/docs">
+                Learn more.
+              </ExternalLink>
+            </Typography>
+          </div>
         </div>
         <AddNewLink
           label="Add Access Control"
