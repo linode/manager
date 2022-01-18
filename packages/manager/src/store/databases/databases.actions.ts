@@ -34,6 +34,7 @@ export const deleteDatabaseActions = actionCreator.async<
 >(`delete`);
 
 export interface UpdateDatabaseParams extends UpdateDatabasePayload {
+  engine: Engine;
   databaseID: number;
 }
 export const updateDatabaseActions = actionCreator.async<

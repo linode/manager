@@ -30,6 +30,7 @@ export const createDatabase = createRequestThunk(
   _create
 );
 
+
 export const deleteDatabase = createRequestThunk(
   deleteDatabaseActions,
   ({ engine, databaseID }) => _delete(engine, databaseID)
@@ -37,7 +38,7 @@ export const deleteDatabase = createRequestThunk(
 
 export const updateDatabase = createRequestThunk(
   updateDatabaseActions,
-  ({ databaseID, ...payload }) => _update(databaseID, payload)
+  ({ engine, databaseID, ...payload }) => _update(engine, databaseID, payload)
 );
 
 export const resetPassword = createRequestThunk(

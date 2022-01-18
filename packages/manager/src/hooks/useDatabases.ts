@@ -35,8 +35,8 @@ export const useDatabases = () => {
     dispatch(_create(payload));
   const deleteDatabase = ( engine: Engine, databaseID: number) =>
     dispatch(_delete({ engine, databaseID }));
-  const updateDatabase = (databaseID: number, payload: UpdateDatabasePayload) =>
-    dispatch(_update({ databaseID, ...payload }));
+  const updateDatabase = (engine: Engine, databaseID: number, payload: UpdateDatabasePayload) =>
+    dispatch(_update({ engine, databaseID, ...payload }));
   const resetPassword = (databaseID: number, root_password: string) =>
     dispatch(_reset({ databaseID, root_password }));
 
