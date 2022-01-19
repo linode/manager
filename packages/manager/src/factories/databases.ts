@@ -71,7 +71,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   label: Factory.each((i) => `database-${i}`),
   region: 'us-east',
   status: pickRandom(possibleStatuses),
-  type: databaseTypeFactory.build().id,
+  type: 'g6-standard-0',
   version: '5.8.13',
   failover_count: 2,
   engine: 'mysql',
