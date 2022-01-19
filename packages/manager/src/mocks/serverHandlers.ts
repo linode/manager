@@ -137,8 +137,27 @@ const databases = [
   }),
 
   rest.get('*/databases/types', (req, res, ctx) => {
-    const dbTypes = databaseTypeFactory.buildList(2);
-    return res(ctx.json(makeResourcePage(dbTypes)));
+    const standardTypes = [
+      databaseTypeFactory.build({
+        id: 'g6-standard-0',
+        label: `Linode 1 GB`,
+        class: 'standard',
+        memory: 1024,
+      }),
+      ...databaseTypeFactory.buildList(7, { class: 'standard' }),
+    ];
+    const dedicatedTypes = [
+      databaseTypeFactory.build({
+        id: 'g6-dedicated-0',
+        label: `Linode 1 GB`,
+        class: 'dedicated',
+        memory: 1024,
+      }),
+      ...databaseTypeFactory.buildList(7, { class: 'dedicated' }),
+    ];
+    return res(
+      ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+    );
   }),
 
   rest.get('*/databases/versions', (req, res, ctx) => {
@@ -323,6 +342,10 @@ export const handlers = [
       region: payload?.region ?? 'us-east',
     });
     return res(ctx.json(linode));
+    // return res(
+    //   ctx.status(400),
+    //   ctx.json({ errors: [{ reason: 'Invalid label', field: 'data.label' }] })
+    // );
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesAPIResponse.buildList(10);

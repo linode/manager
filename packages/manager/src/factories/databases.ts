@@ -28,15 +28,16 @@ const possibleReplicationTypes: ReplicationType[] = [
 const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
-  id: 'g1-mysql-ha-2',
-  label: 'MySQL HA Tier 2',
+  id: Factory.each((i) => `g6-standard-${i}`),
+  label: Factory.each((i) => `Linode ${i} GB`),
+  class: 'standard',
   price: {
     hourly: 0.4,
     monthly: 60,
   },
   memory: 2048,
   transfer: 30,
-  disk: 40,
+  disk: 20480,
   vcpus: 2,
   deprecated: false,
   addons: {
@@ -98,10 +99,9 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
 
 export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
   {
-    id: Factory.each((i) => `version-${i}`),
-    label: Factory.each((i) => `Example Version ${i}`),
+    id: Factory.each((i) => `mysql/${i}`),
     engine: 'mysql',
-    version: Factory.each((i) => `v${i}`),
+    version: Factory.each((i) => `${i}`),
     deprecated: false,
   }
 );
