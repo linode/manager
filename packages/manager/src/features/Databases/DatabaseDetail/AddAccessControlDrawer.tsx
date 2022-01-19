@@ -1,4 +1,3 @@
-import { updateDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { IP_ERROR_MESSAGE } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
@@ -108,7 +107,6 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     validateOnChange: false,
     validateOnBlur: false,
     validate: (values: Values) => onValidate(values),
-    validationSchema: updateDatabaseSchema,
   });
 
   const handleIPChange = React.useCallback(
