@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '1rem',
     width: '65%',
     marginRight: 0,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   addAccessControlBtn: {
     minWidth: 180,
@@ -52,6 +55,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `solid 1px ${theme.cmrBorderColors.divider}`,
     '&:last-child': {
       borderBottom: 'none',
+    },
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
     },
   },
   cell: {
