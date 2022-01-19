@@ -18,12 +18,16 @@ afterEach(() => {
 
 describe('Database Create', () => {
   it('should render loading state', () => {
-    const { getByTestId } = renderWithTheme(<DatabaseCreate />);
+    const { getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      queryClient,
+    });
     expect(getByTestId(loadingTestId)).toBeInTheDocument();
   });
 
   it('should render inputs', async () => {
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />);
+    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
+      queryClient,
+    });
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     getAllByText('Cluster Label');
