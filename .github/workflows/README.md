@@ -19,6 +19,8 @@ Automatic end-to-end testing of Linode Cloud Manager via [Cypress](https://www.c
 
 End-to-end tests are run automatically for the `develop` branch each weekday at 8:00 AM ET, and are triggered any time code is pushed to the `develop`, `staging`, and `master` branches. However, tests are only performed for pull requests if the PR includes the `e2e` label.
 
+Cypress tests are parallelized across four containers, and tests are automatically distributed among containers for optimal performance. To avoid race conditions, each test container is authenticated with its own test user account.
+
 ### Triggers
 * Scheduled, 1:00 PM UTC (8:00 AM ET) every Monday through Friday for `develop` branch
 * Upon push to `develop`, `staging`, and `master` branches
@@ -27,4 +29,6 @@ End-to-end tests are run automatically for the `develop` branch each weekday at 
 ## See Also
 * [_Understanding GitHub Actions_](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) (`docs.github.com`)
 * [_Introduction to Cypress_](https://docs.cypress.io/guides/core-concepts/introduction-to-cypress) (`docs.cypress.io`)
-* [_Jest: Getting Started_](https://jestjs.io/docs/getting-started) (`jestjs.io`)
+* [Cypress: _GitHub Actions_](https://docs.cypress.io/guides/continuous-integration/github-actions#Cypress-GitHub-Action) (`docs.cypress.io`)
+* [Cypress: _Parallelization_](https://docs.cypress.io/guides/guides/parallelization) (`docs.cypress.io`)
+* [Jest: _Getting Started_](https://jestjs.io/docs/getting-started) (`jestjs.io`)
