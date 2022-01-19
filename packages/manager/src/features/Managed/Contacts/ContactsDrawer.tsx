@@ -181,7 +181,7 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
                 <Select
                   label="Group"
                   placeholder="Create or Select a Group"
-                  variant="creatable"
+                  creatable
                   isClearable={false}
                   value={
                     values.group

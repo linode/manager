@@ -7,7 +7,7 @@ import EnvironmentToggleTool from './EnvironmentToggleTool';
 import store from 'src/store';
 import { Provider } from 'react-redux';
 import MockDataTool from './MockDataTool';
-import { isProductionBuild } from 'src/constants';
+import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import Grid from 'src/components/core/Grid';
 
 function install() {
@@ -26,11 +26,11 @@ function install() {
               <EnvironmentToggleTool />
             </Grid>
           )}
-          {!isProductionBuild && (
+          {!isProductionBuild || ENABLE_DEV_TOOLS ? (
             <Grid item xs={4} sm={5} md={3}>
               <MockDataTool />
             </Grid>
-          )}
+          ) : null}
         </Grid>
       </div>
     );

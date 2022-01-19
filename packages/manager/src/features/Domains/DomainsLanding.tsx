@@ -178,16 +178,6 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
     openForEditing,
   ]);
 
-  React.useEffect(() => {
-    // Open the "Edit Domain" drawer if so specified by this component's props.
-    if (domainForEditing) {
-      props.openForEditing(
-        domainForEditing.domainLabel,
-        domainForEditing.domainId
-      );
-    }
-  }, [domainForEditing, props]);
-
   const navigateToCreate = () => {
     props.history.push(DOMAIN_CREATE_ROUTE);
   };
