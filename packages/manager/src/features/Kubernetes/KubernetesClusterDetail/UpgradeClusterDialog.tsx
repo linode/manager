@@ -104,22 +104,20 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
         <Typography variant="h3" className={classes.noticeHeader}>
           Caution:
         </Typography>
-        <Typography>
-          <ul className={classes.noticeList}>
-            <li>
-              All nodes will be deleted and new nodes will be created to replace
-              them.
-            </li>
-            <li>
-              Any local storage (such as &apos;hostPath&apos; volumes) will be
-              erased.
-            </li>
-            <li>
-              This may take several minutes, as nodes will be replaced on a
-              rolling basis.
-            </li>
-          </ul>
-        </Typography>
+        <ul className={classes.noticeList}>
+          <li>
+            All nodes will be deleted and new nodes will be created to replace
+            them.
+          </li>
+          <li>
+            Any local storage (such as &apos;hostPath&apos; volumes) will be
+            erased.
+          </li>
+          <li>
+            This may take several minutes, as nodes will be replaced on a
+            rolling basis.
+          </li>
+        </ul>
       </Notice>
       <CheckBox
         checked={checked}
