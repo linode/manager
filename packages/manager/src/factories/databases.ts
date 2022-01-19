@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { pickRandom } from 'src/utilities/random';
+import { pickRandom, randomDate } from 'src/utilities/random';
 import { v4 } from 'uuid';
 import {
   Database,
@@ -28,15 +28,16 @@ const possibleReplicationTypes: ReplicationType[] = [
 const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
-  id: 'g1-mysql-ha-2',
-  label: 'MySQL HA Tier 2',
+  id: Factory.each((i) => `g6-standard-${i}`),
+  label: Factory.each((i) => `Linode ${i} GB`),
+  class: 'standard',
   price: {
     hourly: 0.4,
     monthly: 60,
   },
   memory: 2048,
   transfer: 30,
-  disk: 40,
+  disk: 20480,
   vcpus: 2,
   deprecated: false,
   addons: {
@@ -71,6 +72,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   region: 'us-east',
   status: pickRandom(possibleStatuses),
   type: databaseTypeFactory.build().id,
+  version: '5.8.13',
   failover_count: 2,
   engine: 'mysql',
   encrypted: false,
@@ -92,15 +94,14 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   id: Factory.each((i) => i),
   label: Factory.each(() => `backup-${v4()}`),
   type: pickRandom(['snapshot', 'auto']),
-  created: '2020-10-01T00:00:00',
+  created: Factory.each(() => randomDate().toISOString()),
 });
 
 export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
   {
-    id: Factory.each((i) => `version-${i}`),
-    label: Factory.each((i) => `Example Version ${i}`),
+    id: Factory.each((i) => `mysql/${i}`),
     engine: 'mysql',
-    version: Factory.each((i) => `v${i}`),
+    version: Factory.each((i) => `${i}`),
     deprecated: false,
   }
 );

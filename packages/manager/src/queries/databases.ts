@@ -7,6 +7,7 @@ import {
   getDatabaseTypes,
   getDatabaseVersions,
   getEngineDatabase,
+  restoreWithBackup,
   updateDatabase,
 } from '@linode/api-v4/lib/databases';
 import {
@@ -46,7 +47,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
     {
       onSuccess: (data) => {
         queryClient.setQueryData<Database | undefined>(
-          `${queryKey}-${id}`,
+          [queryKey, id],
           (oldEntity) => {
             if (oldEntity === undefined) {
               return undefined;
@@ -76,7 +77,7 @@ export const useCreateDatabaseMutation = () =>
         // is API paginated.
         queryClient.invalidateQueries(`${queryKey}-list`);
         // Add database to the cache
-        queryClient.setQueryData(`${queryKey}-${data.id}`, data);
+        queryClient.setQueryData([queryKey, data.id], data);
       },
     }
   );
@@ -125,20 +126,11 @@ export const useDatabaseCredentialsQuery = (engine: Engine, id: number) =>
     () => getDatabaseCredentials(engine, id)
   );
 
-// This may or may not be useful when we start implementing our components
-// since most of our queries require the engine to be passed and we will need the
-// engine synchronously.
-export const getDatabaseEngine = (id: number) => {
-  const queries = queryClient.getQueriesData<ResourcePage<Database>>(
-    `${queryKey}-list`
+export const useRestoreFromBackupMutation = (
+  engine: Engine,
+  databaseId: number,
+  backupId: number
+) =>
+  useMutation<{}, APIError[]>(() =>
+    restoreWithBackup(engine, databaseId, backupId)
   );
-
-  for (const query of queries) {
-    const database = query[1].data.find((database) => database.id === id);
-    if (database) {
-      return database.engine;
-    }
-  }
-
-  return 'mysql';
-};
