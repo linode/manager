@@ -112,8 +112,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   chip: {
     backgroundColor: theme.palette.primary.main,
     color: '#fff',
+    fontFamily: theme.font.bold,
     fontSize: '0.625rem',
-    height: 15,
+    height: 16,
     marginTop: 2,
     marginLeft: theme.spacing(),
     letterSpacing: '.25px',

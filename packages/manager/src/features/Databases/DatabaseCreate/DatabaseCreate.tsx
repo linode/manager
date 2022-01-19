@@ -49,6 +49,7 @@ import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOption
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import Chip from 'src/components/core/Chip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -78,6 +79,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       padding: `0 ${theme.spacing()}px`,
     },
+  },
+  chip: {
+    fontFamily: theme.font.bold,
+    fontSize: '0.625rem',
+    height: 16,
+    marginTop: 4,
+    marginLeft: theme.spacing(),
+    letterSpacing: '.25px',
+    textTransform: 'uppercase',
   },
 }));
 
@@ -372,6 +382,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             label: 'Database Clusters',
           },
         ]}
+        labelOptions={{
+          suffixComponent: (
+            <Chip className={classes.chip} label="beta" component="span" />
+          ),
+        }}
       />
       <Paper>
         {createError ? <Notice error text={createError} /> : null}
