@@ -97,7 +97,6 @@ export interface Database {
   region: string;
   status: DatabaseStatus;
   type: string;
-  version: string;
   failover_count: FailoverCount;
   engine: Engine;
   encrypted: boolean;
