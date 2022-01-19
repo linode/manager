@@ -50,7 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   removeButton: {
     float: 'right',
-    paddingRight: 15,
   },
   restrictWarning: {
     width: '50%',
@@ -97,16 +96,6 @@ export const AccessControls: React.FC<Props> = (props) => {
     }
   }, [allowList]);
 
-  // Functions for "Add Access Control" button interactions.
-  const handleAddAccessControlClick = () => {
-    setAddAccessControlDrawerOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setAddAccessControlDrawerOpen(false);
-  };
-
-  // Functions for Access Control table "Remove" button interactions.
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
     setDialogOpen(true);
@@ -117,11 +106,7 @@ export const AccessControls: React.FC<Props> = (props) => {
     setDialogOpen(false);
   };
 
-  const handleError = (e: APIError[]) => {
-    setError(e[0].reason);
-  };
-
-  const handleRemove = () => {
+  const handleRemoveIPAddress = () => {
     updateDatabase({
       allow_list: allowList.filter(
         (ipAddress) => ipAddress !== accessControlToBeRemoved
@@ -130,7 +115,9 @@ export const AccessControls: React.FC<Props> = (props) => {
       .then(() => {
         handleDialogClose();
       })
-      .catch(handleError);
+      .catch((e: APIError[]) => {
+        setError(e[0].reason);
+      });
   };
 
   const ipTable = (accessControlsList: string[]) => {
@@ -161,6 +148,18 @@ export const AccessControls: React.FC<Props> = (props) => {
     );
   };
 
+  const actionsPanel = (
+    <ActionsPanel>
+      <Button buttonType="secondary" onClick={handleDialogClose}>
+        Cancel
+      </Button>
+
+      <Button buttonType="primary" onClick={handleRemoveIPAddress}>
+        Remove IP Address
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
     <>
       <div className={classes.topSection}>
@@ -182,7 +181,7 @@ export const AccessControls: React.FC<Props> = (props) => {
         </div>
         <AddNewLink
           label="Add Access Control"
-          onClick={handleAddAccessControlClick}
+          onClick={() => setAddAccessControlDrawerOpen(true)}
           className={classes.addAccessControlBtn}
         />
       </div>
@@ -191,17 +190,7 @@ export const AccessControls: React.FC<Props> = (props) => {
         open={isDialogOpen}
         onClose={handleDialogClose}
         title={`Remove IP Address ${accessControlToBeRemoved}`}
-        actions={() => (
-          <ActionsPanel>
-            <Button buttonType="secondary" onClick={handleDialogClose}>
-              Cancel
-            </Button>
-
-            <Button buttonType="primary" onClick={handleRemove}>
-              Remove IP Address
-            </Button>
-          </ActionsPanel>
-        )}
+        actions={actionsPanel}
       >
         {error ? <Notice error text={error} /> : null}
         <Typography data-testid="ip-removal-confirmation-warning">
@@ -213,7 +202,7 @@ export const AccessControls: React.FC<Props> = (props) => {
       </ConfirmationDialog>
       <AddAccessControlDrawer
         open={addAccessControlDrawerOpen}
-        onClose={handleDrawerClose}
+        onClose={() => setAddAccessControlDrawerOpen(false)}
         updateDatabase={updateDatabase}
         allowList={extendedIPs}
       />
