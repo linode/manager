@@ -68,7 +68,7 @@ export interface DatabaseInstance {
   instance_uri: string;
 }
 
-type FailoverCount = 0 | 2;
+export type FailoverCount = 0 | 2;
 type ReadonlyCount = 0 | 2;
 
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
