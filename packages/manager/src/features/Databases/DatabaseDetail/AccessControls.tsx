@@ -23,8 +23,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  sectionHeader: {
+  sectionTitleAndText: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+  },
+  sectionTitle: {
     marginBottom: '0.25rem',
   },
   sectionText: {
@@ -34,6 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addAccessControlBtn: {
     minWidth: 180,
+    [theme.breakpoints.down('sm')]: {
+      alignSelf: 'flex-start',
+      marginBottom: '1rem',
+    },
   },
   table: {
     width: '50%',
@@ -163,8 +175,8 @@ export const AccessControls: React.FC<Props> = (props) => {
   return (
     <>
       <div className={classes.topSection}>
-        <div>
-          <div className={classes.sectionHeader}>
+        <div className={classes.sectionTitleAndText}>
+          <div className={classes.sectionTitle}>
             <Typography variant="h3">Access Controls</Typography>
           </div>
           <div className={classes.sectionText}>
