@@ -16,8 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
   },
   noticeList: {
-    paddingLeft: 16,
-    marginTop: 8,
+    paddingLeft: theme.spacing(2),
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -105,11 +105,12 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
               them.
             </li>
             <li>
-              Any local storage(such as 'hostPath' volumes) will be erased.
+              Any local storage (such as &apos;hostPath&apos; volumes) will be
+              erased.
             </li>
             <li>
               This may take several minutes, as nodes will be replaced on a
-              rolling basis
+              rolling basis.
             </li>
           </ul>
         </Typography>
