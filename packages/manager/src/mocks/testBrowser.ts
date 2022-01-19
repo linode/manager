@@ -1,6 +1,6 @@
 import { setupWorker } from 'msw';
 import { SetupWorkerApi } from 'msw/lib/types/setupWorker/setupWorker';
-import { isProductionBuild } from 'src/constants';
+import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { MockData, mockDataController } from 'src/dev-tools/mockDataController';
 import store, { ApplicationState } from 'src/store';
 import { requestDomains } from 'src/store/domains/domains.requests';
@@ -11,7 +11,7 @@ import { handlers, mockDataHandlers } from './serverHandlers';
 
 let worker: SetupWorkerApi;
 
-if (!isProductionBuild) {
+if (!isProductionBuild || ENABLE_DEV_TOOLS) {
   worker = setupWorker(...handlers);
 
   // Subscribe to changes from the mockDataController, which is updated by local dev tools.

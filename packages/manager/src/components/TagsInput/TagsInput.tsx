@@ -96,7 +96,7 @@ const TagsInput: React.FC<Props> = (props) => {
   return (
     <Select
       name={name}
-      variant="creatable"
+      creatable
       isMulti={true}
       label={label || 'Add Tags'}
       hideLabel={hideLabel}

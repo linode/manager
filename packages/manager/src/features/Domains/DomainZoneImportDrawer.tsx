@@ -61,16 +61,16 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
           errorText={remoteNameserverError}
         />
         <ActionsPanel>
+          <Button buttonType="secondary" onClick={this.onClose}>
+            Cancel
+          </Button>
           <Button
             buttonType="primary"
             onClick={this.onSubmit}
             disabled={!requirementsMet}
             loading={submitting}
           >
-            Save
-          </Button>
-          <Button buttonType="secondary" onClick={this.onClose}>
-            Cancel
+            Import
           </Button>
         </ActionsPanel>
       </Drawer>

@@ -120,7 +120,7 @@ interface Props {
   dropzoneDisabled: boolean;
   apiError: string | undefined;
   setErrors: React.Dispatch<React.SetStateAction<APIError[] | undefined>>;
-  // Send a function for cancelling the upload back to the parent.
+  // Send a function for canceling the upload back to the parent.
   setCancelFn: React.Dispatch<React.SetStateAction<(() => void) | null>>;
   onSuccess?: () => void;
 }
