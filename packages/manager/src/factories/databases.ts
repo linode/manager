@@ -60,6 +60,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     version: 'mysql/5.8.13',
     status: Factory.each(() => pickRandom(possibleStatuses)),
     failover_count: Factory.each(() => pickRandom([0, 2])),
+    host: 'db-mysql-0.b.linodeb.net',
     updated: '2021-12-16T17:15:12',
     created: '2021-12-09T17:15:12',
     instance_uri: '',
@@ -79,6 +80,8 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   ipv4_public: pickRandom(IPv4List),
   ssl_connection: false,
   replication_type: pickRandom(possibleReplicationTypes),
+  host: 'db-mysql-0.b.linodeb.net',
+  port: 3306,
   allow_list: [...IPv4List],
   connection_strings: [
     {

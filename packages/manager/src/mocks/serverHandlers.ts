@@ -182,6 +182,18 @@ const databases = [
     }
   ),
 
+  rest.get(
+    `*/databases/:engine/instances/:databaseId/credentials`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          username: 'lnroot',
+          password: 'password123',
+        })
+      );
+    }
+  ),
+
   rest.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
     (req, res, ctx) => {

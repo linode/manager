@@ -25,7 +25,7 @@ import {
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient } from './base';
+import { queryClient, queryPresets } from './base';
 
 export const queryKey = 'databases';
 
@@ -123,7 +123,8 @@ export const useDatabaseTypesQuery = () =>
 export const useDatabaseCredentialsQuery = (engine: Engine, id: number) =>
   useQuery<DatabaseCredentials, APIError[]>(
     [`${queryKey}-credentials`, id],
-    () => getDatabaseCredentials(engine, id)
+    () => getDatabaseCredentials(engine, id),
+    { ...queryPresets.oneTimeFetch }
   );
 
 export const useRestoreFromBackupMutation = (

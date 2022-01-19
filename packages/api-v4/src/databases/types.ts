@@ -66,6 +66,7 @@ export interface DatabaseInstance {
   updated: string;
   created: string;
   instance_uri: string;
+  host: string;
 }
 
 export type FailoverCount = 0 | 2;
@@ -110,6 +111,8 @@ export interface Database {
   connection_strings: ConnectionStrings[];
   created: string;
   updated: string;
+  host: string;
+  port: number;
 }
 
 export interface UpdateDatabasePayload {
