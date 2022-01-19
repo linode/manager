@@ -24,7 +24,7 @@
 // words, one instance of the reducer manages "inbound" rules, and another
 // instance manages "outbound" rules.
 
-import produce, { Draft, Immutable, castDraft } from 'immer';
+import produce, { Draft, castDraft } from 'immer';
 import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
 import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
@@ -42,7 +42,7 @@ export interface ExtendedFirewallRule extends FirewallRuleType {
   originalIndex: number;
 }
 
-export type RuleEditorState = Immutable<ExtendedFirewallRule[][]>;
+export type RuleEditorState = ExtendedFirewallRule[][];
 
 export type RuleEditorAction =
   | {
@@ -251,12 +251,28 @@ export const removeICMPPort = (
     return thisRule;
   });
 
+const removeEmptyAddressArrays = (rules: ExtendedFirewallRule[]) => {
+  return rules.map((rule) => {
+    const keepIPv4 = rule.addresses?.ipv4 && rule.addresses.ipv4.length > 0;
+    const keepIPv6 = rule.addresses?.ipv6 && rule.addresses.ipv6.length > 0;
+
+    return {
+      ...rule,
+      addresses: {
+        ipv4: keepIPv4 ? rule.addresses?.ipv4 : undefined,
+        ipv6: keepIPv6 ? rule.addresses?.ipv6 : undefined,
+      },
+    };
+  });
+};
+
 export const filterRulesPendingDeletion = (
   rules: ExtendedFirewallRule[]
 ): ExtendedFirewallRule[] =>
   rules.filter((thisRule) => thisRule.status !== 'PENDING_DELETION');
 
 export const prepareRules = compose(
+  removeEmptyAddressArrays,
   removeICMPPort,
   filterRulesPendingDeletion,
   editorStateToRules
