@@ -3,7 +3,7 @@
 This directory contains the GitHub Actions workflows that power continuous integration and end-to-end testing for Linode Cloud Manager.
 
 ## Continuous Integration
-The `ci` workflow handles testing, building, and publishing of packages in this repository. Tests are run via [Jest](https://jestjs.io/) for `api-v4` and `manager`, but tests are not run for `validation`.
+The `ci` workflow handles testing, building, and publishing of packages in this repository. Tests are run via [Jest](https://jestjs.io/) for `api-v4` and `manager`.
 
 If the continuous integration workflow was triggered via a push to the `master` branch, the built packages are published:
 
@@ -13,6 +13,12 @@ If the continuous integration workflow was triggered via a push to the `master` 
 ### Triggers
 * Upon push to `master` branch
 * Upon pull request creation
+
+### Secrets
+| Name           | Description                                     |
+|----------------|-------------------------------------------------|
+| NPM_AUTH_TOKEN | NPM authentication token for package publishing |
+| SLACK_WEBHOOK  | Webhook for Slack CI notifications              |
 
 ## End-to-End Tests
 Automatic end-to-end testing of Linode Cloud Manager via [Cypress](https://www.cypress.io/) is handled by the `Run Tests On PR` and `Run Tests On Push/Schedule` workflows. These two workflows are very similar, and differ primarily in how they are triggered.
@@ -25,6 +31,19 @@ Cypress tests are parallelized across four containers, and tests are automatical
 * Scheduled, 1:00 PM UTC (8:00 AM ET) every Monday through Friday for `develop` branch
 * Upon push to `develop`, `staging`, and `master` branches
 * Upon creation or update to any pull request with `e2e` label
+
+### Secrets
+| Name                       | Description                               |
+|----------------------------|-------------------------------------------|
+| USER_1                     | Cloud Manager OAuth token for test user 1 |
+| USER_2                     | Cloud Manager OAuth token for test user 2 |
+| USER_3                     | Cloud Manager OAuth token for test user 3 |
+| USER_4                     | Cloud Manager OAuth token for test user 4 |
+| REACT_APP_LAUNCH_DARKLY_ID | LaunchDarkly API key                      |
+| REACT_APP_CLIENT_ID        | Linode OAuth app client ID                |
+| REACT_APP_API_ROOT         | Linode API root URL                       |
+| REACT_APP_APP_ROOT         | Linode Cloud Manager instance root URL    |
+| CYPRESS_RECORD_KEY         | Cypress Dashboard project record key      |
 
 ## See Also
 * [_Understanding GitHub Actions_](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) (`docs.github.com`)
