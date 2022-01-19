@@ -1,23 +1,27 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import CheckBox from 'src/components/CheckBox';
-import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { HACopy } from '../KubeCheckoutBar/HACheckbox';
-import { useSnackbar } from 'notistack';
-import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {
-    fontWeight: 'bold',
+    fontSize: '0.875rem',
   },
   noticeList: {
-    paddingLeft: 16,
-    marginTop: 8,
+    fontSize: '0.875rem',
+    marginTop: 4,
+    paddingLeft: theme.spacing(2),
+    '& li': {
+      marginBottom: 4,
+    },
   },
 }));
 
@@ -96,8 +100,10 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
         Pricing for the HA control plane is ${HIGH_AVAILABILITY_PRICE} per month
         per cluster.
       </Typography>
-      <Notice warning>
-        <Typography className={classes.noticeHeader}>Caution:</Typography>
+      <Notice warning spacingTop={16} spacingBottom={16}>
+        <Typography variant="h3" className={classes.noticeHeader}>
+          Caution:
+        </Typography>
         <Typography>
           <ul className={classes.noticeList}>
             <li>
@@ -105,7 +111,8 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
               them.
             </li>
             <li>
-              Any local storage(such as 'hostPath' volumes) will be erased.
+              Any local storage(such as &rsquo;hostPath&rsquo; volumes) will be
+              erased.
             </li>
             <li>
               This may take several minutes, as nodes will be replaced on a
