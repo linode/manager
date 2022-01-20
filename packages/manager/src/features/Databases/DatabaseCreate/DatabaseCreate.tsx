@@ -452,7 +452,7 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
-          <Typography variant="h2">
+          <Typography variant="h2" style={{ marginBottom: 4 }}>
             Set Number of Nodes{' '}
             {is1GbPlan ? (
               <HelpIcon
@@ -498,7 +498,9 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
-          <Typography variant="h2">Add Access Controls</Typography>
+          <Typography variant="h2" style={{ marginBottom: 4 }}>
+            Add Access Controls
+          </Typography>
           <Typography>
             Add the IP addresses for other instances or users that should have
             the authorization to view this cluster’s database.
