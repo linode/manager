@@ -97,7 +97,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         try {
           const decodedFile = window.atob(response.certificate);
           downloadFile(
-            `${response.public_key}-ca-certificate.yaml`,
+            `${response.public_key}-ca-certificate.crt`,
             decodedFile
           );
         } catch (e) {
