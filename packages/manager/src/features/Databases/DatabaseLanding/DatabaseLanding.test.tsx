@@ -58,7 +58,7 @@ describe('Database Table', () => {
     server.use(
       rest.get('*/databases/instances', (req, res, ctx) => {
         const databases = databaseInstanceFactory.buildList(1, {
-          status: 'running',
+          status: 'active',
         });
         return res(ctx.json(makeResourcePage(databases)));
       })
@@ -84,7 +84,7 @@ describe('Database Table', () => {
     getAllByText('Created');
 
     // Check to see if the mocked API data rendered in the table
-    queryAllByText('Running');
+    queryAllByText('Active');
   });
 
   it('should render database landing with empty state', async () => {
