@@ -109,6 +109,7 @@ export class App extends React.Component<CombinedProps, State> {
       console.log('Event:', event);
 
       if (event.action === 'database_create' && event.status === 'finished') {
+        queryClient.invalidateQueries(`${queryKey}-list`);
         queryClient.setQueryData<Database | undefined>(
           [queryKey, event.entity?.id],
           (oldData) => {
