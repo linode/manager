@@ -7,7 +7,6 @@ import Typography from 'src/components/core/Typography';
 import CircleProgress from 'src/components/CircleProgress';
 // import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   connectionDetailsCtn: {
-    padding: theme.spacing(),
+    padding: '8px 15px',
     background: '#f4f4f4',
     border: '1px solid #ccc',
     '& p': {
@@ -67,12 +66,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   credentialsCtn: {
     display: 'flex',
   },
-  errorIcon: {
+  error: {
     color: theme.color.red,
-    '&:hover': {
-      color: theme.color.red,
-      opacity: 0.7,
-    },
+    marginLeft: theme.spacing(2),
   },
 }));
 
@@ -136,6 +132,23 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
 
   const sslMode = database.ssl_connection ? 'REQUIRED' : 'NOT REQUIRED';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\nsslmode = ${sslMode}`;
+  const credentialsBtn = (handleClick: () => void, btnText: string) => {
+    return (
+      <span
+        onClick={handleClick}
+        className={classes.showBtn}
+        role="button"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            handleClick();
+          }
+        }}
+        tabIndex={0}
+      >
+        {btnText}
+      </span>
+    );
+  };
 
   return (
     <>
@@ -151,31 +164,23 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             </Typography>
           </div>
           {credentialsLoading ? (
-            <div style={{ margin: '4px 0px 4px 4px' }}>
+            <div style={{ marginLeft: 4, marginTop: 4 }}>
               <CircleProgress mini />
             </div>
           ) : (
             <Typography style={{ alignSelf: 'center' }}>
               {credentialsError ? (
-                <HelpIcon
-                  className={classes.errorIcon}
-                  text="Error retrieving credentials"
-                  isError
-                />
+                <>
+                  <span className={classes.error}>
+                    Error retrieving credentials.
+                  </span>
+                  {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
+                </>
               ) : (
-                <span
-                  onClick={handleShowPasswordClick}
-                  className={classes.showBtn}
-                  role="button"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleShowPasswordClick();
-                    }
-                  }}
-                  tabIndex={0}
-                >
-                  {showCredentials && credentials ? 'hide' : 'show'}
-                </span>
+                credentialsBtn(
+                  handleShowPasswordClick,
+                  showCredentials && credentials ? 'Hide' : 'Show'
+                )
               )}
             </Typography>
           )}
