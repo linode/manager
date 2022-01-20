@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   table: {
     width: '50%',
-    border: `solid 1px ${theme.cmrBorderColors.divider}`,
+    border: `solid 1px ${theme.cmrBorderColors.borderTable}`,
     '&:last-child': {
       borderBottom: 'none',
     },
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: `solid 1px ${theme.cmrBorderColors.divider}`,
+    borderBottom: `solid 1px ${theme.cmrBorderColors.borderTable}`,
   },
   removeButton: {
     float: 'right',
