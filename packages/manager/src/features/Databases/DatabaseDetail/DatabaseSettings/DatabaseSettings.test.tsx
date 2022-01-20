@@ -2,15 +2,19 @@ import * as React from 'react';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import DatabaseSettings from './DatabaseSettings';
+import { databaseFactory } from 'src/factories/databases';
 
 describe('DatabaseSettings Component', () => {
+  const database = databaseFactory.build();
   it('Should exist and be renderable', () => {
     expect(DatabaseSettings).toBeDefined();
-    renderWithTheme(<DatabaseSettings />);
+    renderWithTheme(<DatabaseSettings database={database} />);
   });
 
   it('Should render a Paper component with headers for Access Controls, Reseting the Root password, and Deleting the Cluster', () => {
-    const { getAllByRole, container } = renderWithTheme(<DatabaseSettings />);
+    const { getAllByRole, container } = renderWithTheme(
+      <DatabaseSettings database={database} />
+    );
     const paper = container.querySelector('.MuiPaper-root');
     expect(paper).not.toBeNull();
     const headings = getAllByRole('heading');

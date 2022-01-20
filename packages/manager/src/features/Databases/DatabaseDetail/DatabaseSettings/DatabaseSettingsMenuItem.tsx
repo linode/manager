@@ -2,6 +2,7 @@ import * as React from 'react';
 import Grid from 'src/components/Grid';
 import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 interface Props {
   buttonText: string;
@@ -10,6 +11,22 @@ interface Props {
   onClick: () => void;
   disabled?: boolean;
 }
+
+const useStyles = makeStyles((theme: Theme) => ({
+  menuItem: {
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(2),
+  },
+  menuItemTitle: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  menuItemButtonContainer: {
+    marginTop: theme.spacing(2),
+    justifyContent: 'flex-end',
+    alignContent: 'flex-start',
+  },
+}));
 
 export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
   const {
@@ -21,14 +38,24 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
     children,
   } = props;
 
+  const classes = useStyles();
+
   return (
-    <Grid container>
-      <Grid item lg={9}>
-        <Typography variant="h3">{sectionTitle}</Typography>
+    <Grid container className={classes.menuItem}>
+      <Grid item lg={6} sm={12}>
+        <Typography className={classes.menuItemTitle} variant="h3">
+          {sectionTitle}
+        </Typography>
         <Typography>{descriptiveText}</Typography>
         {children}
       </Grid>
-      <Grid item lg={3}>
+      <Grid
+        container
+        item
+        lg={3}
+        sm={12}
+        className={classes.menuItemButtonContainer}
+      >
         <Button
           disabled={disabled}
           buttonType="primary"

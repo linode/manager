@@ -1,24 +1,20 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Divider from 'src/components/core/Divider';
-import { Engine } from '@linode/api-v4/lib/databases/types';
+import { Database } from '@linode/api-v4/lib/databases/types';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
-import AccessControls from '../DatabaseSummary/DatabaseSummaryAccessControls';
+import AccessControls from '../AccessControls';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {
-  databaseID: number;
-  databaseEngine: Engine;
-  databaseLabel: string;
+  database: Database;
 }
 
 export const DatabaseSettings: React.FC<Props> = (props) => {
-  const { databaseID, databaseEngine, databaseLabel } = props;
+  const { database } = props;
   const { data: profile } = useProfile();
-  const accessControlsCopy =
-    'Add the IP addresses or IP range(s) for other instances or users that should have the authorization to view this cluster’s database. By default, all public and private connections are denied. Learn more.';
 
   const resetRootPasswordCopy =
     'Resetting your root password will automatically generate a new password. You can view the updated password on your Database Cluster Summary page. ';
@@ -28,17 +24,9 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [
-    isAddAccessControlDialogOpen,
-    setIsAddAccessControlDialogOpen,
-  ] = React.useState(false);
-  const [
     isResetRootPasswordDialogOpen,
     setIsResetRootPasswordDialogOpen,
   ] = React.useState(false);
-
-  const onAddAccessControl = () => {
-    setIsAddAccessControlDialogOpen(true);
-  };
 
   const onResetRootPassword = () => {
     setIsResetRootPasswordDialogOpen(true);
@@ -59,14 +47,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   return (
     <>
       <Paper>
-        <DatabaseSettingsMenuItem
-          buttonText="Add Access Controls"
-          descriptiveText={accessControlsCopy}
-          onClick={onAddAccessControl}
-          sectionTitle="Access Controls"
-        >
-          <AccessControls />
-        </DatabaseSettingsMenuItem>
+        <AccessControls database={database} />
         <Divider />
         <DatabaseSettingsMenuItem
           buttonText="Reset Root Password"
@@ -86,15 +67,15 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
       <DatabaseSettingsDeleteClusterDialog
         open={isDeleteDialogOpen}
         onClose={onDeleteClusterClose}
-        databaseID={databaseID}
-        databaseEngine={databaseEngine}
-        databaseLabel={databaseLabel}
+        databaseID={database.id}
+        databaseEngine={database.engine}
+        databaseLabel={database.label}
       />
       <DatabaseSettingsResetPasswordDialog
         open={isResetRootPasswordDialogOpen}
         onClose={onResetRootPasswordClose}
-        databaseID={databaseID}
-        databaseEngine={databaseEngine}
+        databaseID={database.id}
+        databaseEngine={database.engine}
       />
     </>
   );
