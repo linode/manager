@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   addAccessControlBtn: {
-    minWidth: 180,
+    minWidth: 214,
     [theme.breakpoints.down('sm')]: {
       alignSelf: 'flex-start',
       marginBottom: '1rem',
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   table: {
     width: '50%',
-    border: `solid 1px ${theme.cmrBorderColors.divider}`,
+    border: `solid 1px ${theme.cmrBorderColors.borderTable}`,
     '&:last-child': {
       borderBottom: 'none',
     },
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: `solid 1px ${theme.cmrBorderColors.divider}`,
+    borderBottom: `solid 1px ${theme.cmrBorderColors.borderTable}`,
   },
   removeButton: {
     float: 'right',
@@ -187,10 +187,9 @@ export const AccessControls: React.FC<Props> = (props) => {
           </div>
           <div className={classes.sectionText}>
             <Typography>
-              Add the IP addresses or IP range(s) for other instances or users
-              that should have the authorization to view this cluster&apos;s
-              database. By default, all public and private connections are
-              denied.{' '}
+              Add the IP addresses for other instances or users that should have
+              the authorization to view this cluster&apos;s database. By
+              default, all public and private connections are denied.{' '}
               <ExternalLink to="https://www.linode.com/docs/products/database">
                 Learn more.
               </ExternalLink>
@@ -198,7 +197,7 @@ export const AccessControls: React.FC<Props> = (props) => {
           </div>
         </div>
         <AddNewLink
-          label="Add Access Control"
+          label="Manage Access Controls"
           onClick={() => setAddAccessControlDrawerOpen(true)}
           className={classes.addAccessControlBtn}
         />
@@ -214,8 +213,8 @@ export const AccessControls: React.FC<Props> = (props) => {
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable
-          access by clicking Add Access Control and adding the same IP address
-          or IP range.
+          access by clicking Manage Access Controls and adding the same IP
+          address.
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer

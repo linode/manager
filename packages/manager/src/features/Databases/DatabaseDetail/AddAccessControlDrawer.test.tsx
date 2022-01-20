@@ -20,7 +20,7 @@ describe('Add Access Controls drawer', () => {
   const { getByText, getByTestId } = renderWithTheme(
     <AccessControls database={database} />
   );
-  const button = getByText('Add Access Control');
+  const button = getByText('Manage Access Controls');
 
   fireEvent.click(button);
 
@@ -58,7 +58,7 @@ describe('Add Access Controls drawer', () => {
       />
     );
 
-    const addInboundSourcesButton = getByText('Add Inbound Sources').closest(
+    const addInboundSourcesButton = getByText('Update Inbound Sources').closest(
       'button'
     );
 
