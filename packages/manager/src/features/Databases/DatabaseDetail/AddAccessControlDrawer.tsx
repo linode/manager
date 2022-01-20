@@ -139,6 +139,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
             onChange={handleIPChange}
             inputProps={{ autoFocus: true }}
             placeholder="Add IP address"
+            forDatabaseAccessControls
           />
           <ActionsPanel>
             <Button
