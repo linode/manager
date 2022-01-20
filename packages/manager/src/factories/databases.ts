@@ -11,12 +11,12 @@ import {
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 
+// These are not all of the possible statuses, but these are some common ones.
 const possibleStatuses: DatabaseStatus[] = [
-  'creating',
-  'running',
+  'provisioning',
+  'active',
   'failed',
   'degraded',
-  'updating',
 ];
 
 const possibleReplicationTypes: ReplicationType[] = [

@@ -28,11 +28,14 @@ export interface DatabaseVersion {
 }
 
 export type DatabaseStatus =
-  | 'creating'
-  | 'running'
+  | 'provisioning'
+  | 'active'
+  | 'suspending'
+  | 'suspended'
+  | 'resuming'
+  | 'restoring'
   | 'failed'
-  | 'degraded'
-  | 'updating';
+  | 'degraded';
 
 export type DatabaseBackupType = 'snapshot' | 'auto';
 

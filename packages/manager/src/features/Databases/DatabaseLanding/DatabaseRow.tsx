@@ -19,11 +19,14 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  creating: 'other',
-  running: 'active',
+  provisioning: 'other',
+  active: 'active',
+  suspending: 'other',
+  suspended: 'error',
+  resuming: 'other',
+  restoring: 'other',
   failed: 'error',
   degraded: 'inactive',
-  updating: 'other',
 };
 
 export const databaseEngineMap: Record<Engine, string> = {
