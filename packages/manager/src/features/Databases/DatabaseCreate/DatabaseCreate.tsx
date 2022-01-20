@@ -302,14 +302,6 @@ const DatabaseCreate: React.FC<{}> = () => {
     </div>
   );
 
-  const disableCreateButton =
-    !values.label ||
-    !values.engine ||
-    !values.region ||
-    !values.type ||
-    values.failover_count < 0 ||
-    values.allow_list.some((item) => item.address === '');
-
   const is1GbPlan = type?.memory === 1024;
 
   const nodeOptions = [
@@ -529,12 +521,7 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
       </Paper>
       <Grid className={classes.btnCtn}>
-        <Button
-          type="submit"
-          buttonType="primary"
-          disabled={disableCreateButton}
-          loading={isSubmitting}
-        >
+        <Button type="submit" buttonType="primary" loading={isSubmitting}>
           Create Database Cluster
         </Button>
       </Grid>
