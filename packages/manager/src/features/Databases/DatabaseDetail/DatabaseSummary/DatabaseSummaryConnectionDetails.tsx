@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   connectionDetailsCtn: {
     padding: '8px 15px',
-    background: theme.bg.main,
-    border: '1px solid #ccc',
+    background: theme.cmrBGColors.bgAccessRow,
+    border: `1px solid ${theme.color.borderPagination}`,
     '& p': {
       lineHeight: '1.5rem',
       '& span': {
