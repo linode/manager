@@ -43,10 +43,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const getDatabaseVersionNumber = (
-  version: DatabaseInstance['version']
-) => version.split('/')[1];
-
 interface Props {
   database: DatabaseInstance;
 }
@@ -92,9 +88,7 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
       <Hidden xsDown>
         <TableCell>{configuration}</TableCell>
       </Hidden>
-      <TableCell>
-        {`${databaseEngineMap[engine]} v${getDatabaseVersionNumber(version)}`}
-      </TableCell>
+      <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
       <Hidden smDown>
         <TableCell>{dcDisplayNames[region] || 'Unknown Region'}</TableCell>
       </Hidden>
