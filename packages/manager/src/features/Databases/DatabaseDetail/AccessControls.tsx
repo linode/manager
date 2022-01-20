@@ -213,7 +213,8 @@ export const AccessControls: React.FC<Props> = (props) => {
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
           database cluster. This action cannot be undone, but you can re-enable
-          access by clicking Add Access Control and adding the same IP address.
+          access by clicking Manage Access Controls and adding the same IP
+          address.
         </Typography>
       </ConfirmationDialog>
       <AddAccessControlDrawer
