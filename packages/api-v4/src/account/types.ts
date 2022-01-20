@@ -311,7 +311,8 @@ export type EventAction =
   | 'volume_resize'
   | 'volume_clone'
   | 'volume_migrate_scheduled'
-  | 'volume_migrate';
+  | 'volume_migrate'
+  | 'database_create';
 
 export type EventStatus =
   | 'scheduled'

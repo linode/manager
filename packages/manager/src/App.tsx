@@ -31,6 +31,9 @@ import { MapState } from './store/types';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
 import GoTo from './GoTo';
+import { queryClient } from './queries/base';
+import { queryKey } from './queries/databases';
+import { Database } from '@linode/api-v4/lib/databases';
 
 interface Props {
   toggleTheme: () => void;
@@ -99,6 +102,26 @@ export class App extends React.Component<CombinedProps, State> {
             }));
             break;
         }
+      }
+    });
+
+    events$.subscribe((event) => {
+      console.log('Event:', event);
+
+      if (event.action === 'database_create' && event.status === 'finished') {
+        queryClient.setQueryData<Database | undefined>(
+          [queryKey, event.entity?.id],
+          (oldData) => {
+            if (oldData === undefined) {
+              return undefined;
+            }
+
+            return {
+              ...oldData,
+              status: 'active',
+            };
+          }
+        );
       }
     });
 
