@@ -1,64 +1,54 @@
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
-import { deleteDatabase, Engine } from '@linode/api-v4/lib/databases';
+import DeletionDialog from 'src/components/DeletionDialog';
+import { Engine } from '@linode/api-v4/lib/databases';
+import { useDeleteDatabaseMutation } from 'src/queries/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   databaseID: number;
   databaseEngine: Engine;
-};
-
-// I feel like this pattern should be its own component due to how common it is
-const renderActions = (onClose: () => void, onConfirm: () => Promise<void>) => {
-  return (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onConfirm}
-        data-qa-confirm
-        data-testid="dialog-confrim"
-      >
-        Delete Cluster
-      </Button>
-    </ActionsPanel>
-  );
-};
+  databaseLabel: string;
+}
 
 export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
-  const { open, onClose, databaseID, databaseEngine } = props;
+  const { open, onClose, databaseID, databaseEngine, databaseLabel} = props;
+  const { enqueueSnackbar } = useSnackbar();
+  const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(
+    databaseEngine,
+    databaseID
+  );
+  const defaultError = 'There was an error deleting this database cluster';
+  const [error, setError] = React.useState('');
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const onDeleteCluster = async () => {
-    await deleteDatabase(databaseEngine, databaseID);
-    onClose();
+  const onDeleteCluster = () => {
+    setIsLoading(true);
+    deleteDatabase()
+      .then(() => {
+        setIsLoading(false);
+        enqueueSnackbar('Database Cluster deleted successfully', {
+          variant: 'success',
+        });
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        setError(getAPIErrorOrDefault(e, defaultError)[0].reason);
+      });
   };
 
   return (
-    <ConfirmationDialog
+    <DeletionDialog
+      entity="Database Cluster"
+      label={databaseLabel}
       open={open}
-      title="Delete Database Cluster"
+      error={error}
       onClose={onClose}
-      actions={renderActions(onClose, onDeleteCluster)}
-    >
-      <Notice
-        warning
-        text="Deleting a database cluster is permenant and cannot be undone." />
-      <Typography>
-        Are you sure you want to continue?
-      </Typography>
-    </ConfirmationDialog>
+      onDelete={onDeleteCluster}
+      loading={isLoading}
+    />
   );
 };
 

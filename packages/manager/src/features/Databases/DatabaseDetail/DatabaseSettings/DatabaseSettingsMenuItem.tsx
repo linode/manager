@@ -8,6 +8,7 @@ interface Props {
   descriptiveText: string;
   sectionTitle: string;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
@@ -16,6 +17,7 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
     descriptiveText,
     sectionTitle,
     onClick,
+    disabled = false,
     children,
   } = props;
 
@@ -27,7 +29,12 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
         {children}
       </Grid>
       <Grid item lg={3}>
-        <Button buttonType="primary" onClick={onClick} fullWidth>
+        <Button
+          disabled={disabled}
+          buttonType="primary"
+          onClick={onClick}
+          fullWidth
+        >
           {buttonText}
         </Button>
       </Grid>

@@ -11,7 +11,7 @@ interface Props {
   onClose: () => void;
   databaseID: number;
   databaseEngine: Engine;
-};
+}
 
 // I feel like this pattern should be its own component due to how common it is
 const renderActions = (onClose: () => void, onConfirm: () => void) => {
@@ -38,7 +38,7 @@ const renderActions = (onClose: () => void, onConfirm: () => void) => {
 };
 
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
-  const { open, onClose, databaseEngine, databaseID} = props;
+  const { open, onClose, databaseEngine, databaseID } = props;
 
   const onResetRootPassword = async () => {
     await resetDatabaseCredentials(databaseEngine, databaseID);
@@ -54,10 +54,9 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
     >
       <Notice
         warning
-        text="Deleting a database cluster is permenant and cannot be undone." />
-      <Typography>
-        Are you sure you want to continue?
-      </Typography>
+        text="Deleting a database cluster is permenant and cannot be undone."
+      />
+      <Typography>Are you sure you want to continue?</Typography>
     </ConfirmationDialog>
   );
 };
