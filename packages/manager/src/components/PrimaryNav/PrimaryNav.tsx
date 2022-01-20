@@ -150,6 +150,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           display: 'Databases',
           href: '/databases',
           icon: <Database />,
+          isBeta: true,
         },
         {
           hide: !showFirewalls,
