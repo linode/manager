@@ -101,7 +101,9 @@ describe('Database Table', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     expect(
-      getByText('Take control of your data with managed MySQL Databases.')
+      getByText(
+        'Fully managed and highly scalable database clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
+      )
     ).toBeInTheDocument();
   });
 });

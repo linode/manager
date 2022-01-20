@@ -47,7 +47,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
     {
       onSuccess: (data) => {
         queryClient.setQueryData<Database | undefined>(
-          [queryKey, id],
+          [queryKey, Number(id)],
           (oldEntity) => {
             if (oldEntity === undefined) {
               return undefined;
@@ -55,7 +55,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
 
             if (oldEntity.label !== data.label) {
               // Invalidate useDatabasesQuery to reflect the new database label.
-              // We choose to refetch insted of manually mutate the cache because it
+              // We choose to refetch instead of manually mutate the cache because it
               // is API paginated.
               queryClient.invalidateQueries(`${queryKey}-list`);
             }
