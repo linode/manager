@@ -187,6 +187,7 @@ const databases = [
     '*/databases/:engine/instances/:databaseId/credentials',
     (req, res, ctx) => {
       return res(
+        // ctx.status(400)
         ctx.json({
           username: 'lnroot',
           password: 'password123',

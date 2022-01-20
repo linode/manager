@@ -6,8 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CircleProgress from 'src/components/CircleProgress';
 // import CopyTooltip from 'src/components/CopyTooltip';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -62,7 +62,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   showBtn: {
     color: theme.color.blue,
     cursor: 'pointer',
-    marginLeft: theme.spacing(),
+    marginLeft: theme.spacing(2),
+  },
+  credentialsCtn: {
+    display: 'flex',
+  },
+  errorIcon: {
+    color: theme.color.red,
+    '&:hover': {
+      color: theme.color.red,
+      opacity: 0.7,
+    },
   },
 }));
 
@@ -74,21 +84,29 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const { database } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const [showPassword, setShowPassword] = React.useState<boolean>(false);
+  const [showCredentials, setShowPassword] = React.useState<boolean>(false);
 
   const {
     data: credentials,
     isLoading: credentialsLoading,
     error: credentialsError,
+    refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
-  const password = showPassword
-    ? credentials?.password
-    : credentials?.password.replace(/./g, '•');
+  const username =
+    showCredentials && credentials ? credentials?.username : '••••••••';
+  const password =
+    showCredentials && credentials ? credentials?.password : '••••••••';
 
   const handleShowPasswordClick = () => {
-    setShowPassword((showPassword) => !showPassword);
+    setShowPassword((showCredentials) => !showCredentials);
   };
+
+  React.useEffect(() => {
+    if (showCredentials && !credentials) {
+      getDatabaseCredentials();
+    }
+  }, [credentials, getDatabaseCredentials, showCredentials]);
 
   const handleDownloadCACertificate = () => {
     getSSLFields(database.engine, database.id)
@@ -116,24 +134,6 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       });
   };
 
-  if (credentialsLoading) {
-    return (
-      <>
-        <Typography className={classes.header}>Connection Details</Typography>
-        <CircleProgress noTopMargin />
-      </>
-    );
-  }
-
-  if (credentialsError) {
-    return (
-      <>
-        <Typography className={classes.header}>Connection Details</Typography>
-        <ErrorState errorText="An unexpected error occurred." />
-      </>
-    );
-  }
-
   const sslMode = database.ssl_connection ? 'REQUIRED' : 'NOT REQUIRED';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\nsslmode = ${sslMode}`;
 
@@ -141,25 +141,45 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     <>
       <Typography className={classes.header}>Connection Details</Typography>
       <Grid className={classes.connectionDetailsCtn}>
-        <Typography>
-          <span>username</span> = {credentials?.username}
-        </Typography>
-        <Typography>
-          <span>password</span> = {password}
-          <span
-            onClick={handleShowPasswordClick}
-            className={classes.showBtn}
-            role="button"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleShowPasswordClick();
-              }
-            }}
-            tabIndex={0}
-          >
-            show
-          </span>
-        </Typography>
+        <div className={classes.credentialsCtn}>
+          <div>
+            <Typography>
+              <span>username</span> = {username}
+            </Typography>
+            <Typography>
+              <span>password</span> = {password}
+            </Typography>
+          </div>
+          {credentialsLoading ? (
+            <div style={{ margin: '4px 0px 4px 4px' }}>
+              <CircleProgress mini />
+            </div>
+          ) : (
+            <Typography style={{ alignSelf: 'center' }}>
+              {credentialsError ? (
+                <HelpIcon
+                  className={classes.errorIcon}
+                  text="Error retrieving credentials"
+                  isError
+                />
+              ) : (
+                <span
+                  onClick={handleShowPasswordClick}
+                  className={classes.showBtn}
+                  role="button"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleShowPasswordClick();
+                    }
+                  }}
+                  tabIndex={0}
+                >
+                  {showCredentials && credentials ? 'hide' : 'show'}
+                </span>
+              )}
+            </Typography>
+          )}
+        </div>
         <Typography>
           <span>host</span> = {database.host}
         </Typography>

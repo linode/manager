@@ -120,11 +120,15 @@ export const useDatabaseTypesQuery = () =>
     getAllDatabaseTypes
   );
 
-export const useDatabaseCredentialsQuery = (engine: Engine, id: number) =>
+export const useDatabaseCredentialsQuery = (
+  engine: Engine,
+  id: number,
+  enabled: boolean = false
+) =>
   useQuery<DatabaseCredentials, APIError[]>(
     [`${queryKey}-credentials`, id],
     () => getDatabaseCredentials(engine, id),
-    { ...queryPresets.oneTimeFetch }
+    { ...queryPresets.oneTimeFetch, enabled }
   );
 
 export const useRestoreFromBackupMutation = (
