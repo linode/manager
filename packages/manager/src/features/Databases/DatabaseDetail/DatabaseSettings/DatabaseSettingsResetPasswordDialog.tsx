@@ -5,6 +5,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { Engine, resetDatabaseCredentials } from '@linode/api-v4/lib/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;
@@ -14,7 +15,11 @@ interface Props {
 }
 
 // I feel like this pattern should be its own component due to how common it is
-const renderActions = (onClose: () => void, onConfirm: () => void) => {
+const renderActions = (
+  onClose: () => void,
+  onConfirm: () => void,
+  loading: boolean
+) => {
   return (
     <ActionsPanel>
       <Button
@@ -30,6 +35,7 @@ const renderActions = (onClose: () => void, onConfirm: () => void) => {
         onClick={onConfirm}
         data-qa-confirm
         data-testid="dialog-confrim"
+        loading={loading}
       >
         Reset Password
       </Button>
@@ -40,9 +46,23 @@ const renderActions = (onClose: () => void, onConfirm: () => void) => {
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
   const { open, onClose, databaseEngine, databaseID } = props;
 
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [error, setError] = React.useState('');
+
   const onResetRootPassword = async () => {
-    await resetDatabaseCredentials(databaseEngine, databaseID);
-    onClose();
+    setIsLoading(true);
+    try {
+      await resetDatabaseCredentials(databaseEngine, databaseID);
+      setIsLoading(false);
+      onClose();
+    } catch (e) {
+      setError(
+        getAPIErrorOrDefault(
+          e,
+          'There was an error resetting the root password'
+        )[0].reason
+      );
+    }
   };
 
   return (
@@ -50,7 +70,8 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       open={open}
       title="Reset Root Password"
       onClose={onClose}
-      actions={renderActions(onClose, onResetRootPassword)}
+      actions={renderActions(onClose, onResetRootPassword, isLoading)}
+      error={error}
     >
       <Notice
         warning
