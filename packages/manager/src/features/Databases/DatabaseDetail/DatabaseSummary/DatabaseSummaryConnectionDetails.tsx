@@ -1,4 +1,5 @@
-import { Database } from '@linode/api-v4/lib/databases/types';
+import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
+import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -8,6 +9,9 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
+import { downloadFile } from 'src/utilities/downloadFile';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -69,6 +73,7 @@ interface Props {
 export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const { database } = props;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = React.useState<boolean>(false);
 
   const {
@@ -83,6 +88,32 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
 
   const handleShowPasswordClick = () => {
     setShowPassword((showPassword) => !showPassword);
+  };
+
+  const handleDownloadCACertificate = () => {
+    getSSLFields(database.engine, database.id)
+      .then((response: SSLFields) => {
+        // Convert to utf-8 from base64
+        try {
+          const decodedFile = window.atob(response.certificate);
+          downloadFile(
+            `${response.public_key}-ca-certificate.yaml`,
+            decodedFile
+          );
+        } catch (e) {
+          enqueueSnackbar('Error parsing your CA Certificate file', {
+            variant: 'error',
+          });
+          return;
+        }
+      })
+      .catch((errorResponse: any) => {
+        const error = getErrorStringOrDefault(
+          errorResponse,
+          'Unable to download your CA Certificate'
+        );
+        enqueueSnackbar(error, { variant: 'error' });
+      });
   };
 
   if (credentialsLoading) {
@@ -147,18 +178,18 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             displayText="Copy Connection Details"
           />
         </Grid>
-        <Grid
-          item
-          onClick={() => {
-            return null;
-          }}
-          className={classes.actionBtn}
-        >
-          <DownloadIcon style={{ marginRight: 8 }} />
-          <Typography className={classes.actionText}>
-            Download CA Certificate
-          </Typography>
-        </Grid>
+        {database.ssl_connection ? (
+          <Grid
+            item
+            onClick={handleDownloadCACertificate}
+            className={classes.actionBtn}
+          >
+            <DownloadIcon style={{ marginRight: 8 }} />
+            <Typography className={classes.actionText}>
+              Download CA Certificate
+            </Typography>
+          </Grid>
+        ) : null}
       </div>
     </>
   );

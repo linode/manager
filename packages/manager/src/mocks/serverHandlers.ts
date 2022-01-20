@@ -170,6 +170,7 @@ const databases = [
       id: req.params.id,
       label: `database-${req.params.id}`,
       engine: req.params.engine,
+      ssl_connection: true,
     });
     return res(ctx.json(database));
   }),
@@ -183,7 +184,7 @@ const databases = [
   ),
 
   rest.get(
-    `*/databases/:engine/instances/:databaseId/credentials`,
+    '*/databases/:engine/instances/:databaseId/credentials',
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -193,6 +194,15 @@ const databases = [
       );
     }
   ),
+
+  rest.get('*/databases/:engine/instances/:databaseId/ssl', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        public_key: 'testkey',
+        certificate: 'testcertificate',
+      })
+    );
+  }),
 
   rest.post(
     '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',

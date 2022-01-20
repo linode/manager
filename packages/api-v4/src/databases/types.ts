@@ -49,8 +49,8 @@ export interface DatabaseCredentials {
 }
 
 export interface SSLFields {
-  public_key: string | null;
-  certificate: string | null;
+  public_key: string;
+  certificate: string;
 }
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
