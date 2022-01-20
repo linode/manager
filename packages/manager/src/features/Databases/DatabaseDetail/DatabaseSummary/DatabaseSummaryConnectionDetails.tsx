@@ -5,7 +5,7 @@ import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CircleProgress from 'src/components/CircleProgress';
-import CopyTooltip from 'src/components/CopyTooltip';
+// import CopyTooltip from 'src/components/CopyTooltip';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
@@ -135,7 +135,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   }
 
   const sslMode = database.ssl_connection ? 'REQUIRED' : 'NOT REQUIRED';
-  const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\nsslmode = ${sslMode}`;
+  // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\nsslmode = ${sslMode}`;
 
   return (
     <>
@@ -171,13 +171,13 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
-        <Grid item className={classes.actionBtn}>
+        {/* <Grid item className={classes.actionBtn}>
           <CopyTooltip
             className={classes.copyToolTip}
             text={connectionDetailsCopy}
             displayText="Copy Connection Details"
           />
-        </Grid>
+        </Grid> */}
         {database.ssl_connection ? (
           <Grid
             item
