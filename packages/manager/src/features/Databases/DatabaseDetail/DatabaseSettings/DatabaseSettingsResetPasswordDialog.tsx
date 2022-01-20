@@ -54,9 +54,12 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
     >
       <Notice
         warning
-        text="Deleting a database cluster is permenant and cannot be undone."
+        text="Resetting your root password requires your database node(s) to"
       />
-      <Typography>Are you sure you want to continue?</Typography>
+      <Typography>
+        After resetting your Root Password, you can view your new password on
+        the Database Cluster Summary page. Learn more.
+      </Typography>
     </ConfirmationDialog>
   );
 };
