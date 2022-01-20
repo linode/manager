@@ -48,6 +48,11 @@ export interface DatabaseCredentials {
   password: string;
 }
 
+interface DatabaseHosts {
+  primary: string;
+  secondary: string;
+}
+
 export interface SSLFields {
   public_key: string;
   certificate: string;
@@ -66,7 +71,7 @@ export interface DatabaseInstance {
   updated: string;
   created: string;
   instance_uri: string;
-  host: string;
+  hosts: DatabaseHosts;
 }
 
 export type FailoverCount = 0 | 2;
@@ -111,7 +116,7 @@ export interface Database {
   connection_strings: ConnectionStrings[];
   created: string;
   updated: string;
-  host: string;
+  hosts: DatabaseHosts;
   port: number;
 }
 
