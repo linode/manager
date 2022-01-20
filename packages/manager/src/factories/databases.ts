@@ -11,12 +11,12 @@ import {
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 
+// These are not all of the possible statuses, but these are some common ones.
 const possibleStatuses: DatabaseStatus[] = [
-  'creating',
-  'running',
+  'provisioning',
+  'active',
   'failed',
   'degraded',
-  'updating',
 ];
 
 const possibleReplicationTypes: ReplicationType[] = [
@@ -57,7 +57,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     engine: 'mysql',
     type: databaseTypeFactory.build().id,
     region: 'us-east',
-    version: 'mysql/5.8.13',
+    version: '5.8.13',
     status: Factory.each(() => pickRandom(possibleStatuses)),
     failover_count: Factory.each(() => pickRandom([0, 2])),
     updated: '2021-12-16T17:15:12',

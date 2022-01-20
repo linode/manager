@@ -67,8 +67,9 @@ const DatabaseLanding: React.FC = () => {
   return (
     <React.Fragment>
       <LandingHeader
-        title="Databases"
-        entity="Database"
+        title="Database Clusters"
+        createButtonText="Create Database Cluster"
+        createButtonWidth={205}
         docsLink="https://linode.com/docs"
         onAddNew={() => history.push('/databases/create')}
       />

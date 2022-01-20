@@ -19,11 +19,14 @@ import {
 } from '@linode/api-v4/lib/databases/types';
 
 export const databaseStatusMap: Record<DatabaseStatus, Status> = {
-  creating: 'other',
-  running: 'active',
+  provisioning: 'other',
+  active: 'active',
+  suspending: 'other',
+  suspended: 'error',
+  resuming: 'other',
+  restoring: 'other',
   failed: 'error',
   degraded: 'inactive',
-  updating: 'other',
 };
 
 export const databaseEngineMap: Record<Engine, string> = {
@@ -42,10 +45,6 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
   },
 }));
-
-export const getDatabaseVersionNumber = (
-  version: DatabaseInstance['version']
-) => version.split('/')[1];
 
 interface Props {
   database: DatabaseInstance;
@@ -92,9 +91,7 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
       <Hidden xsDown>
         <TableCell>{configuration}</TableCell>
       </Hidden>
-      <TableCell>
-        {`${databaseEngineMap[engine]} v${getDatabaseVersionNumber(version)}`}
-      </TableCell>
+      <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
       <Hidden smDown>
         <TableCell>{dcDisplayNames[region] || 'Unknown Region'}</TableCell>
       </Hidden>
