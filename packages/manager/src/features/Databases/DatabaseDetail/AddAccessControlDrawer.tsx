@@ -1,5 +1,4 @@
 import { useFormik } from 'formik';
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -10,7 +9,11 @@ import ExternalLink from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { ExtendedIP, extendedIPToString } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  validateIPs,
+} from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   instructions: {
@@ -80,6 +83,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
   const onValidate = ({ _allowList }: Values) => {
     const validatedIPs = validateIPs(_allowList, {
       allowEmptyAddress: false,
+      errorMessage: 'Must be a valid IPv4 address.',
     });
 
     setValues({ _allowList: validatedIPs });
@@ -165,33 +169,6 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
       </React.Fragment>
     </Drawer>
   );
-};
-
-// Adds an `error` message to each invalid IP in the list.
-export const validateIPs = (
-  ips: ExtendedIP[],
-  options?: { allowEmptyAddress: boolean }
-): ExtendedIP[] => {
-  return ips.map(({ address }) => {
-    if (!options?.allowEmptyAddress && !address) {
-      return { address, error: 'Please enter an IP address.' };
-    }
-    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
-    // methods for each, so we check for a netmask to decide the method to use.
-    const [, mask] = address.split('/');
-    try {
-      if (mask) {
-        parseCIDR(address);
-      } else {
-        parseIP(address);
-      }
-    } catch (err) {
-      if (address) {
-        return { address, error: 'Must be a valid IPv4 address.' };
-      }
-    }
-    return { address };
-  });
 };
 
 export default AddAccessControlDrawer;
