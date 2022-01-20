@@ -508,8 +508,8 @@ const DatabaseCreate: React.FC<{}> = () => {
         <Grid item>
           <Typography variant="h2">Add Access Controls</Typography>
           <Typography>
-            Add the IP addresses or IP range(s) for other instances or users
-            that should have the authorization to view this cluster’s database.
+            Add the IP addresses for other instances or users that should have
+            the authorization to view this cluster’s database.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
@@ -523,6 +523,7 @@ const DatabaseCreate: React.FC<{}> = () => {
               placeholder="Add IP Address or range"
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
+              required
             />
           </Grid>
         </Grid>
