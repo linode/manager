@@ -182,6 +182,13 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
           <Grid
             item
             onClick={handleDownloadCACertificate}
+            role="button"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                handleDownloadCACertificate();
+              }
+            }}
+            tabIndex={0}
             className={classes.actionBtn}
           >
             <DownloadIcon style={{ marginRight: 8 }} />
