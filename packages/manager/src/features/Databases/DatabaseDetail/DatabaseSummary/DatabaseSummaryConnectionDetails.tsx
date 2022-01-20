@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   connectionDetailsCtn: {
     padding: '8px 15px',
-    background: '#f4f4f4',
+    background: theme.bg.main,
     border: '1px solid #ccc',
     '& p': {
       lineHeight: '1.5rem',
