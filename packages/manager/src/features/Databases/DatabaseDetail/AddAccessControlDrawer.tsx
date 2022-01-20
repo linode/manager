@@ -1,4 +1,3 @@
-import { IP_ERROR_MESSAGE } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import * as React from 'react';
@@ -121,7 +120,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
   );
 
   return (
-    <Drawer open={open} onClose={onClose} title="Add Access Controls">
+    <Drawer open={open} onClose={onClose} title="Manage Access Controls">
       <React.Fragment>
         {error ? <Notice error text={error} /> : null}
         <Typography variant="body1" className={classes.instructions}>
@@ -139,7 +138,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
             ips={values._allowList}
             onChange={handleIPChange}
             inputProps={{ autoFocus: true }}
-            placeholder="Add IP address or range"
+            placeholder="Add IP address"
           />
           <ActionsPanel>
             <Button
@@ -158,7 +157,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
               style={{ marginBottom: 8 }}
               loading={isSubmitting}
             >
-              Add Inbound Sources
+              Update Inbound Sources
             </Button>
           </ActionsPanel>
         </form>
@@ -187,7 +186,7 @@ export const validateIPs = (
       }
     } catch (err) {
       if (address) {
-        return { address, error: IP_ERROR_MESSAGE };
+        return { address, error: 'Must be a valid IPv4 address.' };
       }
     }
     return { address };
