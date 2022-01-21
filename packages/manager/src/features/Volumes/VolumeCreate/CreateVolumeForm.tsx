@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   notice: {
     borderColor: theme.color.green,
-    fontWeight: 'bold',
     fontSize: 15,
     lineHeight: '18px',
   },
@@ -264,16 +263,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       dismissible
                       onClose={handleDismiss}
                     >
-                      We’re working quickly to expand global availability of our
-                      high-performance NVMe block storage.{' '}
-                      <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
-                        Check NVMe rollout status on our blog.
-                      </Link>
+                      <strong>
+                        We’re working quickly to expand global availability of
+                        our high-performance NVMe block storage.{' '}
+                        <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
+                          Check NVMe rollout status on our blog.
+                        </Link>
+                      </strong>
                     </Notice>
                   ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
                     A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                    size and costs <b>$0.10/GB per month</b>. Up to eight
+                    size and costs <strong>$0.10/GB per month</strong>. Up to
                     volumes can be attached to a single Linode.
                   </Typography>
                   <Typography
