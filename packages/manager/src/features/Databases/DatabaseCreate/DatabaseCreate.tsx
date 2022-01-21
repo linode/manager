@@ -244,6 +244,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: values.allow_list.map((ip) => ip.address),
+      ssl_connection: true,
     };
 
     try {
