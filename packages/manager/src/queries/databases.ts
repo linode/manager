@@ -56,10 +56,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
             }
 
             if (oldEntity.label !== data.label) {
-              // Invalidate useDatabasesQuery to reflect the new database label.
-              // We choose to refetch instead of manually mutate the cache because it
-              // is API paginated.
-              queryClient.invalidateQueries(`${queryKey}-list`);
+              updatePaginatedDatabaseStore(id, { label: data.label });
             }
 
             return { ...oldEntity, ...data };
@@ -141,22 +138,8 @@ export const useRestoreFromBackupMutation = (
   useMutation<{}, APIError[]>(
     () => restoreWithBackup(engine, databaseId, backupId),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries(`${queryKey}-list`);
-        queryClient.setQueryData<Database | undefined>(
-          [queryKey, databaseId],
-          (oldData) => {
-            if (oldData === undefined) {
-              return undefined;
-            }
-
-            return {
-              ...oldData,
-              status: 'restoring',
-            };
-          }
-        );
-      },
+      onSuccess: () =>
+        updateStoreForDatabase(databaseId, { status: 'restoring' }),
     }
   );
 
@@ -167,25 +150,65 @@ export const databaseEventsHandler = (event: Event) => {
     case 'database_create':
       switch (status) {
         case 'failed':
+          updateStoreForDatabase(entity!.id, { status: 'failed' });
         case 'finished':
-          queryClient.invalidateQueries(`${queryKey}-list`);
-          queryClient.setQueryData<Database | undefined>(
-            [queryKey, entity?.id],
-            (oldData) => {
-              if (oldData === undefined) {
-                return undefined;
-              }
-
-              return {
-                ...oldData,
-                status: status === 'finished' ? 'active' : 'failed',
-              };
-            }
-          );
+          updateStoreForDatabase(entity!.id, { status: 'active' });
         case 'notification':
         case 'scheduled':
         case 'started':
           return;
       }
   }
+};
+
+const updateStoreForDatabase = (
+  id: number,
+  data: Partial<Database> & Partial<DatabaseInstance>
+) => {
+  updateDatabaseStore(id, data);
+  updatePaginatedDatabaseStore(id, data);
+};
+
+const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
+  queryClient.setQueryData<Database | undefined>([queryKey, id], (oldData) => {
+    if (oldData === undefined) {
+      return undefined;
+    }
+
+    return {
+      ...oldData,
+      ...newData,
+    };
+  });
+};
+
+const updatePaginatedDatabaseStore = (
+  id: number,
+  newData: Partial<DatabaseInstance>
+) => {
+  queryClient.setQueriesData<ResourcePage<DatabaseInstance> | undefined>(
+    `${queryKey}-list`,
+    (oldData) => {
+      if (oldData == undefined) {
+        return undefined;
+      }
+
+      const databaseToUpdateIndex = oldData.data.findIndex(
+        (database) => database.id === id
+      );
+
+      const isDatabaseOnPage = databaseToUpdateIndex !== -1;
+
+      if (!isDatabaseOnPage) {
+        return oldData;
+      }
+
+      oldData.data[databaseToUpdateIndex] = {
+        ...oldData.data[databaseToUpdateIndex],
+        ...newData,
+      };
+
+      return oldData;
+    }
+  );
 };
