@@ -90,6 +90,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: '.25px',
     textTransform: 'uppercase',
   },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      [theme.breakpoints.up('md')]: {
+        minWidth: 350,
+      },
+    },
+  },
 }));
 
 const engineIcons = {
@@ -403,6 +410,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             errorText={errors.label}
             label="Cluster Label"
             tooltipText={labelToolTip}
+            tooltipClasses={classes.tooltip}
             onChange={(e) => setFieldValue('label', e.target.value)}
             value={values.label}
           />
