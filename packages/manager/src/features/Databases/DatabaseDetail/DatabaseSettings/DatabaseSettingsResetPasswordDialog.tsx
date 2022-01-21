@@ -56,6 +56,7 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       setIsLoading(false);
       onClose();
     } catch (e) {
+      setIsLoading(false);
       setError(
         getAPIErrorOrDefault(
           e,
