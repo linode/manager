@@ -4,6 +4,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
@@ -104,6 +105,39 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
             />
           </Grid>
         </Grid>
+      </Paper>
+      <Paper className={classes.root}>
+        <Typography variant="h2" className={classes.title}>
+          Power User
+        </Typography>
+        <PreferenceToggle<boolean>
+          preferenceKey="power_user"
+          preferenceOptions={[false, true]}
+          localStorageKey="powerUser"
+        >
+          {({
+            preference: isPowerUser,
+            togglePreference: togglePowerUser,
+          }: ToggleProps<boolean>) => {
+            return (
+              <Grid container alignItems="center">
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Toggle
+                        onChange={togglePowerUser}
+                        checked={isPowerUser}
+                      />
+                    }
+                    label={` User will ${
+                      isPowerUser === true ? '' : 'not'
+                    } be allowed to skip "Type to confirm.." boxes when doing potentially destructive actions`}
+                  />
+                </Grid>
+              </Grid>
+            );
+          }}
+        </PreferenceToggle>
       </Paper>
     </>
   );

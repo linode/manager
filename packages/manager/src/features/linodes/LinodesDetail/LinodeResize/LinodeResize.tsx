@@ -26,7 +26,8 @@ import Dialog from 'src/components/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
+import TypeToConfirm from 'src/components/TypeToConfirm';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
@@ -295,6 +296,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       typesData
     );
 
+    const typeToConfirmText = (
+      <span>
+        To confirm these changes, type the label of the Linode{' '}
+        <strong>({linodeLabel})</strong> in the field below:
+      </span>
+    );
+
     return (
       <Dialog
         title={`Resize Linode ${this.props.linodeLabel ?? ''}`}
@@ -382,19 +390,32 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
 
         <ActionsPanel className={classes.actionPanel}>
-          <Typography variant="h2">Confirm</Typography>
-          <Typography style={{ marginBottom: 8 }}>
-            To confirm these changes, type the label of the Linode{' '}
-            <strong>({linodeLabel})</strong> in the field below:
-          </Typography>
-          <TextField
-            label="Linode Label"
-            hideLabel
-            onChange={(e) =>
-              this.setState({ confirmationText: e.target.value })
-            }
-            style={{ marginBottom: 16 }}
-          />
+          <PreferenceToggle<boolean>
+            preferenceKey="power_user"
+            preferenceOptions={[false, true]}
+            localStorageKey="powerUser"
+          >
+            {({ preference: isPowerUser }: ToggleProps<boolean>) => {
+              return isPowerUser ? (
+                <React.Fragment />
+              ) : (
+                <>
+                  <Typography variant="h2">Confirm</Typography>
+                  <TypeToConfirm
+                    confirmationText={typeToConfirmText}
+                    typographyStyle={{ marginBottom: 8 }}
+                    updateString={(input) => {
+                      this.setState({ confirmationText: input });
+                    }}
+                    hideLabel
+                    label="Linode Label"
+                    textFieldStyle={{ marginBottom: 16 }}
+                  />
+                </>
+              );
+            }}
+          </PreferenceToggle>
+
           <Button
             disabled={
               !this.state.selectedId ||

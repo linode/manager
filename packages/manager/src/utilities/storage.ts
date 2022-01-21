@@ -42,6 +42,7 @@ export const setStorage = (key: string, value: string) => {
 const PAGE_SIZE = 'PAGE_SIZE';
 const INFINITE_PAGE_SIZE = 'INFINITE_PAGE_SIZE';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
+const POWER_USER = 'powerUser';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
@@ -96,6 +97,10 @@ export interface Storage {
     set: (perPage: PageSize) => void;
   };
   BackupsCtaDismissed: {
+    get: () => boolean;
+    set: (v: 'true' | 'false') => void;
+  };
+  powerUser: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
   };
@@ -158,6 +163,10 @@ export const storage: Storage = {
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true'),
+  },
+  powerUser: {
+    get: () => getStorage(POWER_USER),
+    set: (v) => setStorage(POWER_USER, 'false'),
   },
   supportText: {
     get: () => getStorage(SUPPORT, { title: '', description: '' }),
