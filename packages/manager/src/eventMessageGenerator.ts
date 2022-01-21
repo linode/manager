@@ -707,6 +707,20 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: (e) => `Database ${e.entity!.label} could not be created.`,
     finished: (e) => `Database ${e.entity!.label} has been created.`,
   },
+  database_delete: {
+    notification: (e) => `Database ${e.entity!.label} has been deleted.`,
+  },
+  database_update: {
+    notification: (e) => `Database ${e.entity!.label} has been updated.`,
+  },
+  database_backup_restore: {
+    notification: (e) =>
+      `Database ${e.entity!.label} has been restored from a backup.`,
+  },
+  database_credentials_reset: {
+    notification: (e) =>
+      `Database ${e.entity!.label}'s credentials have been reset.`,
+  },
 };
 
 export const formatEventWithAPIMessage = (e: Event) => {
