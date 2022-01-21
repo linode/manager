@@ -20,7 +20,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     'Resetting your root password will automatically generate a new password. You can view the updated password on your Database Cluster Summary page. ';
 
   const deleteClusterCopy =
-    'Deleting a database cluster is permenant and cannot be undone';
+    'Deleting a database cluster is permanent and cannot be undone.';
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [
@@ -48,14 +48,14 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
     <>
       <Paper>
         <AccessControls database={database} />
-        <Divider />
+        <Divider spacingTop={28} spacingBottom={22} />
         <DatabaseSettingsMenuItem
           buttonText="Reset Root Password"
           descriptiveText={resetRootPasswordCopy}
           onClick={onResetRootPassword}
           sectionTitle="Root Password Reset"
         />
-        <Divider />
+        <Divider spacingTop={22} spacingBottom={22} />
         <DatabaseSettingsMenuItem
           sectionTitle="Delete Cluster"
           descriptiveText={deleteClusterCopy}
