@@ -186,7 +186,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
           )}
         </div>
         <Typography>
-          <span>host</span> = {database.hosts.primary}
+          <span>host</span> = {database.hosts?.primary}
         </Typography>
         <Typography>
           <span>port</span> = {database.port}
