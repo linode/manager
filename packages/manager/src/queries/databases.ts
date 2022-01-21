@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-small-switch */
 import {
   createDatabase,
   deleteDatabase,
@@ -26,6 +27,7 @@ import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryClient, queryPresets } from './base';
+import { Event } from '@linode/api-v4/lib/account/types';
 
 export const queryKey = 'databases';
 
@@ -139,3 +141,33 @@ export const useRestoreFromBackupMutation = (
   useMutation<{}, APIError[]>(() =>
     restoreWithBackup(engine, databaseId, backupId)
   );
+
+export const databaseEventsHandler = (event: Event) => {
+  const { action, status, entity } = event;
+
+  switch (action) {
+    case 'database_create':
+      switch (status) {
+        case 'failed':
+        case 'finished':
+          queryClient.invalidateQueries(`${queryKey}-list`);
+          queryClient.setQueryData<Database | undefined>(
+            [queryKey, entity?.id],
+            (oldData) => {
+              if (oldData === undefined) {
+                return undefined;
+              }
+
+              return {
+                ...oldData,
+                status: status === 'finished' ? 'active' : 'failed',
+              };
+            }
+          );
+        case 'notification':
+        case 'scheduled':
+        case 'started':
+          return;
+      }
+  }
+};
