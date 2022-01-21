@@ -140,21 +140,15 @@ const databases = [
     const standardTypes = [
       databaseTypeFactory.build({
         id: 'g6-standard-0',
-        label: `Linode 1 GB`,
-        class: 'standard',
+        label: `Nanode 1 GB`,
+        class: 'nanode',
         memory: 1024,
       }),
       ...databaseTypeFactory.buildList(7, { class: 'standard' }),
     ];
-    const dedicatedTypes = [
-      databaseTypeFactory.build({
-        id: 'g6-dedicated-0',
-        label: `Linode 1 GB`,
-        class: 'dedicated',
-        memory: 1024,
-      }),
-      ...databaseTypeFactory.buildList(7, { class: 'dedicated' }),
-    ];
+    const dedicatedTypes = databaseTypeFactory.buildList(7, {
+      class: 'dedicated',
+    });
     return res(
       ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
     );
