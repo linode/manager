@@ -303,7 +303,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     </div>
   );
 
-  const is1GbPlan = type?.memory === 1024;
+  const is1GbPlan = type?.class.includes('nanode');
 
   const nodeOptions = [
     {
