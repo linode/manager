@@ -9,7 +9,7 @@ import TabLinkList from 'src/components/TabLinkList';
 import useFlags from 'src/hooks/useFlags';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useDatabaseQuery } from 'src/queries/databases';
+import { useDatabaseQuery, useDatabaseTypesQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { Engine } from '@linode/api-v4/lib/databases/types';
 
@@ -29,6 +29,7 @@ export const DatabaseDetail: React.FC = () => {
   const id = Number(databaseId);
 
   const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
 
   if (error) {
     return (
@@ -40,7 +41,7 @@ export const DatabaseDetail: React.FC = () => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isTypesLoading) {
     return <CircleProgress />;
   }
 

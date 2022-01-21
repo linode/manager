@@ -170,16 +170,25 @@ const updateStoreForDatabase = (
 };
 
 const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
-  queryClient.setQueryData<Database | undefined>([queryKey, id], (oldData) => {
-    if (oldData === undefined) {
-      return undefined;
-    }
+  const previousValue = queryClient.getQueryData([queryKey, id]);
 
-    return {
-      ...oldData,
-      ...newData,
-    };
-  });
+  // This previous value check makes sure we don't set the Database store to undefined.
+  // This is an odd edge case.
+  if (previousValue) {
+    queryClient.setQueryData<Database | undefined>(
+      [queryKey, id],
+      (oldData) => {
+        if (oldData === undefined) {
+          return undefined;
+        }
+
+        return {
+          ...oldData,
+          ...newData,
+        };
+      }
+    );
+  }
 };
 
 const updatePaginatedDatabaseStore = (
@@ -189,7 +198,7 @@ const updatePaginatedDatabaseStore = (
   queryClient.setQueriesData<ResourcePage<DatabaseInstance> | undefined>(
     `${queryKey}-list`,
     (oldData) => {
-      if (oldData == undefined) {
+      if (oldData === undefined) {
         return undefined;
       }
 
