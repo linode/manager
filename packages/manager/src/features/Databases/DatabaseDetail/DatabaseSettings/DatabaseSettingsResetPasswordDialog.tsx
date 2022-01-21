@@ -3,7 +3,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { Engine, resetDatabaseCredentials } from '@linode/api-v4/lib/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -74,13 +73,9 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       actions={renderActions(onClose, onResetRootPassword, isLoading)}
       error={error}
     >
-      <Notice
-        warning
-        text="Resetting your root password requires your database node(s) to"
-      />
       <Typography>
         After resetting your Root Password, you can view your new password on
-        the Database Cluster Summary page. Learn more.
+        the Database Cluster Summary page.
       </Typography>
     </ConfirmationDialog>
   );
