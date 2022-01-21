@@ -69,7 +69,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
 
 export const useCreateDatabaseMutation = () =>
   useMutation<Database, APIError[], CreateDatabasePayload>(
-    (data) => createDatabase(data.engine, data),
+    (data) => createDatabase(data.engine?.split('/')[0] as Engine, data),
     {
       onSuccess: (data) => {
         // Invalidate useDatabasesQuery to show include the new database.
