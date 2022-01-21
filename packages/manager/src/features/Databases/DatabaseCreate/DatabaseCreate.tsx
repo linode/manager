@@ -73,7 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   nodeHelpIcon: {
-    padding: 0,
+    padding: '0px 0px 0px 2px',
+    marginTop: '-2px',
   },
   createText: {
     [theme.breakpoints.down('xs')]: {
@@ -310,7 +311,14 @@ const DatabaseCreate: React.FC<{}> = () => {
       value: 0,
       label: (
         <Typography>
-          1 Node
+          1 Node {` `}
+          {is1GbPlan ? (
+            <HelpIcon
+              className={classes.nodeHelpIcon}
+              text="1 GB Linodes are only available for single-node database deployments."
+              tooltipPosition="right"
+            />
+          ) : null}
           <br />
           {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
         </Typography>
@@ -455,13 +463,6 @@ const DatabaseCreate: React.FC<{}> = () => {
         <Grid item>
           <Typography variant="h2" style={{ marginBottom: 4 }}>
             Set Number of Nodes{' '}
-            {is1GbPlan ? (
-              <HelpIcon
-                className={classes.nodeHelpIcon}
-                text="1 GB Linodes are only available for single-node database deployments."
-                tooltipPosition="right"
-              />
-            ) : null}
           </Typography>
           <Typography>
             We recommend 3 nodes in a database cluster to avoid downtime during
