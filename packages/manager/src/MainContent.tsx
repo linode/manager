@@ -321,10 +321,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
-                            <Route
-                              path="/linodes"
-                              component={LinodesRoutes}
-                            />
+                            <Route path="/linodes" component={LinodesRoutes} />
                             <Route path="/volumes" component={Volumes} />
                             <Redirect path="/volumes*" to="/volumes" />
                             <Route
@@ -343,10 +340,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                               path="/object-storage"
                               component={ObjectStorage}
                             />
-                            <Route
-                              path="/kubernetes"
-                              component={Kubernetes}
-                            />
+                            <Route path="/kubernetes" component={Kubernetes} />
                             <Route path="/account" component={Account} />
 
                             <Route
@@ -362,16 +356,10 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route path="/search" component={SearchLanding} />
                             <Route path="/events" component={EventsLanding} />
                             {showFirewalls && (
-                              <Route
-                                path="/firewalls"
-                                component={Firewalls}
-                              />
+                              <Route path="/firewalls" component={Firewalls} />
                             )}
                             {flags.databases ? (
-                              <Route
-                                path="/databases"
-                                component={Databases}
-                              />
+                              <Route path="/databases" component={Databases} />
                             ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
                             {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
