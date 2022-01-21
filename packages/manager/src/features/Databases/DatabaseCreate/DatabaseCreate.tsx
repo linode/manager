@@ -320,7 +320,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             />
           ) : null}
           <br />
-          {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
+          <Typography style={{ fontSize: '12px' }}>
+            {`$${type?.price.monthly || 0}/month $${
+              type?.price.hourly || 0
+            }/hr`}
+          </Typography>
         </Typography>
       ),
       disabled: is1GbPlan,
@@ -332,9 +336,11 @@ const DatabaseCreate: React.FC<{}> = () => {
           3 Nodes - High Availability{' '}
           {type?.memory !== 1024 ? '(recommended)' : ''}
           <br />
-          {`$${multiNodePricing.monthly || 0}/month $${
-            multiNodePricing.hourly || 0
-          }/hr`}
+          <Typography style={{ fontSize: '12px' }}>
+            {`$${multiNodePricing.monthly || 0}/month $${
+              multiNodePricing.hourly || 0
+            }/hr`}
+          </Typography>
         </Typography>
       ),
       disabled: is1GbPlan,
