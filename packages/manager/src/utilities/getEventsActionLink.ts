@@ -102,6 +102,9 @@ export default (
           return `/nodebalancers/${id}/summary`;
       }
 
+    case 'database':
+      return `/databases/${id}/summary`;
+
     case 'user':
       return `/account/users/${label}/profile`;
 
