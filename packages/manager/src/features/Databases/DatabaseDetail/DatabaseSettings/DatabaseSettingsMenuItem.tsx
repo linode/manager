@@ -31,6 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   sectionText: {
     width: '65%',
     marginRight: 0,
+    [theme.breakpoints.down('sm')]: {
+      marginBottom: '1rem',
+    },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
