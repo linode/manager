@@ -206,6 +206,13 @@ const databases = [
     }
   ),
 
+  rest.post(
+    '*/databases/:engine/instances/:databaseId/credentials/reset',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+
   rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
     const id = Number(req.params.databaseId);
     const body = req.body as any;
