@@ -73,7 +73,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   nodeHelpIcon: {
-    padding: 0,
+    padding: '0px 0px 0px 2px',
+    marginTop: '-2px',
   },
   createText: {
     [theme.breakpoints.down('xs')]: {
@@ -88,6 +89,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
     letterSpacing: '.25px',
     textTransform: 'uppercase',
+  },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      [theme.breakpoints.up('md')]: {
+        minWidth: 350,
+      },
+    },
   },
 }));
 
@@ -244,6 +252,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: values.allow_list.map((ip) => ip.address),
+      ssl_connection: true,
     };
 
     try {
@@ -302,24 +311,27 @@ const DatabaseCreate: React.FC<{}> = () => {
     </div>
   );
 
-  const disableCreateButton =
-    !values.label ||
-    !values.engine ||
-    !values.region ||
-    !values.type ||
-    values.failover_count < 0 ||
-    values.allow_list.some((item) => item.address === '');
-
-  const is1GbPlan = type?.memory === 1024;
+  const is1GbPlan = type?.class.includes('nanode');
 
   const nodeOptions = [
     {
       value: 0,
       label: (
         <Typography>
-          1 Node
+          1 Node {` `}
+          {is1GbPlan ? (
+            <HelpIcon
+              className={classes.nodeHelpIcon}
+              text="1 GB Linodes are only available for single-node database deployments."
+              tooltipPosition="right"
+            />
+          ) : null}
           <br />
-          {`$${type?.price.monthly || 0}/month $${type?.price.hourly || 0}/hr`}
+          <Typography style={{ fontSize: '12px' }}>
+            {`$${type?.price.monthly || 0}/month $${
+              type?.price.hourly.toFixed(2) || 0.0
+            }/hr`}
+          </Typography>
         </Typography>
       ),
       disabled: is1GbPlan,
@@ -328,12 +340,13 @@ const DatabaseCreate: React.FC<{}> = () => {
       value: 2,
       label: (
         <Typography>
-          3 Nodes - High Availability{' '}
-          {type?.memory !== 1024 ? '(recommended)' : ''}
+          3 Nodes - High Availability {!is1GbPlan && '(recommended)'}
           <br />
-          {`$${multiNodePricing.monthly || 0}/month $${
-            multiNodePricing.hourly || 0
-          }/hr`}
+          <Typography style={{ fontSize: '12px' }}>
+            {`$${multiNodePricing.monthly || 0}/month $${
+              parseFloat(multiNodePricing.hourly).toFixed(2) || 0.0
+            }/hr`}
+          </Typography>
         </Typography>
       ),
       disabled: is1GbPlan,
@@ -397,6 +410,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             errorText={errors.label}
             label="Cluster Label"
             tooltipText={labelToolTip}
+            tooltipClasses={classes.tooltip}
             onChange={(e) => setFieldValue('label', e.target.value)}
             value={values.label}
           />
@@ -460,15 +474,8 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
-          <Typography variant="h2">
+          <Typography variant="h2" style={{ marginBottom: 4 }}>
             Set Number of Nodes{' '}
-            {is1GbPlan ? (
-              <HelpIcon
-                className={classes.nodeHelpIcon}
-                text="1 GB Linodes are only available for single-node database deployments."
-                tooltipPosition="right"
-              />
-            ) : null}
           </Typography>
           <Typography>
             We recommend 3 nodes in a database cluster to avoid downtime during
@@ -506,10 +513,12 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
-          <Typography variant="h2">Add Access Controls</Typography>
+          <Typography variant="h2" style={{ marginBottom: 4 }}>
+            Add Access Controls
+          </Typography>
           <Typography>
-            Add the IP addresses or IP range(s) for other instances or users
-            that should have the authorization to view this cluster’s database.
+            Add the IP addresses for other instances or users that should have
+            the authorization to view this cluster’s database.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
@@ -523,17 +532,13 @@ const DatabaseCreate: React.FC<{}> = () => {
               placeholder="Add IP Address or range"
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
+              required
             />
           </Grid>
         </Grid>
       </Paper>
       <Grid className={classes.btnCtn}>
-        <Button
-          type="submit"
-          buttonType="primary"
-          disabled={disableCreateButton}
-          loading={isSubmitting}
-        >
+        <Button type="submit" buttonType="primary" loading={isSubmitting}>
           Create Database Cluster
         </Button>
       </Grid>
