@@ -713,6 +713,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   database_update: {
     notification: (e) => `Database ${e.entity!.label} has been updated.`,
   },
+  database_update_failed: {
+    notification: (e) => `Database ${e.entity!.label} failed to update.`,
+  },
   database_backup_restore: {
     notification: (e) =>
       `Database ${e.entity!.label} has been restored from a backup.`,

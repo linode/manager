@@ -312,7 +312,12 @@ export type EventAction =
   | 'volume_clone'
   | 'volume_migrate_scheduled'
   | 'volume_migrate'
-  | 'database_create';
+  | 'database_create'
+  | 'database_delete'
+  | 'database_update'
+  | 'database_update_failed'
+  | 'database_backup_restore'
+  | 'database_credentials_reset';
 
 export type EventStatus =
   | 'scheduled'
