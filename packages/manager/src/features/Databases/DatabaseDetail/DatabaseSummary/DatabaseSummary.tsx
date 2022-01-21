@@ -21,7 +21,7 @@ export const DatabaseSummary: React.FC<Props> = (props) => {
           <ClusterConfiguration database={database} />
         </Grid>
         <Grid item xs={12} sm={8}>
-          <ConnectionDetails />
+          <ConnectionDetails database={database} />
         </Grid>
       </Grid>
       <Divider spacingTop={28} spacingBottom={16} />
