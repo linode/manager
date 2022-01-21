@@ -1,14 +1,29 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import CheckBox from 'src/components/CheckBox';
-import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { HACopy } from '../KubeCheckoutBar/HACheckbox';
-import { useSnackbar } from 'notistack';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  noticeHeader: {
+    fontSize: '0.875rem',
+  },
+  noticeList: {
+    fontSize: '0.875rem',
+    marginTop: 4,
+    paddingLeft: theme.spacing(2),
+    '& li': {
+      marginBottom: 4,
+    },
+  },
+}));
 
 interface Props {
   open: boolean;
@@ -53,6 +68,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const { updateKubernetesCluster } = useKubernetesClusters();
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
+  const classes = useStyles();
 
   const onUpgrade = () => {
     setSubmitting(true);
@@ -79,21 +95,34 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       actions={renderActions(!checked || submitting, onClose, onUpgrade)}
       error={error}
     >
-      <Notice
-        warning
-        text="Upgrading to high availability cannot be reversed."
-      />
       <HACopy />
       <Typography variant="body1" style={{ marginTop: 12, marginBottom: 8 }}>
         Pricing for the HA control plane is ${HIGH_AVAILABILITY_PRICE} per month
-        per cluster. By completing this upgrade, you are agreeing to the
-        additional fee on your monthly bill and understand the HA upgrade can
-        only be reversed by deleting your cluster.
+        per cluster.
       </Typography>
+      <Notice warning spacingTop={16} spacingBottom={16}>
+        <Typography variant="h3" className={classes.noticeHeader}>
+          Caution:
+        </Typography>
+        <ul className={classes.noticeList}>
+          <li>
+            All nodes will be deleted and new nodes will be created to replace
+            them.
+          </li>
+          <li>
+            Any local storage (such as &apos;hostPath&apos; volumes) will be
+            erased.
+          </li>
+          <li>
+            This may take several minutes, as nodes will be replaced on a
+            rolling basis.
+          </li>
+        </ul>
+      </Notice>
       <CheckBox
         checked={checked}
         onChange={toggleChecked}
-        text="Enable HA Control Plane"
+        text="I agree to the additional fee on my monthly bill and understand HA upgrade can only be reversed by deleting my cluster."
       />
     </ConfirmationDialog>
   );

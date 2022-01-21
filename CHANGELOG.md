@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-01-24] - v1.58.0
+
+### Added:
+- Marketplace January 2022 Release
+
+### Changed:
+- Upgrade to High Availability Dialog Copy
+- Marketplace document link updates and cleanup
+- State/Province field in Billing Contact Info drawer becomes a dropdown if country is US or Canada
+
+### Fixed:
+- Icon Alignment for Kubernetes Nodes
+
 ## [2022-01-10] - v1.57.0
 
 ### Changed:

@@ -43,7 +43,7 @@ const newAccountData = {
   city: 'New Philadelphia',
   country: 'FR',
   phone: '6104444444',
-  state: 'New Pennsylvania',
+  state: 'Pennsylvania',
   tax_id: '9234567890',
   zip: '19108',
 };
@@ -115,7 +115,7 @@ describe('Billing Contact', () => {
       .click()
       .clear()
       .type(newAccountData['city']);
-    cy.findByLabelText('Zip / Postal Code')
+    cy.findByLabelText('Postal Code')
       .should('be.visible')
       .click()
       .clear()
@@ -125,12 +125,11 @@ describe('Billing Contact', () => {
       .click()
       .clear()
       .type(newAccountData['phone']);
-    getClick('[data-qa-contact-country]').type('France{enter}');
-    cy.findByLabelText('State / Province')
+    getClick('[data-qa-contact-country]').type('United States{enter}');
+    getClick('[data-qa-contact-state-province]')
       .should('be.visible')
       .click()
-      .clear()
-      .type(newAccountData['state']);
+      .type(`${newAccountData['state']}{enter}`);
     cy.findByLabelText('Tax ID')
       .should('be.visible')
       .click()
