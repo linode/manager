@@ -322,7 +322,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           <br />
           <Typography style={{ fontSize: '12px' }}>
             {`$${type?.price.monthly || 0}/month $${
-              type?.price.hourly || 0
+              type?.price.hourly.toFixed(2) || 0.0
             }/hr`}
           </Typography>
         </Typography>
@@ -333,12 +333,11 @@ const DatabaseCreate: React.FC<{}> = () => {
       value: 2,
       label: (
         <Typography>
-          3 Nodes - High Availability{' '}
-          {type?.memory !== 1024 ? '(recommended)' : ''}
+          3 Nodes - High Availability {!is1GbPlan && '(recommended)'}
           <br />
           <Typography style={{ fontSize: '12px' }}>
             {`$${multiNodePricing.monthly || 0}/month $${
-              multiNodePricing.hourly || 0
+              parseFloat(multiNodePricing.hourly).toFixed(2) || 0.0
             }/hr`}
           </Typography>
         </Typography>
