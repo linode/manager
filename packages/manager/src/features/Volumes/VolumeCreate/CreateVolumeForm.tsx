@@ -275,7 +275,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   <Typography variant="body1" data-qa-volume-size-help>
                     A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
                     size and costs <strong>$0.10/GB per month</strong>. Up to
-                    volumes can be attached to a single Linode.
+                    eight volumes can be attached to a single Linode.
                   </Typography>
                   <Typography
                     variant="body1"
