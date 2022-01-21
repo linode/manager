@@ -1,6 +1,6 @@
 import { BaseType } from '../linodes/types';
 
-export type DatabaseTypeClass = 'standard' | 'dedicated';
+export type DatabaseTypeClass = 'standard' | 'dedicated' | 'nanode';
 
 interface DatabasePriceObject {
   monthly: number;
@@ -51,9 +51,14 @@ export interface DatabaseCredentials {
   password: string;
 }
 
+interface DatabaseHosts {
+  primary: string;
+  secondary: string;
+}
+
 export interface SSLFields {
-  public_key: string | null;
-  certificate: string | null;
+  public_key: string;
+  certificate: string;
 }
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
@@ -69,6 +74,7 @@ export interface DatabaseInstance {
   updated: string;
   created: string;
   instance_uri: string;
+  hosts: DatabaseHosts;
 }
 
 export type FailoverCount = 0 | 2;
@@ -113,6 +119,8 @@ export interface Database {
   connection_strings: ConnectionStrings[];
   created: string;
   updated: string;
+  hosts: DatabaseHosts;
+  port: number;
 }
 
 export interface UpdateDatabasePayload {

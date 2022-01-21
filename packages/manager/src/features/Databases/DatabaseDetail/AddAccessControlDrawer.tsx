@@ -1,6 +1,4 @@
-import { IP_ERROR_MESSAGE } from '@linode/validation/lib/firewalls.schema';
 import { useFormik } from 'formik';
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -11,7 +9,11 @@ import ExternalLink from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { ExtendedIP, extendedIPToString } from 'src/utilities/ipUtils';
+import {
+  ExtendedIP,
+  extendedIPToString,
+  validateIPs,
+} from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   instructions: {
@@ -81,6 +83,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
   const onValidate = ({ _allowList }: Values) => {
     const validatedIPs = validateIPs(_allowList, {
       allowEmptyAddress: false,
+      errorMessage: 'Must be a valid IPv4 address.',
     });
 
     setValues({ _allowList: validatedIPs });
@@ -121,7 +124,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
   );
 
   return (
-    <Drawer open={open} onClose={onClose} title="Add Access Controls">
+    <Drawer open={open} onClose={onClose} title="Manage Access Controls">
       <React.Fragment>
         {error ? <Notice error text={error} /> : null}
         <Typography variant="body1" className={classes.instructions}>
@@ -139,7 +142,8 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
             ips={values._allowList}
             onChange={handleIPChange}
             inputProps={{ autoFocus: true }}
-            placeholder="Add IP address or range"
+            placeholder="Add IP address"
+            forDatabaseAccessControls
           />
           <ActionsPanel>
             <Button
@@ -158,40 +162,13 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
               style={{ marginBottom: 8 }}
               loading={isSubmitting}
             >
-              Add Inbound Sources
+              Update Inbound Sources
             </Button>
           </ActionsPanel>
         </form>
       </React.Fragment>
     </Drawer>
   );
-};
-
-// Adds an `error` message to each invalid IP in the list.
-export const validateIPs = (
-  ips: ExtendedIP[],
-  options?: { allowEmptyAddress: boolean }
-): ExtendedIP[] => {
-  return ips.map(({ address }) => {
-    if (!options?.allowEmptyAddress && !address) {
-      return { address, error: 'Please enter an IP address.' };
-    }
-    // We accept plain IPs as well as ranges (i.e. CIDR notation). Ipaddr.js has separate parsing
-    // methods for each, so we check for a netmask to decide the method to use.
-    const [, mask] = address.split('/');
-    try {
-      if (mask) {
-        parseCIDR(address);
-      } else {
-        parseIP(address);
-      }
-    } catch (err) {
-      if (address) {
-        return { address, error: IP_ERROR_MESSAGE };
-      }
-    }
-    return { address };
-  });
 };
 
 export default AddAccessControlDrawer;
