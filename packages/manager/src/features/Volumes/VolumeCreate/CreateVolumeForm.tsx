@@ -17,6 +17,7 @@ import Typography from 'src/components/core/Typography';
 import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
@@ -63,6 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   notice: {
     borderColor: theme.color.green,
+    fontWeight: 'bold',
+    fontSize: 15,
+    lineHeight: '18px',
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
@@ -260,8 +264,11 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       dismissible
                       onClose={handleDismiss}
                     >
-                      High-performance NVMe block storage is currently available
-                      in Atlanta, GA and Newark, NJ.
+                      We’re working quickly to expand global availability of our
+                      high-performance NVMe block storage.{' '}
+                      <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
+                        Check NVMe rollout status on our blog.
+                      </Link>
                     </Notice>
                   ) : null}
                   <Typography variant="body1" data-qa-volume-size-help>
