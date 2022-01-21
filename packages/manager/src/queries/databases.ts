@@ -138,8 +138,26 @@ export const useRestoreFromBackupMutation = (
   databaseId: number,
   backupId: number
 ) =>
-  useMutation<{}, APIError[]>(() =>
-    restoreWithBackup(engine, databaseId, backupId)
+  useMutation<{}, APIError[]>(
+    () => restoreWithBackup(engine, databaseId, backupId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+        queryClient.setQueryData<Database | undefined>(
+          [queryKey, databaseId],
+          (oldData) => {
+            if (oldData === undefined) {
+              return undefined;
+            }
+
+            return {
+              ...oldData,
+              status: 'restoring',
+            };
+          }
+        );
+      },
+    }
   );
 
 export const databaseEventsHandler = (event: Event) => {
