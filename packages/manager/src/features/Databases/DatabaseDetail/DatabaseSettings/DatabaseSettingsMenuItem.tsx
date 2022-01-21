@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Grid from 'src/components/Grid';
 import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -13,18 +12,34 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  menuItem: {
+  topSection: {
+    display: 'flex',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
   },
-  menuItemTitle: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
+  sectionTitleAndText: {
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
   },
-  menuItemButtonContainer: {
-    marginTop: theme.spacing(2),
-    justifyContent: 'flex-end',
-    alignContent: 'flex-start',
+  sectionTitle: {
+    marginBottom: '0.25rem',
+  },
+  sectionText: {
+    width: '65%',
+    marginRight: 0,
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
+  },
+  sectionButton: {
+    minWidth: 214,
+    [theme.breakpoints.down('sm')]: {
+      alignSelf: 'flex-start',
+    },
   },
 }));
 
@@ -35,37 +50,30 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
     sectionTitle,
     onClick,
     disabled = false,
-    children,
   } = props;
 
   const classes = useStyles();
 
   return (
-    <Grid container className={classes.menuItem}>
-      <Grid item lg={6} sm={12}>
-        <Typography className={classes.menuItemTitle} variant="h3">
-          {sectionTitle}
-        </Typography>
-        <Typography>{descriptiveText}</Typography>
-        {children}
-      </Grid>
-      <Grid
-        container
-        item
-        lg={3}
-        sm={12}
-        className={classes.menuItemButtonContainer}
+    <div className={classes.topSection}>
+      <div className={classes.sectionTitleAndText}>
+        <div className={classes.sectionTitle}>
+          <Typography variant="h3">{sectionTitle}</Typography>
+        </div>
+        <div className={classes.sectionText}>
+          <Typography>{descriptiveText}</Typography>
+        </div>
+      </div>
+      <Button
+        className={classes.sectionButton}
+        disabled={disabled}
+        buttonType="primary"
+        onClick={onClick}
+        compact
       >
-        <Button
-          disabled={disabled}
-          buttonType="primary"
-          onClick={onClick}
-          fullWidth
-        >
-          {buttonText}
-        </Button>
-      </Grid>
-    </Grid>
+        {buttonText}
+      </Button>
+    </div>
   );
 };
 
