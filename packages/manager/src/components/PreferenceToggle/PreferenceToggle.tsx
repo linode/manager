@@ -8,10 +8,6 @@ import withPreferences, {
 
 type PreferenceValue = boolean | string | number;
 
-// TODO: add way to surface preference, since querying localstorage always fails for some fucking reason
-// we no longer use localstorage for handling preferences, not sure what should change here, however
-// i echo the sentiment of localstorage being extraordinarily annoying >:(
-
 export interface ToggleProps<T> {
   preference: T;
   togglePreference: () => T;
