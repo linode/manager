@@ -10,10 +10,9 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import TextField from 'src/components/TextField';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
@@ -25,6 +24,9 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -54,6 +56,7 @@ export type CombinedProps = Props &
   WithImages &
   UserSSHKeyProps &
   RouteComponentProps &
+  PreferencesProps &
   WithSnackbarProps;
 
 interface RebuildFromImageForm {
@@ -80,6 +83,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     onClose,
     enqueueSnackbar,
     passwordHelperText,
+    preferences,
   } = props;
 
   const classes = useStyles();
@@ -87,7 +91,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
-  const submitButtonDisabled = confirmationText !== linodeLabel;
+  const submitButtonDisabled = preferences?.power_user
+    ? false
+    : confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromImageForm,
@@ -130,6 +136,13 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
         scrollErrorIntoView();
       });
   };
+
+  const textToConfirm = (
+    <span>
+      To confirm these changes, type the label of the Linode{' '}
+      <strong>({linodeLabel})</strong> in the field below:
+    </span>
+  );
 
   return (
     <Formik
@@ -203,16 +216,17 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 passwordHelperText={passwordHelperText}
               />
               <ActionsPanel className={classes.actionPanel}>
-                <Typography variant="h2">Confirm</Typography>
-                <Typography style={{ marginBottom: 8 }}>
-                  To confirm these changes, type the label of the Linode{' '}
-                  <strong>({linodeLabel})</strong> in the field below:
-                </Typography>
-                <TextField
-                  label="Linode Label"
+                <TypeToConfirm
+                  confirmationText={textToConfirm}
+                  title="Confirm"
+                  typographyStyle={{ marginBottom: 8 }}
+                  onChange={(input) => {
+                    setConfirmationText(input);
+                  }}
                   hideLabel
-                  onChange={(e) => setConfirmationText(e.target.value)}
-                  style={{ marginBottom: 16 }}
+                  visible={!preferences?.power_user}
+                  label="Linode Label"
+                  textFieldStyle={{ marginBottom: 16 }}
                 />
                 <Button
                   disabled={submitButtonDisabled || disabled}
@@ -233,6 +247,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withImages(),
+  withPreferences(),
   userSSHKeyHoc,
   withSnackbar,
   withRouter

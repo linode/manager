@@ -4,6 +4,7 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
+import { preferencesFactory } from 'src/factories/preferences';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import BucketLanding, { CombinedProps } from './BucketLanding';
 
@@ -14,6 +15,9 @@ const props: CombinedProps = {
   isRestrictedUser: false,
   openBucketDrawer: mockOpenBucketDrawer,
   closeBucketDrawer: mockCloseBucketDrawer,
+  getUserPreferences: jest.fn(),
+  updateUserPreferences: jest.fn(),
+  preferences: preferencesFactory.build(),
 };
 
 describe('ObjectStorageLanding', () => {

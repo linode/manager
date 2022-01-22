@@ -396,24 +396,18 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
 
         <ActionsPanel className={classes.actionPanel}>
-          {preferences?.power_user ? (
-            <React.Fragment />
-          ) : (
-            <>
-              <Typography variant="h2">Confirm</Typography>
-              <TypeToConfirm
-                confirmationText={typeToConfirmText}
-                typographyStyle={{ marginBottom: 8 }}
-                updateString={(input) => {
-                  this.setState({ confirmationText: input });
-                }}
-                hideLabel
-                label="Linode Label"
-                textFieldStyle={{ marginBottom: 16 }}
-              />
-            </>
-          )}
-
+          <TypeToConfirm
+            title="Confirm"
+            confirmationText={typeToConfirmText}
+            typographyStyle={{ marginBottom: 8 }}
+            onChange={(input) => {
+              this.setState({ confirmationText: input });
+            }}
+            hideLabel
+            visible={!preferences?.power_user}
+            label="Linode Label"
+            textFieldStyle={{ marginBottom: 16 }}
+          />
           <Button
             disabled={
               !this.state.selectedId ||

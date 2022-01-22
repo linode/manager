@@ -8,6 +8,7 @@ import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import TextField from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 
@@ -117,13 +118,12 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         account means that all services including Linodes, Volumes, DNS Records,
         etc will be lost and may not be able to be restored.
       </Typography>
-      <TextField
+      <TypeToConfirm
         label={`Please enter your username (${profile.username}) to confirm.`}
-        placeholder="Username"
-        aria-label="username field"
-        value={inputtedUsername}
-        onChange={(e) => setUsername(e.target.value)}
+        onChange={(input) => setUsername(input)}
         inputRef={inputRef}
+        aria-label="username field"
+        placeholder="Username"
       />
       <Typography className={classes.dontgo}>
         We’d hate to see you go. Please let us know what we could be doing

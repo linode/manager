@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
 import { PoolNodeWithPrice } from 'src/features/Kubernetes/types';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 
 interface Props {
   open: boolean;
@@ -17,7 +21,7 @@ interface Props {
   onDelete: () => void;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & PreferencesProps;
 
 const renderActions = (
   disabled: boolean,
@@ -64,11 +68,21 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
     open,
     onClose,
     onDelete,
+    preferences,
   } = props;
   const [confirmText, setConfirmText] = React.useState<string>('');
-  const disabled = confirmText !== clusterLabel;
+  const disabled = preferences.power_user
+    ? false
+    : confirmText !== clusterLabel;
   const poolCount = clusterPools.length;
   const linodeCount = getTotalLinodes(clusterPools);
+
+  const typeToConfirmText = (
+    <span>
+      To confirm deletion, type the name of the cluster (<b>{clusterLabel}</b>)
+      in the field below:
+    </span>
+  );
 
   return (
     <ConfirmationDialog
@@ -90,20 +104,21 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
         that will be deleted along with the cluster. Deleting a cluster is
         permanent and can&apos;t be undone.
       </Typography>
-      <Typography style={{ marginTop: '10px' }}>
-        To confirm deletion, type the name of the cluster (<b>{clusterLabel}</b>
-        ) in the field below:
-      </Typography>
-      <TextField
-        data-testid={'dialog-confirm-text-input'}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setConfirmText(e.target.value)
-        }
+      <TypeToConfirm
         label="Cluster Name"
+        confirmationText={typeToConfirmText}
+        typographyStyle={{ marginTop: '10px' }}
+        data-testid={'dialog-confirm-text-input'}
         expand
+        onChange={(input) => {
+          setConfirmText(input);
+        }}
+        visible={!preferences.power_user}
       />
     </ConfirmationDialog>
   );
 };
 
-export default KubernetesDialog;
+export default compose<CombinedProps, Props>(withPreferences())(
+  KubernetesDialog
+);
