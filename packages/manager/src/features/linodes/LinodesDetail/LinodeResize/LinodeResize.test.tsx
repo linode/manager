@@ -7,6 +7,7 @@ import { extDisk, swapDisk } from 'src/__data__/disks';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { Grants, Profile } from '@linode/api-v4/lib';
+import { UserPreferences } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   isSmallerThanCurrentPlan,
@@ -14,6 +15,7 @@ import {
   shouldEnableAutoResizeDiskOption,
 } from './LinodeResize';
 import { grantsFactory } from 'src/factories/grants';
+import { preferencesFactory } from 'src/factories/preferences';
 
 beforeAll(() => {
   mockMatchMedia();
@@ -44,6 +46,9 @@ describe('LinodeResize', () => {
       linodeId={12}
       linodeLabel=""
       open={false}
+      getUserPreferences={jest.fn()}
+      updateUserPreferences={jest.fn()}
+      preferences={{ data: preferencesFactory.build() } as UserPreferences}
       onClose={jest.fn()}
       getLinodeDisks={jest.fn()}
       updateLinode={jest.fn()}

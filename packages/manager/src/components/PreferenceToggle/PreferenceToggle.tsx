@@ -6,9 +6,11 @@ import withPreferences, {
   PreferencesActionsProps,
 } from 'src/containers/preferences.container';
 
-import { getStorage } from 'src/utilities/storage';
-
 type PreferenceValue = boolean | string | number;
+
+// TODO: add way to surface preference, since querying localstorage always fails for some fucking reason
+// we no longer use localstorage for handling preferences, not sure what should change here, however
+// i echo the sentiment of localstorage being extraordinarily annoying >:(
 
 export interface ToggleProps<T> {
   preference: T;
@@ -47,7 +49,6 @@ const PreferenceToggle: React.FC<CombinedProps> = (props) => {
     toggleCallbackFn,
     children,
     preferences,
-    localStorageKey,
   } = props;
 
   /** will be undefined and render-block children unless otherwise specified */
@@ -63,29 +64,6 @@ const PreferenceToggle: React.FC<CombinedProps> = (props) => {
      */
 
     /**
-     * here we're going to fallback to local storage defaults
-     * because user preferences are replacing the legacy local storage
-     * implementation, so we don't want the users' choices to be
-     * lost.
-     *
-     * That being said, this logic should be removed after some time because
-     * we don't want to have to rely on local storage forever, sooooo...
-     *
-     * @todo remove this code by at least Sept 1, 2019
-     *   * this includes the localStorageKey prop and all the checking in this
-     *      useEffect
-     */
-    let preferenceFromLocalStorage = '';
-
-    try {
-      if (!!localStorageKey) {
-        preferenceFromLocalStorage = getStorage(localStorageKey);
-      }
-    } catch (e) {
-      /** do nothing */
-    }
-
-    /**
      * if for whatever reason we failed to get the preferences data
      * just fallback to some default (the first in the list of options).
      *
@@ -97,12 +75,9 @@ const PreferenceToggle: React.FC<CombinedProps> = (props) => {
       lastUpdated === 0
     ) {
       /**
-       * local storage value takes priority, but if that doesn't exist fall back to
-       * the first set of options
+       * get the first set of options
        */
-      const preferenceToSet = isNullOrUndefined(preferenceFromLocalStorage)
-        ? preferenceOptions[0]
-        : preferenceFromLocalStorage;
+      const preferenceToSet = preferenceOptions[0];
       setPreference(preferenceToSet);
 
       if (props.initialSetCallbackFn) {
@@ -128,13 +103,10 @@ const PreferenceToggle: React.FC<CombinedProps> = (props) => {
       /**
        * this is the first time the user is setting the user preference
        *
-       * if the API value is null or undefined, rely on local storage or default
-       * to the first value that was passed to this component from props.
+       * if the API value is null or undefined, default to the first value that was passed to this component from props.
        */
       const preferenceToSet = isNullOrUndefined(preferenceFromAPI)
-        ? isNullOrUndefined(preferenceFromLocalStorage)
-          ? preferenceOptions[0]
-          : preferenceFromLocalStorage
+        ? preferenceOptions[0]
         : preferenceFromAPI;
 
       setPreference(preferenceToSet);

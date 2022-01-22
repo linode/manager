@@ -27,9 +27,11 @@ import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -116,6 +118,7 @@ type CombinedProps = Props &
   WithTypesProps &
   WithStyles<ClassNames> &
   DispatchProps &
+  PreferencesProps &
   WithSnackbarProps &
   StateProps &
   ProfileProps;
@@ -265,6 +268,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeLabel,
       linodeId,
       grants,
+      preferences,
     } = this.props;
     const { confirmationText, submissionError } = this.state;
     const type = typesData.find((t) => t.id === linodeType);
@@ -277,7 +281,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const tableDisabled =
       hostMaintenance || unauthorized || Boolean(disksError);
 
-    const submitButtonDisabled = confirmationText !== linodeLabel;
+    const submitButtonDisabled = preferences?.power_user
+      ? false
+      : confirmationText !== linodeLabel;
 
     const currentPlanHeading = linodeType
       ? type
@@ -390,31 +396,23 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
 
         <ActionsPanel className={classes.actionPanel}>
-          <PreferenceToggle<boolean>
-            preferenceKey="power_user"
-            preferenceOptions={[false, true]}
-            localStorageKey="powerUser"
-          >
-            {({ preference: isPowerUser }: ToggleProps<boolean>) => {
-              return isPowerUser ? (
-                <React.Fragment />
-              ) : (
-                <>
-                  <Typography variant="h2">Confirm</Typography>
-                  <TypeToConfirm
-                    confirmationText={typeToConfirmText}
-                    typographyStyle={{ marginBottom: 8 }}
-                    updateString={(input) => {
-                      this.setState({ confirmationText: input });
-                    }}
-                    hideLabel
-                    label="Linode Label"
-                    textFieldStyle={{ marginBottom: 16 }}
-                  />
-                </>
-              );
-            }}
-          </PreferenceToggle>
+          {preferences?.power_user ? (
+            <React.Fragment />
+          ) : (
+            <>
+              <Typography variant="h2">Confirm</Typography>
+              <TypeToConfirm
+                confirmationText={typeToConfirmText}
+                typographyStyle={{ marginBottom: 8 }}
+                updateString={(input) => {
+                  this.setState({ confirmationText: input });
+                }}
+                hideLabel
+                label="Linode Label"
+                textFieldStyle={{ marginBottom: 16 }}
+              />
+            </>
+          )}
 
           <Button
             disabled={
@@ -551,5 +549,6 @@ export default compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   connected,
-  withProfile
+  withProfile,
+  withPreferences()
 )(LinodeResize);
