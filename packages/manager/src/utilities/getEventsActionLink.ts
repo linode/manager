@@ -103,7 +103,8 @@ export default (
       }
 
     case 'database':
-      return `/databases/${id}/summary`;
+      // @TODO parse entity.url for the engine
+      return `/databases/mysql/${id}/summary`;
 
     case 'user':
       return `/account/users/${label}/profile`;

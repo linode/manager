@@ -146,6 +146,8 @@ export const useRestoreFromBackupMutation = (
 export const databaseEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
 
+  console.log(event);
+
   switch (action) {
     case 'database_create':
       switch (status) {
@@ -154,6 +156,9 @@ export const databaseEventsHandler = (event: Event) => {
         case 'finished':
           updateStoreForDatabase(entity!.id, { status: 'active' });
         case 'notification':
+        // A user just made the initial POST to create a DB, we should use this event to ensure
+        // Cloud Manager has the DB in the store. This allows Cloud Manager to be up to date even if
+        // they have multiple instances of Manager open.
         case 'scheduled':
         case 'started':
           return;
