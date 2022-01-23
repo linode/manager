@@ -129,9 +129,9 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
                         checked={isPowerUser}
                       />
                     }
-                    label={` User will ${
-                      isPowerUser === true ? '' : 'not'
-                    } be allowed to skip "Type to confirm.." boxes when doing potentially destructive actions`}
+                    label={` User will${
+                      isPowerUser === true ? ' ' : ' not '
+                    }be allowed to skip "Type to confirm.." boxes when doing potentially destructive actions`}
                   />
                 </Grid>
               </Grid>
