@@ -123,6 +123,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         onChange={(input) => setUsername(input)}
         inputRef={inputRef}
         aria-label="username field"
+        visible
         placeholder="Username"
       />
       <Typography className={classes.dontgo}>
