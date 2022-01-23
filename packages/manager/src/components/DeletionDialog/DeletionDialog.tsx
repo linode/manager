@@ -108,5 +108,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(React.memo, withPreferences());
-export default enhanced(DeletionDialog);
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withPreferences()
+)(DeletionDialog);
