@@ -302,13 +302,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       typesData
     );
 
-    const typeToConfirmText = (
-      <span>
-        To confirm these changes, type the label of the Linode{' '}
-        <strong>({linodeLabel})</strong> in the field below:
-      </span>
-    );
-
     return (
       <Dialog
         title={`Resize Linode ${this.props.linodeLabel ?? ''}`}
@@ -398,7 +391,12 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <ActionsPanel className={classes.actionPanel}>
           <TypeToConfirm
             title="Confirm"
-            confirmationText={typeToConfirmText}
+            confirmationText={
+              <span>
+                To confirm these changes, type the label of the Linode{' '}
+                <strong>({linodeLabel})</strong> in the field below:
+              </span>
+            }
             typographyStyle={{ marginBottom: 8 }}
             onChange={(input) => {
               this.setState({ confirmationText: input });

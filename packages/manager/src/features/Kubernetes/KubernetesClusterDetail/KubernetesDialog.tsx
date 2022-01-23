@@ -77,13 +77,6 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   const poolCount = clusterPools.length;
   const linodeCount = getTotalLinodes(clusterPools);
 
-  const typeToConfirmText = (
-    <span>
-      To confirm deletion, type the name of the cluster (<b>{clusterLabel}</b>)
-      in the field below:
-    </span>
-  );
-
   return (
     <ConfirmationDialog
       open={open}
@@ -106,7 +99,12 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
       </Typography>
       <TypeToConfirm
         label="Cluster Name"
-        confirmationText={typeToConfirmText}
+        confirmationText={
+          <span>
+            To confirm deletion, type the name of the cluster (
+            <b>{clusterLabel}</b>) in the field below:
+          </span>
+        }
         typographyStyle={{ marginTop: '10px' }}
         data-testid={'dialog-confirm-text-input'}
         expand
