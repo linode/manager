@@ -46,6 +46,8 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
     loading,
     preferences,
     typeToConfirm,
+    getUserPreferences,
+    updateUserPreferences,
     ...rest
   } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -91,11 +93,12 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
         onChange={(input) => {
           setConfirmationText(input);
         }}
+        value={confirmationText}
         label={`${capitalize(entity)} Name:`}
         placeholder={label}
         visible={typeToConfirmRequired}
         confirmationText={
-          <Typography className={classes.text}>
+          <Typography component={'span'} className={classes.text}>
             To confirm deletion, type the name of the {entity} (
             <strong>{label}</strong>) in the field below:
           </Typography>
