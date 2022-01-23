@@ -137,13 +137,6 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const textToConfirm = (
-    <span>
-      To confirm these changes, type the label of the Linode{' '}
-      <strong>({linodeLabel})</strong> in the field below:
-    </span>
-  );
-
   return (
     <Formik
       initialValues={initialValues}
@@ -217,7 +210,12 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
               />
               <ActionsPanel className={classes.actionPanel}>
                 <TypeToConfirm
-                  confirmationText={textToConfirm}
+                  confirmationText={
+                    <span>
+                      To confirm these changes, type the label of the Linode{' '}
+                      <strong>({linodeLabel})</strong> in the field below:
+                    </span>
+                  }
                   title="Confirm"
                   typographyStyle={{ marginBottom: 8 }}
                   onChange={(input) => {
