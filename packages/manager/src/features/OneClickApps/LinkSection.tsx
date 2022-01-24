@@ -67,7 +67,7 @@ export const LinkSection: React.FunctionComponent<CombinedProps> = (props) => {
           <Typography variant="h3">{title}</Typography>
         </Grid>
       </Grid>
-      <Grid container item className={classes.link}>
+      <Grid container item className={classes.link} direction="column">
         {links.map((link, idx) => (
           <Grid item key={`${title}-link-item-${idx}`}>
             <Typography className={classes.title}>

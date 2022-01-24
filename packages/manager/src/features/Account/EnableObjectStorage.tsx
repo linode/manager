@@ -31,7 +31,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
       <Grid container direction="column">
         <Grid item>
           <Typography variant="body1">
-            Object Storage is enabled on your account. Upon cancelation, all
+            Object Storage is enabled on your account. Upon cancellation, all
             Object Storage Access Keys will be revoked, all buckets will be
             removed, and their objects deleted.
           </Typography>
