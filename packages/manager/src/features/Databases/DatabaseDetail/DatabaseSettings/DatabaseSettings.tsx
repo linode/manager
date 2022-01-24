@@ -53,7 +53,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           buttonText="Reset Root Password"
           descriptiveText={resetRootPasswordCopy}
           onClick={onResetRootPassword}
-          sectionTitle="Root Password Reset"
+          sectionTitle="Reset Root Password"
         />
         <Divider spacingTop={22} spacingBottom={22} />
         <DatabaseSettingsMenuItem
