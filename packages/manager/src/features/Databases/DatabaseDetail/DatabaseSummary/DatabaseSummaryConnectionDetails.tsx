@@ -14,7 +14,6 @@ import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    fontFamily: theme.font.bold,
     marginBottom: theme.spacing(2),
   },
   copyToolTip: {
@@ -152,7 +151,9 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Typography className={classes.header}>Connection Details</Typography>
+      <Typography className={classes.header} variant="h3">
+        Connection Details
+      </Typography>
       <Grid className={classes.connectionDetailsCtn}>
         <div className={classes.credentialsCtn}>
           <div>
