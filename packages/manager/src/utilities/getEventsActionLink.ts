@@ -103,8 +103,9 @@ export default (
       }
 
     case 'database':
-      // @TODO parse entity.url for the engine
-      return `/databases/mysql/${id}/summary`;
+      const engine =
+        entity?.url.split('/v4/databases/')[1].split('/')[0] || 'mysql';
+      return `/databases/${engine}/${id}/summary`;
 
     case 'user':
       return `/account/users/${label}/profile`;

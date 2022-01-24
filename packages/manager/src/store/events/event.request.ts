@@ -28,6 +28,15 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   // Regardless of date created, we request events that are still in-progress.
   const inIds = Object.keys(inProgressEvents).map((thisId) => +thisId);
 
+  const databaseEventIds = _events
+    .filter(
+      (event) =>
+        event.action === 'database_create' && event.status === 'notification'
+    )
+    .map((event) => event.id);
+
+  const includeIds = [...inIds, ...databaseEventIds];
+
   // Generate a list of event IDs for the "+neq" filter. We want to request events created
   // on or after the most recent created date, minus any events we've already requested.
   // This is to catch any events that may be "lost" if the request/query lands at just the
@@ -51,7 +60,7 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
     DateTime.fromMillis(mostRecentEventTime, { zone: 'utc' }).toFormat(
       ISO_DATETIME_NO_TZ_FORMAT
     ),
-    inIds,
+    includeIds,
     neqIds
   );
 
