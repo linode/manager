@@ -13,7 +13,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Upgrade to High Availability Dialog Copy
 - NVMe Block Storage banner copy in the Volume Create form
 - Marketplace document link updates and cleanup
-- State/Province field in Billing Contact Info drawer becomes a dropdown if country is US or Canada
 
 ### Fixed:
 - Icon Alignment for Kubernetes Nodes
