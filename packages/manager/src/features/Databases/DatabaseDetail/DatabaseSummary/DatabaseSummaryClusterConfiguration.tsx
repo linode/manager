@@ -12,7 +12,6 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
-    fontFamily: theme.font.bold,
     marginBottom: theme.spacing(2),
   },
   configs: {
@@ -59,7 +58,9 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
 
   return (
     <>
-      <Typography className={classes.header}>Cluster Configuration</Typography>
+      <Typography className={classes.header} variant="h3">
+        Cluster Configuration
+      </Typography>
       <div className={classes.configs}>
         <Box display="flex">
           <Typography className={classes.label}>Status</Typography>
