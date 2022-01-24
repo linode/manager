@@ -1,5 +1,7 @@
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
 
+import { ENABLE_DEV_TOOLS } from 'src/constants';
+
 function loadDevTools(callback: () => any) {
   // we want it enabled by default everywhere but production and we also want
   // to support the dev tools in production (to make us more productive triaging production issues).
@@ -28,7 +30,8 @@ export const devToolsEnabled = () => {
     window.localStorage.getItem('dev-tools') === 'false';
   const explicitlyEnabled =
     window.location.search.includes('dev-tools=true') ||
-    window.localStorage.getItem('dev-tools') === 'true';
+    window.localStorage.getItem('dev-tools') === 'true' ||
+    ENABLE_DEV_TOOLS;
 
   return (
     !explicitlyDisabled &&
