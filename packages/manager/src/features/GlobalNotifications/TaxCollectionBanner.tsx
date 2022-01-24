@@ -4,21 +4,19 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { useAccount } from 'src/queries/account';
 
 const nexusStates = ['AZ', 'HI', 'PA', 'TX', 'WA'];
-const nexusStatesCopy = 'Copy for nexus states.';
-
 const taxableCountries = ['CA', 'JP'];
-const taxableCountriesCopy = 'Copy for Canada and Japan.';
 
 const TaxCollectionBanner: React.FC<{}> = () => {
   const history = useHistory();
 
   const { data: account } = useAccount();
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
-    'tax-collection'
+    'start-tax-collection'
   );
 
   if (!account) {
@@ -42,11 +40,13 @@ const TaxCollectionBanner: React.FC<{}> = () => {
         justifyContent="space-between"
       >
         <Typography>
-          {isNexusState
-            ? nexusStatesCopy
-            : isTaxableCountry
-            ? taxableCountriesCopy
-            : null}
+          Starting {isNexusState ? 'TBD' : isTaxableCountry ? 'TBD' : null}, tax
+          may be applied to your Linode services. For more information, please
+          see the{' '}
+          <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
+            Tax Information Guide
+          </Link>
+          .
         </Typography>
         {isTaxableCountry ? (
           <Button
