@@ -28,6 +28,8 @@ export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   // Regardless of date created, we request events that are still in-progress.
   const inIds = Object.keys(inProgressEvents).map((thisId) => +thisId);
 
+  // We need to keep polling the event for any database that is still creating.
+  // The same event will change its status from `notification` to `finished`.
   const databaseEventIds = _events
     .filter(
       (event) =>
