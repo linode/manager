@@ -90,6 +90,9 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+  const [ipRemovalLoading, setIPRemovalLoading] = React.useState<boolean>(
+    false
+  );
   const [
     accessControlToBeRemoved,
     setAccessControlToBeRemoved,
@@ -125,15 +128,19 @@ export const AccessControls: React.FC<Props> = (props) => {
   };
 
   const handleRemoveIPAddress = () => {
+    setIPRemovalLoading(true);
+
     updateDatabase({
       allow_list: allowList.filter(
         (ipAddress) => ipAddress !== accessControlToBeRemoved
       ),
     })
       .then(() => {
+        setIPRemovalLoading(false);
         handleDialogClose();
       })
       .catch((e: APIError[]) => {
+        setIPRemovalLoading(false);
         setError(e[0].reason);
       });
   };
@@ -172,7 +179,11 @@ export const AccessControls: React.FC<Props> = (props) => {
         Cancel
       </Button>
 
-      <Button buttonType="primary" onClick={handleRemoveIPAddress}>
+      <Button
+        buttonType="primary"
+        onClick={handleRemoveIPAddress}
+        loading={ipRemovalLoading}
+      >
         Remove IP Address
       </Button>
     </ActionsPanel>
