@@ -32,15 +32,17 @@ import { Event } from '@linode/api-v4/lib/account/types';
 export const queryKey = 'databases';
 
 export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>([queryKey, id], () =>
-    getEngineDatabase(engine, id)
+  useQuery<Database, APIError[]>(
+    [queryKey, id],
+    () => getEngineDatabase(engine, id),
+    { refetchInterval: 20000 }
   );
 
 export const useDatabasesQuery = (params: any, filter: any) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),
-    { keepPreviousData: true }
+    { keepPreviousData: true, refetchInterval: 20000 }
   );
 
 export const useDatabaseMutation = (engine: Engine, id: number) =>
