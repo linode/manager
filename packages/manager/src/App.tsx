@@ -107,7 +107,7 @@ export class App extends React.Component<CombinedProps, State> {
      * Send any Database events to the Database events handler in the queries file
      */
     events$
-      .filter((event) => event.action.startsWith('database'))
+      .filter((event) => event.action.startsWith('database') && !event._initial)
       .subscribe(databaseEventsHandler);
 
     /*
