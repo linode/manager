@@ -4,28 +4,39 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [{2022-01-24] - v1.58.1
+
+### Fixed:
+
+- Display previous region as placeholder
+
 ## [2022-01-24] - v1.58.0
 
 ### Added:
+
 - Marketplace January 2022 Release
 
 ### Changed:
+
 - Upgrade to High Availability Dialog Copy
 - NVMe Block Storage banner copy in the Volume Create form
 - Marketplace document link updates and cleanup
 
 ### Fixed:
+
 - Icon Alignment for Kubernetes Nodes
 
 ## [2022-01-10] - v1.57.0
 
 ### Changed:
+
 - Marketplace: Utunnel app name update
 - Override Domain type display in search results
 - Backup Auto Enrollment – Remove redundant head
 - Removed copy re: OBJ buckets needing to be empty prior to canceling Object Storage Subscription
 
 ### Fixed:
+
 - Customer unable to edit Cloud Firewall Rules
 - Editing a Secondary Domain that caused freeze and crash
 - Support ticket entity param bug for LKE clusters
