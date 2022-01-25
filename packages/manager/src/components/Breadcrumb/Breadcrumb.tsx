@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.only('sm')]: {
       marginLeft: theme.spacing(),
     },
+    [theme.breakpoints.only('xs')]: {
+      marginLeft: theme.spacing(),
+    },
   },
   preContainer: {
     display: 'flex',

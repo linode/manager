@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   initialIcon: {
     margin: 0,
     marginLeft: 4,
+    marginRight: 4,
   },
   noWrap: {
     whiteSpace: 'nowrap',

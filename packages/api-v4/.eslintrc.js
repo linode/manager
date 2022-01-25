@@ -75,6 +75,8 @@ module.exports = {
     'object-shorthand': 'warn',
     // make prettier issues warnings
     'prettier/prettier': 'warn',
+    // Allow infered return types
+    '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
   overrides: [
     {
