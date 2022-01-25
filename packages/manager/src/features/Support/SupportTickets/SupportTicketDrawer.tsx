@@ -454,23 +454,24 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   });
 
   const getEntityOptions = (): Item<any, string>[] => {
-    if (entityType === 'database_id') {
-      return (
-        databases?.map((database) => ({
-          value: database,
-          label: database.label,
-        })) || []
-      );
+    const reactQueryEntityDataMap = {
+      database_id: databases,
+      firewall_id: firewalls,
+    };
+
+    if (!reactQueryEntityDataMap[entityType]) {
+      // We are dealing with an entity found in Redux. Return the data from state.
+      return data;
     }
-    if (entityType === 'firewall_id') {
-      return (
-        firewalls?.map((firewall) => ({
-          value: firewall,
-          label: firewall.label,
-        })) || []
-      );
-    }
-    return data;
+
+    return (
+      reactQueryEntityDataMap[entityType]?.map(
+        ({ id, label }: { id: number; label: string }) => ({
+          value: id,
+          label,
+        })
+      ) || []
+    );
   };
 
   const getAreEntitiesLoading = () => {
