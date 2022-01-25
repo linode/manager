@@ -19,7 +19,7 @@ describe('DatabaseSettings Component', () => {
     expect(paper).not.toBeNull();
     const headings = getAllByRole('heading');
     expect(headings[0].textContent).toBe('Access Controls');
-    expect(headings[1].textContent).toBe('Root Password Reset');
+    expect(headings[1].textContent).toBe('Reset Root Password');
     expect(headings[2].textContent).toBe('Delete Cluster');
   });
 });
