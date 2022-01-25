@@ -59,7 +59,7 @@ export const getDatabaseTypes = (params?: any, filters?: any) =>
  * Return information for a single database type
  *
  */
-export const getDatabaseType = (typeSlug: number) =>
+export const getDatabaseType = (typeSlug: string) =>
   Request<DatabaseType>(
     setURL(`${API_ROOT}/databases/types/${typeSlug}`),
     setMethod('GET')
