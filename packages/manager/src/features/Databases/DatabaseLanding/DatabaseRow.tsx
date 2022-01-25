@@ -1,104 +1,107 @@
-import { DatabaseStatus } from '@linode/api-v4/lib/databases/types';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import Hidden from 'src/components/core/Hidden';
-import StatusIcon from 'src/components/StatusIcon';
+import classNames from 'classnames';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TagCell from 'src/components/TagCell';
-import useDatabases from 'src/hooks/useDatabases';
-import { capitalize } from 'src/utilities/capitalize';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import ActionMenu, { ActionHandlers } from './DatabaseActionMenu';
+import StatusIcon from 'src/components/StatusIcon';
+import Hidden from 'src/components/core/Hidden';
+import Chip from 'src/components/core/Chip';
+import { Link } from 'react-router-dom';
+import { Status } from 'src/components/StatusIcon/StatusIcon';
+import { makeStyles } from 'src/components/core/styles';
+import { dcDisplayNames } from 'src/constants';
+import { formatDate } from 'src/utilities/formatDate';
+import { isWithinDays, parseAPIDate } from 'src/utilities/date';
+import { useStyles as useChipStyles } from 'src/features/Volumes/VolumeTableRow';
+import {
+  DatabaseInstance,
+  DatabaseStatus,
+  Engine,
+} from '@linode/api-v4/lib/databases/types';
 
-interface Props extends ActionHandlers {
-  id: number;
-  label: string;
-  status: DatabaseStatus;
-  region?: string; // @todo should be required when the API adds it
-  tags?: string[];
-}
-
-const getDisplayStatus = (status: DatabaseStatus) => {
-  switch (status) {
-    case 'ready':
-      return 'active';
-    case 'error':
-      return 'error';
-    case 'unknown':
-      return 'inactive';
-    case 'initializing':
-      return 'other';
-  }
+export const databaseStatusMap: Record<DatabaseStatus, Status> = {
+  provisioning: 'other',
+  active: 'active',
+  suspending: 'other',
+  suspended: 'error',
+  resuming: 'other',
+  restoring: 'other',
+  failed: 'error',
+  degraded: 'inactive',
 };
 
-export const DatabaseRow: React.FC<Props> = (props) => {
-  const { id, label, status, tags, openTagDrawer, ...actionHandlers } = props;
-  const _tags = tags ?? [];
+export const databaseEngineMap: Record<Engine, string> = {
+  mysql: 'MySQL',
+  postgresql: 'PostgreSQL',
+  mongodb: 'MongoDB',
+  redis: 'Redis',
+};
 
-  const { enqueueSnackbar } = useSnackbar();
-  const { updateDatabase } = useDatabases();
+const useStyles = makeStyles(() => ({
+  capitalize: {
+    textTransform: 'capitalize',
+  },
+  status: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+}));
 
-  const displayStatus = getDisplayStatus(status);
+interface Props {
+  database: DatabaseInstance;
+}
 
-  const addTag = React.useCallback(
-    (tag: string) => {
-      const newTags = [..._tags, tag];
-      updateDatabase(id, { tags: newTags }).catch((e) =>
-        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error',
-        })
-      );
-    },
-    [_tags, id, updateDatabase, enqueueSnackbar]
-  );
+export const DatabaseRow: React.FC<Props> = ({ database }) => {
+  const classes = useStyles();
+  const chipClasses = useChipStyles();
+  const {
+    id,
+    label,
+    engine,
+    created,
+    status,
+    region,
+    version,
+    failover_count,
+  } = database;
 
-  const deleteTag = React.useCallback(
-    (tag: string) => {
-      const newTags = _tags.filter((thisTag) => thisTag !== tag);
-      updateDatabase(id, { tags: newTags }).catch((e) =>
-        enqueueSnackbar(
-          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
-          {
-            variant: 'error',
-          }
-        )
-      );
-    },
-    [_tags, id, updateDatabase, enqueueSnackbar]
-  );
+  const configuration =
+    failover_count === 0 ? (
+      'Primary'
+    ) : (
+      <>
+        {`Primary +${failover_count}`}
+        <Chip
+          className={`${chipClasses.chip} ${chipClasses.nvmeChip}`}
+          label="HA"
+        />
+      </>
+    );
+
   return (
-    <TableRow
-      key={`database-row-${id}`}
-      data-testid={`database-row-${id}`}
-      ariaLabel={`Database ${label}`}
-    >
+    <TableRow key={`database-row-${id}`} ariaLabel={`Database ${label}`}>
       <TableCell>
-        <Link to={`/databases/${id}`}>{label}</Link>
+        <Link to={`/databases/${engine}/${id}`}>{label}</Link>
       </TableCell>
       <TableCell>
-        <StatusIcon status={displayStatus} />
-        {capitalize(status)}
+        <div className={classNames(classes.status, classes.capitalize)}>
+          <StatusIcon status={databaseStatusMap[status]} />
+          {status}
+        </div>
       </TableCell>
       <Hidden xsDown>
-        {/** Pending API work */}
-        {/* <TableCell>Hostname</TableCell>
-        <TableCell>Port</TableCell>
-        <TableCell>Last Backup</TableCell> */}
-        <TagCell
-          tags={_tags}
-          width={250}
-          addTag={addTag}
-          deleteTag={deleteTag}
-          listAllTags={() => openTagDrawer(id, label, _tags)}
-          inTableContext
-        />
+        <TableCell>{configuration}</TableCell>
       </Hidden>
-
-      <TableCell>
-        <ActionMenu databaseID={id} databaseLabel={label} {...actionHandlers} />
-      </TableCell>
+      <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
+      <Hidden smDown>
+        <TableCell>{dcDisplayNames[region] || 'Unknown Region'}</TableCell>
+      </Hidden>
+      <Hidden mdDown>
+        <TableCell>
+          {isWithinDays(3, created)
+            ? parseAPIDate(created).toRelative()
+            : formatDate(created)}
+        </TableCell>
+      </Hidden>
     </TableRow>
   );
 };
