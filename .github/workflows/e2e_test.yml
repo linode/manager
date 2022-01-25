@@ -4,7 +4,11 @@ env:
 
   # OAuth tokens for up to 8 test users.
   #
-  # TODO Explain these environment variables, and the fact that they are not required.
+  # At least one of these must be defined. If more than one OAuth token is
+  # specified, the additional test users are used to parallelize Cypress.
+  #
+  # For more information, see:
+  # https://docs.cypress.io/guides/continuous-integration/github-actions#Worker-Jobs
   USER_1: ${{ secrets.USER_1 }}
   USER_2: ${{ secrets.USER_2 }}
   USER_3: ${{ secrets.USER_3 }}
@@ -23,7 +27,8 @@ on:
 jobs:
 
   # This job checks environment variables `USER_1` through `USER_8` and
-  # constructs a JSON array to be used for the next job's matrix.
+  # constructs a JSON array to be used for the next job's matrix. It also
+  # outputs some related data that can be used elsewhere within the workflow.
   #
   # By using this job to construct the array, we can control the number of test
   # users being used by Cypress dynamically according to the presence of the
@@ -32,19 +37,22 @@ jobs:
   # This is particularly useful when running workflows locally, where you may
   # not be able to supply more than one test user.
   generate_users_matrix:
-    name: Generate Cypress test user matrix
+    name: Generate Cypress user matrix
     runs-on: ubuntu-latest
     steps:
       - name: Generate JSON array of test users
         id: generate_users_array
         run: |
           MAX_USERS=8
+          COUNT=0
+          PARALLELIZE=false
           LIST=
           for ((ITER=1;ITER<=MAX_USERS;ITER++)); do
             OAUTH_VAR="USER_$ITER"
             OAUTH="${!OAUTH_VAR}"
             # Only add to matrix if `USER_*` variable is not empty.
             if [ ! -z "${OAUTH}" ]; then
+              COUNT=$(($COUNT+1))
               APPEND="{\"id\": \"$ITER\", \"var\": \"$OAUTH_VAR\"}"
               if [ -z "${LIST}" ]; then
                 LIST=${APPEND}
@@ -53,18 +61,70 @@ jobs:
               fi
             fi
           done
-          # Use GitHub Actions expression to set array of users as output.
+          # Determine whether or not Cypress should be parallelized.
+          if [ $COUNT -gt 1 ]; then
+            PARALLELIZE=true
+          fi
+          # Use GitHub Actions expression to set output.
           echo ::set-output name=matrix::{\"user\": [$LIST]}
+          echo ::set-output name=parallelize::$PARALLELIZE
+
     outputs:
+      # Matrix of test users for Cypress parallelization.
       matrix: ${{ steps.generate_users_array.outputs.matrix }}
+
+      # Whether or not Cypress should be parallelized.
+      parallelize: ${{ steps.generate_users_array.outputs.parallelize }}
 
   # Runs Cypress.
   run_cypress:
-    name: Run Cypress (User ${{ matrix.user.var }})
+    # name: Run Cypress (User ${{ matrix.user.id }})
     needs: generate_users_matrix
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix: "${{ fromJson(needs.generate_users_matrix.outputs.matrix) }}"
     steps:
-      - name: Say hello
-        run: echo '${{ matrix.user.var }}'
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14.17.4"
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+            ~/.cache/Cypress
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+
+      - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
+      # Configure environment variables.
+      - run: |
+          # echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
+          echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
+          # echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
+          echo "MANAGER_OAUTH=$${{ matrix.user.var }}" >> ./packages/manager/.env
+          echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
+          echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
+          echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
+          echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
+
+      # GO GO GO
+      - run: |
+          yarn up & echo BOOTING UP!!
+
+      - name: Run tests
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: packages/manager
+          wait-on: "http://localhost:3000"
+          wait-on-timeout: 1000
+          install: false
+          browser: chrome
+          headless: true
+          record: false
+          # Only parallelize if more than one test users exists.
+          parallel: ${{ needs.generate_users_matrix.outputs.parallelize }}
