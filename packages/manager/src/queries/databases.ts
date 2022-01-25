@@ -25,7 +25,7 @@ import {
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient } from './base';
+import { queryClient, queryPresets } from './base';
 
 export const queryKey = 'databases';
 
@@ -54,7 +54,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
     {
       onSuccess: (data) => {
         queryClient.setQueryData<Database | undefined>(
-          [queryKey, id],
+          [queryKey, Number(id)],
           (oldEntity) => {
             if (oldEntity === undefined) {
               return undefined;
@@ -62,7 +62,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
 
             if (oldEntity.label !== data.label) {
               // Invalidate useDatabasesQuery to reflect the new database label.
-              // We choose to refetch insted of manually mutate the cache because it
+              // We choose to refetch instead of manually mutate the cache because it
               // is API paginated.
               queryClient.invalidateQueries(`${queryKey}-list`);
             }
@@ -76,7 +76,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
 
 export const useCreateDatabaseMutation = () =>
   useMutation<Database, APIError[], CreateDatabasePayload>(
-    (data) => createDatabase(data.engine, data),
+    (data) => createDatabase(data.engine?.split('/')[0] as Engine, data),
     {
       onSuccess: (data) => {
         // Invalidate useDatabasesQuery to show include the new database.
@@ -132,10 +132,15 @@ export const useDatabaseTypesQuery = () =>
     getAllDatabaseTypes
   );
 
-export const useDatabaseCredentialsQuery = (engine: Engine, id: number) =>
+export const useDatabaseCredentialsQuery = (
+  engine: Engine,
+  id: number,
+  enabled: boolean = false
+) =>
   useQuery<DatabaseCredentials, APIError[]>(
     [`${queryKey}-credentials`, id],
-    () => getDatabaseCredentials(engine, id)
+    () => getDatabaseCredentials(engine, id),
+    { ...queryPresets.oneTimeFetch, enabled }
   );
 
 export const useRestoreFromBackupMutation = (

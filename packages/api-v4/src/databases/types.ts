@@ -1,21 +1,19 @@
-export interface DatabaseType {
-  id: string;
-  label: string;
-  price: {
-    hourly: number;
-    monthly: number;
-  };
-  memory: number;
-  transfer: number;
-  disk: number;
-  vcpus: number;
+import { BaseType } from '../linodes/types';
+
+export type DatabaseTypeClass = 'standard' | 'dedicated' | 'nanode';
+
+interface DatabasePriceObject {
+  monthly: number;
+  hourly: number;
+}
+
+export interface DatabaseType extends BaseType {
+  class: DatabaseTypeClass;
   deprecated: boolean;
+  price: DatabasePriceObject;
   addons: {
     failover: {
-      price: {
-        monthly: number;
-        hourly: number;
-      };
+      price: DatabasePriceObject;
     };
   };
 }
@@ -24,18 +22,20 @@ export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
 
 export interface DatabaseVersion {
   id: string;
-  label: string;
   engine: Engine;
   version: string;
   deprecated: boolean;
 }
 
 export type DatabaseStatus =
-  | 'creating'
-  | 'running'
+  | 'provisioning'
+  | 'active'
+  | 'suspending'
+  | 'suspended'
+  | 'resuming'
+  | 'restoring'
   | 'failed'
-  | 'degraded'
-  | 'updating';
+  | 'degraded';
 
 export type DatabaseBackupType = 'snapshot' | 'auto';
 
@@ -51,9 +51,14 @@ export interface DatabaseCredentials {
   password: string;
 }
 
+interface DatabaseHosts {
+  primary: string;
+  secondary: string;
+}
+
 export interface SSLFields {
-  public_key: string | null;
-  certificate: string | null;
+  public_key: string;
+  certificate: string;
 }
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
@@ -69,9 +74,11 @@ export interface DatabaseInstance {
   updated: string;
   created: string;
   instance_uri: string;
+  hosts: DatabaseHosts;
 }
 
-type FailoverCount = 0 | 2;
+export type FailoverCount = 0 | 2;
+type ReadonlyCount = 0 | 2;
 
 export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
 
@@ -97,10 +104,12 @@ interface ConnectionStrings {
 export interface Database {
   id: number;
   label: string;
+  type: string;
+  version: string;
   region: string;
   status: DatabaseStatus;
-  type: string;
   failover_count: FailoverCount;
+  readonly_count?: ReadonlyCount;
   engine: Engine;
   encrypted: boolean;
   ipv4_public: string;
@@ -110,6 +119,8 @@ export interface Database {
   connection_strings: ConnectionStrings[];
   created: string;
   updated: string;
+  hosts: DatabaseHosts;
+  port: number;
 }
 
 export interface UpdateDatabasePayload {

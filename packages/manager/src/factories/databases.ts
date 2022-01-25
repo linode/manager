@@ -11,12 +11,12 @@ import {
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 
+// These are not all of the possible statuses, but these are some common ones.
 const possibleStatuses: DatabaseStatus[] = [
-  'creating',
-  'running',
+  'provisioning',
+  'active',
   'failed',
   'degraded',
-  'updating',
 ];
 
 const possibleReplicationTypes: ReplicationType[] = [
@@ -25,18 +25,19 @@ const possibleReplicationTypes: ReplicationType[] = [
   'asynch',
 ];
 
-const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
+export const IPv4List = ['192.0.2.1', '196.0.0.0', '198.0.0.2'];
 
 export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
-  id: 'g1-mysql-ha-2',
-  label: 'MySQL HA Tier 2',
+  id: Factory.each((i) => `g6-standard-${i}`),
+  label: Factory.each((i) => `Linode ${i} GB`),
+  class: 'standard',
   price: {
     hourly: 0.4,
     monthly: 60,
   },
   memory: 2048,
   transfer: 30,
-  disk: 40,
+  disk: 20480,
   vcpus: 2,
   deprecated: false,
   addons: {
@@ -56,9 +57,13 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     engine: 'mysql',
     type: databaseTypeFactory.build().id,
     region: 'us-east',
-    version: 'mysql/5.8.13',
+    version: '5.8.13',
     status: Factory.each(() => pickRandom(possibleStatuses)),
     failover_count: Factory.each(() => pickRandom([0, 2])),
+    hosts: {
+      primary: 'db-mysql-primary-0.b.linodeb.net',
+      secondary: 'db-mysql-secondary-0.b.linodeb.net',
+    },
     updated: '2021-12-16T17:15:12',
     created: '2021-12-09T17:15:12',
     instance_uri: '',
@@ -70,7 +75,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   label: Factory.each((i) => `database-${i}`),
   region: 'us-east',
   status: pickRandom(possibleStatuses),
-  type: databaseTypeFactory.build().id,
+  type: 'g6-standard-0',
   version: '5.8.13',
   failover_count: 2,
   engine: 'mysql',
@@ -78,6 +83,11 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   ipv4_public: pickRandom(IPv4List),
   ssl_connection: false,
   replication_type: pickRandom(possibleReplicationTypes),
+  hosts: {
+    primary: 'db-mysql-primary-0.b.linodeb.net',
+    secondary: 'db-mysql-secondary-0.b.linodeb.net',
+  },
+  port: 3306,
   allow_list: [...IPv4List],
   connection_strings: [
     {
@@ -98,10 +108,9 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
 
 export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
   {
-    id: Factory.each((i) => `version-${i}`),
-    label: Factory.each((i) => `Example Version ${i}`),
+    id: Factory.each((i) => `mysql/${i}`),
     engine: 'mysql',
-    version: Factory.each((i) => `v${i}`),
+    version: Factory.each((i) => `${i}`),
     deprecated: false,
   }
 );

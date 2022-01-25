@@ -58,7 +58,7 @@ describe('Database Table', () => {
     server.use(
       rest.get('*/databases/instances', (req, res, ctx) => {
         const databases = databaseInstanceFactory.buildList(1, {
-          status: 'running',
+          status: 'active',
         });
         return res(ctx.json(makeResourcePage(databases)));
       })
@@ -84,7 +84,7 @@ describe('Database Table', () => {
     getAllByText('Created');
 
     // Check to see if the mocked API data rendered in the table
-    queryAllByText('Running');
+    queryAllByText('Active');
   });
 
   it('should render database landing with empty state', async () => {
@@ -101,7 +101,9 @@ describe('Database Table', () => {
     await waitForElementToBeRemoved(getByTestId(loadingTestId));
 
     expect(
-      getByText('Take control of your data with managed MySQL Databases.')
+      getByText(
+        'Fully managed and highly scalable database clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
+      )
     ).toBeInTheDocument();
   });
 });
