@@ -426,9 +426,10 @@ class UpdateContactInformationForm extends React.Component<
               isClearable={false}
               onChange={this.updateState}
               options={filteredRegionResults}
-              placeholder={`Select ${
-                fields.country === 'US' ? 'state' : 'region'
-              }`}
+              placeholder={
+                account.state ||
+                `Select ${fields.country === 'US' ? 'state' : 'province'}`
+              }
               required={flags.regionDropdown}
               value={
                 filteredRegionResults.find(({ value }) =>
