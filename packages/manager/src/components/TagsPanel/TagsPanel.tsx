@@ -351,7 +351,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           <Select
             onChange={this.handleCreateTag}
             options={tagsToSuggest}
-            variant="creatable"
+            creatable
             onBlur={this.toggleTagInput}
             placeholder="Create or Select a Tag"
             label="Create or Select a Tag"

@@ -57,7 +57,7 @@ type CombinedProps = WithNodeBalancerActions &
   RouteComponentProps<{}> &
   SetDocsProps;
 
-const headers: HeaderCell[] = [
+export const headers: HeaderCell[] = [
   {
     label: 'Name',
     dataColumn: 'label',

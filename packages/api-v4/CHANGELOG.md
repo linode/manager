@@ -1,3 +1,14 @@
+## [2022-01-10] -v0.65.0
+
+### Changed:
+
+- Refactor PaymentMethod type definition
+
+## [2021-11-30] - v0.64.0
+
+### Added:
+- getLinodeFirewalls method
+
 ## [2021-11-15] - v0.63.0
 
 ### Added:

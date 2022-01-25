@@ -330,7 +330,9 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            {gravatarLoading || gravatarURL === 'not found' ? (
+            {gravatarLoading ||
+            gravatarURL === 'not found' ||
+            gravatarURL === undefined ? (
               <div className={classes.userWrapper}>
                 <UserIcon />
               </div>

@@ -1,8 +1,4 @@
-import {
-  Event,
-  EventAction,
-  NotificationType,
-} from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -14,27 +10,14 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import useNotifications from 'src/hooks/useNotifications';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import useEvents from 'src/hooks/useEvents';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
     width: '35%',
     wordBreak: 'break-all',
-  },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    /*
-      Explicitly stating this as the theme file is automatically adding padding to the last cell
-      We can remove once we make the full switch to CMR styling
-      */
-    paddingRight: '0 !important',
   },
   chipWrapper: {
     alignSelf: 'center',
@@ -101,37 +84,18 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     linodeLabel,
     linode_id: linodeId,
     linodeStatus,
+    eligibleForUpgradeToNVMe,
+    nvmeUpgradeScheduledByUserImminent,
+    nvmeUpgradeScheduledByUserInProgress,
   } = props;
 
-  const { events } = useEvents();
   const history = useHistory();
   const location = useLocation();
-  const notifications = useNotifications();
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
 
   const isNVMe = hardwareType === 'nvme';
-
-  const eligibleForUpgradeToNVMe = notifications.some(
-    (notification) =>
-      notification.type ===
-        ('volume_migration_scheduled' as NotificationType) &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserImminent = notifications.some(
-    (notification) =>
-      notification.type === ('volume_migration_imminent' as NotificationType) &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserInProgress = events.some(
-    (event) =>
-      event.action === ('volume_migrate' as EventAction) &&
-      event.entity?.id === id &&
-      event.status === 'started'
-  );
 
   return isUpdating ? (
     <TableRow
@@ -156,7 +120,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         <Grid
           container
           wrap="nowrap"
-          justify="space-between"
+          justifyContent="space-between"
           alignItems="flex-end"
         >
           {isVolumesLanding ? (
@@ -226,35 +190,33 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </TableCell>
       )}
-      <TableCell>
-        <div className={classes.actionCell}>
-          <VolumesActionMenu
-            onShowConfig={openForConfig}
-            filesystemPath={filesystemPath}
-            linodeLabel={linodeLabel || ''}
-            regionID={region}
-            volumeId={id}
-            volumeTags={tags}
-            size={size}
-            label={label}
-            onEdit={openForEdit}
-            onResize={openForResize}
-            onClone={openForClone}
-            volumeLabel={label}
-            /**
-             * This is a safer check than linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
-             * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
-             * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
-             * could sometimes get tagged as "attached" here.
-             */
-            attached={Boolean(linodeLabel)}
-            isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
-            onAttach={handleAttach}
-            onDetach={handleDetach}
-            poweredOff={linodeStatus === 'offline'}
-            onDelete={handleDelete}
-          />
-        </div>
+      <TableCell actionCell>
+        <VolumesActionMenu
+          onShowConfig={openForConfig}
+          filesystemPath={filesystemPath}
+          linodeLabel={linodeLabel || ''}
+          regionID={region}
+          volumeId={id}
+          volumeTags={tags}
+          size={size}
+          label={label}
+          onEdit={openForEdit}
+          onResize={openForResize}
+          onClone={openForClone}
+          volumeLabel={label}
+          /**
+           * This is a safer check than linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
+           * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
+           * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
+           * could sometimes get tagged as "attached" here.
+           */
+          attached={Boolean(linodeLabel)}
+          isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
+          onAttach={handleAttach}
+          onDetach={handleDetach}
+          poweredOff={linodeStatus === 'offline'}
+          onDelete={handleDelete}
+        />
       </TableCell>
     </TableRow>
   );

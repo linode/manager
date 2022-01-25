@@ -4,6 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-01-10] - v1.57.0
+
+### Changed:
+- Marketplace: Utunnel app name update
+- Override Domain type display in search results
+- Backup Auto Enrollment – Remove redundant head
+- Removed copy re: OBJ buckets needing to be empty prior to removal
+
+### Fixed:
+- Customer unable to edit Cloud Firewall Rules
+- Editing a Secondary Domain that caused freeze and crash
+- Support ticket entity param bug for LKE clusters
+
+## [2021-11-30] - v1.56.0
+
+### Added:
+
+- Warning when booting into Rescue Mode that Cloud Firewall will not be enabled
+- URL paging for the Linodes table
+
+### Fixed:
+
+- Row height and extra spacing around ActionMenu in Safari
+- Transferred column on NodeBalancer page not showing the correct amount
+- Axis label UI bugs
+
 ## [2021-11-15] - v1.55.0
 
 ### Added:

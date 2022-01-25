@@ -1,7 +1,7 @@
 import { Account, updateAccountInfo } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import countryData from 'country-region-data';
-import { defaultTo, lensPath, pick, set } from 'ramda';
+import countryData, { Region } from 'country-region-data';
+import { defaultTo, lensPath, pathOr, pick, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,6 +15,9 @@ import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { queryClient } from 'src/queries/base';
 import withNotifications, {
   WithNotifications,
@@ -30,10 +33,17 @@ const styles = () =>
   createStyles({
     mainFormContainer: {
       maxWidth: 860,
+      '& .MuiGrid-item:not(:first-child) label': {
+        marginTop: 0,
+      },
     },
     actions: {
       display: 'flex',
       justifyContent: 'flex-end',
+      paddingBottom: 0,
+      '& button': {
+        marginBottom: 0,
+      },
     },
   });
 
@@ -44,38 +54,52 @@ interface Props {
 }
 
 interface State {
+  isValid: boolean;
   submitting: boolean;
   success?: string;
   fields: Partial<Account>;
   errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithNotifications;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  WithNotifications &
+  FeatureFlagConsumerProps;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
 const L = {
   fields: {
-    address_1: field(['address_1']),
-    address_2: field(['address_2']),
-    city: field(['city']),
-    company: field(['company']),
     email: field(['email']),
     first_name: field(['first_name']),
     last_name: field(['last_name']),
-    phone: field(['phone']),
-    tax_id: field(['tax_id']),
-    zip: field(['zip']),
+    company: field(['company']),
+    address_1: field(['address_1']),
+    address_2: field(['address_2']),
     country: field(['country']),
     state: field(['state']),
+    city: field(['city']),
+    zip: field(['zip']),
+    phone: field(['phone']),
+    tax_id: field(['tax_id']),
   },
 };
+
+const excludedUSRegions = [
+  'Micronesia',
+  'Marshall Islands',
+  'Palau',
+  'Armed Forces Americas',
+  'Armed Forces Europe, Canada, Africa and Middle East',
+  'Armed Forces Pacific',
+];
 
 class UpdateContactInformationForm extends React.Component<
   CombinedProps,
   State
 > {
   state: State = {
+    isValid: true,
     submitting: false,
     fields: {},
     errResponse: undefined,
@@ -93,16 +117,16 @@ class UpdateContactInformationForm extends React.Component<
     // display in the form.
     const editableContactInformationFields = pick(
       [
+        'email',
         'first_name',
         'last_name',
         'company',
         'address_1',
         'address_2',
-        'city',
-        'state',
-        'zip',
         'country',
-        'email',
+        'state',
+        'city',
+        'zip',
         'phone',
         'tax_id',
       ],
@@ -141,7 +165,7 @@ class UpdateContactInformationForm extends React.Component<
   }
 
   renderForm = (account: Account) => {
-    const { classes } = this.props;
+    const { classes, flags } = this.props;
     const { fields, success } = this.state;
 
     const errorMap = getErrorMap(
@@ -173,24 +197,46 @@ class UpdateContactInformationForm extends React.Component<
       }
     );
 
-    // const currentCountryResult = countryData.filter((country: Country) =>
-    //   fields.country
-    //     ? country.countryShortCode === fields.country
-    //     : country.countryShortCode === account.country
-    // );
+    const currentCountryResult = countryData.filter((country: Country) =>
+      fields.country
+        ? country.countryShortCode === fields.country
+        : country.countryShortCode === account.country
+    );
 
-    // const countryRegions: Region[] = pathOr(
-    //   [],
-    //   ['0', 'regions'],
-    //   currentCountryResult
-    // );
+    const countryRegions: Region[] = pathOr(
+      [],
+      ['0', 'regions'],
+      currentCountryResult
+    );
 
-    // const regionResults = countryRegions.map(region => {
-    //   return {
-    //     value: region.name,
-    //     label: region.name
-    //   };
-    // });
+    const regionResults = countryRegions.map((region) => {
+      if (fields.country === 'US' && region.name === 'Virgin Islands') {
+        return {
+          value: region.shortCode,
+          label: 'Virgin Islands, U.S.',
+        };
+      }
+
+      return {
+        value: region.shortCode,
+        label: region.name,
+      };
+    });
+
+    let filteredRegionResults;
+
+    if (fields.country === 'US') {
+      filteredRegionResults = regionResults.filter(
+        (region) => !excludedUSRegions.includes(region.label)
+      );
+
+      filteredRegionResults.push({
+        value: 'UM',
+        label: 'United States Minor Outlying Islands',
+      });
+    } else {
+      filteredRegionResults = regionResults;
+    }
 
     return (
       <Grid
@@ -212,6 +258,24 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={12}
+          updateFor={[account.email, fields.email, errorMap.email, classes]}
+        >
+          <TextField
+            label="Email"
+            errorText={errorMap.email}
+            helperTextPosition="top"
+            inputRef={this.emailRef}
+            onChange={this.updateEmail}
+            required
+            type="email"
+            value={defaultTo(account.email, fields.email)}
+            data-qa-contact-email
+          />
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
           sm={6}
           updateFor={[
             account.first_name,
@@ -222,9 +286,9 @@ class UpdateContactInformationForm extends React.Component<
         >
           <TextField
             label="First Name"
-            value={defaultTo(account.first_name, fields.first_name)}
             errorText={errorMap.first_name}
             onChange={this.updateFirstName}
+            value={defaultTo(account.first_name, fields.first_name)}
             data-qa-contact-first-name
           />
         </Grid>
@@ -242,9 +306,9 @@ class UpdateContactInformationForm extends React.Component<
         >
           <TextField
             label="Last Name"
-            value={defaultTo(account.last_name, fields.last_name)}
             errorText={errorMap.last_name}
             onChange={this.updateLastName}
+            value={defaultTo(account.last_name, fields.last_name)}
             data-qa-contact-last-name
           />
         </Grid>
@@ -259,16 +323,14 @@ class UpdateContactInformationForm extends React.Component<
             classes,
           ]}
         >
-          <Grid container>
-            <Grid item xs={12}>
-              <TextField
-                label="Company Name"
-                value={defaultTo(account.company, fields.company)}
-                errorText={errorMap.company}
-                onChange={this.updateCompany}
-                data-qa-company
-              />
-            </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Company Name"
+              errorText={errorMap.company}
+              onChange={this.updateCompany}
+              value={defaultTo(account.company, fields.company)}
+              data-qa-company
+            />
           </Grid>
         </Grid>
 
@@ -284,9 +346,9 @@ class UpdateContactInformationForm extends React.Component<
         >
           <TextField
             label="Address"
-            value={defaultTo(account.address_1, fields.address_1)}
             errorText={errorMap.address_1}
             onChange={this.updateAddress1}
+            value={defaultTo(account.address_1, fields.address_1)}
             data-qa-contact-address-1
           />
         </Grid>
@@ -303,101 +365,10 @@ class UpdateContactInformationForm extends React.Component<
         >
           <TextField
             label="Address 2"
-            value={defaultTo(account.address_2, fields.address_2)}
             errorText={errorMap.address_2}
             onChange={this.updateAddress2}
+            value={defaultTo(account.address_2, fields.address_2)}
             data-qa-contact-address-2
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[account.city, fields.city, errorMap.city, classes]}
-        >
-          <TextField
-            label="City"
-            value={defaultTo(account.city, fields.city)}
-            errorText={errorMap.city}
-            onChange={this.updateCity}
-            data-qa-contact-city
-          />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={6}
-          updateFor={[
-            fields.state,
-            fields.zip,
-            fields.country,
-            errorMap.state,
-            errorMap.zip,
-            errorMap.country,
-            classes,
-          ]}
-        >
-          {/*
-                @todo use the <EnhancedSelect /> in favor of the
-                <TextField /> when the DB and API remove the 24 character limit.
-
-                The issue here is that the province/state short codes (for a subset of countries)
-                uses the ISO 3316 numeric format, which is not as helpful as just being able
-                to submit the full name of the region. What we'd like to do is PUT /account
-                with the full name of the province/state, but there is a server-side
-                24-character limitation which makes it impossible to submit some provinces.
-
-                Follow DBA-1066 for more information.
-              */}
-          {/* <EnhancedSelect
-                  label="State / Province"
-                  errorText={errorMap.state}
-                  onChange={this.updateState}
-                  placeholder="Select a State"
-                  options={regionResults}
-                  isClearable={false}
-                  // Explicitly setting the value as an object so the text will populate on selection.
-                  // For more info see here: https://github.com/JedWatson/react-select/issues/2674
-                  value={
-                    fields.state
-                      ? {
-                          label: fields.state,
-                          value: fields.state
-                        }
-                      : ''
-                  }
-                  textFieldProps={{
-                    dataAttrs: {
-                      'data-qa-contact-province': true
-                    }
-                  }}
-                /> */}
-          <TextField
-            label="State / Province"
-            placeholder="Enter a State or Province"
-            errorText={errorMap.state}
-            onChange={(e) =>
-              this.updateState({
-                label: e.target.value,
-                value: e.target.value,
-              })
-            }
-            dataAttrs={{
-              'data-qa-contact-province': true,
-            }}
-            value={fields.state || ''}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Zip / Postal Code"
-            value={defaultTo(account.zip, fields.zip)}
-            errorText={errorMap.zip}
-            onChange={this.updateZip}
-            data-qa-contact-post-code
           />
         </Grid>
 
@@ -415,10 +386,11 @@ class UpdateContactInformationForm extends React.Component<
           <EnhancedSelect
             label="Country"
             errorText={errorMap.country}
-            onChange={this.updateCountry}
-            placeholder="Select a Country"
-            options={countryResults}
             isClearable={false}
+            onChange={this.updateCountry}
+            options={countryResults}
+            placeholder="Select a Country"
+            required={flags.regionDropdown}
             value={countryResults.find(({ value }) =>
               fields.country
                 ? value === fields.country
@@ -435,19 +407,80 @@ class UpdateContactInformationForm extends React.Component<
         <Grid
           item
           xs={12}
-          updateFor={[account.email, fields.email, errorMap.email, classes]}
+          sm={6}
+          updateFor={[
+            fields.state,
+            fields.zip,
+            fields.country,
+            errorMap.state,
+            errorMap.zip,
+            errorMap.country,
+            classes,
+          ]}
+        >
+          {flags.regionDropdown &&
+          (fields.country === 'US' || fields.country == 'CA') ? (
+            <EnhancedSelect
+              label={`${fields.country === 'US' ? 'State' : 'Province'}`}
+              errorText={errorMap.state}
+              isClearable={false}
+              onChange={this.updateState}
+              options={filteredRegionResults}
+              placeholder={`Select ${
+                fields.country === 'US' ? 'state' : 'region'
+              }`}
+              required={flags.regionDropdown}
+              value={
+                filteredRegionResults.find(({ value }) =>
+                  fields.state
+                    ? value === fields.state
+                    : value === account.state
+                ) ?? ''
+              }
+              textFieldProps={{
+                'data-qa-contact-state-province': true,
+              }}
+            />
+          ) : (
+            <TextField
+              label="State / Province"
+              errorText={errorMap.state}
+              onChange={(e) =>
+                this.updateState({
+                  label: e.target.value,
+                  value: e.target.value,
+                })
+              }
+              placeholder="Enter region"
+              required={flags.regionDropdown}
+              value={fields.state || ''}
+              data-qa-contact-state-province
+            />
+          )}
+        </Grid>
+
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          updateFor={[account.city, fields.city, errorMap.city, classes]}
         >
           <TextField
-            inputRef={this.emailRef}
-            label="Email"
-            required
-            type="email"
-            value={defaultTo(account.email, fields.email)}
-            errorText={errorMap.email}
-            helperText="All e-mails from Linode will be sent to this address."
-            helperTextPosition="top"
-            onChange={this.updateEmail}
-            data-qa-contact-email
+            label="City"
+            errorText={errorMap.city}
+            onChange={this.updateCity}
+            value={defaultTo(account.city, fields.city)}
+            data-qa-contact-city
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={6}>
+          <TextField
+            label="Postal Code"
+            errorText={errorMap.zip}
+            onChange={this.updateZip}
+            value={defaultTo(account.zip, fields.zip)}
+            data-qa-contact-post-code
           />
         </Grid>
 
@@ -459,9 +492,9 @@ class UpdateContactInformationForm extends React.Component<
           <TextField
             label="Phone"
             type="tel"
-            value={defaultTo(account.phone, fields.phone)}
             errorText={errorMap.phone}
             onChange={this.updatePhone}
+            value={defaultTo(account.phone, fields.phone)}
             data-qa-contact-phone
           />
         </Grid>
@@ -473,9 +506,9 @@ class UpdateContactInformationForm extends React.Component<
         >
           <TextField
             label="Tax ID"
-            value={defaultTo(account.tax_id, fields.tax_id)}
             errorText={errorMap.tax_id}
             onChange={this.updateTaxID}
+            value={defaultTo(account.tax_id, fields.tax_id)}
             data-qa-contact-tax-id
           />
         </Grid>
@@ -484,7 +517,7 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   renderFormActions = () => {
-    const { classes } = this.props;
+    const { classes, flags } = this.props;
 
     return (
       <ActionsPanel className={classes.actions}>
@@ -497,6 +530,7 @@ class UpdateContactInformationForm extends React.Component<
         </Button>
         <Button
           buttonType="primary"
+          disabled={flags.regionDropdown && !this.state.isValid}
           onClick={this.submitForm}
           loading={this.state.submitting}
           data-qa-save-contact-info
@@ -526,6 +560,12 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { flags } = this.props;
+    if (flags.regionDropdown && e.target.value === '') {
+      this.setState({ isValid: false });
+    } else {
+      this.setState({ isValid: true });
+    }
     this.composeState([set(L.fields.email, e.target.value)]);
   };
 
@@ -542,16 +582,33 @@ class UpdateContactInformationForm extends React.Component<
   };
 
   updateState = (selectedRegion: Item) => {
+    const { flags } = this.props;
+    if (
+      flags.regionDropdown &&
+      (selectedRegion.value === undefined || selectedRegion.value === '')
+    ) {
+      this.setState({ isValid: false });
+    } else {
+      this.setState({ isValid: true });
+    }
     this.composeState([set(L.fields.state, selectedRegion.value)]);
   };
 
   updateCountry = (selectedCountry: Item) => {
+    const { flags } = this.props;
+
     this.setState({
       fields: {
         ...this.state.fields,
         state: undefined,
       },
     });
+
+    if (flags.regionDropdown) {
+      this.setState({
+        isValid: false,
+      });
+    }
     this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
@@ -612,6 +669,10 @@ class UpdateContactInformationForm extends React.Component<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(styled, withNotifications());
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withFeatureFlags,
+  withNotifications()
+);
 
 export default enhanced(UpdateContactInformationForm);

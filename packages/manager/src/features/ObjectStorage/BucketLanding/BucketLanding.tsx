@@ -28,6 +28,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
+  sendObjectStorageDocsEvent,
 } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 import CancelNotice from '../CancelNotice';
@@ -318,6 +319,7 @@ const RenderEmpty: React.FC<{
         <Typography variant="subtitle1">Need help getting started?</Typography>
         <Typography variant="subtitle1">
           <a
+            onClick={() => sendObjectStorageDocsEvent('Empty state')}
             href="https://linode.com/docs/platform/object-storage"
             target="_blank"
             aria-describedby="external-site"
