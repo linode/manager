@@ -140,7 +140,13 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            <Button className={classes.edit} onClick={handleEditDrawerOpen}>
+            <Button
+              className={classes.edit}
+              onClick={() => {
+                history.push('/account/billing/edit');
+                handleEditDrawerOpen();
+              }}
+            >
               Edit
             </Button>
           </Grid>

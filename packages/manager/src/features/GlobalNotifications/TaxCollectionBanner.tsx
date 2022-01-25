@@ -9,7 +9,7 @@ import Notice from 'src/components/Notice';
 import { useAccount } from 'src/queries/account';
 
 const nexusStates = ['AZ', 'HI', 'PA', 'TX', 'WA'];
-const taxableCountries = ['CA', 'JP'];
+const taxableCountries = ['CA', 'JP', 'NO'];
 
 const TaxCollectionBanner: React.FC<{}> = () => {
   const history = useHistory();
@@ -19,7 +19,7 @@ const TaxCollectionBanner: React.FC<{}> = () => {
     'start-tax-collection'
   );
 
-  if (!account) {
+  if (!account || hasDismissedBanner) {
     return null;
   }
 
@@ -27,7 +27,7 @@ const TaxCollectionBanner: React.FC<{}> = () => {
     account.country === 'US' && nexusStates.includes(account.state);
   const isTaxableCountry = taxableCountries.includes(account.country);
 
-  if (hasDismissedBanner || (!isNexusState && !isTaxableCountry)) {
+  if (!isNexusState && !isTaxableCountry) {
     return null;
   }
 
