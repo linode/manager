@@ -373,7 +373,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       ).toFixed(2),
     });
     setFieldValue('failover_count', is1GbPlan ? 0 : 2);
-    setFieldValue('replication_type', is1GbPlan ? 'none' : 'semi-synch');
+    setFieldValue('replication_type', is1GbPlan ? 'none' : 'semi_synch');
   }, [dbtypes, is1GbPlan, setFieldValue, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
@@ -487,7 +487,7 @@ const DatabaseCreate: React.FC<{}> = () => {
               setFieldValue('failover_count', +e.target.value);
               setFieldValue(
                 'replication_type',
-                +e.target.value === 0 ? 'none' : 'semi-synch'
+                +e.target.value === 0 ? 'none' : 'semi_synch'
               );
             }}
             data-testid="database-nodes"

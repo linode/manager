@@ -21,7 +21,7 @@ const possibleStatuses: DatabaseStatus[] = [
 
 const possibleReplicationTypes: ReplicationType[] = [
   'none',
-  'semi-synch',
+  'semi_synch',
   'asynch',
 ];
 
