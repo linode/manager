@@ -6,7 +6,6 @@ import Typography from 'src/components/core/Typography';
 import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 
 // @TODO: add Canada to the list of countries once a tax collection date is determined
@@ -14,7 +13,6 @@ const taxableCountries = ['JP', 'NO'];
 // const nexusStates = ['AZ', 'HI', 'PA', 'TX', 'WA'];
 
 const TaxCollectionBanner: React.FC<{}> = () => {
-  const flags = useFlags();
   const history = useHistory();
 
   const { data: account } = useAccount();
@@ -36,13 +34,12 @@ const TaxCollectionBanner: React.FC<{}> = () => {
   }
 
   const getTaxCollectionDate = (country: string) => {
-    if (flags.taxCollectionPart1) {
-      switch (country) {
-        case 'JP':
-          return '2022-04-01';
-        case 'NO':
-          return '2022-05-01';
-      }
+    if (country === 'JP') {
+      return '2022-04-01';
+    }
+
+    if (country === 'NO') {
+      return '2022-05-01';
     }
 
     // if (flags.taxCollectionPart2) {
