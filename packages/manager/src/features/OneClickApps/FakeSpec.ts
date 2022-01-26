@@ -35,6 +35,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/aapanel_color.svg',
   },
   {
+    name: 'Akaunting',
+    description: `Akaunting is a universal accounting software that helps small businesses run more efficiently. Track expenses, generate reports, manage your books, and get the other essential features to run your business from a single dashboard.`,
+    summary:
+      'Free and open source accounting software you can use in your browser.',
+    related_guides: [
+      {
+        title: 'Deploying Akaunting through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/akaunting-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://akaunting.com',
+        href: 'https://akaunting.com',
+      },
+    ],
+    logo_url: 'assets/akaunting_color.svg',
+  },
+  {
     name: 'Ant Media Server',
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
     summary: 'A reliable, flexible and scalable video streaming solution.',
@@ -1045,6 +1064,24 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/redis_color.svg',
   },
   {
+    name: 'Restyaboard',
+    description: `Restyaboard is an open-source alternative to Trello, but with additional smart features like offline sync, diff /revisions, nested comments, multiple view layouts, chat, and more.`,
+    summary: 'Free and open source project management tool.',
+    related_guides: [
+      {
+        title: 'Deploying Restyaboard through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/restyaboard-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://restya.com',
+        href: 'https://restya.com',
+      },
+    ],
+    logo_url: 'assets/restyaboard_color.svg',
+  },
+  {
     name: 'Rocket.Chat',
     description: `Put data privacy first with an alternative to programs like Slack and Microsoft Teams.`,
     summary: 'Feature-rich self-hosted chat and collaboration platform.',
@@ -1212,7 +1249,7 @@ export const oneClickApps: OCA[] = [
     name: 'UTunnel VPN',
     description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
     summary:
-      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols',
+      'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols.',
     related_guides: [
       {
         title: 'Deploying UTunnel VPN through the Linode Marketplace',
@@ -1249,6 +1286,27 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/valheim_color.svg',
+  },
+  {
+    name: 'VictoriaMetrics Single',
+    description: `VictoriaMetrics is designed to collect, store, and process real-time metrics.`,
+    summary:
+      'Free and open source time series database (TSDB) and monitoring solution.',
+    related_guides: [
+      {
+        title:
+          'Deploying VictoriaMetrics Single through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/guides/victoriametrics-single-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://victoriametrics.com/',
+        href: 'https://victoriametrics.com/',
+      },
+    ],
+    logo_url: 'assets/victoriametricssingle_color.svg',
   },
   {
     name: 'Virtualmin',

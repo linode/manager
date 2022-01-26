@@ -1,28 +1,31 @@
 import * as React from 'react';
-import { Route, RouteComponentProps } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import useReduxLoad from 'src/hooks/useReduxLoad';
+import useFlags from 'src/hooks/useFlags';
 
 const DatabaseLanding = React.lazy(() => import('./DatabaseLanding'));
 const DatabaseDetail = React.lazy(() => import('./DatabaseDetail'));
+const DatabaseCreate = React.lazy(() => import('./DatabaseCreate'));
 
-type Props = RouteComponentProps<{}>;
-
-type CombinedProps = Props;
-
-const Database: React.FC<CombinedProps> = (props) => {
-  const {
-    match: { path },
-  } = props;
-
-  useReduxLoad(['databases']);
+const Database: React.FC = () => {
+  // @TODO: Remove when Database goes to GA
+  const flags = useFlags();
+  if (!flags.databases) {
+    return null;
+  }
 
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <DocumentTitleSegment segment="Databases" />
-      <Route component={DatabaseLanding} exact path={path} />
-      <Route component={DatabaseDetail} path={`${path}/:id`} />
+      <Switch>
+        <Route component={DatabaseCreate} path="/databases/create" />
+        <Route
+          component={DatabaseDetail}
+          path="/databases/:engine/:databaseId"
+        />
+        <Route component={DatabaseLanding} exact strict />
+      </Switch>
     </React.Suspense>
   );
 };

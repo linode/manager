@@ -426,7 +426,10 @@ class UpdateContactInformationForm extends React.Component<
               isClearable={false}
               onChange={this.updateState}
               options={filteredRegionResults}
-              placeholder="Select region"
+              placeholder={
+                account.state ||
+                `Select ${fields.country === 'US' ? 'state' : 'province'}`
+              }
               required={flags.regionDropdown}
               value={
                 filteredRegionResults.find(({ value }) =>
@@ -436,9 +439,7 @@ class UpdateContactInformationForm extends React.Component<
                 ) ?? ''
               }
               textFieldProps={{
-                dataAttrs: {
-                  'data-qa-contact-province': true,
-                },
+                'data-qa-contact-state-province': true,
               }}
             />
           ) : (
@@ -454,9 +455,7 @@ class UpdateContactInformationForm extends React.Component<
               placeholder="Enter region"
               required={flags.regionDropdown}
               value={fields.state || ''}
-              dataAttrs={{
-                'data-qa-contact-province': true,
-              }}
+              data-qa-contact-state-province
             />
           )}
         </Grid>

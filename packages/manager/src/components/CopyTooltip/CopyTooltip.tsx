@@ -79,12 +79,11 @@ const styles = (theme: Theme) =>
     },
     flex: {
       display: 'flex',
+      width: 'auto !important',
     },
     displayText: {
-      alignSelf: 'flex-end',
+      color: theme.cmrTextColors.linkActiveLight,
       marginLeft: 6,
-      fontSize: '1rem',
-      color: theme.color.blue,
     },
   });
 
