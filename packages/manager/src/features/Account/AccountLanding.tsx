@@ -3,6 +3,7 @@ import {
   matchPath,
   RouteComponentProps,
   useHistory,
+  useRouteMatch,
   withRouter,
 } from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -63,14 +64,26 @@ const AccountLanding: React.FC<Props> = (props) => {
     },
   ].filter(Boolean) as Tab[];
 
+  const isRedirectToMakePayment = Boolean(
+    useRouteMatch('/account/billing/make-payment')
+  );
+
+  const isRedirectToAddPaymentMethod = Boolean(
+    useRouteMatch('/account/billing/add-payment-method')
+  );
+
   const getDefaultTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
 
-    // Redirect to the landing page if the path does not exist
     if (tabChoice < 0) {
-      history.push(`${props.match.url}/billing`);
+      // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`
+      if (!isRedirectToMakePayment && !isRedirectToAddPaymentMethod) {
+        history.push(`${props.match.url}/billing`);
+      }
+
+      // Redirect to the landing page if the path does not exist
       return 0;
     } else {
       return tabChoice;
