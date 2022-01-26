@@ -128,16 +128,16 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
       <React.Fragment>
         {error ? <Notice error text={error} /> : null}
         <Typography variant="body1" className={classes.instructions}>
-          To restrict connections to trusted sources, add at least one inbound
-          source below.{' '}
+          Add or remove IPv4 addresses and ranges that should be authorized to
+          view your cluster&apos;s database.{' '}
           <ExternalLink to="https://www.linode.com/docs/products/database">
             Learn more about securing your cluster.
           </ExternalLink>
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
-            title="Inbound Sources"
-            aria-label="Inbound Sources"
+            title="Allowed IP Address(es) or Range(s)"
+            aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
             ips={values._allowList}
             onChange={handleIPChange}
@@ -162,7 +162,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
               style={{ marginBottom: 8 }}
               loading={isSubmitting}
             >
-              Update Inbound Sources
+              Update Access Controls
             </Button>
           </ActionsPanel>
         </form>
