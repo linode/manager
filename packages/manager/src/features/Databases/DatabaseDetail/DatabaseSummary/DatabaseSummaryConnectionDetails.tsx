@@ -1,16 +1,17 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import CircleProgress from 'src/components/CircleProgress';
 // import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/Grid';
+import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -62,6 +63,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     marginLeft: theme.spacing(2),
   },
+  progressCtn: {
+    marginLeft: 22,
+    marginBottom: 2,
+    '& circle': {
+      stroke: theme.color.blue,
+    },
+    alignSelf: 'flex-end',
+  },
   credentialsCtn: {
     display: 'flex',
   },
@@ -88,8 +97,6 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
-  const username =
-    showCredentials && credentials ? credentials?.username : '••••••••';
   const password =
     showCredentials && credentials ? credentials?.password : '••••••••';
 
@@ -158,18 +165,18 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         <div className={classes.credentialsCtn}>
           <div>
             <Typography>
-              <span>username</span> = {username}
+              <span>username</span> = {DB_ROOT_USERNAME}
             </Typography>
             <Typography>
               <span>password</span> = {password}
             </Typography>
           </div>
           {credentialsLoading ? (
-            <div style={{ marginLeft: 4, marginTop: 4 }}>
-              <CircleProgress mini />
+            <div className={classes.progressCtn}>
+              <CircleProgress mini tag />
             </div>
           ) : (
-            <Typography style={{ alignSelf: 'center' }}>
+            <Typography style={{ alignSelf: 'flex-end' }}>
               {credentialsError ? (
                 <>
                   <span className={classes.error}>
