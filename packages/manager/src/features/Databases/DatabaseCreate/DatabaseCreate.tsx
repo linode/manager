@@ -340,11 +340,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             />
           ) : null}
           <br />
-          <Typography style={{ fontSize: '12px' }}>
+          <span style={{ fontSize: '12px' }}>
             {`$${type?.price.monthly || 0}/month $${
               type?.price.hourly.toFixed(2) || 0.0
             }/hr`}
-          </Typography>
+          </span>
         </Typography>
       ),
       disabled: is1GbPlan,
@@ -355,11 +355,11 @@ const DatabaseCreate: React.FC<{}> = () => {
         <Typography>
           3 Nodes - High Availability {!is1GbPlan && '(recommended)'}
           <br />
-          <Typography style={{ fontSize: '12px' }}>
+          <span style={{ fontSize: '12px' }}>
             {`$${multiNodePricing.monthly || 0}/month $${
               parseFloat(multiNodePricing.hourly).toFixed(2) || 0.0
             }/hr`}
-          </Typography>
+          </span>
         </Typography>
       ),
       disabled: is1GbPlan,
