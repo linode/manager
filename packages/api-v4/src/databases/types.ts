@@ -80,7 +80,7 @@ export interface DatabaseInstance {
 export type FailoverCount = 0 | 2;
 type ReadonlyCount = 0 | 2;
 
-export type ReplicationType = 'none' | 'semi-synch' | 'asynch';
+export type ReplicationType = 'none' | 'semi_synch' | 'asynch';
 
 export interface CreateDatabasePayload {
   label: string;
