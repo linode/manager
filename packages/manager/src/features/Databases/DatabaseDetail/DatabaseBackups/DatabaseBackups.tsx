@@ -1,69 +1,133 @@
-import {
-  DatabaseBackup,
-  getDatabaseBackups,
-} from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import BackupTableRow from './DatabaseBackupTableRow';
+import TableSortCell from 'src/components/TableSortCell';
+import DatabaseBackupTableRow from './DatabaseBackupTableRow';
+import TableRowLoading from 'src/components/TableRowLoading';
+import TableRowError from 'src/components/TableRowError';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import { useOrder } from 'src/hooks/useOrder';
+import { useParams } from 'react-router-dom';
+import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
+import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
+import {
+  useDatabaseBackupsQuery,
+  useDatabaseQuery,
+} from 'src/queries/databases';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  heading: {
-    marginBottom: theme.spacing(2),
-    paddingLeft: theme.spacing(2),
-  },
-}));
+export const DatabaseBackups: React.FC = () => {
+  const { databaseId, engine } = useParams<{
+    databaseId: string;
+    engine: Engine;
+  }>();
 
-interface Props {
-  databaseID: number;
-}
+  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
+  const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<
+    number | undefined
+  >();
 
-export const DatabaseBackups: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const id = Number(databaseId);
 
-  const { databaseID } = props;
+  const {
+    data: database,
+    isLoading: isDatabaseLoading,
+    error: databaseError,
+  } = useDatabaseQuery(engine, id);
 
-  const backups = useAPIRequest<DatabaseBackup[]>(
-    () => getDatabaseBackups(Number(databaseID)).then((res) => res.data),
-    []
+  const {
+    data: backups,
+    isLoading: isBackupsLoading,
+    error: backupsError,
+  } = useDatabaseBackupsQuery(engine, id);
+
+  const { order, orderBy, handleOrderChange } = useOrder({
+    orderBy: 'created',
+    order: 'desc',
+  });
+
+  const onRestore = (id: number) => {
+    setIdOfBackupToRestore(id);
+    setIsRestoreDialogOpen(true);
+  };
+
+  const backupToRestore = backups?.data.find(
+    (backup) => backup.id === idOfBackupToRestore
   );
+
+  const sorter = (a: DatabaseBackup, b: DatabaseBackup) => {
+    if (order === 'asc') {
+      return new Date(b.created).getTime() - new Date(a.created).getTime();
+    }
+    return new Date(a.created).getTime() - new Date(b.created).getTime();
+  };
+
+  const renderTableBody = () => {
+    if (databaseError) {
+      return <TableRowError message={databaseError[0].reason} colSpan={2} />;
+    }
+    if (backupsError) {
+      return <TableRowError message={backupsError[0].reason} colSpan={2} />;
+    }
+    if (isDatabaseLoading || isBackupsLoading) {
+      return <TableRowLoading oneLine numberOfColumns={2} colSpan={2} />;
+    }
+    if (backups?.results === 0) {
+      return (
+        <TableRowEmptyState message="No backups to display." colSpan={2} />
+      );
+    }
+    if (backups) {
+      return backups.data
+        .sort(sorter)
+        .map((backup) => (
+          <DatabaseBackupTableRow
+            key={backup.id}
+            backup={backup}
+            onRestore={onRestore}
+          />
+        ));
+    }
+    return null;
+  };
 
   return (
     <>
-      <Typography className={classes.heading} variant="h2">
-        Backups
-      </Typography>
-      <Paper style={{ padding: 0 }}>
-        <Table aria-label="List of database backups">
-          <TableHead>
-            <TableRow>
-              <TableCell>Backup ID</TableCell>
-              <TableCell>Date Created</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableContentWrapper
-              length={backups.data.length}
-              loading={backups.loading}
-              error={backups.error}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'created'}
+              direction={order}
+              label="created"
+              handleClick={handleOrderChange}
             >
-              {backups.data.map((backup: DatabaseBackup, idx: number) => (
-                <BackupTableRow key={idx} backup={backup} />
-              ))}
-            </TableContentWrapper>
-          </TableBody>
-        </Table>
+              Date Created
+            </TableSortCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderTableBody()}</TableBody>
+      </Table>
+      <Paper style={{ marginTop: 16 }}>
+        <Typography variant="h3">Backup Schedule</Typography>
+        <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
+          A backup of this database is created every 24 hours at 0:00 UTC on a 7
+          day cycle.
+        </Typography>
       </Paper>
+      {database && backupToRestore ? (
+        <RestoreFromBackupDialog
+          open={isRestoreDialogOpen}
+          database={database}
+          backup={backupToRestore}
+          onClose={() => setIsRestoreDialogOpen(false)}
+        />
+      ) : null}
     </>
   );
 };
