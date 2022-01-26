@@ -9,6 +9,7 @@ import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -91,7 +92,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Storage</Typography>
-          {type.disk} GB
+          {convertMegabytesTo(type.disk, true)}
         </Box>
       </div>
     </>
