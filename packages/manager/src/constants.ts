@@ -327,3 +327,5 @@ export const HIGH_AVAILABILITY_PRICE =
   process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
     ? undefined
     : Number(process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
+
+export const DB_ROOT_USERNAME = 'linroot';
