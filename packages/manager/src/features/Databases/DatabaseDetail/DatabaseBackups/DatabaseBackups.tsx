@@ -8,7 +8,6 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
-import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
@@ -19,6 +18,7 @@ import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
+import Skeleton from 'src/components/core/Skeleton';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId, engine } = useParams<{
@@ -74,7 +74,19 @@ export const DatabaseBackups: React.FC = () => {
       return <TableRowError message={backupsError[0].reason} colSpan={3} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
-      return <TableRowLoading oneLine numberOfColumns={3} colSpan={3} />;
+      return (
+        <TableRow key={id}>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <TableCell>
+            <Skeleton style={{ width: '92%' }} />
+          </TableCell>
+        </TableRow>
+      );
     }
     if (backups?.results === 0) {
       return (
@@ -105,11 +117,12 @@ export const DatabaseBackups: React.FC = () => {
               direction={order}
               label="created"
               handleClick={handleOrderChange}
+              style={{ width: 155 }}
             >
               Date Created
             </TableSortCell>
             <TableCell></TableCell>
-            <TableCell></TableCell>
+            <TableCell style={{ width: 100 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
