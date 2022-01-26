@@ -74,11 +74,12 @@ jobs:
       matrix: ${{ steps.generate_users_array.outputs.matrix }}
 
       # Whether or not Cypress should be parallelized.
+      # 'true' if more than one test user specified, 'false' otherwise.
       parallelize: ${{ steps.generate_users_array.outputs.parallelize }}
 
   # Runs Cypress.
   run_cypress:
-    # name: Run Cypress (User ${{ matrix.user.id }})
+    name: Run Cypress
     needs: generate_users_matrix
     runs-on: ubuntu-latest
     strategy:
@@ -113,17 +114,21 @@ jobs:
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
 
       # GO GO GO
-      - run: |
-          yarn up & echo BOOTING UP!!
+      # - run: |
+      #     yarn up &
+      # ONLY NEEDED FOR LOCAL RUNS!
+      - run: sudo apt update -y && sudo apt install xvfb libnss3 libgtk2.0-0 libnotify-dev libgconf-2-4 libxss1 libasound2 -y && npm install -g yarn
 
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
-          working-directory: packages/manager
+          #working-directory: packages/manager
+          config-file: packages/manager/cypress.json
           wait-on: "http://localhost:3000"
-          wait-on-timeout: 1000
-          install: false
-          browser: chrome
+          wait-on-timeout: 10000
+          start: yarn up
+          install: true
+          browser: electron
           headless: true
           record: false
           # Only parallelize if more than one test users exists.
