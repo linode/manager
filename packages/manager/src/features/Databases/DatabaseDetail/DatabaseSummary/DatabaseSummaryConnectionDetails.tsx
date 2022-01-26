@@ -129,8 +129,8 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       });
   };
 
-  const sslMode = database.ssl_connection ? 'REQUIRED' : 'NOT REQUIRED';
-  // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\nsslmode = ${sslMode}`;
+  const ssl = database.ssl_connection ? 'ENABLED' : 'DISABLED';
+  // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
       <span
@@ -193,7 +193,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
           <span>port</span> = {database.port}
         </Typography>
         <Typography>
-          <span>sslmode</span> = {sslMode}
+          <span>ssl</span> = {ssl}
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
