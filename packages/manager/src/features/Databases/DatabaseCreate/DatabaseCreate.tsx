@@ -50,6 +50,7 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Chip from 'src/components/core/Chip';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -185,6 +186,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const [type, setType] = React.useState<DatabaseType>();
   const [createError, setCreateError] = React.useState<string>();
+  const [apiIpErrors, setApiIpErrors] = React.useState<APIError[]>();
   const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
     hourly: '0',
     monthly: '0',
@@ -258,8 +260,14 @@ const DatabaseCreate: React.FC<{}> = () => {
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.id}`);
-    } catch (error) {
-      handleAPIErrors(error, setFieldError, setCreateError);
+    } catch (errors) {
+      const ipErrors = errors.filter(
+        (error: APIError) => error.field === 'allow_list'
+      );
+      if (ipErrors) {
+        setApiIpErrors(ipErrors);
+      }
+      handleAPIErrors(errors, setFieldError, setCreateError);
     }
 
     setSubmitting(false);
@@ -275,15 +283,23 @@ const DatabaseCreate: React.FC<{}> = () => {
     setSubmitting,
   } = useFormik({
     initialValues: {
-      label: '',
-      engine: '' as Engine,
-      region: '',
-      type: '',
-      failover_count: -1 as FailoverCount,
+      label: '123',
+      engine: 'mysql/8.0.20' as Engine,
+      region: 'us-east',
+      type: 'g6-nanode-1',
+      failover_count: 2 as FailoverCount,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
-          address: '',
+          address: '1',
+          error: '',
+        },
+        {
+          address: '2',
+          error: '',
+        },
+        {
+          address: '1',
           error: '',
         },
       ],
@@ -527,6 +543,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             </Link>
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
+            {apiIpErrors
+              ? apiIpErrors.map((apiError: APIError) => (
+                  <Notice key={apiError.reason} text={apiError.reason} error />
+                ))
+              : null}
             <MultipleIPInput
               title="Inbound Sources"
               placeholder="Add IP Address or range"
