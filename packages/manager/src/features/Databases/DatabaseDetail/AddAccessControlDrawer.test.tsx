@@ -58,16 +58,16 @@ describe('Add Access Controls drawer', () => {
       />
     );
 
-    const addInboundSourcesButton = getByText('Update Inbound Sources').closest(
+    const addAccessControlsButton = getByText('Update Access Controls').closest(
       'button'
     );
 
     // Before making a change to the IP addresses, the "Add Inbound Sources" button should be disabled.
-    expect(addInboundSourcesButton).toBeDisabled();
+    expect(addAccessControlsButton).toBeDisabled();
 
     const addAnIPButton = getByText('Add an IP');
     fireEvent.click(addAnIPButton);
 
-    expect(addInboundSourcesButton).toBeEnabled();
+    expect(addAccessControlsButton).toBeEnabled();
   });
 });
