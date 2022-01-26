@@ -6,12 +6,15 @@ import Typography from 'src/components/core/Typography';
 import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 
-const nexusStates = ['AZ', 'HI', 'PA', 'TX', 'WA'];
-const taxableCountries = ['CA', 'JP', 'NO'];
+// @TODO: add Canada to the list of countries once a tax collection date is determined
+const taxableCountries = ['JP', 'NO'];
+// const nexusStates = ['AZ', 'HI', 'PA', 'TX', 'WA'];
 
 const TaxCollectionBanner: React.FC<{}> = () => {
+  const flags = useFlags();
   const history = useHistory();
 
   const { data: account } = useAccount();
@@ -23,13 +26,48 @@ const TaxCollectionBanner: React.FC<{}> = () => {
     return null;
   }
 
-  const isNexusState =
-    account.country === 'US' && nexusStates.includes(account.state);
   const isTaxableCountry = taxableCountries.includes(account.country);
+  // const isNexusState =
+  //   account.country === 'US' && nexusStates.includes(account.state);
 
-  if (!isNexusState && !isTaxableCountry) {
+  // if (!isTaxableCountry && !isNexusState) {
+  if (!isTaxableCountry) {
     return null;
   }
+
+  const getTaxCollectionDate = (country: string) => {
+    if (flags.taxCollectionPart1) {
+      switch (country) {
+        case 'JP':
+          return '2022-04-01';
+        case 'NO':
+          return '2022-05-01';
+      }
+    }
+
+    // if (flags.taxCollectionPart2) {
+    //   if (country === 'CA') {
+    //     return '[CANADA DATE]';
+    //   }
+
+    //   if (isNexusState) {
+    //     switch (state) {
+    //       case 'AZ':
+    //         return '[ARIZONA DATE]';
+    //       case 'HI':
+    //         return '[HAWAII DATE]';
+    //       case 'PA':
+    //         return '[PENNSYLVANIA DATE]';
+    //       case 'TX':
+    //         return '[TEXAS DATE]';
+    //       case 'WA':
+    //         return '[WASHINGTON DATE]';
+    //     }
+    //   }
+    // }
+
+    return null;
+  };
 
   return (
     <Notice warning important dismissible onClose={handleDismiss}>
@@ -40,9 +78,8 @@ const TaxCollectionBanner: React.FC<{}> = () => {
         justifyContent="space-between"
       >
         <Typography>
-          Starting {isNexusState ? 'TBD' : isTaxableCountry ? 'TBD' : null}, tax
-          may be applied to your Linode services. For more information, please
-          see the{' '}
+          Starting {getTaxCollectionDate(account.country)}, tax may be applied
+          to your Linode services. For more information, please see the{' '}
           <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
             Tax Information Guide
           </Link>

@@ -44,6 +44,8 @@ export interface Flags {
   autoscaler: boolean;
   kubernetesDashboardAvailability: boolean;
   regionDropdown: boolean;
+  taxCollectionPart1: boolean;
+  taxCollectionPart2: boolean;
 }
 
 type PromotionalOfferFeature =

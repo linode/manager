@@ -39,7 +39,7 @@ const GlobalNotifications: React.FC<{}> = () => {
       {!isEmpty(suppliedMaintenances) && !hasDismissedMaintenances ? (
         <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
       ) : null}
-      {flags.regionDropdown ? <TaxCollectionBanner /> : null}
+      {flags.taxCollectionPart1 ? <TaxCollectionBanner /> : null}
     </>
   );
 };
