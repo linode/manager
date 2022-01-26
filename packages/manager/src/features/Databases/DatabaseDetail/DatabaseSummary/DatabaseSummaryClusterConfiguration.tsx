@@ -5,11 +5,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
