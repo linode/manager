@@ -15,7 +15,7 @@ export const createDatabaseSchema = object({
     .oneOf([0, 2], 'Nodes are required')
     .required('Nodes are required'),
   replication_type: string()
-    .oneOf(['none', 'semi-synch', 'asynch'])
+    .oneOf(['none', 'semi_synch', 'asynch'])
     .required('Replication Type is required'),
 });
 
