@@ -132,17 +132,14 @@ const getEngineOptions = (versions: DatabaseVersion[]) => {
         ...accum,
         {
           label: thisGroup,
-          options: groupedVersions[thisGroup].map((version) => ({
-            ...version,
-            // @TODO: clean this up once we get clean version from api
-            label: version.version.includes('v')
-              ? `${databaseEngineMap[version.engine]} v${version.id.substring(
-                  version.id.indexOf('/') + 1
-                )}`
-              : `${databaseEngineMap[version.engine]} v${version.version}`,
-            value: `${version.engine}/${version.version}`,
-            flag: engineIcons[version.engine],
-          })),
+          options: groupedVersions[thisGroup]
+            .map((version) => ({
+              ...version,
+              label: `${databaseEngineMap[version.engine]} v${version.version}`,
+              value: `${version.engine}/${version.version}`,
+              flag: engineIcons[version.engine],
+            }))
+            .sort((a, b) => (a.version > b.version ? -1 : 1)),
         },
       ];
     },
