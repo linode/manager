@@ -104,17 +104,20 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     isLoading: credentialsLoading,
     error: credentialsError,
     refetch: getDatabaseCredentials,
+    isRefetching,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
+  const passwordIsReady = credentials && !isRefetching && !credentialsLoading;
+
   const password =
-    showCredentials && credentials ? credentials?.password : '••••••••';
+    showCredentials && passwordIsReady ? credentials?.password : '••••••••';
 
   const handleShowPasswordClick = () => {
     setShowPassword((showCredentials) => !showCredentials);
   };
 
   React.useEffect(() => {
-    if (showCredentials && !credentials) {
+    if (showCredentials) {
       getDatabaseCredentials();
     }
   }, [credentials, getDatabaseCredentials, showCredentials]);
@@ -180,7 +183,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
               <span>password</span> = {password}
             </Typography>
           </div>
-          {credentialsLoading ? (
+          {credentialsLoading || isRefetching ? (
             <div className={classes.progressCtn}>
               <CircleProgress mini tag />
             </div>

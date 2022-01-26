@@ -3,7 +3,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { Engine, resetDatabaseCredentials } from '@linode/api-v4/lib/databases';
+import { Engine } from '@linode/api-v4/lib/databases';
+import { useDatabaseCredentialsMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
@@ -45,23 +46,23 @@ const renderActions = (
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
   const { open, onClose, databaseEngine, databaseID } = props;
 
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [error, setError] = React.useState('');
+  const [error, setError] = React.useState<string | undefined>();
+
+  const { mutateAsync, isLoading } = useDatabaseCredentialsMutation(
+    databaseEngine,
+    databaseID
+  );
 
   const onResetRootPassword = async () => {
-    setIsLoading(true);
     try {
-      await resetDatabaseCredentials(databaseEngine, databaseID);
-      setIsLoading(false);
+      await mutateAsync();
       onClose();
-    } catch (e) {
-      setIsLoading(false);
-      setError(
-        getAPIErrorOrDefault(
-          e,
-          'There was an error resetting the root password'
-        )[0].reason
-      );
+    } catch (_error) {
+      const reason = getAPIErrorOrDefault(
+        _error,
+        'There was an error resetting the root password'
+      )[0].reason;
+      setError(reason);
     }
   };
 
