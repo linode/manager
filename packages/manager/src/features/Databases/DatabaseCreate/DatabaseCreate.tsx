@@ -50,6 +50,7 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Chip from 'src/components/core/Chip';
+import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -131,17 +132,14 @@ const getEngineOptions = (versions: DatabaseVersion[]) => {
         ...accum,
         {
           label: thisGroup,
-          options: groupedVersions[thisGroup].map((version) => ({
-            ...version,
-            // @TODO: clean this up once we get clean version from api
-            label: version.version.includes('v')
-              ? `${databaseEngineMap[version.engine]} v${version.id.substring(
-                  version.id.indexOf('/') + 1
-                )}`
-              : `${databaseEngineMap[version.engine]} v${version.version}`,
-            value: `${version.engine}/${version.version}`,
-            flag: engineIcons[version.engine],
-          })),
+          options: groupedVersions[thisGroup]
+            .map((version) => ({
+              ...version,
+              label: `${databaseEngineMap[version.engine]} v${version.version}`,
+              value: `${version.engine}/${version.version}`,
+              flag: engineIcons[version.engine],
+            }))
+            .sort((a, b) => (a.version > b.version ? -1 : 1)),
         },
       ];
     },
@@ -185,6 +183,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const [type, setType] = React.useState<DatabaseType>();
   const [createError, setCreateError] = React.useState<string>();
+  const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
   const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
     hourly: '0',
     monthly: '0',
@@ -258,8 +257,14 @@ const DatabaseCreate: React.FC<{}> = () => {
     try {
       const response = await createDatabase(createPayload);
       history.push(`/databases/${response.id}`);
-    } catch (error) {
-      handleAPIErrors(error, setFieldError, setCreateError);
+    } catch (errors) {
+      const ipErrors = errors.filter(
+        (error: APIError) => error.field === 'allow_list'
+      );
+      if (ipErrors) {
+        setIPErrorsFromAPI(ipErrors);
+      }
+      handleAPIErrors(errors, setFieldError, setCreateError);
     }
 
     setSubmitting(false);
@@ -327,11 +332,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             />
           ) : null}
           <br />
-          <Typography style={{ fontSize: '12px' }}>
+          <span style={{ fontSize: '12px' }}>
             {`$${type?.price.monthly || 0}/month $${
               type?.price.hourly.toFixed(2) || 0.0
             }/hr`}
-          </Typography>
+          </span>
         </Typography>
       ),
       disabled: is1GbPlan,
@@ -342,11 +347,11 @@ const DatabaseCreate: React.FC<{}> = () => {
         <Typography>
           3 Nodes - High Availability {!is1GbPlan && '(recommended)'}
           <br />
-          <Typography style={{ fontSize: '12px' }}>
+          <span style={{ fontSize: '12px' }}>
             {`$${multiNodePricing.monthly || 0}/month $${
               parseFloat(multiNodePricing.hourly).toFixed(2) || 0.0
             }/hr`}
-          </Typography>
+          </span>
         </Typography>
       ),
       disabled: is1GbPlan,
@@ -527,6 +532,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             </Link>
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
+            {ipErrorsFromAPI
+              ? ipErrorsFromAPI.map((apiError: APIError) => (
+                  <Notice key={apiError.reason} text={apiError.reason} error />
+                ))
+              : null}
             <MultipleIPInput
               title="Inbound Sources"
               placeholder="Add IP Address or range"
