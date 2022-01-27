@@ -536,12 +536,12 @@ const DatabaseCreate: React.FC<{}> = () => {
             Add Access Controls
           </Typography>
           <Typography>
-            Add the IP addresses for other instances or users that should have
-            the authorization to view this cluster’s database.
+            Add at least one IPv4 address or range that should be authorized to
+            view this cluster’s database.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/database">
+            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
               Learn more.
             </Link>
           </Typography>
@@ -552,8 +552,8 @@ const DatabaseCreate: React.FC<{}> = () => {
                 ))
               : null}
             <MultipleIPInput
-              title="Inbound Sources"
-              placeholder="Add IP Address or range"
+              title="Allowed IP Address(s) or Range(s)"
+              placeholder="Add IP Address or Range"
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
               required
