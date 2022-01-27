@@ -10,6 +10,7 @@ import TableSortCell from 'src/components/TableSortCell';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import Skeleton from 'src/components/core/Skeleton';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
@@ -18,7 +19,6 @@ import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
-import Skeleton from 'src/components/core/Skeleton';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId, engine } = useParams<{
@@ -75,7 +75,7 @@ export const DatabaseBackups: React.FC = () => {
     }
     if (isDatabaseLoading || isBackupsLoading) {
       return (
-        <TableRow key={id}>
+        <TableRow>
           <TableCell>
             <Skeleton />
           </TableCell>
@@ -83,7 +83,7 @@ export const DatabaseBackups: React.FC = () => {
             <Skeleton />
           </TableCell>
           <TableCell>
-            <Skeleton style={{ width: '92%' }} />
+            <Skeleton style={{ maxWidth: '85%' }} />
           </TableCell>
         </TableRow>
       );
