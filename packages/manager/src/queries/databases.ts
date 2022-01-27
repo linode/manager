@@ -35,6 +35,10 @@ export const useDatabaseQuery = (engine: Engine, id: number) =>
   useQuery<Database, APIError[]>(
     [queryKey, id],
     () => getEngineDatabase(engine, id),
+    // @TODO Consider removing polling
+    // The refetchInterval will poll the API for this Database. We will do this
+    // to ensure we have up to date information. We do this polling because the events
+    // API does not provide us every feature we need currently.
     { refetchInterval: 20000 }
   );
 
@@ -42,6 +46,7 @@ export const useDatabasesQuery = (params: any, filter: any) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),
+    // @TODO Consider removing polling
     { keepPreviousData: true, refetchInterval: 20000 }
   );
 

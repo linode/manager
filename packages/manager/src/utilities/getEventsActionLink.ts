@@ -103,8 +103,9 @@ export default (
       }
 
     case 'database':
-      const engine =
-        entity?.url.split('/v4/databases/')[1].split('/')[0] || 'mysql';
+      const engine = entity?.url.match(
+        /(mysql|postgresql|mongodb|redis)/i
+      )?.[0];
       return `/databases/${engine}/${id}/summary`;
 
     case 'user':
