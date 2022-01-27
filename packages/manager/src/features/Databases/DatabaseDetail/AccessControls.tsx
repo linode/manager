@@ -201,7 +201,7 @@ export const AccessControls: React.FC<Props> = (props) => {
               Add the IP addresses for other instances or users that should have
               the authorization to view this cluster&apos;s database. By
               default, all public and private connections are denied.{' '}
-              <ExternalLink to="https://www.linode.com/docs/products/database">
+              <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/">
                 Learn more.
               </ExternalLink>
             </Typography>

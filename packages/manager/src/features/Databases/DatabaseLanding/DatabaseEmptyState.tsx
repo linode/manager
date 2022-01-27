@@ -39,7 +39,7 @@ const DatabaseEmptyState: React.FC = () => {
           Fully managed and highly scalable database clusters. Choose your
           Linode plan, select a database engine, and deploy in minutes.
         </div>
-        <Link to="https://www.linode.com/docs/products/database">
+        <Link to="https://www.linode.com/docs/products/databases/managed-databases/">
           Need help getting started? Browse database guides.
         </Link>
       </Typography>
