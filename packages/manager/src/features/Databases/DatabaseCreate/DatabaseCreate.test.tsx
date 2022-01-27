@@ -25,17 +25,20 @@ describe('Database Create', () => {
   });
 
   it('should render inputs', async () => {
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      queryClient,
-    });
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const { getAllByText, getAllByTestId } = renderWithTheme(
+      <DatabaseCreate />,
+      {
+        queryClient,
+      }
+    );
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
 
     getAllByText('Cluster Label');
     getAllByText('Database Engine');
-    getAllByText('Select a Region');
+    getAllByText('Region');
     getAllByText('Choose a Plan');
-    getByTestId('database-nodes');
-    getByTestId('domain-transfer-input');
+    getAllByTestId('database-nodes');
+    getAllByTestId('domain-transfer-input');
     getAllByText('Create Database Cluster');
   });
 
