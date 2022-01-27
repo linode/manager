@@ -63,7 +63,7 @@ export const DatabaseDetail: React.FC = () => {
     },
   ];
 
-  const getDefaultTabIndex = () => {
+  const getTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
@@ -97,7 +97,7 @@ export const DatabaseDetail: React.FC = () => {
         ]}
         labelOptions={{ noCap: true }}
       />
-      <Tabs defaultIndex={getDefaultTabIndex()} onChange={handleTabChange}>
+      <Tabs index={getTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
