@@ -59,7 +59,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   btnCtn: {
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginTop: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      marginTop: theme.spacing(),
+    },
+  },
+  createBtn: {
+    [theme.breakpoints.down('xs')]: {
+      marginRight: theme.spacing(),
+    },
+  },
+  createText: {
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(),
+      marginRight: 0,
+    },
   },
   selectPlanPanel: {
     padding: 0,
@@ -76,11 +94,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   nodeHelpIcon: {
     padding: '0px 0px 0px 2px',
     marginTop: '-2px',
-  },
-  createText: {
-    [theme.breakpoints.down('xs')]: {
-      padding: `0 ${theme.spacing()}px`,
-    },
   },
   chip: {
     fontFamily: theme.font.bold,
@@ -563,15 +576,18 @@ const DatabaseCreate: React.FC<{}> = () => {
         </Grid>
       </Paper>
       <Grid className={classes.btnCtn}>
-        <Button type="submit" buttonType="primary" loading={isSubmitting}>
-          Create Database Cluster
-        </Button>
-      </Grid>
-      <Grid className={classes.btnCtn}>
         <Typography className={classes.createText}>
           Your database node(s) will take approximately 15-30 minutes to
           provision.
         </Typography>
+        <Button
+          type="submit"
+          buttonType="primary"
+          loading={isSubmitting}
+          className={classes.createBtn}
+        >
+          Create Database Cluster
+        </Button>
       </Grid>
     </form>
   );
