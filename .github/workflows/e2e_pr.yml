@@ -8,11 +8,10 @@ env:
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
 on:
   pull_request_target:
-    types: [labeled, synchronize]
+    types: [synchronize]
 
 jobs:
   run-cypress-e2e-pr:
-    if: contains(github.event.pull_request.labels.*.name, 'e2e')
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
