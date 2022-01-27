@@ -98,6 +98,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
+  notice: {
+    borderColor: theme.color.green,
+    fontSize: 15,
+    lineHeight: '18px',
+  },
 }));
 
 const engineIcons = {
@@ -515,6 +520,15 @@ const DatabaseCreate: React.FC<{}> = () => {
             </RadioGroup>
             <FormHelperText>{errors.failover_count}</FormHelperText>
           </FormControl>
+          <Grid item xs={12} md={8}>
+            <Notice success className={classes.notice}>
+              <strong>
+                Notice: There is no charge for database clusters during beta.
+              </strong>{' '}
+              You will be notified before the beta period ends and database
+              clusters are subject to charges. <Link to="#">View pricing.</Link>
+            </Notice>
+          </Grid>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
