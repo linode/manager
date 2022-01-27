@@ -75,7 +75,7 @@ export const DatabaseBackups: React.FC = () => {
     }
     if (isDatabaseLoading || isBackupsLoading) {
       return (
-        <TableRow>
+        <TableRow data-testid="table-row-loading">
           <TableCell>
             <Skeleton />
           </TableCell>
