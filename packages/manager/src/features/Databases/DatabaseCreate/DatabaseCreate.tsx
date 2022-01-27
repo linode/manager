@@ -526,7 +526,8 @@ const DatabaseCreate: React.FC<{}> = () => {
                 Notice: There is no charge for database clusters during beta.
               </strong>{' '}
               You will be notified before the beta period ends and database
-              clusters are subject to charges. <Link to="#">View pricing.</Link>
+              clusters are subject to charges.{' '}
+              <Link to="https://www.linode.com/pricing/">View pricing.</Link>
             </Notice>
           </Grid>
         </Grid>
