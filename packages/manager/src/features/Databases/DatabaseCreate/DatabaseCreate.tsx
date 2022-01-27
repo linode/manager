@@ -280,23 +280,15 @@ const DatabaseCreate: React.FC<{}> = () => {
     setSubmitting,
   } = useFormik({
     initialValues: {
-      label: '123',
-      engine: 'mysql/8.0.20' as Engine,
-      region: 'us-east',
-      type: 'g6-nanode-1',
-      failover_count: 2 as FailoverCount,
+      label: '',
+      engine: '' as Engine,
+      region: '',
+      type: '',
+      failover_count: -1 as FailoverCount,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
-          address: '1',
-          error: '',
-        },
-        {
-          address: '2',
-          error: '',
-        },
-        {
-          address: '1',
+          address: '',
           error: '',
         },
       ],
