@@ -183,7 +183,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const [type, setType] = React.useState<DatabaseType>();
   const [createError, setCreateError] = React.useState<string>();
-  const [apiIpErrors, setApiIpErrors] = React.useState<APIError[]>();
+  const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
   const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
     hourly: '0',
     monthly: '0',
@@ -262,7 +262,7 @@ const DatabaseCreate: React.FC<{}> = () => {
         (error: APIError) => error.field === 'allow_list'
       );
       if (ipErrors) {
-        setApiIpErrors(ipErrors);
+        setIPErrorsFromAPI(ipErrors);
       }
       handleAPIErrors(errors, setFieldError, setCreateError);
     }
@@ -540,8 +540,8 @@ const DatabaseCreate: React.FC<{}> = () => {
             </Link>
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
-            {apiIpErrors
-              ? apiIpErrors.map((apiError: APIError) => (
+            {ipErrorsFromAPI
+              ? ipErrorsFromAPI.map((apiError: APIError) => (
                   <Notice key={apiError.reason} text={apiError.reason} error />
                 ))
               : null}
