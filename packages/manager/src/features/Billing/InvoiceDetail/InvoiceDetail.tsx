@@ -1,4 +1,3 @@
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import {
   Account,
   getInvoice,
@@ -7,7 +6,9 @@ import {
   InvoiceItem,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import * as React from 'react';
+import { CSVLink } from 'react-csv';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -22,10 +23,10 @@ import Notice from 'src/components/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
 import useFlags from 'src/hooks/useFlags';
+import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import InvoiceTable from './InvoiceTable';
-import { useAccount } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -59,6 +60,8 @@ type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
 
 export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+
+  const csvRef = React.useRef<any>();
 
   const { data: account } = useAccount();
 
@@ -144,12 +147,29 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
               data-qa-printable-invoice
             >
               {account && invoice && items && (
-                <Button
-                  buttonType="primary"
-                  onClick={() => printInvoicePDF(account, invoice, items)}
-                >
-                  Download PDF
-                </Button>
+                <>
+                  {/* Hidden CSVLink component controlled by a ref.
+                  This is done so we can use Button styles.  */}
+                  <CSVLink
+                    ref={csvRef}
+                    filename={`invoice-${invoice.date}.csv`}
+                    headers={csvHeaders}
+                    data={items}
+                  />
+                  <Button
+                    buttonType="secondary"
+                    onClick={() => csvRef.current.link.click()}
+                    style={{ marginRight: 8 }}
+                  >
+                    Download CSV
+                  </Button>
+                  <Button
+                    buttonType="primary"
+                    onClick={() => printInvoicePDF(account, invoice, items)}
+                  >
+                    Download PDF
+                  </Button>
+                </>
               )}
             </Grid>
             <Grid item className={`${classes.titleWrapper} ${classes.m2}`}>
@@ -210,3 +230,14 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
 const enhanced = compose<CombinedProps, {}>(withRouter);
 
 export default enhanced(InvoiceDetail);
+
+const csvHeaders = [
+  { label: 'Description', key: 'label' },
+  { label: 'From', key: 'from' },
+  { label: 'To', key: 'to' },
+  { label: 'Quantity', key: 'quantity' },
+  { label: 'Unit Price', key: 'unit_price' },
+  { label: 'Amount (USD)', key: 'amount' },
+  { label: 'Tax (USD)', key: 'tax' },
+  { label: 'Total (USD)', key: 'total' },
+];
