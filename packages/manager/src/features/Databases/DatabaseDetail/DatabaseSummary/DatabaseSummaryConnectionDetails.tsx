@@ -1,16 +1,19 @@
 import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
 import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import CircleProgress from 'src/components/CircleProgress';
 // import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/Grid';
+import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { useSnackbar } from 'notistack';
+import Box from 'src/components/core/Box';
+import HelpIcon from 'src/components/HelpIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -62,6 +65,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
     marginLeft: theme.spacing(2),
   },
+  progressCtn: {
+    marginLeft: 22,
+    marginBottom: 2,
+    '& circle': {
+      stroke: theme.color.blue,
+    },
+    alignSelf: 'flex-end',
+  },
   credentialsCtn: {
     display: 'flex',
   },
@@ -69,11 +80,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.red,
     marginLeft: theme.spacing(2),
   },
+  helpIcon: {
+    padding: 0,
+    marginLeft: theme.spacing(),
+  },
 }));
 
 interface Props {
   database: Database;
 }
+
+const privateHostCopy =
+  'A private network host and a private IP can only be used to access a database cluster from Linodes in the same data center and will not incur transfer costs.';
 
 export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const { database } = props;
@@ -88,8 +106,6 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
-  const username =
-    showCredentials && credentials ? credentials?.username : '••••••••';
   const password =
     showCredentials && credentials ? credentials?.password : '••••••••';
 
@@ -158,18 +174,18 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         <div className={classes.credentialsCtn}>
           <div>
             <Typography>
-              <span>username</span> = {username}
+              <span>username</span> = {DB_ROOT_USERNAME}
             </Typography>
             <Typography>
               <span>password</span> = {password}
             </Typography>
           </div>
           {credentialsLoading ? (
-            <div style={{ marginLeft: 4, marginTop: 4 }}>
-              <CircleProgress mini />
+            <div className={classes.progressCtn}>
+              <CircleProgress mini tag />
             </div>
           ) : (
-            <Typography style={{ alignSelf: 'center' }}>
+            <Typography style={{ alignSelf: 'flex-end' }}>
               {credentialsError ? (
                 <>
                   <span className={classes.error}>
@@ -189,6 +205,14 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         <Typography>
           <span>host</span> = {database.hosts?.primary}
         </Typography>
+        {database.hosts.secondary ? (
+          <Box display="flex" flexDirection="row" alignItems="center">
+            <Typography>
+              <span>private network host</span> = {database.hosts.secondary}
+            </Typography>
+            <HelpIcon className={classes.helpIcon} text={privateHostCopy} />
+          </Box>
+        ) : null}
         <Typography>
           <span>port</span> = {database.port}
         </Typography>
