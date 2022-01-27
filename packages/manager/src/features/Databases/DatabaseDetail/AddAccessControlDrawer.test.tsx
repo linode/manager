@@ -30,12 +30,13 @@ describe('Add Access Controls drawer', () => {
   });
 
   it('Should open with a full list of current inbound sources that are allow listed', async () => {
+    const IPv4ListWithMasks = IPv4List.map((ip) => `${ip}/32`);
     const { getAllByTestId } = renderWithTheme(
       <AddAccessControlDrawer
         open={true}
         onClose={() => null}
         updateDatabase={() => null}
-        allowList={IPv4List.map(stringToExtendedIP)}
+        allowList={IPv4ListWithMasks.map(stringToExtendedIP)}
       />
     );
 
@@ -43,9 +44,9 @@ describe('Add Access Controls drawer', () => {
       IPv4List.length
     );
 
-    await screen.findByDisplayValue(IPv4List[0]);
-    await screen.findByDisplayValue(IPv4List[1]);
-    await screen.findByDisplayValue(IPv4List[2]);
+    await screen.findByDisplayValue(IPv4ListWithMasks[0]);
+    await screen.findByDisplayValue(IPv4ListWithMasks[1]);
+    await screen.findByDisplayValue(IPv4ListWithMasks[2]);
   });
 
   it('Should have a disabled Add Inbound Sources button until an inbound source field is touched', () => {
