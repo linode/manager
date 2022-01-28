@@ -27,7 +27,6 @@ env:
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
 on:
   pull_request_target:
-    types: [synchronize]
 
 jobs:
 
