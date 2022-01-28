@@ -1,30 +1,32 @@
 import {
+  ClusterSize,
   CreateDatabasePayload,
   DatabaseType,
   DatabaseVersion,
   Engine,
-  FailoverCount,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import BreadCrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
+import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import BreadCrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
@@ -39,18 +41,16 @@ import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/Databa
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
-  useDatabaseVersionsQuery,
-  useDatabaseTypesQuery,
   useCreateDatabaseMutation,
+  useDatabaseTypesQuery,
+  useDatabaseVersionsQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { validateIPs } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import Chip from 'src/components/core/Chip';
-import { APIError } from '@linode/api-v4/lib/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -284,7 +284,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       engine: '' as Engine,
       region: '',
       type: '',
-      failover_count: -1 as FailoverCount,
+      failover_count: -1 as ClusterSize,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
