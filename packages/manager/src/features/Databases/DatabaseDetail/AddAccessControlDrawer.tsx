@@ -165,7 +165,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         <Typography variant="body1" className={classes.instructions}>
           Add or remove IPv4 addresses and ranges that should be authorized to
           view your cluster&apos;s database.{' '}
-          <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/">
+          <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
             Learn more about securing your cluster.
           </ExternalLink>
         </Typography>

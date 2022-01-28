@@ -90,9 +90,7 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
-  const [ipRemovalLoading, setIPRemovalLoading] = React.useState<boolean>(
-    false
-  );
+
   const [
     accessControlToBeRemoved,
     setAccessControlToBeRemoved,
@@ -105,7 +103,10 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
-  const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
+  const {
+    mutateAsync: updateDatabase,
+    isLoading: databaseUpdating,
+  } = useDatabaseMutation(engine, id);
 
   React.useEffect(() => {
     if (allowList.length > 0) {
@@ -128,19 +129,15 @@ export const AccessControls: React.FC<Props> = (props) => {
   };
 
   const handleRemoveIPAddress = () => {
-    setIPRemovalLoading(true);
-
     updateDatabase({
       allow_list: allowList.filter(
         (ipAddress) => ipAddress !== accessControlToBeRemoved
       ),
     })
       .then(() => {
-        setIPRemovalLoading(false);
         handleDialogClose();
       })
       .catch((e: APIError[]) => {
-        setIPRemovalLoading(false);
         setError(e[0].reason);
       });
   };
@@ -182,7 +179,7 @@ export const AccessControls: React.FC<Props> = (props) => {
       <Button
         buttonType="primary"
         onClick={handleRemoveIPAddress}
-        loading={ipRemovalLoading}
+        loading={databaseUpdating}
       >
         Remove IP Address
       </Button>
@@ -201,7 +198,7 @@ export const AccessControls: React.FC<Props> = (props) => {
               Add the IP addresses for other instances or users that should have
               the authorization to view this cluster&apos;s database. By
               default, all public and private connections are denied.{' '}
-              <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/">
+              <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
                 Learn more.
               </ExternalLink>
             </Typography>
