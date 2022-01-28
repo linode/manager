@@ -137,7 +137,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   }, []);
 
   const renderTableContent = () => {
-    if (isLoading) {
+    if (true) {
       return (
         <TableLoading
           rows={1}
