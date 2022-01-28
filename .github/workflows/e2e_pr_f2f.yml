@@ -18,6 +18,11 @@ env:
   USER_7: ${{ secrets.USER_7 }}
   USER_8: ${{ secrets.USER_8 }}
 
+  # Cypress record key.
+  #
+  # Optional, but Cypress runs cannot be recorded if unspecified.
+  CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
   # Cloud Manager app client ID.
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
 on:
@@ -65,6 +70,12 @@ jobs:
           if [ $COUNT -gt 1 ]; then
             PARALLELIZE=true
           fi
+          # Determine whether or not to record Cypress run.
+          if [ ! -z "${CYPRESS_RECORD_KEY}" ]; then
+            echo ::set-output name=record::true
+          else
+            echo ::set-output name=record::false
+          fi
           # Use GitHub Actions expression to set output.
           echo ::set-output name=matrix::{\"user\": [$LIST]}
           echo ::set-output name=parallelize::$PARALLELIZE
@@ -76,6 +87,10 @@ jobs:
       # Whether or not Cypress should be parallelized.
       # 'true' if more than one test user specified, 'false' otherwise.
       parallelize: ${{ steps.generate_users_array.outputs.parallelize }}
+
+      # Whether or not Cypress run should be recorded.
+      # 'true' if CYPRESS_RECORD_KEY secret is defined.
+      record: ${{ steps.generate_users_array.outputs.record }}
 
   # Runs Cypress.
   run_cypress:
@@ -104,32 +119,26 @@ jobs:
 
       # Configure environment variables.
       - run: |
-          # echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
+          echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
-          # echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
+          echo "REACT_APP_LAUNCH_DARKLY_ID=${{ secrets.REACT_APP_LAUNCH_DARKLY_ID }}" >> ./packages/manager/.env
           echo "MANAGER_OAUTH=$${{ matrix.user.var }}" >> ./packages/manager/.env
           echo "REACT_APP_CLIENT_ID=$CLIENT_ID" >> ./packages/manager/.env
           echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
 
-      # GO GO GO
-      # - run: |
-      #     yarn up &
-      # ONLY NEEDED FOR LOCAL RUNS!
-      - run: sudo apt update -y && sudo apt install xvfb libnss3 libgtk2.0-0 libnotify-dev libgconf-2-4 libxss1 libasound2 -y && npm install -g yarn
-
+      # Run Cypress
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
-          #working-directory: packages/manager
-          config-file: packages/manager/cypress.json
+          working-directory: packages/manager
           wait-on: "http://localhost:3000"
-          wait-on-timeout: 10000
-          start: yarn up
-          install: true
-          browser: electron
+          wait-on-timeout: 1000
+          install: false
+          browser: chrome
           headless: true
-          record: false
-          # Only parallelize if more than one test users exists.
+          # Only record if Cypress record key is provided.
+          record: ${{ needs.generate_users_matrix.outputs.record }}
+          # Only parallelize if more than one test users is provided.
           parallel: ${{ needs.generate_users_matrix.outputs.parallelize }}
