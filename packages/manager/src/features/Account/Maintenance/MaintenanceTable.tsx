@@ -7,7 +7,6 @@ import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import PaginationFooter from 'src/components/PaginationFooter';
-import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import usePagination from 'src/hooks/usePagination';
@@ -26,6 +25,7 @@ import {
 import Accordion from 'src/components/Accordion';
 import Box from 'src/components/core/Box';
 import classNames from 'classnames';
+import TableLoading from 'src/components/TableRowLoading/TableLoading';
 
 export type MaintenanceEntities = 'Linode' | 'Volume';
 
@@ -139,13 +139,24 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   const renderTableContent = () => {
     if (isLoading) {
       return (
-        <TableRowLoading
-          oneLine
-          numberOfColumns={6}
-          colSpan={6}
-          widths={[12, 12, 12, 12, 12, 40]}
+        <TableLoading
+          rows={1}
+          columns={6}
+          responsive={{
+            2: { smDown: true },
+            3: { xsDown: true },
+            5: { mdDown: true },
+          }}
         />
       );
+      // return (
+      //   <TableRowLoading
+      //     oneLine
+      //     numberOfColumns={6}
+      //     colSpan={6}
+      //     widths={[12, 12, 12, 12, 12, 40]}
+      //   />
+      // );
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results == 0) {
