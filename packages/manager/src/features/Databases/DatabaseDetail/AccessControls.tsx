@@ -90,6 +90,7 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
+
   const [
     accessControlToBeRemoved,
     setAccessControlToBeRemoved,
@@ -102,7 +103,10 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const [extendedIPs, setExtendedIPs] = React.useState<ExtendedIP[]>([]);
 
-  const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
+  const {
+    mutateAsync: updateDatabase,
+    isLoading: databaseUpdating,
+  } = useDatabaseMutation(engine, id);
 
   React.useEffect(() => {
     if (allowList.length > 0) {
@@ -172,7 +176,11 @@ export const AccessControls: React.FC<Props> = (props) => {
         Cancel
       </Button>
 
-      <Button buttonType="primary" onClick={handleRemoveIPAddress}>
+      <Button
+        buttonType="primary"
+        onClick={handleRemoveIPAddress}
+        loading={databaseUpdating}
+      >
         Remove IP Address
       </Button>
     </ActionsPanel>
@@ -190,7 +198,7 @@ export const AccessControls: React.FC<Props> = (props) => {
               Add the IP addresses for other instances or users that should have
               the authorization to view this cluster&apos;s database. By
               default, all public and private connections are denied.{' '}
-              <ExternalLink to="https://www.linode.com/docs/products/database">
+              <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
                 Learn more.
               </ExternalLink>
             </Typography>

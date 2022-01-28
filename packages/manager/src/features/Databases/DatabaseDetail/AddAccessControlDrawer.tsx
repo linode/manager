@@ -1,3 +1,4 @@
+import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -8,10 +9,12 @@ import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
+import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import {
   ExtendedIP,
   extendedIPToString,
+  ipFieldPlaceholder,
   validateIPs,
 } from 'src/utilities/ipUtils';
 
@@ -43,18 +46,19 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const [error, setError] = React.useState<string | undefined>('');
+  const [allowListErrors, setAllowListErrors] = React.useState<APIError[]>();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
-  // "Allow Inbound Sources" button unless there have been changes to the form.
+  // "Update Access Controls" button unless there have been changes to the form.
   const [formTouched, setFormTouched] = React.useState<boolean>(false);
 
-  React.useEffect(() => {
-    if (open) {
-      setError('');
-    }
-  }, [open]);
+  const handleIPBlur = (_ips: ExtendedIP[]) => {
+    const _ipsWithMasks = enforceIPMasks(_ips);
 
-  const handleAllowInboundSourcesClick = (
+    setValues({ _allowList: _ipsWithMasks });
+  };
+
+  const handleUpdateAccessControlsClick = (
     { _allowList }: Values,
     {
       setSubmitting,
@@ -75,6 +79,14 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         onClose();
       })
       .catch((errors: any) => {
+        // Surface allow_list errors -- for example, "Invalid IPv4 address(es): ..."
+        const allowListErrors = errors.filter(
+          (error: APIError) => error.field === 'allow_list'
+        );
+        if (allowListErrors) {
+          setAllowListErrors(allowListErrors);
+        }
+
         handleAPIErrors(errors, setFieldError, setError);
         setSubmitting(false);
       });
@@ -101,12 +113,18 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     };
   };
 
-  const { values, isSubmitting, handleSubmit, setValues } = useFormik({
+  const {
+    values,
+    isSubmitting,
+    handleSubmit,
+    setValues,
+    resetForm,
+  } = useFormik({
     initialValues: {
       _allowList: allowList,
     },
     enableReinitialize: true,
-    onSubmit: handleAllowInboundSourcesClick,
+    onSubmit: handleUpdateAccessControlsClick,
     validateOnChange: false,
     validateOnBlur: false,
     validate: (values: Values) => onValidate(values),
@@ -123,26 +141,44 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     [formTouched, setValues]
   );
 
+  React.useEffect(() => {
+    if (open) {
+      setError('');
+      setAllowListErrors([]);
+      resetForm();
+    }
+  }, [open, resetForm]);
+
   return (
     <Drawer open={open} onClose={onClose} title="Manage Access Controls">
       <React.Fragment>
         {error ? <Notice error text={error} /> : null}
+        {allowListErrors
+          ? allowListErrors.map((allowListError) => (
+              <Notice
+                error
+                text={allowListError.reason}
+                key={allowListError.reason}
+              />
+            ))
+          : null}
         <Typography variant="body1" className={classes.instructions}>
-          To restrict connections to trusted sources, add at least one inbound
-          source below.{' '}
-          <ExternalLink to="https://www.linode.com/docs/products/database">
+          Add or remove IPv4 addresses and ranges that should be authorized to
+          view your cluster&apos;s database.{' '}
+          <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
             Learn more about securing your cluster.
           </ExternalLink>
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
-            title="Inbound Sources"
-            aria-label="Inbound Sources"
+            title="Allowed IP Address(es) or Range(s)"
+            aria-label="Allowed IP Addresses or Ranges"
             className={classes.ipSelect}
             ips={values._allowList}
             onChange={handleIPChange}
+            onBlur={handleIPBlur}
             inputProps={{ autoFocus: true }}
-            placeholder="Add IP address"
+            placeholder={ipFieldPlaceholder}
             forDatabaseAccessControls
           />
           <ActionsPanel>
@@ -162,7 +198,7 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
               style={{ marginBottom: 8 }}
               loading={isSubmitting}
             >
-              Update Inbound Sources
+              Update Access Controls
             </Button>
           </ActionsPanel>
         </form>
