@@ -6,6 +6,7 @@ import {
   FailoverCount,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
@@ -13,6 +14,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -49,8 +51,7 @@ import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOption
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import { validateIPs } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import Chip from 'src/components/core/Chip';
-import { APIError } from '@linode/api-v4/lib/types';
+import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   createBtn: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
     },
   },
@@ -566,8 +567,8 @@ const DatabaseCreate: React.FC<{}> = () => {
                 ))
               : null}
             <MultipleIPInput
-              title="Allowed IP Address(s) or Range(s)"
-              placeholder="Add IP Address or Range"
+              title="Allowed IP Address(es) or Range(s)"
+              placeholder={ipFieldPlaceholder}
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
               required
