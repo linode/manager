@@ -41,6 +41,13 @@ export const useDatabasesQuery = (params: any, filter: any) =>
     { keepPreviousData: true }
   );
 
+export const useAllDatabasesQuery = (enabled: boolean = true) =>
+  useQuery<DatabaseInstance[], APIError[]>(
+    `${queryKey}-all-list`,
+    getAllDatabases,
+    { enabled }
+  );
+
 export const useDatabaseMutation = (engine: Engine, id: number) =>
   useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
     (data) => updateDatabase(engine, id, data),
@@ -96,6 +103,11 @@ export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
   useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
     [`${queryKey}-backups`, id],
     () => getDatabaseBackups(engine, id)
+  );
+
+export const getAllDatabases = () =>
+  getAll<DatabaseInstance>((params) => getDatabases(params))().then(
+    (data) => data.data
   );
 
 export const getAllDatabaseVersions = () =>
