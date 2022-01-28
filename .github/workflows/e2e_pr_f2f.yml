@@ -26,8 +26,8 @@ env:
   # Cloud Manager app client ID.
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
 on:
-  schedule:
-  - cron: "0 13 * * 1-5"
+  pull_request_target:
+    types: [synchronize]
 
 jobs:
 
@@ -102,6 +102,8 @@ jobs:
       matrix: "${{ fromJson(needs.generate_users_matrix.outputs.matrix) }}"
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - uses: actions/setup-node@v1
         with:
