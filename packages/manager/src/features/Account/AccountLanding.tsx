@@ -1,10 +1,9 @@
 import * as React from 'react';
 import {
   matchPath,
-  RouteComponentProps,
   useHistory,
+  useLocation,
   useRouteMatch,
-  withRouter,
 } from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -19,8 +18,6 @@ import TaxBanner from 'src/components/TaxBanner';
 import useFlags from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile';
 
-type Props = RouteComponentProps<{}>;
-
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
   () => import('src/features/EntityTransfers/EntityTransfersLanding')
@@ -31,36 +28,36 @@ const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
 );
 
-const AccountLanding: React.FC<Props> = (props) => {
-  const { location } = props;
+const AccountLanding: React.FC = () => {
   const flags = useFlags();
   const history = useHistory();
+  const location = useLocation();
   const { data: profile } = useProfile();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${props.match.url}/billing`,
+      routeName: `${location.pathname}/billing`,
     },
     {
       title: 'Users & Grants',
-      routeName: `${props.match.url}/users`,
+      routeName: `${location.pathname}/users`,
     },
     flags.entityTransfers
       ? {
           title: 'Service Transfers',
-          routeName: `${props.match.url}/service-transfers`,
+          routeName: `${location.pathname}/service-transfers`,
           hide: !flags.entityTransfers,
         }
       : null,
     {
       title: 'Maintenance',
-      routeName: `${props.match.url}/maintenance`,
+      routeName: `${location.pathname}/maintenance`,
     },
     {
       title: 'Settings',
-      routeName: `${props.match.url}/settings`,
+      routeName: `${location.pathname}/settings`,
     },
   ].filter(Boolean) as Tab[];
 
@@ -80,7 +77,7 @@ const AccountLanding: React.FC<Props> = (props) => {
     if (tabChoice < 0) {
       // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`
       if (!isRedirectToMakePayment && !isRedirectToAddPaymentMethod) {
-        history.push(`${props.match.url}/billing`);
+        history.push(`${location.pathname}/billing`);
       }
 
       // Redirect to the landing page if the path does not exist
@@ -149,4 +146,4 @@ const AccountLanding: React.FC<Props> = (props) => {
   );
 };
 
-export default withRouter(AccountLanding);
+export default AccountLanding;
