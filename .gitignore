@@ -20,9 +20,7 @@ restart.sh
 
 # dotenv environment variables and secrets files
 .env*
-.secrets*
 *env.
-*secrets.
 
 npm-debug.log*
 yarn-debug.log*
