@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import countryData from 'country-region-data';
 import * as React from 'react';
 import {
   RouteComponentProps,
@@ -13,11 +14,15 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
+import { Country } from './UpdateContactInformationForm/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   wordWrap: {
     wordBreak: 'break-all',
+  },
+  bold: {
+    fontFamily: theme.font.bold,
   },
   switchWrapper: {
     flex: 1,
@@ -32,13 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   switchWrapperFlex: {
     display: 'flex',
     flexDirection: 'column',
-    alignContent: 'flex-start',
-    '& > div:nth-last-child(2)': {
-      flexGrow: 1,
-    },
-    '& > div:last-child': {
-      alignSelf: 'end',
-    },
   },
   edit: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -58,13 +56,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props extends Pick<RouteComponentProps, 'history'> {
   company: string;
-  lastName: string;
   firstName: string;
-  zip: string;
-  state: string;
-  city: string;
-  address2: string;
+  lastName: string;
   address1: string;
+  address2: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
   email: string;
   phone: string;
   taxId: string;
@@ -74,14 +73,15 @@ type CombinedProps = Props;
 
 const ContactInformation: React.FC<CombinedProps> = (props) => {
   const {
-    city,
-    state,
+    company,
     firstName,
     lastName,
-    zip,
-    company,
     address1,
     address2,
+    city,
+    state,
+    zip,
+    country,
     email,
     phone,
     taxId,
@@ -130,6 +130,14 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
+  const countryName = countryData.map((_country: Country) => {
+    if (country === _country.countryShortCode) {
+      return _country.countryName;
+    }
+
+    return null;
+  });
+
   return (
     <Grid item xs={12} md={6}>
       <Paper className={classes.summarySection} data-qa-contact-summary>
@@ -160,43 +168,43 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
             address2 ||
             city ||
             state ||
-            zip) && (
+            zip ||
+            country) && (
             <Grid item className={classes.switchWrapper}>
               {(firstName || lastName) && (
-                <div className={classes.section} data-qa-contact-name>
-                  <div
-                    className={classes.wordWrap}
-                  >{`${firstName} ${lastName}`}</div>
-                </div>
+                <Typography
+                  className={`${classes.section} ${classes.wordWrap}`}
+                  data-qa-contact-name
+                >
+                  {firstName} {lastName}
+                </Typography>
               )}
-
               {company && (
-                <div className={classes.section} data-qa-company>
-                  <div className={classes.wordWrap}>{company}</div>
-                </div>
+                <Typography
+                  className={`${classes.section} ${classes.wordWrap}`}
+                  data-qa-company
+                >
+                  {company}
+                </Typography>
               )}
-
-              {(address1 || address2 || city || state || zip) && (
-                <div>
-                  <div className={classes.section} data-qa-contact-address>
-                    <div>
-                      <span>{address1}</span>
-                    </div>
-                  </div>
-
-                  <div className={classes.section}>
-                    <div>
-                      <div>{address2}</div>
-                    </div>
-                  </div>
-                </div>
+              {(address1 || address2 || city || state || zip || country) && (
+                <>
+                  <Typography
+                    className={classes.section}
+                    data-qa-contact-address
+                  >
+                    {address1}
+                  </Typography>
+                  <Typography className={classes.section}>
+                    {address2}
+                  </Typography>
+                </>
               )}
-
-              <div className={classes.section}>
-                <div>
-                  <div>{`${city}${city && state && ','} ${state} ${zip}`}</div>
-                </div>
-              </div>
+              <Typography className={classes.section}>
+                {city}
+                {city && state && ','} {state} {zip}
+              </Typography>
+              <Typography className={classes.section}>{countryName}</Typography>
             </Grid>
           )}
 
@@ -208,18 +216,24 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
                 taxId !== undefined && taxId !== null && taxId !== '',
             })}
           >
-            <div className={classes.section} data-qa-contact-email>
-              <div className={classes.wordWrap}>{email}</div>
-            </div>
-
+            <Typography
+              className={`${classes.section} ${classes.wordWrap}`}
+              data-qa-contact-email
+            >
+              {email}
+            </Typography>
             {phone && (
-              <div className={classes.section} data-qa-contact-phone>
+              <Typography className={classes.section} data-qa-contact-phone>
                 {phone}
-              </div>
+              </Typography>
             )}
-
             {taxId && (
-              <div className={classes.section}>{'Tax ID ' + taxId}</div>
+              <Typography
+                className={classes.section}
+                style={{ marginTop: 'auto' }}
+              >
+                <span className={classes.bold}>Tax ID</span> {taxId}
+              </Typography>
             )}
           </Grid>
         </Grid>
