@@ -356,9 +356,12 @@ const DatabaseCreate: React.FC<{}> = () => {
         ?.price,
       multi: type.cluster_size.find((cluster) => cluster.quantity === 3)?.price,
     });
-    setFieldValue('cluster_size', 3);
+    setFieldValue(
+      'cluster_size',
+      values.cluster_size < 1 ? 3 : values.cluster_size
+    );
     setFieldValue('replication_type', 'semi_synch');
-  }, [dbtypes, setFieldValue, values.type]);
+  }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
