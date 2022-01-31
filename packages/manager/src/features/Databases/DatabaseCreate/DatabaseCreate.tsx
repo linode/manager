@@ -31,7 +31,6 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
@@ -152,11 +151,6 @@ export interface ExtendedDatabaseType extends DatabaseType {
   subHeadings: [string, string];
 }
 
-interface NodePricing {
-  hourly: string;
-  monthly: string;
-}
-
 const DatabaseCreate: React.FC<{}> = () => {
   const classes = useStyles();
   const history = useHistory();
@@ -184,10 +178,6 @@ const DatabaseCreate: React.FC<{}> = () => {
   const [type, setType] = React.useState<DatabaseType>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
-  const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
-    hourly: '0',
-    monthly: '0',
-  });
 
   const engineOptions = React.useMemo(() => {
     if (!versions) {
@@ -201,20 +191,15 @@ const DatabaseCreate: React.FC<{}> = () => {
       return [];
     }
     return dbtypes.map((type) => {
-      const {
-        label,
-        memory,
-        vcpus,
-        disk,
-        price: { monthly, hourly },
-      } = type;
+      const { label, memory, vcpus, disk, cluster_size } = type;
       const formattedLabel = formatStorageUnits(label);
       return {
         ...type,
+        price: cluster_size[0].price,
         label: formattedLabel,
         heading: formattedLabel,
         subHeadings: [
-          `$${monthly}/mo ($${hourly}/hr)`,
+          `$${cluster_size[0].price.monthly}/mo ($${cluster_size[0].price.hourly}/hr)`,
           typeLabelDetails(memory, disk, vcpus),
         ] as [string, string],
       };
@@ -251,7 +236,6 @@ const DatabaseCreate: React.FC<{}> = () => {
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: values.allow_list.map((ip) => ip.address),
-      ssl_connection: true,
     };
 
     try {
@@ -284,7 +268,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       engine: '' as Engine,
       region: '',
       type: '',
-      failover_count: -1 as ClusterSize,
+      cluster_size: -1 as ClusterSize,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
@@ -292,6 +276,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           error: '',
         },
       ],
+      ssl_connection: true,
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
@@ -316,45 +301,34 @@ const DatabaseCreate: React.FC<{}> = () => {
     </div>
   );
 
-  const is1GbPlan = type?.class.includes('nanode');
-
   const nodeOptions = [
     {
-      value: 0,
+      value: 1,
       label: (
         <Typography>
           1 Node {` `}
-          {is1GbPlan ? (
-            <HelpIcon
-              className={classes.nodeHelpIcon}
-              text="1 GB Linodes are only available for single-node database deployments."
-              tooltipPosition="right"
-            />
-          ) : null}
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${type?.price.monthly || 0}/month $${
-              type?.price.hourly.toFixed(2) || 0.0
+            {`$${type?.cluster_size[0].price.monthly || 0}/month $${
+              type?.cluster_size[0].price.hourly || 0
             }/hr`}
           </span>
         </Typography>
       ),
-      disabled: is1GbPlan,
     },
     {
-      value: 2,
+      value: 3,
       label: (
         <Typography>
-          3 Nodes - High Availability {!is1GbPlan && '(recommended)'}
+          3 Nodes - High Availability (recommended)
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${multiNodePricing.monthly || 0}/month $${
-              parseFloat(multiNodePricing.hourly).toFixed(2) || 0.0
+            {`$${type?.cluster_size[2].price.monthly || 0}/month $${
+              type?.cluster_size[2].price.hourly || 0
             }/hr`}
           </span>
         </Typography>
       ),
-      disabled: is1GbPlan,
     },
   ];
 
@@ -369,17 +343,9 @@ const DatabaseCreate: React.FC<{}> = () => {
     }
 
     setType(type);
-    setMultiNodePricing({
-      hourly: Number(
-        type.price.hourly + type.addons.failover.price.hourly
-      ).toFixed(2),
-      monthly: Number(
-        type.price.monthly + type.addons.failover.price.monthly
-      ).toFixed(2),
-    });
-    setFieldValue('failover_count', is1GbPlan ? 0 : 2);
-    setFieldValue('replication_type', is1GbPlan ? 'none' : 'semi_synch');
-  }, [dbtypes, is1GbPlan, setFieldValue, values.type]);
+    setFieldValue('cluster_size', 3);
+    setFieldValue('replication_type', 'semi_synch');
+  }, [dbtypes, setFieldValue, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
@@ -487,33 +453,29 @@ const DatabaseCreate: React.FC<{}> = () => {
             upgrades and maintenance.
           </Typography>
           <FormControl
-            error={Boolean(errors.failover_count)}
+            error={Boolean(errors.cluster_size)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue('failover_count', +e.target.value);
+              setFieldValue('cluster_size', +e.target.value);
               setFieldValue(
                 'replication_type',
-                +e.target.value === 0 ? 'none' : 'semi_synch'
+                +e.target.value === 1 ? 'none' : 'semi_synch'
               );
             }}
             data-testid="database-nodes"
           >
-            <RadioGroup
-              style={{ marginBottom: 0 }}
-              value={values.failover_count}
-            >
+            <RadioGroup style={{ marginBottom: 0 }} value={values.cluster_size}>
               {nodeOptions.map((nodeOption) => (
                 <FormControlLabel
                   key={nodeOption.value}
                   value={nodeOption.value}
                   label={nodeOption.label}
-                  disabled={nodeOption.disabled}
                   control={<Radio />}
                   data-qa-radio={nodeOption.label}
                   className={classes.formControlLabel}
                 />
               ))}
             </RadioGroup>
-            <FormHelperText>{errors.failover_count}</FormHelperText>
+            <FormHelperText>{errors.cluster_size}</FormHelperText>
           </FormControl>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
