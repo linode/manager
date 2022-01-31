@@ -1,19 +1,22 @@
 import { Entity, EventAction } from '@linode/api-v4/lib/account';
-import { path } from 'ramda';
 import { nonClickEvents } from 'src/constants';
 import {
   EntityType,
   getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
 
+export const getEngineFromDatabaseEntityURL = (url: string) => {
+  return url.match(/databases\/(\w*)\/instances/i)?.[1];
+};
+
 export default (
   action: EventAction,
   entity: null | Entity,
   deleted: undefined | string | boolean
 ) => {
-  const type = path(['type'], entity);
-  const id = path(['id'], entity);
-  const label = path(['label'], entity);
+  const type = entity?.type;
+  const id = entity?.id;
+  const label = entity?.label;
 
   if (action.match(/community/gi)) {
     return () => {
@@ -103,10 +106,9 @@ export default (
       }
 
     case 'database':
-      const engine = entity?.url.match(
-        /(mysql|postgresql|mongodb|redis)/i
-      )?.[0];
-      return `/databases/${engine}/${id}/summary`;
+      return `/databases/${getEngineFromDatabaseEntityURL(
+        entity!.url
+      )}/${id}/summary`;
 
     case 'user':
       return `/account/users/${label}/profile`;
