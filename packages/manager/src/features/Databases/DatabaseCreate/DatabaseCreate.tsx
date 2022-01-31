@@ -69,11 +69,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   createBtn: {
+    whiteSpace: 'nowrap',
     [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
     },
   },
   createText: {
+    marginLeft: theme.spacing(),
     marginRight: theme.spacing(3),
     [theme.breakpoints.down('xs')]: {
       padding: theme.spacing(),
