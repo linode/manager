@@ -137,7 +137,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   }, []);
 
   const renderTableContent = () => {
-    if (true) {
+    if (isLoading) {
       return (
         <TableLoading
           rows={1}
@@ -149,14 +149,6 @@ const MaintenanceTable: React.FC<Props> = (props) => {
           }}
         />
       );
-      // return (
-      //   <TableRowLoading
-      //     oneLine
-      //     numberOfColumns={6}
-      //     colSpan={6}
-      //     widths={[12, 12, 12, 12, 12, 40]}
-      //   />
-      // );
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results == 0) {
