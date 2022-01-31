@@ -199,13 +199,16 @@ const DatabaseCreate: React.FC<{}> = () => {
     return dbtypes.map((type) => {
       const { label, memory, vcpus, disk, cluster_size } = type;
       const formattedLabel = formatStorageUnits(label);
+      const singleNodePricing = cluster_size.find(
+        (cluster) => cluster.quantity === 1
+      )?.price;
       return {
         ...type,
-        price: cluster_size[0].price,
+        price: singleNodePricing,
         label: formattedLabel,
         heading: formattedLabel,
         subHeadings: [
-          `$${cluster_size[0].price.monthly}/mo ($${cluster_size[0].price.hourly}/hr)`,
+          `$${singleNodePricing?.monthly}/mo ($${singleNodePricing?.hourly}/hr)`,
           typeLabelDetails(memory, disk, vcpus),
         ] as [string, string],
       };
