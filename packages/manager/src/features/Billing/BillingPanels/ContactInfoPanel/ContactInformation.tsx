@@ -1,6 +1,10 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { RouteComponentProps, useHistory } from 'react-router-dom';
+import {
+  RouteComponentProps,
+  useHistory,
+  useRouteMatch,
+} from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -14,9 +18,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   wordWrap: {
     wordBreak: 'break-all',
-  },
-  cancel: {
-    marginTop: theme.spacing(2),
   },
   switchWrapper: {
     flex: 1,
@@ -100,9 +101,21 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
 
   const [focusEmail, setFocusEmail] = React.useState(false);
 
-  const handleEditDrawerOpen = () => {
-    setEditContactDrawerOpen(true);
-  };
+  const handleEditDrawerOpen = React.useCallback(
+    () => setEditContactDrawerOpen(true),
+    [setEditContactDrawerOpen]
+  );
+
+  // On-the-fly route matching so this component can open the drawer itself.
+  const editBillingContactRouteMatch = Boolean(
+    useRouteMatch('/account/billing/edit')
+  );
+
+  React.useEffect(() => {
+    if (editBillingContactRouteMatch) {
+      handleEditDrawerOpen();
+    }
+  }, [editBillingContactRouteMatch, handleEditDrawerOpen]);
 
   // Listen for changes to history state and open the drawer if necessary.
   // This is currently in use by the EmailBounceNotification, which navigates
@@ -127,7 +140,13 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            <Button className={classes.edit} onClick={handleEditDrawerOpen}>
+            <Button
+              className={classes.edit}
+              onClick={() => {
+                history.push('/account/billing/edit');
+                handleEditDrawerOpen();
+              }}
+            >
               Edit
             </Button>
           </Grid>
@@ -208,7 +227,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
       <BillingContactDrawer
         open={editContactDrawerOpen}
         onClose={() => {
-          history.replace(location.pathname, { contactDrawerOpen: false });
+          history.replace('/account/billing', { contactDrawerOpen: false });
           setEditContactDrawerOpen(false);
           setFocusEmail(false);
         }}

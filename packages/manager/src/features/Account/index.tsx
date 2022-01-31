@@ -24,18 +24,23 @@ class Account extends React.Component<Props> {
     return (
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch>
-          <Route path={`${path}/users/:username`} component={UserDetail} />
+          <Route component={UserDetail} path={`${path}/users/:username`} />
           <Route
+            path={`${path}/billing/edit`}
+            component={AccountLanding}
             exact
-            path={`${path}/billing/invoices/:invoiceId`}
-            component={InvoiceDetail}
+            strict
           />
           <Route
-            path={`${path}/service-transfers/create`}
-            component={EntityTransfersCreate}
+            component={InvoiceDetail}
+            path={`${path}/billing/invoices/:invoiceId`}
           />
-          <Redirect exact from="/account" to="/account/billing" />
-          <Route path={`${path}`} component={AccountLanding} />
+          <Route
+            component={EntityTransfersCreate}
+            path={`${path}/service-transfers/create`}
+          />
+          <Redirect from={path} to={`${path}/billing`} exact />
+          <Route component={AccountLanding} path={path} />
         </Switch>
       </React.Suspense>
     );

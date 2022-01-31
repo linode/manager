@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { matchPath, RouteComponentProps, useHistory } from 'react-router-dom';
+import {
+  matchPath,
+  useHistory,
+  useLocation,
+  useRouteMatch,
+} from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -13,8 +18,6 @@ import TaxBanner from 'src/components/TaxBanner';
 import useFlags from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile';
 
-type Props = RouteComponentProps<{}>;
-
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
   () => import('src/features/EntityTransfers/EntityTransfersLanding')
@@ -25,45 +28,67 @@ const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
 );
 
-const AccountLanding: React.FC<Props> = (props) => {
-  const { location } = props;
+const AccountLanding: React.FC = () => {
   const flags = useFlags();
   const history = useHistory();
+  const location = useLocation();
   const { data: profile } = useProfile();
 
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${props.match.url}/billing`,
+      routeName: `${location.pathname}/billing`,
     },
     {
       title: 'Users & Grants',
-      routeName: `${props.match.url}/users`,
+      routeName: `${location.pathname}/users`,
     },
     flags.entityTransfers
       ? {
           title: 'Service Transfers',
-          routeName: `${props.match.url}/service-transfers`,
+          routeName: `${location.pathname}/service-transfers`,
           hide: !flags.entityTransfers,
         }
       : null,
     {
       title: 'Maintenance',
-      routeName: `${props.match.url}/maintenance`,
+      routeName: `${location.pathname}/maintenance`,
     },
     {
       title: 'Settings',
-      routeName: `${props.match.url}/settings`,
+      routeName: `${location.pathname}/settings`,
     },
   ].filter(Boolean) as Tab[];
 
-  const matches = (p: string) => {
-    return Boolean(matchPath(p, { path: location.pathname }));
+  const isRedirectToMakePayment = Boolean(
+    useRouteMatch('/account/billing/make-payment')
+  );
+
+  const isRedirectToAddPaymentMethod = Boolean(
+    useRouteMatch('/account/billing/add-payment-method')
+  );
+
+  const getDefaultTabIndex = () => {
+    const tabChoice = tabs.findIndex((tab) =>
+      Boolean(matchPath(tab.routeName, { path: location.pathname }))
+    );
+
+    if (tabChoice < 0) {
+      // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`
+      if (!isRedirectToMakePayment && !isRedirectToAddPaymentMethod) {
+        history.push(`${location.pathname}/billing`);
+      }
+
+      // Redirect to the landing page if the path does not exist
+      return 0;
+    } else {
+      return tabChoice;
+    }
   };
 
-  const navToURL = (index: number) => {
-    props.history.push(tabs[index].routeName);
+  const handleTabChange = (index: number) => {
+    history.push(tabs[index].routeName);
   };
 
   let idx = 0;
@@ -92,13 +117,7 @@ const AccountLanding: React.FC<Props> = (props) => {
       <TaxBanner location={location} marginBottom={24} />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
-      <Tabs
-        index={Math.max(
-          tabs.findIndex((tab) => matches(tab.routeName)),
-          0
-        )}
-        onChange={navToURL}
-      >
+      <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
 
         <React.Suspense fallback={<SuspenseLoader />}>
