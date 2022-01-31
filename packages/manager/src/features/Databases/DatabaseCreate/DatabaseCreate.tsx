@@ -2,6 +2,7 @@ import {
   ClusterSize,
   CreateDatabasePayload,
   DatabaseType,
+  DatabasePriceObject,
   DatabaseVersion,
   Engine,
   ReplicationType,
@@ -151,6 +152,11 @@ export interface ExtendedDatabaseType extends DatabaseType {
   subHeadings: [string, string];
 }
 
+interface NodePricing {
+  single: DatabasePriceObject | undefined;
+  multi: DatabasePriceObject | undefined;
+}
+
 const DatabaseCreate: React.FC<{}> = () => {
   const classes = useStyles();
   const history = useHistory();
@@ -175,7 +181,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [type, setType] = React.useState<DatabaseType>();
+  const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
 
@@ -309,8 +315,8 @@ const DatabaseCreate: React.FC<{}> = () => {
           1 Node {` `}
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${type?.cluster_size[0].price.monthly || 0}/month $${
-              type?.cluster_size[0].price.hourly || 0
+            {`$${nodePricing?.single?.monthly || 0}/month $${
+              nodePricing?.single?.hourly || 0
             }/hr`}
           </span>
         </Typography>
@@ -323,8 +329,8 @@ const DatabaseCreate: React.FC<{}> = () => {
           3 Nodes - High Availability (recommended)
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${type?.cluster_size[2].price.monthly || 0}/month $${
-              type?.cluster_size[2].price.hourly || 0
+            {`$${nodePricing?.multi?.monthly || 0}/month $${
+              nodePricing?.multi?.hourly || 0
             }/hr`}
           </span>
         </Typography>
@@ -342,7 +348,11 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
-    setType(type);
+    setNodePricing({
+      single: type.cluster_size.find((cluster) => cluster.quantity === 1)
+        ?.price,
+      multi: type.cluster_size.find((cluster) => cluster.quantity === 3)?.price,
+    });
     setFieldValue('cluster_size', 3);
     setFieldValue('replication_type', 'semi_synch');
   }, [dbtypes, setFieldValue, values.type]);

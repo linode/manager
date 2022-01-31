@@ -2,7 +2,7 @@ import { BaseType } from '../linodes/types';
 
 export type DatabaseTypeClass = 'standard' | 'dedicated' | 'nanode';
 
-interface DatabasePriceObject {
+export interface DatabasePriceObject {
   monthly: number;
   hourly: number;
 }
