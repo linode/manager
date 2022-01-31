@@ -21,7 +21,6 @@ import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -467,12 +466,11 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Typography variant="h2" style={{ marginBottom: 4 }}>
             Set Number of Nodes{' '}
           </Typography>
-          <Typography>
+          <Typography style={{ marginBottom: 8 }}>
             We recommend 3 nodes in a database cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
-            error={Boolean(errors.cluster_size)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFieldValue('cluster_size', +e.target.value);
               setFieldValue(
@@ -482,7 +480,13 @@ const DatabaseCreate: React.FC<{}> = () => {
             }}
             data-testid="database-nodes"
           >
-            <RadioGroup style={{ marginBottom: 0 }} value={values.cluster_size}>
+            {errors.cluster_size ? (
+              <Notice error text={errors.cluster_size} />
+            ) : null}
+            <RadioGroup
+              style={{ marginTop: 0, marginBottom: 0 }}
+              value={values.cluster_size}
+            >
               {nodeOptions.map((nodeOption) => (
                 <FormControlLabel
                   key={nodeOption.value}
@@ -494,7 +498,6 @@ const DatabaseCreate: React.FC<{}> = () => {
                 />
               ))}
             </RadioGroup>
-            <FormHelperText>{errors.cluster_size}</FormHelperText>
           </FormControl>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
