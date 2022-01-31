@@ -20,7 +20,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import TableLoading from 'src/components/TableRowLoading/TableLoading';
 import usePagination from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -192,7 +192,13 @@ const UsersLanding: React.FC<Props> = (props) => {
 
   const renderTableContent = () => {
     if (isLoading) {
-      return <TableRowLoading colSpan={4} oneLine hasEntityIcon />;
+      return (
+        <TableLoading
+          columns={4}
+          rows={1}
+          responsive={{ 1: { smDown: true } }}
+        />
+      );
     }
 
     if (error) {

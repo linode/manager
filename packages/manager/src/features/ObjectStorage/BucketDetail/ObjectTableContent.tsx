@@ -2,7 +2,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import TableLoading from 'src/components/TableRowLoading/TableLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { ExtendedObject } from '../utilities';
@@ -33,7 +33,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   const { width } = useWindowDimensions();
 
   if (loading && data.length === 0) {
-    return <TableRowLoading colSpan={4} widths={[20]} />;
+    return <TableLoading columns={4} responsive={{ 2: { smDown: true } }} />;
   }
 
   if (error) {
@@ -99,7 +99,9 @@ const ObjectTableContent: React.FC<Props> = (props) => {
           />
         );
       })}
-      {loading && <TableRowLoading colSpan={12} transparent />}
+      {loading && (
+        <TableLoading columns={4} responsive={{ 2: { smDown: true } }} />
+      )}
     </>
   );
 };
