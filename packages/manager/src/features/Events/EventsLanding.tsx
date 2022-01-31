@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -16,7 +17,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import TableLoading from 'src/components/TableRowLoading/TableLoading';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
@@ -272,19 +273,25 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
         <TableHead>
           <TableRow>
             {/* Cell for icon (global EventsLanding only) */}
-            {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
+            {!entityId && (
+              <Hidden xsDown>
+                <TableCell style={{ padding: 0, width: 70 }} />
+              </Hidden>
+            )}
             <TableCell
               data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
             >
               Event
             </TableCell>
-            <TableCell
-              className={classes.columnHeader}
-              data-qa-events-duration-header
-            >
-              Duration
-            </TableCell>
+            <Hidden mdDown>
+              <TableCell
+                className={classes.columnHeader}
+                data-qa-events-duration-header
+              >
+                Duration
+              </TableCell>
+            </Hidden>
             <TableCell
               className={classes.columnHeader}
               data-qa-events-time-header
@@ -335,13 +342,10 @@ export const renderTableBody = (
 
   if (loading) {
     return (
-      <TableRowLoading
-        colSpan={5}
-        numberOfRows={10}
-        numberOfColumns={4}
-        oneLine
-        data-qa-events-table-loading
-        compact
+      <TableLoading
+        columns={4}
+        rows={10}
+        responsive={{ 0: { xsDown: true }, 2: { mdDown: true } }}
       />
     );
   } else if (error) {
@@ -371,13 +375,10 @@ export const renderTableBody = (
           />
         ))}
         {isRequesting && (
-          <TableRowLoading
-            colSpan={5}
-            numberOfColumns={4}
-            numberOfRows={4}
-            oneLine
-            compact
-            transparent
+          <TableLoading
+            columns={4}
+            rows={10}
+            responsive={{ 0: { xsDown: true }, 2: { mdDown: true } }}
           />
         )}
       </>

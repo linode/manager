@@ -115,8 +115,8 @@ export const Row: React.FC<RowProps> = (props) => {
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
       {!entityId && (
-        <TableCell data-qa-event-icon-cell>
-          <Hidden smDown>
+        <Hidden xsDown>
+          <TableCell data-qa-event-icon-cell>
             <div className={classes.icon}>
               <EntityIcon
                 data-qa-entity-icon
@@ -125,24 +125,25 @@ export const Row: React.FC<RowProps> = (props) => {
                 size={20}
               />
             </div>
-          </Hidden>
-        </TableCell>
+          </TableCell>
+        </Hidden>
       )}
-      <TableCell parentColumn={'Event'} data-qa-event-message-cell>
+      <TableCell parentColumn="Event" data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
           {displayedMessage}
         </Typography>
       </TableCell>
-
-      <TableCell parentColumn="Duration">
-        <Typography variant="body1">
-          {/* There is currently an API bug where host_reboot event durations are
+      <Hidden mdDown>
+        <TableCell parentColumn="Duration">
+          <Typography variant="body1">
+            {/* There is currently an API bug where host_reboot event durations are
           not reported correctly. This patch simply hides the duration. @todo
           remove this // check when the API bug is fixed. */}
-          {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
-        </Typography>
-      </TableCell>
-      <TableCell parentColumn={'When'} data-qa-event-created-cell>
+            {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
+          </Typography>
+        </TableCell>
+      </Hidden>
+      <TableCell parentColumn="When" data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>
