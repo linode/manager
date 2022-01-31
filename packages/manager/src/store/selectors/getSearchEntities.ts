@@ -108,7 +108,7 @@ export const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   entityType: 'domain',
   data: {
     tags: domain.tags,
-    description: domain.type,
+    description: domain.type === 'master' ? 'primary' : 'secondary',
     status: domain.status,
     icon: 'domain',
     path: `/domains/${domain.id}`,

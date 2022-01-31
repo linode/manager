@@ -82,7 +82,7 @@ export type CombinedProps = DispatchProps &
   StateProps &
   WithSnackbarProps;
 
-const getHeaders = (
+export const getHeaders = (
   matchesXsDown: boolean,
   matchesSmDown: boolean,
   matchesMdDown: boolean
@@ -177,16 +177,6 @@ export const DomainsLanding: React.FC<CombinedProps> = (props) => {
     isLargeAccount,
     openForEditing,
   ]);
-
-  React.useEffect(() => {
-    // Open the "Edit Domain" drawer if so specified by this component's props.
-    if (domainForEditing) {
-      props.openForEditing(
-        domainForEditing.domainLabel,
-        domainForEditing.domainId
-      );
-    }
-  }, [domainForEditing, props]);
 
   const navigateToCreate = () => {
     props.history.push(DOMAIN_CREATE_ROUTE);

@@ -88,7 +88,9 @@ interface BaseProps {
   noMarginTop?: boolean;
   optional?: boolean;
   required?: boolean;
-  tooltipText?: string;
+  tooltipText?: string | JSX.Element;
+  tooltipClasses?: string;
+  tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
   value?: Value;
 }
 
@@ -135,6 +137,8 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     theme,
     tooltipText,
+    tooltipClasses,
+    tooltipOnMouseEnter,
     type,
     value,
     ...textFieldProps
@@ -314,7 +318,12 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
           {children}
         </TextField>
         {tooltipText && (
-          <HelpIcon className={classes.helpIcon} text={tooltipText} />
+          <HelpIcon
+            className={classes.helpIcon}
+            classes={{ popper: tooltipClasses }}
+            text={tooltipText}
+            onMouseEnter={tooltipOnMouseEnter}
+          />
         )}
       </div>
       {errorText && (

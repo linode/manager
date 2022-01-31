@@ -41,18 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 0,
     },
   },
-  actionCell: {
-    // @todo: remove action cell duplication (this is from DomainTableRow)
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    /*
-      Explicitly stating this as the theme file is automatically adding padding to the last cell
-      We can remove once we make the full switch to CMR styling
-      */
-    paddingRight: '0 !important',
-  },
   row: {
     '&:hover': {
       '& [data-qa-copy-ip]': {
@@ -137,7 +125,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
 
-      <TableCell className={classes.actionCell}>
+      <TableCell actionCell>
         <NodeBalancerActionMenu
           nodeBalancerId={id}
           toggleDialog={toggleDialog}

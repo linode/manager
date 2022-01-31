@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.55.0",
+  "version": "1.58.1",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -16,7 +16,7 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.63.0",
+    "@linode/api-v4": "^0.65.0",
     "@linode/validation": "0.7.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -55,7 +55,7 @@
     "launchdarkly-react-client-sdk": "2.11.0",
     "logic-query-parser": "^0.0.5",
     "luxon": "^1.24.1",
-    "markdown-it": "^11.0.1",
+    "markdown-it": "^12.3.2",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
     "notistack": "^0.9.7",
@@ -102,7 +102,7 @@
     "precommit": "lint-staged && yarn typecheck",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "yarn run start-storybook -p 6006 --ci",
+    "storybook": "yarn run start-storybook -p 6006 --ci -s ./public",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",
@@ -126,6 +126,7 @@
     "@babel/register": "^7.10.1",
     "@mdx-js/loader": "^1.6.22",
     "@storybook/addon-actions": "~6.3.3",
+    "@storybook/addon-controls": "~6.3.12",
     "@storybook/addon-docs": "^6.3.3",
     "@storybook/addon-knobs": "~6.2.9",
     "@storybook/addon-links": "~6.3.3",

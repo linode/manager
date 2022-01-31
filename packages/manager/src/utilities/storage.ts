@@ -70,6 +70,7 @@ interface TicketReply {
 
 interface StackScriptData extends StackScriptPayload {
   id: number | string;
+  updated: string;
 }
 
 export interface DevToolsEnv {

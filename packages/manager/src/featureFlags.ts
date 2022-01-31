@@ -43,6 +43,9 @@ export interface Flags {
   lkeHighAvailability: boolean;
   autoscaler: boolean;
   kubernetesDashboardAvailability: boolean;
+  regionDropdown: boolean;
+  taxCollectionPart1: boolean;
+  taxCollectionPart2: boolean;
 }
 
 type PromotionalOfferFeature =

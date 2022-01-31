@@ -146,7 +146,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           {
             // Defines a fixed width for the Y-axis labels
             afterFit(axes) {
-              axes.width = 32;
+              axes.width = 35;
             },
             gridLines: {
               borderDash: [3, 6],
@@ -156,6 +156,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             },
             ticks: {
               beginAtZero: true,
+              fontColor: theme.cmrTextColors.tableHeader,
               fontSize: 12,
               fontStyle: 'normal',
               maxTicksLimit: 8,
@@ -191,6 +192,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
               },
             },
             ticks: {
+              fontColor: theme.cmrTextColors.tableHeader,
               fontSize: 12,
               fontStyle: 'normal',
             },

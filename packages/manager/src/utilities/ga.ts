@@ -370,6 +370,10 @@ export const sendEntityTransferCopyDraftEmailEvent = (): void => {
 };
 
 export const sendHelpButtonClickEvent = (url: string, from?: string) => {
+  if (from === 'Object Storage Landing') {
+    sendObjectStorageDocsEvent('Docs');
+  }
+
   sendEvent({
     category: 'Help Button',
     action: url,
@@ -389,5 +393,19 @@ export const sendImageUploadEvent = (action: string, imageSize: string) => {
     category: 'Image Upload',
     action,
     label: imageSize,
+  });
+};
+
+export const sendLinodeCreateDocsEvent = (action: string) => {
+  sendEvent({
+    category: 'Linode Create Contextual Help',
+    action,
+  });
+};
+
+export const sendObjectStorageDocsEvent = (action: string) => {
+  sendEvent({
+    category: 'Object Storage Landing Contextual Help',
+    action,
   });
 };

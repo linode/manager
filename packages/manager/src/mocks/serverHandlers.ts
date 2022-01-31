@@ -1,23 +1,31 @@
-import { rest, RequestHandler } from 'msw';
-
+import { EventAction, NotificationType } from '@linode/api-v4';
+import { RequestHandler, rest } from 'msw';
+import cachedRegions from 'src/cachedData/regions.json';
+import { MockData } from 'src/dev-tools/mockDataController';
 import {
   // abuseTicketNotificationFactory,
   accountFactory,
+  accountMaintenanceFactory,
+  accountTransferFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
+  databaseBackupFactory,
   databaseFactory,
+  databaseInstanceFactory,
+  databaseTypeFactory,
+  databaseVersionFactory,
   domainFactory,
   domainRecordFactory,
-  imageFactory,
   entityTransferFactory,
-  firewallFactory,
+  eventFactory,
   firewallDeviceFactory,
-  kubernetesAPIResponse,
-  kubeEndpointFactory,
+  firewallFactory,
+  imageFactory,
   incidentResponseFactory,
   invoiceFactory,
   invoiceItemFactory,
-  nodePoolFactory,
+  kubeEndpointFactory,
+  kubernetesAPIResponse,
   linodeConfigFactory,
   linodeDiskFactory,
   linodeFactory,
@@ -27,37 +35,30 @@ import {
   longviewActivePlanFactory,
   longviewClientFactory,
   longviewSubscriptionFactory,
-  managedStatsFactory,
   maintenanceResponseFactory,
+  makeObjectsPage,
+  managedStatsFactory,
   monitorFactory,
+  nodeBalancerConfigFactory,
+  nodeBalancerConfigNodeFactory,
   nodeBalancerFactory,
+  nodePoolFactory,
   notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
+  paymentMethodFactory,
   profileFactory,
+  promoFactory,
   stackScriptFactory,
+  staticObjects,
   supportReplyFactory,
   supportTicketFactory,
-  volumeFactory,
-  accountTransferFactory,
-  eventFactory,
   tagFactory,
-  nodeBalancerConfigFactory,
-  nodeBalancerConfigNodeFactory,
   VLANFactory,
-  promoFactory,
-  staticObjects,
-  makeObjectsPage,
-  paymentMethodFactory,
-  accountMaintenanceFactory,
-  // gdprComplianceNotification,
+  volumeFactory,
 } from 'src/factories';
-
-import cachedRegions from 'src/cachedData/regions.json';
-import { MockData } from 'src/dev-tools/mockDataController';
-import { grantsFactory } from 'src/factories/grants';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
-import { EventAction, NotificationType } from '@linode/api-v4';
+import { grantsFactory } from 'src/factories/grants';
 
 export const makeResourcePage = (
   e: any[],
@@ -129,6 +130,100 @@ const entityTransfers = [
   }),
 ];
 
+const databases = [
+  rest.get('*/databases/instances', (req, res, ctx) => {
+    const databases = databaseInstanceFactory.buildList(5);
+    return res(ctx.json(makeResourcePage(databases)));
+  }),
+
+  rest.get('*/databases/types', (req, res, ctx) => {
+    const standardTypes = [
+      databaseTypeFactory.build({
+        id: 'g6-standard-0',
+        label: `Nanode 1 GB`,
+        class: 'nanode',
+        memory: 1024,
+      }),
+      ...databaseTypeFactory.buildList(7, { class: 'standard' }),
+    ];
+    const dedicatedTypes = databaseTypeFactory.buildList(7, {
+      class: 'dedicated',
+    });
+    return res(
+      ctx.json(makeResourcePage([...standardTypes, ...dedicatedTypes]))
+    );
+  }),
+
+  rest.get('*/databases/versions', (req, res, ctx) => {
+    const version = databaseVersionFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(version)));
+  }),
+
+  rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
+    const database = databaseFactory.build({
+      id: req.params.id,
+      label: `database-${req.params.id}`,
+      engine: req.params.engine,
+      ssl_connection: true,
+    });
+    return res(ctx.json(database));
+  }),
+
+  rest.get(
+    '*/databases/:engine/instances/:databaseId/backups',
+    (req, res, ctx) => {
+      const backups = databaseBackupFactory.buildList(7);
+      return res(ctx.json(makeResourcePage(backups)));
+    }
+  ),
+
+  rest.get(
+    '*/databases/:engine/instances/:databaseId/credentials',
+    (req, res, ctx) => {
+      return res(
+        // ctx.status(400)
+        ctx.json({
+          username: 'lnroot',
+          password: 'password123',
+        })
+      );
+    }
+  ),
+
+  rest.get('*/databases/:engine/instances/:databaseId/ssl', (req, res, ctx) => {
+    return res(
+      ctx.json({
+        public_key: 'testkey',
+        certificate: 'testcertificate',
+      })
+    );
+  }),
+
+  rest.post(
+    '*/databases/:engine/instances/:databaseId/backups/:backupId/restore',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+
+  rest.post(
+    '*/databases/:engine/instances/:databaseId/credentials/reset',
+    (req, res, ctx) => {
+      return res(ctx.json({}));
+    }
+  ),
+
+  rest.put('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
+    const id = Number(req.params.databaseId);
+    const body = req.body as any;
+    return res(ctx.json({ ...databaseFactory.build({ id }), ...body }));
+  }),
+
+  rest.delete('*/databases/mysql/instances/:databaseId', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+];
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({ restricted: false });
@@ -182,7 +277,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
-    const onlineLinodes = linodeFactory.buildList(3, {
+    const onlineLinodes = linodeFactory.buildList(60, {
       backups: { enabled: false },
       ipv4: ['000.000.000.000'],
     });
@@ -271,6 +366,10 @@ export const handlers = [
       region: payload?.region ?? 'us-east',
     });
     return res(ctx.json(linode));
+    // return res(
+    //   ctx.status(400),
+    //   ctx.json({ errors: [{ reason: 'Invalid label', field: 'data.label' }] })
+    // );
   }),
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesAPIResponse.buildList(10);
@@ -869,16 +968,17 @@ export const handlers = [
   rest.post('*/account/payments', (req, res, ctx) => {
     return res(ctx.json(creditPaymentResponseFactory.build()));
   }),
-  rest.get('*/databases/mysql/instances', (req, res, ctx) => {
-    const online = databaseFactory.build({ status: 'ready' });
-    const initializing = databaseFactory.build({ status: 'initializing' });
-    const error = databaseFactory.build({ status: 'error' });
-    const unknown = databaseFactory.build({ status: 'unknown' });
-    const databases = [online, initializing, error, unknown];
-    return res(ctx.json(makeResourcePage(databases)));
-  }),
+  // rest.get('*/databases/mysql/instances', (req, res, ctx) => {
+  //   const online = databaseFactory.build({ status: 'ready' });
+  //   const initializing = databaseFactory.build({ status: 'initializing' });
+  //   const error = databaseFactory.build({ status: 'error' });
+  //   const unknown = databaseFactory.build({ status: 'unknown' });
+  //   const databases = [online, initializing, error, unknown];
+  //   return res(ctx.json(makeResourcePage(databases)));
+  // }),
   ...entityTransfers,
   ...statusPage,
+  ...databases,
 ];
 
 // Generator functions for dynamic handlers, in use by mock data dev tools.

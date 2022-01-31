@@ -76,17 +76,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 40,
     },
   },
-  actionCell: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    padding: 0,
-    /*
-      Explicitly stating this as the theme file is automatically adding padding to the last cell
-      We can remove once we make the full switch to CMR styling
-      */
-    paddingRight: '0 !important',
-  },
 }));
 
 interface Props {
@@ -194,7 +183,7 @@ const UsersLanding: React.FC<Props> = (props) => {
         <TableCell data-qa-user-restriction>
           {user.restricted ? 'Limited' : 'Full'}
         </TableCell>
-        <TableCell className={classes.actionCell}>
+        <TableCell actionCell>
           <ActionMenu username={user.username} onDelete={onUsernameDelete} />
         </TableCell>
       </TableRow>

@@ -21,9 +21,8 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
-import { dbaasContext, useDialogContext } from 'src/context';
+import { useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
-import CreateDatabaseDialog from 'src/features/Databases/CreateDatabaseDialog';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import GlobalNotifications from 'src/features/GlobalNotifications';
@@ -181,9 +180,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
 
-  const DbaasContextProvider = dbaasContext.Provider;
-  const dbaasContextValue = useDialogContext();
-
   const ComplianceUpdateProvider = complianceUpdateContext.Provider;
   const complianceUpdateContextValue = useDialogContext();
 
@@ -209,13 +205,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
       preferences ?? {},
       flags?.mainContentBanner?.key
     );
-
-  // Clean up and use the below once we know what the Databases piece will look like for Capabilities. Until then, the feature-based display logic for Databases will rely only on the flag.
-  // const showDbaas = isFeatureEnabled(
-  //   'Dbaas',
-  //   Boolean(props.flags.dbaas),
-  //   account?.data?.capabilities ?? []
-  // );
 
   /**
    * this is the case where the user has successfully completed signup
@@ -287,124 +276,109 @@ const MainContent: React.FC<CombinedProps> = (props) => {
           preference: desktopMenuIsOpen,
           togglePreference: desktopMenuToggle,
         }: ToggleProps<boolean>) => (
-          <DbaasContextProvider value={dbaasContextValue}>
-            <ComplianceUpdateProvider value={complianceUpdateContextValue}>
-              <NotificationProvider value={contextValue}>
-                <>
-                  {shouldDisplayMainContentBanner ? (
-                    <MainContentBanner
-                      bannerText={flags.mainContentBanner?.text ?? ''}
-                      url={flags.mainContentBanner?.link?.url ?? ''}
-                      linkText={flags.mainContentBanner?.link?.text ?? ''}
-                      bannerKey={flags.mainContentBanner?.key ?? ''}
-                      onClose={() => setBannerDismissed(true)}
-                    />
-                  ) : null}
-                  <SideMenu
-                    open={menuIsOpen}
-                    desktopOpen={desktopMenuIsOpen || false}
-                    closeMenu={() => toggleMenu(false)}
+          <ComplianceUpdateProvider value={complianceUpdateContextValue}>
+            <NotificationProvider value={contextValue}>
+              <>
+                {shouldDisplayMainContentBanner ? (
+                  <MainContentBanner
+                    bannerText={flags.mainContentBanner?.text ?? ''}
+                    url={flags.mainContentBanner?.link?.url ?? ''}
+                    linkText={flags.mainContentBanner?.link?.text ?? ''}
+                    bannerKey={flags.mainContentBanner?.key ?? ''}
+                    onClose={() => setBannerDismissed(true)}
                   />
-                  <div
-                    className={`
-                      ${classes.content}
-                      ${
-                        desktopMenuIsOpen ||
-                        (desktopMenuIsOpen && desktopMenuIsOpen === true)
-                          ? classes.fullWidthContent
-                          : ''
-                      }
-                    `}
+                ) : null}
+                <SideMenu
+                  open={menuIsOpen}
+                  collapse={desktopMenuIsOpen || false}
+                  closeMenu={() => toggleMenu(false)}
+                />
+                <div
+                  className={`
+                    ${classes.content}
+                    ${
+                      desktopMenuIsOpen ||
+                      (desktopMenuIsOpen && desktopMenuIsOpen === true)
+                        ? classes.fullWidthContent
+                        : ''
+                    }
+                  `}
+                >
+                  <TopMenu
+                    isSideMenuOpen={!desktopMenuIsOpen}
+                    openSideMenu={() => toggleMenu(true)}
+                    desktopMenuToggle={desktopMenuToggle}
+                    isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+                    username={username}
+                  />
+                  <main
+                    className={classes.cmrWrapper}
+                    id="main-content"
+                    role="main"
                   >
-                    <TopMenu
-                      isSideMenuOpen={!desktopMenuIsOpen}
-                      openSideMenu={() => toggleMenu(true)}
-                      desktopMenuToggle={desktopMenuToggle}
-                      isLoggedInAsCustomer={props.isLoggedInAsCustomer}
-                      username={username}
-                    />
-                    <main
-                      className={classes.cmrWrapper}
-                      id="main-content"
-                      role="main"
-                    >
-                      <Grid container spacing={0} className={classes.grid}>
-                        <Grid item className={`${classes.switchWrapper} p0`}>
-                          <GlobalNotifications />
-                          <React.Suspense fallback={<SuspenseLoader />}>
-                            <Switch>
-                              <Route
-                                path="/linodes"
-                                component={LinodesRoutes}
-                              />
-                              <Route path="/volumes" component={Volumes} />
-                              <Redirect path="/volumes*" to="/volumes" />
-                              <Route
-                                path="/nodebalancers"
-                                component={NodeBalancers}
-                              />
-                              <Route path="/domains" component={Domains} />
-                              <Route path="/managed" component={Managed} />
-                              <Route path="/longview" component={Longview} />
-                              <Route path="/images" component={Images} />
-                              <Route
-                                path="/stackscripts"
-                                component={StackScripts}
-                              />
-                              <Route
-                                path="/object-storage"
-                                component={ObjectStorage}
-                              />
-                              <Route
-                                path="/kubernetes"
-                                component={Kubernetes}
-                              />
-                              <Route path="/account" component={Account} />
+                    <Grid container spacing={0} className={classes.grid}>
+                      <Grid item className={`${classes.switchWrapper} p0`}>
+                        <GlobalNotifications />
+                        <React.Suspense fallback={<SuspenseLoader />}>
+                          <Switch>
+                            <Route path="/linodes" component={LinodesRoutes} />
+                            <Route path="/volumes" component={Volumes} />
+                            <Redirect path="/volumes*" to="/volumes" />
+                            <Route
+                              path="/nodebalancers"
+                              component={NodeBalancers}
+                            />
+                            <Route path="/domains" component={Domains} />
+                            <Route path="/managed" component={Managed} />
+                            <Route path="/longview" component={Longview} />
+                            <Route path="/images" component={Images} />
+                            <Route
+                              path="/stackscripts"
+                              component={StackScripts}
+                            />
+                            <Route
+                              path="/object-storage"
+                              component={ObjectStorage}
+                            />
+                            <Route path="/kubernetes" component={Kubernetes} />
+                            <Route path="/account" component={Account} />
 
-                              <Route
-                                path="/profile"
-                                render={(routeProps) => (
-                                  <Profile
-                                    {...routeProps}
-                                    toggleTheme={props.toggleTheme}
-                                  />
-                                )}
-                              />
-                              <Route path="/support" component={Help} />
-                              <Route path="/search" component={SearchLanding} />
-                              <Route path="/events" component={EventsLanding} />
-                              {showFirewalls && (
-                                <Route
-                                  path="/firewalls"
-                                  component={Firewalls}
+                            <Route
+                              path="/profile"
+                              render={(routeProps) => (
+                                <Profile
+                                  {...routeProps}
+                                  toggleTheme={props.toggleTheme}
                                 />
                               )}
-                              {flags.databases ? (
-                                <Route
-                                  path="/databases"
-                                  component={Databases}
-                                />
-                              ) : null}
-                              <Redirect exact from="/" to={defaultRoot} />
-                              {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
-                              <Redirect from="/dashboard" to={defaultRoot} />
-                              <Route component={NotFound} />
-                            </Switch>
-                          </React.Suspense>
-                        </Grid>
+                            />
+                            <Route path="/support" component={Help} />
+                            <Route path="/search" component={SearchLanding} />
+                            <Route path="/events" component={EventsLanding} />
+                            {showFirewalls && (
+                              <Route path="/firewalls" component={Firewalls} />
+                            )}
+                            {flags.databases ? (
+                              <Route path="/databases" component={Databases} />
+                            ) : null}
+                            <Redirect exact from="/" to={defaultRoot} />
+                            {/** We don't want to break any bookmarks. This can probably be removed eventually. */}
+                            <Redirect from="/dashboard" to={defaultRoot} />
+                            <Route component={NotFound} />
+                          </Switch>
+                        </React.Suspense>
                       </Grid>
-                    </main>
-                  </div>
-                </>
-              </NotificationProvider>
-              <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
-              <ToastNotifications />
-              <DomainDrawer />
-              <VolumeDrawer />
-              <BackupDrawer />
-              <CreateDatabaseDialog />
-            </ComplianceUpdateProvider>
-          </DbaasContextProvider>
+                    </Grid>
+                  </main>
+                </div>
+              </>
+            </NotificationProvider>
+            <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
+            <ToastNotifications />
+            <DomainDrawer />
+            <VolumeDrawer />
+            <BackupDrawer />
+          </ComplianceUpdateProvider>
         )}
       </PreferenceToggle>
     </div>

@@ -2,20 +2,12 @@ import { Event } from '@linode/api-v4/lib/account';
 import { Image } from '@linode/api-v4/lib/images';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 import { formatDate } from 'src/utilities/formatDate';
 import ActionMenu, { Handlers } from './ImagesActionMenu';
-
-const useStyles = makeStyles(() => ({
-  actionMenu: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-  },
-}));
 
 export interface ImageWithEvent extends Image {
   event?: Event;
@@ -24,8 +16,6 @@ export interface ImageWithEvent extends Image {
 type CombinedProps = Handlers & ImageWithEvent;
 
 const ImageRow: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
   const {
     created,
     description,
@@ -89,7 +79,7 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
           <TableCell data-qa-image-date>{formatDate(expiry)}</TableCell>
         ) : null}
       </Hidden>
-      <TableCell className={classes.actionMenu}>
+      <TableCell actionCell>
         {event?.status !== 'failed' ? (
           <ActionMenu
             id={id}
