@@ -360,7 +360,10 @@ const DatabaseCreate: React.FC<{}> = () => {
       'cluster_size',
       values.cluster_size < 1 ? 3 : values.cluster_size
     );
-    setFieldValue('replication_type', 'semi_synch');
+    setFieldValue(
+      'replication_type',
+      values.cluster_size === 1 ? 'none' : 'semi_synch'
+    );
   }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
