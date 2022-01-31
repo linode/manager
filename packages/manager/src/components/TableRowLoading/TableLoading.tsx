@@ -45,7 +45,12 @@ const TableLoading: React.FC<Props> = ({
 
   for (let i = 0; i < rows; i++) {
     tableRows.push(
-      <TableRow className={classes.root} key={i}>
+      <TableRow
+        className={classes.root}
+        data-testid="table-row-loading"
+        aria-label="Table content is loading"
+        key={`table-row-loading-${i}`}
+      >
         {cols}
       </TableRow>
     );
