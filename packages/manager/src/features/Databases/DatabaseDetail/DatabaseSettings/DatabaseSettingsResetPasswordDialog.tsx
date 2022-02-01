@@ -5,7 +5,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { Engine } from '@linode/api-v4/lib/databases';
 import { useDatabaseCredentialsMutation } from 'src/queries/databases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Notice from 'src/components/Notice';
 
 interface Props {
   open: boolean;
@@ -46,24 +46,14 @@ const renderActions = (
 export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
   const { open, onClose, databaseEngine, databaseID } = props;
 
-  const [error, setError] = React.useState<string | undefined>();
-
-  const { mutateAsync, isLoading } = useDatabaseCredentialsMutation(
+  const { mutateAsync, isLoading, error } = useDatabaseCredentialsMutation(
     databaseEngine,
     databaseID
   );
 
   const onResetRootPassword = async () => {
-    try {
-      await mutateAsync();
-      onClose();
-    } catch (_error) {
-      const reason = getAPIErrorOrDefault(
-        _error,
-        'There was an error resetting the root password'
-      )[0].reason;
-      setError(reason);
-    }
+    await mutateAsync();
+    onClose();
   };
 
   return (
@@ -72,8 +62,8 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       title="Reset Root Password"
       onClose={onClose}
       actions={renderActions(onClose, onResetRootPassword, isLoading)}
-      error={error}
     >
+      {error ? <Notice error>{error[0].reason}</Notice> : undefined}
       <Typography>
         After resetting your Root Password, you can view your new password on
         the Database Cluster Summary page.
