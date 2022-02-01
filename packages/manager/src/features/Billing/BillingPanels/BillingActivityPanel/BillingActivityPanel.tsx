@@ -403,6 +403,9 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
+                        loadingProps={{
+                          columns: 4,
+                        }}
                         length={paginatedAndOrderedData.length}
                         loading={
                           accountPaymentsLoading || accountInvoicesLoading

@@ -343,8 +343,8 @@ export const renderTableBody = (
   if (loading) {
     return (
       <TableLoading
-        columns={4}
-        rows={10}
+        columns={entityId ? 3 : 4}
+        rows={5}
         responsive={{ 0: { xsDown: true }, 2: { mdDown: true } }}
       />
     );
@@ -377,7 +377,7 @@ export const renderTableBody = (
         {isRequesting && (
           <TableLoading
             columns={4}
-            rows={10}
+            rows={3}
             responsive={{ 0: { xsDown: true }, 2: { mdDown: true } }}
           />
         )}

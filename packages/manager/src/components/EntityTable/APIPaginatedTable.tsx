@@ -70,6 +70,12 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
           />
           <TableBody>
             <TableContentWrapper
+              loadingProps={{
+                columns: headers.length,
+                responsive: {
+                  // @TODO
+                },
+              }}
               length={count}
               loading={loading}
               error={error}

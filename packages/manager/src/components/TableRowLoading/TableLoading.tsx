@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-interface Props {
+export interface Props {
   columns?: number;
   rows?: number;
   responsive?: Record<number, HiddenProps>;

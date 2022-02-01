@@ -119,6 +119,7 @@ export const NodeTable: React.FC<Props> = (props) => {
                 </TableHead>
                 <TableBody>
                   <TableContentWrapper
+                    loadingProps={{ columns: 4 }}
                     loading={linodes.loading || _loading}
                     lastUpdated={linodes.lastUpdated}
                     length={paginatedAndOrderedData.length}
