@@ -39,7 +39,8 @@ export type AccountCapability =
   | 'Cloud Firewall'
   | 'Vlans'
   | 'Machine Images'
-  | 'LKE HA Control Planes';
+  | 'LKE HA Control Planes'
+  | 'Managed Databases';
 
 export interface AccountSettings {
   managed: boolean;
