@@ -11,8 +11,8 @@ export const createDatabaseSchema = object({
   engine: string().required('Database Engine is required'),
   region: string().required('Region is required'),
   type: string().required('Type is required'),
-  failover_count: number()
-    .oneOf([0, 2], 'Nodes are required')
+  cluster_size: number()
+    .oneOf([1, 3], 'Nodes are required')
     .required('Nodes are required'),
   replication_type: string()
     .oneOf(['none', 'semi_synch', 'asynch'])

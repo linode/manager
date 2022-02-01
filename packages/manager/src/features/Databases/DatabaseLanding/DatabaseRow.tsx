@@ -61,15 +61,15 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
     status,
     region,
     version,
-    failover_count,
+    cluster_size,
   } = database;
 
   const configuration =
-    failover_count === 0 ? (
+    cluster_size === 1 ? (
       'Primary'
     ) : (
       <>
-        {`Primary +${failover_count}`}
+        {`Primary +${cluster_size - 1}`}
         <Chip
           className={`${chipClasses.chip} ${chipClasses.nvmeChip}`}
           label="HA"
