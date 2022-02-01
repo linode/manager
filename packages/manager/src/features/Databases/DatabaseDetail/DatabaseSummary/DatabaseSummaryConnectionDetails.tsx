@@ -124,11 +124,8 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       .then((response: SSLFields) => {
         // Convert to utf-8 from base64
         try {
-          const decodedFile = window.atob(response.certificate);
-          downloadFile(
-            `${response.public_key}-ca-certificate.crt`,
-            decodedFile
-          );
+          const decodedFile = window.atob(response.ca_certificate);
+          downloadFile(`${database.label}-ca-certificate.crt`, decodedFile);
         } catch (e) {
           enqueueSnackbar('Error parsing your CA Certificate file', {
             variant: 'error',
