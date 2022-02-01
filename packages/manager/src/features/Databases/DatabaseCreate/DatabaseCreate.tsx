@@ -37,6 +37,7 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
@@ -47,9 +48,10 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-import { validateIPs } from 'src/utilities/ipUtils';
+import { validateIPs, ExtendedIP } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -58,7 +60,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   btnCtn: {
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginTop: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      marginTop: theme.spacing(),
+    },
+  },
+  createBtn: {
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+    },
+  },
+  createText: {
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(),
+      marginRight: 0,
+    },
   },
   selectPlanPanel: {
     padding: 0,
@@ -76,11 +98,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0px 0px 0px 2px',
     marginTop: '-2px',
   },
-  createText: {
-    [theme.breakpoints.down('xs')]: {
-      padding: `0 ${theme.spacing()}px`,
-    },
-  },
   chip: {
     fontFamily: theme.font.bold,
     fontSize: '0.625rem',
@@ -96,6 +113,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         minWidth: 350,
       },
     },
+  },
+  notice: {
+    borderColor: theme.color.green,
+    fontSize: 15,
+    lineHeight: '18px',
   },
 }));
 
@@ -213,6 +235,11 @@ const DatabaseCreate: React.FC<{}> = () => {
       };
     });
   }, [dbtypes]);
+
+  const handleIPBlur = (ips: ExtendedIP[]) => {
+    const ipsWithMasks = enforceIPMasks(ips);
+    setFieldValue('allow_list', ipsWithMasks);
+  };
 
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
@@ -499,6 +526,16 @@ const DatabaseCreate: React.FC<{}> = () => {
               ))}
             </RadioGroup>
           </FormControl>
+          <Grid item xs={12} md={8}>
+            <Notice success className={classes.notice}>
+              <strong>
+                Notice: There is no charge for database clusters during beta.
+              </strong>{' '}
+              You will be notified before the beta period ends and database
+              clusters are subject to charges.{' '}
+              <Link to="https://www.linode.com/pricing/">View pricing.</Link>
+            </Notice>
+          </Grid>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
@@ -506,12 +543,12 @@ const DatabaseCreate: React.FC<{}> = () => {
             Add Access Controls
           </Typography>
           <Typography>
-            Add the IP addresses for other instances or users that should have
-            the authorization to view this cluster’s database.
+            Add at least one IPv4 address or range that should be authorized to
+            view this cluster’s database.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/database">
+            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
               Learn more.
             </Link>
           </Typography>
@@ -522,25 +559,29 @@ const DatabaseCreate: React.FC<{}> = () => {
                 ))
               : null}
             <MultipleIPInput
-              title="Inbound Sources"
-              placeholder="Add IP Address or range"
+              title="Allowed IP Address(es) or Range(s)"
+              placeholder={ipFieldPlaceholder}
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
+              onBlur={handleIPBlur}
               required
             />
           </Grid>
         </Grid>
       </Paper>
       <Grid className={classes.btnCtn}>
-        <Button type="submit" buttonType="primary" loading={isSubmitting}>
-          Create Database Cluster
-        </Button>
-      </Grid>
-      <Grid className={classes.btnCtn}>
         <Typography className={classes.createText}>
           Your database node(s) will take approximately 15-30 minutes to
           provision.
         </Typography>
+        <Button
+          type="submit"
+          buttonType="primary"
+          loading={isSubmitting}
+          className={classes.createBtn}
+        >
+          Create Database Cluster
+        </Button>
       </Grid>
     </form>
   );
