@@ -12,6 +12,7 @@ import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import MarketplaceIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import LongviewIcon from 'src/assets/icons/longview.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -37,7 +38,8 @@ export type Variant =
   | 'longview'
   | 'marketplace'
   | 'object'
-  | 'folder';
+  | 'folder'
+  | 'database';
 
 interface Props {
   variant: Variant;
@@ -66,6 +68,7 @@ const iconMap = {
   oca: MarketplaceIcon,
   object: ObjectIcon,
   folder: FolderIcon,
+  database: DatabaseIcon,
 };
 
 const getIcon = (variant: Variant) => {
