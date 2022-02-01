@@ -106,7 +106,8 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     refetch: getDatabaseCredentials,
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
-  const password = showCredentials ? credentials?.password : '••••••••';
+  const password =
+    showCredentials && credentials ? credentials?.password : '••••••••';
 
   const handleShowPasswordClick = () => {
     setShowPassword((showCredentials) => !showCredentials);
