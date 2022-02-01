@@ -1,6 +1,6 @@
 export * from './account.schema';
 export * from './buckets.schema';
-export * from './databases.schema';
+export * from './dbaas.schema';
 export * from './domains.schema';
 export * from './firewalls.schema';
 export * from './images.schema';
