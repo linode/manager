@@ -13,7 +13,7 @@ import LandingHeader, {
 } from 'src/components/LandingHeader';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
-import TabLinkList, { Tab } from 'src/components/TabLinkList';
+import TabLinkList from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
 import useFlags from 'src/hooks/useFlags';
 import { useProfile } from 'src/queries/profile';
@@ -35,31 +35,27 @@ const AccountLanding: React.FC = () => {
   const { data: profile } = useProfile();
 
   const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
     {
       title: 'Billing Info',
-      routeName: `${location.pathname}/billing`,
+      routeName: '/account/billing',
     },
     {
       title: 'Users & Grants',
-      routeName: `${location.pathname}/users`,
+      routeName: '/account/users',
     },
-    flags.entityTransfers
-      ? {
-          title: 'Service Transfers',
-          routeName: `${location.pathname}/service-transfers`,
-          hide: !flags.entityTransfers,
-        }
-      : null,
+    {
+      title: 'Service Transfers',
+      routeName: '/account/service-transfers',
+    },
     {
       title: 'Maintenance',
-      routeName: `${location.pathname}/maintenance`,
+      routeName: '/account/maintenance',
     },
     {
       title: 'Settings',
-      routeName: `${location.pathname}/settings`,
+      routeName: '/account/settings',
     },
-  ].filter(Boolean) as Tab[];
+  ];
 
   const isRedirectToMakePayment = Boolean(
     useRouteMatch('/account/billing/make-payment')
@@ -77,7 +73,7 @@ const AccountLanding: React.FC = () => {
     if (tabChoice < 0) {
       // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`
       if (!isRedirectToMakePayment && !isRedirectToAddPaymentMethod) {
-        history.push(`${location.pathname}/billing`);
+        history.push('/account/billing');
       }
 
       // Redirect to the landing page if the path does not exist
@@ -114,7 +110,7 @@ const AccountLanding: React.FC = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
-      <TaxBanner location={location} marginBottom={24} />
+      <TaxBanner marginBottom={24} />
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
