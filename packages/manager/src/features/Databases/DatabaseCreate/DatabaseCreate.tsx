@@ -38,6 +38,7 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
@@ -49,7 +50,7 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs } from 'src/utilities/ipUtils';
+import { validateIPs, ExtendedIP } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 
@@ -241,6 +242,11 @@ const DatabaseCreate: React.FC<{}> = () => {
       };
     });
   }, [dbtypes]);
+
+  const handleIPBlur = (ips: ExtendedIP[]) => {
+    const ipsWithMasks = enforceIPMasks(ips);
+    setFieldValue('allow_list', ipsWithMasks);
+  };
 
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
@@ -573,6 +579,7 @@ const DatabaseCreate: React.FC<{}> = () => {
               placeholder={ipFieldPlaceholder}
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
+              onBlur={handleIPBlur}
               required
             />
           </Grid>
