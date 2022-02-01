@@ -11,6 +11,7 @@ import formatDate from 'src/utilities/formatDate';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { useSnackbar } from 'notistack';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useHistory } from 'react-router-dom';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -22,6 +23,7 @@ interface Props extends Omit<DialogProps, 'title'> {
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   const { database, backup, onClose, open, ...rest } = props;
 
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -34,7 +36,8 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
 
   const handleRestoreDatabase = () => {
     restore().then(() => {
-      enqueueSnackbar('Your database has been scheduled to be restored.', {
+      history.push('summary');
+      enqueueSnackbar('Your database is being restored.', {
         variant: 'success',
       });
       onClose();

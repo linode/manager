@@ -8,9 +8,9 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
-import TableRowLoading from 'src/components/TableRowLoading';
 import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import Skeleton from 'src/components/core/Skeleton';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
@@ -68,17 +68,29 @@ export const DatabaseBackups: React.FC = () => {
 
   const renderTableBody = () => {
     if (databaseError) {
-      return <TableRowError message={databaseError[0].reason} colSpan={2} />;
+      return <TableRowError message={databaseError[0].reason} colSpan={3} />;
     }
     if (backupsError) {
-      return <TableRowError message={backupsError[0].reason} colSpan={2} />;
+      return <TableRowError message={backupsError[0].reason} colSpan={3} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
-      return <TableRowLoading oneLine numberOfColumns={2} colSpan={2} />;
+      return (
+        <TableRow data-testid="table-row-loading">
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <TableCell>
+            <Skeleton />
+          </TableCell>
+          <TableCell>
+            <Skeleton style={{ maxWidth: '85%' }} />
+          </TableCell>
+        </TableRow>
+      );
     }
     if (backups?.results === 0) {
       return (
-        <TableRowEmptyState message="No backups to display." colSpan={2} />
+        <TableRowEmptyState message="No backups to display." colSpan={3} />
       );
     }
     if (backups) {
@@ -105,10 +117,12 @@ export const DatabaseBackups: React.FC = () => {
               direction={order}
               label="created"
               handleClick={handleOrderChange}
+              style={{ width: 155 }}
             >
               Date Created
             </TableSortCell>
             <TableCell></TableCell>
+            <TableCell style={{ width: 100 }}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
@@ -116,8 +130,8 @@ export const DatabaseBackups: React.FC = () => {
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Backup Schedule</Typography>
         <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
-          A backup of this database is created every 24 hours at 0:00 UTC on a 7
-          day cycle.
+          A backup of this database is created every 24 hours at 0:00 UTC and
+          each backup is retained for 7 days.
         </Typography>
       </Paper>
       {database && backupToRestore ? (
