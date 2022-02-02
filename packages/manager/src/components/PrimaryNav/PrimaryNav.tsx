@@ -96,8 +96,11 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     account?.capabilities ?? []
   );
 
-  // No account capability returned yet.
-  const showDatabases = flags.databases;
+  const showDatabases = isFeatureEnabled(
+    'Managed Databases',
+    Boolean(flags.databases),
+    account?.capabilities ?? []
+  );
 
   const clustersLoadedOrLoadingOrHasError =
     objectStorageClusters.lastUpdated > 0 ||
