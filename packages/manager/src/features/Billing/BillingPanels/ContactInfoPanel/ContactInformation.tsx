@@ -14,7 +14,6 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import styled from 'src/containers/SummaryPanels.styles';
 import BillingContactDrawer from './EditBillingContactDrawer';
-import { Country } from './UpdateContactInformationForm/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -130,13 +129,10 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
     }
   }, [editContactDrawerOpen, history.location.state]);
 
-  const countryName = countryData.map((_country: Country) => {
-    if (country === _country.countryShortCode) {
-      return _country.countryName;
-    }
-
-    return null;
-  });
+  // Finding the country from the countryData JSON
+  const countryName = countryData?.find(
+    (_country) => _country.countryShortCode === country ?? null
+  );
 
   return (
     <Grid item xs={12} md={6}>
