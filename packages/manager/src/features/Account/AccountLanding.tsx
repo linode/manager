@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  matchPath,
-  useHistory,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
+import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -57,17 +52,11 @@ const AccountLanding: React.FC = () => {
     },
   ];
 
-  const isRedirectToMakePayment = Boolean(
-    useRouteMatch('/account/billing/make-payment')
-  );
-
-  const isRedirectToAddPaymentMethod = Boolean(
-    useRouteMatch('/account/billing/add-payment-method')
-  );
-
-  const isRedirectToAccountEdit = Boolean(
-    useRouteMatch('/account/billing/edit')
-  );
+  const overrideWhitelist = [
+    '/account/billing/make-payment',
+    '/account/billing/add-payment-method',
+    '/account/billing/edit',
+  ];
 
   const getDefaultTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
@@ -77,11 +66,7 @@ const AccountLanding: React.FC = () => {
     if (tabChoice < 0) {
       // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
       // and `/account/billing/edit`
-      if (
-        !isRedirectToMakePayment &&
-        !isRedirectToAddPaymentMethod &&
-        !isRedirectToAccountEdit
-      ) {
+      if (!overrideWhitelist.includes(location.pathname)) {
         history.push('/account/billing');
       }
 
