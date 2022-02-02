@@ -125,27 +125,27 @@ const engineIcons = {
   mysql: () => <MySQLIcon width="24" height="24" />,
 };
 
-const getEngineOptions = (versions: DatabaseEngine[]) => {
-  const groupedVersions = groupBy<DatabaseEngine>((version) => {
-    if (version.engine.match(/mysql/i)) {
+const getEngineOptions = (engines: DatabaseEngine[]) => {
+  const groupedEngines = groupBy<DatabaseEngine>((engineObject) => {
+    if (engineObject.engine.match(/mysql/i)) {
       return 'MySQL';
     }
-    if (version.engine.match(/postgresql/i)) {
+    if (engineObject.engine.match(/postgresql/i)) {
       return 'PostgreSQL';
     }
-    if (version.engine.match(/mongodb/i)) {
+    if (engineObject.engine.match(/mongodb/i)) {
       return 'MongoDB';
     }
-    if (version.engine.match(/redis/i)) {
+    if (engineObject.engine.match(/redis/i)) {
       return 'Redis';
     }
     return 'Other';
-  }, versions);
+  }, engines);
   return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
     (accum, thisGroup) => {
       if (
-        !groupedVersions[thisGroup] ||
-        groupedVersions[thisGroup].length === 0
+        !groupedEngines[thisGroup] ||
+        groupedEngines[thisGroup].length === 0
       ) {
         return accum;
       }
@@ -153,12 +153,14 @@ const getEngineOptions = (versions: DatabaseEngine[]) => {
         ...accum,
         {
           label: thisGroup,
-          options: groupedVersions[thisGroup]
-            .map((version) => ({
-              ...version,
-              label: `${databaseEngineMap[version.engine]} v${version.version}`,
-              value: `${version.engine}/${version.version}`,
-              flag: engineIcons[version.engine],
+          options: groupedEngines[thisGroup]
+            .map((engineObject) => ({
+              ...engineObject,
+              label: `${databaseEngineMap[engineObject.engine]} v${
+                engineObject.version
+              }`,
+              value: `${engineObject.engine}/${engineObject.version}`,
+              flag: engineIcons[engineObject.engine],
             }))
             .sort((a, b) => (a.version > b.version ? -1 : 1)),
         },
