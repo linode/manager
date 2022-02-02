@@ -57,8 +57,7 @@ interface DatabaseHosts {
 }
 
 export interface SSLFields {
-  public_key: string;
-  certificate: string;
+  ca_certificate: string;
 }
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
