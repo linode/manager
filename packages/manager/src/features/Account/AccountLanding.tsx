@@ -65,14 +65,23 @@ const AccountLanding: React.FC = () => {
     useRouteMatch('/account/billing/add-payment-method')
   );
 
+  const isRedirectToAccountEdit = Boolean(
+    useRouteMatch('/account/billing/edit')
+  );
+
   const getDefaultTabIndex = () => {
     const tabChoice = tabs.findIndex((tab) =>
       Boolean(matchPath(tab.routeName, { path: location.pathname }))
     );
 
     if (tabChoice < 0) {
-      // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`
-      if (!isRedirectToMakePayment && !isRedirectToAddPaymentMethod) {
+      // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`,
+      // and `/account/billing/edit`
+      if (
+        !isRedirectToMakePayment &&
+        !isRedirectToAddPaymentMethod &&
+        !isRedirectToAccountEdit
+      ) {
         history.push('/account/billing');
       }
 
