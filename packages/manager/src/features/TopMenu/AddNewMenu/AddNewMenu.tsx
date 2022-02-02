@@ -157,6 +157,12 @@ class AddNewMenu extends React.Component<CombinedProps> {
       account?.capabilities ?? []
     );
 
+    const showDatabases = isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
+      account?.capabilities ?? []
+    );
+
     return (
       <dbaasContext.Consumer>
         {(dbaas) => (
@@ -193,7 +199,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={VolumeIcon}
                     />
                   </MenuLink>
-                  {flags.databases ? (
+                  {showDatabases ? (
                     <MenuLink
                       as={Link}
                       to="/databases/create"
