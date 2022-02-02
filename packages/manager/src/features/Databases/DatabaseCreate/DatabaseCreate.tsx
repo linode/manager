@@ -3,7 +3,7 @@ import {
   CreateDatabasePayload,
   DatabaseType,
   DatabasePriceObject,
-  DatabaseVersion,
+  DatabaseEngine,
   Engine,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
@@ -43,7 +43,7 @@ import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   useCreateDatabaseMutation,
   useDatabaseTypesQuery,
-  useDatabaseVersionsQuery,
+  useDatabaseEnginesQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -125,8 +125,8 @@ const engineIcons = {
   mysql: () => <MySQLIcon width="24" height="24" />,
 };
 
-const getEngineOptions = (versions: DatabaseVersion[]) => {
-  const groupedVersions = groupBy<DatabaseVersion>((version) => {
+const getEngineOptions = (versions: DatabaseEngine[]) => {
+  const groupedVersions = groupBy<DatabaseEngine>((version) => {
     if (version.engine.match(/mysql/i)) {
       return 'MySQL';
     }
@@ -189,10 +189,10 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useRegionsQuery();
 
   const {
-    data: versions,
-    isLoading: versionsLoading,
-    error: versionsError,
-  } = useDatabaseVersionsQuery();
+    data: engines,
+    isLoading: enginesLoading,
+    error: enginesError,
+  } = useDatabaseEnginesQuery();
 
   const {
     data: dbtypes,
@@ -207,11 +207,11 @@ const DatabaseCreate: React.FC<{}> = () => {
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
 
   const engineOptions = React.useMemo(() => {
-    if (!versions) {
+    if (!engines) {
       return [];
     }
-    return getEngineOptions(versions);
-  }, [versions]);
+    return getEngineOptions(engines);
+  }, [engines]);
 
   const displayTypes: ExtendedDatabaseType[] = React.useMemo(() => {
     if (!dbtypes) {
@@ -392,11 +392,11 @@ const DatabaseCreate: React.FC<{}> = () => {
     );
   }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
 
-  if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
+  if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || versionsError || typesError) {
+  if (regionsError || enginesError || typesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 

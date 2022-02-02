@@ -6,7 +6,7 @@ import {
   getDatabaseCredentials,
   getDatabases,
   getDatabaseTypes,
-  getDatabaseVersions,
+  getDatabaseEngines,
   getEngineDatabase,
   restoreWithBackup,
   updateDatabase,
@@ -18,7 +18,7 @@ import {
   DatabaseCredentials,
   DatabaseInstance,
   DatabaseType,
-  DatabaseVersion,
+  DatabaseEngine,
   Engine,
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
@@ -116,15 +116,15 @@ export const getAllDatabases = () =>
     (data) => data.data
   );
 
-export const getAllDatabaseVersions = () =>
-  getAll<DatabaseVersion>((params) => getDatabaseVersions(params))().then(
+export const getAllDatabaseEngines = () =>
+  getAll<DatabaseEngine>((params) => getDatabaseEngines(params))().then(
     (data) => data.data
   );
 
-export const useDatabaseVersionsQuery = () =>
-  useQuery<DatabaseVersion[], APIError[]>(
+export const useDatabaseEnginesQuery = () =>
+  useQuery<DatabaseEngine[], APIError[]>(
     `${queryKey}-versions`,
-    getAllDatabaseVersions
+    getAllDatabaseEngines
   );
 
 export const getAllDatabaseTypes = () =>
