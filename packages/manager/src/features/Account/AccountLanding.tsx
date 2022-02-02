@@ -75,7 +75,7 @@ const AccountLanding: React.FC = () => {
     );
 
     if (tabChoice < 0) {
-      // Prevent redirect from overriding the URL change for `/account/billing/make-payment` and `/account/billing/add-payment-method`,
+      // Prevent redirect from overriding the URL change for `/account/billing/make-payment`, `/account/billing/add-payment-method`,
       // and `/account/billing/edit`
       if (
         !isRedirectToMakePayment &&
