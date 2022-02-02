@@ -22,7 +22,7 @@
   "types": "./lib/index.d.ts",
   "unpkg": "./index.js",
   "dependencies": {
-    "@linode/validation": "0.7.0",
+    "@linode/validation": "0.8.0",
     "@types/yup": "^0.29.13",
     "axios": "~0.21.4",
     "ipaddr.js": "^2.0.0",
