@@ -21,7 +21,6 @@ const paymentMethods = [
 ];
 
 describe('Payment Info Panel', () => {
-  // TODO Investigate whether `getByLabelText` for aria-label is used within this repo.
   it('Shows loading animation when loading', () => {
     const { getByLabelText } = renderWithTheme(
       <PaymentInformation loading={true} paymentMethods={paymentMethods} />
@@ -54,8 +53,4 @@ describe('Payment Info Panel', () => {
       ).toBeVisible();
     });
   });
-
-  // TODO Test payment method deletion.
-
-  // TODO Investigate testing the PayPal link.
 });
