@@ -2,20 +2,20 @@ import { BaseType } from '../linodes/types';
 
 export type DatabaseTypeClass = 'standard' | 'dedicated' | 'nanode';
 
-interface DatabasePriceObject {
+export interface DatabasePriceObject {
   monthly: number;
   hourly: number;
+}
+
+interface DatabaseClusterSizeObject {
+  quantity: number;
+  price: DatabasePriceObject;
 }
 
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   deprecated: boolean;
-  price: DatabasePriceObject;
-  addons: {
-    failover: {
-      price: DatabasePriceObject;
-    };
-  };
+  cluster_size: DatabaseClusterSizeObject[];
 }
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
@@ -57,8 +57,7 @@ interface DatabaseHosts {
 }
 
 export interface SSLFields {
-  public_key: string;
-  certificate: string;
+  ca_certificate: string;
 }
 
 // DatabaseInstance is the interface for the shape of data returned by the /databases/instances endpoint.
@@ -70,14 +69,14 @@ export interface DatabaseInstance {
   region: string;
   version: string;
   status: DatabaseStatus;
-  failover_count: number;
+  cluster_size: ClusterSize;
   updated: string;
   created: string;
   instance_uri: string;
   hosts: DatabaseHosts;
 }
 
-export type FailoverCount = 0 | 2;
+export type ClusterSize = 1 | 3;
 type ReadonlyCount = 0 | 2;
 
 export type ReplicationType = 'none' | 'semi_synch' | 'asynch';
@@ -86,7 +85,7 @@ export interface CreateDatabasePayload {
   label: string;
   region: string;
   type: string;
-  failover_count?: FailoverCount;
+  cluster_size?: ClusterSize;
   engine?: Engine;
   encrypted?: boolean;
   ssl_connection?: boolean;
@@ -108,7 +107,7 @@ export interface Database {
   version: string;
   region: string;
   status: DatabaseStatus;
-  failover_count: FailoverCount;
+  cluster_size: ClusterSize;
   readonly_count?: ReadonlyCount;
   engine: Engine;
   encrypted: boolean;

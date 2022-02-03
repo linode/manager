@@ -1,56 +1,57 @@
 import {
+  ClusterSize,
   CreateDatabasePayload,
   DatabaseType,
+  DatabasePriceObject,
   DatabaseVersion,
   Engine,
-  FailoverCount,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Divider from 'src/components/core/Divider';
-import FormControl from 'src/components/core/FormControl';
-import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
-import Paper from 'src/components/core/Paper';
-import RadioGroup from 'src/components/core/RadioGroup';
-import Typography from 'src/components/core/Typography';
 import BreadCrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Chip from 'src/components/core/Chip';
+import Divider from 'src/components/core/Divider';
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import Paper from 'src/components/core/Paper';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RegionOption from 'src/components/EnhancedSelect/variants/RegionSelect/RegionOption';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
+import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
-  useDatabaseVersionsQuery,
-  useDatabaseTypesQuery,
   useCreateDatabaseMutation,
+  useDatabaseTypesQuery,
+  useDatabaseVersionsQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
-import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs } from 'src/utilities/ipUtils';
+import { validateIPs, ExtendedIP } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import Chip from 'src/components/core/Chip';
-import { APIError } from '@linode/api-v4/lib/types';
+import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -59,7 +60,27 @@ const useStyles = makeStyles((theme: Theme) => ({
   btnCtn: {
     display: 'flex',
     justifyContent: 'flex-end',
+    alignItems: 'center',
     marginTop: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      marginTop: theme.spacing(),
+    },
+  },
+  createBtn: {
+    whiteSpace: 'nowrap',
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+    },
+  },
+  createText: {
+    marginLeft: theme.spacing(),
+    marginRight: theme.spacing(3),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(),
+      marginRight: 0,
+    },
   },
   selectPlanPanel: {
     padding: 0,
@@ -77,11 +98,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0px 0px 0px 2px',
     marginTop: '-2px',
   },
-  createText: {
-    [theme.breakpoints.down('xs')]: {
-      padding: `0 ${theme.spacing()}px`,
-    },
-  },
   chip: {
     fontFamily: theme.font.bold,
     fontSize: '0.625rem',
@@ -97,6 +113,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         minWidth: 350,
       },
     },
+  },
+  notice: {
+    borderColor: theme.color.green,
+    fontSize: 15,
+    lineHeight: '18px',
   },
 }));
 
@@ -153,8 +174,8 @@ export interface ExtendedDatabaseType extends DatabaseType {
 }
 
 interface NodePricing {
-  hourly: string;
-  monthly: string;
+  single: DatabasePriceObject | undefined;
+  multi: DatabasePriceObject | undefined;
 }
 
 const DatabaseCreate: React.FC<{}> = () => {
@@ -181,13 +202,9 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [type, setType] = React.useState<DatabaseType>();
+  const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
-  const [multiNodePricing, setMultiNodePricing] = React.useState<NodePricing>({
-    hourly: '0',
-    monthly: '0',
-  });
 
   const engineOptions = React.useMemo(() => {
     if (!versions) {
@@ -201,25 +218,28 @@ const DatabaseCreate: React.FC<{}> = () => {
       return [];
     }
     return dbtypes.map((type) => {
-      const {
-        label,
-        memory,
-        vcpus,
-        disk,
-        price: { monthly, hourly },
-      } = type;
+      const { label, memory, vcpus, disk, cluster_size } = type;
       const formattedLabel = formatStorageUnits(label);
+      const singleNodePricing = cluster_size.find(
+        (cluster) => cluster.quantity === 1
+      )?.price;
       return {
         ...type,
+        price: singleNodePricing,
         label: formattedLabel,
         heading: formattedLabel,
         subHeadings: [
-          `$${monthly}/mo ($${hourly}/hr)`,
+          `$${singleNodePricing?.monthly}/mo ($${singleNodePricing?.hourly}/hr)`,
           typeLabelDetails(memory, disk, vcpus),
         ] as [string, string],
       };
     });
   }, [dbtypes]);
+
+  const handleIPBlur = (ips: ExtendedIP[]) => {
+    const ipsWithMasks = enforceIPMasks(ips);
+    setFieldValue('allow_list', ipsWithMasks);
+  };
 
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
@@ -251,7 +271,6 @@ const DatabaseCreate: React.FC<{}> = () => {
     const createPayload: CreateDatabasePayload = {
       ...values,
       allow_list: values.allow_list.map((ip) => ip.address),
-      ssl_connection: true,
     };
 
     try {
@@ -284,7 +303,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       engine: '' as Engine,
       region: '',
       type: '',
-      failover_count: -1 as FailoverCount,
+      cluster_size: -1 as ClusterSize,
       replication_type: 'none' as ReplicationType,
       allow_list: [
         {
@@ -292,6 +311,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           error: '',
         },
       ],
+      ssl_connection: true,
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
@@ -316,45 +336,34 @@ const DatabaseCreate: React.FC<{}> = () => {
     </div>
   );
 
-  const is1GbPlan = type?.class.includes('nanode');
-
   const nodeOptions = [
     {
-      value: 0,
+      value: 1,
       label: (
         <Typography>
           1 Node {` `}
-          {is1GbPlan ? (
-            <HelpIcon
-              className={classes.nodeHelpIcon}
-              text="1 GB Linodes are only available for single-node database deployments."
-              tooltipPosition="right"
-            />
-          ) : null}
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${type?.price.monthly || 0}/month $${
-              type?.price.hourly.toFixed(2) || 0.0
+            {`$${nodePricing?.single?.monthly || 0}/month $${
+              nodePricing?.single?.hourly || 0
             }/hr`}
           </span>
         </Typography>
       ),
-      disabled: is1GbPlan,
     },
     {
-      value: 2,
+      value: 3,
       label: (
         <Typography>
-          3 Nodes - High Availability {!is1GbPlan && '(recommended)'}
+          3 Nodes - High Availability (recommended)
           <br />
           <span style={{ fontSize: '12px' }}>
-            {`$${multiNodePricing.monthly || 0}/month $${
-              parseFloat(multiNodePricing.hourly).toFixed(2) || 0.0
+            {`$${nodePricing?.multi?.monthly || 0}/month $${
+              nodePricing?.multi?.hourly || 0
             }/hr`}
           </span>
         </Typography>
       ),
-      disabled: is1GbPlan,
     },
   ];
 
@@ -368,18 +377,20 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
-    setType(type);
-    setMultiNodePricing({
-      hourly: Number(
-        type.price.hourly + type.addons.failover.price.hourly
-      ).toFixed(2),
-      monthly: Number(
-        type.price.monthly + type.addons.failover.price.monthly
-      ).toFixed(2),
+    setNodePricing({
+      single: type.cluster_size.find((cluster) => cluster.quantity === 1)
+        ?.price,
+      multi: type.cluster_size.find((cluster) => cluster.quantity === 3)?.price,
     });
-    setFieldValue('failover_count', is1GbPlan ? 0 : 2);
-    setFieldValue('replication_type', is1GbPlan ? 'none' : 'semi_synch');
-  }, [dbtypes, is1GbPlan, setFieldValue, values.type]);
+    setFieldValue(
+      'cluster_size',
+      values.cluster_size < 1 ? 3 : values.cluster_size
+    );
+    setFieldValue(
+      'replication_type',
+      values.cluster_size === 1 ? 'none' : 'semi_synch'
+    );
+  }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
 
   if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
     return <CircleProgress />;
@@ -482,39 +493,49 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Typography variant="h2" style={{ marginBottom: 4 }}>
             Set Number of Nodes{' '}
           </Typography>
-          <Typography>
+          <Typography style={{ marginBottom: 8 }}>
             We recommend 3 nodes in a database cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
-            error={Boolean(errors.failover_count)}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue('failover_count', +e.target.value);
+              setFieldValue('cluster_size', +e.target.value);
               setFieldValue(
                 'replication_type',
-                +e.target.value === 0 ? 'none' : 'semi_synch'
+                +e.target.value === 1 ? 'none' : 'semi_synch'
               );
             }}
             data-testid="database-nodes"
           >
+            {errors.cluster_size ? (
+              <Notice error text={errors.cluster_size} />
+            ) : null}
             <RadioGroup
-              style={{ marginBottom: 0 }}
-              value={values.failover_count}
+              style={{ marginTop: 0, marginBottom: 0 }}
+              value={values.cluster_size}
             >
               {nodeOptions.map((nodeOption) => (
                 <FormControlLabel
                   key={nodeOption.value}
                   value={nodeOption.value}
                   label={nodeOption.label}
-                  disabled={nodeOption.disabled}
                   control={<Radio />}
                   data-qa-radio={nodeOption.label}
                   className={classes.formControlLabel}
                 />
               ))}
             </RadioGroup>
-            <FormHelperText>{errors.failover_count}</FormHelperText>
           </FormControl>
+          <Grid item xs={12} md={8}>
+            <Notice success className={classes.notice}>
+              <strong>
+                Notice: There is no charge for database clusters during beta.
+              </strong>{' '}
+              You will be notified before the beta period ends and database
+              clusters are subject to charges.{' '}
+              <Link to="https://www.linode.com/pricing/">View pricing.</Link>
+            </Notice>
+          </Grid>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
         <Grid item>
@@ -522,12 +543,12 @@ const DatabaseCreate: React.FC<{}> = () => {
             Add Access Controls
           </Typography>
           <Typography>
-            Add the IP addresses for other instances or users that should have
-            the authorization to view this cluster’s database.
+            Add at least one IPv4 address or range that should be authorized to
+            view this cluster’s database.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/database">
+            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
               Learn more.
             </Link>
           </Typography>
@@ -538,25 +559,29 @@ const DatabaseCreate: React.FC<{}> = () => {
                 ))
               : null}
             <MultipleIPInput
-              title="Inbound Sources"
-              placeholder="Add IP Address or range"
+              title="Allowed IP Address(es) or Range(s)"
+              placeholder={ipFieldPlaceholder}
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
+              onBlur={handleIPBlur}
               required
             />
           </Grid>
         </Grid>
       </Paper>
       <Grid className={classes.btnCtn}>
-        <Button type="submit" buttonType="primary" loading={isSubmitting}>
-          Create Database Cluster
-        </Button>
-      </Grid>
-      <Grid className={classes.btnCtn}>
         <Typography className={classes.createText}>
           Your database node(s) will take approximately 15-30 minutes to
           provision.
         </Typography>
+        <Button
+          type="submit"
+          buttonType="primary"
+          loading={isSubmitting}
+          className={classes.createBtn}
+        >
+          Create Database Cluster
+        </Button>
       </Grid>
     </form>
   );
