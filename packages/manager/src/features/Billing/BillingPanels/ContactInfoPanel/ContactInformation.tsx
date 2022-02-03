@@ -200,7 +200,9 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
                 {city}
                 {city && state && ','} {state} {zip}
               </Typography>
-              <Typography className={classes.section}>{countryName}</Typography>
+              <Typography className={classes.section}>
+                {countryName?.countryName}
+              </Typography>
             </Grid>
           )}
 
