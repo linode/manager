@@ -196,6 +196,12 @@ const MainContent: React.FC<CombinedProps> = (props) => {
     account?.capabilities ?? []
   );
 
+  const showDatabases = isFeatureEnabled(
+    'Managed Databases',
+    Boolean(flags.databases),
+    account?.capabilities ?? []
+  );
+
   const defaultRoot = _isManagedAccount ? '/managed' : '/linodes';
 
   const shouldDisplayMainContentBanner =
@@ -358,7 +364,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             {showFirewalls && (
                               <Route path="/firewalls" component={Firewalls} />
                             )}
-                            {flags.databases ? (
+                            {showDatabases ? (
                               <Route path="/databases" component={Databases} />
                             ) : null}
                             <Redirect exact from="/" to={defaultRoot} />
