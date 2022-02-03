@@ -174,7 +174,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   refreshIPs = (): Promise<void>[] => {
     this.setState({ IPRequestError: undefined });
     const refreshIPv4 = getLinodeIPs(this.props.linode.id)
-      .request()
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
@@ -234,11 +233,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         await getIPv6RangeInfo(range.range).then(async (resp) => {
           let slaac;
           if (!resp.is_bgp) {
-            await getLinodeIPs(this.props.linode.id)
-              .request()
-              .then((ips) => {
-                slaac = ips?.ipv6?.slaac.address;
-              });
+            await getLinodeIPs(this.props.linode.id).then((ips) => {
+              slaac = ips?.ipv6?.slaac.address;
+            });
           }
 
           // any range that is shared to this linode

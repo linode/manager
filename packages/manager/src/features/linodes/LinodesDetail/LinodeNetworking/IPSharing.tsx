@@ -5,7 +5,6 @@ import {
   IPRangeInformation,
 } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
-import { GetLinodeIPsInstantiation } from '@linode/api-v4';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -101,12 +100,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     }
   });
 
-  // will later be set if we make getLinodeIPsRequest
-  // to figure out the shareable ipv6 ranges
-  // we check against this on unmount to cancel any outstanding requests
-  // and prevent memory leaks
-  let getLinodeIPsRequest: GetLinodeIPsInstantiation;
-
   const resp = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
     {
@@ -153,13 +146,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     const ipChoices = getIPChoicesAndLabels(linodeID, linodes);
     setipChoices(ipChoices);
     isLoading = false;
-
-    return () => {
-      // unmount and cancel outstanding getLinodeIPsRequest's
-      if (getLinodeIPsRequest !== undefined) {
-        getLinodeIPsRequest.cancel();
-      }
-    };
   }, [linodeID, data, availableRanges]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);

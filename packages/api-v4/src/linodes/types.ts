@@ -1,5 +1,4 @@
 import { IPAddress, IPRange } from '../networking/types';
-import { CancellableRequest } from '../request';
 import { SSHKey } from '../profile/types';
 
 export type Hypervisor = 'kvm' | 'zen';
@@ -356,5 +355,3 @@ export interface LinodeDiskCreationData {
   stackscript_id?: number;
   stackscript_data?: any;
 }
-
-export type GetLinodeIPsInstantiation = CancellableRequest<LinodeIPsResponse>;
