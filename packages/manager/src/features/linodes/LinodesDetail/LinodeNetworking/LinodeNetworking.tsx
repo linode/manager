@@ -139,12 +139,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    Promise.all(this.refreshIPs());
+    this.refreshIPs();
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (prevProps.linode.id !== this.props.linode.id) {
-      Promise.all(this.refreshIPs());
+      this.refreshIPs();
     }
   }
 
@@ -267,7 +267,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   handleRemoveIPSuccess = (linode?: Linode) => {
     // refresh local state and redux state so our data is persistent everywhere
-    Promise.all(this.refreshIPs());
+    this.refreshIPs();
     if (linode) {
       this.props.upsertLinode(linode);
     }
@@ -403,7 +403,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       currentlySelectedIP: undefined,
       currentlySelectedIPRange: undefined,
     });
-    Promise.all(this.refreshIPs());
+    this.refreshIPs();
   };
 
   closeViewRDNSDrawer = () => {

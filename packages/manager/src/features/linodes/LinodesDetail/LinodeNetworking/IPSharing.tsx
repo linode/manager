@@ -214,7 +214,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
     share({ linode_id: props.linodeID, ips: finalIPs })
       .then((_) => {
-        Promise.all(props.refreshIPs());
+        props.refreshIPs();
         setErrors(undefined);
         setSubmitting(false);
         setSuccessMessage('IP Sharing updated successfully');
