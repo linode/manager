@@ -31,6 +31,14 @@ export interface IPRange {
   prefix?: number;
 }
 
+export interface IPRangeInformation {
+  range: string;
+  region: string;
+  prefix: number;
+  is_bgp: boolean;
+  linodes: number[];
+}
+
 export interface IPSharingPayload {
   ips: string[];
   linode_id: number;

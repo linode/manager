@@ -2,9 +2,8 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import {
   shareAddresses,
   shareAddressesv4,
-  IPRange,
+  IPRangeInformation,
 } from '@linode/api-v4/lib/networking';
-import { getLinodeIPs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetLinodeIPsInstantiation } from '@linode/api-v4';
 import { remove, uniq, update } from 'ramda';
@@ -66,6 +65,7 @@ interface Props {
   linodeRegion: string;
   linodeIPs: string[];
   linodeSharedIPs: string[];
+  availableRanges: IPRangeInformation[];
   readOnly?: boolean;
   refreshIPs: () => Promise<void>[];
   open: boolean;
@@ -85,7 +85,21 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     open,
     onClose,
     linodeSharedIPs,
+    availableRanges,
   } = props;
+
+  const availableRangesMap = {};
+  availableRanges.forEach((range) => {
+    if (availableRangesMap.hasOwnProperty(range.linodes[0].toString())) {
+      availableRangesMap[range.linodes[0].toString()].push(
+        `${range.range}/${range.prefix}`
+      );
+    } else {
+      availableRangesMap[range.linodes[0].toString()] = [
+        `${range.range}/${range.prefix}`,
+      ];
+    }
+  });
 
   // will later be set if we make getLinodeIPsRequest
   // to figure out the shareable ipv6 ranges
@@ -104,36 +118,26 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   let isLoading = resp.isLoading;
   const data = resp.data;
 
-  const getIPChoicesAndLabels = async (linodeID: number, linodes: Linode[]) => {
+  const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
     const choiceLabels = {};
-    const promisedChoices: string[] = await linodes.reduce(
-      async (acc, thisLinode) => {
-        await acc;
-        // Filter out the current Linode
-        if (thisLinode.id === linodeID) {
-          return acc;
-        }
+    linodes.forEach((linode) => {
+      // Filter out the current Linode
+      if (linode.id === linodeID) {
+        return;
+      }
 
-        thisLinode.ipv4.forEach((ip) => {
-          choiceLabels[ip] = thisLinode.label;
-        });
+      linode.ipv4.forEach((ip) => {
+        choiceLabels[ip] = linode.label;
+      });
 
-        if (flags.ipv6Sharing) {
-          getLinodeIPsRequest = getLinodeIPs(thisLinode.id);
-          const linodeIPs = await getLinodeIPsRequest.request();
-          const ranges = linodeIPs?.ipv6?.global ?? [];
-          ranges.forEach((i: IPRange) => {
-            const address = `${i.range}/${i.prefix}`;
-            choiceLabels[address] = thisLinode.label;
+      if (flags.ipv6Sharing) {
+        availableRangesMap[linode.id.toString()] &&
+          availableRangesMap[linode.id.toString()].forEach((range: string) => {
+            choiceLabels[range] = linode.label;
           });
-        }
-
-        return [];
-      },
-      Promise.resolve([])
-    );
-
-    return Promise.all(promisedChoices).then(() => choiceLabels);
+      }
+    });
+    return choiceLabels;
   };
 
   const linodes = Object.values(data?.linodes ?? []);
@@ -146,19 +150,17 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       return;
     }
     isLoading = true;
-    async function load() {
-      const ipChoices = await getIPChoicesAndLabels(linodeID, linodes);
-      setipChoices(ipChoices);
-      isLoading = false;
-    }
-    load();
+    const ipChoices = getIPChoicesAndLabels(linodeID, linodes);
+    setipChoices(ipChoices);
+    isLoading = false;
+
     return () => {
       // unmount and cancel outstanding getLinodeIPsRequest's
       if (getLinodeIPsRequest !== undefined) {
         getLinodeIPsRequest.cancel();
       }
     };
-  }, [linodeID, data]);
+  }, [linodeID, data, availableRanges]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<

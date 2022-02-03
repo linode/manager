@@ -18,6 +18,7 @@ import {
   IPAddress,
   IPAssignmentPayload,
   IPRange,
+  IPRangeInformation,
   IPSharingPayload,
 } from './types';
 
@@ -156,12 +157,24 @@ export const getIPv6Pools = (params?: unknown) =>
   );
 
 /**
- * Displays the IPv6 ranges on your Account.
+ * View IPv6 range information.
  *
  */
 export const getIPv6Ranges = (params?: any) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
+    setMethod('GET'),
+    setParams(params)
+  );
+
+/**
+ * Returns information about a single IPv6 range on your Account.
+ *
+ * @param range { string } The range address to operate on.
+ */
+export const getIPv6RangeInfo = (range: string, params?: any) =>
+  Request<IPRangeInformation>(
+    setURL(`${API_ROOT}/networking/ipv6/ranges/${range}`),
     setMethod('GET'),
     setParams(params)
   );
