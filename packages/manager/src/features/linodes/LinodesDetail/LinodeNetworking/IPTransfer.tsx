@@ -1,4 +1,5 @@
 import { assignAddresses, IPRange } from '@linode/api-v4/lib/networking';
+// import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
@@ -82,7 +83,7 @@ interface Props {
   linodeRegion: string;
   ipAddresses: string[];
   readOnly?: boolean;
-  refreshIPs: () => Promise<void>;
+  refreshIPs: () => Promise<void>[];
   open: boolean;
   onClose: () => void;
 }
@@ -432,8 +433,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
       .then(() => {
         // Refresh Linodes in the region in which the changes were made.
         // props.getLinodes({}, { region: props.linodeRegion });
-        return props
-          .refreshIPs()
+        return Promise.all(props.refreshIPs())
           .then(() => {
             setSubmitting(false);
             setError(undefined);

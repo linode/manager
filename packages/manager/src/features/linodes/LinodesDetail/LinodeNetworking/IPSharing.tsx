@@ -67,7 +67,7 @@ interface Props {
   linodeIPs: string[];
   linodeSharedIPs: string[];
   readOnly?: boolean;
-  refreshIPs: () => Promise<void>;
+  refreshIPs: () => Promise<void>[];
   open: boolean;
   onClose: () => void;
 }
@@ -223,7 +223,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
     share({ linode_id: props.linodeID, ips: finalIPs })
       .then((_) => {
-        props.refreshIPs();
+        Promise.all(props.refreshIPs());
         setErrors(undefined);
         setSubmitting(false);
         setSuccessMessage('IP Sharing updated successfully');

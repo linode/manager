@@ -157,9 +157,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  refreshIPs = () => {
+  refreshIPs = (): Promise<void>[] => {
     this.setState({ IPRequestError: undefined });
-    return getLinodeIPs(this.props.linode.id)
+    const refreshIPv4 = getLinodeIPs(this.props.linode.id)
       .request()
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
@@ -203,11 +203,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           initialLoading: false,
         });
       });
+
+    return [refreshIPv4];
   };
 
   handleRemoveIPSuccess = (linode?: Linode) => {
     /** refresh local state and redux state so our data is persistent everywhere */
-    this.refreshIPs();
+    Promise.all(this.refreshIPs());
     if (linode) {
       this.props.upsertLinode(linode);
     }
