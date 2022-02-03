@@ -45,7 +45,10 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   const deletableIPTypes = ['IPv4 – Public', 'IPv6 – Range'];
 
   const actions = [
-    onRemove && ipAddress && deletableIPTypes.includes(ipType)
+    onRemove &&
+    ipAddress &&
+    ipAddress.prefix !== 116 &&
+    deletableIPTypes.includes(ipType)
       ? {
           title: 'Delete',
           disabled: readOnly,

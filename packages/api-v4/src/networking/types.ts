@@ -28,7 +28,7 @@ export interface IPRange {
   range: string;
   region: string;
   route_target: string | null;
-  prefix?: number;
+  prefix: number;
 }
 
 export interface IPRangeInformation {
