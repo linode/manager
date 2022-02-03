@@ -165,7 +165,6 @@ const databases = [
       label: `database-${req.params.id}`,
       engine: req.params.engine,
       ssl_connection: true,
-      status: 'provisioning',
     });
     return res(ctx.json(database));
   }),

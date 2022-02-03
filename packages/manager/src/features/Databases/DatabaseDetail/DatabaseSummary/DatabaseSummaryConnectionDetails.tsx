@@ -148,7 +148,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const disableToolTipText =
     database.status === 'provisioning'
       ? 'Your Database Cluster is currently provisioning.'
-      : 'You cannot view your root password when your Database Cluster has failed.';
+      : 'Your root password is unavailable when your Database Cluster has failed.';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
