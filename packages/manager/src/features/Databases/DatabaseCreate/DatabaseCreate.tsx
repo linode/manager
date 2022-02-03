@@ -1,8 +1,8 @@
 import {
   ClusterSize,
   CreateDatabasePayload,
-  DatabaseType,
   DatabasePriceObject,
+  DatabaseType,
   DatabaseVersion,
   Engine,
   ReplicationType,
@@ -48,10 +48,13 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs, ExtendedIP } from 'src/utilities/ipUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import {
+  ExtendedIP,
+  ipFieldPlaceholder,
+  validateIPs,
+} from 'src/utilities/ipUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -494,7 +497,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             Set Number of Nodes{' '}
           </Typography>
           <Typography style={{ marginBottom: 8 }}>
-            We recommend 3 nodes in a database cluster to avoid downtime during
+            We recommend 3 nodes in a Database Cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
@@ -529,7 +532,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Grid item xs={12} md={8}>
             <Notice success className={classes.notice}>
               <strong>
-                Notice: There is no charge for database clusters during beta.
+                Notice: There is no charge for Database Clusters during beta.
               </strong>{' '}
               You will be notified before the beta period ends and database
               clusters are subject to charges.{' '}

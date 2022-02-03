@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 interface Props {
   buttonText: string;
@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   sectionTitleAndText: {
+    width: '100%',
     [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
@@ -30,7 +31,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   sectionText: {
     width: '65%',
-    marginRight: 0,
     [theme.breakpoints.down('sm')]: {
       marginBottom: '1rem',
     },
@@ -60,12 +60,12 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
   return (
     <div className={classes.topSection}>
       <div className={classes.sectionTitleAndText}>
-        <div className={classes.sectionTitle}>
-          <Typography variant="h3">{sectionTitle}</Typography>
-        </div>
-        <div className={classes.sectionText}>
-          <Typography>{descriptiveText}</Typography>
-        </div>
+        <Typography variant="h3" className={classes.sectionTitle}>
+          {sectionTitle}
+        </Typography>
+        <Typography className={classes.sectionText}>
+          {descriptiveText}
+        </Typography>
       </div>
       <Button
         className={classes.sectionButton}
