@@ -14,6 +14,7 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import Box from 'src/components/core/Box';
 import HelpIcon from 'src/components/HelpIcon';
+import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -62,8 +63,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   showBtn: {
     color: theme.color.blue,
-    cursor: 'pointer',
     marginLeft: theme.spacing(2),
+    fontSize: '0.875rem',
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
   },
   progressCtn: {
     marginLeft: 22,
@@ -72,9 +76,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       stroke: theme.color.blue,
     },
     alignSelf: 'flex-end',
-  },
-  credentialsCtn: {
-    display: 'flex',
   },
   error: {
     color: theme.color.red,
@@ -107,7 +108,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   } = useDatabaseCredentialsQuery(database.engine, database.id);
 
   const password =
-    showCredentials && credentials ? credentials?.password : '••••••••';
+    showCredentials && credentials ? credentials?.password : '••••••••••';
 
   const handleShowPasswordClick = () => {
     setShowPassword((showCredentials) => !showCredentials);
@@ -143,22 +144,22 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   };
 
   const ssl = database.ssl_connection ? 'ENABLED' : 'DISABLED';
+  const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
+  const disableToolTipText =
+    database.status === 'provisioning'
+      ? 'Your Database Cluster is currently provisioning.'
+      : 'Your root password is unavailable when your Database Cluster has failed.';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
+
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
-      <span
+      <Button
         onClick={handleClick}
         className={classes.showBtn}
-        role="button"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            handleClick();
-          }
-        }}
-        tabIndex={0}
+        disabled={disableShowBtn}
       >
         {btnText}
-      </span>
+      </Button>
     );
   };
 
@@ -168,37 +169,34 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         Connection Details
       </Typography>
       <Grid className={classes.connectionDetailsCtn}>
-        <div className={classes.credentialsCtn}>
-          <div>
-            <Typography>
-              <span>username</span> = {DB_ROOT_USERNAME}
-            </Typography>
-            <Typography>
-              <span>password</span> = {password}
-            </Typography>
-          </div>
+        <Typography>
+          <span>username</span> = {DB_ROOT_USERNAME}
+        </Typography>
+        <Box display="flex">
+          <Typography>
+            <span>password</span> = {password}
+          </Typography>
           {credentialsLoading ? (
             <div className={classes.progressCtn}>
               <CircleProgress mini tag />
             </div>
+          ) : credentialsError ? (
+            <>
+              <span className={classes.error}>
+                Error retrieving credentials.
+              </span>
+              {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
+            </>
           ) : (
-            <Typography style={{ alignSelf: 'flex-end' }}>
-              {credentialsError ? (
-                <>
-                  <span className={classes.error}>
-                    Error retrieving credentials.
-                  </span>
-                  {credentialsBtn(() => getDatabaseCredentials(), 'Retry')}
-                </>
-              ) : (
-                credentialsBtn(
-                  handleShowPasswordClick,
-                  showCredentials && credentials ? 'Hide' : 'Show'
-                )
-              )}
-            </Typography>
+            credentialsBtn(
+              handleShowPasswordClick,
+              showCredentials && credentials ? 'Hide' : 'Show'
+            )
           )}
-        </div>
+          {disableShowBtn ? (
+            <HelpIcon className={classes.helpIcon} text={disableToolTipText} />
+          ) : null}
+        </Box>
         <Typography>
           <span>host</span> = {database.hosts?.primary}
         </Typography>
