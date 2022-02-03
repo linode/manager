@@ -164,7 +164,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
                     Download CSV
                   </Button>
                   <Button
-                    buttonType="primary"
+                    buttonType="secondary"
                     onClick={() => printInvoicePDF(account, invoice, items)}
                   >
                     Download PDF
