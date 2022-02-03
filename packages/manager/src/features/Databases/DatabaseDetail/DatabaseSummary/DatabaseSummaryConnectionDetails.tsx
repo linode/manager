@@ -144,8 +144,13 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   };
 
   const ssl = database.ssl_connection ? 'ENABLED' : 'DISABLED';
-  const disableShowBtn = database.status === 'provisioning';
+  const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
+  const disableToolTipText =
+    database.status === 'provisioning'
+      ? 'Your Database Cluster is currently provisioning.'
+      : 'You cannot view your root password when your Database Cluster has failed.';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
+
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
     return (
       <Button
@@ -189,10 +194,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             )
           )}
           {disableShowBtn ? (
-            <HelpIcon
-              className={classes.helpIcon}
-              text={'Your database cluster is currently provisioning.'}
-            />
+            <HelpIcon className={classes.helpIcon} text={disableToolTipText} />
           ) : null}
         </Box>
         <Typography>
