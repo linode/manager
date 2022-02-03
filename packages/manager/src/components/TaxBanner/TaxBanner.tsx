@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -7,24 +7,24 @@ import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import useFlags from 'src/hooks/useFlags';
 
 interface Props {
-  location: RouteComponentProps<{}>['location'];
   marginBottom?: 0 | 8 | 16 | 24 | undefined;
 }
 
 const VATBanner: React.FC<Props> = (props) => {
   const { marginBottom } = props;
   const flags = useFlags();
+  const location = useLocation();
 
-  const isBillingPage = props.location.pathname.match(/account[/]billing/);
+  const isBillingPage = location.pathname.match(/account[/]billing/);
 
   {
-    /* 
+    /*
     launch darkly is responsible for determining who and who doesn't see this banner
     based on country information we send to the service in IdentifyUser.tsx
-    
+
     As of Aug 14, 2019, this is the payload this component expects from LD
-    
-    {} || {
+
+   {} || {
       tax_name: string;
       date: string;
     }
