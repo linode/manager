@@ -89,14 +89,12 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
   const availableRangesMap = {};
   availableRanges.forEach((range) => {
-    if (availableRangesMap.hasOwnProperty(range.linodes[0].toString())) {
-      availableRangesMap[range.linodes[0].toString()].push(
+    if (availableRangesMap.hasOwnProperty(range.linodes[0])) {
+      availableRangesMap[range.linodes[0]].push(
         `${range.range}/${range.prefix}`
       );
     } else {
-      availableRangesMap[range.linodes[0].toString()] = [
-        `${range.range}/${range.prefix}`,
-      ];
+      availableRangesMap[range.linodes[0]] = [`${range.range}/${range.prefix}`];
     }
   });
 
@@ -124,10 +122,15 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       });
 
       if (flags.ipv6Sharing) {
-        availableRangesMap[linode.id.toString()] &&
-          availableRangesMap[linode.id.toString()].forEach((range: string) => {
+        availableRangesMap[linode.id] &&
+          availableRangesMap[linode.id].forEach((range: string) => {
             choiceLabels[range] = linode.label;
           });
+      }
+    });
+    linodeSharedIPs.forEach((range) => {
+      if (!choiceLabels.hasOwnProperty(range)) {
+        choiceLabels[range] = '';
       }
     });
     return choiceLabels;
