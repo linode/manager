@@ -1,12 +1,12 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import Divider from 'src/components/core/Divider';
 import { Database } from '@linode/api-v4/lib/databases/types';
-import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
-import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
-import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
-import AccessControls from '../AccessControls';
+import * as React from 'react';
+import Divider from 'src/components/core/Divider';
+import Paper from 'src/components/core/Paper';
 import { useProfile } from 'src/queries/profile';
+import AccessControls from '../AccessControls';
+import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
+import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
+import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
 
 interface Props {
   database: Database;
@@ -17,10 +17,10 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
 
   const resetRootPasswordCopy =
-    'Resetting your root password will automatically generate a new password. You can view the updated password on your Database Cluster Summary page. ';
+    'Resetting your root password will automatically generate a new password. You can view the updated password on your Database Cluster summary page. ';
 
   const deleteClusterCopy =
-    'Deleting a database cluster is permanent and cannot be undone.';
+    'Deleting a Database Cluster is permanent and cannot be undone.';
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [

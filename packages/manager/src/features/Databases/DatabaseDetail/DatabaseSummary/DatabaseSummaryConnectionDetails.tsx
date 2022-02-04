@@ -3,18 +3,18 @@ import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import { DB_ROOT_USERNAME } from 'src/constants';
 import { useDatabaseCredentialsQuery } from 'src/queries/databases';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import Box from 'src/components/core/Box';
-import HelpIcon from 'src/components/HelpIcon';
-import Button from 'src/components/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -100,7 +100,7 @@ interface Props {
 }
 
 const privateHostCopy =
-  'A private network host and a private IP can only be used to access a database cluster from Linodes in the same data center and will not incur transfer costs.';
+  'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
 
 export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const { database } = props;

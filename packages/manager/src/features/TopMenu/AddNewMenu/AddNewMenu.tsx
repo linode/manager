@@ -207,7 +207,7 @@ class AddNewMenu extends React.Component<CombinedProps> {
                     >
                       <AddNewMenuItem
                         title="Database"
-                        body="High-performance managed database clusters"
+                        body="High-performance managed Database Clusters"
                         ItemIcon={DatabaseIcon}
                         attr={{ 'data-qa-database-add-new': true }}
                       />
