@@ -78,7 +78,7 @@ import {
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 
-const DEFAULT_IMAGE = 'linode/debian10';
+const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
   selectedImageID?: string;
