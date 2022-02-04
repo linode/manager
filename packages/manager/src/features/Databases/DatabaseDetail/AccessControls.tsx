@@ -226,12 +226,7 @@ export const AccessControls: React.FC<Props> = (props) => {
             <Typography variant="h3">Access Controls</Typography>
           </div>
           <div className={classes.sectionText}>
-            <Typography>
-              {getCopy(location.pathname)}
-              {/* <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
-                Learn more.
-              </ExternalLink> */}
-            </Typography>
+            <Typography>{getCopy(location.pathname)}</Typography>
           </div>
         </div>
         <AddNewLink

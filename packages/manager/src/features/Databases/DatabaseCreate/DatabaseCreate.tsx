@@ -571,7 +571,6 @@ const DatabaseCreate: React.FC<{}> = () => {
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
               onBlur={handleIPBlur}
-              required
             />
           </Grid>
         </Grid>
