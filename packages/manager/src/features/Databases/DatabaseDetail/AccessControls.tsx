@@ -1,6 +1,7 @@
 import { Database } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useLocation } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -9,7 +10,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Typography from 'src/components/core/Typography';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import ExternalLink from 'src/components/Link';
+import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -87,6 +88,7 @@ export const AccessControls: React.FC<Props> = (props) => {
   } = props;
 
   const classes = useStyles();
+  const location = useLocation();
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
@@ -117,6 +119,35 @@ export const AccessControls: React.FC<Props> = (props) => {
       setExtendedIPs([]);
     }
   }, [allowList]);
+
+  const getCopy = (url: string) => {
+    if (url.includes('/settings')) {
+      // Copy for `/settings`
+      return (
+        <Typography>
+          Add or remove IPv4 addresses or ranges that should be authorized to
+          access your cluster.
+        </Typography>
+      );
+    } else {
+      // Copy for `/summary`
+      return (
+        <>
+          <Typography>
+            Add IPv4 addresses or ranges that should be authorized to access
+            this cluster. All other public and private connections are denied.{' '}
+            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
+              Learn more.
+            </Link>
+          </Typography>
+          <Typography style={{ marginTop: 12 }}>
+            You can add or modify access controls after your database cluster is
+            active.
+          </Typography>
+        </>
+      );
+    }
+  };
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
@@ -195,12 +226,10 @@ export const AccessControls: React.FC<Props> = (props) => {
           </div>
           <div className={classes.sectionText}>
             <Typography>
-              Add the IP addresses for other instances or users that should have
-              the authorization to view this cluster&apos;s database. By
-              default, all public and private connections are denied.{' '}
-              <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
+              {getCopy(location.pathname)}
+              {/* <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
                 Learn more.
-              </ExternalLink>
+              </ExternalLink> */}
             </Typography>
           </div>
         </div>

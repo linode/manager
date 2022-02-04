@@ -543,14 +543,17 @@ const DatabaseCreate: React.FC<{}> = () => {
             Add Access Controls
           </Typography>
           <Typography>
-            Add at least one IPv4 address or range that should be authorized to
-            view this cluster’s database.
+            Add any IPv4 address or range that should be authorized to access
+            this cluster.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
             <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
               Learn more.
             </Link>
+          </Typography>
+          <Typography style={{ marginTop: 16 }}>
+            You can add or modify access controls after your Database is active.{' '}
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
