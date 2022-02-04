@@ -20,7 +20,7 @@ export interface DatabaseType extends BaseType {
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
 
-export interface DatabaseVersion {
+export interface DatabaseEngine {
   id: string;
   engine: Engine;
   version: string;

@@ -13,7 +13,7 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  databaseVersionFactory,
+  databaseEngineFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -154,9 +154,9 @@ const databases = [
     );
   }),
 
-  rest.get('*/databases/versions', (req, res, ctx) => {
-    const version = databaseVersionFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(version)));
+  rest.get('*/databases/engines', (req, res, ctx) => {
+    const engine = databaseEngineFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(engine)));
   }),
 
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
