@@ -40,7 +40,7 @@ const GlobalNotifications: React.FC<{}> = () => {
         <APIMaintenanceBanner suppliedMaintenances={suppliedMaintenances} />
       ) : null}
       {flags.taxCollectionBanner &&
-      !!Object.keys(flags.taxCollectionBanner).length ? (
+      Boolean(Object.keys(flags.taxCollectionBanner).length) ? (
         <TaxCollectionBanner />
       ) : null}
     </>
