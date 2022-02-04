@@ -246,6 +246,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
+      allowEmptyAddress: true,
       errorMessage: 'Must be a valid IPv4 address',
     });
 
@@ -271,9 +272,17 @@ const DatabaseCreate: React.FC<{}> = () => {
 
     setCreateError(undefined);
     setSubmitting(true);
+
+    const _allow_list = values.allow_list.reduce((accum, ip) => {
+      if (ip.address !== '') {
+        return [...accum, ip.address];
+      }
+      return accum;
+    }, []);
+
     const createPayload: CreateDatabasePayload = {
       ...values,
-      allow_list: values.allow_list.map((ip) => ip.address),
+      allow_list: _allow_list,
     };
 
     try {
