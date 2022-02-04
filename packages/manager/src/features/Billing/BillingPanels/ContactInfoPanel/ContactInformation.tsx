@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   wordWrap: {
     wordBreak: 'break-all',
   },
-  bold: {
-    fontFamily: theme.font.bold,
-  },
   switchWrapper: {
     flex: 1,
     maxWidth: '100%',
@@ -228,7 +225,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
                 className={classes.section}
                 style={{ marginTop: 'auto' }}
               >
-                <span className={classes.bold}>Tax ID</span> {taxId}
+                <strong>Tax ID</strong> {taxId}
               </Typography>
             )}
           </Grid>
