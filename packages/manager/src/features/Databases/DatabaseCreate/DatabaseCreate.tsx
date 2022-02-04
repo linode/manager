@@ -1,9 +1,9 @@
 import {
   ClusterSize,
   CreateDatabasePayload,
-  DatabaseType,
+  DatabaseEngine,
   DatabasePriceObject,
-  DatabaseVersion,
+  DatabaseType,
   Engine,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
@@ -42,16 +42,19 @@ import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel'
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   useCreateDatabaseMutation,
+  useDatabaseEnginesQuery,
   useDatabaseTypesQuery,
-  useDatabaseVersionsQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs, ExtendedIP } from 'src/utilities/ipUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import {
+  ExtendedIP,
+  ipFieldPlaceholder,
+  validateIPs,
+} from 'src/utilities/ipUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -125,27 +128,27 @@ const engineIcons = {
   mysql: () => <MySQLIcon width="24" height="24" />,
 };
 
-const getEngineOptions = (versions: DatabaseVersion[]) => {
-  const groupedVersions = groupBy<DatabaseVersion>((version) => {
-    if (version.engine.match(/mysql/i)) {
+const getEngineOptions = (engines: DatabaseEngine[]) => {
+  const groupedEngines = groupBy<DatabaseEngine>((engineObject) => {
+    if (engineObject.engine.match(/mysql/i)) {
       return 'MySQL';
     }
-    if (version.engine.match(/postgresql/i)) {
+    if (engineObject.engine.match(/postgresql/i)) {
       return 'PostgreSQL';
     }
-    if (version.engine.match(/mongodb/i)) {
+    if (engineObject.engine.match(/mongodb/i)) {
       return 'MongoDB';
     }
-    if (version.engine.match(/redis/i)) {
+    if (engineObject.engine.match(/redis/i)) {
       return 'Redis';
     }
     return 'Other';
-  }, versions);
+  }, engines);
   return ['MySQL', 'PostgreSQL', 'MongoDB', 'Redis', 'Other'].reduce(
     (accum, thisGroup) => {
       if (
-        !groupedVersions[thisGroup] ||
-        groupedVersions[thisGroup].length === 0
+        !groupedEngines[thisGroup] ||
+        groupedEngines[thisGroup].length === 0
       ) {
         return accum;
       }
@@ -153,12 +156,14 @@ const getEngineOptions = (versions: DatabaseVersion[]) => {
         ...accum,
         {
           label: thisGroup,
-          options: groupedVersions[thisGroup]
-            .map((version) => ({
-              ...version,
-              label: `${databaseEngineMap[version.engine]} v${version.version}`,
-              value: `${version.engine}/${version.version}`,
-              flag: engineIcons[version.engine],
+          options: groupedEngines[thisGroup]
+            .map((engineObject) => ({
+              ...engineObject,
+              label: `${databaseEngineMap[engineObject.engine]} v${
+                engineObject.version
+              }`,
+              value: `${engineObject.engine}/${engineObject.version}`,
+              flag: engineIcons[engineObject.engine],
             }))
             .sort((a, b) => (a.version > b.version ? -1 : 1)),
         },
@@ -189,10 +194,10 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useRegionsQuery();
 
   const {
-    data: versions,
-    isLoading: versionsLoading,
-    error: versionsError,
-  } = useDatabaseVersionsQuery();
+    data: engines,
+    isLoading: enginesLoading,
+    error: enginesError,
+  } = useDatabaseEnginesQuery();
 
   const {
     data: dbtypes,
@@ -207,11 +212,11 @@ const DatabaseCreate: React.FC<{}> = () => {
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
 
   const engineOptions = React.useMemo(() => {
-    if (!versions) {
+    if (!engines) {
       return [];
     }
-    return getEngineOptions(versions);
-  }, [versions]);
+    return getEngineOptions(engines);
+  }, [engines]);
 
   const displayTypes: ExtendedDatabaseType[] = React.useMemo(() => {
     if (!dbtypes) {
@@ -392,11 +397,11 @@ const DatabaseCreate: React.FC<{}> = () => {
     );
   }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
 
-  if (regionsLoading || !regionsData || versionsLoading || typesLoading) {
+  if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
   }
 
-  if (regionsError || versionsError || typesError) {
+  if (regionsError || enginesError || typesError) {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
@@ -494,7 +499,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             Set Number of Nodes{' '}
           </Typography>
           <Typography style={{ marginBottom: 8 }}>
-            We recommend 3 nodes in a database cluster to avoid downtime during
+            We recommend 3 nodes in a Database Cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
@@ -529,10 +534,10 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Grid item xs={12} md={8}>
             <Notice success className={classes.notice}>
               <strong>
-                Notice: There is no charge for database clusters during beta.
+                Notice: There is no charge for Database Clusters during beta.
               </strong>{' '}
-              You will be notified before the beta period ends and database
-              clusters are subject to charges.{' '}
+              You will be notified before the beta period ends and Database
+              Clusters are subject to charges.{' '}
               <Link to="https://www.linode.com/pricing/">View pricing.</Link>
             </Notice>
           </Grid>
