@@ -1,7 +1,6 @@
 import { Database } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useLocation } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -10,7 +9,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Typography from 'src/components/core/Typography';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -80,15 +78,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   database: Database;
+  description?: JSX.Element;
 }
 
 export const AccessControls: React.FC<Props> = (props) => {
   const {
     database: { id, engine, allow_list: allowList },
+    description,
   } = props;
 
   const classes = useStyles();
-  const location = useLocation();
 
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
@@ -119,36 +118,6 @@ export const AccessControls: React.FC<Props> = (props) => {
       setExtendedIPs([]);
     }
   }, [allowList]);
-
-  const getCopy = (url: string) => {
-    if (url.includes('/settings')) {
-      // Copy for `/settings`
-      return (
-        <Typography>
-          Add or remove IPv4 addresses or ranges that should be authorized to
-          access your cluster.
-        </Typography>
-      );
-    } else {
-      // Copy for `/summary`
-      return (
-        <>
-          <Typography>
-            Add IPv4 addresses or ranges that should be authorized to access
-            this cluster. All other public and private connections are denied.{' '}
-            <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
-              Learn more
-            </Link>
-            .
-          </Typography>
-          <Typography style={{ marginTop: 12 }}>
-            You can add or modify access controls after your Database Cluster is
-            active.
-          </Typography>
-        </>
-      );
-    }
-  };
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
@@ -225,9 +194,7 @@ export const AccessControls: React.FC<Props> = (props) => {
           <div className={classes.sectionTitle}>
             <Typography variant="h3">Access Controls</Typography>
           </div>
-          <div className={classes.sectionText}>
-            <Typography>{getCopy(location.pathname)}</Typography>
-          </div>
+          <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <AddNewLink
           label="Manage Access Controls"
@@ -245,7 +212,7 @@ export const AccessControls: React.FC<Props> = (props) => {
         {error ? <Notice error text={error} /> : null}
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
-          Database Cluster. This action cannot be undone, but you can re-enable
+          database cluster. This action cannot be undone, but you can re-enable
           access by clicking Manage Access Controls and adding the same IP
           address.
         </Typography>

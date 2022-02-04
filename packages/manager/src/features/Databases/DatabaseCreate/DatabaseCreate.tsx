@@ -497,7 +497,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             Set Number of Nodes{' '}
           </Typography>
           <Typography style={{ marginBottom: 8 }}>
-            We recommend 3 nodes in a Database Cluster to avoid downtime during
+            We recommend 3 nodes in a database cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
@@ -532,11 +532,11 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Grid item xs={12} md={8}>
             <Notice success className={classes.notice}>
               <strong>
-                Notice: There is no charge for Database Clusters during beta.
+                Notice: There is no charge for database clusters during beta.
               </strong>{' '}
-              You will be notified before the beta period ends and Database
-              Clusters are subject to charges.{' '}
-              <Link to="https://www.linode.com/pricing/">View pricing.</Link>
+              You will be notified before the beta period ends and database
+              clusters are subject to charges.{' '}
+              <Link to="https://www.linode.com/pricing/">View pricing</Link>.
             </Notice>
           </Grid>
         </Grid>
@@ -557,7 +557,8 @@ const DatabaseCreate: React.FC<{}> = () => {
             .
           </Typography>
           <Typography style={{ marginTop: 16 }}>
-            You can add or modify access controls after your Database is active.{' '}
+            You can add or modify access controls after your database cluster is
+            active.{' '}
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
