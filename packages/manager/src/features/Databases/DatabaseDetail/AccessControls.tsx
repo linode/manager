@@ -29,9 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   sectionTitleAndText: {
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
+    width: '100%',
   },
   sectionTitle: {
     marginBottom: '0.25rem',
@@ -54,11 +52,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   table: {
     width: '50%',
     border: `solid 1px ${theme.cmrBorderColors.borderTable}`,
-    '&:last-child': {
-      borderBottom: 'none',
-    },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
+    },
+  },
+  row: {
+    '&:last-of-type td': {
+      borderBottom: 'none',
     },
   },
   cell: {
@@ -137,11 +137,12 @@ export const AccessControls: React.FC<Props> = (props) => {
             Add IPv4 addresses or ranges that should be authorized to access
             this cluster. All other public and private connections are denied.{' '}
             <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
-              Learn more.
+              Learn more
             </Link>
+            .
           </Typography>
           <Typography style={{ marginTop: 12 }}>
-            You can add or modify access controls after your database cluster is
+            You can add or modify access controls after your Database Cluster is
             active.
           </Typography>
         </>
@@ -182,7 +183,7 @@ export const AccessControls: React.FC<Props> = (props) => {
       <Table className={classes.table}>
         <TableBody>
           {accessControlsList.map((accessControl) => (
-            <TableRow key={`${accessControl}-row`}>
+            <TableRow key={`${accessControl}-row`} className={classes.row}>
               <TableCell
                 key={`${accessControl}-tablecell`}
                 className={classes.cell}
@@ -249,7 +250,7 @@ export const AccessControls: React.FC<Props> = (props) => {
         {error ? <Notice error text={error} /> : null}
         <Typography data-testid="ip-removal-confirmation-warning">
           IP {accessControlToBeRemoved} will lose all access to the data on this
-          database cluster. This action cannot be undone, but you can re-enable
+          Database Cluster. This action cannot be undone, but you can re-enable
           access by clicking Manage Access Controls and adding the same IP
           address.
         </Typography>
