@@ -1,4 +1,7 @@
+import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -6,12 +9,9 @@ import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
-import formatDate from 'src/utilities/formatDate';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
-import { useSnackbar } from 'notistack';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useHistory } from 'react-router-dom';
+import formatDate from 'src/utilities/formatDate';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -88,7 +88,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
         text="Restoring from a backup will erase all existing data on this cluster."
       />
       <Typography>
-        To confirm restoration, type the name of the database cluster (
+        To confirm restoration, type the name of the Database Cluster (
         <strong>{database.label}</strong>) in the field below.
       </Typography>
       <TextField
