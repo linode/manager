@@ -1,11 +1,11 @@
+import { Engine } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { Engine } from '@linode/api-v4/lib/databases';
-import { useDatabaseCredentialsMutation } from 'src/queries/databases';
 import Notice from 'src/components/Notice';
+import { useDatabaseCredentialsMutation } from 'src/queries/databases';
 
 interface Props {
   open: boolean;
@@ -37,7 +37,7 @@ const renderActions = (
         data-testid="dialog-confrim"
         loading={loading}
       >
-        Reset Password
+        Reset Root Password
       </Button>
     </ActionsPanel>
   );
@@ -65,8 +65,8 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
     >
       {error ? <Notice error>{error[0].reason}</Notice> : undefined}
       <Typography>
-        After resetting your Root Password, you can view your new password on
-        the Database Cluster Summary page.
+        After resetting your root password, you can view your new password on
+        the Database Cluster summary page.
       </Typography>
     </ConfirmationDialog>
   );
