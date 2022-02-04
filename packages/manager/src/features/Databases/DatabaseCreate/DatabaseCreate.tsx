@@ -1,9 +1,9 @@
 import {
   ClusterSize,
   CreateDatabasePayload,
-  DatabaseType,
-  DatabasePriceObject,
   DatabaseEngine,
+  DatabasePriceObject,
+  DatabaseType,
   Engine,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
@@ -42,16 +42,19 @@ import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel'
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   useCreateDatabaseMutation,
-  useDatabaseTypesQuery,
   useDatabaseEnginesQuery,
+  useDatabaseTypesQuery,
 } from 'src/queries/databases';
 import { useRegionsQuery } from 'src/queries/regions';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
-import { validateIPs, ExtendedIP } from 'src/utilities/ipUtils';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { ipFieldPlaceholder } from 'src/utilities/ipUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
+import {
+  ExtendedIP,
+  ipFieldPlaceholder,
+  validateIPs,
+} from 'src/utilities/ipUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -496,7 +499,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             Set Number of Nodes{' '}
           </Typography>
           <Typography style={{ marginBottom: 8 }}>
-            We recommend 3 nodes in a database cluster to avoid downtime during
+            We recommend 3 nodes in a Database Cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
@@ -531,10 +534,10 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Grid item xs={12} md={8}>
             <Notice success className={classes.notice}>
               <strong>
-                Notice: There is no charge for database clusters during beta.
+                Notice: There is no charge for Database Clusters during beta.
               </strong>{' '}
-              You will be notified before the beta period ends and database
-              clusters are subject to charges.{' '}
+              You will be notified before the beta period ends and Database
+              Clusters are subject to charges.{' '}
               <Link to="https://www.linode.com/pricing/">View pricing.</Link>
             </Notice>
           </Grid>

@@ -10,6 +10,7 @@ import {
   getEngineDatabase,
   restoreWithBackup,
   updateDatabase,
+  resetDatabaseCredentials,
 } from '@linode/api-v4/lib/databases';
 import {
   CreateDatabasePayload,
@@ -148,6 +149,14 @@ export const useDatabaseCredentialsQuery = (
     () => getDatabaseCredentials(engine, id),
     { ...queryPresets.oneTimeFetch, enabled }
   );
+
+export const useDatabaseCredentialsMutation = (engine: Engine, id: number) =>
+  useMutation<{}, APIError[]>(() => resetDatabaseCredentials(engine, id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([`${queryKey}-credentials`, id]);
+      queryClient.removeQueries([`${queryKey}-credentials`, id]);
+    },
+  });
 
 export const useRestoreFromBackupMutation = (
   engine: Engine,

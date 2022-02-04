@@ -1,15 +1,15 @@
-import * as React from 'react';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { Engine } from '@linode/api-v4/lib/databases';
-import { useDeleteDatabaseMutation } from 'src/queries/databases';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useSnackbar } from 'notistack';
-import Notice from 'src/components/Notice';
-import Typography from 'src/components/core/Typography';
-import TextField from 'src/components/TextField';
+import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { useHistory } from 'react-router-dom';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
+import { useDeleteDatabaseMutation } from 'src/queries/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;
@@ -54,7 +54,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
     databaseEngine,
     databaseID
   );
-  const defaultError = 'There was an error deleting this database cluster';
+  const defaultError = 'There was an error deleting this Database Cluster.';
   const [error, setError] = React.useState('');
   const [confirmText, setConfirmText] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
@@ -66,7 +66,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
     deleteDatabase()
       .then(() => {
         setIsLoading(false);
-        enqueueSnackbar('Database Cluster deleted successfully', {
+        enqueueSnackbar('Database Cluster deleted successfully.', {
           variant: 'success',
         });
         onClose();
@@ -88,13 +88,13 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
     >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
-          <strong>Warning</strong>: Deleting your entire database will delete a
+          <strong>Warning</strong>: Deleting your entire database will delete
           any backups and nodes associated with database {databaseLabel}, which
           may result in permanent data loss. This action cannot be undone.
         </Typography>
       </Notice>
       <Typography style={{ marginTop: '10px' }}>
-        To confirm deletion, type the name of the database cluster (
+        To confirm deletion, type the name of the Database Cluster (
         <b>{databaseLabel}</b>) in the field below:
       </Typography>
       <TextField
