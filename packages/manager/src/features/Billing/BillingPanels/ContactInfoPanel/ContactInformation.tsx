@@ -131,8 +131,8 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
 
   // Finding the country from the countryData JSON
   const countryName = countryData?.find(
-    (_country) => _country.countryShortCode === country ?? null
-  );
+    (_country) => _country.countryShortCode === country
+  )?.countryName;
 
   return (
     <Grid item xs={12} md={6}>
@@ -200,9 +200,7 @@ const ContactInformation: React.FC<CombinedProps> = (props) => {
                 {city}
                 {city && state && ','} {state} {zip}
               </Typography>
-              <Typography className={classes.section}>
-                {countryName?.countryName}
-              </Typography>
+              <Typography className={classes.section}>{countryName}</Typography>
             </Grid>
           )}
 
