@@ -28,12 +28,12 @@ const TaxCollectionBanner: React.FC<{}> = () => {
     'tax-collection-banner'
   );
 
-  if (!account || hasDismissedBanner) {
-    return null;
-  }
-
   const bannerDate = flags.taxCollectionBanner?.date ?? '';
   const bannerHasAction = flags.taxCollectionBanner?.action ?? false;
+
+  if (!account || hasDismissedBanner || !bannerDate) {
+    return null;
+  }
 
   return (
     <Notice warning important dismissible onClose={handleDismiss}>
