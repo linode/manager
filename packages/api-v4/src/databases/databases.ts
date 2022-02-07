@@ -1,6 +1,5 @@
 import {
   createDatabaseSchema,
-  resetPasswordSchema,
   updateDatabaseSchema,
 } from '@linode/validation/lib/databases.schema';
 import { BETA_API_ROOT as API_ROOT } from 'src/constants';
@@ -15,102 +14,143 @@ import { ResourcePage as Page } from '../types';
 import {
   CreateDatabasePayload,
   Database,
+  DatabaseInstance,
   DatabaseBackup,
-  DatabaseConnection,
+  DatabaseCredentials,
   DatabaseType,
+  DatabaseEngine,
+  Engine,
+  SSLFields,
   UpdateDatabasePayload,
+  UpdateDatabaseResponse,
 } from './types';
 
 /**
  * getDatabases
  *
- * Return a paginated list of managed databases on this account.
+ * Return a paginated list of databases on this account.
  *
  */
 export const getDatabases = (params?: any, filters?: any) =>
-  Request<Page<Database>>(
-    setURL(`${API_ROOT}/databases/mysql/instances`),
+  Request<Page<DatabaseInstance>>(
+    setURL(`${API_ROOT}/databases/instances`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
   );
 
 /**
- * getDatabase
+ * getDatabaseTypes
  *
- * Return detailed information about a single database
- *
- */
-export const getDatabase = (databaseID: number) =>
-  Request<Database>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
-    setMethod('GET')
-  );
-
-/**
- * getDatabaseConnection
- *
- * Return connection information (host and port) for a database
+ * Return a paginated list of available plans/types for databases
  *
  */
-export const getDatabaseConnection = (databaseID: number) =>
-  Request<DatabaseConnection>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/connection`),
-    setMethod('GET')
-  );
-
-/**
- * getDatabaseBackups
- *
- * Return backups information for a database
- *
- */
-export const getDatabaseBackups = (databaseID: number) =>
-  Request<Page<DatabaseBackup>>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/backups`),
-    setMethod('GET')
-  );
-
-/**
- * getMySQLTypes
- *
- * Return a paginated list of available plans/types for MySQL databases
- *
- */
-export const getMySQLTypes = (params?: any, filters?: any) =>
+export const getDatabaseTypes = (params?: any, filters?: any) =>
   Request<Page<DatabaseType>>(
-    setURL(`${API_ROOT}/databases/mysql/types`),
+    setURL(`${API_ROOT}/databases/types`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
+  );
+
+/**
+ * getDatabaseType
+ *
+ * Return information for a single database type
+ *
+ */
+export const getDatabaseType = (typeSlug: string) =>
+  Request<DatabaseType>(
+    setURL(`${API_ROOT}/databases/types/${typeSlug}`),
+    setMethod('GET')
+  );
+
+/**
+ * getVersions
+ *
+ * Return information on available versions per engine that we offer
+ *
+ */
+export const getDatabaseEngines = (params?: any, filters?: any) =>
+  Request<Page<DatabaseEngine>>(
+    setURL(`${API_ROOT}/databases/engines`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
+  );
+
+/**
+ * getVersion
+ *
+ * Return information on a specified version
+ *
+ */
+export const getDatabaseEngine = (engineSlug: string) =>
+  Request<DatabaseEngine>(
+    setURL(`${API_ROOT}/databases/engines/${engineSlug}`),
+    setMethod('GET')
   );
 
 /**
  * createDatabase
  *
- * Create a new MySQL database in the specified region.
+ * Create a new database in the specified region.
  *
  */
-export const createDatabase = (data: CreateDatabasePayload) =>
+export const createDatabase = (
+  engine: Engine = 'mysql',
+  data: CreateDatabasePayload
+) =>
   Request<Database>(
-    setURL(`${API_ROOT}/databases/mysql/instances`),
+    setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('POST'),
     setData(data, createDatabaseSchema)
   );
 
 /**
+ * getEngineDatabases
+ *
+ * Return a paginated list of active engine-specific (e.g. MySQL) databases belonging to user
+ *
+ */
+export const getEngineDatabases = (
+  engine: Engine,
+  params?: any,
+  filters?: any
+) =>
+  Request<Page<Database>>(
+    setURL(`${API_ROOT}/databases/${engine}/instances`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
+  );
+
+/**
+ * getEngineDatabase
+ *
+ * Return details for a single specified active database
+ *
+ */
+export const getEngineDatabase = (engine: Engine, databaseID: number) =>
+  Request<Database>(
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
+    setMethod('GET')
+  );
+
+/**
  * updateDatabase
  *
- * Update the label, tags, or maintenance schedule of an
+ * Update the label or allowed IPs of an
  * existing database
  *
  */
 export const updateDatabase = (
+  engine: Engine,
   databaseID: number,
   data: UpdateDatabasePayload
 ) =>
-  Request<Database>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
+  Request<UpdateDatabaseResponse>(
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
     setMethod('PUT'),
     setData(data, updateDatabaseSchema)
   );
@@ -120,20 +160,100 @@ export const updateDatabase = (
  *
  * Delete a single database
  */
-export const deleteDatabase = (databaseID: number) =>
+export const deleteDatabase = (engine: Engine, databaseID: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}`),
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}`),
     setMethod('DELETE')
   );
 
 /**
- * resetDatabasePassword
+ * getDatabaseBackups
  *
- * Resets the root password for a database
+ * Return backups information for a database
+ *
  */
-export const resetPassword = (databaseID: number, root_password: string) =>
+export const getDatabaseBackups = (
+  engine: Engine,
+  databaseID: number,
+  params?: any,
+  filters?: any
+) =>
+  Request<Page<DatabaseBackup>>(
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters)
+  );
+
+/**
+ * getDatabaseBackups
+ *
+ * Return details for a specific database backup
+ *
+ */
+export const getDatabaseBackup = (
+  engine: Engine,
+  databaseID: number,
+  backupID: number
+) =>
+  Request<DatabaseBackup>(
+    setURL(
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * restoreWithBackup
+ *
+ * Fully restore a backup to the cluster
+ */
+export const restoreWithBackup = (
+  engine: Engine,
+  databaseID: number,
+  backupID: number
+) =>
   Request<{}>(
-    setURL(`${API_ROOT}/databases/mysql/instances/${databaseID}/password`),
-    setMethod('PUT'),
-    setData({ root_password }, resetPasswordSchema)
+    setURL(
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}/restore`
+    ),
+    setMethod('POST')
+  );
+
+/**
+ * getDatabaseCredentials
+ *
+ * Return credentials (root username and password) for a database
+ *
+ */
+export const getDatabaseCredentials = (engine: Engine, databaseID: number) =>
+  Request<DatabaseCredentials>(
+    setURL(
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/credentials`
+    ),
+    setMethod('GET')
+  );
+
+/**
+ * resetDatabaseCredentials
+ *
+ * Resets the root credentials for a database
+ */
+export const resetDatabaseCredentials = (engine: Engine, databaseID: number) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/credentials/reset`
+    ),
+    setMethod('POST')
+  );
+
+/**
+ * getSSLFields
+ *
+ * Retrieve the certificate and public key for a database instance
+ */
+export const getSSLFields = (engine: Engine, databaseID: number) =>
+  Request<SSLFields>(
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/ssl`),
+    setMethod('GET')
   );

@@ -31,6 +31,7 @@ import { MapState } from './store/types';
 import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
 import GoTo from './GoTo';
+import { databaseEventsHandler } from './queries/databases';
 
 interface Props {
   toggleTheme: () => void;
@@ -101,6 +102,13 @@ export class App extends React.Component<CombinedProps, State> {
         }
       }
     });
+
+    /*
+     * Send any Database events to the Database events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('database') && !event._initial)
+      .subscribe(databaseEventsHandler);
 
     /*
      * We want to listen for migration events side-wide

@@ -1,278 +1,125 @@
-import { Database } from '@linode/api-v4/lib/databases/types';
-import { groupBy, prop } from 'ramda';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import Chip from 'src/components/core/Chip';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DeletionDialog from 'src/components/DeletionDialog';
-import EntityTable from 'src/components/EntityTable';
+import Hidden from 'src/components/core/Hidden';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
-import TagDrawer, {
-  OpenTagDrawer,
-  TagDrawerProps,
-} from 'src/components/TagCell/TagDrawer';
-import { dbaasContext } from 'src/context';
-import useDatabases from 'src/hooks/useDatabases';
-import { useDialog } from 'src/hooks/useDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ActionHandlers as DatabaseHandlers } from './DatabaseActionMenu';
+import PaginationFooter from 'src/components/PaginationFooter';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableSortCell from 'src/components/TableSortCell';
 import DatabaseEmptyState from './DatabaseEmptyState';
-import DatabaseRow from './DatabaseRow';
+import { useHistory } from 'react-router-dom';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { useDatabasesQuery } from 'src/queries/databases';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { DatabaseRow } from './DatabaseRow';
+import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  chip: {
-    ...theme.applyStatusPillStyles,
-    marginRight: theme.spacing(3),
-    paddingTop: '0px !important',
-    paddingBottom: '0px !important',
-  },
-  chipActive: {
-    backgroundColor: theme.bg.chipActive,
-  },
-  chipRunning: {
-    '&:before': {
-      backgroundColor: theme.cmrIconColors.iGreen,
-    },
-  },
-  chipError: {
-    '&:before': {
-      backgroundColor: theme.cmrIconColors.iRed,
-    },
-  },
-  chipOffline: {
-    '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey,
-    },
-  },
-  chipPending: {
-    '&:before': {
-      backgroundColor: theme.cmrIconColors.iOrange,
-    },
-  },
-}));
+const preferenceKey = 'databases';
 
-const headers = [
-  {
-    label: 'Label',
-    dataColumn: 'label',
-    sortable: true,
-    widthPercent: 15,
-  },
-  {
-    label: 'Status',
-    dataColumn: 'status',
-    sortable: true,
-    widthPercent: 10,
-  },
-  // @todo Pending API work
-  // {
-  //   label: 'Region',
-  //   dataColumn: 'region',
-  //   sortable: true,
-  //   widthPercent: 10
-  // },
-  // {
-  //   label: 'Hostname',
-  //   dataColumn: 'hostname',
-  //   sortable: true,
-  //   widthPercent: 15,
-  //   hideOnMobile: true
-  // },
-  // {
-  //   label: 'Port',
-  //   dataColumn: 'port',
-  //   sortable: true,
-  //   widthPercent: 5,
-  //   hideOnMobile: true
-  // },
-  // {
-  //   label: 'Last Backup',
-  //   dataColumn: 'backup',
-  //   sortable: true,
-  //   widthPercent: 10,
-  //   hideOnMobile: true
-  // },
-  {
-    label: 'Tags',
-    dataColumn: 'tags',
-    sortable: false,
-    widthPercent: 30,
-    hideOnMobile: true,
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 5,
-  },
-];
+const DatabaseLanding: React.FC = () => {
+  const history = useHistory();
+  const pagination = usePagination(1, preferenceKey);
 
-interface CombinedHandlers extends DatabaseHandlers {
-  openTagDrawer: OpenTagDrawer;
-}
-
-const DatabaseLanding: React.FC<{}> = (_) => {
-  const classes = useStyles();
-  const { databases, deleteDatabase, updateDatabase } = useDatabases();
-  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
-    deleteDatabase
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'desc',
+    },
+    `${preferenceKey}-order`
   );
 
-  const databaseData = Object.values(databases.itemsById ?? {});
-  const openCreateDialog = React.useContext(dbaasContext).open;
-
-  const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
-    open: false,
-    tags: [],
-    label: '',
-    entityID: 0,
-  });
-
-  const openTagDrawer: OpenTagDrawer = (
-    id: number,
-    label: string,
-    tags: string[]
-  ) =>
-    setTagDrawer({
-      open: true,
-      tags,
-      label,
-      entityID: id,
-    });
-
-  const closeTagDrawer = () => {
-    setTagDrawer({ ...tagDrawer, open: false });
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
   };
 
-  const addTag = (databaseID: number, newTag: string) => {
-    const _tags = [...tagDrawer.tags, newTag];
-    return updateDatabase(databaseID, { tags: _tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags: _tags });
-    });
-  };
+  const { data, error, isLoading } = useDatabasesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
 
-  const deleteTag = (databaseID: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
-    return updateDatabase(databaseID, { tags: _tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags: _tags });
-    });
-  };
-
-  const counts = getChipCounts(databaseData);
-
-  const handlers: CombinedHandlers = {
-    triggerDeleteDatabase: openDialog,
-    openTagDrawer,
-  };
-
-  const _DatabaseRow = {
-    Component: DatabaseRow,
-    handlers,
-    data: databaseData,
-    loading: databases.loading,
-    lastUpdated: databases.lastUpdated,
-    error: databases.error.read,
-  };
-
-  if (databases.error.read) {
-    const message = getAPIErrorOrDefault(
-      databases.error.read,
-      'Error loading your databases.'
-    )[0].reason;
-    return <ErrorState errorText={message} />;
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your databases.')[0].reason
+        }
+      />
+    );
   }
 
-  if (databases.loading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (databaseData.length === 0) {
-    return <DatabaseEmptyState openAddDatabaseDrawer={openCreateDialog} />;
+  if (data?.results === 0) {
+    return <DatabaseEmptyState />;
   }
-
-  const { ready, error, initializing, unknown } = counts;
-  const chips = (
-    <>
-      {ready.length !== 0 && (
-        <Chip
-          className={`${classes.chip} ${classes.chipRunning}`}
-          label={`${ready.length} READY`}
-        />
-      )}
-      {unknown.length !== 0 && (
-        <Chip
-          className={`${classes.chip} ${classes.chipOffline}`}
-          label={`${unknown.length} UNKNOWN`}
-        />
-      )}
-      {error.length !== 0 && (
-        <Chip
-          className={`${classes.chip} ${classes.chipError}`}
-          label={`${error.length} ERROR`}
-        />
-      )}
-      {initializing.length !== 0 && (
-        <Chip
-          className={`${classes.chip} ${classes.chipPending}`}
-          label={`${initializing.length} INITIALIZING`}
-        />
-      )}
-    </>
-  );
 
   return (
     <React.Fragment>
       <LandingHeader
-        title="Databases"
-        entity="Database"
-        docsLink="http://google.com"
-        body={chips}
+        title="Database Clusters"
+        createButtonText="Create Database Cluster"
+        createButtonWidth={205}
+        docsLink="https://www.linode.com/docs/products/databases/managed-databases/"
+        onAddNew={() => history.push('/databases/create')}
       />
-      <EntityTable
-        entity="databases"
-        row={_DatabaseRow}
-        headers={headers}
-        initialOrder={{ order: 'asc', orderBy: 'label' }}
-      />
-      <DeletionDialog
-        typeToConfirm
-        label={dialog.entityLabel ?? ''}
-        entity="database"
-        error={dialog.error}
-        open={dialog.isOpen}
-        loading={dialog.isLoading}
-        onClose={closeDialog}
-        onDelete={() => submitDialog(dialog.entityID)}
-      />
-      <TagDrawer
-        entityLabel={tagDrawer.label}
-        open={tagDrawer.open}
-        tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
-        onClose={closeTagDrawer}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              label="label"
+              handleClick={handleOrderChange}
+            >
+              Cluster Label
+            </TableSortCell>
+            <TableCell>Status</TableCell>
+            <Hidden xsDown>
+              <TableCell>Configuration</TableCell>
+            </Hidden>
+            <TableCell>Engine</TableCell>
+            <Hidden smDown>
+              <TableCell>Region</TableCell>
+            </Hidden>
+            <Hidden mdDown>
+              <TableSortCell
+                active={orderBy === 'created'}
+                direction={order}
+                label="created"
+                handleClick={handleOrderChange}
+              >
+                Created
+              </TableSortCell>
+            </Hidden>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data?.data.map((database: DatabaseInstance) => (
+            <DatabaseRow key={database.id} database={database} />
+          ))}
+        </TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Databases Table"
       />
     </React.Fragment>
   );
-};
-
-interface ChipCounts {
-  ready: Database[];
-  error: Database[];
-  unknown: Database[];
-  initializing: Database[];
-}
-
-export const getChipCounts = (databases: Database[]): ChipCounts => {
-  const groups = groupBy(prop('status'), databases);
-  return {
-    ready: groups.ready ?? [],
-    error: groups.error ?? [],
-    unknown: groups.unknown ?? [],
-    initializing: groups.initializing ?? [],
-  };
 };
 
 export default React.memo(DatabaseLanding);

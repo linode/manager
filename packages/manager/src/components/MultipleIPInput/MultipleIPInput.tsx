@@ -30,9 +30,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
   button: {
+    marginTop: 4,
+    marginLeft: -theme.spacing(),
     minWidth: 'auto',
     minHeight: 'auto',
-    marginLeft: -theme.spacing(),
     padding: 0,
     '& > span': {
       padding: 2,
@@ -70,6 +71,7 @@ export interface Props {
   inputProps?: InputBaseProps;
   className?: string;
   required?: boolean;
+  forDatabaseAccessControls?: boolean;
 }
 
 export const MultipleIPInput: React.FC<Props> = (props) => {
@@ -83,6 +85,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
     tooltip,
     placeholder,
     required,
+    forDatabaseAccessControls,
   } = props;
   const classes = useStyles();
 
@@ -156,7 +159,6 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
           container
           key={`domain-transfer-ip-${idx}`}
           direction="row"
-          alignItems="center"
           justifyContent="center"
           data-testid="domain-transfer-input"
         >
@@ -179,16 +181,16 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
               hideLabel
             />
           </Grid>
-          {/** Don't show the button for the first input since it won't do anything */}
+          {/** Don't show the button for the first input since it won't do anything, unless this component is used in DBaaS */}
           <Grid item xs={1}>
-            {idx > 0 && (
+            {idx > 0 || forDatabaseAccessControls ? (
               <Button
                 className={classes.button}
                 onClick={() => removeInput(idx)}
               >
                 <Close data-testid={`delete-ip-${idx}`} />
               </Button>
-            )}
+            ) : null}
           </Grid>
         </Grid>
       ))}

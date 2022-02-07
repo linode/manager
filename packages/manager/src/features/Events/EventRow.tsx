@@ -72,7 +72,13 @@ export interface RowProps {
   link?: string | (() => void);
   message?: string | void;
   status?: string;
-  type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
+  type:
+    | 'linode'
+    | 'domain'
+    | 'nodebalancer'
+    | 'stackscript'
+    | 'volume'
+    | 'database';
   created: string;
   username: string | null;
   duration: Event['duration'];
