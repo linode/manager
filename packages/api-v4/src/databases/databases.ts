@@ -18,7 +18,7 @@ import {
   DatabaseBackup,
   DatabaseCredentials,
   DatabaseType,
-  DatabaseVersion,
+  DatabaseEngine,
   Engine,
   SSLFields,
   UpdateDatabasePayload,
@@ -71,9 +71,9 @@ export const getDatabaseType = (typeSlug: string) =>
  * Return information on available versions per engine that we offer
  *
  */
-export const getDatabaseVersions = (params?: any, filters?: any) =>
-  Request<Page<DatabaseVersion>>(
-    setURL(`${API_ROOT}/databases/versions`),
+export const getDatabaseEngines = (params?: any, filters?: any) =>
+  Request<Page<DatabaseEngine>>(
+    setURL(`${API_ROOT}/databases/engines`),
     setMethod('GET'),
     setParams(params),
     setXFilter(filters)
@@ -85,9 +85,9 @@ export const getDatabaseVersions = (params?: any, filters?: any) =>
  * Return information on a specified version
  *
  */
-export const getDatabaseVersion = (versionSlug: string) =>
-  Request<DatabaseVersion>(
-    setURL(`${API_ROOT}/databases/versions/${versionSlug}`),
+export const getDatabaseEngine = (engineSlug: string) =>
+  Request<DatabaseEngine>(
+    setURL(`${API_ROOT}/databases/engines/${engineSlug}`),
     setMethod('GET')
   );
 

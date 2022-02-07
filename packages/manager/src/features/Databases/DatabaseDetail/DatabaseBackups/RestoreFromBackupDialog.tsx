@@ -88,7 +88,7 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
         text="Restoring from a backup will erase all existing data on this cluster."
       />
       <Typography>
-        To confirm restoration, type the name of the Database Cluster (
+        To confirm restoration, type the name of the database cluster (
         <strong>{database.label}</strong>) in the field below.
       </Typography>
       <TextField
