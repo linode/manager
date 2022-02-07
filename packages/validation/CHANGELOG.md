@@ -1,4 +1,4 @@
-## [2022-02-01] - v0.8.0
+## [2022-02-07] - v0.8.0
 ### Changed:
 - createDatabaseSchema and updateDatabaseSchema
 

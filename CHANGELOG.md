@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2022-02-01] - v1.59.0
+## [2022-02-07] - v1.59.0
 
 ### Added:
 
@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Ability to link Databases and Firewalls to Support Tickets
 - GitHub workflows documentation
 - Tax collection banner
+
+### Changed:
+
+- Un-exclude Armed Forced regions from billing region dropdown
 
 ### Fixed:
 
