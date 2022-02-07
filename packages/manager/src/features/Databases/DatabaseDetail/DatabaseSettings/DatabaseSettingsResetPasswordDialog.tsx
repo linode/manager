@@ -66,7 +66,7 @@ export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
       {error ? <Notice error>{error[0].reason}</Notice> : undefined}
       <Typography>
         After resetting your root password, you can view your new password on
-        the Database Cluster summary page.
+        the database cluster summary page.
       </Typography>
     </ConfirmationDialog>
   );

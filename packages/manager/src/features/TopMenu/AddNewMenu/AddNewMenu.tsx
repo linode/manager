@@ -199,20 +199,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={VolumeIcon}
                     />
                   </MenuLink>
-                  {showDatabases ? (
-                    <MenuLink
-                      as={Link}
-                      to="/databases/create"
-                      className={classes.menuItemLink}
-                    >
-                      <AddNewMenuItem
-                        title="Database"
-                        body="High-performance managed Database Clusters"
-                        ItemIcon={DatabaseIcon}
-                        attr={{ 'data-qa-database-add-new': true }}
-                      />
-                    </MenuLink>
-                  ) : null}
                   <MenuLink
                     as={Link}
                     to="/nodebalancers/create"
@@ -248,6 +234,20 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={DomainIcon}
                     />
                   </MenuLink>
+                  {showDatabases ? (
+                    <MenuLink
+                      as={Link}
+                      to="/databases/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Database"
+                        body="High-performance managed database clusters"
+                        ItemIcon={DatabaseIcon}
+                        attr={{ 'data-qa-database-add-new': true }}
+                      />
+                    </MenuLink>
+                  ) : null}
                   <MenuLink
                     as={Link}
                     to="/kubernetes/create"

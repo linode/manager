@@ -248,6 +248,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const handleIPValidation = () => {
     const validatedIps = validateIPs(values.allow_list, {
+      allowEmptyAddress: true,
       errorMessage: 'Must be a valid IPv4 address',
     });
 
@@ -273,9 +274,17 @@ const DatabaseCreate: React.FC<{}> = () => {
 
     setCreateError(undefined);
     setSubmitting(true);
+
+    const _allow_list = values.allow_list.reduce((accum, ip) => {
+      if (ip.address !== '') {
+        return [...accum, ip.address];
+      }
+      return accum;
+    }, []);
+
     const createPayload: CreateDatabasePayload = {
       ...values,
-      allow_list: values.allow_list.map((ip) => ip.address),
+      allow_list: _allow_list,
     };
 
     try {
@@ -499,7 +508,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             Set Number of Nodes{' '}
           </Typography>
           <Typography style={{ marginBottom: 8 }}>
-            We recommend 3 nodes in a Database Cluster to avoid downtime during
+            We recommend 3 nodes in a database cluster to avoid downtime during
             upgrades and maintenance.
           </Typography>
           <FormControl
@@ -534,11 +543,11 @@ const DatabaseCreate: React.FC<{}> = () => {
           <Grid item xs={12} md={8}>
             <Notice success className={classes.notice}>
               <strong>
-                Notice: There is no charge for Database Clusters during beta.
+                Notice: There is no charge for database clusters during beta.
               </strong>{' '}
-              You will be notified before the beta period ends and Database
-              Clusters are subject to charges.{' '}
-              <Link to="https://www.linode.com/pricing/">View pricing.</Link>
+              You will be notified before the beta period ends and database
+              clusters are subject to charges.{' '}
+              <Link to="https://www.linode.com/pricing/">View pricing</Link>.
             </Notice>
           </Grid>
         </Grid>
@@ -548,14 +557,19 @@ const DatabaseCreate: React.FC<{}> = () => {
             Add Access Controls
           </Typography>
           <Typography>
-            Add at least one IPv4 address or range that should be authorized to
-            view this cluster’s database.
+            Add any IPv4 address or range that should be authorized to access
+            this cluster.
           </Typography>
           <Typography>
             By default, all public and private connections are denied.{' '}
             <Link to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
-              Learn more.
+              Learn more
             </Link>
+            .
+          </Typography>
+          <Typography style={{ marginTop: 16 }}>
+            You can add or modify access controls after your database cluster is
+            active.{' '}
           </Typography>
           <Grid style={{ marginTop: 24, maxWidth: 450 }}>
             {ipErrorsFromAPI
@@ -569,7 +583,6 @@ const DatabaseCreate: React.FC<{}> = () => {
               ips={values.allow_list}
               onChange={(address) => setFieldValue('allow_list', address)}
               onBlur={handleIPBlur}
-              required
             />
           </Grid>
         </Grid>
