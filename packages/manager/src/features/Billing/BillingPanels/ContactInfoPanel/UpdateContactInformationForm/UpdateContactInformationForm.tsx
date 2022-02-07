@@ -85,14 +85,7 @@ const L = {
   },
 };
 
-const excludedUSRegions = [
-  'Micronesia',
-  'Marshall Islands',
-  'Palau',
-  'Armed Forces Americas',
-  'Armed Forces Europe, Canada, Africa and Middle East',
-  'Armed Forces Pacific',
-];
+const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
 class UpdateContactInformationForm extends React.Component<
   CombinedProps,
