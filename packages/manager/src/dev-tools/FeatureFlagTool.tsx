@@ -9,9 +9,6 @@ import Grid from 'src/components/core/Grid';
 
 const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Databases', flag: 'databases' },
-  { label: 'Region Dropdown', flag: 'regionDropdown' },
-  { label: 'Tax Collection Pt1', flag: 'taxCollectionPart1' },
-  { label: 'Tax Collection Pt2', flag: 'taxCollectionPart2' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {

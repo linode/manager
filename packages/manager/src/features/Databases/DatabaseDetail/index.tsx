@@ -6,7 +6,6 @@ import Tabs from 'src/components/core/ReachTabs';
 import ErrorState from 'src/components/ErrorState';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
-import useFlags from 'src/hooks/useFlags';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useDatabaseQuery, useDatabaseTypesQuery } from 'src/queries/databases';
@@ -18,7 +17,6 @@ const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
 export const DatabaseDetail: React.FC = () => {
-  const flags = useFlags();
   const history = useHistory();
 
   const { databaseId, engine } = useParams<{
@@ -45,7 +43,7 @@ export const DatabaseDetail: React.FC = () => {
     return <CircleProgress />;
   }
 
-  if (!database || !flags.databases) {
+  if (!database) {
     return null;
   }
 

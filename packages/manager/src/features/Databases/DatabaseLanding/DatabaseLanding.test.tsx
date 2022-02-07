@@ -1,18 +1,18 @@
-import * as React from 'react';
-import formatDate from 'src/utilities/formatDate';
-import DatabaseRow from './DatabaseRow';
-import DatabaseLanding from './DatabaseLanding';
 import { waitForElementToBeRemoved } from '@testing-library/react';
-import { databaseInstanceFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
 import { DateTime } from 'luxon';
+import * as React from 'react';
+import { QueryClient } from 'react-query';
+import { databaseInstanceFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import formatDate from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
   renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
+import DatabaseLanding from './DatabaseLanding';
+import DatabaseRow from './DatabaseRow';
 
 const queryClient = new QueryClient();
 
@@ -102,7 +102,7 @@ describe('Database Table', () => {
 
     expect(
       getByText(
-        'Fully managed and highly scalable database clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
+        'Fully managed and highly scalable Database Clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
       )
     ).toBeInTheDocument();
   });
