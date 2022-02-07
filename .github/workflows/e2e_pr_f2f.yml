@@ -1,14 +1,13 @@
 name: Run End-to-End Tests
 concurrency: UI_TESTS
 env:
-
   # OAuth tokens for up to 8 test users.
   #
   # At least one of these must be defined. If more than one OAuth token is
   # specified, the additional test users are used to parallelize Cypress.
   #
   # For more information, see:
-  # https://docs.cypress.io/guides/continuous-integration/github-actions#Worker-Jobs
+  # - https://docs.cypress.io/guides/continuous-integration/github-actions#Worker-Jobs
   USER_1: ${{ secrets.USER_1 }}
   USER_2: ${{ secrets.USER_2 }}
   USER_3: ${{ secrets.USER_3 }}
@@ -27,6 +26,14 @@ env:
   CLIENT_ID: ${{ secrets.REACT_APP_CLIENT_ID }}
 on:
   pull_request_target:
+  schedule:
+    # 1:00 PM UTC (8:00 AM ET)
+    - cron: "0 13 * * 1-5"
+  push:
+    branches:
+      - develop
+      - staging
+      - master
 
 jobs:
 
@@ -51,6 +58,8 @@ jobs:
           COUNT=0
           PARALLELIZE=false
           LIST=
+          RECORD=false
+          # Construct JSON array.
           for ((ITER=1;ITER<=MAX_USERS;ITER++)); do
             OAUTH_VAR="USER_$ITER"
             OAUTH="${!OAUTH_VAR}"
@@ -71,13 +80,12 @@ jobs:
           fi
           # Determine whether or not to record Cypress run.
           if [ ! -z "${CYPRESS_RECORD_KEY}" ]; then
-            echo ::set-output name=record::true
-          else
-            echo ::set-output name=record::false
+            RECORD=true
           fi
           # Use GitHub Actions expression to set output.
           echo ::set-output name=matrix::{\"user\": [$LIST]}
           echo ::set-output name=parallelize::$PARALLELIZE
+          echo ::set-output name=record::$RECORD
 
     outputs:
       # Matrix of test users for Cypress parallelization.
@@ -100,9 +108,17 @@ jobs:
       fail-fast: false
       matrix: "${{ fromJson(needs.generate_users_matrix.outputs.matrix) }}"
     steps:
+
+      # If workflow was triggered via PR, checkout pull request branch.
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+        if: ${{ env.GITHUB_EVENT_NAME == 'pull_request_target' }}
+
+      # If workflow was triggered via push, checkout affected branch. Otherwise,
+      # checkout default branch.
+      - uses: actions/checkout@v2
+        if: ${{ env.GITHUB_EVENT_NAME != 'pull_request_target' }}
 
       - uses: actions/setup-node@v1
         with:
@@ -118,7 +134,6 @@ jobs:
 
       - run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
-      # Configure environment variables.
       - run: |
           echo "CYPRESS_RECORD_KEY=${{ secrets.CYPRESS_RECORD_KEY }}" >> $GITHUB_ENV
           echo "GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}" >> $GITHUB_ENV
@@ -130,7 +145,6 @@ jobs:
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           yarn up &
 
-      # Run Cypress
       - name: Run tests
         uses: cypress-io/github-action@v2
         with:
