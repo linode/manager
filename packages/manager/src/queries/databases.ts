@@ -178,9 +178,10 @@ export const databaseEventsHandler = (event: Event) => {
     case 'database_create':
       switch (status) {
         case 'failed':
-          updateStoreForDatabase(entity!.id, { status: 'failed' });
         case 'finished':
-          updateStoreForDatabase(entity!.id, { status: 'active' });
+          // Database status will change from `provisioning` to `active` (or `failed`) and
+          // the host fields will populate. We need to refetch to get the hostnames.
+          queryClient.invalidateQueries([queryKey, entity!.id]);
         case 'notification':
           // In this case, the API let us know the user initialized a Database create event.
           // We use this logic for the case a user created a Database from outside Cloud Manager,
