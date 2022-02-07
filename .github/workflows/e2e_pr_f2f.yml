@@ -20,7 +20,7 @@ env:
 
   # Cypress record key.
   #
-  # Optional, but Cypress runs cannot be recorded if unspecified.
+  # Optional, but required in order to record Cypress runs.
   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
   # Cloud Manager app client ID.
@@ -38,8 +38,8 @@ jobs:
   # users being used by Cypress dynamically according to the presence of the
   # corresponding secrets.
   #
-  # This is particularly useful when running workflows locally, where you may
-  # not be able to supply more than one test user.
+  # This is useful when running workflows in an environment where you may not
+  # be able to supply more than one test user.
   generate_users_matrix:
     name: Generate Cypress user matrix
     runs-on: ubuntu-latest
@@ -140,7 +140,5 @@ jobs:
           install: false
           browser: chrome
           headless: true
-          # Only record if Cypress record key is provided.
           record: ${{ needs.generate_users_matrix.outputs.record }}
-          # Only parallelize if more than one test users is provided.
           parallel: ${{ needs.generate_users_matrix.outputs.parallelize }}
