@@ -7,7 +7,7 @@ import {
   DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
-  DatabaseVersion,
+  DatabaseEngine,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 
@@ -31,23 +31,27 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   id: Factory.each((i) => `g6-standard-${i}`),
   label: Factory.each((i) => `Linode ${i} GB`),
   class: 'standard',
-  price: {
-    hourly: 0.4,
-    monthly: 60,
-  },
+  cluster_size: [
+    {
+      quantity: 1,
+      price: {
+        hourly: 0.4,
+        monthly: 60,
+      },
+    },
+    {
+      quantity: 3,
+      price: {
+        hourly: 0.3,
+        monthly: 90,
+      },
+    },
+  ],
   memory: 2048,
   transfer: 30,
   disk: 20480,
   vcpus: 2,
   deprecated: false,
-  addons: {
-    failover: {
-      price: {
-        monthly: 80,
-        hourly: 0.6,
-      },
-    },
-  },
 });
 
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
@@ -59,7 +63,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
     region: 'us-east',
     version: '5.8.13',
     status: Factory.each(() => pickRandom(possibleStatuses)),
-    failover_count: Factory.each(() => pickRandom([0, 2])),
+    cluster_size: Factory.each(() => pickRandom([1, 3])),
     hosts: {
       primary: 'db-mysql-primary-0.b.linodeb.net',
       secondary: 'db-mysql-secondary-0.b.linodeb.net',
@@ -77,7 +81,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   status: pickRandom(possibleStatuses),
   type: 'g6-standard-0',
   version: '5.8.13',
-  failover_count: 2,
+  cluster_size: Factory.each(() => pickRandom([1, 3])),
   engine: 'mysql',
   encrypted: false,
   ipv4_public: pickRandom(IPv4List),
@@ -106,11 +110,9 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   created: Factory.each(() => randomDate().toISOString()),
 });
 
-export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
-  {
-    id: Factory.each((i) => `mysql/${i}`),
-    engine: 'mysql',
-    version: Factory.each((i) => `${i}`),
-    deprecated: false,
-  }
-);
+export const databaseEngineFactory = Factory.Sync.makeFactory<DatabaseEngine>({
+  id: Factory.each((i) => `mysql/${i}`),
+  engine: 'mysql',
+  version: Factory.each((i) => `${i}`),
+  deprecated: false,
+});
