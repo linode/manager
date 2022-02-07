@@ -1,4 +1,4 @@
-## [2022-02-01] - v0.66.0
+## [2022-02-07] - v0.66.0
 
 ### Added:
 - Types and methods for Databases
