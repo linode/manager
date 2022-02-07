@@ -113,12 +113,12 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-        if: ${{ env.GITHUB_EVENT_NAME == 'pull_request_target' }}
+        if: ${{ env.GITHUB_EVENT_NAME == 'pull_request' }}
 
       # If workflow was triggered via push, checkout affected branch. Otherwise,
       # checkout default branch.
       - uses: actions/checkout@v2
-        if: ${{ env.GITHUB_EVENT_NAME != 'pull_request_target' }}
+        if: ${{ env.GITHUB_EVENT_NAME != 'pull_request' }}
 
       - uses: actions/setup-node@v1
         with:
