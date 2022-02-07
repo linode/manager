@@ -109,6 +109,9 @@ jobs:
       matrix: "${{ fromJson(needs.generate_users_matrix.outputs.matrix) }}"
     steps:
 
+      - run: echo "event name is:" ${{ github.event_name }}
+      - run: echo "event type is:" ${{ github.event.action }}
+
       # If workflow was triggered via PR, checkout pull request branch.
       - uses: actions/checkout@v2
         with:
