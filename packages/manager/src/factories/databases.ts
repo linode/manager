@@ -7,7 +7,7 @@ import {
   DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
-  DatabaseVersion,
+  DatabaseEngine,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 
@@ -110,11 +110,9 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
   created: Factory.each(() => randomDate().toISOString()),
 });
 
-export const databaseVersionFactory = Factory.Sync.makeFactory<DatabaseVersion>(
-  {
-    id: Factory.each((i) => `mysql/${i}`),
-    engine: 'mysql',
-    version: Factory.each((i) => `${i}`),
-    deprecated: false,
-  }
-);
+export const databaseEngineFactory = Factory.Sync.makeFactory<DatabaseEngine>({
+  id: Factory.each((i) => `mysql/${i}`),
+  engine: 'mysql',
+  version: Factory.each((i) => `${i}`),
+  deprecated: false,
+});
