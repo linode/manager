@@ -94,7 +94,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
         </Typography>
       </Notice>
       <Typography style={{ marginTop: '10px' }}>
-        To confirm deletion, type the name of the Database Cluster (
+        To confirm deletion, type the name of the database cluster (
         <b>{databaseLabel}</b>) in the field below:
       </Typography>
       <TextField

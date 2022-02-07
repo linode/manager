@@ -2,6 +2,7 @@ import { Database } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 import { useProfile } from 'src/queries/profile';
 import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
@@ -16,11 +17,18 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   const { database } = props;
   const { data: profile } = useProfile();
 
+  const accessControlCopy = (
+    <Typography>
+      Add or remove IPv4 addresses or ranges that should be authorized to access
+      your cluster.
+    </Typography>
+  );
+
   const resetRootPasswordCopy =
-    'Resetting your root password will automatically generate a new password. You can view the updated password on your Database Cluster summary page. ';
+    'Resetting your root password will automatically generate a new password. You can view the updated password on your database cluster summary page. ';
 
   const deleteClusterCopy =
-    'Deleting a Database Cluster is permanent and cannot be undone.';
+    'Deleting a database cluster is permanent and cannot be undone.';
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [
@@ -47,7 +55,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   return (
     <>
       <Paper>
-        <AccessControls database={database} />
+        <AccessControls database={database} description={accessControlCopy} />
         <Divider spacingTop={28} spacingBottom={22} />
         <DatabaseSettingsMenuItem
           buttonText="Reset Root Password"

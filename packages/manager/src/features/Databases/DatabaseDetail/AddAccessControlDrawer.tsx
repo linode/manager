@@ -6,7 +6,6 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import ExternalLink from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
@@ -163,11 +162,8 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
             ))
           : null}
         <Typography variant="body1" className={classes.instructions}>
-          Add or remove IPv4 addresses and ranges that should be authorized to
-          view your cluster&apos;s database.{' '}
-          <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
-            Learn more about securing your cluster.
-          </ExternalLink>
+          Add, edit, or remove IPv4 addresses and ranges that should be
+          authorized to access your cluster.
         </Typography>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
