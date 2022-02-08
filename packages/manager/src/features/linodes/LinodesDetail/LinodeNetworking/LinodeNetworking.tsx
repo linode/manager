@@ -172,7 +172,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   };
 
   refreshIPs = (): Promise<void>[] => {
-    this.setState({ IPRequestError: undefined });
+    this.setState({
+      IPRequestError: undefined,
+      ipv6Error: undefined,
+    });
+
     const refreshIPv4 = getLinodeIPs(this.props.linode.id)
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
@@ -217,50 +221,62 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         });
       });
 
-    const refreshIPv6 = getAllIPv6Ranges({}).then(async (resp) => {
-      const ranges = resp.data;
+    const refreshIPv6 = getAllIPv6Ranges({})
+      .then(async (resp) => {
+        const ranges = resp.data;
 
-      const sharedRanges: IPRange[] = [];
-      const staticRanges: IPRange[] = [];
-      const availableRanges: IPRangeInformation[] = [];
-      const rangeConstruction = await ranges.reduce(async (acc, range) => {
-        await acc;
-        // filter user ranges outside dc
-        if (range.region !== this.props.linode.region) {
-          return acc;
-        }
-
-        await getIPv6RangeInfo(range.range).then(async (resp) => {
-          let slaac;
-          if (!resp.is_bgp) {
-            await getLinodeIPs(this.props.linode.id).then((ips) => {
-              slaac = ips?.ipv6?.slaac.address;
-            });
+        const sharedRanges: IPRange[] = [];
+        const staticRanges: IPRange[] = [];
+        const availableRanges: IPRangeInformation[] = [];
+        const rangeConstruction = await ranges.reduce(async (acc, range) => {
+          await acc;
+          // filter user ranges outside dc
+          if (range.region !== this.props.linode.region) {
+            return acc;
           }
 
-          // any range that is shared to this linode
-          if (resp.is_bgp && resp.linodes.includes(this.props.linode.id)) {
-            this.props.flags.ipv6Sharing && sharedRanges.push(range);
-            // any range that is statically routed to this linode
-          } else if (!resp.is_bgp && range.route_target === slaac) {
-            staticRanges.push(range);
-            // any range that is not shared to this linode or static on this linode
-          } else {
-            this.props.flags.ipv6Sharing && availableRanges.push(resp);
-          }
+          await getIPv6RangeInfo(range.range).then(async (resp) => {
+            let slaac;
+            if (!resp.is_bgp) {
+              await getLinodeIPs(this.props.linode.id).then((ips) => {
+                slaac = ips?.ipv6?.slaac.address;
+              });
+            }
+
+            // any range that is shared to this linode
+            if (resp.is_bgp && resp.linodes.includes(this.props.linode.id)) {
+              this.props.flags.ipv6Sharing && sharedRanges.push(range);
+              // any range that is statically routed to this linode
+            } else if (!resp.is_bgp && range.route_target === slaac) {
+              staticRanges.push(range);
+              // any range that is not shared to this linode or static on this linode
+            } else {
+              this.props.flags.ipv6Sharing && availableRanges.push(resp);
+            }
+          });
+
+          return [];
+        }, Promise.resolve([]));
+
+        return Promise.all(rangeConstruction).then(() => {
+          this.setState({
+            sharedRanges,
+            availableRanges,
+            staticRanges,
+            ipv6Loading: false,
+          });
         });
-
-        return [];
-      }, Promise.resolve([]));
-
-      return Promise.all(rangeConstruction).then(() => {
+      })
+      .catch((errorResponse) => {
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an error retrieving your IPv6 network information.'
+        );
         this.setState({
-          sharedRanges,
-          availableRanges,
-          staticRanges,
+          ipv6Error: errors[0].reason,
+          ipv6Loading: false,
         });
       });
-    });
 
     return [refreshIPv4, refreshIPv6];
   };
@@ -444,11 +460,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderErrorState = () => {
-    const { IPRequestError } = this.state;
-    const errorText = IPRequestError
-      ? IPRequestError
-      : 'There was an error retrieving your networking information.';
-    return <ErrorState errorText={errorText} />;
+    const { IPRequestError, ipv6Error } = this.state;
+    let errorText;
+    if (IPRequestError) {
+      errorText =
+        IPRequestError ||
+        'There was an error retrieving your networking information.';
+    } else if (ipv6Error) {
+      errorText =
+        ipv6Error ||
+        'There was an error retrieving your networking information.';
+    }
+    return errorText ? <ErrorState errorText={errorText} /> : null;
   };
 
   renderLoadingState = () => {
@@ -491,16 +514,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       linodeIPs,
       initialLoading,
       IPRequestError,
+      ipv6Error,
+      ipv6Loading,
       currentlySelectedIPRange,
     } = this.state;
 
     /* Loading state */
-    if (initialLoading) {
+    if (initialLoading || ipv6Loading) {
       return this.renderLoadingState();
     }
 
     /* Error state */
-    if (IPRequestError) {
+    if (IPRequestError || ipv6Error) {
       return this.renderErrorState();
     }
 
