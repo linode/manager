@@ -1,4 +1,4 @@
-name: Run End-to-End Tests
+name: End-to-End Tests
 concurrency: UI_TESTS
 env:
   # OAuth tokens for up to 8 test users.
@@ -19,7 +19,7 @@ env:
 
   # Cypress record key.
   #
-  # Optional, but required in order to record Cypress runs.
+  # Optional, but required to record and parallelize Cypress runs.
   CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
   # Cloud Manager app client ID.
@@ -27,7 +27,7 @@ env:
 on:
   pull_request_target:
   schedule:
-    # 1:00 PM UTC (8:00 AM ET)
+    # 1:00 PM UTC (8:00 AM ET) Monday through Friday
     - cron: "0 13 * * 1-5"
   push:
     branches:
