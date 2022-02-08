@@ -15,35 +15,32 @@ If the continuous integration workflow was triggered via a push to the `master` 
 * Upon pull request creation
 
 ### Secrets
-| Name           | Description                                     |
-|----------------|-------------------------------------------------|
-| NPM_AUTH_TOKEN | NPM authentication token for package publishing |
-| SLACK_WEBHOOK  | Webhook for Slack CI notifications              |
+| Name             | Description                                     |
+|------------------|-------------------------------------------------|
+| `NPM_AUTH_TOKEN` | NPM authentication token for package publishing |
+| `SLACK_WEBHOOK`  | Webhook for Slack CI notifications              |
 
 ## End-to-End Tests
-Automatic end-to-end testing of Linode Cloud Manager via [Cypress](https://www.cypress.io/) is handled by the `Run Tests On PR` and `Run Tests On Push/Schedule` workflows. These two workflows are very similar, and differ primarily in how they are triggered.
+Automatic end-to-end testing of Linode Cloud Manager via [Cypress](https://www.cypress.io/) is handled by the `End-to-End Tests` workflow.
 
-End-to-end tests are run automatically for the `develop` branch each weekday at 8:00 AM ET, and are triggered any time code is pushed to the `develop`, `staging`, and `master` branches. However, tests are only performed for pull requests if the PR includes the `e2e` label.
+End-to-end tests are run automatically for the `develop` branch each weekday at 8:00 AM ET, and are triggered any time code is pushed to the `develop`, `staging`, and `master` branches. Tests also run for pull requests authored by Cloud Manager team members.
 
 Cypress tests are parallelized across four containers, and tests are automatically distributed among containers for optimal performance. To avoid race conditions, each test container is authenticated with its own test user account.
 
 ### Triggers
 * Scheduled, 1:00 PM UTC (8:00 AM ET) every Monday through Friday for `develop` branch
 * Upon push to `develop`, `staging`, and `master` branches
-* Upon creation or update to any pull request with `e2e` label
+* Upon creation or update to any pull request authored by a Cloud Manager team member
 
 ### Secrets
-| Name                       | Description                               |
-|----------------------------|-------------------------------------------|
-| USER_1                     | Cloud Manager OAuth token for test user 1 |
-| USER_2                     | Cloud Manager OAuth token for test user 2 |
-| USER_3                     | Cloud Manager OAuth token for test user 3 |
-| USER_4                     | Cloud Manager OAuth token for test user 4 |
-| REACT_APP_LAUNCH_DARKLY_ID | LaunchDarkly API key                      |
-| REACT_APP_CLIENT_ID        | Linode OAuth app client ID                |
-| REACT_APP_API_ROOT         | Linode API root URL                       |
-| REACT_APP_APP_ROOT         | Linode Cloud Manager instance root URL    |
-| CYPRESS_RECORD_KEY         | Cypress Dashboard project record key      |
+| Name                             | Description                                                                      |
+|----------------------------------|----------------------------------------------------------------------------------|
+| `USER_1`, `USER_2`, ... `USER_8` | Cloud Manager OAuth token for up to 8 test users (one or more must be specified) |
+| `REACT_APP_LAUNCH_DARKLY_ID`     | LaunchDarkly API key                                                             |
+| `REACT_APP_CLIENT_ID`            | Linode OAuth app client ID                                                       |
+| `REACT_APP_API_ROOT`             | Linode API root URL                                                              |
+| `REACT_APP_APP_ROOT`             | Linode Cloud Manager instance root URL                                           |
+| `CYPRESS_RECORD_KEY`             | Cypress Dashboard project record key (optional)                                  |
 
 ## See Also
 * [_Understanding GitHub Actions_](https://docs.github.com/en/actions/learn-github-actions/understanding-github-actions) (`docs.github.com`)
