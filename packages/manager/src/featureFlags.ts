@@ -7,6 +7,11 @@ interface TaxBanner {
   linode_tax_id?: string;
 }
 
+interface TaxCollectionBanner {
+  date: string;
+  action?: boolean;
+}
+
 type OneClickApp = Record<string, string>;
 
 interface Changelog {
@@ -43,6 +48,8 @@ export interface Flags {
   lkeHighAvailability: boolean;
   autoscaler: boolean;
   kubernetesDashboardAvailability: boolean;
+  regionDropdown: boolean;
+  taxCollectionBanner: TaxCollectionBanner;
 }
 
 type PromotionalOfferFeature =

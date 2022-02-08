@@ -19,6 +19,7 @@ import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import {
   createStyles,
   Theme,
@@ -156,6 +157,12 @@ class AddNewMenu extends React.Component<CombinedProps> {
       account?.capabilities ?? []
     );
 
+    const showDatabases = isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
+      account?.capabilities ?? []
+    );
+
     return (
       <dbaasContext.Consumer>
         {(dbaas) => (
@@ -227,6 +234,20 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={DomainIcon}
                     />
                   </MenuLink>
+                  {showDatabases ? (
+                    <MenuLink
+                      as={Link}
+                      to="/databases/create"
+                      className={classes.menuItemLink}
+                    >
+                      <AddNewMenuItem
+                        title="Database"
+                        body="High-performance managed database clusters"
+                        ItemIcon={DatabaseIcon}
+                        attr={{ 'data-qa-database-add-new': true }}
+                      />
+                    </MenuLink>
+                  ) : null}
                   <MenuLink
                     as={Link}
                     to="/kubernetes/create"
