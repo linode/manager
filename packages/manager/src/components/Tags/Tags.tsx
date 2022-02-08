@@ -5,13 +5,12 @@ import Tag from 'src/components/Tag';
 
 export interface Props {
   tags: string[];
-  clickable?: boolean;
 }
 
 type CombinedProps = Props;
 
 export const Tags: React.FC<CombinedProps> = (props) => {
-  const { clickable, tags } = props;
+  const { tags } = props;
 
   const renderTags = (tags: string[]) => {
     return tags.map((eachTag) => {
@@ -19,7 +18,6 @@ export const Tags: React.FC<CombinedProps> = (props) => {
         <Tag
           label={eachTag}
           key={eachTag}
-          clickable={clickable}
           component={'button' as 'div'}
           colorVariant="lightBlue"
         />

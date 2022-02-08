@@ -25,24 +25,31 @@ Currently used in:
 - `KubeSummaryPanel`
 - Linode and NodeBalancer - `SummaryPanel`
 
+export const _tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
+
 export const Template = (args) => {
-  const [tags, setTags] = React.useState([]);
-  const updateTags = (tags) => {
+  const [tags, setTags] = React.useState(_tags);
+  const updateTags = (selected) => {
     return new Promise((resolve) => {
       setTimeout(() => {
-        setTags(tags);
+        if (tags.indexOf('selected') > -1) {
+          console.log('found');
+        } else {
+          console.log('not found');
+        }
+        setTags([...tags, selected]);
         resolve();
       }, 500);
     });
   };
-  return <TagsPanel {...args} tags={tags} updateTags={updateTags} />;
+  return <TagsPanel tags={tags} updateTags={updateTags} {...args} />;
 };
 
 <Canvas>
   <Story
     name="Tags Panel"
     args={{
-      tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'],
+      tags: _tags,
       disabled: false,
     }}
     argTypes={{
