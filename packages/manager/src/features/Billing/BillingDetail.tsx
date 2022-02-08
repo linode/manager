@@ -82,13 +82,14 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 lastName={account.last_name}
                 address1={account.address_1}
                 address2={account.address_2}
-                email={account.email}
-                phone={account.phone}
                 city={account.city}
                 state={account.state}
                 zip={account.zip}
-                history={props.history}
+                country={account.country}
+                email={account.email}
+                phone={account.phone}
                 taxId={account.tax_id}
+                history={props.history}
               />
               <PaymentInformation
                 loading={paymentMethodsLoading}
