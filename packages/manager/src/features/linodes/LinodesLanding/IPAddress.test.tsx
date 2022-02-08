@@ -10,12 +10,10 @@ const privateIP2 = '192.168.220.102';
 
 const classes = {
   root: '',
-  left: '',
   right: '',
   icon: '',
   row: '',
   multipleAddresses: '',
-  ip: '',
   ipLink: '',
   hide: 'hide',
 };
