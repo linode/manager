@@ -349,7 +349,7 @@ export const handlers = [
     const transfer = linodeTransferFactory.build();
     return res(ctx.json(transfer));
   }),
-  rest.get('*/instances/*/stats', async (req, res, ctx) => {
+  rest.get('*/instances/*/stats*', async (req, res, ctx) => {
     const stats = linodeStatsFactory.build();
     return res(ctx.json(stats));
   }),
