@@ -10,7 +10,7 @@ export const grantsFactory = Factory.Sync.makeFactory<Grants>({
     },
   ],
   global: {
-    account_access: 'read_write',
+    account_access: 'read_only',
     add_domains: true,
     add_firewalls: true,
     add_images: true,
