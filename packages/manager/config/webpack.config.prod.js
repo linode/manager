@@ -127,7 +127,7 @@ module.exports = {
           {
             test: [/\.tsx$/, /\.ts$/],
             include: paths.appSrc,
-            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/, /node_modules/],
+            exclude: [/(stories|test)\.(ts|tsx)$/, /__data__/],
             use: [
               {
                 loader: require.resolve('esbuild-loader'),
