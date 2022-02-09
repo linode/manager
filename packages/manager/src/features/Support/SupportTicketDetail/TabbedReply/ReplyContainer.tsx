@@ -84,10 +84,7 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const saveText = (_text: string, _ticketId: number) => {
-    storage.ticketReply.set({
-      text: _text,
-      ticketId: _ticketId,
-    });
+    storage.ticketReply.set({ text: _text, ticketId: _ticketId });
   };
 
   const debouncedSave = React.useRef(debounce(500, false, saveText)).current;
