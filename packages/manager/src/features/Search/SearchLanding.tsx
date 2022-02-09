@@ -77,30 +77,6 @@ const displayMap = {
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
 
-const getErrorMessage = (errors: ErrorObject): string => {
-  const errorString: string[] = [];
-  if (errors.linodes) {
-    errorString.push('Linodes');
-  }
-  if (errors.domains) {
-    errorString.push('Domains');
-  }
-  if (errors.volumes) {
-    errorString.push('Volumes');
-  }
-  if (errors.nodebalancers) {
-    errorString.push('NodeBalancers');
-  }
-  if (errors.images) {
-    errorString.push('Images');
-  }
-  if (errors.kubernetes) {
-    errorString.push('Kubernetes');
-  }
-  const joined = errorString.join(', ');
-  return `Could not retrieve search results for: ${joined}`;
-};
-
 const splitWord = (word: any) => {
   word = word.split('');
   for (let i = 0; i < word.length; i += 2) {
@@ -115,10 +91,16 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { _isLargeAccount } = useAccountManagement();
 
-  const { data: objectStorageClusters } = useObjectStorageClusters();
-  const { data: objectStorageBuckets } = useObjectStorageBuckets(
-    objectStorageClusters
-  );
+  const {
+    data: objectStorageClusters,
+    isLoading: areClustersLoading,
+    error: objectStorageClustersError,
+  } = useObjectStorageClusters(_isLargeAccount);
+
+  const {
+    data: objectStorageBuckets,
+    isLoading: areBucketsLoading,
+  } = useObjectStorageBuckets(objectStorageClusters, _isLargeAccount);
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
@@ -174,11 +156,45 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
   ]);
 
+  const getErrorMessage = (errors: ErrorObject): string => {
+    const errorString: string[] = [];
+    if (errors.linodes) {
+      errorString.push('Linodes');
+    }
+    if (errors.domains) {
+      errorString.push('Domains');
+    }
+    if (errors.volumes) {
+      errorString.push('Volumes');
+    }
+    if (errors.nodebalancers) {
+      errorString.push('NodeBalancers');
+    }
+    if (errors.images) {
+      errorString.push('Images');
+    }
+    if (errors.kubernetes) {
+      errorString.push('Kubernetes');
+    }
+    if (objectStorageClustersError) {
+      errorString.push('Object Storage');
+    }
+    if (objectStorageBuckets?.errors && !objectStorageClustersError) {
+      const regionsWithErrors = objectStorageBuckets.errors
+        .map((e) => e.cluster.region)
+        .join(', ');
+      errorString.push(`Object Storage in ${regionsWithErrors}`);
+    }
+
+    const joined = errorString.join(', ');
+    return `Could not retrieve search results for: ${joined}`;
+  };
+
   const finalResults = _isLargeAccount ? apiResults : searchResultsByEntity;
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
-  const loading = reduxLoading;
+  const loading = reduxLoading || areBucketsLoading || areClustersLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

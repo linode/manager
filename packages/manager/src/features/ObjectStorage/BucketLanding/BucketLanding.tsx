@@ -378,7 +378,7 @@ const UnavailableClustersDisplay: React.FC<UnavailableClustersDisplayProps> = Re
     return (
       <Banner
         regionsAffected={unavailableClusters.map(
-          (cluster) => objectStorageClusterDisplay[cluster.id] || cluster.id
+          (cluster) => objectStorageClusterDisplay[cluster.id] || cluster.region
         )}
       />
     );
