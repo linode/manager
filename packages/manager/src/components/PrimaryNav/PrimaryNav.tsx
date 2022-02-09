@@ -85,8 +85,11 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     account?.capabilities ?? []
   );
 
-  // No account capability returned yet.
-  const showDatabases = flags.databases;
+  const showDatabases = isFeatureEnabled(
+    'Managed Databases',
+    Boolean(flags.databases),
+    account?.capabilities ?? []
+  );
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -114,13 +117,6 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           display: 'NodeBalancers',
           href: '/nodebalancers',
           icon: <NodeBalancer />,
-        },
-        {
-          hide: !showDatabases,
-          display: 'Databases',
-          href: '/databases',
-          icon: <Database />,
-          isBeta: true,
         },
         {
           hide: !showFirewalls,
@@ -151,6 +147,13 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           prefetchRequestFn: requestDomains,
           prefetchRequestCondition:
             !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount,
+        },
+        {
+          hide: !showDatabases,
+          display: 'Databases',
+          href: '/databases',
+          icon: <Database />,
+          isBeta: true,
         },
         {
           display: 'Kubernetes',

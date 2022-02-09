@@ -9,7 +9,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Typography from 'src/components/core/Typography';
 import InlineMenuAction from 'src/components/InlineMenuAction';
-import ExternalLink from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -28,9 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   sectionTitleAndText: {
-    [theme.breakpoints.down('sm')]: {
-      width: '100%',
-    },
+    width: '100%',
   },
   sectionTitle: {
     marginBottom: '0.25rem',
@@ -53,11 +50,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   table: {
     width: '50%',
     border: `solid 1px ${theme.cmrBorderColors.borderTable}`,
-    '&:last-child': {
-      borderBottom: 'none',
-    },
     [theme.breakpoints.down('xs')]: {
       width: '100%',
+    },
+  },
+  row: {
+    '&:last-of-type td': {
+      borderBottom: 'none',
     },
   },
   cell: {
@@ -79,11 +78,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   database: Database;
+  description?: JSX.Element;
 }
 
 export const AccessControls: React.FC<Props> = (props) => {
   const {
     database: { id, engine, allow_list: allowList },
+    description,
   } = props;
 
   const classes = useStyles();
@@ -151,7 +152,7 @@ export const AccessControls: React.FC<Props> = (props) => {
       <Table className={classes.table}>
         <TableBody>
           {accessControlsList.map((accessControl) => (
-            <TableRow key={`${accessControl}-row`}>
+            <TableRow key={`${accessControl}-row`} className={classes.row}>
               <TableCell
                 key={`${accessControl}-tablecell`}
                 className={classes.cell}
@@ -193,16 +194,7 @@ export const AccessControls: React.FC<Props> = (props) => {
           <div className={classes.sectionTitle}>
             <Typography variant="h3">Access Controls</Typography>
           </div>
-          <div className={classes.sectionText}>
-            <Typography>
-              Add the IP addresses for other instances or users that should have
-              the authorization to view this cluster&apos;s database. By
-              default, all public and private connections are denied.{' '}
-              <ExternalLink to="https://www.linode.com/docs/products/databases/managed-databases/guides/manage-access-controls/">
-                Learn more.
-              </ExternalLink>
-            </Typography>
-          </div>
+          <div className={classes.sectionText}>{description ?? null}</div>
         </div>
         <AddNewLink
           label="Manage Access Controls"
