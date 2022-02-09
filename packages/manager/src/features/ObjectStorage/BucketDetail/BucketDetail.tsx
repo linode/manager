@@ -38,6 +38,7 @@ import ObjectDetailDrawer from './ObjectDetailsDrawer';
 import ObjectTableContent from './ObjectTableContent';
 import { deleteObject as _deleteObject } from '../requests';
 import { queryClient } from 'src/queries/base';
+import produce from 'immer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   objectTable: {
@@ -182,20 +183,20 @@ export const BucketDetail: React.FC = () => {
   };
 
   const removeOne = (objectName: string) => {
-    const newPagesArray =
-      data?.pages.map((page) => {
-        const updatedData = page.data.filter(
-          (object) => object.name !== objectName
+    const newPagesArray = produce(data?.pages, (draft) => {
+      let objectIndex = -1;
+      const pageIndex = draft?.findIndex((thisPage) => {
+        const _objectIndex = thisPage.data.findIndex(
+          (object) => object.name === objectName
         );
-
-        return {
-          is_truncated: page.is_truncated,
-          next_marker: page.next_marker,
-          data: updatedData,
-        } as ObjectStorageObjectListResponse;
-      }) || [];
-
-    updateStore(newPagesArray);
+        objectIndex = _objectIndex !== -1 ? _objectIndex : -1;
+        return _objectIndex !== -1;
+      });
+      if (draft && pageIndex !== undefined && pageIndex !== -1) {
+        draft[pageIndex].data.splice(objectIndex);
+      }
+    });
+    updateStore(newPagesArray ?? []);
   };
 
   const maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
@@ -223,24 +224,11 @@ export const BucketDetail: React.FC = () => {
       size: sizeInBytes,
     };
 
-    const newPagesArray =
-      data?.pages.map((page, idx) => {
-        let updatedData = page.data.filter(
-          (object) => object.name !== objectName
-        );
+    const newPagesArray = produce(data?.pages, (draft) => {
+      draft[draft.length - 1].data = [...draft[draft.length - 1].data, object];
+    });
 
-        if (idx === data.pages.length - 1) {
-          updatedData = [...updatedData, object];
-        }
-
-        return {
-          is_truncated: page.is_truncated,
-          next_marker: page.next_marker,
-          data: updatedData,
-        } as ObjectStorageObjectListResponse;
-      }) || [];
-
-    updateStore(newPagesArray);
+    updateStore(newPagesArray ?? []);
   };
 
   const addOneFolder = (objectName: string) => {

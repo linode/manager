@@ -175,12 +175,8 @@ const ObjectUploader: React.FC<Props> = (props) => {
   }, [state.numQueued, state.numInProgress]);
 
   const debouncedGetBucket = React.useRef(
-    debounce(400, false, () =>
-      queryClient.invalidateQueries([
-        queryKey,
-        props.clusterId,
-        props.bucketName,
-      ])
+    debounce(1000, false, () =>
+      queryClient.invalidateQueries(`${queryKey}-buckets`)
     )
   ).current;
 
