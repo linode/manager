@@ -193,9 +193,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           className={classes.makeAPaymentButton}
           onClick={() => replace(routeForMakePayment)}
         >
-          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
+          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment'}
         </button>
-        {pastDueBalance ? ` to avoid service disruption.` : null}
+        {pastDueBalance ? ` to avoid service disruption.` : '.'}
       </Typography>
     ) : null;
 
