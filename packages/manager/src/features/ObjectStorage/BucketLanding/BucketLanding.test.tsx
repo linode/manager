@@ -69,10 +69,13 @@ describe('ObjectStorageLanding', () => {
     objectStorageBucketFactory.resetSequenceNumber();
     objectStorageClusterFactory.resetSequenceNumber();
 
+    const downCluster = objectStorageClusterFactory.build({
+      region: 'us-west',
+    });
+
     // Mock Clusters
     server.use(
       rest.get('*/object-storage/clusters', (req, res, ctx) => {
-        const downCluster = objectStorageClusterFactory.build();
         const upClusters = objectStorageClusterFactory.buildList(1, {
           region: 'ap-south-1',
         });
@@ -103,7 +106,7 @@ describe('ObjectStorageLanding', () => {
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
-    screen.getByText(/^There was an error loading buckets in cluster-0/);
+    screen.getByText(/^There was an error loading buckets in us-west/);
   });
 
   it('renders general error state', async () => {
