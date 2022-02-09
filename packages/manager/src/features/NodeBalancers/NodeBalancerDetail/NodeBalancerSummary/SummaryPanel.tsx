@@ -121,10 +121,8 @@ const SummaryPanel: React.FC<CombinedProps> = (props) => {
               </Typography>
               <div className={`${classes.section}`}>
                 <div className={classes.IPgrouping} data-qa-ip>
-                  <IPAddress ips={[nodeBalancer.ipv4]} copyRight showMore />
-                  {nodeBalancer.ipv6 && (
-                    <IPAddress ips={[nodeBalancer.ipv6]} copyRight />
-                  )}
+                  <IPAddress ips={[nodeBalancer.ipv4]} showMore />
+                  {nodeBalancer.ipv6 && <IPAddress ips={[nodeBalancer.ipv6]} />}
                 </div>
               </div>
             </Paper>
