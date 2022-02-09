@@ -66,7 +66,6 @@ interface SupportText {
 interface TicketReply {
   text: string;
   ticketId: number;
-  replyId: number;
 }
 
 interface StackScriptData extends StackScriptPayload {
