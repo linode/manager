@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { paymentMethodFactory } from 'src/factories';
 import { invoiceFactory, paymentFactory } from 'src/factories/billing';
@@ -32,7 +31,7 @@ jest.mock('@linode/api-v4/lib/account', () => {
 
 describe('Account Landing', () => {
   it('should render', async () => {
-    const { getByTestId } = renderWithTheme(
+    const { findByTestId } = renderWithTheme(
       <BillingDetail
         history={history}
         location={mockLocation}
@@ -41,7 +40,7 @@ describe('Account Landing', () => {
         clearDocs={jest.fn()}
       />
     );
-    await waitFor(() => getByTestId('billing-detail'));
+    await findByTestId('billing-detail');
     // Todo: add some get-by-texts once the correct text is available
   });
 });

@@ -30,9 +30,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
   button: {
+    marginTop: 4,
+    marginLeft: -theme.spacing(),
     minWidth: 'auto',
     minHeight: 'auto',
-    marginLeft: -theme.spacing(),
     padding: 0,
     '& > span': {
       padding: 2,
@@ -158,7 +159,6 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
           container
           key={`domain-transfer-ip-${idx}`}
           direction="row"
-          alignItems="center"
           justifyContent="center"
           data-testid="domain-transfer-input"
         >

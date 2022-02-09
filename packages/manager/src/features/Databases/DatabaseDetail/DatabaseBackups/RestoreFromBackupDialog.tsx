@@ -1,4 +1,7 @@
+import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -6,11 +9,9 @@ import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
-import formatDate from 'src/utilities/formatDate';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
-import { useSnackbar } from 'notistack';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import formatDate from 'src/utilities/formatDate';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -22,6 +23,7 @@ interface Props extends Omit<DialogProps, 'title'> {
 export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
   const { database, backup, onClose, open, ...rest } = props;
 
+  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -34,7 +36,8 @@ export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
 
   const handleRestoreDatabase = () => {
     restore().then(() => {
-      enqueueSnackbar('Your database has been scheduled to be restored.', {
+      history.push('summary');
+      enqueueSnackbar('Your database is being restored.', {
         variant: 'success',
       });
       onClose();
