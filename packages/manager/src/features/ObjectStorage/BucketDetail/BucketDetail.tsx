@@ -359,7 +359,7 @@ export const BucketDetail: React.FC = () => {
               onClose={closeDeleteObjectDialog}
               title={
                 objectToDelete
-                  ? `Delete  ${truncateMiddle(displayName(objectToDelete))}`
+                  ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
                   : 'Delete object'
               }
               actions={() => (
