@@ -83,13 +83,15 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
   const {
     data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
+    error: bucketsError,
   } = useObjectStorageBuckets(objectStorageClusters);
   const { data: accountSettings } = useAccountSettings();
 
   const buckets = objectStorageBucketsResponse?.buckets || [];
 
   const hidePermissionsTable =
-    objectStorageBucketsResponse?.buckets.length === 0;
+    bucketsError || objectStorageBucketsResponse?.buckets.length === 0;
+
   const createMode = mode === 'creating';
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
