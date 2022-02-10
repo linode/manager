@@ -23,6 +23,7 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
   createButtonText?: string;
   loading?: boolean;
   breadcrumbProps?: BreadcrumbProps;
+  disabledCreateButton?: boolean;
 }
 
 /**
@@ -43,6 +44,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
     createButtonText,
     loading,
     breadcrumbProps,
+    disabledCreateButton,
   } = props;
 
   const defaultCreateButtonWidth = 152;
@@ -59,6 +61,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
             loading={loading}
             onClick={onAddNew}
             style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
+            disabled={disabledCreateButton}
           >
             {createButtonText ?? `Create ${entity}`}
           </Button>
@@ -73,6 +76,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
       createButtonWidth,
       createButtonText,
       entity,
+      disabledCreateButton,
     ]
   );
 

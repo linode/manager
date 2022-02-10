@@ -11,7 +11,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
 import useFlags from 'src/hooks/useFlags';
-import { useProfile } from 'src/queries/profile';
+import { getGrantData, useProfile } from 'src/queries/profile';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
@@ -28,6 +28,10 @@ const AccountLanding: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: profile } = useProfile();
+
+  const grantData = getGrantData();
+  const accountAccessGrant = grantData?.global?.account_access;
+  const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   const tabs = [
     {
@@ -99,6 +103,7 @@ const AccountLanding: React.FC = () => {
     landingHeaderProps.createButtonText = 'Make a Payment';
     landingHeaderProps.onAddNew = () =>
       history.replace('/account/billing/make-payment');
+    landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
   }
 
   return (
