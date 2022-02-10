@@ -132,6 +132,7 @@
     "@storybook/addon-links": "~6.5.0-alpha.33",
     "@storybook/addon-viewport": "^6.5.0-alpha.33",
     "@storybook/addons": "~6.5.0-alpha.33",
+    "@storybook/client-api": "~6.5.0-alpha.33",
     "@storybook/react": "~6.5.0-alpha.33",
     "@svgr/webpack": "^4.3.3",
     "@testing-library/cypress": "^7.0.6",
