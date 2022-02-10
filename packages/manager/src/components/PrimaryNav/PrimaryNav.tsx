@@ -20,13 +20,20 @@ import Logo from 'src/assets/logo/logo.svg';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
+import useStyles from './PrimaryNav.styles';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
+import { queryClient } from 'src/queries/base';
+import {
+  getAllBucketsFromClusters,
+  queryKey,
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 
 type NavEntity =
   | 'Linodes'
@@ -71,6 +78,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
 
   const flags = useFlags();
   const location = useLocation();
+
   const { domains, requestDomains } = useDomains();
 
   const {
@@ -78,6 +86,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     _isLargeAccount,
     account,
   } = useAccountManagement();
+
+  const { data: clusters, refetch: fetchClusters } = useObjectStorageClusters(
+    false
+  );
+
+  const { data: buckets } = useObjectStorageBuckets(clusters, false);
 
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
@@ -90,6 +104,15 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     Boolean(flags.databases),
     account?.capabilities ?? []
   );
+
+  const prefetchObjectStorage = () => {
+    fetchClusters().then(({ data: clusters }) =>
+      queryClient.fetchQuery({
+        queryKey: `${queryKey}-buckets`,
+        queryFn: () => getAllBucketsFromClusters(clusters || []),
+      })
+    );
+  };
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -169,6 +192,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             '/object-storage/access-keys',
           ],
           icon: <Storage />,
+          prefetchRequestFn: prefetchObjectStorage,
+          prefetchRequestCondition: !buckets,
         },
         {
           display: 'Longview',
@@ -201,8 +226,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       _isManagedAccount,
       domains.loading,
       domains.lastUpdated,
-      requestDomains,
       _isLargeAccount,
+      buckets,
     ]
   );
 
