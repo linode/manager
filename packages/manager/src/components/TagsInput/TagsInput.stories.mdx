@@ -1,4 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
 import TagsInput from './TagsInput';
 
 <Meta title="UI Elements/Tags/Tags Input" component={TagsInput} />
@@ -6,11 +7,11 @@ import TagsInput from './TagsInput';
 # Tags Input
 
 export const Template = (args) => {
-  const [tags, setTags] = React.useState([]);
-  const onChange = (tags) => {
-    setTags(tags);
+  const [args2, updateArgs] = useArgs();
+  const onChange = (updatedTags) => {
+    updateArgs({ value: updatedTags });
   };
-  return <TagsInput value={tags} onChange={onChange} {...args} />;
+  return <TagsInput value={args2.tags} onChange={onChange} {...args} />;
 };
 
 <Canvas>
@@ -18,8 +19,8 @@ export const Template = (args) => {
     name="Tags Input"
     args={{
       value: [
-        { label: 'tag1', value: 'tag1' },
-        { label: 'tag2', value: 'tag2' },
+        { label: 'tag-1', value: 'tag-1' },
+        { label: 'tag-2', value: 'tag-2' },
       ],
       disabled: false,
       hideLabel: false,
