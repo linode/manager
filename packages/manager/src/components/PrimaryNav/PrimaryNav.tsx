@@ -27,10 +27,7 @@ import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { linkIsActive } from './utils';
-import { queryClient } from 'src/queries/base';
 import {
-  getAllBucketsFromClusters,
-  queryKey,
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
@@ -81,17 +78,33 @@ export const PrimaryNav: React.FC<Props> = (props) => {
 
   const { domains, requestDomains } = useDomains();
 
+  const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
+
   const {
     _isManagedAccount,
     _isLargeAccount,
     account,
   } = useAccountManagement();
 
-  const { data: clusters, refetch: fetchClusters } = useObjectStorageClusters(
-    false
-  );
+  const {
+    data: clusters,
+    isLoading: clustersLoading,
+    error: clustersError,
+  } = useObjectStorageClusters(enableObjectPrefetch);
 
-  const { data: buckets } = useObjectStorageBuckets(clusters, false);
+  const {
+    data: buckets,
+    isLoading: bucketsLoading,
+    error: bucketsError,
+  } = useObjectStorageBuckets(clusters, enableObjectPrefetch);
+
+  const allowObjPrefetch =
+    !buckets &&
+    !clusters &&
+    !clustersLoading &&
+    !bucketsLoading &&
+    !clustersError &&
+    !bucketsError;
 
   const showFirewalls = isFeatureEnabled(
     'Cloud Firewall',
@@ -106,12 +119,9 @@ export const PrimaryNav: React.FC<Props> = (props) => {
   );
 
   const prefetchObjectStorage = () => {
-    fetchClusters().then(({ data: clusters }) =>
-      queryClient.fetchQuery({
-        queryKey: `${queryKey}-buckets`,
-        queryFn: () => getAllBucketsFromClusters(clusters || []),
-      })
-    );
+    if (!enableObjectPrefetch) {
+      setEnableObjectPrefetch(true);
+    }
   };
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
@@ -193,7 +203,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           ],
           icon: <Storage />,
           prefetchRequestFn: prefetchObjectStorage,
-          prefetchRequestCondition: !buckets,
+          prefetchRequestCondition: allowObjPrefetch,
         },
         {
           display: 'Longview',
@@ -227,7 +237,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       domains.loading,
       domains.lastUpdated,
       _isLargeAccount,
-      buckets,
+      allowObjPrefetch,
     ]
   );
 
