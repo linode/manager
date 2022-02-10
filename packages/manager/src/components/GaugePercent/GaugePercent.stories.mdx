@@ -9,7 +9,7 @@ import Typography from 'src/components/core/Typography';
 # 📈 Gauges
 
 - **Chart.js** is the charting tool we use for gauges 
-- Best used to show **percentages**
+- Best used to show percentages
 
 export const Template = (args) => (
   <Gauge {...args} />
@@ -31,16 +31,16 @@ export const Template = (args) => (
     }}
     argTypes={{
       value: {
-        description: "The value that should be displayed by the gauge. This value should be <= `max`. This value should be a `number`",
-        type: { name: 'number', required: true },
+        description: "The value that is displayed by the gauge. This value should be <= `max`",
+        type: { summary: 'number', required: true },
       },
       max: {
-        description: 'The max value of the gauge. This value should be a `number`',
-        type: { name: 'number', required: true },
+        description: 'The max value of the gauge',
+        type: { summary: 'number', required: true },
       },
       height: {
-        description: 'The **height** of the gauge. This can only be a `number`.',
-        type: { name: 'number' },
+        description: 'The height of the gauge',
+        type: { summary: "number" },
         table: {
           defaultValue: {
             summary: 300,
@@ -48,8 +48,8 @@ export const Template = (args) => (
         },
       },
       width: {
-        description: 'The **width** of the gauge. This can be a `number` or a `string`.',
-        type: { name: ['number', 'string'] },
+        description: 'The width of the gauge',
+        type: { summary: 'number | string' },
         table: {
           defaultValue: {
             summary: 300,
@@ -57,48 +57,24 @@ export const Template = (args) => (
         },
       },
       innerText: {
-        description: "Text that shows up inside (in the middle) of the gauge. This value should be a `string`.",
-        type: { name: 'string' },
-        table: {
-          defaultValue: {
-            summary: 'undefined',
-          },
-        },
+        description: "Text that shows up inside (in the middle) of the gauge",
+        type: { summary: 'string' },
       },
       innerTextFontSize: {
-        description: 'The font size in `px` of the inner text. This value should be a `number`.',
-        type: { name: 'number' },
-        table: {
-          defaultValue: {
-            summary: 'undefined',
-          },
-        },
+        description: 'The font size in `px` of the inner text',
+        type: { summary: 'number' },
       },
       subTitle: {
-        description: 'A **subtitle** that appears below the gauge. This can be a `JSX.Element` or a `string`',
-        table: {
-          defaultValue: {
-            summary: 'undefined',
-          },
-        },
+        description: 'A subtitle that appears below the gauge',
+        type: { summary: "JSX.Element | string" },
       },
       filledInColor: {
         description: 'The color for the filled in portion of the gauge',
-        type: { name: 'string' },
-        table: {
-          defaultValue: {
-            summary: 'undefined',
-          },
-        },
+        type: { summary: 'string' },
       },
       nonFilledInColor: {
         description: 'The color for the non-filled in portion of the gauge',
-        type: { name: 'string' },
-        table: {
-          defaultValue: {
-            summary: 'undefined',
-          },
-        },
+        type: { summary: 'string' },
       },
     }}
   >

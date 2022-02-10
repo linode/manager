@@ -94,7 +94,7 @@ export const Template = (args) => (
         },
       },
       timezone: {
-        description: 'The **timezone** the graph should use for interpreting the UNIX datetimes in the data set',
+        description: 'The timezone the graph should use for interpreting the UNIX datetimes in the data set',
         table: {
           defaultValue: {
             summary: "UTC",
@@ -129,7 +129,7 @@ export const Template = (args) => (
         },
       },
       rowHeaders: {
-        description: "Row headers of the legened",
+        description: "Row headers for the legend",
         table: {
           defaultValue: {
             summary: 'undefined',
@@ -152,14 +152,14 @@ export const Template = (args) => (
 
 <ArgsTable story="Graph" />
 
-## Examples
+## Example
 
 <br />
 
 ### Linode Network Transfer History
 
 <Canvas>
-  <Story name="Examples" >
+  <Story name="Example" >
     <TranferHistory linodeID={0} linodeCreated="2022-02-08T14:14:57" />
   </Story>
 </Canvas>
