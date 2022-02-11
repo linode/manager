@@ -1,12 +1,10 @@
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 import FileUploader from './FileUploader';
+import ObjectUploader from '/src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 
-<Meta
-  title="Components/File Uploader"
-  component={FileUploader}
-/>
+<Meta title="Components/File Uploads" />
 
-export const Template = (args) => {
+export const ImageUploaderTemplate = (args) => {
   return (
     <FileUploader {...args} />
   );
@@ -14,18 +12,24 @@ export const Template = (args) => {
 
 # File Uploader
 
-The component enables users to attach and upload files from a device.
+This component enables users to attach and upload files from a device.
 
 - Include any file restrictions or limits in the helper text.
 - Dragover effect and release capability occurs when a user drags a file or files directly onto the file upload box. This is called the “drop zone”.
 
+<br />
+
+## Image Uploader
+
+This component enables users to attach and upload custom Images.
+
 <Canvas>
   <Story
-    name="Component API"
+    name="Image Uploads"
     args={{
       label: "file upload",
       region: "us-east-1",
-      description: "Upload a Object",
+      description: "My Ubuntu Image for Production",
       dropzoneDisabled: false,
       apiError: undefined,
       setErrors: undefined,
@@ -72,10 +76,56 @@ The component enables users to attach and upload files from a device.
       },
     }}
    >
-    {Template.bind({})}
+    {ImageUploaderTemplate.bind({})}
    </Story>
  </Canvas>
 
 <ArgsTable
-  story="Component API"
+  story="Image Uploads"
+/>
+
+export const ObjectUploaderTemplate = (args) => {
+  return (
+    <ObjectUploader {...args} />
+  );
+};
+
+## Object Uploader
+
+This component enables users to attach and upload files to be stored in Object Storage.
+
+<Canvas>
+  <Story
+    name="Object Uploads"
+    args={{
+      clusterId: "us-east",
+      bucketName: "my-bucket",
+      prefix: "/",
+      maybeAddObjectToTable: () => null,
+    }}
+    argTypes={{
+      clusterId: {
+        description: "The Object Storage cluster to upload to",
+        type: { summary: 'string', required: true },
+      },
+      bucketName: {
+        description: "The Object Storage bucket to upload to",
+        type: { summary: 'string', required: true },
+      },
+      prefix: {
+        description: "The Object Storage prefix (path) to upload to",
+        type: { summary: 'string', required: true },
+      },
+      maybeAddObjectToTable: {
+        description: "A function that is called when an Object is uploaded successfully so we can manually update our local store to reflect the upload",
+        type: { summary: '(path: string, sizeInBytes: number) => void', required: true },
+      }
+    }}
+   >
+    {ObjectUploaderTemplate.bind({})}
+   </Story>
+ </Canvas>
+
+<ArgsTable
+  story="Object Uploads"
 />
