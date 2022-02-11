@@ -1,0 +1,81 @@
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import FileUploader from './FileUploader';
+
+<Meta
+  title="Components/File Uploader"
+  component={FileUploader}
+/>
+
+export const Template = (args) => {
+  return (
+    <FileUploader {...args} />
+  );
+};
+
+# File Uploader
+
+The component enables users to attach and upload files from a device.
+
+- Include any file restrictions or limits in the helper text.
+- Dragover effect and release capability occurs when a user drags a file or files directly onto the file upload box. This is called the “drop zone”.
+
+<Canvas>
+  <Story
+    name="Component API"
+    args={{
+      label: "file upload",
+      region: "us-east-1",
+      description: "Upload a Object",
+      dropzoneDisabled: false,
+      apiError: undefined,
+      setErrors: undefined,
+      setCancelFn: undefined,
+      onSuccess: undefined,
+    }}
+    argTypes={{
+      label: {
+        description: "The label of the upload that will be sent to the Linode API (used for Image uploads)",
+        type: { summary: 'string', required: true },
+      },
+      region: {
+        description: "The region ID to upload the file to",
+        type: { summary: 'string', required: true },
+      },
+      description: {
+        description: "The description of the upload that will be sent to the Linode API (used for Image uploads)",
+        type: { summary: 'string' },
+      },
+      dropzoneDisabled: {
+        description: "Disables the ability to select file(s) to upload",
+        type: { summary: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      apiError: {
+        description: "An error to display if an upload error occoured",
+        type: { summary: 'string | undefined' },
+      },
+      setErrors: {
+        description: "A function that allows you to set an error value in the parent component",
+        type: { summary: 'React.Dispatch<React.SetStateAction<APIError[] | undefined>>' },
+      },
+      setCancelFn: {
+        description: "Allows you to set a cancel upload function in the parent component",
+        type: { summary: 'React.Dispatch<React.SetStateAction<(() => void) | null>>' },
+      },
+      onSuccess: {
+        description: "A function that is called when an upload is successful",
+        type: { summary: '() => void' },
+      },
+    }}
+   >
+    {Template.bind({})}
+   </Story>
+ </Canvas>
+
+<ArgsTable
+  story="Component API"
+/>
