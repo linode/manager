@@ -41,34 +41,64 @@ export const Template = (args) => <PaymentMethodRow {...args} />
 
 ## Google Pay
 <Canvas>
-  <Story name="Google Pay">
-    <PaymentMethodRow
-      onDelete={onDelete}
-      paymentMethod={paymentMethodFactory.build({
+  <Story
+    name="Google Pay"
+    args={{
+      onDelete: onDelete,
+      paymentMethod: paymentMethodFactory.build({
         type: 'google_pay',
         data: {
           card_type: 'Visa',
         },
-      })}
-    />
+      }),
+    }}
+    argTypes={{
+      onDelete: {
+        description: "Function called when a payment method is deleted.",
+      },
+      paymentMethod: {
+        description: 'Payment method type and data.',
+      },
+    }}
+  >
+    {Template.bind({})}
   </Story>
 </Canvas>
 
+<ArgsTable
+  story="Google Pay"
+/>
+
 ## PayPal
 <Canvas>
-  <Story name="PayPal">
-    <PaymentMethodRow
-      onDelete={onDelete}
-      paymentMethod={paymentMethodFactory.build({
+  <Story
+    name="PayPal"
+    args={{
+      onDelete: onDelete,
+      paymentMethod: paymentMethodFactory.build({
         type: 'paypal',
         data: {
           paypal_id: 'ABCDEFG123',
           email: 'testemail@gmail.com',
         },
-    })}
-  />
+      }),
+    }}
+    argTypes={{
+      onDelete: {
+        description: "Function called when a payment method is deleted.",
+      },
+      paymentMethod: {
+        description: 'Payment method type and data.',
+      },
+    }}
+  >
+    {Template.bind({})}
   </Story>
 </Canvas>
+
+<ArgsTable
+  story="PayPal"
+/>
 
 ## Component API
 <Canvas>
