@@ -36,17 +36,26 @@ export interface Props extends DialogProps {
 
 type CombinedProps = Props;
 
-const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
+const ConfirmationDialog: React.FC<CombinedProps> = (props, ref) => {
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const classes = useStyles();
 
   const { title, children, actions, error, onClose, ...dialogProps } = props;
 
+  React.useImperativeHandle(ref, () => ({
+    openDialog: () => setDialogOpen(true),
+    closeDialog: () => setDialogOpen(false),
+  }));
+
+  console.log('Dialog rendered');
+
   return (
     <Dialog
       {...dialogProps}
+      open={dialogOpen}
       onClose={(_, reason) => {
         if (reason !== 'backdropClick') {
-          onClose();
+          setDialogOpen(false);
         }
       }}
       className={classes.root}
@@ -71,4 +80,4 @@ const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default ConfirmationDialog;
+export default React.forwardRef(ConfirmationDialog);

@@ -89,6 +89,16 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
+  const ipRemovalDialogRef = React.useRef();
+
+  const handleOpenIPRemovalDialog = () => {
+    ipRemovalDialogRef.current.openDialog();
+  };
+
+  const handleCloseIPRemovalDialog = () => {
+    ipRemovalDialogRef.current.closeDialog();
+  };
+
   const [isDialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
 
@@ -121,8 +131,9 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const handleClickRemove = (accessControl: string) => {
     setError(undefined);
-    setDialogOpen(true);
-    setAccessControlToBeRemoved(accessControl);
+    // setDialogOpen(true);
+    // setAccessControlToBeRemoved(accessControl);
+    handleOpenIPRemovalDialog();
   };
 
   const handleDialogClose = () => {
@@ -143,6 +154,8 @@ export const AccessControls: React.FC<Props> = (props) => {
       });
   };
 
+  console.log('AccessControls.tsx rendered');
+
   const ipTable = (accessControlsList: string[]) => {
     if (accessControlsList.length === 0) {
       return null;
@@ -161,7 +174,7 @@ export const AccessControls: React.FC<Props> = (props) => {
                 <InlineMenuAction
                   actionText="Remove"
                   className={classes.removeButton}
-                  onClick={() => handleClickRemove(accessControl)}
+                  onClick={handleOpenIPRemovalDialog}
                 />
               </TableCell>
             </TableRow>
@@ -173,7 +186,7 @@ export const AccessControls: React.FC<Props> = (props) => {
 
   const actionsPanel = (
     <ActionsPanel>
-      <Button buttonType="secondary" onClick={handleDialogClose}>
+      <Button buttonType="secondary" onClick={handleCloseIPRemovalDialog}>
         Cancel
       </Button>
 
@@ -205,6 +218,7 @@ export const AccessControls: React.FC<Props> = (props) => {
       {ipTable(allowList)}
       <ConfirmationDialog
         open={isDialogOpen}
+        ref={ipRemovalDialogRef}
         onClose={handleDialogClose}
         title={`Remove IP Address ${accessControlToBeRemoved}`}
         actions={actionsPanel}
