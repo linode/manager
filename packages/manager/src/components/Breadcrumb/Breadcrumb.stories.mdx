@@ -8,6 +8,32 @@ import UserIcon from 'src/assets/icons/user.svg';
   args={{
     pathname: '/linodes/9872893679817/test/lastcrumb',
   }}
+  argTypes={{
+    pathname: {
+      description: "A string representation of the path of a resource. Each crumb is seperated by a '/' character.",
+    },
+    crumbOverrides: {
+      description: 'An array of objects that can be used to customize any crumb.',
+      control: false,
+    },
+    labelTitle: {
+      description: 'A string that can be used to set a custom title for the last crumb.',
+    },
+    labelOptions: {
+      description: 'An object that can be used to configure the final crumb.',
+      control: false,
+    },
+    firstAndLastOnly: {
+      description: 'A boolean that if true will only show the first and last crumb',
+    },
+    onEditHandlers: {
+      description: 'An object that can be used to define functions, errors, and crumb title for an editable final crumb',
+      control: false,
+    },
+    removeCrumbX: {
+      description: 'A number indicating the position of the crumb to remove. Not zero indexed.',
+    },
+  }}
 />
 
 export const BreadcrumbTemplate = (args, context) => (
@@ -46,32 +72,6 @@ export const EditableBreadcrumbTemplate = (args, context) => {
   story="Basic"
   sort="requiredFirst"
   exclude={['className']}
-  argTypes={{
-    pathname: {
-      description: "A string representation of the path of a resource. Each crumb is seperated by a '/' character.",
-    },
-    crumbOverrides: {
-      description: 'An array of objects that can be used to customize any crumb.',
-      control: false,
-    },
-    labelTitle: {
-      description: 'A string that can be used to set a custom title for the last crumb.',
-    },
-    labelOptions: {
-      description: 'An object that can be used to configure the final crumb.',
-      control: false,
-    },
-    firstAndLastOnly: {
-      description: 'A boolean that if true will only show the first and last crumb',
-    },
-    onEditHandlers: {
-      description: 'An object that can be used to define functions, errors, and crumb title for an editable final crumb',
-      control: false,
-    },
-    removeCrumbX: {
-      description: 'A number indicating the position of the crumb to remove. Not zero indexed.',
-    },
-  }}
 />
 
 ### Breadcrum with Subtitle
