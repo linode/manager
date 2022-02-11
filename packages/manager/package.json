@@ -321,14 +321,6 @@
     "https-proxy-agent": "^3.0.1",
     "axe-core": "^3.4.0"
   },
-  "workspaces": {
-    "nohoist": [
-      "wdio-jasmine-framework*",
-      "launchdarkly-js-client-sdk",
-      "launchdarkly-js-sdk-common",
-      "launchdarkly-react-client-sdk"
-    ]
-  },
   "browserslist": [
     ">1%",
     "last 4 versions",
