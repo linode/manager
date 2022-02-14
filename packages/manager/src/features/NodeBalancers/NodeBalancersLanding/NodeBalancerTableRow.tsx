@@ -116,7 +116,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
 
       <TableCell data-qa-nodebalancer-ips>
         <div className={classes.ipsWrapper}>
-          <IPAddress ips={[ipv4]} copyRight showMore />
+          <IPAddress ips={[ipv4]} showMore />
         </div>
       </TableCell>
       <Hidden xsDown>
