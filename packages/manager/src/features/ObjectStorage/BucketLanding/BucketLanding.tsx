@@ -69,7 +69,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   } = useObjectStorageClusters();
 
   const {
-    data: objectStorageBucketsResponce,
+    data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
   } = useObjectStorageBuckets(objectStorageClusters);
@@ -200,7 +200,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       {/* If the user is attempting to delete their last Bucket, remind them
       that they will still be billed unless they cancel Object Storage in
       Account Settings. */}
-      {objectStorageBucketsResponce?.buckets.length === 1 && (
+      {objectStorageBucketsResponse?.buckets.length === 1 && (
         <CancelNotice className={classes.copy} />
       )}
       <Typography className={classes.copy}>
@@ -211,7 +211,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   ) : null;
 
   const unavailableClusters =
-    objectStorageBucketsResponce?.errors.map(
+    objectStorageBucketsResponse?.errors.map(
       (error: BucketError) => error.cluster
     ) || [];
 
@@ -226,12 +226,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   if (
     areClustersLoading ||
     areBucketsLoading ||
-    objectStorageBucketsResponce === undefined
+    objectStorageBucketsResponse === undefined
   ) {
     return <RenderLoading />;
   }
 
-  if (objectStorageBucketsResponce?.buckets.length === 0) {
+  if (objectStorageBucketsResponse?.buckets.length === 0) {
     return (
       <>
         {unavailableClusters.length > 0 && (
@@ -244,7 +244,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     );
   }
 
-  const totalUsage = sumBucketUsage(objectStorageBucketsResponce.buckets);
+  const totalUsage = sumBucketUsage(objectStorageBucketsResponse.buckets);
 
   return (
     <React.Fragment>
@@ -254,7 +254,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       )}
       <Grid item xs={12}>
         <OrderBy
-          data={objectStorageBucketsResponce.buckets}
+          data={objectStorageBucketsResponse.buckets}
           order={'asc'}
           orderBy={'label'}
         >
@@ -272,7 +272,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           }}
         </OrderBy>
         {/* If there's more than one Bucket, display the total usage. */}
-        {objectStorageBucketsResponce.buckets.length > 1 ? (
+        {objectStorageBucketsResponse.buckets.length > 1 ? (
           <Typography
             style={{ marginTop: 18, width: '100%', textAlign: 'center' }}
             variant="body1"
@@ -281,7 +281,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           </Typography>
         ) : null}
         <TransferDisplay
-          spacingTop={objectStorageBucketsResponce.buckets.length > 1 ? 8 : 18}
+          spacingTop={objectStorageBucketsResponse.buckets.length > 1 ? 8 : 18}
         />
       </Grid>
       <ConfirmationDialog

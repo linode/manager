@@ -74,7 +74,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   const { data: objectStroageClusters } = useObjectStorageClusters();
 
   const {
-    data: objectStorageBucketsResponce,
+    data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
   } = useObjectStorageBuckets(objectStroageClusters);
@@ -126,7 +126,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
   const shouldDisplayBillingNotice =
     !areBucketsLoading &&
     !bucketsErrors &&
-    objectStorageBucketsResponce?.buckets.length === 0 &&
+    objectStorageBucketsResponse?.buckets.length === 0 &&
     accountSettings?.object_storage === 'active';
 
   const matchesAccessKeys = Boolean(
