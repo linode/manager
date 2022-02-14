@@ -56,6 +56,7 @@ type ClassNames =
   | 'multipleRDNSButton'
   | 'multipleRDNSText'
   | 'row'
+  | 'ipAddress'
   | 'copy';
 
 const styles = (theme: Theme) =>
@@ -84,6 +85,9 @@ const styles = (theme: Theme) =>
       '&:hover $copy > svg': {
         opacity: 1,
       },
+    },
+    ipAddress: {
+      whiteSpace: 'nowrap',
     },
     copy: {
       marginLeft: 4,
@@ -319,7 +323,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         className={classes.row}
         data-qa-ip={address}
       >
-        <TableCell parentColumn="Address" data-qa-ip-address>
+        <TableCell
+          parentColumn="Address"
+          className={classes.ipAddress}
+          data-qa-ip-address
+        >
           {address}
           <CopyTooltip className={classes.copy} text={address} />
         </TableCell>
