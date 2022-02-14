@@ -5,7 +5,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
@@ -26,7 +25,6 @@ interface Props {
   currentProvider: Provider;
   newProvider: TPAProvider;
   open: boolean;
-  error?: string;
   onClose: () => void;
 }
 
@@ -36,7 +34,7 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const { currentProvider, newProvider, open, error, onClose } = props;
+  const { currentProvider, newProvider, open, onClose } = props;
 
   // Get list of providers from LaunchDarkly
   const providers = flags.tpaProviders ?? [];
@@ -53,7 +51,6 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
       open={open}
       onClose={onClose}
     >
-      {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
         This will disable your login via{' '}
         {currentProvider.displayName === 'Linode'

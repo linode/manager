@@ -150,6 +150,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           {providersIncludingLinode.map((thisProvider) => {
             const ProviderIcon = icons[thisProvider.name];
             const isProviderEnabled = props.authType === thisProvider.name;
+
             return (
               <Grid item md={4} key={thisProvider.displayName}>
                 <Button
