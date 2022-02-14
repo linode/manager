@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-02-14] - v1.59.1
+
+### Changed:
+
+- Disable "Make a Payment" button if restricted user has read_only access
+- Default Linode image to Debian 11
+
+### Fixed:
+
+- Icon showing after IP address in Linodes landing table
+
 ## [2022-02-07] - v1.59.0
 
 ### Added:
