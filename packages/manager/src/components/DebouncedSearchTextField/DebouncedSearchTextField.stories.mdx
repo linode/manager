@@ -1,6 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import TextFieldExample from './StoryComponents/TextFieldExample';
-import SelectExample from './StoryComponents/SelectExample';
 
 <Meta title="Components/Search" component={TextFieldExample} />
 
@@ -42,10 +41,3 @@ export const Template = (args) => {
 <ArgsTable
   story="Text Field"
 />
-
-## Select Field
-<Canvas>
-  <Story name="Select Field">
-    <SelectExample list={list} />
-  </Story>
-</Canvas>
