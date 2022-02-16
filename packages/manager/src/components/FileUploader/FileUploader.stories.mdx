@@ -64,18 +64,22 @@ This component enables users to attach and upload custom Images.
       apiError: {
         description: "An error to display if an upload error occoured",
         type: { summary: 'string | undefined', name: 'string', required: true },
+        control: { type: null },
       },
       setErrors: {
         description: "A function that allows you to set an error value in the parent component",
         type: { summary: 'React.Dispatch<React.SetStateAction<APIError[] | undefined>>', required: true },
+        control: { type: null },
       },
       setCancelFn: {
         description: "Allows you to set a cancel upload function in the parent component",
         type: { summary: 'React.Dispatch<React.SetStateAction<(() => void) | null>>', required: true },
+        control: { type: null },
       },
       onSuccess: {
         description: "A function that is called when an upload is successful",
         type: { summary: '() => void' },
+        control: { type: null },
       },
     }}
    >
