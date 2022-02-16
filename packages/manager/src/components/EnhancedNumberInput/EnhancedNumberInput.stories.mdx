@@ -1,4 +1,5 @@
 import Typography from 'src/components/core/Typography';
+import Paper from 'src/components/core/Paper';
 import EnhancedNumberInput from './EnhancedNumberInput';
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
@@ -22,7 +23,7 @@ User-interface element for inputting numeric information.
 
 ### Guidelines
 - Use steppers for numerical fields with a clear most frequently selected value
-- When appropriate set the most frequently selected value as a stepper default (for example, 3 nodes is the recommended minimum for a Kubernetes cluster))
+- When appropriate set the most frequently selected value as a stepper default (for example, 3 nodes is the recommended minimum for a Kubernetes cluster)
 - Use large buttons for both desktop and mobile
 - Use +/- or arrow up/down for  the buttons 
 - If the input value has a maximum or minimum limit, be sure to indicate it
@@ -37,11 +38,13 @@ export const decorators = [
 
 export const Template = (args, context) => {
   return (
-    <EnhancedNumberInput
-      {...args}
-      value={args.value || context.value}
-      setValue={context.setValue}
-    />
+    <Paper>
+      <EnhancedNumberInput
+        {...args}
+        value={args.value || context.value}
+        setValue={context.setValue}
+      />
+    </Paper>
   );
 };
 
