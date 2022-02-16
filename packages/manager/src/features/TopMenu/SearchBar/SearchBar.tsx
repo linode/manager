@@ -21,7 +21,10 @@ import { sendSearchBarUsedEvent } from 'src/utilities/ga';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
-import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
+import {
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -88,13 +91,17 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   // Only request things if the search bar is open/active.
   const shouldMakeRequests = searchActive && !_isLargeAccount;
 
-  const { _loading } = useReduxLoad(
-    searchDeps,
-    REFRESH_INTERVAL,
+  const { data: objectStorageClusters } = useObjectStorageClusters(
+    shouldMakeRequests
+  );
+  const { data: objectStorageBuckets } = useObjectStorageBuckets(
+    objectStorageClusters,
     shouldMakeRequests
   );
 
-  const { loading: objectStorageLoading } = useObjectStorage(
+  const { _loading } = useReduxLoad(
+    searchDeps,
+    REFRESH_INTERVAL,
     shouldMakeRequests
   );
 
@@ -125,15 +132,15 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText);
+      search(searchText, objectStorageBuckets?.buckets || []);
     }
   }, [
     _loading,
-    objectStorageLoading,
     search,
     searchText,
     _searchAPI,
     _isLargeAccount,
+    objectStorageBuckets,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -217,7 +224,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const finalOptions = createFinalOptions(
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading || apiSearchLoading || objectStorageLoading,
+    _loading || apiSearchLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
