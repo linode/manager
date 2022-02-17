@@ -50,13 +50,7 @@ export interface Props {
   renderVariant?: () => JSX.Element | null;
 }
 
-interface WithTooltipProps {
-  title?: string;
-}
-
-type CombinedProps = Props & WithTooltipProps;
-
-const SelectionCard: React.FC<CombinedProps> = (props) => {
+const SelectionCard: React.FC<Props> = (props) => {
   const {
     heading,
     subheadings,
