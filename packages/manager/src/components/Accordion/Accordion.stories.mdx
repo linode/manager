@@ -16,53 +16,15 @@ Accordions are better suited for when people need to focus on content that is ke
 - Can make pages seem less complex
  
 ### Cons
-- Can be cumbersome which adds to cognitive load. “People treat clicks like currency and they don't spend it frivolously.” - NNG [Citation](https://www.nngroup.com/articles/clickable-elements/)
+- Can be cumbersome which adds to cognitive load
+  - “People treat clicks like currency and they don't spend it frivolously” - NNG [Citation](https://www.nngroup.com/articles/clickable-elements/)
 - Increases interaction cost
-- Accordions collapsed by default diminish people's awareness of content
+- Accordions collapsed by default diminishes people's awareness of content
 
 <Canvas>
   <Story name="Default" >
     <Accordion heading="This an Accordion">
       <p>The children of the Accordion go here!</p>
-    </Accordion>
-  </Story>
-</Canvas>
-
-## Success
-
-<Canvas>
-  <Story name="Success" >
-    <Accordion
-      success="You did it!"
-      heading="This Accordion will display a success"
-    >
-      <p>Customer service!</p>
-    </Accordion>
-  </Story>
-</Canvas>
-
-## Warning
-
-<Canvas>
-  <Story name="Warning" >
-    <Accordion
-      warning="Careful now..."
-      heading="This Accordion will display a warning"
-    >
-      <p>Customer service!</p>
-    </Accordion>
-  </Story>
-</Canvas>
-
-## Error
-
-<Canvas>
-  <Story name="Error" >
-    <Accordion
-      error="Oh no! Something broke!"
-      heading="This Accordion will display a error"
-    >
-      <p>Customer service!</p>
     </Accordion>
   </Story>
 </Canvas>
@@ -79,7 +41,6 @@ export const renderActions = () => {
     </ActionsPanel>
   );
 };
-
 
 export const Template = (args) => (
   <Accordion {...args}>
@@ -141,14 +102,17 @@ The Accordion component's props extends the Material UI Accordion props
        summaryProps: {
          description: "Allows you to pass props to the Accordion Summary",
          type: { summary: 'AccordionSummaryProps | undefined' },
+         control: { type: null },
        },
        headingProps: {
          description: "Allows you to pass props to the Accordion's Typography Header",
          type: { summary: 'TypographyProps | undefined' },
+         control: { type: null },
        },
        detailProps: {
          description: "Allows you to pass props to the Accordion Details",
          type: { summary: 'AccordionDetailsProps | undefined' },
+         control: { type: null },
        },
     }}
   >
