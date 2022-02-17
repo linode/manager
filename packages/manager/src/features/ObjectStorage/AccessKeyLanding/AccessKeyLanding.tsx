@@ -1,19 +1,14 @@
 import {
   createObjectStorageKeys,
-  getObjectStorageKeys,
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage';
 import { FormikBag } from 'formik';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
-import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { useAccountSettings } from 'src/queries/accountSettings';
@@ -28,6 +23,9 @@ import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 import { MODE, OpenAccessDrawer } from './types';
 import ViewPermissionsDrawer from './ViewPermissionsDrawer';
+import { useObjectStorageAccessKeys } from 'src/queries/objectStorage';
+import usePagination from 'src/hooks/usePagination';
+import PaginationFooter from 'src/components/PaginationFooter';
 
 interface Props {
   isRestrictedUser: boolean;
@@ -37,18 +35,23 @@ interface Props {
   mode: MODE;
 }
 
-export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
+export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
 
-type CombinedProps = Props & PaginationProps<ObjectStorageKey>;
-
-export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
+export const AccessKeyLanding: React.FC<Props> = (props) => {
   const {
     closeAccessDrawer,
     openAccessDrawer,
     mode,
     accessDrawerOpen,
-    ...paginationProps
+    isRestrictedUser,
   } = props;
+
+  const pagination = usePagination(1);
+
+  const { data, isLoading, error, refetch } = useObjectStorageAccessKeys({
+    page: pagination.page,
+    page_size: pagination.pageSize,
+  });
 
   const {
     data: accountSettings,
@@ -77,11 +80,6 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
   const revokeKeysDialog = useOpenClose();
   const viewPermissionsDrawer = useOpenClose();
 
-  // Request object storage key when component is first rendered
-  React.useEffect(() => {
-    paginationProps.request();
-  }, []);
-
   const handleCreateKey = (
     values: ObjectStorageKeyRequest,
     { setSubmitting, setErrors, setStatus }: FormikProps
@@ -97,7 +95,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
         setKeyToDisplay(data);
 
         // "Refresh" keys to include the newly created key
-        paginationProps.request();
+        refetch();
 
         props.closeAccessDrawer();
         displayKeysDialog.open();
@@ -163,7 +161,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
         setSubmitting(false);
 
         // "Refresh" keys to display the newly updated key
-        paginationProps.request();
+        refetch();
 
         closeAccessDrawer();
 
@@ -202,7 +200,7 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
         setIsRevoking(false);
 
         // "Refresh" keys to remove the newly revoked key
-        paginationProps.request();
+        refetch();
 
         revokeKeysDialog.close();
 
@@ -249,17 +247,20 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
     <div>
       <DocumentTitleSegment segment="Access Keys" />
       <AccessKeyTable
-        {...paginationProps}
+        data={data?.data}
+        isLoading={isLoading}
+        error={error}
+        isRestrictedUser={isRestrictedUser}
         openDrawer={openDrawer}
         openRevokeDialog={openRevokeDialog}
         data-qa-access-key-table
       />
       <PaginationFooter
-        page={props.page}
-        pageSize={props.pageSize}
-        count={props.count}
-        handlePageChange={props.handlePageChange}
-        handleSizeChange={props.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        count={data?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
         eventCategory="object storage keys table"
       />
       <AccessKeyDrawer
@@ -287,18 +288,11 @@ export const AccessKeyLanding: React.FC<CombinedProps> = (props) => {
         handleClose={closeRevokeDialog}
         handleSubmit={handleRevokeKeys}
         isLoading={isRevoking}
-        numAccessKeys={pathOr<number>(0, ['data', 'length'], paginationProps)}
+        numAccessKeys={data?.results || 0}
         errors={revokeErrors}
       />
     </div>
   );
 };
 
-const updatedRequest = (_: CombinedProps, params: any, filters: any) =>
-  getObjectStorageKeys(params, filters);
-
-const paginated = Pagey(updatedRequest);
-
-const enhanced = compose<CombinedProps, Props>(paginated);
-
-export default enhanced(AccessKeyLanding);
+export default AccessKeyLanding;
