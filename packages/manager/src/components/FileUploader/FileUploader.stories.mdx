@@ -114,14 +114,17 @@ This component enables users to attach and upload files to be stored in Object S
       clusterId: {
         description: "The Object Storage cluster to upload to",
         type: { summary: 'string', required: true },
+        control: { type: null },
       },
       bucketName: {
         description: "The Object Storage bucket to upload to",
         type: { summary: 'string', required: true },
+        control: { type: null },
       },
       prefix: {
         description: "The Object Storage prefix (path) to upload to",
         type: { summary: 'string', required: true },
+        control: { type: null },
       },
       maybeAddObjectToTable: {
         description: "A function that is called when an Object is uploaded successfully so we can manually update our local store to reflect the upload",
