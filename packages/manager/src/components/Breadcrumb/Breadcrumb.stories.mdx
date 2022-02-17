@@ -7,6 +7,7 @@ import UserIcon from 'src/assets/icons/user.svg';
   component={Breadcrumb}
   args={{
     pathname: '/linodes/9872893679817/test/lastcrumb',
+    firstAndLastOnly: false,
   }}
   argTypes={{
     pathname: {
@@ -58,8 +59,8 @@ export const EditableBreadcrumbTemplate = (args, context) => {
 # Breadcrumb
 
 ## Usage
-- Include the current page as the last item in the breadcrumb trail.
-- In the breadcrumb trail, the breadcrumb corresponding the the current page should not be a link.
+- Include the current page as the last item in the Breadcrumb trail.
+- In the Breadcrumb trail, the Breadcrumb corresponding the the current page should not be a link.
 
 <Canvas>
   <Story name="Basic">
@@ -74,7 +75,7 @@ export const EditableBreadcrumbTemplate = (args, context) => {
   exclude={['className']}
 />
 
-### Breadcrum with Subtitle
+### Breadcrumb with Subtitle
 ---
 
 <Canvas>
@@ -89,7 +90,7 @@ export const EditableBreadcrumbTemplate = (args, context) => {
   </Story>
 </Canvas>
 
-### Breadcrum with Prefix Component
+### Breadcrumb with Prefix Component
 ---
 
 <Canvas>
@@ -115,7 +116,7 @@ export const EditableBreadcrumbTemplate = (args, context) => {
   </Story>
 </Canvas>
 
-### Breadcrum with Editable Text
+### Breadcrumb with Editable Text
 ---
 
 <Canvas>
