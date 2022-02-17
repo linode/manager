@@ -10,6 +10,15 @@ module.exports = {
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
   ],
+  typescript: {
+    reactDocgen: 'react-docgen-typescript',
+    reactDocgenTypescriptOptions: {
+      compilerOptions: {
+        allowSyntheticDefaultImports: false,
+        esModuleInterop: false,
+      },
+    },
+  },
   webpackFinal: (config) => {
     /**
      * Added logic to find svg config included with Storybook and tell it to excude all svgs.
