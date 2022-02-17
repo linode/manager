@@ -440,6 +440,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
                 onSuccess={this.onCreateReplySuccess}
                 reloadAttachments={this.reloadAttachments}
                 closeTicketSuccess={this.closeTicketSuccess}
+                lastReply={replies && replies[replies.length - 1]}
               />
             )}
           </Grid>
