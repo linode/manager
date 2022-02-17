@@ -1,4 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Typography from 'src/components/core/Typography';
 import TagsPanel from './TagsPanel';
 
 <Meta
@@ -31,12 +32,22 @@ export const Template = (args) => {
         } else {
           console.log('not found');
         }
-        setTags([...tags, selected]);
+        setTags([selected]);
         resolve();
       }, 500);
     });
   };
-  return <TagsPanel tags={tags} updateTags={updateTags} {...args} />;
+  return (
+    <>
+      <TagsPanel tags={tags} updateTags={updateTags} {...args} />
+      <Typography style={{ marginTop: 12 }}>
+        <i>
+          Modifying the tags in this example does not currently work at the
+          moment.
+        </i>
+      </Typography>
+    </>
+  );
 };
 
 <Canvas>
