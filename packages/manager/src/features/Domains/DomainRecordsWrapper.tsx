@@ -78,11 +78,7 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
           <Typography variant="h3" className={classes.title} data-qa-title>
             Tags
           </Typography>
-          <TagsPanel
-            align="left"
-            tags={domain.tags}
-            updateTags={handleUpdateTags}
-          />
+          <TagsPanel tags={domain.tags} updateTags={handleUpdateTags} />
         </Paper>
         <div className={hookClasses.delete}>
           <DeleteDomain
