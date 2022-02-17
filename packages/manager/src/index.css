@@ -143,26 +143,6 @@ body.searchOverlay #main-content {
   align-items: center;
 }
 
-.xScroll {
-  overflow-x: auto;
-  padding-bottom: 12px;
-  margin-bottom: -12px;
-}
-.xScroll::-webkit-scrollbar {
-  -webkit-appearance: none;
-}
-.xScroll::-webkit-scrollbar:horizontal {
-  height: 6px;
-}
-.xScroll::-webkit-scrollbar-thumb {
-  border-radius: 8px;
-  background-color: #ccc;
-}
-.xScroll::-webkit-scrollbar-track {
-  background-color: #fff;
-  border-radius: 8px;
-}
-
 a {
   text-decoration: none;
   color: #2575d0;

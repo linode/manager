@@ -10,12 +10,10 @@ const privateIP2 = '192.168.220.102';
 
 const classes = {
   root: '',
-  left: '',
   right: '',
   icon: '',
   row: '',
   multipleAddresses: '',
-  ip: '',
   ipLink: '',
   hide: 'hide',
 };
@@ -46,15 +44,9 @@ describe('IPAddress', () => {
     expect(showmore.prop('items')).toEqual(['8.8.4.4']);
   });
 
-  it('should show the copy icon if copyRight is true', () => {
-    expect(component.find('[data-qa-copy-ip]')).toHaveLength(0);
-    component.setProps({ copyRight: true });
-    expect(component.find('[data-qa-copy-ip]')).toHaveLength(1);
-  });
-
-  it('should render the copyIcon, but not show it, if copyRight is true and showCopyOnHover is true', () => {
+  it('should render the copy icon, but not show it if showCopyOnHover is true', () => {
     expect(component.find('.hide')).toHaveLength(0);
-    component.setProps({ copyRight: true, showCopyOnHover: true });
+    component.setProps({ showCopyOnHover: true });
     const copy = component.find('[data-qa-copy-ip]');
     expect(copy).toHaveLength(1);
     expect(component.find('.hide')).toHaveLength(1);
