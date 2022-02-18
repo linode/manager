@@ -27,7 +27,7 @@ User-interface element for inputting numeric information.
 - Use large buttons for both desktop and mobile
 - Use +/- or arrow up/down for  the buttons 
 - If the input value has a maximum or minimum limit, be sure to indicate it
-- Make the step and the unit explicit  (e.g., dollars, cents, percentage).
+- Make the step and the unit explicit  (e.g., dollars, cents, percentage)
 
 export const decorators = [
    (Story, context) => {
@@ -50,10 +50,10 @@ export const Template = (args, context) => {
 
 <Canvas>
   <Story
-    name="Component API"
+    name="Enhanced Number Input"
     decorators={decorators}
     args={{
-      value: undefined,
+      value: 0,
       setValue: undefined,
       max: undefined,
       min: undefined,
@@ -112,4 +112,4 @@ export const Template = (args, context) => {
   </Story>
 </Canvas>
 
-<ArgsTable story="Component API" />
+<ArgsTable story="Enhanced Number Input" />
