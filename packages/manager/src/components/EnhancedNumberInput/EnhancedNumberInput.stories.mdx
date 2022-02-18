@@ -1,11 +1,11 @@
 import Typography from 'src/components/core/Typography';
 import Paper from 'src/components/core/Paper';
-import EnhancedNumberInput from './EnhancedNumberInput';
+import { EnhancedNumberInput } from './EnhancedNumberInput';
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
 <Meta
   title="UI Elements/Enhanced Number Input"
-  components={EnhancedNumberInput}
+  component={EnhancedNumberInput}
 />
 
 # Enhanced Number Input
@@ -98,8 +98,9 @@ export const Template = (args, context) => {
         },
       },
       inputLabel: {
-        description: "The label of the input",
+        description: "The label of the input. This prop does not cause any visual UI changes",
         type: { summary: 'string', name: 'string' },
+        control: false,
         table: {
           defaultValue: {
             summary: 'Edit Quantity',
