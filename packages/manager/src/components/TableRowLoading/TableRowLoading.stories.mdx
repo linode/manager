@@ -17,68 +17,9 @@ export const renderTableHead = (w1 = 25, w2 = 25, w3 = 25, w4= 25) => (
   </TableHead>
 );
 
-<Meta title="Components/Table/Table Row Loading" component={TableRowLoading} />
+<Meta title="Components/Table" component={TableRowLoading} />
 
 # Table Row Loading
-
-For pages that may take a little time to load on slower connections, consider adding a skeleton UI to indicate the page is loading.
-
-<Canvas>
-  <Story name="Default">
-    <Table>
-      {renderTableHead()}
-      <TableBody>
-        <TableRowLoading colSpan={4} />
-      </TableBody>
-    </Table>
-  </Story>
-</Canvas>
-
-## With Custom Widths
-
-<Canvas>
-  <Story name="Custom Widths">
-    <Table>
-      {renderTableHead(40, 20, 20, 20)}
-      <TableBody>
-        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} />
-      </TableBody>
-    </Table>
-  </Story>
-</Canvas>
-
-## One Line Skeleton
-
-<Canvas>
-  <Story name="One Line Skeleton">
-    <Table>
-      {renderTableHead(40, 20, 20, 20)}
-      <TableBody>
-        <TableRowLoading colSpan={4} widths={[40, 20, 20, 20]} oneLine />
-      </TableBody>
-    </Table>
-  </Story>
-</Canvas>
-
-## Entity Icon
-
-<Canvas>
-  <Story name="Entity Icon">
-    <Table>
-      {renderTableHead(40, 20, 20, 20)}
-      <TableBody>
-        <TableRowLoading
-          colSpan={4}
-          widths={[40, 20, 20, 20]}
-          oneLine
-          hasEntityIcon
-        />
-      </TableBody>
-    </Table>
-  </Story>
-</Canvas>
-
-## Component API
 
 export const Template = (args) => {
   const heads = [];
@@ -98,7 +39,7 @@ export const Template = (args) => {
 
 <Canvas>
   <Story
-    name="Component API"
+    name="Table Row Loading"
     args={{
       colSpan: 4,
     }}
@@ -107,4 +48,4 @@ export const Template = (args) => {
   </Story>
 </Canvas>
 
-<ArgsTable story="Component API" />
+<ArgsTable story="Table Row Loading" />
