@@ -4,6 +4,7 @@ import * as React from 'react';
 import FileCopy from 'src/assets/icons/copy.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ToolTip from 'src/components/core/Tooltip';
 
 interface Props {
   text: string;
@@ -14,18 +15,6 @@ interface Props {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes popUp': {
-    from: {
-      opacity: 0,
-      top: -10,
-      transform: 'scale(.1)',
-    },
-    to: {
-      opacity: 1,
-      top: -45,
-      transform: 'scale(1)',
-    },
-  },
   root: {
     position: 'relative',
     padding: 4,
@@ -46,17 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor: theme.color.white,
     },
-  },
-  copied: {
-    fontSize: '.85rem',
-    left: -16,
-    color: theme.palette.text.primary,
-    padding: '6px 8px',
-    backgroundColor: theme.color.white,
-    position: 'absolute',
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    transition: 'opacity .5s ease-in-out',
-    animation: '$popUp 200ms ease-in-out forwards',
   },
   standAlone: {
     marginLeft: theme.spacing(1),
@@ -90,27 +68,24 @@ export const CopyTooltip: React.FC<Props> = (props) => {
   };
 
   return (
-    <button
-      aria-label={`Copy ${text} to clipboard`}
-      name={text}
-      type="button"
-      onClick={handleIconClick}
-      className={classNames(className, {
-        [classes.root]: true,
-        [classes.standAlone]: standAlone,
-        [classes.flex]: Boolean(displayText),
-      })}
-    >
-      {copied && (
-        <span className={classes.copied} data-qa-copied>
-          Copied!
-        </span>
-      )}
-      <FileCopy />
-      {displayText && (
-        <Typography className={classes.displayText}>{displayText}</Typography>
-      )}
-    </button>
+    <ToolTip title={copied ? 'Copied!' : 'Copy'} placement="top" data-qa-copied>
+      <button
+        aria-label={`Copy ${text} to clipboard`}
+        name={text}
+        type="button"
+        onClick={handleIconClick}
+        className={classNames(className, {
+          [classes.root]: true,
+          [classes.standAlone]: standAlone,
+          [classes.flex]: Boolean(displayText),
+        })}
+      >
+        <FileCopy />
+        {displayText && (
+          <Typography className={classes.displayText}>{displayText}</Typography>
+        )}
+      </button>
+    </ToolTip>
   );
 };
 
