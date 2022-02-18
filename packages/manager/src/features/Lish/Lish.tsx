@@ -6,19 +6,19 @@ import {
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
+import SafeTabPanel from 'src/components/SafeTabPanel';
+import TabLinkList from 'src/components/TabLinkList';
 import { Tab } from 'src/components/TabLinkList/TabLinkList';
 import Glish from './Glish';
 import Weblish from './Weblish';
@@ -235,7 +235,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     // if we're loading show circular spinner
     if (loading) {
-      return <CircleProgress noInner className={classes.progress} />;
+      return <CircleProgress className={classes.progress} />;
     }
 
     // Only show 404 component if we are missing _both_ linode and token
