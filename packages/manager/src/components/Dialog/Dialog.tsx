@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Close from '@material-ui/icons/Close';
 import Button from 'src/components/Button';
-import MUIDialog, {
+import {
+  default as _Dialog,
   DialogProps as _DialogProps,
-} from 'src/components/core/Dialog';
+} from '@material-ui/core/Dialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Dialog: React.FC<DialogProps> = (props) => {
+export const Dialog: React.FC<DialogProps> = (props) => {
   const {
     className,
     title,
@@ -105,7 +106,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
   const titleID = convertForAria(title);
 
   return (
-    <MUIDialog
+    <_Dialog
       title={title}
       maxWidth={props.maxWidth ?? 'md'}
       {...rest}
@@ -151,7 +152,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
           </div>
         </Grid>
       </Grid>
-    </MUIDialog>
+    </_Dialog>
   );
 };
 

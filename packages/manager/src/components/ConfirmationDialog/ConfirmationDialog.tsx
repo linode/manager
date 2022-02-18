@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Dialog, { DialogProps } from 'src/components/core/Dialog';
+import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';

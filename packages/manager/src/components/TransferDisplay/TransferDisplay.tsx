@@ -3,7 +3,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Dialog from 'src/components/core/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';

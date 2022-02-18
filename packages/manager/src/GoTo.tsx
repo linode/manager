@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import MUIDialog from 'src/components/core/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import { useHistory } from 'react-router-dom';
 import useFlags from './hooks/useFlags';
 import { isFeatureEnabled } from './utilities/accountCapabilities';
@@ -168,7 +168,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
   ]);
 
   return (
-    <MUIDialog
+    <Dialog
       classes={dialogClasses}
       title="Go To..."
       open={props.open}
@@ -195,7 +195,7 @@ const GoTo: React.FC<CombinedProps> = (props) => {
           menuIsOpen={true}
         />
       </div>
-    </MUIDialog>
+    </Dialog>
   );
 };
 
