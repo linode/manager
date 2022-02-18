@@ -1,40 +1,32 @@
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames = 'root' | 'header' | 'toggleLabel' | 'toggleLabelText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      backgroundColor: theme.bg.offWhite,
-      padding: theme.spacing(1),
-    },
-    header: {
-      marginBottom: theme.spacing(1),
-      fontSize: 17,
-    },
-    toggleLabel: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      marginLeft: 0,
-      marginBottom: theme.spacing(1),
-    },
-    toggleLabelText: {
-      marginTop: theme.spacing(1) + theme.spacing(1) / 2,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    backgroundColor: theme.bg.offWhite,
+    padding: theme.spacing(1),
+  },
+  header: {
+    marginBottom: theme.spacing(1),
+    fontSize: 17,
+  },
+  toggleLabel: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    marginLeft: 0,
+    marginBottom: theme.spacing(1),
+  },
+  toggleLabelText: {
+    marginTop: theme.spacing(1) + theme.spacing(1) / 2,
+  },
+}));
 
 interface Props {
   enabled: boolean;
@@ -42,10 +34,12 @@ interface Props {
   toggle: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const AutoEnroll: React.FC<CombinedProps> = (props) => {
-  const { classes, enabled, error, toggle } = props;
+  const classes = useStyles();
+  const { enabled, error, toggle } = props;
+
   return (
     <Paper className={classes.root}>
       {error && (
@@ -88,6 +82,4 @@ export const AutoEnroll: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(AutoEnroll);
+export default AutoEnroll;

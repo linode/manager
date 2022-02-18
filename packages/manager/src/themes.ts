@@ -152,8 +152,7 @@ const darkThemeOptions = {
   },
   bg: {
     main: '#2f3236',
-    offWhite: '#111111',
-    offWhiteDT: '#444', // better handing for dark theme
+    offWhite: '#444',
     navy: '#32363c',
     lightBlue: '#222',
     white: '#32363c',

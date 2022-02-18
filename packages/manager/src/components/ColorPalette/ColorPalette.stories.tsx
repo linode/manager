@@ -3,7 +3,7 @@ import ColorPalette from './ColorPalette';
 import ColorPalette_CMR from './ColorPalette_CMR';
 
 export default {
-  title: 'Core/Color Palette',
+  title: 'Core/ColorPalette',
 };
 
 export const Default = () => <ColorPalette />;

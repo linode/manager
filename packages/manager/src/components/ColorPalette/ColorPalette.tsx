@@ -71,7 +71,6 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
   const bgColors = [
     { color: theme.bg.main, alias: 'theme.bg.main' },
     { color: theme.bg.offWhite, alias: 'theme.bg.offWhite' },
-    { color: theme.bg.offWhiteDT, alias: 'theme.bg.offWhiteDT' },
     { color: theme.bg.navy, alias: 'theme.bg.navy' },
     { color: theme.bg.lightBlue, alias: 'theme.bg.lightBlue' },
     { color: theme.bg.white, alias: 'theme.bg.white' },

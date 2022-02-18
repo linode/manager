@@ -51,7 +51,7 @@ const styles = (theme: Theme) =>
       )}px`,
       padding: 10,
       color: '#777',
-      backgroundColor: theme.bg.offWhiteDT,
+      backgroundColor: theme.bg.offWhite,
       border: `1px solid ${theme.color.border3}`,
       fontSize: 14,
     },

@@ -280,8 +280,7 @@ const themeDefaults: ThemeDefaults = () => {
     },
     bg: {
       main: '#f4f4f4',
-      offWhite: '#fbfbfb',
-      offWhiteDT: '#fbfbfb', // better handing for dark theme
+      offWhite: '#fbfbfb', // better handing for dark theme
       navy: '#32363c',
       lightBlue: '#f0f7ff',
       white: '#fff',

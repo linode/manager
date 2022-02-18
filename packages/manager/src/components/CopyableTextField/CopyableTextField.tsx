@@ -4,9 +4,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  input: {
-    backgroundColor: theme.bg.offWhite,
-  },
   copyIcon: {
     marginRight: theme.spacing(0.5),
     '& svg': {

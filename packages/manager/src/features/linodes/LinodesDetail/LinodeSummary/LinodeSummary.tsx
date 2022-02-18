@@ -72,7 +72,7 @@ const styles = (theme: Theme) =>
       },
     },
     grid: {
-      backgroundColor: theme.bg.offWhiteDT,
+      backgroundColor: theme.bg.offWhite,
       border: `solid 1px ${theme.cmrBorderColors.divider}`,
       marginBottom: theme.spacing(2),
       '&.MuiGrid-item': {
