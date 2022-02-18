@@ -9,7 +9,6 @@ import ToolTip from 'src/components/core/Tooltip';
 interface Props {
   text: string;
   className?: string;
-  standAlone?: boolean;
   displayText?: string;
   onClickCallback?: () => void;
 }
@@ -36,12 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.color.white,
     },
   },
-  standAlone: {
-    marginLeft: theme.spacing(1),
-    '& svg': {
-      width: 14,
-    },
-  },
   flex: {
     display: 'flex',
     width: 'auto !important',
@@ -56,7 +49,7 @@ export const CopyTooltip: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [copied, setCopied] = React.useState<boolean>(false);
 
-  const { text, className, standAlone, displayText, onClickCallback } = props;
+  const { text, className, displayText, onClickCallback } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -76,7 +69,6 @@ export const CopyTooltip: React.FC<Props> = (props) => {
         onClick={handleIconClick}
         className={classNames(className, {
           [classes.root]: true,
-          [classes.standAlone]: standAlone,
           [classes.flex]: Boolean(displayText),
         })}
       >
