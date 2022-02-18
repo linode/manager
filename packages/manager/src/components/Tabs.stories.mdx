@@ -3,7 +3,6 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 
@@ -35,32 +34,19 @@ Tabs allow users to view content across categories that are all related and shar
 export const TabsContent = () =>
   _tabs.map((tab, idx) => (
     <SafeTabPanel index={idx}>
-      <Paper style={{ paddingTop: 20 }}>
+      <Paper style={{ paddingTop: 8, paddingLeft: 16 }}>
         <Typography variant="body1">Panel {idx + 1}</Typography>
       </Paper>
     </SafeTabPanel>
   ));
 
 export const Template = (args) => (
-  <Grid
-    container
-    justifyContent="center"
-    style={{
-      backgroundColor: '#f4f5f6',
-      height: '100%',
-      paddingTop: 24,
-      paddingBottom: 32,
-    }}
-  >
-    <Grid item xs={10}>
-      <Tabs {...args}>
-        <TabLinkList tabs={_tabs} />
-        <TabPanels>
-          <TabsContent />
-        </TabPanels>
-      </Tabs>
-    </Grid>
-  </Grid>
+  <Tabs {...args}>
+    <TabLinkList tabs={_tabs} />
+    <TabPanels>
+      <TabsContent />
+    </TabPanels>
+  </Tabs>
 );
 
 <Canvas>
