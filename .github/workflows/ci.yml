@@ -217,6 +217,14 @@ jobs:
       - build-sdk
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "14.17.4"
+      - uses: actions/cache@v2
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - uses: actions/download-artifact@v2
         with:
           name: packages-validation-lib
@@ -225,6 +233,7 @@ jobs:
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
+      - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build-storybook
       - uses: actions/upload-artifact@v2
         with:
