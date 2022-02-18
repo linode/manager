@@ -33,7 +33,7 @@ Tabs allow users to view content across categories that are all related and shar
 
 export const TabsContent = () =>
   _tabs.map((tab, idx) => (
-    <SafeTabPanel index={idx}>
+    <SafeTabPanel key={`tab-${idx}`} index={idx}>
       <Paper style={{ paddingTop: 8, paddingLeft: 16 }}>
         <Typography variant="body1">Panel {idx + 1}</Typography>
       </Paper>
