@@ -45,7 +45,7 @@ declare module '@material-ui/core/styles/createTheme' {
     cmrBGColors: any;
     cmrTextColors: any;
     cmrBorderColors: any;
-    cmrIconColors: any;
+    iconColors: any;
     color: any;
     graphs: any;
     visually: any;
@@ -115,13 +115,11 @@ const cmrBorderColors = {
   dividerLight: '#e3e5e8',
 };
 
-const cmrIconColors = {
-  iActiveLight: '#3683dc',
-  iGreen: '#17cf73',
-  iOrange: '#ffb31a',
-  iRed: '#cf1e1e',
-  // Offline status
-  iGrey: '#dbdde1',
+const iconColors = {
+  green: '#17cf73',
+  orange: '#ffb31a',
+  red: '#cf1e1e',
+  grey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -330,7 +328,7 @@ const themeDefaults: ThemeDefaults = () => {
     cmrBGColors,
     cmrTextColors,
     cmrBorderColors,
-    cmrIconColors,
+    iconColors,
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
       requests: `rgba(34, 206, 182, ${graphTransparency})`,

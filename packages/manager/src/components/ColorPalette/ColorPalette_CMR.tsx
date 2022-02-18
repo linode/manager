@@ -120,18 +120,14 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
     },
   ];
 
-  const cmrIconColors = [
+  const iconColors = [
+    { color: theme.iconColors.green, alias: 'theme.iconColors.green' },
     {
-      color: theme.cmrIconColors.iActiveLight,
-      alias: 'theme.cmrIconColors.iActiveLight',
+      color: theme.iconColors.orange,
+      alias: 'theme.iconColors.orange',
     },
-    { color: theme.cmrIconColors.iGreen, alias: 'theme.cmrIconColors.iGreen' },
-    {
-      color: theme.cmrIconColors.iOrange,
-      alias: 'theme.cmrIconColors.iOrange',
-    },
-    { color: theme.cmrIconColors.iRed, alias: 'theme.cmrIconColors.iRed' },
-    { color: theme.cmrIconColors.iGrey, alias: 'theme.cmrIconColors.iGrey' },
+    { color: theme.iconColors.red, alias: 'theme.iconColors.red' },
+    { color: theme.iconColors.grey, alias: 'theme.iconColors.grey' },
   ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {
@@ -195,7 +191,7 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
         <Grid item xs={12}>
           <Typography variant="h2">Icon Colors</Typography>
         </Grid>
-        {cmrIconColors.map((color, idx: number) =>
+        {iconColors.map((color, idx: number) =>
           createSwatch(idx, color.color, color.alias)
         )}
       </>

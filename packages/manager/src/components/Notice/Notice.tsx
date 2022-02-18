@@ -40,7 +40,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor: theme.cmrBGColors.bgPaper,
     },
     '& $error': {
-      borderLeftColor: theme.cmrIconColors.iRed,
+      borderLeftColor: theme.iconColors.red,
     },
   },
   important: {

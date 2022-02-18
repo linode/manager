@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
   },
   pastDueBalance: {
-    color: theme.cmrIconColors.iRed,
+    color: theme.iconColors.red,
   },
   credit: {
     color: theme.color.green,

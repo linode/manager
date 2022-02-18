@@ -46,13 +46,11 @@ const cmrBorderColors = {
   dividerLight: '#2e3238',
 };
 
-const cmrIconColors = {
-  iActiveLight: '#74aae6',
-  iGreen: '#17cf73',
-  iOrange: '#ffb31a',
-  iRed: '#cf1e1e',
-  // Offline status
-  iGrey: '#dbdde1',
+const iconColors = {
+  green: '#17cf73',
+  orange: '#ffb31a',
+  red: '#cf1e1e',
+  grey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -200,7 +198,7 @@ const darkThemeOptions = {
   cmrBGColors,
   cmrBorderColors,
   cmrTextColors,
-  cmrIconColors,
+  iconColors,
   graphs: {
     network: {
       outbound: `rgb(49, 206, 62)`,

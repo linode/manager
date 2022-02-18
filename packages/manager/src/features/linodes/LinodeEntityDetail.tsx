@@ -244,17 +244,17 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGreen,
+      backgroundColor: theme.iconColors.green,
     },
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey,
+      backgroundColor: theme.iconColors.grey,
     },
   },
   statusOther: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iOrange,
+      backgroundColor: theme.iconColors.orange,
     },
   },
   divider: {

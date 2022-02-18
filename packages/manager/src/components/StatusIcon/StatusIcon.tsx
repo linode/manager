@@ -12,16 +12,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   statusIconRunning: {
-    backgroundColor: theme.cmrIconColors.iGreen,
+    backgroundColor: theme.iconColors.green,
   },
   statusIconOffline: {
-    backgroundColor: theme.cmrIconColors.iGrey,
+    backgroundColor: theme.iconColors.grey,
   },
   statusIconError: {
     backgroundColor: theme.color.red,
   },
   statusIconOther: {
-    backgroundColor: theme.cmrIconColors.iOrange,
+    backgroundColor: theme.iconColors.orange,
   },
 }));
 
