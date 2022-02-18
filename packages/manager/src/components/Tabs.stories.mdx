@@ -1,16 +1,13 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 
 <Meta title="UI Elements/Tabs" component={Tabs} />
-
-export const getDefaultTabIndex = () => {};
-
-export const handleTabChange = () => {};
 
 export const _tabs = [
   {
@@ -29,56 +26,67 @@ export const _tabs = [
 
 # Tabs
 
-### Overview
-
-<hr />
-
 Tabs allow users to view content across categories that are all related and share a similar hierarchy.
 
 - Tabs should each contain distinct content
 - Tabs can scroll horizontally on smaller screens and mobile
 - Content across a tab set should be considered peers, each tab being of equal importance
 
-<Canvas>
-  <Story name="Tabs">
-    <Grid
-      container
-      justifyContent="center"
-      style={{
-        backgroundColor: '#f4f5f6',
-        height: '100%',
-        paddingTop: 24,
-        paddingBottom: 32,
-      }}
-    >
-      <Grid item xs={10}>
-        <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
-          <TabLinkList tabs={_tabs} />
-          <TabPanels>
-            <SafeTabPanel index={0}>
-              <Typography variant="body1">Panel 1</Typography>
-            </SafeTabPanel>
-            <SafeTabPanel index={1}>
-              <Typography variant="body1">Panel 2</Typography>
-            </SafeTabPanel>
-            <SafeTabPanel index={2}>
-              <Typography variant="body1">Panel 3</Typography>
-            </SafeTabPanel>
-          </TabPanels>
-        </Tabs>
-      </Grid>
+export const TabsContent = () =>
+  _tabs.map((tab, idx) => (
+    <SafeTabPanel index={idx}>
+      <Paper style={{ paddingTop: 20 }}>
+        <Typography variant="body1">Panel {idx + 1}</Typography>
+      </Paper>
+    </SafeTabPanel>
+  ));
+
+export const Template = (args) => (
+  <Grid
+    container
+    justifyContent="center"
+    style={{
+      backgroundColor: '#f4f5f6',
+      height: '100%',
+      paddingTop: 24,
+      paddingBottom: 32,
+    }}
+  >
+    <Grid item xs={10}>
+      <Tabs {...args}>
+        <TabLinkList tabs={_tabs} />
+        <TabPanels>
+          <TabsContent />
+        </TabPanels>
+      </Tabs>
     </Grid>
+  </Grid>
+);
+
+<Canvas>
+  <Story
+    name="Tabs"
+    argTypes={{
+      defaultIndex: {
+        description: 'Starts the tabs at a specific index.',
+        type: { summary: 'number' },
+        control: { type: 'number' },
+      },
+      index: {
+        description:
+          'The index of the tab, must include `onChange` in order for the tabs to be interactive.',
+        type: { summary: 'number' },
+        control: { type: 'number' },
+      },
+      onChange: {
+        description: 'Callback fired when the value changes.',
+        type: { summary: '(index: number) => void' },
+        control: false,
+      },
+    }}
+  >
+    {Template.bind({})}
   </Story>
 </Canvas>
 
-### Component API
-
-<hr />
-
-export const Template = (args) => (
-  <Tabs index={getDefaultTabIndex()} onChange={handleTabChange} {...args}>
-    I'm a tab, style me using the table below
-  </Tabs>
-);
-
-<ArgsTable story="Component API" sort="requiredFirst" />
+<ArgsTable story="Tabs" sort="requiredFirst" />
