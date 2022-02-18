@@ -4,7 +4,7 @@ import Accordion from './Accordion';
 import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
 <Meta
-  title="UI Elements/Accordion"
+  title="UI Elements"
 />
 
 # Accordion
@@ -20,14 +20,6 @@ Accordions are better suited for when people need to focus on content that is ke
   - “People treat clicks like currency and they don't spend it frivolously” - NNG [Citation](https://www.nngroup.com/articles/clickable-elements/)
 - Increases interaction cost
 - Accordions collapsed by default diminishes people's awareness of content
-
-<Canvas>
-  <Story name="Default" >
-    <Accordion heading="This an Accordion">
-      <p>The children of the Accordion go here!</p>
-    </Accordion>
-  </Story>
-</Canvas>
 
 export const renderActions = () => {
   return (
@@ -48,13 +40,11 @@ export const Template = (args) => (
   </Accordion>
 );
 
-## Component API
-
 The Accordion component's props extends the Material UI Accordion props
 
 <Canvas>
   <Story
-    name="Component API"
+    name="Accordion"
     args={{
       heading: "This is an Accordion",
       defaultExpanded: undefined,
@@ -120,4 +110,4 @@ The Accordion component's props extends the Material UI Accordion props
   </Story>
 </Canvas>
 
-<ArgsTable story="Component API" />
+<ArgsTable story="Accordion" />
