@@ -71,19 +71,11 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
   const bgColors = [
     { color: theme.bg.main, alias: 'theme.bg.main' },
     { color: theme.bg.offWhite, alias: 'theme.bg.offWhite' },
-    { color: theme.bg.navy, alias: 'theme.bg.navy' },
     { color: theme.bg.lightBlue, alias: 'theme.bg.lightBlue' },
     { color: theme.bg.white, alias: 'theme.bg.white' },
     { color: theme.bg.pureWhite, alias: 'theme.bg.pureWhite' },
     { color: theme.bg.tableHeader, alias: 'theme.bg.tableHeader' },
-    { color: theme.bg.primaryNavActive, alias: 'theme.bg.primaryNavActive' },
-    {
-      color: theme.bg.primaryNavActiveBG,
-      alias: 'theme.bg.primaryNavActiveBG',
-    },
     { color: theme.bg.primaryNavPaper, alias: 'theme.bg.primaryNavPaper' },
-    { color: theme.bg.topMenu, alias: 'theme.bg.topMenu' },
-    { color: theme.bg.billingHeader, alias: 'theme.bg.billingHeader' },
   ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {

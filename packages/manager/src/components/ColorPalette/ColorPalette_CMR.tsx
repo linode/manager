@@ -37,7 +37,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ColorPalette: React.FC<CombinedProps> = (props) => {
+export const ColorPalette: React.FC<CombinedProps> = () => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -52,10 +52,6 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
       alias: 'theme.cmrBGColors.bgPrimaryNavActive',
     },
     { color: theme.cmrBGColors.bgPaper, alias: 'theme.cmrBGColors.bgPaper' },
-    {
-      color: theme.cmrBGColors.bgPrimaryButton,
-      alias: 'theme.cmrBGColors.bgPrimaryButton',
-    },
     {
       color: theme.cmrBGColors.bgSecondaryButton,
       alias: 'theme.cmrBGColors.bgSecondaryButton',
