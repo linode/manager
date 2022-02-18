@@ -42,6 +42,19 @@ export const Template = (args) => {
     args={{
       colSpan: 3
     }}
+    argTypes={{
+      colSpan: {
+        description: "How many columns the empty state should span",
+      },
+      message: {
+        description: "The text that displays in the table",
+        table: {
+          defaultValue: {
+            summary: 'No items to display.',
+          },
+        },
+      },
+    }}
   >
     {Template.bind({})}
   </Story>

@@ -80,17 +80,29 @@ For pages that may take a little time to load on slower connections, consider ad
 
 ## Component API
 
-export const Template = (args) => (
-  <Table>
-    {renderTableHead(40, 20, 20, 20)}
-    <TableBody>
-      <TableRowLoading {...args} />
-    </TableBody>
-  </Table>
-);
+export const Template = (args) => {
+  const heads = [];
+  const unit = 100 / args.colSpan;
+  for (let i = 0; i < args.colSpan; i++) {
+    heads.push(unit);
+  }
+  return (
+    <Table>
+      {renderTableHead(...heads)}
+      <TableBody>
+        <TableRowLoading {...args} />
+      </TableBody>
+    </Table>
+  );
+};
 
 <Canvas>
-  <Story name="Component API">
+  <Story
+    name="Component API"
+    args={{
+      colSpan: 4,
+    }}
+  >
     {Template.bind({})}
   </Story>
 </Canvas>
