@@ -225,7 +225,7 @@ jobs:
         with:
           name: packages-api-v4-lib
           path: packages/api-v4
-      - run: yarn workspace linode-manager build-storybook
+      - run: yarn workspace linode-manager run build-storybook
       - uses: actions/upload-artifact@v2
         with:
           name: storybook-build
