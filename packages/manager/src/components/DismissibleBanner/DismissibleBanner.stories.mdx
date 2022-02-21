@@ -1,4 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Typography from 'src/components/core/Typography';
 import DismissibleBanner from './DismissibleBanner';
 
 <Meta title="UI Elements/Notifications/Dismissible Banners" component={DismissibleBanner} />
@@ -16,3 +17,21 @@ Banners appear between the top nav and page content and are a visual interruptio
 - Marketing: Informs users of a new feature or improved service. 
 - Warning: Informs users of an impending change that will have an impact on their service(s).
 - Call to action: Primary Button or text link allows a user to take action directly from the banner. 
+
+export const Template = (args) => {
+    return (
+    <DismissibleBanner
+        productInformationIndicator
+    >
+        <Typography>
+          This is an example of a dismissible banner.
+        </Typography>
+      </DismissibleBanner>
+    )
+}
+
+<Canvas>
+    <Story name="DismissibleBanner">
+        {Template.bind({})}
+    </Story>
+</Canvas>
