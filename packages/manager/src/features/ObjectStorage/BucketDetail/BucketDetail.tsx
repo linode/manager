@@ -274,6 +274,12 @@ export const BucketDetail: React.FC = () => {
             object.name === objectName || object.name === `${objectName}/`
         )
       ) {
+        queryClient.invalidateQueries([
+          queryKey,
+          clusterId,
+          bucketName,
+          `${objectName}/`,
+        ]);
         return;
       }
     }
