@@ -1,26 +1,25 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { useUpdateLinodeSettingsMutation } from 'src/queries/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-interface Props {
+export interface Props {
   linodeId: number;
   linodeLabel: string;
   isEnabled: boolean;
   openDrawer: (linodeId: number) => void;
 }
 
-export type CombinedProps = Props & WithSnackbarProps;
-
-export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
-  const { linodeId, isEnabled, openDrawer, enqueueSnackbar } = props;
+export const SSHAccessActionMenu: React.FC<Props> = (props) => {
+  const { linodeId, isEnabled, openDrawer } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
     linodeId
@@ -96,6 +95,4 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar);
-
-export default enhanced(SSHAccessActionMenu);
+export default SSHAccessActionMenu;
