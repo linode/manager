@@ -1,25 +1,17 @@
-import { getManagedStats, ManagedStatsData } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import withManagedIssues, {
-  DispatchProps as IssueDispatch,
-  ManagedIssuesProps,
-} from 'src/containers/managedIssues.container';
-import withManaged, {
-  DispatchProps,
-  ManagedProps,
-} from 'src/containers/managedServices.container';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import usePolling from 'src/hooks/usePolling';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DashboardCard from './DashboardCard';
 import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
+import { ManagedStatsData } from '@linode/api-v4/lib/managed';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  useAllManagedIssuesQuery,
+  useAllManagedMonitorsQuery,
+  useManagedStatsQuery,
+} from 'src/queries/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,47 +45,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = ManagedProps &
-  DispatchProps &
-  ManagedIssuesProps &
-  IssueDispatch;
-
-export const ManagedDashboardCard: React.FC<CombinedProps> = (props) => {
+export const ManagedDashboardCard = () => {
   const classes = useStyles();
-  const { requestManagedServices, requestManagedIssues } = props;
-  const {
-    data,
-    error,
-    loading,
-    lastUpdated,
-    update,
-  } = useAPIRequest<ManagedStatsData | null>(
-    () => getManagedStats().then((response) => response.data),
-    null
-  );
+  const { data, isLoading, error } = useManagedStatsQuery();
 
-  usePolling(
-    [
-      () => requestManagedServices().catch((_) => null),
-      () => requestManagedIssues().catch((_) => null),
-      update,
-    ],
-    10000
-  );
-
-  React.useEffect(() => {
-    // @todo rely on interval for initial requests
-    // Rely on Redux error handling.
-    requestManagedServices().catch((_) => null);
-    requestManagedIssues().catch((_) => null);
-  }, []);
+  // @TODO
+  // usePolling(
+  //   [
+  //     () => requestManagedServices().catch((_) => null),
+  //     () => requestManagedIssues().catch((_) => null),
+  //     update,
+  //   ],
+  //   10000
+  // );
 
   const statsError =
     error && data === null
       ? getAPIErrorOrDefault(error, 'Unable to load your usage statistics.')[0]
           .reason
       : undefined;
-  const statsLoading = loading && lastUpdated === 0;
 
   return (
     <DashboardCard
@@ -102,58 +72,26 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = (props) => {
       noHeaderActionStyles
     >
       <LoadingErrorOrContent
-        {...props}
-        data={data}
+        data={data?.data}
         statsError={statsError}
-        statsLoading={statsLoading}
+        statsLoading={isLoading}
       />
     </DashboardCard>
   );
 };
 
-interface ContentProps extends CombinedProps {
-  data: ManagedStatsData | null;
+interface ContentProps {
+  data: ManagedStatsData | undefined;
   statsLoading: boolean;
   statsError?: string;
 }
 
 const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
-  const {
-    data,
-    issues,
-    managedError,
-    managedLoading,
-    monitors,
-    managedLastUpdated,
-    issuesLoading,
-    issuesError,
-    issuesLastUpdated,
-    statsError,
-    statsLoading,
-  } = props;
+  const { data, statsError, statsLoading } = props;
   const classes = useStyles();
 
-  /**
-   * Don't show error state if we've successfully retrieved
-   * monitor data but then a subsequent poll fails
-   */
-  if (
-    (managedError.read && managedLastUpdated === 0) ||
-    (issuesError.read && issuesLastUpdated === 0)
-  ) {
-    const errorString = getAPIErrorOrDefault(
-      managedError.read || issuesError.read || [],
-      'Error loading your Managed service information.'
-    )[0].reason;
-    return <ErrorState errorText={errorString} compact />;
-  }
-
-  if (
-    (managedLoading && managedLastUpdated === 0) ||
-    (issuesLoading && issuesLastUpdated === 0)
-  ) {
-    return <CircleProgress />;
-  }
+  const { data: monitors } = useAllManagedMonitorsQuery();
+  const { data: issues } = useAllManagedIssuesQuery();
 
   return (
     <Grid
@@ -174,10 +112,10 @@ const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
         className={classes.status}
       >
         <Grid item className={classes.monitorStatusOuter}>
-          <MonitorStatus monitors={monitors} />
+          <MonitorStatus monitors={monitors || []} />
         </Grid>
         <Grid item>
-          <MonitorTickets issues={issues} />
+          <MonitorTickets issues={issues || []} />
         </Grid>
       </Grid>
       <Grid item xs={12} sm={8} className="p0">
@@ -191,6 +129,4 @@ const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withManaged(), withManagedIssues());
-
-export default enhanced(ManagedDashboardCard);
+export default ManagedDashboardCard;

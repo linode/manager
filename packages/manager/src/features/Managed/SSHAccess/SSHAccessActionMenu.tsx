@@ -1,7 +1,3 @@
-import {
-  ManagedLinodeSetting,
-  updateLinodeSettings,
-} from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -9,23 +5,26 @@ import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { useUpdateLinodeSettingsMutation } from 'src/queries/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   linodeId: number;
   linodeLabel: string;
   isEnabled: boolean;
-  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
 }
 
 export type CombinedProps = Props & WithSnackbarProps;
 
 export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
+  const { linodeId, isEnabled, openDrawer, enqueueSnackbar } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const { linodeId, isEnabled, updateOne, openDrawer, enqueueSnackbar } = props;
+  const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
+    linodeId
+  );
 
   const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);
@@ -43,11 +42,10 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
       ? {
           title: 'Disable',
           onClick: () => {
-            updateLinodeSettings(linodeId, {
+            updateLinodeSettings({
               ssh: { access: false },
             })
-              .then((updatedLinodeSetting) => {
-                updateOne(updatedLinodeSetting);
+              .then(() => {
                 enqueueSnackbar('SSH Access disabled successfully.', {
                   variant: 'success',
                 });
@@ -60,11 +58,10 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
       : {
           title: 'Enable',
           onClick: () => {
-            updateLinodeSettings(linodeId, {
+            updateLinodeSettings({
               ssh: { access: true },
             })
-              .then((updatedLinodeSetting) => {
-                updateOne(updatedLinodeSetting);
+              .then(() => {
                 enqueueSnackbar('SSH Access enabled successfully.', {
                   variant: 'success',
                 });

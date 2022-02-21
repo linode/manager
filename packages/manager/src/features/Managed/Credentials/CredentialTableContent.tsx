@@ -11,7 +11,7 @@ interface Props {
   loading: boolean;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
-  error?: APIError[];
+  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;

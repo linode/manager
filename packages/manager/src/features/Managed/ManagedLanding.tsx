@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ManagedLandingContent from './ManagedLandingContent';
-
-export type CombinedProps = RouteComponentProps<{}>;
 
 const docs: Linode.Doc[] = [
   {
@@ -15,17 +12,15 @@ const docs: Linode.Doc[] = [
   },
 ];
 
-export const ManagedLanding: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const ManagedLanding = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
-      <ManagedLandingContent {...props} />
+      <ManagedLandingContent />
     </React.Fragment>
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(setDocs(docs));
+const enhanced = compose(setDocs(docs));
 
 export default enhanced(ManagedLanding);

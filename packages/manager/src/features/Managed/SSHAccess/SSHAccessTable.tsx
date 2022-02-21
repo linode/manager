@@ -1,7 +1,4 @@
-import {
-  getLinodeSettings,
-  ManagedLinodeSetting,
-} from '@linode/api-v4/lib/managed';
+import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import produce from 'immer';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
@@ -15,9 +12,8 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { getAll } from 'src/utilities/getAll';
+import { useAllLinodeSettingsQuery } from 'src/queries/managed';
 import { DEFAULTS } from './common';
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
@@ -31,22 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const request = () =>
-  getAll<ManagedLinodeSetting>(getLinodeSettings)().then((res) => res.data);
-
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
-    ManagedLinodeSetting[]
-  >(request, []);
+  const { data: settings, isLoading, error } = useAllLinodeSettingsQuery();
 
-  const updateOne = (linodeSetting: ManagedLinodeSetting) => {
-    transformData((draft) => {
-      const idx = draft.findIndex((l) => l.id === linodeSetting.id);
-      draft[idx] = linodeSetting;
-    });
-  };
+  const data = settings || [];
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
     null
@@ -142,9 +128,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                         <TableBody>
                           <SSHAccessTableContent
                             linodeSettings={paginatedData}
-                            loading={loading}
-                            lastUpdated={lastUpdated}
-                            updateOne={updateOne}
+                            loading={isLoading}
                             openDrawer={(linodeId: number) => {
                               setSelectedLinodeId(linodeId);
                               drawer.open();
@@ -173,7 +157,6 @@ const SSHAccessTable: React.FC<{}> = () => {
         isOpen={drawer.isOpen}
         closeDrawer={drawer.close}
         linodeSetting={normalizedData.find((l) => l.id === selectedLinodeId)}
-        updateOne={updateOne}
       />
     </>
   );

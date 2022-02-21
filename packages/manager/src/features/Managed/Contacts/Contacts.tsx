@@ -1,6 +1,5 @@
-import { deleteContact, ManagedContact } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { ManagedContact } from '@linode/api-v4/lib/managed';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
@@ -20,6 +19,10 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
+import {
+  useAllManagedContactsQuery,
+  useDeleteContactMutation,
+} from 'src/queries/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
@@ -49,42 +52,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  contacts: ManagedContact[];
-  loading: boolean;
-  error?: APIError[];
-  lastUpdated: number;
-  transformData: (fn: (contacts: ManagedContact[]) => void) => void;
-  update: () => void;
-}
-
-type CombinedProps = Props & WithSnackbarProps;
-
-const Contacts: React.FC<CombinedProps> = (props) => {
+const Contacts = () => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const {
-    contacts,
-    loading,
+    data,
+    isLoading,
     error,
-    lastUpdated,
-    transformData,
-    update,
-    enqueueSnackbar,
-  } = props;
+    dataUpdatedAt,
+  } = useAllManagedContactsQuery();
 
-  const updateOrAdd = (contact: ManagedContact) => {
-    transformData((draft) => {
-      const idx = draft.findIndex((l) => l.id === contact.id);
-      // Add the contact if we don't already have it.
-      if (idx === -1) {
-        draft.push(contact);
-      } else {
-        // Otherwise just update it.
-        draft[idx] = contact;
-      }
-    });
-  };
+  const contacts = data || [];
 
   const [selectedContactId, setSelectedContactId] = React.useState<
     number | null
@@ -94,18 +73,19 @@ const Contacts: React.FC<CombinedProps> = (props) => {
     'create'
   );
 
+  const { mutateAsync: deleteContact } = useDeleteContactMutation();
+
   const {
     dialog,
     openDialog,
     closeDialog,
     submitDialog,
     handleError,
-  } = useDialog<number>(deleteContact);
+  } = useDialog<number>((id) => deleteContact({ id: id || -1 }));
 
   const handleDelete = () => {
     submitDialog(dialog.entityID)
       .then(() => {
-        update();
         enqueueSnackbar('Contact deleted successfully.', {
           variant: 'success',
         });
@@ -216,9 +196,8 @@ const Contacts: React.FC<CombinedProps> = (props) => {
                       <TableBody>
                         <ContactTableContact
                           contacts={paginatedData}
-                          loading={loading}
-                          lastUpdated={lastUpdated}
-                          updateOrAdd={updateOrAdd}
+                          loading={isLoading}
+                          lastUpdated={dataUpdatedAt}
                           openDrawer={(contactId: number) => {
                             setSelectedContactId(contactId);
                             setContactDrawerMode('edit');
@@ -265,7 +244,6 @@ const Contacts: React.FC<CombinedProps> = (props) => {
         mode={contactDrawerMode}
         isOpen={contactDrawer.isOpen}
         closeDrawer={contactDrawer.close}
-        updateOrAdd={updateOrAdd}
         contact={contacts.find((contact) => contact.id === selectedContactId)}
         groups={groups}
       />
@@ -273,7 +251,7 @@ const Contacts: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default withSnackbar(Contacts);
+export default Contacts;
 
 /**
  * Generate groups from a list of Managed Contacts.

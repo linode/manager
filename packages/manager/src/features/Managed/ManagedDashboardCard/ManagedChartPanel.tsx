@@ -75,7 +75,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  data: ManagedStatsData | null;
+  data: ManagedStatsData | undefined;
   loading: boolean;
   error?: string;
 }
@@ -91,7 +91,7 @@ const _formatTooltip = (valueInBytes: number) =>
   formatNetworkTooltip(valueInBytes / 8);
 
 const createTabs = (
-  data: ManagedStatsData | null,
+  data: ManagedStatsData | undefined,
   timezone: string,
   classes: Record<string, string>,
   theme: Theme

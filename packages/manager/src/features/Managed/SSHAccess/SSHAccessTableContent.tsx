@@ -10,25 +10,16 @@ import SSHAccessRow from './SSHAccessRow';
 interface Props {
   linodeSettings: ManagedLinodeSetting[];
   loading: boolean;
-  lastUpdated: number;
-  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
-  error?: APIError[];
+  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;
 
 export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
-  const {
-    linodeSettings,
-    loading,
-    lastUpdated,
-    updateOne,
-    openDrawer,
-    error,
-  } = props;
+  const { linodeSettings, loading, openDrawer, error } = props;
 
-  if (loading && lastUpdated === 0) {
+  if (loading) {
     return <TableRowLoading colSpan={6} widths={[30]} oneLine />;
   }
 
@@ -37,7 +28,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
     return <TableRowError colSpan={6} message={errorMessage} />;
   }
 
-  if (linodeSettings.length === 0 && lastUpdated !== 0) {
+  if (linodeSettings.length === 0) {
     return (
       <TableRowEmpty
         colSpan={5}
@@ -53,7 +44,6 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
         (linodeSetting: ManagedLinodeSetting, idx: number) => (
           <SSHAccessRow
             key={`linode-setting-row-${idx}`}
-            updateOne={updateOne}
             linodeSetting={linodeSetting}
             openDrawer={openDrawer}
           />

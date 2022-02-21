@@ -13,7 +13,6 @@ const mockOpenDrawer = jest.fn();
 const props: CombinedProps = {
   linodeId: 1,
   isEnabled: true,
-  updateOne: jest.fn(),
   linodeLabel: 'label',
   openDrawer: mockOpenDrawer,
   enqueueSnackbar: jest.fn(),

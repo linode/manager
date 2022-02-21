@@ -14,7 +14,7 @@ interface Props {
   openDialog: (id: number, label: string) => void;
   openHistoryDrawer: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;
-  error?: APIError[];
+  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;

@@ -14,10 +14,9 @@ interface Props {
   contacts: ManagedContact[];
   loading: boolean;
   lastUpdated: number;
-  updateOrAdd: (contact: ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
   openDialog: (contactId: number) => void;
-  error?: APIError[];
+  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;
@@ -27,7 +26,6 @@ export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
     contacts,
     loading,
     lastUpdated,
-    updateOrAdd,
     openDrawer,
     openDialog,
     error,
@@ -59,7 +57,6 @@ export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
       {contacts.map((contact: ManagedContact, idx: number) => (
         <ContactsRow
           key={`managed-contact-row-${idx}`}
-          updateOrAdd={updateOrAdd}
           contact={contact}
           openDrawer={openDrawer}
           openDialog={openDialog}

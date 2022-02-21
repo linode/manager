@@ -12,10 +12,10 @@ import IssueCalendar from './IssueCalendar';
 
 interface Props {
   open: boolean;
-  error?: APIError[];
+  error?: APIError[] | null;
   loading: boolean;
   monitorLabel: string;
-  issues: ExtendedIssue[];
+  issues: ExtendedIssue[] | undefined;
   onClose: () => void;
 }
 
@@ -38,14 +38,10 @@ export const HistoryDrawer: React.FC<Props> = (props) => {
 };
 
 const renderDrawerContent = (
-  issues: ManagedIssue[],
+  issues: ManagedIssue[] | undefined,
   loading: boolean,
-  error?: APIError[]
+  error?: APIError[] | null
 ) => {
-  if (loading) {
-    return <CircleProgress />;
-  }
-
   if (error) {
     return (
       <ErrorState
@@ -55,6 +51,9 @@ const renderDrawerContent = (
         }
       />
     );
+  }
+  if (loading || !issues) {
+    return <CircleProgress />;
   }
   return <IssueCalendar issues={issues} />;
 };
