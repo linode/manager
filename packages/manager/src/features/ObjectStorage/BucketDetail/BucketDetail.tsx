@@ -225,6 +225,12 @@ export const BucketDetail: React.FC = () => {
       size: sizeInBytes,
     };
 
+    for (const page of data.pages) {
+      if (page.data.find((object) => object.name === objectName)) {
+        return;
+      }
+    }
+
     const copy = [...data.pages];
 
     const dataCopy = [...copy[copy.length - 1].data];
@@ -327,6 +333,7 @@ export const BucketDetail: React.FC = () => {
                     handleClickDelete={handleClickDelete}
                     handleClickDetails={handleClickDetails}
                     numOfDisplayedObjects={numOfDisplayedObjects}
+                    prefix={prefix}
                   />
                 </TableBody>
               </Table>
