@@ -6,17 +6,6 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowLoading from 'src/components/TableRowLoading';
 
-export const renderTableHead = (w1 = 25, w2 = 25, w3 = 25, w4= 25) => (
-  <TableHead>
-    <TableRow>
-      <TableCell style={{ width: `${w1}%` }}>Label</TableCell>
-      <TableCell style={{ width: `${w2}%` }}>Status</TableCell>
-      <TableCell style={{ width: `${w3}%` }}>Created</TableCell>
-      <TableCell style={{ width: `${w4}%` }}>Updated</TableCell>
-    </TableRow>
-  </TableHead>
-);
-
 <Meta title="Components/Table" component={TableRowLoading} />
 
 # Table Row Loading
@@ -25,11 +14,15 @@ export const Template = (args) => {
   const heads = [];
   const unit = 100 / args.colSpan;
   for (let i = 0; i < args.colSpan; i++) {
-    heads.push(unit);
+    heads.push(<TableCell style={{ width: `${unit}%` }}>Label {i}</TableCell>);
   }
   return (
     <Table>
-      {renderTableHead(...heads)}
+      <TableHead>
+        <TableRow>
+          {heads}
+        </TableRow>
+      </TableHead>
       <TableBody>
         <TableRowLoading {...args} />
       </TableBody>
