@@ -1,13 +1,10 @@
 import { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage';
 import { Region } from '@linode/api-v4/lib/regions';
 import * as React from 'react';
-import { compose } from 'recompose';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionSelect';
 import { dcDisplayNames } from 'src/constants';
-import clustersContainer, {
-  StateProps,
-} from 'src/containers/clusters.container';
+import { useObjectStorageClusters } from 'src/queries/objectStorage';
 import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
@@ -18,22 +15,18 @@ interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & StateProps;
-export const ClusterSelect: React.FC<CombinedProps> = (props) => {
+export const ClusterSelect: React.FC<Props> = (props) => {
+  const { selectedCluster, error, onChange, onBlur, disabled } = props;
+
   const {
-    selectedCluster,
-    error,
-    onChange,
-    onBlur,
-    clustersData,
-    clustersError,
-    disabled,
-  } = props;
+    data: clustersData,
+    error: clustersError,
+  } = useObjectStorageClusters();
 
   const _regions = useRegionsQuery().data ?? [];
 
   const regions = React.useMemo(
-    () => objectStorageClusterToExtendedRegion(clustersData, _regions),
+    () => objectStorageClusterToExtendedRegion(clustersData || [], _regions),
     [clustersData, _regions]
   );
 
@@ -62,9 +55,7 @@ export const ClusterSelect: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(clustersContainer);
-
-export default enhanced(ClusterSelect);
+export default ClusterSelect;
 
 // This bit of hackery transforms a list of OBJ Clusters to Extended Region by
 // matching up their IDs. We do this so RegionSelect understands the datatype we
