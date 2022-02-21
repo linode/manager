@@ -193,8 +193,9 @@ export const BucketDetail: React.FC = () => {
         return _objectIndex !== -1;
       });
       if (draft && pageIndex !== undefined && pageIndex !== -1) {
-        draft[pageIndex].data.splice(objectIndex);
+        draft[pageIndex].data.splice(objectIndex, 1);
       }
+      return draft;
     });
     updateStore(newPagesArray ?? []);
   };
@@ -224,11 +225,15 @@ export const BucketDetail: React.FC = () => {
       size: sizeInBytes,
     };
 
-    const newPagesArray = produce(data?.pages, (draft) => {
-      draft[draft.length - 1].data = [...draft[draft.length - 1].data, object];
-    });
+    const copy = [...data.pages];
 
-    updateStore(newPagesArray ?? []);
+    const dataCopy = [...copy[copy.length - 1].data];
+
+    dataCopy.push(object);
+
+    copy[copy.length - 1].data = dataCopy;
+
+    updateStore(copy);
   };
 
   const addOneFolder = (objectName: string) => {
