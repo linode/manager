@@ -249,17 +249,15 @@ export const BucketDetail: React.FC = () => {
       size: null,
     };
 
-    for (const page of data.pages) {
-      if (page.data.find((object) => object.name === objectName)) {
-        return;
-      }
-    }
+    const copy = [...data.pages];
 
-    const newPagesData = [...data.pages];
+    const dataCopy = [...copy[copy.length - 1].data];
 
-    newPagesData[0].data = [folder, ...newPagesData[0].data];
+    dataCopy.push(folder);
 
-    updateStore(newPagesData);
+    copy[copy.length - 1].data = dataCopy;
+
+    updateStore(copy);
   };
 
   const closeDeleteObjectDialog = () => {
