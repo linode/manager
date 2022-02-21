@@ -227,7 +227,7 @@ export const BucketDetail: React.FC = () => {
 
     for (let i = 0; i < data.pages.length; i++) {
       const foundObjectIndex = data.pages[i].data.findIndex(
-        (object) => object.name === objectName
+        (_object) => _object.name === object.name
       );
       if (foundObjectIndex !== -1) {
         const copy = [...data.pages];
