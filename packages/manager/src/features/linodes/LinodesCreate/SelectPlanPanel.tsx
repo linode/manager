@@ -33,6 +33,7 @@ import { dcDisplayNames } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
+import { ExtendedDatabaseType } from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
@@ -107,8 +108,10 @@ const styles = (theme: Theme) =>
     },
   });
 
+type ExtendedTypes = Array<ExtendedType | ExtendedDatabaseType>;
+
 interface Props {
-  types: ExtendedType[];
+  types: ExtendedTypes;
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -121,24 +124,25 @@ interface Props {
   tabbedPanelInnerClass?: string;
   ldClient?: LDClient;
   isCreate?: boolean;
+  className?: string;
 }
 
-const getNanodes = (types: ExtendedType[]) =>
+const getNanodes = (types: ExtendedTypes) =>
   types.filter((t) => /nanode/.test(t.class));
 
-const getStandard = (types: ExtendedType[]) =>
+const getStandard = (types: ExtendedTypes) =>
   types.filter((t) => /standard/.test(t.class));
 
-const getHighMem = (types: ExtendedType[]) =>
+const getHighMem = (types: ExtendedTypes) =>
   types.filter((t) => /highmem/.test(t.class));
 
-const getDedicated = (types: ExtendedType[]) =>
+const getDedicated = (types: ExtendedTypes) =>
   types.filter((t) => /dedicated/.test(t.class));
 
-const getGPU = (types: ExtendedType[]) =>
+const getGPU = (types: ExtendedTypes) =>
   types.filter((t) => /gpu/.test(t.class));
 
-const getMetal = (types: ExtendedType[]) =>
+const getMetal = (types: ExtendedTypes) =>
   types.filter((t) => t.class === 'metal');
 
 type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
@@ -277,8 +281,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     );
   };
 
-  renderPlanContainer = (plans: ExtendedType[]) => {
-    const { classes, isCreate } = this.props;
+  renderPlanContainer = (plans: ExtendedTypes) => {
+    const { classes, isCreate, header } = this.props;
 
     return (
       <Grid container>
@@ -296,7 +300,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 <TableRow>
                   <TableCell className={classes.headerCell} />
                   <TableCell className={classes.headerCell} data-qa-plan-header>
-                    Linode Plan
+                    {header}
                   </TableCell>
                   <TableCell
                     className={classes.headerCell}
@@ -473,6 +477,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
+      className,
       copy,
       error,
       header,
@@ -502,7 +507,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
 
     return (
       <TabbedPanel
-        rootClass={`${classes.root} tabbedPanel`}
+        rootClass={`${classes.root} ${className} tabbedPanel`}
         innerClass={this.props.tabbedPanelInnerClass}
         error={error}
         header={header || 'Linode Plan'}

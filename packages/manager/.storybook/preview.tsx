@@ -55,6 +55,10 @@ export const parameters = {
 
 // Use the Mock Service Worker to mock API requests.
 if (typeof global.process === 'undefined') {
-  const { worker } = require('../src/mocks/testBrowser');
-  worker.start();
+  try {
+    const { worker } = require('../src/mocks/testBrowser');
+    worker.start();
+  } catch (e) {
+    console.warn('Unable to start the MSW', e);
+  }
 }

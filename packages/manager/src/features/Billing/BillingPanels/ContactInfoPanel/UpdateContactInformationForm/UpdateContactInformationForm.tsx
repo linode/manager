@@ -85,14 +85,7 @@ const L = {
   },
 };
 
-const excludedUSRegions = [
-  'Micronesia',
-  'Marshall Islands',
-  'Palau',
-  'Armed Forces Americas',
-  'Armed Forces Europe, Canada, Africa and Middle East',
-  'Armed Forces Pacific',
-];
+const excludedUSRegions = ['Micronesia', 'Marshall Islands', 'Palau'];
 
 class UpdateContactInformationForm extends React.Component<
   CombinedProps,
@@ -426,9 +419,10 @@ class UpdateContactInformationForm extends React.Component<
               isClearable={false}
               onChange={this.updateState}
               options={filteredRegionResults}
-              placeholder={`Select ${
-                fields.country === 'US' ? 'state' : 'region'
-              }`}
+              placeholder={
+                account.state ||
+                `Select ${fields.country === 'US' ? 'state' : 'province'}`
+              }
               required={flags.regionDropdown}
               value={
                 filteredRegionResults.find(({ value }) =>

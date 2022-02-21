@@ -37,7 +37,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'Akaunting',
     description: `Akaunting is a universal accounting software that helps small businesses run more efficiently. Track expenses, generate reports, manage your books, and get the other essential features to run your business from a single dashboard.`,
-    summary: 'Free and open source accounting software you can use in your browser.',
+    summary:
+      'Free and open source accounting software you can use in your browser.',
     related_guides: [
       {
         title: 'Deploying Akaunting through the Linode Marketplace',
@@ -372,6 +373,24 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/flask_color.svg',
   },
   {
+    name: 'Focalboard',
+    description: `Create boards, assign tasks, and keep projects moving with a free and robust alternative to tools like Trello and Asana.`,
+    summary: 'Free open source project management tool.',
+    related_guides: [
+      {
+        title: 'Deploying Focalboard through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/focalboard-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.focalboard.com/',
+        href: 'https://www.focalboard.com/',
+      },
+    ],
+    logo_url: 'assets/focalboard_color.svg',
+  },
+  {
     name: 'Gitea',
     description: `Self-hosted Git service built and maintained by a large developer community.`,
     summary: 'Git with a cup of tea - A painless self-hosted Git service',
@@ -426,6 +445,24 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/grafana_color.svg',
+  },
+  {
+    name: 'Grav',
+    description: `Build websites on a CMS that prioritizes speed and simplicity over customization and integration support. Create your content in Markdown and take advantage of powerful taxonomy to customize relationships between pages and other content.`,
+    summary: 'Modern and open source flat-file content management system.',
+    related_guides: [
+      {
+        title: 'Deploying Grav through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/grav-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://getgrav.org/',
+        href: 'https://getgrav.org/',
+      },
+    ],
+    logo_url: 'assets/grav_color.svg',
   },
   {
     name: 'Guacamole',
@@ -761,6 +798,44 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/nirvashare_color.svg',
   },
   {
+    name: 'NodeJS',
+    description: `NodeJS is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
+    summary:
+      'Popular and versatile open source JavaScript run-time environment.',
+    related_guides: [
+      {
+        title: 'Deploying NodeJS through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/nodejs-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://nodejs.org/',
+        href: 'https://nodejs.org/',
+      },
+    ],
+    logo_url: 'assets/nodejs_color.svg',
+  },
+  {
+    name: 'Odoo',
+    description: `Odoo is a free and comprehensive business app suite of tools that seamlessly integrate. Choose what you need to manage your business on a single platform, including a CRM, email marketing tools, essential project management functions, and more.`,
+    summary:
+      'Open source, all-in-one business app suite with more than 7 million users.',
+    related_guides: [
+      {
+        title: 'Deploying Odoo through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/odoo-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.odoo.com/',
+        href: 'https://www.odoo.com/',
+      },
+    ],
+    logo_url: 'assets/odoo_color.svg',
+  },
+  {
     name: 'OpenLiteSpeed Django',
     description: `Simple deployment for OLS web server, Python LSAPI, and CertBot.`,
     summary: 'OLS web server with Django development framework.',
@@ -931,6 +1006,24 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/phpmyadmin_color.svg',
+  },
+  {
+    name: 'Pi-hole',
+    description: `Protect your network and devices from unwanted content. Avoid ads in non-browser locations with a free, lightweight, and comprehensive privacy solution you can self-host.`,
+    summary: 'Free, open source, and highly scalable DNS sinkhole.',
+    related_guides: [
+      {
+        title: 'Deploying Pi-hole through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/pihole-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://pi-hole.net/',
+        href: 'https://pi-hole.net/',
+      },
+    ],
+    logo_url: 'assets/pihole_color.svg',
   },
   {
     name: 'Plesk',
@@ -1136,6 +1229,24 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/rust_color.svg',
   },
   {
+    name: 'Saltcorn',
+    description: `Build applications without writing a single line of code. Saltcorn is a free platform that allows you to build an app with an intuitive point-and-click, drag-and-drop UI.`,
+    summary: 'Open source, no-code database application builder.',
+    related_guides: [
+      {
+        title: 'Deploying Saltcorn through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/saltcorn-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://saltcorn.com/',
+        href: 'https://saltcorn.com/',
+      },
+    ],
+    logo_url: 'assets/saltcorn_color.svg',
+  },
+  {
     name: 'Secure Your Server',
     description: `Save time on securing your Linode by deploying an instance pre-configured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection.`,
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
@@ -1245,6 +1356,24 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/teamfortress_color.svg',
   },
   {
+    name: 'Uptime Kuma',
+    description: `Uptime Kuma is self-hosted alternative to Uptime Robot. Get real-time performance insights for HTTP(s), TCP/ HTTP(s) Keyword, Ping, DNS Record, and more. Monitor everything you need in one UI dashboard, or customize how you receive alerts with a wide range of supported integrations.`,
+    summary: 'Free, comprehensive, and “fancy” monitoring solution.',
+    related_guides: [
+      {
+        title: 'Deploying Uptime Kuma through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/uptimekuma-marketplace-app/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://github.com/louislam/uptime-kuma',
+        href: 'https://github.com/louislam/uptime-kuma',
+      },
+    ],
+    logo_url: 'assets/uptimekuma_color.svg',
+  },
+  {
     name: 'UTunnel VPN',
     description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
     summary:
@@ -1289,11 +1418,14 @@ export const oneClickApps: OCA[] = [
   {
     name: 'VictoriaMetrics Single',
     description: `VictoriaMetrics is designed to collect, store, and process real-time metrics.`,
-    summary: 'Free and open source time series database (TSDB) and monitoring solution.',
+    summary:
+      'Free and open source time series database (TSDB) and monitoring solution.',
     related_guides: [
       {
-        title: 'Deploying VictoriaMetrics Single through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/victoriametrics-single-marketplace-app/',
+        title:
+          'Deploying VictoriaMetrics Single through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/guides/victoriametrics-single-marketplace-app/',
       },
     ],
     related_info: [

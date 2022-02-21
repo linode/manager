@@ -537,11 +537,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 </Grid>
               </Grid>
               <Grid item className={classes.tags} xs={12} lg={12}>
-                <TagsPanel
-                  align="right"
-                  tags={cluster.tags}
-                  updateTags={handleUpdateTags}
-                />
+                <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
               </Grid>
             </Grid>
           </Grid>

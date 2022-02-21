@@ -13,6 +13,12 @@ import Typography from 'src/components/core/Typography';
 import { uploadImageFile } from 'src/features/Images/requests';
 import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
+import { useCurrentToken } from 'src/hooks/useAuthentication';
+import { redirectToLogin } from 'src/session';
+import { uploadImage } from 'src/store/image/image.requests';
+import { setPendingUpload } from 'src/store/pendingUpload';
+import { sendImageUploadEvent } from 'src/utilities/ga';
+import { readableBytes } from 'src/utilities/unitConversions';
 import {
   curriedObjectUploaderReducer,
   defaultState,
@@ -20,12 +26,6 @@ import {
   MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
-import { useCurrentToken } from 'src/hooks/useAuthentication';
-import { redirectToLogin } from 'src/session';
-import { uploadImage } from 'src/store/image/image.requests';
-import { setPendingUpload } from 'src/store/pendingUpload';
-import { sendImageUploadEvent } from 'src/utilities/ga';
-import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

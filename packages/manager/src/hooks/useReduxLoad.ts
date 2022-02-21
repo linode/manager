@@ -5,9 +5,6 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
-import { requestClusters } from 'src/store/clusters/clusters.actions';
-import { getAllDatabases } from 'src/store/databases/databases.requests';
-import { getAllMySQLTypes } from 'src/store/databases/types.requests';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -30,7 +27,6 @@ interface UseReduxPreload {
 export type ReduxEntity =
   | 'linodes'
   | 'volumes'
-  | 'databases'
   | 'domains'
   | 'images'
   | 'kubernetes'
@@ -42,17 +38,13 @@ export type ReduxEntity =
   | 'events'
   | 'longview'
   | 'firewalls'
-  | 'clusters'
-  | 'vlans'
-  | 'databases'
-  | 'databaseTypes';
+  | 'vlans';
 
-// The Buckets request is a special case since it depends on Clusters.
 type RequestMap = Record<ReduxEntity, any>;
+
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   volumes: getAllVolumes,
-  databases: () => getAllDatabases({}),
   domains: requestDomains,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
@@ -64,9 +56,7 @@ const requestMap: RequestMap = {
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
-  clusters: requestClusters,
   vlans: () => getAllVlans({}),
-  databaseTypes: () => getAllMySQLTypes({}),
 };
 
 export const useReduxLoad = (
