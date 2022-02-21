@@ -249,6 +249,17 @@ export const BucketDetail: React.FC = () => {
       size: null,
     };
 
+    for (const page of data.pages) {
+      if (
+        page.data.find(
+          (object) =>
+            object.name === objectName || object.name === `${objectName}/`
+        )
+      ) {
+        return;
+      }
+    }
+
     const copy = [...data.pages];
 
     const dataCopy = [...copy[copy.length - 1].data];
