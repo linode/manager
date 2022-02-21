@@ -269,16 +269,13 @@ export const BucketDetail: React.FC = () => {
 
     for (const page of data.pages) {
       if (
-        page.data.find(
-          (object) =>
-            object.name === objectName || object.name === `${objectName}/`
-        )
+        page.data.find((object) => object.name === `${prefix}${objectName}/`)
       ) {
         queryClient.invalidateQueries([
           queryKey,
           clusterId,
           bucketName,
-          `${objectName}/`,
+          `${prefix}${objectName}/`,
         ]);
         return;
       }
