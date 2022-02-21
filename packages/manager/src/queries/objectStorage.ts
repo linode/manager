@@ -58,7 +58,7 @@ export const useObjectStorageBuckets = (
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
     // we can tell the user which clusters are having issues.
     // getAllObjectStorageBuckets,
-    () => getAllBucketsFromClusters(clusters!),
+    () => getAllBucketsFromClusters(clusters),
     {
       ...queryPresets.longLived,
       enabled: clusters !== undefined && enabled,
@@ -132,8 +132,12 @@ export const useObjectBucketDetailsInfiniteQuery = (
   );
 
 export const getAllBucketsFromClusters = async (
-  clusters: ObjectStorageCluster[]
+  clusters: ObjectStorageCluster[] | undefined
 ) => {
+  if (clusters === undefined) {
+    return { buckets: [], errors: [] } as BucketsResponce;
+  }
+
   const promises = clusters.map((cluster) =>
     getAll<ObjectStorageBucket>((params) =>
       getBucketsInCluster(cluster.id, params)
