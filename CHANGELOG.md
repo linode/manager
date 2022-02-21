@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-02-21] - v1.60.0
+
+### Added:
+- Copy IP address tooltip in the Linode Networking tab
+- February 2022 Marketplace release
+
+### Changed:
+- Update Storybook components
+- Glish URL root from “alpha” to “dev”
+
+### Fixed:
+- Prevent previous saved support text from loading into a ticket reply
+
 ## [2022-02-14] - v1.59.1
 
 ### Changed:
