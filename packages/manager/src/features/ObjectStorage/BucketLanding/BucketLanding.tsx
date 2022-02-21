@@ -26,8 +26,6 @@ import bucketDrawerContainer, {
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
-import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
-import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
   BucketError,
@@ -293,7 +291,9 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         {/* If the user is attempting to delete their last Bucket, remind them
         that they will still be billed unless they cancel Object Storage in
         Account Settings. */}
-        {data.length === 1 && <CancelNotice className={classes.copy} />}
+        {objectStorageBucketsResponse?.buckets.length === 1 && (
+          <CancelNotice className={classes.copy} />
+        )}
         <TypeToConfirm
           confirmationText={<span>{deleteBucketConfirmationMessage}</span>}
           onChange={(input) => setConfirmBucketNameToInput(input)}
