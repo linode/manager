@@ -117,3 +117,84 @@ export const deletionHandlers = <T, V, E = APIError[]>(
     },
   };
 };
+
+export const itemInListMutationHandler = <
+  T extends { id: number | string },
+  V,
+  E = APIError[]
+>(
+  queryKey: string
+): UseMutationOptions<T, E, V, () => void> => {
+  return {
+    onSuccess: (updatedEntity, variables) => {
+      queryClient.setQueryData<any[]>(queryKey, (oldData) => {
+        if (!oldData) {
+          return [];
+        }
+
+        const index = oldData?.findIndex(
+          (item) => item.id === updatedEntity.id
+        );
+
+        if (index === -1) {
+          return oldData;
+        }
+
+        const copy = [...oldData];
+
+        copy[index] = updatedEntity;
+
+        return copy;
+      });
+    },
+  };
+};
+
+export const itemInListCreationHandler = <T, V, E = APIError[]>(
+  queryKey: string
+): UseMutationOptions<T, E, V, () => void> => {
+  return {
+    onSuccess: (createdEntity) => {
+      queryClient.setQueryData<any[]>(queryKey, (oldData) => {
+        if (!oldData) {
+          return [];
+        }
+
+        oldData = [...oldData, createdEntity];
+
+        return oldData;
+      });
+    },
+  };
+};
+
+export const itemInListDeletionHandler = <
+  T,
+  V extends { id?: number | string },
+  E = APIError[]
+>(
+  queryKey: string
+  // id?: number | string
+): UseMutationOptions<T, E, V, () => void> => {
+  return {
+    onSuccess: (_, variables) => {
+      queryClient.setQueryData<any[]>(queryKey, (oldData) => {
+        if (!oldData) {
+          return [];
+        }
+
+        const index = oldData?.findIndex((item) => item.id === variables.id);
+
+        if (index === -1) {
+          return oldData;
+        }
+
+        const copy = [...oldData];
+
+        copy.splice(index, 1);
+
+        return copy;
+      });
+    },
+  };
+};

@@ -88,14 +88,6 @@ import longviewStats, {
   defaultState as defaultLongviewStatsState,
   State as LongviewStatsState,
 } from 'src/store/longviewStats/longviewStats.reducer';
-import managedIssues, {
-  defaultState as defaultManagedIssuesState,
-  State as ManagedIssuesState,
-} from 'src/store/managed/issues.reducer';
-import managed, {
-  defaultState as defaultManagedState,
-  State as ManagedState,
-} from 'src/store/managed/managed.reducer';
 import nodeBalancers, {
   defaultState as defaultNodeBalancerState,
   State as NodeBalancersState,
@@ -167,8 +159,6 @@ const __resourcesDefaultState = {
   domains: defaultDomainsState,
   images: defaultImagesState,
   kubernetes: defaultKubernetesState,
-  managed: defaultManagedState,
-  managedIssues: defaultManagedIssuesState,
   nodePools: defaultNodePoolsState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
@@ -186,8 +176,6 @@ export interface ResourcesState {
   domains: DomainsState;
   images: ImagesState;
   kubernetes: KubernetesState;
-  managed: ManagedState;
-  managedIssues: ManagedIssuesState;
   nodePools: KubeNodePoolsState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
@@ -260,8 +248,6 @@ const __resources = combineReducers({
   linodes,
   linodeConfigs,
   linodeDisks,
-  managed,
-  managedIssues,
   nodeBalancers,
   nodeBalancerConfigs,
   notifications,

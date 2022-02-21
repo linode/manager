@@ -1,15 +1,17 @@
-import { ManagedServiceMonitor } from '@linode/api-v4/lib/managed';
+import {
+  ManagedIssue,
+  ManagedServiceMonitor,
+} from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import MonitorRow from './MonitorRow';
 
 interface Props {
   monitors: ManagedServiceMonitor[];
-  issues: ExtendedIssue[];
+  issues: ManagedIssue[];
   loading: boolean;
   openDialog: (id: number, label: string) => void;
   openHistoryDrawer: (id: number, label: string) => void;

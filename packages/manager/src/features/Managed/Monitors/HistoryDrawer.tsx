@@ -6,7 +6,6 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
-import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import IssueCalendar from './IssueCalendar';
 
@@ -15,7 +14,7 @@ interface Props {
   error?: APIError[] | null;
   loading: boolean;
   monitorLabel: string;
-  issues: ExtendedIssue[] | undefined;
+  issues: ManagedIssue[] | undefined;
   onClose: () => void;
 }
 

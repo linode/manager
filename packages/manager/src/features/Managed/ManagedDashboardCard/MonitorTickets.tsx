@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { ExtendedIssue } from 'src/store/managed/issues.actions';
+import { ExtendedIssue } from 'src/queries/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

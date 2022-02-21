@@ -1,7 +1,12 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryPresets } from './base';
+import {
+  itemInListCreationHandler,
+  itemInListDeletionHandler,
+  itemInListMutationHandler,
+  queryPresets,
+} from './base';
 import {
   ContactPayload,
   createContact,
@@ -11,6 +16,8 @@ import {
   deleteContact,
   deleteCredential,
   deleteServiceMonitor,
+  disableServiceMonitor,
+  enableServiceMonitor,
   getCredentials,
   getLinodeSettings,
   getManagedContacts,
@@ -35,6 +42,10 @@ import {
   UpdatePasswordPayload,
   updateServiceMonitor,
 } from '@linode/api-v4/lib/managed';
+import { getTicket } from '@linode/api-v4';
+import Bluebird from 'bluebird';
+import { DateTime } from 'luxon';
+import { parseAPIDate } from 'src/utilities/date';
 
 const queryKey = 'managed';
 
@@ -67,7 +78,7 @@ export const useAllManagedContactsQuery = () =>
   );
 
 export const useAllManagedIssuesQuery = () =>
-  useQuery<ManagedIssue[], APIError[]>(
+  useQuery<ExtendedIssue[], APIError[]>(
     `${queryKey}-issues`,
     getAllIssues,
     queryPresets.oneTimeFetch
@@ -77,7 +88,7 @@ export const useAllManagedMonitorsQuery = () =>
   useQuery<ManagedServiceMonitor[], APIError[]>(
     `${queryKey}-monitors`,
     getAllMonitors,
-    queryPresets.oneTimeFetch
+    { refetchInterval: 20000 }
   );
 
 export const useManagedStatsQuery = () =>
@@ -87,69 +98,91 @@ export const useManagedStatsQuery = () =>
     queryPresets.shortLived
   );
 
-// @TODO update store
 export const useDeleteMonitorMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(({ id }) =>
-    deleteServiceMonitor(id)
+  useMutation<{}, APIError[], { id: number }>(
+    ({ id }) => deleteServiceMonitor(id),
+    itemInListDeletionHandler(`${queryKey}-monitors`)
   );
 
-// @TODO update store
 export const useCreateMonitorMutation = () =>
   useMutation<ManagedServiceMonitor, APIError[], ManagedServicePayload>(
-    createServiceMonitor
+    createServiceMonitor,
+    itemInListCreationHandler(`${queryKey}-monitors`)
   );
 
-// @TODO update store
 export const useUpdateMonitorMutation = (id: number) =>
   useMutation<
     ManagedServiceMonitor,
     APIError[],
     Partial<ManagedServicePayload>
-  >((data) => updateServiceMonitor(id, data));
+  >(
+    (data) => updateServiceMonitor(id, data),
+    itemInListMutationHandler(`${queryKey}-monitors`)
+  );
 
-// @TODO update store
 export const useCreateCredentialMutation = () =>
   useMutation<ManagedCredential, APIError[], CredentialPayload>(
-    createCredential
+    createCredential,
+    itemInListCreationHandler(`${queryKey}-credentials`)
   );
 
-// @TODO update store
 export const useUpdateCredentialPasswordMutation = (id: number) =>
-  useMutation<{}, APIError[], UpdatePasswordPayload>((data) =>
-    updatePassword(id, data)
+  useMutation<{}, APIError[], UpdatePasswordPayload>(
+    (data) => updatePassword(id, data),
+    itemInListMutationHandler(`${queryKey}-credentials`)
   );
 
-// @TODO update store
 export const useUpdateCredentialMutation = (id: number) =>
-  useMutation<ManagedCredential, APIError[], UpdateCredentialPayload>((data) =>
-    updateCredential(id, data)
+  useMutation<ManagedCredential, APIError[], UpdateCredentialPayload>(
+    (data) => updateCredential(id, data),
+    itemInListMutationHandler(`${queryKey}-credentials`)
   );
 
-// @TODO update store
 export const useDeleteCredentialMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(({ id }) => deleteCredential(id));
-
-// @TODO update store
-export const useCreateContactMutation = () =>
-  useMutation<ManagedContact, APIError[], ContactPayload>(createContact);
-
-// @TODO update store
-export const useDeleteContactMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(({ id }) => deleteContact(id));
-
-// @TODO update store
-export const useUpdateContactMutation = (id: number) =>
-  useMutation<ManagedContact, APIError[], Partial<ContactPayload>>((data) =>
-    updateContact(id, data)
+  useMutation<{}, APIError[], { id: number }>(
+    ({ id }) => deleteCredential(id),
+    itemInListDeletionHandler(`${queryKey}-credentials`)
   );
 
-// @TODO update store
+export const useCreateContactMutation = () =>
+  useMutation<ManagedContact, APIError[], ContactPayload>(
+    createContact,
+    itemInListCreationHandler(`${queryKey}-contacts`)
+  );
+
+export const useDeleteContactMutation = () =>
+  useMutation<{}, APIError[], { id: number }>(
+    ({ id }) => deleteContact(id),
+    itemInListDeletionHandler(`${queryKey}-contacts`)
+  );
+
+export const useUpdateContactMutation = (id: number) =>
+  useMutation<ManagedContact, APIError[], Partial<ContactPayload>>(
+    (data) => updateContact(id, data),
+    itemInListMutationHandler(`${queryKey}-contacts`)
+  );
+
 export const useUpdateLinodeSettingsMutation = (id: number) =>
   useMutation<
     ManagedLinodeSetting,
     APIError[],
     { ssh: Partial<ManagedSSHSetting> }
-  >((data) => updateLinodeSettings(id, data));
+  >(
+    (data) => updateLinodeSettings(id, data),
+    itemInListMutationHandler(`${queryKey}-linode-settings`)
+  );
+
+export const useEnableMonitorMutation = (id: number) =>
+  useMutation<ManagedServiceMonitor, APIError[]>(
+    () => enableServiceMonitor(id),
+    itemInListMutationHandler(`${queryKey}-monitors`)
+  );
+
+export const useDisableMonitorMutation = (id: number) =>
+  useMutation<ManagedServiceMonitor, APIError[]>(
+    () => disableServiceMonitor(id),
+    itemInListMutationHandler(`${queryKey}-monitors`)
+  );
 
 const getAllCredentials = () =>
   getAll<ManagedCredential>(getCredentials)().then((res) => res.data);
@@ -159,11 +192,51 @@ const getAllCredentials = () =>
 const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then((res) => res.data);
 
-const getAllIssues = () =>
-  getAll<ManagedIssue>(getManagedIssues)().then((res) => res.data);
-
 const getAllMonitors = () =>
   getAll<ManagedServiceMonitor>(getServices)().then((res) => res.data);
 
 const getAllLinodeSettings = () =>
   getAll<ManagedLinodeSetting>(getLinodeSettings)().then((res) => res.data);
+
+export interface ExtendedIssue extends ManagedIssue {
+  status?: 'open' | 'closed' | 'new';
+  dateClosed?: string;
+}
+
+const _getAllIssues = () =>
+  getAll<ManagedIssue>(getManagedIssues)().then((res) => res.data);
+
+const getAllIssues = () => _getAllIssues().then((data) => extendIssues(data));
+
+export const extendIssues = async (issues: ManagedIssue[]) => {
+  /**
+   * Issues live forever, but we only care about recent and/or open issues.
+   * To avoid pummeling the API for Support tickets for a list of ancient issues,
+   * we're doing the filtering here. (The API doesn't allow you to filter on date created.)
+   *
+   * It might be better to just get the first page of results (page size of ~50), which in almost
+   * every case will be enough. Did it this way to be safe.
+   */
+  const recentIssues = issues.filter(
+    (thisIssue) =>
+      parseAPIDate(thisIssue.created).diff(DateTime.local()).days < 30
+  );
+  return await Bluebird.map(recentIssues, (thisIssue) => {
+    /**
+     * Get the associated ticket for each issue, since the API response
+     * does not include the status or date closed.
+     */
+    return (
+      getTicket(thisIssue.id)
+        .then((ticket) => {
+          return {
+            ...thisIssue,
+            status: ticket.status,
+            dateClosed: ticket.closed,
+          } as ExtendedIssue;
+        })
+        // If this fails, we'll just use a normal issue
+        .catch((_) => thisIssue as ExtendedIssue)
+    );
+  });
+};
