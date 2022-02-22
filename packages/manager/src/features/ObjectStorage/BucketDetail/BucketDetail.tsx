@@ -145,8 +145,8 @@ export const BucketDetail: React.FC = () => {
   };
 
   // If a user deletes many objects in a short amount of time,
-  // we don't want to fetch for every delete action. Refetch bucket
-  // intially but debounce on 5 seconds.
+  // we don't want to fetch for every delete action. Debounce
+  // the updateBucket call by 3 seconds.
   const debouncedUpdateBucket = debounce(3000, false, () =>
     updateBucket(clusterId, bucketName)
   );
