@@ -41,10 +41,10 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
   },
 ];
 
-describe('create a database', () => {
+describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
-      it(`can create a ${configuration.linodeType} ${configuration.engine} v${configuration.version} ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version} ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
         const databaseMock = databaseInstanceFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
