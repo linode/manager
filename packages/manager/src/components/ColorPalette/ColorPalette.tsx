@@ -46,7 +46,6 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
       color: theme.palette.primary.light,
       alias: 'theme.palette.primary.light',
     },
-    { color: theme.palette.primary.dark, alias: 'theme.palette.primary.dark' },
     { color: theme.palette.text.primary, alias: 'theme.palette.text.primary' },
     { color: theme.color.headline, alias: 'theme.color.headline' },
     { color: theme.palette.divider, alias: 'theme.palette.divider' },

@@ -11,19 +11,11 @@ export const light = () => {
 
 const backgroundColors = {
   bgApp: '#3a3f46',
-  bgPrimaryNav: '#23262a',
-  bgPrimaryNavActive: '#0C0D0E',
   bgPaper: '#2e3238',
-  // notification center, add a tag, breadcrumb
-  bgSecondaryButton: 'transparent',
   bgCopyButton: '#364863',
-  bgTPAButton: '#444',
   bgTableHeader: '#33373e',
   bgAccessRow: '#454b54',
   bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-  bgGooglePay: '#fff',
-  bgTableRow: 'rgba(0, 0, 0, 0.1)',
-  bgReferralsImage: '#83868C',
 };
 
 const cmrTextColors = {
@@ -53,7 +45,6 @@ const primaryColors = {
   text: '#ffffff',
   headline: '#f4f4f4',
   divider: '#222222',
-  offBlack: '#fff',
   white: '#222',
 };
 
@@ -169,7 +160,7 @@ const darkThemeOptions = {
     grey9: primaryColors.divider,
     white: '#32363c',
     black: '#fff',
-    offBlack: primaryColors.offBlack,
+    offBlack: '#fff',
     boxShadow: '#222',
     boxShadowDark: '#000',
     focusBorder: '#999',

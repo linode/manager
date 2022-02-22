@@ -20,7 +20,8 @@ import { formatEventWithUsername } from './Event.helpers';
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
     '&:hover': {
-      backgroundColor: theme.backgroundColors.bgTableRow,
+      backgroundColor:
+        theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
       boxShadow: `inset 5px 0 0 ${theme.palette.primary.main}`,
       cursor: 'pointer',
     },

@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.backgroundColors.bgPrimaryNavActive,
+      backgroundColor: theme.name === 'lightTheme' ? '#3a3f46' : '#23262a',
       color: 'white',
     },
   },

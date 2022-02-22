@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   provider: {
     borderRadius: 1,
-    backgroundColor: theme.backgroundColors.bgTPAButton,
+    backgroundColor: theme.name === 'lightTheme' ? '#f5f6f7' : '#444',
     marginTop: theme.spacing(),
     minHeight: 70,
     paddingRight: theme.spacing(3) - 4,

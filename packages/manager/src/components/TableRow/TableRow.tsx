@@ -15,9 +15,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       boxShadow: `inset 3px 0 0 transparent`,
     },
-    '&:focus': {
-      backgroundColor: theme.backgroundColors.bgSecondaryButton,
-    },
   },
   withForcedIndex: {
     '& td': {

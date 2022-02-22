@@ -1,19 +1,19 @@
-import * as React from 'react';
 import { APIWarning } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { VariantType } from 'notistack';
+import * as React from 'react';
+import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import Grid from 'src/components/Grid';
+import {
+  gPay,
+  initGooglePaymentInstance,
+} from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
 import { SetSuccess } from './types';
-import {
-  initGooglePaymentInstance,
-  gPay,
-} from 'src/features/Billing/GooglePayProvider';
-import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
-import Tooltip from 'src/components/core/Tooltip';
-import CircleProgress from 'src/components/CircleProgress';
-import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.backgroundColors.bgGooglePay,
+    backgroundColor: theme.name === 'lightTheme' ? '#000' : '#fff',
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       opacity: 0.8,
       transition: 'none',
-      background: theme.backgroundColors.bgGooglePay,
     },
     '& svg': {
       color: theme.cmrTextColors.textGooglePay,

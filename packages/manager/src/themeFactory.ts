@@ -79,19 +79,11 @@ const breakpoints = createBreakpoints({});
 
 const backgroundColors = {
   bgApp: '#f4f5f6',
-  bgPrimaryNav: '#3a3f46',
-  bgPrimaryNavActive: '#515861',
   bgPaper: '#ffffff',
-  // notification center, add a tag, breadcrumb
-  bgSecondaryButton: '#f5f8ff',
   bgCopyButton: '#e5f1ff',
-  bgTPAButton: '#f5f6f7',
   bgTableHeader: '#f9fafa',
   bgAccessRow: '#fafafa',
   bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-  bgGooglePay: '#000',
-  bgTableRow: '#fbfbfb',
-  bgReferralsImage: '#EDEDF4',
 };
 
 const cmrTextColors = {
@@ -121,7 +113,6 @@ const primaryColors = {
   text: '#606469',
   headline: '#32363c',
   divider: '#f4f4f4',
-  offBlack: '#444',
   white: '#fff',
 };
 
@@ -297,7 +288,7 @@ const themeDefaults: ThemeDefaults = () => {
       grey9: '#f4f5f6',
       white: '#fff',
       black: '#222',
-      offBlack: primaryColors.offBlack,
+      offBlack: '#444',
       greenCyan: '#17cf73',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
@@ -545,7 +536,7 @@ const themeDefaults: ThemeDefaults = () => {
           color: cmrTextColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: `${backgroundColors.bgSecondaryButton} !important`,
+            backgroundColor: '#f5f8ff !important',
             border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
             color: cmrTextColors.secondaryButton,
           },

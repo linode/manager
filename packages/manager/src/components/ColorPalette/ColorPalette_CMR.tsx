@@ -47,20 +47,8 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
       alias: 'theme.backgroundColors.bgApp',
     },
     {
-      color: theme.backgroundColors.bgPrimaryNav,
-      alias: 'theme.backgroundColors.bgPrimaryNav',
-    },
-    {
-      color: theme.backgroundColors.bgPrimaryNavActive,
-      alias: 'theme.backgroundColors.bgPrimaryNavActive',
-    },
-    {
       color: theme.backgroundColors.bgPaper,
       alias: 'theme.backgroundColors.bgPaper',
-    },
-    {
-      color: theme.backgroundColors.bgSecondaryButton,
-      alias: 'theme.backgroundColors.bgSecondaryButton',
     },
     {
       color: theme.backgroundColors.bgTableHeader,
