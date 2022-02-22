@@ -2,16 +2,16 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from './DismissibleBanner';
 
-<Meta title="UI Elements/Notifications/Dismissible Banners" component={DismissibleBanner} />
+<Meta title="UI Elements/Notifications/Dismissible Banners" />
 
 # Dismissible Banners
 ### Usage
 Banners appear between the top nav and page content and are a visual interruption of the normal page layout. Their use must be approved by all project stakeholders.
 
 ### Design
-- Banners are dismissible using an ‘X’ icon.
+- Banners are dismissible using an &apos;X&apos; icon.
 - Consider adding a link to a doc or a guide for users to learn more.
-- Banners should be considered as one part of a larger communications plan, messaging should be developed with the marketing team.
+- Banners should be considered as one part of a larger communications plan; messaging should be developed with the marketing team.
 
 ### Variants
 - Marketing: Informs users of a new feature or improved service. 
@@ -19,9 +19,10 @@ Banners appear between the top nav and page content and are a visual interruptio
 - Call to action: Primary Button or text link allows a user to take action directly from the banner. 
 
 export const Template = (args) => {
+    const { productInformationIndicator } = args;
     return (
     <DismissibleBanner
-        productInformationIndicator
+        productInformationIndicator={productInformationIndicator}
     >
         <Typography>
           This is an example of a dismissible banner.
@@ -31,7 +32,22 @@ export const Template = (args) => {
 }
 
 <Canvas>
-    <Story name="DismissibleBanner">
+    <Story 
+        name="Component API"
+        args={{
+            productInformationIndicator: true,
+        }}
+        argTypes={{
+            productInformationIndicator: {
+                description: 'Indicates whether the banner communicates information about a product, typically a new feature or improved service. If true, the left border is set to green.',
+            },
+        }}
+    >
         {Template.bind({})}
     </Story>
 </Canvas>
+
+<ArgsTable
+  story="Component API"
+  exclude={['className']}
+/>
