@@ -144,7 +144,7 @@ export const BucketDetail: React.FC = () => {
     setObjectDetailDrawerOpen(true);
   };
 
-  const debouncedUpdateBucket = debounce(3000, false, () =>
+  const debouncedUpdateBucket = debounce(5000, true, () =>
     updateBucket(clusterId, bucketName)
   );
 
