@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       transition: 'none',
     },
     '& svg': {
-      color: theme.cmrTextColors.textGooglePay,
+      color: theme.name === 'lightTheme' ? '#fff' : '#616161',
       height: 16,
     },
     [theme.breakpoints.down('sm')]: {

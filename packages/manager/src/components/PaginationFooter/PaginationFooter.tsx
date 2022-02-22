@@ -17,7 +17,7 @@ type ClassNames = 'root' | 'padded' | 'select';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      background: theme.backgroundColors.bgPaper,
+      background: theme.bg.bgPaper,
       margin: 0,
       minHeight: theme.spacing(5),
       width: '100%',
@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
     },
     select: {
       '& .MuiInput-root': {
-        backgroundColor: theme.backgroundColors.bgPaper,
+        backgroundColor: theme.bg.bgPaper,
         border: 'none',
         '&.Mui-focused': {
           boxShadow: 'none',

@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
     display: 'flex',
     justifyContent: 'flex-end',
-    backgroundColor: theme.backgroundColors.bgTableHeader,
+    backgroundColor: theme.bg.bgTableHeader,
   },
   toggleButton: {
     color: '#d2d3d4',

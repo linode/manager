@@ -18,7 +18,7 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     '.detailsWrapper &': {
       padding: theme.spacing(4),
     },

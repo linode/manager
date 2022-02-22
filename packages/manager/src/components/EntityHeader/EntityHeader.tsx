@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2),
   },
   details: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     margin: 0,
     [theme.breakpoints.down('xs')]: {
       flexWrap: 'wrap',
@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     padding: '4px 16px',
     paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {

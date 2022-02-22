@@ -37,14 +37,14 @@ export const useStyles = makeStyles((theme: Theme) => ({
       marginTop: `${theme.spacing()}px !important`,
     },
     '& $important': {
-      backgroundColor: theme.backgroundColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
     },
     '& $error': {
       borderLeftColor: theme.color.red,
     },
   },
   important: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     padding: theme.spacing(2),
     paddingRight: 18,
     '& $noticeText': {

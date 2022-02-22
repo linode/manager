@@ -25,7 +25,7 @@ export const decorators = [
         {/* Keep this in case we want to change the background color based on the mode */}
         <div
           style={{
-            backgroundColor: options[_key]().backgroundColors.bgApp,
+            backgroundColor: options[_key]().bg.bgApp,
           }}
         >
           <Story />

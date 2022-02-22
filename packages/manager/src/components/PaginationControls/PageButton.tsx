@@ -4,7 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     borderRadius: 1,
     color: theme.cmrTextColors.tableHeader,
     fontSize: '.875rem',

@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        background: theme.backgroundColors.bgApp,
+        background: theme.bg.bgApp,
         '& $caret': {
           color: '#0683E3',
           marginTop: 4,
@@ -159,7 +159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemList: {
     boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.backgroundColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),

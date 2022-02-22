@@ -7,7 +7,7 @@ import { useTheme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     '& h2': {
       color: '#32363c',
     },
@@ -41,26 +41,26 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const backgroundColors = [
+  const bg = [
     {
-      color: theme.backgroundColors.bgApp,
-      alias: 'theme.backgroundColors.bgApp',
+      color: theme.bg.bgApp,
+      alias: 'theme.bg.bgApp',
     },
     {
-      color: theme.backgroundColors.bgPaper,
-      alias: 'theme.backgroundColors.bgPaper',
+      color: theme.bg.bgPaper,
+      alias: 'theme.bg.bgPaper',
     },
     {
-      color: theme.backgroundColors.bgTableHeader,
-      alias: 'theme.backgroundColors.bgTableHeader',
+      color: theme.bg.bgTableHeader,
+      alias: 'theme.bg.bgTableHeader',
     },
     {
-      color: theme.backgroundColors.bgBillingSummary,
-      alias: 'theme.backgroundColors.bgBillingSummary',
+      color: theme.bg.bgBillingSummary,
+      alias: 'theme.bg.bgBillingSummary',
     },
     {
-      color: theme.backgroundColors.bgAccessRow,
-      alias: 'theme.backgroundColors.bgAccessRow',
+      color: theme.bg.bgAccessRow,
+      alias: 'theme.bg.bgAccessRow',
     },
   ];
 
@@ -136,7 +136,7 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
         <Grid item xs={12}>
           <Typography variant="h2">Background Colors</Typography>
         </Grid>
-        {backgroundColors.map((color, idx: number) =>
+        {bg.map((color, idx: number) =>
           createSwatch(idx, color.color, color.alias)
         )}
       </>

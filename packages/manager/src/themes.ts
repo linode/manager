@@ -9,23 +9,12 @@ export const light = () => {
   return createTheme(options);
 };
 
-const backgroundColors = {
-  bgApp: '#3a3f46',
-  bgPaper: '#2e3238',
-  bgCopyButton: '#364863',
-  bgTableHeader: '#33373e',
-  bgAccessRow: '#454b54',
-  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-};
-
 const cmrTextColors = {
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
   tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
-  secondaryButton: '#fff',
-  textGooglePay: '#616161',
 };
 
 const cmrBorderColors = {
@@ -33,7 +22,6 @@ const cmrBorderColors = {
   borderBillingSummary: '#243142',
   borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
-  borderSecondaryButton: '#fff',
   divider: '#222',
   dividerLight: '#2e3238',
 };
@@ -135,11 +123,15 @@ const darkThemeOptions = {
     offWhite: '#444',
     lightBlue: '#222',
     white: '#32363c',
-    pureWhite: '#000',
     tableHeader: '#2B2E32',
     primaryNavPaper: '#2e3238',
     mainContentBanner: '#23272B',
-    chipActive: 'rgba(0,0,0,0.9)',
+    bgApp: '#3a3f46',
+    bgPaper: '#2e3238',
+    bgCopyButton: '#364863',
+    bgTableHeader: '#33373e',
+    bgAccessRow: '#454b54',
+    bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
   },
   color: {
     headline: primaryColors.headline,
@@ -155,7 +147,7 @@ const darkThemeOptions = {
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
     grey6: '#606469',
-    grey7: backgroundColors.bgPaper,
+    grey7: '#2e3238',
     grey8: '#dbdde1',
     grey9: primaryColors.divider,
     white: '#32363c',
@@ -179,7 +171,6 @@ const darkThemeOptions = {
     chipButton: '#415d81',
     chipButtonHover: '#374863',
   },
-  backgroundColors,
   cmrBorderColors,
   cmrTextColors,
   graphs: {
@@ -447,7 +438,7 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        backgroundColor: backgroundColors.bgPaper,
+        backgroundColor: '#2e3238',
       },
       outlined: {
         border: '1px solid rgba(0, 0, 0, 0.2)',

@@ -21,12 +21,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   body: {
     paddingRight: theme.spacing(),
     paddingBottom: theme.spacing(),
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
     borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
   },
   footer: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

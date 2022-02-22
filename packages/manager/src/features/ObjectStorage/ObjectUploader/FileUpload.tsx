@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   progressBar: {
-    backgroundColor: theme.backgroundColors.bgApp,
+    backgroundColor: theme.bg.bgApp,
     borderRadius: 3,
     height: theme.spacing(5.25),
     width: '100%',

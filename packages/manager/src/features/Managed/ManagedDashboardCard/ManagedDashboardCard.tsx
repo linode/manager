@@ -23,7 +23,7 @@ import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.backgroundColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     margin: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {

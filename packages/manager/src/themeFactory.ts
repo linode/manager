@@ -42,7 +42,6 @@ declare module '@material-ui/core/styles/createTheme' {
     '@keyframes rotate': any;
     '@keyframes dash': any;
     bg: any;
-    backgroundColors: any;
     cmrTextColors: any;
     cmrBorderColors: any;
     color: any;
@@ -77,23 +76,12 @@ declare module '@material-ui/core/styles/createTheme' {
 
 const breakpoints = createBreakpoints({});
 
-const backgroundColors = {
-  bgApp: '#f4f5f6',
-  bgPaper: '#ffffff',
-  bgCopyButton: '#e5f1ff',
-  bgTableHeader: '#f9fafa',
-  bgAccessRow: '#fafafa',
-  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-};
-
 const cmrTextColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
   tableHeader: '#888F91',
   tableStatic: '#606469',
   textAccessTable: '#606469',
-  secondaryButton: '#2575d0',
-  textGooglePay: '#fff',
 };
 
 const cmrBorderColors = {
@@ -101,7 +89,6 @@ const cmrBorderColors = {
   borderBillingSummary: '#cce2ff',
   borderBalance: '#c2daff',
   borderTable: '#f4f5f6',
-  borderSecondaryButton: '#d7dfed',
   divider: '#e3e5e8',
   dividerLight: '#e3e5e8',
 };
@@ -262,11 +249,15 @@ const themeDefaults: ThemeDefaults = () => {
       offWhite: '#fbfbfb',
       lightBlue: '#f0f7ff',
       white: '#fff',
-      pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavPaper: '#3a3f46',
       mainContentBanner: '#33373D',
-      chipActive: '#cecece',
+      bgApp: '#f4f5f6',
+      bgPaper: '#ffffff',
+      bgCopyButton: '#e5f1ff',
+      bgTableHeader: '#f9fafa',
+      bgAccessRow: '#fafafa',
+      bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
     },
     color: {
       headline: primaryColors.headline,
@@ -308,7 +299,6 @@ const themeDefaults: ThemeDefaults = () => {
       chipButton: '#e5f1ff',
       chipButtonHover: '#cce2ff',
     },
-    backgroundColors,
     cmrTextColors,
     cmrBorderColors,
     graphs: {
@@ -537,8 +527,8 @@ const themeDefaults: ThemeDefaults = () => {
           minHeight: 34,
           '&:hover, &:focus': {
             backgroundColor: '#f5f8ff !important',
-            border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
-            color: cmrTextColors.secondaryButton,
+            border: '1px solid #d7dfed',
+            color: '#2575d0',
           },
         },
       },

@@ -26,13 +26,13 @@ const styles = (theme: Theme) =>
       textAlign: 'center',
     },
     table: {
-      backgroundColor: theme.backgroundColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
       overflow: 'scroll',
     },
     searchWrapper: {
       display: 'flex',
       flexWrap: 'nowrap',
-      backgroundColor: theme.backgroundColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
       paddingTop: theme.spacing(),
       paddingBottom: '8px !important',
       position: 'sticky',
@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
       flexBasis: '100%',
       marginTop: 0,
       '& .input': {
-        backgroundColor: theme.backgroundColors.bgPaper,
+        backgroundColor: theme.bg.bgPaper,
         border: `1px solid ${theme.color.grey3}`,
         borderRadius: 0,
         minHeight: 'auto',
@@ -68,7 +68,7 @@ const styles = (theme: Theme) =>
       },
     },
     landing: {
-      backgroundColor: `${theme.backgroundColors.bgApp} !important`,
+      backgroundColor: `${theme.bg.bgApp} !important`,
       marginTop: -theme.spacing(),
     },
     // Styles to override base placeholder styles for StackScript null state

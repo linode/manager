@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 28,
     display: 'flex',
     justifyContent: 'flex-end',
-    backgroundColor: theme.backgroundColors.bgTableHeader,
+    backgroundColor: theme.bg.bgTableHeader,
   },
   toggleButton: {
     color: '#d2d3d4',
