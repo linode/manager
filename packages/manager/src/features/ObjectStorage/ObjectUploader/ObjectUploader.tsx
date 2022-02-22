@@ -173,6 +173,8 @@ const ObjectUploader: React.FC<Props> = (props) => {
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
   }, [state.numQueued, state.numInProgress]);
 
+  // If a user uploads many files at once, we don't want to refetch bucket stats for every object.
+  // We debounce this request to prevent unnecessary fetches.
   const debouncedGetBucket = React.useRef(
     debounce(3000, false, () => updateBucket(clusterId, bucketName))
   ).current;

@@ -144,6 +144,9 @@ export const BucketDetail: React.FC = () => {
     setObjectDetailDrawerOpen(true);
   };
 
+  // If a user deletes many objects in a short amount of time,
+  // we don't want to fetch for every delete action. Refetch bucket
+  // intially but debounce on 5 seconds.
   const debouncedUpdateBucket = debounce(5000, true, () =>
     updateBucket(clusterId, bucketName)
   );
