@@ -23,6 +23,7 @@ import TableRow from 'src/components/TableRow';
 import {
   prefixToQueryKey,
   queryKey,
+  updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
@@ -40,6 +41,7 @@ import ObjectTableContent from './ObjectTableContent';
 import { deleteObject as _deleteObject } from '../requests';
 import { queryClient } from 'src/queries/base';
 import produce from 'immer';
+import { debounce } from 'throttle-debounce';
 
 const useStyles = makeStyles((theme: Theme) => ({
   objectTable: {
@@ -142,6 +144,10 @@ export const BucketDetail: React.FC = () => {
     setObjectDetailDrawerOpen(true);
   };
 
+  const debouncedUpdateBucket = debounce(3000, false, () =>
+    updateBucket(clusterId, bucketName)
+  );
+
   const deleteObject = async () => {
     if (!objectToDelete) {
       return;
@@ -159,6 +165,8 @@ export const BucketDetail: React.FC = () => {
       );
 
       await _deleteObject(url);
+
+      debouncedUpdateBucket();
 
       setDeleteObjectLoading(false);
       setDeleteObjectDialogOpen(false);
