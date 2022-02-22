@@ -16,6 +16,7 @@ import {
   ObjectStorageKey,
   ObjectStorageObjectListResponse,
   getBucketsInCluster,
+  getBucket,
 } from '@linode/api-v4/lib/object-storage';
 
 export interface BucketError {
@@ -28,7 +29,7 @@ interface BucketsResponce {
   errors: BucketError[];
 }
 
-export const queryKey = 'object-stroage';
+export const queryKey = 'object-storage';
 
 /**
  * This getAll is probably overkill for getting all
@@ -58,7 +59,7 @@ export const useObjectStorageBuckets = (
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
     // we can tell the user which clusters are having issues.
     // getAllObjectStorageBuckets,
-    () => getAllBucketsFromClusters(clusters!),
+    () => getAllBucketsFromClusters(clusters),
     {
       ...queryPresets.longLived,
       enabled: clusters !== undefined && enabled,
@@ -123,7 +124,7 @@ export const useObjectBucketDetailsInfiniteQuery = (
   prefix: string
 ) =>
   useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
-    [queryKey, cluster, bucket, prefix],
+    [queryKey, cluster, bucket, ...prefixToQueryKey(prefix)],
     ({ pageParam }) =>
       getObjectList(cluster, bucket, { marker: pageParam, delimiter, prefix }),
     {
@@ -132,8 +133,12 @@ export const useObjectBucketDetailsInfiniteQuery = (
   );
 
 export const getAllBucketsFromClusters = async (
-  clusters: ObjectStorageCluster[]
+  clusters: ObjectStorageCluster[] | undefined
 ) => {
+  if (clusters === undefined) {
+    return { buckets: [], errors: [] } as BucketsResponce;
+  }
+
   const promises = clusters.map((cluster) =>
     getAll<ObjectStorageBucket>((params) =>
       getBucketsInCluster(cluster.id, params)
@@ -160,4 +165,53 @@ export const getAllBucketsFromClusters = async (
   }
 
   return { buckets, errors } as BucketsResponce;
+};
+
+/**
+ * Used to make a nice React Query queryKey by splitting the prefix
+ * by the '/' character.
+ *
+ * By spreading the result, you can achieve a queryKey that is in the form of:
+ * ["object-storage","us-southeast-1","test","testfolder"]
+ *
+ * @param {string} prefix The Object Stoage prefix path
+ * @returns {string[]} a list of paths
+ */
+export const prefixToQueryKey = (prefix: string) => {
+  return prefix.split('/', prefix.split('/').length - 1);
+};
+
+/**
+ * Updates the data for a single bucket in the useObjectStorageBuckets query
+ * @param {string} cluster the id of the Object Storage cluster
+ * @param {string} bucketName the label of the bucket
+ */
+export const updateBucket = async (cluster: string, bucketName: string) => {
+  const bucket = await getBucket(cluster, bucketName);
+  queryClient.setQueryData<BucketsResponce | undefined>(
+    `${queryKey}-buckets`,
+    (oldData) => {
+      if (oldData === undefined) {
+        return undefined;
+      }
+
+      const idx = oldData.buckets.findIndex(
+        (thisBucket) =>
+          thisBucket.label === bucketName && thisBucket.cluster === cluster
+      );
+
+      if (idx === -1) {
+        return oldData;
+      }
+
+      const updatedBuckets = [...oldData.buckets];
+
+      updatedBuckets[idx] = bucket;
+
+      return {
+        buckets: updatedBuckets,
+        errors: oldData.errors,
+      } as BucketsResponce;
+    }
+  );
 };
