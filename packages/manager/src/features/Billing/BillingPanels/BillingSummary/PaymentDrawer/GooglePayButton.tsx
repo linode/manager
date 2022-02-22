@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.cmrBGColors.bgGooglePay,
+    backgroundColor: theme.backgroundColors.bgGooglePay,
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       opacity: 0.8,
       transition: 'none',
-      background: theme.cmrBGColors.bgGooglePay,
+      background: theme.backgroundColors.bgGooglePay,
     },
     '& svg': {
       color: theme.cmrTextColors.textGooglePay,

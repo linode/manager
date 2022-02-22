@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     '& svg': {
-      color: theme.cmrBGColors.bgReferralsImage,
+      color: theme.backgroundColors.bgReferralsImage,
     },
     [theme.breakpoints.down('xs')]: {
       marginBottom: theme.spacing(2),

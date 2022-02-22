@@ -81,17 +81,17 @@ const styles = (theme: Theme) =>
     },
     chipRunning: {
       '&:before': {
-        backgroundColor: theme.iconColors.green,
+        backgroundColor: theme.color.greenCyan,
       },
     },
     chipPending: {
       '&:before': {
-        backgroundColor: theme.iconColors.orange,
+        backgroundColor: theme.color.orange,
       },
     },
     chipOffline: {
       '&:before': {
-        backgroundColor: theme.iconColors.grey,
+        backgroundColor: theme.color.grey8,
       },
     },
     clearFilters: {

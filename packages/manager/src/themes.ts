@@ -9,7 +9,7 @@ export const light = () => {
   return createTheme(options);
 };
 
-const cmrBGColors = {
+const backgroundColors = {
   bgApp: '#3a3f46',
   bgPrimaryNav: '#23262a',
   bgPrimaryNavActive: '#0C0D0E',
@@ -44,13 +44,6 @@ const cmrBorderColors = {
   borderSecondaryButton: '#fff',
   divider: '#222',
   dividerLight: '#2e3238',
-};
-
-const iconColors = {
-  green: '#17cf73',
-  orange: '#ffb31a',
-  red: '#cf1e1e',
-  grey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -171,7 +164,8 @@ const darkThemeOptions = {
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
     grey6: '#606469',
-    grey7: cmrBGColors.bgPaper,
+    grey7: backgroundColors.bgPaper,
+    grey8: '#dbdde1',
     grey9: primaryColors.divider,
     white: '#32363c',
     black: '#fff',
@@ -194,10 +188,9 @@ const darkThemeOptions = {
     chipButton: '#415d81',
     chipButtonHover: '#374863',
   },
-  cmrBGColors,
+  backgroundColors,
   cmrBorderColors,
   cmrTextColors,
-  iconColors,
   graphs: {
     network: {
       outbound: `rgb(49, 206, 62)`,
@@ -463,7 +456,7 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        backgroundColor: cmrBGColors.bgPaper,
+        backgroundColor: backgroundColors.bgPaper,
       },
       outlined: {
         border: '1px solid rgba(0, 0, 0, 0.2)',

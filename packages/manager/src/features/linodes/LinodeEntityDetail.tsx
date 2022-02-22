@@ -207,7 +207,7 @@ export interface HeaderProps {
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.backgroundColors.bgPaper,
   },
   linodeLabel: {
     color: theme.cmrTextColors.linkActiveLight,
@@ -244,17 +244,17 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.iconColors.green,
+      backgroundColor: theme.color.greenCyan,
     },
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: theme.iconColors.grey,
+      backgroundColor: theme.color.grey8,
     },
   },
   statusOther: {
     '&:before': {
-      backgroundColor: theme.iconColors.orange,
+      backgroundColor: theme.color.orange,
     },
   },
   divider: {
@@ -621,8 +621,8 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       height: 32,
     },
     '& th': {
-      backgroundColor: theme.cmrBGColors.bgApp,
-      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
+      backgroundColor: theme.backgroundColors.bgApp,
+      borderBottom: `1px solid ${theme.backgroundColors.bgPaper}`,
       color: theme.cmrTextColors.textAccessTable,
       fontSize: '0.875rem',
       fontWeight: 'bold',
@@ -633,9 +633,9 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 170,
     },
     '& td': {
-      backgroundColor: theme.cmrBGColors.bgAccessRow,
+      backgroundColor: theme.backgroundColors.bgAccessRow,
       border: 'none',
-      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
+      borderBottom: `1px solid ${theme.backgroundColors.bgPaper}`,
       fontSize: '0.875rem',
       lineHeight: 1,
       padding: theme.spacing(),
@@ -653,7 +653,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
   copyCell: {
     width: 36,
     height: 33,
-    backgroundColor: `${theme.cmrBGColors.bgCopyButton} !important`,
+    backgroundColor: `${theme.backgroundColors.bgCopyButton} !important`,
     padding: '0px !important',
     '& svg': {
       width: 16,
@@ -690,7 +690,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       right: 0,
       bottom: 0,
-      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.backgroundColors.bgAccessRowTransparentGradient}, ${theme.backgroundColors.bgAccessRow});`,
     },
   },
 }));

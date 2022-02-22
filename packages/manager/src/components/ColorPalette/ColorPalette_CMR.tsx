@@ -7,7 +7,7 @@ import { useTheme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.backgroundColors.bgPaper,
     '& h2': {
       color: '#32363c',
     },
@@ -41,32 +41,38 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const cmrBGColors = [
-    { color: theme.cmrBGColors.bgApp, alias: 'theme.cmrBGColors.bgApp' },
+  const backgroundColors = [
     {
-      color: theme.cmrBGColors.bgPrimaryNav,
-      alias: 'theme.cmrBGColors.bgPrimaryNav',
+      color: theme.backgroundColors.bgApp,
+      alias: 'theme.backgroundColors.bgApp',
     },
     {
-      color: theme.cmrBGColors.bgPrimaryNavActive,
-      alias: 'theme.cmrBGColors.bgPrimaryNavActive',
-    },
-    { color: theme.cmrBGColors.bgPaper, alias: 'theme.cmrBGColors.bgPaper' },
-    {
-      color: theme.cmrBGColors.bgSecondaryButton,
-      alias: 'theme.cmrBGColors.bgSecondaryButton',
+      color: theme.backgroundColors.bgPrimaryNav,
+      alias: 'theme.backgroundColors.bgPrimaryNav',
     },
     {
-      color: theme.cmrBGColors.bgTableHeader,
-      alias: 'theme.cmrBGColors.bgTableHeader',
+      color: theme.backgroundColors.bgPrimaryNavActive,
+      alias: 'theme.backgroundColors.bgPrimaryNavActive',
     },
     {
-      color: theme.cmrBGColors.bgBillingSummary,
-      alias: 'theme.cmrBGColors.bgBillingSummary',
+      color: theme.backgroundColors.bgPaper,
+      alias: 'theme.backgroundColors.bgPaper',
     },
     {
-      color: theme.cmrBGColors.bgAccessRow,
-      alias: 'theme.cmrBGColors.bgAccessRow',
+      color: theme.backgroundColors.bgSecondaryButton,
+      alias: 'theme.backgroundColors.bgSecondaryButton',
+    },
+    {
+      color: theme.backgroundColors.bgTableHeader,
+      alias: 'theme.backgroundColors.bgTableHeader',
+    },
+    {
+      color: theme.backgroundColors.bgBillingSummary,
+      alias: 'theme.backgroundColors.bgBillingSummary',
+    },
+    {
+      color: theme.backgroundColors.bgAccessRow,
+      alias: 'theme.backgroundColors.bgAccessRow',
     },
   ];
 
@@ -120,16 +126,6 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
     },
   ];
 
-  const iconColors = [
-    { color: theme.iconColors.green, alias: 'theme.iconColors.green' },
-    {
-      color: theme.iconColors.orange,
-      alias: 'theme.iconColors.orange',
-    },
-    { color: theme.iconColors.red, alias: 'theme.iconColors.red' },
-    { color: theme.iconColors.grey, alias: 'theme.iconColors.grey' },
-  ];
-
   const createSwatch = (idx: number, color: string, alias: string) => {
     return (
       <Grid item className={classes.swatchWrapper} key={idx}>
@@ -152,7 +148,7 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
         <Grid item xs={12}>
           <Typography variant="h2">Background Colors</Typography>
         </Grid>
-        {cmrBGColors.map((color, idx: number) =>
+        {backgroundColors.map((color, idx: number) =>
           createSwatch(idx, color.color, color.alias)
         )}
       </>
@@ -185,25 +181,11 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
     );
   };
 
-  const renderIconColors = () => {
-    return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="h2">Icon Colors</Typography>
-        </Grid>
-        {iconColors.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-      </>
-    );
-  };
-
   return (
     <Grid container className={classes.root}>
       {renderBackgrounds()}
       {renderTextColors()}
       {renderBorderColors()}
-      {renderIconColors()}
     </Grid>
   );
 };

@@ -66,7 +66,7 @@ const styles = (theme: Theme) =>
     },
     entity: {
       borderRadius: '50%',
-      backgroundColor: theme.cmrBGColors.bgPaper,
+      backgroundColor: theme.backgroundColors.bgPaper,
       color: theme.color.green,
       display: 'flex',
       alignItems: 'center',

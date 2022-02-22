@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '8px 0px',
   },
   dragIcon: {
-    color: theme.iconColors.grey,
+    color: theme.color.grey8,
     marginRight: theme.spacing(1.5),
     position: 'relative',
     top: 2,
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   dragging: {
     display: 'table',
-    border: `solid 0.5px ${theme.iconColors.grey}`,
+    border: `solid 0.5px ${theme.color.grey8}`,
     boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
     '& svg': {
       color: theme.cmrTextColors.tableHeader,

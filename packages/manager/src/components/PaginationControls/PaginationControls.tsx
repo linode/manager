@@ -20,11 +20,11 @@ const styles = (theme: Theme) =>
       flexWrap: 'wrap',
       alignItems: 'center',
       '& [aria-label="Previous Page"]:disabled': {
-        backgroundColor: theme.cmrBGColors.bgPaper,
+        backgroundColor: theme.backgroundColors.bgPaper,
         color: theme.cmrTextColors.tableHeader,
       },
       '& [aria-label="Next Page"]:disabled': {
-        backgroundColor: theme.cmrBGColors.bgPaper,
+        backgroundColor: theme.backgroundColors.bgPaper,
         color: theme.cmrTextColors.tableHeader,
       },
     },

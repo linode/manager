@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   summaryOuter: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.backgroundColors.bgPaper,
     margin: `${theme.spacing()}px 0`,
     marginBottom: 20,
     '&.MuiGrid-item': {

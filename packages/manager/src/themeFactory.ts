@@ -42,10 +42,9 @@ declare module '@material-ui/core/styles/createTheme' {
     '@keyframes rotate': any;
     '@keyframes dash': any;
     bg: any;
-    cmrBGColors: any;
+    backgroundColors: any;
     cmrTextColors: any;
     cmrBorderColors: any;
-    iconColors: any;
     color: any;
     graphs: any;
     visually: any;
@@ -78,7 +77,7 @@ declare module '@material-ui/core/styles/createTheme' {
 
 const breakpoints = createBreakpoints({});
 
-const cmrBGColors = {
+const backgroundColors = {
   bgApp: '#f4f5f6',
   bgPrimaryNav: '#3a3f46',
   bgPrimaryNavActive: '#515861',
@@ -113,13 +112,6 @@ const cmrBorderColors = {
   borderSecondaryButton: '#d7dfed',
   divider: '#e3e5e8',
   dividerLight: '#e3e5e8',
-};
-
-const iconColors = {
-  green: '#17cf73',
-  orange: '#ffb31a',
-  red: '#cf1e1e',
-  grey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -301,6 +293,7 @@ const themeDefaults: ThemeDefaults = () => {
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
       grey7: '#e9eaef',
+      grey8: '#dbdde1',
       grey9: '#f4f5f6',
       white: '#fff',
       black: '#222',
@@ -324,10 +317,9 @@ const themeDefaults: ThemeDefaults = () => {
       chipButton: '#e5f1ff',
       chipButtonHover: '#cce2ff',
     },
-    cmrBGColors,
+    backgroundColors,
     cmrTextColors,
     cmrBorderColors,
-    iconColors,
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
       requests: `rgba(34, 206, 182, ${graphTransparency})`,
@@ -553,7 +545,7 @@ const themeDefaults: ThemeDefaults = () => {
           color: cmrTextColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: `${cmrBGColors.bgSecondaryButton} !important`,
+            backgroundColor: `${backgroundColors.bgSecondaryButton} !important`,
             border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
             color: cmrTextColors.secondaryButton,
           },

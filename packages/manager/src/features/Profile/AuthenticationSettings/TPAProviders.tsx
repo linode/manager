@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   provider: {
     borderRadius: 1,
-    backgroundColor: theme.cmrBGColors.bgTPAButton,
+    backgroundColor: theme.backgroundColors.bgTPAButton,
     marginTop: theme.spacing(),
     minHeight: 70,
     paddingRight: theme.spacing(3) - 4,

@@ -14,7 +14,7 @@ import { HeaderCell } from './types';
 const useStyles = makeStyles((theme: Theme) => ({
   hiddenHeaderCell: theme.visually.hidden,
   groupByTagCell: {
-    backgroundColor: theme.cmrBGColors.bgTableHeader,
+    backgroundColor: theme.backgroundColors.bgTableHeader,
     paddingRight: `0px !important`,
     textAlign: 'right',
   },

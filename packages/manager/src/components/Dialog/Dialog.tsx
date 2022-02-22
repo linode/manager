@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.drawerBackdrop,
   },
   sticky: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.backgroundColors.bgPaper,
     position: 'sticky',
     top: 0,
     padding: theme.spacing(),

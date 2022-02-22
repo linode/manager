@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+      backgroundColor: theme.backgroundColors.bgPrimaryNavActive,
       color: 'white',
     },
   },
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        background: theme.cmrBGColors.bgApp,
+        background: theme.backgroundColors.bgApp,
         '& $caret': {
           color: '#0683E3',
           marginTop: 4,
@@ -159,7 +159,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemList: {
     boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.cmrBGColors.bgPaper,
+      backgroundColor: theme.backgroundColors.bgPaper,
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
