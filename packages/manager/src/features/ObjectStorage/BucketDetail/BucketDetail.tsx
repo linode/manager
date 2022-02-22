@@ -284,7 +284,7 @@ export const BucketDetail: React.FC = () => {
     for (const page of data.pages) {
       if (page.data.find((object) => object.name === folder.name)) {
         // If a folder already exists in the store, invalidate that store for that specific
-        // prefix. Due to how invalidateQueries works, all subdirectroies also get invalidated.
+        // prefix. Due to how invalidateQueries works, all subdirectories also get invalidated.
         queryClient.invalidateQueries([
           queryKey,
           clusterId,
