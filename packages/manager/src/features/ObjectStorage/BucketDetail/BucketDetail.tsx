@@ -166,6 +166,8 @@ export const BucketDetail: React.FC = () => {
 
       await _deleteObject(url);
 
+      // Update this bucket so the buckets landing page shows the correct
+      // bucket size and object count.
       debouncedUpdateBucket();
 
       setDeleteObjectLoading(false);
@@ -278,6 +280,8 @@ export const BucketDetail: React.FC = () => {
 
     for (const page of data.pages) {
       if (page.data.find((object) => object.name === folder.name)) {
+        // If a folder already exists in the store, invalidate that store for that specific
+        // prefix. Due to how invalidateQueries works, all subdirectroies also get invalidated.
         queryClient.invalidateQueries([
           queryKey,
           clusterId,
