@@ -44,6 +44,7 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
 describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
+      // @TODO Add assertions for DBaaS pricing.
       it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version} ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
         const databaseMock = databaseInstanceFactory.build({
           label: configuration.label,
