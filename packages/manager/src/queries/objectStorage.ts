@@ -16,6 +16,7 @@ import {
   ObjectStorageKey,
   ObjectStorageObjectListResponse,
   getBucketsInCluster,
+  getBucket,
 } from '@linode/api-v4/lib/object-storage';
 
 export interface BucketError {
@@ -123,7 +124,7 @@ export const useObjectBucketDetailsInfiniteQuery = (
   prefix: string
 ) =>
   useInfiniteQuery<ObjectStorageObjectListResponse, APIError[]>(
-    [queryKey, cluster, bucket, prefix],
+    [queryKey, cluster, bucket, ...prefixToQueryKey(prefix)],
     ({ pageParam }) =>
       getObjectList(cluster, bucket, { marker: pageParam, delimiter, prefix }),
     {
@@ -164,4 +165,38 @@ export const getAllBucketsFromClusters = async (
   }
 
   return { buckets, errors } as BucketsResponce;
+};
+
+export const prefixToQueryKey = (prefix: string) => {
+  return prefix.split('/', prefix.split('/').length - 1);
+};
+
+export const updateBucket = async (cluster: string, bucketName: string) => {
+  const bucket = await getBucket(cluster, bucketName);
+  queryClient.setQueryData<BucketsResponce | undefined>(
+    `${queryKey}-buckets`,
+    (oldData) => {
+      if (oldData === undefined) {
+        return undefined;
+      }
+
+      const idx = oldData.buckets.findIndex(
+        (thisBucket) =>
+          thisBucket.label === bucketName && thisBucket.cluster === cluster
+      );
+
+      if (idx === -1) {
+        return oldData;
+      }
+
+      const updatedBuckets = [...oldData.buckets];
+
+      updatedBuckets[idx] = bucket;
+
+      return {
+        buckets: updatedBuckets,
+        errors: oldData.errors,
+      } as BucketsResponce;
+    }
+  );
 };

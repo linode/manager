@@ -21,6 +21,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import {
+  prefixToQueryKey,
   queryKey,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
@@ -159,8 +160,6 @@ export const BucketDetail: React.FC = () => {
 
       await _deleteObject(url);
 
-      queryClient.refetchQueries(`${queryKey}-buckets`);
-
       setDeleteObjectLoading(false);
       setDeleteObjectDialogOpen(false);
       removeOne(objectToDelete);
@@ -176,10 +175,13 @@ export const BucketDetail: React.FC = () => {
     queryClient.setQueryData<{
       pages: ObjectStorageObjectListResponse[];
       pageParams: string[];
-    }>([queryKey, clusterId, bucketName, prefix], (data) => ({
-      pages,
-      pageParams: data?.pageParams || [],
-    }));
+    }>(
+      [queryKey, clusterId, bucketName, ...prefixToQueryKey(prefix)],
+      (data) => ({
+        pages,
+        pageParams: data?.pageParams || [],
+      })
+    );
   };
 
   const removeOne = (objectName: string) => {
@@ -203,7 +205,6 @@ export const BucketDetail: React.FC = () => {
   const maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
     const action = tableUpdateAction(prefix, path);
     if (action) {
-      queryClient.refetchQueries(`${queryKey}-buckets`);
       if (action.type === 'FILE') {
         addOneFile(action.name, sizeInBytes);
       } else {
@@ -273,7 +274,7 @@ export const BucketDetail: React.FC = () => {
           queryKey,
           clusterId,
           bucketName,
-          folder.name,
+          ...`${prefix}${objectName}`.split('/'),
         ]);
         return;
       }
