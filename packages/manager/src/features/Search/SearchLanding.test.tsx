@@ -23,8 +23,6 @@ const props: Props = {
     images: false,
     volumes: false,
     kubernetes: false,
-    objectStorageClusters: false,
-    objectStorageBuckets: false,
   },
   ...reactRouterProps,
 };
@@ -37,10 +35,6 @@ const propsWithResults: Props = {
 
 jest.mock('src/hooks/useReduxLoad', () => ({
   useReduxLoad: () => jest.fn().mockReturnValue({ _loading: false }),
-}));
-
-jest.mock('src/hooks/useObjectStorageBuckets', () => ({
-  useObjectStorage: () => jest.fn().mockReturnValue({ loading: false }),
 }));
 
 describe('Component', () => {
@@ -57,7 +51,7 @@ describe('Component', () => {
     );
     const { getByText } = renderWithTheme(<SearchLanding {...newProps} />);
     getByText(/search/i);
-    expect(props.search).toHaveBeenCalledWith('search');
+    expect(props.search).toHaveBeenCalledWith('search', []);
   });
 
   it('should search when the entity list (from Redux) changes', () => {

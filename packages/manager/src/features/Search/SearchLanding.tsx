@@ -13,8 +13,11 @@ import { REFRESH_INTERVAL } from 'src/constants';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { useObjectStorage } from 'src/hooks/useObjectStorageBuckets';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import {
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -74,33 +77,6 @@ const displayMap = {
 
 export type CombinedProps = SearchProps & RouteComponentProps<{}>;
 
-const getErrorMessage = (errors: ErrorObject): string => {
-  const errorString: string[] = [];
-  if (errors.linodes) {
-    errorString.push('Linodes');
-  }
-  if (errors.domains) {
-    errorString.push('Domains');
-  }
-  if (errors.volumes) {
-    errorString.push('Volumes');
-  }
-  if (errors.nodebalancers) {
-    errorString.push('NodeBalancers');
-  }
-  if (errors.images) {
-    errorString.push('Images');
-  }
-  if (errors.kubernetes) {
-    errorString.push('Kubernetes');
-  }
-  if (errors.objectStorageClusters || errors.objectStorageBuckets) {
-    errorString.push('Buckets');
-  }
-  const joined = errorString.join(', ');
-  return `Could not retrieve search results for: ${joined}`;
-};
-
 const splitWord = (word: any) => {
   word = word.split('');
   for (let i = 0; i < word.length; i += 2) {
@@ -114,6 +90,17 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const { _isLargeAccount } = useAccountManagement();
+
+  const {
+    data: objectStorageClusters,
+    isLoading: areClustersLoading,
+    error: objectStorageClustersError,
+  } = useObjectStorageClusters(_isLargeAccount);
+
+  const {
+    data: objectStorageBuckets,
+    isLoading: areBucketsLoading,
+  } = useObjectStorageBuckets(objectStorageClusters, _isLargeAccount);
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
@@ -132,7 +119,6 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
-  const { loading: objectStorageLoading } = useObjectStorage(!_isLargeAccount);
 
   const { searchAPI } = useAPISearch();
 
@@ -159,20 +145,61 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(query);
     } else {
-      search(query);
+      search(query, objectStorageBuckets?.buckets || []);
     }
-  }, [query, entities, search, _isLargeAccount, _searchAPI]);
+  }, [
+    query,
+    entities,
+    search,
+    _isLargeAccount,
+    _searchAPI,
+    objectStorageBuckets,
+  ]);
+
+  const getErrorMessage = (errors: ErrorObject): string => {
+    const errorString: string[] = [];
+    if (errors.linodes) {
+      errorString.push('Linodes');
+    }
+    if (errors.domains) {
+      errorString.push('Domains');
+    }
+    if (errors.volumes) {
+      errorString.push('Volumes');
+    }
+    if (errors.nodebalancers) {
+      errorString.push('NodeBalancers');
+    }
+    if (errors.images) {
+      errorString.push('Images');
+    }
+    if (errors.kubernetes) {
+      errorString.push('Kubernetes');
+    }
+    if (objectStorageClustersError) {
+      errorString.push('Object Storage');
+    }
+    if (objectStorageBuckets?.errors && !objectStorageClustersError) {
+      const regionsWithErrors = objectStorageBuckets.errors
+        .map((e) => e.cluster.region)
+        .join(', ');
+      errorString.push(`Object Storage in ${regionsWithErrors}`);
+    }
+
+    const joined = errorString.join(', ');
+    return `Could not retrieve search results for: ${joined}`;
+  };
 
   const finalResults = _isLargeAccount ? apiResults : searchResultsByEntity;
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
-  const loading = reduxLoading || objectStorageLoading;
+  const loading = reduxLoading || areBucketsLoading || areClustersLoading;
 
   return (
     <Grid container className={classes.root} direction="column">
       <Grid item>
-        {!resultsEmpty && !loading && !objectStorageLoading && (
+        {!resultsEmpty && !loading && (
           <H1Header
             title={`Search Results ${query && `for "${query}"`}`}
             className={classes.headline}
