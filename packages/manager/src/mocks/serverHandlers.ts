@@ -490,7 +490,41 @@ export const handlers = [
     );
   }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    const buckets = objectStorageBucketFactory.buildList(1);
+    return res.once(
+      ctx.status(500),
+      ctx.json([{ reason: 'Cluster offline!' }])
+    );
+  }),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    return res.once(
+      ctx.status(400),
+      ctx.json([{ reason: 'Cluster offline!' }])
+    );
+  }),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    // Temporarily added pagination logic to make sure my use of
+    // getAll worked for fetching all buckets.
+
+    objectStorageBucketFactory.resetSequenceNumber();
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+
+    const buckets = objectStorageBucketFactory.buildList(650);
+
+    return res(
+      ctx.json({
+        data: buckets.slice(
+          (page - 1) * pageSize,
+          (page - 1) * pageSize + pageSize
+        ),
+        page,
+        pages: Math.ceil(buckets.length / pageSize),
+        results: buckets.length,
+      })
+    );
+  }),
+  rest.get('*/object-storage/buckets', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(10);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
