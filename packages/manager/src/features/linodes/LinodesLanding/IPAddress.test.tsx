@@ -29,7 +29,7 @@ describe('IPAddress', () => {
     const ipText = rendered.text();
 
     expect(rendered).toHaveLength(1);
-    expect(ipText).toBe('8.8.8.8');
+    expect(ipText).toContain('8.8.8.8');
   });
 
   it('should not display ShowMore button unless the showMore prop is true', () => {

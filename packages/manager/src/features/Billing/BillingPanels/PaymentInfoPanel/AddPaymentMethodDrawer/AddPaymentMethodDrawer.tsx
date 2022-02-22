@@ -90,12 +90,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
 
   const renderError = (errorMsg: string) => {
     return (
-      <HelpIcon
-        className={classes.errorIcon}
-        isError={true}
-        size={35}
-        text={errorMsg}
-      />
+      <HelpIcon className={classes.errorIcon} isError={true} text={errorMsg} />
     );
   };
 

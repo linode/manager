@@ -24,7 +24,6 @@ interface Props
   className?: string;
   interactive?: boolean;
   isError?: boolean;
-  size?: number;
   classes?: any;
   leaveDelay?: boolean;
   tooltipPosition?:
@@ -44,6 +43,7 @@ interface Props
 
 type CombinedProps = Props;
 
+// @TODO: M3-5457 refactor this component to be generic
 const HelpIcon: React.FC<CombinedProps> = (props) => {
   const styles = useStyles();
 
@@ -53,7 +53,6 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     tooltipPosition,
     interactive,
     isError,
-    size = 24,
     leaveDelay,
     classes,
     onMouseEnter,
@@ -72,15 +71,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
       onMouseEnter={onMouseEnter}
     >
       <IconButton className={`${className} ${styles.root}`} data-qa-help-button>
-        {isError ? (
-          <ErrorOutline
-            style={{
-              fontSize: size,
-            }}
-          />
-        ) : (
-          <HelpOutline />
-        )}
+        {isError ? <ErrorOutline /> : <HelpOutline />}
       </IconButton>
     </Tooltip>
   );
