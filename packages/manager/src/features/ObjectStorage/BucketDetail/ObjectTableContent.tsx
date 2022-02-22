@@ -22,6 +22,7 @@ interface Props {
   handleClickDelete: (objectName: string) => void;
   handleClickDetails: (object: ObjectStorageObject) => void;
   numOfDisplayedObjects: number;
+  prefix: any;
 }
 
 const ObjectTableContent: React.FC<Props> = (props) => {
@@ -34,6 +35,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     handleClickDelete,
     handleClickDetails,
     numOfDisplayedObjects,
+    prefix,
   } = props;
 
   const { width } = useWindowDimensions();
@@ -52,7 +54,12 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   }
 
   if (numOfDisplayedObjects === 0) {
-    return <TableRowEmptyState colSpan={6} message="This bucket is empty." />;
+    return (
+      <TableRowEmptyState
+        colSpan={6}
+        message={prefix ? 'This folder is empty.' : 'This bucket is empty.'}
+      />
+    );
   }
 
   // Be more strict with truncation lengths on smaller viewports.

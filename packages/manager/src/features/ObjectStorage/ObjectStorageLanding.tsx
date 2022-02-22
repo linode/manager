@@ -71,13 +71,13 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
 
   const { _isRestrictedUser, accountSettings } = useAccountManagement();
 
-  const { data: objectStroageClusters } = useObjectStorageClusters();
+  const { data: objectStorageClusters } = useObjectStorageClusters();
 
   const {
     data: objectStorageBucketsResponse,
     isLoading: areBucketsLoading,
     error: bucketsErrors,
-  } = useObjectStorageBuckets(objectStroageClusters);
+  } = useObjectStorageBuckets(objectStorageClusters);
 
   const createOrEditDrawer = useOpenClose();
 

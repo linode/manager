@@ -6,8 +6,7 @@ import { useDropzone, FileRejection } from 'react-dropzone';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { queryClient } from 'src/queries/base';
-import { queryKey } from 'src/queries/objectStorage';
+import { updateBucket } from 'src/queries/objectStorage';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { debounce } from 'throttle-debounce';
@@ -174,10 +173,10 @@ const ObjectUploader: React.FC<Props> = (props) => {
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
   }, [state.numQueued, state.numInProgress]);
 
+  // If a user uploads many files at once, we don't want to refetch bucket stats for every object.
+  // We debounce this request to prevent unnecessary fetches.
   const debouncedGetBucket = React.useRef(
-    debounce(1000, false, () =>
-      queryClient.invalidateQueries(`${queryKey}-buckets`)
-    )
+    debounce(3000, false, () => updateBucket(clusterId, bucketName))
   ).current;
 
   // When `nextBatch` changes, upload the files.
