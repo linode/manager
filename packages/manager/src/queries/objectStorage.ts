@@ -29,7 +29,7 @@ interface BucketsResponce {
   errors: BucketError[];
 }
 
-export const queryKey = 'object-stroage';
+export const queryKey = 'object-storage';
 
 /**
  * This getAll is probably overkill for getting all
@@ -172,7 +172,7 @@ export const getAllBucketsFromClusters = async (
  * by the '/' character.
  *
  * By spreading the result, you can achieve a queryKey that is in the form of:
- * ["object-stroage","us-southeast-1","test","testfolder"]
+ * ["object-storage","us-southeast-1","test","testfolder"]
  *
  * @param {string} prefix The Object Stoage prefix path
  * @returns {string[]} a list of paths
