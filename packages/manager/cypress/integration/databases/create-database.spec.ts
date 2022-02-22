@@ -1,28 +1,147 @@
+import { ClusterSize, Engine } from '@linode/api-v4/lib/databases/types';
+import { databaseInstanceFactory } from 'src/factories/databases';
+import { eventFactory } from 'src/factories/events';
 import { makeDatabaseClusterLabel } from '../../support/api/databases';
-import {
-  containsClick,
-  containsVisible,
-  fbtClick,
-  fbtVisible,
-  getClick,
-} from '../../support/helpers';
+import sequentialStub from '../../support/stubs/sequential-stub';
+import { makePaginatedResponse } from '../../support/response';
+import { containsClick, fbtClick, getClick } from '../../support/helpers';
+
+interface databaseClusterConfiguration {
+  label: string;
+  linodeType: string;
+  clusterSize: ClusterSize;
+  dbType: Engine;
+  regionTypeahead: string;
+  region: string;
+  engine: string;
+  version: string;
+}
+
+// Array of database cluster configurations for which to test creation.
+const databaseConfigurations: databaseClusterConfiguration[] = [
+  {
+    label: makeDatabaseClusterLabel(),
+    linodeType: 'g6-nanode-1',
+    clusterSize: 1,
+    dbType: 'mysql',
+    regionTypeahead: 'Newark',
+    region: 'us-east',
+    engine: 'MySQL',
+    version: '8.0.26',
+  },
+  {
+    label: makeDatabaseClusterLabel(),
+    linodeType: 'g6-dedicated-16',
+    clusterSize: 3,
+    dbType: 'mysql',
+    regionTypeahead: 'Atlanta',
+    region: 'us-southeast',
+    engine: 'MySQL',
+    version: '5.7.30',
+  },
+];
 
 describe('create a database', () => {
-  it('can navigate to the database page', () => {
-    const clusterLabel = makeDatabaseClusterLabel();
-    const engine = 'MySQL v8.0.26';
-    const region = 'Newark';
+  databaseConfigurations.forEach(
+    (configuration: databaseClusterConfiguration) => {
+      it(`can create a ${configuration.linodeType} ${configuration.engine} v${configuration.version} ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+        const databaseMock = databaseInstanceFactory.build({
+          label: configuration.label,
+          type: configuration.linodeType,
+          region: configuration.region,
+          version: configuration.version,
+          status: 'provisioning',
+          cluster_size: configuration.clusterSize,
+          hosts: {
+            primary: undefined,
+            secondary: undefined,
+          },
+        });
 
-    cy.visitWithLogin('/databases/create');
-    cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
+        const eventMock = eventFactory.build({
+          status: 'finished',
+          action: 'database_create',
+          percent_complete: 100,
+          entity: {
+            label: databaseMock.label,
+            id: databaseMock.id,
+            type: 'database',
+            url: `/v4/databases/${configuration.dbType}/instances/${databaseMock.id}`,
+          },
+          secondary_entity: undefined,
+        });
 
-    containsClick('Cluster Label').type(clusterLabel);
-    containsClick('Select a Database Engine').type(`${engine} {enter}`);
-    containsClick('Select a Region').type(`${region} {enter}`);
+        cy.intercept('POST', '*/databases/mysql/instances', databaseMock).as(
+          'createDatabase'
+        );
 
-    fbtClick('Shared CPU');
-    getClick('[id="g6-nanode-1"]');
-    containsClick('1 Node');
-    fbtClick('Create Database Cluster');
-  });
+        cy.intercept(
+          'GET',
+          '*/databases/instances?page=1&page_size=25',
+          sequentialStub([
+            makePaginatedResponse(databaseMock),
+            makePaginatedResponse({ ...databaseMock, status: 'active' }),
+          ])
+        ).as('listDatabases');
+
+        cy.visitWithLogin('/databases/create');
+        cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
+
+        containsClick('Cluster Label').type(configuration.label);
+        containsClick('Select a Database Engine').type(
+          `${configuration.engine} v${configuration.version} {enter}`
+        );
+        containsClick('Select a Region').type(
+          `${configuration.regionTypeahead} {enter}`
+        );
+
+        // Database Linode type selection.
+        if (configuration.linodeType.indexOf('-dedicated-') !== -1) {
+          fbtClick('Dedicated CPU');
+        } else {
+          fbtClick('Shared CPU');
+        }
+        getClick(`[id="${configuration.linodeType}"]`);
+
+        // Database cluster size selection.
+        if (configuration.clusterSize > 1) {
+          containsClick('3 Nodes');
+        } else {
+          containsClick('1 Node');
+        }
+
+        // Create database.
+        fbtClick('Create Database Cluster');
+
+        // Verify database is listed and appears to be configured correctly.
+        cy.wait('@createDatabase');
+        cy.wait('@listDatabases');
+        cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
+          () => {
+            cy.findByText(configuration.label).should('be.visible');
+            cy.findByText('provisioning').should('be.visible');
+            cy.findByText(
+              `${configuration.engine} v${configuration.version}`
+            ).should('be.visible');
+            cy.findByText(configuration.regionTypeahead, {
+              exact: false,
+            }).should('be.visible');
+          }
+        );
+
+        // Begin intercepting and stubbing event to mock database creation completion.
+        cy.intercept('GET', '*/account/events?page_size=25', (req) => {
+          req.reply(makePaginatedResponse(eventMock));
+        }).as('getEvent');
+
+        cy.wait('@getEvent');
+        cy.wait('@listDatabases');
+        cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
+          () => {
+            cy.findByText('active').should('be.visible');
+          }
+        );
+      });
+    }
+  );
 });
