@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   showBtn: {
-    color: theme.color.blue,
+    color: theme.palette.primary.main,
     marginLeft: theme.spacing(),
     fontSize: '0.875rem',
     minHeight: 'auto',
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 22,
     marginBottom: 2,
     '& circle': {
-      stroke: theme.color.blue,
+      stroke: theme.palette.primary.main,
     },
     alignSelf: 'flex-end',
   },

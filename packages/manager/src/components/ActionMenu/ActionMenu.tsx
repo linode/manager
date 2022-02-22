@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     '& svg': {
-      fill: theme.color.blue,
+      fill: theme.palette.primary.main,
     },
   },
   popover: {

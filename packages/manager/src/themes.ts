@@ -174,7 +174,6 @@ const darkThemeOptions = {
     grey7: cmrBGColors.bgPaper,
     grey9: primaryColors.divider,
     white: '#32363c',
-    blue: primaryColors.main,
     black: '#fff',
     offBlack: primaryColors.offBlack,
     boxShadow: '#222',

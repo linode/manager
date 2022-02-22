@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
       '&:hover': {
         backgroundColor: theme.cmrBGColors.bgTableHeader,
-        color: theme.color.blue,
+        color: theme.palette.primary.main,
       },
     },
     '&[data-reach-tab][data-selected]': {

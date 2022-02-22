@@ -66,11 +66,11 @@ const styles = (theme: Theme) =>
         padding: '6px 16px',
         textDecoration: 'none',
         '&:hover': {
-          color: theme.color.blue,
+          color: theme.palette.primary.main,
         },
       },
       '&[data-reach-tab][data-selected]': {
-        borderBottom: `3px solid ${theme.color.blue}`,
+        borderBottom: `3px solid ${theme.palette.primary.main}`,
         color: theme.color.headline,
         fontFamily: theme.font.bold,
       },

@@ -304,7 +304,6 @@ const themeDefaults: ThemeDefaults = () => {
       grey9: '#f4f5f6',
       white: '#fff',
       black: '#222',
-      blue: primaryColors.main,
       offBlack: primaryColors.offBlack,
       greenCyan: '#17cf73',
       boxShadow: '#ddd',
