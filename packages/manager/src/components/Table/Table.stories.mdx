@@ -1,9 +1,11 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import { Provider } from 'react-redux';
+import PaginationFooter from 'src/components/PaginationFooter';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
-import TableCell from 'src/components/TableCell';
+import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow';
 import { linodeFactory } from 'src/factories/linodes';
 import LinodeRow from 'src/features/linodes/LinodesLanding/LinodeRow';
@@ -13,6 +15,10 @@ import store from 'src/store';
 import capitalize from 'src/utilities/capitalize';
 import TableWrapper from './Table';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import MaintenanceTableRow from 'src/features/Account/Maintenance/MaintenanceTableRow';
+import { useOrder } from 'src/hooks/useOrder';
+import usePagination from 'src/hooks/usePagination';
+import { useAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 
 export const linodes = linodeFactory.buildList(10);
 
@@ -33,7 +39,7 @@ export const linodes = linodeFactory.buildList(10);
 - More than 5 actions: Consider exposing the two most-used actions and placing the remainder in a dropdown
 - If action titles are long, place them in a drop down so they don’t take up too much room in the row
 - Any exposed actions can collapse into the “kebab” icon, and drop down, at smaller viewport sizes
-- Disclaimer: The UX team is in the process of assessing the usability of all of the above
+- **Disclaimer:** The UX team is in the process of assessing the usability of all of the above
 
 
 ## Default
@@ -74,6 +80,97 @@ export const linodes = linodeFactory.buildList(10);
     </TableWrapper>
   </Story>
 </Canvas>
+
+## Paginated
+
+<Canvas>
+  <Story name="Paginated">
+    <PagiatedExample />
+  </Story>
+</Canvas>
+
+export const PagiatedExample = () => {
+  const pagination = usePagination(1);
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'status',
+      order: 'desc',
+    },
+  );
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+    type: ['reboot', 'cold_migration', 'live_migration'],
+  };
+  const { data, isLoading, error } = useAccountMaintenanceQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
+  const renderTableContent = () => {
+    if (data) {
+      return data.data.map((item) => (
+        <MaintenanceTableRow key={`${item.entity.id}-${item.type}`} {...item} />
+      ));
+    }
+    return null;
+  };
+  return (
+    <>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>Label</TableCell>
+            <TableSortCell
+              active={orderBy === 'when'}
+              direction={order}
+              label="when"
+              handleClick={handleOrderChange}
+            >
+              Date
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'when'}
+              direction={order}
+              label="when"
+              handleClick={handleOrderChange}
+            >
+              When
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'type'}
+              direction={order}
+              label="type"
+              handleClick={handleOrderChange}
+            >
+              Type
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="status"
+              handleClick={handleOrderChange}
+            >
+              Status
+            </TableSortCell>
+            <TableCell>Reason</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderTableContent()}</TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Paginated Table"
+      />
+    </>
+  );
+};
 
 ## Example
 
