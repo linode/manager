@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.59.0",
+  "version": "1.60.0",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -135,6 +135,7 @@
     "@storybook/addon-links": "~6.5.0-alpha.33",
     "@storybook/addon-viewport": "^6.5.0-alpha.33",
     "@storybook/addons": "~6.5.0-alpha.33",
+    "@storybook/client-api": "~6.5.0-alpha.33",
     "@storybook/react": "~6.5.0-alpha.33",
     "@svgr/webpack": "^5.5.0",
     "@testing-library/cypress": "^7.0.6",
@@ -245,7 +246,8 @@
       "<rootDir>/src"
     ],
     "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}"
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.stories.{js,jsx,ts,tsx}"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"

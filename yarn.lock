@@ -2641,7 +2641,7 @@
     ts-dedent "^2.0.0"
     util-deprecate "^1.0.2"
 
-"@storybook/client-api@6.5.0-alpha.38":
+"@storybook/client-api@6.5.0-alpha.38", "@storybook/client-api@~6.5.0-alpha.33":
   version "6.5.0-alpha.38"
   resolved "https://registry.yarnpkg.com/@storybook/client-api/-/client-api-6.5.0-alpha.38.tgz#cdd1f36659b5094778894319d33bd5fff010150e"
   integrity sha512-oZSFApr3tE3UiM6vG8pZcV7bLcjCJPHHJ/SBuk8tej+UgsTrf6oGsce5PyEcpcCyWVm7x/GRB05wgkinBFoPNA==
