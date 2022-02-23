@@ -172,11 +172,11 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                   >
                     <div>
                       {thisProvider.displayName}
-                      {isProviderEnabled && (
+                      {isProviderEnabled ? (
                         <span className={classes.enabledText}>(Enabled)</span>
-                      )}
+                      ) : null}
                     </div>
-                    {isProviderEnabled && <EnabledIcon />}
+                    {isProviderEnabled ? <EnabledIcon /> : null}
                   </Box>
                 </Button>
               </Grid>
