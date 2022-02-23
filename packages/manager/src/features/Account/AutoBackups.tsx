@@ -1,13 +1,12 @@
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import OpenInNew from '@material-ui/icons/OpenInNew';
 import Toggle from 'src/components/Toggle';
+import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   footnote: {
@@ -18,6 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'inline-block',
     fontSize: '0.8em',
     marginLeft: theme.spacing(1) / 3,
+  },
+  enableBackupsButton: {
+    ...theme.applyLinkStyles,
+    fontSize: 14,
   },
 }));
 
@@ -91,15 +94,14 @@ const AutoBackups: React.FC<Props> = (props) => {
           <Grid item>
             <Typography variant="body1" className={classes.footnote}>
               For existing Linodes without backups,&nbsp;
-              <Button
-                compact
-                buttonType="secondary"
+              <button
                 data-qa-backup-existing
                 onClick={openBackupsDrawer}
                 title="enable now"
+                className={classes.enableBackupsButton}
               >
                 enable now
-              </Button>
+              </button>
               .
             </Typography>
           </Grid>
