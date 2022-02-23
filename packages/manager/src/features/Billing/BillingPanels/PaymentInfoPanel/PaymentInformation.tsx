@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: '6px',
   },
   edit: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '.875rem',
     fontWeight: 700,

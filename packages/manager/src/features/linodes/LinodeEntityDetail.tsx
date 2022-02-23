@@ -210,7 +210,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.bgPaper,
   },
   linodeLabel: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     marginLeft: theme.spacing(),
     '&:hover': {
       color: theme.palette.primary.light,
@@ -258,7 +258,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     },
   },
   divider: {
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     paddingRight: `16px !important`,
   },
   actionItemsOuter: {
@@ -480,7 +480,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
   },
   columnLabel: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
   summaryContainer: {
@@ -494,7 +494,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       },
     },
     '& p': {
-      color: theme.cmrTextColors.tableStatic,
+      color: theme.textColors.tableStatic,
     },
   },
   rightColumn: {
@@ -606,7 +606,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
 // be used elsewhere.
 const useAccessTableStyles = makeStyles((theme: Theme) => ({
   columnLabel: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
   accessTableContent: {
@@ -623,7 +623,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     '& th': {
       backgroundColor: theme.bg.app,
       borderBottom: `1px solid ${theme.bg.bgPaper}`,
-      color: theme.cmrTextColors.textAccessTable,
+      color: theme.textColors.textAccessTable,
       fontSize: '0.875rem',
       fontWeight: 'bold',
       lineHeight: 1,
@@ -643,7 +643,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     },
   },
   code: {
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     fontFamily: '"UbuntuMono", monospace, sans-serif',
     position: 'relative',
     '& div': {
@@ -788,8 +788,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   listItem: {
     display: 'flex',
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
-    color: theme.cmrTextColors.tableStatic,
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
     padding: `0px 10px`,
     [theme.breakpoints.down('sm')]: {
       flex: '50%',

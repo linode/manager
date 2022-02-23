@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '4px 16px',
     paddingRight: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     },
   },
   breadCrumbDetail: {

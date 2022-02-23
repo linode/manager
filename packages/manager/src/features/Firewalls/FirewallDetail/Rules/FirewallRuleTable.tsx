@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: `solid 0.5px ${theme.color.grey8}`,
     boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
     '& svg': {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
     },
   },
   footer: {

@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
       },
     },
     CSVlink: {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
       fontSize: '.9rem',
       '&:hover': {
         textDecoration: 'underline',

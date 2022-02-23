@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   iconRight: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
   },
   error: {
     color: theme.color.red,

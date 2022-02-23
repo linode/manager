@@ -56,7 +56,7 @@ const styles = (theme: Theme) =>
         flexShrink: 0,
         alignItems: 'center',
         borderBottom: '2px solid transparent',
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         fontSize: '0.9rem',
         lineHeight: 1.3,
         marginTop: theme.spacing(0.5),

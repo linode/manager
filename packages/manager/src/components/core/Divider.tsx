@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBorderColors.divider,
+    backgroundColor: theme.borderColors.divider,
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),
   },

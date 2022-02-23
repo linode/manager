@@ -22,8 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(),
     paddingBottom: theme.spacing(),
     backgroundColor: theme.bg.bgPaper,
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderTop: `1px solid ${theme.borderColors.borderTable}`,
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
   },
   footer: {
     backgroundColor: theme.bg.bgPaper,
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `10px 16px !important`,
   },
   footerBorder: {
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderTop: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 

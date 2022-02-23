@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     height: '100%',
     minWidth: 'auto',
     padding: '12px 10px',

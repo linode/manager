@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginRight: theme.spacing(),
     },
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
     fontSize: '.9rem',
   },
   cell: {

@@ -172,7 +172,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontSize: '.75rem',
     letterSpacing: 1.875,
     marginBottom: theme.spacing(),
@@ -197,23 +197,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       cursor: 'pointer',
       fontSize: '0.875rem',
       padding: '8px 24px',
       '&:focus, &:hover': {
         backgroundColor: 'transparent',
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
       },
       '&[data-reach-menu-item][data-selected]:not(:hover)': {
         backgroundColor: 'transparent',
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         outline: 'dotted 1px #c1c1c0',
       },
     },
   },
   userName: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontSize: '1.1rem',
     marginTop: -1,
     marginLeft: theme.spacing(3),

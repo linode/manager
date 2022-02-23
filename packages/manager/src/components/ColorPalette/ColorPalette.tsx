@@ -94,6 +94,44 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
     },
   ];
 
+  const textColors = [
+    {
+      color: theme.textColors.linkActiveLight,
+      alias: 'theme.textColors.linkActiveLight',
+    },
+    {
+      color: theme.textColors.headlineStatic,
+      alias: 'theme.textColors.headlineStatic',
+    },
+    {
+      color: theme.textColors.tableStatic,
+      alias: 'theme.textColors.tableStatic',
+    },
+    {
+      color: theme.textColors.textAccessTable,
+      alias: 'theme.textColors.textAccessTable',
+    },
+  ];
+
+  const borderColors = [
+    {
+      color: theme.borderColors.borderTypography,
+      alias: 'theme.borderColors.borderTypography',
+    },
+    {
+      color: theme.borderColors.borderTabActive,
+      alias: 'theme.borderColors.borderTabActive',
+    },
+    {
+      color: theme.borderColors.borderTable,
+      alias: 'theme.borderColors.borderTable',
+    },
+    {
+      color: theme.borderColors.divider,
+      alias: 'theme.borderColors.divider',
+    },
+  ];
+
   const createSwatch = (idx: number, color: string, alias: string) => {
     return (
       <Grid item className={classes.swatchWrapper} key={idx}>
@@ -143,9 +181,38 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
     );
   };
 
+  const renderTextColors = () => {
+    return (
+      <>
+        <Grid item xs={12}>
+          <Typography variant="h2">Typography Colors</Typography>
+        </Grid>
+        {textColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
+      </>
+    );
+  };
+
+  const renderBorderColors = () => {
+    return (
+      <>
+        <Grid item xs={12}>
+          <Typography variant="h2">Border Colors</Typography>
+        </Grid>
+        {borderColors.map((color, idx: number) =>
+          createSwatch(idx, color.color, color.alias)
+        )}
+      </>
+    );
+  };
+
   return (
     <Grid container className={classes.root}>
-      {props.displayBackgrounds ? renderBackgrounds() : renderColors()}
+      {renderColors()}
+      {renderBackgrounds()}
+      {renderTextColors()}
+      {renderBorderColors()}
     </Grid>
   );
 };

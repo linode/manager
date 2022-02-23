@@ -21,11 +21,11 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       '& [aria-label="Previous Page"]:disabled': {
         backgroundColor: theme.bg.bgPaper,
-        color: theme.cmrTextColors.tableHeader,
+        color: theme.textColors.tableHeader,
       },
       '& [aria-label="Next Page"]:disabled': {
         backgroundColor: theme.bg.bgPaper,
-        color: theme.cmrTextColors.tableHeader,
+        color: theme.textColors.tableHeader,
       },
     },
   });

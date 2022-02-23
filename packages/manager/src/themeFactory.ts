@@ -42,8 +42,8 @@ declare module '@material-ui/core/styles/createTheme' {
     '@keyframes rotate': any;
     '@keyframes dash': any;
     bg: any;
-    cmrTextColors: any;
-    cmrBorderColors: any;
+    textColors: any;
+    borderColors: any;
     color: any;
     graphs: any;
     visually: any;
@@ -76,7 +76,7 @@ declare module '@material-ui/core/styles/createTheme' {
 
 const breakpoints = createBreakpoints({});
 
-const cmrTextColors = {
+const textColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
   tableHeader: '#888F91',
@@ -84,7 +84,7 @@ const cmrTextColors = {
   textAccessTable: '#606469',
 };
 
-const cmrBorderColors = {
+const borderColors = {
   borderTypography: '#e3e5e8',
   borderTable: '#f4f5f6',
   divider: '#e3e5e8',
@@ -135,7 +135,7 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: cmrTextColors.linkActiveLight,
+  color: textColors.linkActiveLight,
   border: 'none',
   font: 'inherit',
   padding: 0,
@@ -151,7 +151,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.tableStatic,
+  color: textColors.tableStatic,
   fontFamily: primaryFonts.bold,
   fontSize: '1rem',
   padding: 0,
@@ -170,7 +170,7 @@ const genericTableHeaderStyle = {
   '&:hover': {
     cursor: 'pointer',
     '& span': {
-      color: cmrTextColors.linkActiveLight,
+      color: textColors.linkActiveLight,
     },
   },
 };
@@ -286,8 +286,8 @@ const themeDefaults: ThemeDefaults = () => {
       tagButton: '#f1f7fd',
       tagIcon: '#7daee8',
     },
-    cmrTextColors,
-    cmrBorderColors,
+    textColors,
+    borderColors,
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
       requests: `rgba(34, 206, 182, ${graphTransparency})`,
@@ -488,10 +488,10 @@ const themeDefaults: ThemeDefaults = () => {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            color: cmrTextColors.linkActiveLight,
+            color: textColors.linkActiveLight,
           },
           '&:active': {
             backgroundColor: 'transparent',
@@ -510,7 +510,7 @@ const themeDefaults: ThemeDefaults = () => {
         outlined: {
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
             backgroundColor: '#f5f8ff !important',
@@ -773,7 +773,7 @@ const themeDefaults: ThemeDefaults = () => {
       MuiIconButton: {
         root: {
           padding: 12,
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
           '&:hover': {
             color: primaryColors.main,
             backgroundColor: 'transparent',
@@ -1301,7 +1301,7 @@ const themeDefaults: ThemeDefaults = () => {
           lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
           '&.MuiTableSortLabel-active': {
-            color: cmrTextColors.tableHeader,
+            color: textColors.tableHeader,
           },
           '&:hover': {
             color: primaryColors.main,

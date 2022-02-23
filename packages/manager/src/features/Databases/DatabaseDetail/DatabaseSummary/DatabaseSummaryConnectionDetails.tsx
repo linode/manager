@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2),
   },
   actionText: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     whiteSpace: 'nowrap',
   },
   connectionDetailsCtn: {

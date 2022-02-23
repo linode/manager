@@ -59,7 +59,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   closeIcon: {
     ...theme.applyLinkStyles,
     display: 'flex',
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     marginLeft: 20,
   },
   inner: {

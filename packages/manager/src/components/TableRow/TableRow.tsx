@@ -8,8 +8,8 @@ import _TableRow, { TableRowProps } from 'src/components/core/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
     backgroundColor: theme.bg.bgPaper,
     transition: theme.transitions.create(['box-shadow']),
     [theme.breakpoints.up('md')]: {
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:before': {
       transition: 'none',
       backgroundColor: theme.bg.lightBlue1,
-      borderColor: theme.cmrBorderColors.borderTable,
+      borderColor: theme.borderColors.borderTable,
     },
     '& td': {
       borderTop: `1px solid ${theme.palette.primary.light}`,

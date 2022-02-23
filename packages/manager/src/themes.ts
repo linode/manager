@@ -9,7 +9,7 @@ export const light = () => {
   return createTheme(options);
 };
 
-const cmrTextColors = {
+const textColors = {
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
   tableHeader: '#888F91',
@@ -17,7 +17,7 @@ const cmrTextColors = {
   textAccessTable: '#acb0b4',
 };
 
-const cmrBorderColors = {
+const borderColors = {
   borderTypography: '#454b54',
   borderTable: '#3a3f46',
   divider: '#222',
@@ -53,7 +53,7 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: cmrTextColors.linkActiveLight,
+  color: textColors.linkActiveLight,
   border: 'none',
   font: 'inherit',
   padding: 0,
@@ -67,7 +67,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.tableStatic,
+  color: textColors.tableStatic,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -88,7 +88,7 @@ const genericTableHeaderStyle = {
   '&:hover': {
     cursor: 'pointer',
     '& span': {
-      color: cmrTextColors.linkActiveLight,
+      color: textColors.linkActiveLight,
     },
   },
 };
@@ -153,8 +153,8 @@ const darkThemeOptions = {
     tagButton: '#364863',
     tagIcon: '#9caec9',
   },
-  cmrBorderColors,
-  cmrTextColors,
+  borderColors,
+  textColors,
   graphs: {
     network: {
       outbound: `rgb(49, 206, 62)`,
@@ -267,7 +267,7 @@ const darkThemeOptions = {
         },
       },
       outlined: {
-        color: cmrTextColors.linkActiveLight,
+        color: textColors.linkActiveLight,
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
           border: '1px solid #fff',
@@ -467,7 +467,7 @@ const darkThemeOptions = {
         borderTop: `1px solid ${primaryColors.divider}`,
         borderBottom: `1px solid ${primaryColors.divider}`,
         '& a': {
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
         },
         '& a:hover': {
           color: primaryColors.main,
@@ -525,7 +525,7 @@ const darkThemeOptions = {
     MuiTypography: {
       root: {
         '& a': {
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
         },
         '& a:hover': {
           color: primaryColors.main,

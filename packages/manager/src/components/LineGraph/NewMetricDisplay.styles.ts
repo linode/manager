@@ -32,7 +32,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       },
     },
     container: {
-      borderTop: `1px solid ${theme.cmrBorderColors.divider}`,
+      borderTop: `1px solid ${theme.borderColors.divider}`,
       color: '#777',
       fontSize: '0.875rem',
       marginTop: theme.spacing(0.5),
@@ -117,7 +117,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
     tableHeadInner: {
       width: '23%',
       '& p': {
-        color: theme.cmrTextColors.tableHeader,
+        color: theme.textColors.tableHeader,
       },
       [theme.breakpoints.down('md')]: {
         width: '20%',

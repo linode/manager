@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& th': {
       backgroundColor: theme.bg.tableHeader,
-      borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
-      borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
+      borderTop: `2px solid ${theme.borderColors.borderTable}`,
+      borderBottom: `2px solid ${theme.borderColors.borderTable}`,
       fontFamily: theme.font.bold,
       padding: '10px 15px',
       '&:first-of-type': {
@@ -27,10 +27,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   tableHead: {
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
     top: 104,
     '& span': {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
     },
   },
   noHover: {

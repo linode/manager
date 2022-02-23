@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   crumb: {
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     fontSize: '1.125rem',
     textTransform: 'capitalize',
   },

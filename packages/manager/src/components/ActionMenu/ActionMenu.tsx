@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       border: 'none',
       padding: '10px',
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
