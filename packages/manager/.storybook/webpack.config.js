@@ -69,9 +69,9 @@ module.exports = {
         ],
         use: [
           {
-            loader: require.resolve('ts-loader'),
+            loader: require.resolve('esbuild-loader'),
             options: {
-              transpileOnly: true,
+              loader: 'tsx',
             },
           },
         ],

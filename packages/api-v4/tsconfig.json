@@ -10,7 +10,8 @@
     "skipLibCheck":true,
     "strict": true,
     "baseUrl": ".",
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "declarationMap": true,
   },
   "include": [
     "src"

@@ -1,8 +1,11 @@
 import { renderHook } from '@testing-library/react-hooks';
 import usePolling from './usePolling';
 
-jest.mock('./usePageVisibility', () => ({
-  default: jest.fn().mockReturnValueOnce(true).mockReturnValueOnce(false),
+jest.mock('react-page-visibility', () => ({
+  usePageVisibility: jest
+    .fn()
+    .mockReturnValueOnce(true)
+    .mockReturnValueOnce(false),
 }));
 
 const f1 = jest.fn();

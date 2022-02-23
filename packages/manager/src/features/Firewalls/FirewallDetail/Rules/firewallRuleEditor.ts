@@ -88,6 +88,7 @@ const ruleEditorReducer = (
   draft: Draft<RuleEditorState>,
   action: RuleEditorAction
 ) => {
+  let lastRevision;
   switch (action.type) {
     case 'NEW_RULE':
       draft.push([
@@ -100,7 +101,7 @@ const ruleEditorReducer = (
       return;
 
     case 'DELETE_RULE':
-      let lastRevision = last(draft[action.idx]);
+      lastRevision = last(draft[action.idx]);
 
       if (!lastRevision) {
         return;

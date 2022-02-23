@@ -98,7 +98,7 @@ export const baseApps = {
   '913276': 'Wazuh',
   '923033': 'Akaunting',
   '923036': 'Restyaboard',
-  '954759': 'VictoriaMetrics'
+  '954759': 'VictoriaMetrics',
 };
 
 const oneClickFilter = [

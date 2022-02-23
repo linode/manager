@@ -21,9 +21,7 @@ const mockState = {
 import { getEntityByIDFromStore } from './getEntityByIDFromStore';
 
 jest.mock('src/store', () => ({
-  default: {
-    getState: () => mockState,
-  },
+  getState: () => mockState,
 }));
 
 describe('getEntityByIDFromStore utility function', () => {

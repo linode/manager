@@ -1,4 +1,4 @@
-import * as Algolia from 'algoliasearch';
+import Algolia from 'algoliasearch';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Item } from 'src/components/EnhancedSelect/Select';

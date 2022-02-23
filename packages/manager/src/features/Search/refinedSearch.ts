@@ -1,6 +1,6 @@
-import * as logicQueryParser from 'logic-query-parser';
+import logicQueryParser from 'logic-query-parser';
 import { all, any, equals, isEmpty } from 'ramda';
-import * as searchString from 'search-string';
+import searchString from 'search-string';
 import { SearchableItem, SearchField } from './search.interfaces';
 
 const DEFAULT_SEARCH_FIELDS = ['label', 'tags', 'ips'];
