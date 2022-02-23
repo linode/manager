@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   light: {
-    backgroundColor: theme.cmrBorderColors.dividerLight,
+    backgroundColor: theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238',
   },
 }));
 

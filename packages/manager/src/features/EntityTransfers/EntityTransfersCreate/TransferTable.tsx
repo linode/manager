@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     '& thead': {
       '& th': {
-        backgroundColor: theme.bg.bgTableHeader,
+        backgroundColor: theme.bg.tableHeader,
         borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
         borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
         borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,

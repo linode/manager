@@ -51,10 +51,6 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
       alias: 'theme.bg.bgPaper',
     },
     {
-      color: theme.bg.bgTableHeader,
-      alias: 'theme.bg.bgTableHeader',
-    },
-    {
       color: theme.bg.bgBillingSummary,
       alias: 'theme.bg.bgBillingSummary',
     },
@@ -93,24 +89,12 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
       alias: 'theme.cmrBorderColors.borderTabActive',
     },
     {
-      color: theme.cmrBorderColors.borderBillingSummary,
-      alias: 'theme.cmrBorderColors.borderBillingSummary',
-    },
-    {
-      color: theme.cmrBorderColors.borderBalance,
-      alias: 'theme.cmrBorderColors.borderBalance',
-    },
-    {
       color: theme.cmrBorderColors.borderTable,
       alias: 'theme.cmrBorderColors.borderTable',
     },
     {
       color: theme.cmrBorderColors.divider,
       alias: 'theme.cmrBorderColors.divider',
-    },
-    {
-      color: theme.cmrBorderColors.dividerLight,
-      alias: 'theme.cmrBorderColors.dividerLight',
     },
   ];
 

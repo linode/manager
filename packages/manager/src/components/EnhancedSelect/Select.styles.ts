@@ -69,7 +69,7 @@ export const styles = (theme: Theme) =>
         margin: '-1px 0 0 0',
         borderRadius: 0,
         boxShadow: 'none',
-        border: `1px solid ${theme.color.selectDropDowns}`,
+        border: `1px solid ${theme.palette.primary.main}`,
         maxWidth: 415,
         zIndex: 100,
       },
@@ -392,7 +392,7 @@ export const reactSelectStyles = (theme: Theme) => ({
     margin: 0,
     borderRadius: 0,
     boxShadow: 'none',
-    border: `1px solid ${theme.color.selectDropDowns}`,
+    border: `1px solid ${theme.palette.primary.main}`,
     maxWidth: 415,
     zIndex: 100,
     // The following three rules are different than the class above:

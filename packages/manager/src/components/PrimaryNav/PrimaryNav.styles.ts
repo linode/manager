@@ -86,7 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   linkItem: {
     display: 'flex',
     alignItems: 'center',
-    color: theme.color.primaryNavText,
+    color: '#fff',
     fontFamily: 'LatoWebBold', // we keep this bold at all times
     opacity: 1,
     transition: theme.transitions.create(['color']),

@@ -10,7 +10,7 @@ import TableSortCell from 'src/components/TableSortCell';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& th': {
-      backgroundColor: theme.bg.bgTableHeader,
+      backgroundColor: theme.bg.tableHeader,
       borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
       borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
       fontFamily: theme.font.bold,

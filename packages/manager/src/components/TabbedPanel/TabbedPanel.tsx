@@ -39,10 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '6px 16px',
       textDecoration: 'none',
       '&:focus': {
-        backgroundColor: theme.bg.bgTableHeader,
+        backgroundColor: theme.bg.tableHeader,
       },
       '&:hover': {
-        backgroundColor: theme.bg.bgTableHeader,
+        backgroundColor: theme.bg.tableHeader,
         color: theme.palette.primary.main,
       },
     },
