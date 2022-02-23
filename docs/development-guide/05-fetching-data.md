@@ -129,6 +129,22 @@ const UsernameDisplay: React.FC<> = () => {
 };
 ```
 
+## When to use React Query or an api-v4 method directly
+
+Because **api-v4** methods don't commit data to a cache, it is acceptable to use **api-v4** methods directly
+when performing ***one-time actions*** that do not require any immediate state change in Cloud Manager's UI. 
+
+While use of **api-v4** methods directly are acceptable, use of **React Query** Queries or Mutations are **still prefered** for the benefits described above.
+
+A minimal example of accepable direct **api-v4** use: 
+
+```ts
+resetKubeConfig({ id }).then(() => {
+  setResetKubeConfigDialogOpen(false);
+  enqueueSnackbar('Successfully reset Kubeconfig');
+});
+```
+
 #### Old pattern: Redux Thunks
 
 Before React Query, Redux was used to store API data, loading, and error states. Actions were dispatched to request data, and components used HOCs to connect to the store. A minimal example:

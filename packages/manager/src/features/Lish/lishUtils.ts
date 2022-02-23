@@ -9,7 +9,7 @@ export const lishLaunch = (linodeId: number) => {
 };
 
 export const getLishSchemeAndHostname = (region: string): string => {
-  if (LISH_ROOT.includes('alpha')) {
+  if (LISH_ROOT.includes('dev')) {
     /* Note: This is only the case for pre-production environments! */
     return `wss://${LISH_ROOT}`;
   }

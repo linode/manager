@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { usePageVisibility } from 'react-page-visibility';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import usePageVisibility from 'src/hooks/usePageVisibility';
 import { ApplicationState } from 'src/store';
-import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
@@ -39,11 +38,10 @@ export type ReduxEntity =
   | 'events'
   | 'longview'
   | 'firewalls'
-  | 'clusters'
   | 'vlans';
 
-// The Buckets request is a special case since it depends on Clusters.
 type RequestMap = Record<ReduxEntity, any>;
+
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   volumes: getAllVolumes,
@@ -58,7 +56,6 @@ const requestMap: RequestMap = {
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
-  clusters: requestClusters,
   vlans: () => getAllVlans({}),
 };
 

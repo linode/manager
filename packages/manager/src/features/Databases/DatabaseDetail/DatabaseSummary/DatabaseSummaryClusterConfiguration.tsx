@@ -53,9 +53,9 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
   }
 
   const configuration =
-    database.failover_count === 0
+    database.cluster_size === 1
       ? 'Primary'
-      : `Primary +${database.failover_count} replicas`;
+      : `Primary +${database.cluster_size - 1} replicas`;
 
   return (
     <>

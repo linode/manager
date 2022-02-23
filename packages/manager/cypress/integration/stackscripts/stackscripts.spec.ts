@@ -19,7 +19,7 @@ const createLinode = () => {
 
 describe('stackscripts', () => {
   it('create stackscript, use it to deploy linode', () => {
-    const disk = 'Alpine 3.10';
+    const disk = 'Alpine 3.15';
     cy.intercept('POST', `*/linode/instances`).as('createLinode');
     const ssLabel = makeTestLabel();
     cy.visitWithLogin('/stackscripts');

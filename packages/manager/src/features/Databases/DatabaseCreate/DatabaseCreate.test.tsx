@@ -25,17 +25,20 @@ describe('Database Create', () => {
   });
 
   it('should render inputs', async () => {
-    const { getAllByText, getByTestId } = renderWithTheme(<DatabaseCreate />, {
-      queryClient,
-    });
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    const { getAllByText, getAllByTestId } = renderWithTheme(
+      <DatabaseCreate />,
+      {
+        queryClient,
+      }
+    );
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
 
     getAllByText('Cluster Label');
     getAllByText('Database Engine');
-    getAllByText('Select a Region');
+    getAllByText('Region');
     getAllByText('Choose a Plan');
-    getByTestId('database-nodes');
-    getByTestId('domain-transfer-input');
+    getAllByTestId('database-nodes');
+    getAllByTestId('domain-transfer-input');
     getAllByText('Create Database Cluster');
   });
 
@@ -72,10 +75,7 @@ describe('Database Create', () => {
     // update node pricing if a plan is selected
     const radioBtn = getAllByText('Nanode 1 GB')[0];
     fireEvent.click(radioBtn);
-    expect(nodeRadioBtns).toHaveTextContent('$60/month $0.40/hr');
-    expect(nodeRadioBtns).toHaveTextContent('$140.00/month $1.00/hr');
-
-    // 3 Node options are disabled for 1 GB plans
-    expect(nodeRadioBtns.querySelector('input[type=radio]')).toBeDisabled();
+    expect(nodeRadioBtns).toHaveTextContent('$60/month $0.4/hr');
+    expect(nodeRadioBtns).toHaveTextContent('$90/month $0.3/hr');
   });
 });

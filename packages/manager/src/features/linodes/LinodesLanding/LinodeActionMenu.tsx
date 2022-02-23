@@ -68,7 +68,6 @@ export interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  inlineLabel?: string;
   inTableContext?: boolean;
 }
 
@@ -107,7 +106,6 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
     linodeStatus,
     linodeType,
     openPowerActionDialog,
-    inlineLabel,
     inTableContext,
     openDialog,
   } = props;
@@ -321,7 +319,6 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
         // where we need all of the available actions
         actionsList={inTableContext ? menuActions : actions}
         ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-        inlineLabel={inlineLabel}
       />
     </>
   );
