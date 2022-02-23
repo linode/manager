@@ -629,8 +629,8 @@ export const handlers = [
             }),
           ]
         : [
-            ...accountMaintenanceFactory.buildList(3, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(2, { status: 'started' }),
+            ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(40, { status: 'started' }),
           ];
 
     if (req.headers.get('x-filter')) {

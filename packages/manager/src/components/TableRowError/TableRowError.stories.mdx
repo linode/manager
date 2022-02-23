@@ -1,0 +1,56 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import TableRowError from 'src/components/TableRowError';
+
+<Meta title="Components/Table" component={TableRowError} />
+
+# Table Row Error
+
+export const Template = (args) => {
+  const fields = [];
+  for (let i = 0; i < args.colSpan; i++) {
+    fields.push(
+      <TableCell>
+        Label {i}
+      </TableCell>
+    );
+  }
+  return (
+    <Table>
+      <TableHead>
+        <TableRow>
+          {fields}
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRowError {...args} />
+      </TableBody>
+    </Table>
+  );
+}
+
+<Canvas>
+  <Story
+    name="Table Row Error"
+    args={{
+      colSpan: 3,
+      message: "Table data is unavailable."
+    }}
+    argTypes={{
+      colSpan: {
+        description: "How many columns the error state should span",
+      },
+      message: {
+        description: "The text that displays in the table",
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Table Row Error" />
