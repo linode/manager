@@ -32,16 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     '&:focus': {
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
     },
   },
   selected: {
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue1,
     transform: 'scale(1)',
-    boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue}`,
+    boxShadow: `inset 3px 0 0 ${theme.bg.lightBlue1}`,
     '&:before': {
       transition: 'none',
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
       borderColor: theme.cmrBorderColors.borderTable,
     },
     '& td': {
@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right top, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`,
+      background: `linear-gradient(to right top, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
     },
     '&:after': {
       content: '""',
@@ -98,11 +98,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       bottom: 0,
       width: 15,
       height: '50%',
-      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue} 0%, ${theme.bg.lightBlue} 45%, transparent 46.1%)`,
+      background: `linear-gradient(to right bottom, ${theme.bg.lightBlue1} 0%, ${theme.bg.lightBlue1} 45%, transparent 46.1%)`,
     },
   },
   highlight: {
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue1,
   },
   disabled: {
     backgroundColor: 'rgba(247, 247, 247, 0.25)',

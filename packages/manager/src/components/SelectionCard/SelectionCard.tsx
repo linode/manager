@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     outline: 0,
     '&.checked .cardBaseGrid': {
-      backgroundColor: theme.bg.bgCopyButton,
+      backgroundColor: theme.bg.lightBlue2,
       borderColor: theme.palette.primary.main,
       '& span': {
         color: theme.palette.primary.main,

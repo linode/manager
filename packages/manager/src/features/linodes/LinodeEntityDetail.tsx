@@ -244,7 +244,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.color.greenCyan,
+      backgroundColor: theme.color.teal,
     },
   },
   statusOffline: {
@@ -621,7 +621,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       height: 32,
     },
     '& th': {
-      backgroundColor: theme.bg.bgApp,
+      backgroundColor: theme.bg.app,
       borderBottom: `1px solid ${theme.bg.bgPaper}`,
       color: theme.cmrTextColors.textAccessTable,
       fontSize: '0.875rem',
@@ -653,7 +653,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
   copyCell: {
     width: 36,
     height: 33,
-    backgroundColor: `${theme.bg.bgCopyButton} !important`,
+    backgroundColor: `${theme.bg.lightBlue2} !important`,
     padding: '0px !important',
     '& svg': {
       width: 16,

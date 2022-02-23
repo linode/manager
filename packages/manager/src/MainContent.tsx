@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
-    backgroundColor: theme.bg.bgApp,
+    backgroundColor: theme.bg.app,
     zIndex: 1,
   },
   wrapper: {

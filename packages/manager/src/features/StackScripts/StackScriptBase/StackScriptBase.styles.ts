@@ -68,7 +68,7 @@ const styles = (theme: Theme) =>
       },
     },
     landing: {
-      backgroundColor: `${theme.bg.bgApp} !important`,
+      backgroundColor: `${theme.bg.app} !important`,
       marginTop: -theme.spacing(),
     },
     // Styles to override base placeholder styles for StackScript null state

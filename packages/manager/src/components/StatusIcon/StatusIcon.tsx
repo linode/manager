@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   statusIconRunning: {
-    backgroundColor: theme.color.greenCyan,
+    backgroundColor: theme.color.teal,
   },
   statusIconOffline: {
     backgroundColor: theme.color.grey8,

@@ -64,8 +64,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1,
       },
       '& svg': {
-        color: theme.color.greenCyan,
-        fill: theme.color.greenCyan,
+        color: theme.color.teal,
+        fill: theme.color.teal,
       },
     },
     '& .icon': {
@@ -102,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
     '& svg': {
-      color: theme.color.greenCyan,
+      color: theme.color.teal,
     },
   },
   divider: {

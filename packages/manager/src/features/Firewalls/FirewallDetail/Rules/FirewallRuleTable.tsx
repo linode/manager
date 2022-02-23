@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
   },
   highlight: {
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue1,
   },
   error: {
     '& p': { color: theme.color.red },

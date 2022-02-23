@@ -68,13 +68,30 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
   ];
 
   const bgColors = [
+    {
+      color: theme.bg.app,
+      alias: 'theme.bg.app',
+    },
     { color: theme.bg.main, alias: 'theme.bg.main' },
     { color: theme.bg.offWhite, alias: 'theme.bg.offWhite' },
-    { color: theme.bg.lightBlue, alias: 'theme.bg.lightBlue' },
+    { color: theme.bg.lightBlue1, alias: 'theme.bg.lightBlue1' },
+    { color: theme.bg.lightBlue2, alias: 'theme.bg.lightBlue2' },
     { color: theme.bg.white, alias: 'theme.bg.white' },
-    { color: theme.bg.pureWhite, alias: 'theme.bg.pureWhite' },
     { color: theme.bg.tableHeader, alias: 'theme.bg.tableHeader' },
     { color: theme.bg.primaryNavPaper, alias: 'theme.bg.primaryNavPaper' },
+    { color: theme.bg.mainContentBanner, alias: 'theme.bg.mainContentBanner' },
+    {
+      color: theme.bg.bgPaper,
+      alias: 'theme.bg.bgPaper',
+    },
+    {
+      color: theme.bg.bgAccessRow,
+      alias: 'theme.bg.bgAccessRow',
+    },
+    {
+      color: theme.bg.bgAccessRowTransparentGradient,
+      alias: 'theme.bg.bgAccessRowTransparentGradient',
+    },
   ];
 
   const createSwatch = (idx: number, color: string, alias: string) => {

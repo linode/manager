@@ -41,25 +41,6 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
   const classes = useStyles();
   const theme = useTheme();
 
-  const bg = [
-    {
-      color: theme.bg.bgApp,
-      alias: 'theme.bg.bgApp',
-    },
-    {
-      color: theme.bg.bgPaper,
-      alias: 'theme.bg.bgPaper',
-    },
-    {
-      color: theme.bg.bgBillingSummary,
-      alias: 'theme.bg.bgBillingSummary',
-    },
-    {
-      color: theme.bg.bgAccessRow,
-      alias: 'theme.bg.bgAccessRow',
-    },
-  ];
-
   const cmrTextColors = [
     {
       color: theme.cmrTextColors.linkActiveLight,
@@ -114,19 +95,6 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
     );
   };
 
-  const renderBackgrounds = () => {
-    return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="h2">Background Colors</Typography>
-        </Grid>
-        {bg.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-      </>
-    );
-  };
-
   const renderTextColors = () => {
     return (
       <>
@@ -155,7 +123,6 @@ export const ColorPalette: React.FC<CombinedProps> = () => {
 
   return (
     <Grid container className={classes.root}>
-      {renderBackgrounds()}
       {renderTextColors()}
       {renderBorderColors()}
     </Grid>

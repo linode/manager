@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     '&:focus': {
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
       color: theme.color.black,
     },
   },

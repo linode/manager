@@ -138,7 +138,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__multi-value': {
         borderRadius: 4,
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.bg.lightBlue1,
         alignItems: 'center',
       },
       '& .react-select__multi-value__label': {
@@ -258,7 +258,7 @@ export const styles = (theme: Theme) =>
     selectedMenuItem: {
       backgroundColor: `${theme.bg.main} !important`,
       '& .tag': {
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.bg.lightBlue1,
         color: theme.palette.text.primary,
         '&:hover': {
           backgroundColor: theme.palette.primary.main,
@@ -468,7 +468,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   multiValue: (base: any) => ({
     ...base,
     borderRadius: 4,
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue1,
     alignItems: 'center',
   }),
   clearIndicator: (base: any) => ({

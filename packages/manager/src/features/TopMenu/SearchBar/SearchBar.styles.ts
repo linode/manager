@@ -24,7 +24,7 @@ const styles = (theme: Theme) =>
       flex: 1,
       display: 'flex',
       alignItems: 'center',
-      backgroundColor: theme.bg.bgApp,
+      backgroundColor: theme.bg.app,
       borderRadius: 3,
       padding: theme.spacing(1),
       marginLeft: theme.spacing(1),
