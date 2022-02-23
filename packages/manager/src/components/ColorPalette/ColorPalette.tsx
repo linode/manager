@@ -46,17 +46,22 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
       color: theme.palette.primary.light,
       alias: 'theme.palette.primary.light',
     },
+    {
+      color: theme.palette.primary.dark,
+      alias: 'theme.palette.primary.dark',
+    },
     { color: theme.palette.text.primary, alias: 'theme.palette.text.primary' },
     { color: theme.color.headline, alias: 'theme.color.headline' },
     { color: theme.palette.divider, alias: 'theme.palette.divider' },
-    { color: theme.color.offBlack, alias: 'theme.color.offBlack' },
     { color: theme.color.white, alias: 'theme.color.white' },
   ];
 
   const etc = [
     { color: theme.color.red, alias: 'theme.color.red' },
-    { color: theme.color.green, alias: 'theme.color.green' },
+    { color: theme.color.orange, alias: 'theme.color.orange' },
     { color: theme.color.yellow, alias: 'theme.color.yellow' },
+    { color: theme.color.green, alias: 'theme.color.green' },
+    { color: theme.color.teal, alias: 'theme.color.teal' },
     { color: theme.color.border2, alias: 'theme.color.border2' },
     { color: theme.color.border3, alias: 'theme.color.border3' },
     { color: theme.color.grey1, alias: 'theme.color.grey1' },
@@ -65,6 +70,24 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
     { color: theme.color.grey4, alias: 'theme.color.grey4' },
     { color: theme.color.grey5, alias: 'theme.color.grey5' },
     { color: theme.color.grey6, alias: 'theme.color.grey6' },
+    { color: theme.color.grey7, alias: 'theme.color.grey7' },
+    { color: theme.color.grey8, alias: 'theme.color.grey8' },
+    { color: theme.color.grey9, alias: 'theme.color.grey9' },
+    { color: theme.color.white, alias: 'theme.color.white' },
+    { color: theme.color.black, alias: 'theme.color.black' },
+    { color: theme.color.offBlack, alias: 'theme.color.offBlack' },
+    { color: theme.color.boxShadow, alias: 'theme.color.boxShadow' },
+    { color: theme.color.boxShadowDark, alias: 'theme.color.boxShadowDark' },
+    { color: theme.color.blueDTwhite, alias: 'theme.color.blueDTwhite' },
+    {
+      color: theme.color.tableHeaderText,
+      alias: 'theme.color.tableHeaderText',
+    },
+    { color: theme.color.drawerBackdrop, alias: 'theme.color.drawerBackdrop' },
+    { color: theme.color.label, alias: 'theme.color.label' },
+    { color: theme.color.disabledText, alias: 'theme.color.disabledText' },
+    { color: theme.color.tagButton, alias: 'theme.color.tagButton' },
+    { color: theme.color.tagIcon, alias: 'theme.color.tagIcon' },
   ];
 
   const bgColors = [
@@ -104,6 +127,10 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
       alias: 'theme.textColors.headlineStatic',
     },
     {
+      color: theme.textColors.tableHeader,
+      alias: 'theme.textColors.tableHeader',
+    },
+    {
       color: theme.textColors.tableStatic,
       alias: 'theme.textColors.tableStatic',
     },
@@ -117,10 +144,6 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
     {
       color: theme.borderColors.borderTypography,
       alias: 'theme.borderColors.borderTypography',
-    },
-    {
-      color: theme.borderColors.borderTabActive,
-      alias: 'theme.borderColors.borderTabActive',
     },
     {
       color: theme.borderColors.borderTable,
