@@ -1,7 +1,7 @@
 import { string } from 'yup';
 import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
 import { object } from 'yup';
-import * as zxcvbn from 'zxcvbn';
+import zxcvbn from 'zxcvbn';
 
 export const validatePassword = (password: string) => {
   // This method does not evaluate whether a password is required.
