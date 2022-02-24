@@ -16,6 +16,7 @@ import {
 } from './LongviewPlans';
 import { rest, server } from 'src/mocks/testServer';
 import { profileFactory } from 'src/factories/profile';
+import { grantsFactory } from 'src/factories/grants';
 import { QueryClient } from 'react-query';
 import { queryPresets } from 'src/queries/base';
 
@@ -117,6 +118,22 @@ describe('LongviewPlans', () => {
           ctx.json(
             profileFactory.build({
               restricted: true,
+            })
+          )
+        );
+      })
+    );
+
+    server.use(
+      rest.get('*/grants', (req, res, ctx) => {
+        return res(
+          ctx.status(200),
+          ctx.json(
+            grantsFactory.build({
+              global: {
+                account_access: 'read_only',
+                longview_subscription: false,
+              },
             })
           )
         );

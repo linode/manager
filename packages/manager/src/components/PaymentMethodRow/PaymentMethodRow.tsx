@@ -101,6 +101,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
     <Paper
       className={classes.root}
       variant="outlined"
+      data-testid={`payment-method-row-${paymentMethod.id}`}
       data-qa-payment-row={type}
     >
       <Grid container className={classes.container}>
