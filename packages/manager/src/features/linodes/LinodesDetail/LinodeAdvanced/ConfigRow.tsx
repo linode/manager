@@ -24,9 +24,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   interfaceListItem: {
     paddingBottom: 4,
   },
-  alignTop: {
-    verticalAlign: 'top',
-  },
 }));
 
 interface Props {
@@ -121,15 +118,8 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
 
   const defaultInterfaceLabel = 'eth0 – Public Internet';
 
-  // This should determine alignment based on device count associated w/ a config
-  const hasManyConfigs = validDevices.length > 3;
-
   return (
-    <TableRow
-      className={hasManyConfigs ? classes.alignTop : undefined}
-      key={config.id}
-      data-qa-config={config.label}
-    >
+    <TableRow key={config.id} data-qa-config={config.label}>
       <TableCell>
         {config.label} – {linodeKernel}
       </TableCell>
