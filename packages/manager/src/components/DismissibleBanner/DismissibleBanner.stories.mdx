@@ -1,6 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from './DismissibleBanner';
+import StatusBanners from 'src/features/Help/StatusBanners';
 
 <Meta title="UI Elements/Notifications/Dismissible Banners" />
 
@@ -18,7 +19,7 @@ Banners appear between the top nav and page content and are a visual interruptio
 - Warning: Informs users of an impending change that will have an impact on their service(s).
 - Call to action: Primary Button or text link allows a user to take action directly from the banner. 
 
-export const Template = (args) => {
+export const DismissibleBannerTemplate = (args) => {
     const { productInformationIndicator } = args;
     return (
     <DismissibleBanner
@@ -31,9 +32,16 @@ export const Template = (args) => {
     )
 }
 
+export const StatusBannersTemplate = (args) => {
+    const { message, title, status, impact, href } = args;
+    return (
+        <StatusBanners {...args} />
+    )
+}
+
 <Canvas>
     <Story 
-        name="Component API"
+        name="Dismissible Banner"
         args={{
             productInformationIndicator: true,
         }}
@@ -43,11 +51,21 @@ export const Template = (args) => {
             },
         }}
     >
-        {Template.bind({})}
+        {DismissibleBannerTemplate.bind({})}
     </Story>
 </Canvas>
 
 <ArgsTable
-  story="Component API"
+  story="Dismissible Banner"
   exclude={['className']}
 />
+
+Status Banners appear on our `/support` pages and communicate information about data center connectivity and service issues. The information populating these banners is sourced from Statuspage and corresponds to incidents detailed at status.linode.com.
+
+<Canvas>
+    <Story
+        name="StatusBanners"
+    >
+        {StatusBannersTemplate.bind({})}
+    </Story>
+</Canvas>
