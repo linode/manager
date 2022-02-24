@@ -5,7 +5,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { LOGIN_ROOT } from 'src/constants';
 import { Provider } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
@@ -23,11 +22,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  open: boolean;
-  error?: string;
-  loading: boolean;
   currentProvider: Provider;
-  provider: TPAProvider;
+  newProvider: TPAProvider;
+  open: boolean;
   onClose: () => void;
 }
 
@@ -37,23 +34,23 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 
-  const { open, error, loading, currentProvider, provider, onClose } = props;
+  const { currentProvider, newProvider, open, onClose } = props;
 
+  // Get list of providers from LaunchDarkly
   const providers = flags.tpaProviders ?? [];
 
   const displayName =
-    providers.find((thisProvider) => thisProvider.name === provider)
+    providers.find((thisProvider) => thisProvider.name === newProvider)
       ?.displayName ?? 'Linode';
 
   return (
     <ConfirmationDialog
       className={classes.dialog}
-      open={open}
       title={`Change login method to ${displayName}?`}
+      actions={() => renderActions(onClose, newProvider)}
+      open={open}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, provider)}
     >
-      {error && <Notice error text={error} />}
       <Typography className={classes.copy} variant="body1">
         This will disable your login via{' '}
         {currentProvider.displayName === 'Linode'
@@ -65,7 +62,7 @@ const TPADialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const changeLogin = (provider: TPAProvider) => {
+const handleLoginChange = (provider: TPAProvider) => {
   // If the selected provider is 'password', that means the user has decided
   // to disable TPA and revert to using Linode credentials
   return provider === 'password'
@@ -77,18 +74,13 @@ const changeLogin = (provider: TPAProvider) => {
       );
 };
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  provider: TPAProvider
-) => {
+const renderActions = (onClose: () => void, provider: TPAProvider) => {
   return (
     <ActionsPanel className="p0">
       <Button
         buttonType="secondary"
         onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
+        data-testid="confirm-cancel"
       >
         Cancel
       </Button>
@@ -96,12 +88,10 @@ const renderActions = (
         buttonType="primary"
         onClick={() => {
           onClose();
-          changeLogin(provider);
+          handleLoginChange(provider);
         }}
-        loading={loading}
         aria-describedby="external-site"
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
+        data-testid="confirm-login-change"
       >
         Change login
       </Button>
