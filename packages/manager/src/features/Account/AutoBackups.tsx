@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   footnote: {
-    fontSize: 14,
+    fontSize: '0.875rem',
     cursor: 'pointer',
   },
   icon: {
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   enableBackupsButton: {
     ...theme.applyLinkStyles,
-    fontSize: 14,
+    fontSize: '0.875rem',
   },
 }));
 
