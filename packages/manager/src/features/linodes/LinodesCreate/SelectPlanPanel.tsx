@@ -125,6 +125,7 @@ interface Props {
   ldClient?: LDClient;
   isCreate?: boolean;
   className?: string;
+  showTransfer?: boolean;
 }
 
 const getNanodes = (types: ExtendedTypes) =>
@@ -170,6 +171,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
       disabled,
       classes,
       isCreate,
+      showTransfer,
     } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -179,6 +181,8 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     const isSamePlan = type.heading === currentPlanHeading;
     const isGPU = type.class === 'gpu';
     const isDisabledClass = this.getDisabledClass(type.class);
+    const shouldShowTransfer = showTransfer && type.transfer;
+    const shouldShowNetwork = showTransfer && type.network_out;
 
     if (planTooSmall) {
       tooltip = `This plan is too small for the selected image.`;
@@ -255,13 +259,25 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 `$` + type.price.hourly
               )}
             </TableCell>
-            <TableCell data-qa-ram>
+            <TableCell center data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
-            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
-            <TableCell data-qa-storage>
+            <TableCell center data-qa-cpu>
+              {type.vcpus}
+            </TableCell>
+            <TableCell center data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
             </TableCell>
+            {shouldShowTransfer ? (
+              <TableCell center data-qa-transfer>
+                {type.transfer / 1000} TB
+              </TableCell>
+            ) : null}
+            {shouldShowNetwork ? (
+              <TableCell center noWrap data-qa-network>
+                40 Gbps / {type.network_out / 1000} Gbps
+              </TableCell>
+            ) : null}
           </TableRow>
         </Hidden>
 
@@ -282,7 +298,12 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
   };
 
   renderPlanContainer = (plans: ExtendedTypes) => {
-    const { classes, isCreate, header } = this.props;
+    const { classes, isCreate, header, showTransfer } = this.props;
+
+    const shouldShowTransfer = showTransfer && plans[0].transfer;
+
+    // @ts-expect-error Database does not have
+    const shouldShowNetwork = showTransfer && plans[0].network_out;
 
     return (
       <Grid container>
@@ -314,18 +335,46 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                   >
                     Hourly
                   </TableCell>
-                  <TableCell className={classes.headerCell} data-qa-ram-header>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-ram-header
+                    center
+                  >
                     RAM
                   </TableCell>
-                  <TableCell className={classes.headerCell} data-qa-cpu-header>
+                  <TableCell
+                    className={classes.headerCell}
+                    data-qa-cpu-header
+                    center
+                  >
                     CPUs
                   </TableCell>
                   <TableCell
                     className={classes.headerCell}
                     data-qa-storage-header
+                    center
                   >
                     Storage
                   </TableCell>
+                  {shouldShowTransfer ? (
+                    <TableCell
+                      className={classes.headerCell}
+                      data-qa-transfer-header
+                      center
+                    >
+                      Transfer
+                    </TableCell>
+                  ) : null}
+                  {shouldShowNetwork ? (
+                    <TableCell
+                      className={classes.headerCell}
+                      data-qa-network-header
+                      noWrap
+                      center
+                    >
+                      Network (In / Out)
+                    </TableCell>
+                  ) : null}
                 </TableRow>
               </TableHead>
               <TableBody role="radiogroup">

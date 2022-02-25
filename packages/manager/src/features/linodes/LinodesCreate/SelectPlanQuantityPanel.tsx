@@ -30,7 +30,7 @@ import { gpuPlanText } from './utilities';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
-  subHeadings: [string, string];
+  subHeadings: [string, string, string];
 }
 
 type ClassNames =
