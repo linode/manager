@@ -30,12 +30,26 @@ const TaxCollectionBanner: React.FC<{}> = () => {
 
   const bannerDate = flags.taxCollectionBanner?.date ?? '';
   const bannerHasAction = flags.taxCollectionBanner?.action ?? false;
+  const bannerRegions = flags.taxCollectionBanner?.regions ?? [];
 
   if (!account || hasDismissedBanner || !bannerDate) {
     return null;
   }
 
-  return (
+  /**
+   * If bannerRegions is empty, display the banner for everyone in the country
+   * since everyone will be taxed the same.
+   */
+  const isEntireCountryTaxable = bannerRegions.length === 0;
+
+  /**
+   * If bannerRegions is not empty, only display the banner for customers
+   * whose region is included in the list.
+   */
+  const isUserInTaxableRegion =
+    bannerRegions.length > 0 && bannerRegions.includes(account.state);
+
+  return isEntireCountryTaxable || isUserInTaxableRegion ? (
     <Notice warning important dismissible onClose={handleDismiss}>
       <Box
         display="flex"
@@ -62,7 +76,7 @@ const TaxCollectionBanner: React.FC<{}> = () => {
         ) : null}
       </Box>
     </Notice>
-  );
+  ) : null;
 };
 
 export default TaxCollectionBanner;
