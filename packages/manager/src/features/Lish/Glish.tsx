@@ -322,7 +322,7 @@ class Glish extends React.Component<CombinedProps, State> {
           isRetryingConnection ? (
             this.renderRetryState()
           ) : (
-            <CircleProgress />
+            <CircleProgress noInner />
           )
         ) : (
           <React.Fragment />

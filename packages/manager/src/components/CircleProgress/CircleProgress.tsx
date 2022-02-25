@@ -25,6 +25,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: '72px !important',
     },
   },
+  top: {
+    width: 70,
+    height: 70,
+    borderRadius: '50%',
+    border: '1px solid #999',
+    [theme.breakpoints.up('sm')]: {
+      width: 120,
+      height: 120,
+    },
+  },
+  topWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
   mini: {
     padding: theme.spacing() * 1.3,
   },
@@ -51,6 +69,7 @@ interface Props extends CircularProgressProps {
   className?: string;
   children?: JSX.Element;
   mini?: boolean;
+  noInner?: boolean;
   noPadding?: boolean;
   tag?: boolean;
 }
@@ -59,7 +78,7 @@ type CombinedProps = Props;
 
 export const CircleProgressComponent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { className, children, mini, noPadding, tag, ...rest } = props;
+  const { className, children, mini, noInner, noPadding, tag, ...rest } = props;
 
   const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
@@ -84,6 +103,11 @@ export const CircleProgressComponent: React.FC<CombinedProps> = (props) => {
     >
       {children !== undefined && (
         <div className={classes.valueInside}>{children}</div>
+      )}
+      {noInner !== true && (
+        <div className={classes.topWrapper}>
+          <div className={classes.top} />
+        </div>
       )}
       <CircularProgress
         {...rest}

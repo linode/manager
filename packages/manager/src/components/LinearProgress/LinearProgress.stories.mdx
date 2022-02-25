@@ -40,10 +40,13 @@ export const Template = (args) => <LinearProgress {...args} />;
         },
         options: ['determinate', 'indeterminate'],
       },
+      ref: {
+        table: { disable: true },
+      },
     }}
   >
     {Template.bind()}
   </Story>
 </Canvas>
 
-<ArgsTable story="Linear Progress" sort="requiredFirst" exclude={['ref']} />
+<ArgsTable story="Linear Progress" sort="requiredFirst" />

@@ -24,6 +24,9 @@ export const Template = (args) => <BarPercent {...args} />;
         description:
           'The value of the progress indicator for the determinate and buffer variants.',
       },
+      className: {
+        table: { disable: true },
+      },
       isFetchingValue: {
         description:
           'Applies styles to show that the value is being retrieved.',
@@ -43,4 +46,4 @@ export const Template = (args) => <BarPercent {...args} />;
   </Story>
 </Canvas>
 
-<ArgsTable story="Bar Percent" sort="requiredFirst" exclude={['className']} />
+<ArgsTable story="Bar Percent" sort="requiredFirst" />

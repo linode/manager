@@ -250,7 +250,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div id="terminal" className="terminal" />
         ) : !retryingConnection ? ( // basically are we switching tabs after the lish token expired?
-          <CircleProgress className={classes.progress} />
+          <CircleProgress className={classes.progress} noInner />
         ) : (
           this.renderRetryState()
         )}

@@ -235,7 +235,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     // if we're loading show circular spinner
     if (loading) {
-      return <CircleProgress className={classes.progress} />;
+      return <CircleProgress className={classes.progress} noInner />;
     }
 
     // Only show 404 component if we are missing _both_ linode and token
