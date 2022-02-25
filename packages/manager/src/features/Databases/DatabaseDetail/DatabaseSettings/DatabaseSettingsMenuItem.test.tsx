@@ -15,7 +15,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={jest.fn()} />
+        onClick={jest.fn()}
+      />
     );
     const title = getByRole('heading');
     expect(title).toHaveTextContent(sectionTitle);
@@ -27,7 +28,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={jest.fn()} />
+        onClick={jest.fn()}
+      />
     );
     getByText(descriptiveText);
   });
@@ -38,7 +40,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={jest.fn()} />
+        onClick={jest.fn()}
+      />
     );
     const button = getByRole('button');
     expect(button).toHaveTextContent(buttonText);
@@ -51,7 +54,8 @@ describe('DatabaseSettingsMenuItem Component', () => {
         buttonText={buttonText}
         descriptiveText={descriptiveText}
         sectionTitle={sectionTitle}
-        onClick={onClick} />
+        onClick={onClick}
+      />
     );
     const button = getByRole('button');
     fireEvent.click(button);
