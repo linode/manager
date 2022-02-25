@@ -10,12 +10,19 @@ export const CurrencyTemplate = (args) => (
 # Currency
 
 <Canvas>
-  <Story 
+  <Story
     name="Currency"
     args={{
-      quantity: 4.51,
+      quantity: 4.00,
       decimalPlaces: 2,
       wrapInParentheses: false,
+    }}
+    argTypes={{
+      decimalPlaces: {
+        control: {
+          min: 0
+        }
+      }
     }}>
       {CurrencyTemplate.bind({})}
   </Story>
