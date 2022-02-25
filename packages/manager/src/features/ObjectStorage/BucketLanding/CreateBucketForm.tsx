@@ -6,12 +6,6 @@ import Form from 'src/components/core/Form';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import bucketContainer, {
-  StateProps as BucketContainerProps,
-} from 'src/containers/bucket.container';
-import bucketRequestsContainer, {
-  BucketsRequests,
-} from 'src/containers/bucketRequests.container';
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import {
@@ -23,7 +17,6 @@ import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import ClusterSelect from './ClusterSelect';
 import { useAccountSettings } from 'src/queries/accountSettings';
-import { compose } from 'recompose';
 import { isEURegion } from 'src/utilities/formatRegion';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
@@ -32,6 +25,11 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
+import {
+  useCreateBucketMutation,
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
@@ -49,16 +47,8 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
-type CombinedProps = Props & BucketContainerProps & BucketsRequests;
-
-export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
-  const {
-    isRestrictedUser,
-    onClose,
-    onSuccess,
-    createBucket,
-    bucketsData,
-  } = props;
+export const CreateBucketForm: React.FC<Props> = (props) => {
+  const { isRestrictedUser, onClose, onSuccess } = props;
 
   const {
     data: accountSettings,
@@ -73,6 +63,9 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
   const { data: agreements } = useAccountAgreements();
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
   const { data: profile } = useProfile();
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: bucketsResponse } = useObjectStorageBuckets(clusters);
+  const { mutateAsync: createBucket } = useCreateBucketMutation();
 
   return (
     <Formik
@@ -84,7 +77,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
       ) => {
         const { cluster, label } = values;
 
-        if (isDuplicateBucket(bucketsData, label, cluster)) {
+        if (isDuplicateBucket(bucketsResponse?.buckets || [], label, cluster)) {
           setErrors({
             label: `You already have a bucket named ${label} in this region.`,
           });
@@ -113,7 +106,7 @@ export const CreateBucketForm: React.FC<CombinedProps> = (props) => {
               }).catch(reportAgreementSigningError);
             }
 
-            // If our Redux Store says that the user doesn't have OBJ enabled,
+            // If our React Query cache says that the user doesn't have OBJ enabled,
             // it probably means they have just enabled it with the creation
             // of this bucket. In that case, update the Redux Store so that
             // subsequently created buckets don't need to go through the
@@ -256,12 +249,7 @@ const initialValues: FormState = {
   cluster: '',
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  bucketRequestsContainer,
-  bucketContainer
-);
-
-export default enhanced(CreateBucketForm);
+export default CreateBucketForm;
 
 // Returns `true` if a bucket with the same label and clusterId already exist
 // in the given bucket data.

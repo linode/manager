@@ -12,13 +12,14 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { storage } from 'src/utilities/storage';
+import { debounce } from 'throttle-debounce';
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
+import { ExtendedReply } from '../../types';
 import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
-import { storage } from 'src/utilities/storage';
-import { debounce } from 'throttle-debounce';
 
 const useStyles = makeStyles((theme: Theme) => ({
   replyContainer: {
@@ -57,6 +58,7 @@ interface Props {
   reloadAttachments: () => void;
   ticketId: number;
   closeTicketSuccess: () => void;
+  lastReply?: ExtendedReply;
 }
 
 type CombinedProps = Props;
@@ -64,7 +66,7 @@ type CombinedProps = Props;
 const ReplyContainer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { onSuccess, reloadAttachments, ...rest } = props;
+  const { onSuccess, reloadAttachments, lastReply, ...rest } = props;
 
   const textFromStorage = storage.ticketReply.get();
   const isTextFromStorageForCurrentTicket =
@@ -72,7 +74,10 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [value, setValue] = React.useState<string>(
-    isTextFromStorageForCurrentTicket ? textFromStorage.text : ''
+    isTextFromStorageForCurrentTicket &&
+      lastReply?.description !== textFromStorage.text
+      ? textFromStorage.text
+      : ''
   );
 
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);

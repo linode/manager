@@ -12,18 +12,10 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState,
 } from 'src/store/backupDrawer';
-import buckets, {
-  defaultState as defaultBucketsState,
-  State as BucketsState,
-} from 'src/store/bucket/bucket.reducer';
 import bucketDrawer, {
   defaultState as bucketDrawerDefaultState,
   State as BucketDrawerState,
 } from 'src/store/bucketDrawer/bucketDrawer.reducer';
-import clusters, {
-  defaultState as defaultClustersState,
-  State as ClustersState,
-} from 'src/store/clusters/clusters.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState,
@@ -186,8 +178,6 @@ const __resourcesDefaultState = {
   notifications: notificationsDefaultState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
-  buckets: defaultBucketsState,
-  clusters: defaultClustersState,
   vlans: defaultVLANState,
 };
 
@@ -207,8 +197,6 @@ export interface ResourcesState {
   notifications: NotificationsState;
   types: TypesState;
   volumes: VolumesState;
-  buckets: BucketsState;
-  clusters: ClustersState;
   vlans: VlanState;
 }
 
@@ -279,8 +267,6 @@ const __resources = combineReducers({
   notifications,
   types,
   volumes,
-  buckets,
-  clusters,
   vlans,
 });
 

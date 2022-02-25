@@ -9,11 +9,6 @@ describe('CreateBucketForm', () => {
     <CreateBucketForm
       onClose={jest.fn()}
       onSuccess={jest.fn()}
-      createBucket={jest.fn()}
-      deleteBucket={jest.fn()}
-      getBucket={jest.fn()}
-      bucketsData={[]}
-      bucketsLoading={false}
       isRestrictedUser={false}
     />
   );

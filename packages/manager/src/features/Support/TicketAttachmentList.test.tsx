@@ -51,15 +51,17 @@ describe('TicketAttachmentList component', () => {
     expect(props.toggle).toHaveBeenCalled();
   });
   it('should use Show More Files when showMoreAttachments is false', () => {
-    expect(
-      component.find('WithStyles(ShowMoreExpansion)').first().props()
-    ).toHaveProperty('name', 'Show More Files');
+    expect(component.find('ShowMoreExpansion').first().props()).toHaveProperty(
+      'name',
+      'Show More Files'
+    );
   });
   it('should use Show Less Files when showMoreFiles is true', () => {
     component.setProps({ showMoreAttachments: true });
-    expect(
-      component.find('WithStyles(ShowMoreExpansion)').first().props()
-    ).toHaveProperty('name', 'Show Less Files');
+    expect(component.find('ShowMoreExpansion').first().props()).toHaveProperty(
+      'name',
+      'Show Less Files'
+    );
   });
   describe('addIconsToAttachments helper method', () => {
     const icons = addIconsToAttachments(props.attachments);

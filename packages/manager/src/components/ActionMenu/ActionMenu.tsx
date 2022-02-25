@@ -41,14 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  buttonWithLabel: {
-    padding: '15px 10px !important',
-  },
-  buttonLabel: {
-    margin: `0 0 0 ${theme.spacing() + 2}px`,
-    fontFamily: theme.font.normal,
-    lineHeight: 1,
-  },
   icon: {
     '& svg': {
       fill: theme.color.blue,
@@ -113,8 +105,6 @@ export interface Props {
   ariaLabel: string;
   className?: string;
   disabled?: boolean;
-  // Displays inline next to the button icon
-  inlineLabel?: string;
 }
 
 type CombinedProps = Props;
@@ -123,7 +113,7 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { toggleOpenCallback, actionsList } = props;
 
-  const { ariaLabel, inlineLabel } = props;
+  const { ariaLabel } = props;
 
   const handleClick = () => {
     if (toggleOpenCallback) {
@@ -146,14 +136,12 @@ const ActionMenu: React.FC<CombinedProps> = (props) => {
       <MenuButton
         className={classNames({
           [classes.button]: true,
-          [classes.buttonWithLabel]: Boolean(inlineLabel),
         })}
         aria-label={ariaLabel}
         onMouseDown={handleClick}
         onKeyDown={handleKeyPress}
       >
         <KebabIcon aria-hidden className={classes.icon} type="primary" />
-        {inlineLabel && <p className={classes.buttonLabel}>{inlineLabel}</p>}
       </MenuButton>
       <MenuPopover className={classes.popover} position={positionRight}>
         <MenuItems className={classes.itemsOuter}>
