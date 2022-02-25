@@ -151,6 +151,9 @@ export class SelectPlanPanel extends React.Component<
       updatePlanCount,
     } = this.props;
 
+    // We don't want network information for LKE so we remove the last element.
+    const subHeadings = type.subHeadings.slice(0, -1);
+
     const renderVariant = () => (
       <Grid item xs={12}>
         <div className={classes.enhancedInputOuter}>
@@ -234,7 +237,7 @@ export class SelectPlanPanel extends React.Component<
             checked={type.id === String(selectedID)}
             onClick={this.onSelect(type.id)}
             heading={type.heading}
-            subheadings={type.subHeadings}
+            subheadings={subHeadings}
             disabled={disabled}
             renderVariant={renderVariant}
           />
