@@ -97,7 +97,6 @@ const AutoBackups: React.FC<Props> = (props) => {
               <button
                 data-qa-backup-existing
                 onClick={openBackupsDrawer}
-                title="enable now"
                 className={classes.enableBackupsButton}
               >
                 enable now
