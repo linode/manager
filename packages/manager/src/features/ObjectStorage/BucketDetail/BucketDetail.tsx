@@ -21,7 +21,9 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import {
+  prefixToQueryKey,
   queryKey,
+  updateBucket,
   useObjectBucketDetailsInfiniteQuery,
 } from 'src/queries/objectStorage';
 import { sendDownloadObjectEvent } from 'src/utilities/ga';
@@ -39,6 +41,7 @@ import ObjectTableContent from './ObjectTableContent';
 import { deleteObject as _deleteObject } from '../requests';
 import { queryClient } from 'src/queries/base';
 import produce from 'immer';
+import { debounce } from 'throttle-debounce';
 
 const useStyles = makeStyles((theme: Theme) => ({
   objectTable: {
@@ -141,6 +144,13 @@ export const BucketDetail: React.FC = () => {
     setObjectDetailDrawerOpen(true);
   };
 
+  // If a user deletes many objects in a short amount of time,
+  // we don't want to fetch for every delete action. Debounce
+  // the updateBucket call by 3 seconds.
+  const debouncedUpdateBucket = debounce(3000, false, () =>
+    updateBucket(clusterId, bucketName)
+  );
+
   const deleteObject = async () => {
     if (!objectToDelete) {
       return;
@@ -159,7 +169,9 @@ export const BucketDetail: React.FC = () => {
 
       await _deleteObject(url);
 
-      queryClient.refetchQueries(`${queryKey}-buckets`);
+      // Update this bucket so the buckets landing page shows the correct
+      // bucket size and object count.
+      debouncedUpdateBucket();
 
       setDeleteObjectLoading(false);
       setDeleteObjectDialogOpen(false);
@@ -176,10 +188,13 @@ export const BucketDetail: React.FC = () => {
     queryClient.setQueryData<{
       pages: ObjectStorageObjectListResponse[];
       pageParams: string[];
-    }>([queryKey, clusterId, bucketName, prefix], (data) => ({
-      pages,
-      pageParams: data?.pageParams || [],
-    }));
+    }>(
+      [queryKey, clusterId, bucketName, ...prefixToQueryKey(prefix)],
+      (data) => ({
+        pages,
+        pageParams: data?.pageParams || [],
+      })
+    );
   };
 
   const removeOne = (objectName: string) => {
@@ -193,8 +208,9 @@ export const BucketDetail: React.FC = () => {
         return _objectIndex !== -1;
       });
       if (draft && pageIndex !== undefined && pageIndex !== -1) {
-        draft[pageIndex].data.splice(objectIndex);
+        draft[pageIndex].data.splice(objectIndex, 1);
       }
+      return draft;
     });
     updateStore(newPagesArray ?? []);
   };
@@ -202,7 +218,6 @@ export const BucketDetail: React.FC = () => {
   const maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
     const action = tableUpdateAction(prefix, path);
     if (action) {
-      queryClient.refetchQueries(`${queryKey}-buckets`);
       if (action.type === 'FILE') {
         addOneFile(action.name, sizeInBytes);
       } else {
@@ -224,11 +239,33 @@ export const BucketDetail: React.FC = () => {
       size: sizeInBytes,
     };
 
-    const newPagesArray = produce(data?.pages, (draft) => {
-      draft[draft.length - 1].data = [...draft[draft.length - 1].data, object];
-    });
+    for (let i = 0; i < data.pages.length; i++) {
+      const foundObjectIndex = data.pages[i].data.findIndex(
+        (_object) => _object.name === object.name
+      );
+      if (foundObjectIndex !== -1) {
+        const copy = [...data.pages];
+        const pageCopy = [...data.pages[i].data];
 
-    updateStore(newPagesArray ?? []);
+        pageCopy[foundObjectIndex] = object;
+
+        copy[i].data = pageCopy;
+
+        updateStore(copy);
+
+        return;
+      }
+    }
+
+    const copy = [...data.pages];
+
+    const dataCopy = [...copy[copy.length - 1].data];
+
+    dataCopy.push(object);
+
+    copy[copy.length - 1].data = dataCopy;
+
+    updateStore(copy);
   };
 
   const addOneFolder = (objectName: string) => {
@@ -245,16 +282,28 @@ export const BucketDetail: React.FC = () => {
     };
 
     for (const page of data.pages) {
-      if (page.data.find((object) => object.name === objectName)) {
+      if (page.data.find((object) => object.name === folder.name)) {
+        // If a folder already exists in the store, invalidate that store for that specific
+        // prefix. Due to how invalidateQueries works, all subdirectories also get invalidated.
+        queryClient.invalidateQueries([
+          queryKey,
+          clusterId,
+          bucketName,
+          ...`${prefix}${objectName}`.split('/'),
+        ]);
         return;
       }
     }
 
-    const newPagesData = [...data.pages];
+    const copy = [...data.pages];
 
-    newPagesData[0].data = [folder, ...newPagesData[0].data];
+    const dataCopy = [...copy[copy.length - 1].data];
 
-    updateStore(newPagesData);
+    dataCopy.push(folder);
+
+    copy[copy.length - 1].data = dataCopy;
+
+    updateStore(copy);
   };
 
   const closeDeleteObjectDialog = () => {
@@ -313,6 +362,7 @@ export const BucketDetail: React.FC = () => {
                     handleClickDelete={handleClickDelete}
                     handleClickDetails={handleClickDetails}
                     numOfDisplayedObjects={numOfDisplayedObjects}
+                    prefix={prefix}
                   />
                 </TableBody>
               </Table>

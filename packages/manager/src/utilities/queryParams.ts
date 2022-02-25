@@ -1,6 +1,6 @@
 import { parse } from 'qs';
 import { pathOr } from 'ramda';
-import * as parseUrl from 'url-parse';
+import parseUrl from 'url-parse';
 
 /**
  * Parses a string of key/value pairs separated by '&', with the key and value separated by '='

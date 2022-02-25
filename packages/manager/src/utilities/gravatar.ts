@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import * as md5 from 'md5';
+import md5 from 'md5';
 
 export const getEmailHash = (email: string) => {
   return email && md5(email.trim().toLowerCase());
