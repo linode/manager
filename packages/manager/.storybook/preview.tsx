@@ -48,6 +48,9 @@ export const parameters = {
       order: ['Guidelines', 'Components', 'UI Elements', 'Core'],
     },
   },
+  previewTabs: {
+    'storybook/docs/panel': { index: -1 },
+  },
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
   },
