@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   center: {
     textAlign: 'center',
+    '&:last-child': {
+      paddingRight: '15px',
+    },
   },
   sortable: {
     color: theme.color.headline,
