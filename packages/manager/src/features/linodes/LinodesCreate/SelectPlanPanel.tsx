@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   table: {
     borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
     borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    overflowX: 'hidden',
   },
   headingCellContainer: {
     display: 'flex',
@@ -247,13 +248,13 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 `$` + type.price.hourly
               )}
             </TableCell>
-            <TableCell center data-qa-ram>
+            <TableCell center noWrap data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
             <TableCell center data-qa-cpu>
               {type.vcpus}
             </TableCell>
-            <TableCell center data-qa-storage>
+            <TableCell center noWrap data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
             </TableCell>
             {shouldShowTransfer ? (
@@ -262,7 +263,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
               </TableCell>
             ) : null}
             {shouldShowNetwork ? (
-              <TableCell center data-qa-network>
+              <TableCell center noWrap data-qa-network>
                 40 Gbps <span style={{ color: '#9DA4A6' }}>/</span>{' '}
                 {type.network_out / 1000} Gbps
               </TableCell>
@@ -360,6 +361,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                     <TableCell
                       className={classes.headerCell}
                       data-qa-network-header
+                      noWrap
                       center
                     >
                       Network (In / Out)
