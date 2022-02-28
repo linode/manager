@@ -174,13 +174,6 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     </ActionsPanel>
   );
 
-  const deleteBucketConfirmationMessage = bucketToRemove ? (
-    <Typography component={'span'} className={classes.copy}>
-      To confirm deletion, type the name of the bucket (
-      <b>{bucketToRemove.label}</b>) in the field below:
-    </Typography>
-  ) : null;
-
   const unavailableClusters =
     objectStorageBucketsResponse?.errors.map(
       (error: BucketError) => error.cluster
@@ -293,7 +286,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           <CancelNotice className={classes.copy} />
         )}
         <TypeToConfirm
-          confirmationText={<span>{deleteBucketConfirmationMessage}</span>}
+          confirmationText={
+            <Typography component={'span'} className={classes.copy}>
+              To confirm deletion, type the name of the bucket (
+              <b>{bucketToRemove?.label}</b>) in the field below:
+            </Typography>
+          }
           onChange={(input) => setConfirmBucketNameToInput(input)}
           value={confirmBucketName}
           label="Bucket Name"
