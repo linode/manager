@@ -263,7 +263,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             ) : null}
             {shouldShowNetwork ? (
               <TableCell center data-qa-network>
-                40 Gbps / {type.network_out / 1000} Gbps
+                40 Gbps <span style={{ color: '#9DA4A6' }}>/</span>{' '}
+                {type.network_out / 1000} Gbps
               </TableCell>
             ) : null}
           </TableRow>
