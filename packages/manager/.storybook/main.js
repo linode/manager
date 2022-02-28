@@ -3,7 +3,10 @@ const path = require('path');
 const includePath = path.resolve(__dirname, '../../..');
 
 module.exports = {
-  stories: ['../src/components/**/*.stories.@(js|ts|jsx|tsx|mdx)'],
+  stories: [
+    '../src/components/intro.stories.mdx',
+    '../src/components/**/*.stories.@(js|ts|jsx|tsx|mdx)',
+  ],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-knobs',
