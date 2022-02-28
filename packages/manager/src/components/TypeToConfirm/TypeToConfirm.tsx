@@ -1,6 +1,12 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
+import Link from 'src/components/Link';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import Grid from 'src/components/Grid';
+import CheckBox from 'src/components/CheckBox';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 
 export interface Props {
   confirmationText?: JSX.Element | string;
@@ -16,6 +22,12 @@ export interface Props {
   [propName: string]: any;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  description: {
+    marginTop: theme.spacing(),
+  },
+}));
+
 type CombinedProps = Props;
 
 const TypeToConfirm: React.FC<CombinedProps> = (props) => {
@@ -30,9 +42,12 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
     visible,
     ...rest
   } = props;
+
+  const classes = useStyles();
+
   if (visible === undefined || !!visible) {
     return (
-      <div>
+      <>
         <Typography variant="h2">{title}</Typography>
         <Typography style={typographyStyle}>{confirmationText}</Typography>
         <TextField
@@ -42,10 +57,44 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
           style={textFieldStyle}
           {...rest}
         />
-      </div>
+        <PreferenceToggle<boolean>
+          preferenceKey="type_to_confirm"
+          preferenceOptions={[false, true]}
+          localStorageKey="typeToConfirm"
+        >
+          {({
+            preference: istypeToConfirm,
+            togglePreference: toggleTypeToConfirm,
+          }: ToggleProps<boolean>) => {
+            return (
+              <Grid container alignItems="center">
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <CheckBox
+                        onChange={toggleTypeToConfirm}
+                        checked={!istypeToConfirm}
+                        inputProps={{
+                          'aria-label': `Disable type to confirm`,
+                        }}
+                      />
+                    }
+                    label="Disable type to confirm for all destructive actions"
+                  />
+                </Grid>
+              </Grid>
+            );
+          }}
+        </PreferenceToggle>
+      </>
     );
   } else {
-    return <React.Fragment />;
+    return (
+      <Typography className={classes.description}>
+        To enable type to confirm for all destructive actions go to{' '}
+        <Link to="/profile/settings">My Settings</Link>.
+      </Typography>
+    );
   }
 };
 

@@ -33,7 +33,7 @@ export interface UserPreferences {
   linode_news_banner_dismissed?: boolean;
   firewall_beta_notification?: boolean;
   backups_cta_dismissed?: boolean;
-  power_user?: boolean;
+  type_to_confirm?: boolean;
   dismissed_notifications?: Record<string, DismissedNotification>;
 }
 

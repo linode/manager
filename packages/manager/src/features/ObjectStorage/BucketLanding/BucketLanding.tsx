@@ -162,10 +162,8 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         onClick={removeBucket}
         disabled={
           bucketToRemove
-            ? !(
-                preferences?.power_user ||
-                confirmBucketName === bucketToRemove.label
-              )
+            ? !!preferences?.type_to_confirm &&
+              confirmBucketName !== bucketToRemove.label
             : true
         }
         loading={isLoading}
@@ -298,7 +296,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           confirmationText={<span>{deleteBucketConfirmationMessage}</span>}
           onChange={(input) => setConfirmBucketNameToInput(input)}
           label="Bucket Name"
-          visible={!preferences?.power_user}
+          visible={preferences?.type_to_confirm}
           expand
         />
       </ConfirmationDialog>

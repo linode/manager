@@ -51,7 +51,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
     ...rest
   } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
-  const typeToConfirmRequired = typeToConfirm && !preferences?.power_user;
+  const typeToConfirmRequired = typeToConfirm && preferences?.type_to_confirm;
   const renderActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button buttonType="secondary" onClick={onClose} data-qa-cancel>

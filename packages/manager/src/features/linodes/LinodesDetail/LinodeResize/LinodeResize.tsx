@@ -281,9 +281,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const tableDisabled =
       hostMaintenance || unauthorized || Boolean(disksError);
 
-    const submitButtonDisabled = preferences?.power_user
-      ? false
-      : confirmationText !== linodeLabel;
+    const submitButtonDisabled =
+      !!preferences?.type_to_confirm && confirmationText !== linodeLabel;
 
     const currentPlanHeading = linodeType
       ? type
@@ -402,7 +401,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               this.setState({ confirmationText: input });
             }}
             hideLabel
-            visible={!preferences?.power_user}
+            visible={preferences?.type_to_confirm}
             label="Linode Label"
             textFieldStyle={{ marginBottom: 16 }}
           />

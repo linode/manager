@@ -71,9 +71,8 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
     preferences,
   } = props;
   const [confirmText, setConfirmText] = React.useState<string>('');
-  const disabled = preferences?.power_user
-    ? false
-    : confirmText !== clusterLabel;
+  const disabled =
+    !!preferences?.type_to_confirm && confirmText !== clusterLabel;
   const poolCount = clusterPools.length;
   const linodeCount = getTotalLinodes(clusterPools);
 
@@ -111,7 +110,7 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
         onChange={(input) => {
           setConfirmText(input);
         }}
-        visible={!preferences?.power_user}
+        visible={preferences?.type_to_confirm}
       />
     </ConfirmationDialog>
   );

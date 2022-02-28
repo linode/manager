@@ -120,9 +120,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
     extendValidationSchema(RebuildLinodeFromStackScriptSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
-  const submitButtonDisabled = preferences?.power_user
-    ? false
-    : confirmationText !== linodeLabel;
+  const submitButtonDisabled =
+    !!preferences?.type_to_confirm && confirmationText !== linodeLabel;
 
   const [
     ss,
@@ -374,7 +373,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                     setConfirmationText(input);
                   }}
                   hideLabel
-                  visible={!preferences?.power_user}
+                  visible={preferences?.type_to_confirm}
                   textFieldStyle={{ marginBottom: 16 }}
                 />
                 <Button

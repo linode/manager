@@ -16,7 +16,7 @@ export const preferencesFactory = Factory.Sync.makeFactory<UserPreferences>({
   linode_news_banner_dismissed: true,
   firewall_beta_notification: true,
   backups_cta_dismissed: true,
-  power_user: true,
+  type_to_confirm: true,
   dismissed_notifications: {
     t: {
       id: '',

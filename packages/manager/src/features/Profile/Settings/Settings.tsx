@@ -108,16 +108,16 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
       </Paper>
       <Paper className={classes.root}>
         <Typography variant="h2" className={classes.title}>
-          Power User
+          Type to Confirm
         </Typography>
         <PreferenceToggle<boolean>
-          preferenceKey="power_user"
+          preferenceKey="type_to_confirm"
           preferenceOptions={[false, true]}
-          localStorageKey="powerUser"
+          localStorageKey="typeToConfirm"
         >
           {({
-            preference: isPowerUser,
-            togglePreference: togglePowerUser,
+            preference: istypeToConfirm,
+            togglePreference: toggleTypeToConfirm,
           }: ToggleProps<boolean>) => {
             return (
               <Grid container alignItems="center">
@@ -125,13 +125,13 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
                   <FormControlLabel
                     control={
                       <Toggle
-                        onChange={togglePowerUser}
-                        checked={isPowerUser}
+                        onChange={toggleTypeToConfirm}
+                        checked={istypeToConfirm}
                       />
                     }
-                    label={` User will${
-                      isPowerUser === true ? ' ' : ' not '
-                    }be allowed to skip "Type to confirm.." boxes when doing potentially destructive actions`}
+                    label={`Type to confirm for all destructive actions is${
+                      istypeToConfirm ? ' enabled' : ' disabled'
+                    }.`}
                   />
                 </Grid>
               </Grid>

@@ -91,9 +91,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
-  const submitButtonDisabled = preferences?.power_user
-    ? false
-    : confirmationText !== linodeLabel;
+  const submitButtonDisabled =
+    !!preferences?.type_to_confirm && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromImageForm,
@@ -222,7 +221,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                     setConfirmationText(input);
                   }}
                   hideLabel
-                  visible={!preferences?.power_user}
+                  visible={preferences?.type_to_confirm}
                   label="Linode Label"
                   textFieldStyle={{ marginBottom: 16 }}
                 />
