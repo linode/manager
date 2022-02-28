@@ -78,7 +78,11 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
     );
 
   return (
-    <TableRow key={`database-row-${id}`} ariaLabel={`Database ${label}`}>
+    <TableRow
+      key={`database-row-${id}`}
+      ariaLabel={`Database ${label}`}
+      data-qa-database-cluster-id={id}
+    >
       <TableCell>
         <Link to={`/databases/${engine}/${id}`}>{label}</Link>
       </TableCell>
