@@ -8,12 +8,7 @@ import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { Theme, makeStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -39,74 +34,62 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 
-type ClassNames =
-  | 'root'
-  | 'copy'
-  | 'disabledRow'
-  | 'table'
-  | 'headerCell'
-  | 'chip'
-  | 'headingCellContainer'
-  | 'radioCell'
-  | 'gpuGuideLink';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(3),
-      width: '100%',
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginTop: theme.spacing(3),
+    width: '100%',
+  },
+  copy: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3),
+  },
+  disabledRow: {
+    backgroundColor: theme.bg.tableHeader,
+    cursor: 'not-allowed',
+    opacity: 0.4,
+  },
+  table: {
+    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+  },
+  headingCellContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  headerCell: {
+    borderTop: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
+    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
+    '&.emptyCell': {
+      borderRight: 'none',
     },
-    copy: {
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(3),
+    '&:not(.emptyCell)': {
+      borderLeft: 'none !important',
     },
-    disabledRow: {
-      backgroundColor: theme.bg.tableHeader,
-      cursor: 'not-allowed',
-      opacity: 0.4,
+    '&:last-child': {
+      paddingRight: 15,
     },
-    table: {
-      borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
-      borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+  },
+  chip: {
+    backgroundColor: theme.color.green,
+    color: '#fff',
+    textTransform: 'uppercase',
+    marginLeft: theme.spacing(2),
+  },
+  radioCell: {
+    height: theme.spacing(6),
+    width: '5%',
+    paddingRight: 0,
+  },
+  gpuGuideLink: {
+    fontSize: '0.9em',
+    '& a': {
+      color: theme.cmrTextColors.linkActiveLight,
     },
-    headingCellContainer: {
-      display: 'flex',
-      alignItems: 'center',
+    '& a:hover': {
+      color: '#3683dc',
     },
-    headerCell: {
-      borderTop: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
-      '&.emptyCell': {
-        borderRight: 'none',
-      },
-      '&:not(.emptyCell)': {
-        borderLeft: 'none !important',
-      },
-      '&:last-child': {
-        paddingRight: 15,
-      },
-    },
-    chip: {
-      backgroundColor: theme.color.green,
-      color: '#fff',
-      textTransform: 'uppercase',
-      marginLeft: theme.spacing(2),
-    },
-    radioCell: {
-      height: theme.spacing(6),
-      width: '5%',
-      paddingRight: 0,
-    },
-    gpuGuideLink: {
-      fontSize: '0.9em',
-      '& a': {
-        color: theme.cmrTextColors.linkActiveLight,
-      },
-      '& a:hover': {
-        color: '#3683dc',
-      },
-    },
-  });
+  },
+}));
 
 type ExtendedTypes = Array<ExtendedType | ExtendedDatabaseType>;
 
@@ -146,41 +129,48 @@ const getGPU = (types: ExtendedTypes) =>
 const getMetal = (types: ExtendedTypes) =>
   types.filter((t) => t.class === 'metal');
 
-type CombinedProps = Props & WithStyles<ClassNames> & RegionsProps;
+type CombinedProps = Props & RegionsProps;
 
-export class SelectPlanPanel extends React.Component<CombinedProps> {
-  onSelect = (id: string) => () => this.props.onSelect(id);
+export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
+  const {
+    selectedID,
+    currentPlanHeading,
+    disabled,
+    isCreate,
+    header,
+    showTransfer,
+    types,
+    className,
+    copy,
+    error,
+  } = props;
 
-  getDisabledClass = (thisClass: LinodeTypeClass) => {
-    const disabledClasses = this.props.disabledClasses ?? [];
+  const classes = useStyles();
+
+  const onSelect = (id: string) => () => props.onSelect(id);
+
+  const getDisabledClass = (thisClass: LinodeTypeClass) => {
+    const disabledClasses = props.disabledClasses ?? [];
     return disabledClasses.includes(thisClass);
   };
 
-  getRegionsWithCapability = (capability: Capabilities) => {
-    const regions = this.props.regionsData ?? [];
+  const getRegionsWithCapability = (capability: Capabilities) => {
+    const regions = props.regionsData ?? [];
     const withCapability = regions
       .filter((thisRegion) => thisRegion.capabilities.includes(capability))
       .map((thisRegion) => dcDisplayNames[thisRegion.id]);
     return arrayToList(withCapability);
   };
 
-  renderSelection = (type: ExtendedType, idx: number) => {
-    const {
-      selectedID,
-      currentPlanHeading,
-      disabled,
-      classes,
-      isCreate,
-      showTransfer,
-    } = this.props;
-    const selectedDiskSize = this.props.selectedDiskSize
-      ? this.props.selectedDiskSize
+  const renderSelection = (type: ExtendedType, idx: number) => {
+    const selectedDiskSize = props.selectedDiskSize
+      ? props.selectedDiskSize
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
     const isSamePlan = type.heading === currentPlanHeading;
     const isGPU = type.class === 'gpu';
-    const isDisabledClass = this.getDisabledClass(type.class);
+    const isDisabledClass = getDisabledClass(type.class);
     const shouldShowTransfer = showTransfer && type.transfer;
     const shouldShowNetwork = showTransfer && type.network_out;
 
@@ -204,9 +194,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
             aria-label={rowAriaLabel}
             key={type.id}
             onClick={
-              !isSamePlan && !isDisabledClass
-                ? this.onSelect(type.id)
-                : undefined
+              !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
             }
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
             className={classNames({
@@ -223,7 +211,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                   control={
                     <Radio
                       checked={!planTooSmall && type.id === String(selectedID)}
-                      onChange={this.onSelect(type.id)}
+                      onChange={onSelect(type.id)}
                       disabled={planTooSmall || disabled || isDisabledClass}
                       id={type.id}
                     />
@@ -274,7 +262,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
               </TableCell>
             ) : null}
             {shouldShowNetwork ? (
-              <TableCell center noWrap data-qa-network>
+              <TableCell center data-qa-network>
                 40 Gbps / {type.network_out / 1000} Gbps
               </TableCell>
             ) : null}
@@ -286,7 +274,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
           <SelectionCard
             key={type.id}
             checked={type.id === String(selectedID)}
-            onClick={this.onSelect(type.id)}
+            onClick={onSelect(type.id)}
             heading={type.heading}
             subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
@@ -297,18 +285,20 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     );
   };
 
-  renderPlanContainer = (plans: ExtendedTypes) => {
-    const { classes, isCreate, header, showTransfer } = this.props;
+  const renderPlanContainer = (plans: ExtendedTypes) => {
+    // Show the Transfer column if, for any plan, the api returned data
+    const shouldShowTransfer =
+      showTransfer &&
+      plans.some((plan: ExtendedType | ExtendedDatabaseType) => plan.transfer);
 
-    const shouldShowTransfer = showTransfer && plans[0].transfer;
-
-    // @ts-expect-error Database does not have
-    const shouldShowNetwork = showTransfer && plans[0].network_out;
+    // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
+    const shouldShowNetwork =
+      showTransfer && plans.some((plan: ExtendedType) => plan.network_out);
 
     return (
       <Grid container>
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
-          {plans.map(this.renderSelection)}
+          {plans.map(renderSelection)}
         </Hidden>
         <Hidden mdDown={isCreate} smDown={!isCreate}>
           <Grid item xs={12} lg={11}>
@@ -369,7 +359,6 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                     <TableCell
                       className={classes.headerCell}
                       data-qa-network-header
-                      noWrap
                       center
                     >
                       Network (In / Out)
@@ -378,7 +367,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 </TableRow>
               </TableHead>
               <TableBody role="radiogroup">
-                {plans.map(this.renderSelection)}
+                {plans.map(renderSelection)}
               </TableBody>
             </Table>
           </Grid>
@@ -387,8 +376,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     );
   };
 
-  createTabs = (): [Tab[], LinodeTypeClass[]] => {
-    const { classes, types } = this.props;
+  const createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
@@ -410,7 +398,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              {this.renderPlanContainer(dedicated)}
+              {renderPlanContainer(dedicated)}
             </>
           );
         },
@@ -428,7 +416,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 Shared CPU instances are good for medium-duty workloads and are
                 a good mix of performance, resources, and price.
               </Typography>
-              {this.renderPlanContainer(shared)}
+              {renderPlanContainer(shared)}
             </>
           );
         },
@@ -447,7 +435,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 good for memory hungry use cases like caching and in-memory
                 databases. All High Memory plans use dedicated CPU cores.
               </Typography>
-              {this.renderPlanContainer(highmem)}
+              {renderPlanContainer(highmem)}
             </>
           );
         },
@@ -457,11 +445,11 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     }
 
     if (!isEmpty(gpu)) {
-      const programInfo = this.getDisabledClass('gpu') ? (
+      const programInfo = getDisabledClass('gpu') ? (
         <>
           GPU instances are not available in the selected region. Currently
           these plans are only available in{' '}
-          {this.getRegionsWithCapability('GPU Linodes')}.
+          {getRegionsWithCapability('GPU Linodes')}.
         </>
       ) : (
         <div className={classes.gpuGuideLink}>{gpuPlanText()}</div>
@@ -476,7 +464,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              {this.renderPlanContainer(gpu)}
+              {renderPlanContainer(gpu)}
             </>
           );
         },
@@ -486,13 +474,13 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     }
 
     if (!isEmpty(metal)) {
-      const programInfo = this.getDisabledClass('metal') ? (
+      const programInfo = getDisabledClass('metal') ? (
         // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass
         // so this branch will never run.
         <Typography>
           Bare Metal instances are not available in the selected region.
           Currently these plans are only available in{' '}
-          {this.getRegionsWithCapability('Bare Metal')}.
+          {getRegionsWithCapability('Bare Metal')}.
         </Typography>
       ) : (
         <Typography className={classes.gpuGuideLink}>
@@ -511,7 +499,7 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
                 physical machine. Some services, including backups, VLANs, and
                 disk management, are not available with these plans.
               </Typography>
-              {this.renderPlanContainer(metal)}
+              {renderPlanContainer(metal)}
             </>
           );
         },
@@ -523,56 +511,40 @@ export class SelectPlanPanel extends React.Component<CombinedProps> {
     return [tabs, tabOrder];
   };
 
-  render() {
-    const {
-      classes,
-      className,
-      copy,
-      error,
-      header,
-      types,
-      currentPlanHeading,
-      selectedID,
-    } = this.props;
+  const [tabs, tabOrder] = createTabs();
 
-    const [tabs, tabOrder] = this.createTabs();
+  // Determine initial plan category tab based on current plan selection
+  // (if there is one).
+  let selectedTypeClass: LinodeTypeClass = pathOr(
+    'standard', // Use `standard` by default
+    ['class'],
+    types.find(
+      (type) => type.id === selectedID || type.heading === currentPlanHeading
+    )
+  );
 
-    // Determine initial plan category tab based on current plan selection
-    // (if there is one).
-    let selectedTypeClass: LinodeTypeClass = pathOr(
-      'standard', // Use `standard` by default
-      ['class'],
-      types.find(
-        (type) => type.id === selectedID || type.heading === currentPlanHeading
-      )
-    );
-
-    // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
-    if (selectedTypeClass === 'nanode') {
-      selectedTypeClass = 'standard';
-    }
-
-    const initialTab = tabOrder.indexOf(selectedTypeClass);
-
-    return (
-      <TabbedPanel
-        rootClass={`${classes.root} ${className} tabbedPanel`}
-        innerClass={this.props.tabbedPanelInnerClass}
-        error={error}
-        header={header || 'Linode Plan'}
-        copy={copy}
-        tabs={tabs}
-        initTab={initialTab >= 0 ? initialTab : 0}
-        data-qa-select-plan
-      />
-    );
+  // We don't have a "Nanodes" tab anymore, so use `standard` (labeled as "Shared CPU").
+  if (selectedTypeClass === 'nanode') {
+    selectedTypeClass = 'standard';
   }
-}
 
-const styled = withStyles(styles);
+  const initialTab = tabOrder.indexOf(selectedTypeClass);
+
+  return (
+    <TabbedPanel
+      rootClass={`${classes.root} ${className} tabbedPanel`}
+      innerClass={props.tabbedPanelInnerClass}
+      error={error}
+      header={header || 'Linode Plan'}
+      copy={copy}
+      tabs={tabs}
+      initTab={initialTab >= 0 ? initialTab : 0}
+      data-qa-select-plan
+    />
+  );
+};
 
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
-  styled,
   withRegions
 )(SelectPlanPanel);
