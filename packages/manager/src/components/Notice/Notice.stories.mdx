@@ -12,36 +12,56 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 - Typically used to alert the user to a new service, limited availability, or a potential consequence of the action being taken
 - Considering making the notice dismissible if it&apos;s not critical information
  
-Types of Notifications:
+Types of Notices:
 
 - Success (blue line)
 - Error/critical (red line)
 - Warning (yellow line)
 - Marketing (green line)
 
-export const Template = (args) => {
-  return (
-    <Provider store={store}>
-      <div style={{ padding: 8 }}>
-        <Notice success text="This is a success notice" />
-        <Notice error text="This is an error notice" />
-        <Notice warning text="This is a warning notice" />
-        <Notice error important text="This is an important error notice" />
-        <Notice warning important text="This is an important warning notice" />
-        <Notice success important text="This is an important success notice" />
-        <Notice
-          warning
-          text="This is a dismissible Notice"
-          dismissible
-          onClose={() => null}
-        />
-      </div>
-    </Provider>
-  )
-}
+<Canvas>
+  <Story name="Success">
+    <Notice success text="This is a success notice" />
+  </Story>
+</Canvas>
 
 <Canvas>
-  <Story name="Notices">
-    {Template.bind({})}
+  <Story name="Error">
+    <Notice error text="This is an error notice" />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Warning">
+    <Notice warning text="This is a warning notice" />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Important Success">
+    <Notice success important text="This is an important success notice" />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Important Error">
+    <Notice error important text="This is an important error notice" />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Important Warning">
+    <Notice warning important text="This is an important warning notice" />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="Dismissible">
+    <Notice
+      warning
+      text="This is a dismissible notice"
+      dismissible
+      onClose={() => null}
+    />
   </Story>
 </Canvas>

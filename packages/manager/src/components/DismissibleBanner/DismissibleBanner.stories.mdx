@@ -1,7 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from './DismissibleBanner';
-import StatusBanners from 'src/features/Help/StatusBanners';
+// import StatusBanners from 'src/features/Help/StatusBanners';
 
 <Meta title="UI Elements/Notifications/Dismissible Banners" />
 
@@ -60,7 +60,8 @@ export const StatusBannersTemplate = (args) => {
   exclude={['className']}
 />
 
-Status Banners appear on our `/support` pages and communicate information about data center connectivity and service issues. The information populating these banners is sourced from Statuspage and corresponds to incidents detailed at status.linode.com.
+<!-- The Status Banners story below can be restored once the MSW works in production builds of Storybook. --!>
+<!-- Status Banners appear on our `/support` pages and communicate information about data center connectivity and service issues. The information populating these banners is sourced from Statuspage and corresponds to incidents detailed at [status.linode.com](https://status.linode.com).
 
 <Canvas>
     <Story
@@ -68,4 +69,4 @@ Status Banners appear on our `/support` pages and communicate information about 
     >
         {StatusBannersTemplate.bind({})}
     </Story>
-</Canvas>
+</Canvas> -->
