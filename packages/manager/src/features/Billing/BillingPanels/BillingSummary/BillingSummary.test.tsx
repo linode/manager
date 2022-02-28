@@ -1,4 +1,5 @@
 import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import * as React from 'react';
 import { promoFactory } from 'src/factories';
 import {
@@ -97,5 +98,17 @@ describe('BillingSummary', () => {
       <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
     );
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
+  });
+
+  it('opens "Make a Payment" drawer when "Make a payment." is clicked', () => {
+    const { getByText, getByTestId } = renderWithTheme(
+      <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
+    );
+
+    const paymentButton = getByText('Make a payment', { exact: false });
+    userEvent.click(paymentButton);
+
+    expect(getByTestId('drawer')).toBeVisible();
+    expect(getByTestId('drawer-title').textContent).toEqual('Make a Payment');
   });
 });

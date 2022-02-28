@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-02-25] - v1.60.1
+
+### Added:
+
+- Check for regions/states in the Tax Collection Banner
+
+## [2022-02-21] - v1.60.0
+
+### Added:
+- Copy IP address tooltip in the Linode Networking tab
+- February 2022 Marketplace release
+
+### Changed:
+- Update Storybook components
+- Glish URL root from “alpha” to “dev”
+
+### Fixed:
+- Prevent previous saved support text from loading into a ticket reply
+
+## [2022-02-14] - v1.59.1
+
+### Changed:
+
+- Disable "Make a Payment" button if restricted user has read_only access
+- Default Linode image to Debian 11
+
+### Fixed:
+
+- Icon showing after IP address in Linodes landing table
+
 ## [2022-02-07] - v1.59.0
 
 ### Added:

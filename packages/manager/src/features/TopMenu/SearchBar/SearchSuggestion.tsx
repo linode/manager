@@ -59,7 +59,6 @@ class SearchSuggestion extends React.Component<CombinedProps> {
       <Tag
         key={`tag-${tag}`}
         label={tag}
-        clickable
         colorVariant={selected ? 'blue' : 'lightBlue'}
         component={'button' as 'div'}
         asSuggestion={true}

@@ -3,6 +3,7 @@ import {
   deleteStackScript,
   updateStackScript,
 } from '@linode/api-v4/lib/stackscripts';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -56,6 +57,8 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
   const [dialog, setDialogState] = React.useState<DialogState>(
     defaultDialogState
   );
+
+  const { enqueueSnackbar } = useSnackbar();
 
   React.useEffect(() => {
     setMounted(true);
@@ -144,12 +147,20 @@ export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
           return;
         }
         handleCloseDialog();
+        enqueueSnackbar(
+          `${dialog.stackScriptLabel} successfully published to the public library.`,
+          { variant: 'success' }
+        );
         props.getDataAtPage(1, currentFilter, true);
       })
       .catch((_) => {
         if (!mounted) {
           return;
         }
+        enqueueSnackbar(
+          `There was an error publishing ${dialog.stackScriptLabel} to the public library.`,
+          { variant: 'error' }
+        );
         handleCloseDialog();
       });
   };
