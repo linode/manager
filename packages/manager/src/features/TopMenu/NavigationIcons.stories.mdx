@@ -15,6 +15,7 @@ export const useStyles = makeStyles(() => ({
     alignItems: 'center',
     width: 125,
     '& svg': {
+      color: '#333',
       width: 30,
       height: 30,
     },
@@ -33,7 +34,7 @@ export const icons = {
   Account: <UserIcon />,
 }
 
-export const NavigationIcons = () => {
+export const renderIcons = (icons) => {
   const classes = useStyles();
   return (
     <Grid container>
@@ -54,5 +55,5 @@ export const NavigationIcons = () => {
 # Navigation Icons
 
 <Canvas>
-  <NavigationIcons />
+  {renderIcons(icons)}
 </Canvas>

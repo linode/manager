@@ -18,27 +18,9 @@ import Trash from 'src/assets/icons/trash.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Unsorted from 'src/assets/icons/unsorted.svg';
 import UploadPending from 'src/assets/icons/uploadPending.svg';
+import { useStyles, renderIcons } from 'src/features/TopMenu/NavigationIcons.stories.mdx';
 
 <Meta title="core/Icons/UI Icons" />
-
-export const useStyles = makeStyles(() => ({
-  item: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: 125,
-    '& svg': {
-      color: '#333',
-      width: 30,
-      height: 30,
-    },
-  },
-  label: {
-    fontSize: '0.875rem',
-    margin: 8,
-    textAlign: 'center',
-  },
-}));
 
 export const icons = {
   Copy: <FileCopy />,
@@ -60,26 +42,8 @@ export const icons = {
   UploadPending: <UploadPending />,
 }
 
-export const UIIcons = () => {
-  const classes = useStyles();
-  return (
-    <Grid container>
-      {
-        Object.entries(icons).map(([iconLabel, icon]) => {
-          return (
-            <Grid key={iconLabel} item className={classes.item}>
-              {icon}
-              <div className={classes.label}>{iconLabel}</div>
-            </Grid>
-          )
-        })
-      }
-    </Grid>
-  )
-};
-
 # UI Icons
 
 <Canvas>
-  <UIIcons />
+  {renderIcons(icons)}
 </Canvas>
