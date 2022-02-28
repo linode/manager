@@ -12,7 +12,7 @@ import { Canvas, Meta, Story } from '@storybook/addon-docs';
 - Typically used to alert the user to a new service, limited availability, or a potential consequence of the action being taken
 - Considering making the notice dismissible if it&apos;s not critical information
  
-Types of notifications:
+Types of Notifications:
 
 - Success (blue line)
 - Error/critical (red line)
@@ -22,7 +22,7 @@ Types of notifications:
 export const Template = (args) => {
   return (
     <Provider store={store}>
-      <div style={{ padding: 8, backgroundColor: '#f4f4f4' }}>
+      <div style={{ padding: 8 }}>
         <Notice success text="This is a success notice" />
         <Notice error text="This is an error notice" />
         <Notice warning text="This is a warning notice" />
