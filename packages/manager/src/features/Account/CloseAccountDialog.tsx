@@ -125,6 +125,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         aria-label="username field"
         value={inputtedUsername}
         visible
+        hideDisable
         placeholder="Username"
       />
       <Typography className={classes.dontgo}>
