@@ -19,6 +19,7 @@ import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
@@ -57,7 +58,13 @@ import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
 
-type ClassNames = 'action' | 'multipleRDNSButton' | 'multipleRDNSText';
+type ClassNames =
+  | 'action'
+  | 'multipleRDNSButton'
+  | 'multipleRDNSText'
+  | 'row'
+  | 'ipAddress'
+  | 'copy';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -79,6 +86,23 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       '&:hover': {
         color: theme.palette.primary.light,
+      },
+    },
+    row: {
+      '&:hover $copy > svg': {
+        opacity: 1,
+      },
+    },
+    ipAddress: {
+      whiteSpace: 'nowrap',
+    },
+    copy: {
+      marginLeft: 4,
+      top: 1,
+      '& svg': {
+        height: `12px`,
+        width: `12px`,
+        opacity: 0,
       },
     },
   });
@@ -368,9 +392,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { address, type, gateway, subnetMask, rdns, _ip, _range } = ipDisplay;
 
     return (
-      <TableRow key={`${address}-${type}`} data-qa-ip={address}>
-        <TableCell parentColumn="Address" data-qa-ip-address>
+      <TableRow
+        key={`${address}-${type}`}
+        className={classes.row}
+        data-qa-ip={address}
+      >
+        <TableCell
+          parentColumn="Address"
+          className={classes.ipAddress}
+          data-qa-ip-address
+        >
           {address}
+          <CopyTooltip className={classes.copy} text={address} />
         </TableCell>
         <TableCell parentColumn="Type" data-qa-ip-address>
           {type}

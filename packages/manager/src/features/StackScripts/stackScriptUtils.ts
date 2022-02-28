@@ -84,6 +84,21 @@ export const baseApps = {
   '869158': 'ClusterControl',
   '869159': 'MagicSpam',
   '869623': 'JetBackup',
+  '913277': 'BeEF',
+  '923034': 'BitNinja',
+  '912262': 'Harbor',
+  '923032': 'LiteSpeed cPanel',
+  '923029': 'OpenLiteSpeed Django',
+  '923031': 'OpenLiteSpeed NodeJS',
+  '923030': 'OpenLiteSpeed Rails',
+  '925722': 'Pritunl',
+  '912264': 'Rocket.Chat',
+  '925530': 'UTunnel VPN',
+  '923037': 'WarpSpeed',
+  '913276': 'Wazuh',
+  '923033': 'Akaunting',
+  '923036': 'Restyaboard',
+  '954759': 'VictoriaMetrics',
 };
 
 const oneClickFilter = [

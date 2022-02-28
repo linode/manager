@@ -35,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   initialIcon: {
     margin: 0,
     marginLeft: 4,
+    marginRight: 4,
   },
   noWrap: {
     whiteSpace: 'nowrap',
@@ -95,7 +96,7 @@ export const TableSortCell: React.FC<CombinedProps> = (props) => {
         {children}
         {!active && <Sort className={classes.initialIcon} />}
       </TableSortLabel>
-      {isLoading && <CircleProgress mini sort />}
+      {isLoading && <CircleProgress mini />}
     </TableCell>
   );
 };

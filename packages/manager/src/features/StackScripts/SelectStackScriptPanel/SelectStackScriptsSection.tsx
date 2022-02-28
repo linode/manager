@@ -58,7 +58,7 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
       ) : (
         <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
-            <CircleProgress noTopMargin />
+            <CircleProgress />
           </TableCell>
         </TableRow>
       )}
