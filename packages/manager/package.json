@@ -92,7 +92,7 @@
     "throttle-debounce": "^2.0.0",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
-    "url-parse": "^1.5.6",
+    "url-parse": "^1.5.8",
     "xterm": "^4.2.0",
     "yup": "^0.32.9",
     "zxcvbn": "^4.4.2"
