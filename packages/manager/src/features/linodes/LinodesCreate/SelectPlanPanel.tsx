@@ -302,7 +302,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
           {plans.map(renderSelection)}
         </Hidden>
         <Hidden mdDown={isCreate} smDown={!isCreate}>
-          <Grid item xs={12} lg={11}>
+          <Grid item xs={12}>
             <Table
               aria-label="List of Linode Plans"
               className={classes.table}
