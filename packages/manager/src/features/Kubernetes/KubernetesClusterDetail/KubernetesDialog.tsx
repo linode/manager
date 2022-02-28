@@ -21,7 +21,7 @@ interface Props {
   onDelete: () => void;
 }
 
-type CombinedProps = Props & PreferencesProps;
+export type CombinedProps = Props & PreferencesProps;
 
 const renderActions = (
   disabled: boolean,
@@ -59,7 +59,7 @@ export const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
   }, 0);
 };
 
-const KubernetesDialog: React.FC<CombinedProps> = (props) => {
+export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   const {
     clusterLabel,
     clusterPools,
