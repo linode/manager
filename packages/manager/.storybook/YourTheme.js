@@ -4,8 +4,8 @@ import Logo from '../src/assets/logo/logo.svg';
 
 const brand = {
   blue: '#3683dc',
-  grey1: '#888f91',
-  grey2: '#3a3f46',
+  lightGrey: '#888f91',
+  darkGrey: '#3a3f46',
   black: '#32363c',
   white: '#fff',
 };
@@ -21,7 +21,7 @@ export default create({
   colorSecondary: '#2575d0',
 
   // UI
-  appBg: brand.grey2,
+  appBg: brand.darkGrey,
 
   // Typography
   fontBase: '"LatoWeb", sans-serif',
@@ -30,7 +30,7 @@ export default create({
   textColor: brand.black,
 
   // Toolbar default and active colors
-  barTextColor: brand.grey1,
+  barTextColor: brand.lightGrey,
   barSelectedColor: brand.black,
   barBg: brand.white,
 });
