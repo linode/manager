@@ -18,7 +18,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import MaintenanceTableRow from './MaintenanceTableRow';
-import * as sync from 'css-animation-sync';
+import sync from 'css-animation-sync';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,

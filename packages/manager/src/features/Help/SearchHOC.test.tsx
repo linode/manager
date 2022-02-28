@@ -1,4 +1,4 @@
-import * as algoliasearch from 'algoliasearch';
+import algoliasearch from 'algoliasearch';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { COMMUNITY_BASE_URL, DOCS_BASE_URL } from 'src/constants';
