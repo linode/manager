@@ -105,7 +105,6 @@ export interface BaseSelectProps
   label: string;
   /** alias for isDisabled */
   disabled?: boolean;
-  variant?: 'creatable';
   /** retyped this */
   value?: Item | Item[] | null;
   /** making this required */
@@ -124,6 +123,8 @@ export interface BaseSelectProps
   guidance?: string | React.ReactNode;
   inputId?: any;
   required?: boolean;
+  creatable?: boolean;
+  variant?: 'creatable';
 }
 
 interface CreatableProps extends CreatableSelectProps<any, any> {}
@@ -165,7 +166,6 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       onInputChange,
       options,
       value,
-      variant,
       noOptionsMessage,
       onMenuClose,
       onBlur,
@@ -182,6 +182,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       overflowPortal,
       theme,
       required,
+      creatable,
       ...restOfProps
     } = this.props;
 
@@ -202,8 +203,13 @@ class Select extends React.PureComponent<CombinedProps, {}> {
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
     type PossibleProps = BaseSelectProps | CreatableProps;
-    const BaseSelect: React.ComponentClass<PossibleProps> =
-      variant === 'creatable' ? CreatableSelect : ReactSelect;
+    const BaseSelect: React.ComponentClass<PossibleProps> = creatable
+      ? CreatableSelect
+      : ReactSelect;
+
+    if (creatable) {
+      restOfProps.variant = 'creatable';
+    }
 
     if (overflowPortal) {
       restOfProps.menuPortalTarget = document.body;

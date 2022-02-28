@@ -39,7 +39,8 @@ export type AccountCapability =
   | 'Cloud Firewall'
   | 'Vlans'
   | 'Machine Images'
-  | 'LKE HA Control Planes';
+  | 'LKE HA Control Planes'
+  | 'Managed Databases';
 
 export interface AccountSettings {
   managed: boolean;
@@ -311,7 +312,13 @@ export type EventAction =
   | 'volume_resize'
   | 'volume_clone'
   | 'volume_migrate_scheduled'
-  | 'volume_migrate';
+  | 'volume_migrate'
+  | 'database_create'
+  | 'database_delete'
+  | 'database_update'
+  | 'database_update_failed'
+  | 'database_backup_restore'
+  | 'database_credentials_reset';
 
 export type EventStatus =
   | 'scheduled'
@@ -405,21 +412,20 @@ export interface CreditCardData {
   card_type?: CardType;
 }
 
+interface PaymentMethodMetaData {
+  id: number;
+  is_default: boolean;
+  created: string;
+}
+
+interface PaymentMethodData<T, U> extends PaymentMethodMetaData {
+  type: T;
+  data: U;
+}
+
 export type PaymentMethod =
-  | {
-      id: number;
-      type: 'credit_card' | 'google_pay';
-      is_default: boolean;
-      created: string;
-      data: CreditCardData;
-    }
-  | {
-      id: number;
-      type: 'paypal';
-      is_default: boolean;
-      created: string;
-      data: PayPalData;
-    };
+  | PaymentMethodData<'credit_card' | 'google_pay', CreditCardData>
+  | PaymentMethodData<'paypal', PayPalData>;
 
 export interface ClientToken {
   client_token: string;

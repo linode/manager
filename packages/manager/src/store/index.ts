@@ -12,26 +12,10 @@ import backups, {
   defaultState as backupsDefaultState,
   State as BackupDrawerState,
 } from 'src/store/backupDrawer';
-import buckets, {
-  defaultState as defaultBucketsState,
-  State as BucketsState,
-} from 'src/store/bucket/bucket.reducer';
 import bucketDrawer, {
   defaultState as bucketDrawerDefaultState,
   State as BucketDrawerState,
 } from 'src/store/bucketDrawer/bucketDrawer.reducer';
-import clusters, {
-  defaultState as defaultClustersState,
-  State as ClustersState,
-} from 'src/store/clusters/clusters.reducer';
-import databases, {
-  defaultState as defaultDatabasesState,
-  State as DatabasesState,
-} from 'src/store/databases/databases.reducer';
-import databaseTypes, {
-  defaultState as defaultDatabaseTypesState,
-  State as DatabaseTypesState,
-} from 'src/store/databases/types.reducer';
 import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState,
@@ -180,8 +164,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  databases: defaultDatabasesState,
-  databaseTypes: defaultDatabaseTypesState,
   domains: defaultDomainsState,
   images: defaultImagesState,
   kubernetes: defaultKubernetesState,
@@ -196,15 +178,11 @@ const __resourcesDefaultState = {
   notifications: notificationsDefaultState,
   types: defaultTypesState,
   volumes: defaultVolumesState,
-  buckets: defaultBucketsState,
-  clusters: defaultClustersState,
   vlans: defaultVLANState,
 };
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  databases: DatabasesState;
-  databaseTypes: DatabaseTypesState;
   domains: DomainsState;
   images: ImagesState;
   kubernetes: KubernetesState;
@@ -219,8 +197,6 @@ export interface ResourcesState {
   notifications: NotificationsState;
   types: TypesState;
   volumes: VolumesState;
-  buckets: BucketsState;
-  clusters: ClustersState;
   vlans: VlanState;
 }
 
@@ -277,8 +253,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  databases,
-  databaseTypes,
   domains,
   images,
   kubernetes,
@@ -293,8 +267,6 @@ const __resources = combineReducers({
   notifications,
   types,
   volumes,
-  buckets,
-  clusters,
   vlans,
 });
 

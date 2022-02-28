@@ -3,8 +3,11 @@ import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 
 const PRODUCTION = 'production';
 
-/** native to webpack build */
+// native to webpack build
 export const isProductionBuild = process.env.NODE_ENV === PRODUCTION;
+
+// allow us to explicity enable dev tools
+export const ENABLE_DEV_TOOLS = Boolean(process.env.REACT_APP_ENABLE_DEV_TOOLS);
 
 /** required for the app to function */
 export const APP_ROOT =
@@ -324,3 +327,5 @@ export const HIGH_AVAILABILITY_PRICE =
   process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
     ? undefined
     : Number(process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
+
+export const DB_ROOT_USERNAME = 'linroot';

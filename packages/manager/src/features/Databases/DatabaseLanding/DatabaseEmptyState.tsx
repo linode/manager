@@ -1,47 +1,50 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { useHistory } from 'react-router-dom';
+import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
-import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     '& svg': {
-      marginTop: theme.spacing(1.5),
       transform: 'scale(0.8)',
     },
   },
+  entityDescription: {
+    marginBottom: '1rem',
+  },
 }));
-interface Props {
-  openAddDatabaseDrawer?: () => void;
-}
 
-const FirewallEmptyState: React.FC<Props> = (props) => {
+const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
+  const history = useHistory();
 
-  const { openAddDatabaseDrawer } = props;
   return (
     <Placeholder
-      title={'Databases'}
+      title="Databases"
       className={classes.root}
       icon={DatabaseIcon}
       isEntity
       buttonProps={[
         {
-          onClick: openAddDatabaseDrawer,
-          children: 'Add a Database',
+          onClick: () => history.push('/databases/create'),
+          children: 'Create Database Cluster',
         },
       ]}
     >
       <Typography variant="subtitle1">
-        <div>Take control of your data with managed MySQL Databases.</div>
-        <Link to="https://www.linode.com/docs">
-          Get started with Databases.
+        <div className={classes.entityDescription}>
+          Fully managed and highly scalable Database Clusters. Choose your
+          Linode plan, select a database engine, and deploy in minutes.
+        </div>
+        <Link to="https://www.linode.com/docs/products/databases/managed-databases/">
+          Need help getting started? Browse database guides.
         </Link>
       </Typography>
     </Placeholder>
   );
 };
 
-export default React.memo(FirewallEmptyState);
+export default React.memo(DatabaseEmptyState);
