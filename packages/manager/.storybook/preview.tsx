@@ -44,9 +44,11 @@ export const parameters = {
   controls: { expanded: true },
   options: {
     storySort: {
-      method: 'alphabetical',
-      order: ['Guidelines', 'Components', 'UI Elements', 'Core'],
+      order: ['Intro', 'Components', 'UI Elements', 'Core'],
     },
+  },
+  previewTabs: {
+    'storybook/docs/panel': { index: -1 },
   },
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
