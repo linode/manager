@@ -65,7 +65,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
                   control={
                     <CheckBox
                       onChange={toggleTypeToConfirm}
-                      checked={!istypeToConfirm}
+                      checked={istypeToConfirm === false}
                       inputProps={{
                         'aria-label': `Disable type to confirm`,
                       }}

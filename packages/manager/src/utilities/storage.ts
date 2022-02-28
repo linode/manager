@@ -166,7 +166,7 @@ export const storage: Storage = {
   },
   typeToConfirm: {
     get: () => getStorage(TYPE_TO_CONFIRM),
-    set: (v) => setStorage(TYPE_TO_CONFIRM, 'false'),
+    set: (v) => setStorage(TYPE_TO_CONFIRM, 'true'),
   },
   supportText: {
     get: () => getStorage(SUPPORT, { title: '', description: '' }),
