@@ -12,6 +12,7 @@ export interface Props {
   confirmationText?: JSX.Element | string;
   onChange: (str: string) => void;
   label: string;
+  hideDisable?: boolean;
   hideLabel?: boolean;
   textFieldStyle?: Record<string, any>;
   typographyStyle?: Record<string, any>;
@@ -39,6 +40,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
     textFieldStyle,
     typographyStyle,
     title,
+    hideDisable,
     visible,
     ...rest
   } = props;
@@ -46,6 +48,38 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   if (visible === undefined || !!visible) {
+    const preferenceToggle = (
+      <PreferenceToggle<boolean>
+        preferenceKey="type_to_confirm"
+        preferenceOptions={[false, true]}
+        localStorageKey="typeToConfirm"
+      >
+        {({
+          preference: istypeToConfirm,
+          togglePreference: toggleTypeToConfirm,
+        }: ToggleProps<boolean>) => {
+          return (
+            <Grid container alignItems="center">
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={
+                    <CheckBox
+                      onChange={toggleTypeToConfirm}
+                      checked={!istypeToConfirm}
+                      inputProps={{
+                        'aria-label': `Disable type to confirm`,
+                      }}
+                    />
+                  }
+                  label="Disable type to confirm for all destructive actions"
+                />
+              </Grid>
+            </Grid>
+          );
+        }}
+      </PreferenceToggle>
+    );
+
     return (
       <>
         <Typography variant="h2">{title}</Typography>
@@ -57,35 +91,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
           style={textFieldStyle}
           {...rest}
         />
-        <PreferenceToggle<boolean>
-          preferenceKey="type_to_confirm"
-          preferenceOptions={[false, true]}
-          localStorageKey="typeToConfirm"
-        >
-          {({
-            preference: istypeToConfirm,
-            togglePreference: toggleTypeToConfirm,
-          }: ToggleProps<boolean>) => {
-            return (
-              <Grid container alignItems="center">
-                <Grid item xs={12}>
-                  <FormControlLabel
-                    control={
-                      <CheckBox
-                        onChange={toggleTypeToConfirm}
-                        checked={!istypeToConfirm}
-                        inputProps={{
-                          'aria-label': `Disable type to confirm`,
-                        }}
-                      />
-                    }
-                    label="Disable type to confirm for all destructive actions"
-                  />
-                </Grid>
-              </Grid>
-            );
-          }}
-        </PreferenceToggle>
+        {!hideDisable && preferenceToggle}
       </>
     );
   } else {
