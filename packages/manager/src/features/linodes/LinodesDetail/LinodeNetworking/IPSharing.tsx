@@ -73,6 +73,8 @@ interface Props {
 
 type CombinedProps = Props;
 
+type AvailableRangesMap = { [linode_id: number]: string[] };
+
 const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
@@ -87,16 +89,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     availableRanges,
   } = props;
 
-  const availableRangesMap = {};
-  availableRanges.forEach((range) => {
-    if (availableRangesMap.hasOwnProperty(range.linodes[0])) {
-      availableRangesMap[range.linodes[0]].push(
-        `${range.range}/${range.prefix}`
-      );
-    } else {
-      availableRangesMap[range.linodes[0]] = [`${range.range}/${range.prefix}`];
-    }
-  });
+  const availableRangesMap: AvailableRangesMap = formatAvailableRanges(
+    availableRanges
+  );
 
   const resp = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
@@ -108,36 +103,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
   let isLoading = resp.isLoading;
   const data = resp.data;
-
-  const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
-    const choiceLabels = {};
-    linodes.forEach((linode) => {
-      // Filter out the current Linode
-      if (linode.id === linodeID) {
-        return;
-      }
-
-      linode.ipv4.forEach((ip) => {
-        choiceLabels[ip] = linode.label;
-      });
-
-      if (flags.ipv6Sharing) {
-        availableRangesMap[linode.id] &&
-          availableRangesMap[linode.id].forEach((range: string) => {
-            choiceLabels[range] = linode.label;
-          });
-      }
-    });
-    linodeSharedIPs.forEach((range) => {
-      if (!choiceLabels.hasOwnProperty(range)) {
-        choiceLabels[range] = '';
-      }
-    });
-    return choiceLabels;
-  };
-
   const linodes = Object.values(data?.linodes ?? []);
-
   const [ipChoices, setipChoices] = React.useState({});
 
   React.useEffect(() => {
@@ -146,7 +112,13 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       return;
     }
     isLoading = true;
-    const ipChoices = getIPChoicesAndLabels(linodeID, linodes);
+    const ipChoices = getIPChoicesAndLabels(
+      linodeID,
+      linodes,
+      flags.ipv6Sharing,
+      availableRangesMap,
+      linodeSharedIPs
+    );
     setipChoices(ipChoices);
     isLoading = false;
   }, [linodeID, data, availableRanges]);
@@ -333,6 +305,63 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       </DialogContent>
     </Dialog>
   );
+};
+
+const formatAvailableRanges = (
+  availableRanges: IPRangeInformation[]
+): AvailableRangesMap => {
+  const availableRangesMap: {
+    [linode_id: number]: string[];
+  } = availableRanges.reduce((previousValue, currentValue) => {
+    if (previousValue.hasOwnProperty(currentValue.linodes[0])) {
+      previousValue[currentValue.linodes[0]].push(
+        `${currentValue.range}/${currentValue.prefix}`
+      );
+    } else {
+      previousValue[currentValue.linodes[0]] = [
+        `${currentValue.range}/${currentValue.prefix}`,
+      ];
+    }
+    return previousValue;
+  }, {});
+
+  return availableRangesMap;
+};
+
+const getIPChoicesAndLabels = (
+  linodeID: number,
+  linodes: Linode[],
+  ipv6Sharing: boolean | undefined,
+  availableRangesMap: AvailableRangesMap,
+  linodeSharedIPs: string[]
+) => {
+  const choiceLabels = linodes.reduce((previousValue, currentValue) => {
+    // Filter out the current Linode
+    if (currentValue.id === linodeID) {
+      return previousValue;
+    }
+
+    currentValue.ipv4.forEach((ip) => {
+      previousValue[ip] = currentValue.label;
+    });
+
+    if (ipv6Sharing) {
+      availableRangesMap[currentValue.id] &&
+        availableRangesMap[currentValue.id].forEach((range: string) => {
+          previousValue[range] = currentValue.label;
+        });
+    }
+
+    return previousValue;
+  }, {});
+
+  linodeSharedIPs.forEach((range) => {
+    if (!choiceLabels.hasOwnProperty(range)) {
+      choiceLabels[range] = '';
+    }
+  });
+
+  return choiceLabels;
 };
 
 interface WrapperProps {
