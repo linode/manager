@@ -372,6 +372,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                   onChange={(input) => {
                     setConfirmationText(input);
                   }}
+                  value={confirmationText}
                   hideLabel
                   visible={preferences?.type_to_confirm}
                   textFieldStyle={{ marginBottom: 16 }}

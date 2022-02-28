@@ -400,6 +400,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             onChange={(input) => {
               this.setState({ confirmationText: input });
             }}
+            value={confirmationText}
             hideLabel
             visible={preferences?.type_to_confirm}
             label="Linode Label"

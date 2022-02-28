@@ -104,6 +104,7 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
             <b>{clusterLabel}</b>) in the field below:
           </span>
         }
+        value={confirmText}
         typographyStyle={{ marginTop: '10px' }}
         data-testid={'dialog-confirm-text-input'}
         expand

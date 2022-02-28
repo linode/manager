@@ -175,7 +175,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   );
 
   const deleteBucketConfirmationMessage = bucketToRemove ? (
-    <Typography className={classes.copy}>
+    <Typography component={'span'} className={classes.copy}>
       To confirm deletion, type the name of the bucket (
       <b>{bucketToRemove.label}</b>) in the field below:
     </Typography>
@@ -295,6 +295,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         <TypeToConfirm
           confirmationText={<span>{deleteBucketConfirmationMessage}</span>}
           onChange={(input) => setConfirmBucketNameToInput(input)}
+          value={confirmBucketName}
           label="Bucket Name"
           visible={preferences?.type_to_confirm}
           expand

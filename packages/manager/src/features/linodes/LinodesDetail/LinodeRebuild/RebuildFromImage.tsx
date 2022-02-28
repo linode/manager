@@ -220,6 +220,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                   onChange={(input) => {
                     setConfirmationText(input);
                   }}
+                  value={confirmationText}
                   hideLabel
                   visible={preferences?.type_to_confirm}
                   label="Linode Label"
