@@ -1,4 +1,4 @@
-import * as copy from 'copy-to-clipboard';
+import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';

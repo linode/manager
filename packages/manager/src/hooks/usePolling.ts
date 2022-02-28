@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
-import usePageVisibility from 'src/hooks/usePageVisibility';
+import { usePageVisibility } from 'react-page-visibility';
 
 export const usePolling = (
+  // eslint-disable-next-line @typescript-eslint/ban-types
   requests: Function[],
   requestInterval: number = 10000
 ) => {

@@ -10,6 +10,7 @@ interface TaxBanner {
 interface TaxCollectionBanner {
   date: string;
   action?: boolean;
+  regions?: string[];
 }
 
 type OneClickApp = Record<string, string>;
