@@ -79,7 +79,7 @@ const StackScriptsSection: React.FC<Props> = (props) => {
       ) : (
         <TableRow>
           <TableCell colSpan={5} className={classes.loadingWrapper}>
-            <CircleProgress noTopMargin />
+            <CircleProgress />
           </TableCell>
         </TableRow>
       )}

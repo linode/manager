@@ -7,8 +7,8 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { readableBytes } from 'src/utilities/unitConversions';
 import { useAccountTransfer } from 'src/queries/accountTransfer';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -16,10 +16,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   poolUsageProgress: {
     marginBottom: theme.spacing(1) / 2,
-  },
-  overLimit: {
-    color: theme.palette.status.warningDark,
-    fontFamily: theme.font.bold,
   },
   legendItem: {
     marginTop: 10,

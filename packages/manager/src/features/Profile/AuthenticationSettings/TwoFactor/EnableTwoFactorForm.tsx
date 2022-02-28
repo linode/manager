@@ -80,7 +80,7 @@ export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
     <React.Fragment>
       {generalError && <Notice error text={generalError} />}
       {loading ? (
-        <CircleProgress noTopMargin />
+        <CircleProgress />
       ) : (
         <QRCodeForm
           secret={secret}
