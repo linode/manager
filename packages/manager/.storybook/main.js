@@ -6,10 +6,7 @@ const componentsPath = '../src/components/**/*.stories.@(js|ts|jsx|tsx|mdx)';
 const featuresPath = '../src/features/**/*.stories.@(js|ts|jsx|tsx|mdx)';
 
 module.exports = {
-  stories: [
-    componentsPath,
-    featuresPath,
-  ],
+  stories: [componentsPath, featuresPath],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-knobs',
