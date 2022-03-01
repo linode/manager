@@ -79,7 +79,7 @@ const breakpoints = createBreakpoints({});
 const textColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
-  tableHeader: '#888F91',
+  tableHeader: '#888f91',
   tableStatic: '#606469',
   textAccessTable: '#606469',
 };

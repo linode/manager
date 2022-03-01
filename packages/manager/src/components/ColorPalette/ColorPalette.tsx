@@ -1,9 +1,9 @@
+// eslint-disable-next-line no-restricted-imports
+import { useTheme } from '@material-ui/core';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-// eslint-disable-next-line no-restricted-imports
-import { useTheme } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -13,30 +13,28 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   swatchWrapper: {
     display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
-    justifyContent: 'center',
-    width: '15%',
+    marginBottom: theme.spacing(),
   },
   swatch: {
-    content: '',
-    height: 64,
-    width: 64,
-    margin: theme.spacing(2),
+    borderRadius: 3,
+    height: theme.spacing(4),
+    width: theme.spacing(4),
+    margin: '0px 16px',
   },
-  label: {
-    color: '#606469',
-    textAlign: 'center',
+  alias: {
+    color: '#32363c',
+    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    fontSize: '0.875rem',
+  },
+  color: {
+    color: '#888f91',
+    fontFamily: '"UbuntuMono", monospace, sans-serif',
+    fontSize: '0.875rem',
   },
 }));
 
-interface Props {
-  displayBackgrounds?: boolean;
-}
-
-export type CombinedProps = Props;
-
-export const ColorPalette: React.FC<CombinedProps> = (props) => {
+export const ColorPalette: React.FC<{}> = () => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -157,15 +155,22 @@ export const ColorPalette: React.FC<CombinedProps> = (props) => {
 
   const createSwatch = (idx: number, color: string, alias: string) => {
     return (
-      <Grid item className={classes.swatchWrapper} key={idx}>
+      <Grid
+        item
+        className={classes.swatchWrapper}
+        key={idx}
+        xs={12}
+        sm={6}
+        md={4}
+      >
         <div
           className={classes.swatch}
           style={{ backgroundColor: color }}
         ></div>
-        <Typography className={classes.label}>
-          {color}
+        <Typography variant="body1">
+          <span className={classes.alias}>{alias}</span>
           <br />
-          {alias}
+          <span className={classes.color}>{color}</span>
         </Typography>
       </Grid>
     );
