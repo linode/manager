@@ -3,4 +3,15 @@ import StatusIcon from './StatusIcon';
 
 <Meta title="UI Elements/Status Icons" component={StatusIcon} />
 
+export const StatusIconTemplate = (args) => (
+    <StatusIcon {...args} />
+)
+
 # Status Icons
+<Canvas>
+  <Story name="Status Icons">
+    {StatusIconTemplate.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Status Icons" />
