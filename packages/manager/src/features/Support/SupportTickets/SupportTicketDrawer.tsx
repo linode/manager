@@ -553,7 +553,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
                   />
                   {!areEntitiesLoading && entityOptions.length === 0 ? (
                     <FormHelperText>
-                      You don&apos;t have any ${entityIdToNameMap[entityType]}s
+                      You don&apos;t have any {entityIdToNameMap[entityType]}s
                       on your account.
                     </FormHelperText>
                   ) : null}

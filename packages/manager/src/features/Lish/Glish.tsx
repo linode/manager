@@ -1,5 +1,5 @@
-import classNames from 'classnames';
 import { Linode } from '@linode/api-v4/lib/linodes';
+import classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
