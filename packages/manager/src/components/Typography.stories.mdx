@@ -4,12 +4,15 @@ import Typography from 'src/components/core/Typography';
 
 <Meta title="Core/Typography/Text" component={Typography} />
 
+export const TypographyTemplate = (args) => (
+  <Typography {...args}/>
+);
+
 # Typography
 
 ## Headings
 
 ### Primary heading (h1)
-Utilized for
 - Empty state entity landing pages.
 - Billing and payment paper.
 - Backup auto enrollment paper.
@@ -23,7 +26,6 @@ Utilized for
 </Canvas>
 
 ### Secondary heading (h2)
-Utilized for
 - Page-level headings and high-level typographical components, such as editable text and breadcrumbs.
 - Section-level headings, such as drawers, some table headers and panel sections.
 
@@ -36,7 +38,6 @@ Utilized for
 </Canvas>
 
 ### Tertiary headings (h3)
-Utilized for
 - Sub-section headings.
 - Titles of paper components.
 
@@ -87,3 +88,46 @@ Utilized for
     </Typography>
   </Story>
 </Canvas>
+
+## Component API
+<Canvas>
+  <Story
+    name="Component API"
+    args={{
+      children: 'Hello World',
+      variant: 'body1',
+    }}
+    argTypes={{
+      children: {
+        description: 'A string that will be rendered inside the HTML element',
+      },
+      variant: {
+        description: 'A string that denotes the HTML base element to use',
+        control: {
+          type: 'radio',
+          labels: [
+            'h1',
+            'h2',
+            'h3',
+            'body1',
+            'caption',
+            'button',
+            'undefined',
+          ],
+          options: [
+            'h1',
+            'h2',
+            'h3',
+            'body1',
+            'caption',
+            'button',
+            undefined,
+          ]
+        }
+      }
+    }}>
+    {TypographyTemplate.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Component API"/>
