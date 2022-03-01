@@ -22,6 +22,9 @@ export const CurrencyTemplate = (args) => (
         control: {
           min: 0
         }
+      },
+      wrapInParentheses: {
+        description: 'A boolean used to wrap the currency in parenthesis. This is normally done to indicate a negative amount or balance.'
       }
     }}>
       {CurrencyTemplate.bind({})}

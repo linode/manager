@@ -15,7 +15,7 @@ export const DateTimeDisplayTemplate = (args) => (
   <Story
   name="Date Time Display"
   args={{
-    value: Date.now(),
+    value: DateTime.now().minus({day: 3}).toISO(),
     displayTime: true,
   }}
   argTypes={{
