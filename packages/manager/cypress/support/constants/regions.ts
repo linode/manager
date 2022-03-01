@@ -30,12 +30,3 @@ export const regions = Object.keys(regionsMap);
 export const regionsFriendly = Object.keys(regionsMap).map(
   (regionKey: string) => regionsMap[regionKey]
 );
-
-/**
- * Array of truncated human-readable region names, appropriate for type-ahead selection fields.
- */
-export const regionsTypeahead = Object.keys(regionsMap).map(
-  (regionKey: string) => {
-    return regionsMap[regionKey].slice(0, -5);
-  }
-);

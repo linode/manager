@@ -13,6 +13,7 @@ import {
 } from '../api/objectStorage';
 import { deleteAllTestStackscripts } from '../api/stackscripts';
 import { deleteAllTestVolumes } from '../api/volumes';
+import { deleteAllTestTags } from '../api/tags';
 
 const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
   cy.log(`Attempts remaining: ${attemptsRemaining}`);
@@ -88,4 +89,5 @@ export const deleteAllTestData = () => {
   deleteAllTestFirewalls();
   deleteAllTestStackscripts();
   deleteAllTestDomains();
+  deleteAllTestTags();
 };

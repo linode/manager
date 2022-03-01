@@ -96,7 +96,7 @@ export const randomString = (
     ...(stringOptions.symbols ? [symbols] : []),
     ...(stringOptions.spaces ? [spaces] : []),
   ]
-    .join()
+    .join('')
     .split('');
 
   let output = '';
