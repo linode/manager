@@ -6,59 +6,57 @@ import DismissibleBanner from './DismissibleBanner';
 <Meta title="UI Elements/Notifications/Dismissible Banners" />
 
 # Dismissible Banners
+
 ### Usage
+
 Banners appear between the top nav and page content and are a visual interruption of the normal page layout. Their use must be approved by all project stakeholders.
 
 ### Design
+
 - Banners are dismissible using an &apos;X&apos; icon.
 - Consider adding a link to a doc or a guide for users to learn more.
 - Banners should be considered as one part of a larger communications plan; messaging should be developed with the marketing team.
 
 ### Variants
-- Marketing: Informs users of a new feature or improved service. 
+
+- Marketing: Informs users of a new feature or improved service.
 - Warning: Informs users of an impending change that will have an impact on their service(s).
-- Call to action: Primary Button or text link allows a user to take action directly from the banner. 
+- Call to action: Primary Button or text link allows a user to take action directly from the banner.
 
 export const DismissibleBannerTemplate = (args) => {
-    const { productInformationIndicator } = args;
-    return (
+  const { productInformationIndicator } = args;
+  return (
     <DismissibleBanner
-        productInformationIndicator={productInformationIndicator}
+      productInformationIndicator={productInformationIndicator}
     >
-        <Typography>
-          This is an example of a dismissible banner.
-        </Typography>
-      </DismissibleBanner>
-    )
-}
+      <Typography>This is an example of a dismissible banner.</Typography>
+    </DismissibleBanner>
+  );
+};
 
 export const StatusBannersTemplate = (args) => {
-    const { message, title, status, impact, href } = args;
-    return (
-        <StatusBanners {...args} />
-    )
-}
+  const { message, title, status, impact, href } = args;
+  return <StatusBanners {...args} />;
+};
 
 <Canvas>
-    <Story 
-        name="Dismissible Banner"
-        args={{
-            productInformationIndicator: true,
-        }}
-        argTypes={{
-            productInformationIndicator: {
-                description: 'Indicates whether the banner communicates information about a product, typically a new feature or improved service. If true, the left border is set to green.',
-            },
-        }}
-    >
-        {DismissibleBannerTemplate.bind({})}
-    </Story>
+  <Story
+    name="Dismissible Banners"
+    args={{
+      productInformationIndicator: true,
+    }}
+    argTypes={{
+      productInformationIndicator: {
+        description:
+          'Indicates whether the banner communicates information about a product, typically a new feature or improved service. If true, the left border is set to green.',
+      },
+    }}
+  >
+    {DismissibleBannerTemplate.bind({})}
+  </Story>
 </Canvas>
 
-<ArgsTable
-  story="Dismissible Banner"
-  exclude={['className']}
-/>
+<ArgsTable story="Dismissible Banners" exclude={['className']} />
 
 <!-- The Status Banners story below can be restored once the MSW works in production builds of Storybook. --!>
 <!-- Status Banners appear on our `/support` pages and communicate information about data center connectivity and service issues. The information populating these banners is sourced from Statuspage and corresponds to incidents detailed at [status.linode.com](https://status.linode.com).

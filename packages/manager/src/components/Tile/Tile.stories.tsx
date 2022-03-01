@@ -21,5 +21,5 @@ export const Internal = () => (
 );
 
 Internal.story = {
-  name: 'internal',
+  name: 'Tile',
 };
