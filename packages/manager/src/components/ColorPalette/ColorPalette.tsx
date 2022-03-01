@@ -5,6 +5,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
+interface Color {
+  color: string;
+  alias: string;
+}
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& h2': {
@@ -19,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   swatch: {
     border: '1px solid #888f91',
     borderRadius: 3,
-    height: theme.spacing(4),
-    width: theme.spacing(4),
+    height: theme.spacing(4.5),
+    width: theme.spacing(4.5),
     margin: '0px 16px',
   },
   alias: {
@@ -154,12 +159,12 @@ export const ColorPalette: React.FC<{}> = () => {
     },
   ];
 
-  const createSwatch = (idx: number, color: string, alias: string) => {
+  const createSwatch = (color: string, alias: string) => {
     return (
       <Grid
         item
         className={classes.swatchWrapper}
-        key={idx}
+        key={alias}
         xs={12}
         sm={6}
         md={4}
@@ -177,71 +182,24 @@ export const ColorPalette: React.FC<{}> = () => {
     );
   };
 
-  const renderColors = () => {
+  const renderColor = (heading: string, colors: Color[]) => {
     return (
       <>
         <Grid item xs={12}>
-          <Typography variant="h2">Primary Colors</Typography>
+          <Typography variant="h2">{heading}</Typography>
         </Grid>
-        {primaryColors.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-
-        <Grid item xs={12}>
-          <Typography variant="h2">Etc.</Typography>
-        </Grid>
-        {etc.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-      </>
-    );
-  };
-
-  const renderBackgrounds = () => {
-    return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="h2">Background Colors</Typography>
-        </Grid>
-        {bgColors.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-      </>
-    );
-  };
-
-  const renderTextColors = () => {
-    return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="h2">Typography Colors</Typography>
-        </Grid>
-        {textColors.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
-      </>
-    );
-  };
-
-  const renderBorderColors = () => {
-    return (
-      <>
-        <Grid item xs={12}>
-          <Typography variant="h2">Border Colors</Typography>
-        </Grid>
-        {borderColors.map((color, idx: number) =>
-          createSwatch(idx, color.color, color.alias)
-        )}
+        {colors.map((color) => createSwatch(color.color, color.alias))}
       </>
     );
   };
 
   return (
     <Grid container className={classes.root}>
-      {renderColors()}
-      {renderBackgrounds()}
-      {renderTextColors()}
-      {renderBorderColors()}
+      {renderColor('Primary Colors', primaryColors)}
+      {renderColor('Etc.', etc)}
+      {renderColor('Background Colors', bgColors)}
+      {renderColor('Typography Colors', textColors)}
+      {renderColor('Border Colors', borderColors)}
     </Grid>
   );
 };
