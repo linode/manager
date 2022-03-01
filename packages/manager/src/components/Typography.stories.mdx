@@ -8,7 +8,6 @@ import Typography from 'src/components/core/Typography';
 
 ## Headings
 
-
 ### Primary heading (h1)
 Utilized for
 - Empty state entity landing pages.
@@ -52,28 +51,39 @@ Utilized for
 ## Text
 
 <Canvas>
-  <Story name="Text">
+  <Story name="base">
+    <Typography gutterBottom>
+      Base typography component example, no variant applied. Utilized wherever
+      typography component is declared without a specific variant.
+    </Typography>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="body1">
     <Typography variant="body1" gutterBottom>
       Body1. Implemented using the 'body1' variant. Styles are identical for
       both body variants since there are 2 defined by MUI but Manager only has 1
       body style. Utilized for general body text, messaging, descriptions, and
       helper info.
     </Typography>
-      <Divider />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="caption">
     <Typography variant="caption" gutterBottom>
       Caption. Implemented using the 'caption' variant. Utilized for helper info
       on some form elements (ex. password strength indicator) and secondary
       descriptions (ex. search result items).
     </Typography>
-      <Divider />
-    <Typography gutterBottom>
-      Base typography component example, no variant applied. Utilized wherever
-      typography component is declared without a specific variant.
-    </Typography>
-      <Divider />
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="button">
     <Typography variant="button" gutterBottom>
       Button variant
     </Typography>
-      <Divider />
   </Story>
 </Canvas>
