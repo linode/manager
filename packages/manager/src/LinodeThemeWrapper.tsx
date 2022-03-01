@@ -18,6 +18,7 @@ interface Props {
    * this is mostly so the unit tests work
    */
   theme?: ThemeChoice;
+  shouldGetPreferences?: boolean;
 }
 
 const themes = { light, dark };
@@ -40,6 +41,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
 };
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
+  const { children, shouldGetPreferences = true } = props;
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
@@ -48,24 +50,24 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
   };
 
   React.useEffect(() => {
-    /** request the user preferences on app load */
-    props
-      .getUserPreferences()
-      .then((response) => {
-        // Without the timeout a race condition sometimes runs the theme
-        // highlight checker before the stylesheets have fully loaded.
-        window.setTimeout(
-          () => setActiveHighlightTheme(response?.theme ?? 'light'),
-          1000
+    if (shouldGetPreferences) {
+      /** request the user preferences on app load */
+      props
+        .getUserPreferences()
+        .then((response) => {
+          // Without the timeout a race condition sometimes runs the theme
+          // highlight checker before the stylesheets have fully loaded.
+          window.setTimeout(
+            () => setActiveHighlightTheme(response?.theme ?? 'light'),
+            1000
+          );
+        })
+        .catch(
+          () =>
+            /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
         );
-      })
-      .catch(
-        () =>
-          /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
-      );
+    }
   }, []);
-
-  const { children } = props;
 
   return (
     <PreferenceToggle<'light' | 'dark'>
