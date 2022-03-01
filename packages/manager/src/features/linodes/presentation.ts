@@ -23,15 +23,6 @@ export const typeLabelDetails = (
   return `${cpus} CPU, ${diskG} GB Storage, ${memG} GB RAM`;
 };
 
-export const networkAndTransferDetails = (
-  transfer: number,
-  networkOut: number
-) => {
-  const transferTb = transfer / 1000;
-  const networkOutTb = networkOut / 1000;
-  return `Transfer ${transferTb} TB, Network In / Out 40 Gbps / ${networkOutTb} Gbps`;
-};
-
 export const displayType = (
   linodeTypeId: null | string,
   types: Pick<LinodeType, 'id' | 'label'>[]

@@ -30,7 +30,7 @@ import { gpuPlanText } from './utilities';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
-  subHeadings: [string, string, string];
+  subHeadings: string[];
 }
 
 type ClassNames =
@@ -151,8 +151,8 @@ export class SelectPlanPanel extends React.Component<
       updatePlanCount,
     } = this.props;
 
-    // We don't want network information for LKE so we remove the last element.
-    const subHeadings = type.subHeadings.slice(0, -1);
+    // We don't want network information for LKE so we remove the last two elements.
+    const subHeadings = type.subHeadings.slice(0, -2);
 
     const renderVariant = () => (
       <Grid item xs={12}>

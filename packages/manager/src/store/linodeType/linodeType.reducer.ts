@@ -6,15 +6,12 @@ import {
   getLinodeTypesActions,
   getLinodeTypeActions,
 } from './linodeType.actions';
-import {
-  networkAndTransferDetails,
-  typeLabelDetails,
-} from 'src/features/linodes/presentation';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
-  subHeadings: [string, string, string];
+  subHeadings: string[];
   isDeprecated: boolean;
   isShadowPlan?: boolean;
 }
@@ -108,7 +105,8 @@ export const extendType = (type: LinodeType): ExtendedType => {
     subHeadings: [
       `$${monthly}/mo ($${hourly}/hr)`,
       typeLabelDetails(memory, disk, vcpus),
-      networkAndTransferDetails(transfer, network_out),
+      `Transfer ${transfer / 1000} TB`,
+      `Network In / Out 40 Gbps / ${network_out / 1000} Gbps`,
     ],
     isDeprecated: type.successor !== null,
   };
