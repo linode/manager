@@ -10,6 +10,10 @@ Add a new color to the palette, especially another tint of gray or blue, only af
 - Colors used in light mode are located in `themeFactory.ts`
 - Colors used in dark mode are located in `themes.ts`
 
+If a color does not exist in the current palette and is only used once, consider applying the color conditionally:
+
+`theme.name === 'lightTheme' ? '#fff' : '#000'`
+
 <Canvas>
   <Story name="Color Palette">
     <ColorPalette />

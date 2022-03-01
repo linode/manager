@@ -23,13 +23,13 @@ export const decorators = [
       <ThemeProvider theme={options[_key]}>
         <CssBaseline />
         {/* Keep this in case we want to change the background color based on the mode */}
-        <div
+        {/* <div
           style={{
             backgroundColor: options[_key]().bg.app,
           }}
-        >
-          <Story />
-        </div>
+        > */}
+        <Story />
+        {/* </div> */}
       </ThemeProvider>
     );
   },

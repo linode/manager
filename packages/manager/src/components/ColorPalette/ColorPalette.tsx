@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   swatch: {
+    border: '1px solid #888f91',
     borderRadius: 3,
     height: theme.spacing(4),
     width: theme.spacing(4),
