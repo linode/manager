@@ -106,7 +106,7 @@ export const extendType = (type: LinodeType): ExtendedType => {
       `$${monthly}/mo ($${hourly}/hr)`,
       typeLabelDetails(memory, disk, vcpus),
       `Transfer ${transfer / 1000} TB`,
-      `Network In / Out 40 Gbps / ${network_out / 1000} Gbps`,
+      `40 Gbps In / ${network_out / 1000} Gbps Out`,
     ],
     isDeprecated: type.successor !== null,
   };
