@@ -96,7 +96,7 @@ export const TableSortCell: React.FC<CombinedProps> = (props) => {
         {children}
         {!active && <Sort className={classes.initialIcon} />}
       </TableSortLabel>
-      {isLoading && <CircleProgress mini sort />}
+      {isLoading && <CircleProgress mini />}
     </TableCell>
   );
 };

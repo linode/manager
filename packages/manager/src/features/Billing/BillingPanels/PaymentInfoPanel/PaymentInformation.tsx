@@ -164,6 +164,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
           </Grid>
           <Grid item>
             <Button
+              data-testid="payment-info-add-payment-method"
               className={classes.edit}
               onClick={() => replace(drawerLink)}
             >
