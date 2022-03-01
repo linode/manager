@@ -255,9 +255,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         actions={actions}
         error={error}
       >
-        <Typography>
-          Deleting a bucket is permanent and can&apos;t be undone.
-        </Typography>
+        <Notice warning>
+          <Typography style={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Deleting a bucket is permanent and
+            can&apos;t be undone.
+          </Typography>
+        </Notice>
         <Typography className={classes.copy}>
           A bucket must be empty before deleting it. Please{' '}
           <a

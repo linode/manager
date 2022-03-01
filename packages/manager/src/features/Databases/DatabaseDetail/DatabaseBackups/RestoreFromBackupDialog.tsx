@@ -7,6 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
+import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import withPreferences, {
@@ -90,10 +91,12 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
           }
         />
       ) : null}
-      <Notice
-        warning
-        text="Restoring from a backup will erase all existing data on this cluster."
-      />
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> Restoring from a backup will erase all
+          existing data on this cluster.
+        </Typography>
+      </Notice>
       <TypeToConfirm
         confirmationText={
           <span>

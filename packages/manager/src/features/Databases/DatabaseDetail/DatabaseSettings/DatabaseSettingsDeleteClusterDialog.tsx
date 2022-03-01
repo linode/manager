@@ -103,7 +103,7 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<CombinedProps> = (
     >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
-          <strong>Warning</strong>: Deleting your entire database will delete
+          <strong>Warning:</strong> Deleting your entire database will delete
           any backups and nodes associated with database {databaseLabel}, which
           may result in permanent data loss. This action cannot be undone.
         </Typography>

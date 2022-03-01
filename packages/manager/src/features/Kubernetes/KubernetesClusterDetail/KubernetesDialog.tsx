@@ -84,18 +84,20 @@ export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
       actions={() => renderActions(disabled, loading, onClose, onDelete)}
     >
       {error && <Notice error text={error} />}
-      <Typography>
-        This cluster contains {` `}
-        <strong>
-          {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
-        </strong>
-        with a total of {` `}
-        <strong>
-          {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
-        </strong>
-        that will be deleted along with the cluster. Deleting a cluster is
-        permanent and can&apos;t be undone.
-      </Typography>
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> This cluster contains {` `}
+          <strong>
+            {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
+          </strong>
+          with a total of {` `}
+          <strong>
+            {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
+          </strong>
+          that will be deleted along with the cluster. Deleting a cluster is
+          permanent and can&apos;t be undone.
+        </Typography>
+      </Notice>
       <TypeToConfirm
         label="Cluster Name"
         confirmationText={

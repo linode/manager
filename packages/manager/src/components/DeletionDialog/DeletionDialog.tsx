@@ -86,9 +86,12 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
       {...rest}
     >
       {error && <Notice error text={error} />}
-      <Typography>
-        Deleting this {entity} is permanent and can&apos;t be undone.
-      </Typography>
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> Deleting this {entity} is permanent and
+          can&apos;t be undone.
+        </Typography>
+      </Notice>
       <TypeToConfirm
         onChange={(input) => {
           setConfirmationText(input);
