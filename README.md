@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://www.linode.com/media/images/logos/diagonal/light/linode-logo_diagonal_light_medium.png" width="200" />
+  <img src="https://user-images.githubusercontent.com/32860776/156064400-4eb7e3ef-aa93-4b75-9962-07f6090de2ed.png" width="200" />
   <br />
   Linode Cloud Manager
 </h1>
