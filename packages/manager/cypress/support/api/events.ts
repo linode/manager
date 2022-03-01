@@ -31,3 +31,24 @@ export const stubLinodeEvent = (linodeData = undefined) => {
   );
   cy.wait('@event');
 };
+
+export const waitForEvent = (eventFilter, attempts = 10) => {
+  cy.intercept('GET', '*/account/events*').as('event');
+  let attempt = 0;
+  const wait = () => {
+    attempt++;
+    cy.wait('@event').then((xhr) => {
+      const data = xhr.response?.body.data;
+      if (Array.isArray(data) && data.some(eventFilter)) {
+        return;
+      }
+      if (attempt < attempts) {
+        wait();
+        return;
+      }
+      throw new Error(`Failed to wait for event after ${attempts} attempt(s)`);
+    });
+  };
+
+  wait();
+};
