@@ -18,7 +18,7 @@ interface Props {
    * this is mostly so the unit tests work
    */
   theme?: ThemeChoice;
-  fromPreferences?: boolean;
+  shouldGetPreferences?: boolean;
 }
 
 const themes = { light, dark };
@@ -41,7 +41,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
 };
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
-  const { children, fromPreferences = true } = props;
+  const { children, shouldGetPreferences = true } = props;
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
@@ -50,7 +50,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
   };
 
   React.useEffect(() => {
-    if (fromPreferences) {
+    if (shouldGetPreferences) {
       /** request the user preferences on app load */
       props
         .getUserPreferences()
