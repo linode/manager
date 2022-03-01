@@ -7,7 +7,6 @@ const featuresPath = '../src/features/**/*.stories.@(js|ts|jsx|tsx|mdx)';
 
 module.exports = {
   stories: [
-    '../src/components/intro.stories.mdx',
     componentsPath,
     featuresPath,
   ],
