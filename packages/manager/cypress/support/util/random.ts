@@ -2,6 +2,8 @@
  * @file Utilities related to random string and number generation.
  */
 
+import { entityPrefix } from 'support/constants/cypress';
+
 /**
  * Describes options for generating a random string.
  */
@@ -105,4 +107,28 @@ export const randomString = (
   }
 
   return output;
+};
+
+/**
+ * Creates a random label that has a test entity prefix.
+ *
+ * @example
+ * // Assumes that test entity prefix is `cy-test-`.
+ * randomLabel(); // Example output: `cy-test-prcxfnmafe`
+ * randomLabel(5); // Example output: `cy-test-bkwpo`
+ *
+ * @param length - Length of random label, not including length of test entity prefix.
+ *
+ * @return Random test label.
+ */
+export const randomLabel = (length: number = 10): string => {
+  const randomStringOptions = {
+    lowercase: true,
+    uppercase: false,
+    numbers: false,
+    symbols: false,
+    spaces: false,
+  };
+
+  return `${entityPrefix}${randomString(length, randomStringOptions)}`;
 };
