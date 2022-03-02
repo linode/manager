@@ -364,7 +364,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                       noWrap
                       center
                     >
-                      Network (In/Out)
+                      Network In / Out
                     </TableCell>
                   ) : null}
                 </TableRow>
