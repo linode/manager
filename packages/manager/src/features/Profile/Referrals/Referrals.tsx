@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     '& label': {
-      color: theme.cmrTextColors.headlineStatic,
+      color: theme.textColors.headlineStatic,
     },
   },
   resultsWrapper: {
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 180,
   },
   referrals: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
   },
   earned: {
     color: theme.color.green,
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   limitNotice: {
     marginLeft: theme.spacing(),
     '& p': {
-      color: `${theme.cmrTextColors.tableStatic} !important`,
+      color: `${theme.textColors.tableStatic} !important`,
       fontSize: '0.875rem',
     },
   },
@@ -69,14 +69,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     '& svg': {
-      color: theme.cmrBGColors.bgReferralsImage,
+      color: theme.name === 'lightTheme' ? '#ededf4' : '#83868c',
     },
     [theme.breakpoints.down('xs')]: {
       marginBottom: theme.spacing(2),
     },
   },
   imageCopy: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
     textAlign: 'center',
     marginTop: theme.spacing(2),

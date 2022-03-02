@@ -10,7 +10,7 @@ import TableRow from 'src/components/TableRow';
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
     },
   },
   iconWrapper: {

@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
   },
   highlight: {
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue1,
   },
   error: {
     '& p': { color: theme.color.red },
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '8px 0px',
   },
   dragIcon: {
-    color: theme.cmrIconColors.iGrey,
+    color: theme.color.grey8,
     marginRight: theme.spacing(1.5),
     position: 'relative',
     top: 2,
@@ -87,10 +87,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   dragging: {
     display: 'table',
-    border: `solid 0.5px ${theme.cmrIconColors.iGrey}`,
+    border: `solid 0.5px ${theme.color.grey8}`,
     boxShadow: '0 1px 1.5px 0 rgba(0, 0, 0, 0.15)',
     '& svg': {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
     },
   },
   footer: {

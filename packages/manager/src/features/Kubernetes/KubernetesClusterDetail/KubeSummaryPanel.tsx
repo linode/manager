@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   kubeconfigFileText: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     marginRight: theme.spacing(1),
     whiteSpace: 'nowrap',
   },

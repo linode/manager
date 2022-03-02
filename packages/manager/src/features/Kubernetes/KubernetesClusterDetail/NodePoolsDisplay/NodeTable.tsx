@@ -26,8 +26,8 @@ import NodeActionMenu from './NodeActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
-    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
   },
   labelCell: {
     ...theme.applyTableHeaderStyles,
