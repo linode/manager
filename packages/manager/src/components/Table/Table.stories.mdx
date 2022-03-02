@@ -124,7 +124,7 @@ export const PaginatedExample = () => {
                           mostRecentBackup={linode.backups.last_successful}
                           tags={linode.tags}
                           openTagDrawer={() => null}
-                          type={linode.type}
+                          type={{ label: 'Linode 2 GB' }}
                           vcpus={linode.specs.vcpus}
                           openDialog={() => null}
                           openPowerActionDialog={() => null}
