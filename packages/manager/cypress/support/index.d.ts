@@ -10,6 +10,13 @@ declare namespace Cypress {
     ): Chainable<>;
 
     /**
+     *
+     *
+     * @example cy.defer(new Promise('value')).then((val) => {...})
+     */
+    defer(promise: Promise<any>): Chainable<>;
+
+    /**
      * Custom command to select DOM element by data-cy attribute.
      * @example cy.dataCy('greeting')
      */

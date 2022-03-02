@@ -1,5 +1,6 @@
 import { NetworkUtilization } from '@linode/api-v4/lib/account';
 import {
+  CreateLinodeRequest,
   Linode,
   LinodeAlerts,
   LinodeBackups,
@@ -147,3 +148,14 @@ export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   tags: [],
   backups: linodeBackupsFactory.build(),
 });
+
+export const createLinodeRequestFactory = Factory.Sync.makeFactory<CreateLinodeRequest>(
+  {
+    label: Factory.each((i) => `linode-${i}`),
+    root_pass: 'linode-root-password',
+    image: 'linode/debian10',
+    type: 'g6-standard-1',
+    region: 'us-southeast',
+    booted: true,
+  }
+);

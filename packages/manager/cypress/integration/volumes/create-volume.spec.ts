@@ -1,16 +1,16 @@
-import { createLinode } from '../../support/api/linodes';
-import { makeTagLabel } from '../../support/api/tags';
-import { makeTestLabel } from '../../support/api/common';
-
-import { randomNumber, randomItem } from '../../support/util/random';
-import { regions, regionsMap } from '../../support/constants/regions';
+import { createLinode, Linode } from '@linode/api-v4/lib/linodes';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { authenticate } from 'support/api/authentication';
+import { regions, regionsMap } from 'support/constants/regions';
+import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
 import {
-  containsClick,
-  fbtVisible,
-  fbtClick,
-  getClick,
-} from '../../support/helpers';
+  randomNumber,
+  randomItem,
+  randomString,
+  randomLabel,
+} from 'support/util/random';
 
+authenticate();
 describe('volumes', () => {
   /*
    * - Creates a volume that is not attached to a Linode.
@@ -20,9 +20,9 @@ describe('volumes', () => {
    */
   it('creates an unattached volume', () => {
     const regionId = randomItem(regions);
-    const tags = [makeTagLabel(), makeTagLabel(), makeTagLabel()];
+    const tags = [randomLabel(5), randomLabel(5), randomLabel(5)];
     const volume = {
-      label: makeTestLabel(),
+      label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
       region: regionId,
       regionLabel: regionsMap[regionId],
@@ -74,15 +74,21 @@ describe('volumes', () => {
    */
   it('creates an attached volume', () => {
     const regionId = randomItem(regions);
+
+    const linodeRequest = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      region: regionId,
+      root_pass: randomString(16),
+    });
+
     const volume = {
-      label: makeTestLabel(),
+      label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
       region: regionId,
       regionLabel: regionsMap[regionId],
     };
 
-    // Create a Linode for volume.
-    createLinode({ region: volume.region }).then((linode) => {
+    cy.defer(createLinode(linodeRequest)).then((linode) => {
       cy.intercept('POST', '*/volumes').as('createVolume');
       cy.visitWithLogin('/volumes/create');
 
@@ -126,9 +132,14 @@ describe('volumes', () => {
    * - Confirms that volume is listed correctly on Volumes landing page.
    */
   it('creates a volume from an existing Linode', () => {
-    createLinode().then((linode) => {
+    const linodeRequest = createLinodeRequestFactory.build({
+      label: randomLabel(),
+      root_pass: randomString(16),
+    });
+
+    cy.defer(createLinode(linodeRequest)).then((linode: Linode) => {
       const volume = {
-        label: makeTestLabel(),
+        label: randomLabel(),
         size: `${randomNumber(10, 250)}`,
       };
 

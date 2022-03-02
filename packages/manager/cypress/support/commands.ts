@@ -26,4 +26,23 @@
 import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
 import './login';
+
+// TODO Add documentation.
+/**
+ * @param {Promise<any>} promise - Promise with result to await.
+ *
+ * @returns {any} Promise result.
+ */
+Cypress.Commands.add('defer', (promise: Promise<any>) => {
+  return new Cypress.Promise((resolve, reject) => {
+    promise
+      .then((...data) => {
+        resolve(...data);
+      })
+      .catch((...data) => {
+        reject(...data);
+      });
+  });
+});
+
 import '@testing-library/cypress/add-commands';
