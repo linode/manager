@@ -1,10 +1,10 @@
 import { ClusterSize, Engine } from '@linode/api-v4/lib/databases/types';
 import { databaseInstanceFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
-import { makeDatabaseClusterLabel } from '../../support/api/databases';
-import sequentialStub from '../../support/stubs/sequential-stub';
-import { makePaginatedResponse } from '../../support/response';
-import { containsClick, fbtClick, getClick } from '../../support/helpers';
+import { randomLabel } from 'support/util/random';
+import sequentialStub from 'support/stubs/sequential-stub';
+import { makePaginatedResponse } from 'support/util/response';
+import { containsClick, fbtClick, getClick } from 'support/helpers';
 
 interface databaseClusterConfiguration {
   label: string;
@@ -20,7 +20,7 @@ interface databaseClusterConfiguration {
 // Array of database cluster configurations for which to test creation.
 const databaseConfigurations: databaseClusterConfiguration[] = [
   {
-    label: makeDatabaseClusterLabel(),
+    label: randomLabel(),
     linodeType: 'g6-nanode-1',
     clusterSize: 1,
     dbType: 'mysql',
@@ -30,7 +30,7 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     version: '8.0.26',
   },
   {
-    label: makeDatabaseClusterLabel(),
+    label: randomLabel(),
     linodeType: 'g6-dedicated-16',
     clusterSize: 3,
     dbType: 'mysql',
