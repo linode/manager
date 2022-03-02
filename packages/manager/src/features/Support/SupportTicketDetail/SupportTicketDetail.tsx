@@ -82,7 +82,7 @@ const styles = (theme: Theme) =>
         height: 40,
       },
       '& .outerCircle': {
-        fill: theme.bg.offWhiteDT,
+        fill: theme.bg.offWhite,
         stroke: theme.bg.main,
       },
       '& .circle': {

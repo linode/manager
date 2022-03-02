@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
       marginLeft: theme.spacing(1) / 2,
       paddingLeft: 2,
       paddingRight: 2,
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
       fontWeight: 500,
       lineHeight: 1,
       '&:hover, &.active': {
@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
         color: 'white',
       },
       '&:focus': {
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.bg.lightBlue1,
         outline: '1px dotted #999',
       },
     },

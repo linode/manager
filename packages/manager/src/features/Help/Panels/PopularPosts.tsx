@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
       ...theme.typography.body1,
     },
     postLink: {
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       '&:hover': {
         color: theme.palette.primary.main,
         textDecoration: 'underline',

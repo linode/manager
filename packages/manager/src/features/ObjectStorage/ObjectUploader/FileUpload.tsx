@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   progressBar: {
-    backgroundColor: theme.cmrBGColors.bgApp,
+    backgroundColor: theme.bg.app,
     borderRadius: 3,
     height: theme.spacing(5.25),
     width: '100%',
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1,
   },
   barColorPrimary: {
-    backgroundColor: theme.cmrBorderColors.borderBillingSummary,
+    backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#243142',
   },
   container: {
     display: 'flex',
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   iconRight: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
   },
   error: {
     color: theme.color.red,

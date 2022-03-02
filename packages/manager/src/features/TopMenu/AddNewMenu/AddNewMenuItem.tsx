@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       transition: 'background-color .2s ease-in-out',
       '& .circle': {
-        fill: theme.bg.offWhiteDT,
+        fill: theme.bg.offWhite,
       },
       '& .outerCircle': {
         stroke: theme.bg.main,

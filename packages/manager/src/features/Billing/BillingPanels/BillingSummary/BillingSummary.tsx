@@ -19,10 +19,10 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useNotifications from 'src/hooks/useNotifications';
+import { getGrantData } from 'src/queries/profile';
 import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
-import { getGrantData } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
   },
   pastDueBalance: {
-    color: theme.cmrIconColors.iRed,
+    color: theme.color.red,
   },
   credit: {
     color: theme.color.green,

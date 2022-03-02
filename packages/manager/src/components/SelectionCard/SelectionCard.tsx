@@ -14,14 +14,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     outline: 0,
     '&.checked .cardBaseGrid': {
+      backgroundColor: theme.bg.lightBlue2,
       borderColor: theme.palette.primary.main,
-      backgroundColor: theme.cmrBGColors.bgCopyButton,
       '& span': {
         color: theme.palette.primary.main,
       },
     },
     '&:focus .cardBaseGrid': {
-      outline: `1px dotted ${theme.color.focusBorder}`,
+      outline: '1px dotted #999',
     },
     '& [class^="fl-"]': {
       transition: 'color 225ms ease-in-out',

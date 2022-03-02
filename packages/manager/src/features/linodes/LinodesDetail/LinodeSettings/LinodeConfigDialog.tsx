@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControlToggle: {
     '& button': {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
       order: 3,
     },
   },

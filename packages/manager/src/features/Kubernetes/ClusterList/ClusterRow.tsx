@@ -14,7 +14,7 @@ import ActionMenu from './ClusterActionMenu';
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
     '&:hover, &:focus': {

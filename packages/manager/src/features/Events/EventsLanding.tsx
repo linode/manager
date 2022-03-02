@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   columnHeader: {
     fontFamily: theme.font.bold,
     fontSize: '0.875rem',
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
   },
 }));
 

@@ -18,9 +18,9 @@ import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
-    border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    border: `1px solid ${theme.borderColors.borderTable}`,
     '& thead th': {
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
       '&:last-of-type': {
         paddingRight: 15,
       },

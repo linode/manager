@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   label: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontSize: '1rem',
     marginRight: theme.spacing(),
     whiteSpace: 'nowrap',

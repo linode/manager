@@ -7,12 +7,12 @@ import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBorderColors.divider,
+    backgroundColor: theme.borderColors.divider,
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),
   },
   light: {
-    backgroundColor: theme.cmrBorderColors.dividerLight,
+    backgroundColor: theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238',
   },
 }));
 

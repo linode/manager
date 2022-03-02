@@ -50,11 +50,11 @@ const styles = (theme: Theme) =>
       width: '160px',
       height: '160px',
       '& .outerCircle': {
-        fill: theme.color.absWhite,
+        fill: theme.name === 'lightTheme' ? '#fff' : '#000',
         stroke: theme.bg.offWhite,
       },
       '& .circle': {
-        fill: theme.color.absWhite,
+        fill: theme.name === 'lightTheme' ? '#fff' : '#000',
       },
       '& .insidePath path': {
         opacity: 0,
@@ -66,7 +66,7 @@ const styles = (theme: Theme) =>
     },
     entity: {
       borderRadius: '50%',
-      backgroundColor: theme.cmrBGColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
       color: theme.color.green,
       display: 'flex',
       alignItems: 'center',

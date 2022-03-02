@@ -37,14 +37,14 @@ export const useStyles = makeStyles((theme: Theme) => ({
       marginTop: `${theme.spacing()}px !important`,
     },
     '& $important': {
-      backgroundColor: theme.cmrBGColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
     },
     '& $error': {
-      borderLeftColor: theme.cmrIconColors.iRed,
+      borderLeftColor: theme.color.red,
     },
   },
   important: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     padding: theme.spacing(2),
     paddingRight: 18,
     '& $noticeText': {
@@ -59,7 +59,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   closeIcon: {
     ...theme.applyLinkStyles,
     display: 'flex',
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     marginLeft: 20,
   },
   inner: {

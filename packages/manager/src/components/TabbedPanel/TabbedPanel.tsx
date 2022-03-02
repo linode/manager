@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexShrink: 0,
       alignItems: 'center',
       borderBottom: '2px solid transparent',
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       fontSize: '0.9rem',
       lineHeight: 1.3,
       marginTop: theme.spacing(0.5),
@@ -39,23 +39,23 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: '6px 16px',
       textDecoration: 'none',
       '&:focus': {
-        backgroundColor: theme.cmrBGColors.bgTableHeader,
+        backgroundColor: theme.bg.tableHeader,
       },
       '&:hover': {
-        backgroundColor: theme.cmrBGColors.bgTableHeader,
-        color: theme.color.blue,
+        backgroundColor: theme.bg.tableHeader,
+        color: theme.palette.primary.main,
       },
     },
     '&[data-reach-tab][data-selected]': {
-      borderBottom: `3px solid ${theme.cmrTextColors.linkActiveLight}`,
-      color: theme.cmrTextColors.headlineStatic,
+      borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
+      color: theme.textColors.headlineStatic,
       fontFamily: theme.font.bold,
     },
   },
   tabList: {
     '&[data-reach-tab-list]': {
       background: 'none !important',
-      boxShadow: `inset 0 -1px 0 ${theme.cmrBorderColors.divider}`,
+      boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
       marginTop: 22,
       marginBottom: theme.spacing(3),
       [theme.breakpoints.down('md')]: {

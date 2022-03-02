@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     minHeight: 0,
   },
   table: {
-    border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    border: `1px solid ${theme.borderColors.borderTable}`,
     '& td': {
       whiteSpace: 'nowrap',
     },
@@ -101,7 +101,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     '& a': {
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
     },
     '& a:hover': {
       color: theme.palette.primary.main,

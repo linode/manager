@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     ...theme.applyLinkStyles,
     display: 'flex',
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     marginLeft: 20,
   },
   productInformationIndicator: {

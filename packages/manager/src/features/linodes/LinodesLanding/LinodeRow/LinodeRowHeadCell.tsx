@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     fontSize: '.875rem',
     lineHeight: '1.125rem',
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },

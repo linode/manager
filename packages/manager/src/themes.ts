@@ -9,52 +9,18 @@ export const light = () => {
   return createTheme(options);
 };
 
-const cmrBGColors = {
-  bgApp: '#3a3f46',
-  bgPrimaryNav: '#23262a',
-  bgPrimaryNavActive: '#0C0D0E',
-  bgPaper: '#2e3238',
-  bgPrimaryButton: '#3683dc',
-  // notification center, add a tag, breadcrumb
-  bgSecondaryButton: 'transparent',
-  bgCopyButton: '#364863',
-  bgTPAButton: '#444',
-  bgTableHeader: '#33373e',
-  bgBillingSummary: '#2d3d53',
-  bgAccessRow: '#454b54',
-  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-  bgGooglePay: '#fff',
-  bgTableRow: 'rgba(0, 0, 0, 0.1)',
-  bgReferralsImage: '#83868C',
-};
-
-const cmrTextColors = {
+const textColors = {
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
   tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
-  secondaryButton: '#fff',
-  textGooglePay: '#616161',
 };
 
-const cmrBorderColors = {
+const borderColors = {
   borderTypography: '#454b54',
-  borderBillingSummary: '#243142',
-  borderBalance: '#4d79b2',
   borderTable: '#3a3f46',
-  borderSecondaryButton: '#fff',
   divider: '#222',
-  dividerLight: '#2e3238',
-};
-
-const cmrIconColors = {
-  iActiveLight: '#74aae6',
-  iGreen: '#17cf73',
-  iOrange: '#ffb31a',
-  iRed: '#cf1e1e',
-  // Offline status
-  iGrey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -64,7 +30,6 @@ const primaryColors = {
   text: '#ffffff',
   headline: '#f4f4f4',
   divider: '#222222',
-  offBlack: '#fff',
   white: '#222',
 };
 
@@ -88,7 +53,7 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: cmrTextColors.linkActiveLight,
+  color: textColors.linkActiveLight,
   border: 'none',
   font: 'inherit',
   padding: 0,
@@ -102,7 +67,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.tableStatic,
+  color: textColors.tableStatic,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -123,7 +88,7 @@ const genericTableHeaderStyle = {
   '&:hover': {
     cursor: 'pointer',
     '& span': {
-      color: cmrTextColors.linkActiveLight,
+      color: textColors.linkActiveLight,
     },
   },
 };
@@ -151,72 +116,45 @@ const darkThemeOptions = {
     },
   },
   bg: {
+    app: '#3a3f46',
     main: '#2f3236',
-    offWhite: '#111111',
-    offWhiteDT: '#444', // better handing for dark theme
-    navy: '#32363c',
-    lightBlue: '#222',
+    offWhite: '#444',
+    lightBlue1: '#222',
+    lightBlue2: '#364863',
     white: '#32363c',
-    pureWhite: '#000',
-    tableHeader: '#2B2E32',
-    primaryNavActive: '#303235',
-    primaryNavActiveBG: '#464c53',
+    tableHeader: '#33373e',
     primaryNavPaper: '#2e3238',
-    mainContentBanner: '#23272B',
-    topMenu: '#33383d',
-    billingHeader: '#222',
-    controlHeader: 'rgba(0, 0, 0, 0.2)',
-    chipActive: 'rgba(0,0,0,0.9)',
+    mainContentBanner: '#23272b',
+    bgPaper: '#2e3238',
+    bgAccessRow: '#454b54',
+    bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
   },
   color: {
     headline: primaryColors.headline,
     red: '#fb6d6d',
-    green: '#00b159',
-    orange: '#ffb31a',
-    yellow: '#fecf2f',
     border2: '#111',
     border3: '#222',
-    borderPagination: '#222222',
     grey1: '#abadaf',
     grey2: 'rgba(0, 0, 0, 0.2)',
     grey3: '#999',
     grey5: 'rgba(0, 0, 0, 0.2)',
     grey6: '#606469',
-    grey7: cmrBGColors.bgPaper,
+    grey7: '#2e3238',
     grey9: primaryColors.divider,
-    grey10: '#dbdde1',
     white: '#32363c',
-    blue: primaryColors.main,
     black: '#fff',
-    offBlack: primaryColors.offBlack,
+    offBlack: '#fff',
     boxShadow: '#222',
     boxShadowDark: '#000',
-    focusBorder: '#999',
-    absWhite: '#000',
     blueDTwhite: '#fff',
-    selectDropDowns: primaryColors.main,
-    borderRow: 'rgba(0, 0, 0, 0.15)',
     tableHeaderText: '#fff',
-    toggleActive: '#444',
-    diskSpaceBorder: '#222222',
     drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
     label: '#c9cacb',
-    disabledText: '#c9cacb',
-    kubeLabel: '#fff',
-    primaryNavText: '#fff',
-    borderBilling: primaryColors.light,
-    billingText: '#fff',
     tagButton: '#364863',
-    tagText: '#9caec9',
     tagIcon: '#9caec9',
-    tagBorder: '#2e3238',
-    chipButton: '#415d81',
-    chipButtonHover: '#374863',
   },
-  cmrBGColors,
-  cmrBorderColors,
-  cmrTextColors,
-  cmrIconColors,
+  borderColors,
+  textColors,
   graphs: {
     network: {
       outbound: `rgb(49, 206, 62)`,
@@ -264,9 +202,6 @@ const darkThemeOptions = {
       color: primaryColors.headline,
     },
     caption: {
-      color: primaryColors.text,
-    },
-    h4: {
       color: primaryColors.text,
     },
     body1: {
@@ -332,7 +267,7 @@ const darkThemeOptions = {
         },
       },
       outlined: {
-        color: cmrTextColors.linkActiveLight,
+        color: textColors.linkActiveLight,
         '&:hover, &:focus': {
           backgroundColor: 'transparent !important',
           border: '1px solid #fff',
@@ -485,7 +420,7 @@ const darkThemeOptions = {
     },
     MuiPaper: {
       root: {
-        backgroundColor: cmrBGColors.bgPaper,
+        backgroundColor: '#2e3238',
       },
       outlined: {
         border: '1px solid rgba(0, 0, 0, 0.2)',
@@ -532,7 +467,7 @@ const darkThemeOptions = {
         borderTop: `1px solid ${primaryColors.divider}`,
         borderBottom: `1px solid ${primaryColors.divider}`,
         '& a': {
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
         },
         '& a:hover': {
           color: primaryColors.main,
@@ -590,7 +525,7 @@ const darkThemeOptions = {
     MuiTypography: {
       root: {
         '& a': {
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
         },
         '& a:hover': {
           color: primaryColors.main,

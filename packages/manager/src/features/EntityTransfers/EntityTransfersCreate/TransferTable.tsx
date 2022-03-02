@@ -23,14 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
     '& thead': {
       '& th': {
-        backgroundColor: theme.cmrBGColors.bgTableHeader,
-        borderTop: `2px solid ${theme.cmrBorderColors.borderTable}`,
-        borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
-        borderBottom: `2px solid ${theme.cmrBorderColors.borderTable}`,
-        borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
+        backgroundColor: theme.bg.tableHeader,
+        borderTop: `2px solid ${theme.borderColors.borderTable}`,
+        borderRight: `1px solid ${theme.borderColors.borderTable}`,
+        borderBottom: `2px solid ${theme.borderColors.borderTable}`,
+        borderLeft: `1px solid ${theme.borderColors.borderTable}`,
         fontFamily: theme.font.bold,
         fontSize: '0.875em !important',
-        color: theme.cmrTextColors.tableHeader,
+        color: theme.textColors.tableHeader,
         padding: '0px 15px',
         '&:first-of-type': {
           borderLeft: 'none',

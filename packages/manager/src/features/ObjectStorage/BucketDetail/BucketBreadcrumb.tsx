@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 4,
   },
   link: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
     '&:hover': {
       textDecoration: 'underline',

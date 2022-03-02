@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
   },
   header: {
-    borderBottom: `solid 1px ${theme.cmrBorderColors.borderTypography}`,
+    borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
     display: 'flex',
     justifyContent: 'space-between',
   },

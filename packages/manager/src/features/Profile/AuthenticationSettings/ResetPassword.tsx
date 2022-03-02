@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   link: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     fontSize: '0.875rem',
     marginTop: theme.spacing(),
   },

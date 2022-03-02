@@ -33,9 +33,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(0.5),
   },
   forceUpgradeChip: {
-    backgroundColor: theme.color.chipButton,
+    backgroundColor: theme.name === 'lightTheme' ? '#e5f1ff' : '#415d81',
     '&:hover': {
-      backgroundColor: theme.color.chipButtonHover,
+      backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#374863',
     },
   },
   upgradePendingChip: {

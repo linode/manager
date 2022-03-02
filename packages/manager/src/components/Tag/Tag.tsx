@@ -35,8 +35,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 3,
       borderTopRightRadius: 0,
       borderBottomRightRadius: 0,
-      borderRight: `1px solid ${theme.color.tagBorder}`,
-      color: theme.color.tagText,
+      borderRight: `1px solid ${
+        theme.name === 'lightTheme' ? '#fff' : '#2e3238'
+      }`,
+      color: theme.name === 'lightTheme' ? '#3a3f46' : '#9caec9',
       fontSize: '0.875rem',
       padding: '7px 10px',
     },
@@ -64,7 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
     '&:focus': {
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
       color: theme.color.black,
     },
   },

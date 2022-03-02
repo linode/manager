@@ -77,13 +77,13 @@ const GaugePercent: React.FC<CombinedProps> = (props) => {
     {
       borderWidth: 0,
       hoverBackgroundColor: [
-        props.filledInColor || props.theme.color.blue,
+        props.filledInColor || props.theme.palette.primary.main,
         props.nonFilledInColor || props.theme.color.grey2,
       ],
       /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
       data: [props.value, finalMax],
       backgroundColor: [
-        props.filledInColor || props.theme.color.blue,
+        props.filledInColor || props.theme.palette.primary.main,
         props.nonFilledInColor || props.theme.color.grey2,
       ],
     },

@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   portLink: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
   },
   link: {
     display: 'block',
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',

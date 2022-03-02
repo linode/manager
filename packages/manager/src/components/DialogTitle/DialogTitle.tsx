@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 0,
     cursor: 'pointer',
     '&:hover': {
-      color: theme.color.blue,
+      color: theme.palette.primary.main,
     },
   },
 }));

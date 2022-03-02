@@ -156,7 +156,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
             },
             ticks: {
               beginAtZero: true,
-              fontColor: theme.cmrTextColors.tableHeader,
+              fontColor: theme.textColors.tableHeader,
               fontSize: 12,
               fontStyle: 'normal',
               maxTicksLimit: 8,
@@ -192,7 +192,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
               },
             },
             ticks: {
-              fontColor: theme.cmrTextColors.tableHeader,
+              fontColor: theme.textColors.tableHeader,
               fontSize: 12,
               fontStyle: 'normal',
             },

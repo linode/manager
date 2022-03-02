@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '1rem',
       border: 'none',
       padding: '10px',
-      color: theme.cmrIconColors.iActiveLight,
+      color: theme.textColors.linkActiveLight,
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: '#3683dc',
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     '& svg': {
-      fill: theme.color.blue,
+      fill: theme.palette.primary.main,
     },
   },
   popover: {
