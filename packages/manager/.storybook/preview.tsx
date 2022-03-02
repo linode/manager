@@ -44,7 +44,14 @@ export const parameters = {
   controls: { expanded: true },
   options: {
     storySort: {
-      order: ['Intro', 'Components', 'UI Elements', 'Core'],
+      method: 'alphabetical',
+      order: [
+        'Intro',
+        ['Welcome', 'Color Palette', 'Grid'],
+        'Features',
+        'Components',
+        'Elements',
+      ],
     },
   },
   previewTabs: {

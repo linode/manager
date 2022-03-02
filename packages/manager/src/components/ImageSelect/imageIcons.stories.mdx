@@ -4,7 +4,7 @@ import { distroIcons } from 'src/components/ImageSelect/icons';
 import Grid from 'src/components/Grid';
 import 'font-logos/assets/font-logos.css';
 
-<Meta title="core/Icons/Distribution Icons" />
+<Meta title="Elements/Icons/Distribution Icons" />
 
 export const useStyles = makeStyles(() => ({
   item: {
@@ -24,20 +24,18 @@ export const useStyles = makeStyles(() => ({
 
 export const DistributionIcons = () => {
   const classes = useStyles();
-    return (
-      <Grid container>
-        {
-          Object.entries(distroIcons).map(([iconLabel, icon]) => {
-            return (
-              <Grid key={iconLabel} item className={classes.item}>
-                <span className={`fl-${icon}`}></span>
-                <div className={classes.label}>{iconLabel}</div>
-              </Grid>
-            )
-          })
-        }
-      </Grid>
-    )
+  return (
+    <Grid container>
+      {Object.entries(distroIcons).map(([iconLabel, icon]) => {
+        return (
+          <Grid key={iconLabel} item className={classes.item}>
+            <span className={`fl-${icon}`}></span>
+            <div className={classes.label}>{iconLabel}</div>
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
 };
 
 # Distribution Icons

@@ -8,7 +8,7 @@ import {
   volumeFactory,
   imageFactory,
   nodeBalancerFactory,
-  nodeBalancerConfigFactory
+  nodeBalancerConfigFactory,
 } from 'src/factories';
 import store from 'src/store';
 import { getHeaders as getDomainHeaders } from 'src/features/Domains/DomainsLanding';
@@ -23,31 +23,25 @@ import { volumeHeaders } from 'src/features/Volumes/VolumesLanding';
 import { VolumeTableRow } from 'src/features/Volumes/VolumeTableRow';
 import EntityTable, { EntityTableRow, HeaderCell } from './EntityTable';
 
-<Meta
-  title="Components/Entity Table"
-  component={EntityTable}
-/>
+<Meta title="Features/Entity Table" component={EntityTable} />
 
 export const domainHeaders = () => {
   const theme = useTheme();
   const matchesXsDown = useMediaQuery(theme.breakpoints.down('xs'));
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
-  return getDomainHeaders(
-    matchesXsDown,
-    matchesSmDown,
-    matchesMdDown
-  );
-}
+  return getDomainHeaders(matchesXsDown, matchesSmDown, matchesMdDown);
+};
 
 export const getNodeBalancers = () => {
   const configs = nodeBalancerConfigFactory.buildList(2);
-  return nodeBalancerFactory.buildList(10).map(nb => ({ ...nb, configs }));
-}
+  return nodeBalancerFactory.buildList(10).map((nb) => ({ ...nb, configs }));
+};
 
 # Entity Detail
 
 ## Volumes
+
 <Canvas>
   <Story name="Volumes">
     <EntityTable
@@ -67,6 +61,7 @@ export const getNodeBalancers = () => {
 </Canvas>
 
 ## Domains
+
 <Canvas>
   <Story name="Domains">
     <Provider store={store}>
@@ -89,6 +84,7 @@ export const getNodeBalancers = () => {
 </Canvas>
 
 ## Firewalls
+
 <Canvas>
   <Story name="Firewalls">
     <EntityTable
@@ -108,6 +104,7 @@ export const getNodeBalancers = () => {
 </Canvas>
 
 ## Images
+
 <Canvas>
   <Story name="Images">
     <EntityTable
@@ -126,6 +123,7 @@ export const getNodeBalancers = () => {
 </Canvas>
 
 ## NodeBalancers
+
 <Canvas>
   <Story name="NodeBalancers">
     <EntityTable

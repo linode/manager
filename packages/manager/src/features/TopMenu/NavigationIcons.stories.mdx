@@ -6,7 +6,7 @@ import Community from 'src/assets/icons/community_nav.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Bell from 'src/assets/icons/notification.svg';
 
-<Meta title="core/Icons/Navigation Icons" />
+<Meta title="Elements/Icons/Navigation Icons" />
 
 export const useStyles = makeStyles(() => ({
   item: {
@@ -32,28 +32,24 @@ export const icons = {
   'Linode Cloud Community': <Community />,
   Notifications: <Bell />,
   Account: <UserIcon />,
-}
+};
 
 export const renderIcons = (icons) => {
   const classes = useStyles();
   return (
     <Grid container>
-      {
-        Object.entries(icons).map(([iconLabel, icon]) => {
-          return (
-            <Grid key={iconLabel} item className={classes.item}>
-              {icon}
-              <div className={classes.label}>{iconLabel}</div>
-            </Grid>
-          )
-        })
-      }
+      {Object.entries(icons).map(([iconLabel, icon]) => {
+        return (
+          <Grid key={iconLabel} item className={classes.item}>
+            {icon}
+            <div className={classes.label}>{iconLabel}</div>
+          </Grid>
+        );
+      })}
     </Grid>
-  )
+  );
 };
 
 # Navigation Icons
 
-<Canvas>
-  {renderIcons(icons)}
-</Canvas>
+<Canvas>{renderIcons(icons)}</Canvas>

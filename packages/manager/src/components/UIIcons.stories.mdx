@@ -18,9 +18,12 @@ import Trash from 'src/assets/icons/trash.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Unsorted from 'src/assets/icons/unsorted.svg';
 import UploadPending from 'src/assets/icons/uploadPending.svg';
-import { useStyles, renderIcons } from 'src/features/TopMenu/NavigationIcons.stories.mdx';
+import {
+  useStyles,
+  renderIcons,
+} from 'src/features/TopMenu/NavigationIcons.stories.mdx';
 
-<Meta title="core/Icons/UI Icons" />
+<Meta title="Elements/Icons/UI Icons" />
 
 export const icons = {
   Copy: <FileCopy />,
@@ -40,10 +43,8 @@ export const icons = {
   Undo: <Undo />,
   Unsorted: <Unsorted />,
   UploadPending: <UploadPending />,
-}
+};
 
 # UI Icons
 
-<Canvas>
-  {renderIcons(icons)}
-</Canvas>
+<Canvas>{renderIcons(icons)}</Canvas>

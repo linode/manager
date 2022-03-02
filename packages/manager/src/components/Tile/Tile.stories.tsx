@@ -1,11 +1,9 @@
 import * as React from 'react';
-
+import Chat from 'src/assets/icons/chat.svg';
 import Tile from './Tile';
 
-import Chat from 'src/assets/icons/chat.svg';
-
 export default {
-  title: 'UI Elements/Tile',
+  title: 'Features/Tile',
 };
 
 export const Internal = () => (
@@ -21,5 +19,5 @@ export const Internal = () => (
 );
 
 Internal.story = {
-  name: 'internal',
+  name: 'Tile',
 };
