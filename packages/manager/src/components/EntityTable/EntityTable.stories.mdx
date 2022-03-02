@@ -42,102 +42,92 @@ export const getNodeBalancers = () => {
 
 ## Volumes
 
-<Canvas>
-  <Story name="Volumes">
-    <EntityTable
-      entity="volume"
-      toggleGroupByTag={() => false}
-      isGroupedByTag={false}
-      headers={volumeHeaders}
-      row={{
-        handlers: {},
-        Component: VolumeTableRow,
-        data: volumeFactory.buildList(10),
-        lastUpdated: 1637782175231,
-      }}
-      initialOrder={{ order: 'asc', orderBy: 'label' }}
-    />
-  </Story>
-</Canvas>
+<Story name="Volumes">
+  <EntityTable
+    entity="volume"
+    toggleGroupByTag={() => false}
+    isGroupedByTag={false}
+    headers={volumeHeaders}
+    row={{
+      handlers: {},
+      Component: VolumeTableRow,
+      data: volumeFactory.buildList(10),
+      lastUpdated: 1637782175231,
+    }}
+    initialOrder={{ order: 'asc', orderBy: 'label' }}
+  />
+</Story>
 
 ## Domains
 
-<Canvas>
-  <Story name="Domains">
-    <Provider store={store}>
-      <Grid spacing={8}>
-        <EntityTable
-          entity="domains"
-          toggleGroupByTag={() => false}
-          isGroupedByTag={false}
-          headers={getDomainHeaders()}
-          row={{
-            Component: DomainRow,
-            data: domainFactory.buildList(10),
-            loading: false,
-            lastUpdated: 1637782175231,
-          }}
-        />
-      </Grid>
-    </Provider>
-  </Story>
-</Canvas>
+<Story name="Domains">
+  <Provider store={store}>
+    <Grid spacing={8}>
+      <EntityTable
+        entity="domains"
+        toggleGroupByTag={() => false}
+        isGroupedByTag={false}
+        headers={getDomainHeaders()}
+        row={{
+          Component: DomainRow,
+          data: domainFactory.buildList(10),
+          loading: false,
+          lastUpdated: 1637782175231,
+        }}
+      />
+    </Grid>
+  </Provider>
+</Story>
 
 ## Firewalls
 
-<Canvas>
-  <Story name="Firewalls">
-    <EntityTable
-      entity="firewall"
-      headers={firewallHeaders}
-      row={{
-        handlers: {},
-        Component: FirewallRow,
-        data: firewallFactory.buildList(10),
-        loading: false,
-        lastUpdated: 1637782175231,
-        error: undefined,
-      }}
-      initialOrder={{ order: 'asc', orderBy: 'domain' }}
-    />
-  </Story>
-</Canvas>
+<Story name="Firewalls">
+  <EntityTable
+    entity="firewall"
+    headers={firewallHeaders}
+    row={{
+      handlers: {},
+      Component: FirewallRow,
+      data: firewallFactory.buildList(10),
+      loading: false,
+      lastUpdated: 1637782175231,
+      error: undefined,
+    }}
+    initialOrder={{ order: 'asc', orderBy: 'domain' }}
+  />
+</Story>
 
 ## Images
 
-<Canvas>
-  <Story name="Images">
-    <EntityTable
-      entity="image"
-      headers={getImageHeaders('manual')}
-      row={{
-        Component: ImageRow,
-        data: imageFactory.buildList(10),
-        loading: false,
-        lastUpdated: 1637782175231,
-        handlers: {},
-      }}
-      initialOrder={{ order: 'asc', orderBy: 'label' }}
-    />
-  </Story>
-</Canvas>
+<Story name="Images">
+  <EntityTable
+    entity="image"
+    headers={getImageHeaders('manual')}
+    row={{
+      Component: ImageRow,
+      data: imageFactory.buildList(10),
+      loading: false,
+      lastUpdated: 1637782175231,
+      handlers: {},
+    }}
+    initialOrder={{ order: 'asc', orderBy: 'label' }}
+  />
+</Story>
 
 ## NodeBalancers
 
-<Canvas>
-  <Story name="NodeBalancers">
-    <EntityTable
-      entity="nodebalancer"
-      toggleGroupByTag={() => false}
-      isGroupedByTag={false}
-      headers={nodeBalancerHeaders}
-      row={{
-        Component: NodeBalancerTableRow,
-        data: getNodeBalancers(),
-        handlers: {},
-        lastUpdated: 1637782175231,
-      }}
-      initialOrder={{ order: 'asc', orderBy: 'label' }}
-    />
-  </Story>
-</Canvas>
+<Story name="NodeBalancers">
+  <EntityTable
+    entity="nodebalancer"
+    toggleGroupByTag={() => false}
+    isGroupedByTag={false}
+    headers={nodeBalancerHeaders}
+    row={{
+      Component: NodeBalancerTableRow,
+      data: getNodeBalancers(),
+      handlers: {},
+      lastUpdated: 1637782175231,
+    }}
+    initialOrder={{ order: 'asc', orderBy: 'label' }}
+  />
+</Story>
