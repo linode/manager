@@ -112,7 +112,7 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
         </Typography>
         <PreferenceToggle<boolean>
           preferenceKey="type_to_confirm"
-          preferenceOptions={[false, true]}
+          preferenceOptions={[true, false]}
           localStorageKey="typeToConfirm"
         >
           {({

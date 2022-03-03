@@ -46,12 +46,11 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
-
   if (visible === undefined || !!visible) {
     const preferenceToggle = (
       <PreferenceToggle<boolean>
         preferenceKey="type_to_confirm"
-        preferenceOptions={[false, true]}
+        preferenceOptions={[true, false]}
         localStorageKey="typeToConfirm"
       >
         {({
