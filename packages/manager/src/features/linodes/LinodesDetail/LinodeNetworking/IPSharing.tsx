@@ -98,7 +98,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     {
       region: linodeRegion,
     },
-    true // always make the request so we have the data preloaded and don't need to wait to make further requests
+    open // Only run the query if the modal is open
   );
 
   let isLoading = resp.isLoading;
