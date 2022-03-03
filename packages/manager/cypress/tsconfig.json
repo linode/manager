@@ -6,7 +6,7 @@
     "skipLibCheck": true,
     "noImplicitAny": false,
     "target": "es5",
-    "lib": ["es5", "dom"],
+    "lib": ["es6", "dom"],
     "baseUrl": "..",
     "paths": {
       "@src/*": ["src/*"],
