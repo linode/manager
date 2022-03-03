@@ -45,13 +45,7 @@ export const parameters = {
   options: {
     storySort: {
       method: 'alphabetical',
-      order: [
-        'Intro',
-        ['Welcome', 'Color Palette', 'Grid'],
-        'Features',
-        'Components',
-        'Elements',
-      ],
+      order: ['Intro', 'Features', 'Components', 'Elements', 'Core Styles'],
     },
   },
   previewTabs: {
