@@ -4,7 +4,6 @@ import { APIWarning } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import makeAsyncScriptLoader from 'react-async-script';
 import Button from 'src/components/Button';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
@@ -27,20 +26,16 @@ import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
-import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
 import { queryClient } from 'src/queries/base';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { v4 } from 'uuid';
 import GooglePayButton from './GooglePayButton';
 import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
-import PayPal, { paypalScriptSrc } from './Paypal';
 import { SetSuccess } from './types';
 
-// @TODO: remove feature flag logic and old paypal code once braintree paypal is released
 const useStyles = makeStyles((theme: Theme) => ({
   currentBalance: {
     fontSize: '1.1rem',
@@ -142,8 +137,6 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
-const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
-
 export const PaymentDrawer: React.FC<Props> = (props) => {
   const { paymentMethods, selectedPaymentMethod, open, onClose } = props;
 
@@ -154,10 +147,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   } = useAccount();
 
   const classes = useStyles();
-  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
-
-  const braintreePayPal = flags.additionalPaymentMethods?.includes('paypal');
 
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
 
@@ -173,12 +163,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
 
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-
-  const [payPalKey, setPayPalKey] = React.useState<string>(v4());
-  const [
-    isPaypalScriptLoaded,
-    setIsPaypalScriptLoaded,
-  ] = React.useState<boolean>(false);
 
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
 
@@ -277,17 +261,12 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       });
       // Reset everything
       setUSD('0.00');
-      setPayPalKey(v4());
       accountRefetch();
       onClose();
     }
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
     }
-  };
-
-  const onScriptLoad = () => {
-    setIsPaypalScriptLoaded(true);
   };
 
   const renderError = (errorMsg: string) => {
@@ -500,27 +479,16 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           </Grid>
           <Grid container>
             <Grid item xs={9} sm={6}>
-              {braintreePayPal ? (
-                <PayPalErrorBoundary renderError={renderError}>
-                  <PayPalButton
-                    usd={usd}
-                    disabled={isProcessing}
-                    setSuccess={setSuccess}
-                    setError={setErrorMessage}
-                    setProcessing={setIsProcessing}
-                    renderError={renderError}
-                  />
-                </PayPalErrorBoundary>
-              ) : (
-                <AsyncPaypal
-                  key={payPalKey}
+              <PayPalErrorBoundary renderError={renderError}>
+                <PayPalButton
                   usd={usd}
-                  setSuccess={setSuccess}
-                  asyncScriptOnLoad={onScriptLoad}
-                  isScriptLoaded={isPaypalScriptLoaded}
                   disabled={isProcessing}
+                  setSuccess={setSuccess}
+                  setError={setErrorMessage}
+                  setProcessing={setIsProcessing}
+                  renderError={renderError}
                 />
-              )}
+              </PayPalErrorBoundary>
             </Grid>
             <Grid item xs={9} sm={6}>
               <GooglePayButton

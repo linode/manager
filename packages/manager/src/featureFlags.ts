@@ -38,7 +38,6 @@ export interface Flags {
   bareMetal: boolean;
   tpaProviders: Provider[];
   machineImages: boolean;
-  additionalPaymentMethods: AdditionalPaymentMethod[];
   imagesPricingBanner: ImagesPricingBanner;
   imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
@@ -98,8 +97,6 @@ export interface Provider {
   icon: any;
   href: string;
 }
-
-export type AdditionalPaymentMethod = 'google_pay' | 'paypal';
 
 export interface ImagesPricingBanner {
   key: string;
