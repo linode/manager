@@ -129,9 +129,9 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
                         checked={istypeToConfirm}
                       />
                     }
-                    label={`Type to confirm for all destructive actions is${
+                    label={`Type to confirm is${
                       istypeToConfirm ? ' enabled' : ' disabled'
-                    }.`}
+                    }`}
                   />
                 </Grid>
               </Grid>
