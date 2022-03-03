@@ -659,11 +659,8 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 16,
       height: 16,
       '& path': {
-        fill: theme.name === 'lightTheme' ? '#c2daff' : '#4d79b2',
+        fill: theme.textColors.linkActiveLight,
       },
-    },
-    '& button': {
-      padding: 0,
     },
     '&:last-child': {
       paddingRight: theme.spacing(),
@@ -671,12 +668,16 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
   },
   copyButton: {
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    justifyContent: 'center',
+    borderRadius: 1,
     height: '100%',
+    width: '100%',
     '&:hover': {
-      backgroundColor: 'transparent',
+      backgroundColor: '#3683dc',
+      '& svg path': {
+        fill: '#fff',
+      },
     },
   },
   gradient: {

@@ -37,10 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 15,
   },
   copyIcon: {
-    color: theme.palette.primary.main,
-    position: 'relative',
-    display: 'inline-block',
-    transition: theme.transitions.create(['color']),
+    display: 'flex',
     '& svg': {
       width: '1em',
       height: '1em',
