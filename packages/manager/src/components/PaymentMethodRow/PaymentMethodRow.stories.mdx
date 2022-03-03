@@ -2,7 +2,7 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import PaymentMethodRow from 'src/components/PaymentMethodRow/PaymentMethodRow';
 import { paymentMethodFactory } from 'src/factories';
 
-<Meta title="components/PaymentMethodRow" component={PaymentMethodRow} />
+<Meta title="Features/Payment Method Row" component={PaymentMethodRow} />
 
 export const onDelete = () => {};
 
@@ -29,10 +29,12 @@ export const CreditCards = () =>
     />
   ));
 
-export const Template = (args) => <PaymentMethodRow {...args} />
+export const Template = (args) => <PaymentMethodRow {...args} />;
 
 # Payment Method Row
+
 ## Credit Cards
+
 <Canvas>
   <Story name="CreditCards">
     <CreditCards />
@@ -40,6 +42,7 @@ export const Template = (args) => <PaymentMethodRow {...args} />
 </Canvas>
 
 ## Google Pay
+
 <Canvas>
   <Story
     name="Google Pay"
@@ -54,7 +57,7 @@ export const Template = (args) => <PaymentMethodRow {...args} />
     }}
     argTypes={{
       onDelete: {
-        description: "Function called when a payment method is deleted.",
+        description: 'Function called when a payment method is deleted.',
       },
       paymentMethod: {
         description: 'Payment method type and data.',
@@ -65,11 +68,10 @@ export const Template = (args) => <PaymentMethodRow {...args} />
   </Story>
 </Canvas>
 
-<ArgsTable
-  story="Google Pay"
-/>
+<ArgsTable story="Google Pay" />
 
 ## PayPal
+
 <Canvas>
   <Story
     name="PayPal"
@@ -85,7 +87,7 @@ export const Template = (args) => <PaymentMethodRow {...args} />
     }}
     argTypes={{
       onDelete: {
-        description: "Function called when a payment method is deleted.",
+        description: 'Function called when a payment method is deleted.',
       },
       paymentMethod: {
         description: 'Payment method type and data.',
@@ -96,11 +98,10 @@ export const Template = (args) => <PaymentMethodRow {...args} />
   </Story>
 </Canvas>
 
-<ArgsTable
-  story="PayPal"
-/>
+<ArgsTable story="PayPal" />
 
 ## Component API
+
 <Canvas>
   <Story
     name="Component API"
@@ -115,7 +116,7 @@ export const Template = (args) => <PaymentMethodRow {...args} />
     }}
     argTypes={{
       onDelete: {
-        description: "Function called when a payment method is deleted.",
+        description: 'Function called when a payment method is deleted.',
       },
       paymentMethod: {
         description: 'Payment method type and data.',
@@ -126,6 +127,4 @@ export const Template = (args) => <PaymentMethodRow {...args} />
   </Story>
 </Canvas>
 
-<ArgsTable
-  story="Component API"
-/>
+<ArgsTable story="Component API" />

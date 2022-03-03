@@ -2,18 +2,14 @@ import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 import Gauge from './GaugePercent';
 import Typography from 'src/components/core/Typography';
 
-<Meta
-  title="UI Elements/Analytics & Graphs"
-/>
+<Meta title="Components/Analytics & Graphs" component={Gauge} />
 
 # 📈 Gauges
 
-- **Chart.js** is the charting tool we use for gauges 
+- **Chart.js** is the charting tool we use for gauges
 - Best used to show percentages
 
-export const Template = (args) => (
-  <Gauge {...args} />
-);
+export const Template = (args) => <Gauge {...args} />;
 
 <Canvas>
   <Story
@@ -23,15 +19,16 @@ export const Template = (args) => (
       max: 200,
       height: 150,
       width: 150,
-      innerText: "25%",
+      innerText: '25%',
       innerTextFontSize: 12,
-      subTitle: "CPU", 
+      subTitle: 'CPU',
       filledInColor: undefined,
       nonFilledInColor: undefined,
     }}
     argTypes={{
       value: {
-        description: "The value that is displayed by the gauge. This value should be <= `max`",
+        description:
+          'The value that is displayed by the gauge. This value should be <= `max`',
         type: { summary: 'number', required: true },
       },
       max: {
@@ -40,7 +37,7 @@ export const Template = (args) => (
       },
       height: {
         description: 'The height of the gauge',
-        type: { summary: "number" },
+        type: { summary: 'number' },
         table: {
           defaultValue: {
             summary: 300,
@@ -57,7 +54,7 @@ export const Template = (args) => (
         },
       },
       innerText: {
-        description: "Text that shows up inside (in the middle) of the gauge",
+        description: 'Text that shows up inside (in the middle) of the gauge',
         type: { summary: 'string' },
       },
       innerTextFontSize: {
@@ -66,7 +63,7 @@ export const Template = (args) => (
       },
       subTitle: {
         description: 'A subtitle that appears below the gauge',
-        type: { summary: "JSX.Element | string" },
+        type: { summary: 'JSX.Element | string' },
       },
       filledInColor: {
         description: 'The color for the filled in portion of the gauge',

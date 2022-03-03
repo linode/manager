@@ -1,7 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import TextField from 'src/components/TextField';
 
-<Meta title="Components/Forms/Text Field" component={TextField} />
+<Meta title="Elements/Text Field" component={TextField} />
 
 # Text Field
 
@@ -12,12 +12,10 @@ import TextField from 'src/components/TextField';
 Text fields allow users to enter text into a UI.
 
 | Elements    | Guidelines                                                                                                                                                                                                                                    |
-|:------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Input Field | The size of the field should be proportional to the expected user input.                                                                                                                                                                      |
 | Label       | Avoid long labels; use succinct, short and descriptive labels (a word or two) so users can quickly scan your form. <br/> Label text shouldn’t take up multiple lines.                                                                         |
 | Placeholder | Placeholder is the text that users see before they interact with a field. It should be a useful guide to the input type and format <br/> Don’t make the user guess what format they should use for the field. Tell this information up front. |
-
-
 
 ### Usage
 
@@ -51,6 +49,7 @@ Text fields allow users to enter text into a UI.
 - Grouping related inputs (ex. mailing address) under a subhead or rule can add meaning and make the form feel more manageable.
 - Avoid breaking a single form into multiple “papers” unless those sections are truly independent of each other.
 - Consider sizing the input field to the data being entered (ex. the field for a street address should be wider than the field for a zip code). Balance this goal with the visual benefits of fields of the same length. A somewhat outsized input that aligns with the fields above and below it might be the best choice.
+
 ### Error
 
 <hr />
@@ -60,6 +59,7 @@ Text fields allow users to enter text into a UI.
 Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix it. Users should not have to memorize instructions in order to fix the error.
 
 ##### Main principles
+
 - Should be easy to notice and understand.
 - Should give solutions to how to fix the error.
 - Users should not have to memorize instructions in order to fix the

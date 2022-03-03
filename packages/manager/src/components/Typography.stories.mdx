@@ -2,17 +2,16 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
 
-<Meta title="Core/Typography/Text" component={Typography} />
+<Meta title="Elements/Typography/Text" component={Typography} />
 
-export const TypographyTemplate = (args) => (
-  <Typography {...args}/>
-);
+export const TypographyTemplate = (args) => <Typography {...args} />;
 
 # Typography
 
 ## Headings
 
 ### Primary heading (h1)
+
 - Empty state entity landing pages.
 - Billing and payment paper.
 - Backup auto enrollment paper.
@@ -26,6 +25,7 @@ export const TypographyTemplate = (args) => (
 </Canvas>
 
 ### Secondary heading (h2)
+
 - Page-level headings and high-level typographical components, such as editable text and breadcrumbs.
 - Section-level headings, such as drawers, some table headers and panel sections.
 
@@ -38,6 +38,7 @@ export const TypographyTemplate = (args) => (
 </Canvas>
 
 ### Tertiary headings (h3)
+
 - Sub-section headings.
 - Titles of paper components.
 
@@ -90,6 +91,7 @@ export const TypographyTemplate = (args) => (
 </Canvas>
 
 ## Component API
+
 <Canvas>
   <Story
     name="Component API"
@@ -105,29 +107,14 @@ export const TypographyTemplate = (args) => (
         description: 'A string that denotes the HTML base element to use',
         control: {
           type: 'radio',
-          labels: [
-            'h1',
-            'h2',
-            'h3',
-            'body1',
-            'caption',
-            'button',
-            'undefined',
-          ],
-          options: [
-            'h1',
-            'h2',
-            'h3',
-            'body1',
-            'caption',
-            'button',
-            undefined,
-          ]
-        }
-      }
-    }}>
+          labels: ['h1', 'h2', 'h3', 'body1', 'caption', 'button', 'undefined'],
+          options: ['h1', 'h2', 'h3', 'body1', 'caption', 'button', undefined],
+        },
+      },
+    }}
+  >
     {TypographyTemplate.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable story="Component API"/>
+<ArgsTable story="Component API" />

@@ -39,9 +39,7 @@ export const data = [
   [1644340500000, 0.45],
 ];
 
-<Meta
-  title="UI Elements/Analytics & Graphs"
-/>
+<Meta title="Components/Analytics & Graphs/Graphs" component={LineGraph} />
 
 # 📈 Graphs
 
@@ -50,13 +48,11 @@ export const data = [
 - When selecting a chart color palette make sure colors are distinct when viewed by a person with color blindness
   - Test the palette with a checker such as the [Coblis — Color Blindness Simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/)
 
-export const Template = (args) => (
-  <LineGraph {...args} />
-);
+export const Template = (args) => <LineGraph {...args} />;
 
 <Canvas>
   <Story
-    name="Graph"
+    name="Default"
     args={{
       data: [
         {
@@ -64,12 +60,12 @@ export const Template = (args) => (
           borderColor: 'transparent',
           backgroundColor: 'rgba(54, 131, 220, 0.7)',
           data,
-        }
+        },
       ],
       showToday: true,
       nativeLegend: false,
-      timezone: "America/New_York",
-      unit: "%",
+      timezone: 'America/New_York',
+      unit: '%',
       chartHeight: undefined,
       suggestedMax: undefined,
       rowHeaders: undefined,
@@ -77,15 +73,17 @@ export const Template = (args) => (
     }}
     argTypes={{
       data: {
-        description: "The data point to plot on the line graph that should be of type `DataSet`",
+        description:
+          'The data point to plot on the line graph that should be of type `DataSet`',
         type: { name: 'DataSet', required: true },
       },
       showToday: {
-        description: 'Determines whether dates or times are shown on the x-axis and also deturminds the x-axis step size',
+        description:
+          'Determines whether dates or times are shown on the x-axis and also deturminds the x-axis step size',
         type: { name: 'boolean', required: true },
       },
       nativeLegend: {
-        description: "Show the native **Chart.js** legend",
+        description: 'Show the native **Chart.js** legend',
         table: {
           defaultValue: {
             summary: false,
@@ -93,15 +91,16 @@ export const Template = (args) => (
         },
       },
       timezone: {
-        description: 'The timezone the graph should use for interpreting the UNIX datetimes in the data set',
+        description:
+          'The timezone the graph should use for interpreting the UNIX datetimes in the data set',
         table: {
           defaultValue: {
-            summary: "UTC",
+            summary: 'UTC',
           },
         },
       },
       unit: {
-        description: "The unit to add to the mouse-over tooltip in the chart",
+        description: 'The unit to add to the mouse-over tooltip in the chart',
         type: { name: 'string' },
         table: {
           defaultValue: {
@@ -119,7 +118,8 @@ export const Template = (args) => (
         },
       },
       suggestedMax: {
-        description: 'The suggested maximum y-axis value passed to **Chart,js**\n`number`',
+        description:
+          'The suggested maximum y-axis value passed to **Chart,js**\n`number`',
         type: { name: 'number' },
         table: {
           defaultValue: {
@@ -128,7 +128,7 @@ export const Template = (args) => (
         },
       },
       rowHeaders: {
-        description: "Row headers for the legend",
+        description: 'Row headers for the legend',
         table: {
           defaultValue: {
             summary: 'undefined',
@@ -136,7 +136,7 @@ export const Template = (args) => (
         },
       },
       legendRows: {
-        description: "Legend row labels that are used in the legend",
+        description: 'Legend row labels that are used in the legend',
         table: {
           defaultValue: {
             summary: 'undefined',
@@ -149,7 +149,7 @@ export const Template = (args) => (
   </Story>
 </Canvas>
 
-<ArgsTable story="Graph" />
+<ArgsTable story="Default" />
 
 ## Example
 
@@ -158,7 +158,7 @@ export const Template = (args) => (
 ### Linode Network Transfer History
 
 <Canvas>
-  <Story name="Example" >
+  <Story name="Example">
     <TranferHistory linodeID={0} linodeCreated="2022-02-08T14:14:57" />
   </Story>
 </Canvas>

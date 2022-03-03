@@ -2,11 +2,11 @@ import * as React from 'react';
 import ErrorState from './ErrorState';
 
 export default {
-  title: 'UI Elements/Entity Landing Page/Error Display',
+  title: 'Features/Entity Landing Page/Error Display',
 };
 
 export const WithText = () => <ErrorState errorText="An error has occurred." />;
 
 WithText.story = {
-  name: 'with text',
+  name: 'Error Display',
 };

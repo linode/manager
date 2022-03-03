@@ -2,7 +2,7 @@ import * as React from 'react';
 import PaginationControls from './PaginationControls';
 
 export default {
-  title: 'Components/PaginationControl',
+  title: 'Components/Pagination Control',
 };
 
 export const PaginationControl = () => {
