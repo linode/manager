@@ -36,7 +36,7 @@ class InteractiveEditableText extends React.Component {
 }
 
 export default {
-  title: 'UI Elements/Editable Text',
+  title: 'Components/Editable Text',
 };
 
 export const HeadlineTitle = () => <InteractiveEditableText />;
