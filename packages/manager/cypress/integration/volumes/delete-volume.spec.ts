@@ -7,8 +7,8 @@ import { randomLabel } from 'support/util/random';
 authenticate();
 describe('volumes', () => {
   /*
-   * - Clicks "Delete" action menu item but cancels operation.
-   * - Clicks "Delete" action menu item and confirms operation.
+   * - Clicks "Delete" action menu item for volume but cancels operation.
+   * - Clicks "Delete" action menu item for volume and confirms operation.
    * - Confirms that volume is still in landing page list after canceled operation.
    * - Confirms that volume is removed from landing page list after confirmed operation.
    * - Confirms that volume deletion toast is displayed.
@@ -20,7 +20,7 @@ describe('volumes', () => {
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
       cy.intercept('DELETE', '*/volumes/*').as('deleteVolume');
-      cy.visitWithLogin(`/volumes`);
+      cy.visitWithLogin('/volumes');
 
       // Confirm that volume is listed and initiate deletion.
       cy.findByText(volume.label).should('be.visible');
