@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       margin: 0,
     },
   },
+  status: {
+    display: 'flex',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+  },
 }));
 
 export interface Props extends TableCellProps {
@@ -63,6 +68,7 @@ export interface Props extends TableCellProps {
   parentColumn?: string;
   compact?: boolean;
   actionCell?: boolean;
+  statusCell?: boolean;
 }
 
 type CombinedProps = Props;
@@ -77,6 +83,7 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
     sortable,
     compact,
     actionCell,
+    statusCell,
     ...rest
   } = props;
 
@@ -93,7 +100,11 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
       })}
       {...rest}
     >
-      {props.children}
+      {statusCell ? (
+        <div className={classes.status}>{props.children}</div>
+      ) : (
+        props.children
+      )}
     </TableCell>
   );
 };
