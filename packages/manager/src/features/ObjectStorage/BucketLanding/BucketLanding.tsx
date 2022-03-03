@@ -162,7 +162,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         onClick={removeBucket}
         disabled={
           bucketToRemove
-            ? !!preferences?.type_to_confirm &&
+            ? preferences?.type_to_confirm !== false &&
               confirmBucketName !== bucketToRemove.label
             : true
         }

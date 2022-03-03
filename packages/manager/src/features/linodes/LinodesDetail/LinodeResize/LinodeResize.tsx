@@ -282,7 +282,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       hostMaintenance || unauthorized || Boolean(disksError);
 
     const submitButtonDisabled =
-      !!preferences?.type_to_confirm && confirmationText !== linodeLabel;
+      preferences?.type_to_confirm !== false &&
+      confirmationText !== linodeLabel;
 
     const currentPlanHeading = linodeType
       ? type

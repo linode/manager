@@ -72,7 +72,7 @@ export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   } = props;
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
-    !!preferences?.type_to_confirm && confirmText !== clusterLabel;
+    preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
   const poolCount = clusterPools.length;
   const linodeCount = getTotalLinodes(clusterPools);
 

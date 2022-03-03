@@ -92,7 +92,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
   const submitButtonDisabled =
-    !!preferences?.type_to_confirm && confirmationText !== linodeLabel;
+    preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromImageForm,

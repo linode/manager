@@ -121,7 +121,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
   const submitButtonDisabled =
-    !!preferences?.type_to_confirm && confirmationText !== linodeLabel;
+    preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const [
     ss,

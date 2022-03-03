@@ -59,7 +59,8 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
         buttonType="primary"
         onClick={handleRestoreDatabase}
         disabled={
-          !!preferences?.type_to_confirm && confirmationText !== database.label
+          preferences?.type_to_confirm !== false &&
+          confirmationText !== database.label
         }
         loading={isLoading}
       >
