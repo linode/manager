@@ -1,0 +1,91 @@
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { withSnackbar, WithSnackbarProps, useSnackbar } from 'notistack';
+import Button from 'src/components/Button';
+import Snackbar from 'src/components/SnackBar';
+
+<Meta title="Components/Notifications/Toasts" />
+
+# Toasts
+
+### Timing
+
+- Default timing for toast notifications is 5 seconds.
+- If the message is longer, more complex, or very important, consider increasing the display time accordingly.
+- If the message is critical (e.g., an Image failed to upload), consider making it persistent until dismissed by the user.
+
+export const MyButton = (args) => {
+  const { variant, onClick } = args;
+  const handleClick = () => {
+    // just call the onClick with the provided variant
+    onClick(variant);
+  };
+  return <Button onClick={handleClick}>{variant}</Button>;
+};
+
+export const Example = () => {
+  const { enqueueSnackbar } = useSnackbar();
+  const variants = ['default', 'success', 'warning', 'error', 'info'];
+  const showToast = (variant) =>
+    enqueueSnackbar(
+      'Toast message. This will auto destruct after five seconds.',
+      {
+        variant,
+      }
+    );
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {variants.map((eachVariant) => {
+        // map over each variant and show a button for each
+        return (
+          <MyButton
+            key={eachVariant}
+            variant={eachVariant}
+            onClick={showToast}
+          />
+        );
+      })}
+    </>
+  );
+};
+
+export const Template = (args) => {
+  const Enhanced = withSnackbar(Example);
+  return (
+    <Snackbar {...args}>
+      <Enhanced />
+    </Snackbar>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Toasts"
+    args={{
+      anchorOrigin: { vertical: 'bottom', horizontal: 'right' },
+      maxSnack: 3,
+      hideIconVariant: true,
+    }}
+    argTypes={{
+      anchorOrigin: {
+        description:
+          'Determine where the toast initially appears vertically and horizontally.',
+      },
+      maxSnack: {
+        description:
+          'Set the maximum number of toasts that can appear simultaneously.',
+      },
+      hideIconVariant: {
+        description:
+          'Determine whether variant icons appear to the left of the text in the toast.',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable
+  story="Toasts"
+  include={['anchorOrigin', 'maxSnack', 'hideIconVariant']}
+/>

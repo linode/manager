@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.tagButton,
     border: 'none',
     borderRadius: 3,
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',

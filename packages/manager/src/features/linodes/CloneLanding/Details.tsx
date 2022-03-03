@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.white,
     border: 'none',
     '& path': {
-      fill: theme.color.blue,
+      fill: theme.palette.primary.main,
     },
   },
   submitButton: {

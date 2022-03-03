@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     padding: '12px 10px',
     minWidth: 0,
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     whiteSpace: 'nowrap',
     borderRadius: 0,
     '&:hover, &:focus': {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linkRoot: {
     textAlign: 'center',
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     borderRadius: 0,
     '&:hover, &:focus': {
       backgroundColor: '#3683dc',

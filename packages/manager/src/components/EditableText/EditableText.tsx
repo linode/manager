@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'inline-block',
     border: '1px solid transparent',
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     fontSize: '1.125rem',
     lineHeight: 1,
     padding: '5px 8px',

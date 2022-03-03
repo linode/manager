@@ -49,8 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 0.4,
   },
   table: {
-    borderLeft: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderLeft: `1px solid ${theme.borderColors.borderTable}`,
+    borderRight: `1px solid ${theme.borderColors.borderTable}`,
     overflowX: 'hidden',
   },
   headingCellContainer: {
@@ -58,8 +58,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   headerCell: {
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
-    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable} !important`,
+    borderTop: `1px solid ${theme.borderColors.borderTable} !important`,
+    borderBottom: `1px solid ${theme.borderColors.borderTable} !important`,
     '&.emptyCell': {
       borderRight: 'none',
     },
@@ -84,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   gpuGuideLink: {
     fontSize: '0.9em',
     '& a': {
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
     },
     '& a:hover': {
       color: '#3683dc',

@@ -1,17 +1,12 @@
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import Radio from './Radio';
-import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
 
-<Meta
-  title="UI Elements/Radio"
-  component={Radio}
-/>
+<Meta title="Elements/Radio" component={Radio} />
 
 export const Template = (args) => {
-  return (
-    <Radio {...args} />
-  );
+  return <Radio {...args} />;
 };
 
 # Radio
@@ -19,22 +14,25 @@ export const Template = (args) => {
 <hr />
 
 ### Use radio buttons to
+
 - Expose all available options
 - Select a single option from a list
- 
+
 ### Guidelines
+
 - If there are 3 or fewer items to select, use radio buttons rather than drop-down menus.
 - If possible, offer a default selection.
 - Because radio buttons allow only one choice, make sure that the options are both comprehensive and distinct.
 - Let users select an option by clicking on either the button itself or its label to provide as big a target area as possible.
- 
+
 ### Reasons for a Default Selection
+
 - Expedite tasks
 - Give people control and align with their expectations
 
 <Canvas>
-  <Story name="Radio">
-   <Radio />
+  <Story name="Default">
+    <Radio />
   </Story>
 </Canvas>
 
@@ -42,7 +40,11 @@ export const Template = (args) => {
 
 <Canvas>
   <Story name="Controlled Radio">
-    <FormControlLabel style={{ marginLeft: 0 }} label="Radio Label" control={<Radio />} />
+    <FormControlLabel
+      style={{ marginLeft: 0 }}
+      label="Radio Label"
+      control={<Radio />}
+    />
   </Story>
 </Canvas>
 
@@ -78,7 +80,7 @@ export const Template = (args) => {
       inputProps: undefined,
       inputRef: undefined,
       required: false,
-      size: "medium",
+      size: 'medium',
     }}
     argTypes={{
       checked: {
@@ -106,7 +108,8 @@ export const Template = (args) => {
         },
       },
       onChange: {
-        description: "Callback fired when the state is changed. Signature: `function(event: object) => void` event: The event source of the callback. You can pull out the new value by accessing `event.target.value` (`string`). You can pull out the new checked state by accessing `event.target.checked` (`boolean`)." ,
+        description:
+          'Callback fired when the state is changed. Signature: `function(event: object) => void` event: The event source of the callback. You can pull out the new value by accessing `event.target.value` (`string`). You can pull out the new checked state by accessing `event.target.checked` (`boolean`).',
         table: {
           defaultValue: {
             summary: 'undefined',
@@ -114,10 +117,10 @@ export const Template = (args) => {
         },
       },
     }}
-   >
+  >
     {Template.bind({})}
-   </Story>
- </Canvas>
+  </Story>
+</Canvas>
 
 <ArgsTable
   story="Component API"
@@ -136,6 +139,6 @@ export const Template = (args) => {
     'focusRipple',
     'focusVisibleClassName',
     'onFocusVisible',
-    'TouchRippleProps'
+    'TouchRippleProps',
   ]}
 />

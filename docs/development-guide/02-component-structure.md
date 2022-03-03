@@ -21,7 +21,7 @@ import { makeStyles, Theme } from "src/components/core/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
   name: {
-    color: theme.color.blue,
+    color: theme.color.black,
   },
 }));
 

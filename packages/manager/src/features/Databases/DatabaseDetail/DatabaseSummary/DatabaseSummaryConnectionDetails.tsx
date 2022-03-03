@@ -55,13 +55,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2),
   },
   actionText: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     whiteSpace: 'nowrap',
   },
   connectionDetailsCtn: {
     padding: '8px 15px',
-    background: theme.cmrBGColors.bgAccessRow,
-    border: `1px solid ${theme.color.borderPagination}`,
+    background: theme.bg.bgAccessRow,
+    border: `1px solid ${theme.name === 'lightTheme' ? '#ccc' : '#222'}`,
     '& p': {
       lineHeight: '1.5rem',
       '& span': {
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   showBtn: {
-    color: theme.color.blue,
+    color: theme.palette.primary.main,
     marginLeft: theme.spacing(),
     fontSize: '0.875rem',
     minHeight: 'auto',
@@ -81,7 +81,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 22,
     marginBottom: 2,
     '& circle': {
-      stroke: theme.color.blue,
+      stroke: theme.palette.primary.main,
     },
     alignSelf: 'flex-end',
   },

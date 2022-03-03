@@ -4,9 +4,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     borderRadius: 1,
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
     fontSize: '.875rem',
     height: 28,
     marginTop: theme.spacing(0.5),
@@ -28,11 +28,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '&:disabled': {
       background: theme.color.grey6,
-      color: theme.cmrTextColors.tableStatic,
+      color: theme.textColors.tableStatic,
     },
     '&:hover': {
       background: theme.color.grey9,
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
     },
   },
 }));

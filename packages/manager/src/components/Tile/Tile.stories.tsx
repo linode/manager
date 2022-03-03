@@ -1,11 +1,9 @@
 import * as React from 'react';
-
+import Chat from 'src/assets/icons/chat.svg';
 import Tile from './Tile';
 
-import Chat from 'src/assets/icons/chat.svg';
-
 export default {
-  title: 'UI Elements/Tile',
+  title: 'Components/Tile',
 };
 
 export const Internal = () => (
@@ -15,11 +13,11 @@ export const Internal = () => (
       title="This is the Tile title"
       description="In order to make the tile a link, the link prop needs to be set.
         It can be either an internal or external link, or an onClick function"
-      link="http://cloud.manager.com"
+      link="http://cloud.linode.com"
     />
   </div>
 );
 
 Internal.story = {
-  name: 'internal',
+  name: 'Tile',
 };

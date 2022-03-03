@@ -1,0 +1,52 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import LinearProgress from './LinearProgress';
+
+<Meta
+  title="Components/Loading States/Linear Progress"
+  component={LinearProgress}
+/>
+
+# Linear Progress
+
+**Indeterminate indicators**
+
+Expresses an unspecified amount of wait time. They should be used when progress isn&rsquo;t detectable, or if it&rsquo;s not necessary to indicate how long an activity will take.
+
+export const Template = (args) => <LinearProgress {...args} />;
+
+<Canvas>
+  <Story
+    name="Linear Progress"
+    args={{ value: null, variant: null }}
+    argTypes={{
+      value: {
+        description:
+          'The value of the progress indicator for the determinate and buffer variants.',
+        table: {
+          type: { summary: 'number' },
+        },
+        control: { type: 'number' },
+      },
+      variant: {
+        description:
+          'The variant to use. Use indeterminate when there is no progress value.',
+        table: {
+          type: {
+            summary: 'determinate | indeterminate',
+          },
+        },
+        control: {
+          type: 'select',
+        },
+        options: ['determinate', 'indeterminate'],
+      },
+      ref: {
+        table: { disable: true },
+      },
+    }}
+  >
+    {Template.bind()}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Linear Progress" sort="requiredFirst" />

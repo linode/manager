@@ -25,7 +25,7 @@ export const decorators = [
         {/* Keep this in case we want to change the background color based on the mode */}
         {/* <div
           style={{
-            backgroundColor: options[_key]().cmrBGColors.bgApp,
+            backgroundColor: options[_key]().bg.app,
           }}
         > */}
         <Story />
@@ -45,9 +45,13 @@ export const parameters = {
   options: {
     storySort: {
       method: 'alphabetical',
-      order: ['Guidelines', 'Components', 'UI Elements', 'Core'],
+      order: ['Intro', 'Features', 'Components', 'Elements', 'Core Styles'],
     },
   },
+  previewTabs: {
+    'storybook/docs/panel': { index: -1 },
+  },
+  viewMode: 'docs',
   viewport: {
     viewports: MINIMAL_VIEWPORTS,
   },
