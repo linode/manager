@@ -79,15 +79,18 @@ export const useAllManagedContactsQuery = () =>
 
 export const useAllManagedIssuesQuery = () =>
   useQuery<ExtendedIssue[], APIError[]>(`${queryKey}-issues`, getAllIssues, {
+    ...queryPresets.shortLived,
     refetchInterval: 20000,
-    refetchOnMount: true,
   });
 
 export const useAllManagedMonitorsQuery = () =>
   useQuery<ManagedServiceMonitor[], APIError[]>(
     `${queryKey}-monitors`,
     getAllMonitors,
-    { refetchInterval: 20000 }
+    {
+      ...queryPresets.shortLived,
+      refetchInterval: 20000,
+    }
   );
 
 export const useManagedStatsQuery = () =>
