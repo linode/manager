@@ -4,7 +4,7 @@ import {
   shareAddressesSchema,
   updateIPSchema,
 } from '@linode/validation/lib/networking.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -140,7 +140,7 @@ export const shareAddressesv4 = (payload: IPSharingPayload) =>
  */
 export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
-    setURL(`${API_ROOT}/networking/ips/share`),
+    setURL(`${BETA_API_ROOT}/networking/ips/share`),
     setMethod('POST'),
     setData(payload, shareAddressesSchema)
   );
