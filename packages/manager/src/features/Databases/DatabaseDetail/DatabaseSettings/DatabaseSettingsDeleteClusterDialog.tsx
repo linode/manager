@@ -74,7 +74,8 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<CombinedProps> = (
   const [confirmText, setConfirmText] = React.useState('');
   const [isLoading, setIsLoading] = React.useState(false);
   const { push } = useHistory();
-  const disabled = confirmText !== databaseLabel;
+  const disabled =
+    !!preferences?.type_to_confirm && confirmText !== databaseLabel;
 
   const onDeleteCluster = () => {
     setIsLoading(true);
