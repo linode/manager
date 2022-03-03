@@ -78,11 +78,10 @@ export const useAllManagedContactsQuery = () =>
   );
 
 export const useAllManagedIssuesQuery = () =>
-  useQuery<ExtendedIssue[], APIError[]>(
-    `${queryKey}-issues`,
-    getAllIssues,
-    queryPresets.oneTimeFetch
-  );
+  useQuery<ExtendedIssue[], APIError[]>(`${queryKey}-issues`, getAllIssues, {
+    refetchInterval: 20000,
+    refetchOnMount: true,
+  });
 
 export const useAllManagedMonitorsQuery = () =>
   useQuery<ManagedServiceMonitor[], APIError[]>(
@@ -92,11 +91,11 @@ export const useAllManagedMonitorsQuery = () =>
   );
 
 export const useManagedStatsQuery = () =>
-  useQuery<ManagedStats, APIError[]>(
-    `${queryKey}-stats`,
-    getManagedStats,
-    queryPresets.shortLived
-  );
+  useQuery<ManagedStats, APIError[]>(`${queryKey}-stats`, getManagedStats, {
+    ...queryPresets.shortLived,
+    refetchOnWindowFocus: false,
+    retry: false,
+  });
 
 export const useDeleteMonitorMutation = () =>
   useMutation<{}, APIError[], { id: number }>(

@@ -59,11 +59,10 @@ export const ManagedDashboardCard = () => {
   //   10000
   // );
 
-  const statsError =
-    error && data === null
-      ? getAPIErrorOrDefault(error, 'Unable to load your usage statistics.')[0]
-          .reason
-      : undefined;
+  const statsError = error
+    ? getAPIErrorOrDefault(error, 'Unable to load your usage statistics.')[0]
+        .reason
+    : undefined;
 
   return (
     <DashboardCard
