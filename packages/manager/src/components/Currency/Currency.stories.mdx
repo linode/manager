@@ -1,11 +1,9 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Currency from './Currency';
 
-<Meta title="Core/Typography/Currency" component={Currency} />
+<Meta title="Elements/Typography/Currency" component={Currency} />
 
-export const CurrencyTemplate = (args) => (
-  <Currency {...args} />
-)
+export const CurrencyTemplate = (args) => <Currency {...args} />;
 
 # Currency
 
@@ -13,27 +11,24 @@ export const CurrencyTemplate = (args) => (
   <Story
     name="Currency"
     args={{
-      quantity: 4.00,
+      quantity: 4.0,
       decimalPlaces: 2,
       wrapInParentheses: false,
     }}
     argTypes={{
       decimalPlaces: {
         control: {
-          min: 0
-        }
+          min: 0,
+        },
       },
       wrapInParentheses: {
-        description: 'A boolean used to wrap the currency in parenthesis. This is normally done to indicate a negative amount or balance.'
-      }
-    }}>
-      {CurrencyTemplate.bind({})}
+        description:
+          'A boolean used to wrap the currency in parenthesis. This is normally done to indicate a negative amount or balance.',
+      },
+    }}
+  >
+    {CurrencyTemplate.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable
- story="Currency"
- exclude={[
-   'dataAttrs',
- ]}
-/>
+<ArgsTable story="Currency" exclude={['dataAttrs']} />
