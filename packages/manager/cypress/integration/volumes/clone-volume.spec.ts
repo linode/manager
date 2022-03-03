@@ -1,13 +1,13 @@
 import { createVolume, Volume } from '@linode/api-v4/lib/volumes';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
-import { randomNumber, randomLabel } from 'support/util/random';
-//import { ui } from 'support/ui';
+import { randomLabel } from 'support/util/random';
 
 authenticate();
 describe('volumes', () => {
   /**
-   *
+   * - Clicks "Clone" action menu for volume, enters new label, and submits form.
+   * - Confirms that new volume appears in landing page with expected label and size.
    */
   it('clones a volume', () => {
     const volumeRequest = volumeRequestPayloadFactory.build({
@@ -17,6 +17,7 @@ describe('volumes', () => {
     const cloneVolumeLabel = randomLabel();
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
+      cy.intercept('POST', `*/volumes/${volume.id}/clone`).as('cloneVolume');
       cy.visitWithLogin('/volumes');
 
       // Confirm that volume is listed, initiate clone.
@@ -31,15 +32,24 @@ describe('volumes', () => {
         .should('be.visible')
         .click();
 
-      // Confirm drawer opens, input new volume label, and submit.
-      // ui.getDrawerByTitle('Clone Volume')
-      //   .should('be.visible')
-      //   .within(() => {
-      //     cy.findByText('Label').click().type(cloneVolumeLabel);
-      //     ui.getDrawerButtons().within(() => {
-      //       cy.findByText('Clone Volume').click();
-      //     });
-      // });
+      // Input new volume label and submit.
+      cy.get('[data-qa-drawer-title="Clone Volume"]')
+        .closest('[data-qa-drawer="true"]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Label').click().type(cloneVolumeLabel);
+          cy.get('[data-qa-buttons="true"]').within(() => {
+            cy.findByText('Clone Volume').should('be.visible').click();
+          });
+        });
+
+      // Confirm that volume has been cloned.
+      cy.wait('@cloneVolume').its('response.statusCode').should('eq', 200);
+      cy.findByText(cloneVolumeLabel)
+        .closest('tr')
+        .within(() => {
+          cy.findByText(`${volume.size} GB`).should('be.visible');
+        });
     });
   });
 });
