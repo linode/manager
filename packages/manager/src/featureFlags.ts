@@ -38,7 +38,6 @@ export interface Flags {
   bareMetal: boolean;
   tpaProviders: Provider[];
   machineImages: boolean;
-  imagesPricingBanner: ImagesPricingBanner;
   imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
@@ -96,16 +95,6 @@ export interface Provider {
   displayName: string;
   icon: any;
   href: string;
-}
-
-export interface ImagesPricingBanner {
-  key: string;
-  lede: string;
-  link: {
-    text: string;
-    url: string;
-  };
-  text: string;
 }
 
 export interface ImagesPricingCopy {

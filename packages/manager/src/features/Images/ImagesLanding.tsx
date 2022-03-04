@@ -40,7 +40,6 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
 import ImagesDrawer, { DrawerMode } from './ImagesDrawer';
-import ImagesPricingBanner from './ImagesPricingBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   imageTable: {
@@ -466,7 +465,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Images" />
-      <ImagesPricingBanner />
       <LandingHeader
         title="Images"
         entity="Image"
