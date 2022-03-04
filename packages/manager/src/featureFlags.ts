@@ -25,7 +25,6 @@ export interface Flags {
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;
   lkeHideButtons: boolean;
-  firewalls: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
@@ -33,7 +32,6 @@ export interface Flags {
   vlans: boolean;
   cvvRequired: boolean;
   databases: boolean;
-  firewallBetaNotification: boolean;
   entityTransfers: boolean;
   bareMetal: boolean;
   tpaProviders: Provider[];
