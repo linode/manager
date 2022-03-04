@@ -38,10 +38,8 @@ export interface Flags {
   bareMetal: boolean;
   tpaProviders: Provider[];
   machineImages: boolean;
-  imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
-  imagesPriceInfo: boolean;
   apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
   lkeHighAvailability: boolean;
@@ -95,11 +93,6 @@ export interface Provider {
   displayName: string;
   icon: any;
   href: string;
-}
-
-export interface ImagesPricingCopy {
-  captureImage: string;
-  uploadImage: string;
 }
 
 interface ReferralBannerText {
