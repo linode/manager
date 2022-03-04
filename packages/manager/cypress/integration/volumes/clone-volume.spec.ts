@@ -4,9 +4,9 @@ import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 
 authenticate();
-describe('volumes', () => {
-  /**
-   * - Clicks "Clone" action menu for volume, enters new label, and submits form.
+describe('volume clone flow', () => {
+  /*
+   * - Clicks "Clone" action menu item for volume, enters new label, and submits form.
    * - Confirms that new volume appears in landing page with expected label and size.
    */
   it('clones a volume', () => {

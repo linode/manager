@@ -5,7 +5,7 @@ import { assertToast } from 'support/ui/events';
 import { randomLabel } from 'support/util/random';
 
 authenticate();
-describe('volumes', () => {
+describe('volume delete flow', () => {
   /*
    * - Clicks "Delete" action menu item for volume but cancels operation.
    * - Clicks "Delete" action menu item for volume and confirms operation.

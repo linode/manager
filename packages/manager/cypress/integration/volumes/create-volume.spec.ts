@@ -11,7 +11,7 @@ import {
 } from 'support/util/random';
 
 authenticate();
-describe('volumes', () => {
+describe('volume create flow', () => {
   /*
    * - Creates a volume that is not attached to a Linode.
    * - Assigns 3 tags to the volume.

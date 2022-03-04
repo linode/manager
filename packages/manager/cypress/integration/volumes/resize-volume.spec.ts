@@ -4,7 +4,7 @@ import { authenticate } from 'support/api/authentication';
 import { randomNumber, randomLabel } from 'support/util/random';
 
 authenticate();
-describe('volumes', () => {
+describe('volume resize flow', () => {
   /*
    * - Clicks "Resize" action menu item for volume, enters new size, and submits form.
    * - Confirms that volume resize drawer appears after submitting form.
