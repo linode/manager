@@ -360,7 +360,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               className={`p0 ${isDetailLanding && classes.chipWrapper}`}
             >
               <Chip
-                data-qa-linode-status={true}
+                data-qa-linode-status
                 className={classNames({
                   [classes.statusChip]: true,
                   [classes.statusChipLandingDetailView]: isDetailLanding,

@@ -34,7 +34,7 @@ authenticate();
 describe('volume attach and detach flows', () => {
   /*
    * - Clicks "Attach" action menu item for volume, selects Linode with common region, and submits form.
-   * - Confirms that volume is attached to Linode
+   * - Confirms that volume attach toast appears and that Linode is listed as attached for Volume.
    */
   it('attaches a volume to a Linode', () => {
     const commonRegion = randomItem(regions);
@@ -97,7 +97,7 @@ describe('volume attach and detach flows', () => {
 
   /*
    * - Clicks "Detach" action menu item for volume.
-   * - Confirms that volume has been detached from Linode.
+   * - Confirms that volume detach toast appears and that Linode is no longer listed as attached for Volume.
    */
   it('detaches a volume from a Linode', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
@@ -148,7 +148,7 @@ describe('volume attach and detach flows', () => {
   /*
    * - Clicks "Detach" action menu item for volume on Linode details page.
    * - Confirms that volume is no longer listed on Linode details page.
-   * - Confirms that volume is no longer listed as attached on Volumes landing page.
+   * - Confirms that Linode is no longer listed as attached to Volume on Volumes landing page.
    */
   it('detaches a volume from a Linode via Linode details page', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
