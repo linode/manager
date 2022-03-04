@@ -371,14 +371,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onCancelFailed: onCancelFailedClick,
   };
 
-  // @todo remove this check after Machine Images is in GA
-  // This is used instead of a feature flag, since there is no
-  // customer tag for this feature; if status is returned from the API,
-  // we want to include it in the table.
-  const machineImagesEnabled = imagesData.some((thisImage) =>
-    thisImage.hasOwnProperty('status')
-  );
-
   const manualHeaders = getHeaders('manual');
   const automaticHeaders = getHeaders('automatic');
 
@@ -475,9 +467,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Custom Images</Typography>
           <Typography className={classes.imageTableSubheader}>
-            {machineImagesEnabled
-              ? `These are images you manually uploaded or captured from an existing Linode disk.`
-              : `These are images you captured from an existing Linode disk.`}
+            These are images you manually uploaded or captured from an existing
+            Linode disk.
           </Typography>
         </div>
         <EntityTable
