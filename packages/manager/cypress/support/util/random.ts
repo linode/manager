@@ -8,29 +8,19 @@ import { entityPrefix } from 'support/constants/cypress';
  * Describes options for generating a random string.
  */
 interface randomStringOptions {
-  /**
-   * Whether random string should include lowercase alphabetical characters.
-   */
+  /// Whether random string should include lowercase alphabetical characters.
   lowercase: boolean;
 
-  /**
-   * Whether random string should include uppercase alphabetical characters.
-   */
+  /// Whether random string should include uppercase alphabetical characters.
   uppercase: boolean;
 
-  /**
-   * Whether random string should include numeric characters.
-   */
+  /// Whether random string should include numeric characters.
   numbers: boolean;
 
-  /**
-   * Whether random string should include symbols.
-   */
+  /// Whether random string should include symbols.
   symbols: boolean;
 
-  /**
-   * Whether random string should include space characters.
-   */
+  /// Whether random string should include space characters.
   spaces: boolean;
 }
 

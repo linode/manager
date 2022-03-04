@@ -27,8 +27,9 @@ import '@testing-library/cypress/add-commands';
 import 'cypress-axe';
 import './login';
 
-// TODO Add documentation.
 /**
+ * Returns a Cypress Promise that can be used in place of the given Promise.
+ *
  * @param {Promise<any>} promise - Promise with result to await.
  *
  * @returns {any} Promise result.

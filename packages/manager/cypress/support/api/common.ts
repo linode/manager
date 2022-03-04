@@ -94,6 +94,7 @@ export const deleteByLabel = (path: string, label: string) => {
   });
 };
 
+// @TODO Remove these in favor of constants defined in `../constants/cypress.ts`.
 export const testTag = 'cy-test';
 export const testNamePrefix = 'cy-test-';
 
@@ -115,7 +116,7 @@ export const isTestEntity = (entity) =>
  * @returns True if label is a test label, false otherwise.
  */
 export const isTestLabel = (label: string) => {
-  return label.substring(0, 8) === testNamePrefix;
+  return label.startsWith(testNamePrefix);
 };
 
 export const makeTestLabel = () => testNamePrefix + strings.randomTitle(10);
