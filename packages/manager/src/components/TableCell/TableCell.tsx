@@ -21,6 +21,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   noWrap: {
     whiteSpace: 'nowrap',
   },
+  center: {
+    textAlign: 'center',
+    '&:last-child': {
+      paddingRight: '15px',
+    },
+  },
   sortable: {
     color: theme.color.headline,
     fontWeight: 'normal',
@@ -63,6 +69,7 @@ export interface Props extends TableCellProps {
   parentColumn?: string;
   compact?: boolean;
   actionCell?: boolean;
+  center?: boolean;
 }
 
 type CombinedProps = Props;
@@ -77,6 +84,7 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
     sortable,
     compact,
     actionCell,
+    center,
     ...rest
   } = props;
 
@@ -88,6 +96,7 @@ export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
         [classes.sortable]: sortable,
         [classes.compact]: compact,
         [classes.actionCell]: actionCell,
+        [classes.center]: center,
         // hide the cell at small breakpoints if it's empty with no parent column
         emptyCell: !parentColumn && !props.children,
       })}
