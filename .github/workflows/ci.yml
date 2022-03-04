@@ -212,7 +212,7 @@ jobs:
 
   build-storybook:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/develop'
     needs:
       - build-sdk
     steps:
