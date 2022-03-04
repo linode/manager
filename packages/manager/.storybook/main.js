@@ -13,6 +13,7 @@ module.exports = {
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
   ],
+  staticDirs: ['../public'],
   webpackFinal: (config) => {
     /**
      * Added logic to find svg config included with Storybook and tell it to excude all svgs.
