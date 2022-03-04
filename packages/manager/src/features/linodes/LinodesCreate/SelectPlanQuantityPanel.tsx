@@ -30,7 +30,7 @@ import { gpuPlanText } from './utilities';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
-  subHeadings: [string, string];
+  subHeadings: string[];
 }
 
 type ClassNames =
@@ -151,6 +151,9 @@ export class SelectPlanPanel extends React.Component<
       updatePlanCount,
     } = this.props;
 
+    // We don't want network information for LKE so we remove the last two elements.
+    const subHeadings = type.subHeadings.slice(0, -2);
+
     const renderVariant = () => (
       <Grid item xs={12}>
         <div className={classes.enhancedInputOuter}>
@@ -190,11 +193,13 @@ export class SelectPlanPanel extends React.Component<
             </TableCell>
             <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
             <TableCell data-qa-hourly>{`$` + type.price.hourly}</TableCell>
-            <TableCell data-qa-ram>
+            <TableCell center data-qa-ram>
               {convertMegabytesTo(type.memory, true)}
             </TableCell>
-            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
-            <TableCell data-qa-storage>
+            <TableCell center data-qa-cpu>
+              {type.vcpus}
+            </TableCell>
+            <TableCell center data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
             </TableCell>
             <TableCell>
@@ -232,7 +237,7 @@ export class SelectPlanPanel extends React.Component<
             checked={type.id === String(selectedID)}
             onClick={this.onSelect(type.id)}
             heading={type.heading}
-            subheadings={type.subHeadings}
+            subheadings={subHeadings}
             disabled={disabled}
             renderVariant={renderVariant}
           />
@@ -248,9 +253,15 @@ export class SelectPlanPanel extends React.Component<
           <TableCell data-qa-plan-header>Plan</TableCell>
           <TableCell data-qa-monthly-header>Monthly</TableCell>
           <TableCell data-qa-hourly-header>Hourly</TableCell>
-          <TableCell data-qa-ram-header>RAM</TableCell>
-          <TableCell data-qa-cpu-header>CPUs</TableCell>
-          <TableCell data-qa-storage-header>Storage</TableCell>
+          <TableCell center data-qa-ram-header>
+            RAM
+          </TableCell>
+          <TableCell center data-qa-cpu-header>
+            CPUs
+          </TableCell>
+          <TableCell center data-qa-storage-header>
+            Storage
+          </TableCell>
           <TableCell>
             <p className="visually-hidden">Quantity</p>
           </TableCell>

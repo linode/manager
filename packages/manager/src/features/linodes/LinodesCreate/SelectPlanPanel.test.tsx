@@ -9,17 +9,6 @@ describe('Select Plan Panel', () => {
   it('should render TabbedPanel', () => {
     const { getByText } = renderWithTheme(
       <SelectPlanPanel
-        classes={{
-          root: '',
-          copy: '',
-          disabledRow: '',
-          table: '',
-          headerCell: '',
-          chip: '',
-          radioCell: '',
-          headingCellContainer: '',
-          gpuGuideLink: '',
-        }}
         types={extendedTypes}
         currentPlanHeading="Linode 2GB"
         selectedID="test"

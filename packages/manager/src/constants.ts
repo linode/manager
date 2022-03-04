@@ -286,6 +286,11 @@ export const MBpsIntraDC = 75;
 export const MBpsInterDC = 1.5;
 
 /**
+ * The incoming network rate (in Gbps) that is standard for all Linodes
+ */
+export const LINODE_NETWORK_IN = 40;
+
+/**
  * Events that have entities or otherwise would
  * be calculated as "clickable" in menus, but for which
  * there is no sensible destination.

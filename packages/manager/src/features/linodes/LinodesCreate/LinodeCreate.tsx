@@ -604,6 +604,7 @@ export class LinodeCreate extends React.PureComponent<
             disabled={userCannotCreateLinode}
             disabledClasses={this.props.disabledClasses}
             isCreate
+            showTransfer
           />
           <LabelAndTagsPanel
             data-qa-label-and-tags-panel
