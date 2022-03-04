@@ -24,7 +24,7 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { dcDisplayNames } from 'src/constants';
+import { dcDisplayNames, LINODE_NETWORK_IN } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
@@ -264,7 +264,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             ) : null}
             {shouldShowNetwork ? (
               <TableCell center noWrap data-qa-network>
-                40 Gbps <span style={{ color: '#9DA4A6' }}>/</span>{' '}
+                {LINODE_NETWORK_IN} Gbps{' '}
+                <span style={{ color: '#9DA4A6' }}>/</span>{' '}
                 {type.network_out / 1000} Gbps
               </TableCell>
             ) : null}
