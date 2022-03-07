@@ -1,8 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { Theme, makeStyles } from 'src/components/core/styles';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import createMailto from './createMailto';
 
 import AdaLink from './AdaLink';
 
@@ -79,13 +79,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
+
 export const Footer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { desktopMenuIsOpen } = props;
-  const feedbackEmail = window.location.host.match(/beta/)
-    ? 'cloudbeta@linode.com'
-    : 'feedback@linode.com';
 
   return (
     <footer role="contentinfo">
@@ -124,12 +123,12 @@ export const Footer: React.FC<Props> = (props) => {
             [classes.feedbackLink]: true,
           })}
         >
-          <a
+          <ExternalLink
             className={classes.link}
-            href={createMailto(window.navigator.userAgent || '', feedbackEmail)}
-          >
-            Provide Feedback
-          </a>
+            text="Provide Feedback"
+            link={FEEDBACK_LINK}
+            hideIcon
+          />
         </Grid>
         <Grid item className={classes.adaLink}>
           <AdaLink />
