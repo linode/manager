@@ -231,16 +231,16 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell>
+      <TableCell statusCell={!linodeError}>
         {linodeError ? (
           <Typography className={classes.error}>
             Error retrieving status
           </Typography>
         ) : (
-          <Grid container alignItems="center" wrap="nowrap">
+          <>
             <StatusIcon status={iconStatus} />
             {displayStatus}
-          </Grid>
+          </>
         )}
       </TableCell>
       <TableCell>

@@ -44,7 +44,8 @@ export const parameters = {
   controls: { expanded: true },
   options: {
     storySort: {
-      order: ['Intro', 'Components', 'UI Elements', 'Core'],
+      method: 'alphabetical',
+      order: ['Intro', 'Features', 'Components', 'Elements', 'Core Styles'],
     },
   },
   previewTabs: {
@@ -55,13 +56,3 @@ export const parameters = {
     viewports: MINIMAL_VIEWPORTS,
   },
 };
-
-// Use the Mock Service Worker to mock API requests.
-if (typeof global.process === 'undefined') {
-  try {
-    const { worker } = require('../src/mocks/testBrowser');
-    worker.start();
-  } catch (e) {
-    console.warn('Unable to start the MSW', e);
-  }
-}
