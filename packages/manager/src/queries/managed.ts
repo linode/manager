@@ -5,6 +5,7 @@ import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
+  queryClient,
   queryPresets,
 } from './base';
 import {
@@ -46,6 +47,7 @@ import { getTicket } from '@linode/api-v4';
 import Bluebird from 'bluebird';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
+import { isManaged } from './accountSettings';
 
 const queryKey = 'managed';
 
@@ -131,7 +133,29 @@ export const useCreateCredentialMutation = () =>
 export const useUpdateCredentialPasswordMutation = (id: number) =>
   useMutation<{}, APIError[], UpdatePasswordPayload>(
     (data) => updatePassword(id, data),
-    itemInListMutationHandler(`${queryKey}-credentials`)
+    {
+      // This endpoint returns nothing but we need the Credentials list to update
+      // because last_decrypted may need to change.
+      // @TODO API does not currently have this behavior.
+      // onSuccess: () => {
+      //   queryClient.setQueryData<ManagedCredential[]>(
+      //     `${queryKey}-credentials`,
+      //     (oldData) => {
+      //       if (!oldData) {
+      //         return [];
+      //       }
+      //       const index = oldData.findIndex((item) => item.id === id);
+      //       if (index === -1 || oldData[index].last_decrypted === null) {
+      //         // The item was not found or the credentails have never been decrypted so we don't need to update anything.
+      //         return oldData;
+      //       }
+      //       const copy = [...oldData];
+      //       copy[index] = { ...copy[index], last_decrypted: null };
+      //       return copy;
+      //     }
+      //   );
+      // },
+    }
   );
 
 export const useUpdateCredentialMutation = (id: number) =>
@@ -241,4 +265,12 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
         .catch((_) => thisIssue as ExtendedIssue)
     );
   });
+};
+
+export const invalidateSSHAccessQuery = () => {
+  if (isManaged()) {
+    // If the user is a Managed customer, their SSH Key access needs to
+    // be refetched to reflect the new Linode
+    queryClient.invalidateQueries(`${queryKey}-linode-settings`);
+  }
 };
