@@ -1,0 +1,20 @@
+version: '3.1'
+services:
+  manager-storybook:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src/components:/src/src/components
+    entrypoint: ["./scripts/storybook_static.sh"]
+  manager-storyshots:
+    environment:
+      - UPDATE=${UPDATE}
+    build:
+        context: .
+        dockerfile: Dockerfile-storyshots
+    volumes:
+      - ./src/components:/src/src/components
+    depends_on:
+      - manager-storybook
+    entrypoint: ["./scripts/storyshots_entrypoint.sh"]
