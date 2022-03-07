@@ -23,11 +23,11 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
   const { heading, agreement, displaySections } = props;
 
   return (
-    <Paper className={classes.paper}>
+    <Paper data-qa-summary className={classes.paper}>
       <Typography
         variant="h2"
         data-qa-order-summary
-        style={{ marginBottom: 4 }}
+        style={{ marginBottom: 8 }}
       >
         {heading}
       </Typography>
