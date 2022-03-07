@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-03-07] - v1.61.0
+
+### Added:
+
+- Transfer and Network In/Out columns to Linode plans tables
+- Type to confirm toggle
+
+### Changed:
+
+- Drupal Marketplace app logo
+- Feedback link 
+- Improve styling consistency for backup auto enrollment
+- Replaced copy icon and added copy tooltip on hover
+
+#### Storybook
+
+- Colors
+- Icons
+- Loading states
+- Notifications
+- Tooltip
+- Typography
+
+### Fixed:
+
+- Extra character in Support Ticket entity selection
+- Status icon alignment in tables
+- Linode Details action link colors in dark mode
+- Linode Details Configurations table alignment
+
+
 ## [2022-02-25] - v1.60.1
 
 ### Added:
