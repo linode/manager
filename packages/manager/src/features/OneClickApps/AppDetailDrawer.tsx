@@ -4,12 +4,7 @@ import Info from 'src/assets/icons/info.svg';
 import Link from 'src/assets/icons/moreInfo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { APP_ROOT } from 'src/constants';
@@ -18,47 +13,36 @@ import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
 import TipSection from './TipSection';
 
-type ClassNames =
-  | 'logo'
-  | 'appName'
-  | 'summary'
-  | 'description'
-  | 'image'
-  | 'wrapLogo'
-  | 'wrapAppName';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    logo: {
-      marginRight: theme.spacing(1),
-    },
-    appName: {
-      fontSize: '2.0rem',
-      fontFamily: theme.font.normal,
-      color: theme.color.grey4,
-      lineHeight: '2.5rem',
-    },
-    summary: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-      textAlign: 'center',
-    },
-    description: {
-      lineHeight: 1.5,
-    },
-
-    image: {
-      maxWidth: 50,
-    },
-    wrapLogo: {
-      alignSelf: 'flex-start',
-      marginLeft: -theme.spacing(3),
-    },
-    wrapAppName: {
-      maxWidth: 'fit-content',
-      minWidth: 170,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  logo: {
+    marginRight: theme.spacing(1),
+  },
+  appName: {
+    fontSize: '2.0rem',
+    fontFamily: theme.font.normal,
+    color: theme.color.grey4,
+    lineHeight: '2.5rem',
+  },
+  summary: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    textAlign: 'center',
+  },
+  description: {
+    lineHeight: 1.5,
+  },
+  image: {
+    maxWidth: 50,
+  },
+  wrapLogo: {
+    alignSelf: 'flex-start',
+    marginLeft: -theme.spacing(3),
+  },
+  wrapAppName: {
+    maxWidth: 'fit-content',
+    minWidth: 170,
+  },
+}));
 
 interface Props {
   stackScriptLabel: string;
@@ -66,12 +50,9 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
-  const { classes, stackScriptLabel, open, onClose } = props;
+export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
+  const { stackScriptLabel, open, onClose } = props;
+  const classes = useStyles();
 
   const app = oneClickApps.find((app) => {
     const cleanedStackScriptLabel = stackScriptLabel
@@ -155,6 +136,4 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(AppDetailDrawer);
+export default AppDetailDrawer;
