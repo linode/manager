@@ -21,7 +21,7 @@ If you already have your development environment set up, please read the [contri
 
 ## Reaching Out
 
-To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use feedback@linode.com
+To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use [linode.com/feedback](https://www.linode.com/feedback/).
 
 ## License
 
