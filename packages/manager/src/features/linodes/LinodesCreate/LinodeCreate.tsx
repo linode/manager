@@ -81,9 +81,6 @@ const styles = (theme: Theme) =>
   createStyles({
     form: {
       width: '100%',
-      [theme.breakpoints.up('md')]: {
-        display: 'flex',
-      },
     },
     stackScriptWrapper: {
       '& [role="tablist"]': {
@@ -667,14 +664,6 @@ export class LinodeCreate extends React.PureComponent<
             data-qa-checkout-bar
             heading={`Summary ${this.props.label}`}
             displaySections={displaySections}
-            agreement={
-              showAgreement ? (
-                <EUAgreementCheckbox
-                  checked={signedAgreement}
-                  onChange={handleAgreementChange}
-                />
-              ) : undefined
-            }
           >
             {this.props.createType === 'fromApp' &&
             this.props.documentation.length > 0 ? (

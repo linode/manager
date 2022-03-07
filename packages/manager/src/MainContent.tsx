@@ -276,7 +276,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
     >
       <PreferenceToggle<boolean>
         preferenceKey="desktop_sidebar_open"
-        preferenceOptions={[true, false]}
+        preferenceOptions={[false, true]}
       >
         {({
           preference: desktopMenuIsOpen,
