@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`HighlightedMarkdown component should highlight text consistently 1`] = `
+<DocumentFragment>
+  <p
+    class="MuiTypography-root makeStyles-root-1 formatted-text MuiTypography-body1"
+  />
+  <h1>
+    Some markdown
+  </h1>
+  
+
+  <pre>
+    <code
+      class="hljs javascript"
+    >
+      <span
+        class="hljs-keyword"
+      >
+        const
+      </span>
+       x = 
+      <span
+        class="hljs-function"
+      >
+        <span
+          class="hljs-keyword"
+        >
+          function
+        </span>
+        (
+        <span
+          class="hljs-params"
+        />
+        ) 
+      </span>
+      { 
+      <span
+        class="hljs-keyword"
+      >
+        return
+      </span>
+       
+      <span
+        class="hljs-literal"
+      >
+        true
+      </span>
+      ; }
+
+    </code>
+  </pre>
+  <p />
+</DocumentFragment>
+`;
