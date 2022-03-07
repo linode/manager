@@ -270,6 +270,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   actionItem: {
     borderRadius: 0,
+    color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
     height: theme.spacing(5),
