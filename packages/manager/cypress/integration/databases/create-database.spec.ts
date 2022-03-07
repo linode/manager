@@ -120,7 +120,7 @@ describe('create a database cluster, mocked data', () => {
         cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
           () => {
             cy.findByText(configuration.label).should('be.visible');
-            cy.findByText('provisioning').should('be.visible');
+            cy.findByText('Provisioning').should('be.visible');
             cy.findByText(
               `${configuration.engine} v${configuration.version}`
             ).should('be.visible');
@@ -139,7 +139,7 @@ describe('create a database cluster, mocked data', () => {
         cy.wait('@listDatabases');
         cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
           () => {
-            cy.findByText('active').should('be.visible');
+            cy.findByText('Active').should('be.visible');
           }
         );
       });

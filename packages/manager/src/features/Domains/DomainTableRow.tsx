@@ -20,9 +20,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     whiteSpace: 'nowrap',
   },
-  statusCell: {
-    whiteSpace: 'nowrap',
-  },
 }));
 
 type CombinedProps = Domain & Handlers;
@@ -65,7 +62,7 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </div>
       </TableCell>
-      <TableCell className={classes.statusCell} data-qa-domain-status>
+      <TableCell statusCell data-qa-domain-status>
         <StatusIcon status={domainStatusToIconStatus(status)} />
         {humanizeDomainStatus(status)}
       </TableCell>

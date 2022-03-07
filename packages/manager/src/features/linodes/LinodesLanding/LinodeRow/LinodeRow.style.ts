@@ -10,7 +10,6 @@ export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
 type ClassNames =
   | 'bodyRow'
-  | 'status'
   | 'statusCell'
   | 'statusCellMaintenance'
   | 'statusLink'
@@ -38,12 +37,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block',
     },
     statusCell: {
-      whiteSpace: 'nowrap',
       width: '17%',
-    },
-    status: {
-      display: 'flex',
-      alignItems: 'center',
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
