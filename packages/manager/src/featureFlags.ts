@@ -32,10 +32,8 @@ export interface Flags {
   vlans: boolean;
   cvvRequired: boolean;
   databases: boolean;
-  entityTransfers: boolean;
   bareMetal: boolean;
   tpaProviders: Provider[];
-  machineImages: boolean;
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
   apiMaintenance: APIMaintenance;
