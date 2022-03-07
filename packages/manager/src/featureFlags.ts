@@ -15,11 +15,6 @@ interface TaxCollectionBanner {
 
 type OneClickApp = Record<string, string>;
 
-interface Changelog {
-  version: string;
-  message: string;
-}
-
 export interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
@@ -28,11 +23,7 @@ export interface Flags {
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
-  changelog: Changelog;
-  vlans: boolean;
-  cvvRequired: boolean;
   databases: boolean;
-  bareMetal: boolean;
   tpaProviders: Provider[];
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
