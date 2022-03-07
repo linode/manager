@@ -13,6 +13,7 @@ import {
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { tagFactory, volumeFactory } from '@src/factories';
 import { getRandomNumber, interceptOnce } from 'cypress/support/ui/common';
+import { randomLabel } from 'cypress/support/util/random';
 
 const region = 'Newark, NJ';
 
@@ -39,7 +40,11 @@ const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
 const linode = linodeList.data[1];
 const linodeLabel = linode.label;
 const linodeId = linode.id;
-const volumeList = makeResourcePage(volumeFactory.buildList(2));
+const volumeList = makeResourcePage(
+  volumeFactory.buildList(2, {
+    label: randomLabel(),
+  })
+);
 const volume = volumeList.data[1];
 const volumeLabel = volume.label;
 const volumeId = volume.id;
