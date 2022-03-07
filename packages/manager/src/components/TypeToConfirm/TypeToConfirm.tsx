@@ -1,12 +1,12 @@
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
-import TextField from 'src/components/TextField';
-import Link from 'src/components/Link';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import Grid from 'src/components/Grid';
 import CheckBox from 'src/components/CheckBox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
+import Link from 'src/components/Link';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+import TextField from 'src/components/TextField';
 
 export interface Props {
   confirmationText?: JSX.Element | string;
@@ -14,8 +14,8 @@ export interface Props {
   label: string;
   hideDisable?: boolean;
   hideLabel?: boolean;
-  textFieldStyle?: Record<string, any>;
-  typographyStyle?: Record<string, any>;
+  textFieldStyle?: React.CSSProperties;
+  typographyStyle?: React.CSSProperties;
   visible?: boolean | undefined;
   title?: string;
   // This is a string index signature.
@@ -29,9 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Props;
-
-const TypeToConfirm: React.FC<CombinedProps> = (props) => {
+const TypeToConfirm: React.FC<Props> = (props) => {
   const {
     confirmationText,
     onChange,
@@ -46,6 +44,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
+
   if (visible !== false) {
     const preferenceToggle = (
       <PreferenceToggle<boolean>
@@ -59,7 +58,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
         }: ToggleProps<boolean>) => {
           return (
             <Grid container alignItems="center">
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ marginLeft: 2 }}>
                 <FormControlLabel
                   control={
                     <CheckBox
@@ -70,7 +69,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
                       }}
                     />
                   }
-                  label="Disable type to confirm for all destructive actions"
+                  label="Disable type to confirm"
                 />
               </Grid>
             </Grid>
@@ -96,7 +95,7 @@ const TypeToConfirm: React.FC<CombinedProps> = (props) => {
   } else {
     return (
       <Typography className={classes.description}>
-        To enable type to confirm for all destructive actions go to{' '}
+        To enable type to confirm, go to{' '}
         <Link to="/profile/settings">My Settings</Link>.
       </Typography>
     );

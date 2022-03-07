@@ -13,6 +13,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
@@ -24,9 +27,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -211,8 +211,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 <TypeToConfirm
                   confirmationText={
                     <span>
-                      To confirm these changes, type the label of the Linode{' '}
-                      <strong>({linodeLabel})</strong> in the field below:
+                      To confirm these changes, type the label of the Linode (
+                      <strong>{linodeLabel}</strong>) in the field below:
                     </span>
                   }
                   title="Confirm"

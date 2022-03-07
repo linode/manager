@@ -4,8 +4,8 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Grid from 'src/components/Grid';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -109,6 +109,10 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
       <Paper className={classes.root}>
         <Typography variant="h2" className={classes.title}>
           Type to Confirm
+        </Typography>
+        <Typography variant="body1">
+          For some products and services, the type to confirm setting requires
+          entering the label before deletion.
         </Typography>
         <PreferenceToggle<boolean>
           preferenceKey="type_to_confirm"

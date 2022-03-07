@@ -18,10 +18,10 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
@@ -362,8 +362,8 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                 <TypeToConfirm
                   confirmationText={
                     <span>
-                      To confirm these changes, type the label of the Linode{' '}
-                      <strong>({linodeLabel})</strong> in the field below:
+                      To confirm these changes, type the label of the Linode (
+                      <strong>{linodeLabel}</strong>) in the field below:
                     </span>
                   }
                   title="Confirm"

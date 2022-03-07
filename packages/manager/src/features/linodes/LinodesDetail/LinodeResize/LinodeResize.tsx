@@ -28,10 +28,10 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -393,8 +393,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             title="Confirm"
             confirmationText={
               <span>
-                To confirm these changes, type the label of the Linode{' '}
-                <strong>({linodeLabel})</strong> in the field below:
+                To confirm these changes, type the label of the Linode (
+                <strong>{linodeLabel}</strong>) in the field below:
               </span>
             }
             typographyStyle={{ marginBottom: 8 }}
