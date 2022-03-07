@@ -2,27 +2,24 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
-type ClassNames = 'root';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    color: theme.textColors.linkActiveLight,
+  },
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-  });
-
-export type CombinedProps = WithStyles<ClassNames> & RouteComponentProps<{}>;
+export type CombinedProps = RouteComponentProps<{}>;
 
 export const SupportWidget: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+
+  const { history } = props;
+
   const [open, setOpen] = React.useState<boolean>(false);
-  const { classes, history } = props;
   const onTicketCreated = (
     ticketId: number,
     attachmentErrors: AttachmentError[] = []
@@ -32,6 +29,7 @@ export const SupportWidget: React.FC<CombinedProps> = (props) => {
       state: { attachmentErrors },
     });
   };
+
   return (
     <>
       <Button
@@ -50,6 +48,5 @@ export const SupportWidget: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, {}>(styled, React.memo, withRouter);
+const enhanced = compose<CombinedProps, {}>(React.memo, withRouter);
 export default enhanced(SupportWidget);
