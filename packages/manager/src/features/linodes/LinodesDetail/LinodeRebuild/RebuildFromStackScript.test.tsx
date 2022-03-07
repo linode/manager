@@ -7,6 +7,7 @@ import {
   CombinedProps,
   RebuildFromStackScript,
 } from './RebuildFromStackScript';
+import { preferencesFactory } from 'src/factories/preferences';
 
 const request = jest.requireMock('@linode/api-v4/lib/account');
 
@@ -27,6 +28,9 @@ const props: CombinedProps = {
   imagesError: {},
   imagesLastUpdated: 0,
   userSSHKeys: [],
+  getUserPreferences: jest.fn(),
+  updateUserPreferences: jest.fn(),
+  preferences: preferencesFactory.build(),
   disabled: false,
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),

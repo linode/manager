@@ -7,7 +7,9 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Notice from 'src/components/Notice';
 import Typography from 'src/components/core/Typography';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import TextField from 'src/components/TextField';
 import { useProfile } from 'src/queries/profile';
 
@@ -112,18 +114,23 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         />
       }
     >
-      <Typography>
-        Please note this is an extremely destructive action. Closing your
-        account means that all services including Linodes, Volumes, DNS Records,
-        etc will be lost and may not be able to be restored.
-      </Typography>
-      <TextField
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> Please note this is an extremely destructive
+          action. Closing your account means that all services including
+          Linodes, Volumes, DNS Records, etc will be lost and may not be able to
+          be restored.
+        </Typography>
+      </Notice>
+      <TypeToConfirm
         label={`Please enter your username (${profile.username}) to confirm.`}
-        placeholder="Username"
+        onChange={(input) => setUsername(input)}
+        inputRef={inputRef}
         aria-label="username field"
         value={inputtedUsername}
-        onChange={(e) => setUsername(e.target.value)}
-        inputRef={inputRef}
+        visible
+        hideDisable
+        placeholder="Username"
       />
       <Typography className={classes.dontgo}>
         We’d hate to see you go. Please let us know what we could be doing
