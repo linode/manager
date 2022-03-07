@@ -24,7 +24,11 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
 
   return (
     <Paper className={classes.paper}>
-      <Typography variant="h2" data-qa-order-summary>
+      <Typography
+        variant="h2"
+        data-qa-order-summary
+        style={{ marginBottom: 4 }}
+      >
         {heading}
       </Typography>
       {displaySections.map(({ title, details }, idx) => (
