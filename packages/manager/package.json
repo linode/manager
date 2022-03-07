@@ -92,7 +92,7 @@
     "throttle-debounce": "^2.0.0",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
-    "url-parse": "^1.5.8",
+    "url-parse": "^1.5.9",
     "xterm": "^4.2.0",
     "yup": "^0.32.9",
     "zxcvbn": "^4.4.2"
@@ -106,7 +106,7 @@
     "precommit": "lint-staged && yarn typecheck",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
-    "storybook": "yarn run start-storybook -p 6006 --ci -s ./public",
+    "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",

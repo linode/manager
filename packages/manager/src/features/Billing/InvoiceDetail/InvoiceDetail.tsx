@@ -21,7 +21,6 @@ import IconButton from 'src/components/IconButton';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
-import createMailto from 'src/features/Footer/createMailto';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -186,15 +185,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
         <Grid item xs={12}>
-          {pdfGenerationError && (
-            <Notice error>
-              Failed generating PDF.{' '}
-              <Link to={createMailto(pdfGenerationError.stack)}>
-                {' '}
-                Send report
-              </Link>
-            </Notice>
-          )}
+          {pdfGenerationError && <Notice error>Failed generating PDF.</Notice>}
           <InvoiceTable loading={loading} items={items} errors={errors} />
         </Grid>
         <Grid item xs={12}>

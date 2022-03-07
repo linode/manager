@@ -92,6 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   helpIcon: {
     padding: 0,
     marginLeft: theme.spacing(),
+    alignSelf: 'baseline',
   },
 }));
 
