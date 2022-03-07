@@ -39,7 +39,6 @@ import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
 import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
@@ -653,7 +652,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       type && {
         title: type.label,
-        details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
+        details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
       }
@@ -673,8 +672,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedRegion && {
-        title: selectedRegion.country.toUpperCase(),
-        details: selectedRegion.display,
+        title: selectedRegion.display,
       }
     );
   };
@@ -694,8 +692,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedImage && {
-        title: `${selectedImage.vendor || selectedImage.label}`,
-        details: `${selectedImage.vendor ? selectedImage.label : ''}`,
+        title: `${selectedImage.vendor ? selectedImage.label : ''}`,
       }
     );
   };

@@ -1,12 +1,10 @@
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
-import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -30,7 +28,6 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
-import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -69,32 +66,19 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { CheckoutSummary } from 'src/components/CheckoutSummary';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 
-type ClassNames = 'root' | 'form' | 'stackScriptWrapper' | 'imageSelect';
+type ClassNames =
+  | 'form'
+  | 'stackScriptWrapper'
+  | 'imageSelect'
+  | 'buttonGroup'
+  | 'agreement';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      '& .mlMain': {
-        maxWidth: '100%',
-        flexBasis: '100%',
-        [theme.breakpoints.up('md')]: {
-          maxWidth: '78.8%',
-          flexBasis: '78.8%',
-        },
-      },
-      '& .mlSidebar': {
-        position: 'static',
-        width: '100%',
-        flexBasis: '100%',
-        maxWidth: '100%',
-        [theme.breakpoints.up('md')]: {
-          position: 'sticky',
-          maxWidth: '21.2%',
-          flexBasis: '21.2%',
-        },
-      },
-    },
     form: {
       width: '100%',
       [theme.breakpoints.up('md')]: {
@@ -110,6 +94,18 @@ const styles = (theme: Theme) =>
     imageSelect: {
       '& .MuiPaper-root': {
         padding: 0,
+      },
+    },
+    buttonGroup: {
+      marginTop: theme.spacing(3),
+      [theme.breakpoints.down('xs')]: {
+        justifyContent: 'flex-end',
+      },
+    },
+    agreement: {
+      maxWidth: '70%',
+      [theme.breakpoints.down('xs')]: {
+        maxWidth: 'unset',
       },
     },
   });
@@ -427,11 +423,6 @@ export class LinodeCreate extends React.PureComponent<
       this.props.backupsEnabled || accountBackupsEnabled
     );
 
-    let calculatedPrice = pathOr(0, ['monthly'], typeDisplayInfo);
-    if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
-      calculatedPrice += typeDisplayInfo.backupsMonthly;
-    }
-
     const displaySections = [];
     if (imageDisplayInfo) {
       displaySections.push(imageDisplayInfo);
@@ -448,13 +439,6 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push(typeDisplayInfo);
     }
 
-    if (label) {
-      displaySections.push({
-        title: 'Linode Label',
-        details: label,
-      });
-    }
-
     if (hasBackups && typeDisplayInfo && typeDisplayInfo.backupsMonthly) {
       displaySections.push(
         renderBackupsDisplaySection(
@@ -464,9 +448,21 @@ export class LinodeCreate extends React.PureComponent<
       );
     }
 
+    if (Boolean(this.props.vlanLabel)) {
+      displaySections.push({
+        title: 'VLAN Attached',
+      });
+    }
+
+    if (Boolean(this.props.privateIPEnabled)) {
+      displaySections.push({
+        title: 'Private IP',
+      });
+    }
+
     return (
       <form className={classes.form}>
-        <Grid item className={`mlMain py0`}>
+        <Grid item className={`py0`}>
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
@@ -667,25 +663,10 @@ export class LinodeCreate extends React.PureComponent<
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
             createType={this.props.createType}
           />
-        </Grid>
-        <Grid item className="mlSidebar">
-          <CheckoutBar
+          <CheckoutSummary
             data-qa-checkout-bar
-            heading="Linode Summary"
-            calculatedPrice={calculatedPrice}
-            isMakingRequest={formIsSubmitting}
-            disabled={
-              formIsSubmitting ||
-              userCannotCreateLinode ||
-              (showAgreement && !signedAgreement)
-            }
-            onDeploy={this.createLinode}
-            submitText="Create Linode"
-            footer={
-              <SMTPRestrictionText>
-                {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
-              </SMTPRestrictionText>
-            }
+            heading={`Summary ${this.props.label}`}
+            displaySections={displaySections}
             agreement={
               showAgreement ? (
                 <EUAgreementCheckbox
@@ -695,12 +676,40 @@ export class LinodeCreate extends React.PureComponent<
               ) : undefined
             }
           >
-            <DisplaySectionList displaySections={displaySections} />
-          </CheckoutBar>
-          {this.props.createType === 'fromApp' &&
-            this.props.documentation.length > 0 && (
+            {this.props.createType === 'fromApp' &&
+            this.props.documentation.length > 0 ? (
               <DocsSidebar docs={this.props.documentation} />
-            )}
+            ) : null}
+          </CheckoutSummary>
+          <Box
+            display="flex"
+            justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+            alignItems="center"
+            flexWrap="wrap"
+            className={classes.buttonGroup}
+          >
+            {showAgreement ? (
+              <EUAgreementCheckbox
+                checked={signedAgreement}
+                onChange={handleAgreementChange}
+                className={classes.agreement}
+                centerCheckbox
+              />
+            ) : null}
+            <Button
+              data-qa-deploy-linode
+              buttonType="primary"
+              onClick={this.createLinode}
+              loading={formIsSubmitting}
+              disabled={
+                formIsSubmitting ||
+                userCannotCreateLinode ||
+                (showAgreement && !signedAgreement)
+              }
+            >
+              Create Linode
+            </Button>
+          </Box>
         </Grid>
       </form>
     );
