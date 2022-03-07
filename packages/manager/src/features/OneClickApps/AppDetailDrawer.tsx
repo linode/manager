@@ -61,7 +61,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  stackscriptID: string;
+  stackScriptLabel: string;
   open: boolean;
   onClose: () => void;
 }
@@ -71,15 +71,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
-  const { classes, stackscriptID, open, onClose } = props;
-  const app = oneClickApps.find((eachApp) => {
-    const cleanedAppName = eachApp.name.replace(
-      /[-\/\\^$*+?.()|[\]{}]/g,
-      '\\$&'
-    );
-    const strippedAppName = cleanedAppName.replace('&reg;', '');
-    const regex = new RegExp(strippedAppName);
-    return Boolean(stackscriptID.match(regex));
+  const { classes, stackScriptLabel, open, onClose } = props;
+
+  const app = oneClickApps.find((app) => {
+    const cleanedStackScriptLabel = stackScriptLabel
+      .replace(/[^\w\s\/$*+-?.:()]/gi, '')
+      .trim();
+    const cleanedAppName = app.name.replace('&reg;', '');
+    return cleanedStackScriptLabel === cleanedAppName;
   }); // This is horrible
   if (!app) {
     return null;
