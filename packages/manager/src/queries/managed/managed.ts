@@ -45,7 +45,7 @@ import {
   updateServiceMonitor,
 } from '@linode/api-v4/lib/managed';
 
-const queryKey = 'managed';
+export const queryKey = 'managed';
 
 export const useManagedSSHKey = () =>
   useQuery<ManagedSSHPubKey, APIError[]>(

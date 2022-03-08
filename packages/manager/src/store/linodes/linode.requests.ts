@@ -7,6 +7,7 @@ import {
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
+import { invalidateSSHAccessQuery } from 'src/queries/managed/helpers';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -36,7 +37,12 @@ export const createLinode = createRequestThunk(createLinodeActions, (data) =>
 
 export const deleteLinode = createRequestThunk(
   deleteLinodeActions,
-  ({ linodeId }) => _deleteLinode(linodeId)
+  ({ linodeId }) => {
+    // If the user is a Managed customer, we want their SSH Access
+    // data to update when they navigate to it.
+    invalidateSSHAccessQuery();
+    return _deleteLinode(linodeId);
+  }
 );
 
 export const rebootLinode = createRequestThunk(

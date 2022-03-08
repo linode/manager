@@ -3,6 +3,9 @@ import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
 import { ExtendedIssue } from './types';
 import { ManagedIssue, getTicket } from '@linode/api-v4';
+import { getIsManaged } from '../accountSettings';
+import { queryClient } from '../base';
+import { queryKey } from './managed';
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**
@@ -35,4 +38,14 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
         .catch((_) => thisIssue as ExtendedIssue)
     );
   });
+};
+
+// If the user is a Managed customer, their SSH Key access needs to
+// be refetched to reflect a new or deleted Linode
+export const invalidateSSHAccessQuery = () => {
+  const isManaged = getIsManaged();
+
+  if (isManaged) {
+    queryClient.invalidateQueries(`${queryKey}-linode-settings`);
+  }
 };
