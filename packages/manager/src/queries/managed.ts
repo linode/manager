@@ -131,31 +131,8 @@ export const useCreateCredentialMutation = () =>
   );
 
 export const useUpdateCredentialPasswordMutation = (id: number) =>
-  useMutation<{}, APIError[], UpdatePasswordPayload>(
-    (data) => updatePassword(id, data),
-    {
-      // This endpoint returns nothing but we need the Credentials list to update
-      // because last_decrypted may need to change.
-      // @TODO API does not currently have this behavior.
-      // onSuccess: () => {
-      //   queryClient.setQueryData<ManagedCredential[]>(
-      //     `${queryKey}-credentials`,
-      //     (oldData) => {
-      //       if (!oldData) {
-      //         return [];
-      //       }
-      //       const index = oldData.findIndex((item) => item.id === id);
-      //       if (index === -1 || oldData[index].last_decrypted === null) {
-      //         // The item was not found or the credentails have never been decrypted so we don't need to update anything.
-      //         return oldData;
-      //       }
-      //       const copy = [...oldData];
-      //       copy[index] = { ...copy[index], last_decrypted: null };
-      //       return copy;
-      //     }
-      //   );
-      // },
-    }
+  useMutation<{}, APIError[], UpdatePasswordPayload>((data) =>
+    updatePassword(id, data)
   );
 
 export const useUpdateCredentialMutation = (id: number) =>
