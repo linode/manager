@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-03-08] - v1.61.1
+
+### Added:
+
+- Early Adopter Program SLA banners to Database Create and empty state Database landing pages for beta
+
 ## [2022-03-07] - v1.61.0
 
 ### Added:
