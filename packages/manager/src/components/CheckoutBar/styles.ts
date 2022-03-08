@@ -20,11 +20,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
       bottom: '0 !important' as '0',
     },
   },
-  sidebarTitle: {
-    color: theme.color.headline,
-    fontSize: '1.125rem',
-    wordBreak: 'break-word',
-  },
   checkoutSection: {
     animation: '$fadeIn 225ms linear forwards',
     opacity: 0,
@@ -43,6 +38,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.8rem',
     lineHeight: '1.5em',
     marginTop: theme.spacing(),
+  },
+  sidebarTitle: {
+    fontSize: '1.125rem',
+    color: theme.color.headline,
+    wordBreak: 'break-word',
   },
   detail: {
     color: theme.color.headline,
