@@ -3,12 +3,10 @@ import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { extendIssues } from './helpers';
 import { ExtendedIssue } from './types';
-import { getIsManaged } from '../accountSettings';
 import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
-  queryClient,
   queryPresets,
 } from '../base';
 import {
@@ -203,13 +201,3 @@ const _getAllIssues = () =>
   getAll<ManagedIssue>(getManagedIssues)().then((res) => res.data);
 
 const getAllIssues = () => _getAllIssues().then((data) => extendIssues(data));
-
-// If the user is a Managed customer, their SSH Key access needs to
-// be refetched to reflect a new or deleted Linode
-export const invalidateSSHAccessQuery = () => {
-  const isManaged = getIsManaged();
-
-  if (isManaged) {
-    queryClient.invalidateQueries(`${queryKey}-linode-settings`);
-  }
-};

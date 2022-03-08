@@ -77,7 +77,6 @@ import {
   queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
-import { invalidateSSHAccessQuery } from 'src/queries/managed/managed';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -595,10 +594,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ...simpleMutationHandlers(accountAgreementsQueryKey),
           });
         }
-
-        // If the user is a Managed customer, we want their SSH Access
-        // data to update when they navigate to it.
-        invalidateSSHAccessQuery();
 
         /** if cloning a Linode, upsert Linode in redux */
         if (createType === 'fromLinode') {
