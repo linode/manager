@@ -9,6 +9,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
     fontSize: '1.125rem',
   },
+  root: {},
+  per: {
+    color: theme.color.green,
+    display: 'inline-block',
+    fontWeight: 400,
+  },
 }));
 
 interface Props {
