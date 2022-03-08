@@ -31,6 +31,9 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
       >
         {heading}
       </Typography>
+      {displaySections.length === 0 ? (
+        <Typography variant="body1">Please configure your Linode.</Typography>
+      ) : null}
       {displaySections.map(({ title, details }, idx) => (
         <>
           {title ? (
@@ -51,7 +54,9 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
           >
             {details}
           </Typography>
-          {idx !== displaySections.length - 1 ? <span> | </span> : null}
+          {idx !== displaySections.length - 1 ? (
+            <span style={{ color: '#888f91' }}> | </span>
+          ) : null}
         </>
       ))}
       {props.children}
