@@ -73,9 +73,8 @@ import {
 import { getRegionIDFromLinodeID } from './utilities';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import { invalidateSSHAccessQuery } from 'src/queries/managed';
 import {
-  queryKey,
+  queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 
@@ -590,13 +589,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
-            mutationKey: queryKey,
+            mutationKey: accountAgreementsQueryKey,
             onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(queryKey),
+            ...simpleMutationHandlers(accountAgreementsQueryKey),
           });
         }
-
-        invalidateSSHAccessQuery();
 
         /** if cloning a Linode, upsert Linode in redux */
         if (createType === 'fromLinode') {

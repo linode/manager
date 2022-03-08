@@ -5,7 +5,6 @@ import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
-  queryClient,
   queryPresets,
 } from './base';
 import {
@@ -47,7 +46,6 @@ import { getTicket } from '@linode/api-v4';
 import Bluebird from 'bluebird';
 import { DateTime } from 'luxon';
 import { parseAPIDate } from 'src/utilities/date';
-import { isManaged } from './accountSettings';
 
 const queryKey = 'managed';
 
@@ -242,12 +240,4 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
         .catch((_) => thisIssue as ExtendedIssue)
     );
   });
-};
-
-export const invalidateSSHAccessQuery = () => {
-  if (isManaged()) {
-    // If the user is a Managed customer, their SSH Key access needs to
-    // be refetched to reflect the new Linode
-    queryClient.invalidateQueries(`${queryKey}-linode-settings`);
-  }
 };
