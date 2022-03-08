@@ -23,7 +23,7 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
      * does not include the status or date closed.
      */
     return (
-      getTicket(thisIssue.id)
+      getTicket(thisIssue.entity.id)
         .then((ticket) => {
           return {
             ...thisIssue,
