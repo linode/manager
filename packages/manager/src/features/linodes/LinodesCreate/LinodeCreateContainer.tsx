@@ -46,7 +46,7 @@ import {
   baseApps,
   getOneClickApps,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { accountBackupsEnabled } from 'src/queries/accountSettings';
+import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
@@ -775,7 +775,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleVLANChange={this.handleVLANChange}
             handleAgreementChange={this.handleAgreementChange}
             userCannotCreateLinode={userCannotCreateLinode}
-            accountBackupsEnabled={accountBackupsEnabled()}
+            accountBackupsEnabled={getAccountBackupsEnabled()}
             {...restOfProps}
             {...restOfState}
           />
