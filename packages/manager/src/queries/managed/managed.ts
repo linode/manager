@@ -58,7 +58,10 @@ export const useAllLinodeSettingsQuery = () =>
   useQuery<ManagedLinodeSetting[], APIError[]>(
     `${queryKey}-linode-settings`,
     getAllLinodeSettings,
-    queryPresets.oneTimeFetch
+    {
+      // A Linode may have been created or deleted since the last visit.
+      refetchOnMount: 'always',
+    }
   );
 
 export const useAllManagedCredentialsQuery = () =>
@@ -77,7 +80,6 @@ export const useAllManagedContactsQuery = () =>
 
 export const useAllManagedIssuesQuery = () =>
   useQuery<ExtendedIssue[], APIError[]>(`${queryKey}-issues`, getAllIssues, {
-    ...queryPresets.shortLived,
     refetchInterval: 20000,
   });
 
@@ -86,15 +88,12 @@ export const useAllManagedMonitorsQuery = () =>
     `${queryKey}-monitors`,
     getAllMonitors,
     {
-      ...queryPresets.shortLived,
       refetchInterval: 20000,
     }
   );
 
 export const useManagedStatsQuery = () =>
   useQuery<ManagedStats, APIError[]>(`${queryKey}-stats`, getManagedStats, {
-    ...queryPresets.shortLived,
-    refetchOnWindowFocus: false,
     retry: false,
   });
 
