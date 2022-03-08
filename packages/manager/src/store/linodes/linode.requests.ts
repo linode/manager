@@ -7,7 +7,7 @@ import {
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode,
 } from '@linode/api-v4/lib/linodes';
-import { invalidateSSHAccessQuery } from 'src/queries/managed/helpers';
+import { invalidateSSHAccessQuery } from 'src/queries/managed/managed';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';

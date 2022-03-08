@@ -77,7 +77,7 @@ import {
   queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
-import { invalidateSSHAccessQuery } from 'src/queries/managed/helpers';
+import { invalidateSSHAccessQuery } from 'src/queries/managed/managed';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
