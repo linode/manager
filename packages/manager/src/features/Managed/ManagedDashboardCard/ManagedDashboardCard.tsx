@@ -4,14 +4,14 @@ import DashboardCard from './DashboardCard';
 import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
-import { ManagedStatsData } from '@linode/api-v4/lib/managed';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,
-  useManagedStatsQuery,
 } from 'src/queries/managed/managed';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import ErrorState from 'src/components/ErrorState/ErrorState';
+import CircleProgress from 'src/components/CircleProgress/CircleProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -47,22 +47,36 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const ManagedDashboardCard = () => {
   const classes = useStyles();
-  const { data, isLoading, error } = useManagedStatsQuery();
 
-  // @TODO
-  // usePolling(
-  //   [
-  //     () => requestManagedServices().catch((_) => null),
-  //     () => requestManagedIssues().catch((_) => null),
-  //     update,
-  //   ],
-  //   10000
-  // );
+  const {
+    data: monitors,
+    isLoading: monitorsLoading,
+    error: monitorsError,
+  } = useAllManagedMonitorsQuery();
 
-  const statsError = error
-    ? getAPIErrorOrDefault(error, 'Unable to load your usage statistics.')[0]
-        .reason
-    : undefined;
+  const {
+    data: issues,
+    isLoading: issuesLoading,
+    error: issuesError,
+  } = useAllManagedIssuesQuery();
+
+  const defaultError = 'Error loading your Managed service information.';
+
+  if (monitorsError) {
+    const error = getAPIErrorOrDefault(monitorsError, defaultError)[0].reason;
+
+    return <ErrorState errorText={error} compact />;
+  }
+
+  if (issuesError) {
+    const error = getAPIErrorOrDefault(issuesError, defaultError)[0].reason;
+
+    return <ErrorState errorText={error} compact />;
+  }
+
+  if (monitorsLoading || issuesLoading) {
+    return <CircleProgress />;
+  }
 
   return (
     <DashboardCard
@@ -70,61 +84,35 @@ export const ManagedDashboardCard = () => {
       className={classes.root}
       noHeaderActionStyles
     >
-      <LoadingErrorOrContent
-        data={data?.data}
-        statsError={statsError}
-        statsLoading={isLoading}
-      />
-    </DashboardCard>
-  );
-};
-
-interface ContentProps {
-  data: ManagedStatsData | undefined;
-  statsLoading: boolean;
-  statsError?: string;
-}
-
-const LoadingErrorOrContent: React.FC<ContentProps> = (props) => {
-  const { data, statsError, statsLoading } = props;
-  const classes = useStyles();
-
-  const { data: monitors } = useAllManagedMonitorsQuery();
-  const { data: issues } = useAllManagedIssuesQuery();
-
-  return (
-    <Grid
-      container
-      direction="row"
-      justifyContent="center"
-      alignItems="center"
-      className={classes.outerContainer}
-    >
       <Grid
         container
-        item
-        direction="column"
-        justifyContent="space-around"
+        direction="row"
+        justifyContent="center"
         alignItems="center"
-        xs={12}
-        sm={5}
-        className={classes.status}
+        className={classes.outerContainer}
       >
-        <Grid item className={classes.monitorStatusOuter}>
-          <MonitorStatus monitors={monitors || []} />
+        <Grid
+          container
+          item
+          direction="column"
+          justifyContent="space-around"
+          alignItems="center"
+          xs={12}
+          sm={5}
+          className={classes.status}
+        >
+          <Grid item className={classes.monitorStatusOuter}>
+            <MonitorStatus monitors={monitors || []} />
+          </Grid>
+          <Grid item>
+            <MonitorTickets issues={issues || []} />
+          </Grid>
         </Grid>
-        <Grid item>
-          <MonitorTickets issues={issues || []} />
+        <Grid item xs={12} sm={8} className="p0">
+          <ManagedChartPanel />
         </Grid>
       </Grid>
-      <Grid item xs={12} sm={8} className="p0">
-        <ManagedChartPanel
-          data={data}
-          loading={statsLoading}
-          error={statsError}
-        />
-      </Grid>
-    </Grid>
+    </DashboardCard>
   );
 };
 

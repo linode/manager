@@ -1,8 +1,9 @@
 import * as Factory from 'factory.ts';
 import {
+  DataSeries,
   ManagedCredential,
   ManagedServiceMonitor,
-  ManagedStatsData,
+  ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
 
 export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
@@ -27,10 +28,21 @@ export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
   body: '',
 });
 
-export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStatsData>({
-  cpu: [],
-  disk: [],
-  net_in: [],
-  net_out: [],
-  swap: [],
+export const generateManagedStats = (modifier = 1): DataSeries[] => {
+  const stat: DataSeries[] = [];
+  let i = 0;
+  for (i; i < 200; i++) {
+    stat.push({ x: Date.now() - i * 300000, y: Math.random() * modifier });
+  }
+  return stat;
+};
+
+export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStats>({
+  data: {
+    cpu: generateManagedStats(4),
+    disk: generateManagedStats(),
+    net_in: generateManagedStats(3),
+    net_out: generateManagedStats(2),
+    swap: generateManagedStats(),
+  },
 });

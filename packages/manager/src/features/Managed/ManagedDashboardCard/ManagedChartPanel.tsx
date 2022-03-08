@@ -16,7 +16,9 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
+import { useManagedStatsQuery } from 'src/queries/managed/managed';
 import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getUserTimezone from 'src/utilities/getUserTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -74,13 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption: {},
 }));
 
-interface Props {
-  data: ManagedStatsData | undefined;
-  loading: boolean;
-  error?: string;
-}
-
-type CombinedProps = Props & WithTheme;
+type CombinedProps = WithTheme;
 
 const chartHeight = 300;
 
@@ -209,24 +205,34 @@ const createTabs = (
 };
 
 export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
-  const { data, error, loading, theme } = props;
+  const { theme } = props;
   const classes = useStyles();
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile);
+  const { data, isLoading, error } = useManagedStatsQuery();
 
   if (error) {
-    return <ErrorState errorText={error} />;
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(
+            error,
+            'Unable to load your usage statistics.'
+          )[0].reason
+        }
+      />
+    );
   }
 
-  if (loading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
-  if (data === null) {
+  if (!data) {
     return null;
   }
 
-  const tabs = createTabs(data, timezone, classes, theme);
+  const tabs = createTabs(data.data, timezone, classes, theme);
 
   const initialTab = 0;
 
@@ -245,4 +251,4 @@ export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default React.memo(withTheme(ManagedChartPanel));
+export default withTheme(ManagedChartPanel);
