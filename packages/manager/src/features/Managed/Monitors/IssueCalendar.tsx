@@ -40,17 +40,18 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
   const days: CalendarDay[] = [];
 
   // Start with today, since it will be at the top of our list.
-  const day = DateTime.local().setZone(timezone);
   for (let i = 0; i < TOTAL_DAYS; i++) {
+    const day = DateTime.local().minus({ days: i }).setZone(timezone);
     /**
      * Iterate through the past 10 days
      */
     const relevantIssues = issues.filter((thisIssue) =>
       createdOnTargetDay(timezone, thisIssue, day)
     );
+
     days.push({
       issues: relevantIssues,
-      day: day.minus({ days: i }).toISO(),
+      day: day.toISO(),
     });
   }
 

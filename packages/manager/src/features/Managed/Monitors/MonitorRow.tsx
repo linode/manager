@@ -45,9 +45,7 @@ interface Props {
   openHistoryDrawer: (id: number, label: string) => void;
 }
 
-type CombinedProps = Props;
-
-export const MonitorRow: React.FunctionComponent<CombinedProps> = (props) => {
+export const MonitorRow: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

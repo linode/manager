@@ -1,4 +1,5 @@
 import { EventAction, NotificationType } from '@linode/api-v4';
+import { DateTime } from 'luxon';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -56,6 +57,7 @@ import {
   tagFactory,
   VLANFactory,
   volumeFactory,
+  managedIssueFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantsFactory } from 'src/factories/grants';
@@ -800,14 +802,23 @@ export const handlers = [
   }),
   rest.get('*managed/services', (req, res, ctx) => {
     const monitors = monitorFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(monitors)));
+    const downMonitors = monitorFactory.buildList(1, {
+      id: 999,
+      label: 'Problem',
+      status: 'problem',
+    });
+    return res(ctx.json(makeResourcePage([...monitors, ...downMonitors])));
   }),
   rest.get('*managed/stats', (req, res, ctx) => {
     const stats = managedStatsFactory.build();
     return res(ctx.json(stats));
   }),
   rest.get('*managed/issues', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([])));
+    const issue = managedIssueFactory.build({
+      services: [999],
+      created: DateTime.now().minus({ days: 2 }).toISO(),
+    });
+    return res(ctx.json(makeResourcePage([issue])));
   }),
   rest.get('*stackscripts/', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));

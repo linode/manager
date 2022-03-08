@@ -2,6 +2,7 @@ import * as Factory from 'factory.ts';
 import {
   DataSeries,
   ManagedCredential,
+  ManagedIssue,
   ManagedServiceMonitor,
   ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
@@ -45,4 +46,16 @@ export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStats>({
     net_out: generateManagedStats(2),
     swap: generateManagedStats(),
   },
+});
+
+export const managedIssueFactory = Factory.Sync.makeFactory<ManagedIssue>({
+  created: '2018-01-01T00:01:01',
+  entity: {
+    id: 98765,
+    label: 'Managed Issue opened!',
+    type: 'ticket',
+    url: '/support/tickets/98765',
+  },
+  id: 823,
+  services: [],
 });
