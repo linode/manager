@@ -94,6 +94,7 @@ export const useAllManagedMonitorsQuery = () =>
 
 export const useManagedStatsQuery = () =>
   useQuery<ManagedStats, APIError[]>(`${queryKey}-stats`, getManagedStats, {
+    ...queryPresets.shortLived,
     retry: false,
   });
 
