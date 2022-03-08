@@ -5,13 +5,7 @@ import Typography from 'src/components/core/Typography';
 
 import { DisplayPrice, displayPrice } from './DisplayPrice';
 
-const classes = {
-  root: '',
-  price: '',
-  per: '',
-};
-
-const component = shallow(<DisplayPrice price={100} classes={classes} />);
+const component = shallow(<DisplayPrice price={100} />);
 
 describe('DisplayPrice component', () => {
   it('should format the price prop correctly', () => {
