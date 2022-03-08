@@ -22,7 +22,7 @@ import useOpenClose from 'src/hooks/useOpenClose';
 import {
   useAllManagedContactsQuery,
   useDeleteContactMutation,
-} from 'src/queries/managed';
+} from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';

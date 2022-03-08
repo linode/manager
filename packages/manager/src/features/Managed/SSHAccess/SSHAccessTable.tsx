@@ -13,7 +13,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { useAllLinodeSettingsQuery } from 'src/queries/managed';
+import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 import { DEFAULTS } from './common';
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';

@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { ExtendedIssue } from 'src/queries/managed';
+import { ExtendedIssue } from 'src/queries/managed/types';
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 

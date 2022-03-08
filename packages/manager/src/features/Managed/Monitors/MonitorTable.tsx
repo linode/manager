@@ -26,7 +26,7 @@ import {
   useCreateMonitorMutation,
   useDeleteMonitorMutation,
   useUpdateMonitorMutation,
-} from 'src/queries/managed';
+} from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,

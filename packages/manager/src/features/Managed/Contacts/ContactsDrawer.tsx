@@ -13,7 +13,7 @@ import TextField from 'src/components/TextField';
 import {
   useCreateContactMutation,
   useUpdateContactMutation,
-} from 'src/queries/managed';
+} from 'src/queries/managed/managed';
 import {
   handleFieldErrors,
   handleGeneralErrors,

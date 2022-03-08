@@ -1,12 +1,14 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
+import { extendIssues } from './helpers';
+import { ExtendedIssue } from './types';
 import {
   itemInListCreationHandler,
   itemInListDeletionHandler,
   itemInListMutationHandler,
   queryPresets,
-} from './base';
+} from '../base';
 import {
   ContactPayload,
   createContact,
@@ -42,10 +44,6 @@ import {
   UpdatePasswordPayload,
   updateServiceMonitor,
 } from '@linode/api-v4/lib/managed';
-import { getTicket } from '@linode/api-v4';
-import Bluebird from 'bluebird';
-import { DateTime } from 'luxon';
-import { parseAPIDate } from 'src/utilities/date';
 
 const queryKey = 'managed';
 
@@ -185,13 +183,13 @@ export const useDisableMonitorMutation = (id: number) =>
     itemInListMutationHandler(`${queryKey}-monitors`)
   );
 
-const getAllCredentials = () =>
-  getAll<ManagedCredential>(getCredentials)().then((res) => res.data);
-
 // We need to "Get All" on this request in order to handle Groups
 // as a quasi-independent entity.
 const getAllContacts = () =>
   getAll<ManagedContact>(getManagedContacts)().then((res) => res.data);
+
+const getAllCredentials = () =>
+  getAll<ManagedCredential>(getCredentials)().then((res) => res.data);
 
 const getAllMonitors = () =>
   getAll<ManagedServiceMonitor>(getServices)().then((res) => res.data);
@@ -199,45 +197,7 @@ const getAllMonitors = () =>
 const getAllLinodeSettings = () =>
   getAll<ManagedLinodeSetting>(getLinodeSettings)().then((res) => res.data);
 
-export interface ExtendedIssue extends ManagedIssue {
-  status?: 'open' | 'closed' | 'new';
-  dateClosed?: string;
-}
-
 const _getAllIssues = () =>
   getAll<ManagedIssue>(getManagedIssues)().then((res) => res.data);
 
 const getAllIssues = () => _getAllIssues().then((data) => extendIssues(data));
-
-export const extendIssues = async (issues: ManagedIssue[]) => {
-  /**
-   * Issues live forever, but we only care about recent and/or open issues.
-   * To avoid pummeling the API for Support tickets for a list of ancient issues,
-   * we're doing the filtering here. (The API doesn't allow you to filter on date created.)
-   *
-   * It might be better to just get the first page of results (page size of ~50), which in almost
-   * every case will be enough. Did it this way to be safe.
-   */
-  const recentIssues = issues.filter(
-    (thisIssue) =>
-      parseAPIDate(thisIssue.created).diff(DateTime.local()).days < 30
-  );
-  return await Bluebird.map(recentIssues, (thisIssue) => {
-    /**
-     * Get the associated ticket for each issue, since the API response
-     * does not include the status or date closed.
-     */
-    return (
-      getTicket(thisIssue.id)
-        .then((ticket) => {
-          return {
-            ...thisIssue,
-            status: ticket.status,
-            dateClosed: ticket.closed,
-          } as ExtendedIssue;
-        })
-        // If this fails, we'll just use a normal issue
-        .catch((_) => thisIssue as ExtendedIssue)
-    );
-  });
-};

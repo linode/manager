@@ -9,7 +9,7 @@ import InlineMenuAction from 'src/components/InlineMenuAction';
 import {
   useDisableMonitorMutation,
   useEnableMonitorMutation,
-} from 'src/queries/managed';
+} from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export interface Props {

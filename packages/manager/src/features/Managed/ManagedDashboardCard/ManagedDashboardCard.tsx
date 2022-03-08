@@ -11,7 +11,7 @@ import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,
   useManagedStatsQuery,
-} from 'src/queries/managed';
+} from 'src/queries/managed/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

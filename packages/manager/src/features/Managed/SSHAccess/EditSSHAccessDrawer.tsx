@@ -18,7 +18,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
 import { DEFAULTS } from './common';
-import { useUpdateLinodeSettingsMutation } from 'src/queries/managed';
+import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ip: {

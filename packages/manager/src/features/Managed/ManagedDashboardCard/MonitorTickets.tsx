@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { ExtendedIssue } from 'src/queries/managed';
+import { ExtendedIssue } from 'src/queries/managed/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
