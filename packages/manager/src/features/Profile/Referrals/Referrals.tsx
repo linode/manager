@@ -23,6 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.textColors.headlineStatic,
     },
   },
+  removeDisabledStyles: {
+    '&.Mui-disabled': {
+      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
+      color: 'inherit',
+      opacity: 1,
+    },
+  },
   resultsWrapper: {
     borderTop: '1px solid #D6D7D9',
     fontSize: '0.875rem',
@@ -141,6 +148,8 @@ export const Referrals: React.FC<{}> = () => {
           <Grid item xs={12} className={classes.link}>
             {allowReferral ? (
               <CopyableTextField
+                className={classes.removeDisabledStyles}
+                disabled
                 expand
                 label="Your personal referral link"
                 value={url}
