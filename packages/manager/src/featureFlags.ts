@@ -19,7 +19,6 @@ export interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;
-  lkeHideButtons: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
@@ -29,8 +28,6 @@ export interface Flags {
   blockStorageAvailability: boolean;
   apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
-  lkeHighAvailability: boolean;
-  autoscaler: boolean;
   kubernetesDashboardAvailability: boolean;
   regionDropdown: boolean;
   taxCollectionBanner: TaxCollectionBanner;
