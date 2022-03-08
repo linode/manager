@@ -21,7 +21,6 @@ interface Props {
   price: number;
   interval?: string;
   fontSize?: string; // optional override
-  color?: string; // optional override
 }
 
 type CombinedProps = Props;
@@ -33,8 +32,8 @@ export const DisplayPrice: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const overrideStyle = {
     fontSize: props?.fontSize,
-    color: props?.color,
   };
+
   return (
     <React.Fragment>
       <Typography
@@ -49,6 +48,7 @@ export const DisplayPrice: React.FC<CombinedProps> = (props) => {
         <Typography
           variant="h3"
           className={classes.per}
+          style={overrideStyle}
           qa-data-billing-interval={interval}
         >
           /{interval}

@@ -31,6 +31,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   price: {
     marginTop: theme.spacing(),
+    '& h3': {
+      color: `${theme.palette.text.primary} !important`,
+      fontFamily: '"LatoWebRegular", sans-serif',
+    },
   },
 }));
 
@@ -69,7 +73,7 @@ const HACheckbox: React.FC<Props> = (props) => {
       <Box className={classes.price}>
         <DisplayPrice
           price={HIGH_AVAILABILITY_PRICE}
-          fontSize="16px"
+          fontSize="14px"
           interval="month"
         />
       </Box>

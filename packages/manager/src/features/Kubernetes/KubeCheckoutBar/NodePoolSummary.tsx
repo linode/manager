@@ -30,6 +30,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: '#6e6e6e',
     },
   },
+  price: {
+    '& h3': {
+      color: `${theme.palette.text.primary} !important`,
+      fontFamily: '"LatoWebRegular", sans-serif',
+    },
+  },
 }));
 
 export interface Props {
@@ -94,8 +100,8 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
             min={1}
           />
         </Grid>
-        <Grid item>
-          <DisplayPrice price={price} fontSize="16px" interval="month" />
+        <Grid item className={classes.price}>
+          <DisplayPrice price={price} fontSize="14px" interval="month" />
         </Grid>
       </Grid>
     </React.Fragment>
