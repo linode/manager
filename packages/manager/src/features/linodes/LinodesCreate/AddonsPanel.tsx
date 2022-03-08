@@ -122,11 +122,9 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     const { backupsMonthly } = props;
     return (
       backupsMonthly && (
-        <Grid item className={classes.subLabel}>
-          <Typography variant="body1">
-            <Currency quantity={backupsMonthly} /> per month
-          </Typography>
-        </Grid>
+        <Typography component="span" variant="body1" style={{ marginLeft: 8 }}>
+          <Currency quantity={backupsMonthly} /> per month
+        </Typography>
       )
     );
   };
@@ -172,8 +170,9 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
               }
               label={
                 <>
-                  <Typography variant="h3">Backups</Typography>
-                  {renderBackupsPrice()}
+                  <Typography variant="h3">
+                    Backups {renderBackupsPrice()}
+                  </Typography>
                   <Typography variant="body1">
                     {accountBackups ? (
                       <React.Fragment>
