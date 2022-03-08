@@ -25,7 +25,7 @@ export const useMutateAccountSettings = () => {
   );
 };
 
-export const isManaged = () =>
+export const getIsManaged = () =>
   Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.managed);
 
 export const accountBackupsEnabled = () =>

@@ -21,7 +21,7 @@ import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { isManaged } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import SubscriptionDialog from './SubscriptionDialog';
 
@@ -45,6 +45,10 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
   );
 
   const { createLongviewClient } = props;
+
+  const { data: accountSettings } = useAccountSettings();
+
+  const isManaged = Boolean(accountSettings?.managed);
 
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
@@ -106,7 +110,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       history: { push },
     } = props;
 
-    if (isManaged()) {
+    if (isManaged) {
       push({
         pathname: '/support/tickets',
         state: {
@@ -161,7 +165,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
       </Tabs>
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={isManaged()}
+        isManaged={isManaged}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={
