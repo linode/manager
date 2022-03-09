@@ -1,13 +1,20 @@
 import * as React from 'react';
 import Paper from '../core/Paper';
-import { makeStyles, Theme } from '../core/styles';
+import { makeStyles, Theme, useMediaQuery, useTheme } from '../core/styles';
 import Typography from '../core/Typography';
+import Grid from '../Grid';
+import { SummaryItem } from './SummaryItem';
 
 interface Props {
   heading: string;
   children?: JSX.Element | null;
   agreement?: JSX.Element;
-  displaySections: { title?: string; details?: string | number }[];
+  displaySections: SummaryItem[];
+}
+
+export interface SummaryItem {
+  title?: string;
+  details?: string | number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -15,10 +22,25 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
   },
+  heading: {
+    marginBottom: theme.spacing(3),
+  },
+  summary: {
+    [theme.breakpoints.up('md')]: {
+      '& > div': {
+        borderRight: 'solid 1px #9DA4A6',
+        '&:last-child': {
+          borderRight: 'none',
+        },
+      },
+    },
+  },
 }));
 
 export const CheckoutSummary: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const { heading, agreement, displaySections } = props;
 
@@ -27,38 +49,23 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
       <Typography
         variant="h2"
         data-qa-order-summary
-        style={{ marginBottom: 8 }}
+        className={classes.heading}
       >
         {heading}
       </Typography>
       {displaySections.length === 0 ? (
         <Typography variant="body1">Please configure your Linode.</Typography>
       ) : null}
-      {displaySections.map(({ title, details }, idx) => (
-        <>
-          {title ? (
-            <>
-              <Typography
-                style={{ fontWeight: 'bolder' }}
-                key={`${title}-${idx}`}
-                component="span"
-              >
-                {title}
-              </Typography>{' '}
-            </>
-          ) : null}
-          <Typography
-            key={`${details}-${idx}`}
-            component="span"
-            data-qa-details={details}
-          >
-            {details}
-          </Typography>
-          {idx !== displaySections.length - 1 ? (
-            <span style={{ color: '#888f91' }}> | </span>
-          ) : null}
-        </>
-      ))}
+      <Grid
+        container
+        spacing={3}
+        direction={matchesSmDown ? 'column' : 'row'}
+        className={classes.summary}
+      >
+        {displaySections.map((item) => (
+          <SummaryItem key={`${item.title}-${item.details}`} {...item} />
+        ))}
+      </Grid>
       {props.children}
       {agreement ? agreement : null}
     </Paper>
