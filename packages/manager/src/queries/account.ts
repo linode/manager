@@ -12,7 +12,7 @@ export const queryKey = 'account';
 export const useAccount = () =>
   useQuery<Account, APIError[]>(queryKey, getAccountInfo, {
     ...queryPresets.oneTimeFetch,
-    retry: false,
+    ...queryPresets.noRetry,
   });
 
 export const useMutateAccount = () => {
