@@ -634,37 +634,40 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 170,
     },
     '& td': {
-      backgroundColor: theme.bg.bgAccessRow,
       border: 'none',
       borderBottom: `1px solid ${theme.bg.bgPaper}`,
       fontSize: '0.875rem',
       lineHeight: 1,
-      padding: theme.spacing(),
       whiteSpace: 'nowrap',
     },
   },
   code: {
+    backgroundColor: theme.bg.bgAccessRow,
     color: theme.textColors.tableStatic,
     fontFamily: '"UbuntuMono", monospace, sans-serif',
+    padding: theme.spacing(),
     position: 'relative',
     '& div': {
       fontSize: 15,
     },
   },
   copyCell: {
-    width: 36,
+    backgroundColor: theme.bg.lightBlue2,
     height: 33,
-    backgroundColor: `${theme.bg.lightBlue2} !important`,
-    padding: '0px !important',
+    width: 36,
+    padding: 0,
     '& svg': {
-      width: 16,
       height: 16,
+      width: 16,
       '& path': {
         fill: theme.textColors.linkActiveLight,
       },
     },
-    '&:last-child': {
-      paddingRight: theme.spacing(),
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      '& svg path': {
+        fill: '#fff',
+      },
     },
   },
   copyButton: {
@@ -675,10 +678,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     height: '100%',
     width: '100%',
     '&:hover': {
-      backgroundColor: '#3683dc',
-      '& svg path': {
-        fill: '#fff',
-      },
+      backgroundColor: 'transparent',
     },
   },
   gradient: {
