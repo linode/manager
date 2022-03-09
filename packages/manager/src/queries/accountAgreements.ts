@@ -11,11 +11,10 @@ import { queryPresets, simpleMutationHandlers } from './base';
 export const queryKey = 'account-agreements';
 
 export const useAccountAgreements = () =>
-  useQuery<Agreements, APIError[]>(
-    queryKey,
-    getAccountAgreements,
-    queryPresets.oneTimeFetch
-  );
+  useQuery<Agreements, APIError[]>(queryKey, getAccountAgreements, {
+    ...queryPresets.oneTimeFetch,
+    ...queryPresets.noRetry,
+  });
 
 export const useMutateAccountAgreements = () => {
   return useMutation<{}, APIError[], Partial<Agreements>>(
