@@ -5,7 +5,7 @@ import { isEmpty } from '@linode/api-v4/lib/request';
 // =============================================================================
 // Config
 // =============================================================================
-type QueryConfigTypes = 'shortLived' | 'longLived' | 'oneTimeFetch';
+type QueryConfigTypes = 'shortLived' | 'longLived' | 'oneTimeFetch' | 'noRetry';
 
 export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
   shortLived: {
@@ -23,6 +23,9 @@ export const queryPresets: Record<QueryConfigTypes, UseQueryOptions<any>> = {
   oneTimeFetch: {
     staleTime: Infinity,
     cacheTime: Infinity,
+  },
+  noRetry: {
+    retry: false,
   },
 };
 

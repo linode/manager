@@ -10,11 +10,10 @@ import { queryClient, queryPresets } from './base';
 export const queryKey = 'account-settings';
 
 export const useAccountSettings = () =>
-  useQuery<AccountSettings, APIError[]>(
-    queryKey,
-    getAccountSettings,
-    queryPresets.oneTimeFetch
-  );
+  useQuery<AccountSettings, APIError[]>(queryKey, getAccountSettings, {
+    ...queryPresets.oneTimeFetch,
+    ...queryPresets.noRetry,
+  });
 
 export const useMutateAccountSettings = () => {
   return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>(
