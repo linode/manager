@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Early Adopter Program SLA banners to Database Create and empty state Database landing pages for beta
 
+### Fixed:
+
+- Fixed issue where limited users without billing access could not use the app
+
 ## [2022-03-07] - v1.61.0
 
 ### Added:
@@ -20,7 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed:
 
 - Drupal Marketplace app logo
-- Feedback link 
+- Feedback link
 - Improve styling consistency for backup auto enrollment
 - Replaced copy icon and added copy tooltip on hover
 
@@ -40,7 +44,6 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Linode Details action link colors in dark mode
 - Linode Details Configurations table alignment
 
-
 ## [2022-02-25] - v1.60.1
 
 ### Added:
@@ -50,14 +53,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2022-02-21] - v1.60.0
 
 ### Added:
+
 - Copy IP address tooltip in the Linode Networking tab
 - February 2022 Marketplace release
 
 ### Changed:
+
 - Update Storybook components
 - Glish URL root from “alpha” to “dev”
 
 ### Fixed:
+
 - Prevent previous saved support text from loading into a ticket reply
 
 ## [2022-02-14] - v1.59.1
