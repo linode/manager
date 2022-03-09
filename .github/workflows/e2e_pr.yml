@@ -59,4 +59,4 @@ jobs:
           browser: chrome
           headless: true
           record: false
-          parallel: true
+          parallel: false
