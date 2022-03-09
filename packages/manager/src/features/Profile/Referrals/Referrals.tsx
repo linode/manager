@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   removeDisabledStyles: {
     '&.Mui-disabled': {
       borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
-      color: 'inherit',
+      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
       opacity: 1,
     },
   },
