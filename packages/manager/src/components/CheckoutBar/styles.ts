@@ -13,17 +13,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
     minHeight: '24px',
     minWidth: '24px',
     [theme.breakpoints.down('sm')]: {
+      background: theme.color.white,
+      padding: theme.spacing(2),
       position: 'relative !important' as 'relative',
       left: '0 !important' as '0',
       bottom: '0 !important' as '0',
-      background: theme.color.white,
-      padding: theme.spacing(2),
     },
+  },
+  sidebarTitle: {
+    color: theme.color.headline,
+    fontSize: '1.125rem',
+    wordBreak: 'break-word',
   },
   checkoutSection: {
     animation: '$fadeIn 225ms linear forwards',
     opacity: 0,
-    padding: `${theme.spacing(2)}px 0`,
+    padding: '12px 0',
     [theme.breakpoints.down('sm')]: {
       '& button': {
         marginLeft: 0,
@@ -33,26 +38,22 @@ export const useStyles = makeStyles((theme: Theme) => ({
       paddingBottom: `0px !important`,
     },
   },
-  sidebarTitle: {
-    fontSize: '1.125rem',
+  price: {
     color: theme.color.headline,
-    wordBreak: 'break-word',
+    fontSize: '.8rem',
+    lineHeight: '1.5em',
+    marginTop: theme.spacing(),
   },
   detail: {
-    fontSize: '.8rem',
     color: theme.color.headline,
+    fontSize: '.8rem',
     lineHeight: '1.5em',
   },
   createButton: {
+    marginTop: 18,
     [theme.breakpoints.up('lg')]: {
       width: '100%',
     },
-  },
-  price: {
-    fontSize: '.8rem',
-    color: theme.color.headline,
-    lineHeight: '1.5em',
-    marginTop: theme.spacing(1),
   },
 }));
 
