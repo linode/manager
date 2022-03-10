@@ -10,11 +10,10 @@ import { mutationHandlers, queryPresets } from './base';
 export const queryKey = 'account';
 
 export const useAccount = () =>
-  useQuery<Account, APIError[]>(
-    queryKey,
-    getAccountInfo,
-    queryPresets.oneTimeFetch
-  );
+  useQuery<Account, APIError[]>(queryKey, getAccountInfo, {
+    ...queryPresets.oneTimeFetch,
+    ...queryPresets.noRetry,
+  });
 
 export const useMutateAccount = () => {
   return useMutation<Account, APIError[], Partial<Account>>((data) => {
