@@ -151,12 +151,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
     const { classes, flags } = this.props;
     const account = queryClient.getQueryData<Account>('account');
 
-    const showFirewalls = isFeatureEnabled(
-      'Cloud Firewall',
-      Boolean(flags.firewalls),
-      account?.capabilities ?? []
-    );
-
     const showDatabases = isFeatureEnabled(
       'Managed Databases',
       Boolean(flags.databases),
@@ -210,19 +204,17 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={NodebalancerIcon}
                     />
                   </MenuLink>
-                  {showFirewalls ? (
-                    <MenuLink
-                      as={Link}
-                      to="/firewalls/create"
-                      className={classes.menuItemLink}
-                    >
-                      <AddNewMenuItem
-                        title="Firewall"
-                        body="Control network access to your Linodes"
-                        ItemIcon={FirewallIcon}
-                      />
-                    </MenuLink>
-                  ) : null}
+                  <MenuLink
+                    as={Link}
+                    to="/firewalls/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Firewall"
+                      body="Control network access to your Linodes"
+                      ItemIcon={FirewallIcon}
+                    />
+                  </MenuLink>
                   <MenuLink
                     as={Link}
                     to="/domains/create"

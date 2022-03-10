@@ -190,12 +190,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
 
-  const showFirewalls = isFeatureEnabled(
-    'Cloud Firewall',
-    Boolean(flags.firewalls),
-    account?.capabilities ?? []
-  );
-
   const showDatabases = isFeatureEnabled(
     'Managed Databases',
     Boolean(flags.databases),
@@ -361,9 +355,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route path="/support" component={Help} />
                             <Route path="/search" component={SearchLanding} />
                             <Route path="/events" component={EventsLanding} />
-                            {showFirewalls && (
-                              <Route path="/firewalls" component={Firewalls} />
-                            )}
+                            <Route path="/firewalls" component={Firewalls} />
                             {showDatabases ? (
                               <Route path="/databases" component={Databases} />
                             ) : null}

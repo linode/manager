@@ -1,4 +1,3 @@
-import { waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
@@ -19,9 +18,12 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />
-    );
+    const {
+      getByTestId,
+      rerender,
+      queryByTestId,
+      findByTestId,
+    } = renderWithTheme(<PrimaryNav {...props} />);
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
     server.use(
@@ -32,26 +34,8 @@ describe('PrimaryNav', () => {
 
     rerender(wrapWithTheme(<PrimaryNav {...props} />));
 
-    await waitFor(() => getByTestId('menu-item-Managed'));
+    await findByTestId('menu-item-Managed');
 
     getByTestId('menu-item-Managed');
-  });
-
-  it('only contains a "Firewalls" menu link when the flag is enabled', () => {
-    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
-      <PrimaryNav {...props} />,
-      {
-        flags: { firewalls: false },
-      }
-    );
-    expect(queryByTestId('menu-item-Firewalls')).not.toBeInTheDocument();
-
-    rerender(
-      wrapWithTheme(<PrimaryNav {...props} />, {
-        flags: { firewalls: true },
-      })
-    );
-
-    getByTestId('menu-item-Firewalls');
   });
 });

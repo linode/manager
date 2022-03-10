@@ -219,11 +219,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     openDialog: openUpgradeDialog,
   } = useDialog(_updateCluster);
 
-  const isHighAvailabilityFeatureEnabled = Boolean(
+  const capabilities = account?.capabilities ?? [];
+  const isHighAvailabilityFeatureEnabled =
     HIGH_AVAILABILITY_PRICE !== undefined &&
-      flags.lkeHighAvailability &&
-      account?.capabilities.includes('LKE HA Control Planes')
-  );
+    capabilities.includes('LKE HA Control Planes');
 
   const isClusterHighlyAvailable =
     isHighAvailabilityFeatureEnabled &&
