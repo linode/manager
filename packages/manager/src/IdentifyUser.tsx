@@ -87,7 +87,7 @@ export const IdentifyUser: React.FC<{}> = () => {
           .catch(() => setFeatureFlagsLoaded());
       }
     }
-  }, [client, userID, username, account]);
+  }, [client, userID, username, account, accountError]);
 
   return null;
 };
