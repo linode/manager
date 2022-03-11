@@ -1,9 +1,9 @@
 import * as React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
-import { useSelector, useDispatch } from 'react-redux';
 
 interface Props {
   error?: string;
@@ -13,6 +13,7 @@ interface Props {
   name: string;
   value: number;
   disabled?: boolean;
+  width?: number;
 }
 
 type CombinedProps = Props;
@@ -20,7 +21,16 @@ type CombinedProps = Props;
 export const initialValueDefaultId = -1;
 
 const ConfigSelect: React.FC<CombinedProps> = (props) => {
-  const { error, onChange, onBlur, linodeId, name, value, ...rest } = props;
+  const {
+    error,
+    onChange,
+    onBlur,
+    linodeId,
+    name,
+    value,
+    width,
+    ...rest
+  } = props;
 
   const { lastUpdated, error: configsError, loading, itemsById } = useSelector(
     (state: ApplicationState) => {
@@ -63,7 +73,10 @@ const ConfigSelect: React.FC<CombinedProps> = (props) => {
     return null;
   } else {
     return (
-      <FormControl fullWidth>
+      <FormControl
+        fullWidth={width ? false : true}
+        style={{ marginTop: 20, width }}
+      >
         <Select
           options={configList}
           name={name}

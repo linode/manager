@@ -115,10 +115,12 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     setSelectedLinode(linode);
   };
 
-  const handleLinodeChange = (linode: Linode) => {
-    // Clear any errors
-    setErrors(undefined);
-    changeSelectedLinode(linode);
+  const handleLinodeChange = (linode: Linode | null) => {
+    if (linode !== null) {
+      // Clear any errors
+      setErrors(undefined);
+      changeSelectedLinode(linode);
+    }
   };
 
   const handleDiskChange = (diskID: string | null) => {
@@ -228,6 +230,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           canCreateImage,
           availableLinodesToImagize,
         ]}
+        isClearable={false}
       />
 
       <>

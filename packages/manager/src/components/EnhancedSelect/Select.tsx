@@ -102,7 +102,7 @@ export interface BaseSelectProps
   /**
    * We require label for accessibility purpose
    */
-  label: string;
+  label: string | JSX.Element;
   /** alias for isDisabled */
   disabled?: boolean;
   /** retyped this */
@@ -239,7 +239,13 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           but we're using the MUI select element so any props that
           can be passed to the MUI TextField element can be passed here
          */
-        inputId={inputId ? inputId : convertToKebabCase(label)}
+        inputId={
+          inputId
+            ? inputId
+            : typeof label === 'string'
+            ? convertToKebabCase(label)
+            : null
+        }
         textFieldProps={{
           ...textFieldProps,
           label,
