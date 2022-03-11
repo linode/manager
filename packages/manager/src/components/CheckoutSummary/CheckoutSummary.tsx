@@ -54,7 +54,9 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
         {heading}
       </Typography>
       {displaySections.length === 0 ? (
-        <Typography variant="body1">Please configure your Linode.</Typography>
+        <Typography variant="body1" className={classes.heading}>
+          Please configure your Linode.
+        </Typography>
       ) : null}
       <Grid
         container

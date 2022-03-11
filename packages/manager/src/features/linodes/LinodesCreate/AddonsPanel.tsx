@@ -122,9 +122,11 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     const { backupsMonthly } = props;
     return (
       backupsMonthly && (
-        <Typography component="span" variant="body1" style={{ marginLeft: 8 }}>
-          <Currency quantity={backupsMonthly} /> per month
-        </Typography>
+        <Grid item className={classes.subLabel}>
+          <Typography variant="body1">
+            <Currency quantity={backupsMonthly} /> per month
+          </Typography>
+        </Grid>
       )
     );
   };
@@ -168,31 +170,25 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                   }
                 />
               }
-              label={
-                <>
-                  <Typography variant="h3">
-                    Backups {renderBackupsPrice()}
-                  </Typography>
-                  <Typography variant="body1">
-                    {accountBackups ? (
-                      <React.Fragment>
-                        You have enabled automatic backups for your account.
-                        This Linode will automatically have backups enabled. To
-                        change this setting,{' '}
-                        <Link to={'/account/settings'}>click here.</Link>
-                      </React.Fragment>
-                    ) : (
-                      <React.Fragment>
-                        Three backup slots are executed and rotated
-                        automatically: a daily backup, a 2-7 day old backup, and
-                        an 8-14 day old backup. Plans are priced according to
-                        the Linode plan selected above.
-                      </React.Fragment>
-                    )}
-                  </Typography>
-                </>
-              }
+              label="Backups"
             />
+            {renderBackupsPrice()}
+            <Typography variant="body1" className={classes.caption}>
+              {accountBackups ? (
+                <React.Fragment>
+                  You have enabled automatic backups for your account. This
+                  Linode will automatically have backups enabled. To change this
+                  setting, <Link to={'/account/settings'}>click here.</Link>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  Three backup slots are executed and rotated automatically: a
+                  daily backup, a 2-7 day old backup, and an 8-14 day old
+                  backup. Plans are priced according to the Linode plan selected
+                  above.
+                </React.Fragment>
+              )}
+            </Typography>
           </Grid>
         </Grid>
         {
@@ -211,16 +207,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                       disabled={disabled}
                     />
                   }
-                  label={
-                    <>
-                      <Typography variant="h3">Private IP</Typography>
-                      <Typography variant="body1">
-                        A private IPv4 address can be assigned to a Linode to
-                        allow it to connect to other services located in the
-                        same data center.
-                      </Typography>
-                    </>
-                  }
+                  label="Private IP"
                 />
               </Grid>
             </Grid>

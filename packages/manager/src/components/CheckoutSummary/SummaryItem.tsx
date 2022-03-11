@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles, Theme } from '../core/styles';
 import Typography from '../core/Typography';
 import Grid from '../Grid';
-import { SummaryItem as Props } from './index';
+import { SummaryItem as Props } from './CheckoutSummary';
 
 const useStyles = makeStyles((theme: Theme) => ({
   item: {

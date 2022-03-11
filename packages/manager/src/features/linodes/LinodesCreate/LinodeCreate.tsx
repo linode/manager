@@ -66,7 +66,7 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { CheckoutSummary } from 'src/components/CheckoutSummary';
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 
@@ -445,13 +445,13 @@ export class LinodeCreate extends React.PureComponent<
       );
     }
 
-    if (Boolean(this.props.vlanLabel)) {
+    if (this.props.vlanLabel) {
       displaySections.push({
         title: 'VLAN Attached',
       });
     }
 
-    if (Boolean(this.props.privateIPEnabled)) {
+    if (this.props.privateIPEnabled) {
       displaySections.push({
         title: 'Private IP',
       });
@@ -459,7 +459,7 @@ export class LinodeCreate extends React.PureComponent<
 
     return (
       <form className={classes.form}>
-        <Grid item className={`py0`}>
+        <Grid item className="py0">
           {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
