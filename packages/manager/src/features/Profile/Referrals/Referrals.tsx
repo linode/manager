@@ -148,8 +148,6 @@ export const Referrals: React.FC<{}> = () => {
           <Grid item xs={12} className={classes.link}>
             {allowReferral ? (
               <CopyableTextField
-                className={classes.removeDisabledStyles}
-                disabled
                 expand
                 label="Your personal referral link"
                 value={url}
