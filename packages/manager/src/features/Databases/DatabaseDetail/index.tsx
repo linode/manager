@@ -97,6 +97,7 @@ export const DatabaseDetail: React.FC<EditableLabelProps> = (props) => {
   };
 
   const handleSubmitLabelChange = (newLabel: string) => {
+    // @TODO Update this to only send the label when the API supports it
     return updateDatabase({ allow_list: database.allow_list, label: newLabel })
       .then(() => {
         resetEditableLabel();
