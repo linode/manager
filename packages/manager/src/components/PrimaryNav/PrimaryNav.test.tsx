@@ -2,6 +2,7 @@ import * as React from 'react';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme, wrapWithTheme } from 'src/utilities/testHelpers';
 import PrimaryNav from './PrimaryNav';
+import { waitFor } from '@testing-library/react';
 
 const props = {
   closeMenu: jest.fn(),
@@ -18,12 +19,9 @@ describe('PrimaryNav', () => {
       })
     );
 
-    const {
-      getByTestId,
-      rerender,
-      queryByTestId,
-      findByTestId,
-    } = renderWithTheme(<PrimaryNav {...props} />);
+    const { getByTestId, rerender, queryByTestId } = renderWithTheme(
+      <PrimaryNav {...props} />
+    );
     expect(queryByTestId('menu-item-Managed')).not.toBeInTheDocument();
 
     server.use(
@@ -34,7 +32,8 @@ describe('PrimaryNav', () => {
 
     rerender(wrapWithTheme(<PrimaryNav {...props} />));
 
-    await findByTestId('menu-item-Managed');
+    // eslint-disable-next-line testing-library/prefer-find-by
+    await waitFor(() => getByTestId('menu-item-Managed'));
 
     getByTestId('menu-item-Managed');
   });
