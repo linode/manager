@@ -44,6 +44,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'flex-end',
     },
   },
+  rawDiskWarning: {
+    marginTop: '1rem !important',
+    marginBottom: '1rem !important',
+    width: '100%',
+    maxWidth: '425px',
+  },
 }));
 
 export interface Props {
@@ -177,6 +183,15 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     'GB'
   );
 
+  const isRawDisk = selectedDiskData?.filesystem === 'raw';
+  const rawDiskWarning = (
+    <Notice
+      className={classes.rawDiskWarning}
+      warning
+      text={rawDiskWarningText}
+    />
+  );
+
   const hasErrorFor = getAPIErrorFor(
     {
       linode_id: 'Linode',
@@ -235,16 +250,16 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           disabled={!canCreateImage}
           data-qa-disk-select
         />
-        <Typography className={classes.helperText} variant="body1">
-          {`Estimated: ${calculateCostFromUnitPrice(
-            0.1,
-            selectedDiskSizeInGB
-          )}/month`}
-        </Typography>
-        <Typography className={classes.helperText} variant="body1">
-          Linode Images cannot be created if you are using raw disks or disks
-          that have been formatted using custom filesystems.
-        </Typography>
+        {isRawDisk ? (
+          rawDiskWarning
+        ) : (
+          <Typography className={classes.helperText} variant="body1">
+            {`Estimated: ${calculateCostFromUnitPrice(
+              0.1,
+              selectedDiskSizeInGB
+            )}/month`}
+          </Typography>
+        )}
       </>
 
       <>
@@ -294,3 +309,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 export default compose<Props & ImagesDispatch, Props>(withImages())(
   CreateImageTab
 );
+
+const rawDiskWarningText =
+  'Using a raw disk may fail, as Linode Images cannot be created from disks formatted with custom filesystems.';
