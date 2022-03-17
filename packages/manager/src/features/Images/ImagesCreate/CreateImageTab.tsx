@@ -26,9 +26,6 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  helperText: {
-    paddingTop: theme.spacing(1) / 2,
-  },
   container: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
@@ -45,14 +42,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   rawDiskWarning: {
-    marginTop: '1rem !important',
-    marginBottom: '2rem !important',
+    maxWidth: 600,
     width: '100%',
-    maxWidth: '425px',
   },
   diskAndPrice: {
-    display: 'flex',
-    alignItems: 'flex-end',
+    '& > div': {
+      width: 415,
+    },
+  },
+  helperText: {
+    marginBottom: theme.spacing(),
+    marginLeft: theme.spacing(1.5),
   },
 }));
 
@@ -191,6 +191,8 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const rawDiskWarning = (
     <Notice
       className={classes.rawDiskWarning}
+      spacingTop={16}
+      spacingBottom={32}
       warning
       text={rawDiskWarningText}
     />
@@ -244,7 +246,11 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         ]}
       />
 
-      <div className={classes.diskAndPrice}>
+      <Box
+        display="flex"
+        alignItems="flex-end"
+        className={classes.diskAndPrice}
+      >
         <DiskSelect
           selectedDisk={selectedDisk}
           disks={disks}
@@ -256,13 +262,11 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         />
         {selectedDiskData?.size ? (
           <Typography className={classes.helperText} variant="body1">
-            {`Estimated: ${calculateCostFromUnitPrice(
-              0.1,
-              selectedDiskSizeInGB
-            )}/month`}
+            Estimated: {calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}
+            /month
           </Typography>
         ) : null}
-      </div>
+      </Box>
       {isRawDisk ? rawDiskWarning : null}
       <>
         <TextField
