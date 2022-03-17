@@ -7,6 +7,7 @@ import { MAX_VOLUME_SIZE } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   createVolumeText: {
+    display: 'block',
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(1.5),
   },
@@ -70,7 +71,7 @@ const SizeField: React.FC<CombinedProps> = (props) => {
         {resize || isFromLinode ? (
           'The size of the new volume in GB.'
         ) : (
-          <div className={classes.createVolumeText}>${price}/month</div>
+          <span className={classes.createVolumeText}>${price}/month</span>
         )}
       </FormHelperText>
     </>

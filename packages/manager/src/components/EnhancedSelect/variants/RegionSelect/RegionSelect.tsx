@@ -26,7 +26,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   regions: ExtendedRegion[];
   handleSelection: (id: string) => void;
   selectedID: string | null;
-  label?: string | JSX.Element;
+  label?: string;
   helperText?: string;
   isClearable?: boolean;
   required?: boolean;

@@ -36,7 +36,7 @@ interface Props {
   valueOverride?: Override;
   labelOverride?: Override;
   filterCondition?: (linode: Linode) => boolean;
-  label?: string | JSX.Element;
+  label?: string;
   noOptionsMessage?: string;
   small?: boolean;
   noMarginTop?: boolean;

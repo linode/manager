@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 960,
   },
   copy: {
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(),
     maxWidth: 680,
   },
   notice: {
@@ -66,7 +66,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 320,
   },
   helpIcon: {
-    marginTop: -2,
+    marginBottom: 6,
+    marginLeft: theme.spacing(),
     padding: 0,
   },
   tooltip: {
@@ -82,6 +83,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   size: {
     width: 160,
   },
+  linodeConfigSelectWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+  linodeSelect: {
+    marginRight: theme.spacing(4),
+  },
   buttonGroup: {
     marginTop: theme.spacing(3),
     [theme.breakpoints.down('xs')]: {
@@ -96,6 +106,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     marginTop: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
+    },
   },
 }));
 
@@ -145,17 +158,14 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     'block-storage-available'
   );
 
-  const renderSelectLabel = (label: string, tooltipText: string) => {
+  const renderSelectTooltip = (tooltipText: string) => {
     return (
-      <>
-        {label}{' '}
-        <HelpIcon
-          classes={{ popper: classes.tooltip }}
-          className={classes.helpIcon}
-          text={tooltipText}
-          tooltipPosition="right"
-        />
-      </>
+      <HelpIcon
+        classes={{ popper: classes.tooltip }}
+        className={classes.helpIcon}
+        text={tooltipText}
+        tooltipPosition="right"
+      />
     );
   };
 
@@ -303,8 +313,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   data-qa-volume-size-help
                 >
                   A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                  size and costs $0.10/GB per month. Up to eight volumes can be
-                  attached to a single Linode.
+                  size and costs $0.10/GB per month. <br />
+                  Up to eight volumes can be attached to a single Linode.
                 </Typography>
                 <LabelField
                   name="label"
@@ -315,7 +325,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                   textFieldStyles={classes.select}
                   tooltipClasses={classes.labelTooltip}
                   tooltipPosition="right"
-                  tooltipText="Use only ascii letters, numbers,
+                  tooltipText="Use only ASCII letters, numbers,
                   underscores, and dashes."
                   value={values.label}
                 />
@@ -330,40 +340,47 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     textFieldStyles={classes.size}
                   />
                 </Box>
-                <RegionSelect
-                  label={renderSelectLabel(
-                    'Region',
+                <Box display="flex" alignItems="flex-end">
+                  <RegionSelect
+                    label="Region"
+                    name="region"
+                    disabled={doesNotHavePermission}
+                    errorText={touched.region ? errors.region : undefined}
+                    handleSelection={(value) => {
+                      setFieldValue('region', value);
+                      setFieldValue('linode_id', initialValueDefaultId);
+                    }}
+                    isClearable
+                    onBlur={handleBlur}
+                    regions={props.regions
+                      .filter((eachRegion) =>
+                        eachRegion.capabilities.some((eachCape) =>
+                          eachCape.match(/block/i)
+                        )
+                      )
+                      .map((eachRegion) => ({
+                        ...eachRegion,
+                        display: dcDisplayNames[eachRegion.id],
+                      }))}
+                    selectedID={values.region}
+                    width={320}
+                  />
+                  {renderSelectTooltip(
                     'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
                   )}
-                  name="region"
-                  disabled={doesNotHavePermission}
-                  errorText={touched.region ? errors.region : undefined}
-                  handleSelection={(value) => {
-                    setFieldValue('region', value);
-                    setFieldValue('linode_id', initialValueDefaultId);
-                  }}
-                  isClearable
-                  onBlur={handleBlur}
-                  regions={props.regions
-                    .filter((eachRegion) =>
-                      eachRegion.capabilities.some((eachCape) =>
-                        eachCape.match(/block/i)
-                      )
-                    )
-                    .map((eachRegion) => ({
-                      ...eachRegion,
-                      display: dcDisplayNames[eachRegion.id],
-                    }))}
-                  selectedID={values.region}
-                  width={320}
-                />
-                <Box display="flex">
-                  <span style={{ marginRight: 36 }}>
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="flex-end"
+                  className={classes.linodeConfigSelectWrapper}
+                >
+                  <Box
+                    display="flex"
+                    alignItems="flex-end"
+                    className={classes.linodeSelect}
+                  >
                     <LinodeSelect
-                      label={renderSelectLabel(
-                        'Linode',
-                        'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
-                      )}
+                      label="Linode"
                       name="linodeId"
                       disabled={doesNotHavePermission}
                       filterCondition={(linode: Linode) =>
@@ -377,7 +394,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                       isClearable
                       width={320}
                     />
-                  </span>
+                    {renderSelectTooltip(
+                      'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                    )}
+                  </Box>
                   <ConfigSelect
                     name="configId"
                     disabled={doesNotHavePermission}
