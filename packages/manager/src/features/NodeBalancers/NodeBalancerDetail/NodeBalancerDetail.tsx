@@ -313,7 +313,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           >
             <Grid item className="p0">
               <Breadcrumb
-                pathname={`/NodeBalancers/${nodeBalancerLabel}`}
+                pathname={`/nodebalancers/${nodeBalancerLabel}`}
                 firstAndLastOnly
                 onEditHandlers={{
                   editableTextTitle: nodeBalancerLabel,

@@ -532,7 +532,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <Grid container className="m0">
           <Grid item className={`mlMain p0`}>
             <Breadcrumb
-              pathname="/NodeBalancers/Create"
+              pathname="/nodebalancers/create"
               data-qa-create-nodebalancer-header
             />
             {generalError && !this.disabled && (
