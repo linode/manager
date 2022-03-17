@@ -58,5 +58,5 @@ jobs:
           install: false
           browser: chrome
           headless: true
-          record: false
+          record: true
           parallel: true
