@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginBottom: theme.spacing(),
     marginLeft: theme.spacing(1.5),
+    whiteSpace: 'nowrap',
   },
 }));
 
