@@ -175,7 +175,9 @@ const TagsPanel: React.FC<Props> = (props) => {
 
   const toggleTagInput = () => {
     if (!disabled) {
-      setTagError('');
+      if (tagError) {
+        setTagError('');
+      }
       setIsCreatingTag((prev) => !prev);
     }
   };
