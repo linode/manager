@@ -577,7 +577,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({ display: 'compact' }));
+    return res(ctx.json({}));
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));

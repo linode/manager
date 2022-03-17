@@ -25,7 +25,7 @@ export type TypeInfo =
     }
   | undefined;
 
-export type Info = { title: string; details?: string } | undefined;
+export type Info = { title?: string; details?: string } | undefined;
 
 /**
  * These props are meant purely for what is displayed in the

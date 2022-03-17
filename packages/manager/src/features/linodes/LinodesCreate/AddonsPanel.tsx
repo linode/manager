@@ -35,11 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  subLabel: {
-    display: 'inline-block',
-    position: 'relative',
-    top: 3,
-  },
   caption: {
     marginTop: -8,
     paddingLeft: theme.spacing(2) + 18, // 34,
@@ -117,7 +112,7 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
     const { backupsMonthly } = props;
     return (
       backupsMonthly && (
-        <Grid item className={classes.subLabel}>
+        <Grid item>
           <Typography variant="body1">
             <Currency quantity={backupsMonthly} /> per month
           </Typography>
@@ -165,9 +160,13 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
                   }
                 />
               }
-              label="Backups"
+              label={
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item>Backups</Grid>
+                  {renderBackupsPrice()}
+                </Grid>
+              }
             />
-            {renderBackupsPrice()}
             <Typography variant="body1" className={classes.caption}>
               {accountBackups ? (
                 <React.Fragment>

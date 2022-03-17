@@ -28,7 +28,7 @@ describe('clone linode', () => {
         containsClick('Clone');
         containsClick('Select a Region');
         containsClick('Newark, NJ');
-        getVisible('[data-qa-details]').within(() => {
+        getVisible('[data-qa-summary]').within(() => {
           containsVisible(linode.label);
         });
         fbtClick('Shared CPU');
