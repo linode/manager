@@ -10,7 +10,6 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
-import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import AttachVLAN from './AttachVLAN';
@@ -85,7 +84,6 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
   const hidePrivateIP = createType === 'fromLinode';
 
   const classes = useStyles();
-  const flags = useFlags();
   const { data: account } = useAccount();
 
   // Making this an && instead of the usual hasFeatureEnabled, which is || based.
@@ -94,12 +92,9 @@ const AddonsPanel: React.FC<CombinedProps> = (props) => {
 
   // The VLAN section is shown when:
   // - the user has the capability
-  // - the flag is on
   // - the user is not creating by cloning (cloning copies the network interfaces)
   const showVlans =
-    capabilities.includes('Vlans') &&
-    flags.vlans &&
-    createType !== 'fromLinode';
+    capabilities.includes('Vlans') && createType !== 'fromLinode';
 
   const isBareMetal = /metal/.test(selectedTypeID ?? '');
 
