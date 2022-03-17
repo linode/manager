@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -17,23 +16,18 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
-import {
-  getIcon as getTPPIcon,
-  thirdPartyPaymentMap,
-} from 'src/components/PaymentMethodRow/ThirdPartyPayment';
-import SelectionCard from 'src/components/SelectionCard';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
-import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
 import { queryClient } from 'src/queries/base';
-import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import isCreditCardExpired from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import GooglePayButton from './GooglePayButton';
-import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
+import { PaymentMethodCard } from './PaymentMethodCard';
+import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -59,57 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
-  },
-  cvvField: {
-    width: 100,
-  },
-  cardSection: {
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    flexFlow: 'column nowrap',
-  },
-  cardSectionNew: {
-    marginLeft: -7,
-  },
-  cardText: {
-    padding: '1px',
-    lineHeight: '1.5rem',
-  },
-  cvvFieldWrapper: {
-    '& label': {
-      fontSize: 12,
-    },
-  },
-  paymentMethod: {
-    marginBottom: theme.spacing(),
-  },
-  selectionCard: {
-    minWidth: '100%',
-    padding: 0,
-    marginBottom: theme.spacing(),
-    '& .cardBaseGrid': {
-      flexWrap: 'nowrap',
-    },
-    '& .cardBaseIcon': {
-      width: 45,
-      padding: 0,
-      justifyContent: 'center',
-    },
-    '& .cardBaseHeadings': {
-      flex: 'inherit',
-    },
-  },
-  expired: {
-    '& .cardBaseSubHeading': {
-      color: theme.color.red,
-    },
-  },
-  chip: {
-    '& span': {
-      color: 'inherit !important',
-      fontSize: '0.625rem',
-    },
   },
   helpIcon: {
     padding: `0px 8px`,
@@ -338,97 +281,14 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
             </Grid>
             <Grid item>
               {hasPaymentMethods ? (
-                paymentMethods?.map((paymentMethod: PaymentMethod) => {
-                  const { id, type, is_default } = paymentMethod;
-
-                  const getIsCardExpired = (paymentMethod: PaymentMethod) => {
-                    if (paymentMethod.type === 'paypal') {
-                      return false;
-                    }
-
-                    return Boolean(
-                      paymentMethod.data.expiry &&
-                        isCreditCardExpired(paymentMethod.data.expiry)
-                    );
-                  };
-
-                  const getHeading = (paymentMethod: PaymentMethod) => {
-                    switch (paymentMethod.type) {
-                      case 'paypal':
-                        return thirdPartyPaymentMap[type].label;
-                      case 'google_pay':
-                        return `${thirdPartyPaymentMap[type].label} ${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
-                      default:
-                        return `${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
-                    }
-                  };
-
-                  const getSubHeading = (
-                    paymentMethod: PaymentMethod,
-                    isExpired: boolean
-                  ) => {
-                    // eslint-disable-next-line sonarjs/no-small-switch
-                    switch (paymentMethod.type) {
-                      case 'paypal':
-                        return paymentMethod.data.email;
-                      default:
-                        return `${
-                          isExpired ? 'Expired' : 'Expires'
-                        } ${formatExpiry(paymentMethod.data.expiry ?? '')}`;
-                    }
-                  };
-
-                  const getIcon = (paymentMethod: PaymentMethod) => {
-                    // eslint-disable-next-line sonarjs/no-small-switch
-                    switch (paymentMethod.type) {
-                      case 'credit_card':
-                        return getCreditCardIcon(paymentMethod.data.card_type);
-                      default:
-                        return getTPPIcon(paymentMethod.type);
-                    }
-                  };
-
-                  const heading = getHeading(paymentMethod);
-
-                  const cardIsExpired = getIsCardExpired(paymentMethod);
-
-                  const subHeading = getSubHeading(
-                    paymentMethod,
-                    cardIsExpired
-                  );
-
-                  const renderIcon = () => {
-                    const Icon = getIcon(paymentMethod);
-                    return <Icon />;
-                  };
-
-                  const renderVariant = () => {
-                    return is_default ? (
-                      <Grid item className={classes.chip} xs={3} md={2}>
-                        <Chip label="DEFAULT" component="span" />
-                      </Grid>
-                    ) : null;
-                  };
-
-                  return (
-                    <Grid key={id} className={classes.paymentMethod}>
-                      <SelectionCard
-                        className={classNames({
-                          [classes.selectionCard]: true,
-                          [classes.expired]: cardIsExpired,
-                        })}
-                        checked={id === paymentMethodId}
-                        onClick={() =>
-                          handlePaymentMethodChange(id, cardIsExpired)
-                        }
-                        renderIcon={renderIcon}
-                        renderVariant={renderVariant}
-                        heading={heading}
-                        subheadings={[subHeading]}
-                      />
-                    </Grid>
-                  );
-                })
+                paymentMethods?.map((paymentMethod: PaymentMethod) => (
+                  <PaymentMethodCard
+                    key={paymentMethod.id}
+                    paymentMethod={paymentMethod}
+                    paymentMethodId={paymentMethodId}
+                    handlePaymentMethodChange={handlePaymentMethodChange}
+                  />
+                ))
               ) : (
                 <Grid item>
                   <Typography>No payment methods on file.</Typography>

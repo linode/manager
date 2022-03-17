@@ -183,7 +183,10 @@ export const PayPalButton: React.FC<Props> = (props) => {
     }
   };
 
-  const onError = (error: Record<string, unknown>) => {
+  const onError = (error: any) => {
+    if (error?.message?.includes('popup close')) {
+      return;
+    }
     reportException(
       'An error occurred when trying to make a one-time PayPal payment.',
       { error }
