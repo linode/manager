@@ -46,9 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   rawDiskWarning: {
     marginTop: '1rem !important',
-    marginBottom: '1rem !important',
+    marginBottom: '2rem !important',
     width: '100%',
     maxWidth: '425px',
+  },
+  diskAndPrice: {
+    display: 'flex',
+    alignItems: 'flex-end',
   },
 }));
 
@@ -240,7 +244,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         ]}
       />
 
-      <>
+      <div className={classes.diskAndPrice}>
         <DiskSelect
           selectedDisk={selectedDisk}
           disks={disks}
@@ -250,18 +254,16 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           disabled={!canCreateImage}
           data-qa-disk-select
         />
-        {isRawDisk ? (
-          rawDiskWarning
-        ) : (
+        {selectedDiskData?.size ? (
           <Typography className={classes.helperText} variant="body1">
             {`Estimated: ${calculateCostFromUnitPrice(
               0.1,
               selectedDiskSizeInGB
             )}/month`}
           </Typography>
-        )}
-      </>
-
+        ) : null}
+      </div>
+      {isRawDisk ? rawDiskWarning : null}
       <>
         <TextField
           label="Label"
