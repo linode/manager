@@ -75,7 +75,8 @@ type ClassNames =
   | 'stackScriptWrapper'
   | 'imageSelect'
   | 'buttonGroup'
-  | 'agreement';
+  | 'agreement'
+  | 'createButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -103,6 +104,11 @@ const styles = (theme: Theme) =>
       maxWidth: '70%',
       [theme.breakpoints.down('xs')]: {
         maxWidth: 'unset',
+      },
+    },
+    createButton: {
+      [theme.breakpoints.down('sm')]: {
+        marginRight: theme.spacing(1),
       },
     },
   });
@@ -690,6 +696,7 @@ export class LinodeCreate extends React.PureComponent<
               buttonType="primary"
               onClick={this.createLinode}
               loading={formIsSubmitting}
+              className={classes.createButton}
               disabled={
                 formIsSubmitting ||
                 userCannotCreateLinode ||
