@@ -684,11 +684,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       return undefined;
     }
 
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
-    const { vendor, label } = this.props.imagesData![selectedImageID];
+    const selectedImage = this.props.imagesData[selectedImageID];
+
+    if (!selectedImage) {
+      return undefined;
+    }
+
+    const { vendor, label } = selectedImage;
 
     return { title: `${label ? label : vendor ? vendor : ''}` };
   };
