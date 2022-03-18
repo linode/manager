@@ -7,7 +7,6 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatDate } from 'src/utilities/formatDate';
-import stripImageName from 'src/utilities/stripImageName';
 import { truncate } from 'src/utilities/truncate';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
@@ -40,7 +39,6 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
       label={s.label}
       stackScriptUsername={s.username}
       description={truncate(s.description, 100)}
-      images={stripImageName(s.images)}
       deploymentsActive={s.deployments_active}
       updated={formatDate(s.updated, { displayTime: false })}
       onSelect={() => onSelect(s)}

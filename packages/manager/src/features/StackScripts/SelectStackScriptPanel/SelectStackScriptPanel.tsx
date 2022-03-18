@@ -25,7 +25,6 @@ import Table from 'src/components/Table';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { formatDate } from 'src/utilities/formatDate';
 import { getParamFromUrl } from 'src/utilities/queryParams';
-import stripImageName from 'src/utilities/stripImageName';
 import { truncate } from 'src/utilities/truncate';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
@@ -178,7 +177,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
                   stackScriptUsername={stackScript.username}
                   disabledCheckedSelect
                   description={truncate(stackScript.description, 100)}
-                  images={stripImageName(stackScript.images)}
                   deploymentsActive={stackScript.deployments_active}
                   updated={formatDate(stackScript.updated, {
                     displayTime: false,
