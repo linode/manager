@@ -50,9 +50,6 @@ import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    maxWidth: 960,
-  },
   copy: {
     marginBottom: theme.spacing(),
     maxWidth: 680,
@@ -270,7 +267,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             setLinodeId(linode.id);
           } else {
             // If the LinodeSelect is cleared, reset the values for Region and Config
-            setFieldValue('linode_id', -1);
+            setFieldValue('linode_id', initialValueDefaultId);
             setLinodeId(initialValueDefaultId);
           }
         };
@@ -288,7 +285,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 important
               />
             ) : null}
-            <Box display="flex" flexDirection="column" className={classes.root}>
+            <Box display="flex" flexDirection="column">
               <Paper>
                 {flags.blockStorageAvailability && !hasDismissedBanner ? (
                   <Notice

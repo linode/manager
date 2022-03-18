@@ -102,7 +102,7 @@ export interface BaseSelectProps
   /**
    * We require label for accessibility purpose
    */
-  label: string | JSX.Element;
+  label: string;
   /** alias for isDisabled */
   disabled?: boolean;
   /** retyped this */
