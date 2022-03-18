@@ -1,8 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { clickVolumeActionMenu } from '../../support/api/volumes';
-import { assertToast } from '../../support/ui/events';
+import { volumeFactory } from '@src/factories';
+import { makeResourcePage } from '@src/mocks/serverHandlers';
+import { interceptOnce } from 'cypress/support/ui/common';
 import { createMockLinodeList } from '../../support/api/linodes';
-import { selectRegionString } from '../../support/ui/constants';
+import { clickVolumeActionMenu } from '../../support/api/volumes';
 import {
   containsVisible,
   fbtClick,
@@ -10,9 +11,8 @@ import {
   getClick,
   getVisible,
 } from '../../support/helpers';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { volumeFactory } from '@src/factories';
-import { getRandomNumber, interceptOnce } from 'cypress/support/ui/common';
+import { selectRegionString } from '../../support/ui/constants';
+import { assertToast } from '../../support/ui/events';
 
 const region = 'Newark, NJ';
 
