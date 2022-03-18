@@ -378,7 +378,11 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             selectedLinode={selectedLinode}
             linodeError={linodeError}
             disabled={!this.canCreateImage}
-            handleChange={(linode) => this.handleLinodeChange(linode.id)}
+            handleChange={(linode) => {
+              if (linode !== null) {
+                this.handleLinodeChange(linode.id);
+              }
+            }}
             filterCondition={(linode) =>
               this.availableImages
                 ? this.availableImages.includes(linode.id)
@@ -391,6 +395,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
               this.canCreateImage,
               this.availableImages,
             ]}
+            isClearable={false}
           />
         )}
 

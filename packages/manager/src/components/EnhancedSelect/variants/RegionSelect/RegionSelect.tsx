@@ -30,6 +30,7 @@ interface Props extends Omit<BaseSelectProps, 'onChange'> {
   helperText?: string;
   isClearable?: boolean;
   required?: boolean;
+  width?: number;
 }
 
 export const flags = {
@@ -151,6 +152,7 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
     selectedID,
     styles,
     required,
+    width,
     ...restOfReactSelectProps
   } = props;
 
@@ -175,7 +177,7 @@ const SelectRegionPanel: React.FC<Props> = (props) => {
   const options = React.useMemo(() => getRegionOptions(regions), [regions]);
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{ width }}>
       <Select
         isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
         value={getSelectedRegionById(selectedID || '', options)}
