@@ -30,6 +30,7 @@ import {
   Permission,
   permTuplesToScopeString,
   scopeStringToPermTuples,
+  allScopesAreTheSame,
 } from './utils';
 
 type Expiry = [string, string];
@@ -147,9 +148,10 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
     scopes: scopeStringToPermTuples(this.props.scopes || '', this.props.perms),
     expiryTups: genExpiryTups(),
-    selectAllSelectedScope: null,
+    selectAllSelectedScope: allScopesAreTheSame(
+      scopeStringToPermTuples(this.props.scopes || '', this.props.perms)
+    ),
   };
-
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
   UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     if (
@@ -238,7 +240,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                 className={classes.noneCell}
               >
                 <Radio
-                  name="Select All"
+                  name="Select Al"
                   checked={
                     selectAllSelectedScope === 0 && this.allScopesIdentical()
                   }
@@ -411,6 +413,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               onChange={this.handleExpiryChange}
               name="expiry"
               id="expiry"
+              labelId="expiry"
               label="Expiry"
               isClearable={false}
             />

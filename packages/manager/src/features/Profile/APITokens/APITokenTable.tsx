@@ -131,8 +131,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       errors: undefined,
       id: undefined,
       values: {
-        scopes: undefined,
-        expiry: genExpiryTups()[0][1],
+        scopes: '*',
+        expiry: genExpiryTups()[3][1],
         label: '',
       },
     },
@@ -166,8 +166,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         id: undefined,
         values: {
           label: '',
-          expiry: genExpiryTups()[0][1],
-          scopes: undefined,
+          expiry: genExpiryTups()[3][1],
+          scopes: '*',
         },
       },
     });

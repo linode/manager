@@ -160,3 +160,19 @@ export const permTuplesToScopeString = (
   }, []);
   return joinedTups.join(' ');
 };
+
+export const allScopesAreTheSame = (scopes: Permission[]) => {
+  const result = scopes.reduce((acc, scope) => {
+    if (acc === null) {
+      return null;
+    } else if (acc === scope[1] || acc === undefined) {
+      return scope[1];
+    } else {
+      return null;
+    }
+  }, undefined);
+  if (result === undefined) {
+    return null;
+  }
+  return result;
+};
