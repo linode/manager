@@ -61,18 +61,11 @@ describe('linode storage tab', () => {
       cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
-      /* Waiting is necessary because visiting the Linode landing page too
-       * quickly causes the disk not to appear in the `Storage` tab, presumably
-       * because it has not been created yet. This can be improved by waiting
-       * only until an API response confirms that the disk has been created,
-       * or by changing the `Storage` tab to update its contents automatically
-       * without requiring a refresh. In the meantime, this hack should help
-       * reduce flakiness for this test.
-       */
-      // @TODO Remove/improve use of `cy.wait()`. See M3-5762.
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(5);
-      cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      cy.visitWithLogin(`/linodes/${linode.id}`);
+      containsVisible('RUNNING');
+      cy.get('[role="tablist"]').within(() => {
+        fbtClick('Storage');
+      });
       fbtVisible(diskName);
       cy.get('button[title="Add a Disk"]').should('be.disabled');
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
