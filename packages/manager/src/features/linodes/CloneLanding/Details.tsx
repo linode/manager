@@ -249,7 +249,11 @@ export const Configs: React.FC<Props> = (props) => {
       <LinodeSelect
         label="Destination"
         selectedLinode={selectedLinodeId}
-        handleChange={(linode) => handleSelectLinode(linode.id)}
+        handleChange={(linode) => {
+          if (linode !== null) {
+            handleSelectLinode(linode.id);
+          }
+        }}
         filterCondition={
           shouldExcludeCurrentLinode
             ? (linode: Linode) => linode.id !== currentLinodeId
@@ -265,6 +269,7 @@ export const Configs: React.FC<Props> = (props) => {
           errorMap,
           classes,
         ]}
+        isClearable={false}
       />
 
       {linodeError && (
