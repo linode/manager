@@ -55,6 +55,7 @@ export const styles = (theme: Theme) =>
       },
     },
     selectionGrid: {
+      width: '100%',
       flexWrap: 'nowrap',
       alignItems: 'center',
       justifyContent: 'space-between',
