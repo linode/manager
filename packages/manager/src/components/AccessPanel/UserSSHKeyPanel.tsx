@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -97,10 +96,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
       </Typography>
       {success && (
         <Notice success data-testid="ssh-success-message">
-          <Typography>
-            SSH key added successfully.{' '}
-            <Link to="/profile/keys">Click here</Link> to manage your keys.
-          </Typography>
+          <Typography>SSH key added successfully.</Typography>
         </Notice>
       )}
       <Table spacingBottom={16}>
