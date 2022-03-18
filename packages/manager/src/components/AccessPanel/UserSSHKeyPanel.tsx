@@ -159,7 +159,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
         </TableBody>
       </Table>
       <Button
-        buttonType="secondary"
+        buttonType="outlined"
         onClick={handleOpenDrawer}
         compact
         disabled={disabled}

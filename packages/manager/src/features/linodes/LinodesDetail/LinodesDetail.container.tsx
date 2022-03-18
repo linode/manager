@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useFlags from 'src/hooks/useFlags';
 import { useLinodes } from 'src/hooks/useLinodes';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { ApplicationState } from 'src/store';
@@ -11,7 +10,6 @@ import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinode as _getLinode } from 'src/store/linodes/linode.requests';
 import { ThunkDispatch } from 'src/store/types';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { shouldRequestEntity } from 'src/utilities/shouldRequestEntity';
 import LinodesDetail from './LinodesDetail';
 
@@ -27,7 +25,6 @@ interface Props {
 export const LinodesDetailContainer: React.FC<Props> = (props) => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch<ThunkDispatch>();
-  const flags = useFlags();
   const { account } = useAccountManagement();
 
   const params = useParams<{ linodeId: string }>();
@@ -40,11 +37,9 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
     return { disks, configs };
   });
 
-  const vlansEnabled = isFeatureEnabled(
-    'Vlans',
-    Boolean(flags.vlans),
-    account?.capabilities ?? []
-  );
+  const capabilities = account?.capabilities ?? [];
+
+  const showVlans = capabilities.includes('Vlans');
 
   React.useEffect(() => {
     // Unconditionally request data for the Linode being viewed
@@ -70,7 +65,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
     if (shouldRequestEntity(disks)) {
       dispatch(getAllLinodeDisks({ linodeId: +linodeId }));
     }
-  }, [dispatch, configs, disks, vlansEnabled, linodeId, linodes]);
+  }, [dispatch, configs, disks, showVlans, linodeId, linodes]);
 
   if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
     return <CircleProgress />;
