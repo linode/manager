@@ -23,6 +23,13 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.textColors.headlineStatic,
     },
   },
+  removeDisabledStyles: {
+    '&.Mui-disabled': {
+      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
+      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      opacity: 1,
+    },
+  },
   resultsWrapper: {
     borderTop: '1px solid #D6D7D9',
     fontSize: '0.875rem',
