@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
 import { PoolNodeWithPrice } from 'src/features/Kubernetes/types';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 
 interface Props {
   open: boolean;
@@ -17,7 +21,7 @@ interface Props {
   onDelete: () => void;
 }
 
-type CombinedProps = Props;
+export type CombinedProps = Props & PreferencesProps;
 
 const renderActions = (
   disabled: boolean,
@@ -55,7 +59,7 @@ export const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
   }, 0);
 };
 
-const KubernetesDialog: React.FC<CombinedProps> = (props) => {
+export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
   const {
     clusterLabel,
     clusterPools,
@@ -64,9 +68,11 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
     open,
     onClose,
     onDelete,
+    preferences,
   } = props;
   const [confirmText, setConfirmText] = React.useState<string>('');
-  const disabled = confirmText !== clusterLabel;
+  const disabled =
+    preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
   const poolCount = clusterPools.length;
   const linodeCount = getTotalLinodes(clusterPools);
 
@@ -78,32 +84,41 @@ const KubernetesDialog: React.FC<CombinedProps> = (props) => {
       actions={() => renderActions(disabled, loading, onClose, onDelete)}
     >
       {error && <Notice error text={error} />}
-      <Typography>
-        This cluster contains {` `}
-        <strong>
-          {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
-        </strong>
-        with a total of {` `}
-        <strong>
-          {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
-        </strong>
-        that will be deleted along with the cluster. Deleting a cluster is
-        permanent and can&apos;t be undone.
-      </Typography>
-      <Typography style={{ marginTop: '10px' }}>
-        To confirm deletion, type the name of the cluster (<b>{clusterLabel}</b>
-        ) in the field below:
-      </Typography>
-      <TextField
-        data-testid={'dialog-confirm-text-input'}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          setConfirmText(e.target.value)
-        }
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> This cluster contains {` `}
+          <strong>
+            {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
+          </strong>
+          with a total of {` `}
+          <strong>
+            {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
+          </strong>
+          that will be deleted along with the cluster. Deleting a cluster is
+          permanent and can&apos;t be undone.
+        </Typography>
+      </Notice>
+      <TypeToConfirm
         label="Cluster Name"
+        confirmationText={
+          <span>
+            To confirm deletion, type the name of the cluster (
+            <b>{clusterLabel}</b>) in the field below:
+          </span>
+        }
+        value={confirmText}
+        typographyStyle={{ marginTop: '10px' }}
+        data-testid={'dialog-confirm-text-input'}
         expand
+        onChange={(input) => {
+          setConfirmText(input);
+        }}
+        visible={preferences?.type_to_confirm}
       />
     </ConfirmationDialog>
   );
 };
 
-export default KubernetesDialog;
+export default compose<CombinedProps, Props>(withPreferences())(
+  KubernetesDialog
+);

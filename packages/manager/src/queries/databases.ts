@@ -1,3 +1,4 @@
+/* eslint-disable sonarjs/no-small-switch */
 import {
   createDatabase,
   deleteDatabase,
@@ -5,10 +6,11 @@ import {
   getDatabaseCredentials,
   getDatabases,
   getDatabaseTypes,
-  getDatabaseVersions,
+  getDatabaseEngines,
   getEngineDatabase,
   restoreWithBackup,
   updateDatabase,
+  resetDatabaseCredentials,
 } from '@linode/api-v4/lib/databases';
 import {
   CreateDatabasePayload,
@@ -17,7 +19,7 @@ import {
   DatabaseCredentials,
   DatabaseInstance,
   DatabaseType,
-  DatabaseVersion,
+  DatabaseEngine,
   Engine,
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
@@ -26,19 +28,27 @@ import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryClient, queryPresets } from './base';
+import { Event } from '@linode/api-v4/lib/account/types';
 
 export const queryKey = 'databases';
 
 export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>([queryKey, id], () =>
-    getEngineDatabase(engine, id)
+  useQuery<Database, APIError[]>(
+    [queryKey, id],
+    () => getEngineDatabase(engine, id),
+    // @TODO Consider removing polling
+    // The refetchInterval will poll the API for this Database. We will do this
+    // to ensure we have up to date information. We do this polling because the events
+    // API does not provide us every feature we need currently.
+    { refetchInterval: 20000 }
   );
 
 export const useDatabasesQuery = (params: any, filter: any) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDatabases(params, filter),
-    { keepPreviousData: true }
+    // @TODO Consider removing polling
+    { keepPreviousData: true, refetchInterval: 20000 }
   );
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
@@ -61,10 +71,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
             }
 
             if (oldEntity.label !== data.label) {
-              // Invalidate useDatabasesQuery to reflect the new database label.
-              // We choose to refetch instead of manually mutate the cache because it
-              // is API paginated.
-              queryClient.invalidateQueries(`${queryKey}-list`);
+              updatePaginatedDatabaseStore(id, { label: data.label });
             }
 
             return { ...oldEntity, ...data };
@@ -110,15 +117,15 @@ export const getAllDatabases = () =>
     (data) => data.data
   );
 
-export const getAllDatabaseVersions = () =>
-  getAll<DatabaseVersion>((params) => getDatabaseVersions(params))().then(
+export const getAllDatabaseEngines = () =>
+  getAll<DatabaseEngine>((params) => getDatabaseEngines(params))().then(
     (data) => data.data
   );
 
-export const useDatabaseVersionsQuery = () =>
-  useQuery<DatabaseVersion[], APIError[]>(
+export const useDatabaseEnginesQuery = () =>
+  useQuery<DatabaseEngine[], APIError[]>(
     `${queryKey}-versions`,
-    getAllDatabaseVersions
+    getAllDatabaseEngines
   );
 
 export const getAllDatabaseTypes = () =>
@@ -143,11 +150,114 @@ export const useDatabaseCredentialsQuery = (
     { ...queryPresets.oneTimeFetch, enabled }
   );
 
+export const useDatabaseCredentialsMutation = (engine: Engine, id: number) =>
+  useMutation<{}, APIError[]>(() => resetDatabaseCredentials(engine, id), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([`${queryKey}-credentials`, id]);
+      queryClient.removeQueries([`${queryKey}-credentials`, id]);
+    },
+  });
+
 export const useRestoreFromBackupMutation = (
   engine: Engine,
   databaseId: number,
   backupId: number
 ) =>
-  useMutation<{}, APIError[]>(() =>
-    restoreWithBackup(engine, databaseId, backupId)
+  useMutation<{}, APIError[]>(
+    () => restoreWithBackup(engine, databaseId, backupId),
+    {
+      onSuccess: () =>
+        updateStoreForDatabase(databaseId, { status: 'restoring' }),
+    }
   );
+
+export const databaseEventsHandler = (event: Event) => {
+  const { action, status, entity } = event;
+
+  switch (action) {
+    case 'database_create':
+      switch (status) {
+        case 'failed':
+        case 'finished':
+          // Database status will change from `provisioning` to `active` (or `failed`) and
+          // the host fields will populate. We need to refetch to get the hostnames.
+          queryClient.invalidateQueries([queryKey, entity!.id]);
+          queryClient.invalidateQueries(`${queryKey}-list`);
+        case 'notification':
+          // In this case, the API let us know the user initialized a Database create event.
+          // We use this logic for the case a user created a Database from outside Cloud Manager,
+          // they would expect to see their database populate without a refresh.
+          const storedDatabase = queryClient.getQueryData<Database>([
+            queryKey,
+            entity!.id,
+          ]);
+          if (!storedDatabase) {
+            queryClient.invalidateQueries(`${queryKey}-list`);
+          }
+        case 'scheduled':
+        case 'started':
+          return;
+      }
+  }
+};
+
+const updateStoreForDatabase = (
+  id: number,
+  data: Partial<Database> & Partial<DatabaseInstance>
+) => {
+  updateDatabaseStore(id, data);
+  updatePaginatedDatabaseStore(id, data);
+};
+
+const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
+  const previousValue = queryClient.getQueryData([queryKey, id]);
+
+  // This previous value check makes sure we don't set the Database store to undefined.
+  // This is an odd edge case.
+  if (previousValue) {
+    queryClient.setQueryData<Database | undefined>(
+      [queryKey, id],
+      (oldData) => {
+        if (oldData === undefined) {
+          return undefined;
+        }
+
+        return {
+          ...oldData,
+          ...newData,
+        };
+      }
+    );
+  }
+};
+
+const updatePaginatedDatabaseStore = (
+  id: number,
+  newData: Partial<DatabaseInstance>
+) => {
+  queryClient.setQueriesData<ResourcePage<DatabaseInstance> | undefined>(
+    `${queryKey}-list`,
+    (oldData) => {
+      if (oldData === undefined) {
+        return undefined;
+      }
+
+      const databaseToUpdateIndex = oldData.data.findIndex(
+        (database) => database.id === id
+      );
+
+      const isDatabaseOnPage = databaseToUpdateIndex !== -1;
+
+      if (!isDatabaseOnPage) {
+        return oldData;
+      }
+
+      oldData.data[databaseToUpdateIndex] = {
+        ...oldData.data[databaseToUpdateIndex],
+        ...newData,
+      };
+
+      return oldData;
+    }
+  );
+};

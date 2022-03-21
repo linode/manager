@@ -82,7 +82,7 @@ const styles = (theme: Theme) =>
         height: 40,
       },
       '& .outerCircle': {
-        fill: theme.bg.offWhiteDT,
+        fill: theme.bg.offWhite,
         stroke: theme.bg.main,
       },
       '& .circle': {
@@ -440,6 +440,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
                 onSuccess={this.onCreateReplySuccess}
                 reloadAttachments={this.reloadAttachments}
                 closeTicketSuccess={this.closeTicketSuccess}
+                lastReply={replies && replies[replies.length - 1]}
               />
             )}
           </Grid>

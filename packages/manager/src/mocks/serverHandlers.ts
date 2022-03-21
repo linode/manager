@@ -13,7 +13,7 @@ import {
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  databaseVersionFactory,
+  databaseEngineFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -154,9 +154,9 @@ const databases = [
     );
   }),
 
-  rest.get('*/databases/versions', (req, res, ctx) => {
-    const version = databaseVersionFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(version)));
+  rest.get('*/databases/engines', (req, res, ctx) => {
+    const engine = databaseEngineFactory.buildList(3);
+    return res(ctx.json(makeResourcePage(engine)));
   }),
 
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
@@ -349,7 +349,7 @@ export const handlers = [
     const transfer = linodeTransferFactory.build();
     return res(ctx.json(transfer));
   }),
-  rest.get('*/instances/*/stats', async (req, res, ctx) => {
+  rest.get('*/instances/*/stats*', async (req, res, ctx) => {
     const stats = linodeStatsFactory.build();
     return res(ctx.json(stats));
   }),
@@ -490,7 +490,41 @@ export const handlers = [
     );
   }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    const buckets = objectStorageBucketFactory.buildList(1);
+    return res.once(
+      ctx.status(500),
+      ctx.json([{ reason: 'Cluster offline!' }])
+    );
+  }),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    return res.once(
+      ctx.status(400),
+      ctx.json([{ reason: 'Cluster offline!' }])
+    );
+  }),
+  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
+    // Temporarily added pagination logic to make sure my use of
+    // getAll worked for fetching all buckets.
+
+    objectStorageBucketFactory.resetSequenceNumber();
+    const page = Number(req.url.searchParams.get('page') || 1);
+    const pageSize = Number(req.url.searchParams.get('page_size') || 25);
+
+    const buckets = objectStorageBucketFactory.buildList(650);
+
+    return res(
+      ctx.json({
+        data: buckets.slice(
+          (page - 1) * pageSize,
+          (page - 1) * pageSize + pageSize
+        ),
+        page,
+        pages: Math.ceil(buckets.length / pageSize),
+        results: buckets.length,
+      })
+    );
+  }),
+  rest.get('*/object-storage/buckets', (req, res, ctx) => {
+    const buckets = objectStorageBucketFactory.buildList(10);
     return res(ctx.json(makeResourcePage(buckets)));
   }),
   rest.get('*object-storage/clusters', (req, res, ctx) => {
@@ -543,7 +577,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(vlans)));
   }),
   rest.get('*/profile/preferences', (req, res, ctx) => {
-    return res(ctx.json({ display: 'compact' }));
+    return res(ctx.json({}));
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage([])));
@@ -595,8 +629,8 @@ export const handlers = [
             }),
           ]
         : [
-            ...accountMaintenanceFactory.buildList(3, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(2, { status: 'started' }),
+            ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(40, { status: 'started' }),
           ];
 
     if (req.headers.get('x-filter')) {

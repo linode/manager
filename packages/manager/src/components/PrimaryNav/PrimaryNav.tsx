@@ -20,15 +20,17 @@ import Logo from 'src/assets/logo/logo.svg';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
+import useStyles from './PrimaryNav.styles';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
-import useObjectStorageBuckets from 'src/hooks/useObjectStorageBuckets';
-import useObjectStorageClusters from 'src/hooks/useObjectStorageClusters';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import useStyles from './PrimaryNav.styles';
 import { linkIsActive } from './utils';
+import {
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 
 type NavEntity =
   | 'Linodes'
@@ -73,50 +75,48 @@ export const PrimaryNav: React.FC<Props> = (props) => {
 
   const flags = useFlags();
   const location = useLocation();
+
   const { domains, requestDomains } = useDomains();
-  const {
-    objectStorageClusters,
-    requestObjectStorageClusters,
-  } = useObjectStorageClusters();
-  const {
-    objectStorageBuckets,
-    requestObjectStorageBuckets,
-  } = useObjectStorageBuckets();
+
+  const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
 
   const {
     _isManagedAccount,
     _isLargeAccount,
-    _isRestrictedUser,
     account,
   } = useAccountManagement();
 
-  const showFirewalls = isFeatureEnabled(
-    'Cloud Firewall',
-    Boolean(flags.firewalls),
+  const {
+    data: clusters,
+    isLoading: clustersLoading,
+    error: clustersError,
+  } = useObjectStorageClusters(enableObjectPrefetch);
+
+  const {
+    data: buckets,
+    isLoading: bucketsLoading,
+    error: bucketsError,
+  } = useObjectStorageBuckets(clusters, enableObjectPrefetch);
+
+  const allowObjPrefetch =
+    !buckets &&
+    !clusters &&
+    !clustersLoading &&
+    !bucketsLoading &&
+    !clustersError &&
+    !bucketsError;
+
+  const showDatabases = isFeatureEnabled(
+    'Managed Databases',
+    Boolean(flags.databases),
     account?.capabilities ?? []
   );
 
-  // No account capability returned yet.
-  const showDatabases = flags.databases;
-
-  const clustersLoadedOrLoadingOrHasError =
-    objectStorageClusters.lastUpdated > 0 ||
-    objectStorageClusters.loading ||
-    objectStorageClusters.error;
-
-  React.useEffect(() => {
-    if (!clustersLoadedOrLoadingOrHasError && !_isRestrictedUser) {
-      requestObjectStorageClusters();
+  const prefetchObjectStorage = () => {
+    if (!enableObjectPrefetch) {
+      setEnableObjectPrefetch(true);
     }
-  }, [
-    _isRestrictedUser,
-    clustersLoadedOrLoadingOrHasError,
-    requestObjectStorageClusters,
-  ]);
-
-  const clusterIds = objectStorageClusters.entities.map(
-    (thisCluster) => thisCluster.id
-  );
+  };
 
   const primaryLinkGroups: PrimaryLink[][] = React.useMemo(
     () => [
@@ -146,14 +146,6 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           icon: <NodeBalancer />,
         },
         {
-          hide: !showDatabases,
-          display: 'Databases',
-          href: '/databases',
-          icon: <Database />,
-          isBeta: true,
-        },
-        {
-          hide: !showFirewalls,
           display: 'Firewalls',
           href: '/firewalls',
           icon: <Firewall />,
@@ -183,6 +175,13 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount,
         },
         {
+          hide: !showDatabases,
+          display: 'Databases',
+          href: '/databases',
+          icon: <Database />,
+          isBeta: true,
+        },
+        {
           display: 'Kubernetes',
           href: '/kubernetes/clusters',
           activeLinks: ['/kubernetes/create'],
@@ -196,10 +195,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             '/object-storage/access-keys',
           ],
           icon: <Storage />,
-          prefetchRequestFn: () => requestObjectStorageBuckets(clusterIds),
-          prefetchRequestCondition:
-            !objectStorageBuckets.loading &&
-            objectStorageBuckets.lastUpdated === 0,
+          prefetchRequestFn: prefetchObjectStorage,
+          prefetchRequestCondition: allowObjPrefetch,
         },
         {
           display: 'Longview',
@@ -227,17 +224,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       ],
     ],
     [
-      showFirewalls,
       showDatabases,
       _isManagedAccount,
       domains.loading,
       domains.lastUpdated,
-      requestDomains,
       _isLargeAccount,
-      objectStorageBuckets.loading,
-      objectStorageBuckets.lastUpdated,
-      requestObjectStorageBuckets,
-      clusterIds,
+      allowObjPrefetch,
     ]
   );
 

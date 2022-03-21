@@ -4,9 +4,7 @@ import { APIWarning } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import makeAsyncScriptLoader from 'react-async-script';
 import Button from 'src/components/Button';
-import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -18,29 +16,20 @@ import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
-import {
-  getIcon as getTPPIcon,
-  thirdPartyPaymentMap,
-} from 'src/components/PaymentMethodRow/ThirdPartyPayment';
-import SelectionCard from 'src/components/SelectionCard';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
-import { getIcon as getCreditCardIcon } from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
-import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountBilling';
 import { queryClient } from 'src/queries/base';
-import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
+import isCreditCardExpired from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { v4 } from 'uuid';
 import GooglePayButton from './GooglePayButton';
-import PayPalButton from './PayPalButton';
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
-import PayPal, { paypalScriptSrc } from './Paypal';
+import { PaymentMethodCard } from './PaymentMethodCard';
+import PayPalButton from './PayPalButton';
 import { SetSuccess } from './types';
 
-// @TODO: remove feature flag logic and old paypal code once braintree paypal is released
 const useStyles = makeStyles((theme: Theme) => ({
   currentBalance: {
     fontSize: '1.1rem',
@@ -64,57 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   button: {
     alignSelf: 'flex-end',
     marginLeft: 'auto',
-  },
-  cvvField: {
-    width: 100,
-  },
-  cardSection: {
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    flexFlow: 'column nowrap',
-  },
-  cardSectionNew: {
-    marginLeft: -7,
-  },
-  cardText: {
-    padding: '1px',
-    lineHeight: '1.5rem',
-  },
-  cvvFieldWrapper: {
-    '& label': {
-      fontSize: 12,
-    },
-  },
-  paymentMethod: {
-    marginBottom: theme.spacing(),
-  },
-  selectionCard: {
-    minWidth: '100%',
-    padding: 0,
-    marginBottom: theme.spacing(),
-    '& .cardBaseGrid': {
-      flexWrap: 'nowrap',
-    },
-    '& .cardBaseIcon': {
-      width: 45,
-      padding: 0,
-      justifyContent: 'center',
-    },
-    '& .cardBaseHeadings': {
-      flex: 'inherit',
-    },
-  },
-  expired: {
-    '& .cardBaseSubHeading': {
-      color: theme.color.red,
-    },
-  },
-  chip: {
-    '& span': {
-      color: 'inherit !important',
-      fontSize: '0.625rem',
-    },
   },
   helpIcon: {
     padding: `0px 8px`,
@@ -142,8 +80,6 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
-const AsyncPaypal = makeAsyncScriptLoader(paypalScriptSrc())(PayPal);
-
 export const PaymentDrawer: React.FC<Props> = (props) => {
   const { paymentMethods, selectedPaymentMethod, open, onClose } = props;
 
@@ -154,10 +90,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
   } = useAccount();
 
   const classes = useStyles();
-  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
-
-  const braintreePayPal = flags.additionalPaymentMethods?.includes('paypal');
 
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
 
@@ -173,12 +106,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
 
   const [warning, setWarning] = React.useState<APIWarning | null>(null);
   const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
-
-  const [payPalKey, setPayPalKey] = React.useState<string>(v4());
-  const [
-    isPaypalScriptLoaded,
-    setIsPaypalScriptLoaded,
-  ] = React.useState<boolean>(false);
 
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
 
@@ -277,17 +204,12 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
       });
       // Reset everything
       setUSD('0.00');
-      setPayPalKey(v4());
       accountRefetch();
       onClose();
     }
     if (warnings && warnings.length > 0) {
       setWarning(warnings[0]);
     }
-  };
-
-  const onScriptLoad = () => {
-    setIsPaypalScriptLoaded(true);
   };
 
   const renderError = (errorMsg: string) => {
@@ -359,97 +281,14 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
             </Grid>
             <Grid item>
               {hasPaymentMethods ? (
-                paymentMethods?.map((paymentMethod: PaymentMethod) => {
-                  const { id, type, is_default } = paymentMethod;
-
-                  const getIsCardExpired = (paymentMethod: PaymentMethod) => {
-                    if (paymentMethod.type === 'paypal') {
-                      return false;
-                    }
-
-                    return Boolean(
-                      paymentMethod.data.expiry &&
-                        isCreditCardExpired(paymentMethod.data.expiry)
-                    );
-                  };
-
-                  const getHeading = (paymentMethod: PaymentMethod) => {
-                    switch (paymentMethod.type) {
-                      case 'paypal':
-                        return thirdPartyPaymentMap[type].label;
-                      case 'google_pay':
-                        return `${thirdPartyPaymentMap[type].label} ${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
-                      default:
-                        return `${paymentMethod.data.card_type} ****${paymentMethod.data.last_four}`;
-                    }
-                  };
-
-                  const getSubHeading = (
-                    paymentMethod: PaymentMethod,
-                    isExpired: boolean
-                  ) => {
-                    // eslint-disable-next-line sonarjs/no-small-switch
-                    switch (paymentMethod.type) {
-                      case 'paypal':
-                        return paymentMethod.data.email;
-                      default:
-                        return `${
-                          isExpired ? 'Expired' : 'Expires'
-                        } ${formatExpiry(paymentMethod.data.expiry ?? '')}`;
-                    }
-                  };
-
-                  const getIcon = (paymentMethod: PaymentMethod) => {
-                    // eslint-disable-next-line sonarjs/no-small-switch
-                    switch (paymentMethod.type) {
-                      case 'credit_card':
-                        return getCreditCardIcon(paymentMethod.data.card_type);
-                      default:
-                        return getTPPIcon(paymentMethod.type);
-                    }
-                  };
-
-                  const heading = getHeading(paymentMethod);
-
-                  const cardIsExpired = getIsCardExpired(paymentMethod);
-
-                  const subHeading = getSubHeading(
-                    paymentMethod,
-                    cardIsExpired
-                  );
-
-                  const renderIcon = () => {
-                    const Icon = getIcon(paymentMethod);
-                    return <Icon />;
-                  };
-
-                  const renderVariant = () => {
-                    return is_default ? (
-                      <Grid item className={classes.chip} xs={3} md={2}>
-                        <Chip label="DEFAULT" component="span" />
-                      </Grid>
-                    ) : null;
-                  };
-
-                  return (
-                    <Grid key={id} className={classes.paymentMethod}>
-                      <SelectionCard
-                        className={classNames({
-                          [classes.selectionCard]: true,
-                          [classes.expired]: cardIsExpired,
-                        })}
-                        checked={id === paymentMethodId}
-                        onClick={() =>
-                          handlePaymentMethodChange(id, cardIsExpired)
-                        }
-                        renderIcon={renderIcon}
-                        renderVariant={renderVariant}
-                        heading={heading}
-                        subheadings={[subHeading]}
-                      />
-                    </Grid>
-                  );
-                })
+                paymentMethods?.map((paymentMethod: PaymentMethod) => (
+                  <PaymentMethodCard
+                    key={paymentMethod.id}
+                    paymentMethod={paymentMethod}
+                    paymentMethodId={paymentMethodId}
+                    handlePaymentMethodChange={handlePaymentMethodChange}
+                  />
+                ))
               ) : (
                 <Grid item>
                   <Typography>No payment methods on file.</Typography>
@@ -500,27 +339,16 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           </Grid>
           <Grid container>
             <Grid item xs={9} sm={6}>
-              {braintreePayPal ? (
-                <PayPalErrorBoundary renderError={renderError}>
-                  <PayPalButton
-                    usd={usd}
-                    disabled={isProcessing}
-                    setSuccess={setSuccess}
-                    setError={setErrorMessage}
-                    setProcessing={setIsProcessing}
-                    renderError={renderError}
-                  />
-                </PayPalErrorBoundary>
-              ) : (
-                <AsyncPaypal
-                  key={payPalKey}
+              <PayPalErrorBoundary renderError={renderError}>
+                <PayPalButton
                   usd={usd}
-                  setSuccess={setSuccess}
-                  asyncScriptOnLoad={onScriptLoad}
-                  isScriptLoaded={isPaypalScriptLoaded}
                   disabled={isProcessing}
+                  setSuccess={setSuccess}
+                  setError={setErrorMessage}
+                  setProcessing={setIsProcessing}
+                  renderError={renderError}
                 />
-              )}
+              </PayPalErrorBoundary>
             </Grid>
             <Grid item xs={9} sm={6}>
               <GooglePayButton

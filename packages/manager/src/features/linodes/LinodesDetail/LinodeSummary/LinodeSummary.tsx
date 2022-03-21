@@ -72,8 +72,8 @@ const styles = (theme: Theme) =>
       },
     },
     grid: {
-      backgroundColor: theme.bg.offWhiteDT,
-      border: `solid 1px ${theme.cmrBorderColors.divider}`,
+      backgroundColor: theme.bg.offWhite,
+      border: `solid 1px ${theme.borderColors.divider}`,
       marginBottom: theme.spacing(2),
       '&.MuiGrid-item': {
         padding: theme.spacing(2),

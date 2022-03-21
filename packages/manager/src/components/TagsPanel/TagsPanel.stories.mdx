@@ -1,0 +1,81 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Typography from 'src/components/core/Typography';
+import TagsPanel from './TagsPanel';
+
+<Meta
+  title="Features/Tags/Tags Panel"
+  component={TagsPanel}
+  decorators={[
+    (Story) => (
+      <div
+        style={{
+          paddingTop: 12,
+        }}
+      >
+        <Story />
+      </div>
+    ),
+  ]}
+/>
+
+# Tags Panel
+
+export const _tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
+
+export const Template = (args) => {
+  const [tags, setTags] = React.useState(_tags);
+  const updateTags = (selected) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (tags.indexOf('selected') > -1) {
+          console.log('found');
+        } else {
+          console.log('not found');
+        }
+        setTags([selected]);
+        resolve();
+      }, 500);
+    });
+  };
+  return (
+    <>
+      <TagsPanel tags={tags} updateTags={updateTags} {...args} />
+      <Typography style={{ marginTop: 12 }}>
+        <i>
+          Modifying the tags in this example does not currently work at the
+          moment.
+        </i>
+      </Typography>
+    </>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Tags Panel"
+    args={{
+      tags: _tags,
+      disabled: false,
+    }}
+    argTypes={{
+      tags: {
+        type: { required: true },
+        table: {
+          type: { summary: 'string[]' },
+        },
+      },
+      disabled: {
+        description: 'If true, the component is disabled.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+    }}
+    height="300px"
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Tags Panel" sort="requiredFirst" />

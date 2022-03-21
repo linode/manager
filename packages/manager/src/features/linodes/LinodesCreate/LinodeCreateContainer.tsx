@@ -39,7 +39,6 @@ import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
 import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
@@ -78,7 +77,7 @@ import {
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 
-const DEFAULT_IMAGE = 'linode/debian10';
+const DEFAULT_IMAGE = 'linode/debian11';
 
 interface State {
   selectedImageID?: string;
@@ -653,7 +652,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return (
       type && {
         title: type.label,
-        details: `${typeLabelDetails(type.memory, type.disk, type.vcpus)}`,
+        details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
       }
@@ -673,8 +672,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedRegion && {
-        title: selectedRegion.country.toUpperCase(),
-        details: selectedRegion.display,
+        title: selectedRegion.display,
       }
     );
   };
@@ -683,21 +681,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const { selectedImageID } = this.state;
 
     if (!selectedImageID) {
-      return;
+      return undefined;
     }
 
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
-    const selectedImage = this.props.imagesData![selectedImageID];
+    const selectedImage = this.props.imagesData[selectedImageID];
 
-    return (
-      selectedImage && {
-        title: `${selectedImage.vendor || selectedImage.label}`,
-        details: `${selectedImage.vendor ? selectedImage.label : ''}`,
-      }
-    );
+    if (!selectedImage) {
+      return undefined;
+    }
+
+    const { vendor, label } = selectedImage;
+
+    return { title: `${label ? label : vendor ? vendor : ''}` };
   };
 
   render() {

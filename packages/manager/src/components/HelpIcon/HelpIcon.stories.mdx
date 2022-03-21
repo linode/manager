@@ -1,0 +1,46 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import HelpIcon from 'src/components/HelpIcon/HelpIcon';
+
+<Meta title="Elements/Tooltip/Help Icon" component={HelpIcon} />
+
+export const Template = (args) => {
+  return <HelpIcon {...args} />;
+};
+
+# Help Icon
+
+## Usage
+
+Tooltips can be attached to any active element (text fields, buttons, etc.) on a page. They provide descriptions or explanations for their paired elements. Thus, tooltips are highly contextual and specific and don’t explain the bigger picture or entire task flow.
+
+**Guidelines**
+
+- Don’t use tooltips for information that is vital to task completion.
+- Provide brief and helpful content inside the tooltip.
+- Support _both_ mouse _and_ keyboard hover.
+- Present a link to additional content if needed.
+
+<Canvas>
+  <Story
+    name="Help Icon"
+    args={{
+      text: 'Hello World',
+      tooltipPosition: 'bottom',
+    }}
+    argTypes={{
+      text: {
+        description: 'Tooltip text.',
+      },
+      isError: {
+        description: 'Changes the icon to an error icon.',
+      },
+      leaveDelay: {
+        description: 'Delay hiding the tooltip.',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Help Icon" exclude={['className', 'classes', 'ref']} />

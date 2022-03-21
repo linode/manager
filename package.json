@@ -24,10 +24,11 @@
     "build": "yarn build:validation && yarn build:sdk && yarn workspace linode-manager build",
     "build:analyze": "yarn build --bundle-analyze",
     "up": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all",
-    "start:all": "concurrently \"yarn workspace @linode/api-v4 start\" \"yarn workspace linode-manager start\"",
+    "dev": "yarn up",
+    "start:all": "concurrently -n api-v4,manager -c green,blue \"yarn workspace @linode/api-v4 start\" \"sleep 2.5; yarn workspace linode-manager start\"",
+    "start:manager": "yarn workspace linode-manager start",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
     "test": "yarn workspace linode-manager test --maxWorkers=4",
-    "selenium:install": "yarn workspace linode-manager selenium:install",
     "storybook": "yarn workspace linode-manager storybook",
     "storybook:e2e": "yarn workspace linode-manager storybook:e2e",
     "storybook:debug": "yarn storybook:e2e --color --debug",
@@ -53,7 +54,6 @@
     "immer": "^9.0.6",
     "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
-    "ws": "^7.4.6",
     "browserslist": "^4.16.5"
   },
   "workspaces": {

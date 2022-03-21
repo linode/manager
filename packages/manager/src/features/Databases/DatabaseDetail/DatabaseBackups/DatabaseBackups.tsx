@@ -12,7 +12,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
-import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
+import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,

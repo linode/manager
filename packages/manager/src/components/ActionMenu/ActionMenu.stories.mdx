@@ -1,0 +1,46 @@
+import ActionMenu, { Action } from './ActionMenu';
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+
+<Meta title="Components/Action Menu" component={ActionMenu} />
+
+# Action Menu
+
+### Usage
+
+No more than 8 items should be displayed within an action menu.
+
+export const actions = [
+  {
+    title: 'First Action',
+    onClick: () => null,
+  },
+  {
+    title: 'Second Action',
+    onClick: () => null,
+  },
+  {
+    title: 'Disabled Action',
+    disabled: true,
+    onClick: () => null,
+    tooltip: 'An explanation as to why this item is disabled',
+  },
+];
+
+## Standard actions
+
+<Canvas>
+  <Story name="Action Menu">
+    <ActionMenu
+      actionsList={actions.filter((action) => !action.disabled)}
+      ariaLabel="label"
+    />
+  </Story>
+</Canvas>
+
+## Disabled actions
+
+<Canvas>
+  <Story name="Action Menu with Tooltip">
+    <ActionMenu actionsList={actions} ariaLabel="label" />
+  </Story>
+</Canvas>

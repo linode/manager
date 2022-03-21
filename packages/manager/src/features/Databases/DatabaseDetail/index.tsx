@@ -1,24 +1,35 @@
+import { Engine } from '@linode/api-v4/lib/databases/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { matchPath, useHistory, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
-import useFlags from 'src/hooks/useFlags';
-import { matchPath, useHistory, useParams } from 'react-router-dom';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { useDatabaseQuery } from 'src/queries/databases';
+import withEditableLabelState, {
+  EditableLabelProps,
+} from 'src/features/linodes/LinodesDetail/LinodesDetailHeader/editableLabelState';
+import {
+  useDatabaseMutation,
+  useDatabaseQuery,
+  useDatabaseTypesQuery,
+} from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { Engine } from '@linode/api-v4/lib/databases/types';
 
 const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
-export const DatabaseDetail: React.FC = () => {
-  const flags = useFlags();
+export const DatabaseDetail: React.FC<EditableLabelProps> = (props) => {
+  const {
+    resetEditableLabel,
+    setEditableLabelError,
+    editableLabelError,
+  } = props;
   const history = useHistory();
 
   const { databaseId, engine } = useParams<{
@@ -29,6 +40,9 @@ export const DatabaseDetail: React.FC = () => {
   const id = Number(databaseId);
 
   const { data: database, isLoading, error } = useDatabaseQuery(engine, id);
+  const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
+
+  const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
 
   if (error) {
     return (
@@ -40,11 +54,11 @@ export const DatabaseDetail: React.FC = () => {
     );
   }
 
-  if (isLoading) {
+  if (isLoading || isTypesLoading) {
     return <CircleProgress />;
   }
 
-  if (!database || !flags.databases) {
+  if (!database) {
     return null;
   }
 
@@ -82,6 +96,25 @@ export const DatabaseDetail: React.FC = () => {
     history.push(tabs[index].routeName);
   };
 
+  const handleSubmitLabelChange = (newLabel: string) => {
+    // @TODO Update this to only send the label when the API supports it
+    return updateDatabase({ allow_list: database.allow_list, label: newLabel })
+      .then(() => {
+        resetEditableLabel();
+      })
+      .catch((err) => {
+        const errors: APIError[] = getAPIErrorOrDefault(
+          err,
+          'An error occurred while updating label',
+          'label'
+        );
+
+        const errorStrings: string[] = errors.map((e) => e.reason);
+        setEditableLabelError(errorStrings[0]);
+        return Promise.reject(errorStrings[0]);
+      });
+  };
+
   return (
     <>
       <DocumentTitleSegment segment={database.label} />
@@ -96,6 +129,12 @@ export const DatabaseDetail: React.FC = () => {
           },
         ]}
         labelOptions={{ noCap: true }}
+        onEditHandlers={{
+          editableTextTitle: database.label,
+          onEdit: handleSubmitLabelChange,
+          onCancel: resetEditableLabel,
+          errorText: editableLabelError,
+        }}
       />
       <Tabs index={getTabIndex()} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
@@ -115,4 +154,4 @@ export const DatabaseDetail: React.FC = () => {
   );
 };
 
-export default DatabaseDetail;
+export default withEditableLabelState(DatabaseDetail);

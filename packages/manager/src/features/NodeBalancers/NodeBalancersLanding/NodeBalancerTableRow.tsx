@@ -24,11 +24,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   portLink: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
   },
   link: {
     display: 'block',
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
       textDecoration: 'underline',
@@ -116,7 +116,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
 
       <TableCell data-qa-nodebalancer-ips>
         <div className={classes.ipsWrapper}>
-          <IPAddress ips={[ipv4]} copyRight showMore />
+          <IPAddress ips={[ipv4]} showMore />
         </div>
       </TableCell>
       <Hidden xsDown>

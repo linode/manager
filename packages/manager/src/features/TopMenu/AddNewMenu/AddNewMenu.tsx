@@ -95,7 +95,7 @@ const styles = (theme: Theme) =>
         cursor: 'pointer',
         textDecoration: 'none',
         '& h3': {
-          color: theme.cmrTextColors.linkActiveLight,
+          color: theme.textColors.linkActiveLight,
         },
         '&:hover': {
           '& h3': {
@@ -151,9 +151,9 @@ class AddNewMenu extends React.Component<CombinedProps> {
     const { classes, flags } = this.props;
     const account = queryClient.getQueryData<Account>('account');
 
-    const showFirewalls = isFeatureEnabled(
-      'Cloud Firewall',
-      Boolean(flags.firewalls),
+    const showDatabases = isFeatureEnabled(
+      'Managed Databases',
+      Boolean(flags.databases),
       account?.capabilities ?? []
     );
 
@@ -193,7 +193,40 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       ItemIcon={VolumeIcon}
                     />
                   </MenuLink>
-                  {flags.databases ? (
+                  <MenuLink
+                    as={Link}
+                    to="/nodebalancers/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="NodeBalancer"
+                      body="Ensure your services are highly available"
+                      ItemIcon={NodebalancerIcon}
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/firewalls/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Firewall"
+                      body="Control network access to your Linodes"
+                      ItemIcon={FirewallIcon}
+                    />
+                  </MenuLink>
+                  <MenuLink
+                    as={Link}
+                    to="/domains/create"
+                    className={classes.menuItemLink}
+                  >
+                    <AddNewMenuItem
+                      title="Domain"
+                      body="Manage your DNS records"
+                      ItemIcon={DomainIcon}
+                    />
+                  </MenuLink>
+                  {showDatabases ? (
                     <MenuLink
                       as={Link}
                       to="/databases/create"
@@ -207,41 +240,6 @@ class AddNewMenu extends React.Component<CombinedProps> {
                       />
                     </MenuLink>
                   ) : null}
-                  <MenuLink
-                    as={Link}
-                    to="/nodebalancers/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="NodeBalancer"
-                      body="Ensure your services are highly available"
-                      ItemIcon={NodebalancerIcon}
-                    />
-                  </MenuLink>
-                  {showFirewalls ? (
-                    <MenuLink
-                      as={Link}
-                      to="/firewalls/create"
-                      className={classes.menuItemLink}
-                    >
-                      <AddNewMenuItem
-                        title="Firewall"
-                        body="Control network access to your Linodes"
-                        ItemIcon={FirewallIcon}
-                      />
-                    </MenuLink>
-                  ) : null}
-                  <MenuLink
-                    as={Link}
-                    to="/domains/create"
-                    className={classes.menuItemLink}
-                  >
-                    <AddNewMenuItem
-                      title="Domain"
-                      body="Manage your DNS records"
-                      ItemIcon={DomainIcon}
-                    />
-                  </MenuLink>
                   <MenuLink
                     as={Link}
                     to="/kubernetes/create"

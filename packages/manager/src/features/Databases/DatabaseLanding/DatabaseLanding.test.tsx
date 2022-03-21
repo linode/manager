@@ -1,18 +1,19 @@
-import * as React from 'react';
-import formatDate from 'src/utilities/formatDate';
-import DatabaseRow from './DatabaseRow';
-import DatabaseLanding from './DatabaseLanding';
 import { waitForElementToBeRemoved } from '@testing-library/react';
-import { databaseInstanceFactory } from 'src/factories';
-import { rest, server } from 'src/mocks/testServer';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
 import { DateTime } from 'luxon';
+import * as React from 'react';
+import { QueryClient } from 'react-query';
+import { databaseInstanceFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { capitalize } from 'src/utilities/capitalize';
+import formatDate from 'src/utilities/formatDate';
 import {
   mockMatchMedia,
   renderWithTheme,
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
+import DatabaseLanding from './DatabaseLanding';
+import DatabaseRow from './DatabaseRow';
 
 const queryClient = new QueryClient();
 
@@ -35,7 +36,7 @@ describe('Database Table Row', () => {
     // Check to see if the row rendered some data
     getByText(database.label);
     getByText(formatDate(database.created));
-    getByText(database.status);
+    getByText(capitalize(database.status));
   });
 
   it('should render a relative time in the created column if the database was created in the last 3 days', () => {
@@ -102,7 +103,7 @@ describe('Database Table', () => {
 
     expect(
       getByText(
-        'Fully managed and highly scalable database clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
+        'Fully managed and highly scalable Database Clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
       )
     ).toBeInTheDocument();
   });

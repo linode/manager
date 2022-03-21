@@ -20,7 +20,8 @@ import { formatEventWithUsername } from './Event.helpers';
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
     '&:hover': {
-      backgroundColor: theme.cmrBGColors.bgTableRow,
+      backgroundColor:
+        theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
       boxShadow: `inset 5px 0 0 ${theme.palette.primary.main}`,
       cursor: 'pointer',
     },
@@ -72,7 +73,13 @@ export interface RowProps {
   link?: string | (() => void);
   message?: string | void;
   status?: string;
-  type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
+  type:
+    | 'linode'
+    | 'domain'
+    | 'nodebalancer'
+    | 'stackscript'
+    | 'volume'
+    | 'database';
   created: string;
   username: string | null;
   duration: Event['duration'];

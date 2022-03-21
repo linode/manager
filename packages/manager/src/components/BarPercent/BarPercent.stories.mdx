@@ -1,0 +1,49 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import BarPercent from './BarPercent';
+
+<Meta title="Components/Loading States/Bar Percent" component={BarPercent} />
+
+# Bar Percent
+
+**Determinate indicators**
+
+Displays how long a process will take.
+
+export const Template = (args) => <BarPercent {...args} />;
+
+<Canvas>
+  <Story
+    name="Bar Percent"
+    args={{ max: 100, value: 60 }}
+    argTypes={{
+      max: {
+        description:
+          'The maximum allowed value and should not be equal to min.',
+      },
+      value: {
+        description:
+          'The value of the progress indicator for the determinate and buffer variants.',
+      },
+      className: {
+        table: { disable: true },
+      },
+      isFetchingValue: {
+        description:
+          'Applies styles to show that the value is being retrieved.',
+      },
+      narrow: {
+        description: 'Decreases the height of the bar.',
+      },
+      rounded: {
+        description: 'Applies a `border-radius` to the bar.',
+      },
+      valueBuffer: {
+        description: 'The value for the buffer variant.',
+      },
+    }}
+  >
+    {Template.bind()}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Bar Percent" sort="requiredFirst" />

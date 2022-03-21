@@ -1,4 +1,4 @@
-import * as copy from 'copy-to-clipboard';
+import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
@@ -13,33 +13,19 @@ import { privateIPRegex } from 'src/utilities/ipUtils';
 
 type CSSClasses =
   | 'root'
-  | 'left'
   | 'right'
   | 'icon'
   | 'row'
   | 'multipleAddresses'
-  | 'ip'
   | 'ipLink'
   | 'hide';
 
 const styles = (theme: Theme) =>
   createStyles({
-    '@keyframes popUp': {
-      from: {
-        opacity: 0,
-        top: -10,
-        transform: 'scale(.1)',
-      },
-      to: {
-        opacity: 1,
-        top: -40,
-        transform: 'scale(1)',
-      },
-    },
     root: {
-      marginBottom: theme.spacing(1) / 2,
-      width: '100%',
+      marginBottom: theme.spacing() / 2,
       maxWidth: '100%',
+      width: '100%',
       '&:last-child': {
         marginBottom: 0,
       },
@@ -56,33 +42,27 @@ const styles = (theme: Theme) =>
     },
     multipleAddresses: {
       '&:not(:last-child)': {
-        marginBottom: theme.spacing(1) / 2,
+        marginBottom: theme.spacing() / 2,
       },
     },
-    left: {
-      marginLeft: theme.spacing(1),
-    },
     right: {
-      marginLeft: theme.spacing(1),
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
+      marginLeft: theme.spacing(0.5),
     },
     icon: {
       '& svg': {
-        width: 12,
         height: 12,
+        width: 12,
+        top: 1,
       },
     },
-    ip: {
-      // color: theme.palette.text.primary,
-      fontSize: '.9rem',
-    },
     ipLink: {
-      color: theme.palette.primary.main,
-      top: -1,
-      position: 'relative',
       display: 'inline-block',
+      color: theme.palette.primary.main,
+      position: 'relative',
+      top: -1,
       transition: theme.transitions.create(['color']),
     },
     hide: {
@@ -100,7 +80,6 @@ const styles = (theme: Theme) =>
 
 interface Props {
   ips: string[];
-  copyRight?: boolean;
   showCopyOnHover?: boolean;
   showMore?: boolean;
   showAll?: boolean;
@@ -131,36 +110,35 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   };
 
   renderCopyIcon = (ip: string) => {
-    const { classes, copyRight, showCopyOnHover } = this.props;
+    const { classes, showCopyOnHover } = this.props;
 
     return (
       <div className={`${classes.ipLink}`} data-qa-copy-ip>
         <CopyTooltip
           text={ip}
           className={`${classes.icon} ${showCopyOnHover ? classes.hide : ''}
-            ${copyRight ? classes.right : classes.left} copy`}
+            ${classes.right} copy`}
         />
       </div>
     );
   };
 
-  renderIP = (ip: string, copyRight?: boolean, key?: number) => {
+  renderIP = (ip: string, key?: number) => {
     const { classes, showAll } = this.props;
     return (
       <div
         key={key}
         className={`${classes.row} ${showAll && classes.multipleAddresses}`}
+        data-qa-ip-main
       >
-        <div className={`${classes.ip} ${'ip xScroll'}`} data-qa-ip-main>
-          {ip}
-        </div>
-        {copyRight && this.renderCopyIcon(ip)}
+        {ip}
+        {this.renderCopyIcon(ip)}
       </div>
     );
   };
 
   render() {
-    const { classes, ips, copyRight, showMore, showAll } = this.props;
+    const { classes, ips, showMore, showAll } = this.props;
 
     const formattedIPS = ips
       .map((ip) => ip.replace('/64', ''))
@@ -169,9 +147,9 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
     return (
       <div className={`${!showAll && 'dif'} ${classes.root}`}>
         {!showAll
-          ? this.renderIP(formattedIPS[0], copyRight)
+          ? this.renderIP(formattedIPS[0])
           : formattedIPS.map((a, i) => {
-              return this.renderIP(a, copyRight, i);
+              return this.renderIP(a, i);
             })}
 
         {formattedIPS.length > 1 && showMore && !showAll && (
@@ -180,7 +158,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
             ariaItemType="IP addresses"
             render={(ipsAsArray: string[]) => {
               return ipsAsArray.map((ip, idx) =>
-                this.renderIP(ip.replace('/64', ''), copyRight, idx)
+                this.renderIP(ip.replace('/64', ''), idx)
               );
             }}
             data-qa-ip-more

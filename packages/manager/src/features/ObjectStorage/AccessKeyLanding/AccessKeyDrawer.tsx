@@ -15,8 +15,11 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import useBuckets from 'src/hooks/useObjectStorageBuckets';
 import { useAccountSettings } from 'src/queries/accountSettings';
+import {
+  useObjectStorageBuckets,
+  useObjectStorageClusters,
+} from 'src/queries/objectStorage';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import LimitedAccessControls from './LimitedAccessControls';
@@ -73,9 +76,22 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
     objectStorageKey,
   } = props;
 
-  const { objectStorageBuckets: buckets } = useBuckets();
+  const {
+    data: objectStorageClusters,
+    isLoading: areClustersLoading,
+  } = useObjectStorageClusters();
+  const {
+    data: objectStorageBucketsResponse,
+    isLoading: areBucketsLoading,
+    error: bucketsError,
+  } = useObjectStorageBuckets(objectStorageClusters);
   const { data: accountSettings } = useAccountSettings();
-  const hidePermissionsTable = buckets.data.length === 0;
+
+  const buckets = objectStorageBucketsResponse?.buckets || [];
+
+  const hidePermissionsTable =
+    bucketsError || objectStorageBucketsResponse?.buckets.length === 0;
+
   const createMode = mode === 'creating';
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
@@ -96,7 +112,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
 
   const initialValues: FormState = {
     label: initialLabelValue,
-    bucket_access: getDefaultScopes(buckets.data),
+    bucket_access: getDefaultScopes(buckets),
   };
 
   const handleSubmit = (values: ObjectStorageKeyRequest, formikProps: any) => {
@@ -119,7 +135,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer title={title} open={open} onClose={onClose} wide={createMode}>
-      {buckets.loading ? (
+      {areBucketsLoading || areClustersLoading ? (
         <CircleProgress />
       ) : (
         <Formik
@@ -156,7 +172,7 @@ export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
             const handleToggleAccess = () => {
               setLimitedAccessChecked((checked) => !checked);
               // Reset scopes
-              setFieldValue('bucket_access', getDefaultScopes(buckets.data));
+              setFieldValue('bucket_access', getDefaultScopes(buckets));
             };
 
             return (
