@@ -20,6 +20,9 @@ export const styles = (theme: Theme) =>
   createStyles({
     row: {
       height: 46,
+      '& > button': {
+        height: 46,
+      },
     },
     link: {
       color: theme.textColors.tableStatic,
