@@ -2,9 +2,10 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableLoading, {
+import {
+  TableRowLoading,
   Props as TableLoadingProps,
-} from '../TableRowLoading/TableLoading';
+} from '../TableRowLoading/TableRowLoading';
 
 interface Props {
   length: number;
@@ -28,7 +29,7 @@ const TableContentWrapper: React.FC<CombinedProps> = (props) => {
   } = props;
 
   if (loading) {
-    return <TableLoading {...loadingProps} />;
+    return <TableRowLoading {...loadingProps} />;
   }
 
   if (error && error.length > 0) {

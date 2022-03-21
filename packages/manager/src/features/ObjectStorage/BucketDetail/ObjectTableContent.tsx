@@ -6,7 +6,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableLoading from 'src/components/TableRowLoading/TableLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { displayName, isFolder } from '../utilities';
@@ -41,7 +41,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   const { width } = useWindowDimensions();
 
   if (isFetching && !isFetchingNextPage) {
-    return <TableLoading columns={4} responsive={{ 2: { smDown: true } }} />;
+    return <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />;
   }
 
   if (error) {
@@ -108,7 +108,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
         });
       })}
       {isFetchingNextPage && (
-        <TableLoading columns={4} responsive={{ 2: { smDown: true } }} />
+        <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />
       )}
     </>
   );

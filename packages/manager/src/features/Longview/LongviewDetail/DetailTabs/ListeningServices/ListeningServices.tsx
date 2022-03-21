@@ -11,7 +11,7 @@ import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { LongviewService } from 'src/features/Longview/request.types';
 import LongviewServiceRow from './LongviewServiceRow';
@@ -158,7 +158,7 @@ const renderLoadingErrorData = (
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading) {
-    return <TableRowLoading colSpan={6} />;
+    return <TableRowLoading columns={5} />;
   }
   if (data.length === 0) {
     return <TableRowEmptyState colSpan={12} message="No listening services." />;

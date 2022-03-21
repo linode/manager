@@ -25,7 +25,7 @@ import {
 import Accordion from 'src/components/Accordion';
 import Box from 'src/components/core/Box';
 import classNames from 'classnames';
-import TableLoading from 'src/components/TableRowLoading/TableLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 export type MaintenanceEntities = 'Linode' | 'Volume';
 
@@ -139,7 +139,7 @@ const MaintenanceTable: React.FC<Props> = (props) => {
   const renderTableContent = () => {
     if (isLoading) {
       return (
-        <TableLoading
+        <TableRowLoading
           rows={1}
           columns={6}
           responsive={{

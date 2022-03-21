@@ -18,7 +18,7 @@ import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
-import TableLoading from 'src/components/TableRowLoading/TableLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId, engine } = useParams<{
@@ -74,7 +74,7 @@ export const DatabaseBackups: React.FC = () => {
       return <TableRowError message={backupsError[0].reason} colSpan={3} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
-      return <TableLoading columns={3} />;
+      return <TableRowLoading columns={3} />;
     }
     if (backups?.results === 0) {
       return (
