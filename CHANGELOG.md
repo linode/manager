@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-03-21] - v1.62.0
+
+### Added:
+- Dynamically-shown warning for raw disks in Capture Image tab
+- Kubernetes Dashboard link
+
+### Changed:
+- Replace Linode Checkout Sidebar with Summary Paper
+- Prevent referral link from being modified
+- Remove manage SSH keys link from success notice
+- DBaaS cluster labels now editable
+
+### Fixed:
+- Tags Panel causing extra PUT requests
+- Select Dropdown overflow
+- Linode Disk delete modal cancel button
+- Mismatching Marketplace app drawers
+- Hover state for Linode Detail header copy icon on Safari
+
 ## [2022-03-08] - v1.61.1
 
 ### Added:
