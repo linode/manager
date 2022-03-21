@@ -518,7 +518,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                     <Button
                       className={`${classes.dashboard} ${classes.buttons}`}
                       buttonType="secondary"
-                      disabled={Boolean(dashboardError)}
+                      disabled={Boolean(dashboardError) || !dashboard}
                       onClick={() => {
                         window.open(dashboard?.url, '_blank');
                       }}
