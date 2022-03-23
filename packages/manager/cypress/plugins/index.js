@@ -30,7 +30,7 @@ function getConfiguration() {
 function checkNodeVersionRequiredByLinode() {
   const v = process.version.substr(1, process.version.length - 1).split('.');
   if (![12, 10].includes(v[0])) {
-    console.error('We recomend Node version 10 or 12 to run this tests');
+    console.error('We recommend Node version 10 or 12 to run these tests');
   }
 }
 
