@@ -127,6 +127,9 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     // The difference between these two, i.e. the types we don't know about.
     const missingTypeIds = difference(linodeTypeIds, knownTypeIds);
 
+    console.log(knownTypeIds);
+    console.log(linodeTypeIds);
+    console.log(missingTypeIds);
     // For each type we don't know about, request it.
     missingTypeIds.forEach((thisMissingTypeId) => {
       if (thisMissingTypeId !== null) {

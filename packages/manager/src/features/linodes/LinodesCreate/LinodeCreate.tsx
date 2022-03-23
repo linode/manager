@@ -587,7 +587,7 @@ export class LinodeCreate extends React.PureComponent<
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
-              copy="Determine the best location for your Linode."
+              copy="Determine the best location for your server."
               updateFor={[this.props.selectedRegionID, regionsData, errors]}
               disabled={userCannotCreateLinode}
               helperText={this.props.regionHelperText}
@@ -652,7 +652,7 @@ export class LinodeCreate extends React.PureComponent<
               requestKeys={requestKeys}
             />
           )}
-          <AddonsPanel
+          {/* <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
             accountBackups={accountBackupsEnabled}
@@ -670,7 +670,7 @@ export class LinodeCreate extends React.PureComponent<
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
             createType={this.props.createType}
-          />
+          /> */}
         </Grid>
         <Grid item className="mlSidebar">
           <CheckoutBar
@@ -686,9 +686,9 @@ export class LinodeCreate extends React.PureComponent<
             onDeploy={this.createLinode}
             submitText="Create Linode"
             footer={
-              <SMTPRestrictionText>
-                {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
-              </SMTPRestrictionText>
+              // <SMTPRestrictionText>
+              //   {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
+              // </SMTPRestrictionText>
             }
             agreement={
               showAgreement ? (

@@ -65,6 +65,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const { data: profile } = useProfile();
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
+  console.log('Firewalls', data);
   // @TODO: Refactor so these are combined?
   const { mutateAsync: updateFirewall } = useMutateFirewall();
   const { mutateAsync: _deleteFirewall } = useDeleteFirewall();

@@ -20,7 +20,7 @@ export const LOGIN_ROOT =
 // process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 export const API_ROOT =
   process.env.REACT_APP_API_ROOT || 'http://localhost:8080';
-export const BETA_API_ROOT = API_ROOT + 'beta';
+export const BETA_API_ROOT = API_ROOT + '/beta';
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */

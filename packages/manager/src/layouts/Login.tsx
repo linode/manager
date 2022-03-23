@@ -124,6 +124,8 @@ export class Login extends PureComponent<
         }
       );
       url.searchParams.append('access_token', res.data.access_token);
+      url.searchParams.append('expires_in', res.data.expires_in);
+      console.log('hello', res.data);
       url.searchParams.append('state', params.get('state') ?? '');
       url.hash = url.searchParams.toString();
       let keys: string[] = [];

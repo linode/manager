@@ -60,7 +60,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
       <Typography variant="h2" data-qa-tp="Region">
         Region
       </Typography>
-      {copy && (
+      {/* {copy && (
         <Typography variant="body1">
           {copy}
           {` `}
@@ -76,7 +76,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
           {` `}
           to find the best region for your current location.
         </Typography>
-      )}
+      )} */}
       <RegionSelect
         errorText={error}
         disabled={disabled}
