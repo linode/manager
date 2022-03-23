@@ -61,11 +61,16 @@ describe('linode storage tab', () => {
       cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
-      cy.visitWithLogin(`/linodes/${linode.id}`);
-      containsVisible('RUNNING');
-      cy.get('[role="tablist"]').within(() => {
-        fbtClick('Storage');
-      });
+      // Wait for Linode to boot before navigating to `Storage` details page.
+      // @TODO Remove this step upon resolution of M3-5762.
+      cy.visitWithLogin(`/linodes`);
+      cy.findByText(linode.label)
+        .should('be.visible')
+        .closest('tr')
+        .within(() => {
+          cy.findByText('Running');
+        });
+      cy.visitWithLogin(`linodes/${linode.id}/storage`);
       fbtVisible(diskName);
       cy.get('button[title="Add a Disk"]').should('be.disabled');
       cy.get(`[data-qa-disk="${diskName}"]`).within(() => {
