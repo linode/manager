@@ -56,7 +56,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
   const app = oneClickApps.find((app) => {
     const cleanedStackScriptLabel = stackScriptLabel
-      .replace(/[^\w\s\/$*+-?.:()]/gi, '')
+      .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
       .trim();
     const cleanedAppName = app.name.replace('&reg;', '');
     return cleanedStackScriptLabel === cleanedAppName;
