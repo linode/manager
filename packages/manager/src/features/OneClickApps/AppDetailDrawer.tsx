@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 50,
   },
   wrapLogo: {
-    alignSelf: 'flex-start',
     marginLeft: -theme.spacing(3),
   },
   wrapAppName: {
