@@ -13,6 +13,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
@@ -20,9 +21,6 @@ import {
   withLinodeDetailContext,
 } from '../linodeDetailContext';
 import LinodePowerControl from '../LinodePowerControl';
-import withEditableLabelState, {
-  EditableLabelProps,
-} from './editableLabelState';
 
 type ClassNames = 'breadCrumbs' | 'controls' | 'launchButton';
 
@@ -63,27 +61,23 @@ interface Props {
 
 type CombinedProps = Props &
   LinodeDetailContext &
-  EditableLabelProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
 const LinodeControls: React.FC<CombinedProps> = (props) => {
-  const {
-    classes,
-    linode,
-    updateLinode,
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
+  const { classes, linode, updateLinode, breadcrumbProps } = props;
 
-    breadcrumbProps,
-  } = props;
+  const {
+    editableLabelError,
+    setEditableLabelError,
+    resetEditableLabel,
+  } = useEditableLabelState();
 
   const disabled = linode._permissions === 'read_only';
 
   const handleSubmitLabelChange = (label: string) => {
     return updateLinode({ label })
-      .then((updatedLinode) => {
+      .then(() => {
         resetEditableLabel();
       })
       .catch((err) => {
@@ -160,7 +154,6 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  withEditableLabelState,
   withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,

@@ -7,15 +7,13 @@ import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import Grid from 'src/components/Grid';
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   LinodeDetailContext,
   withLinodeDetailContext,
 } from '../linodeDetailContext';
-import withEditableLabelState, {
-  EditableLabelProps,
-} from './editableLabelState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -33,29 +31,24 @@ interface Props {
   breadcrumbProps?: Partial<BreadcrumbProps>;
 }
 
-type CombinedProps = Props &
-  LinodeDetailContext &
-  EditableLabelProps &
-  RouteComponentProps<{}>;
+type CombinedProps = Props & LinodeDetailContext & RouteComponentProps<{}>;
 
 const LinodeControls: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    linode,
-    updateLinode,
-    editableLabelError,
-    resetEditableLabel,
-    setEditableLabelError,
+  const { linode, updateLinode, breadcrumbProps } = props;
 
-    breadcrumbProps,
-  } = props;
+  const {
+    editableLabelError,
+    setEditableLabelError,
+    resetEditableLabel,
+  } = useEditableLabelState();
 
   const disabled = linode._permissions === 'read_only';
 
   const handleSubmitLabelChange = (label: string) => {
     return updateLinode({ label })
-      .then((updatedLinode) => {
+      .then(() => {
         resetEditableLabel();
       })
       .catch((err) => {
@@ -113,7 +106,6 @@ const LinodeControls: React.FC<CombinedProps> = (props) => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  withEditableLabelState,
   withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,

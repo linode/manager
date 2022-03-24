@@ -10,9 +10,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
-import withEditableLabelState, {
-  EditableLabelProps,
-} from 'src/features/linodes/LinodesDetail/LinodesDetailHeader/editableLabelState';
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import {
   useDatabaseMutation,
   useDatabaseQuery,
@@ -24,12 +22,7 @@ const DatabaseSummary = React.lazy(() => import('./DatabaseSummary'));
 const DatabaseBackups = React.lazy(() => import('./DatabaseBackups'));
 const DatabaseSettings = React.lazy(() => import('./DatabaseSettings'));
 
-export const DatabaseDetail: React.FC<EditableLabelProps> = (props) => {
-  const {
-    resetEditableLabel,
-    setEditableLabelError,
-    editableLabelError,
-  } = props;
+export const DatabaseDetail: React.FC = () => {
   const history = useHistory();
 
   const { databaseId, engine } = useParams<{
@@ -43,6 +36,12 @@ export const DatabaseDetail: React.FC<EditableLabelProps> = (props) => {
   const { isLoading: isTypesLoading } = useDatabaseTypesQuery();
 
   const { mutateAsync: updateDatabase } = useDatabaseMutation(engine, id);
+
+  const {
+    editableLabelError,
+    setEditableLabelError,
+    resetEditableLabel,
+  } = useEditableLabelState();
 
   if (error) {
     return (
@@ -154,4 +153,4 @@ export const DatabaseDetail: React.FC<EditableLabelProps> = (props) => {
   );
 };
 
-export default withEditableLabelState(DatabaseDetail);
+export default DatabaseDetail;
