@@ -35,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 50,
   },
   wrapLogo: {
-    alignSelf: 'flex-start',
     marginLeft: -theme.spacing(3),
   },
   wrapAppName: {
@@ -56,7 +55,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
   const app = oneClickApps.find((app) => {
     const cleanedStackScriptLabel = stackScriptLabel
-      .replace(/[^\w\s\/$*+-?.:()]/gi, '')
+      .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
       .trim();
     const cleanedAppName = app.name.replace('&reg;', '');
     return cleanedStackScriptLabel === cleanedAppName;
