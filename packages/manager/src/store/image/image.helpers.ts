@@ -19,6 +19,11 @@ export const filterImagesByType = (
   }, {});
 };
 
+// Image IDs are in the form linode/debian11
+export const isLinodeKubeImageId = (id: string) => {
+  return id.startsWith('linode/') && Boolean(id.match(/kube/i));
+};
+
 export const isLinodeKubeImage = (image: Image) =>
   image.label.match(/kube/i) && image.created_by === 'linode';
 
