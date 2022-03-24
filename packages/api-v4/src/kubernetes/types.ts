@@ -54,7 +54,7 @@ export interface KubernetesEndpointResponse {
 }
 
 export interface KubernetesDashboardResponse {
-  endpoint: string;
+  url: string;
 }
 
 export interface ControlPlaneOptions {

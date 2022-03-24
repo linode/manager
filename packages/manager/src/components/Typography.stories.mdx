@@ -1,0 +1,120 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Divider from 'src/components/core/Divider';
+import Typography from 'src/components/core/Typography';
+
+<Meta title="Elements/Typography/Text" component={Typography} />
+
+export const TypographyTemplate = (args) => <Typography {...args} />;
+
+# Typography
+
+## Headings
+
+### Primary heading (h1)
+
+- Empty state entity landing pages.
+- Billing and payment paper.
+- Backup auto enrollment paper.
+
+<Canvas>
+  <Story name="Primary">
+    <Typography variant="h1" gutterBottom>
+      Primary Heading (h1)
+    </Typography>
+  </Story>
+</Canvas>
+
+### Secondary heading (h2)
+
+- Page-level headings and high-level typographical components, such as editable text and breadcrumbs.
+- Section-level headings, such as drawers, some table headers and panel sections.
+
+<Canvas>
+  <Story name="Secondary">
+    <Typography variant="h2" gutterBottom>
+      Secondary Heading (h2)
+    </Typography>
+  </Story>
+</Canvas>
+
+### Tertiary headings (h3)
+
+- Sub-section headings.
+- Titles of paper components.
+
+<Canvas>
+  <Story name="Tertiary">
+    <Typography variant="h3" gutterBottom>
+      Tertiary Heading (h3)
+    </Typography>
+  </Story>
+</Canvas>
+
+## Text
+
+<Canvas>
+  <Story name="base">
+    <Typography gutterBottom>
+      Base typography component example, no variant applied. Utilized wherever
+      typography component is declared without a specific variant.
+    </Typography>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="body1">
+    <Typography variant="body1" gutterBottom>
+      Body1. Implemented using the 'body1' variant. Styles are identical for
+      both body variants since there are 2 defined by MUI but Manager only has 1
+      body style. Utilized for general body text, messaging, descriptions, and
+      helper info.
+    </Typography>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="caption">
+    <Typography variant="caption" gutterBottom>
+      Caption. Implemented using the 'caption' variant. Utilized for helper info
+      on some form elements (ex. password strength indicator) and secondary
+      descriptions (ex. search result items).
+    </Typography>
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story name="button">
+    <Typography variant="button" gutterBottom>
+      Button variant
+    </Typography>
+  </Story>
+</Canvas>
+
+## Component API
+
+<Canvas>
+  <Story
+    name="Component API"
+    args={{
+      children: 'Hello World',
+      variant: 'body1',
+    }}
+    argTypes={{
+      children: {
+        description: 'A string that will be rendered inside the HTML element',
+      },
+      variant: {
+        description: 'A string that denotes the HTML base element to use',
+        control: {
+          type: 'radio',
+          labels: ['h1', 'h2', 'h3', 'body1', 'caption', 'button', 'undefined'],
+          options: ['h1', 'h2', 'h3', 'body1', 'caption', 'button', undefined],
+        },
+      },
+    }}
+  >
+    {TypographyTemplate.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Component API" />

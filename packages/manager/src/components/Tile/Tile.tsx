@@ -72,7 +72,7 @@ const styles = (theme: Theme) =>
       margin: '0 auto 16px',
       display: 'block',
       '& .outerCircle': {
-        fill: theme.bg.offWhiteDT,
+        fill: theme.bg.offWhite,
         stroke: theme.bg.main,
       },
       '& .insidePath': {

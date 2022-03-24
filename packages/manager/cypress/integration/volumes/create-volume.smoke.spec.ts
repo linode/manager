@@ -1,8 +1,9 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { clickVolumeActionMenu } from '../../support/api/volumes';
-import { assertToast } from '../../support/ui/events';
+import { volumeFactory } from '@src/factories';
+import { makeResourcePage } from '@src/mocks/serverHandlers';
+import { interceptOnce } from 'cypress/support/ui/common';
 import { createMockLinodeList } from '../../support/api/linodes';
-import { selectRegionString } from '../../support/ui/constants';
+import { clickVolumeActionMenu } from '../../support/api/volumes';
 import {
   containsVisible,
   fbtClick,
@@ -10,10 +11,9 @@ import {
   getClick,
   getVisible,
 } from '../../support/helpers';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { tagFactory, volumeFactory } from '@src/factories';
-import { getRandomNumber, interceptOnce } from 'cypress/support/ui/common';
 import { randomLabel } from 'cypress/support/util/random';
+import { selectRegionString } from '../../support/ui/constants';
+import { assertToast } from '../../support/ui/events';
 
 const region = 'Newark, NJ';
 
@@ -33,9 +33,6 @@ const validateBasicVolume = (
   });
 };
 
-const tagList = makeResourcePage(tagFactory.buildList(5));
-const tag = tagList.data[getRandomNumber(0, 4)];
-const tagLabel = tag.label;
 const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
 const linode = linodeList.data[1];
 const linodeLabel = linode.label;
@@ -72,17 +69,13 @@ describe('volumes', () => {
     }).as('getProfilePreferences');
   });
 
-  it('creates a volume with tag but without linode from volumes page', () => {
+  it('creates a volume without linode from volumes page', () => {
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(volume);
     }).as('createVolume');
-    cy.intercept('GET', `*/tags`, (req) => {
-      req.reply(tagList);
-    }).as('getTags');
     cy.visitWithLogin('/volumes');
     cy.wait('@getProfilePreferences');
     fbtClick('Create Volume');
-    cy.wait('@getTags');
     cy.findByText('volumes');
     fbtClick('Create Volume');
     fbtVisible('Label is required.');
@@ -90,8 +83,6 @@ describe('volumes', () => {
     fbtClick('Create Volume');
     fbtVisible('Must provide a region or a Linode ID.');
     fbtClick(selectRegionString).type('new {enter}');
-    getClick('[data-qa-multi-select="Type to choose or create a tag."]');
-    fbtClick(tagLabel);
     fbtClick('Create Volume');
     cy.wait('@createVolume');
     validateBasicVolume(volumeLabel, volumeId);
@@ -99,7 +90,7 @@ describe('volumes', () => {
     getVisible('[data-qa-action-menu-item="Delete"]');
   });
 
-  it('creates volume with tag from linode with block storage support (Atlanta)', () => {
+  it('creates volume from linode with block storage support (Atlanta)', () => {
     interceptOnce('GET', '*/volumes*', volumeList).as('getVolumes');
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(attachedVolume);
@@ -110,9 +101,6 @@ describe('volumes', () => {
     cy.intercept('GET', `*/linode/instances/${linodeId}*`, (req) => {
       req.reply(linode);
     }).as('getLinodeDetail');
-    cy.intercept('GET', `*/tags`, (req) => {
-      req.reply(tagList);
-    }).as('getTags');
     cy.visitWithLogin('/linodes');
     cy.wait('@getProfilePreferences');
     cy.wait('@getLinodes');
@@ -126,11 +114,8 @@ describe('volumes', () => {
     });
     fbtClick('Create a Volume');
     getClick('[value="creating_for_linode"]');
-    cy.wait('@getTags');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
     getClick('[data-qa-volume-label="true"]').type('cy-test-volume');
-    getClick('[data-qa-multi-select="Type to choose or create a tag."]');
-    fbtClick(tagLabel);
     getClick('[data-qa-submit="true"]');
     cy.wait('@createVolume');
     containsVisible('Volume Configuration');

@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
       alignItems: 'flex-start',
       cursor: 'pointer',
       padding: theme.spacing(1) + theme.spacing(1) / 2,
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       transition: 'none',
       margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
       minHeight: 'auto',

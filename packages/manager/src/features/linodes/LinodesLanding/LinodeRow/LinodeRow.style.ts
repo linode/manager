@@ -10,7 +10,6 @@ export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
 type ClassNames =
   | 'bodyRow'
-  | 'status'
   | 'statusCell'
   | 'statusCellMaintenance'
   | 'statusLink'
@@ -38,12 +37,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block',
     },
     statusCell: {
-      whiteSpace: 'nowrap',
       width: '17%',
-    },
-    status: {
-      display: 'flex',
-      alignItems: 'center',
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
@@ -59,7 +53,7 @@ const styles = (theme: Theme) =>
         },
       },
       '& button': {
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         padding: '0 6px',
         position: 'relative',
       },
@@ -67,11 +61,11 @@ const styles = (theme: Theme) =>
     statusLink: {
       backgroundColor: 'transparent',
       border: 'none',
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       cursor: 'pointer',
       padding: 0,
       '& p': {
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         fontFamily: theme.font.bold,
       },
     },

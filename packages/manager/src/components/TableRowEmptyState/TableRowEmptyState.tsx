@@ -5,7 +5,7 @@ import TableRow from 'src/components/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    borderColor: theme.cmrBorderColors.borderTable,
+    borderColor: theme.borderColors.borderTable,
     textAlign: 'center',
   },
 }));

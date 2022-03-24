@@ -19,18 +19,13 @@ import withImages, {
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import useFlags from 'src/hooks/useFlags';
 import { useGrants, useProfile } from 'src/queries/profile';
 import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import { convertStorageUnit } from 'src/utilities/unitConversions';
-import ImagesPricingCopy from './ImagesPricingCopy';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  helperText: {
-    paddingTop: theme.spacing(1) / 2,
-  },
   container: {
     padding: theme.spacing(3),
     paddingTop: theme.spacing(2),
@@ -45,6 +40,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('xs')]: {
       justifyContent: 'flex-end',
     },
+  },
+  rawDiskWarning: {
+    maxWidth: 600,
+    width: '100%',
+  },
+  diskAndPrice: {
+    '& > div': {
+      width: 415,
+    },
+  },
+  helperText: {
+    marginBottom: theme.spacing(),
+    marginLeft: theme.spacing(1.5),
+    whiteSpace: 'nowrap',
   },
 }));
 
@@ -115,10 +124,12 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     setSelectedLinode(linode);
   };
 
-  const handleLinodeChange = (linode: Linode) => {
-    // Clear any errors
-    setErrors(undefined);
-    changeSelectedLinode(linode);
+  const handleLinodeChange = (linode: Linode | null) => {
+    if (linode !== null) {
+      // Clear any errors
+      setErrors(undefined);
+      changeSelectedLinode(linode);
+    }
   };
 
   const handleDiskChange = (diskID: string | null) => {
@@ -170,8 +181,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const requirementsMet = checkRequirements();
 
-  const flags = useFlags();
-  const isImagePricingEnabled = Boolean(flags.imagesPriceInfo);
   const selectedDiskData: Disk | undefined = disks.find(
     (d) => `${d.id}` === selectedDisk
   );
@@ -179,6 +188,17 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     'MB',
     selectedDiskData?.size,
     'GB'
+  );
+
+  const isRawDisk = selectedDiskData?.filesystem === 'raw';
+  const rawDiskWarning = (
+    <Notice
+      className={classes.rawDiskWarning}
+      spacingTop={16}
+      spacingBottom={32}
+      warning
+      text={rawDiskWarningText}
+    />
   );
 
   const hasErrorFor = getAPIErrorFor(
@@ -210,7 +230,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         <Notice error text={generalError} data-qa-notice />
       ) : null}
       {notice ? <Notice success text={notice} data-qa-notice /> : null}
-      <ImagesPricingCopy type="captureImage" />
       <LinodeSelect
         selectedLinode={selectedLinode?.id || null}
         linodeError={linodeError}
@@ -228,9 +247,14 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           canCreateImage,
           availableLinodesToImagize,
         ]}
+        isClearable={false}
       />
 
-      <>
+      <Box
+        display="flex"
+        alignItems="flex-end"
+        className={classes.diskAndPrice}
+      >
         <DiskSelect
           selectedDisk={selectedDisk}
           disks={disks}
@@ -240,20 +264,14 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           disabled={!canCreateImage}
           data-qa-disk-select
         />
-        {isImagePricingEnabled ? (
+        {selectedDiskData?.size ? (
           <Typography className={classes.helperText} variant="body1">
-            {`Estimated: ${calculateCostFromUnitPrice(
-              0.1,
-              selectedDiskSizeInGB
-            )}/month`}
+            Estimated: {calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}
+            /month
           </Typography>
         ) : null}
-        <Typography className={classes.helperText} variant="body1">
-          Linode Images cannot be created if you are using raw disks or disks
-          that have been formatted using custom filesystems.
-        </Typography>
-      </>
-
+      </Box>
+      {isRawDisk ? rawDiskWarning : null}
       <>
         <TextField
           label="Label"
@@ -301,3 +319,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 export default compose<Props & ImagesDispatch, Props>(withImages())(
   CreateImageTab
 );
+
+const rawDiskWarningText =
+  'Using a raw disk may fail, as Linode Images cannot be created from disks formatted with custom filesystems.';

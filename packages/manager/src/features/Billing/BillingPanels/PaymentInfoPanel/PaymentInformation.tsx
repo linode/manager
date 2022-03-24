@@ -14,7 +14,6 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';
 import styled from 'src/containers/SummaryPanels.styles';
-import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
@@ -63,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: '6px',
   },
   edit: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '.875rem',
     fontWeight: 700,
@@ -99,17 +98,13 @@ const PaymentInformation: React.FC<Props> = (props) => {
   ] = React.useState<PaymentMethod | undefined>();
 
   const classes = useStyles();
-  const flags = useFlags();
   const { replace } = useHistory();
 
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
-  const isPayPalEnabled = flags.additionalPaymentMethods?.includes('paypal');
-
   const showPayPalAvailableNotice =
     !loading &&
-    isPayPalEnabled &&
     !paymentMethods?.some(
       (paymetMethod: PaymentMethod) => paymetMethod.type === 'paypal'
     );
