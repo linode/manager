@@ -19,16 +19,14 @@ export const filterImagesByType = (
   }, {});
 };
 
+export const isLinodeKubeImage = (image: Image) =>
+  image.label.match(/kube/i) && image.created_by === 'linode';
+
 export const filterOutKubeImages = (
   images: Record<string, Image>
 ): Record<string, Image> => {
   return Object.keys(images).reduce((acc, eachKey) => {
-    if (
-      !(
-        images[eachKey].label.match(/kube/i) &&
-        images[eachKey].created_by === 'linode'
-      )
-    ) {
+    if (!isLinodeKubeImage(images[eachKey])) {
       acc[eachKey] = images[eachKey];
     }
 
