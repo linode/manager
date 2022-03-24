@@ -49,7 +49,6 @@ describe('volume create flow', () => {
         cy.findByText(`${volume.size} GB`).should('be.visible');
         cy.findByText(volume.regionLabel).should('be.visible');
         cy.findByText('Unattached');
-        fbtClick('Edit');
       });
   });
 
