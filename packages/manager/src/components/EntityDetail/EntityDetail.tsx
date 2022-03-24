@@ -21,19 +21,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   body: {
     paddingRight: theme.spacing(),
     paddingBottom: theme.spacing(),
-    backgroundColor: theme.cmrBGColors.bgPaper,
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
-    borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    backgroundColor: theme.bg.bgPaper,
+    borderTop: `1px solid ${theme.borderColors.borderTable}`,
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
   },
   footer: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     padding: `10px 16px !important`,
   },
   footerBorder: {
-    borderTop: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    borderTop: `1px solid ${theme.borderColors.borderTable}`,
   },
 }));
 

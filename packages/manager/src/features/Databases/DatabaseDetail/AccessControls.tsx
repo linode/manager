@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   table: {
     width: '50%',
-    border: `solid 1px ${theme.cmrBorderColors.borderTable}`,
+    border: `solid 1px ${theme.borderColors.borderTable}`,
     [theme.breakpoints.down('xs')]: {
       width: '100%',
     },
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottom: `solid 1px ${theme.cmrBorderColors.borderTable}`,
+    borderBottom: `solid 1px ${theme.borderColors.borderTable}`,
   },
   removeButton: {
     float: 'right',

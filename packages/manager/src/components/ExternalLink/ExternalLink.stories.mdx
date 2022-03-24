@@ -1,0 +1,87 @@
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import ExternalLink from './ExternalLink';
+
+<Meta title="Elements/Links/External Link" component={ExternalLink} />
+
+# External Link
+
+Links that open a page outside of Cloud Manager should have the External Link icon at the end of the text link.
+
+export const Template = (args) => <ExternalLink {...args} />;
+
+<Canvas>
+  <Story
+    name="External Link"
+    args={{
+      link: 'http://linode.com',
+      text: 'Here is a link to the Linode website',
+      className: undefined,
+      absoluteIcon: false,
+      black: false,
+      fixedIcon: false,
+      hideIcon: false,
+      onClick: undefined,
+    }}
+    argTypes={{
+      link: {
+        description: "The link's destination.",
+        type: { summary: 'string', required: true },
+      },
+      text: {
+        description: 'The clickable text.',
+        type: { summary: 'string', required: true },
+      },
+      className: {
+        description:
+          'Optional CSS class names that are applied to the component.',
+        type: { summary: 'string', name: 'string' },
+      },
+      absoluteIcon: {
+        description: "Makes the icon's postition absolute.",
+        type: { summary: 'boolean', name: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      black: {
+        description: 'Makes the font color black insted of the normal blue.',
+        type: { summary: 'boolean', name: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      fixedIcon: {
+        description:
+          'Adds an icon that is visable at all times that signifies this is an external link.',
+        type: { summary: 'boolean', name: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      hideIcon: {
+        description: 'Disables the icon from appearing on hover.',
+        type: { summary: 'boolean', name: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      onClick: {
+        description: 'A function that will be called onClick.',
+        type: { summary: '() => void' },
+        control: { type: null },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="External Link" />

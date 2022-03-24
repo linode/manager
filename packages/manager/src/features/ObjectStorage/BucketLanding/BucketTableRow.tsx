@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   bucketLabel: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
@@ -69,7 +69,7 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
     <TableRow
       key={label}
       data-qa-bucket-cell={label}
-      className={`${classes.bucketRow} ${'fade-in-table'}`}
+      className={classes.bucketRow}
       ariaLabel={label}
     >
       <TableCell>

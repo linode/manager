@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   kubeconfigFileText: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     marginRight: theme.spacing(1),
     whiteSpace: 'nowrap',
   },
@@ -518,9 +518,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                     <Button
                       className={`${classes.dashboard} ${classes.buttons}`}
                       buttonType="secondary"
-                      disabled={Boolean(dashboardError)}
+                      disabled={Boolean(dashboardError) || !dashboard}
                       onClick={() => {
-                        window.open(dashboard?.endpoint, '_blank');
+                        window.open(dashboard?.url, '_blank');
                       }}
                     >
                       Kubernetes Dashboard
@@ -537,11 +537,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 </Grid>
               </Grid>
               <Grid item className={classes.tags} xs={12} lg={12}>
-                <TagsPanel
-                  align="right"
-                  tags={cluster.tags}
-                  updateTags={handleUpdateTags}
-                />
+                <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
               </Grid>
             </Grid>
           </Grid>

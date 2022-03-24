@@ -4,6 +4,7 @@ import {
 } from '@material-ui/core/styles';
 import { SvgIconProps as _SVGIconProps } from '@material-ui/core/SvgIcon';
 import { CSSProperties as _CSSProperties } from '@material-ui/styles';
+import { Theme as _Theme } from '@material-ui/core/styles/createTheme';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface SvgIconProps extends _SVGIconProps {}
@@ -30,6 +31,27 @@ export {
 
 export { createMuiTheme } from '@material-ui/core/styles';
 
-export { Theme } from '@material-ui/core/styles/createTheme';
+interface Theme extends _Theme {
+  name: string;
+  '@keyframes rotate': any;
+  '@keyframes dash': any;
+  bg: any;
+  textColors: any;
+  borderColors: any;
+  color: any;
+  graphs: any;
+  visually: any;
+  font?: any;
+  animateCircleIcon?: any;
+  addCircleHoverEffect?: any;
+  applyLinkStyles?: any;
+  applyStatusPillStyles?: any;
+  applyTableHeaderStyles?: any;
+
+  notificationList: any;
+  status: any;
+}
+
+export { Theme };
 
 export { default as useMediaQuery } from '@material-ui/core/useMediaQuery';

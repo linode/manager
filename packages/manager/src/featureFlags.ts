@@ -10,43 +10,24 @@ interface TaxBanner {
 interface TaxCollectionBanner {
   date: string;
   action?: boolean;
+  regions?: string[];
 }
 
 type OneClickApp = Record<string, string>;
-
-interface Changelog {
-  version: string;
-  message: string;
-}
 
 export interface Flags {
   promos: boolean;
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;
-  lkeHideButtons: boolean;
-  firewalls: boolean;
   oneClickApps: OneClickApp;
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
-  changelog: Changelog;
-  vlans: boolean;
-  cvvRequired: boolean;
   databases: boolean;
-  firewallBetaNotification: boolean;
-  entityTransfers: boolean;
-  bareMetal: boolean;
   tpaProviders: Provider[];
-  machineImages: boolean;
-  additionalPaymentMethods: AdditionalPaymentMethod[];
-  imagesPricingBanner: ImagesPricingBanner;
-  imagesPricingCopy: ImagesPricingCopy;
   referralBannerText: ReferralBannerText;
   blockStorageAvailability: boolean;
-  imagesPriceInfo: boolean;
   apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
-  lkeHighAvailability: boolean;
-  autoscaler: boolean;
   kubernetesDashboardAvailability: boolean;
   regionDropdown: boolean;
   taxCollectionBanner: TaxCollectionBanner;
@@ -96,23 +77,6 @@ export interface Provider {
   displayName: string;
   icon: any;
   href: string;
-}
-
-export type AdditionalPaymentMethod = 'google_pay' | 'paypal';
-
-export interface ImagesPricingBanner {
-  key: string;
-  lede: string;
-  link: {
-    text: string;
-    url: string;
-  };
-  text: string;
-}
-
-export interface ImagesPricingCopy {
-  captureImage: string;
-  uploadImage: string;
 }
 
 interface ReferralBannerText {

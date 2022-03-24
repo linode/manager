@@ -19,6 +19,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HelpIcon from 'src/components/HelpIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useNotifications from 'src/hooks/useNotifications';
+import { getGrantData } from 'src/queries/profile';
 import { isWithinDays } from 'src/utilities/date';
 import PaymentDrawer from './PaymentDrawer';
 import PromoDialog from './PromoDialog';
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.text.primary,
   },
   pastDueBalance: {
-    color: theme.cmrIconColors.iRed,
+    color: theme.color.red,
   },
   credit: {
     color: theme.color.green,
@@ -93,6 +94,10 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
   const [isPromoDialogOpen, setIsPromoDialogOpen] = React.useState<boolean>(
     false
   );
+
+  const grantData = getGrantData();
+  const accountAccessGrant = grantData?.global?.account_access;
+  const readOnlyAccountAccess = accountAccessGrant === 'read_only';
 
   // If a user has a payment_due notification with a severity of critical, it indicates that they are outside of any grace period they may have and payment is due immediately.
   const isBalanceOutsideGracePeriod = notifications.some(
@@ -188,9 +193,9 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
           className={classes.makeAPaymentButton}
           onClick={() => replace(routeForMakePayment)}
         >
-          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment.'}
+          {pastDueBalance ? 'Make a payment immediately' : 'Make a payment'}
         </button>
-        {pastDueBalance ? ` to avoid service disruption.` : null}
+        {pastDueBalance ? ` to avoid service disruption.` : '.'}
       </Typography>
     ) : null;
 
@@ -228,7 +233,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
                 />
               </Typography>
             </Box>
-            {balanceJSX}
+            {!readOnlyAccountAccess ? balanceJSX : null}
             {showAddPromoLink ? (
               <Typography className={classes.promo}>
                 <button

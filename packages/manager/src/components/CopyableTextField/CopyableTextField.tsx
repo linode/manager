@@ -4,8 +4,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  input: {
-    backgroundColor: theme.bg.offWhite,
+  removeDisabledStyles: {
+    '&.Mui-disabled': {
+      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
+      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      opacity: 1,
+    },
   },
   copyIcon: {
     marginRight: theme.spacing(0.5),
@@ -25,20 +29,20 @@ type CombinedProps = Props;
 
 export const CopyableTextField: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-
   const { value, className, hideIcon, ...restProps } = props;
 
   return (
     <TextField
       value={value}
       {...restProps}
-      className={`${className} ${'copy'}`}
-      data-qa-copy-tooltip
+      className={`${className} ${'copy'} ${classes.removeDisabledStyles}`}
+      disabled
       InputProps={{
         endAdornment: hideIcon ? undefined : (
           <CopyTooltip text={`${value}`} className={classes.copyIcon} />
         ),
       }}
+      data-qa-copy-tooltip
     />
   );
 };

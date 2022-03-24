@@ -1,6 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { Region } from '@linode/api-v4/lib/regions/types';
-import { APIError } from '@linode/api-v4/lib/types';
 import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
@@ -10,16 +9,14 @@ import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Form from 'src/components/core/Form';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
-import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests,
@@ -37,7 +34,6 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
 import {
   handleFieldErrors,
@@ -46,7 +42,6 @@ import {
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
-import { array, object, string } from 'yup';
 import ConfigSelect, {
   initialValueDefaultId,
 } from '../VolumeDrawer/ConfigSelect';
@@ -55,17 +50,44 @@ import NoticePanel from '../VolumeDrawer/NoticePanel';
 import SizeField from '../VolumeDrawer/SizeField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    maxWidth: 960,
-  },
   copy: {
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(),
+    maxWidth: 680,
   },
   notice: {
     borderColor: theme.color.green,
     fontSize: 15,
     lineHeight: '18px',
+  },
+  select: {
+    width: 320,
+  },
+  helpIcon: {
+    marginBottom: 6,
+    marginLeft: theme.spacing(),
+    padding: 0,
+  },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 320,
+    },
+  },
+  labelTooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 220,
+    },
+  },
+  size: {
+    width: 160,
+  },
+  linodeConfigSelectWrapper: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+    },
+  },
+  linodeSelect: {
+    marginRight: theme.spacing(4),
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
@@ -80,9 +102,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   button: {
-    maxHeight: 34,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing(2),
+    marginTop: theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      marginRight: theme.spacing(),
     },
   },
 }));
@@ -96,18 +118,6 @@ interface Props {
     message?: string
   ) => void;
 }
-
-// The original schema expects tags to be an array of strings, but Formik treats
-// tags as _Tag[], so we extend the schema to transform tags before validation.
-const extendedCreateVolumeSchema = CreateVolumeSchema.concat(
-  object({
-    tags: array()
-      .transform((tagItems: _Tag[]) =>
-        tagItems.map((thisTagItem) => thisTagItem.value)
-      )
-      .of(string()),
-  })
-);
 
 type CombinedProps = Props & VolumesRequests & StateProps;
 
@@ -145,15 +155,26 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     'block-storage-available'
   );
 
+  const renderSelectTooltip = (tooltipText: string) => {
+    return (
+      <HelpIcon
+        classes={{ popper: classes.tooltip }}
+        className={classes.helpIcon}
+        text={tooltipText}
+        tooltipPosition="right"
+      />
+    );
+  };
+
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={extendedCreateVolumeSchema}
+      validationSchema={CreateVolumeSchema}
       onSubmit={(
         values,
         { resetForm, setSubmitting, setStatus, setErrors }
       ) => {
-        const { label, size, region, linode_id, config_id, tags } = values;
+        const { label, size, region, linode_id, config_id } = values;
 
         setSubmitting(true);
 
@@ -173,7 +194,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             config_id === initialValueDefaultId
               ? undefined
               : maybeCastToNumber(config_id),
-          tags: tags.map((v) => v.value),
         })
           .then(({ filesystem_path, label: volumeLabel }) => {
             if (hasSignedAgreement) {
@@ -240,6 +260,18 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           doesNotHavePermission || (showAgreement && !hasSignedAgreement)
         );
 
+        const handleLinodeChange = (linode: Linode | null) => {
+          if (linode !== null) {
+            setFieldValue('linode_id', linode.id);
+            setFieldValue('region', linode.region);
+            setLinodeId(linode.id);
+          } else {
+            // If the LinodeSelect is cleared, reset the values for Region and Config
+            setFieldValue('linode_id', initialValueDefaultId);
+            setLinodeId(initialValueDefaultId);
+          }
+        };
+
         return (
           <Form>
             {generalError ? <NoticePanel error={generalError} /> : null}
@@ -253,49 +285,47 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 important
               />
             ) : null}
-            <Grid container direction="column">
-              <Grid item className={classes.root}>
-                <Paper>
-                  {flags.blockStorageAvailability && !hasDismissedBanner ? (
-                    <Notice
-                      success
-                      className={classes.notice}
-                      dismissible
-                      onClose={handleDismiss}
-                    >
-                      <strong>
-                        We’re working quickly to expand global availability of
-                        our high-performance NVMe block storage.{' '}
-                        <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
-                          Check NVMe rollout status on our blog.
-                        </Link>
-                      </strong>
-                    </Notice>
-                  ) : null}
-                  <Typography variant="body1" data-qa-volume-size-help>
-                    A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
-                    size and costs <strong>$0.10/GB per month</strong>. Up to
-                    eight volumes can be attached to a single Linode.
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    className={classes.copy}
-                    data-qa-volume-help
+            <Box display="flex" flexDirection="column">
+              <Paper>
+                {flags.blockStorageAvailability && !hasDismissedBanner ? (
+                  <Notice
+                    success
+                    className={classes.notice}
+                    dismissible
+                    onClose={handleDismiss}
                   >
-                    Volumes must be created in a particular region. You can
-                    choose to create a Volume in a region and attach it later to
-                    a Linode in the same region. If you select a Linode from the
-                    field below, the Volume will be automatically created in
-                    that Linode&apos;s region and attached upon creation.
-                  </Typography>
-                  <LabelField
-                    name="label"
-                    disabled={doesNotHavePermission}
-                    error={touched.label ? errors.label : undefined}
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    value={values.label}
-                  />
+                    <strong>
+                      We&rsquo;re working quickly to expand global availability
+                      of our high-performance NVMe block storage.{' '}
+                      <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
+                        Check NVMe rollout status on our blog.
+                      </Link>
+                    </strong>
+                  </Notice>
+                ) : null}
+                <Typography
+                  className={classes.copy}
+                  variant="body1"
+                  data-qa-volume-size-help
+                >
+                  A single Volume can range from 10 to {MAX_VOLUME_SIZE} GB in
+                  size and costs $0.10/GB per month. <br />
+                  Up to eight volumes can be attached to a single Linode.
+                </Typography>
+                <LabelField
+                  name="label"
+                  disabled={doesNotHavePermission}
+                  error={touched.label ? errors.label : undefined}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  textFieldStyles={classes.select}
+                  tooltipClasses={classes.labelTooltip}
+                  tooltipPosition="right"
+                  tooltipText="Use only ASCII letters, numbers,
+                  underscores, and dashes."
+                  value={values.label}
+                />
+                <Box display="flex" alignItems="flex-end">
                   <SizeField
                     name="size"
                     disabled={doesNotHavePermission}
@@ -303,8 +333,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.size}
+                    textFieldStyles={classes.size}
                   />
+                </Box>
+                <Box display="flex" alignItems="flex-end">
                   <RegionSelect
+                    label="Region"
                     name="region"
                     disabled={doesNotHavePermission}
                     errorText={touched.region ? errors.region : undefined}
@@ -325,27 +359,41 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                         display: dcDisplayNames[eachRegion.id],
                       }))}
                     selectedID={values.region}
+                    width={320}
                   />
-                  <FormHelperText data-qa-volume-region>
-                    The datacenter where the new volume should be created. Only
-                    regions supporting block storage are displayed.
-                  </FormHelperText>
-                  <LinodeSelect
-                    name="linodeId"
-                    disabled={doesNotHavePermission}
-                    filterCondition={(linode: Linode) =>
-                      regionsWithBlockStorage.includes(linode.region)
-                    }
-                    handleChange={(linode: Linode) => {
-                      setFieldValue('linode_id', linode.id);
-                      setFieldValue('region', linode.region);
-                      setLinodeId(linode.id);
-                    }}
-                    linodeError={linodeError || configErrorMessage}
-                    onBlur={handleBlur}
-                    selectedLinode={values.linode_id}
-                    region={values.region}
-                  />
+                  {renderSelectTooltip(
+                    'Volumes must be created in a region. You can choose to create a Volume in a region and attach it later to a Linode in the same region.'
+                  )}
+                </Box>
+                <Box
+                  display="flex"
+                  alignItems="flex-end"
+                  className={classes.linodeConfigSelectWrapper}
+                >
+                  <Box
+                    display="flex"
+                    alignItems="flex-end"
+                    className={classes.linodeSelect}
+                  >
+                    <LinodeSelect
+                      label="Linode"
+                      name="linodeId"
+                      disabled={doesNotHavePermission}
+                      filterCondition={(linode: Linode) =>
+                        regionsWithBlockStorage.includes(linode.region)
+                      }
+                      handleChange={handleLinodeChange}
+                      linodeError={linodeError || configErrorMessage}
+                      onBlur={handleBlur}
+                      selectedLinode={values.linode_id}
+                      region={values.region}
+                      isClearable
+                      width={320}
+                    />
+                    {renderSelectTooltip(
+                      'If you select a Linode, the Volume will be automatically created in that Linode’s region and attached upon creation.'
+                    )}
+                  </Box>
                   <ConfigSelect
                     name="configId"
                     disabled={doesNotHavePermission}
@@ -354,58 +402,40 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                     onBlur={handleBlur}
                     onChange={(id: number) => setFieldValue('config_id', id)}
                     value={config_id}
+                    width={320}
                   />
-                  <TagsInput
-                    name="tags"
-                    disabled={doesNotHavePermission}
-                    label="Tags"
-                    menuPlacement="top"
-                    onChange={(selected) => setFieldValue('tags', selected)}
-                    tagError={
-                      touched.tags
-                        ? errors.tags
-                          ? getErrorStringOrDefault(
-                              errors.tags as APIError[],
-                              'Unable to tag Volume.'
-                            )
-                          : undefined
-                        : undefined
-                    }
-                    value={values.tags}
-                  />
-                  <Box
-                    display="flex"
-                    justifyContent={
-                      showAgreement ? 'space-between' : 'flex-end'
-                    }
-                    alignItems="center"
-                    flexWrap="wrap"
-                    className={classes.buttonGroup}
-                  >
-                    {showAgreement ? (
-                      <EUAgreementCheckbox
-                        checked={hasSignedAgreement}
-                        onChange={(e) =>
-                          setHasSignedAgreement(e.target.checked)
-                        }
-                        className={classes.agreement}
-                        centerCheckbox
-                      />
-                    ) : null}
-                    <Button
-                      buttonType="primary"
-                      disabled={disabled}
-                      loading={isSubmitting}
-                      onClick={() => handleSubmit()}
-                      data-qa-deploy-linode
-                      className={classes.button}
-                    >
-                      Create Volume
-                    </Button>
-                  </Box>
-                </Paper>
-              </Grid>
-            </Grid>
+                </Box>
+                <Box
+                  display="flex"
+                  justifyContent={showAgreement ? 'space-between' : 'flex-end'}
+                  alignItems="center"
+                  flexWrap="wrap"
+                  className={classes.buttonGroup}
+                >
+                  {showAgreement ? (
+                    <EUAgreementCheckbox
+                      checked={hasSignedAgreement}
+                      onChange={(e) => setHasSignedAgreement(e.target.checked)}
+                      className={classes.agreement}
+                      centerCheckbox
+                    />
+                  ) : null}
+                </Box>
+              </Paper>
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  buttonType="primary"
+                  className={classes.button}
+                  disabled={disabled}
+                  loading={isSubmitting}
+                  onClick={() => handleSubmit()}
+                  style={{ marginLeft: 12 }}
+                  data-qa-deploy-linode
+                >
+                  Create Volume
+                </Button>
+              </Box>
+            </Box>
           </Form>
         );
       }}
@@ -419,7 +449,6 @@ interface FormState {
   region: string;
   linode_id: number;
   config_id: number;
-  tags: _Tag[];
 }
 
 const initialValues: FormState = {
@@ -428,7 +457,6 @@ const initialValues: FormState = {
   region: '',
   linode_id: initialValueDefaultId,
   config_id: initialValueDefaultId,
-  tags: [],
 };
 
 interface StateProps {

@@ -12,7 +12,7 @@ const styles = (theme: Theme) =>
     ellipses: {
       backgroundColor: theme.bg.white,
       borderRight: 0,
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
       padding: theme.spacing(),
       [theme.breakpoints.only('xs')]: {
         position: 'relative',

@@ -56,7 +56,7 @@ const styles = (theme: Theme) =>
         flexShrink: 0,
         alignItems: 'center',
         borderBottom: '2px solid transparent',
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         fontSize: '0.9rem',
         lineHeight: 1.3,
         marginTop: theme.spacing(0.5),
@@ -66,11 +66,11 @@ const styles = (theme: Theme) =>
         padding: '6px 16px',
         textDecoration: 'none',
         '&:hover': {
-          color: theme.color.blue,
+          color: theme.palette.primary.main,
         },
       },
       '&[data-reach-tab][data-selected]': {
-        borderBottom: `3px solid ${theme.color.blue}`,
+        borderBottom: `3px solid ${theme.palette.primary.main}`,
         color: theme.color.headline,
         fontFamily: theme.font.bold,
       },

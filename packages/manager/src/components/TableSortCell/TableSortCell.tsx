@@ -16,18 +16,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       cursor: 'pointer',
       '& span': {
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
       },
       '& .MuiTableSortLabel-icon': {
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
       },
       '& svg g': {
-        fill: theme.cmrTextColors.linkActiveLight,
+        fill: theme.textColors.linkActiveLight,
       },
     },
   },
   label: {
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
     fontSize: '.875rem',
     minHeight: 20,
     transition: 'none',
@@ -96,7 +96,7 @@ export const TableSortCell: React.FC<CombinedProps> = (props) => {
         {children}
         {!active && <Sort className={classes.initialIcon} />}
       </TableSortLabel>
-      {isLoading && <CircleProgress mini sort />}
+      {isLoading && <CircleProgress mini />}
     </TableCell>
   );
 };

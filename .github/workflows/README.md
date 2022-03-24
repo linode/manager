@@ -15,10 +15,14 @@ If the continuous integration workflow was triggered via a push to the `master` 
 * Upon pull request creation
 
 ### Secrets
-| Name             | Description                                     |
-|------------------|-------------------------------------------------|
-| `NPM_AUTH_TOKEN` | NPM authentication token for package publishing |
-| `SLACK_WEBHOOK`  | Webhook for Slack CI notifications              |
+| Name                    | Description                                       |
+|-------------------------|---------------------------------------------------|
+| `AWS_ACCESS_KEY_ID`     | AWS access key, or equivalent                     |
+| `AWS_S3_BUCKET`         | Name of S3 bucket where Cloud Manager is deployed |
+| `AWS_SECRET_ACCESS_KEY` | AWS secret access key, or equivalent              |
+| `NPM_AUTH_TOKEN`        | NPM authentication token for package publishing   |
+| `SLACK_WEBHOOK`         | Webhook for Slack CI notifications                |
+| `STORYBOOK_BUCKET`      | Name of S3 bucket where Storybook is deployed     |
 
 ## End-to-End Tests
 Automatic end-to-end testing of Linode Cloud Manager via [Cypress](https://www.cypress.io/) is handled by the `End-to-End Tests` workflow.

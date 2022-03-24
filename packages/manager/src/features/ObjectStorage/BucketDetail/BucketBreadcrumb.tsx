@@ -1,5 +1,5 @@
 import FileCopy from '@material-ui/icons/FileCopy';
-import * as copy from 'copy-to-clipboard';
+import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 4,
   },
   link: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
     '&:hover': {
       textDecoration: 'underline',

@@ -1,0 +1,115 @@
+import Button from 'src/components/Button';
+import ActionsPanel from '../ActionsPanel';
+import Accordion from './Accordion';
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+
+<Meta title="Components/Accordion" component={Accordion} />
+
+# Accordion
+
+Accordions are better suited for when people need to focus on content that is key for decision making and other supplementary content can be hidden. Accordions should be avoided when users need most if not all of the content on a page. Scrolling isn't as big of an issue as once thought.
+
+### Pros
+
+- Puts focus on the content the user is interested in
+- Can make pages seem less complex
+
+### Cons
+
+- Can be cumbersome which adds to cognitive load
+  - “People treat clicks like currency and they don't spend it frivolously” - NNG [Citation](https://www.nngroup.com/articles/clickable-elements/)
+- Increases interaction cost
+- Accordions collapsed by default diminishes people's awareness of content
+
+export const renderActions = () => {
+  return (
+    <ActionsPanel>
+      <Button buttonType="primary">Save</Button>
+      <Button buttonType="secondary">Cancel</Button>
+    </ActionsPanel>
+  );
+};
+
+export const Template = (args) => (
+  <Accordion {...args}>
+    <p>Any children can go here</p>
+  </Accordion>
+);
+
+The Accordion component's props extends the Material UI Accordion props
+
+<Canvas>
+  <Story
+    name="Accordion"
+    args={{
+      heading: 'This is an Accordion',
+      defaultExpanded: undefined,
+      expanded: undefined,
+      headingNumberCount: undefined,
+      actions: undefined,
+      success: undefined,
+      warning: undefined,
+      error: undefined,
+    }}
+    argTypes={{
+      heading: {
+        description: 'The header for the Accordion',
+        type: { summary: 'string | React.ReactNode', required: true },
+      },
+      defaultExpanded: {
+        description: 'Should the Accordion be expanded by default',
+        type: { summary: 'boolean', name: 'boolean' },
+      },
+      expanded: {
+        description:
+          'Allows you to control the Accordion state from outside the component',
+        type: { summary: 'boolean', name: 'boolean' },
+      },
+      headingNumberCount: {
+        description: 'Displayed a number in the heading of the Accordion',
+        type: { summary: 'number | undefined', name: 'number' },
+      },
+      actions: {
+        description:
+          'Include an `ActionsPanel` to place action buttons at the bottom of the expanded Accordion',
+        type: { summary: '(props: AccordionProps) => null | JSX.Element' },
+        options: {
+          'Without Actions': undefined,
+          'With Actions': renderActions,
+        },
+      },
+      success: {
+        description: 'Set this value to enable a success notice',
+        type: { summary: 'string | undefined', name: 'string' },
+      },
+      warning: {
+        description: 'Set this value to enable a warning notice',
+        type: { summary: 'string | undefined', name: 'string' },
+      },
+      error: {
+        description: 'set this value to enable a error notice',
+        type: { summary: 'string | undefined', name: 'string' },
+      },
+      summaryProps: {
+        description: 'Allows you to pass props to the Accordion Summary',
+        type: { summary: 'AccordionSummaryProps | undefined' },
+        control: { type: null },
+      },
+      headingProps: {
+        description:
+          "Allows you to pass props to the Accordion's Typography Header",
+        type: { summary: 'TypographyProps | undefined' },
+        control: { type: null },
+      },
+      detailProps: {
+        description: 'Allows you to pass props to the Accordion Details',
+        type: { summary: 'AccordionDetailsProps | undefined' },
+        control: { type: null },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Accordion" />

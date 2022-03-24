@@ -4,6 +4,98 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-03-21] - v1.62.0
+
+### Added:
+- Dynamically-shown warning for raw disks in Capture Image tab
+- Kubernetes Dashboard link
+
+### Changed:
+- Replace Linode Checkout Sidebar with Summary Paper
+- Prevent referral link from being modified
+- Remove manage SSH keys link from success notice
+- DBaaS cluster labels now editable
+
+### Fixed:
+- Tags Panel causing extra PUT requests
+- Select Dropdown overflow
+- Linode Disk delete modal cancel button
+- Mismatching Marketplace app drawers
+- Hover state for Linode Detail header copy icon on Safari
+
+## [2022-03-08] - v1.61.1
+
+### Added:
+
+- Early Adopter Program SLA banners to Database Create and empty state Database landing pages for beta
+
+### Fixed:
+
+- Fixed issue where limited users without billing access could not use the app
+
+## [2022-03-07] - v1.61.0
+
+### Added:
+
+- Transfer and Network In/Out columns to Linode plans tables
+- Type to confirm toggle
+
+### Changed:
+
+- Drupal Marketplace app logo
+- Feedback link
+- Improve styling consistency for backup auto enrollment
+- Replaced copy icon and added copy tooltip on hover
+
+#### Storybook
+
+- Colors
+- Icons
+- Loading states
+- Notifications
+- Tooltip
+- Typography
+
+### Fixed:
+
+- Extra character in Support Ticket entity selection
+- Status icon alignment in tables
+- Linode Details action link colors in dark mode
+- Linode Details Configurations table alignment
+
+## [2022-02-25] - v1.60.1
+
+### Added:
+
+- Check for regions/states in the Tax Collection Banner
+
+## [2022-02-21] - v1.60.0
+
+### Added:
+
+- Copy IP address tooltip in the Linode Networking tab
+- February 2022 Marketplace release
+
+### Changed:
+
+- Update Storybook components
+- Glish URL root from “alpha” to “dev”
+
+### Fixed:
+
+- Prevent previous saved support text from loading into a ticket reply
+
+## [2022-02-14] - v1.59.1
+
+### Changed:
+
+- Disable "Make a Payment" button if restricted user has read_only access
+- Default Linode image to Debian 11
+
+### Fixed:
+
+- Icon showing after IP address in Linodes landing table
+
 ## [2022-02-07] - v1.59.0
 
 ### Added:

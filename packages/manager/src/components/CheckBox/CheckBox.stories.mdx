@@ -1,0 +1,78 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { useArgs } from '@storybook/client-api';
+import CheckBox from './CheckBox';
+
+<Meta title="Elements/Checkbox" component={CheckBox} />
+
+export const CheckBoxTemplate = (args) => {
+  const [localArgs, setLocalArgs] = useArgs();
+  const onChange = () => {
+    setLocalArgs({ checked: !localArgs.checked });
+  };
+  return <CheckBox {...args} onChange={onChange} />;
+};
+
+# CheckBox
+
+## Usage
+
+- Used when there are lists of options and the user may select any number of choices, including none, one, or many.
+- A stand-alone checkbox is used for a single option that the user can turn on or off (ie. accepting terms and conditions).
+
+## Guidelines
+
+- Visually present groups of choices as groups, and clearly separate them from other groups on the same page.
+- Lay out lists vertically, with one choice per line.
+- Write checkbox labels so that users know what will happen if they check a particular box.
+- Checkboxes often default to having none of the options selected.
+- Changed settings should not take effect until the user clicks the action button.
+- If the user clicks the Back button, any changes made to checkboxes should be discarded and the original settings reinstated.
+
+<Canvas>
+  <Story
+    name="Checkbox"
+    argTypes={{
+      text: {
+        description: 'Text to be shown as the label for the CheckBox.',
+        type: {
+          summary: 'string',
+          name: 'string',
+        },
+      },
+      toolTipText: {
+        description:
+          'If text is provided via this prop then a help icon will appear next to the CheckBox and the text provoided will be shown when the user hovers over the icon.',
+        type: {
+          summary: 'string',
+          name: 'string',
+        },
+      },
+      checked: {
+        description:
+          'Boolean that controls if the checkbox has the checked status',
+        type: {
+          summary: 'boolean',
+          name: 'boolean',
+        },
+      },
+      disabled: {
+        description:
+          'Boolean that controls if the checkbox is in the disabled state',
+        type: {
+          summary: 'boolean',
+          name: 'boolean',
+        },
+      },
+    }}
+    args={{
+      text: '',
+      toolTipText: '',
+      checked: false,
+      disabled: false,
+    }}
+  >
+    {CheckBoxTemplate.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Checkbox" />

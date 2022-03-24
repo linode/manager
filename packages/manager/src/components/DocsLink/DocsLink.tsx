@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
     '&:hover': {
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       textDecoration: 'underline',
     },
   },
@@ -30,9 +30,7 @@ interface Props {
   analyticsLabel?: string;
 }
 
-type CombinedProps = Props;
-
-export const DocsLink: React.FC<CombinedProps> = (props) => {
+export const DocsLink: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { href, label, analyticsLabel } = props;

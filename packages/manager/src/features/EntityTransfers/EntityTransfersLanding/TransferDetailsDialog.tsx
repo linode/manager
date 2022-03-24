@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
   },
   label: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
   entities: {

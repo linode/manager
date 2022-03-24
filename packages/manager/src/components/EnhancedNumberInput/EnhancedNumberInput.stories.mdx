@@ -1,0 +1,121 @@
+import Typography from 'src/components/core/Typography';
+import Paper from 'src/components/core/Paper';
+import { EnhancedNumberInput } from './EnhancedNumberInput';
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+
+<Meta title="Features/Enhanced Number Input" component={EnhancedNumberInput} />
+
+# Enhanced Number Input
+
+User-interface element for inputting numeric information.
+
+### Pros
+
+- Avoids device limitations
+- People only need to think about whether they want the value to go up or down
+- Allows for the option to key a value into the text field
+
+### Cons
+
+- Steppers are not suitable for large number adjustments
+
+<br />
+
+### Guidelines
+
+- Use steppers for numerical fields with a clear most frequently selected value
+- When appropriate set the most frequently selected value as a stepper default (for example, 3 nodes is the recommended minimum for a Kubernetes cluster)
+- Use large buttons for both desktop and mobile
+- Use +/- or arrow up/down for the buttons
+- If the input value has a maximum or minimum limit, be sure to indicate it
+- Make the step and the unit explicit (e.g., dollars, cents, percentage)
+
+export const decorators = [
+  (Story, context) => {
+    const [value, setValue] = React.useState(0);
+    return Story({ value, setValue });
+  },
+];
+
+export const Template = (args, context) => {
+  return (
+    <Paper>
+      <EnhancedNumberInput
+        {...args}
+        value={args.value || context.value}
+        setValue={context.setValue}
+      />
+    </Paper>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Enhanced Number Input"
+    decorators={decorators}
+    args={{
+      value: 0,
+      setValue: undefined,
+      max: undefined,
+      min: undefined,
+      disabled: undefined,
+      inputLabel: undefined,
+    }}
+    argTypes={{
+      value: {
+        description:
+          'Allows you to control the numeric value of the input from outside the component',
+        type: { summary: 'number', name: 'number', required: true },
+      },
+      setValue: {
+        description: 'The function to update the numeric value',
+        type: { summary: '(value: number) => void', required: true },
+        control: { type: null },
+      },
+      max: {
+        description:
+          'The max number allowed in the input. The +/- buttons will disable accordingly',
+        type: { summary: 'number', name: 'number' },
+        table: {
+          defaultValue: {
+            summary: '100',
+          },
+        },
+      },
+      min: {
+        description:
+          'The min number allowed in the input. The +/- buttons will disable accordingly',
+        type: { summary: 'number', name: 'number' },
+        table: {
+          defaultValue: {
+            summary: '0',
+          },
+        },
+      },
+      disabled: {
+        description: 'Disables the input and the +/- buttons',
+        type: { summary: 'boolean', name: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      inputLabel: {
+        description:
+          'The label of the input. This prop does not cause any visual UI changes',
+        type: { summary: 'string', name: 'string' },
+        control: false,
+        table: {
+          defaultValue: {
+            summary: 'Edit Quantity',
+          },
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Enhanced Number Input" />

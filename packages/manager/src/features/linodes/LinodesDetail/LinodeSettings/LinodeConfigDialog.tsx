@@ -39,7 +39,6 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -73,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   formControlToggle: {
     '& button': {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
       order: 3,
     },
   },
@@ -230,7 +229,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const classes = useStyles();
-  const flags = useFlags();
   const regions = useRegionsQuery().data ?? [];
 
   const { data: account } = useAccount();
@@ -248,8 +246,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       thisRegion.id === linodeRegion &&
       thisRegion.capabilities.includes('Vlans')
   );
-  const showVlans =
-    capabilities.includes('Vlans') && flags.vlans && regionHasVLANS;
+  const showVlans = capabilities.includes('Vlans') && regionHasVLANS;
 
   const { values, resetForm, setFieldValue, ...formik } = useFormik({
     initialValues: defaultFieldsValues,

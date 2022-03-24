@@ -1,0 +1,102 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Alarm from '@material-ui/icons/Alarm';
+import InsertPhoto from '@material-ui/icons/InsertPhoto';
+import DE from 'flag-icon-css/flags/4x3/de.svg';
+import US from 'flag-icon-css/flags/4x3/us.svg';
+import Chip from '/src/components/core/Chip';
+import SelectionCard from '/src/components/SelectionCard/SelectionCard';
+
+<Meta title="Components/Selection Card" component={SelectionCard} />
+
+export const Template = (args) => {
+  return <SelectionCard {...args} />;
+};
+
+export const iconOptions = {
+  None: () => null,
+  Photo: () => <InsertPhoto />,
+  Alarm: () => <Alarm />,
+  'DE Flag': () => <DE width="32" height="24" viewBox="0 0 640 480" />,
+  'US Flag': () => <US width="32" height="24" viewBox="0 0 720 480" />,
+  'Arch Linux': () => <span className="fl-archlinux" />,
+  Debian: () => <span className="fl-debian" />,
+};
+
+export const variantOptions = {
+  None: () => null,
+  Chip: () => <Chip label="DEFAULT" component="span" />,
+};
+
+# Selection Card
+
+## Usage
+
+Tables used for selecting an item become cards at a breakpoint (e.g., plans on the Create Linode page and Linodes on the Clone Linode page)
+
+**Pros**
+
+- Cards are used as a compact presentation of data that is mobile-friendly
+
+**Cons**
+
+- Do not use cards if comparing or scanning data points is important. Tables, even compact ones are better suited to this use case.
+
+<Canvas>
+  <Story
+    name="Selection Card"
+    args={{
+      renderIcon: iconOptions.Photo,
+      renderVariant: variantOptions.None,
+      heading: 'Photos',
+      subheadings: ['Use a photo', 'Select up to 3'],
+      checked: false,
+      disabled: false,
+      tooltip: '',
+    }}
+    argTypes={{
+      renderIcon: {
+        description: 'Element to render on the left side.',
+        control: {
+          type: 'select',
+        },
+        options: iconOptions,
+      },
+      renderVariant: {
+        description: 'Element to render on the right side.',
+        control: {
+          type: 'select',
+        },
+        options: variantOptions,
+      },
+      checked: {
+        description:
+          'If `true`, the card should be displayed in a checked state.',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      disabled: {
+        description:
+          'If `true`, the card should be displayed in a disabled state.',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      tooltip: {
+        description: 'Text shown when hovering over the card.',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable
+  story="Selection Card"
+  sort="requiredFirst"
+  exclude={['className']}
+/>
