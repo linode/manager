@@ -14,13 +14,11 @@ authenticate();
 describe('volume create flow', () => {
   /*
    * - Creates a volume that is not attached to a Linode.
-   * - Assigns 3 tags to the volume.
    * - Confirms that volume is listed correctly on volumes landing page.
    * - Confirms that tags exist on volume.
    */
   it('creates an unattached volume', () => {
     const regionId = randomItem(regions);
-    const tags = [randomLabel(5), randomLabel(5), randomLabel(5)];
     const volume = {
       label: randomLabel(),
       size: `${randomNumber(10, 250)}`,
@@ -35,9 +33,6 @@ describe('volume create flow', () => {
     containsClick('Label').type(volume.label);
     containsClick('Size').type(`{selectall}{backspace}${volume.size}`);
     containsClick('Select a Region').type(`${volume.region}{enter}`);
-    containsClick('Type to choose or create a tag.').type(
-      tags.map((tag) => `${tag}{enter}`).join('')
-    );
 
     fbtClick('Create Volume');
     cy.wait('@createVolume');
@@ -56,15 +51,6 @@ describe('volume create flow', () => {
         cy.findByText('Unattached');
         fbtClick('Edit');
       });
-
-    // Confirm that volume tags are set.
-    cy.get('[data-qa-drawer="true"]').within(() => {
-      fbtVisible('Edit Volume');
-      cy.get(`input[value="${volume.label}"]`).should('be.visible');
-      tags.forEach((tag) => {
-        fbtVisible(tag);
-      });
-    });
   });
 
   /*
