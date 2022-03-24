@@ -20,6 +20,9 @@ export const styles = (theme: Theme) =>
   createStyles({
     row: {
       height: 46,
+      '& > button': {
+        height: 46,
+      },
     },
     link: {
       color: theme.textColors.tableStatic,
@@ -55,6 +58,7 @@ export const styles = (theme: Theme) =>
       },
     },
     selectionGrid: {
+      width: '100%',
       flexWrap: 'nowrap',
       alignItems: 'center',
       justifyContent: 'space-between',

@@ -15,7 +15,6 @@ import { ClassNames, styles } from '../StackScriptRowHelpers';
 export interface Props {
   label: string;
   description: string;
-  images: string[];
   deploymentsActive: number;
   updated: string;
   disabledCheckedSelect?: boolean;
