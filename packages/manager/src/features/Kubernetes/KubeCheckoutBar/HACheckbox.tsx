@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   price: {
     marginTop: theme.spacing(),
     '& h3': {
-      color: `${theme.palette.text.primary} !important`,
+      color: `${theme.font.normal} !important`,
       fontFamily: '"LatoWebRegular", sans-serif',
     },
   },
