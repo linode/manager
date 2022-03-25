@@ -37,7 +37,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ActionPanel: React.FC<CombinedProps> = (props) => {
-  const { classes, className, style } = props;
+  const { classes, className, style, children } = props;
 
   return (
     <div
@@ -49,7 +49,11 @@ const ActionPanel: React.FC<CombinedProps> = (props) => {
       })}
       style={style}
     >
-      {props.children}
+      {children instanceof Array
+        ? [...children].sort((child) =>
+            child.props.buttonType === 'primary' ? 1 : -1
+          )
+        : children}
     </div>
   );
 };
