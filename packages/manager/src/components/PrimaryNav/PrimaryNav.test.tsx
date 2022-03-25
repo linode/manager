@@ -13,7 +13,7 @@ const props = {
 describe('PrimaryNav', () => {
   it('only contains a "Managed" menu link if the user has Managed services.', async () => {
     server.use(
-      rest.get('*/linode/instances', (req, res, ctx) => {
+      rest.get('*/account/maintenance', (req, res, ctx) => {
         return res(ctx.json({ managed: false }));
       })
     );
