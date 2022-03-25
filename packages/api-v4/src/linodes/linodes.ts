@@ -70,7 +70,7 @@ export const getLinodeVolumes = (
  */
 export const getLinodes = (params?: any, filter?: any) =>
   Request<Page<Linode>>(
-    setURL(`${API_ROOT}/linode/instances/`),
+    setURL(`${API_ROOT}/linode/instances`),
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
