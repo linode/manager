@@ -54,6 +54,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 6,
     padding: 0,
   },
+  tooltip: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 350,
+    },
+  },
   addImageLink: {
     fontFamily: theme.font.bold,
     fontSize: '1rem',
@@ -163,6 +168,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
             gravatarURL === 'not found' ||
             gravatarURL === undefined ? (
               <HelpIcon
+                classes={{ popper: classes.tooltip }}
                 className={classes.helpIcon}
                 interactive
                 text={helpIconText}
