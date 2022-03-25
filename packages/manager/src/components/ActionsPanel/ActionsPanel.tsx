@@ -51,7 +51,7 @@ const ActionPanel: React.FC<CombinedProps> = (props) => {
     >
       {children instanceof Array
         ? [...children].sort((child) =>
-            child.props.buttonType === 'primary' ? 1 : -1
+            child?.props?.buttonType === 'primary' ? 1 : -1
           )
         : children}
     </div>
