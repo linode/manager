@@ -37,7 +37,7 @@ const LinodeDetail: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const dispatch = useDispatch();
-  const linode = useExtendedLinode(+linodeId);
+  const linode = useExtendedLinode(linodeId as any);
 
   if (!linode) {
     return <NotFound />;
