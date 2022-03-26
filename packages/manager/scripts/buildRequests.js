@@ -11,7 +11,7 @@ const bluebird = require('bluebird');
 
 const DATA_DIR = 'src/cachedData/';
 // Always use prod API rather than the variable in /src/constants
-const API_ROOT = 'https://api.linode.com/v4/';
+const API_ROOT = 'http://localhost:8080/api';
 
 const handleError = (err) => {
   if (err) {

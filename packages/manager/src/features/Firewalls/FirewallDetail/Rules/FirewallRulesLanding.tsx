@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  firewallID: number;
+  firewallID: string;
   rules: FirewallRules;
   disabled: boolean;
 }
@@ -203,7 +203,7 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
       outbound_policy: policy.outbound,
     };
 
-    updateFirewallRules(firewallID, finalRules)
+    updateFirewallRules(firewallID as any, finalRules)
       .then((_rules) => {
         setSubmitting(false);
         // Reset editor state.

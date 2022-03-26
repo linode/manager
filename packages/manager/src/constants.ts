@@ -19,7 +19,7 @@ export const LOGIN_ROOT =
 // export const API_ROOT =
 // process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 export const API_ROOT =
-  process.env.REACT_APP_API_ROOT || 'http://localhost:8080';
+  process.env.REACT_APP_API_ROOT || 'http://localhost:8080/api';
 export const BETA_API_ROOT = API_ROOT + '/beta';
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';

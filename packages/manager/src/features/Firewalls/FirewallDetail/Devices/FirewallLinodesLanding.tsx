@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  firewallID: number;
+  firewallID: string;
   firewallLabel: string;
   disabled: boolean;
 }
@@ -56,7 +56,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
     requestDevices,
     removeDevice,
     addDevice,
-  } = useFirewallDevices(firewallID);
+  } = useFirewallDevices(firewallID as any);
 
   const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
   React.useEffect(() => {

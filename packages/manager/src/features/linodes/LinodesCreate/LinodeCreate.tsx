@@ -30,7 +30,6 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
-import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -45,7 +44,6 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import AddonsPanel from './AddonsPanel';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
@@ -407,11 +405,6 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     if (regionsError || imagesError.read || linodesError || typesError) {
-      console.log(regionsError);
-      console.log(imagesError);
-      console.log(linodesError);
-      console.log(typesError);
-
       return (
         <ErrorState errorText="There was an issue loading Linode creation options." />
       );
@@ -685,11 +678,6 @@ export class LinodeCreate extends React.PureComponent<
             }
             onDeploy={this.createLinode}
             submitText="Create Linode"
-            footer={
-              // <SMTPRestrictionText>
-              //   {({ text }) => <div style={{ marginTop: 16 }}>{text}</div>}
-              // </SMTPRestrictionText>
-            }
             agreement={
               showAgreement ? (
                 <EUAgreementCheckbox

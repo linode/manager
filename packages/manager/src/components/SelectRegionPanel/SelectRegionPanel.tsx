@@ -12,7 +12,6 @@ import RegionSelect, {
   ExtendedRegion,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 
 type ClassNames = 'root';
 
@@ -42,7 +41,6 @@ interface Props {
 const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
   const {
     classes,
-    copy,
     disabled,
     error,
     handleSelection,
