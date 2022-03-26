@@ -175,14 +175,15 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return getLinodeLishToken(linodeId as any)
       .then((response) => {
-        const { lish_token: token } = response;
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          token,
-          loading: false,
-        });
+        const { url } = response as any;
+        window.location.href = url;
+        // if (!this.mounted) {
+        //   return;
+        // }
+        // this.setState({
+        //   token,
+        //   loading: false,
+        // });
       })
       .catch(() => {
         if (!this.mounted) {
@@ -198,26 +199,6 @@ class Lish extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
     const { authenticated, loading, linode, token } = this.state;
-
-    const isBareMetal = linode && linode.type && linode.type.includes('metal');
-
-    const tabs = [
-      /* NB: These must correspond to the routes inside the Switch */
-      {
-        title: 'Weblish',
-        routeName: `${this.props.match.url}/weblish`,
-      },
-      !isBareMetal
-        ? {
-            title: 'Glish',
-            routeName: `${this.props.match.url}/glish`,
-          }
-        : null,
-    ].filter(Boolean) as Tab[];
-
-    const navToURL = (index: number) => {
-      this.props.history.push(tabs[index].routeName);
-    };
 
     // If the window.close() logic above fails, we render an error state as a fallback
     if (!authenticated) {
@@ -245,31 +226,7 @@ class Lish extends React.Component<CombinedProps, State> {
 
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
-      <React.Fragment>
-        {linode && token && (
-          <Tabs className={classes.tabs} onChange={navToURL}>
-            <TabLinkList className={classes.lish} tabs={tabs} />
-            <TabPanels>
-              <SafeTabPanel index={0} data-qa-tab="Weblish">
-                <Weblish
-                  token={token}
-                  linode={linode}
-                  refreshToken={this.refreshToken}
-                />
-              </SafeTabPanel>
-              {!isBareMetal && (
-                <SafeTabPanel index={1} data-qa-tab="Glish">
-                  <Glish
-                    token={token}
-                    linode={linode}
-                    refreshToken={this.refreshToken}
-                  />
-                </SafeTabPanel>
-              )}
-            </TabPanels>
-          </Tabs>
-        )}
-      </React.Fragment>
+      <React.Fragment></React.Fragment>
     );
   }
 }
