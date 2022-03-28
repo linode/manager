@@ -49,10 +49,10 @@ const ActionPanel: React.FC<CombinedProps> = (props) => {
       })}
       style={style}
     >
-      {children instanceof Array
+      {Array.isArray(children)
         ? [...children].sort((child) =>
             child?.props?.buttonType === 'primary' ? 1 : -1
-          )
+          ) // enforce that the primary button will always be to the right
         : children}
     </div>
   );
