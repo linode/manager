@@ -11,6 +11,7 @@ import {
   getClick,
   getVisible,
 } from '../../support/helpers';
+import { randomLabel } from 'cypress/support/util/random';
 import { selectRegionString } from '../../support/ui/constants';
 import { assertToast } from '../../support/ui/events';
 
@@ -36,7 +37,11 @@ const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
 const linode = linodeList.data[1];
 const linodeLabel = linode.label;
 const linodeId = linode.id;
-const volumeList = makeResourcePage(volumeFactory.buildList(2));
+const volumeList = makeResourcePage(
+  volumeFactory.buildList(2, {
+    label: randomLabel(),
+  })
+);
 const volume = volumeList.data[1];
 const volumeLabel = volume.label;
 const volumeId = volume.id;
