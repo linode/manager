@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-03-28] - v1.62.1
+
+### Added:
+- March 2022 Marketplace release
+
 ## [2022-03-21] - v1.62.0
 
 ### Added:
