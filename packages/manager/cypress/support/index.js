@@ -15,6 +15,7 @@
 
 // Import commands.js using ES2015 syntax:
 import chaiString from 'chai-string';
+import { authenticate } from './api/authentication';
 import { deleteAllTestData } from './ui/common';
 import 'cypress-real-events/support';
 
@@ -22,9 +23,11 @@ import 'cypress-real-events/support';
 // we can just simply extend it
 chai.use(chaiString);
 
+authenticate();
+
 import './commands';
 
-// runs before each test file
+// Runs before each test file.
 before(() => {
   deleteAllTestData();
 });

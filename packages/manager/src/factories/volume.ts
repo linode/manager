@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
+import { Volume, VolumeRequestPayload } from '@linode/api-v4/lib/volumes/types';
 
 export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   id: Factory.each((id) => id),
@@ -14,3 +14,11 @@ export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   linode_id: null,
   hardware_type: 'hdd',
 });
+
+export const volumeRequestPayloadFactory = Factory.Sync.makeFactory<VolumeRequestPayload>(
+  {
+    label: Factory.each((id) => `volume-${id}`),
+    size: 20,
+    region: 'us-east',
+  }
+);
