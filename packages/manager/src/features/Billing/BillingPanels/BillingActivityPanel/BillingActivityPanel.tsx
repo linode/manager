@@ -1,4 +1,3 @@
-import * as React from 'react';
 import {
   getInvoiceItems,
   Invoice,
@@ -6,6 +5,7 @@ import {
   Payment,
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
+import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -30,14 +30,14 @@ import {
 import useFlags from 'src/hooks/useFlags';
 import { useSet } from 'src/hooks/useSet';
 import { useAccount } from 'src/queries/account';
-import { isAfter, parseAPIDate } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
-import { getAllWithArguments } from 'src/utilities/getAll';
-import { getTaxID } from '../../billingUtils';
 import {
   useAllAccountInvoices,
   useAllAccountPayments,
 } from 'src/queries/accountBilling';
+import { isAfter, parseAPIDate } from 'src/utilities/date';
+import formatDate from 'src/utilities/formatDate';
+import { getAllWithArguments } from 'src/utilities/getAll';
+import { getTaxID } from '../../billingUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -73,6 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   headline: {
+    fontSize: '1rem',
     marginTop: 8,
     marginBottom: 8,
     marginLeft: 15,
@@ -80,20 +81,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   activeSince: {
     marginRight: theme.spacing() + 2,
-  },
-  cancelButton: {
-    '&:focus, &:hover': {
-      backgroundColor: 'inherit !important',
-    },
-    borderLeft: `solid 1px ${
-      theme.name === 'lightTheme' ? theme.color.border2 : theme.color.border3
-    } !important`,
-    fontSize: '0.875rem !important',
-    padding: 6,
-    marginRight: theme.spacing() + 2,
-    '& :first-child': {
-      marginLeft: 2,
-    },
   },
   transactionType: {
     marginRight: theme.spacing(),
