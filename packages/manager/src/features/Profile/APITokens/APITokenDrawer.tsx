@@ -412,7 +412,6 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               defaultValue={defaultExpiry || expiryTups[0][1]}
               onChange={this.handleExpiryChange}
               name="expiry"
-              id="expiry"
               labelId="expiry"
               label="Expiry"
               isClearable={false}

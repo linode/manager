@@ -1,4 +1,4 @@
-import { fireEvent, within, waitFor } from '@testing-library/react';
+import { fireEvent, within } from '@testing-library/react';
 import * as React from 'react';
 import { APITokenDrawer } from './APITokenDrawer';
 
@@ -60,15 +60,15 @@ describe('API Token Drawer', () => {
     fireEvent.click(submit);
     expect(props.onCreate).toHaveBeenCalledWith('*');
   });
-  it.only('Should default to read/write for all scopes', async () => {
-    const { findByLabelText } = renderWithTheme(<APITokenDrawer {...props} />);
-    const selectAllReadWriteRadioButton = await findByLabelText(
+  it('Should default to read/write for all scopes', () => {
+    const { getByLabelText } = renderWithTheme(<APITokenDrawer {...props} scopes="*"/>);
+    const selectAllReadWriteRadioButton = getByLabelText(
       'Select read/write for all'
     );
-    await waitFor(() => expect(selectAllReadWriteRadioButton).toBeChecked());
+    expect(selectAllReadWriteRadioButton).toBeChecked();
   });
-  it('Should default to never for expiration', () => {
-    // const { getByLabelText } = renderWithTheme(<APITokenDrawer {...props} />);
-    // const experationSelection = getByLabelText('Expiry');
+  it.only('Should default to never for expiration', () => {
+    const { getByText } = renderWithTheme(<APITokenDrawer {...props} scopes="*" expiry="Never" />);
+    const expirySelection = getByText(/Never/i);
   });
 });
