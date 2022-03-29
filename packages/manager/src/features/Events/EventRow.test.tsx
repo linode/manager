@@ -14,7 +14,6 @@ const props: RowProps = {
   type: 'linode',
   created: '2018-01-01',
   username: null,
-  duration: 0,
   history,
 };
 

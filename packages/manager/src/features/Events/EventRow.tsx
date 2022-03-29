@@ -14,7 +14,6 @@ import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
-import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor:
         theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
-      boxShadow: `inset 5px 0 0 ${theme.palette.primary.main}`,
       cursor: 'pointer',
     },
   },
@@ -60,7 +58,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     type,
     created: event.created,
     username: event.username,
-    duration: event.duration,
     history,
   };
 
@@ -82,7 +79,6 @@ export interface RowProps {
     | 'database';
   created: string;
   username: string | null;
-  duration: Event['duration'];
   history: any;
 }
 
@@ -98,7 +94,6 @@ export const Row: React.FC<RowProps> = (props) => {
     type,
     created,
     username,
-    duration,
     history,
   } = props;
 
@@ -138,15 +133,6 @@ export const Row: React.FC<RowProps> = (props) => {
       <TableCell parentColumn={'Event'} data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
           {displayedMessage}
-        </Typography>
-      </TableCell>
-
-      <TableCell parentColumn="Duration">
-        <Typography variant="body1">
-          {/* There is currently an API bug where host_reboot event durations are
-          not reported correctly. This patch simply hides the duration. @todo
-          remove this // check when the API bug is fixed. */}
-          {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
         </Typography>
       </TableCell>
       <TableCell parentColumn={'When'} data-qa-event-created-cell>

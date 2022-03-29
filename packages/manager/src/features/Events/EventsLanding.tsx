@@ -281,12 +281,6 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
             </TableCell>
             <TableCell
               className={classes.columnHeader}
-              data-qa-events-duration-header
-            >
-              Duration
-            </TableCell>
-            <TableCell
-              className={classes.columnHeader}
               data-qa-events-time-header
             >
               When
