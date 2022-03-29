@@ -249,7 +249,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           linodeBackups={backups}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
-          inTableContext
+          inListView
         />
       </TableCell>
     </TableRow>

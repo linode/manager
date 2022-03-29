@@ -28,6 +28,7 @@ const styles = (theme: Theme) =>
     bodyRow: {
       height: 'auto',
       '&:hover': {
+        backgroundColor: theme.bg.lightBlue1,
         '& [data-qa-copy-ip]': {
           opacity: 1,
         },
@@ -84,11 +85,17 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingBottom: 0,
       },
+      '& button:hover': {
+        backgroundColor: 'transparent',
+      },
       '& [data-qa-copy-ip]': {
         opacity: 0,
       },
       '& svg': {
         marginTop: 2,
+        '&:hover': {
+          color: theme.palette.primary.main,
+        },
       },
     },
     regionCell: {
