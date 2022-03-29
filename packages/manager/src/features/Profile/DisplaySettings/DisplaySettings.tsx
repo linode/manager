@@ -12,6 +12,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
+import Notice from 'src/components/Notice';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
@@ -80,16 +81,23 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
 
   const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
   const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
+  const [gravatarError, setGravatarError] = React.useState<
+    string | undefined
+  >();
 
   const userEmail = profile?.email;
 
   React.useEffect(() => {
     if (userEmail) {
       setGravatarLoading(true);
-      getGravatarUrl(userEmail).then((url) => {
-        setGravatarLoading(false);
-        setGravatarURL(url);
-      });
+      getGravatarUrl(userEmail)
+        .then((url) => {
+          setGravatarLoading(false);
+          setGravatarURL(url);
+        })
+        .catch(() => {
+          setGravatarError('Gravatar is currently unavailable.');
+        });
     }
   }, [userEmail]);
 
@@ -145,6 +153,9 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
 
   return (
     <Paper>
+      {gravatarError !== undefined ? (
+        <Notice warning text={gravatarError} />
+      ) : null}
       <Box className={classes.profile} display="flex">
         {gravatarLoading ||
         gravatarURL === 'not found' ||

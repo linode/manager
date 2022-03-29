@@ -4,7 +4,6 @@ import { formatOffset, TimezoneForm } from './TimezoneForm';
 
 const classes = {
   root: '',
-  title: '',
   copy: '',
   button: '',
   loggedInAsCustomerNotice: '',

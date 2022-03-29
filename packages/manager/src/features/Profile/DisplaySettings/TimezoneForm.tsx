@@ -18,12 +18,7 @@ import Notice from 'src/components/Notice';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'copy'
-  | 'button'
-  | 'loggedInAsCustomerNotice';
+type ClassNames = 'root' | 'copy' | 'button' | 'loggedInAsCustomerNotice';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -31,11 +26,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
       },
-    },
-    title: {
-      color: '#555',
-      fontSize: '0.875rem',
-      marginBottom: 2,
     },
     copy: {
       marginTop: 8,
@@ -196,9 +186,6 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           className={classes.root}
         >
           <div>
-            <Typography className={classes.title} variant="h2">
-              Timezone
-            </Typography>
             <Select
               options={timezoneList}
               placeholder={'Choose a Timezone'}
@@ -207,8 +194,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
               data-qa-tz-select
               defaultValue={defaultTimeZone}
               isClearable={false}
-              label="Choose a Timezone"
-              hideLabel
+              label="Timezone"
             />
             <Typography className={classes.copy} variant="body1" data-qa-copy>
               This setting converts the dates and times displayed in the Linode
