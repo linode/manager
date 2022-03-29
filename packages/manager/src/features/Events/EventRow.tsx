@@ -1,13 +1,13 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
+import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor:
         theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
-      cursor: 'pointer',
+    },
+    '& a': {
+      color: 'inherit',
     },
   },
   icon: {
@@ -42,8 +44,6 @@ interface Props {
 type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
-  const history = useHistory();
-
   const { event, entityId } = props;
   const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -59,7 +59,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     type,
     created: event.created,
     username: event.username,
-    history,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -80,7 +79,6 @@ export interface RowProps {
     | 'database';
   created: string;
   username: string | null;
-  history: any;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
@@ -95,7 +93,6 @@ export const Row: React.FC<RowProps> = (props) => {
     type,
     created,
     username,
-    history,
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -113,7 +110,6 @@ export const Row: React.FC<RowProps> = (props) => {
       data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}
       className={link ? classes.row : ''}
-      onClick={() => history.push(link as string)}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
@@ -133,7 +129,7 @@ export const Row: React.FC<RowProps> = (props) => {
       )}
       <TableCell parentColumn={'Event'} data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
-          {displayedMessage}
+          {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
         </Typography>
       </TableCell>
       <TableCell parentColumn={'Relative Date'}>
