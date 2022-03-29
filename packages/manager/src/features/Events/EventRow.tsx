@@ -12,6 +12,7 @@ import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
 import { formatEventWithUsername } from './Event.helpers';
@@ -135,7 +136,10 @@ export const Row: React.FC<RowProps> = (props) => {
           {displayedMessage}
         </Typography>
       </TableCell>
-      <TableCell parentColumn={'When'} data-qa-event-created-cell>
+      <TableCell parentColumn={'Relative Date'}>
+        {parseAPIDate(created).toRelative()}
+      </TableCell>
+      <TableCell parentColumn={'Absolute Date'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>

@@ -279,11 +279,14 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
             >
               Event
             </TableCell>
+            <TableCell className={classes.columnHeader}>
+              Relative Date
+            </TableCell>
             <TableCell
               className={classes.columnHeader}
               data-qa-events-time-header
             >
-              When
+              Absolute Date
             </TableCell>
           </TableRow>
         </TableHead>
