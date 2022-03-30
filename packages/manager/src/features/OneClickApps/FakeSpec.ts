@@ -78,8 +78,10 @@ export const oneClickApps: OCA[] = [
     summary: 'Highly scalable and feature-rich live video streaming platform.',
     related_guides: [
       {
-        title: 'Deploying Ant Media Enterprise Edition through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseedition',
+        title:
+          'Deploying Ant Media Enterprise Edition through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
       },
     ],
     related_info: [
@@ -580,7 +582,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Joomla through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joomla',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/joomla',
       },
     ],
     related_info: [
@@ -598,7 +601,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Joplin through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/joplin',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/joplin',
       },
     ],
     related_info: [
@@ -1179,7 +1183,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Prometheus & Grafana through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/prometheusgrafana',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana',
       },
     ],
     related_info: [
