@@ -188,16 +188,21 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
             ) : null}
           </Typography>
           <Typography className={classes.profileCopy} variant="body1">
-            Create, upload, and manage your globally recognized avatar from a
-            single place with Gravatar.
+            {gravatarLoading ||
+            gravatarURL === 'not found' ||
+            gravatarURL === undefined
+              ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
+              : 'Edit your profile picture using Gravatar.'}
           </Typography>
           <ExternalLink
             className={classes.addImageLink}
             link="https://en.gravatar.com/"
             text={
-              gravatarURL === 'not found' || gravatarURL === undefined
+              gravatarLoading ||
+              gravatarURL === 'not found' ||
+              gravatarURL === undefined
                 ? 'Add image'
-                : 'Update image'
+                : 'Edit image'
             }
             fixedIcon
           />
