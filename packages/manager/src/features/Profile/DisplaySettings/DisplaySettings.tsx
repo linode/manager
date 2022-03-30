@@ -14,13 +14,13 @@ import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
+import { useAccountGravatar } from 'src/queries/account';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import withNotifications, {
   WithNotifications,
 } from 'src/store/notification/notification.containers';
 import getUserTimezone from 'src/utilities/getUserTimezone';
-import { getGravatarUrl } from 'src/utilities/gravatar';
 import { v4 } from 'uuid';
 import TimezoneForm from './TimezoneForm';
 
@@ -80,27 +80,14 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: profile, refetch: requestProfile } = useProfile();
 
-  const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
-  const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
-  const [gravatarError, setGravatarError] = React.useState<
-    string | undefined
-  >();
+  const {
+    data: gravatarURL,
+    error: gravatarError,
+    isLoading: gravatarLoading,
+  } = useAccountGravatar(profile?.email ?? '');
 
-  const userEmail = profile?.email;
-
-  React.useEffect(() => {
-    if (userEmail) {
-      setGravatarLoading(true);
-      getGravatarUrl(userEmail)
-        .then((url) => {
-          setGravatarLoading(false);
-          setGravatarURL(url);
-        })
-        .catch(() => {
-          setGravatarError('Gravatar is currently unavailable.');
-        });
-    }
-  }, [userEmail]);
+  const noGravatar =
+    gravatarLoading || gravatarError || gravatarURL === 'not found';
 
   const timezone = getUserTimezone();
   const loggedInAsCustomer = useSelector(
@@ -154,13 +141,11 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
 
   return (
     <Paper>
-      {gravatarError !== undefined ? (
-        <Notice warning text={gravatarError} />
+      {gravatarError ? (
+        <Notice warning text={'Error retrieving Gravatar'} />
       ) : null}
       <Box className={classes.profile} display="flex">
-        {gravatarLoading ||
-        gravatarURL === 'not found' ||
-        gravatarURL === undefined ? (
+        {noGravatar ? (
           <div className={classes.avatar}>
             <UserIcon />
           </div>
@@ -176,9 +161,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
         <div>
           <Typography className={classes.profileTitle} variant="h2">
             Profile photo
-            {gravatarLoading ||
-            gravatarURL === 'not found' ||
-            gravatarURL === undefined ? (
+            {noGravatar ? (
               <HelpIcon
                 classes={{ popper: classes.tooltip }}
                 className={classes.helpIcon}
@@ -188,22 +171,14 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
             ) : null}
           </Typography>
           <Typography className={classes.profileCopy} variant="body1">
-            {gravatarLoading ||
-            gravatarURL === 'not found' ||
-            gravatarURL === undefined
+            {noGravatar
               ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
               : 'Edit your profile picture using Gravatar.'}
           </Typography>
           <ExternalLink
             className={classes.addImageLink}
             link="https://en.gravatar.com/"
-            text={
-              gravatarLoading ||
-              gravatarURL === 'not found' ||
-              gravatarURL === undefined
-                ? 'Add image'
-                : 'Edit image'
-            }
+            text={noGravatar ? 'Add image' : 'Edit image'}
             fixedIcon
           />
         </div>
