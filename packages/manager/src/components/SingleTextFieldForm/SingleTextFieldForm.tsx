@@ -2,9 +2,31 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+    },
+  },
+  input: {
+    minWidth: 415,
+    [theme.breakpoints.down('sm')]: {
+      minWidth: 'auto',
+    },
+  },
+  button: {
+    minWidth: 165,
+    [theme.breakpoints.up('md')]: {
+      marginTop: 16,
+    },
+  },
+}));
 
 export interface Props {
   label: string;
@@ -21,6 +43,8 @@ export interface Props {
 export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
   props
 ) => {
+  const classes = useStyles();
+
   const {
     label,
     fieldName,
@@ -68,27 +92,44 @@ export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
 
   return (
     <>
-      {success && <Notice success text={_successMessage} />}
-      {generalError && <Notice error text={generalError} />}
-      <TextField
-        {...textFieldProps}
-        label={label}
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        errorText={fieldError}
-        disabled={disabled}
-      />
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          onClick={handleSubmit}
-          loading={submitting}
-          disabled={disabled || value === initialValue}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        className={classes.root}
+      >
+        <TextField
+          {...textFieldProps}
+          className={classes.input}
+          label={label}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          disabled={disabled}
+          errorText={fieldError}
           tooltipText={tooltipText ? tooltipText : undefined}
-        >
-          Save
-        </Button>
-      </ActionsPanel>
+        />
+        <ActionsPanel>
+          <Button
+            className={classes.button}
+            buttonType="primary"
+            onClick={handleSubmit}
+            disabled={disabled || value === initialValue}
+            loading={submitting}
+          >
+            Update {label}
+          </Button>
+        </ActionsPanel>
+      </Box>
+      {success ? (
+        <Notice
+          success
+          text={_successMessage}
+          spacingTop={8}
+          spacingBottom={8}
+        />
+      ) : null}
+      {generalError ? (
+        <Notice error text={generalError} spacingTop={8} spacingBottom={8} />
+      ) : null}
     </>
   );
 };

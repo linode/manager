@@ -5,11 +5,45 @@ import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+type ClassNames = 'root' | 'copy' | 'button' | 'loggedInAsCustomerNotice';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+      },
+    },
+    copy: {
+      marginTop: 8,
+      maxWidth: 415,
+    },
+    button: {
+      minWidth: 165,
+      [theme.breakpoints.up('md')]: {
+        marginTop: 16,
+      },
+    },
+    loggedInAsCustomerNotice: {
+      backgroundColor: 'pink',
+      padding: 16,
+      marginBottom: 8,
+      textAlign: 'center',
+    },
+  });
 
 interface Props {
   timezone: string;
@@ -32,7 +66,7 @@ interface Timezone {
   offset: number;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const formatOffset = (offset: number, label: string) => {
   const remainder = Math.abs(offset) % 1;
@@ -111,7 +145,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { loggedInAsCustomer, timezone } = this.props;
+    const { classes, loggedInAsCustomer, timezone } = this.props;
     const { errors, submitting, success, updatedTimezone } = this.state;
     const timezoneDisplay = pathOr(
       timezone,
@@ -133,53 +167,64 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <div>
-        {loggedInAsCustomer && (
+      <>
+        {loggedInAsCustomer ? (
           <div
-            style={{
-              backgroundColor: 'pink',
-              padding: '1em',
-              marginBottom: '0.5em',
-              textAlign: 'center',
-            }}
+            className={classes.loggedInAsCustomerNotice}
             data-qa-admin-notice
           >
-            <Typography style={{ fontSize: '1.2em', color: 'black' }}>
-              {`While you are logged in as a customer, all times, dates, and graphs will be displayed in your browser's timezone (${timezone}).`}
+            <Typography variant="h2">
+              While you are logged in as a customer, all times, dates, and
+              graphs will be displayed in your browser&rsquo;s timezone (
+              {timezone}).
             </Typography>
           </div>
-        )}
-        {success && <Notice success text={success} />}
-        {generalError && <Notice error text={generalError} />}
-        <Typography variant="body1" data-qa-copy>
-          This setting converts the dates and times displayed in the Linode
-          Manager to a timezone of your choice.{' '}
-        </Typography>
-        <Select
-          options={timezoneList}
-          placeholder={'Choose a Timezone'}
-          errorText={timezoneError}
-          onChange={this.handleTimezoneChange}
-          data-qa-tz-select
-          defaultValue={defaultTimeZone}
-          isClearable={false}
-          label="Choose a Timezone"
-          hideLabel
-        />
-        <ActionsPanel>
-          <Button
-            buttonType="primary"
-            onClick={this.onSubmit}
-            loading={submitting}
-            disabled={updatedTimezone === null}
-            data-qa-tz-submit
-          >
-            Save
-          </Button>
-        </ActionsPanel>
-      </div>
+        ) : null}
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          className={classes.root}
+        >
+          <div>
+            <Select
+              options={timezoneList}
+              placeholder={'Choose a Timezone'}
+              errorText={timezoneError}
+              onChange={this.handleTimezoneChange}
+              data-qa-tz-select
+              defaultValue={defaultTimeZone}
+              isClearable={false}
+              label="Timezone"
+            />
+            <Typography className={classes.copy} variant="body1" data-qa-copy>
+              This setting converts the dates and times displayed in the Linode
+              Manager to a timezone of your choice.{' '}
+            </Typography>
+          </div>
+          <ActionsPanel>
+            <Button
+              className={classes.button}
+              buttonType="primary"
+              onClick={this.onSubmit}
+              disabled={updatedTimezone === null}
+              loading={submitting}
+              data-qa-tz-submit
+            >
+              Update Timezone
+            </Button>
+          </ActionsPanel>
+        </Box>
+        {success ? (
+          <Notice success text={success} spacingTop={8} spacingBottom={8} />
+        ) : null}
+        {generalError ? (
+          <Notice error text={generalError} spacingTop={8} spacingBottom={8} />
+        ) : null}
+      </>
     );
   }
 }
 
-export default TimezoneForm;
+const styled = withStyles(styles);
+
+export default styled(TimezoneForm);

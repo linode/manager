@@ -20,7 +20,7 @@ describe('SingleTextFieldForm', () => {
   it('Renders a success message on success', async () => {
     renderWithTheme(<SingleTextFieldForm {...props} />);
     userEvent.type(screen.getByTestId('textfield-input'), 'new-value');
-    userEvent.click(screen.getByText('Save'));
+    userEvent.click(screen.getByText('Update Username'));
     await waitFor(() =>
       expect(screen.getByText(/username updated/i)).toBeInTheDocument()
     );
@@ -36,7 +36,7 @@ describe('SingleTextFieldForm', () => {
       />
     );
     userEvent.type(screen.getByTestId('textfield-input'), 'new-value');
-    userEvent.click(screen.getByText('Save'));
+    userEvent.click(screen.getByText('Update Username'));
     await waitFor(() =>
       expect(screen.getByText(/error updating/i)).toBeInTheDocument()
     );

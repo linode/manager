@@ -1,13 +1,20 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { formatOffset, TimezoneForm } from './TimezoneForm';
 
-import { TimezoneForm, formatOffset } from './TimezoneForm';
+const classes = {
+  root: '',
+  copy: '',
+  button: '',
+  loggedInAsCustomerNotice: '',
+};
 
 describe('Timezone change form', () => {
   const updateProfile = jest.fn();
 
   const component = shallow(
     <TimezoneForm
+      classes={classes}
       timezone={'Pacific/Niue'}
       updateTimezone={updateProfile}
       loggedInAsCustomer={true}
