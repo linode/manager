@@ -41,49 +41,7 @@ interface Props {
   entityId?: number;
 }
 
-interface Message {
-  message: string;
-  displayJSX: string | JSX.Element;
-}
-
 type CombinedProps = Props;
-
-const displayMessageJSX = (event: ExtendedEvent): Message => {
-  const message = eventMessageGenerator(event);
-  const formattedMessage = formatEventWithUsername(
-    event.action,
-    event.username,
-    message
-  );
-  const entityLabelMatch = formattedMessage.match(
-    new RegExp(event!.entity!.label)
-  );
-  const usernameMatch = formattedMessage.match(new RegExp(event.username));
-
-  if (!entityLabelMatch || !usernameMatch) {
-    return {
-      message: formattedMessage,
-      displayJSX: formattedMessage,
-    };
-  }
-
-  const displayJSX = (
-    <>
-      {formattedMessage.substring(0, entityLabelMatch.index)}
-      <strong>{entityLabelMatch[0]}</strong>
-      {formattedMessage.substring(
-        Number(entityLabelMatch.index) + entityLabelMatch[0].length,
-        usernameMatch.index
-      )}
-      <strong>{usernameMatch[0]}</strong>
-    </>
-  );
-
-  return {
-    message,
-    displayJSX,
-  };
-};
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
   const { event, entityId } = props;
@@ -91,13 +49,12 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
-  const message = displayMessageJSX(event);
 
   const rowProps = {
     action: event.action,
     entityId,
     link,
-    message,
+    message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type,
     created: event.created,
@@ -111,7 +68,7 @@ export interface RowProps {
   action: EventAction;
   entityId?: number;
   link?: string | (() => void);
-  message?: Message;
+  message?: string | void;
   status?: string;
   type:
     | 'linode'
@@ -127,7 +84,16 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const { action, entityId, link, message, status, type, created } = props;
+  const {
+    action,
+    entityId,
+    link,
+    message,
+    status,
+    type,
+    created,
+    username,
+  } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -136,11 +102,13 @@ export const Row: React.FC<RowProps> = (props) => {
     return null;
   }
 
+  const displayedMessage = formatEventWithUsername(action, username, message);
+
   return (
     <TableRow
       data-qa-event-row
       data-test-id={action}
-      ariaLabel={`Event ${message.message}`}
+      ariaLabel={`Event ${displayedMessage}`}
       className={link ? classes.row : ''}
     >
       {/** We don't use the event argument, so typing isn't critical here. */}
@@ -161,11 +129,7 @@ export const Row: React.FC<RowProps> = (props) => {
       )}
       <TableCell parentColumn={'Event'} data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
-          {link ? (
-            <Link to={link}>{message.displayJSX}</Link>
-          ) : (
-            message.displayJSX
-          )}
+          {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
         </Typography>
       </TableCell>
       <TableCell parentColumn={'Relative Date'}>

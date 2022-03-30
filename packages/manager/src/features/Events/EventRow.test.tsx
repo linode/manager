@@ -10,10 +10,7 @@ jest.mock('src/components/core/styles', () => ({
 const message = 'this is a message.';
 const props: RowProps = {
   action: 'linode_boot',
-  message: {
-    message: '',
-    displayJSX: '',
-  },
+  message,
   type: 'linode',
   created: '2018-01-01',
   username: null,
