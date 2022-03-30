@@ -6,7 +6,6 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import EntityIcon from 'src/components/EntityIcon';
 import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
@@ -15,6 +14,7 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
+import GravatarIcon from '../Profile/DisplaySettings/GravatarIcon';
 import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,7 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   icon: {
-    marginLeft: theme.spacing(1.5),
+    height: 24,
+    width: 24,
   },
 }));
 
@@ -84,16 +85,7 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    action,
-    entityId,
-    link,
-    message,
-    status,
-    type,
-    created,
-    username,
-  } = props;
+  const { action, link, message, created, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -111,22 +103,11 @@ export const Row: React.FC<RowProps> = (props) => {
       ariaLabel={`Event ${displayedMessage}`}
       className={link ? classes.row : ''}
     >
-      {/** We don't use the event argument, so typing isn't critical here. */}
-      {/* Only display entity icon on the Global EventsLanding page */}
-      {!entityId && (
-        <TableCell data-qa-event-icon-cell>
-          <Hidden smDown>
-            <div className={classes.icon}>
-              <EntityIcon
-                data-qa-entity-icon
-                variant={type}
-                status={status}
-                size={20}
-              />
-            </div>
-          </Hidden>
-        </TableCell>
-      )}
+      <TableCell data-qa-event-icon-cell>
+        <Hidden smDown>
+          <GravatarIcon className={classes.icon} />
+        </Hidden>
+      </TableCell>
       <TableCell parentColumn={'Event'} data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
           {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
