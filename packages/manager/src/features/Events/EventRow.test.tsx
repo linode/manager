@@ -28,14 +28,6 @@ describe('EventRow component', () => {
     expect(Row(emptyMessageProps)).toBeNull();
   });
 
-  it("should only render an entity icon if it's not an events page for a specific entity", () => {
-    row.setProps({ entityId: 1 });
-    expect(row.find('[data-qa-entity-icon]')).toHaveLength(0);
-
-    row.setProps({ entityId: 0 });
-    expect(row.find('[data-qa-entity-icon]')).toHaveLength(1);
-  });
-
   it('should display the message with a username if one exists', () => {
     expect(row.find(`[data-qa-event-message]`).text()).toBe(
       'this is a message.'

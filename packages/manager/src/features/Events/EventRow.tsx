@@ -67,7 +67,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
 
 export interface RowProps {
   action: EventAction;
-  entityId?: number;
   link?: string | (() => void);
   message?: string | void;
   status?: string;
