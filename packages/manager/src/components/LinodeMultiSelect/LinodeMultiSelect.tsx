@@ -27,7 +27,7 @@ export const LinodeMultiSelect: React.FC<Props> = (props) => {
 
   const { data, isLoading, error } = useAllLinodesQuery();
 
-  const linodes = data || [];
+  const linodes = data ?? [];
 
   const _filteredLinodes = filteredLinodes ?? [];
 

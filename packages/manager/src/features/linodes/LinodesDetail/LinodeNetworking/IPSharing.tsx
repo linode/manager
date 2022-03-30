@@ -113,7 +113,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     open // Only run the query if the modal is open
   );
 
-  const linodes = data || [];
+  const linodes = data ?? [];
 
   const { ipChoices, ipChoiceLabels } = React.useMemo(
     () => getIPChoicesAndLabels(linodeID, linodes),
