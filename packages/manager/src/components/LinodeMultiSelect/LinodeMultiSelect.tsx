@@ -42,7 +42,7 @@ export const LinodeMultiSelect: React.FC<Props> = (props) => {
     [allowedRegions, _filteredLinodes, linodes]
   );
 
-  const linodeError = error && error[0]?.reason;
+  const linodeError = error?.[0]?.reason;
 
   const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
 
