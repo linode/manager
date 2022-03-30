@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   gravatar: {
+    borderRadius: '50%',
     height: 88,
     width: 88,
   },
@@ -193,7 +194,11 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
           <ExternalLink
             className={classes.addImageLink}
             link="https://en.gravatar.com/"
-            text="Add image"
+            text={
+              gravatarURL === 'not found' || gravatarURL === undefined
+                ? 'Add image'
+                : 'Update image'
+            }
             fixedIcon
           />
         </div>
