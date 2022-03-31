@@ -6,7 +6,7 @@ import {
   EntityType,
   getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
-import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
+import createLinkHandlerForNotification from 'src/utilities/getEventsActionLink';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { Variant } from 'src/components/EntityIcon';
 
