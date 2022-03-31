@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   button: {
-    minWidth: 165,
+    minWidth: 180,
     [theme.breakpoints.up('md')]: {
       marginTop: 16,
     },

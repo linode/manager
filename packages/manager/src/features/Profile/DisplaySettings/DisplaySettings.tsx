@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   profileCopy: {
     marginTop: 4,
     marginBottom: theme.spacing(2),
-    maxWidth: 294,
+    maxWidth: 360,
   },
   avatar: {
     borderRadius: '50%',
