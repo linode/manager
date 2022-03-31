@@ -173,12 +173,12 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
           <Typography className={classes.profileCopy} variant="body1">
             {noGravatar
               ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
-              : 'Edit your profile picture using Gravatar.'}
+              : 'Edit your profile photo using Gravatar.'}
           </Typography>
           <ExternalLink
             className={classes.addImageLink}
             link="https://en.gravatar.com/"
-            text={noGravatar ? 'Add image' : 'Edit image'}
+            text={noGravatar ? 'Add photo' : 'Edit photo'}
             fixedIcon
           />
         </div>
