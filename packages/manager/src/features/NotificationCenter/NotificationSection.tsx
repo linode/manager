@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
+  notificationSpacing: {
+    marginBottom: theme.spacing(2),
+  },
   header: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -66,7 +69,7 @@ export interface NotificationItem {
 
 interface Props {
   header: string;
-  count?: number; // @todo do we even need the expansion behavior anymore?
+  count?: number;
   showMoreText?: string;
   showMoreTarget?: string;
   content: NotificationItem[];
@@ -78,6 +81,8 @@ interface Props {
 export type CombinedProps = Props;
 
 export const NotificationSection: React.FC<Props> = (props) => {
+  const classes = useStyles();
+
   const {
     content,
     count,
@@ -89,9 +94,8 @@ export const NotificationSection: React.FC<Props> = (props) => {
     onClose,
   } = props;
 
-  const _loading = Boolean(loading); // false if not provided
   const _count = count ?? 5;
-  const classes = useStyles();
+  const _loading = Boolean(loading); // false if not provided
 
   const innerContent = () => {
     return (
@@ -105,48 +109,62 @@ export const NotificationSection: React.FC<Props> = (props) => {
     );
   };
 
-  return (
-    <>
-      <Hidden smDown>
-        <div className={classes.root}>
-          <div className={classes.content}>
-            <div className={classes.header}>
-              <Typography variant="h3">{header}</Typography>
-              {showMoreTarget && (
-                <Typography variant="body1">
-                  <strong>
-                    <Link
-                      to={showMoreTarget}
-                      onClick={() => {
-                        if (onClose) {
-                          onClose();
-                        }
-                      }}
-                    >
-                      {showMoreText ?? 'View history'}
-                    </Link>
-                  </strong>
-                </Typography>
-              )}
-            </div>
-            <ContentBody
-              loading={_loading}
-              count={_count}
-              content={content}
-              header={header}
-              emptyMessage={emptyMessage}
-            />
-          </div>
-        </div>
-      </Hidden>
+  const isActualNotificationContainer = header === 'Notifications';
 
-      <Hidden mdUp>
-        <ExtendedAccordion
-          heading={header}
-          headingNumberCount={content.length > 0 ? content.length : undefined}
-          renderMainContent={innerContent}
-        />
-      </Hidden>
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {isActualNotificationContainer && content.length === 0 ? null : (
+        <>
+          <Hidden smDown>
+            <div
+              className={classNames({
+                [classes.root]: true,
+                [classes.notificationSpacing]: isActualNotificationContainer,
+              })}
+            >
+              <div className={classes.content}>
+                <div className={classes.header}>
+                  <Typography variant="h3">{header}</Typography>
+                  {showMoreTarget && (
+                    <Typography variant="body1">
+                      <strong>
+                        <Link
+                          to={showMoreTarget}
+                          onClick={() => {
+                            if (onClose) {
+                              onClose();
+                            }
+                          }}
+                        >
+                          {showMoreText ?? 'View history'}
+                        </Link>
+                      </strong>
+                    </Typography>
+                  )}
+                </div>
+                <ContentBody
+                  loading={_loading}
+                  count={_count}
+                  content={content}
+                  header={header}
+                  emptyMessage={emptyMessage}
+                />
+              </div>
+            </div>
+          </Hidden>
+
+          <Hidden mdUp>
+            <ExtendedAccordion
+              heading={header}
+              headingNumberCount={
+                content.length > 0 ? content.length : undefined
+              }
+              renderMainContent={innerContent}
+            />
+          </Hidden>
+        </>
+      )}
     </>
   );
 };
@@ -165,7 +183,7 @@ interface BodyProps {
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
   const classes = useStyles();
 
-  const { content, count, emptyMessage, header, loading } = props;
+  const { content, count, loading } = props;
 
   const [showAll, setShowAll] = React.useState(false);
 
@@ -209,13 +227,7 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
         </Box>
       ) : null}
     </>
-  ) : (
-    <Typography className={classes.notificationItem}>
-      {emptyMessage
-        ? emptyMessage
-        : `You have no ${header.toLocaleLowerCase()}.`}
-    </Typography>
-  );
+  ) : null;
 });
 
 export default React.memo(NotificationSection);

@@ -15,8 +15,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& .MuiDrawer-paper': {
       boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+      maxHeight: 'calc(100% - 50px)',
       overflowX: 'hidden',
+      // Prevents the width from changing if the scrollbar is visible
+      overflowY: 'scroll',
       padding: 20,
+      paddingTop: theme.spacing(),
       paddingBottom: 0,
       top: 50,
       // Prevents the drawer from being aligned on the left since the it is anchored to the top
@@ -31,13 +35,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.down('sm')]: {
         height: '100%',
       },
-    },
-  },
-  notificationSectionContainer: {
-    '& > div': {
-      marginTop: theme.spacing(3),
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: theme.spacing(3),
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
       },
     },
   },
@@ -76,13 +75,11 @@ export const NotificationDrawer: React.FC<Props> = (props) => {
       title="Notification Drawer"
       isNotificationDrawer
     >
-      <div className={classes.notificationSectionContainer}>
-        <Notifications
-          notificationsList={formattedNotifications}
-          onClose={onClose}
-        />
-        <Events events={eventNotifications} onClose={onClose} />
-      </div>
+      <Notifications
+        notificationsList={formattedNotifications}
+        onClose={onClose}
+      />
+      <Events events={eventNotifications} onClose={onClose} />
     </Drawer>
   );
 };

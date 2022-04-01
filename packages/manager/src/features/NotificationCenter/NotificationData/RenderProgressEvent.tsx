@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor: theme.bg.app,
       cursor: 'pointer',
+      // Extends the hover state to the edges of the drawer
       marginLeft: -20,
       marginRight: -20,
       paddingLeft: 20,
