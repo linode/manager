@@ -122,3 +122,21 @@ export const randomLabel = (length: number = 10): string => {
 
   return `${entityPrefix}${randomString(length, randomStringOptions)}`;
 };
+
+/**
+ * Creates a random domain name that has a test entity prefix.
+ *
+ * @example
+ * // Assumes that test entity prefix is `cy-test-`.
+ * randomDomain(); // Example output: `cy-test-prcxfnmafe.com`
+ * randomDomain(5); // Example output: `cy-test-bkwpo.net`
+ *
+ * @param length - Length of random domain name, not including length of test entity prefix or TLD.
+ *
+ * @returns Random domain name.
+ */
+export const randomDomainName = (length: number = 10): string => {
+  const tlds = ['net', 'com', 'org'];
+
+  return `${randomLabel(length)}.${randomItem(tlds)}`;
+};

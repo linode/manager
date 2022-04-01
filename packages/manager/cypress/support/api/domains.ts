@@ -5,6 +5,7 @@ import {
   testNamePrefix,
   apiCheckErrors,
 } from './common';
+import { randomDomainName } from 'support/util/random';
 
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 const relativeApiPath = '/domains';
@@ -12,7 +13,6 @@ export const makeRandomIP = () => {
   const _mf = () => Math.floor(Math.random() * 254);
   return `${_mf()}.${_mf()}.${_mf()}.${_mf()}`;
 };
-export const makeDomainLabel = () => makeTestLabel() + '.net';
 
 export const getDomains = () => getAll(relativeApiPath);
 
@@ -34,7 +34,7 @@ const makeDomainCreateReq = (domain) => {
   const domainData = domain
     ? domain
     : {
-        domain: makeDomainLabel(),
+        domain: randomDomainName(),
         type: 'master',
         soa_email: 'admin@example.com',
       };
