@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Select, { BaseSelectProps, Item } from 'src/components/EnhancedSelect';
-import withLinodes, {
-  Props as LinodeProps,
-} from 'src/containers/withLinodes.container';
+import { useAllLinodesQuery } from 'src/queries/linodes';
+import { Linode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
 
 export interface Props extends Partial<BaseSelectProps> {
   selectedLinodes?: number[];
@@ -14,37 +13,36 @@ export interface Props extends Partial<BaseSelectProps> {
   handleChange: (selected: number[]) => void;
 }
 
-export type CombinedProps = Props & LinodeProps;
-
-export const LinodeMultiSelect: React.FC<CombinedProps> = (props) => {
+export const LinodeMultiSelect: React.FC<Props> = (props) => {
   const {
     allowedRegions,
     errorText,
     filteredLinodes,
     selectedLinodes,
     helperText,
-    linodesData,
-    linodesError,
-    linodesLoading,
     handleChange,
     showAllOption,
     ...selectProps
   } = props;
 
+  const { data, isLoading, error } = useAllLinodesQuery();
+
+  const linodes = data ?? [];
+
   const _filteredLinodes = filteredLinodes ?? [];
 
   const filteredLinodesData = React.useMemo(
     () =>
-      linodesData.filter(
+      linodes.filter(
         (thisLinode) =>
           !_filteredLinodes.includes(thisLinode.id) &&
           // If allowedRegions wasn't passed, don't use region as a filter.
           (!allowedRegions || allowedRegions.includes(thisLinode.region))
       ),
-    [allowedRegions, _filteredLinodes, linodesData]
+    [allowedRegions, _filteredLinodes, linodes]
   );
 
-  const linodeError = linodesError && linodesError[0]?.reason;
+  const linodeError = error?.[0]?.reason;
 
   const [selectAll, toggleSelectAll] = React.useState<boolean>(false);
 
@@ -77,7 +75,7 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = (props) => {
 
   const value = selectedLinodes
     ? selectedLinodes.map((thisLinodeID) => {
-        const thisLinode = linodesData.find(
+        const thisLinode = linodes.find(
           (eachLinode) => eachLinode.id === thisLinodeID
         );
         return {
@@ -92,14 +90,14 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = (props) => {
       label="Linodes"
       name="linodes"
       value={value}
-      isLoading={linodesLoading}
+      isLoading={isLoading}
       errorText={linodeError || errorText}
       isMulti
       options={generateOptions(
         selectAll,
         !!showAllOption,
         filteredLinodesData,
-        linodesError
+        error
       )}
       noOptionsMessage={() =>
         filteredLinodesData.length === 0 || selectAll
@@ -122,8 +120,8 @@ export const LinodeMultiSelect: React.FC<CombinedProps> = (props) => {
 export const generateOptions = (
   allLinodesAreSelected: boolean,
   showAllOption: boolean,
-  linodesData: LinodeProps['linodesData'],
-  linodeError: LinodeProps['linodesError']
+  linodesData: Linode[],
+  linodeError: APIError[] | null | undefined
 ): Item<any>[] => {
   /** if there's an error, don't show any options */
   if (linodeError) {
@@ -163,6 +161,4 @@ export const generateOptions = (
 export const userSelectedAllLinodes = (values: Item<string | number>[]) =>
   values.some((eachValue) => eachValue.value === 'ALL');
 
-const enhanced = compose<CombinedProps, Props>(React.memo, withLinodes());
-
-export default enhanced(LinodeMultiSelect);
+export default React.memo(LinodeMultiSelect);
