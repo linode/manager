@@ -48,6 +48,7 @@ export const GravatarIcon: React.FC<Props> = (props) => {
       <UserIcon
         className={classNames([classes.avatar], className)}
         style={{ color: '#c9c7c7' }}
+        alt={`Avatar for user ${username}`}
       />
     );
   }
@@ -56,7 +57,7 @@ export const GravatarIcon: React.FC<Props> = (props) => {
     <img
       className={classNames([classes.avatar], className)}
       src={gravatarURL}
-      alt="Gravatar"
+      alt={`Avatar for user ${username}`}
     />
   );
 };
