@@ -80,6 +80,7 @@ const styles = (theme: Theme) =>
   createStyles({
     permsTable: {
       marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(),
     },
     selectCell: {
       fontFamily: 'LatoWebBold', // we keep this bold at all times
@@ -96,18 +97,21 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
+      textAlign: 'center',
     },
     readOnlyCell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
+      textAlign: 'center',
     },
     readWritecell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
+      textAlign: 'center',
     },
   });
 
@@ -140,6 +144,7 @@ interface State {
   scopes: Permission[];
   expiryTups: Expiry[];
   selectAllSelectedScope: number | null;
+  isDefaultCreateOptions: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -151,7 +156,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     selectAllSelectedScope: allScopesAreTheSame(
       scopeStringToPermTuples(this.props.scopes || '', this.props.perms)
     ),
+    isDefaultCreateOptions: false,
   };
+
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
   UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     if (
@@ -168,6 +175,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
           nextProps.scopes || '',
           nextProps.perms
         ),
+        isDefaultCreateOptions: nextProps.mode === 'create',
       });
     }
   }
@@ -180,7 +188,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     if (targetIndex !== undefined) {
       scopeTups[targetIndex][1] = +e.currentTarget.value;
     }
-    this.setState({ scopes: scopeTups });
+    this.setState({ scopes: scopeTups, isDefaultCreateOptions: false });
   };
 
   handleSelectAllScopes = (e: React.SyntheticEvent<RadioButton>): void => {
@@ -189,6 +197,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     this.setState({
       scopes: scopes.map((scope): Permission => [scope[0], value]),
       selectAllSelectedScope: value,
+      isDefaultCreateOptions: false,
     });
   };
 
@@ -198,6 +207,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
 
   handleExpiryChange = (e: Item<string>) => {
     this.props.onChange('expiry', e.value);
+    this.setState({ isDefaultCreateOptions: false });
   };
 
   // return whether all scopes selected in the create token flow are the same
@@ -215,13 +225,20 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         aria-label="Personal Access Token Permissions"
         className={classes.permsTable}
         spacingTop={24}
+        spacingBottom={16}
       >
         <TableHead>
           <TableRow>
             <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none>None</TableCell>
-            <TableCell data-qa-perm-read>Read Only</TableCell>
-            <TableCell data-qa-perm-rw>Read/Write</TableCell>
+            <TableCell data-qa-perm-none style={{ textAlign: 'center' }}>
+              None
+            </TableCell>
+            <TableCell data-qa-perm-read noWrap style={{ textAlign: 'center' }}>
+              Read Only
+            </TableCell>
+            <TableCell data-qa-perm-rw style={{ textAlign: 'left' }}>
+              Read/Write
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -371,7 +388,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
       onEdit,
       submitting,
     } = this.props;
-    const { expiryTups } = this.state;
+    const { expiryTups, isDefaultCreateOptions } = this.state;
 
     const errorMap = getErrorMap(['label', 'scopes'], errors);
 
@@ -406,7 +423,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         )}
 
         {mode === 'create' && (
-          <FormControl>
+          <FormControl data-testid="expiry-select">
             <Select
               options={expiryList}
               defaultValue={defaultExpiry || expiryTups[0][1]}
@@ -424,6 +441,14 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         {(mode === 'view' || mode === 'create') && this.renderPermsTable()}
         {errorMap.scopes && (
           <FormHelperText error>{errorMap.scopes}</FormHelperText>
+        )}
+        {mode === 'create' && isDefaultCreateOptions && (
+          <Notice warning>
+            The default permissions for access tokens is read/write for all
+            items. The token's expiration defaults to 6 months. For improved
+            security be sure to revoke unexpired tokens if they are no longer in
+            use.
+          </Notice>
         )}
         <ActionsPanel>
           {(mode === 'create' || mode === 'edit') && [
