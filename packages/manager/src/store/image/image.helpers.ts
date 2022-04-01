@@ -20,14 +20,14 @@ export const filterImagesByType = (
 };
 
 /**
- * isLinodeKubeImageId helps us determined if an Image is an
+ * isLinodeKubeImageId helps us determine if an Image is an
  * LKE (Linode Kubernetes Engine) image. In Cloud Manager, we hide
  * these images from the user.
  *
  * Image IDs are in the form linode/debian11 or private/15943292
  *
  * @param {string} id the image's id (unlike most entities, image ids are string)
- * @returns {boolean} true if the image a LKE image
+ * @returns {boolean} true if the image is an LKE image
  */
 export const isLinodeKubeImageId = (id: string): boolean => {
   return id.startsWith('linode/') && /kube/i.test(id);
