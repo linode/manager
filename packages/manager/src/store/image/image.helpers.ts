@@ -29,6 +29,6 @@ export const filterImagesByType = (
  * @param {string} id the image's id (unlike most entities, image ids are string)
  * @returns {boolean} true if the image a LKE image
  */
-export const isLinodeKubeImageId = (id: string) => {
+export const isLinodeKubeImageId = (id: string): boolean => {
   return id.startsWith('linode/') && /kube/i.test(id);
 };
