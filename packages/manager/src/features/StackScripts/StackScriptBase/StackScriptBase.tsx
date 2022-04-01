@@ -229,11 +229,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       );
     };
 
-    usesKubeImage = (stackScriptImages: string[]) => {
-      return stackScriptImages.some((imageId) => {
-        return isLinodeKubeImageId(imageId);
-      });
-    };
+    usesKubeImage = (stackScriptImages: string[]) =>
+      stackScriptImages.some((imageId) => isLinodeKubeImageId(imageId));
 
     generateFilterInfo = (value: CurrentFilter): FilterInfo => {
       switch (value) {
