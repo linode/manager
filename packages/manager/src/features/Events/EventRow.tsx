@@ -104,18 +104,18 @@ export const Row: React.FC<RowProps> = (props) => {
     >
       <TableCell data-qa-event-icon-cell>
         <Hidden smDown>
-          <GravatarIcon className={classes.icon} />
+          <GravatarIcon username={username} className={classes.icon} />
         </Hidden>
       </TableCell>
-      <TableCell parentColumn={'Event'} data-qa-event-message-cell>
+      <TableCell parentColumn="Event" data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
           {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
         </Typography>
       </TableCell>
-      <TableCell parentColumn={'Relative Date'}>
+      <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}
       </TableCell>
-      <TableCell parentColumn={'Absolute Date'} data-qa-event-created-cell>
+      <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
       </TableCell>
     </TableRow>

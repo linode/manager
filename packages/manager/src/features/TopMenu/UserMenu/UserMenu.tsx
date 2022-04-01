@@ -313,7 +313,7 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            <GravatarIcon className={classes.userWrapper} />
+            <GravatarIcon username={userName} className={classes.userWrapper} />
             <Hidden smDown>
               <Typography className={classes.inlineUserName}>
                 {userName}

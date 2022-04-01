@@ -2,8 +2,8 @@ import classNames from 'classnames';
 import * as React from 'react';
 import UserIcon from 'src/assets/icons/account.svg';
 import { makeStyles } from 'src/components/core/styles';
-import { useAccountGravatar } from 'src/queries/account';
-import { useProfile } from 'src/queries/profile';
+import usePagination from 'src/hooks/usePagination';
+import { useAccountUsers } from 'src/queries/accountUsers';
 
 const useStyles = makeStyles(() => ({
   avatar: {
@@ -14,19 +14,28 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
+  username: string | null;
   className?: string;
 }
 
 export const GravatarIcon: React.FC<Props> = (props) => {
-  const { className } = props;
-  const { data: profile } = useProfile();
+  const { username, className } = props;
+  const pagination = usePagination(1, 'account-users');
+  const {
+    data: users,
+    isLoading: gravatarLoading,
+    error: gravatarError,
+  } = useAccountUsers(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    true
+  );
   const classes = useStyles();
 
-  const {
-    data: gravatarURL,
-    error: gravatarError,
-    isLoading: gravatarLoading,
-  } = useAccountGravatar(profile?.email ?? '');
+  const gravatarURL = users?.data.find((user) => user.username === username)
+    ?.gravatarUrl;
 
   const noGravatar =
     gravatarLoading || gravatarError || gravatarURL === 'not found';
