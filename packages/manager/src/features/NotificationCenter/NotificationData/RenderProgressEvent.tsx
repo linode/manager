@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   event: {
-    color: '#32363c',
+    color: theme.textColors.headlineStatic,
     '&:hover': {
-      backgroundColor: '#f4f5f6',
+      backgroundColor: theme.bg.app,
       cursor: 'pointer',
       marginLeft: -20,
       marginRight: -20,

@@ -22,9 +22,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 20,
   },
   event: {
-    color: '#888f91',
+    color: theme.textColors.tableHeader,
     '&:hover': {
-      backgroundColor: '#f4f5f6',
+      backgroundColor: theme.bg.app,
       cursor: 'pointer',
       marginLeft: -20,
       marginRight: -20,
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 2,
   },
   unseenEvent: {
-    color: '#32363c',
+    color: theme.textColors.headlineStatic,
     textDecoration: 'none',
   },
 }));

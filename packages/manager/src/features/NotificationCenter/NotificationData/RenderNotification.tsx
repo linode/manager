@@ -28,7 +28,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.red,
   },
   redLink: {
-    color: theme.color.red,
+    color: `${theme.color.red} !important`,
     '&:hover': {
       textDecoration: `${theme.color.red} underline`,
     },

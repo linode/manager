@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.875rem',
     width: '100%',
     '& p': {
-      color: '#32363c',
+      color: theme.textColors.headlineStatic,
       lineHeight: '1.25rem',
     },
   },
