@@ -1,4 +1,5 @@
-import strings from '../cypresshelpers';
+import { entityPrefix } from '../constants/cypress';
+
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 const apirootBeta = Cypress.env('REACT_APP_API_ROOT') + 'beta/';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
@@ -94,14 +95,13 @@ export const deleteByLabel = (path: string, label: string) => {
   });
 };
 
-// @TODO Remove these in favor of constants defined in `../constants/cypress.ts`.
+// @TODO Remove this in favor of constants defined in `../constants/cypress.ts`.
 export const testTag = 'cy-test';
-export const testNamePrefix = 'cy-test-';
 
 // Images do not have tags
 export const isTestEntity = (entity) =>
   entity.tags?.includes(testTag) ||
-  entity.label?.startsWith(testNamePrefix) ||
+  entity.label?.startsWith(entityPrefix) ||
   entity.summary?.includes(testTag);
 
 /**
@@ -116,5 +116,5 @@ export const isTestEntity = (entity) =>
  * @returns True if label is a test label, false otherwise.
  */
 export const isTestLabel = (label: string) => {
-  return label.startsWith(testNamePrefix);
+  return label.startsWith(entityPrefix);
 };
