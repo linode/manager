@@ -38,7 +38,10 @@ export const GravatarIcon: React.FC<Props> = (props) => {
     ?.gravatarUrl;
 
   const noGravatar =
-    gravatarLoading || gravatarError || gravatarURL === 'not found';
+    gravatarLoading ||
+    gravatarError ||
+    !gravatarURL ||
+    gravatarURL === 'not found';
 
   if (noGravatar) {
     return (
