@@ -271,8 +271,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
-            {/* Cell for icon (global EventsLanding only) */}
-            {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
+            <TableCell style={{ padding: 0, width: '1%' }} />
             <TableCell
               data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
