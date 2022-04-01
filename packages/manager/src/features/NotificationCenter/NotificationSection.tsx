@@ -1,25 +1,25 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import classNames from 'classnames';
 import * as React from 'react';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
-import Hidden from 'src/components/core/Hidden';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
+import { Link } from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(),
     display: 'flex',
-    flexFlow: 'row nowrap',
+    flexWrap: 'nowrap',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
   header: {
-    borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
     display: 'flex',
     justifyContent: 'space-between',
+    borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
   },
   content: {
     width: '100%',
@@ -28,20 +28,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
-  icon: {
-    marginRight: theme.spacing(),
-    '& svg': {
-      color: theme.color.grey1,
-      stroke: theme.color.grey1,
-    },
-  },
   notificationItem: {
-    paddingTop: '10px',
-    width: '100%',
-    lineHeight: 1.43,
-    fontSize: '14px',
     display: 'flex',
     justifyContent: 'space-between',
+    fontSize: '0.875rem',
+    width: '100%',
+    '& p': {
+      color: '#32363c',
+      lineHeight: '1.25rem',
+    },
   },
   showMore: {
     ...theme.applyLinkStyles,
@@ -56,6 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: theme.palette.primary.main,
+    marginRight: -4,
   },
   inverted: {
     transform: 'rotate(180deg)',
@@ -167,8 +163,10 @@ interface BodyProps {
 }
 
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
-  const { content, count, emptyMessage, header, loading } = props;
   const classes = useStyles();
+
+  const { content, count, emptyMessage, header, loading } = props;
+
   const [showAll, setShowAll] = React.useState(false);
 
   if (loading) {
@@ -193,20 +191,22 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
         </div>
       ))}
       {content.length > count ? (
-        <button
-          className={classes.showMore}
-          onClick={() => setShowAll(!showAll)}
-          aria-label={`Display all ${content.length} items`}
-          data-test-id="showMoreButton"
-        >
-          {showAll ? 'Close' : `${content.length - count} more`}
-          <KeyboardArrowDown
-            className={classNames({
-              [classes.caret]: true,
-              [classes.inverted]: showAll,
-            })}
-          />
-        </button>
+        <Box display="flex" justifyContent="flex-end">
+          <button
+            className={classes.showMore}
+            onClick={() => setShowAll(!showAll)}
+            aria-label={`Display all ${content.length} items`}
+            data-test-id="showMoreButton"
+          >
+            {showAll ? 'Close' : `${content.length - count} more`}
+            <KeyboardArrowDown
+              className={classNames({
+                [classes.caret]: true,
+                [classes.inverted]: showAll,
+              })}
+            />
+          </button>
+        </Box>
       ) : null}
     </>
   ) : (

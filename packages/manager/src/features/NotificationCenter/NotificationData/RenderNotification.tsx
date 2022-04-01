@@ -13,8 +13,7 @@ import { ExtendedNotification } from './useFormattedNotifications';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: 2,
-    paddingBottom: 2,
+    marginTop: -2,
   },
   criticalIcon: {
     fill: theme.color.red,
@@ -34,15 +33,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: `${theme.color.red} underline`,
     },
   },
-  greyLink: {
-    color: theme.palette.text.primary,
-    '&:hover': {
-      textDecoration: `${theme.palette.text.primary} underline`,
-    },
-  },
   notificationIcon: {
-    lineHeight: '1rem',
     display: 'flex',
+    lineHeight: '1rem',
     '& svg': {
       height: '1.25rem',
       width: '1.25rem',
@@ -72,8 +65,8 @@ export const RenderNotification: React.FC<Props> = (props) => {
   const message = (
     <Typography
       className={classNames({
-        [classes.severeAlert]: severity === 'critical',
         [classes.itemsWithoutIcon]: notification.severity === 'minor',
+        [classes.severeAlert]: severity === 'critical',
       })}
       dangerouslySetInnerHTML={{ __html: sanitizeHTML(notification.message) }}
     />
@@ -82,11 +75,11 @@ export const RenderNotification: React.FC<Props> = (props) => {
   return (
     <>
       <Grid
-        container
         className={classes.root}
-        data-test-id={notification.type}
+        container
+        alignItems="flex-start"
         wrap="nowrap"
-        alignItems="center"
+        data-test-id={notification.type}
       >
         <Grid item>
           <div className={classes.notificationIcon}>
@@ -104,18 +97,16 @@ export const RenderNotification: React.FC<Props> = (props) => {
             ) : null}
           </div>
         </Grid>
-
         <Grid item>
           {/* If JSX has already been put together from interceptions in useFormattedNotifications.tsx, use that */}
           {notification.jsx ? (
             notification.jsx
           ) : linkTarget ? (
             <Link
-              to={linkTarget}
               className={classNames({
                 [classes.redLink]: severity === 'critical',
-                [classes.greyLink]: severity !== 'critical',
               })}
+              to={linkTarget}
               onClick={onClose}
             >
               {message}
@@ -135,12 +126,12 @@ const getEntityLinks = (
   entityType?: string,
   id?: number
 ) => {
-  // Handle specific notification types ()
+  // Handle specific notification types
   if (notificationType === 'ticket_abuse') {
     return `/support/tickets/${id}`;
   }
 
-  // The only entity.type we currently expect and can handle for is "linode."
+  // The only entity.type we currently expect and can handle for is "linode"
   return entityType === 'linode' ? `/linodes/${id}` : null;
 };
 

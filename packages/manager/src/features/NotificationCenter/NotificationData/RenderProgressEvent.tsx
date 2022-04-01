@@ -1,7 +1,10 @@
 import { Event } from '@linode/api-v4/lib/account/types';
+import classNames from 'classnames';
 import { Duration } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
@@ -9,39 +12,42 @@ import {
   eventLabelGenerator,
   eventMessageGenerator,
 } from 'src/eventMessageGenerator_CMR';
+import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
-import EntityIcon, { Variant } from 'src/components/EntityIcon';
-import Divider from 'src/components/core/Divider';
 import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  action: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
+  root: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     width: '100%',
+  },
+  event: {
+    color: '#32363c',
+    '&:hover': {
+      backgroundColor: '#f4f5f6',
+      cursor: 'pointer',
+      marginLeft: -20,
+      marginRight: -20,
+      paddingLeft: 20,
+      paddingRight: 20,
+      width: 'calc(100% + 40px)',
+      '& a': {
+        textDecoration: 'none',
+      },
+    },
   },
   bar: {
     marginTop: theme.spacing(),
   },
   icon: {
-    marginRight: theme.spacing(2),
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
+    height: 40,
+    minWidth: 40,
+    marginRight: 20,
   },
-  message: {
-    width: '100%',
-  },
-  link: {
-    color: theme.palette.text.primary,
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-      textDecorationColor: 'inherit',
-    },
+  eventMessage: {
+    marginTop: 2,
   },
 }));
 
@@ -60,7 +66,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
-  const { linkTarget, status, type } = useEventInfo(event);
+  const { linkTarget } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, _types);
 
   if (message === null) {
@@ -74,32 +80,33 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
     : null;
 
   const eventMessage = (
-    <>
+    <Typography>
       {event.action !== 'volume_migrate' ? eventLabelGenerator(event) : ''}
       {` `}
       {message}
       {formattedTimeRemaining}
-    </>
+    </Typography>
   );
 
   return (
     <>
-      <div className={classes.action}>
-        <EntityIcon
-          className={classes.icon}
-          variant={type as Variant}
-          status={status}
-        />
-        <div className={classes.message} data-test-id={event.action}>
-          <Typography>
-            {linkTarget ? (
-              <Link className={classes.link} to={linkTarget} onClick={onClose}>
-                {eventMessage}
-              </Link>
-            ) : (
-              <strong>{eventMessage}</strong>
-            )}
-          </Typography>
+      <Box
+        className={classNames({
+          [classes.root]: true,
+          [classes.event]: !!linkTarget,
+        })}
+        display="flex"
+        data-test-id={event.action}
+      >
+        <GravatarIcon username={event.username} className={classes.icon} />
+        <div className={classes.eventMessage} data-test-id={event.action}>
+          {linkTarget ? (
+            <Link to={linkTarget} onClick={onClose}>
+              {eventMessage}
+            </Link>
+          ) : (
+            eventMessage
+          )}
           <BarPercent
             className={classes.bar}
             max={100}
@@ -108,7 +115,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
             narrow
           />
         </div>
-      </div>
+      </Box>
       <Divider className={classes.bar} />
     </>
   );

@@ -704,6 +704,13 @@ export const handlers = [
     //   message:
     //     'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
     // });
+    const events = eventFactory.buildList(10, {
+      action: 'lke_node_create',
+      percent_complete: 15,
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    });
     const volumeMigrationScheduled = eventFactory.build({
       entity: { type: 'volume', id: 6, label: 'bravoExample' },
       action: 'volume_migrate_scheduled' as EventAction,
@@ -733,7 +740,7 @@ export const handlers = [
     return res.once(
       ctx.json(
         makeResourcePage([
-          // ...events,
+          ...events,
           ...oldEvents,
           ...oldEvents,
           volumeMigrationScheduled,
@@ -814,88 +821,88 @@ export const handlers = [
   }),
   rest.get('*/notifications', (req, res, ctx) => {
     // pastDueBalance included here merely for ease of testing for Notifications section in the Notifications drawer.
-    // const pastDueBalance = notificationFactory.build({
-    //   entity: null,
-    //   label: 'past due',
-    //   message: `You have a past due balance of $58.50. Please make a payment immediately to avoid service disruption.`,
-    //   type: 'payment_due',
-    //   severity: 'critical',
-    //   when: null,
-    //   until: null,
-    //   body: null
-    // });
+    const pastDueBalance = notificationFactory.build({
+      entity: null,
+      label: 'past due',
+      message: `You have a past due balance of $58.50. Please make a payment immediately to avoid service disruption.`,
+      type: 'payment_due',
+      severity: 'critical',
+      when: null,
+      until: null,
+      body: null,
+    });
 
     // const gdprNotification = gdprComplianceNotification.build();
 
-    // const generalGlobalNotice = {
-    //   type: 'notice',
-    //   entity: null,
-    //   when: null,
-    //   // eslint-disable-next-line xss/no-mixed-html
-    //   message:
-    //     "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
-    //   label: "We've updated our policies.",
-    //   severity: 'minor',
-    //   until: null,
-    //   body: null,
-    // };
+    const generalGlobalNotice = {
+      type: 'notice',
+      entity: null,
+      when: null,
+      // eslint-disable-next-line xss/no-mixed-html
+      message:
+        "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
+      label: "We've updated our policies.",
+      severity: 'minor',
+      until: null,
+      body: null,
+    };
 
-    // const outageNotification = {
-    //   type: 'outage',
-    //   entity: {
-    //     type: 'region',
-    //     label: null,
-    //     id: 'us-east',
-    //     url: '/regions/us-east',
-    //   },
-    //   when: null,
-    //   message:
-    //     'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
-    //   label: 'There is an issue affecting service in this facility',
-    //   severity: 'major',
-    //   until: null,
-    //   body: null,
-    // };
+    const outageNotification = {
+      type: 'outage',
+      entity: {
+        type: 'region',
+        label: null,
+        id: 'us-east',
+        url: '/regions/us-east',
+      },
+      when: null,
+      message:
+        'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
+      label: 'There is an issue affecting service in this facility',
+      severity: 'major',
+      until: null,
+      body: null,
+    };
 
-    // const emailBounce = notificationFactory.build({
-    //   type: 'billing_email_bounce',
-    //   entity: null,
-    //   when: null,
-    //   message: 'We are unable to send emails to your billing email address!',
-    //   label: 'We are unable to send emails to your billing email address!',
-    //   severity: 'major',
-    //   until: null,
-    //   body: null,
-    // });
+    const emailBounce = notificationFactory.build({
+      type: 'billing_email_bounce',
+      entity: null,
+      when: null,
+      message: 'We are unable to send emails to your billing email address!',
+      label: 'We are unable to send emails to your billing email address!',
+      severity: 'major',
+      until: null,
+      body: null,
+    });
 
     // const abuseTicket = abuseTicketNotificationFactory.build();
 
-    // const migrationNotification = notificationFactory.build({
-    //   type: 'migration_pending',
-    //   label: 'You have a migration pending!',
-    //   message:
-    //     'You have a migration pending! Your Linode must be offline before starting the migration.',
-    //   entity: { id: 0, type: 'linode', label: 'linode-0' },
-    //   severity: 'major',
-    // });
+    const migrationNotification = notificationFactory.build({
+      type: 'migration_pending',
+      label: 'You have a migration pending!',
+      message:
+        'You have a migration pending! Your Linode must be offline before starting the migration.',
+      entity: { id: 0, type: 'linode', label: 'linode-0' },
+      severity: 'major',
+    });
 
-    // const minorSeverityNotification = notificationFactory.build({
-    //   type: 'notice',
-    //   message: 'Testing for minor notification',
-    //   severity: 'minor',
-    // });
+    const minorSeverityNotification = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for minor notification',
+      severity: 'minor',
+    });
 
-    // const criticalSeverityNotification = notificationFactory.build({
-    //   type: 'notice',
-    //   message: 'Testing for critical notification',
-    //   severity: 'critical',
-    // });
+    const criticalSeverityNotification = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for critical notification',
+      severity: 'critical',
+    });
 
-    // const balanceNotification = notificationFactory.build({
-    //   type: 'payment_due',
-    //   message: 'You have an overdue balance!',
-    //   severity: 'major',
-    // });
+    const balanceNotification = notificationFactory.build({
+      type: 'payment_due',
+      message: 'You have an overdue balance!',
+      severity: 'major',
+    });
 
     const blockStorageMigrationScheduledNotification = notificationFactory.build(
       {
@@ -938,17 +945,17 @@ export const handlers = [
     return res(
       ctx.json(
         makeResourcePage([
-          // pastDueBalance,
-          // ...notificationFactory.buildList(1),
+          pastDueBalance,
+          ...notificationFactory.buildList(1),
           // gdprNotification,
-          // generalGlobalNotice,
-          // outageNotification,
-          // minorSeverityNotification,
-          // criticalSeverityNotification,
+          generalGlobalNotice,
+          outageNotification,
+          minorSeverityNotification,
+          criticalSeverityNotification,
           // abuseTicket,
-          // emailBounce,
-          // migrationNotification,
-          // balanceNotification,
+          emailBounce,
+          migrationNotification,
+          balanceNotification,
           blockStorageMigrationScheduledNotification,
           blockStorageMigrationImminentNotification,
         ])

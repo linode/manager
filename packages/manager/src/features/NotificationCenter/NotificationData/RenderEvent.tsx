@@ -1,37 +1,47 @@
 import { Event } from '@linode/api-v4/lib/account/types';
 import classNames from 'classnames';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import EntityIcon, { Variant } from 'src/components/EntityIcon';
-import Grid from 'src/components/Grid';
 import { Link } from 'src/components/Link';
-import { isLongPendingEvent } from 'src/store/events/event.helpers';
-import formatDate from 'src/utilities/formatDate';
+import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
+import { parseAPIDate } from 'src/utilities/date';
 import useEventInfo from './useEventInfo';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: 2,
-    paddingBottom: 2,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    width: '100%',
   },
   icon: {
-    '& svg': {
-      height: 20,
-      width: 20,
+    height: 40,
+    minWidth: 40,
+    marginRight: 20,
+  },
+  event: {
+    color: '#888f91',
+    '&:hover': {
+      backgroundColor: '#f4f5f6',
+      cursor: 'pointer',
+      marginLeft: -20,
+      marginRight: -20,
+      paddingLeft: 20,
+      paddingRight: 20,
+      width: 'calc(100% + 40px)',
+      '& a': {
+        textDecoration: 'none',
+      },
     },
   },
   eventMessage: {
-    '&:hover': {
-      textDecoration: 'underline',
-    },
-  },
-  timeStamp: {
-    textAlign: 'right',
+    marginTop: 2,
   },
   unseenEvent: {
-    fontWeight: 'bold',
+    color: '#32363c',
+    textDecoration: 'none',
   },
 }));
 
@@ -40,13 +50,12 @@ interface Props {
   onClose: () => void;
 }
 
-export type CombinedProps = Props;
-
 export const RenderEvent: React.FC<Props> = (props) => {
-  const { event, onClose } = props;
   const classes = useStyles();
 
-  const { message, duration, type, status, linkTarget } = useEventInfo(event);
+  const { event, onClose } = props;
+  const { message, linkTarget } = useEventInfo(event);
+
   if (message === null) {
     return null;
   }
@@ -55,55 +64,38 @@ export const RenderEvent: React.FC<Props> = (props) => {
     <Typography
       className={classNames({
         [classes.unseenEvent]: !event.seen,
-        [classes.eventMessage]: !!linkTarget,
       })}
     >
       {message}
-      {event.duration && !isLongPendingEvent(event)
-        ? event.status === 'failed'
-          ? ` (Failed after ${duration})`
-          : ` (Completed in ${duration})`
-        : null}
     </Typography>
   );
 
   return (
     <>
-      <Grid
-        container
-        className={classes.root}
-        justifyContent="space-between"
+      <Box
+        className={classNames({
+          [classes.root]: true,
+          [classes.event]: !!linkTarget,
+        })}
+        display="flex"
         data-test-id={event.action}
       >
-        <Grid item xs={8}>
-          <Grid container wrap="nowrap">
-            <Grid item>
-              <EntityIcon
-                className={classes.icon}
-                variant={type as Variant}
-                status={status}
-                size={25}
-              />
-            </Grid>
-            <Grid item>
-              {linkTarget ? (
-                <Link to={linkTarget} onClick={onClose}>
-                  {eventMessage}
-                </Link>
-              ) : (
-                eventMessage
-              )}
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs={4} className={classes.timeStamp}>
+        <GravatarIcon username={event.username} className={classes.icon} />
+        <div className={classes.eventMessage}>
+          {linkTarget ? (
+            <Link to={linkTarget} onClick={onClose}>
+              {eventMessage}
+            </Link>
+          ) : (
+            eventMessage
+          )}
           <Typography
             className={classNames({ [classes.unseenEvent]: !event.seen })}
           >
-            {formatDate(event.created)}
+            {parseAPIDate(event.created).toRelative()}
           </Typography>
-        </Grid>
-      </Grid>
+        </div>
+      </Box>
       <Divider />
     </>
   );
