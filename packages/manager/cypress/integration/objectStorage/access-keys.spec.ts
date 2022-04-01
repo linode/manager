@@ -1,4 +1,3 @@
-import { makeTestLabel } from '../../support/api/common';
 import { createBucket } from '../../support/api/objectStorage';
 import {
   containsVisible,
@@ -7,10 +6,11 @@ import {
   getClick,
   getVisible,
 } from '../../support/helpers';
+import { randomLabel } from 'support/util/random';
 
 describe('access keys', () => {
   it('create access key', () => {
-    const bucketLabel = 'cy-test-' + makeTestLabel();
+    const bucketLabel = 'cy-test-' + randomLabel();
     const accessKeyLabel = 'cy-test-key';
     const clusterId = 'us-east-1';
     // catch create access key request

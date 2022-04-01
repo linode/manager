@@ -109,7 +109,7 @@ export const randomString = (
  *
  * @param length - Length of random label, not including length of test entity prefix.
  *
- * @return Random test label.
+ * @returns Random test label.
  */
 export const randomLabel = (length: number = 10): string => {
   const randomStringOptions = {
@@ -139,4 +139,17 @@ export const randomDomainName = (length: number = 10): string => {
   const tlds = ['net', 'com', 'org'];
 
   return `${randomLabel(length)}.${randomItem(tlds)}`;
+};
+
+/**
+ * Returns a random IPv4 address.
+ *
+ * @example
+ * randomIp(); // Example output: `3.196.83.89`
+ *
+ * @returns Random IPv4 address.
+ */
+export const randomIp = () => {
+  const randomOctet = () => randomNumber(0, 254);
+  return `${randomOctet()}.${randomOctet()}.${randomOctet()}.${randomOctet()}`;
 };

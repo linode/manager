@@ -1,5 +1,4 @@
 import { Linode } from '../../../../api-v4/lib/linodes/types';
-import { makeImageLabel } from '../../support/api/images';
 import { createLinode, deleteLinodeById } from '../../support/api/linodes';
 import {
   containsClick,
@@ -8,6 +7,7 @@ import {
   getClick,
   getVisible,
 } from '../../support/helpers';
+import { randomLabel } from 'support/util/random';
 
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
@@ -53,7 +53,7 @@ describe('create image', () => {
       getVisible('[data-qa-header]').within(() => {
         fbtVisible('Images');
       });
-      const imageLabel = makeImageLabel();
+      const imageLabel = randomLabel();
       getVisible('[data-qa-header]').within(() => {
         fbtVisible('Images');
       });

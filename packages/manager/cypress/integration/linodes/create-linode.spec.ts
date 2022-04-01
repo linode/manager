@@ -1,5 +1,3 @@
-import strings from '../../support/cypresshelpers';
-import { makeLinodeLabel } from '../../support/api/linodes';
 import { assertToast } from '../../support/ui/events';
 import {
   containsClick,
@@ -9,11 +7,12 @@ import {
   getClick,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
+import { randomString, randomLabel } from 'support/util/random';
 
 describe('create linode', () => {
   it('creates a nanode', () => {
-    const rootpass = strings.randomPass();
-    const linodeLabel = makeLinodeLabel();
+    const rootpass = randomString(32);
+    const linodeLabel = randomLabel();
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');

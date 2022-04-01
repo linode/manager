@@ -118,5 +118,3 @@ export const isTestEntity = (entity) =>
 export const isTestLabel = (label: string) => {
   return label.startsWith(testNamePrefix);
 };
-
-export const makeTestLabel = () => testNamePrefix + strings.randomTitle(10);

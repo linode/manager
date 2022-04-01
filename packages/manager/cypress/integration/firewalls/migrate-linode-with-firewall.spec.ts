@@ -10,7 +10,7 @@ import {
   containsVisible,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
-import { randomTitle } from 'cypress/support/cypresshelpers';
+import { randomString} from 'support/util/random';
 
 const fakeRegionsData = {
   data: [
@@ -165,7 +165,7 @@ describe('Migrate Linode With Firewall', () => {
       cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
     };
 
-    const firewallLabel = `cy-test-firewall-${randomTitle(5)}`;
+    const firewallLabel = `cy-test-firewall-${randomString(5)}`;
     // intercept create firewall request
     cy.intercept('POST', `*/networking/firewalls`).as('createFirewall');
     // modify incoming response
@@ -233,7 +233,7 @@ describe('Migrate Linode With Firewall', () => {
   });
 
   it('adds linode to firewall - real data, ', () => {
-    const firewallLabel = `cy-test-firewall-${randomTitle(5)}`;
+    const firewallLabel = `cy-test-firewall-${randomString(5)}`;
     // intercept create firewall request
     cy.intercept('POST', '*/networking/firewalls').as('createFirewall');
     // modify incoming response
