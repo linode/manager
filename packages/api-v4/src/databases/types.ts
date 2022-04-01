@@ -99,6 +99,15 @@ interface ConnectionStrings {
   value: string;
 }
 
+export type UpdatesFrequency = 'weekly' | 'monthly';
+export interface UpdatesSchedule {
+  frequency: UpdatesFrequency;
+  duration: number;
+  hour: number;
+  day: number;
+  week: number | null;
+}
+
 // Database is the interface for the shape of data returned by /databases/{engine}/instances
 export interface Database {
   id: number;
@@ -120,11 +129,13 @@ export interface Database {
   updated: string;
   hosts: DatabaseHosts;
   port: number;
+  updates: UpdatesSchedule;
 }
 
 export interface UpdateDatabasePayload {
   label?: string;
   allow_list?: string[];
+  updates?: UpdatesSchedule;
 }
 
 export interface UpdateDatabaseResponse {

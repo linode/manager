@@ -8,6 +8,7 @@ import AccessControls from '../AccessControls';
 import DatabaseSettingsDeleteClusterDialog from './DatabaseSettingsDeleteClusterDialog';
 import DatabaseSettingsMenuItem from './DatabaseSettingsMenuItem';
 import DatabaseSettingsResetPasswordDialog from './DatabaseSettingsResetPasswordDialog';
+import MaintenanceWindow from './MaintenanceWindow';
 
 interface Props {
   database: Database;
@@ -16,6 +17,11 @@ interface Props {
 export const DatabaseSettings: React.FC<Props> = (props) => {
   const { database } = props;
   const { data: profile } = useProfile();
+
+  // const {
+  //   mutateAsync: updateDatabase,
+  //   isLoading: databaseUpdating,
+  // } = useDatabaseMutation(database.engine, database.id);
 
   const accessControlCopy = (
     <Typography>
@@ -71,6 +77,8 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           disabled={Boolean(profile?.restricted)}
           onClick={onDeleteCluster}
         />
+        <Divider spacingTop={22} spacingBottom={22} />
+        <MaintenanceWindow database={database} timezone={profile?.timezone} />
       </Paper>
       <DatabaseSettingsDeleteClusterDialog
         open={isDeleteDialogOpen}
