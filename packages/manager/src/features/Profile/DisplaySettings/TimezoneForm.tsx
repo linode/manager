@@ -27,12 +27,8 @@ const styles = (theme: Theme) =>
         flexDirection: 'column',
       },
     },
-    copy: {
-      marginTop: 8,
-      maxWidth: 415,
-    },
     button: {
-      minWidth: 165,
+      minWidth: 180,
       [theme.breakpoints.up('md')]: {
         marginTop: 16,
       },
@@ -185,22 +181,16 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           justifyContent="space-between"
           className={classes.root}
         >
-          <div>
-            <Select
-              options={timezoneList}
-              placeholder={'Choose a Timezone'}
-              errorText={timezoneError}
-              onChange={this.handleTimezoneChange}
-              data-qa-tz-select
-              defaultValue={defaultTimeZone}
-              isClearable={false}
-              label="Timezone"
-            />
-            <Typography className={classes.copy} variant="body1" data-qa-copy>
-              This setting converts the dates and times displayed in the Linode
-              Manager to a timezone of your choice.{' '}
-            </Typography>
-          </div>
+          <Select
+            options={timezoneList}
+            placeholder={'Choose a Timezone'}
+            errorText={timezoneError}
+            onChange={this.handleTimezoneChange}
+            data-qa-tz-select
+            defaultValue={defaultTimeZone}
+            isClearable={false}
+            label="Timezone"
+          />
           <ActionsPanel>
             <Button
               className={classes.button}
