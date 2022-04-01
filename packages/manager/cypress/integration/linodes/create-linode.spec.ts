@@ -1,12 +1,12 @@
-import { assertToast } from '../../support/ui/events';
+import { assertToast } from 'support/ui/events';
 import {
   containsClick,
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
-} from '../../support/helpers';
-import { selectRegionString } from '../../support/ui/constants';
+} from 'support/helpers';
+import { selectRegionString } from 'support/ui/constants';
 import { randomString, randomLabel } from 'support/util/random';
 
 describe('create linode', () => {

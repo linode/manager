@@ -1,11 +1,11 @@
-import { createBucket } from '../../support/api/objectStorage';
+import { createBucket } from 'support/api/objectStorage';
 import {
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 import { randomLabel } from 'support/util/random';
 
 describe('access keys', () => {

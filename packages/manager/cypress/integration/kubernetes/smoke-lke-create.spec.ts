@@ -4,8 +4,8 @@ import {
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
-import { selectRegionString } from '../../support/ui/constants';
+} from 'support/helpers';
+import { selectRegionString } from 'support/ui/constants';
 import { randomLabel } from 'support/util/random';
 
 const multipleClick = (

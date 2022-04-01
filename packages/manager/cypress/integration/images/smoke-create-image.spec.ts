@@ -1,12 +1,12 @@
-import { Linode } from '../../../../api-v4/lib/linodes/types';
-import { createLinode, deleteLinodeById } from '../../support/api/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 import { randomLabel } from 'support/util/random';
 
 describe('create image', () => {

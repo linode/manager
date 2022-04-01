@@ -1,20 +1,17 @@
 import {
-  deleteNodeBalancerByLabel,
-  makeNodeBalLabel,
   testNodeBalTag,
-} from '../../support/api/nodebalancers';
+} from 'support/api/nodebalancers';
 import {
   createLinode,
-  deleteLinodeById,
-} from '../../support/api/linodes';
-import { selectRegionString } from '../../support/ui/constants';
+} from 'support/api/linodes';
+import { selectRegionString } from 'support/ui/constants';
 import {
   containsClick,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 import { randomLabel } from 'support/util/random';
 
 const deployNodeBalancer = () => {

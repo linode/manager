@@ -1,11 +1,11 @@
-/* eslint-disable sonarjs/no-duplicate-string */
+import { LongviewClient } from '@linode/api-v4';
 import { randomLabel, randomString } from 'support/util/random';
 import { createLinode } from '../../support/api/linodes';
 import { createClient } from '../../support/api/longview';
 import { containsVisible, fbtVisible, getVisible } from '../../support/helpers';
 import { waitForAppLoad } from '../../support/ui/common';
-import { LongviewClient } from '@linode/api-v4';
 
+/* eslint-disable sonarjs/no-duplicate-string */
 describe('longview', () => {
   it('tests longview', () => {
     const linodePassword = randomString(32);
