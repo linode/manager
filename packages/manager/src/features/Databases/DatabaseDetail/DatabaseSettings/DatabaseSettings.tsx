@@ -18,11 +18,6 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
   const { database } = props;
   const { data: profile } = useProfile();
 
-  // const {
-  //   mutateAsync: updateDatabase,
-  //   isLoading: databaseUpdating,
-  // } = useDatabaseMutation(database.engine, database.id);
-
   const accessControlCopy = (
     <Typography>
       Add or remove IPv4 addresses or ranges that should be authorized to access
