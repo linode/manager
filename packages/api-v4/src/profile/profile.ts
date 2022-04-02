@@ -1,5 +1,5 @@
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import { Grants } from '../account';
 import Request, {
   setData,

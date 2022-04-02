@@ -29,8 +29,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\"",
-    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"esbuild src/*.ts src/**/index.ts --outdir=lib --watch\"",
+    "build": "concurrently --raw \"tsc\" \"esbuild src/*.ts src/**/*.ts --outdir=lib\"",
     "build:node": "yarn build --config webpack.node.config.js",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
@@ -59,6 +59,7 @@
     "axios-mock-adapter": "^1.18.1",
     "babel-plugin-module-resolver": "^4.0.0",
     "concurrently": "^4.1.1",
+    "esbuild": "^0.14.30",
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
