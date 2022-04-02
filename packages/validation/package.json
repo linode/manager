@@ -2,7 +2,7 @@
   "name": "@linode/validation",
   "version": "0.8.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
-  "main": "./index.js",
+  "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
     "index.js",

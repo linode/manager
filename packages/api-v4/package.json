@@ -17,9 +17,9 @@
   "license": "Apache-2.0",
   "private": false,
   "main": "./index.node.js",
-  "browser": "./index.js",
+  "browser": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "unpkg": "./index.js",
+  "unpkg": "./lib/index.js",
   "dependencies": {
     "@linode/validation": "0.8.0",
     "@types/yup": "^0.29.13",
