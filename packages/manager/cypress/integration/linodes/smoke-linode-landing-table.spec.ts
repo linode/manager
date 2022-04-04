@@ -215,10 +215,10 @@ describe('linode landing checks', () => {
   it('checks the action menu items', () => {
     const label = linodeLabel(1);
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      fbtVisible('Power Off');
-      fbtVisible('Reboot');
-      getClick(`[aria-label="Action menu for Linode ${label}"]`);
+      cy.findByLabelText(`Action menu for Linode ${label}`).click();
     });
+    getVisible('[data-qa-action-menu-item="Power Off"]');
+    getVisible('[data-qa-action-menu-item="Reboot"]');
     getVisible('[data-qa-action-menu-item="Launch LISH Console"]');
     getVisible('[data-qa-action-menu-item="Clone"]');
     getVisible('[data-qa-action-menu-item="Resize"]');
