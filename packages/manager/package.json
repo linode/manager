@@ -104,7 +104,7 @@
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
     "build": "node scripts/build.js",
     "precommit": "lint-staged && yarn typecheck",
-    "test": "jest --color --maxWorkers=60%",
+    "test": "jest --color --maxWorkers=4",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
