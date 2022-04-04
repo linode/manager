@@ -14,8 +14,6 @@ const props: RowProps = {
   type: 'linode',
   created: '2018-01-01',
   username: null,
-  duration: 0,
-  history,
 };
 
 describe('EventRow component', () => {
@@ -28,14 +26,6 @@ describe('EventRow component', () => {
   it("shouldn't render events without a message", () => {
     const emptyMessageProps = { ...props, message: undefined };
     expect(Row(emptyMessageProps)).toBeNull();
-  });
-
-  it("should only render an entity icon if it's not an events page for a specific entity", () => {
-    row.setProps({ entityId: 1 });
-    expect(row.find('[data-qa-entity-icon]')).toHaveLength(0);
-
-    row.setProps({ entityId: 0 });
-    expect(row.find('[data-qa-entity-icon]')).toHaveLength(1);
   });
 
   it('should display the message with a username if one exists', () => {
