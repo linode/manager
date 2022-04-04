@@ -161,18 +161,18 @@ export const permTuplesToScopeString = (
   return joinedTups.join(' ');
 };
 
+/**
+ * Determines whether permission scopes all have the same access level.
+ *
+ * If all scopes have the same access level, the numeric access level is
+ * returned. Otherwise, `null` is returned.
+ *
+ * @param scopes - Permission scopes for which to check access levels.
+ *
+ * @returns Access level for the given scopes if they are all the same; `null` otherwise.
+ */
 export const allScopesAreTheSame = (scopes: Permission[]) => {
-  const result = scopes.reduce((acc, scope) => {
-    if (acc === null) {
-      return null;
-    } else if (acc === scope[1] || acc === undefined) {
-      return scope[1];
-    } else {
-      return null;
-    }
-  }, undefined);
-  if (result === undefined) {
-    return null;
-  }
-  return result;
+  const sample = scopes[0];
+  const scopeMatches = (scope: Permission) => scope[1] === sample[1];
+  return scopes.slice(1).every(scopeMatches) ? sample[1] : null;
 };
