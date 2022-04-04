@@ -10,10 +10,7 @@ import withImagesContainer, {
   WithImages,
 } from 'src/containers/withImages.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import {
-  filterImagesByType,
-  filterOutKubeImages,
-} from 'src/store/image/image.helpers';
+import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel';
 
 type CombinedProps = WithImages & RouteComponentProps<{}, any, any>;
@@ -61,7 +58,7 @@ export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
 export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: filterOutKubeImages(filterImagesByType(imagesData, 'public')),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
     imagesError,
   }))
