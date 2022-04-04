@@ -19,9 +19,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TabList: React.FC<TabListProps> = (props) => {
+const TabList: React.FC<TabListProps> = ({ children, ...rest }) => {
   const classes = useStyles();
-  const { children, ...rest } = props;
 
   return (
     <ReachTabList className={classes.tabList} {...rest}>

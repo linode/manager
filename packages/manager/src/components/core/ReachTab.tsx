@@ -34,9 +34,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Tab: React.FC<TabProps> = (props) => {
+const Tab: React.FC<TabProps> = ({ children, ...rest }) => {
   const classes = useStyles();
-  const { children, ...rest } = props;
 
   return (
     <ReachTab className={classes.tab} {...rest}>

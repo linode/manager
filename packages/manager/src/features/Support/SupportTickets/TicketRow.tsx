@@ -37,9 +37,8 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-const TicketRow: React.FC<Props> = (props) => {
+const TicketRow: React.FC<Props> = ({ ticket }) => {
   const classes = useStyles();
-  const { ticket } = props;
 
   return (
     <TableRow
