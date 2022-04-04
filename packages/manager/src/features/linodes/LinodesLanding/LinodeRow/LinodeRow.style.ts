@@ -74,6 +74,7 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
     },
     ipCell: {
+      paddingRight: 0,
       width: '14%',
     },
     ipCellWrapper: {
