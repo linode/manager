@@ -29,6 +29,9 @@ import EventRow from './EventRow';
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing(),
+    },
   },
   noMoreEvents: {
     padding: theme.spacing(4),
@@ -287,7 +290,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
             <TableCell className={classes.columnHeader}>
               Relative Date
             </TableCell>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableCell
                 className={classes.columnHeader}
                 data-qa-events-time-header

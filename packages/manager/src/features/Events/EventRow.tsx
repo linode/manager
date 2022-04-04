@@ -115,7 +115,7 @@ export const Row: React.FC<RowProps> = (props) => {
       <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
           <DateTimeDisplay value={created} />
         </TableCell>
