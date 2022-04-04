@@ -9,41 +9,42 @@ import BillingActivityPanel, {
   makeFilter,
 } from './BillingActivityPanel';
 import { DateTime } from 'luxon';
-jest.mock('../../../../utilities/getUserTimezone');
 
-// Mock global Date object so Transaction Date tests are deterministic.
-global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());
+const mockInvoices = [
+  invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
+  invoiceFactory.build({ date: '2019-12-01T00:00:00' }),
+];
 
-jest.mock('@linode/api-v4/lib/account', () => {
-  const invoices = [
-    // eslint-disable-next-line
-    invoiceFactory.build({ date: '2020-01-01T00:00:00' }),
-    // eslint-disable-next-line
-    invoiceFactory.build({ date: '2019-12-01T00:00:00' }),
-  ];
-  const payments = [
-    paymentFactory.build({ date: '2020-01-01T00:00:00' }),
-    paymentFactory.build({ date: '2019-12-01T00:00:00' }),
-  ];
+const mockPayments = [
+  paymentFactory.build({ date: '2020-01-01T00:00:00' }),
+  paymentFactory.build({ date: '2019-12-01T00:00:00' }),
+];
 
-  return {
-    getInvoices: jest.fn().mockResolvedValue({
-      results: 2,
-      page: 1,
-      pages: 1,
-      data: invoices,
-    }),
-    getPayments: jest.fn().mockResolvedValue({
-      results: 2,
-      page: 1,
-      pages: 1,
-      data: payments,
-    }),
-  };
-});
-jest.mock('src/components/EnhancedSelect/Select');
+describe.skip('BillingActivityPanel', () => {
+  jest.mock('../../../../utilities/getUserTimezone');
 
-describe('BillingActivityPanel', () => {
+  // Mock global Date object so Transaction Date tests are deterministic.
+  global.Date.now = jest.fn(() => new Date('2020-01-02T00:00:00').getTime());
+
+  jest.mock('@linode/api-v4/lib/account', () => {
+    return {
+      getInvoices: jest.fn().mockResolvedValue({
+        results: 2,
+        page: 1,
+        pages: 1,
+        data: mockInvoices,
+      }),
+      getPayments: jest.fn().mockResolvedValue({
+        results: 2,
+        page: 1,
+        pages: 1,
+        data: mockPayments,
+      }),
+    };
+  });
+
+  jest.mock('src/components/EnhancedSelect/Select');
+
   it('renders the header and appropriate rows', async () => {
     const { getByText } = renderWithTheme(<BillingActivityPanel />);
     await waitFor(() => {

@@ -6,11 +6,9 @@ import { notificationFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { EmailBounceNotificationSection } from './EmailBounce';
 
-const mockUpdateAccountInfo = jest.spyOn(account, 'updateAccountInfo');
-const mockUpdateProfile = jest.spyOn(profile, 'updateProfile');
-
 describe('EmailBounceNotificationSection', () => {
   it.skip('renders an account email bounce notice', async () => {
+    const mockUpdateAccountInfo = jest.spyOn(account, 'updateAccountInfo');
     const { getByTestId, queryByTestId } = renderWithTheme(
       <EmailBounceNotificationSection />,
       {
@@ -43,6 +41,7 @@ describe('EmailBounceNotificationSection', () => {
   });
 
   it.skip('renders an profile email bounce notice', async () => {
+    const mockUpdateProfile = jest.spyOn(profile, 'updateProfile');
     const { getByTestId, queryByTestId } = renderWithTheme(
       <EmailBounceNotificationSection />,
       {

@@ -1,22 +1,21 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-
 import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { StackScriptsLanding } from './StackScriptsLanding';
 
-jest.mock('src/hooks/useReduxLoad', () => ({
-  useReduxLoad: jest.fn().mockReturnValue({ _loading: false }),
-}));
+describe.skip('StackScripts Landing', () => {
+  jest.mock('src/hooks/useReduxLoad', () => ({
+    useReduxLoad: jest.fn().mockReturnValue({ _loading: false }),
+  }));
 
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn().mockResolvedValue({}),
-}));
+  jest.mock('@linode/api-v4/lib/account', () => ({
+    getUsers: jest.fn().mockResolvedValue({}),
+  }));
 
-const normalizedImages = normalizeEntities(imageFactory.buildList(10));
+  const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 
-describe('StackScripts Landing', () => {
   const { getByText } = render(
     wrapWithTheme(
       <StackScriptsLanding

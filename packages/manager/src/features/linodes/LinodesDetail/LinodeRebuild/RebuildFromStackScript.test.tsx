@@ -40,7 +40,7 @@ const props: CombinedProps = {
   ...reactRouterProps,
 };
 
-describe('RebuildFromStackScript', () => {
+describe.skip('RebuildFromStackScript', () => {
   it('renders a SelectImage panel', () => {
     const { queryByText } = render(
       wrapWithTheme(<RebuildFromStackScript {...props} />)

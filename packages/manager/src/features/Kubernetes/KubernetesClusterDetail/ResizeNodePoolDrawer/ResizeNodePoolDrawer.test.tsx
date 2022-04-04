@@ -17,10 +17,10 @@ const props: Props = {
   isSubmitting: false,
 };
 
-const useTypes = jest.fn().mockReturnValue({ types: { entities: _types } });
+const mockUseTypes = jest.fn().mockReturnValue({ types: { entities: _types } });
 
 jest.mock('src/hooks/useTypes', () => ({
-  useTypes: () => useTypes(),
+  useTypes: () => mockUseTypes(),
 }));
 
 describe('ResizeNodePoolDrawer', () => {

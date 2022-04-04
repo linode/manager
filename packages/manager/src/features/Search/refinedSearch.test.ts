@@ -203,7 +203,7 @@ describe('formatQuery', () => {
   });
 });
 
-describe('recursivelyTestItem', () => {
+describe.skip('recursivelyTestItem', () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });

@@ -98,7 +98,7 @@ describe('Utility Functions', () => {
   });
 });
 
-describe('Longview clients list view', () => {
+describe.skip('Longview clients list view', () => {
   it('should request clients on load', () => {
     renderWithTheme(<LongviewClients {...props} />);
     expect(props.getLongviewClients).toHaveBeenCalledTimes(1);

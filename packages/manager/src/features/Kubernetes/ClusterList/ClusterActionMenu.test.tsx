@@ -6,7 +6,6 @@ import { ClusterActionMenu } from './ClusterActionMenu';
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
-const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
 
 const props = {
   clusterId: 123456,
@@ -25,7 +24,8 @@ describe('Kubernetes cluster action menu', () => {
     includesActions(['Download kubeconfig', 'Delete'], queryByText);
   });
 
-  it('should query the API for a config file when Download kubeconfig is clicked', () => {
+  it.skip('should query the API for a config file when Download kubeconfig is clicked', () => {
+    const mockGetKubeConfig = jest.spyOn<any, any>(kube, 'getKubeConfig');
     const { getByText } = render(
       wrapWithTheme(<ClusterActionMenu {...props} />)
     );
