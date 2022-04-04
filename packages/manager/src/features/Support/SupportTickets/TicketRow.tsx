@@ -1,35 +1,23 @@
-import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { SupportTicket } from '@linode/api-v4/lib/support';
+import { Link } from 'react-router-dom';
+import { makeStyles } from 'src/components/core/styles';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
+
+const useStyles = makeStyles(() => ({
+  regarding: {
+    lineHeight: 1.1,
+  },
+}));
 
 interface Props {
   ticket: SupportTicket;
 }
-
-type ClassNames = 'summary' | 'regarding';
-
-const styles = () =>
-  createStyles({
-    summary: {
-      lineHeight: 1.1,
-    },
-    regarding: {
-      lineHeight: 1.1,
-    },
-  });
-
-type CombinedProps = Props & WithStyles<ClassNames>;
 
 const renderEntityLink = (ticket: SupportTicket) => {
   const target = getLinkTargets(ticket.entity);
@@ -49,8 +37,10 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-const TicketRow: React.FC<CombinedProps> = (props) => {
-  const { ticket, classes } = props;
+const TicketRow: React.FC<Props> = (props) => {
+  const classes = useStyles();
+  const { ticket } = props;
+
   return (
     <TableRow
       data-qa-support-ticket={ticket.id}
@@ -59,16 +49,11 @@ const TicketRow: React.FC<CombinedProps> = (props) => {
       ariaLabel={`Ticket subject ${ticket.summary}`}
     >
       <TableCell data-qa-support-subject>
-        <Link to={`/support/tickets/${ticket.id}`}>
-          <Typography variant="h3" className={classes.summary}>
-            {ticket.summary}
-          </Typography>
-        </Link>
+        <Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link>
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
-
       <TableCell data-qa-support-entity className={classes.regarding}>
         {renderEntityLink(ticket)}
       </TableCell>
@@ -87,6 +72,4 @@ const TicketRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(TicketRow);
+export default TicketRow;
