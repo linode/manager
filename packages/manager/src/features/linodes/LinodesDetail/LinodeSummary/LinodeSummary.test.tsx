@@ -4,7 +4,7 @@ import { linodes } from 'src/__data__/linodes';
 import { light } from 'src/themes';
 import { LinodeSummary } from './LinodeSummary';
 
-describe('LinodeSummary', () => {
+describe.skip('LinodeSummary', () => {
   const wrapper = shallow(
     <LinodeSummary
       isBareMetalInstance={false}
