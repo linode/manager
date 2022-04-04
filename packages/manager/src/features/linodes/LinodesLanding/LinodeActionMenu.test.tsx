@@ -1,16 +1,16 @@
-import * as React from 'react';
 import { screen } from '@testing-library/react';
-import { extendedTypes } from 'src/__data__/ExtendedType';
-import { regionFactory } from 'src/factories/regions';
+import * as React from 'react';
 import { linodeBackupsFactory } from 'src/factories/linodes';
+import { regionFactory } from 'src/factories/regions';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
+import { extendedTypes } from 'src/__data__/ExtendedType';
 import LinodeActionMenu, {
   buildQueryStringForLinodeClone,
   Props,
 } from './LinodeActionMenu';
 
 const props: Props = {
-  inTableContext: true,
+  inListView: true,
   linodeId: 1,
   linodeRegion: 'us-east',
   linodeBackups: linodeBackupsFactory.build(),
@@ -54,7 +54,7 @@ describe('LinodeActionMenu', () => {
         <LinodeActionMenu
           {...props}
           linodeStatus="offline"
-          inTableContext={false}
+          inListView={false}
         />
       );
       expect(
