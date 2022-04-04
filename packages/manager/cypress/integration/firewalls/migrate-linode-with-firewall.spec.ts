@@ -10,7 +10,7 @@ import {
   containsVisible,
 } from '../../support/helpers';
 import { selectRegionString } from '../../support/ui/constants';
-import { randomString} from 'support/util/random';
+import { randomString } from 'support/util/random';
 
 const fakeRegionsData = {
   data: [
