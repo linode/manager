@@ -102,11 +102,11 @@ export const Row: React.FC<RowProps> = (props) => {
       ariaLabel={`Event ${displayedMessage}`}
       className={link ? classes.row : ''}
     >
-      <TableCell data-qa-event-icon-cell>
-        <Hidden smDown>
+      <Hidden xsDown>
+        <TableCell data-qa-event-icon-cell>
           <GravatarIcon username={username} className={classes.icon} />
-        </Hidden>
-      </TableCell>
+        </TableCell>
+      </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
           {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
@@ -115,9 +115,11 @@ export const Row: React.FC<RowProps> = (props) => {
       <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}
       </TableCell>
-      <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
-        <DateTimeDisplay value={created} />
-      </TableCell>
+      <Hidden xsDown>
+        <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
+          <DateTimeDisplay value={created} />
+        </TableCell>
+      </Hidden>
     </TableRow>
   );
 };

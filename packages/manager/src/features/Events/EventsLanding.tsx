@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -37,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
     minWidth: 200,
     paddingLeft: 10,
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    },
   },
   columnHeader: {
     fontFamily: theme.font.bold,
@@ -271,7 +275,9 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
-            <TableCell style={{ padding: 0, width: '1%' }} />
+            <Hidden xsDown>
+              <TableCell style={{ padding: 0, width: '1%' }} />
+            </Hidden>
             <TableCell
               data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
@@ -281,12 +287,14 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
             <TableCell className={classes.columnHeader}>
               Relative Date
             </TableCell>
-            <TableCell
-              className={classes.columnHeader}
-              data-qa-events-time-header
-            >
-              Absolute Date
-            </TableCell>
+            <Hidden xsDown>
+              <TableCell
+                className={classes.columnHeader}
+                data-qa-events-time-header
+              >
+                Absolute Date
+              </TableCell>
+            </Hidden>
           </TableRow>
         </TableHead>
         <TableBody>
