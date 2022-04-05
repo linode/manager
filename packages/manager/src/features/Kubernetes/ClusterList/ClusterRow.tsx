@@ -97,6 +97,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
             {cluster.k8s_version}
             {hasUpgrade ? (
               <Chip
+                variant="clickable"
                 className={classes.chip}
                 onClick={openUpgradeDialog}
                 label="UPGRADE"

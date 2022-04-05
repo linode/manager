@@ -23,28 +23,12 @@ export const useStyles = makeStyles((theme: Theme) => ({
     alignSelf: 'center',
   },
   chip: {
-    borderRadius: 1,
-    fontSize: '0.65rem',
     marginTop: 0,
     marginBottom: 0,
     marginLeft: theme.spacing(2),
     minHeight: theme.spacing(2),
     paddingLeft: theme.spacing(0.5),
     paddingRight: theme.spacing(0.5),
-  },
-  forceUpgradeChip: {
-    backgroundColor: theme.name === 'lightTheme' ? '#e5f1ff' : '#415d81',
-    '&:hover': {
-      backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#374863',
-    },
-  },
-  upgradePendingChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #ccc',
-  },
-  nvmeChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #02B159',
   },
 }));
 
@@ -131,7 +115,9 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
               {isNVMe ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.nvmeChip}`}
+                    variant="outlined"
+                    outlineColor="green"
+                    className={classes.chip}
                     label="NVMe"
                     data-testid="nvme-chip"
                   />
@@ -141,7 +127,8 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                 !nvmeUpgradeScheduledByUserImminent ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.forceUpgradeChip}`}
+                    variant="clickable"
+                    className={classes.chip}
                     label="UPGRADE TO NVMe"
                     onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
@@ -152,7 +139,9 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                   nvmeUpgradeScheduledByUserInProgress) ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.upgradePendingChip}`}
+                    variant="outlined"
+                    outlineColor="gray"
+                    className={classes.chip}
                     label="UPGRADE PENDING"
                     data-testid="upgrading-chip"
                   />

@@ -59,7 +59,9 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
       <>
         {`Primary +${cluster_size - 1}`}
         <Chip
-          className={`${chipClasses.chip} ${chipClasses.nvmeChip}`}
+          variant="outlined"
+          outlineColor="green"
+          className={chipClasses.chip}
           label="HA"
         />
       </>
