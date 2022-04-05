@@ -26,9 +26,9 @@ export const updateDatabaseSchema = object({
     .shape({
       frequency: string().oneOf(['weekly', 'monthly']),
       duration: number(),
-      hour: number(),
-      day: number(),
-      week: number().nullable(true),
+      hour_of_day: number(),
+      day_of_week: number(),
+      week_of_month: number().nullable(true),
     })
     .nullable(true),
 });

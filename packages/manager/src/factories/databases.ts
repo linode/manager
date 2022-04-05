@@ -104,9 +104,9 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   updates: {
     frequency: 'weekly',
     duration: 3,
-    hour: 20,
-    day: 1,
-    week: null,
+    hour_of_day: 20,
+    day_of_week: 1,
+    week_of_month: null,
   },
 });
 

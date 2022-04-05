@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -52,14 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       alignSelf: 'flex-start',
     },
   },
-  helperContent: {
-    display: 'inline-flex',
-    alignItems: 'center',
-  },
   helpIcon: {
     padding: '0px 8px',
+    marginTop: '1.25rem',
   },
-  formControl: {
+  formControlDropdown: {
     marginRight: '3rem',
   },
 }));
@@ -77,8 +73,13 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
   >();
 
   // This will be set to `true` once a form field has been touched. This is used to disable the
-  // Save Changes" button unless there have been changes to the form.
+  // "Save Changes" button unless there have been changes to the form.
   const [formTouched, setFormTouched] = React.useState<boolean>(false);
+
+  const [
+    modifiedWeekSelectionMap,
+    setModifiedWeekSelectionMap,
+  ] = React.useState<{ label: string; value: number }[]>([]);
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -87,6 +88,30 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
     database.engine,
     database.id
   );
+
+  const weekSelectionModifier = (
+    day: string,
+    weekSelectionMap: { label: string; value: number }[]
+  ) => {
+    const modifiedMap = weekSelectionMap.map((weekSelectionElement) => {
+      return {
+        label: `${weekSelectionElement.label} ${day} of each month`,
+        value: weekSelectionElement.value,
+      };
+    });
+
+    setModifiedWeekSelectionMap(modifiedMap);
+  };
+
+  React.useEffect(() => {
+    // This is so that if a user loads the page and just changes to the Monthly frequency, the "Repeats on" field will be accurate.
+    const initialDay = database.updates?.day_of_week;
+    const dayOfWeek =
+      daySelectionMap.find((option) => option.value === initialDay) ??
+      daySelectionMap[0];
+
+    weekSelectionModifier(dayOfWeek.label, weekSelectionMap);
+  }, []);
 
   const handleSaveMaintenanceWindow = (
     values: UpdatesSchedule,
@@ -112,11 +137,11 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
   };
 
   const scheduledUpdateDay = daySelectionMap.find(
-    (thisOption) => thisOption.value === database.updates?.day
+    (thisOption) => thisOption.value === database.updates?.day_of_week
   );
 
   const scheduledUpdateHour = hourSelectionMap.find(
-    (thisOption) => thisOption.value === database.updates?.hour
+    (thisOption) => thisOption.value === database.updates?.hour_of_day
   );
 
   const utcOffsetInHours = timezone
@@ -134,10 +159,12 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
     initialValues: {
       frequency: database.updates?.frequency ?? 'weekly',
       duration: database.updates?.duration ?? 3,
-      hour: database.updates?.hour ?? 20,
-      day: database.updates?.day ?? 1,
-      week:
-        database.updates?.frequency === 'monthly' ? database.updates?.week : 1,
+      hour_of_day: database.updates?.hour_of_day ?? 20,
+      day_of_week: database.updates?.day_of_week ?? 1,
+      week_of_month:
+        database.updates?.frequency === 'monthly'
+          ? database.updates?.week_of_month
+          : 1,
     },
     // enableReinitialize: true,
     // validationSchema: updateDatabaseSchema,
@@ -163,6 +190,77 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
             Select the frequency, day, and time you&apos;d prefer maintenance to
             occur. On non-HA plans, there may be downtime during this window.
           </Typography>
+          <div>
+            <FormControl className={classes.formControlDropdown}>
+              <Select
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-weekday-select': true,
+                  },
+                }}
+                options={daySelectionMap}
+                defaultValue={scheduledUpdateDay?.value ?? 1}
+                value={daySelectionMap.find(
+                  (thisOption) => thisOption.value === values.day_of_week
+                )}
+                onChange={(e: Item) => {
+                  setFormTouched(true);
+                  setFieldValue('day_of_week', e.value);
+                  weekSelectionModifier(e.label, weekSelectionMap);
+                }}
+                label="Day of Week"
+                placeholder="Choose a day"
+                isClearable={false}
+                menuPlacement="top"
+                name="Day of Week"
+                error={touched.day_of_week && Boolean(errors.day_of_week)}
+                errorText={touched.day_of_week ? errors.day_of_week : undefined}
+                noMarginTop
+              />
+            </FormControl>
+            <FormControl className={classes.formControlDropdown}>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Select
+                  textFieldProps={{
+                    dataAttrs: {
+                      'data-qa-time-select': true,
+                    },
+                  }}
+                  options={hourSelectionMap}
+                  defaultValue={scheduledUpdateHour?.value ?? 20}
+                  value={hourSelectionMap.find(
+                    (thisOption) => thisOption.value === values.hour_of_day
+                  )}
+                  onChange={(e: Item) => {
+                    setFormTouched(true);
+                    setFieldValue('hour_of_day', +e.value);
+                  }}
+                  label="Time of Day (UTC)"
+                  placeholder="Choose a time"
+                  isClearable={false}
+                  menuPlacement="top"
+                  name="Time of Day"
+                  error={touched.hour_of_day && Boolean(errors.hour_of_day)}
+                  errorText={
+                    touched.hour_of_day ? errors.hour_of_day : undefined
+                  }
+                  noMarginTop
+                />
+                <HelpIcon
+                  interactive
+                  className={classes.helpIcon}
+                  text={
+                    <Typography>
+                      UTC is {utcOffsetText(utcOffsetInHours)} hours compared to
+                      your local timezone. Click{' '}
+                      <Link to="/profile/display">here</Link> to view or change
+                      your timezone settings.
+                    </Typography>
+                  }
+                />
+              </div>
+            </FormControl>
+          </div>
           <FormControl
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFormTouched(true);
@@ -185,100 +283,35 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
           </FormControl>
           <div>
             {values.frequency === 'monthly' ? (
-              <FormControl style={{ marginRight: '3rem', minWidth: '150px' }}>
+              <FormControl style={{ marginRight: '3rem', minWidth: '250px' }}>
                 <Select
                   textFieldProps={{
                     dataAttrs: {
                       'data-qa-week-in-month-select': true,
                     },
                   }}
-                  options={weekSelectionMap}
+                  options={modifiedWeekSelectionMap}
                   defaultValue={null}
-                  value={weekSelectionMap.find(
-                    (thisOption) => thisOption.value === values.week
+                  value={modifiedWeekSelectionMap.find(
+                    (thisOption) => thisOption.value === values.week_of_month
                   )}
                   onChange={(e: Item) => {
                     setFormTouched(true);
-                    setFieldValue('week', +e.value);
+                    setFieldValue('week_of_month', +e.value);
                   }}
-                  label="Week in the month"
-                  placeholder="Choose a week"
+                  label="Repeats on"
+                  placeholder="Repeats on"
                   isClearable={false}
                   menuPlacement="top"
-                  name="Week in the month"
-                  error={touched.week && Boolean(errors.week)}
-                  errorText={touched.week ? errors.week : undefined}
+                  name="Repeats on"
+                  error={touched.week_of_month && Boolean(errors.week_of_month)}
+                  errorText={
+                    touched.week_of_month ? errors.week_of_month : undefined
+                  }
                   noMarginTop
                 />
               </FormControl>
             ) : null}
-            <FormControl style={{ marginRight: '3rem' }}>
-              <Select
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-weekday-select': true,
-                  },
-                }}
-                options={daySelectionMap}
-                defaultValue={scheduledUpdateDay?.value ?? 1}
-                value={daySelectionMap.find(
-                  (thisOption) => thisOption.value === values.day
-                )}
-                onChange={(e: Item) => {
-                  setFormTouched(true);
-                  setFieldValue('day', e.value);
-                }}
-                label="Day of Week"
-                placeholder="Choose a day"
-                isClearable={false}
-                menuPlacement="top"
-                name="Day of Week"
-                error={touched.day && Boolean(errors.day)}
-                errorText={touched.day ? errors.day : undefined}
-                noMarginTop
-              />
-            </FormControl>
-            <FormControl style={{ marginRight: '3rem' }}>
-              <Select
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-time-select': true,
-                  },
-                }}
-                options={hourSelectionMap}
-                defaultValue={scheduledUpdateHour?.value ?? 20}
-                value={hourSelectionMap.find(
-                  (thisOption) => thisOption.value === values.hour
-                )}
-                onChange={(e: Item) => {
-                  setFormTouched(true);
-                  setFieldValue('hour', +e.value);
-                }}
-                label="Time of Day"
-                placeholder="Choose a time"
-                isClearable={false}
-                menuPlacement="top"
-                name="Time of Day"
-                error={touched.hour && Boolean(errors.hour)}
-                errorText={touched.hour ? errors.hour : undefined}
-                noMarginTop
-              />
-              <FormHelperText className={classes.helperContent}>
-                Time in UTC
-                <HelpIcon
-                  interactive
-                  className={classes.helpIcon}
-                  text={
-                    <Typography>
-                      UTC is {utcOffsetText(utcOffsetInHours)} hours compared to
-                      your local timezone. Click{' '}
-                      <Link to="/profile/display">here</Link> to view or change
-                      your timezone settings.
-                    </Typography>
-                  }
-                />
-              </FormHelperText>
-            </FormControl>
           </div>
         </div>
         <Button
@@ -344,10 +377,10 @@ const hourSelectionMap = [
 ];
 
 const weekSelectionMap = [
-  { label: '1', value: 1 },
-  { label: '2', value: 2 },
-  { label: '3', value: 3 },
-  { label: '4', value: 4 },
+  { label: 'First', value: 1 },
+  { label: 'Second', value: 2 },
+  { label: 'Third', value: 3 },
+  { label: 'Fourth', value: 4 },
 ];
 
 const utcOffsetText = (utcOffsetInHours: number) => {

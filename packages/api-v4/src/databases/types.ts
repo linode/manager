@@ -103,9 +103,9 @@ export type UpdatesFrequency = 'weekly' | 'monthly';
 export interface UpdatesSchedule {
   frequency: UpdatesFrequency;
   duration: number;
-  hour: number;
-  day: number;
-  week: number | null;
+  hour_of_day: number;
+  day_of_week: number;
+  week_of_month: number | null;
 }
 
 // Database is the interface for the shape of data returned by /databases/{engine}/instances
