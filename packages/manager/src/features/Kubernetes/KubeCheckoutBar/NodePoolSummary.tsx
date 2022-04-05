@@ -61,7 +61,11 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
   return (
     <>
       <Divider dark spacingTop={24} spacingBottom={12} />
-      <Box display="flex" flexDirection="column">
+      <Box
+        display="flex"
+        flexDirection="column"
+        data-testid="node-pool-summary"
+      >
         <Box display="flex" justifyContent="space-between">
           <div>
             <Typography className={classes.typeHeader}>
