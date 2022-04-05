@@ -10,7 +10,7 @@ import { randomLabel } from 'support/util/random';
 
 describe('access keys', () => {
   it('create access key', () => {
-    const bucketLabel = 'cy-test-' + randomLabel();
+    const bucketLabel = randomLabel();
     const accessKeyLabel = 'cy-test-key';
     const clusterId = 'us-east-1';
     // catch create access key request
