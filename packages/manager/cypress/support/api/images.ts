@@ -1,8 +1,6 @@
 import { imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { getAll, deleteById, isTestEntity, makeTestLabel } from './common';
-
-export const makeImageLabel = makeTestLabel;
+import { getAll, deleteById, isTestEntity } from './common';
 
 export const getImages = (page: number = 1) => getAll(`images?page=${page}`);
 

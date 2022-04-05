@@ -109,7 +109,7 @@ export const randomString = (
  *
  * @param length - Length of random label, not including length of test entity prefix.
  *
- * @return Random test label.
+ * @returns Random test label.
  */
 export const randomLabel = (length: number = 10): string => {
   const randomStringOptions = {
@@ -121,4 +121,35 @@ export const randomLabel = (length: number = 10): string => {
   };
 
   return `${entityPrefix}${randomString(length, randomStringOptions)}`;
+};
+
+/**
+ * Creates a random domain name that has a test entity prefix.
+ *
+ * @example
+ * // Assumes that test entity prefix is `cy-test-`.
+ * randomDomain(); // Example output: `cy-test-prcxfnmafe.com`
+ * randomDomain(5); // Example output: `cy-test-bkwpo.net`
+ *
+ * @param length - Length of random domain name, not including length of test entity prefix or TLD.
+ *
+ * @returns Random domain name.
+ */
+export const randomDomainName = (length: number = 10): string => {
+  const tlds = ['net', 'com', 'org'];
+
+  return `${randomLabel(length)}.${randomItem(tlds)}`;
+};
+
+/**
+ * Returns a random IPv4 address.
+ *
+ * @example
+ * randomIp(); // Example output: `3.196.83.89`
+ *
+ * @returns Random IPv4 address.
+ */
+export const randomIp = () => {
+  const randomOctet = () => randomNumber(0, 254);
+  return `${randomOctet()}.${randomOctet()}.${randomOctet()}.${randomOctet()}`;
 };
