@@ -431,7 +431,6 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     assignAddresses(createRequestData(ips, props.linodeRegion))
       .then(() => {
         // Refresh Linodes in the region in which the changes were made.
-        // props.getLinodes({}, { region: props.linodeRegion });
         return Promise.all(props.refreshIPs())
           .then(() => {
             setSubmitting(false);
