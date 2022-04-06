@@ -6,6 +6,7 @@ import withPreferences, {
   PreferencesActionsProps,
 } from 'src/containers/preferences.container';
 import { dark, light } from 'src/themes';
+import { isProductionBuild } from './constants';
 
 export type ThemeChoice = 'light' | 'dark';
 
@@ -18,6 +19,7 @@ interface Props {
    * this is mostly so the unit tests work
    */
   theme?: ThemeChoice;
+  shouldGetPreferences?: boolean;
 }
 
 const themes = { light, dark };
@@ -30,16 +32,43 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
    * the app theme. This looks horrible but it is the recommended approach:
    * https://github.com/highlightjs/highlight.js/blob/master/demo/demo.js
    */
-  const inactiveTheme = value === 'dark' ? 'a11y-light' : 'a11y-dark';
+
+  // Get all the <style>...</style> tags currently rendered.
+  // We do this because Webpack writes our CSS into these html tags.
   const links = document.querySelectorAll('style');
+
   links.forEach((thisLink: any) => {
-    const content = thisLink?.textContent ?? '';
-    // We're matching a comment in the style tag's text contents :groan:
-    thisLink.disabled = content.match(inactiveTheme);
+    // Get the inner content of style tag as a text string
+    const content: string = thisLink?.textContent ?? '';
+
+    const isHighlightJS = content.match('.hljs');
+
+    const darkColor = isProductionBuild
+      ? 'background:#2b2b2b;'
+      : 'background: #2b2b2b;';
+
+    const lightColor = isProductionBuild
+      ? 'background:#fefefe;'
+      : 'background: #fefefe;';
+
+    // If the CSS string contains .hljs and background: #2b2b2b; we can safely assume
+    // we are currently using a11y-dark.css
+    if (isHighlightJS && content.match(darkColor)) {
+      // If we are in dark mode, disable the dark mode css if the new theme is light
+      thisLink.disabled = value === 'light';
+    }
+
+    // If the CSS string contains .hljs and background: #fefefe; we can safely assume
+    // we are currently using a11y-light.css
+    if (isHighlightJS && content.match(lightColor)) {
+      // If we are in light mode, disable the light mode css if the new theme is dark
+      thisLink.disabled = value === 'dark';
+    }
   });
 };
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
+  const { children, shouldGetPreferences = true } = props;
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
@@ -48,24 +77,24 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
   };
 
   React.useEffect(() => {
-    /** request the user preferences on app load */
-    props
-      .getUserPreferences()
-      .then((response) => {
-        // Without the timeout a race condition sometimes runs the theme
-        // highlight checker before the stylesheets have fully loaded.
-        window.setTimeout(
-          () => setActiveHighlightTheme(response?.theme ?? 'light'),
-          1000
+    if (shouldGetPreferences) {
+      /** request the user preferences on app load */
+      props
+        .getUserPreferences()
+        .then((response) => {
+          // Without the timeout a race condition sometimes runs the theme
+          // highlight checker before the stylesheets have fully loaded.
+          window.setTimeout(
+            () => setActiveHighlightTheme(response?.theme ?? 'light'),
+            1000
+          );
+        })
+        .catch(
+          () =>
+            /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
         );
-      })
-      .catch(
-        () =>
-          /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
-      );
+    }
   }, []);
-
-  const { children } = props;
 
   return (
     <PreferenceToggle<'light' | 'dark'>

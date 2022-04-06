@@ -1,0 +1,55 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { makeStyles } from 'src/components/core/styles';
+import Grid from 'src/components/Grid';
+import UserIcon from 'src/assets/icons/account.svg';
+import Community from 'src/assets/icons/community_nav.svg';
+import HelpIcon from 'src/assets/icons/get_help.svg';
+import Bell from 'src/assets/icons/notification.svg';
+
+<Meta title="Core Styles/Icons/Navigation Icons" />
+
+export const useStyles = makeStyles(() => ({
+  item: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: 125,
+    '& svg': {
+      color: '#333',
+      width: 40,
+      height: 40,
+    },
+  },
+  label: {
+    fontSize: '0.875rem',
+    margin: 8,
+    textAlign: 'center',
+  },
+}));
+
+export const icons = {
+  'Help & Support': <HelpIcon />,
+  'Linode Cloud Community': <Community />,
+  Notifications: <Bell />,
+  Account: <UserIcon />,
+};
+
+export const renderIcons = (icons) => {
+  const classes = useStyles();
+  return (
+    <Grid container>
+      {Object.entries(icons).map(([iconLabel, icon]) => {
+        return (
+          <Grid key={iconLabel} item className={classes.item}>
+            {icon}
+            <div className={classes.label}>{iconLabel}</div>
+          </Grid>
+        );
+      })}
+    </Grid>
+  );
+};
+
+# Navigation Icons
+
+<Canvas>{renderIcons(icons)}</Canvas>

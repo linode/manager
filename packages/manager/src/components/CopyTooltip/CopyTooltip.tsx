@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 'auto !important',
   },
   displayText: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     marginLeft: 6,
   },
 }));

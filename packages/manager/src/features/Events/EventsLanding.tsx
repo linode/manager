@@ -6,6 +6,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import { compose } from 'recompose';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -28,6 +29,9 @@ import EventRow from './EventRow';
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing(),
+    },
   },
   noMoreEvents: {
     padding: theme.spacing(4),
@@ -37,11 +41,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
     minWidth: 200,
     paddingLeft: 10,
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    },
   },
   columnHeader: {
     fontFamily: theme.font.bold,
     fontSize: '0.875rem',
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
   },
 }));
 
@@ -271,26 +278,26 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
-            {/* Cell for icon (global EventsLanding only) */}
-            {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
+            <Hidden xsDown>
+              <TableCell style={{ padding: 0, width: '1%' }} />
+            </Hidden>
             <TableCell
               data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
             >
               Event
             </TableCell>
-            <TableCell
-              className={classes.columnHeader}
-              data-qa-events-duration-header
-            >
-              Duration
+            <TableCell className={classes.columnHeader}>
+              Relative Date
             </TableCell>
-            <TableCell
-              className={classes.columnHeader}
-              data-qa-events-time-header
-            >
-              When
-            </TableCell>
+            <Hidden smDown>
+              <TableCell
+                className={classes.columnHeader}
+                data-qa-events-time-header
+              >
+                Absolute Date
+              </TableCell>
+            </Hidden>
           </TableRow>
         </TableHead>
         <TableBody>

@@ -3,15 +3,12 @@ import {
   deleteById,
   getAll,
   isTestEntity,
-  makeTestLabel,
 } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 
 export const getClients = () => getAll('longview/clients');
-export const makeClientLabel = makeTestLabel;
 
-export const deleteClientById = (clientId: number) =>
-  deleteById('longview/clients', clientId);
+export const deleteClientById = (clientId: number) => deleteById('longview/clients', clientId);
 
 export const deleteAllTestClients = () => {
   getClients().then((resp) => {

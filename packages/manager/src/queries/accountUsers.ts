@@ -4,7 +4,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 import { map as mapPromise } from 'bluebird';
-import * as memoize from 'memoizee';
+import { default as memoize } from 'memoizee';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 
 export const queryKey = 'account-users';

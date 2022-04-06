@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     minHeight: '100vh',
     flexDirection: 'column',
-    backgroundColor: theme.cmrBGColors.bgApp,
+    backgroundColor: theme.bg.app,
     zIndex: 1,
   },
   wrapper: {
@@ -189,12 +189,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
   const username = profile?.username || '';
 
   const [bannerDismissed, setBannerDismissed] = React.useState<boolean>(false);
-
-  const showFirewalls = isFeatureEnabled(
-    'Cloud Firewall',
-    Boolean(flags.firewalls),
-    account?.capabilities ?? []
-  );
 
   const showDatabases = isFeatureEnabled(
     'Managed Databases',
@@ -361,9 +355,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route path="/support" component={Help} />
                             <Route path="/search" component={SearchLanding} />
                             <Route path="/events" component={EventsLanding} />
-                            {showFirewalls && (
-                              <Route path="/firewalls" component={Firewalls} />
-                            )}
+                            <Route path="/firewalls" component={Firewalls} />
                             {showDatabases ? (
                               <Route path="/databases" component={Databases} />
                             ) : null}

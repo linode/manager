@@ -99,6 +99,13 @@ export const baseApps = {
   '923033': 'Akaunting',
   '923036': 'Restyaboard',
   '954759': 'VictoriaMetrics',
+  '970522': 'Pi-hole',
+  '970523': 'Uptime Kuma',
+  '971042': 'Saltcorn',
+  '971045': 'Focalboard',
+  '971043': 'Odoo',
+  '970559': 'Grav',
+  '970561': 'NodeJS',
 };
 
 const oneClickFilter = [

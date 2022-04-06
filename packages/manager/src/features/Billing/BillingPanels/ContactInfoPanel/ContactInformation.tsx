@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   edit: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '.875rem',
     fontWeight: 700,

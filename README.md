@@ -1,5 +1,5 @@
 <h1 align="center">
-  <img src="https://www.linode.com/media/images/logos/diagonal/light/linode-logo_diagonal_light_medium.png" width="200" />
+  <img src="https://user-images.githubusercontent.com/32860776/156064400-4eb7e3ef-aa93-4b75-9962-07f6090de2ed.png" width="200" />
   <br />
   Linode Cloud Manager
 </h1>
@@ -21,7 +21,7 @@ If you already have your development environment set up, please read the [contri
 
 ## Reaching Out
 
-To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use feedback@linode.com
+To report a bug or request a feature in Cloud Manager, please [open a GitHub Issue](https://github.com/linode/manager/issues/new). For general feedback, use [linode.com/feedback](https://www.linode.com/feedback/).
 
 ## License
 

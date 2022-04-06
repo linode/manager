@@ -1,3 +1,8 @@
+## [2022-03-21] - v0.67.0
+
+### Fixed:
+- KubernetesDashboardResponse reflects API return data structure
+
 ## [2022-02-07] - v0.66.0
 
 ### Added:

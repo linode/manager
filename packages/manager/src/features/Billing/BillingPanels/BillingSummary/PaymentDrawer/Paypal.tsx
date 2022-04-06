@@ -29,7 +29,6 @@ import * as ReactDOM from 'react-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { PAYPAL_CLIENT_ENV } from 'src/constants';
@@ -37,7 +36,6 @@ import { reportException } from 'src/exceptionReporting';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import PaypalDialog from './PaymentBits/PaypalDialog';
 import { SetSuccess } from './types';
-import useFlags from 'src/hooks/useFlags';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountBilling';
 
@@ -102,9 +100,6 @@ export const paypalScriptSrc = () => {
 export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
   const { isScriptLoaded, usd, setSuccess, disabled } = props;
   const classes = useStyles();
-  const flags = useFlags();
-
-  const showGooglePay = flags.additionalPaymentMethods?.includes('google_pay');
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [isStagingPayment, setStaging] = React.useState<boolean>(false);
@@ -281,104 +276,40 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
     );
   }
 
-  if (showGooglePay) {
-    return (
-      <>
-        <Grid item xs={6} style={{ position: 'relative' }}>
-          {!enabled && (
-            <Tooltip
-              title={'Payment amount must be between $5 and $10000'}
-              data-qa-help-tooltip
-              enterTouchDelay={0}
-              leaveTouchDelay={5000}
-            >
-              <div className={classes.paypalMask} />
-            </Tooltip>
-          )}
-          <div
-            data-qa-paypal-button
-            className={classNames({
-              [classes.paypalButtonWrapper]: true,
-              [classes.PaypalHidden]: !enabled || disabled,
-            })}
-          >
-            {PaypalButton.current && shouldRenderButton && (
-              <PaypalButton.current
-                env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
-                client={client}
-                createOrder={createOrder}
-                onApprove={onApprove}
-                onCancel={onCancel}
-                style={{
-                  color: 'gold',
-                  shape: 'rect',
-                }}
-              />
-            )}
-          </div>
-        </Grid>
-        <PaypalDialog
-          open={dialogOpen}
-          closeDialog={handleClose}
-          isExecutingPayment={isExecutingPayment}
-          isStagingPaypalPayment={isStagingPayment}
-          initExecutePayment={confirmPaypalPayment}
-          paypalPaymentFailed={paymentFailed}
-          usd={(+usd).toFixed(2)}
-        />
-      </>
-    );
-  }
-
   return (
     <>
-      <Grid container direction="column">
-        <Grid item>
-          <Typography variant="h3" className={classes.header}>
-            <strong>Pay via PayPal</strong>
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography className={classes.text}>
-            You'll be taken to PayPal to complete your payment.
-          </Typography>
-        </Grid>
-        <Grid container alignItems="flex-end" justifyContent="flex-start">
-          <Grid item style={{ position: 'relative' }}>
-            {!enabled && (
-              <Tooltip
-                title={'Payment amount must be between $5 and $10000'}
-                data-qa-help-tooltip
-                enterTouchDelay={0}
-                leaveTouchDelay={5000}
-              >
-                <div className={classes.paypalMask} />
-              </Tooltip>
-            )}
-            <div
-              data-qa-paypal-button
-              className={classNames({
-                [classes.align]: !showGooglePay,
-                [classes.paypalButtonWrapper]: true,
-                [classes.PaypalHidden]: !enabled,
-              })}
-            >
-              {PaypalButton.current && shouldRenderButton && (
-                <PaypalButton.current
-                  env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
-                  client={client}
-                  createOrder={createOrder}
-                  onApprove={onApprove}
-                  onCancel={onCancel}
-                  style={{
-                    color: 'blue',
-                    shape: 'rect',
-                  }}
-                />
-              )}
-            </div>
-          </Grid>
-        </Grid>
+      <Grid item xs={6} style={{ position: 'relative' }}>
+        {!enabled && (
+          <Tooltip
+            title={'Payment amount must be between $5 and $10000'}
+            data-qa-help-tooltip
+            enterTouchDelay={0}
+            leaveTouchDelay={5000}
+          >
+            <div className={classes.paypalMask} />
+          </Tooltip>
+        )}
+        <div
+          data-qa-paypal-button
+          className={classNames({
+            [classes.paypalButtonWrapper]: true,
+            [classes.PaypalHidden]: !enabled || disabled,
+          })}
+        >
+          {PaypalButton.current && shouldRenderButton && (
+            <PaypalButton.current
+              env={PAYPAL_CLIENT_ENV as 'sandbox' | 'production'}
+              client={client}
+              createOrder={createOrder}
+              onApprove={onApprove}
+              onCancel={onCancel}
+              style={{
+                color: 'gold',
+                shape: 'rect',
+              }}
+            />
+          )}
+        </div>
       </Grid>
       <PaypalDialog
         open={dialogOpen}

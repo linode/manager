@@ -10,7 +10,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
@@ -23,8 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '60%',
   },
   cta: {
-    color: theme.color.blue,
-    cursor: 'pointer',
+    ...theme.applyLinkStyles,
   },
 }));
 
@@ -61,16 +59,16 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
             Thanks for signing up!
           </Typography>
           <Typography className={classes.subheading}>
-            Your account is currently being reviewed. You'll receive an email
-            from us once our review is complete, so hang tight! If you have
-            questions during this process{' '}
-            <span
+            Your account is currently being reviewed. You&rsquo;ll receive an
+            email from us once our review is complete, so hang tight! If you
+            have questions during this process{' '}
+            <button
               onClick={() => toggleSupportDrawer(true)}
               className={classes.cta}
-              role="button"
             >
-              please open a Support ticket.
-            </span>
+              please open a Support ticket
+            </button>
+            .
           </Typography>
           <SupportTicketDrawer
             open={supportDrawerIsOpen}

@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     right: 0,
     left: 'auto',
     '& svg': {
-      stroke: theme.cmrTextColors.tableHeader,
+      stroke: theme.textColors.tableHeader,
     },
   },
   toggle: {

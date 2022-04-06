@@ -1,21 +1,18 @@
 import {
-  deleteNodeBalancerByLabel,
-  makeNodeBalLabel,
   testNodeBalTag,
-} from '../../support/api/nodebalancers';
+} from 'support/api/nodebalancers';
 import {
-  makeLinodeLabel,
   createLinode,
-  deleteLinodeById,
-} from '../../support/api/linodes';
-import { selectRegionString } from '../../support/ui/constants';
+} from 'support/api/linodes';
+import { selectRegionString } from 'support/ui/constants';
 import {
   containsClick,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
+import { randomLabel } from 'support/util/random';
 
 const deployNodeBalancer = () => {
   // This is not an error, the tag is deploy-linode
@@ -30,7 +27,7 @@ const createNodeBalancerWithUI = (nodeBal) => {
   containsClick(selectRegionString).type('new {enter}');
 
   // node backend config
-  fbtClick('Label').type(makeLinodeLabel());
+  fbtClick('Label').type(randomLabel());
   containsClick('Enter IP Address').type(`${nodeBal.linodePrivateIp}{enter}`);
   deployNodeBalancer();
 };
@@ -40,7 +37,7 @@ describe('create NodeBalancer', () => {
     // create a linode in NW where the NB will be created
     createLinode().then((linode) => {
       const nodeBal = {
-        label: makeNodeBalLabel(),
+        label: randomLabel(),
         linodePrivateIp: linode.ipv4[1],
       };
       // catch request
@@ -63,7 +60,7 @@ describe('create NodeBalancer', () => {
       getVisible('[id="nodebalancer-label"]')
         .click()
         .clear()
-        .type(makeNodeBalLabel());
+        .type(randomLabel());
       getClick('[data-qa-protocol-select="true"]').type('TCP{enter}');
       getClick('[data-qa-session-stickiness-select]').type(
         'HTTP Cookie{enter}'

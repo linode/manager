@@ -171,11 +171,12 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime,
         })}
+        statusCell
         data-qa-status
       >
         {!maintenanceStartTime ? (
           loading ? (
-            <div className={classes.status}>
+            <>
               <StatusIcon status={iconStatus} />
               <button
                 className={classes.statusLink}
@@ -187,14 +188,14 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
                   text={transitionText(status, id, recentEvent)}
                 />
               </button>
-            </div>
+            </>
           ) : (
-            <div className={classes.status}>
+            <>
               <StatusIcon status={iconStatus} />
               {displayStatus.includes('_')
                 ? capitalizeAllWords(displayStatus.replace('_', ' '))
                 : capitalize(displayStatus)}
-            </div>
+            </>
           )
         ) : (
           <div className={classes.maintenanceOuter}>
@@ -248,7 +249,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           linodeBackups={backups}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
-          inTableContext
+          inListView
         />
       </TableCell>
     </TableRow>

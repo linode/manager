@@ -2,17 +2,18 @@ const custom = require('./webpack.config.js');
 const path = require('path');
 const includePath = path.resolve(__dirname, '../../..');
 
+const componentsPath = '../src/components/**/*.stories.@(js|ts|jsx|tsx|mdx)';
+const featuresPath = '../src/features/**/*.stories.@(js|ts|jsx|tsx|mdx)';
+
 module.exports = {
-  stories: [
-    '../src/components/intro.stories.mdx',
-    '../src/components/**/*.stories.@(js|ts|jsx|tsx|mdx)',
-  ],
+  stories: [componentsPath, featuresPath],
   addons: [
     '@storybook/addon-docs',
     '@storybook/addon-knobs',
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
   ],
+  staticDirs: ['../public'],
   webpackFinal: (config) => {
     /**
      * Added logic to find svg config included with Storybook and tell it to excude all svgs.

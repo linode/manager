@@ -9,16 +9,14 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/account.svg';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useFlags from 'src/hooks/useFlags';
 import { useGrants } from 'src/queries/profile';
-import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
   display: string;
@@ -54,12 +52,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     borderRadius: '50%',
     transition: theme.transitions.create(['box-shadow']),
-    height: 28,
-    width: 28,
+    height: 30,
+    width: 30,
     '& svg': {
       color: '#c9c7c7',
-      width: 28,
-      height: 28,
+      width: 30,
+      height: 30,
     },
     [theme.breakpoints.down('md')]: {
       width: '28px',
@@ -87,7 +85,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.cmrBGColors.bgPrimaryNavActive,
+      backgroundColor: theme.name === 'lightTheme' ? '#3a3f46' : '#23262a',
       color: 'white',
     },
   },
@@ -115,7 +113,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 50,
       textTransform: 'inherit',
       '&[aria-expanded="true"]': {
-        background: theme.cmrBGColors.bgApp,
+        background: theme.bg.app,
         '& $caret': {
           color: '#0683E3',
           marginTop: 4,
@@ -159,7 +157,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   menuItemList: {
     boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
     '&[data-reach-menu-items]': {
-      backgroundColor: theme.cmrBGColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
       border: 'none',
       padding: 0,
       paddingBottom: theme.spacing(1.5),
@@ -172,7 +170,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   menuHeader: {
     borderBottom: '1px solid #9ea4ae',
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontSize: '.75rem',
     letterSpacing: 1.875,
     marginBottom: theme.spacing(),
@@ -197,23 +195,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       alignItems: 'center',
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       cursor: 'pointer',
       fontSize: '0.875rem',
       padding: '8px 24px',
       '&:focus, &:hover': {
         backgroundColor: 'transparent',
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
       },
       '&[data-reach-menu-item][data-selected]:not(:hover)': {
         backgroundColor: 'transparent',
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         outline: 'dotted 1px #c1c1c0',
       },
     },
   },
   userName: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontSize: '1.1rem',
     marginTop: -1,
     marginLeft: theme.spacing(3),
@@ -242,10 +240,6 @@ const profileLinks: MenuLink[] = [
 
 export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
-  const flags = useFlags();
-
-  const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
-  const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
 
   const {
     profile,
@@ -274,7 +268,7 @@ export const UserMenu: React.FC<{}> = () => {
       {
         display: 'Service Transfers',
         href: '/account/service-transfers',
-        hide: _isRestrictedUser || !flags.entityTransfers,
+        hide: _isRestrictedUser,
       },
       {
         display: 'Maintenance',
@@ -287,21 +281,10 @@ export const UserMenu: React.FC<{}> = () => {
         hide: !hasFullAccountAccess,
       },
     ],
-    [hasFullAccountAccess, _isRestrictedUser, flags]
+    [hasFullAccountAccess, _isRestrictedUser]
   );
 
-  const userEmail = profile?.email;
   const userName = profile?.username ?? '';
-
-  React.useEffect(() => {
-    if (userEmail) {
-      setGravatarLoading(true);
-      getGravatarUrl(userEmail).then((url) => {
-        setGravatarLoading(false);
-        setGravatarURL(url);
-      });
-    }
-  }, [userEmail]);
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
@@ -330,21 +313,7 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            {gravatarLoading ||
-            gravatarURL === 'not found' ||
-            gravatarURL === undefined ? (
-              <div className={classes.userWrapper}>
-                <UserIcon />
-              </div>
-            ) : (
-              <div className={classes.userWrapper}>
-                <img
-                  className={classes.gravatar}
-                  src={gravatarURL}
-                  alt="Gravatar"
-                />
-              </div>
-            )}
+            <GravatarIcon username={userName} className={classes.userWrapper} />
             <Hidden smDown>
               <Typography className={classes.inlineUserName}>
                 {userName}

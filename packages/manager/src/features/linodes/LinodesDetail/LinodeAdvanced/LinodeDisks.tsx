@@ -279,7 +279,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     }
 
     if (disks.length === 0) {
-      return <TableRowEmptyState colSpan={4} />;
+      return <TableRowEmptyState colSpan={5} />;
     }
 
     return disks.map((disk) => (
@@ -326,11 +326,15 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   };
 
-  confirmDeleteActions = ({ onClose }: { onClose: () => void }) => {
+  confirmDeleteActions = () => {
     const { submitting } = this.state.confirmDelete;
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="secondary" onClick={onClose} data-qa-cancel-delete>
+        <Button
+          buttonType="secondary"
+          onClick={this.closeConfirmDelete}
+          data-qa-cancel-delete
+        >
           Cancel
         </Button>
         <Button
