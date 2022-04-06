@@ -117,7 +117,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       if (flags.ipv6Sharing) {
         availableRangesMap?.[currentValue.id]?.forEach((range: string) => {
           previousValue[range] = currentValue.label;
-          updateipToLinodeID({
+          updateIPToLinodeID({
             [range]: [...(ipToLinodeID?.[range] ?? []), currentValue.id],
           });
         });
@@ -135,11 +135,11 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     return choiceLabels;
   };
 
-  const [ipChoices, setipChoices] = React.useState({});
-  const [ipToLinodeID, setipToLinodeID] = React.useState({});
+  const [ipChoices, setIPChoices] = React.useState({});
+  const [ipToLinodeID, setIPToLinodeID] = React.useState({});
 
-  const updateipToLinodeID = (newData: Record<string, number[]>) => {
-    setipToLinodeID((previousState) => {
+  const updateIPToLinodeID = (newData: Record<string, number[]>) => {
+    setIPToLinodeID((previousState) => {
       return { ...previousState, ...newData };
     });
   };
@@ -150,7 +150,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       return;
     }
     const ipChoices = getIPChoicesAndLabels(linodeID, linodes ?? []);
-    setipChoices(ipChoices);
+    setIPChoices(ipChoices);
   }, [linodeID, linodes, availableRanges]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
