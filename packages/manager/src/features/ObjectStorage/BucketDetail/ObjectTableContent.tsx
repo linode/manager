@@ -107,9 +107,9 @@ const ObjectTableContent: React.FC<Props> = (props) => {
           );
         });
       })}
-      {isFetchingNextPage && (
+      {isFetchingNextPage ? (
         <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />
-      )}
+      ) : null}
     </>
   );
 };
