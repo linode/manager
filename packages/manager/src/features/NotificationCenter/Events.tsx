@@ -17,7 +17,7 @@ export const Events: React.FC<Props> = (props) => {
       header="Events"
       showMoreTarget="/events"
       showMoreText="View all events"
-      emptyMessage="No events to display."
+      emptyMessage="No recent events to display."
       onClose={onClose}
       count={NUM_EVENTS_DISPLAY}
     />

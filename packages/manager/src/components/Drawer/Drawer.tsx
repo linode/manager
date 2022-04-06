@@ -77,7 +77,7 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer
-      anchor={isNotificationDrawer ? 'top' : 'right'}
+      anchor="right"
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       onClose={(event, reason) => {
         if (

@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   inverted: {
     transform: 'rotate(180deg)',
   },
+  emptyMessage: {
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(2.5),
+  },
 }));
 
 export interface NotificationItem {
@@ -174,16 +178,16 @@ export const NotificationSection: React.FC<Props> = (props) => {
 // =============================================================================
 interface BodyProps {
   header: string;
-  loading: boolean;
   content: NotificationItem[];
   count: number;
   emptyMessage?: string;
+  loading: boolean;
 }
 
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
   const classes = useStyles();
 
-  const { content, count, loading } = props;
+  const { header, content, count, emptyMessage, loading } = props;
 
   const [showAll, setShowAll] = React.useState(false);
 
@@ -227,6 +231,12 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
         </Box>
       ) : null}
     </>
+  ) : header === 'Events' ? (
+    <Typography className={classes.emptyMessage} variant="body1">
+      {emptyMessage
+        ? emptyMessage
+        : `You have no ${header.toLocaleLowerCase()}.`}
+    </Typography>
   ) : null;
 });
 

@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& .MuiDrawer-paper': {
       boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
+      // Overrides the default drawer height
+      height: 'auto',
       maxHeight: 'calc(100% - 50px)',
       overflowX: 'hidden',
       // Prevents the width from changing if the scrollbar is visible
@@ -23,8 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: theme.spacing(),
       paddingBottom: 0,
       top: 50,
-      // Prevents the drawer from being aligned on the left since the it is anchored to the top
-      left: 'auto',
       // Overrides the built-in animation so it matches the UserMenu
       transition: 'none !important',
       [theme.breakpoints.up('md')]: {
