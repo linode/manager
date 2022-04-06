@@ -103,7 +103,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     open // Only run the query if the modal is open
   );
   let isLoading = resp.isLoading;
-  const data = resp.data;
+  const linodes = resp.data ?? [];
 
   const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
     const choiceLabels = linodes.reduce((previousValue, currentValue) => {
@@ -137,8 +137,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     return choiceLabels;
   };
 
-  const linodes = data ?? [];
-
   const [ipChoices, setipChoices] = React.useState({});
   const [ipToLinodeID, setipToLinodeID] = React.useState({});
 
@@ -157,7 +155,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     const ipChoices = getIPChoicesAndLabels(linodeID, linodes);
     setipChoices(ipChoices);
     isLoading = false;
-  }, [linodeID, data, availableRanges]);
+  }, [linodeID, linodes, availableRanges]);
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [successMessage, setSuccessMessage] = React.useState<
