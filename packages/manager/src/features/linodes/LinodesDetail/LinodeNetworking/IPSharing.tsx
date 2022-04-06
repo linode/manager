@@ -3,6 +3,7 @@ import {
   shareAddresses,
   shareAddressesv4,
   IPRangeInformation,
+  IPSharingPayload,
 } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
@@ -103,8 +104,53 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
 
   let isLoading = resp.isLoading;
   const data = resp.data;
+
+  const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
+    const choiceLabels = linodes.reduce((previousValue, currentValue) => {
+      // Filter out the current Linode
+      if (currentValue.id === linodeID) {
+        return previousValue;
+      }
+
+      currentValue.ipv4.forEach((ip) => {
+        previousValue[ip] = currentValue.label;
+      });
+
+      if (flags.ipv6Sharing) {
+        availableRangesMap[currentValue.id] &&
+          availableRangesMap[currentValue.id].forEach((range: string) => {
+            previousValue[range] = currentValue.label;
+            if (ipToLinodeID.hasOwnProperty(range)) {
+              updateipToLinodeID({
+                [range]: [ipToLinodeID[range]].concat([currentValue.id]),
+              });
+            } else {
+              updateipToLinodeID({ [range]: [currentValue.id] });
+            }
+          });
+      }
+
+      return previousValue;
+    }, {});
+
+    linodeSharedIPs.forEach((range) => {
+      if (!choiceLabels.hasOwnProperty(range)) {
+        choiceLabels[range] = '';
+      }
+    });
+
+    return choiceLabels;
+  };
+
   const linodes = Object.values(data?.linodes ?? []);
   const [ipChoices, setipChoices] = React.useState({});
+  const [ipToLinodeID, setipToLinodeID] = React.useState({});
+
+  const updateipToLinodeID = (newData: Record<string, number[]>) => {
+    setipToLinodeID((previousState) => {
+      return { ...previousState, ...newData };
+    });
+  };
 
   React.useEffect(() => {
     // don't try anything until we've finished the request for the Linodes data
@@ -112,13 +158,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       return;
     }
     isLoading = true;
-    const ipChoices = getIPChoicesAndLabels(
-      linodeID,
-      linodes,
-      flags.ipv6Sharing,
-      availableRangesMap,
-      linodeSharedIPs
-    );
+    const ipChoices = getIPChoicesAndLabels(linodeID, linodes);
     setipChoices(ipChoices);
     isLoading = false;
   }, [linodeID, data, availableRanges]);
@@ -164,43 +204,102 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const onSubmit = () => {
-    const finalIPs = uniq(
-      ipsToShare.filter(Boolean).map((ip) => {
-        return ip.includes('/') ? ip.substr(0, ip.indexOf('/')) : ip;
-      })
+    const groupedUnsharedRanges = {};
+    const finalIPs: string[] = uniq(
+      ipsToShare.reduce((previousValue, currentValue) => {
+        // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added, also filter out null and undefined
+        if (
+          !ipToLinodeID.hasOwnProperty(currentValue) ||
+          ipToLinodeID[currentValue].length !== 1 ||
+          currentValue === undefined ||
+          currentValue === null
+        ) {
+          return previousValue;
+        }
+
+        // For any IP in finalIPs that isn't shared (length of linode_ids === 1)
+        // make note in groupedUnsharedRanges so that we can first share that IP to
+        // the Linode it is statically routed to, then to the current Linode
+        const linode_id = ipToLinodeID[currentValue][0];
+        const strippedIP: string = currentValue.includes('/')
+          ? currentValue.substr(0, currentValue.indexOf('/'))
+          : currentValue;
+        if (groupedUnsharedRanges.hasOwnProperty(linode_id)) {
+          groupedUnsharedRanges[linode_id] = [
+            groupedUnsharedRanges[linode_id],
+          ].concat([strippedIP]);
+        } else {
+          groupedUnsharedRanges[linode_id] = [strippedIP];
+        }
+        return [...previousValue, strippedIP];
+      }, [])
     );
 
+    // use local variable and state because useState won't update state right away
+    // and useEffect won't play nicely here
+    let localErrors: APIError[] | undefined = undefined;
     setErrors(undefined);
-    setSubmitting(true);
+    let localSubmitting = true;
+    setSubmitting(localSubmitting);
     setSuccessMessage(undefined);
 
-    let share;
+    let share: {
+      (arg0: { linode_id: number; ips: string[] }): Promise<any>;
+      (payload: IPSharingPayload): Promise<{}>;
+      (payload: IPSharingPayload): Promise<{}>;
+    };
+    const promises: Promise<void | {}>[] = [];
     if (flags.ipv6Sharing) {
-      // this fails for datacenters that don't support sharing IPv6 addresses
-      // for now we just default to the given error message rather than preventing
-      // this from running
       share = shareAddresses;
+
+      // share unshared ranges first to their staticly routed Linode, then later we can share to the current Linode
+      ipsToShare.forEach((ip) => {
+        Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
+          promises.push(
+            shareAddresses({
+              linode_id: parseInt(linode_id, 10),
+              ips: groupedUnsharedRanges[linode_id],
+            }).catch((errorResponse) => {
+              const errors = getAPIErrorOrDefault(
+                errorResponse,
+                'Unable to complete request at this time.'
+              );
+              localErrors = errors;
+              setErrors(errors);
+              localSubmitting = false;
+              setSubmitting(false);
+              setSuccessMessage(undefined);
+            })
+          );
+        });
+      });
     } else {
       share = shareAddressesv4;
     }
 
-    share({ linode_id: props.linodeID, ips: finalIPs })
-      .then((_) => {
-        props.refreshIPs();
-        setErrors(undefined);
-        setSubmitting(false);
-        setSuccessMessage('IP Sharing updated successfully');
-      })
-      .catch((errorResponse) => {
-        const errors = getAPIErrorOrDefault(
-          errorResponse,
-          'Unable to complete request at this time.'
-        );
+    Promise.all(promises).then(() => {
+      if (!localSubmitting || !!localErrors) {
+        return;
+      }
 
-        setErrors(errors);
-        setSubmitting(false);
-        setSuccessMessage(undefined);
-      });
+      share({ linode_id: props.linodeID, ips: finalIPs })
+        .then((_) => {
+          props.refreshIPs();
+          setErrors(undefined);
+          setSubmitting(false);
+          setSuccessMessage('IP Sharing updated successfully');
+        })
+        .catch((errorResponse) => {
+          const errors = getAPIErrorOrDefault(
+            errorResponse,
+            'Unable to complete request at this time.'
+          );
+
+          setErrors(errors);
+          setSubmitting(false);
+          setSuccessMessage(undefined);
+        });
+    });
   };
 
   const onReset = () => {
@@ -326,42 +425,6 @@ const formatAvailableRanges = (
   }, {});
 
   return availableRangesMap;
-};
-
-const getIPChoicesAndLabels = (
-  linodeID: number,
-  linodes: Linode[],
-  ipv6Sharing: boolean | undefined,
-  availableRangesMap: AvailableRangesMap,
-  linodeSharedIPs: string[]
-) => {
-  const choiceLabels = linodes.reduce((previousValue, currentValue) => {
-    // Filter out the current Linode
-    if (currentValue.id === linodeID) {
-      return previousValue;
-    }
-
-    currentValue.ipv4.forEach((ip) => {
-      previousValue[ip] = currentValue.label;
-    });
-
-    if (ipv6Sharing) {
-      availableRangesMap[currentValue.id] &&
-        availableRangesMap[currentValue.id].forEach((range: string) => {
-          previousValue[range] = currentValue.label;
-        });
-    }
-
-    return previousValue;
-  }, {});
-
-  linodeSharedIPs.forEach((range) => {
-    if (!choiceLabels.hasOwnProperty(range)) {
-      choiceLabels[range] = '';
-    }
-  });
-
-  return choiceLabels;
 };
 
 interface WrapperProps {
