@@ -207,30 +207,31 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     const groupedUnsharedRanges = {};
     const finalIPs: string[] = uniq(
       ipsToShare.reduce((previousValue, currentValue) => {
-        // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added, also filter out null and undefined
-        if (
-          !ipToLinodeID.hasOwnProperty(currentValue) ||
-          ipToLinodeID[currentValue].length !== 1 ||
-          currentValue === undefined ||
-          currentValue === null
-        ) {
+        if (currentValue === undefined || currentValue === null) {
           return previousValue;
         }
-
-        // For any IP in finalIPs that isn't shared (length of linode_ids === 1)
-        // make note in groupedUnsharedRanges so that we can first share that IP to
-        // the Linode it is statically routed to, then to the current Linode
-        const linode_id = ipToLinodeID[currentValue][0];
         const strippedIP: string = currentValue.includes('/')
           ? currentValue.substr(0, currentValue.indexOf('/'))
           : currentValue;
-        if (groupedUnsharedRanges.hasOwnProperty(linode_id)) {
-          groupedUnsharedRanges[linode_id] = [
-            groupedUnsharedRanges[linode_id],
-          ].concat([strippedIP]);
-        } else {
-          groupedUnsharedRanges[linode_id] = [strippedIP];
+
+        // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added
+        const isStaticv6 =
+          ipToLinodeID.hasOwnProperty(currentValue) &&
+          ipToLinodeID[currentValue].length === 1;
+        // For any IP in finalIPs that isn't shared (length of linode_ids === 1)
+        // make note in groupedUnsharedRanges so that we can first share that IP to
+        // the Linode it is statically routed to, then to the current Linode
+        if (isStaticv6) {
+          const linode_id = ipToLinodeID[currentValue][0];
+          if (groupedUnsharedRanges.hasOwnProperty(linode_id)) {
+            groupedUnsharedRanges[linode_id] = [
+              groupedUnsharedRanges[linode_id],
+            ].concat([strippedIP]);
+          } else {
+            groupedUnsharedRanges[linode_id] = [strippedIP];
+          }
         }
+
         return [...previousValue, strippedIP];
       }, [])
     );
