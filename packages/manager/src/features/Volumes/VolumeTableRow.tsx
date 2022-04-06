@@ -22,14 +22,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   chipWrapper: {
     alignSelf: 'center',
   },
-  chip: {
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: theme.spacing(2),
-    minHeight: theme.spacing(2),
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
-  },
 }));
 
 export type CombinedProps = ExtendedVolume & ActionHandlers;
@@ -117,9 +109,9 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                   <Chip
                     variant="outlined"
                     outlineColor="green"
-                    className={classes.chip}
                     label="NVMe"
                     data-testid="nvme-chip"
+                    size="small"
                   />
                 </Grid>
               ) : linodeId &&
@@ -127,11 +119,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                 !nvmeUpgradeScheduledByUserImminent ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    variant="clickable"
-                    className={classes.chip}
                     label="UPGRADE TO NVMe"
                     onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
+                    size="small"
+                    clickable
                   />
                 </Grid>
               ) : linodeId &&
@@ -141,9 +133,9 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                   <Chip
                     variant="outlined"
                     outlineColor="gray"
-                    className={classes.chip}
                     label="UPGRADE PENDING"
                     data-testid="upgrading-chip"
+                    size="small"
                   />
                 </Grid>
               ) : null}

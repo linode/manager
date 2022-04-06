@@ -504,7 +504,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 >
                   {isClusterHighlyAvailable ? (
                     <Grid item>
-                      <Chip label="HA CLUSTER" />
+                      <Chip
+                        label="HA CLUSTER"
+                        variant="outlined"
+                        outlineColor="green"
+                      />
                     </Grid>
                   ) : null}
                   {isKubeDashboardFeatureEnabled ? (

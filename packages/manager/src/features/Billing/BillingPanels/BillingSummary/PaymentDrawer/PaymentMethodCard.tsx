@@ -37,6 +37,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.red,
     },
   },
+  chip: {
+    '& span': {
+      color: 'inherit !important',
+    },
+  },
 }));
 
 interface Props {
@@ -104,8 +109,8 @@ export const PaymentMethodCard: React.FC<Props> = (props) => {
 
   const renderVariant = () => {
     return is_default ? (
-      <Grid item xs={3} md={2}>
-        <Chip label="DEFAULT" component="span" />
+      <Grid item className={classes.chip} xs={3} md={2}>
+        <Chip label="DEFAULT" component="span" size="small" />
       </Grid>
     ) : null;
   };

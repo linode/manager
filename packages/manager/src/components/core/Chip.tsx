@@ -7,18 +7,13 @@ import {
 } from '@material-ui/core/Chip';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    fontSize: '0.65rem',
-  },
-  clickable: {
-    backgroundColor: theme.name === 'lightTheme' ? '#e5f1ff' : '#415d81',
-    '&:hover': {
-      backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#374863',
-    },
-  },
-  outlined: {
-    borderRadius: 1,
-    backgroundColor: 'transparent',
+  inTable: {
+    marginTop: 0,
+    marginBottom: 0,
+    marginLeft: theme.spacing(2),
+    minHeight: theme.spacing(2),
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
   },
   ['outline-gray']: {
     border: '1px solid #ccc',
@@ -28,26 +23,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface ChipProps extends Omit<_ChipProps, 'variant'> {
-  variant?: 'clickable' | _ChipProps['variant'];
+export interface ChipProps extends _ChipProps {
   outlineColor?: 'green' | 'gray';
   component?: string;
+  inTable?: boolean;
 }
 
 const Chip: React.FC<ChipProps> = ({
-  variant,
   outlineColor = 'gray',
   className,
+  inTable,
   ...props
 }) => {
   const classes = useStyles();
 
   return (
     <_Chip
-      className={classNames(className, classes.root, {
-        [classes.clickable]: variant === 'clickable',
-        [classes.outlined]: variant === 'outlined',
-        [classes[`outline-${outlineColor}`]]: variant === 'outlined',
+      className={classNames(className, {
+        [classes.inTable]: inTable,
+        [classes[`outline-${outlineColor}`]]: props.variant === 'outlined',
       })}
       {...props}
     />

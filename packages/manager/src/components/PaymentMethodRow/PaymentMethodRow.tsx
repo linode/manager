@@ -110,7 +110,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
           )}
         </Grid>
         <Grid item className={classes.item} style={{ paddingRight: 0 }}>
-          {is_default && <Chip label="DEFAULT" component="span" />}
+          {is_default && <Chip label="DEFAULT" component="span" size="small" />}
         </Grid>
         <Grid item className={classes.actions}>
           <ActionMenu

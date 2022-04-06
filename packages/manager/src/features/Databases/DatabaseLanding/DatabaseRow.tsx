@@ -12,7 +12,6 @@ import { Status } from 'src/components/StatusIcon/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
-import { useStyles as useChipStyles } from 'src/features/Volumes/VolumeTableRow';
 import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
@@ -40,7 +39,6 @@ interface Props {
 }
 
 export const DatabaseRow: React.FC<Props> = ({ database }) => {
-  const chipClasses = useChipStyles();
   const {
     id,
     label,
@@ -61,8 +59,9 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
         <Chip
           variant="outlined"
           outlineColor="green"
-          className={chipClasses.chip}
           label="HA"
+          size="small"
+          inTable
         />
       </>
     );
