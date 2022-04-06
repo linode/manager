@@ -320,7 +320,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                     IPv6 range to a shared range will break existing IPv6
                     connectivity unless each Linode that shares the range has
                     BGP setup to advertise that range. Follow{' '}
-                    <Link to="https://deploy-preview-5342--nostalgic-ptolemy-b01ab8.netlify.app/docs/guides/ip-failover/">
+                    <Link to="https://www.linode.com/docs/guides/ip-failover/">
                       this guide
                     </Link>{' '}
                     to set up BGP on a Linode.
