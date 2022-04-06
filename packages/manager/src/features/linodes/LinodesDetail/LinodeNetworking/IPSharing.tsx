@@ -205,9 +205,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           : currentValue;
 
         // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added
-        const isStaticv6 =
-          ipToLinodeID.hasOwnProperty(currentValue) &&
-          ipToLinodeID[currentValue].length === 1;
+        const isStaticv6 = ipToLinodeID?.[currentValue]?.length === 1;
         // For any IP in finalIPs that isn't shared (length of linode_ids === 1)
         // make note in groupedUnsharedRanges so that we can first share that IP to
         // the Linode it is statically routed to, then to the current Linode
