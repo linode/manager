@@ -323,7 +323,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                     <Link to="https://deploy-preview-5342--nostalgic-ptolemy-b01ab8.netlify.app/docs/guides/ip-failover/">
                       this guide
                     </Link>{' '}
-                    to setup BGP on a Linode.
+                    to set up BGP on a Linode.
                   </Typography>
                 </Notice>
               )}
