@@ -413,15 +413,12 @@ const formatAvailableRanges = (
   const availableRangesMap: {
     [linode_id: number]: string[];
   } = availableRanges.reduce((previousValue, currentValue) => {
-    if (previousValue.hasOwnProperty(currentValue.linodes[0])) {
-      previousValue[currentValue.linodes[0]].push(
-        `${currentValue.range}/${currentValue.prefix}`
-      );
-    } else {
-      previousValue[currentValue.linodes[0]] = [
-        `${currentValue.range}/${currentValue.prefix}`,
-      ];
-    }
+    // use the first entry in linodes as we're only dealing with ranges unassociated with this
+    // Linode, so we just use whatever the first Linode is to later get the label for this range
+    previousValue[currentValue.linodes[0]] = [
+      ...(previousValue?.[currentValue.linodes[0]] ?? []),
+      `${currentValue.range}/${currentValue.prefix}`,
+    ];
     return previousValue;
   }, {});
 
