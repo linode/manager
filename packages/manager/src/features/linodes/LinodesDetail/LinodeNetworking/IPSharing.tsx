@@ -200,9 +200,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
         if (currentValue === undefined || currentValue === null) {
           return previousValue;
         }
-        const strippedIP: string = currentValue.includes('/')
-          ? currentValue.substr(0, currentValue.indexOf('/'))
-          : currentValue;
+        const strippedIP: string = currentValue.split('/')[0];
 
         // Filter out v4s and shared v6 ranges as only v6s and unshared ips will be added
         const isStaticv6 =
