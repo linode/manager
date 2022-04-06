@@ -95,16 +95,13 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     availableRanges
   );
 
-  const resp = useAllLinodesQuery(
+  { data: linodesData, isLoading } = useAllLinodesQuery(
     { page_size: API_MAX_PAGE_SIZE },
     {
       region: linodeRegion,
     },
     open // Only run the query if the modal is open
   );
-
-  let isLoading = resp.isLoading;
-  const data = resp.data;
 
   const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
     const choiceLabels = linodes.reduce((previousValue, currentValue) => {
