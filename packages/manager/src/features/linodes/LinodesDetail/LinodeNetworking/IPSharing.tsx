@@ -324,20 +324,22 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
               <Notice success text={successMessage} />
             </Grid>
           )}
-          {flags.ipv6Sharing && (
-            <Notice warning>
-              <Typography style={{ fontSize: '0.875rem' }}>
-                <strong>Warning:</strong> Converting a statically routed IPv6
-                range to a shared range will break existing IPv6 connectivity
-                unless each Linode that shares the range has BGP setup to
-                advertise that range. Follow{' '}
-                <Link to="https://status.linode.com/">this guide</Link> to setup
-                BGP on a Linode.
-              </Typography>
-            </Notice>
-          )}
           <Grid container>
             <Grid item sm={12} lg={8} xl={6}>
+              {flags.ipv6Sharing && (
+                <Notice warning>
+                  <Typography style={{ fontSize: '0.875rem' }}>
+                    <strong>Warning:</strong> Converting a statically routed
+                    IPv6 range to a shared range will break existing IPv6
+                    connectivity unless each Linode that shares the range has
+                    BGP setup to advertise that range. Follow{' '}
+                    <Link to="https://deploy-preview-5342--nostalgic-ptolemy-b01ab8.netlify.app/docs/guides/ip-failover/">
+                      this guide
+                    </Link>{' '}
+                    to setup BGP on a Linode.
+                  </Typography>
+                </Notice>
+              )}
               <Typography className={classes.networkActionText}>
                 IP Sharing allows a Linode to share an IP address assignment
                 (one or more additional IPv4 addresses). This can be used to
