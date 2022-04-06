@@ -29,6 +29,9 @@ import EventRow from './EventRow';
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: theme.spacing(),
+    },
   },
   noMoreEvents: {
     padding: theme.spacing(4),
@@ -38,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
     minWidth: 200,
     paddingLeft: 10,
+    [theme.breakpoints.down('xs')]: {
+      width: '70%',
+    },
   },
   columnHeader: {
     fontFamily: theme.font.bold,
@@ -272,32 +278,26 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
-            {/* Cell for icon (global EventsLanding only) */}
-            {!entityId && (
-              <Hidden xsDown>
-                <TableCell style={{ padding: 0, width: 70 }} />
-              </Hidden>
-            )}
+            <Hidden xsDown>
+              <TableCell style={{ padding: 0, width: '1%' }} />
+            </Hidden>
             <TableCell
               data-qa-events-subject-header
               className={`${classes.labelCell} ${classes.columnHeader}`}
             >
               Event
             </TableCell>
-            <Hidden mdDown>
+            <TableCell className={classes.columnHeader}>
+              Relative Date
+            </TableCell>
+            <Hidden smDown>
               <TableCell
                 className={classes.columnHeader}
-                data-qa-events-duration-header
+                data-qa-events-time-header
               >
-                Duration
+                Absolute Date
               </TableCell>
             </Hidden>
-            <TableCell
-              className={classes.columnHeader}
-              data-qa-events-time-header
-            >
-              When
-            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

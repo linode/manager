@@ -1,20 +1,20 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import EntityIcon from 'src/components/EntityIcon';
+import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
-import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+import GravatarIcon from '../Profile/DisplaySettings/GravatarIcon';
 import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -22,12 +22,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor:
         theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
-      boxShadow: `inset 5px 0 0 ${theme.palette.primary.main}`,
-      cursor: 'pointer',
+    },
+    '& a': {
+      color: 'inherit',
     },
   },
   icon: {
-    marginLeft: theme.spacing(1.5),
+    height: 24,
+    width: 24,
   },
 }));
 
@@ -43,8 +45,6 @@ interface Props {
 type CombinedProps = Props;
 
 export const EventRow: React.FC<CombinedProps> = (props) => {
-  const history = useHistory();
-
   const { event, entityId } = props;
   const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -60,8 +60,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
     type,
     created: event.created,
     username: event.username,
-    duration: event.duration,
-    history,
   };
 
   return <Row {...rowProps} data-qa-events-row={event.id} />;
@@ -69,7 +67,6 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
 
 export interface RowProps {
   action: EventAction;
-  entityId?: number;
   link?: string | (() => void);
   message?: string | void;
   status?: string;
@@ -82,25 +79,12 @@ export interface RowProps {
     | 'database';
   created: string;
   username: string | null;
-  duration: Event['duration'];
-  history: any;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    action,
-    entityId,
-    link,
-    message,
-    status,
-    type,
-    created,
-    username,
-    duration,
-    history,
-  } = props;
+  const { action, link, message, created, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -117,42 +101,25 @@ export const Row: React.FC<RowProps> = (props) => {
       data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}
       className={link ? classes.row : ''}
-      onClick={() => history.push(link as string)}
     >
-      {/** We don't use the event argument, so typing isn't critical here. */}
-      {/* Only display entity icon on the Global EventsLanding page */}
-      {!entityId && (
-        <Hidden xsDown>
-          <TableCell data-qa-event-icon-cell>
-            <div className={classes.icon}>
-              <EntityIcon
-                data-qa-entity-icon
-                variant={type}
-                status={status}
-                size={20}
-              />
-            </div>
-          </TableCell>
-        </Hidden>
-      )}
-      <TableCell parentColumn="Event" data-qa-event-message-cell>
-        <Typography data-qa-event-message variant="body1">
-          {displayedMessage}
-        </Typography>
-      </TableCell>
-      <Hidden mdDown>
-        <TableCell parentColumn="Duration">
-          <Typography variant="body1">
-            {/* There is currently an API bug where host_reboot event durations are
-          not reported correctly. This patch simply hides the duration. @todo
-          remove this // check when the API bug is fixed. */}
-            {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
-          </Typography>
+      <Hidden xsDown>
+        <TableCell data-qa-event-icon-cell>
+          <GravatarIcon username={username} className={classes.icon} />
         </TableCell>
       </Hidden>
-      <TableCell parentColumn="When" data-qa-event-created-cell>
-        <DateTimeDisplay value={created} />
+      <TableCell parentColumn="Event" data-qa-event-message-cell>
+        <Typography data-qa-event-message variant="body1">
+          {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
+        </Typography>
       </TableCell>
+      <TableCell parentColumn="Relative Date">
+        {parseAPIDate(created).toRelative()}
+      </TableCell>
+      <Hidden smDown>
+        <TableCell parentColumn="Absolute Date" data-qa-event-created-cell>
+          <DateTimeDisplay value={created} />
+        </TableCell>
+      </Hidden>
     </TableRow>
   );
 };
