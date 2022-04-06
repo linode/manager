@@ -268,15 +268,19 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               });
             }
 
-            if (resp.is_bgp && resp.linodes.includes(this.props.linode.id)) {
+            if (
+              this.props.flags.ipv6Sharing &&
+              resp.is_bgp &&
+              resp.linodes.includes(this.props.linode.id)
+            ) {
               // any range that is shared to this linode
-              this.props.flags.ipv6Sharing && sharedRanges.push(range);
+              sharedRanges.push(range);
             } else if (!resp.is_bgp && range.route_target === slaac) {
               // any range that is statically routed to this linode
               staticRanges.push(range);
-            } else {
+            } else if (this.props.flags.ipv6Sharing) {
               // any range that is not shared to this linode or static on this linode
-              this.props.flags.ipv6Sharing && availableRanges.push(resp);
+              availableRanges.push(resp);
             }
           });
 
