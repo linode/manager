@@ -240,25 +240,23 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       share = shareAddresses;
 
       // share unshared ranges first to their staticly routed Linode, then later we can share to the current Linode
-      ipsToShare.forEach((ip) => {
-        Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
-          promises.push(
-            shareAddresses({
-              linode_id: parseInt(linode_id, 10),
-              ips: groupedUnsharedRanges[linode_id],
-            }).catch((errorResponse) => {
-              const errors = getAPIErrorOrDefault(
-                errorResponse,
-                'Unable to complete request at this time.'
-              );
-              localErrors = errors;
-              setErrors(errors);
-              localSubmitting = false;
-              setSubmitting(false);
-              setSuccessMessage(undefined);
-            })
-          );
-        });
+      Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
+        promises.push(
+          shareAddresses({
+            linode_id: parseInt(linode_id, 10),
+            ips: groupedUnsharedRanges[linode_id],
+          }).catch((errorResponse) => {
+            const errors = getAPIErrorOrDefault(
+              errorResponse,
+              'Unable to complete request at this time.'
+            );
+            localErrors = errors;
+            setErrors(errors);
+            localSubmitting = false;
+            setSubmitting(false);
+            setSuccessMessage(undefined);
+          })
+        );
       });
     } else {
       share = shareAddressesv4;
