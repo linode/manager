@@ -245,7 +245,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         });
       });
 
-    const refreshIPv6 = getAllIPv6Ranges({})
+    const refreshIPv6 = getAllIPv6Ranges()
       .then(async (resp) => {
         const ranges = resp.data;
 
@@ -259,6 +259,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             return acc;
           }
 
+          // get info on an IPv6 range; if its shared check if its shared to our Linode; if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
           await getIPv6RangeInfo(range.range).then(async (resp) => {
             let slaac;
             if (!resp.is_bgp) {
