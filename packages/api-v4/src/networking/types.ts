@@ -24,17 +24,16 @@ export interface IPAddress {
   region: string;
 }
 
-export interface IPRange {
+export interface IPRangeBaseData {
   range: string;
   region: string;
-  route_target: string | null;
   prefix: number;
 }
 
-export interface IPRangeInformation {
-  range: string;
-  region: string;
-  prefix: number;
+export interface IPRange extends IPRangeBaseData {
+  route_target: string | null;
+}
+export interface IPRangeInformation extends IPRangeBaseData {
   is_bgp: boolean;
   linodes: number[];
 }
