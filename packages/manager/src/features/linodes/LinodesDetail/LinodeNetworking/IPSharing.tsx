@@ -11,6 +11,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Link from 'src/components/Link';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -117,7 +118,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       });
 
       if (flags.ipv6Sharing) {
-        availableRangesMap?.[currentValue.id].forEach((range: string) => {
+        availableRangesMap?.[currentValue.id]?.forEach((range: string) => {
           previousValue[range] = currentValue.label;
           updateipToLinodeID({
             [range]: [...(ipToLinodeID?.[range] ?? []), currentValue.id],
@@ -323,6 +324,18 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
               <Notice success text={successMessage} />
             </Grid>
           )}
+          {flags.ipv6Sharing && (
+            <Notice warning>
+              <Typography style={{ fontSize: '0.875rem' }}>
+                <strong>Warning:</strong> Converting a statically routed IPv6
+                range to a shared range will break existing IPv6 connectivity
+                unless each Linode that shares the range has BGP setup to
+                advertise that range. Follow{' '}
+                <Link to="https://status.linode.com/">this guide</Link> to setup
+                BGP on a Linode.
+              </Typography>
+            </Notice>
+          )}
           <Grid container>
             <Grid item sm={12} lg={8} xl={6}>
               <Typography className={classes.networkActionText}>
@@ -336,7 +349,9 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
             <Grid item xs={12}>
               <Grid container>
                 <Grid item className={classes.ipFieldLabel}>
-                  <Typography>IP Addresses</Typography>
+                  <Typography style={{ fontWeight: 'bold' }}>
+                    IP Addresses
+                  </Typography>
                 </Grid>
               </Grid>
               {noChoices ? (
