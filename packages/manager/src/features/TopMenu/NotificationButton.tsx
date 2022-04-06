@@ -25,8 +25,10 @@ export const NotificationButton: React.FC<{}> = (_) => {
     <>
       <button
         aria-label="Notifications"
-        className={classes.icon}
-        onMouseDown={notificationContext.openDrawer}
+        className={`${classes.icon} ${
+          notificationContext.drawerOpen ? classes.hover : ''
+        }`}
+        onClick={notificationContext.openDrawer}
       >
         <TopMenuIcon title="Notifications">
           <Bell />
