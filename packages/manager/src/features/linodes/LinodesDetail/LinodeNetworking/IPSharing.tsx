@@ -117,17 +117,17 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
       });
 
       if (flags.ipv6Sharing) {
-        availableRangesMap[currentValue.id] &&
-          availableRangesMap[currentValue.id].forEach((range: string) => {
-            previousValue[range] = currentValue.label;
-            if (ipToLinodeID.hasOwnProperty(range)) {
-              updateipToLinodeID({
-                [range]: [ipToLinodeID[range]].concat([currentValue.id]),
-              });
-            } else {
-              updateipToLinodeID({ [range]: [currentValue.id] });
-            }
+       if (flags.ipv6Sharing) {
+        availableRangesMap?.[currentValue.id].forEach((range: string) => {
+          previousValue[range] = currentValue.label;
+          updateipToLinodeID({
+            [range]: [...(ipToLinodeID?.[range] ?? []), currentValue.id],
           });
+        });
+      }
+
+      return previousValue;
+    }, {});
       }
 
       return previousValue;
