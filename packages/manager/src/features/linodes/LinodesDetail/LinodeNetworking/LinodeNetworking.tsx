@@ -495,17 +495,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderErrorState = () => {
     const { IPRequestError, ipv6Error } = this.state;
-    let errorText;
-    if (IPRequestError) {
-      errorText =
-        IPRequestError ||
-        'There was an error retrieving your networking information.';
-    } else if (ipv6Error) {
-      errorText =
-        ipv6Error ||
-        'There was an error retrieving your networking information.';
-    }
-    return errorText ? <ErrorState errorText={errorText} /> : null;
+    const errorText =
+      IPRequestError ||
+      ipv6Error ||
+      'There was an error retrieving your networking information.';
+    return <ErrorState errorText={errorText} />;
   };
 
   renderLoadingState = () => {
