@@ -1,5 +1,4 @@
 import { assignAddresses, IPRange } from '@linode/api-v4/lib/networking';
-// import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   both,
