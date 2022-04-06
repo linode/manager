@@ -142,7 +142,8 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     return choiceLabels;
   };
 
-  const linodes = Object.values(data?.linodes ?? []);
+  const linodes = data ?? [];
+
   const [ipChoices, setipChoices] = React.useState({});
   const [ipToLinodeID, setipToLinodeID] = React.useState({});
 
