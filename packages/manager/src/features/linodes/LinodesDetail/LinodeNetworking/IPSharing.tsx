@@ -102,7 +102,10 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     open // Only run the query if the modal is open
   );
 
-  const getIPChoicesAndLabels = (linodeID: number, linodes: Linode[]) => {
+  const getIPChoicesAndLabels = (
+    linodeID: number,
+    linodes: Linode[]
+  ): Record<number, string> => {
     const choiceLabels = linodes.reduce((previousValue, currentValue) => {
       // Filter out the current Linode
       if (currentValue.id === linodeID) {
