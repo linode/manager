@@ -1,4 +1,9 @@
-import { basePerms, scopeStringToPermTuples } from './utils';
+import {
+  basePerms,
+  scopeStringToPermTuples,
+  allScopesAreTheSame,
+  Permission,
+} from './utils';
 
 describe('APIToken utils', () => {
   describe('scopeStringToPermTuples', () => {
@@ -191,6 +196,77 @@ describe('APIToken utils', () => {
 
       it('should return the higher value for account.', () => {
         expect(result).toEqual(expected);
+      });
+    });
+
+    describe('allScopesAreTheSame', () => {
+      it('should return 0 if all scopes are 0', () => {
+        const scopes: Permission[] = [
+          ['account', 0],
+          ['domains', 0],
+          ['events', 0],
+          ['images', 0],
+          ['ips', 0],
+          ['linodes', 0],
+          ['longview', 0],
+          ['nodebalancers', 0],
+          ['object_storage', 0],
+          // ['lke', 0],
+          ['stackscripts', 0],
+          ['volumes', 0],
+        ];
+        expect(allScopesAreTheSame(scopes)).toBe(0);
+      });
+      it('should return 1 if all scopes are 1', () => {
+        const scopes: Permission[] = [
+          ['account', 1],
+          ['domains', 1],
+          ['events', 1],
+          ['images', 1],
+          ['ips', 1],
+          ['linodes', 1],
+          ['longview', 1],
+          ['nodebalancers', 1],
+          ['object_storage', 1],
+          // ['lke', 1],
+          ['stackscripts', 1],
+          ['volumes', 1],
+        ];
+        expect(allScopesAreTheSame(scopes)).toBe(1);
+      });
+      it('should return 2 if all scopes are 2', () => {
+        const scopes: Permission[] = [
+          ['account', 2],
+          ['domains', 2],
+          ['events', 2],
+          ['images', 2],
+          ['ips', 2],
+          ['linodes', 2],
+          ['longview', 2],
+          ['nodebalancers', 2],
+          ['object_storage', 2],
+          // ['lke', 2],
+          ['stackscripts', 2],
+          ['volumes', 2],
+        ];
+        expect(allScopesAreTheSame(scopes)).toBe(2);
+      });
+      it('should return null if all scopes are different', () => {
+        const scopes: Permission[] = [
+          ['account', 1],
+          ['domains', 2],
+          ['events', 0],
+          ['images', 2],
+          ['ips', 2],
+          ['linodes', 1],
+          ['longview', 2],
+          ['nodebalancers', 0],
+          ['object_storage', 2],
+          // ['lke', 2],
+          ['stackscripts', 2],
+          ['volumes', 2],
+        ];
+        expect(allScopesAreTheSame(scopes)).toBe(null);
       });
     });
   });
