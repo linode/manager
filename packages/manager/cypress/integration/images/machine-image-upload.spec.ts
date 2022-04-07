@@ -12,6 +12,20 @@ import { EventStatus } from '../../../../api-v4/lib/account/types';
 import { ImageStatus } from '../../../../api-v4/lib/images/types';
 import { randomLabel, randomItem } from 'support/util/random';
 
+/**
+ * Returns a numeric image ID from a string-based image ID.
+ *
+ * @param imageIdString - Image ID string to convert to number.
+ *
+ * @example
+ * numericImageIdFromString('private/1111111'); // Returns 1111111.
+ *
+ * @returns Numeric image ID.
+ */
+const numericImageIdFromString = (imageIdString: string): number => {
+  const substring = imageIdString.split('/')[1];
+  return parseInt(substring, 10);
+};
 const eventIntercept = (
   label: string,
   id: string,
