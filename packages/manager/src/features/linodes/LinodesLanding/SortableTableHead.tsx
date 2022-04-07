@@ -50,13 +50,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '15%',
     },
   },
-  ipAddressCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '14%',
-    [theme.breakpoints.only('sm')]: {
-      width: '22%',
-    },
-  },
   regionCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
@@ -150,7 +143,6 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
                 active={isActive('ipv4[0]')}
                 handleClick={handleOrderChange}
                 direction={order}
-                className={classes.ipAddressCell}
               >
                 IP Address
               </TableSortCell>

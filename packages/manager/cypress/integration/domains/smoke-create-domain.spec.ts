@@ -1,10 +1,10 @@
-import { makeDomainLabel } from '../../support/api/domains';
 import {
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
 } from '../../support/helpers';
+import { randomDomainName } from 'support/util/random';
 
 describe('Create a Domain', () => {
   it('Creates first Domain', () => {
@@ -24,7 +24,7 @@ describe('Create a Domain', () => {
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
     fbtClick('Create Domain');
-    const label = makeDomainLabel();
+    const label = randomDomainName();
     getVisible('[id="domain"][data-testid="textfield-input"]').type(label);
     getVisible('[id="soa-email-address"][data-testid="textfield-input"]').type(
       'devs@linode.com'

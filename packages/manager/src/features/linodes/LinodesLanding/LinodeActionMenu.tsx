@@ -7,17 +7,10 @@ import {
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { stringify } from 'qs';
-import { splitAt } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme,
-} from 'src/components/core/styles';
-import InlineMenuAction from 'src/components/InlineMenuAction';
+import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
@@ -31,24 +24,6 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
-
-const useStyles = makeStyles(() => ({
-  link: {
-    padding: '12px 10px',
-  },
-  action: {
-    marginLeft: 10,
-  },
-  powerOnOrOff: {
-    borderRadius: 0,
-    justifyContent: 'flex-start',
-    minWidth: 83,
-    whiteSpace: 'nowrap',
-    '&:hover': {
-      textDecoration: 'none',
-    },
-  },
-}));
 
 export interface Props {
   linodeId: number;
@@ -68,7 +43,7 @@ export interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  inTableContext?: boolean;
+  inListView?: boolean;
 }
 
 // When we clone a Linode from the action menu, we pass in several query string
@@ -106,13 +81,12 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
     linodeStatus,
     linodeType,
     openPowerActionDialog,
-    inTableContext,
+    inListView,
     openDialog,
   } = props;
-  const classes = useStyles();
+
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
   const history = useHistory();
@@ -179,23 +153,18 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
       }
     : {};
 
-  const inLandingListView = matchesMdDown && inTableContext;
-  const inEntityView = matchesSmDown;
-
   const actions = [
-    inLandingListView || inEntityView || inTableContext
+    inListView || matchesSmDown
       ? {
           title: linodeStatus === 'running' ? 'Power Off' : 'Power On',
-          className: classes.powerOnOrOff,
           disabled: !['running', 'offline'].includes(linodeStatus) || readOnly,
           tooltip: readOnly ? noPermissionTooltipText : undefined,
           onClick: handlePowerAction,
         }
       : null,
-    inLandingListView || inEntityView || inTableContext
+    inListView || matchesSmDown
       ? {
           title: 'Reboot',
-          className: classes.link,
           disabled:
             linodeStatus !== 'running' ||
             (!hasMadeConfigsRequest && matchesSmDown) ||
@@ -213,7 +182,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
           ...readOnlyProps,
         }
       : null,
-    inTableContext || matchesSmDown
+    inListView || matchesSmDown
       ? {
           title: 'Launch LISH Console',
           onClick: () => {
@@ -293,34 +262,12 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
     },
   ].filter(Boolean) as ExtendedAction[];
 
-  const splitActionsArrayIndex = matchesMdDown ? 0 : 2;
-  const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
-
   return (
-    <>
-      {!matchesMdDown &&
-        inTableContext &&
-        inlineActions.map((action) => {
-          return (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              className={action.className}
-              disabled={action.disabled}
-              onClick={action.onClick}
-              tooltip={action.tooltip}
-            />
-          );
-        })}
-      <ActionMenu
-        className={classes.action}
-        toggleOpenCallback={toggleOpenActionMenu}
-        // if inTableContext is false we're most likely in the detail header
-        // where we need all of the available actions
-        actionsList={inTableContext ? menuActions : actions}
-        ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
-      />
-    </>
+    <ActionMenu
+      toggleOpenCallback={toggleOpenActionMenu}
+      actionsList={actions}
+      ariaLabel={`Action menu for Linode ${props.linodeLabel}`}
+    />
   );
 };
 

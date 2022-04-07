@@ -30,6 +30,7 @@ import {
   Permission,
   permTuplesToScopeString,
   scopeStringToPermTuples,
+  allScopesAreTheSame,
 } from './utils';
 
 type Expiry = [string, string];
@@ -79,6 +80,7 @@ const styles = (theme: Theme) =>
   createStyles({
     permsTable: {
       marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(),
     },
     selectCell: {
       fontFamily: 'LatoWebBold', // we keep this bold at all times
@@ -95,18 +97,21 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
+      textAlign: 'center',
     },
     readOnlyCell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
+      textAlign: 'center',
     },
     readWritecell: {
       width: '23%',
       [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
+      textAlign: 'center',
     },
   });
 
@@ -147,7 +152,9 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
     scopes: scopeStringToPermTuples(this.props.scopes || '', this.props.perms),
     expiryTups: genExpiryTups(),
-    selectAllSelectedScope: null,
+    selectAllSelectedScope: allScopesAreTheSame(
+      scopeStringToPermTuples(this.props.scopes || '', this.props.perms)
+    ),
   };
 
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
@@ -213,13 +220,20 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         aria-label="Personal Access Token Permissions"
         className={classes.permsTable}
         spacingTop={24}
+        spacingBottom={16}
       >
         <TableHead>
           <TableRow>
             <TableCell data-qa-perm-access>Access</TableCell>
-            <TableCell data-qa-perm-none>None</TableCell>
-            <TableCell data-qa-perm-read>Read Only</TableCell>
-            <TableCell data-qa-perm-rw>Read/Write</TableCell>
+            <TableCell data-qa-perm-none style={{ textAlign: 'center' }}>
+              None
+            </TableCell>
+            <TableCell data-qa-perm-read noWrap style={{ textAlign: 'center' }}>
+              Read Only
+            </TableCell>
+            <TableCell data-qa-perm-rw style={{ textAlign: 'left' }}>
+              Read/Write
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -404,13 +418,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         )}
 
         {mode === 'create' && (
-          <FormControl>
+          <FormControl data-testid="expiry-select">
             <Select
               options={expiryList}
               defaultValue={defaultExpiry || expiryTups[0][1]}
               onChange={this.handleExpiryChange}
               name="expiry"
-              id="expiry"
+              labelId="expiry"
               label="Expiry"
               isClearable={false}
             />

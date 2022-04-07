@@ -3,11 +3,10 @@ import {
   testTag,
   getAll,
   deleteById,
-  isTestEntity,
-  makeTestLabel,
+  isTestEntity
 } from './common';
-import strings from '../cypresshelpers';
 import { deleteLinodeById } from './linodes';
+import { randomLabel, randomString } from 'support/util/random';
 
 const relativeApiPath = 'volumes';
 const testVolumeTag = testTag;
@@ -16,8 +15,8 @@ const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 
 const makeVolumeCreateReq = (linodeID, volume) => {
   const volumeData = volume ?? {
-    root_pass: strings.randomPass(),
-    label: makeVolumeLabel(),
+    root_pass: randomString(32),
+    label: randomLabel(),
     region: 'us-east',
     tags: [testVolumeTag],
     linode_id: linodeID,
@@ -40,8 +39,6 @@ export const createVolume = (linodeID, volume = undefined) => {
     return resp.body;
   });
 };
-
-export const makeVolumeLabel = makeTestLabel;
 
 export const getVolumes = () => getAll(relativeApiPath);
 
