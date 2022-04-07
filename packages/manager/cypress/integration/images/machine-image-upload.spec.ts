@@ -1,11 +1,10 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 /* eslint-disable sonarjs/no-identical-functions */
-import { createMockImage } from '../../support/api/images';
 import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
 import 'cypress-file-upload';
 import { assertToast } from 'cypress/support/ui/events';
 import { DateTime } from 'luxon';
-import { eventFactory } from '@src/factories';
+import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { interceptOnce } from 'cypress/support/ui/common';
 import { RecPartial } from 'factory.ts';
@@ -42,9 +41,15 @@ const eventIntercept = (
   ).as('getEvent');
 };
 
-const imageIntercept = (label: string, id: number, status: ImageStatus) => {
-  cy.intercept('GET', `*/images*`, (req) => {
-    req.reply(createMockImage({ label, id, status }));
+const imageIntercept = (label: string, id: string, status: ImageStatus) => {
+  cy.intercept('GET', `*/images/${id}*`, (req) => {
+    req.reply(
+      imageFactory.build({
+        label,
+        id,
+        status,
+      })
+    );
   }).as('getImage');
 };
 
