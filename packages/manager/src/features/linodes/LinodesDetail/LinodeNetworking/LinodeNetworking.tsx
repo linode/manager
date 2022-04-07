@@ -3,7 +3,14 @@ import {
   Linode,
   LinodeIPsResponse,
 } from '@linode/api-v4/lib/linodes';
-import { getIPs, IPAddress, IPRange } from '@linode/api-v4/lib/networking';
+import {
+  getIPs,
+  getIPv6RangeInfo,
+  getIPv6Ranges,
+  IPAddress,
+  IPRange,
+  IPRangeInformation,
+} from '@linode/api-v4/lib/networking';
 import { IPv6, parse as parseIP } from 'ipaddr.js';
 import { isEmpty, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -112,6 +119,9 @@ interface State {
   currentlySelectedIPRange?: IPRange;
   viewIPDrawerOpen: boolean;
   viewRangeDrawerOpen: boolean;
+  sharedRanges: IPRange[];
+  availableRanges: IPRangeInformation[];
+  staticRanges: IPRange[];
   editRDNSDrawerOpen: boolean;
   viewRDNSDrawerOpen: boolean;
   IPRequestError?: string;
@@ -130,6 +140,7 @@ export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 
 // The API returns an error if more than 100 IPs are requested.
 const getAllIPs = getAll<IPAddress>(getIPs, 100);
+const getAllIPv6Ranges = getAll<IPRange>(getIPv6Ranges, 100);
 
 export const ipv4TableID = 'ips';
 
@@ -146,6 +157,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     ipv6Loading: false,
     transferDialogOpen: false,
     sharingDialogOpen: false,
+    sharedRanges: [],
+    availableRanges: [],
+    staticRanges: [],
   };
 
   componentDidMount() {
@@ -181,17 +195,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  refreshIPs = () => {
-    this.setState({ IPRequestError: undefined });
+  refreshIPs = (): Promise<void>[] => {
+    this.setState({
+      IPRequestError: undefined,
+      ipv6Error: undefined,
+    });
 
-    return getLinodeIPs(this.props.linode.id)
+    const refreshIPv4 = getLinodeIPs(this.props.linode.id)
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
         const shouldSetIPv6Loading = this.state.initialLoading;
-
         this.setState({ linodeIPs: ips, initialLoading: false });
-
         // If this user is assigned an IPv6 range in the DC this Linode resides
         // in, we request all IPs on the account, so we can look for matching
         // RDNS addresses.
@@ -229,10 +244,74 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           initialLoading: false,
         });
       });
+
+    const refreshIPv6 = getAllIPv6Ranges()
+      .then(async (resp) => {
+        const ranges = resp.data;
+
+        const sharedRanges: IPRange[] = [];
+        const staticRanges: IPRange[] = [];
+        const availableRanges: IPRangeInformation[] = [];
+        const rangeConstruction = await ranges.reduce(async (acc, range) => {
+          await acc;
+          // filter user ranges outside dc
+          if (range.region !== this.props.linode.region) {
+            return acc;
+          }
+
+          // get info on an IPv6 range; if its shared check if its shared to our Linode
+          // if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
+          const resp = await getIPv6RangeInfo(range.range);
+          let slaac;
+          if (!resp.is_bgp) {
+            await getLinodeIPs(this.props.linode.id).then((ips) => {
+              slaac = ips?.ipv6?.slaac.address;
+            });
+          }
+
+          if (
+            this.props.flags.ipv6Sharing &&
+            resp.is_bgp &&
+            resp.linodes.includes(this.props.linode.id)
+          ) {
+            // any range that is shared to this linode
+            sharedRanges.push(range);
+          } else if (!resp.is_bgp && range.route_target === slaac) {
+            // any range that is statically routed to this linode
+            staticRanges.push(range);
+          } else if (this.props.flags.ipv6Sharing) {
+            // any range that is not shared to this linode or static on this linode
+            availableRanges.push(resp);
+          }
+
+          return [];
+        }, Promise.resolve([]));
+
+        return Promise.all(rangeConstruction).then(() => {
+          this.setState({
+            sharedRanges,
+            availableRanges,
+            staticRanges,
+            ipv6Loading: false,
+          });
+        });
+      })
+      .catch((errorResponse) => {
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an error retrieving your IPv6 network information.'
+        );
+        this.setState({
+          ipv6Error: errors[0].reason,
+          ipv6Loading: false,
+        });
+      });
+
+    return [refreshIPv4, refreshIPv6];
   };
 
   handleRemoveIPSuccess = (linode?: Linode) => {
-    /** refresh local state and redux state so our data is persistent everywhere */
+    // refresh local state and redux state so our data is persistent everywhere
     this.refreshIPs();
     if (linode) {
       this.props.upsertLinode(linode);
@@ -419,10 +498,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderErrorState = () => {
-    const { IPRequestError } = this.state;
-    const errorText = IPRequestError
-      ? IPRequestError
-      : 'There was an error retrieving your networking information.';
+    const { IPRequestError, ipv6Error } = this.state;
+    const errorText =
+      IPRequestError ||
+      ipv6Error ||
+      'There was an error retrieving your networking information.';
     return <ErrorState errorText={errorText} />;
   };
 
@@ -466,16 +546,18 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       linodeIPs,
       initialLoading,
       IPRequestError,
+      ipv6Error,
+      ipv6Loading,
       currentlySelectedIPRange,
     } = this.state;
 
     /* Loading state */
-    if (initialLoading) {
+    if (initialLoading || ipv6Loading) {
       return this.renderLoadingState();
     }
 
     /* Error state */
-    if (IPRequestError) {
+    if (IPRequestError || ipv6Error) {
       return this.renderErrorState();
     }
 
@@ -503,11 +585,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
     const sharedIPs = uniq<string>(
       pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
-    );
-    const globalIPs = uniq<string>(
-      pathOr([], ['ipv6', 'global'], linodeIPs).map(
-        (i: IPRange) => `${i.range}/${i.prefix}`
-      )
     );
 
     let selectedIPAddress;
@@ -588,7 +665,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linodeID={linodeID}
           linodeRegion={linodeRegion}
           refreshIPs={this.refreshIPs}
-          ipAddresses={[...publicIPs, ...privateIPs, ...globalIPs]}
+          ipAddresses={[
+            ...publicIPs,
+            ...privateIPs,
+            ...this.state.staticRanges.map(
+              (range) => `${range.range}/${range.prefix}`
+            ),
+          ]}
           readOnly={readOnly}
         />
 
@@ -597,7 +680,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           onClose={this.closeSharingDialog}
           linodeID={linodeID}
           linodeIPs={publicIPs}
-          linodeSharedIPs={sharedIPs}
+          linodeSharedIPs={[
+            ...sharedIPs,
+            ...this.state.sharedRanges.map(
+              (range) => `${range.range}/${range.prefix}`
+            ),
+          ]}
+          availableRanges={this.state.availableRanges}
           linodeRegion={linodeRegion}
           refreshIPs={this.refreshIPs}
           updateFor={[
@@ -631,7 +720,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(this.state.linodeIPs);
+    const ipDisplay = ipResponseToDisplayRows(
+      [...this.state.staticRanges, ...this.state.sharedRanges],
+      this.state.linodeIPs
+    );
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -813,6 +905,7 @@ interface IPDisplay {
 
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
+  routedRanges: IPRange[],
   ipResponse?: LinodeIPsResponse
 ): IPDisplay[] => {
   if (!ipResponse) {
@@ -837,21 +930,16 @@ export const ipResponseToDisplayRows = (
   }
 
   // Routed ranges are a special case.
-  if (ipv6?.global) {
+  if (routedRanges) {
     ipDisplay.push(
-      ...ipv6.global.map((thisIP) => {
-        let address = thisIP.range;
-        if (thisIP.prefix) {
-          address += ` / ${thisIP.prefix}`;
-        }
-
+      ...routedRanges.map((range) => {
         return {
           type: 'IPv6 – Range' as IPDisplay['type'],
-          address,
+          address: `${range.range}/${range.prefix}`,
           gateway: '',
           subnetMask: '',
           rdns: '',
-          _range: thisIP,
+          _range: range,
         };
       })
     );

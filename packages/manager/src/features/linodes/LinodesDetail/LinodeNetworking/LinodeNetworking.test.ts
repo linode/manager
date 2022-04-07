@@ -7,6 +7,7 @@ import {
   uniqByIP,
 } from './LinodeNetworking';
 import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
+import { IPRange } from '@linode/api-v4/lib/networking';
 
 const {
   private: _privateIPs,
@@ -79,14 +80,20 @@ describe('ipResponseToDisplayRows utility function', () => {
       ],
     },
   };
+  const staticRanges: IPRange = {
+    range: '2600:3c00:e000:0000::',
+    region: 'us-west',
+    route_target: '2a01:7e00::f03c:93ff:fe6e:1233',
+    prefix: 64,
+  };
 
   it('returns a display row for each IP/range', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows([staticRanges], response);
     expect(result).toHaveLength(7);
   });
 
   it('includes the meta _ip field for IP addresses', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows([staticRanges], response);
     // Check the first six rows (the IPs)
     for (let i = 0; i < 5; i++) {
       expect(result[i]._ip).toBeDefined();
@@ -94,7 +101,7 @@ describe('ipResponseToDisplayRows utility function', () => {
   });
 
   it('includes the meta _range field for IP ranges', () => {
-    const result = ipResponseToDisplayRows(response);
+    const result = ipResponseToDisplayRows([staticRanges], response);
     // Check the last row (the IPv6 range)
     expect(result[6]._range).toBeDefined();
   });
