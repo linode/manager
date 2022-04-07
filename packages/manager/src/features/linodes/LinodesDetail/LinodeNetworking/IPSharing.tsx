@@ -315,7 +315,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                     <strong>Warning:</strong> Converting a statically routed
                     IPv6 range to a shared range will break existing IPv6
                     connectivity unless each Linode that shares the range has
-                    BGP setup to advertise that range. Follow{' '}
+                    BGP set up to advertise that range. Follow{' '}
                     <Link to="https://www.linode.com/docs/guides/ip-failover/">
                       this guide
                     </Link>{' '}
@@ -325,8 +325,8 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
               ) : null}
               <Typography className={classes.networkActionText}>
                 IP Sharing allows a Linode to share an IP address assignment
-                (one or more additional IPv4 addresses). This can be used to
-                allow one Linode to begin serving requests should another become
+                (one or more additional IP addresses). This can be used to allow
+                one Linode to begin serving requests should another become
                 unresponsive. Only IPs in the same datacenter are offered for
                 sharing.
               </Typography>
