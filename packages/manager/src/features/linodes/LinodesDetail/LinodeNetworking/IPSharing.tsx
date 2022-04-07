@@ -309,7 +309,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           )}
           <Grid container>
             <Grid item sm={12} lg={8} xl={6}>
-              {flags.ipv6Sharing && (
+              {flags.ipv6Sharing ? (
                 <Notice warning>
                   <Typography style={{ fontSize: '0.875rem' }}>
                     <strong>Warning:</strong> Converting a statically routed
@@ -322,7 +322,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
                     to set up BGP on a Linode.
                   </Typography>
                 </Notice>
-              )}
+              ) : null}
               <Typography className={classes.networkActionText}>
                 IP Sharing allows a Linode to share an IP address assignment
                 (one or more additional IPv4 addresses). This can be used to
