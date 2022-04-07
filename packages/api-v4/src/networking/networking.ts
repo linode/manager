@@ -4,7 +4,7 @@ import {
   shareAddressesSchema,
   updateIPSchema,
 } from '@linode/validation/lib/networking.schema';
-import { API_ROOT } from '../constants';
+import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
@@ -18,6 +18,7 @@ import {
   IPAddress,
   IPAssignmentPayload,
   IPRange,
+  IPRangeInformation,
   IPSharingPayload,
 } from './types';
 
@@ -102,6 +103,28 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
   );
 
 /**
+ * [Legacy endpoint used until IPv6 sharing is flagged on everywhere]
+ * Configure shared IPs. A shared IP may be brought up on a Linode other than
+ * the one it lists in its response. This can be used to allow one Linode to
+ * begin serving requests should another become unresponsive.
+ *
+ * @param payload { Object }
+ * @param payload.linode_id { number } The ID of the Linode that the addresses
+ * will be shared with.
+ * @param payload.ips { string[] } A list of IPs that will be shared with this
+ * Linode. When this is finished, the given Linode will be able to bring up
+ * these addresses in addition to the Linodes that these addresses belong to.
+ * You must have access to all of these addresses and they must be in the same
+ * Region as the Linode.
+ */
+export const shareAddressesv4 = (payload: IPSharingPayload) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/networking/ipv4/share`),
+    setMethod('POST'),
+    setData(payload, shareAddressesSchema)
+  );
+
+/**
  * Configure shared IPs. A shared IP may be brought up on a Linode other than
  * the one it lists in its response. This can be used to allow one Linode to
  * begin serving requests should another become unresponsive.
@@ -117,7 +140,7 @@ export const assignAddresses = (payload: IPAssignmentPayload) =>
  */
 export const shareAddresses = (payload: IPSharingPayload) =>
   Request<{}>(
-    setURL(`${API_ROOT}/networking/ipv4/share`),
+    setURL(`${BETA_API_ROOT}/networking/ips/share`),
     setMethod('POST'),
     setData(payload, shareAddressesSchema)
   );
@@ -134,12 +157,24 @@ export const getIPv6Pools = (params?: unknown) =>
   );
 
 /**
- * Displays the IPv6 ranges on your Account.
+ * View IPv6 range information.
  *
  */
 export const getIPv6Ranges = (params?: any) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
+    setMethod('GET'),
+    setParams(params)
+  );
+
+/**
+ * Returns information about a single IPv6 range on your Account.
+ *
+ * @param range { string } The range address to operate on.
+ */
+export const getIPv6RangeInfo = (range: string, params?: any) =>
+  Request<IPRangeInformation>(
+    setURL(`${API_ROOT}/networking/ipv6/ranges/${range}`),
     setMethod('GET'),
     setParams(params)
   );

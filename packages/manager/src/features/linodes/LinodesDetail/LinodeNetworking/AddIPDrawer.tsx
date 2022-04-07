@@ -90,7 +90,7 @@ interface Props {
   onClose: () => void;
   linodeID: number;
   hasPrivateIPAddress: boolean;
-  onSuccess: () => void;
+  onSuccess: () => Promise<void>[];
   readOnly: boolean;
 }
 
@@ -154,7 +154,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     })
       .then((_) => {
         setSubmittingIPv4(false);
-        onSuccess();
+        Promise.all(onSuccess());
         onClose();
       })
       .catch((errResponse) => {
@@ -173,7 +173,7 @@ const AddIPDrawer: React.FC<CombinedProps> = (props) => {
     })
       .then((_: any) => {
         setSubmittingIPv6(false);
-        onSuccess();
+        Promise.all(onSuccess());
         onClose();
       })
       .catch((errResponse: APIError[]) => {
