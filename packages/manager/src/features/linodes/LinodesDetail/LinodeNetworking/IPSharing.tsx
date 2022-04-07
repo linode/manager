@@ -3,7 +3,6 @@ import {
   shareAddresses,
   shareAddressesv4,
   IPRangeInformation,
-  IPSharingPayload,
 } from '@linode/api-v4/lib/networking';
 import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
@@ -230,15 +229,10 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
     setSubmitting(localSubmitting);
     setSuccessMessage(undefined);
 
-    let share: {
-      (arg0: { linode_id: number; ips: string[] }): Promise<any>;
-      (payload: IPSharingPayload): Promise<{}>;
-      (payload: IPSharingPayload): Promise<{}>;
-    };
+    const share = flags.ipv6Sharing ? shareAddresses : shareAddressesv4;
     const promises: Promise<void | {}>[] = [];
-    if (flags.ipv6Sharing) {
-      share = shareAddresses;
 
+    if (flags.ipv6Sharing) {
       // share unshared ranges first to their staticly routed Linode, then later we can share to the current Linode
       Object.keys(groupedUnsharedRanges).forEach((linode_id) => {
         promises.push(
@@ -258,8 +252,6 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           })
         );
       });
-    } else {
-      share = shareAddressesv4;
     }
 
     Promise.all(promises).then(() => {
