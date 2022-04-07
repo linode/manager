@@ -15,11 +15,12 @@ import { randomLabel } from 'support/util/random';
 
 const eventIntercept = (
   label: string,
-  id: number,
+  id: string,
   status: RecPartial<EventStatus>,
   message?: string,
   created?: string
 ) => {
+  const numericId = numericImageIdFromString(id);
   interceptOnce(
     'GET',
     '*/account/events*',
@@ -29,9 +30,9 @@ const eventIntercept = (
         action: 'image_upload',
         entity: {
           label: label,
-          id,
+          id: numericId,
           type: 'image',
-          url: `/v4/images/private/${id}`,
+          url: `/v4/images/private/${numericId}`,
         },
         status,
         secondary_entity: null,
