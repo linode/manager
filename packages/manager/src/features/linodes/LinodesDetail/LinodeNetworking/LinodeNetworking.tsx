@@ -259,30 +259,30 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             return acc;
           }
 
-          // get info on an IPv6 range; if its shared check if its shared to our Linode; if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
-          await getIPv6RangeInfo(range.range).then(async (resp) => {
-            let slaac;
-            if (!resp.is_bgp) {
-              await getLinodeIPs(this.props.linode.id).then((ips) => {
-                slaac = ips?.ipv6?.slaac.address;
-              });
-            }
+          // get info on an IPv6 range; if its shared check if its shared to our Linode
+          // if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
+          const resp = await getIPv6RangeInfo(range.range);
+          let slaac;
+          if (!resp.is_bgp) {
+            await getLinodeIPs(this.props.linode.id).then((ips) => {
+              slaac = ips?.ipv6?.slaac.address;
+            });
+          }
 
-            if (
-              this.props.flags.ipv6Sharing &&
-              resp.is_bgp &&
-              resp.linodes.includes(this.props.linode.id)
-            ) {
-              // any range that is shared to this linode
-              sharedRanges.push(range);
-            } else if (!resp.is_bgp && range.route_target === slaac) {
-              // any range that is statically routed to this linode
-              staticRanges.push(range);
-            } else if (this.props.flags.ipv6Sharing) {
-              // any range that is not shared to this linode or static on this linode
-              availableRanges.push(resp);
-            }
-          });
+          if (
+            this.props.flags.ipv6Sharing &&
+            resp.is_bgp &&
+            resp.linodes.includes(this.props.linode.id)
+          ) {
+            // any range that is shared to this linode
+            sharedRanges.push(range);
+          } else if (!resp.is_bgp && range.route_target === slaac) {
+            // any range that is statically routed to this linode
+            staticRanges.push(range);
+          } else if (this.props.flags.ipv6Sharing) {
+            // any range that is not shared to this linode or static on this linode
+            availableRanges.push(resp);
+          }
 
           return [];
         }, Promise.resolve([]));
