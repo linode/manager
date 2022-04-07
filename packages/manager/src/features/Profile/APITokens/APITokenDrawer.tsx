@@ -252,7 +252,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
                 className={classes.noneCell}
               >
                 <Radio
-                  name="Select Al"
+                  name="Select All"
                   checked={
                     selectAllSelectedScope === 0 && this.allScopesIdentical()
                   }
