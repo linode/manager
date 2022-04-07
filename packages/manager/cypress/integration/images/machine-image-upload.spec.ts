@@ -11,7 +11,7 @@ import { interceptOnce } from 'cypress/support/ui/common';
 import { RecPartial } from 'factory.ts';
 import { EventStatus } from '../../../../api-v4/lib/account/types';
 import { ImageStatus } from '../../../../api-v4/lib/images/types';
-import { randomLabel } from 'support/util/random';
+import { randomLabel, randomItem } from 'support/util/random';
 
 const eventIntercept = (
   label: string,
@@ -66,7 +66,7 @@ const assertProcessing = (label: string, imageId: number) => {
 };
 
 const uploadImage = (label: string) => {
-  const regionSelect = 'Fremont, CA';
+  const regionSelect = randomItem(regionsFriendly);
   const upload = 'testImage.gz';
   cy.visitWithLogin('/images/create/upload');
   getClick('[id="label"][data-testid="textfield-input"]').type(label);
