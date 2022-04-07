@@ -82,7 +82,7 @@ interface Props {
   linodeRegion: string;
   ipAddresses: string[];
   readOnly?: boolean;
-  refreshIPs: () => Promise<void>;
+  refreshIPs: () => Promise<void>[];
   open: boolean;
   onClose: () => void;
 }
@@ -431,9 +431,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     assignAddresses(createRequestData(ips, props.linodeRegion))
       .then(() => {
         // Refresh Linodes in the region in which the changes were made.
-        // props.getLinodes({}, { region: props.linodeRegion });
-        return props
-          .refreshIPs()
+        return Promise.all(props.refreshIPs())
           .then(() => {
             setSubmitting(false);
             setError(undefined);

@@ -3,17 +3,16 @@ import {
   getAll,
   deleteById,
   isTestEntity,
-  makeTestLabel,
 } from './common';
+import { randomLabel } from 'support/util/random';
 export const testNodeBalTag = testTag;
-export const makeNodeBalLabel = makeTestLabel;
 
 export const makeNodeBalCreateReq = (nodeBal) => {
   const nodeBalData = nodeBal
     ? nodeBal
     : {
         client_conn_throttle: 0,
-        label: makeNodeBalLabel(),
+        label: randomLabel(),
         tags: [testNodeBalTag],
         region: 'us-east',
         configs: [],
