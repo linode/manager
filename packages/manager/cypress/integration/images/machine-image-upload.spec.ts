@@ -1,15 +1,14 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-/* eslint-disable sonarjs/no-identical-functions */
-import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
-import 'cypress-file-upload';
-import { assertToast } from 'cypress/support/ui/events';
-import { DateTime } from 'luxon';
+import { EventStatus } from '@linode/api-v4/lib/account/types';
+import { ImageStatus } from '@linode/api-v4/lib/images/types';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { interceptOnce } from 'cypress/support/ui/common';
+import 'cypress-file-upload';
 import { RecPartial } from 'factory.ts';
-import { EventStatus } from '../../../../api-v4/lib/account/types';
-import { ImageStatus } from '../../../../api-v4/lib/images/types';
+import { DateTime } from 'luxon';
+import { regionsFriendly } from 'support/constants/regions';
+import { fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { interceptOnce } from 'support/ui/common';
+import { assertToast } from 'support/ui/events';
 import { randomLabel, randomItem } from 'support/util/random';
 
 /**
