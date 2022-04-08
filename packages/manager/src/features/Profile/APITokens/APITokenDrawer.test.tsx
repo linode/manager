@@ -1,6 +1,6 @@
 import { fireEvent, within } from '@testing-library/react';
 import * as React from 'react';
-import { APITokenDrawer } from './APITokenDrawer';
+import { APITokenDrawer, genExpiryTups } from './APITokenDrawer';
 
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { basePermNameMap, basePerms } from './utils';
@@ -59,5 +59,20 @@ describe('API Token Drawer', () => {
     const submit = getByText('Create Token');
     fireEvent.click(submit);
     expect(props.onCreate).toHaveBeenCalledWith('*');
+  });
+  it('Should default to read/write for all scopes', () => {
+    const { getByLabelText } = renderWithTheme(
+      <APITokenDrawer {...props} scopes="*" />
+    );
+    const selectAllReadWriteRadioButton = getByLabelText(
+      'Select read/write for all'
+    );
+    expect(selectAllReadWriteRadioButton).toBeChecked();
+  });
+  it('Should default to never for expiration', () => {
+    const { getByText } = renderWithTheme(
+      <APITokenDrawer {...props} scopes="*" expiry={genExpiryTups()[0][1]} />
+    );
+    getByText('In 6 months');
   });
 });

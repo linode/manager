@@ -173,19 +173,19 @@ export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
       )}
       <ActionsPanel>
         <Button
+          buttonType="secondary"
+          onClick={handleCloseDrawer}
+          data-qa-restore-cancel
+        >
+          Cancel
+        </Button>
+        <Button
           buttonType="primary"
           onClick={restoreToLinode}
           data-qa-restore-submit
           disabled={readOnly}
         >
           Restore
-        </Button>
-        <Button
-          buttonType="secondary"
-          onClick={handleCloseDrawer}
-          data-qa-restore-cancel
-        >
-          Cancel
         </Button>
       </ActionsPanel>
     </Drawer>

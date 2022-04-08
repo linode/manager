@@ -6,10 +6,11 @@
     "skipLibCheck": true,
     "noImplicitAny": false,
     "target": "es5",
-    "lib": ["es5", "dom"],
+    "lib": ["es6", "dom"],
     "baseUrl": "..",
     "paths": {
-      "@src/*": ["src/*"]
+      "@src/*": ["src/*"],
+      "support/*": ["cypress/support/*"]
     },
     "types": ["cypress", "cypress-file-upload", "@testing-library/cypress", "cypress-real-events"]
   },
