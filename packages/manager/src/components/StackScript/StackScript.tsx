@@ -1,4 +1,4 @@
-import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { stringify } from 'qs';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
@@ -15,8 +15,6 @@ import ScriptCode from 'src/components/ScriptCode';
 import { useImages } from 'src/hooks/useImages';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import HelpIcon from '../HelpIcon';
-import Box from '../core/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,8 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   description: {
     whiteSpace: 'pre-wrap',
   },
-  heading: {
+  scriptHeading: {
     marginBottom: theme.spacing(1),
+    fontSize: '1rem',
   },
   descriptionText: {
     marginBottom: theme.spacing(2),
@@ -60,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.palette.primary.main,
     position: 'relative',
     display: 'inline-block',
+    transition: theme.transitions.create(['color']),
     '& svg': {
       width: '1em',
       height: '1em',
@@ -73,23 +73,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     marginTop: theme.spacing(1),
   },
-  helpIcon: {
-    padding: 0,
-    marginLeft: theme.spacing(),
-  },
 }));
 
 export interface Props {
-  data: StackScriptType;
+  data: StackScript;
   userCanModify: boolean;
 }
 
-interface StackScriptImages {
-  available: JSX.Element[];
-  deprecated: JSX.Element[];
-}
+type CombinedProps = Props;
 
-export const StackScript: React.FC<Props> = (props) => {
+export const SStackScript: React.FC<CombinedProps> = (props) => {
   const {
     data: {
       username,
@@ -112,24 +105,20 @@ export const StackScript: React.FC<Props> = (props) => {
   const { images: imagesData } = useImages('public');
   useReduxLoad(['images']);
 
-  const imageChips = images.reduce(
-    (acc: StackScriptImages, image: string) => {
+  const compatibleImages = React.useMemo(() => {
+    const imageChips = images.reduce((acc: any[], image: string) => {
       const imageObj = imagesData.itemsById[image];
 
       if (imageObj) {
-        acc.available.push(
+        acc.push(
           <Chip key={imageObj.id} label={imageObj.label} component="span" />
-        );
-      } else {
-        acc.deprecated.push(
-          <Chip key={image} label={image} component="span" />
         );
       }
 
       return acc;
-    },
-    { available: [], deprecated: [] }
-  );
+    }, []);
+    return imageChips.length > 0 ? imageChips : <>No compatible images found</>;
+  }, [images, imagesData]);
 
   const queryString = stringify({ query: `username:${username}` });
   const link =
@@ -194,9 +183,6 @@ export const StackScript: React.FC<Props> = (props) => {
       </div>
       {description && (
         <div className={classes.description}>
-          <Typography variant="h3" className={classes.heading}>
-            Description
-          </Typography>
           <Typography
             className={classes.descriptionText}
             data-qa-stack-description
@@ -207,47 +193,22 @@ export const StackScript: React.FC<Props> = (props) => {
         </div>
       )}
       <div>
-        <div
+        <Typography
           data-qa-compatible-distro
           className={classes.deploymentSection}
           style={{ marginTop: 0 }}
         >
-          <Typography variant="h3" className={classes.heading}>
-            Compatible Images
-          </Typography>
-          {imageChips.available.length > 0 ? (
-            imageChips.available
-          ) : (
-            <Typography variant="body1">No compatible images found</Typography>
-          )}
-          {imageChips.deprecated.length > 0 ? (
-            <>
-              <Divider spacingTop={16} spacingBottom={16} />
-              <Box
-                display="flex"
-                flexDirection="row"
-                alignItems="center"
-                className={classes.heading}
-              >
-                <Typography variant="h3">Deprecated Images</Typography>
-                <HelpIcon
-                  text="You must update your StackScript to use a compatible Image to deploy it"
-                  tooltipPosition="bottom"
-                  className={classes.helpIcon}
-                />
-              </Box>
-              {imageChips.deprecated}
-            </>
-          ) : null}
-        </div>
+          <strong>Compatible with:</strong>
+          <span className={classes.compatibleImages}>{compatibleImages}</span>
+        </Typography>
         <Divider spacingTop={16} spacingBottom={16} />
       </div>
-      <Typography variant="h3" className={classes.heading}>
-        Script
+      <Typography className={classes.scriptHeading}>
+        <strong>Script:</strong>
       </Typography>
       <ScriptCode script={script} />
     </div>
   );
 };
 
-export default React.memo(StackScript);
+export default React.memo(SStackScript);
