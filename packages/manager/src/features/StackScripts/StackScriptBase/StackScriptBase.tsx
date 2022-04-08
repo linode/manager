@@ -185,28 +185,22 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
               : (stackScript: StackScript) =>
                   !this.usesKubeImage(stackScript.images);
 
-          const newDataWithoutLKEStackScripts = newData.filter(
-            stackScriptFilter
-          );
+          const filteredData = newData.filter(stackScriptFilter);
 
           // we have to make sure both the original data set
           // AND the filtered data set is 0 before we request the next page automatically
-          if (
-            isSorting &&
-            newData.length !== 0 &&
-            newDataWithoutLKEStackScripts.length === 0
-          ) {
+          if (isSorting && newData.length !== 0 && filteredData.length === 0) {
             this.getNext();
             return;
           }
           this.setState({
-            listOfStackScripts: newDataWithoutLKEStackScripts,
+            listOfStackScripts: filteredData,
             gettingMoreStackScripts: false,
             loading: false,
             isSorting: false,
             getMoreStackScriptsFailed: false,
           });
-          return newDataWithoutLKEStackScripts;
+          return filteredData;
         })
         .catch((e: any) => {
           if (!this.mounted) {
