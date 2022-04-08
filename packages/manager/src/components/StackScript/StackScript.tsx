@@ -116,6 +116,11 @@ export const StackScript: React.FC<Props> = (props) => {
     (acc: StackScriptImages, image: string) => {
       const imageObj = imagesData.itemsById[image];
 
+      // If an image is null, just continue the reduce.
+      if (!image) {
+        return acc;
+      }
+
       if (imageObj) {
         acc.available.push(
           <Chip key={imageObj.id} label={imageObj.label} component="span" />

@@ -139,7 +139,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       filter: any = this.state.currentFilter,
       isSorting: boolean = false
     ) => {
-      const { request } = this.props;
+      const { request, category } = this.props;
       this.setState({
         gettingMoreStackScripts: true,
         isSorting,
@@ -170,13 +170,23 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             ? response.data
             : [...this.state.listOfStackScripts, ...response.data];
 
-          /*
-           * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
-           * basically, if the result set after filtering out StackScripts with
-           * deprecated distros is 0, request the next page with the same filter.
+          /**
+           * - When viewing Community StackScripts, we want to filter out
+           *   StackScripts that are not deployable (has no non-deprecated images).
+           * - When viewing Account StackScripts, we want users to be able to see
+           *   StackScripts with deprecated images so they can view and edit them.
+           * - We will always filter out LKE images to prevent confusion for the user.
            */
+          const stackScriptFilter =
+            category === 'community'
+              ? (stackScript: StackScript) =>
+                  this.hasNonDeprecatedImages(stackScript.images) &&
+                  !this.usesKubeImage(stackScript.images)
+              : (stackScript: StackScript) =>
+                  !this.usesKubeImage(stackScript.images);
+
           const newDataWithoutLKEStackScripts = newData.filter(
-            (stackScript) => !this.usesKubeImage(stackScript.images)
+            stackScriptFilter
           );
 
           // we have to make sure both the original data set
@@ -227,6 +237,16 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           this.state.isSorting
         )
       );
+    };
+
+    hasNonDeprecatedImages = (stackScriptImages: string[]) => {
+      const { publicImages } = this.props;
+      for (const stackScriptImage of stackScriptImages) {
+        if (publicImages[stackScriptImage]) {
+          return true;
+        }
+      }
+      return false;
     };
 
     usesKubeImage = (stackScriptImages: string[]) =>

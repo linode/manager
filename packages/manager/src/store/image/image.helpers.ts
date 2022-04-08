@@ -26,9 +26,9 @@ export const filterImagesByType = (
  *
  * Image IDs are in the form linode/debian11 or private/15943292
  *
- * @param {string} id the image's id (unlike most entities, image ids are string)
+ * @param {string | null} id the image's id (unlike most entities, image ids are string)
  * @returns {boolean} true if the image is an LKE image
  */
-export const isLinodeKubeImageId = (id: string): boolean => {
-  return id.startsWith('linode/') && /kube/i.test(id);
+export const isLinodeKubeImageId = (id: string | null): boolean => {
+  return Boolean(id?.startsWith('linode/')) && Boolean(id?.includes('kube'));
 };
