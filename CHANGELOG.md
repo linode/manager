@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-04-07] - v1.63.0
+
+### Added:
+- IPv6 sharing support
+- Ability to add Gravatars to My Profile settings
+
+### Changed:
+- Font size for "Billing & Payment History" header
+- Swapped button order in Restore from Backup drawer
+- Events page refinements
+- Default permissions and expiry for personal access tokens
+
+### Fixed:
+- Prometheus & Grafana and Ant Media Enterprise docs link
+- Linodes missing from Firewall Linode selection
+- Prevent Linode Landing table from scrolling
+
 ## [2022-03-28] - v1.62.1
 
 ### Added:
