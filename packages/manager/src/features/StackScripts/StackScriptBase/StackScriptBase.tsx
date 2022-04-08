@@ -19,7 +19,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
-import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
+import { isLinodeKubeImage } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
@@ -175,8 +175,10 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
            * basically, if the result set after filtering out StackScripts with
            * deprecated distros is 0, request the next page with the same filter.
            */
-          const newDataWithoutLKEStackScripts = newData.filter(
-            (stackScript) => !this.usesKubeImage(stackScript.images)
+          const newDataWithoutDeprecatedDistrosOrKube = newData.filter(
+            (stackScript) =>
+              this.hasNonDeprecatedImages(stackScript.images) &&
+              !this.usesKubeImage(stackScript.images)
           );
 
           // we have to make sure both the original data set
@@ -184,19 +186,19 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
           if (
             isSorting &&
             newData.length !== 0 &&
-            newDataWithoutLKEStackScripts.length === 0
+            newDataWithoutDeprecatedDistrosOrKube.length === 0
           ) {
             this.getNext();
             return;
           }
           this.setState({
-            listOfStackScripts: newDataWithoutLKEStackScripts,
+            listOfStackScripts: newDataWithoutDeprecatedDistrosOrKube,
             gettingMoreStackScripts: false,
             loading: false,
             isSorting: false,
             getMoreStackScriptsFailed: false,
           });
-          return newDataWithoutLKEStackScripts;
+          return newDataWithoutDeprecatedDistrosOrKube;
         })
         .catch((e: any) => {
           if (!this.mounted) {
@@ -229,8 +231,26 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       );
     };
 
-    usesKubeImage = (stackScriptImages: string[]) =>
-      stackScriptImages.some((imageId) => isLinodeKubeImageId(imageId));
+    hasNonDeprecatedImages = (stackScriptImages: string[]) => {
+      const { publicImages } = this.props;
+      for (const stackScriptImage of stackScriptImages) {
+        if (publicImages[stackScriptImage]) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    usesKubeImage = (stackScriptImages: string[]) => {
+      const { publicImages } = this.props;
+      return stackScriptImages.some((imageLabel) => {
+        const image = publicImages[imageLabel];
+        if (!image) {
+          return false;
+        }
+        return isLinodeKubeImage(image);
+      });
+    };
 
     generateFilterInfo = (value: CurrentFilter): FilterInfo => {
       switch (value) {
