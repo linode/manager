@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Fixed:
 
-- Issue where Community StackScripts were inaccessible=
+- Issue where Community StackScripts were inaccessible
 
 ## [2022-04-07] - v1.63.0
 
