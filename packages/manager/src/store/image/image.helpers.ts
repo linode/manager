@@ -30,5 +30,5 @@ export const filterImagesByType = (
  * @returns {boolean} true if the image is an LKE image
  */
 export const isLinodeKubeImageId = (id: string): boolean => {
-  return id.startsWith('linode/') && /kube/i.test(id);
+  return Boolean(id?.startsWith('linode/') && /kube/i?.test(id));
 };
