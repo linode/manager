@@ -220,9 +220,7 @@ export class LinodeCreate extends React.PureComponent<
     this.state = {
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
-        preSelectedTab === 2 && location.search.search('Community') > -1
-          ? 1
-          : 0,
+        preSelectedTab === 2 && location.search.search('Account') > -1 ? 0 : 1,
       planKey: v4(),
     };
   }
