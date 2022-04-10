@@ -12,16 +12,9 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
-import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
-import { Tab } from 'src/components/TabLinkList/TabLinkList';
-import Glish from './Glish';
-import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'progress' | 'notFound' | 'lish';
 

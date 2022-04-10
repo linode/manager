@@ -9,7 +9,7 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
-const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
+// const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
   () => import('./LinodeNetworking/LinodeNetworking')
 );
@@ -41,10 +41,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const isBareMetalInstance = linodeType?.class === 'metal';
 
   const tabs = [
-    {
-      routeName: `${url}/analytics`,
-      title: 'Analytics',
-    },
+    // {
+    //   routeName: `${url}/analytics`,
+    //   title: 'Analytics',
+    // },
     {
       routeName: `${url}/networking`,
       title: 'Network',
@@ -102,9 +102,9 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
 
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              <SafeTabPanel index={idx++}>
+              {/* <SafeTabPanel index={idx++}>
                 <LinodeSummary isBareMetalInstance={isBareMetalInstance} />
-              </SafeTabPanel>
+              </SafeTabPanel> */}
 
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
