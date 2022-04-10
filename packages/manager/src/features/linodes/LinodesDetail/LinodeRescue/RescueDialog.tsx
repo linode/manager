@@ -216,7 +216,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
           <Paper className={classes.root}>
             {unauthorized && <LinodePermissionsError />}
             <RescueDescription linodeId={linodeId} />
-            <DeviceSelection
+            {/* <DeviceSelection
               slots={['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg']}
               devices={devices}
               onChange={onChange}
@@ -233,7 +233,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               disabled={disabled || counter >= 6}
             >
               Add Disk
-            </Button>
+            </Button> */}
             <ActionsPanel>
               <Button
                 buttonType="primary"
