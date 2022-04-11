@@ -463,6 +463,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                     </TableHead>
                     <TableBody>
                       <TableContentWrapper
+                        loadingProps={{
+                          columns: 4,
+                        }}
                         loading={
                           (configsLoading && configsLastUpdated === 0) ||
                           this.state.kernelsLoading

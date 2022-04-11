@@ -22,7 +22,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { parseAPIDate } from 'src/utilities/date';
@@ -175,7 +175,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 
   static renderLoading = () => {
-    return <TableRowLoading colSpan={4} />;
+    return <TableRowLoading columns={4} />;
   };
 
   static renderEmptyState = () => {

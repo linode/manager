@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import SSHAccessRow from './SSHAccessRow';
 
@@ -29,7 +29,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
   } = props;
 
   if (loading && lastUpdated === 0) {
-    return <TableRowLoading colSpan={6} widths={[30]} oneLine />;
+    return <TableRowLoading columns={6} />;
   }
 
   if (error) {

@@ -29,7 +29,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { LinodeAPI } from 'src/documentation';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -304,7 +304,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     }
 
     if (loading) {
-      return <TableRowLoading colSpan={6} oneLine />;
+      return <TableRowLoading columns={5} />;
     }
 
     return data && data.length > 0 ? (

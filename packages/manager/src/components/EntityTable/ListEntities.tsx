@@ -56,6 +56,10 @@ export const ListEntities: React.FC<CombinedProps> = (props) => {
 
                 <TableBody>
                   <TableContentWrapper
+                    loadingProps={{
+                      // @TODO this is not done
+                      columns: headers.length,
+                    }}
                     emptyMessage={emptyMessage}
                     length={paginatedAndOrderedData.length}
                     loading={loading}

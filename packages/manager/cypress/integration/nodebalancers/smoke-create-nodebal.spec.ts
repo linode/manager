@@ -1,9 +1,5 @@
-import {
-  testNodeBalTag,
-} from 'support/api/nodebalancers';
-import {
-  createLinode,
-} from 'support/api/linodes';
+import { testNodeBalTag } from 'support/api/nodebalancers';
+import { createLinode } from 'support/api/linodes';
 import { selectRegionString } from 'support/ui/constants';
 import {
   containsClick,

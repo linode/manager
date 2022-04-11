@@ -37,23 +37,30 @@ function getConfiguration() {
  */
 function checkNodeVersionRequiredByLinode() {
   // Versions of Node.js that are recommended for these tests.
-  const recommendedNodeVersions = [
-    14,
-  ];
+  const recommendedNodeVersions = [14];
 
   const versionString = process.version.substr(1, process.version.length - 1);
-  const versionComponents = versionString.split('.').map((versionComponentString) => {
-    return parseInt(versionComponentString, 10);
-  });
+  const versionComponents = versionString
+    .split('.')
+    .map((versionComponentString) => {
+      return parseInt(versionComponentString, 10);
+    });
 
   // Print warning if running a version of Node that is not recommended.
   if (!recommendedNodeVersions.includes(versionComponents[0])) {
     if (recommendedNodeVersions.length > 1) {
-      console.warn(`You are currently running Node v${versionString}. We recommend one of the following versions of Node for these tests:\n`);
-      console.warn(`${recommendedNodeVersions.map(version => `  - v${version}.x\n`).join('')}`);
-    }
-    else {
-      console.warn(`You are currently running Node v${versionString}. We recommend Node v${recommendedNodeVersions[0]}.x for these tests.`);
+      console.warn(
+        `You are currently running Node v${versionString}. We recommend one of the following versions of Node for these tests:\n`
+      );
+      console.warn(
+        `${recommendedNodeVersions
+          .map((version) => `  - v${version}.x\n`)
+          .join('')}`
+      );
+    } else {
+      console.warn(
+        `You are currently running Node v${versionString}. We recommend Node v${recommendedNodeVersions[0]}.x for these tests.`
+      );
     }
   }
 }

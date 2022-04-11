@@ -7,7 +7,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 interface Props {
   loading: boolean;
@@ -28,7 +28,7 @@ export const TrustedDevicesTable: React.FC<CombinedProps> = (props) => {
   };
 
   if (loading) {
-    return <TableRowLoading colSpan={6} />;
+    return <TableRowLoading columns={5} />;
   }
 
   if (error) {

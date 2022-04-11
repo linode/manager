@@ -1,9 +1,4 @@
-import {
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
+import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
 import { randomLabel, randomString } from 'support/util/random';
 
 const createLinode = () => {

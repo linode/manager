@@ -17,7 +17,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
@@ -343,12 +343,9 @@ export const renderTableBody = (
   if (loading) {
     return (
       <TableRowLoading
-        colSpan={5}
-        numberOfRows={10}
-        numberOfColumns={4}
-        oneLine
-        data-qa-events-table-loading
-        compact
+        columns={entityId ? 3 : 4}
+        rows={5}
+        responsive={{ 0: { xsDown: true }, 2: { mdDown: true } }}
       />
     );
   } else if (error) {
@@ -379,12 +376,9 @@ export const renderTableBody = (
         ))}
         {isRequesting && (
           <TableRowLoading
-            colSpan={5}
-            numberOfColumns={4}
-            numberOfRows={4}
-            oneLine
-            compact
-            transparent
+            columns={4}
+            rows={5}
+            responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
           />
         )}
       </>

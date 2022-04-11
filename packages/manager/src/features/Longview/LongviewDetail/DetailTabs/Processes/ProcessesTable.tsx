@@ -9,7 +9,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
@@ -173,7 +173,7 @@ const renderLoadingErrorData = (
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading) {
-    return <TableRowLoading colSpan={7} />;
+    return <TableRowLoading columns={6} />;
   }
   if (data.length === 0) {
     return <TableRowEmptyState colSpan={12} />;

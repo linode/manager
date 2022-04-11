@@ -6,6 +6,7 @@ import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableContentWrapper from 'src/components/TableContentWrapper';
+import { HiddenProps } from '../core/Hidden';
 import EntityTableHeader from './EntityTableHeader';
 import { Entity, ListProps, PageyIntegrationProps } from './types';
 
@@ -55,6 +56,19 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
     }
   }, [request, handleOrderChange, initialOrder]);
 
+  const responsiveHeaders = (): Record<number, HiddenProps> => {
+    const responsive = {};
+    for (let i = 0; i < headers.length; i++) {
+      if (headers[i].hideOnMobile) {
+        responsive[i] = { xsDown: true };
+      }
+      if (headers[i].hideOnTablet) {
+        responsive[i] = { smDown: true };
+      }
+    }
+    return responsive;
+  };
+
   return (
     <>
       <Paper style={{ padding: 0 }}>
@@ -70,6 +84,11 @@ export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
           />
           <TableBody>
             <TableContentWrapper
+              loadingProps={{
+                // Add 1 because the headers array does not inclue the action menu
+                columns: headers.length + 1,
+                responsive: responsiveHeaders(),
+              }}
               length={count}
               loading={loading}
               error={error}
