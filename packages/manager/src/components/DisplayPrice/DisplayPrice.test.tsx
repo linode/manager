@@ -1,17 +1,7 @@
-import { shallow } from 'enzyme';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import * as React from 'react';
 
-import Typography from 'src/components/core/Typography';
-
 import { DisplayPrice, displayPrice } from './DisplayPrice';
-
-const classes = {
-  root: '',
-  price: '',
-  per: '',
-};
-
-const component = shallow(<DisplayPrice price={100} classes={classes} />);
 
 describe('DisplayPrice component', () => {
   it('should format the price prop correctly', () => {
@@ -20,23 +10,21 @@ describe('DisplayPrice component', () => {
     expect(displayPrice(100)).toEqual('$100.00');
   });
   it('should not display an interval unless specified', () => {
-    expect(component.find('WithStyles(ForwardRef(Typography))')).toHaveLength(
-      1
-    );
+    const { getAllByRole } = renderWithTheme(<DisplayPrice price={10} />);
+    const headings = getAllByRole('heading', { level: 3 });
+    expect(headings).toHaveLength(1);
   });
   it('should display the interval when specified', () => {
-    component.setProps({ interval: 'mo' });
-    expect(component.find('WithStyles(ForwardRef(Typography))')).toHaveLength(
-      2
+    const { getAllByRole } = renderWithTheme(
+      <DisplayPrice price={10} interval="mo" />
     );
-    expect(
-      component.containsMatchingElement(<Typography>/mo</Typography>)
-    ).toBeTruthy();
+    const headings = getAllByRole('heading', { level: 3 });
+    expect(headings).toHaveLength(2);
+    expect(headings[1]).toHaveTextContent('/mo');
   });
   it('should render a Currency component with the price', () => {
-    expect(component.find('[data-qa-currency-component]')).toHaveLength(1);
-    expect(
-      component.find('[data-qa-currency-component]').prop('quantity')
-    ).toBe(100);
+    const { getAllByRole } = renderWithTheme(<DisplayPrice price={100} />);
+    const headings = getAllByRole('heading', { level: 3 });
+    expect(headings[0]).toHaveTextContent('$100');
   });
 });
