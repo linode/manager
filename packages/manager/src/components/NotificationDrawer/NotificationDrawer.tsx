@@ -1,58 +1,35 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Drawer from 'src/components/Drawer';
+import Events from 'src/features/NotificationCenter/Events';
+import { NotificationData } from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
 import usePrevious from 'src/hooks/usePrevious';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
-import { NotificationData } from 'src/features/NotificationCenter/NotificationData/useNotificationData';
-import Events from 'src/features/NotificationCenter/Events';
-import Notifications from 'src/features/NotificationCenter/Notifications';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    '& .MuiDrawer-paper': {
-      boxShadow: '0 2px 3px 3px rgba(0, 0, 0, 0.1)',
-      // Overrides the default drawer height
-      height: 'auto',
-      maxHeight: 'calc(100% - 50px)',
-      overflowX: 'hidden',
-      // Prevents the width from changing if the scrollbar is visible
-      overflowY: 'scroll',
-      padding: 20,
-      paddingTop: theme.spacing(),
-      paddingBottom: 0,
-      top: 50,
-      // Overrides the built-in animation so it matches the UserMenu
-      transition: 'none !important',
-      [theme.breakpoints.up('md')]: {
-        maxHeight: 'calc(100% - 150px)',
-        width: 430,
-      },
-
-      [theme.breakpoints.down('sm')]: {
-        height: '100%',
-      },
-      [theme.breakpoints.down('xs')]: {
-        width: '100%',
-      },
-    },
+    padding: 20,
+    paddingTop: theme.spacing(2),
+    paddingBottom: 0,
   },
 }));
 
 export interface Props {
   data: NotificationData;
   open: boolean;
-  onClose: () => void;
 }
 
 export const NotificationDrawer: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const {
+    data: { eventNotifications, formattedNotifications },
+    open,
+  } = props;
 
-  const { data, open, onClose } = props;
-  const { eventNotifications, formattedNotifications } = data;
+  const classes = useStyles();
   const { dismissNotifications } = useDismissibleNotifications();
   const notifications = useNotifications();
   const dispatch = useDispatch<ThunkDispatch>();
@@ -68,19 +45,10 @@ export const NotificationDrawer: React.FC<Props> = (props) => {
   }, [dismissNotifications, notifications, dispatch, open, wasOpen]);
 
   return (
-    <Drawer
-      className={classes.root}
-      open={open}
-      onClose={onClose}
-      title="Notification Drawer"
-      isNotificationDrawer
-    >
-      <Notifications
-        notificationsList={formattedNotifications}
-        onClose={onClose}
-      />
-      <Events events={eventNotifications} onClose={onClose} />
-    </Drawer>
+    <div className={classes.root}>
+      <Notifications notificationsList={formattedNotifications} />
+      <Events events={eventNotifications} />
+    </div>
   );
 };
 

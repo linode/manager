@@ -4,12 +4,14 @@ export interface NotificationContextProps {
   drawerOpen: boolean;
   openDrawer: () => void;
   closeDrawer: () => void;
+  toggleDrawer: () => void;
 }
 
 const defaultContext = {
   drawerOpen: false,
   openDrawer: () => null,
   closeDrawer: () => null,
+  toggleDrawer: () => null,
 };
 
 export const notificationContext = createContext<NotificationContextProps>(
@@ -21,10 +23,15 @@ export const useNotificationContext = (): NotificationContextProps => {
 
   const openDrawer = useCallback(() => setDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setDrawerOpen(false), []);
+  const toggleDrawer = useCallback(
+    () => setDrawerOpen((drawerOpen) => !drawerOpen),
+    []
+  );
 
   return {
     drawerOpen,
     openDrawer,
     closeDrawer,
+    toggleDrawer,
   };
 };

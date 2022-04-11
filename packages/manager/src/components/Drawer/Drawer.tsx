@@ -9,7 +9,6 @@ import { convertForAria } from 'src/components/TabLink/TabLink';
 
 export interface Props extends DrawerProps {
   title: string;
-  isNotificationDrawer?: boolean;
   wide?: boolean;
 }
 
@@ -54,9 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   backDrop: {
     backgroundColor: theme.color.drawerBackdrop,
   },
-  visuallyHideBackdrop: {
-    backgroundColor: 'rgba(255, 255, 255, 0)',
-  },
 }));
 
 type CombinedProps = Props;
@@ -64,14 +60,7 @@ type CombinedProps = Props;
 const DDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    title,
-    children,
-    isNotificationDrawer,
-    onClose,
-    wide,
-    ...rest
-  } = props;
+  const { title, children, onClose, wide, ...rest } = props;
 
   const titleID = convertForAria(title);
 
@@ -80,19 +69,14 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
       anchor="right"
       classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       onClose={(event, reason) => {
-        if (
-          (onClose && reason !== 'backdropClick') ||
-          (onClose && isNotificationDrawer)
-        ) {
+        if (onClose && reason !== 'backdropClick') {
           onClose(event, reason);
         }
       }}
       {...rest}
       ModalProps={{
         BackdropProps: {
-          className: isNotificationDrawer
-            ? classes.visuallyHideBackdrop
-            : classes.backDrop,
+          className: classes.backDrop,
         },
       }}
       aria-labelledby={titleID}
@@ -107,31 +91,27 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
         justifyContent="space-between"
         updateFor={[title, classes]}
       >
-        {!isNotificationDrawer ? (
-          <>
-            <Grid item>
-              <Typography
-                id={titleID}
-                variant="h2"
-                data-qa-drawer-title={title}
-                data-testid="drawer-title"
-              >
-                {title}
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                className={classes.button}
-                buttonType="secondary"
-                onClick={props.onClose as (e: any) => void}
-                aria-label="Close drawer"
-                data-qa-close-drawer
-              >
-                <Close />
-              </Button>
-            </Grid>
-          </>
-        ) : null}
+        <Grid item>
+          <Typography
+            id={titleID}
+            variant="h2"
+            data-qa-drawer-title={title}
+            data-testid="drawer-title"
+          >
+            {title}
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            className={classes.button}
+            buttonType="secondary"
+            onClick={props.onClose as (e: any) => void}
+            aria-label="Close drawer"
+            data-qa-close-drawer
+          >
+            <Close />
+          </Button>
+        </Grid>
       </Grid>
       {children}
     </Drawer>
