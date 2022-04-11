@@ -1,9 +1,4 @@
-import {
-  testTag,
-  getAll,
-  deleteById,
-  isTestEntity,
-} from './common';
+import { testTag, getAll, deleteById, isTestEntity } from './common';
 import { randomLabel } from 'support/util/random';
 export const testNodeBalTag = testTag;
 

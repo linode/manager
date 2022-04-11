@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import * as linodes from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';
 import { BackupsTable } from './BackupsTable';
@@ -19,7 +19,7 @@ describe('BackupsTable component', () => {
   });
   it('should display a loading spinner', () => {
     expect(
-      component.containsMatchingElement(<TableRowLoading colSpan={12} />)
+      component.containsMatchingElement(<TableRowLoading columns={3} />)
     ).toBeTruthy();
   });
   it('should display linodes', () => {

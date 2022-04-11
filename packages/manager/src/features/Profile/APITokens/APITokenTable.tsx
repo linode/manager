@@ -34,7 +34,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import { queryClient } from 'src/queries/base';
@@ -455,7 +455,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { error, loading, data } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={6} oneLine />;
+      return <TableRowLoading columns={6} />;
     }
 
     if (error) {

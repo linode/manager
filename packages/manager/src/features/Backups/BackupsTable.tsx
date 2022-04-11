@@ -6,7 +6,7 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import BackupLinodes from './BackupLinodes';
 import { ExtendedLinode } from './types';
 
@@ -45,7 +45,7 @@ export const BackupsTable: React.FC<CombinedProps> = (props) => {
       </TableHead>
       <TableBody>
         {loading && isEmpty(linodes) ? (
-          <TableRowLoading colSpan={12} />
+          <TableRowLoading columns={3} />
         ) : (
           <BackupLinodes linodes={linodes} />
         )}
