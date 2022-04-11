@@ -79,7 +79,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
   const [
     modifiedWeekSelectionMap,
     setModifiedWeekSelectionMap,
-  ] = React.useState<{ label: string; value: number }[]>([]);
+  ] = React.useState<Item[]>([]);
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -89,10 +89,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
     database.id
   );
 
-  const weekSelectionModifier = (
-    day: string,
-    weekSelectionMap: { label: string; value: number }[]
-  ) => {
+  const weekSelectionModifier = (day: string, weekSelectionMap: Item[]) => {
     const modifiedMap = weekSelectionMap.map((weekSelectionElement) => {
       return {
         label: `${weekSelectionElement.label} ${day} of each month`,
@@ -169,7 +166,6 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
     // enableReinitialize: true,
     // validationSchema: updateDatabaseSchema,
     // validateOnChange: false,
-    // validate: updateDatabaseSchema,
     onSubmit: handleSaveMaintenanceWindow,
   });
 
@@ -265,6 +261,10 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setFormTouched(true);
               setFieldValue('frequency', e.target.value);
+              if (e.target.value === 'weekly') {
+                // If the frequency is weekly, set the 'week_of_month' field to null since that should only be specified for a monthly frequency.
+                setFieldValue('week_of_month', null);
+              }
             }}
           >
             <RadioGroup
@@ -283,7 +283,10 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
           </FormControl>
           <div>
             {values.frequency === 'monthly' ? (
-              <FormControl style={{ marginRight: '3rem', minWidth: '250px' }}>
+              <FormControl
+                className={classes.formControlDropdown}
+                style={{ minWidth: '250px' }}
+              >
                 <Select
                   textFieldProps={{
                     dataAttrs: {
