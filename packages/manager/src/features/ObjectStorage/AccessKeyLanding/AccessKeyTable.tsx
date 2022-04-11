@@ -10,10 +10,10 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import AccessKeyMenu from './AccessKeyMenu';
 import { OpenAccessDrawer } from './types';
 import { APIError } from '@linode/api-v4/lib/types';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
@@ -56,7 +56,7 @@ export const AccessKeyTable: React.FC<Props> = (props) => {
     }
 
     if (isLoading) {
-      return <TableRowLoading colSpan={3} widths={[50]} oneLine />;
+      return <TableRowLoading columns={3} />;
     }
 
     if (error) {
