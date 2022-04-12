@@ -50,6 +50,7 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
 }));
 
 const menuId = 'notification-events-menu';
+const menuButtonId = 'menu-button--notification-events-menu';
 
 export const NotificationButton: React.FC<{}> = (_) => {
   const iconClasses = useStyles();
@@ -72,8 +73,11 @@ export const NotificationButton: React.FC<{}> = (_) => {
 
   const handleAnyClick = React.useCallback(
     (e: any) => {
-      // Ignore clicks from inside the menu
-      if (e?.path.some((element: any) => element.id === menuId)) {
+      // Ignore clicks from inside the menu unless it's a link
+      if (
+        e.path?.some((element: any) => element.id === menuId) &&
+        e.target.tagName.toLowerCase() !== 'a'
+      ) {
         return;
       }
 
@@ -81,7 +85,9 @@ export const NotificationButton: React.FC<{}> = (_) => {
        * Prevent the notification bell click event from being called
        * otherwise the menu will immediately re-open
        */
-      e.stopImmediatePropagation();
+      if (e.path?.some((element: any) => element.id === menuButtonId)) {
+        e.stopImmediatePropagation();
+      }
       notificationContext.closeMenu();
     },
     [notificationContext]
