@@ -82,7 +82,8 @@ export const NotificationButton: React.FC<{}> = (_) => {
       }
 
       /**
-       * Prevent the notification bell click event from being called
+       * If the user clicks the bell icon while the menu is open,
+       * prevent the bell click event from being called
        * otherwise the menu will immediately re-open
        */
       if (e.path?.some((element: any) => element.id === menuButtonId)) {
