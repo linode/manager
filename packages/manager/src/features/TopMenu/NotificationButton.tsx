@@ -73,11 +73,11 @@ export const NotificationButton: React.FC<{}> = (_) => {
 
   const handleAnyClick = React.useCallback(
     (e: any) => {
+      const clickWasFromInsideMenu =
+        e.target?.parentElement.textContent.indexOf('EventsView all events') >
+        -1;
       // Ignore clicks from inside the menu unless it's a link
-      if (
-        e.path?.some((element: any) => element.id === menuId) &&
-        e.target.tagName.toLowerCase() !== 'a'
-      ) {
+      if (clickWasFromInsideMenu && e.target.tagName.toLowerCase() !== 'a') {
         return;
       }
 
@@ -86,7 +86,7 @@ export const NotificationButton: React.FC<{}> = (_) => {
        * prevent the bell click event from being called
        * otherwise the menu will immediately re-open
        */
-      if (e.path?.some((element: any) => element.id === menuButtonId)) {
+      if (e.target.nearestViewportElement?.parentElement.id === menuButtonId) {
         e.stopImmediatePropagation();
       }
       notificationContext.closeMenu();
