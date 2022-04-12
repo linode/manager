@@ -5,11 +5,10 @@ const NUM_EVENTS_DISPLAY = 20;
 
 interface Props {
   events: NotificationItem[];
-  onClose?: () => void;
 }
 
 export const Events: React.FC<Props> = (props) => {
-  const { events, onClose } = props;
+  const { events } = props;
 
   return (
     <NotificationSection
@@ -18,7 +17,6 @@ export const Events: React.FC<Props> = (props) => {
       showMoreTarget="/events"
       showMoreText="View all events"
       emptyMessage="No recent events to display."
-      onClose={onClose}
       count={NUM_EVENTS_DISPLAY}
     />
   );

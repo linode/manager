@@ -79,7 +79,6 @@ interface Props {
   content: NotificationItem[];
   loading?: boolean;
   emptyMessage?: string;
-  onClose?: () => void;
 }
 
 export type CombinedProps = Props;
@@ -95,7 +94,6 @@ export const NotificationSection: React.FC<Props> = (props) => {
     loading,
     showMoreText,
     showMoreTarget,
-    onClose,
   } = props;
 
   const _count = count ?? 5;
@@ -133,14 +131,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
                   {showMoreTarget && (
                     <Typography variant="body1">
                       <strong>
-                        <Link
-                          to={showMoreTarget}
-                          onClick={() => {
-                            if (onClose) {
-                              onClose();
-                            }
-                          }}
-                        >
+                        <Link to={showMoreTarget}>
                           {showMoreText ?? 'View history'}
                         </Link>
                       </strong>
@@ -165,6 +156,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
                 content.length > 0 ? content.length : undefined
               }
               renderMainContent={innerContent}
+              defaultExpanded={true}
             />
           </Hidden>
         </>
