@@ -54,7 +54,7 @@ const getIsTooEarlyForStats = (linodeCreated?: string) => {
     return false;
   }
 
-  return parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 1 });
+  return parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 7 });
 };
 
 export const useLinodeNetworkStatsByDate = (
