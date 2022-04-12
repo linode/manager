@@ -2,7 +2,7 @@ import { ClusterSize, Engine } from '@linode/api-v4/lib/databases/types';
 import { databaseInstanceFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
 import { randomLabel } from 'support/util/random';
-import sequentialStub from 'support/stubs/sequential-stub';
+import { sequentialStub } from 'support/stubs/sequential-stub';
 import { makePaginatedResponse } from 'support/util/response';
 import { containsClick, fbtClick, getClick } from 'support/helpers';
 
