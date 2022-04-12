@@ -10,10 +10,10 @@ import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import { parseAPIDate } from 'src/utilities/date';
 import useEventInfo from './useEventInfo';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
+    paddingTop: 12,
+    paddingBottom: 12,
     width: '100%',
   },
   icon: {

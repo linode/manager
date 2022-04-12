@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'space-between',
     borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
+    marginBottom: 6,
   },
   content: {
     width: '100%',

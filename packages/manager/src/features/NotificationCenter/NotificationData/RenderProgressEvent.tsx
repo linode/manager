@@ -15,40 +15,12 @@ import {
 import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
+import { useStyles as useEventStyles } from './RenderEvent';
 import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    width: '100%',
-  },
-  event: {
-    color: theme.textColors.headlineStatic,
-    '&:hover': {
-      backgroundColor: theme.bg.app,
-      cursor: 'pointer',
-      // Extends the hover state to the edges of the drawer
-      marginLeft: -20,
-      marginRight: -20,
-      paddingLeft: 20,
-      paddingRight: 20,
-      width: 'calc(100% + 40px)',
-      '& a': {
-        textDecoration: 'none',
-      },
-    },
-  },
   bar: {
     marginTop: theme.spacing(),
-  },
-  icon: {
-    height: 40,
-    minWidth: 40,
-    marginRight: 20,
-  },
-  eventMessage: {
-    marginTop: 2,
   },
 }));
 
@@ -61,6 +33,7 @@ export type CombinedProps = Props;
 
 export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
+  const eventClasses = useEventStyles();
   const classes = useStyles();
 
   const { linodes } = useLinodes();
@@ -93,14 +66,14 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
     <>
       <Box
         className={classNames({
-          [classes.root]: true,
-          [classes.event]: !!linkTarget,
+          [eventClasses.root]: true,
+          [eventClasses.event]: !!linkTarget,
         })}
         display="flex"
         data-test-id={event.action}
       >
-        <GravatarIcon username={event.username} className={classes.icon} />
-        <div className={classes.eventMessage} data-test-id={event.action}>
+        <GravatarIcon username={event.username} className={eventClasses.icon} />
+        <div className={eventClasses.eventMessage} data-test-id={event.action}>
           {linkTarget ? (
             <Link to={linkTarget} onClick={onClose}>
               {eventMessage}
