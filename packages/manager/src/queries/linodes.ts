@@ -15,8 +15,10 @@ import {
 
 export const queryKey = 'linode';
 
+export const STATS_NOT_READY_API_MESSAGE =
+  'Stats are unavailable at this time.';
 export const STATS_NOT_READY_MESSAGE =
-  'Graphs for this Linode are not yet available - check back later';
+  'Stats for this Linode are not yet available - check back later';
 
 interface LinodeData {
   results: number;
@@ -52,7 +54,7 @@ const getIsTooEarlyForStats = (linodeCreated?: string) => {
     return false;
   }
 
-  return parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 7 });
+  return parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 1 });
 };
 
 export const useLinodeNetworkStatsByDate = (

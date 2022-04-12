@@ -15,6 +15,7 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import {
+  STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
   useLinodeNetworkStatsByDate,
   useLinodeTransferByDate,
@@ -197,11 +198,17 @@ export const TransferHistory: React.FC<Props> = ({
       ) : statsErrorString ? (
         <ErrorState
           CustomIcon={
-            statsErrorString === STATS_NOT_READY_MESSAGE
+            [STATS_NOT_READY_MESSAGE, STATS_NOT_READY_API_MESSAGE].includes(
+              statsErrorString
+            )
               ? PendingIcon
               : undefined
           }
-          errorText={statsErrorString}
+          errorText={
+            statsErrorString === STATS_NOT_READY_API_MESSAGE
+              ? STATS_NOT_READY_MESSAGE
+              : statsErrorString
+          }
           compact
         />
       ) : (
