@@ -2,7 +2,7 @@ import { Menu, MenuButton, MenuItems, MenuPopover } from '@reach/menu-button';
 import * as React from 'react';
 import Bell from 'src/assets/icons/notification.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { NotificationDrawer } from 'src/features/NotificationCenter';
+import { NotificationMenu } from 'src/features/NotificationCenter';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import { notificationContext as _notificationContext } from '../NotificationCenter/NotificationContext';
 import { useStyles } from './iconStyles';
@@ -34,7 +34,7 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
         width: '100%',
       },
       height: 'auto',
-      maxHeight: 'calc(100% - 50px)',
+      maxHeight: 'calc(90% - 50px)',
       overflowX: 'hidden',
       overflowY: 'auto',
     },
@@ -67,14 +67,12 @@ export const NotificationButton: React.FC<{}> = (_) => {
     ).length;
 
   const handleNotificationButtonClick = () => {
-    notificationContext.toggleDrawer();
+    notificationContext.toggleMenu();
   };
 
   const handleAnyClick = React.useCallback(
     (e: any) => {
-      /**
-       * Ignore clicks from inside the menu
-       */
+      // Ignore clicks from inside the menu
       if (e?.path.some((element: any) => element.id === menuId)) {
         return;
       }
@@ -84,13 +82,13 @@ export const NotificationButton: React.FC<{}> = (_) => {
        * otherwise the menu will immediately re-open
        */
       e.stopImmediatePropagation();
-      notificationContext.closeDrawer();
+      notificationContext.closeMenu();
     },
     [notificationContext]
   );
 
   React.useEffect(() => {
-    if (notificationContext.drawerOpen) {
+    if (notificationContext.menuOpen) {
       // eslint-disable-next-line
       document.addEventListener('click', handleAnyClick, true);
 
@@ -99,7 +97,7 @@ export const NotificationButton: React.FC<{}> = (_) => {
     } else {
       return () => null;
     }
-  }, [handleAnyClick, notificationContext.drawerOpen]);
+  }, [handleAnyClick, notificationContext.menuOpen]);
 
   return (
     <Menu id={menuId}>
@@ -109,10 +107,10 @@ export const NotificationButton: React.FC<{}> = (_) => {
           onClick={handleNotificationButtonClick}
           onKeyDown={(e: React.KeyboardEvent) => {
             if (e.key === 'Escape') {
-              notificationContext.closeDrawer();
+              notificationContext.closeMenu();
             }
           }}
-          aria-expanded={notificationContext.drawerOpen}
+          aria-expanded={notificationContext.menuOpen}
         >
           <Bell />
           {numNotifications > 0 ? (
@@ -122,11 +120,11 @@ export const NotificationButton: React.FC<{}> = (_) => {
       </TopMenuIcon>
       <MenuPopover
         className={classes.menuPopover}
-        hidden={!notificationContext.drawerOpen}
+        hidden={!notificationContext.menuOpen}
       >
         <MenuItems className={classes.menuItem}>
-          <NotificationDrawer
-            open={notificationContext.drawerOpen}
+          <NotificationMenu
+            open={notificationContext.menuOpen}
             data={notificationData}
           />
         </MenuItems>

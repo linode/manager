@@ -111,7 +111,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
           key={`linode-row-${idx}`}
           openTagDrawer={openTagDrawer}
           openDialog={openDialog}
-          openNotificationDrawer={notificationContext.openDrawer}
+          openNotificationMenu={notificationContext.openMenu}
           openPowerActionDialog={openPowerActionDialog}
         />
       ))}

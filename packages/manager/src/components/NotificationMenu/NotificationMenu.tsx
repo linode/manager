@@ -23,7 +23,7 @@ export interface Props {
   open: boolean;
 }
 
-export const NotificationDrawer: React.FC<Props> = (props) => {
+export const NotificationMenu: React.FC<Props> = (props) => {
   const {
     data: { eventNotifications, formattedNotifications },
     open,
@@ -38,9 +38,9 @@ export const NotificationDrawer: React.FC<Props> = (props) => {
 
   React.useEffect(() => {
     if (wasOpen && !open) {
-      // User has closed the drawer.
+      // User has closed the menu.
       dispatch(markAllSeen());
-      dismissNotifications(notifications, { prefix: 'notificationDrawer' });
+      dismissNotifications(notifications, { prefix: 'notificationMenu' });
     }
   }, [dismissNotifications, notifications, dispatch, open, wasOpen]);
 
@@ -52,4 +52,4 @@ export const NotificationDrawer: React.FC<Props> = (props) => {
   );
 };
 
-export default React.memo(NotificationDrawer);
+export default React.memo(NotificationMenu);

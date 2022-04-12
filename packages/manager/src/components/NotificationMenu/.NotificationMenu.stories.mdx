@@ -3,14 +3,14 @@ import Typography from 'src/components/core/Typography';
 import ActionsPanel from '../ActionsPanel';
 import TextField from '../TextField';
 import { Canvas, Meta, Story } from '@storybook/addon-docs';
-import { NotificationDrawer } from './NotificationDrawer';
+import { NotificationMenu } from './NotificationMenu';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import { eventFactory, notificationFactory } from 'src/factories';
 
 export const mockEvents = eventFactory.buildList(1);
 export const mockNotifications = notificationFactory.buildList(1);
 
-<Meta title="Components/Drawer/Notification Drawer" component={NotificationDrawer} />
+<Meta title="Components/Drawer/Notification Drawer" component={NotificationMenu} />
 
 # Notification Drawer
 
@@ -41,7 +41,7 @@ export const Template = (args, context) => {
       <Button buttonType="primary" onClick={() => context.setOpen(true)}>
         Click to open Drawer
       </Button>
-      <NotificationDrawer
+      <NotificationMenu
         open={context.open}
         onClose={() => context.setOpen(false)}
         data={notificationData}
