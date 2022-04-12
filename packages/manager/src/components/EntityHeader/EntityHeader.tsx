@@ -127,7 +127,12 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
   return (
     <>
       {isLanding && (
-        <Grid container item className={`${classes.root} ${classes.landing}`}>
+        <Grid
+          data-qa-entity-header={true}
+          container
+          item
+          className={`${classes.root} ${classes.landing}`}
+        >
           <Grid container item xs={12} sm={4}>
             <Breadcrumb
               labelTitle={labelTitle}
