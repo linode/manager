@@ -3,6 +3,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import { STATS_NOT_READY_MESSAGE } from 'src/queries/linodes';
 
 const useStyles = makeStyles(() => ({
   graphsUnavailable: {
@@ -54,7 +55,7 @@ export const StatsPanel: React.FC<CombinedProps> = (props) => {
           data-qa-graphs-unavailable
           className={classes.graphsUnavailable}
         >
-          Graphs for this Linode are not yet available – check back later
+          {STATS_NOT_READY_MESSAGE}
         </Typography>
       ) : loading ? (
         <div className={classes.spinner} style={{ minHeight: height }}>
