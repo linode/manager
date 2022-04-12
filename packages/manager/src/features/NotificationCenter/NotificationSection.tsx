@@ -119,7 +119,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
     <>
       {isActualNotificationContainer && content.length === 0 ? null : (
         <>
-          <Hidden smDown>
+          <Hidden xsDown>
             <div
               className={classNames({
                 [classes.root]: true,
@@ -150,7 +150,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
             </div>
           </Hidden>
 
-          <Hidden mdUp>
+          <Hidden smUp>
             <ExtendedAccordion
               heading={header}
               headingNumberCount={
