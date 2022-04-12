@@ -147,6 +147,6 @@ describe('volumes', () => {
     cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
     getClick('[data-qa-confirm="true"]');
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
-    assertToast('Volume detachment started', 2);
+    assertToast('Volume detachment started');
   });
 });
