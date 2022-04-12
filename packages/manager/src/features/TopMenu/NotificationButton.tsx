@@ -86,7 +86,10 @@ export const NotificationButton: React.FC<{}> = (_) => {
        * prevent the bell click event from being called
        * otherwise the menu will immediately re-open
        */
-      if (e.target.nearestViewportElement?.parentElement.id === menuButtonId) {
+      if (
+        e.target.nearestViewportElement instanceof SVGElement ||
+        e.target.id === menuButtonId
+      ) {
         e.stopImmediatePropagation();
       }
       notificationContext.closeMenu();
