@@ -203,6 +203,12 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
                   setFormTouched(true);
                   setFieldValue('day_of_week', e.value);
                   weekSelectionModifier(e.label, weekSelectionMap);
+
+                  // If week_of_month is not null (i.e., the user has selected a value for "Repeats on" already),
+                  // refresh the field value so that the selected option displays the chosen day.
+                  if (values.week_of_month) {
+                    setFieldValue('week_of_month', values.week_of_month);
+                  }
                 }}
                 label="Day of Week"
                 placeholder="Choose a day"
@@ -265,6 +271,15 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
                 // If the frequency is weekly, set the 'week_of_month' field to null since that should only be specified for a monthly frequency.
                 setFieldValue('week_of_month', null);
               }
+
+              if (e.target.value === 'monthly') {
+                const dayOfWeek =
+                  daySelectionMap.find(
+                    (option) => option.value === values.day_of_week
+                  ) ?? daySelectionMap[0];
+
+                weekSelectionModifier(dayOfWeek.label, weekSelectionMap);
+              }
             }}
           >
             <RadioGroup
@@ -294,7 +309,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
                     },
                   }}
                   options={modifiedWeekSelectionMap}
-                  defaultValue={null}
+                  defaultValue={modifiedWeekSelectionMap[0]}
                   value={modifiedWeekSelectionMap.find(
                     (thisOption) => thisOption.value === values.week_of_month
                   )}
