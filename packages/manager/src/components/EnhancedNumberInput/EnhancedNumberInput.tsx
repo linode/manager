@@ -144,9 +144,9 @@ export const EnhancedNumberInput: React.FC<Props> = (props) => {
           className: classNames({
             [classes.input]: true,
           }),
-          min,
-          max,
         }}
+        min={min}
+        max={max}
         disabled={disabled}
         data-testid={'quantity-input'}
       />
