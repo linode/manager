@@ -932,8 +932,8 @@ export const ipResponseToDisplayRows = (
   // IPv6 pools (116s)
   ipDisplay.push(
     ...[
-      ...(ipv6?.global
-        ? ipv6?.global.filter((ip) => {
+      ...(ipv6
+        ? ipv6.global.filter((ip) => {
             return ip.prefix === 116 ? ip : null;
           })
         : []),
