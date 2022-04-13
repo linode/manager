@@ -108,7 +108,8 @@ const CautionNotice: React.FC<CombinedProps> = (props) => {
           When this migration begins, we estimate it will take approximately{' '}
           {DateTime.local()
             .plus({ minutes: props.migrationTimeInMins })
-            .toRelative()}{' '}
+            .toRelative()
+            ?.replace('in', '')}{' '}
           to complete.
         </li>
       </ul>
