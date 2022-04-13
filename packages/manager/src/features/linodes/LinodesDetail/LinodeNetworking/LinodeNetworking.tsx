@@ -930,55 +930,40 @@ export const ipResponseToDisplayRows = (
   }
 
   // IPv6 pools (116s)
-  if (ipv6?.global) {
-    ipDisplay.push(
-      ...ipv6.global
-        .filter((ip) => {
-          return ip.prefix === 116 ? ip : null;
-        })
-        .map((thisIP) => {
-          return {
-            type: 'IPv6 – Range' as IPDisplay['type'],
-            address: `${thisIP.range}/${thisIP.prefix}`,
-            gateway: '',
-            subnetMask: '',
-            rdns: '',
-            _range: thisIP,
-          };
-        })
-    );
-  }
+  ipDisplay.push(
+    ...[
+      ...(ipv6?.global
+        ? ipv6?.global.filter((ip) => {
+            return ip.prefix === 116 ? ip : null;
+          })
+        : []),
+      ...routedRanges,
+    ].map((thisIP) => {
+      /* If you want to surface rdns info in the future you have two options:
+        1. Use the info we already have:
+          We get info on our routed ranges from /networking/ipv6/ranges and /networking/ipv6/ranges/<id>, because the API
+          only surfaces is_bgp in /networking/ipv6/ranges/<id> we need to use both, this should change in the API
+          Similarly, the API only surfaces rdns info in /networking/ips/<ip>. To correlate a range and
+          it's rdns info, you'll need to make an extra request to /netowrking/ips/<ip> or loop through the
+          result of the request to /networking/ips and find the range info you want
 
-  // Routed ranges
-  if (routedRanges) {
-    ipDisplay.push(
-      ...routedRanges.map((range) => {
-        /* If you want to surface rdns info in the future you have two options:
-          1. Use the info we already have:
-            We get info on our routed ranges from /networking/ipv6/ranges and /networking/ipv6/ranges/<id>, because the API
-            only surfaces is_bgp in /networking/ipv6/ranges/<id> we need to use both, this should change in the API
-            Similarly, the API only surfaces rdns info in /networking/ips/<ip>. To correlate a range and
-            it's rdns info, you'll need to make an extra request to /netowrking/ips/<ip> or loop through the
-            result of the request to /networking/ips and find the range info you want
+        - OR -
 
-          - OR -
-
-          2. API change
-            API could include RDNS info in /networking/ipv6/ranges and /networking/ipv6/ranges/<id> and 
-            while you're at it please ask them to add in is_bgp to /networking/ipv6/ranges as it would save a bunch of 
-            extra requests on Linodes with many ranges
-        */
-        return {
-          type: 'IPv6 – Range' as IPDisplay['type'],
-          address: `${range.range}/${range.prefix}`,
-          gateway: '',
-          subnetMask: '',
-          rdns: '',
-          _range: range,
-        };
-      })
-    );
-  }
+        2. API change
+          API could include RDNS info in /networking/ipv6/ranges and /networking/ipv6/ranges/<id> and
+          while you're at it please ask them to add in is_bgp to /networking/ipv6/ranges as it would save a bunch of
+          extra requests on Linodes with many ranges
+      */
+      return {
+        type: 'IPv6 – Range' as IPDisplay['type'],
+        address: `${thisIP.range}/${thisIP.prefix}`,
+        gateway: '',
+        subnetMask: '',
+        rdns: '',
+        _range: thisIP,
+      };
+    })
+  );
 
   return ipDisplay;
 };
