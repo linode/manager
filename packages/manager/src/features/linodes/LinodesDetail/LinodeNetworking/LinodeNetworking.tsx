@@ -929,7 +929,29 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  // Routed ranges are a special case.
+  // IPv6 pools (116s)
+  if (ipv6?.global) {
+    ipDisplay.push(
+      ...ipv6.global
+        .filter((ip) => {
+          return ip.prefix === 116 ? ip : null;
+        })
+        .map((thisIP) => {
+          const address = thisIP.range + ` / ${thisIP.prefix}`;
+
+          return {
+            type: 'IPv6 – Range' as IPDisplay['type'],
+            address,
+            gateway: '',
+            subnetMask: '',
+            rdns: '',
+            _range: thisIP,
+          };
+        })
+    );
+  }
+
+  // Routed ranges
   if (routedRanges) {
     ipDisplay.push(
       ...routedRanges.map((range) => {
