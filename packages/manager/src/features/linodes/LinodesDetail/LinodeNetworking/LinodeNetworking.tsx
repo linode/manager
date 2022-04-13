@@ -955,6 +955,21 @@ export const ipResponseToDisplayRows = (
   if (routedRanges) {
     ipDisplay.push(
       ...routedRanges.map((range) => {
+        /* If you want to surface rdns info in the future you have two options:
+          1. Use the info we already have:
+            We get info on our routed ranges from /networking/ipv6/ranges and /networking/ipv6/ranges/<id>, because the API
+            only surfaces is_bgp in /networking/ipv6/ranges/<id> we need to use both, this should change in the API
+            Similarly, the API only surfaces rdns info in /networking/ips/<ip>. To correlate a range and
+            it's rdns info, you'll need to make an extra request to /netowrking/ips/<ip> or loop through the
+            result of the request to /networking/ips and find the range info you want
+
+          - OR -
+
+          2. Ask for API change
+            API could include RDNS info in /networking/ipv6/ranges and /networking/ipv6/ranges/<id> and 
+            while you're at it please ask them to add in is_bgp to /networking/ipv6/ranges as it would save a bunch of 
+            extra requests on Linodes with many ranges
+        */
         return {
           type: 'IPv6 – Range' as IPDisplay['type'],
           address: `${range.range}/${range.prefix}`,
