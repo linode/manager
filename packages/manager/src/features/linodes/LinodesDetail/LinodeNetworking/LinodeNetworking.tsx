@@ -937,11 +937,9 @@ export const ipResponseToDisplayRows = (
           return ip.prefix === 116 ? ip : null;
         })
         .map((thisIP) => {
-          const address = thisIP.range + ` / ${thisIP.prefix}`;
-
           return {
             type: 'IPv6 – Range' as IPDisplay['type'],
-            address,
+            address: `${thisIP.range}/${thisIP.prefix}`,
             gateway: '',
             subnetMask: '',
             rdns: '',
