@@ -213,7 +213,7 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
             aria-label={`Display all ${content.length} items`}
             data-test-id="showMoreButton"
           >
-            {showAll ? 'Close' : `${content.length - count} more`}
+            {showAll ? 'Collapse' : `${content.length - count} more`}
             <KeyboardArrowDown
               className={classNames({
                 [classes.caret]: true,
