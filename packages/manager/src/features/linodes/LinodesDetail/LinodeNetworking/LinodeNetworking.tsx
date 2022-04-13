@@ -965,7 +965,7 @@ export const ipResponseToDisplayRows = (
 
           - OR -
 
-          2. Ask for API change
+          2. API change
             API could include RDNS info in /networking/ipv6/ranges and /networking/ipv6/ranges/<id> and 
             while you're at it please ask them to add in is_bgp to /networking/ipv6/ranges as it would save a bunch of 
             extra requests on Linodes with many ranges
