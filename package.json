@@ -54,7 +54,8 @@
     "immer": "^9.0.6",
     "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
-    "browserslist": "^4.16.5"
+    "browserslist": "^4.16.5",
+    "trim-newlines": "4.0.2"
   },
   "workspaces": {
     "packages": [
