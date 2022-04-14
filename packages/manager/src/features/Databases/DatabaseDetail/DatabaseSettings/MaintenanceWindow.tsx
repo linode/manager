@@ -111,15 +111,20 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
   }, []);
 
   const handleSaveMaintenanceWindow = (
-    values: UpdatesSchedule,
+    values: Omit<UpdatesSchedule, 'duration'>,
     {
       setSubmitting,
     }: {
       setSubmitting: (isSubmitting: boolean) => void;
     }
   ) => {
-    // @TODO Update this to only send 'updates' and now 'allow_list' when the API supports it
-    updateDatabase({ allow_list: database.allow_list, updates: values })
+    // @TODO Update this to only send 'updates' and not 'allow_list' when the API supports it.
+    // Additionally, at that time, enable the validationSchema which currently does not work
+    // because allow_list is a required field in the schema.
+    updateDatabase({
+      allow_list: database.allow_list,
+      updates: values as UpdatesSchedule,
+    })
       .then(() => {
         setSubmitting(false);
         enqueueSnackbar('Maintenance Window settings saved successfully.', {
@@ -155,7 +160,6 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
   } = useFormik({
     initialValues: {
       frequency: database.updates?.frequency ?? 'weekly',
-      duration: database.updates?.duration ?? 3,
       hour_of_day: database.updates?.hour_of_day ?? 20,
       day_of_week: database.updates?.day_of_week ?? 1,
       week_of_month:
@@ -163,9 +167,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
           ? database.updates?.week_of_month
           : 1,
     },
-    // enableReinitialize: true,
     // validationSchema: updateDatabaseSchema,
-    // validateOnChange: false,
     onSubmit: handleSaveMaintenanceWindow,
   });
 
