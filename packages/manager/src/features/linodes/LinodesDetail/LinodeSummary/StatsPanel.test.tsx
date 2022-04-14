@@ -45,6 +45,6 @@ describe('StatsPanel component', () => {
     component.setProps({ isTooEarlyForGraphData: true });
     expect(
       component.find('[data-qa-graphs-unavailable]').children().text()
-    ).toBe('Stats for this Linode are not yet available - check back later');
+    ).toBe('Stats for this Linode are not yet available – check back later');
   });
 });
