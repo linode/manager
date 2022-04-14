@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { TabList as ReachTabList, TabListProps } from '@reach/tabs';
 import { makeStyles, Theme } from './styles';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
@@ -19,11 +20,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TabList: React.FC<TabListProps> = ({ children, ...rest }) => {
+const TabList: React.FC<TabListProps & { className?: string }> = ({
+  children,
+  className,
+  ...rest
+}) => {
   const classes = useStyles();
 
   return (
-    <ReachTabList className={classes.tabList} {...rest}>
+    <ReachTabList className={classNames(classes.tabList, className)} {...rest}>
       {children}
     </ReachTabList>
   );

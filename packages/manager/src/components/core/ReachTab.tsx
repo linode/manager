@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Tab as ReachTab, TabProps } from '@reach/tabs';
 import { makeStyles, Theme } from './styles';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tab: {
@@ -34,11 +35,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Tab: React.FC<TabProps> = ({ children, ...rest }) => {
+const Tab: React.FC<TabProps & { className?: string }> = ({
+  children,
+  className,
+  ...rest
+}) => {
   const classes = useStyles();
 
   return (
-    <ReachTab className={classes.tab} {...rest}>
+    <ReachTab className={classNames(classes.tab, className)} {...rest}>
       {children}
     </ReachTab>
   );

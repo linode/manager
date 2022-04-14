@@ -118,9 +118,11 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
         )}
 
         <Tabs className={classes.tabsWrapper} onChange={handleTabChange}>
-          <TabList>
+          <TabList className={classes.tabList}>
             {tabs.map((tab, idx) => (
-              <Tab key={`tabs-${tab.title}-${idx}`}>{tab.title}</Tab>
+              <Tab className={classes.tab} key={`tabs-${tab.title}-${idx}`}>
+                {tab.title}
+              </Tab>
             ))}
           </TabList>
 
