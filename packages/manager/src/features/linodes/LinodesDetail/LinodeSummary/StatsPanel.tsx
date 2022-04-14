@@ -3,7 +3,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import { STATS_NOT_READY_MESSAGE } from 'src/queries/linodes';
+import { STATS_NOT_READY_MESSAGE } from '../LinodeNetworking/NetworkingSummaryPanel/TransferHistory';
 
 const useStyles = makeStyles(() => ({
   graphsUnavailable: {

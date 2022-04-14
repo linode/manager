@@ -15,8 +15,6 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import {
-  STATS_NOT_READY_API_MESSAGE,
-  STATS_NOT_READY_MESSAGE,
   useLinodeNetworkStatsByDate,
   useLinodeTransferByDate,
 } from 'src/queries/linodes';
@@ -57,10 +55,14 @@ interface Props {
   linodeCreated: string;
 }
 
-export const TransferHistory: React.FC<Props> = ({
-  linodeID,
-  linodeCreated,
-}) => {
+export const STATS_NOT_READY_API_MESSAGE =
+  'Stats are unavailable at this time.';
+export const STATS_NOT_READY_MESSAGE =
+  'Stats for this Linode are not yet available – check back later';
+
+export const TransferHistory: React.FC<Props> = (props) => {
+  const { linodeID, linodeCreated } = props;
+
   const classes = useStyles();
 
   // Needed to see the user's timezone.
