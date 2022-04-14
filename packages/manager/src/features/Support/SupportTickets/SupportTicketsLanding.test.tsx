@@ -15,9 +15,6 @@ describe('Support Tickets Landing', () => {
       classes={{
         title: '',
         openTicketButton: '',
-        tabsWrapper: '',
-        tabList: '',
-        tab: '',
       }}
       {...reactRouterProps}
     />
