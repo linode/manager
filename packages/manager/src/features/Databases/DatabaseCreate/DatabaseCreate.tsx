@@ -25,6 +25,7 @@ import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -35,6 +36,7 @@ import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
+import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
@@ -55,7 +57,6 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -488,18 +489,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <Typography style={{ marginTop: 8 }}>
-            <a
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              href="https://www.linode.com/speed-test/"
-            >
-              Use our speedtest page
-            </a>
-            {` `}
-            to find the best region for your current location.
-          </Typography>
+          <div style={{ marginTop: 8 }}>{regionHelperText()}</div>
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
         <Grid item>

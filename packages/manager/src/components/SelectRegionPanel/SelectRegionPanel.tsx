@@ -31,7 +31,6 @@ const styles = (theme: Theme) =>
 
 interface Props {
   regions: ExtendedRegion[];
-  copy?: string;
   error?: string;
   handleSelection: (id: string) => void;
   selectedID?: string;
@@ -39,10 +38,27 @@ interface Props {
   helperText?: string;
 }
 
+export const regionHelperText = (onClick?: () => void) => (
+  <Typography variant="body1">
+    You can use
+    {` `}
+    <a
+      onClick={onClick}
+      target="_blank"
+      aria-describedby="external-site"
+      rel="noopener noreferrer"
+      href="https://www.linode.com/speed-test/"
+    >
+      our speedtest page
+    </a>
+    {` `}
+    to find the best region for your current location.
+  </Typography>
+);
+
 const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
   const {
     classes,
-    copy,
     disabled,
     error,
     handleSelection,
@@ -60,23 +76,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
       <Typography variant="h2" data-qa-tp="Region">
         Region
       </Typography>
-      {copy && (
-        <Typography variant="body1">
-          {copy}
-          {` `}
-          <a
-            onClick={() => sendLinodeCreateDocsEvent('Speedtest Link')}
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-            href="https://www.linode.com/speed-test/"
-          >
-            Use our speedtest page
-          </a>
-          {` `}
-          to find the best region for your current location.
-        </Typography>
-      )}
+      {regionHelperText(() => sendLinodeCreateDocsEvent('Speedtest Link'))}
       <RegionSelect
         errorText={error}
         disabled={disabled}
