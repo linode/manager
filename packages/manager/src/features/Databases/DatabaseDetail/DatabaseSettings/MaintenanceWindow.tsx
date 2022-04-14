@@ -279,6 +279,10 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
                   ) ?? daySelectionMap[0];
 
                 weekSelectionModifier(dayOfWeek.label, weekSelectionMap);
+                setFieldValue(
+                  'week_of_month',
+                  modifiedWeekSelectionMap[0].value
+                );
               }
             }}
           >
