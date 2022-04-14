@@ -1,6 +1,7 @@
 /**
- * @file Cypress intercepts for Cloud Manager Object Storage operations.
+ * @file Cypress intercepts and mocks for Cloud Manager Object Storage operations.
  */
+
 import { Response } from 'support/util/response';
 import { sequentialStub } from 'support/stubs/sequential-stub';
 import { paginateResponse } from 'support/util/paginate';
@@ -191,6 +192,15 @@ export const mockDeleteBucketObjectS3 = (
 };
 
 /**
+ * Intercepts GET request to fetch object storage access keys.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetAccessKeys = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', '*/object-storage/keys*');
+};
+
+/**
  * Intercepts GET request to fetch object storage access keys, and mocks response.
  *
  * @param response - Mocked response.
@@ -205,6 +215,15 @@ export const mockGetAccessKeys = (
     body: {},
     ...response,
   });
+};
+
+/**
+ * Intercepts object storage access key POST request.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateAccessKey = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/object-storage/keys');
 };
 
 /**
@@ -236,13 +255,4 @@ export const mockDeleteAccessKey = (keyId: number): Cypress.Chainable<null> => {
     statusCode: 200,
     body: {},
   });
-};
-
-/**
- * Intercepts object storage access key POST request.
- *
- * @returns Cypress chainable.
- */
-export const interceptAccessKeyCreate = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/object-storage/keys');
 };
