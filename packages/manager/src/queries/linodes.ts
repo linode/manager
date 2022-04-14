@@ -1,8 +1,15 @@
-import { Linode, getLinodes } from '@linode/api-v4/lib/linodes';
+import { NetworkTransfer } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { listToItemsByID, queryPresets } from './base';
+import {
+  Linode,
+  getLinodes,
+  getLinodeStatsByDate,
+  Stats,
+  getLinodeTransferByDate,
+} from '@linode/api-v4/lib/linodes';
 
 export const queryKey = 'linode';
 
@@ -32,6 +39,36 @@ export const useAllLinodesQuery = (
     [`${queryKey}-all`, params, filter],
     () => getAllLinodesRequest(params, filter),
     { ...queryPresets.longLived, enabled }
+  );
+};
+
+export const useLinodeNetworkStatsByDate = (
+  id: number,
+  year: string,
+  month: string,
+  enabled = true
+) => {
+  return useQuery<Stats, APIError[]>(
+    [`${queryKey}-stats`, id, year, month],
+    () => getLinodeStatsByDate(id, year, month),
+    // We need to disable retries because the API will
+    // error if stats are not ready. If the default retry policy
+    // is used, a "stats not ready" state can't be shown because the
+    // query is still trying to request.
+    { enabled, retry: false }
+  );
+};
+
+export const useLinodeTransferByDate = (
+  id: number,
+  year: string,
+  month: string,
+  enabled = true
+) => {
+  return useQuery<NetworkTransfer, APIError[]>(
+    [`${queryKey}-transfer`, id, year, month],
+    () => getLinodeTransferByDate(id, year, month),
+    { enabled }
   );
 };
 

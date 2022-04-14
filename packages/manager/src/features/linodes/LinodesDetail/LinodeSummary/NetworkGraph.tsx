@@ -23,8 +23,13 @@ import {
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
 import StatsPanel from './StatsPanel';
-import { TotalTrafficProps } from './TotalTraffic';
 import { ChartProps } from './types';
+
+export interface TotalTrafficProps {
+  inTraffic: string;
+  outTraffic: string;
+  combinedTraffic: string;
+}
 
 const formatTotalTraffic = (value: number) =>
   readableBytes(value, { base10: true }).formatted;
