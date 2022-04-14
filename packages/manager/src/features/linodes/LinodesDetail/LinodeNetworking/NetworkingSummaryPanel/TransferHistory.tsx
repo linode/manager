@@ -24,6 +24,7 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
 import PendingIcon from 'src/assets/icons/pending.svg';
+import { parseAPIDate } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   arrowIconOuter: {
@@ -73,11 +74,14 @@ export const TransferHistory: React.FC<Props> = ({
 
   const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
 
+  const isTooEarlyForStats =
+    parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 7 });
+
   const {
     data: stats,
     isLoading: statsLoading,
     error: statsError,
-  } = useLinodeNetworkStatsByDate(linodeID, year, month, linodeCreated);
+  } = useLinodeNetworkStatsByDate(linodeID, year, month, !isTooEarlyForStats);
 
   const { data: transfer } = useLinodeTransferByDate(
     linodeID,
@@ -142,6 +146,60 @@ export const TransferHistory: React.FC<Props> = ({
     ? getAPIErrorOrDefault(statsError, 'Unable to load stats.')[0].reason
     : null;
 
+  const renderStatsGraph = () => {
+    if (statsLoading) {
+      return (
+        <div className={classes.loading}>
+          <CircleProgress mini />
+        </div>
+      );
+    }
+
+    if (isTooEarlyForStats) {
+      return (
+        <ErrorState
+          CustomIcon={PendingIcon}
+          errorText={STATS_NOT_READY_MESSAGE}
+          compact
+        />
+      );
+    }
+
+    if (statsErrorString) {
+      const areStatsNotReadyFromAPI =
+        statsErrorString === STATS_NOT_READY_API_MESSAGE;
+
+      return (
+        <ErrorState
+          CustomIcon={areStatsNotReadyFromAPI ? PendingIcon : undefined}
+          errorText={
+            areStatsNotReadyFromAPI ? STATS_NOT_READY_MESSAGE : statsErrorString
+          }
+          compact
+        />
+      );
+    }
+
+    return (
+      <LineGraph
+        timezone={profile?.timezone ?? 'UTC'}
+        chartHeight={190}
+        unit={`/s`}
+        formatData={convertNetworkData}
+        formatTooltip={formatTooltip}
+        showToday={true}
+        data={[
+          {
+            borderColor: 'transparent',
+            backgroundColor: '#5ad865',
+            data: combinedData,
+            label: 'Public Outbound Traffic',
+          },
+        ]}
+      />
+    );
+  };
+
   return (
     <>
       <Box
@@ -191,44 +249,7 @@ export const TransferHistory: React.FC<Props> = ({
           </button>
         </Box>
       </Box>
-      {statsLoading ? (
-        <div className={classes.loading}>
-          <CircleProgress mini />
-        </div>
-      ) : statsErrorString ? (
-        <ErrorState
-          CustomIcon={
-            [STATS_NOT_READY_MESSAGE, STATS_NOT_READY_API_MESSAGE].includes(
-              statsErrorString
-            )
-              ? PendingIcon
-              : undefined
-          }
-          errorText={
-            statsErrorString === STATS_NOT_READY_API_MESSAGE
-              ? STATS_NOT_READY_MESSAGE
-              : statsErrorString
-          }
-          compact
-        />
-      ) : (
-        <LineGraph
-          timezone={profile?.timezone ?? 'UTC'}
-          chartHeight={190}
-          unit={`/s`}
-          formatData={convertNetworkData}
-          formatTooltip={formatTooltip}
-          showToday={true}
-          data={[
-            {
-              borderColor: 'transparent',
-              backgroundColor: '#5ad865',
-              data: combinedData,
-              label: 'Public Outbound Traffic',
-            },
-          ]}
-        />
-      )}
+      {renderStatsGraph()}
     </>
   );
 };

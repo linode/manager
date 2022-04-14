@@ -1,8 +1,6 @@
 import { NetworkTransfer } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import { useQuery } from 'react-query';
-import { parseAPIDate } from 'src/utilities/date';
 import { getAll } from 'src/utilities/getAll';
 import { listToItemsByID, queryPresets } from './base';
 import {
@@ -49,30 +47,20 @@ export const useAllLinodesQuery = (
   );
 };
 
-const getIsTooEarlyForStats = (linodeCreated?: string) => {
-  if (!linodeCreated) {
-    return false;
-  }
-
-  return parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 7 });
-};
-
 export const useLinodeNetworkStatsByDate = (
   id: number,
   year: string,
   month: string,
-  linodeCreated?: string
+  enabled = true
 ) => {
   return useQuery<Stats, APIError[]>(
     [`${queryKey}-stats`, id, year, month],
-    // If the Linode was created within the last 7 minutes,
-    // mock an API failure so the real API is not actually used.
-    getIsTooEarlyForStats(linodeCreated)
-      ? () => Promise.reject([{ reason: STATS_NOT_READY_MESSAGE }])
-      : () => getLinodeStatsByDate(id, year, month),
-    // Don't retry because React Query will spam our mock failure and the real
-    // API if stats are not ready. Refetching will resolve any errors eventually.
-    { refetchInterval: 30000, retry: false }
+    () => getLinodeStatsByDate(id, year, month),
+    // We need to disable retries because the API will
+    // error if stats are not ready. If the default retry policy
+    // is used, a "stats not ready" state can't be shown because the
+    // query is still trying to request.
+    { enabled, retry: false }
   );
 };
 
