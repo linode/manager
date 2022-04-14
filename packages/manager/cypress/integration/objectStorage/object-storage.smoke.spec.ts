@@ -1,20 +1,21 @@
-import 'cypress-file-upload';
-import { objectStorageBucketFactory } from 'src/factories/objectStorage';
-import {
-  interceptBucketCreate,
-  interceptBucketDelete,
-  interceptBucketObjectDelete,
-  interceptBucketObjectList,
-  interceptBucketObjectS3Delete,
-  interceptBucketObjectS3Upload,
-  interceptBucketObjectUpload,
-  interceptBuckets,
-} from 'support/intercepts/object-storage';
-import { randomLabel } from 'support/util/random';
-
 /**
  * @file Smoke tests for Cloud Manager object storage.
  */
+
+import 'cypress-file-upload';
+import { objectStorageBucketFactory } from 'src/factories/objectStorage';
+import {
+  mockCreateBucket,
+  mockDeleteBucket,
+  mockDeleteBucketObject,
+  mockDeleteBucketObjectS3,
+  mockGetBuckets,
+  mockGetBucketObjects,
+  mockUploadBucketObject,
+  mockUploadBucketObjectS3,
+} from 'support/intercepts/object-storage';
+import { randomLabel } from 'support/util/random';
+
 describe('object storage smoke tests', () => {
   /*
    * - Tests core object storage bucket create flow using mocked API responses.
@@ -27,8 +28,8 @@ describe('object storage smoke tests', () => {
     const bucketCluster = 'us-southeast-1';
     const bucketHostname = `${bucketLabel}.${bucketCluster}.linodeobjects.com`;
 
-    interceptBuckets([]).as('getBuckets');
-    interceptBucketCreate(bucketLabel, bucketCluster).as('createBucket');
+    mockGetBuckets([]).as('getBuckets');
+    mockCreateBucket(bucketLabel, bucketCluster).as('createBucket');
 
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
@@ -67,9 +68,7 @@ describe('object storage smoke tests', () => {
       'object-storage-files/4.zip',
     ];
 
-    interceptBucketObjectList(bucketLabel, bucketCluster, []).as(
-      'getBucketObjects'
-    );
+    mockGetBucketObjects(bucketLabel, bucketCluster, []).as('getBucketObjects');
 
     cy.visitWithLogin(
       `/object-storage/buckets/${bucketCluster}/${bucketLabel}`
@@ -80,10 +79,10 @@ describe('object storage smoke tests', () => {
     bucketContents.forEach((bucketFile) => {
       const filename = bucketFile.split('/')[1];
 
-      interceptBucketObjectUpload(bucketLabel, bucketCluster, filename).as(
+      mockUploadBucketObject(bucketLabel, bucketCluster, filename).as(
         'uploadBucketObject'
       );
-      interceptBucketObjectS3Upload(bucketLabel, bucketCluster, filename).as(
+      mockUploadBucketObjectS3(bucketLabel, bucketCluster, filename).as(
         'uploadBucketObjectS3'
       );
 
@@ -106,10 +105,10 @@ describe('object storage smoke tests', () => {
     bucketContents.forEach((bucketFile) => {
       const filename = bucketFile.split('/')[1];
 
-      interceptBucketObjectDelete(bucketLabel, bucketCluster, filename).as(
+      mockDeleteBucketObject(bucketLabel, bucketCluster, filename).as(
         'deleteBucketObject'
       );
-      interceptBucketObjectS3Delete(bucketLabel, bucketCluster, filename).as(
+      mockDeleteBucketObjectS3(bucketLabel, bucketCluster, filename).as(
         'deleteBucketObjectS3'
       );
 
@@ -148,8 +147,8 @@ describe('object storage smoke tests', () => {
       objects: 0,
     });
 
-    interceptBuckets(bucketMock).as('getBuckets');
-    interceptBucketDelete(bucketLabel, bucketCluster).as('deleteBucket');
+    mockGetBuckets(bucketMock).as('getBuckets');
+    mockDeleteBucket(bucketLabel, bucketCluster).as('deleteBucket');
 
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
