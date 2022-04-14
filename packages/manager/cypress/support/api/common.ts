@@ -3,6 +3,7 @@ import { entityPrefix } from '../constants/cypress';
 const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
 const apirootBeta = Cypress.env('REACT_APP_API_ROOT') + 'beta/';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
+
 export const apiCheckErrors = (resp, failOnError = true) => {
   let errs = undefined;
   if (resp.body && resp.body.ERRORARRAY && resp.body.ERRORARRAY.length > 0) {
@@ -110,8 +111,8 @@ export const isTestEntity = (entity) =>
  * @param label Label to check.
  *
  * @example
- * isTestLabel('my-label'); // False.
- * isTestLabel('cy-test-my-label'); // True.
+ * isTestLabel('my-label'); // `false`.
+ * isTestLabel('cy-test-my-label'); // `true`.
  *
  * @returns True if label is a test label, false otherwise.
  */
