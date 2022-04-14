@@ -27,12 +27,7 @@ import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
-type ClassNames =
-  | 'title'
-  | 'openTicketButton'
-  | 'tabsWrapper'
-  | 'tab'
-  | 'tabList';
+type ClassNames = 'title' | 'openTicketButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,45 +40,6 @@ const styles = (theme: Theme) =>
       minWidth: 150,
       [theme.breakpoints.down('sm')]: {
         marginRight: theme.spacing(),
-      },
-    },
-    tabsWrapper: {
-      position: 'relative',
-    },
-    tab: {
-      '&[data-reach-tab]': {
-        display: 'inline-flex',
-        flexShrink: 0,
-        alignItems: 'center',
-        borderBottom: '2px solid transparent',
-        color: theme.textColors.linkActiveLight,
-        fontSize: '0.9rem',
-        lineHeight: 1.3,
-        marginTop: theme.spacing(0.5),
-        maxWidth: 264,
-        minHeight: theme.spacing(5),
-        minWidth: 50,
-        padding: '6px 16px',
-        textDecoration: 'none',
-        '&:hover': {
-          color: theme.palette.primary.main,
-        },
-      },
-      '&[data-reach-tab][data-selected]': {
-        borderBottom: `3px solid ${theme.palette.primary.main}`,
-        color: theme.color.headline,
-        fontFamily: theme.font.bold,
-      },
-    },
-    tabList: {
-      '&[data-reach-tab-list]': {
-        background: 'none !important',
-        boxShadow: `inset 0 -1px 0 ${theme.color.border2}`,
-        marginBottom: theme.spacing(),
-        [theme.breakpoints.down('md')]: {
-          overflowX: 'auto',
-          padding: 1,
-        },
       },
     },
   });
@@ -251,14 +207,10 @@ export class SupportTicketsLanding extends React.PureComponent<
           )}
         </Grid>
         {notice && <Notice success text={notice} />}
-        <Tabs defaultIndex={value} className={classes.tabsWrapper}>
-          <TabList className={classes.tabList}>
-            <Tab data-qa-tab="Open Tickets" key={0} className={classes.tab}>
-              Open Tickets
-            </Tab>
-            <Tab data-qa-tab="Closed Tickets" key={1} className={classes.tab}>
-              Closed Tickets
-            </Tab>
+        <Tabs defaultIndex={value}>
+          <TabList>
+            <Tab data-qa-tab="Open Tickets">Open Tickets</Tab>
+            <Tab data-qa-tab="Closed Tickets">Closed Tickets</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
