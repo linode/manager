@@ -14,9 +14,15 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { useLinodeNetworkInfo } from 'src/hooks/useLinodeNetworkInfo';
+import {
+  useLinodeNetworkStatsByDate,
+  useLinodeTransferByDate,
+} from 'src/queries/linodes';
 import { useProfile } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
+import PendingIcon from 'src/assets/icons/pending.svg';
+import { parseAPIDate } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   arrowIconOuter: {
@@ -44,12 +50,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface TransferHistoryProps {
+interface Props {
   linodeID: number;
   linodeCreated: string;
 }
 
-export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
+export const STATS_NOT_READY_API_MESSAGE =
+  'Stats are unavailable at this time.';
+export const STATS_NOT_READY_MESSAGE =
+  'Stats for this Linode are not yet available – check back later';
+
+export const TransferHistory: React.FC<Props> = (props) => {
+  const { linodeID, linodeCreated } = props;
+
   const classes = useStyles();
 
   // Needed to see the user's timezone.
@@ -63,13 +76,20 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
 
   const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
 
-  const { loading, errorMessage, stats, transfer } = useLinodeNetworkInfo(
-    props.linodeID,
-    {
-      year,
-      month,
-      requestTransfer: monthOffset < 0,
-    }
+  const isTooEarlyForStats =
+    parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 7 });
+
+  const {
+    data: stats,
+    isLoading: statsLoading,
+    error: statsError,
+  } = useLinodeNetworkStatsByDate(linodeID, year, month, !isTooEarlyForStats);
+
+  const { data: transfer } = useLinodeTransferByDate(
+    linodeID,
+    year,
+    month,
+    monthOffset < 0
   );
 
   const bytesIn = readableBytes(transfer?.bytes_in ?? 0);
@@ -87,11 +107,8 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
   const unit = generateNetworkUnits(max);
 
   // The following two functions copied from LinodeSummary/NetworkGraph.tsx:
-  //
-  // @todo: reduce duplication.
-
   const convertNetworkData = (value: number) => {
-    return convertNetworkToUnit(value, unit as any);
+    return convertNetworkToUnit(value, unit);
   };
 
   /**
@@ -100,15 +117,15 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
    * that we want, but it first multiplies by 8 to convert to bits.
    * APIv4 returns this data in bits to begin with,
    * so we have to preemptively divide by 8 to counter the conversion inside the helper.
-   *
    */
-  const _formatTooltip = (valueInBytes: number) =>
+  const formatTooltip = (valueInBytes: number) =>
     formatNetworkTooltip(valueInBytes / 8);
 
   const maxMonthOffset = getOffsetFromDate(
     now,
-    DateTime.fromISO(props.linodeCreated, { zone: 'utc' })
+    DateTime.fromISO(linodeCreated, { zone: 'utc' })
   );
+
   const minMonthOffset = 0;
 
   const decrementOffset = () =>
@@ -116,8 +133,6 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
 
   const incrementOffset = () =>
     setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
-
-  const displayLoading = loading && !stats && !transfer;
 
   // In/Out totals from the /transfer endpoint are per-month (to align with billing cycle).
   // Graph data from the /stats endpoint works a bit differently: when you request data for the
@@ -128,6 +143,64 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
   // with the behavior of Legacy Manager.
 
   const displayInOutTotals = monthOffset < 0;
+
+  const statsErrorString = statsError
+    ? getAPIErrorOrDefault(statsError, 'Unable to load stats.')[0].reason
+    : null;
+
+  const renderStatsGraph = () => {
+    if (statsLoading) {
+      return (
+        <div className={classes.loading}>
+          <CircleProgress mini />
+        </div>
+      );
+    }
+
+    if (isTooEarlyForStats) {
+      return (
+        <ErrorState
+          CustomIcon={PendingIcon}
+          errorText={STATS_NOT_READY_MESSAGE}
+          compact
+        />
+      );
+    }
+
+    if (statsErrorString) {
+      const areStatsNotReadyFromAPI =
+        statsErrorString === STATS_NOT_READY_API_MESSAGE;
+
+      return (
+        <ErrorState
+          CustomIcon={areStatsNotReadyFromAPI ? PendingIcon : undefined}
+          errorText={
+            areStatsNotReadyFromAPI ? STATS_NOT_READY_MESSAGE : statsErrorString
+          }
+          compact
+        />
+      );
+    }
+
+    return (
+      <LineGraph
+        timezone={profile?.timezone ?? 'UTC'}
+        chartHeight={190}
+        unit={`/s`}
+        formatData={convertNetworkData}
+        formatTooltip={formatTooltip}
+        showToday={true}
+        data={[
+          {
+            borderColor: 'transparent',
+            backgroundColor: '#5ad865',
+            data: combinedData,
+            label: 'Public Outbound Traffic',
+          },
+        ]}
+      />
+    );
+  };
 
   return (
     <>
@@ -143,11 +216,11 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
         <Typography>
           <strong>Network Transfer History ({unit}/s)</strong>
         </Typography>
-        {displayInOutTotals && transfer && !errorMessage && (
+        {displayInOutTotals && transfer ? (
           <Typography>
             {bytesIn.formatted} In/{bytesOut.formatted} Out
           </Typography>
-        )}
+        ) : null}
         <Box
           display="flex"
           flexDirection="row"
@@ -178,30 +251,7 @@ export const TransferHistory: React.FC<TransferHistoryProps> = (props) => {
           </button>
         </Box>
       </Box>
-      {displayLoading ? (
-        <div className={classes.loading}>
-          <CircleProgress mini />
-        </div>
-      ) : errorMessage ? (
-        <ErrorState errorText={errorMessage} compact />
-      ) : (
-        <LineGraph
-          timezone={profile?.timezone ?? 'UTC'}
-          chartHeight={190}
-          unit={`/s`}
-          formatData={convertNetworkData}
-          formatTooltip={_formatTooltip}
-          showToday={true}
-          data={[
-            {
-              borderColor: 'transparent',
-              backgroundColor: '#5ad865',
-              data: combinedData,
-              label: 'Public Outbound Traffic',
-            },
-          ]}
-        />
-      )}
+      {renderStatsGraph()}
     </>
   );
 };
