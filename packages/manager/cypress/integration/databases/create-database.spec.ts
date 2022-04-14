@@ -3,7 +3,7 @@ import { databaseInstanceFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
 import { randomLabel } from 'support/util/random';
 import { sequentialStub } from 'support/stubs/sequential-stub';
-import { makePaginatedResponse } from 'support/util/response';
+import { paginateResponse } from 'support/util/paginate';
 import { containsClick, fbtClick, getClick } from 'support/helpers';
 
 interface databaseClusterConfiguration {
@@ -80,8 +80,8 @@ describe('create a database cluster, mocked data', () => {
           'GET',
           '*/databases/instances?page=1&page_size=25',
           sequentialStub([
-            makePaginatedResponse(databaseMock),
-            makePaginatedResponse({ ...databaseMock, status: 'active' }),
+            paginateResponse(databaseMock),
+            paginateResponse({ ...databaseMock, status: 'active' }),
           ])
         ).as('listDatabases');
 
@@ -132,7 +132,7 @@ describe('create a database cluster, mocked data', () => {
 
         // Begin intercepting and stubbing event to mock database creation completion.
         cy.intercept('GET', '*/account/events?page_size=25', (req) => {
-          req.reply(makePaginatedResponse(eventMock));
+          req.reply(paginateResponse(eventMock));
         }).as('getEvent');
 
         cy.wait('@getEvent');
