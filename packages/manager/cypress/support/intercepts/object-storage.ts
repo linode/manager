@@ -8,11 +8,22 @@ import { paginateResponse } from 'support/util/paginate';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 
 /**
+ * Intercepts GET requests to fetch buckets.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptGetBuckets = (): Cypress.Chainable<null> => {
+  return cy.intercept('GET', '*/object-storage/buckets/*');
+};
+
+/**
  * Intercepts GET requests to fetch buckets and mocks response.
  *
  * Only returns data for the first request intercepted.
  *
  * @param data - Mock response data.
+ *
+ * @returns Cypress chainable.
  */
 export const mockGetBuckets = (data: any): Cypress.Chainable<null> => {
   /*
@@ -28,6 +39,15 @@ export const mockGetBuckets = (data: any): Cypress.Chainable<null> => {
     '*/object-storage/buckets/*',
     sequentialStub([paginateResponse(data), paginateResponse([])])
   );
+};
+
+/**
+ * Intercepts POST request to create bucket.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptCreateBucket = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/object-storage/buckets');
 };
 
 /**
@@ -51,6 +71,39 @@ export const mockCreateBucket = (
       hostname: `${label}.${cluster}.linodeobjects.com`,
     })
   );
+};
+
+/**
+ * Intercepts DELETE request to delete bucket.
+ *
+ * If a bucket label and cluster are provided, only requests to delete the
+ * given bucket in the given cluster are intercepted.
+ *
+ * If only a cluster is provided, only requests to delete buckets in the
+ * given cluster are intercepted.
+ *
+ * If no cluster or label are provided, all requests to delete buckets are
+ * intercepted.
+ *
+ * @param label - Optional label for bucket deletion to intercept.
+ * @param cluster - Optional cluster for bucket deletion to intercept.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptDeleteBucket = (
+  label?: string,
+  cluster?: string
+): Cypress.Chainable<null> => {
+  if (label && cluster) {
+    return cy.intercept(
+      'DELETE',
+      `*/object-storage/buckets/${cluster}/${label}`
+    );
+  }
+  if (cluster) {
+    return cy.intercept('DELETE', `*/object-storage/buckets/${cluster}/*`);
+  }
+  return cy.intercept('DELETE', '*/object-storage/buckets/*');
 };
 
 /**
