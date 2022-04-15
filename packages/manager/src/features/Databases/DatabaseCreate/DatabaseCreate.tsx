@@ -119,7 +119,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   notice: {
-    borderColor: theme.color.green,
     fontSize: 15,
     lineHeight: '18px',
   },
@@ -556,12 +555,12 @@ const DatabaseCreate: React.FC<{}> = () => {
             </RadioGroup>
           </FormControl>
           <Grid item xs={12} md={8}>
-            <Notice success className={classes.notice}>
+            <Notice informational className={classes.notice}>
               <strong>
                 Notice: There is no charge for database clusters during beta.
               </strong>{' '}
-              You will be notified before the beta period ends and database
-              clusters are subject to charges.{' '}
+              Database clusters will be subject to charges when the beta period
+              ends on May 2nd, 2022.{' '}
               <Link to="https://www.linode.com/pricing/">View pricing</Link>.
             </Notice>
           </Grid>
