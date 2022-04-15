@@ -10,6 +10,7 @@ import {
 } from 'support/intercepts/object-storage';
 import { paginateResponse } from 'support/util/paginate';
 import { randomLabel, randomNumber } from 'support/util/random';
+import { ui } from 'support/ui';
 
 describe('object storage access keys smoke tests', () => {
   /*
@@ -38,7 +39,7 @@ describe('object storage access keys smoke tests', () => {
 
     cy.findByText('No items to display.').should('be.visible');
 
-    cy.get('[data-qa-entity-header="true"]').within(() => {
+    ui.entityHeader.find().within(() => {
       cy.findByText('Create Access Key').should('be.visible').click();
     });
 
@@ -52,17 +53,16 @@ describe('object storage access keys smoke tests', () => {
       )
     ).as('getKeys');
 
-    cy.get('[data-qa-drawer="true"]')
+    ui.drawer
+      .findByTitle('Create Access Key')
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Label').click().type(keyLabel);
-        cy.get('[data-qa-buttons="true"]').within(() => {
-          cy.findByText('Create Access Key')
-            .closest('button')
-            .should('be.visible')
-            .should('be.enabled')
-            .click();
-        });
+        ui.buttonGroup
+          .findButtonByTitle('Create Access Key')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
 
     cy.wait(['@createKey', '@getKeys']);
@@ -119,13 +119,13 @@ describe('object storage access keys smoke tests', () => {
     // Mock next GET request to respond with no data to reflect key revocation.
     mockGetAccessKeys(paginateResponse([])).as('getKeys');
 
-    cy.findByText(`Revoking ${keyLabel}`)
-      .closest('[role="dialog"]')
-      .within(() => {
-        cy.get('[data-qa-buttons="true"]').within(() => {
-          cy.findByText('Revoke').closest('button').click();
-        });
-      });
+    ui.dialog.findByTitle(`Revoking ${keyLabel}`).within(() => {
+      ui.buttonGroup
+        .findButtonByTitle('Revoke')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
 
     cy.wait(['@deleteKey', '@getKeys']);
     cy.findByText('No items to display.').should('be.visible');

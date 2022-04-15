@@ -4,15 +4,13 @@
 
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 import { authenticate } from 'support/api/authentication';
-import {
-  createBucket,
-  ObjectStorageBucket,
-} from '@linode/api-v4/lib/object-storage';
+import { createBucket } from '@linode/api-v4/lib/object-storage';
 import {
   interceptGetAccessKeys,
   interceptCreateAccessKey,
 } from 'support/intercepts/object-storage';
 import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 
 authenticate();
 describe('object storage access key end-to-end tests', () => {
@@ -23,7 +21,7 @@ describe('object storage access key end-to-end tests', () => {
    * - Confirms that new access key is listed in landing page table.
    * - Confirms that access key has expected permissions.
    */
-  it('↔️ can create an access key with unlimited access', () => {
+  it('can create an access key with unlimited access - e2e', () => {
     const keyLabel = randomLabel();
 
     interceptGetAccessKeys().as('getKeys');
@@ -33,19 +31,22 @@ describe('object storage access key end-to-end tests', () => {
     cy.wait('@getKeys');
 
     // Click "Create Access Key" button in entity header.
-    cy.get('[data-qa-entity-header="true"]').within(() => {
+    ui.entityHeader.find().within(() => {
       cy.findByText('Create Access Key').should('be.visible').click();
     });
 
     // Enter access key label in drawer, then click "Create Access Key".
-    cy.get('[data-qa-drawer="true"]').within(() => {
-      cy.findByText('Create Access Key').should('be.visible');
-      cy.findByText('Label').click().type(keyLabel);
-
-      cy.get('[data-qa-buttons="true"]').within(() => {
-        cy.findByText('Create Access Key').click();
+    ui.drawer
+      .findByTitle('Create Access Key')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Label').click().type(keyLabel);
+        ui.buttonGroup
+          .findButtonByTitle('Create Access Key')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
       });
-    });
 
     cy.wait('@createKey').then((intercepts) => {
       // Use non-exact match; this allows leniency for wording to change but
@@ -85,7 +86,7 @@ describe('object storage access key end-to-end tests', () => {
    * - Confirms that new access key is listed in landing page title.
    * - Confirms that access key has expected permissions.
    */
-  it('↔️ can create an access key with limited access', () => {
+  it('can create an access key with limited access - e2e', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-east-1';
     const bucketRequest = objectStorageBucketFactory.build({
@@ -94,66 +95,66 @@ describe('object storage access key end-to-end tests', () => {
     });
 
     // Create a bucket before creating access key.
-    cy.defer(createBucket(bucketRequest)).then(
-      (bucket: ObjectStorageBucket) => {
-        const keyLabel = randomLabel();
+    cy.defer(createBucket(bucketRequest)).then(() => {
+      const keyLabel = randomLabel();
 
-        interceptGetAccessKeys().as('getKeys');
-        interceptCreateAccessKey().as('createKey');
+      interceptGetAccessKeys().as('getKeys');
+      interceptCreateAccessKey().as('createKey');
 
-        cy.visitWithLogin('/object-storage/access-keys');
-        cy.wait('@getKeys');
+      cy.visitWithLogin('/object-storage/access-keys');
+      cy.wait('@getKeys');
 
-        // Click "Create Access Key" button in entity header.
-        cy.get('[data-qa-entity-header="true"]').within(() => {
-          cy.findByText('Create Access Key').should('be.visible').click();
-        });
+      // Click "Create Access Key" button in entity header.
+      ui.entityHeader.find().within(() => {
+        cy.findByText('Create Access Key').should('be.visible').click();
+      });
 
-        // Enter access key label in drawer, set read-only access, then click "Create Access Key".
-        cy.get('[data-qa-drawer="true"]').within(() => {
-          cy.findByText('Create Access Key').should('be.visible');
+      // Enter access key label in drawer, set read-only access, then click "Create Access Key".
+      ui.drawer
+        .findByTitle('Create Access Key')
+        .should('be.visible')
+        .within(() => {
           cy.findByText('Label').click().type(keyLabel);
           cy.findByLabelText('Limited Access').click();
           cy.findByLabelText('Select read-only for all').click();
 
-          cy.get('[data-qa-buttons="true"]').within(() => {
-            cy.findByText('Create Access Key').click();
-          });
+          ui.buttonGroup
+            .findButtonByTitle('Create Access Key')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
-        /*
-         * Wait for access key to be created, confirm that dialog is shown, close
-         * dialog. Then confirm that key is listed in table and displays the correct
-         * permissions.
-         */
-        cy.wait('@createKey').then((intercepts) => {
-          const accessKey = intercepts.response?.body?.access_key;
-          const secretKey = intercepts.response?.body?.secret_key;
+      /*
+       * Wait for access key to be created, confirm that dialog is shown, close
+       * dialog. Then confirm that key is listed in table and displays the correct
+       * permissions.
+       */
+      cy.wait('@createKey').then((intercepts) => {
+        const accessKey = intercepts.response?.body?.access_key;
+        const secretKey = intercepts.response?.body?.secret_key;
 
-          cy.get('[id="access-key"]')
+        cy.get('[id="access-key"]')
+          .should('be.visible')
+          .should('have.value', accessKey);
+        cy.get('[id="secret-key"]')
+          .should('be.visible')
+          .should('have.value', secretKey);
+        cy.findByLabelText('Close drawer').should('be.visible').click();
+
+        cy.findByLabelText('List of Object Storage Access Keys').within(() => {
+          cy.findByText(keyLabel)
             .should('be.visible')
-            .should('have.value', accessKey);
-          cy.get('[id="secret-key"]')
-            .should('be.visible')
-            .should('have.value', secretKey);
-          cy.findByLabelText('Close drawer').should('be.visible').click();
-
-          cy.findByLabelText('List of Object Storage Access Keys').within(
-            () => {
-              cy.findByText(keyLabel)
-                .should('be.visible')
-                .closest('tr')
-                .within(() => {
-                  cy.findByText(accessKey).should('be.visible');
-                  cy.findByText('Permissions').click();
-                });
-            }
-          );
-
-          const permissionLabel = `This token has read-only access for ${bucketCluster}-${bucketLabel}`;
-          cy.findByLabelText(permissionLabel).should('be.visible');
+            .closest('tr')
+            .within(() => {
+              cy.findByText(accessKey).should('be.visible');
+              cy.findByText('Permissions').click();
+            });
         });
-      }
-    );
+
+        const permissionLabel = `This token has read-only access for ${bucketCluster}-${bucketLabel}`;
+        cy.findByLabelText(permissionLabel).should('be.visible');
+      });
+    });
   });
 });

@@ -15,6 +15,7 @@ import {
   mockUploadBucketObjectS3,
 } from 'support/intercepts/object-storage';
 import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 
 describe('object storage smoke tests', () => {
   /*
@@ -22,7 +23,7 @@ describe('object storage smoke tests', () => {
    * - Creates bucket.
    * - Confirms bucket is listed in table.
    */
-  it('can create object storage bucket - smoke test', () => {
+  it('can create object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketRegion = 'Atlanta, GA';
     const bucketCluster = 'us-southeast-1';
@@ -33,18 +34,23 @@ describe('object storage smoke tests', () => {
 
     cy.visitWithLogin('/object-storage');
     cy.wait('@getBuckets');
-    cy.get('[data-qa-entity-header="true"]').within(() => {
+
+    ui.entityHeader.find().within(() => {
       cy.findByText('Create Bucket').should('be.visible').click();
     });
-    cy.get('[data-qa-drawer="true"]')
+
+    ui.drawer
+      .findByTitle('Create Bucket')
       .should('be.visible')
       .within(() => {
         cy.findByText('Label').click().type(bucketLabel);
         cy.findByText('Region').click().type(`${bucketRegion}{enter}`);
-        cy.get('[data-qa-buttons]').within(() => {
-          cy.findByText('Create Bucket').should('be.visible').click();
-        });
+        ui.buttonGroup
+          .findButtonByTitle('Create Bucket')
+          .should('be.visible')
+          .click();
       });
+
     cy.wait('@createBucket');
     cy.findByText(bucketLabel).should('be.visible');
     cy.findByText(bucketRegion).should('be.visible');
@@ -58,7 +64,7 @@ describe('object storage smoke tests', () => {
    * - Deletes uploaded files.
    * - Confirms deleted files are removed from object list.
    */
-  it('can upload, view, and delete bucket objects - smoke test', () => {
+  it('can upload, view, and delete bucket objects - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketContents = [
@@ -121,10 +127,13 @@ describe('object storage smoke tests', () => {
           });
       });
 
-      cy.findByText(`Delete ${filename}`).should('be.visible');
-      cy.get('[data-qa-buttons="true"]').within(() => {
-        cy.findByText('Delete').click();
-      });
+      ui.dialog.findByTitle(`Delete ${filename}`).should('be.visible');
+
+      ui.buttonGroup
+        .findButtonByTitle('Delete')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
 
       cy.wait(['@deleteBucketObject', '@deleteBucketObjectS3']);
     });
@@ -137,7 +146,7 @@ describe('object storage smoke tests', () => {
    * - Mocks existing buckets.
    * - Deletes mocked bucket, confirms that landing page reflects deletion.
    */
-  it('can delete object storage bucket - smoke test', () => {
+  it('can delete object storage bucket - smoke', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
     const bucketMock = objectStorageBucketFactory.build({
@@ -160,15 +169,13 @@ describe('object storage smoke tests', () => {
         cy.findByText('Delete').should('be.visible').click();
       });
 
-    cy.findByText(`Delete Bucket ${bucketLabel}`).should('be.visible');
+    ui.dialog.findByTitle(`Delete Bucket ${bucketLabel}`).should('be.visible');
     cy.findByLabelText('Bucket Name').click().type(bucketLabel);
-    cy.get('[data-qa-buttons="true"]').within(() => {
-      cy.findByText('Delete Bucket')
-        .closest('button')
-        .should('be.enabled')
-        .should('be.visible')
-        .click();
-    });
+    ui.buttonGroup
+      .findButtonByTitle('Delete Bucket')
+      .should('be.enabled')
+      .should('be.visible')
+      .click();
 
     cy.wait('@deleteBucket');
     cy.findByText('Need help getting started?').should('be.visible');
