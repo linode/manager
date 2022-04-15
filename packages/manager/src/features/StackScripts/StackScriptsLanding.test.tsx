@@ -6,14 +6,6 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { StackScriptsLanding } from './StackScriptsLanding';
 
 describe.skip('StackScripts Landing', () => {
-  jest.mock('src/hooks/useReduxLoad', () => ({
-    useReduxLoad: jest.fn().mockReturnValue({ _loading: false }),
-  }));
-
-  jest.mock('@linode/api-v4/lib/account', () => ({
-    getUsers: jest.fn().mockResolvedValue({}),
-  }));
-
   const normalizedImages = normalizeEntities(imageFactory.buildList(10));
 
   const { getByText } = render(
