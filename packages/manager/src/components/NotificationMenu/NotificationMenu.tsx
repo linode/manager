@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
+import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Events from 'src/features/NotificationCenter/Events';
 import { NotificationData } from 'src/features/NotificationCenter/NotificationData/useNotificationData';
@@ -45,10 +46,10 @@ export const NotificationMenu: React.FC<Props> = (props) => {
   }, [dismissNotifications, notifications, dispatch, open, wasOpen]);
 
   return (
-    <div className={classes.root}>
+    <Paper className={classes.root}>
       <Notifications notificationsList={formattedNotifications} />
       <Events events={eventNotifications} />
-    </div>
+    </Paper>
   );
 };
 
