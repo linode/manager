@@ -604,6 +604,9 @@ export const handlers = [
   rest.put('*/account', (req, res, ctx) => {
     return res(ctx.json({ ...accountFactory.build(), ...(req.body as any) }));
   }),
+  rest.put('*/account/users*', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([])));
+  }),
   rest.get('*/account/transfer', (req, res, ctx) => {
     const transfer = accountTransferFactory.build();
     return res(ctx.delay(5000), ctx.json(transfer));
