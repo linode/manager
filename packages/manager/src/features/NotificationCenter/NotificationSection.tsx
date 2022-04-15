@@ -1,13 +1,15 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import { MenuLink } from '@reach/menu-button';
 import classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
-import { Link } from 'src/components/Link';
+import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -63,6 +65,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   emptyMessage: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(2.5),
+  },
+  menuItemLink: {
+    ...menuLinkStyle(theme.textColors.linkActiveLight),
   },
 }));
 
@@ -130,13 +135,16 @@ export const NotificationSection: React.FC<Props> = (props) => {
                 <div className={classes.header}>
                   <Typography variant="h3">{header}</Typography>
                   {showMoreTarget && (
-                    <Typography variant="body1">
-                      <strong>
-                        <Link to={showMoreTarget}>
-                          {showMoreText ?? 'View history'}
-                        </Link>
-                      </strong>
-                    </Typography>
+                    <strong>
+                      <MenuLink
+                        as={Link}
+                        to={showMoreTarget}
+                        className={classes.menuItemLink}
+                        style={{ padding: 0 }}
+                      >
+                        {showMoreText ?? 'View history'}
+                      </MenuLink>
+                    </strong>
                   )}
                 </div>
                 <ContentBody
