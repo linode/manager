@@ -1,11 +1,11 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
 import { linodes } from 'src/__data__/linodes';
 import { light } from 'src/themes';
 import { LinodeSummary } from './LinodeSummary';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('LinodeSummary', () => {
-  const wrapper = shallow(
+  const render = renderWithTheme(
     <LinodeSummary
       isBareMetalInstance={false}
       mostRecentEventTime=""
@@ -34,6 +34,6 @@ describe('LinodeSummary', () => {
   );
 
   it('should have a select menu for the graphs', () => {
-    expect(wrapper.find('[data-qa-item="chartRange"]')).toHaveLength(1);
+    expect(render.findByTestId('[data-qa-item="chartRange"]')).not.toBeNull();
   });
 });
