@@ -419,20 +419,22 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <DismissibleBanner
-        preferenceKey="dbaas-open-beta-notice"
-        productInformationIndicator
-      >
-        <Typography>
-          Managed Database for MySQL is available in a free, open beta period.
-          This is a beta environment and should not be used to support
-          production workloads. Review the{' '}
-          <Link to="https://www.linode.com/legal-eatp">
-            Early Adopter Program SLA
-          </Link>
-          .
-        </Typography>
-      </DismissibleBanner>
+      {flags.databaseBeta ? (
+        <DismissibleBanner
+          preferenceKey="dbaas-open-beta-notice"
+          productInformationIndicator
+        >
+          <Typography>
+            Managed Database for MySQL is available in a free, open beta period.
+            This is a beta environment and should not be used to support
+            production workloads. Review the{' '}
+            <Link to="https://www.linode.com/legal-eatp">
+              Early Adopter Program SLA
+            </Link>
+            .
+          </Typography>
+        </DismissibleBanner>
+      ) : undefined}
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}
