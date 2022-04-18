@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 20,
   },
   productInformationIndicator: {
-    borderLeft: `solid 6px ${theme.color.green}`,
+    borderLeft: `solid 6px ${theme.palette.primary.main}`,
   },
 }));
 
