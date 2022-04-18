@@ -425,9 +425,9 @@ const DatabaseCreate: React.FC<{}> = () => {
           productInformationIndicator
         >
           <Typography>
-            Managed Database for MySQL is available in a free, open beta period.
-            This is a beta environment and should not be used to support
-            production workloads. Review the{' '}
+            Managed Database for MySQL is available in a free, open beta period
+            until May 2nd, 2022. This is a beta environment and should not be
+            used to support production workloads. Review the{' '}
             <Link to="https://www.linode.com/legal-eatp">
               Early Adopter Program SLA
             </Link>
@@ -556,7 +556,10 @@ const DatabaseCreate: React.FC<{}> = () => {
                 </strong>{' '}
                 Database clusters will be subject to charges when the beta
                 period ends on May 2nd, 2022.{' '}
-                <Link to="https://www.linode.com/pricing/#databases">View pricing</Link>.
+                <Link to="https://www.linode.com/pricing/#databases">
+                  View pricing
+                </Link>
+                .
               </Notice>
             ) : undefined}
           </Grid>
