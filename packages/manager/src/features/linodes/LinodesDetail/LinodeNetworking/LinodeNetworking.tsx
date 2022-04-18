@@ -929,7 +929,7 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  // IPv6 pools (116s)
+  // IPv6 pools (/116s) and routed ranges to display in the networking table
   ipDisplay.push(
     ...[
       ...(ipv6
