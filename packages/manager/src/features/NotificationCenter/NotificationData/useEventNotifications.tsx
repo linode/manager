@@ -4,10 +4,10 @@ import * as React from 'react';
 import useEvents from 'src/hooks/useEvents';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
+import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import RenderEvent from './RenderEvent';
 import RenderProgressEvent from './RenderProgressEvent';
-import { notificationContext } from '../NotificationContext';
 
 const unwantedEvents: EventAction[] = [
   'account_update',
@@ -20,7 +20,7 @@ const unwantedEvents: EventAction[] = [
 
 export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
   const events = givenEvents ?? useEvents().events;
-  const context = React.useContext(notificationContext);
+  const notificationContext = React.useContext(_notificationContext);
 
   const _events = events.filter(
     (thisEvent) => !unwantedEvents.includes(thisEvent.action)
@@ -30,10 +30,10 @@ export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
 
   const allEvents = [
     ...inProgress.map((thisEvent) =>
-      formatProgressEventForDisplay(thisEvent, context.closeDrawer)
+      formatProgressEventForDisplay(thisEvent, notificationContext.closeMenu)
     ),
     ...completed.map((thisEvent) =>
-      formatEventForDisplay(thisEvent, context.closeDrawer)
+      formatEventForDisplay(thisEvent, notificationContext.closeMenu)
     ),
   ];
 

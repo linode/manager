@@ -462,7 +462,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         openTagDrawer={openTagDrawer}
         openDialog={openDialog}
         openPowerActionDialog={openPowerActionDialog}
-        openNotificationDrawer={notificationContext.openDrawer}
+        openNotificationMenu={notificationContext.openMenu}
       />
       <PowerDialogOrDrawer
         isOpen={powerDialog.open}

@@ -7,6 +7,7 @@ interface Props extends Omit<AccordionProps, 'children'> {
   height?: number;
   renderMainContent: () => JSX.Element;
   headingNumberCount?: number;
+  defaultExpanded?: boolean;
 }
 
 /*
@@ -56,6 +57,7 @@ const ExtendedAccordion: React.FC<Props> = (props) => {
     onChange,
     renderMainContent,
     headingNumberCount,
+    defaultExpanded,
   } = props;
 
   return (
@@ -63,6 +65,7 @@ const ExtendedAccordion: React.FC<Props> = (props) => {
       heading={heading}
       onChange={onChange}
       headingNumberCount={headingNumberCount}
+      defaultExpanded={defaultExpanded}
     >
       {renderContent(error, Boolean(loading), height || 300, renderMainContent)}
     </Accordion>
