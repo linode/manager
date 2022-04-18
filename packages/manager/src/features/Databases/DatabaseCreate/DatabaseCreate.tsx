@@ -554,7 +554,7 @@ const DatabaseCreate: React.FC<{}> = () => {
                 </strong>{' '}
                 Database clusters will be subject to charges when the beta
                 period ends on May 2nd, 2022.{' '}
-                <Link to="https://www.linode.com/pricing/">View pricing</Link>.
+                <Link to="https://www.linode.com/pricing/#databases">View pricing</Link>.
               </Notice>
             ) : undefined}
           </Grid>
