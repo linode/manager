@@ -933,9 +933,7 @@ export const ipResponseToDisplayRows = (
   ipDisplay.push(
     ...[
       ...(ipv6
-        ? ipv6.global.filter((ip) => {
-            return ip.prefix === 116 ? ip : null;
-          })
+        ? ipv6.global.filter((ip) => (ip.prefix === 116 ? ip : null))
         : []),
       ...routedRanges,
     ].map((thisIP) => {
