@@ -114,6 +114,16 @@ export const useStyles = makeStyles((theme: Theme) => ({
   flag: {
     marginRight: theme.spacing(2),
   },
+  informational: {
+    animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
+    '&$important': {
+      borderLeftWidth: 32,
+    },
+  },
+  informationalList: {
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
+  },
 }));
 
 interface Props extends GridProps {
@@ -134,6 +144,7 @@ interface Props extends GridProps {
   // Dismissible Props
   dismissible?: boolean;
   onClose?: () => void;
+  informational?: boolean;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -157,6 +168,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
     onClose,
     spacingTop,
     spacingBottom,
+    informational,
   } = props;
 
   const classes = useStyles();
@@ -215,6 +227,8 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
+        [classes.informational]: informational && !notificationList,
+        [classes.informationalList]: informational && notificationList,
         notice: true,
         ...(className && { [className]: true }),
       })}

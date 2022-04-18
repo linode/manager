@@ -32,6 +32,7 @@ export interface Flags {
   kubernetesDashboardAvailability: boolean;
   regionDropdown: boolean;
   taxCollectionBanner: TaxCollectionBanner;
+  databaseBeta: boolean;
 }
 
 type PromotionalOfferFeature =
