@@ -195,14 +195,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    const _tabs = [
-      'Distributions',
-      'One-Click',
-      'StackScripts',
-      'Images',
-      'Backups',
-      'Clone Linode',
-    ];
+    const _tabs = ['Distributions', 'One-Click', 'Images', 'Backups'];
 
     /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -267,11 +260,6 @@ export class LinodeCreate extends React.PureComponent<
       routeName: `${this.props.match.url}?type=One-Click`,
     },
     {
-      title: 'StackScripts',
-      type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts`,
-    },
-    {
       title: 'Images',
       type: 'fromImage',
       routeName: `${this.props.match.url}?type=Images`,
@@ -280,11 +268,6 @@ export class LinodeCreate extends React.PureComponent<
       title: 'Backups',
       type: 'fromBackup',
       routeName: `${this.props.match.url}?type=Backups`,
-    },
-    {
-      title: 'Clone Linode',
-      type: 'fromLinode',
-      routeName: `${this.props.match.url}?type=Clone%20Linode`,
     },
   ];
 

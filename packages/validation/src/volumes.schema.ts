@@ -1,7 +1,7 @@
 import { array, number, object, string } from 'yup';
 import { MAX_VOLUME_SIZE } from './constants';
 
-const createSizeValidation = (minSize: number = 10) =>
+const createSizeValidation = (minSize: number = 1) =>
   number()
     .integer()
     .typeError(`Size must be a number`)
@@ -23,7 +23,7 @@ export const CreateVolumeSchema = object({
     then: string().required('Must provide a region or a Linode ID.'),
   }),
   linode_id: number(),
-  size: createSizeValidation(10),
+  size: createSizeValidation(1),
   label: string()
     .required('Label is required.')
     .ensure()

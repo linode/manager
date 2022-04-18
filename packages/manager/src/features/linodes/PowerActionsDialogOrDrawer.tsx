@@ -147,7 +147,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
     <Dialog
       className={classes.dialog}
       open={props.isOpen}
-      title={`${props.action} Linode ${props.linodeLabel}?`}
+      title={`${props.action} Server ${props.linodeLabel}?`}
       onClose={props.close}
       error={errors ? errors[0].reason : ''}
       actions={
@@ -160,9 +160,9 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
       }
     >
       <Typography className={classes.root}>
-        Are you sure you want to {props.action.toLowerCase()} your Linode?
+        Are you sure you want to {props.action.toLowerCase()} your server?
       </Typography>
-      {props.action === 'Power Off' && (
+      {/* {props.action === 'Power Off' && (
         <span>
           <Notice warning important className={classes.notice}>
             <strong>Note: </strong>
@@ -175,7 +175,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
             &nbsp;for more information.
           </Notice>
         </span>
-      )}
+      )} */}
     </Dialog>
   );
 };
