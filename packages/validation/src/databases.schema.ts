@@ -22,4 +22,14 @@ export const createDatabaseSchema = object({
 export const updateDatabaseSchema = object({
   label: string().notRequired().min(3, LABEL_MESSAGE).max(32, LABEL_MESSAGE),
   allow_list: array().of(string()).required('An IPv4 address is required'),
+  updates: object()
+    .notRequired()
+    .shape({
+      frequency: string().oneOf(['weekly', 'monthly']),
+      duration: number(),
+      hour_of_day: number(),
+      day_of_week: number(),
+      week_of_month: number().nullable(true),
+    })
+    .nullable(true),
 });
