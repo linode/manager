@@ -150,6 +150,13 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
     ? DateTime.fromISO(new Date().toISOString(), { zone: timezone }).offset / 60
     : DateTime.now().offset / 60;
 
+  const getInitialWeekOfMonth = () => {
+    if (database.updates?.frequency === 'monthly') {
+      return database.updates?.week_of_month ?? 1;
+    }
+    return null;
+  };
+
   const {
     values,
     errors,
@@ -162,10 +169,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
       frequency: database.updates?.frequency ?? 'weekly',
       hour_of_day: database.updates?.hour_of_day ?? 20,
       day_of_week: database.updates?.day_of_week ?? 1,
-      week_of_month:
-        database.updates?.frequency === 'monthly'
-          ? database.updates?.week_of_month
-          : 1,
+      week_of_month: getInitialWeekOfMonth(),
     },
     // validationSchema: updateDatabaseSchema,
     onSubmit: handleSaveMaintenanceWindow,
