@@ -1,10 +1,11 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
-
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import {
+  TableRowLoading,
+  Props as TableLoadingProps,
+} from '../TableRowLoading/TableRowLoading';
 
 interface Props {
   length: number;
@@ -12,15 +13,23 @@ interface Props {
   lastUpdated?: number;
   error?: APIError[];
   emptyMessage?: string;
+  loadingProps?: TableLoadingProps;
 }
 
 type CombinedProps = Props;
 
 const TableContentWrapper: React.FC<CombinedProps> = (props) => {
-  const { length, loading, emptyMessage, error, lastUpdated } = props;
+  const {
+    length,
+    loading,
+    emptyMessage,
+    error,
+    lastUpdated,
+    loadingProps,
+  } = props;
 
   if (loading) {
-    return <TableRowLoading colSpan={6} widths={[25]} oneLine />;
+    return <TableRowLoading {...loadingProps} />;
   }
 
   if (error && error.length > 0) {
@@ -40,4 +49,4 @@ const TableContentWrapper: React.FC<CombinedProps> = (props) => {
   return <>{props.children}</>;
 };
 
-export default compose<CombinedProps, Props>(React.memo)(TableContentWrapper);
+export default TableContentWrapper;

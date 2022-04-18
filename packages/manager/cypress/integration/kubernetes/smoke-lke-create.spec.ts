@@ -41,11 +41,7 @@ describe('LKE Create Cluster', () => {
     }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     fbtVisible('Add Node Pools');
-    cy.contains('Cluster Label')
-      .next()
-      .children()
-      .click()
-      .type(randomLabel());
+    cy.contains('Cluster Label').next().children().click().type(randomLabel());
     containsClick(selectRegionString).type('Newar{enter}');
     cy.get('[id="kubernetes-version"]').type('{enter}');
     fbtClick('Shared CPU');

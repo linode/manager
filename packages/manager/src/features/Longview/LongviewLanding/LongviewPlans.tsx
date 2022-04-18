@@ -21,12 +21,12 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { isManaged } from 'src/queries/accountSettings';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -333,7 +333,7 @@ export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = Rea
     const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
     if (loading) {
-      return <TableRowLoading colSpan={12} />;
+      return <TableRowLoading columns={5} />;
     }
 
     if (error && error.length > 0) {

@@ -11,7 +11,7 @@ import Table from 'src/components/Table';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { LongviewPort } from 'src/features/Longview/request.types';
 import ConnectionRow from './ConnectionRow';
@@ -139,7 +139,7 @@ const renderLoadingErrorData = (
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading) {
-    return <TableRowLoading colSpan={4} />;
+    return <TableRowLoading columns={3} />;
   }
   if (data.length === 0) {
     return (

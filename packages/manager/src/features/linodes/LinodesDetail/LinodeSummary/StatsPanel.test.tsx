@@ -1,10 +1,9 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-
+import { STATS_NOT_READY_MESSAGE } from '../LinodeNetworking/NetworkingSummaryPanel/TransferHistory';
 import { StatsPanel } from './StatsPanel';
+import { shallow } from 'enzyme';
 
 const renderMain = jest.fn();
 const title = 'Stats About My Linode';
@@ -45,6 +44,6 @@ describe('StatsPanel component', () => {
     component.setProps({ isTooEarlyForGraphData: true });
     expect(
       component.find('[data-qa-graphs-unavailable]').children().text()
-    ).toBe('Graphs for this Linode are not yet available – check back later');
+    ).toBe(STATS_NOT_READY_MESSAGE);
   });
 });

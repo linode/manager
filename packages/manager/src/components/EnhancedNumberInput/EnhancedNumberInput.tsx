@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import Minus from 'src/assets/icons/minusSign.svg';
-import Plus from 'src/assets/icons/plusSign.svg';
+import Minus from 'src/assets/icons/LKEminusSign.svg';
+import Plus from 'src/assets/icons/LKEplusSign.svg';
 import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
@@ -12,7 +12,10 @@ const useStyles = makeStyles(() => ({
       width: 35,
       height: 34,
       minWidth: 30,
-      border: '1px solid #CCCCCC',
+      border: 'none',
+      '&:hover': {
+        backgroundColor: 'rgba(224, 224, 224, 0.69) !important',
+      },
     },
     '& $input': {
       padding: '0 8px',
@@ -141,9 +144,9 @@ export const EnhancedNumberInput: React.FC<Props> = (props) => {
           className: classNames({
             [classes.input]: true,
           }),
-          min,
-          max,
         }}
+        min={min}
+        max={max}
         disabled={disabled}
         data-testid={'quantity-input'}
       />
