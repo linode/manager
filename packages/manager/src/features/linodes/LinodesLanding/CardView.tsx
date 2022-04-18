@@ -145,7 +145,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
                 openTagDrawer={openTagDrawer}
                 openDialog={openDialog}
                 openPowerActionDialog={openPowerActionDialog}
-                openNotificationDrawer={notificationContext.openDrawer}
+                openNotificationMenu={notificationContext.openMenu}
               />
             </Grid>
           </React.Fragment>

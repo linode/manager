@@ -101,6 +101,13 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   ],
   created: '2021-12-09T17:15:12',
   updated: '2021-12-16T17:15:12',
+  updates: {
+    frequency: 'weekly',
+    duration: 3,
+    hour_of_day: 20,
+    day_of_week: 1,
+    week_of_month: null,
+  },
 });
 
 export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({

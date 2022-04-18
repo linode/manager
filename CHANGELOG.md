@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-04-18] - v1.64.0
+
+### Added:
+
+- Support for DBaaS Maintenance Windows
+
+### Changed:
+
+- Update DBaaS Beta notice to include end date
+- Notification Drawer updates and refinements
+- Improve Table Loading States
+- Premium LKE Create page UI refinements
+- Display placeholder text while stats are not yet available in Linode Network tab
+- Support Ticket Refinements
+
+### Fixed:
+
+- Show /116s in networking panel
+- Typo in migrate Linode modal
+- Max value for Node Pools is 100
+
 ## [2022-04-08] - v1.63.1
 
 ### Fixed:

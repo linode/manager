@@ -160,6 +160,12 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
             </TableHead>
             <TableBody>
               <TableContentWrapper
+                loadingProps={{
+                  columns: 3,
+                  responsive: {
+                    // @TODO do this
+                  },
+                }}
                 loading={isLoading}
                 error={error ?? undefined}
                 length={transfers?.length ?? 0}

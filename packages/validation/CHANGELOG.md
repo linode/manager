@@ -1,3 +1,7 @@
+## [2022-04-18] - v0.9.0
+### Changed:
+- updateDatabaseSchema to include maintenance updates
+
 ## [2022-02-07] - v0.8.0
 ### Changed:
 - createDatabaseSchema and updateDatabaseSchema

@@ -3,7 +3,7 @@ import {
   testTag,
   getAll,
   deleteById,
-  isTestEntity
+  isTestEntity,
 } from './common';
 import { deleteLinodeById } from './linodes';
 import { randomLabel, randomString } from 'support/util/random';

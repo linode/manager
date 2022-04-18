@@ -1,3 +1,9 @@
+## [2022-04-18] - v0.69.0
+
+### Added:
+
+- Types for DBaaS Maintenance Window
+
 ## [2022-04-07] - v0.68.0
 
 ### Added:

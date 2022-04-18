@@ -1,7 +1,10 @@
 import { Event } from '@linode/api-v4/lib/account/types';
+import classNames from 'classnames';
 import { Duration } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
@@ -9,39 +12,15 @@ import {
   eventLabelGenerator,
   eventMessageGenerator,
 } from 'src/eventMessageGenerator_CMR';
+import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
-import EntityIcon, { Variant } from 'src/components/EntityIcon';
-import Divider from 'src/components/core/Divider';
+import { useStyles as useEventStyles } from './RenderEvent';
 import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  action: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    width: '100%',
-  },
   bar: {
     marginTop: theme.spacing(),
-  },
-  icon: {
-    marginRight: theme.spacing(2),
-    '& svg': {
-      height: 20,
-      width: 20,
-    },
-  },
-  message: {
-    width: '100%',
-  },
-  link: {
-    color: theme.palette.text.primary,
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-      textDecorationColor: 'inherit',
-    },
   },
 }));
 
@@ -54,13 +33,14 @@ export type CombinedProps = Props;
 
 export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { event, onClose } = props;
+  const eventClasses = useEventStyles();
   const classes = useStyles();
 
   const { linodes } = useLinodes();
   const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
-  const { linkTarget, status, type } = useEventInfo(event);
+  const { linkTarget } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, _types);
 
   if (message === null) {
@@ -74,32 +54,33 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
     : null;
 
   const eventMessage = (
-    <>
+    <Typography>
       {event.action !== 'volume_migrate' ? eventLabelGenerator(event) : ''}
       {` `}
       {message}
       {formattedTimeRemaining}
-    </>
+    </Typography>
   );
 
   return (
     <>
-      <div className={classes.action}>
-        <EntityIcon
-          className={classes.icon}
-          variant={type as Variant}
-          status={status}
-        />
-        <div className={classes.message} data-test-id={event.action}>
-          <Typography>
-            {linkTarget ? (
-              <Link className={classes.link} to={linkTarget} onClick={onClose}>
-                {eventMessage}
-              </Link>
-            ) : (
-              <strong>{eventMessage}</strong>
-            )}
-          </Typography>
+      <Box
+        className={classNames({
+          [eventClasses.root]: true,
+          [eventClasses.event]: !!linkTarget,
+        })}
+        display="flex"
+        data-test-id={event.action}
+      >
+        <GravatarIcon username={event.username} className={eventClasses.icon} />
+        <div className={eventClasses.eventMessage} data-test-id={event.action}>
+          {linkTarget ? (
+            <Link to={linkTarget} onClick={onClose}>
+              {eventMessage}
+            </Link>
+          ) : (
+            eventMessage
+          )}
           <BarPercent
             className={classes.bar}
             max={100}
@@ -108,7 +89,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
             narrow
           />
         </div>
-      </div>
+      </Box>
       <Divider className={classes.bar} />
     </>
   );

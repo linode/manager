@@ -1,25 +1,31 @@
+import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import { MenuLink } from '@reach/menu-button';
 import classNames from 'classnames';
 import * as React from 'react';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import { Link } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
-import Hidden from 'src/components/core/Hidden';
 import ExtendedAccordion from 'src/components/ExtendedAccordion';
+import { menuLinkStyle } from 'src/features/TopMenu/UserMenu/UserMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(),
     display: 'flex',
-    flexFlow: 'row nowrap',
+    flexWrap: 'nowrap',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
+  notificationSpacing: {
+    marginBottom: theme.spacing(2),
+  },
   header: {
-    borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
     display: 'flex',
     justifyContent: 'space-between',
+    borderBottom: `solid 1px ${theme.borderColors.borderTypography}`,
+    marginBottom: 6,
   },
   content: {
     width: '100%',
@@ -28,20 +34,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'center',
   },
-  icon: {
-    marginRight: theme.spacing(),
-    '& svg': {
-      color: theme.color.grey1,
-      stroke: theme.color.grey1,
-    },
-  },
   notificationItem: {
-    paddingTop: '10px',
-    width: '100%',
-    lineHeight: 1.43,
-    fontSize: '14px',
     display: 'flex',
     justifyContent: 'space-between',
+    fontSize: '0.875rem',
+    width: '100%',
+    '& p': {
+      color: theme.textColors.headlineStatic,
+      lineHeight: '1.25rem',
+    },
   },
   showMore: {
     ...theme.applyLinkStyles,
@@ -56,9 +57,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: theme.palette.primary.main,
+    marginRight: -4,
   },
   inverted: {
     transform: 'rotate(180deg)',
+  },
+  emptyMessage: {
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(2.5),
+  },
+  menuItemLink: {
+    ...menuLinkStyle(theme.textColors.linkActiveLight),
   },
 }));
 
@@ -70,18 +79,19 @@ export interface NotificationItem {
 
 interface Props {
   header: string;
-  count?: number; // @todo do we even need the expansion behavior anymore?
+  count?: number;
   showMoreText?: string;
   showMoreTarget?: string;
   content: NotificationItem[];
   loading?: boolean;
   emptyMessage?: string;
-  onClose?: () => void;
 }
 
 export type CombinedProps = Props;
 
 export const NotificationSection: React.FC<Props> = (props) => {
+  const classes = useStyles();
+
   const {
     content,
     count,
@@ -90,12 +100,10 @@ export const NotificationSection: React.FC<Props> = (props) => {
     loading,
     showMoreText,
     showMoreTarget,
-    onClose,
   } = props;
 
-  const _loading = Boolean(loading); // false if not provided
   const _count = count ?? 5;
-  const classes = useStyles();
+  const _loading = Boolean(loading); // false if not provided
 
   const innerContent = () => {
     return (
@@ -109,48 +117,59 @@ export const NotificationSection: React.FC<Props> = (props) => {
     );
   };
 
-  return (
-    <>
-      <Hidden smDown>
-        <div className={classes.root}>
-          <div className={classes.content}>
-            <div className={classes.header}>
-              <Typography variant="h3">{header}</Typography>
-              {showMoreTarget && (
-                <Typography variant="body1">
-                  <strong>
-                    <Link
-                      to={showMoreTarget}
-                      onClick={() => {
-                        if (onClose) {
-                          onClose();
-                        }
-                      }}
-                    >
-                      {showMoreText ?? 'View history'}
-                    </Link>
-                  </strong>
-                </Typography>
-              )}
-            </div>
-            <ContentBody
-              loading={_loading}
-              count={_count}
-              content={content}
-              header={header}
-              emptyMessage={emptyMessage}
-            />
-          </div>
-        </div>
-      </Hidden>
+  const isActualNotificationContainer = header === 'Notifications';
 
-      <Hidden mdUp>
-        <ExtendedAccordion
-          heading={header}
-          headingNumberCount={content.length > 0 ? content.length : undefined}
-          renderMainContent={innerContent}
-        />
-      </Hidden>
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {isActualNotificationContainer && content.length === 0 ? null : (
+        <>
+          <Hidden xsDown>
+            <div
+              className={classNames({
+                [classes.root]: true,
+                [classes.notificationSpacing]: isActualNotificationContainer,
+              })}
+            >
+              <div className={classes.content}>
+                <div className={classes.header}>
+                  <Typography variant="h3">{header}</Typography>
+                  {showMoreTarget && (
+                    <strong>
+                      <MenuLink
+                        as={Link}
+                        to={showMoreTarget}
+                        className={classes.menuItemLink}
+                        style={{ padding: 0 }}
+                      >
+                        {showMoreText ?? 'View history'}
+                      </MenuLink>
+                    </strong>
+                  )}
+                </div>
+                <ContentBody
+                  loading={_loading}
+                  count={_count}
+                  content={content}
+                  header={header}
+                  emptyMessage={emptyMessage}
+                />
+              </div>
+            </div>
+          </Hidden>
+
+          <Hidden smUp>
+            <ExtendedAccordion
+              heading={header}
+              headingNumberCount={
+                content.length > 0 ? content.length : undefined
+              }
+              renderMainContent={innerContent}
+              defaultExpanded={true}
+            />
+          </Hidden>
+        </>
+      )}
     </>
   );
 };
@@ -160,15 +179,17 @@ export const NotificationSection: React.FC<Props> = (props) => {
 // =============================================================================
 interface BodyProps {
   header: string;
-  loading: boolean;
   content: NotificationItem[];
   count: number;
   emptyMessage?: string;
+  loading: boolean;
 }
 
 const ContentBody: React.FC<BodyProps> = React.memo((props) => {
-  const { content, count, emptyMessage, header, loading } = props;
   const classes = useStyles();
+
+  const { header, content, count, emptyMessage, loading } = props;
+
   const [showAll, setShowAll] = React.useState(false);
 
   if (loading) {
@@ -193,29 +214,31 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
         </div>
       ))}
       {content.length > count ? (
-        <button
-          className={classes.showMore}
-          onClick={() => setShowAll(!showAll)}
-          aria-label={`Display all ${content.length} items`}
-          data-test-id="showMoreButton"
-        >
-          {showAll ? 'Close' : `${content.length - count} more`}
-          <KeyboardArrowDown
-            className={classNames({
-              [classes.caret]: true,
-              [classes.inverted]: showAll,
-            })}
-          />
-        </button>
+        <Box display="flex" justifyContent="flex-end">
+          <button
+            className={classes.showMore}
+            onClick={() => setShowAll(!showAll)}
+            aria-label={`Display all ${content.length} items`}
+            data-test-id="showMoreButton"
+          >
+            {showAll ? 'Collapse' : `${content.length - count} more`}
+            <KeyboardArrowDown
+              className={classNames({
+                [classes.caret]: true,
+                [classes.inverted]: showAll,
+              })}
+            />
+          </button>
+        </Box>
       ) : null}
     </>
-  ) : (
-    <Typography className={classes.notificationItem}>
+  ) : header === 'Events' ? (
+    <Typography className={classes.emptyMessage} variant="body1">
       {emptyMessage
         ? emptyMessage
         : `You have no ${header.toLocaleLowerCase()}.`}
     </Typography>
-  );
+  ) : null;
 });
 
 export default React.memo(NotificationSection);

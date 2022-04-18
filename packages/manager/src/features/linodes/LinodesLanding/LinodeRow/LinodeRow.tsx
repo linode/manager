@@ -71,7 +71,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openNotificationDrawer: () => void;
+  openNotificationMenu: () => void;
 }
 
 export type CombinedProps = Props &
@@ -104,7 +104,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     linodeNotifications,
     openDialog,
     openPowerActionDialog,
-    openNotificationDrawer,
+    openNotificationMenu,
     recentEvent,
     mutationAvailable,
   } = props;
@@ -180,7 +180,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
               <StatusIcon status={iconStatus} />
               <button
                 className={classes.statusLink}
-                onClick={() => openNotificationDrawer()}
+                onClick={() => openNotificationMenu()}
               >
                 <ProgressDisplay
                   className={classes.progressDisplay}

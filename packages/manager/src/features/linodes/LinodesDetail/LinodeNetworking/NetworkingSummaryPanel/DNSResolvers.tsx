@@ -10,7 +10,7 @@ interface Props {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    overflowX: 'scroll',
+    overflowX: 'auto',
     overflowY: 'hidden',
     [theme.breakpoints.down('xs')]: {
       width: '100%',
