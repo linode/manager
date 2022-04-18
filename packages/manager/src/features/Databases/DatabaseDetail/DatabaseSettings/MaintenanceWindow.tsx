@@ -348,6 +348,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
         <Button
           className={classes.sectionButton}
           disabled={!formTouched || isSubmitting}
+          loading={isSubmitting}
           type="submit"
           buttonType="primary"
           compact
