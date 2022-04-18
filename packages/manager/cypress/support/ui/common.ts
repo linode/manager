@@ -10,7 +10,7 @@ import { deleteAllTestNodeBalancers } from '../api/nodebalancers';
 import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets,
-} from '../api/objectStorage';
+} from 'support/api/objectStorage';
 import { deleteAllTestStackscripts } from '../api/stackscripts';
 import { deleteAllTestVolumes } from '../api/volumes';
 import { deleteAllTestTags } from '../api/tags';
@@ -79,7 +79,7 @@ export const deleteAllTestData = () => {
     deleteAllTestAccessKeys(),
   ]);
 
-  // Old deletion functions then run sequentially.
+  // Remaining deletion functions then run sequentially.
   cy.defer(asyncDeletionPromise).then(() => {
     deleteAllTestLinodes();
     deleteAllTestNodeBalancers();

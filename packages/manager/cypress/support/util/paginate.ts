@@ -44,7 +44,7 @@ export const paginate = (data: any | any[]): PaginatedData => {
  *
  * @returns Promise that resolves to an array of data.
  */
-export const depaginate = async <T>(resultGenerator: (number) => Promise<ResourcePage<T>>): Promise<Array<T>> => {
+export const depaginate = async <T>(resultGenerator: (page: number) => Promise<ResourcePage<T>>): Promise<Array<T>> => {
   const firstResult: ResourcePage<T> = await resultGenerator(1);
   let data = firstResult.data;
   if (firstResult.pages > 1) {
