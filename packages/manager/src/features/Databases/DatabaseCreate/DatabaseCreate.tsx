@@ -434,7 +434,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             .
           </Typography>
         </DismissibleBanner>
-      ) : undefined}
+      ) : null}
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}

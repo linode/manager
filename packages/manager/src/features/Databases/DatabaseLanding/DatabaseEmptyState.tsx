@@ -6,6 +6,7 @@ import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,23 +22,26 @@ const useStyles = makeStyles(() => ({
 const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
+  const flags = useFlags();
 
   return (
     <>
-      <DismissibleBanner
-        preferenceKey="dbaas-open-beta-notice"
-        productInformationIndicator
-      >
-        <Typography>
-          Managed Database for MySQL is available in a free, open beta period.
-          This is a beta environment and should not be used to support
-          production workloads. Review the{' '}
-          <Link to="https://www.linode.com/legal-eatp">
-            Early Adopter Program SLA
-          </Link>
-          .
-        </Typography>
-      </DismissibleBanner>
+      {flags.databaseBeta ? (
+        <DismissibleBanner
+          preferenceKey="dbaas-open-beta-notice"
+          productInformationIndicator
+        >
+          <Typography>
+            Managed Database for MySQL is available in a free, open beta period
+            until May 2nd, 2022. This is a beta environment and should not be
+            used to support production workloads. Review the{' '}
+            <Link to="https://www.linode.com/legal-eatp">
+              Early Adopter Program SLA
+            </Link>
+            .
+          </Typography>
+        </DismissibleBanner>
+      ) : null}
       <Placeholder
         title="Databases"
         className={classes.root}
