@@ -71,10 +71,10 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
     onResize(volumeId, size, label);
   };
 
-  const handleClone = () => {
-    const { onClone, volumeId, label, size, regionID } = props;
-    onClone(volumeId, label, size, regionID);
-  };
+  // const handleClone = () => {
+  //   const { onClone, volumeId, label, size, regionID } = props;
+  //   onClone(volumeId, label, size, regionID);
+  // };
 
   const handleAttach = () => {
     const { onAttach, volumeId, label, regionID } = props;
