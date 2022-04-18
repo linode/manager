@@ -110,12 +110,12 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
         handleResize();
       },
     },
-    {
-      title: 'Clone',
-      onClick: () => {
-        handleClone();
-      },
-    },
+    // {
+    //   title: 'Clone',
+    //   onClick: () => {
+    //     handleClone();
+    //   },
+    // },
   ];
 
   if (!attached && isVolumesLanding) {

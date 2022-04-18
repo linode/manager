@@ -12,8 +12,6 @@ import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
-import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
@@ -162,20 +160,6 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
       <Typography className={classes.root}>
         Are you sure you want to {props.action.toLowerCase()} your server?
       </Typography>
-      {/* {props.action === 'Power Off' && (
-        <span>
-          <Notice warning important className={classes.notice}>
-            <strong>Note: </strong>
-            Powered down Linodes will still accrue charges. See the&nbsp;
-            <ExternalLink
-              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
-              text="Billing and Payments documentation"
-              hideIcon
-            />
-            &nbsp;for more information.
-          </Notice>
-        </span>
-      )} */}
     </Dialog>
   );
 };
