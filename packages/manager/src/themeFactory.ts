@@ -568,6 +568,9 @@ const themeDefaults: ThemeDefaults = () => {
           '&:hover': {
             backgroundColor: '#cce2ff',
           },
+          '&:focus': {
+            backgroundColor: '#cce2ff',
+          },
         },
         sizeSmall: {
           height: 20,

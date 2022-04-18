@@ -295,6 +295,9 @@ const darkThemeOptions = {
         '&:hover': {
           backgroundColor: '#374863',
         },
+        '&:focus': {
+          backgroundColor: '#374863',
+        },
       },
       outlined: {
         borderRadius: 1,
