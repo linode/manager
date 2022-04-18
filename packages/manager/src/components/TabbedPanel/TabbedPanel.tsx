@@ -25,43 +25,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tab: {
     '&[data-reach-tab]': {
-      display: 'inline-flex',
-      flexShrink: 0,
-      alignItems: 'center',
-      borderBottom: '2px solid transparent',
-      color: theme.textColors.linkActiveLight,
-      fontSize: '0.9rem',
-      lineHeight: 1.3,
-      marginTop: theme.spacing(0.5),
-      maxWidth: 264,
-      minHeight: theme.spacing(5),
-      minWidth: 50,
-      padding: '6px 16px',
-      textDecoration: 'none',
       '&:focus': {
         backgroundColor: theme.bg.tableHeader,
       },
       '&:hover': {
         backgroundColor: theme.bg.tableHeader,
-        color: theme.palette.primary.main,
       },
-    },
-    '&[data-reach-tab][data-selected]': {
-      borderBottom: `3px solid ${theme.textColors.linkActiveLight}`,
-      color: theme.textColors.headlineStatic,
-      fontFamily: theme.font.bold,
     },
   },
   tabList: {
     '&[data-reach-tab-list]': {
-      background: 'none !important',
       boxShadow: `inset 0 -1px 0 ${theme.borderColors.divider}`,
       marginTop: 22,
       marginBottom: theme.spacing(3),
-      [theme.breakpoints.down('md')]: {
-        overflowX: 'auto',
-        padding: 1,
-      },
     },
   },
 }));

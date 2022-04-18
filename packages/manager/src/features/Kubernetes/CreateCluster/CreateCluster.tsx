@@ -18,8 +18,13 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
+import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import {
+  reportAgreementSigningError,
+  useMutateAccountAgreements,
+} from 'src/queries/accountAgreements';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -29,10 +34,6 @@ import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
-import {
-  reportAgreementSigningError,
-  useMutateAccountAgreements,
-} from 'src/queries/accountAgreements';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -104,24 +105,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type CombinedProps = RouteComponentProps<{}> & WithTypesProps;
-
-const regionHelperText = (
-  <React.Fragment>
-    You can use
-    {` `}
-    <a
-      target="_blank"
-      aria-describedby="external-site"
-      rel="noopener noreferrer"
-      href="https://www.linode.com/speed-test/"
-      style={{ fontWeight: 600 }}
-    >
-      our speedtest page
-    </a>
-    {` `}
-    to find the best region for your current location.
-  </React.Fragment>
-);
 
 export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -305,7 +288,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
                 regions={filteredRegions}
                 selectedID={selectedID}
                 textFieldProps={{
-                  helperText: regionHelperText,
+                  helperText: regionHelperText(),
                   helperTextPosition: 'top',
                 }}
               />
