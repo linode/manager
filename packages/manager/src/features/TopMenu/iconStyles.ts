@@ -33,6 +33,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
       marginTop: 4,
     },
   },
+  hover: {
+    color: '#606469',
+  },
   badge: {
     display: 'flex',
     position: 'absolute',

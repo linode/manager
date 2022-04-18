@@ -24,6 +24,27 @@ interface MenuLink {
   hide?: boolean;
 }
 
+export const menuLinkStyle = (linkColor: string) => ({
+  lineHeight: 1,
+  '&[data-reach-menu-item]': {
+    display: 'flex',
+    alignItems: 'center',
+    color: linkColor,
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+    padding: '8px 24px',
+    '&:focus, &:hover': {
+      backgroundColor: 'transparent',
+      color: linkColor,
+    },
+    '&[data-reach-menu-item][data-selected]:not(:hover)': {
+      backgroundColor: 'transparent',
+      color: linkColor,
+      outline: 'dotted 1px #c1c1c0',
+    },
+  },
+});
+
 const useStyles = makeStyles((theme: Theme) => ({
   menu: {
     transform: `translateY(${theme.spacing(1)}px)`,
@@ -190,26 +211,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'normal',
     width: '100%',
   },
-  menuItemLink: {
-    lineHeight: 1,
-    '&[data-reach-menu-item]': {
-      display: 'flex',
-      alignItems: 'center',
-      color: theme.textColors.linkActiveLight,
-      cursor: 'pointer',
-      fontSize: '0.875rem',
-      padding: '8px 24px',
-      '&:focus, &:hover': {
-        backgroundColor: 'transparent',
-        color: theme.textColors.linkActiveLight,
-      },
-      '&[data-reach-menu-item][data-selected]:not(:hover)': {
-        backgroundColor: 'transparent',
-        color: theme.textColors.linkActiveLight,
-        outline: 'dotted 1px #c1c1c0',
-      },
-    },
-  },
+  menuItemLink: menuLinkStyle(theme.textColors.linkActiveLight),
   userName: {
     color: theme.textColors.headlineStatic,
     fontSize: '1.1rem',

@@ -17,7 +17,7 @@ import { useStyles } from 'src/features/NotificationCenter/NotificationData/Rend
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
 import { formatDate } from 'src/utilities/formatDate';
-import { notificationContext } from '../NotificationContext';
+import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import { checkIfMaintenanceNotification } from './notificationUtils';
 import RenderNotification from './RenderNotification';
@@ -29,7 +29,7 @@ export interface ExtendedNotification extends Notification {
 export const useFormattedNotifications = (
   givenNotifications?: Notification[]
 ): NotificationItem[] => {
-  const context = React.useContext(notificationContext);
+  const notificationContext = React.useContext(_notificationContext);
   const {
     dismissNotifications,
     hasDismissedNotifications,
@@ -47,8 +47,8 @@ export const useFormattedNotifications = (
   const dayOfMonth = DateTime.local().day;
 
   const handleClose = () => {
-    dismissNotifications(notifications, { prefix: 'notificationDrawer' });
-    context.closeDrawer();
+    dismissNotifications(notifications, { prefix: 'notificationMenu' });
+    notificationContext.closeMenu();
   };
 
   const filteredNotifications = notifications.filter((thisNotification) => {
@@ -88,7 +88,7 @@ export const useFormattedNotifications = (
       interceptNotification(notification, handleClose, classes),
       idx,
       handleClose,
-      !hasDismissedNotifications([notification], 'notificationDrawer')
+      !hasDismissedNotifications([notification], 'notificationMenu')
     )
   );
 };
