@@ -1,5 +1,5 @@
 /**
- * @file End-to-end tests for Object Storage Access Keys.
+ * @file End-to-end tests for Object Storage Access Key operations.
  */
 
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';

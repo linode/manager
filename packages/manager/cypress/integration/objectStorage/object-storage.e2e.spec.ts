@@ -1,5 +1,5 @@
 /**
- * @file End-to-end CRUD test for Object Storage.
+ * @file End-to-end tests for Object Storage operations.
  */
 
 import { createBucket } from '@linode/api-v4/lib/object-storage';
@@ -15,6 +15,11 @@ import { randomLabel } from 'support/util/random';
 
 authenticate();
 describe('object storage end-to-end tests', () => {
+  /*
+   * - Tests object bucket creation flow using real API responses.
+   * - Creates bucket.
+   * - Confirms bucket is listed in table.
+   */
   it('can create object storage bucket - e2e', () => {
     const bucketLabel = randomLabel();
     const bucketRegion = 'Atlanta, GA';
@@ -51,6 +56,11 @@ describe('object storage end-to-end tests', () => {
     cy.findByText(bucketHostname).should('be.visible');
   });
 
+  /*
+   * - Tests core object storage bucket deletion flows using real API responses.
+   * - Creates a bucket using APIv4 before test begins.
+   * - Deletes created bucket, confirms that landing page reflects deletion.
+   */
   it('can delete object storage bucket - e2e', () => {
     const bucketLabel = randomLabel();
     const bucketCluster = 'us-southeast-1';
@@ -99,8 +109,7 @@ describe('object storage end-to-end tests', () => {
    * upload/deletion.
    */
   it.skip('can update bucket access control - e2e', () => {});
-
   it.skip('can upload and delete objects - e2e', () => {});
-
+  it.skip('cannot delete bucket that has one or more object - e2e', () => {});
   it.skip('verifies object access control works as expected - e2e', () => {});
 });

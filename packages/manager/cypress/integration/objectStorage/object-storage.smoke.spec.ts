@@ -1,5 +1,5 @@
 /**
- * @file Smoke tests for Cloud Manager object storage.
+ * @file Smoke tests for crucial Object Storage operations.
  */
 
 import 'cypress-file-upload';

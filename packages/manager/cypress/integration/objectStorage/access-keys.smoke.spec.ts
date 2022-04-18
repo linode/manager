@@ -1,5 +1,5 @@
 /**
- * @file Smoke tests for Cloud Manager object storage access keys.
+ * @file Smoke tests for crucial Object Storage Access Keys operations.
  */
 
 import { objectStorageKeyFactory } from 'src/factories/objectStorage';
