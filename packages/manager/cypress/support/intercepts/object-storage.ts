@@ -135,42 +135,63 @@ export const mockDeleteBucket = (
  * @param label - Object storage bucket label.
  * @param cluster - Object storage bucket cluster.
  * @param data - Mocked response data.
+ * @param statusCode - Mocked response status code.
  *
  * @returns Cypress chainable.
  */
 export const mockGetBucketObjects = (
   label: string,
   cluster: string,
-  data: any
+  data: any,
+  statusCode: number = 200
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     `*/object-storage/buckets/${cluster}/${label}/object-list?delimiter=%2F&prefix=`,
-    paginateResponse(data)
+    {
+      statusCode,
+      body: {
+        data,
+        next_marker: null,
+        is_truncated: false,
+      },
+    }
   );
 };
 
 /**
  * Intercepts POST request to upload bucket object and mocks response.
  *
+ * By default, an HTTP 200 response which contains the S3 URL for the object
+ * is mocked.
+ *
  * @param label - Object storage bucket label.
  * @param cluster - Object storage bucket cluster.
  * @param filename - Mocked response object filename.
+ * @param data - Optional mocked response data.
+ * @param statusCode - Opiontal mocked response status code.
  *
  * @returns Cypress chainable.
  */
 export const mockUploadBucketObject = (
   label: string,
   cluster: string,
-  filename: string
+  filename: string,
+  data?: any,
+  statusCode: number = 200
 ): Cypress.Chainable<null> => {
+  const mockResponse = {
+    statusCode,
+    data: data || {
+      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
+      exists: false,
+    },
+  };
+
   return cy.intercept(
     'POST',
     `*/object-storage/buckets/${cluster}/${label}/object-url`,
-    {
-      url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
-      exists: false,
-    }
+    mockResponse
   );
 };
 
