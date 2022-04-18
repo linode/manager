@@ -91,6 +91,7 @@ describe('object storage smoke tests', () => {
       mockUploadBucketObjectS3(bucketLabel, bucketCluster, filename).as(
         'uploadBucketObjectS3'
       );
+      // @TODO Intercept and mock bucket objects GET request to reflect upload.
 
       cy.fixture(bucketFile, null).then((bucketFileContents) => {
         cy.get('[data-qa-drop-zone="true"]').attachFile(

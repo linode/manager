@@ -182,7 +182,7 @@ export const mockUploadBucketObject = (
 ): Cypress.Chainable<null> => {
   const mockResponse = {
     statusCode,
-    data: data || {
+    body: data || {
       url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
       exists: false,
     },
