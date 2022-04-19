@@ -69,7 +69,7 @@ const TypeToConfirm: React.FC<Props> = (props) => {
                       }}
                     />
                   }
-                  label="Disable type to confirm"
+                  label="Disable type-to-confirm"
                 />
               </Grid>
             </Grid>
