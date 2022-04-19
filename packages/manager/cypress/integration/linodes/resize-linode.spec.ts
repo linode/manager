@@ -14,9 +14,9 @@ describe('resize linode', () => {
       cy.get('[data-testid="textfield-input"]').type(linode.label);
       cy.get('[data-qa-resize="true"]').click();
       cy.wait('@linodeResize');
-      fbtVisible(
+      cy.contains(
         'Your Linode will soon be automatically powered off, migrated, and restored to its previous state (booted or powered off).'
-      );
+      ).should('be.visible');
     });
   });
 });
