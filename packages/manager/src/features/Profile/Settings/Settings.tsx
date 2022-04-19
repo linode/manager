@@ -133,7 +133,7 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
                         checked={istypeToConfirm}
                       />
                     }
-                    label={`Type to confirm is${
+                    label={`Type-to-confirm is${
                       istypeToConfirm ? ' enabled' : ' disabled'
                     }`}
                   />

@@ -65,7 +65,7 @@ const TypeToConfirm: React.FC<Props> = (props) => {
                       onChange={toggleTypeToConfirm}
                       checked={!istypeToConfirm}
                       inputProps={{
-                        'aria-label': `Disable type to confirm`,
+                        'aria-label': `Disable type-to-confirm`,
                       }}
                     />
                   }
@@ -95,7 +95,7 @@ const TypeToConfirm: React.FC<Props> = (props) => {
   } else {
     return (
       <Typography className={classes.description}>
-        To enable type to confirm, go to{' '}
+        To enable type-to-confirm, go to{' '}
         <Link to="/profile/settings">My Settings</Link>.
       </Typography>
     );
