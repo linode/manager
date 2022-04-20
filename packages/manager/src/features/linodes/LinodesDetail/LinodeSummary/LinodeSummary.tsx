@@ -2,11 +2,10 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import NetworkGraph from './NetworkGraphs';
+import NetworkGraph, { ChartProps } from './NetworkGraphs';
 import PendingIcon from 'src/assets/icons/pending.svg';
 import ErrorState from 'src/components/ErrorState';
 import Typography from 'src/components/core/Typography';
-import CircleProgress from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { DateTime } from 'luxon';
 import { useParams } from 'react-router-dom';
@@ -14,6 +13,7 @@ import { useProfile } from 'src/queries/profile';
 import { setUpCharts } from 'src/utilities/charts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getDateOptions } from './helpers';
+import { StatsPanel } from './StatsPanel';
 import {
   useLinodeStatsByDate,
   useLinodeStats,
@@ -244,13 +244,12 @@ const LinodeSummary: React.FC<Props> = (props) => {
     );
   }
 
-  if (isLoading) {
-    return (
-      <Paper>
-        <CircleProgress />
-      </Paper>
-    );
-  }
+  const chartProps: ChartProps = {
+    loading: isLoading,
+    height: chartHeight,
+    timezone,
+    rangeSelection,
+  };
 
   return (
     <Paper>
@@ -272,24 +271,22 @@ const LinodeSummary: React.FC<Props> = (props) => {
         {!isBareMetalInstance ? (
           <Grid container item xs={12} className={`${classes.graphGrids} p0`}>
             <Grid item className={classes.grid} xs={12}>
-              <Typography variant="h2" data-qa-stats-title>
-                CPU (%)
-              </Typography>
-              {renderCPUChart()}
+              <StatsPanel
+                title="CPU (%)"
+                renderBody={renderCPUChart}
+                {...chartProps}
+              />
             </Grid>
             <Grid item className={classes.grid} xs={12}>
-              <Typography variant="h2" data-qa-stats-title>
-                Disk IO (blocks/s)
-              </Typography>
-              {renderDiskIOChart()}
+              <StatsPanel
+                title="Disk IO (blocks/s)"
+                renderBody={renderDiskIOChart}
+                {...chartProps}
+              />
             </Grid>
           </Grid>
         ) : null}
-        <NetworkGraph
-          stats={stats}
-          chartHeight={chartHeight}
-          rangeSelection={rangeSelection}
-        />
+        <NetworkGraph stats={stats} {...chartProps} />
       </Grid>
     </Paper>
   );

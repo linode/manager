@@ -1,9 +1,7 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
-import { DateTime } from 'luxon';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme, useTheme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import {
@@ -12,13 +10,13 @@ import {
   formatNetworkTooltip,
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
-import { useProfile } from 'src/queries/profile';
 import {
   getMetrics,
   getTotalTraffic,
   Metrics,
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { StatsPanel } from './StatsPanel';
 
 export interface TotalTrafficProps {
   inTraffic: string;
@@ -62,6 +60,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export interface ChartProps {
+  height: number;
+  loading: boolean;
+  timezone: string;
+  rangeSelection: string;
+}
+
+interface Props extends ChartProps {
+  timezone: string;
+  rangeSelection: string;
+  stats?: Stats;
+}
+
 interface NetworkMetrics {
   publicIn: Metrics;
   publicOut: Metrics;
@@ -85,14 +96,10 @@ const _getMetrics = (data: NetworkStats) => {
   };
 };
 
-interface Props {
-  rangeSelection: string;
-  stats?: Stats;
-  chartHeight: number;
-}
-
 export const NetworkGraphs: React.FC<Props> = (props) => {
-  const { rangeSelection, stats, chartHeight } = props;
+  const { rangeSelection, stats, ...rest } = props;
+
+  const theme = useTheme<Theme>();
   const classes = useStyles();
 
   const v4Data: NetworkStats = {
@@ -152,32 +159,43 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
     ) / 8;
   const v6Unit = generateNetworkUnits(maxV6InBytes);
 
+  const commonGraphProps = {
+    timezone: props.timezone,
+    theme,
+    chartHeight: props.height,
+    rangeSelection,
+  };
+
   return (
     <Grid container className={`${classes.graphGrids} p0`}>
       <Grid item className={classes.grid} xs={12}>
-        <Typography variant="h2" data-qa-stats-title>
-          Network — IPv4 ({v4Unit}/s)
-        </Typography>
-        <Graph
-          data={v4Data}
-          unit={v4Unit}
-          totalTraffic={v4totalTraffic}
-          metrics={v4Metrics}
-          rangeSelection={rangeSelection}
-          chartHeight={chartHeight}
+        <StatsPanel
+          title={`Network — IPv4 (${v4Unit}/s)`}
+          renderBody={() => (
+            <Graph
+              data={v4Data}
+              unit={v4Unit}
+              totalTraffic={v4totalTraffic}
+              metrics={v4Metrics}
+              {...commonGraphProps}
+            />
+          )}
+          {...rest}
         />
       </Grid>
       <Grid item className={classes.grid} xs={12}>
-        <Typography variant="h2" data-qa-stats-title>
-          Network — IPv6 ({v6Unit}/s)
-        </Typography>
-        <Graph
-          data={v6Data}
-          unit={v6Unit}
-          totalTraffic={v6totalTraffic}
-          metrics={v6Metrics}
-          rangeSelection={rangeSelection}
-          chartHeight={chartHeight}
+        <StatsPanel
+          title={`Network — IPv6 (${v6Unit}/s)`}
+          renderBody={() => (
+            <Graph
+              data={v6Data}
+              unit={v6Unit}
+              totalTraffic={v6totalTraffic}
+              metrics={v6Metrics}
+              {...commonGraphProps}
+            />
+          )}
+          {...rest}
         />
       </Grid>
     </Grid>
@@ -185,8 +203,10 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
 };
 
 interface GraphProps {
+  timezone: string;
   data: NetworkStats;
   unit: string;
+  theme: Theme;
   rangeSelection: string;
   chartHeight: number;
   totalTraffic: TotalTrafficProps;
@@ -194,10 +214,15 @@ interface GraphProps {
 }
 
 const Graph: React.FC<GraphProps> = (props) => {
-  const theme = useTheme<Theme>();
-  const { data: profile } = useProfile();
-  const { chartHeight, data, metrics, rangeSelection, unit } = props;
-  const timezone = profile?.timezone || DateTime.local().zoneName;
+  const {
+    chartHeight,
+    data,
+    metrics,
+    rangeSelection,
+    theme,
+    timezone,
+    unit,
+  } = props;
 
   const format = formatBitsPerSecond;
 
