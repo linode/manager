@@ -13,6 +13,7 @@ import SecuritySettings from './SecuritySettings';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
+import SecurityQuestions from './SecurityQuestions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -86,6 +87,7 @@ export const AuthenticationSettings: React.FC = () => {
             <Divider spacingTop={22} spacingBottom={16} />
           </>
         ) : null}
+        <SecurityQuestions />
         <Typography variant="h3">Security Questions</Typography>
         <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
           This is a placeholder for the Security Questions component.
