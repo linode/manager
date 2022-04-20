@@ -23,10 +23,8 @@ const useStyles = makeStyles(() => ({
 interface Props {
   renderBody: () => JSX.Element;
   loading: boolean;
-  error?: string;
   title: string;
   height: number;
-  isTooEarlyForGraphData?: boolean;
 }
 
 export const StatsPanel: React.FC<Props> = (props) => {
