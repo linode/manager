@@ -28,9 +28,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
-  chip: {
-    fontSize: '0.625rem',
-  },
   container: {
     flexWrap: 'nowrap',
   },
@@ -113,9 +110,7 @@ const PaymentMethodRow: React.FC<Props> = (props) => {
           )}
         </Grid>
         <Grid item className={classes.item} style={{ paddingRight: 0 }}>
-          {is_default && (
-            <Chip className={classes.chip} label="DEFAULT" component="span" />
-          )}
+          {is_default && <Chip label="DEFAULT" component="span" size="small" />}
         </Grid>
         <Grid item className={classes.actions}>
           <ActionMenu

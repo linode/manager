@@ -147,13 +147,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttons: {
     marginRight: theme.spacing(),
   },
-  chip: {
-    backgroundColor: theme.color.tagButton,
-    borderRadius: 1,
-    fontSize: 10,
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
-  },
   actionRow: {
     flexDirection: 'column',
     [theme.breakpoints.down('md')]: {
@@ -511,7 +504,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                 >
                   {isClusterHighlyAvailable ? (
                     <Grid item>
-                      <Chip className={classes.chip} label="HA CLUSTER" />
+                      <Chip
+                        label="HA CLUSTER"
+                        variant="outlined"
+                        outlineColor="green"
+                      />
                     </Grid>
                   ) : null}
                   {isKubeDashboardFeatureEnabled ? (
