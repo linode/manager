@@ -564,9 +564,25 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
         clickable: {
+          backgroundColor: '#e5f1ff',
           '&:hover': {
-            background: 'rgb(206, 206, 206)',
+            backgroundColor: '#cce2ff',
           },
+          '&:focus': {
+            backgroundColor: '#cce2ff',
+          },
+        },
+        sizeSmall: {
+          height: 20,
+          fontSize: '.65rem',
+        },
+        labelSmall: {
+          paddingLeft: 4,
+          paddingRight: 4,
+        },
+        outlined: {
+          borderRadius: 1,
+          backgroundColor: 'transparent',
         },
         label: {
           paddingLeft: 4,

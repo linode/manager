@@ -32,17 +32,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'none',
     },
   },
-  chip: {
-    fontSize: '0.65rem',
-    textTransform: 'uppercase',
-    minHeight: theme.spacing(2),
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: theme.spacing(2),
-    borderRadius: '1px',
-  },
   version: {
     display: 'flex',
     alignItems: 'center',
@@ -97,9 +86,11 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
             {cluster.k8s_version}
             {hasUpgrade ? (
               <Chip
-                className={classes.chip}
                 onClick={openUpgradeDialog}
                 label="UPGRADE"
+                size="small"
+                clickable
+                inTable
               />
             ) : null}
           </div>
