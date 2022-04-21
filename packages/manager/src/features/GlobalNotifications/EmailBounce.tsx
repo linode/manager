@@ -137,8 +137,10 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const confirmationText = matchesSmDown ? 'Confirm' : "Yes it's correct.";
-  const updateText = matchesSmDown ? 'Update' : "No, let's update it.";
+  const confirmationText = matchesSmDown
+    ? 'Confirm'
+    : 'Yes it&rsquo;s correct.';
+  const updateText = matchesSmDown ? 'Update' : 'No, let&rsquo;s update it.';
 
   if (dismissed) {
     return null;

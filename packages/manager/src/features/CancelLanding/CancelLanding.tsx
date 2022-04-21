@@ -54,7 +54,7 @@ export const CancelLanding: React.FC<{}> = () => {
   return (
     <div className={classes.root} data-testid="body">
       <Logo className={classes.logo} />
-      <H1Header title="It's been our pleasure to serve you." />
+      <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
         Your account is closed. We hope you'll consider Linode for your future
         cloud hosting needs.

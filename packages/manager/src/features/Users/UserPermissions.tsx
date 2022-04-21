@@ -419,7 +419,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_nodebalancers: 'Can add NodeBalancers to this account ($)',
       add_longview: 'Can add Longview clients to this account',
       longview_subscription:
-        "Can modify this account's Longview subscription ($)",
+        'Can modify this account&rsquo;s Longview subscription ($)',
       add_domains: 'Can add Domains using the DNS Manager',
       add_stackscripts: 'Can create StackScripts under this account',
       add_images: 'Can create frozen Images under this account ($)',

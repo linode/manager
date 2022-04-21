@@ -533,7 +533,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             />
             <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
             <Typography style={{ paddingTop: 4 }}>
-              This will take precedence over the Firewall's {category} policy.
+              This will take precedence over the Firewall&rsquo;s {category}{' '}
+              policy.
             </Typography>
           </RadioGroup>
         </div>

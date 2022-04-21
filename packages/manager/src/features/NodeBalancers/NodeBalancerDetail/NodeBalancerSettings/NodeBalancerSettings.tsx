@@ -107,7 +107,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
         setLabelError(
           getAPIErrorOrDefault(
             error,
-            "Unable to update your NodeBalancer's label."
+            'Unable to update your NodeBalancer&rsquo;s label.'
           )[0].reason
         );
       });
@@ -130,7 +130,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
         setLabelError(
           getAPIErrorOrDefault(
             error,
-            "Unable to update your NodeBalancer's client connection throttle."
+            'Unable to update your NodeBalancer&rsquo;s client connection throttle.'
           )[0].reason
         );
       });
