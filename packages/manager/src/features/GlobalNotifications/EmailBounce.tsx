@@ -51,7 +51,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
         <EmailBounceNotification
           text={
             <Typography data-testid="billing_email_bounce">
-              An email to your account&apos;s email address couldn&apos;t be
+              An email to your account&rsquo;s email address couldn&rsquo;t be
               delivered. Is <strong>{accountEmailRef.current}</strong> the
               correct address?
             </Typography>
@@ -69,7 +69,7 @@ export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
         <EmailBounceNotification
           text={
             <Typography data-testid="user_email_bounce">
-              An email to your user profile&apos;s email address couldn&apos;t
+              An email to your user profile&rsquo;s email address couldn&rsquo;t
               be delivered. Is <strong>{profileEmailRef.current}</strong> the
               correct address?
             </Typography>

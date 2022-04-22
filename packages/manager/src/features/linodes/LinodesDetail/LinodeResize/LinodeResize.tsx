@@ -321,9 +321,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         )}
         {submissionError && <Notice error>{submissionError}</Notice>}
         <Typography data-qa-description>
-          If you&apos;re expecting a temporary burst of traffic to your website,
-          or if you&apos;re not using your Linode as much as you thought, you
-          can temporarily or permanently resize your Linode to a different plan.{' '}
+          If you&rsquo;re expecting a temporary burst of traffic to your
+          website, or if you&rsquo;re not using your Linode as much as you
+          thought, you can temporarily or permanently resize your Linode to a
+          different plan.{' '}
           <ExternalLink
             fixedIcon
             text="Learn more."
@@ -379,7 +380,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               ) : (
                 'your disk'
               )}{' '}
-              to be automatically scaled with this Linode&apos;s new size? We
+              to be automatically scaled with this Linode&rsquo;s new size? We
               recommend you keep this option enabled when available. Automatic
               resizing is only available when moving to a larger plan, and when
               you have a single ext disk (or one ext and one swap disk) on your

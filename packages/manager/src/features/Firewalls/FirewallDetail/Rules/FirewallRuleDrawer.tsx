@@ -183,7 +183,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
         }}
       </Formik>
       <Typography variant="body1">
-        Rule changes don&apos;t take effect immediately. You can add or delete
+        Rule changes don&rsquo;t take effect immediately. You can add or delete
         rules before saving all your changes to this Firewall.
       </Typography>
     </Drawer>
