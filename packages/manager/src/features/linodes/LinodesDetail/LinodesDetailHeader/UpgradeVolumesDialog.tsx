@@ -47,7 +47,7 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
   const onSubmit = () => {
     migrateVolumes(upgradeableVolumeIds).then(() => {
       enqueueSnackbar(
-        `Successfully added ${linode.label}&rsquo;s volumes to the migration queue.`,
+        `Successfully added ${linode.label}\u{2019}s volumes to the migration queue.`,
         { variant: 'success' }
       );
       // Re-request notifications so the Upgrade Volume banner on the Linode Detail page disappears.

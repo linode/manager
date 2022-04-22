@@ -64,7 +64,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
     const privateCopy = `Add a private IP address to your Linode. Data sent
       explicitly to and from private IP addresses in the same data center does
       not incur transfer quota usage. To ensure that the private IP is properly
-      configured once added, it&rsquo;s best to reboot your Linode.`;
+      configured once added, it\u{2019}s best to reboot your Linode.`;
     return this.state.forPublic ? publicCopy : privateCopy;
   }
 

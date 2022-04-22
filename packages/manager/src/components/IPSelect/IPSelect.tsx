@@ -57,7 +57,7 @@ const IPSelect: React.FC<CombinedProps> = (props) => {
     errorText = props.errorText;
   } else if (linodesError) {
     errorText =
-      'There was an error retrieving this Linode&rsquo;s IP addresses.';
+      'There was an error retrieving this Linode\u{2019}s IP addresses.';
   }
 
   return (

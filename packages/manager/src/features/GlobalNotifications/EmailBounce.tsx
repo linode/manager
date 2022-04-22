@@ -139,8 +139,8 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
 
   const confirmationText = matchesSmDown
     ? 'Confirm'
-    : 'Yes it&rsquo;s correct.';
-  const updateText = matchesSmDown ? 'Update' : 'No, let&rsquo;s update it.';
+    : 'Yes it\u{2019}s correct.';
+  const updateText = matchesSmDown ? 'Update' : 'No, let\u{2019}s update it.';
 
   if (dismissed) {
     return null;

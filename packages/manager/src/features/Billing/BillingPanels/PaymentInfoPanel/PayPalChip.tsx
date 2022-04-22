@@ -134,7 +134,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
 
         reportException(error, {
           message:
-            'Failed to add PayPal as a payment method with Linode&rsquo;s API',
+            'Failed to add PayPal as a payment method with Linode\u{2019}s API',
         });
       });
   };

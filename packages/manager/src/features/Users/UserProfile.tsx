@@ -154,7 +154,7 @@ const UserProfile: React.FC<Props> = (props) => {
             onChange={changeEmail}
             tooltipText={
               profile?.username !== originalUsername
-                ? "You can't change another user&rsquo;s email address"
+                ? "You can't change another user\u{2019}s email address"
                 : ''
             }
             errorText={hasProfileErrorFor('email')}
