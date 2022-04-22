@@ -108,10 +108,10 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
       </Paper>
       <Paper className={classes.root}>
         <Typography variant="h2" className={classes.title}>
-          Type to Confirm
+          Type-to-Confirm
         </Typography>
         <Typography variant="body1">
-          For some products and services, the type to confirm setting requires
+          For some products and services, the type-to-confirm setting requires
           entering the label before deletion.
         </Typography>
         <PreferenceToggle<boolean>
@@ -133,7 +133,7 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
                         checked={istypeToConfirm}
                       />
                     }
-                    label={`Type to confirm is${
+                    label={`Type-to-confirm is${
                       istypeToConfirm ? ' enabled' : ' disabled'
                     }`}
                   />
