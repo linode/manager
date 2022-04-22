@@ -74,7 +74,7 @@ const ObjectTableRow: React.FC<Props> = (props) => {
                   className={classes.objectNameButton}
                   onClick={handleClickDetails}
                 >
-                  <strong>{displayName}</strong>
+                  {displayName}
                 </button>
               </Typography>
             </Box>
