@@ -1,9 +1,11 @@
 import * as React from 'react';
+import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import ResetPassword from './ResetPassword';
@@ -25,7 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const AuthenticationSettings: React.FC = () => {
   const classes = useStyles();
-  const { data: profile, isLoading: profileLoading } = useProfile();
+
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    error: profileError,
+  } = useProfile();
+
   const {
     mutateAsync: updateProfile,
     error: profileUpdateError,
@@ -35,6 +43,8 @@ export const AuthenticationSettings: React.FC = () => {
   const ipAllowlisting = profile?.ip_whitelist_enabled ?? false;
   const twoFactor = Boolean(profile?.two_factor_auth);
   const username = profile?.username;
+
+  const thirdPartyEnabled = authType !== 'password';
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
 
@@ -46,18 +56,26 @@ export const AuthenticationSettings: React.FC = () => {
     setSuccess('IP allowlisting disabled. This feature cannot be re-enabled.');
   };
 
+  if (profileError) {
+    return <ErrorState errorText="Unable to load your profile" />;
+  }
+
+  if (profileLoading) {
+    return <CircleProgress />;
+  }
+
   return (
     <div data-testid="authSettings">
       <DocumentTitleSegment segment="Login & Authentication" />
       {success && <Notice success text={success} />}
-      {!profileLoading && (
-        <>
-          <TPAProviders authType={authType} />
-          <Paper className={classes.root}>
-            <Typography className={classes.linode} variant="h3">
-              Security Settings
-            </Typography>
-            <Divider spacingTop={24} spacingBottom={16} />
+      <TPAProviders authType={authType} />
+      <Paper className={classes.root}>
+        <Typography className={classes.linode} variant="h3">
+          Security Settings
+        </Typography>
+        <Divider spacingTop={24} spacingBottom={16} />
+        {!thirdPartyEnabled ? (
+          <>
             <ResetPassword username={username} />
             <Divider spacingTop={22} spacingBottom={16} />
             <TwoFactor
@@ -66,24 +84,22 @@ export const AuthenticationSettings: React.FC = () => {
               clearState={clearState}
             />
             <Divider spacingTop={22} spacingBottom={16} />
-            <Typography variant="h3">Security Questions</Typography>
-            <Typography
-              variant="body1"
-              style={{ marginTop: 8, marginBottom: 8 }}
-            >
-              This is a placeholder for the Security Questions component.
-            </Typography>
-            <Divider spacingTop={22} spacingBottom={16} />
-            <Typography variant="h3">Phone Verification</Typography>
-            <Typography
-              variant="body1"
-              style={{ marginTop: 8, marginBottom: 8 }}
-            >
-              This is a placeholder for the Phone Verification component.
-            </Typography>
+          </>
+        ) : null}
+        <Typography variant="h3">Security Questions</Typography>
+        <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
+          This is a placeholder for the Security Questions component.
+        </Typography>
+        <Divider spacingTop={22} spacingBottom={16} />
+        <Typography variant="h3">Phone Verification</Typography>
+        <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
+          This is a placeholder for the Phone Verification component.
+        </Typography>
+        {!thirdPartyEnabled ? (
+          <>
             <Divider spacingTop={22} spacingBottom={16} />
             <TrustedDevices />
-            {ipAllowlisting && (
+            {ipAllowlisting ? (
               <SecuritySettings
                 updateProfile={updateProfile}
                 onSuccess={onAllowlistingDisable}
@@ -91,10 +107,10 @@ export const AuthenticationSettings: React.FC = () => {
                 ipAllowlistingEnabled={ipAllowlisting}
                 data-qa-allowlisting-form
               />
-            )}
-          </Paper>
-        </>
-      )}
+            ) : null}
+          </>
+        ) : null}
+      </Paper>
     </div>
   );
 };
