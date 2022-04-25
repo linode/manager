@@ -126,11 +126,11 @@ export const getLogins = (params: any, filter: any) => {
 };
 
 /**
- * sendPhoneNumberCode
+ * sendCodeToPhoneNumber
  *
  * Sends a one-time password via SMS to be used to verify a phone number.
  */
-export const sendPhoneNumberCode = (phoneNumber: string) => {
+export const sendCodeToPhoneNumber = (phoneNumber: string) => {
   return Request<PhoneNumberVerificationCode>(
     setURL(`${API_ROOT}/profile/phone-number`),
     setMethod('POST'),
@@ -143,7 +143,7 @@ export const sendPhoneNumberCode = (phoneNumber: string) => {
 /**
  * verifyPhoneNumberCode
  *
- * Verifies a one-time password sent using `sendPhoneNumberCode`.
+ * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
  */
 export const verifyPhoneNumberCode = (otpCode: number) => {
   return Request(
