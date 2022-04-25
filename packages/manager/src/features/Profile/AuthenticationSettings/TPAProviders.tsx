@@ -184,7 +184,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             );
           })}
         </Grid>
-        {isThirdPartyAuthEnabled && (
+        {isThirdPartyAuthEnabled ? (
           <>
             <Divider spacingTop={24} spacingBottom={16} />
             <Typography variant="h3">
@@ -220,7 +220,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
               your password.
             </Typography>
           </>
-        )}
+        ) : null}
       </Paper>
       <TPADialog
         currentProvider={currentProvider}

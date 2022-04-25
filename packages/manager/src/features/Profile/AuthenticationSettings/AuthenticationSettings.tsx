@@ -44,7 +44,7 @@ export const AuthenticationSettings: React.FC = () => {
   const twoFactor = Boolean(profile?.two_factor_auth);
   const username = profile?.username;
 
-  const thirdPartyEnabled = authType !== 'password';
+  const isThirdPartyAuthEnabled = authType !== 'password';
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
 
@@ -74,7 +74,7 @@ export const AuthenticationSettings: React.FC = () => {
           Security Settings
         </Typography>
         <Divider spacingTop={24} spacingBottom={16} />
-        {!thirdPartyEnabled ? (
+        {!isThirdPartyAuthEnabled ? (
           <>
             <ResetPassword username={username} />
             <Divider spacingTop={22} spacingBottom={16} />
@@ -95,7 +95,7 @@ export const AuthenticationSettings: React.FC = () => {
         <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
           This is a placeholder for the Phone Verification component.
         </Typography>
-        {!thirdPartyEnabled ? (
+        {!isThirdPartyAuthEnabled ? (
           <>
             <Divider spacingTop={22} spacingBottom={16} />
             <TrustedDevices />
