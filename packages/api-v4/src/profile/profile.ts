@@ -146,7 +146,7 @@ export const sendCodeToPhoneNumber = (phoneNumber: string) => {
  * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
  */
 export const verifyPhoneNumberCode = (otpCode: number) => {
-  return Request(
+  return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number/verify`),
     setMethod('POST'),
     setData({
@@ -174,7 +174,7 @@ export const getSecurityQuestions = () => {
  * questions may be used.
  */
 export const updateSecurityQuestions = (payload: SecurityQuestions) => {
-  return Request(
+  return Request<{}>(
     setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('PUT'),
     setData({
