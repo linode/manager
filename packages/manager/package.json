@@ -188,7 +188,7 @@
     "chalk": "^2.4.2",
     "circular-dependency-plugin": "^5.2.0",
     "core-js": "^2.6.5",
-    "css-loader": "^6.5.1",
+    "css-loader": "^6.7.1",
     "csstype": "^2.5.5",
     "cypress": "^9.5.1",
     "cypress-axe": "^0.14.0",
@@ -318,7 +318,8 @@
     "handlebars": "^4.4.3",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
-    "axe-core": "^3.4.0"
+    "axe-core": "^3.4.0",
+    "postcss": "^8.4.6"
   },
   "workspaces": {
     "nohoist": [
