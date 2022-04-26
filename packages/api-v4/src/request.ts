@@ -94,7 +94,7 @@ export const setData = (
     return (object: any) => ({
       ...object,
       data: updatedData,
-      validationErrors: convertYupToLinodeErrors(error),
+      validationErrors: convertYupToLinodeErrors(error as ValidationError),
     });
   }
 };
