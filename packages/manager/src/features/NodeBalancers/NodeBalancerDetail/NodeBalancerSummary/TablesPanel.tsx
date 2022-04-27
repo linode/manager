@@ -71,6 +71,9 @@ const Loading = () => (
   </div>
 );
 
+const STATS_NOT_READY_TITLE =
+  'Stats for this NodeBalancer are not available yet';
+
 interface Props {
   nodeBalancer: ExtendedNodeBalancer;
 }
@@ -105,7 +108,7 @@ const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
             <>
               <div>
                 <Typography variant="h2" className={classes.emptyText}>
-                  Stats for this NodeBalancer are not yet available
+                  {STATS_NOT_READY_TITLE}
                 </Typography>
               </div>
               <div>
@@ -178,7 +181,7 @@ const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
             <>
               <div>
                 <Typography variant="h2" className={classes.emptyText}>
-                  Stats for this NodeBalancer are not yet available
+                  {STATS_NOT_READY_TITLE}
                 </Typography>
               </div>
               <div>

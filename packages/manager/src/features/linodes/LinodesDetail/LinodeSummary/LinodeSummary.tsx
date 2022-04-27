@@ -218,7 +218,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
             <>
               <div>
                 <Typography variant="h2" className={classes.emptyText}>
-                  Stats for this Linode are not yet available
+                  Stats for this Linode are not available yet
                 </Typography>
               </div>
               <div>

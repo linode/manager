@@ -17,7 +17,7 @@ import { DateTime } from 'luxon';
 export const STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
 export const STATS_NOT_READY_MESSAGE =
-  'Stats for this Linode are not yet available – check back later';
+  'Stats for this Linode are not available yet';
 
 export const queryKey = 'linode';
 
