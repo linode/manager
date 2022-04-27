@@ -7,6 +7,7 @@ import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
 import LinodeLogo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -183,45 +184,44 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             );
           })}
         </Grid>
+        {isThirdPartyAuthEnabled ? (
+          <>
+            <Divider spacingTop={24} spacingBottom={16} />
+            <Typography variant="h3">
+              {currentProvider.displayName} Authentication
+            </Typography>
+            <Notice
+              className={classes.notice}
+              spacingTop={16}
+              spacingBottom={16}
+              warning
+            >
+              Your login credentials are currently managed via{' '}
+              {currentProvider.displayName}.
+            </Notice>
+            <Typography variant="body1" className={classes.copy}>
+              If you need to reset your password or set up Two-Factor
+              Authentication (TFA), please visit the{' '}
+              <ExternalLink
+                hideIcon
+                link={currentProvider.href}
+                text={`${currentProvider.displayName}` + ` website`}
+              />
+              .
+            </Typography>
+            <Typography
+              variant="body1"
+              className={classes.copy}
+              style={{ marginBottom: 8 }}
+            >
+              To disable {currentProvider.displayName} authentication and log in
+              using your Linode credentials, click the Linode button above.
+              We&rsquo;ll send you an e-mail with instructions on how to reset
+              your password.
+            </Typography>
+          </>
+        ) : null}
       </Paper>
-
-      {isThirdPartyAuthEnabled && (
-        <Paper className={classes.root}>
-          <Typography variant="h3">
-            {currentProvider.displayName} Authentication
-          </Typography>
-          <Notice
-            className={classes.notice}
-            spacingTop={16}
-            spacingBottom={16}
-            warning
-          >
-            Your login credentials are currently managed via{' '}
-            {currentProvider.displayName}.
-          </Notice>
-          <Typography variant="body1" className={classes.copy}>
-            If you need to reset your password or set up Two-Factor
-            Authentication (TFA), please visit the{' '}
-            <ExternalLink
-              hideIcon
-              link={currentProvider.href}
-              text={`${currentProvider.displayName}` + ` website`}
-            />
-            .
-          </Typography>
-          <Typography
-            variant="body1"
-            className={classes.copy}
-            style={{ marginBottom: 8 }}
-          >
-            To disable {currentProvider.displayName} authentication and log in
-            using your Linode credentials, click the Linode button above.
-            We&rsquo;ll send you an e-mail with instructions on how to reset
-            your password.
-          </Typography>
-        </Paper>
-      )}
-
       <TPADialog
         currentProvider={currentProvider}
         newProvider={newProvider}

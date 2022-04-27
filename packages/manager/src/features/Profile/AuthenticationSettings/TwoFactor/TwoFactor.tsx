@@ -18,9 +18,6 @@ import EnableTwoFactorForm from './EnableTwoFactorForm';
 import ScratchDialog from './ScratchCodeDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(4),
-  },
   container: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -168,11 +165,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
         <ToggleState>
           {({ open: scratchDialogOpen, toggle: toggleScratchDialog }) => (
             <React.Fragment>
-              <div
-                className={`${classes.root} ${
-                  disabled ? classes.disabled : ''
-                }`}
-              >
+              <div className={disabled ? classes.disabled : undefined}>
                 {success && <Notice success text={success} />}
                 {generalError && <Notice error text={generalError} />}
                 <Typography variant="h3" data-qa-title>
