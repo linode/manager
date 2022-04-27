@@ -41,7 +41,6 @@ import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -176,8 +175,8 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 };
 
 export interface ExtendedDatabaseType extends DatabaseType {
-  heading: string;
-  subHeadings: [string, string];
+  heading?: string;
+  subHeadings?: [string, string];
 }
 
 interface NodePricing {
@@ -210,6 +209,9 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
+  const [selectedEngine, setSelectedEngine] = React.useState<
+    Engine | undefined
+  >();
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
@@ -226,20 +228,13 @@ const DatabaseCreate: React.FC<{}> = () => {
       return [];
     }
     return dbtypes.map((type) => {
-      const { label, memory, vcpus, disk, cluster_size } = type;
+      const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const singleNodePricing = cluster_size.find(
-        (cluster) => cluster.quantity === 1
-      )?.price;
+
       return {
         ...type,
-        price: singleNodePricing,
         label: formattedLabel,
         heading: formattedLabel,
-        subHeadings: [
-          `$${singleNodePricing?.monthly}/mo ($${singleNodePricing?.hourly}/hr)`,
-          typeLabelDetails(memory, disk, vcpus),
-        ] as [string, string],
       };
     });
   }, [dbtypes]);
@@ -394,10 +389,13 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
+    const engineType = values.engine.split('/')[0] || 'mysql'; // If an engine has not yet been selected, default to 'mysql' to prevent crashes from setNodePricing().
+
     setNodePricing({
-      single: type.cluster_size.find((cluster) => cluster.quantity === 1)
+      single: type.engines[engineType].find((cluster) => cluster.quantity === 1)
         ?.price,
-      multi: type.cluster_size.find((cluster) => cluster.quantity === 3)?.price,
+      multi: type.engines[engineType].find((cluster) => cluster.quantity === 3)
+        ?.price,
     });
     setFieldValue(
       'cluster_size',
@@ -407,7 +405,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       'replication_type',
       values.cluster_size === 1 ? 'none' : 'semi_synch'
     );
-  }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
+  }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
@@ -479,6 +477,9 @@ const DatabaseCreate: React.FC<{}> = () => {
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
+
+              const selection = selected.value.split('/')[0];
+              setSelectedEngine(selection as Engine);
             }}
             isClearable={false}
           />
@@ -508,6 +509,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
+            selectedEngine={selectedEngine ?? 'mysql'} // `selectedEngine` is undefined upon page load, so pass 'mysql' as a default to prevent SelectPlanPanel.tsx crashes.
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />

@@ -12,10 +12,13 @@ interface DatabaseClusterSizeObject {
   price: DatabasePriceObject;
 }
 
-export interface DatabaseType extends BaseType {
+interface Engines {
+  [engineType: string]: DatabaseClusterSizeObject[];
+}
+export interface DatabaseType extends Omit<BaseType, 'transfer'> {
   class: DatabaseTypeClass;
-  deprecated: boolean;
-  cluster_size: DatabaseClusterSizeObject[];
+  engines: Engines;
+  transfer?: number;
 }
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';

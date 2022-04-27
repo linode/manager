@@ -1,3 +1,4 @@
+import { Engine } from '@linode/api-v4/lib/databases/types';
 import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
@@ -8,7 +9,7 @@ import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -33,6 +34,7 @@ import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -110,6 +112,7 @@ interface Props {
   isCreate?: boolean;
   className?: string;
   showTransfer?: boolean;
+  selectedEngine?: Engine;
 }
 
 const getNanodes = (types: ExtendedTypes) =>
@@ -144,6 +147,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     className,
     copy,
     error,
+    selectedEngine,
   } = props;
 
   const classes = useStyles();
@@ -163,7 +167,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return arrayToList(withCapability);
   };
 
-  const renderSelection = (type: ExtendedType, idx: number) => {
+  const renderSelection = (type: any, idx: number) => {
     const selectedDiskSize = props.selectedDiskSize
       ? props.selectedDiskSize
       : 0;
@@ -185,6 +189,18 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         : planTooSmall
         ? `${type.label} this plan is too small for resize`
         : type.label;
+
+    // If `selectedEngine` is present, it indicates that <SelectPlanPanel /> is being called from <DatabaseCreate />.
+    const databasePrices = selectedEngine
+      ? type.engines[selectedEngine].find(
+          (cluster: any) => cluster.quantity === 1
+        )
+      : undefined;
+
+    const databaseSubheadings = [
+      `$${databasePrices?.price?.monthly}/mo ($${databasePrices?.price?.hourly}/hr)`,
+      typeLabelDetails(type.memory, type.disk, type.vcpus),
+    ] as [string, string];
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -240,12 +256,15 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 )}
               </div>
             </TableCell>
-            <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
+            <TableCell data-qa-monthly>
+              {' '}
+              ${type.price?.monthly ?? databasePrices.price.monthly}
+            </TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly ?? 0} />
               ) : (
-                `$` + type.price.hourly
+                `$${type.price?.hourly ?? databasePrices.price.hourly}`
               )}
             </TableCell>
             <TableCell center noWrap data-qa-ram>
@@ -279,7 +298,9 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             checked={type.id === String(selectedID)}
             onClick={onSelect(type.id)}
             heading={type.heading}
-            subheadings={type.subHeadings}
+            subheadings={
+              selectedEngine ? databaseSubheadings : type.subHeadings
+            }
             disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
             tooltip={tooltip}
           />
