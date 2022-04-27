@@ -9,7 +9,14 @@ import Request, {
   setXFilter,
 } from '../request';
 import { ResourcePage } from '../types';
-import { Profile, ProfileLogin, TrustedDevice, UserPreferences } from './types';
+import {
+  Profile,
+  ProfileLogin,
+  TrustedDevice,
+  UserPreferences,
+  SecurityQuestions,
+  PhoneNumberVerificationCode,
+} from './types';
 
 /**
  * getProfile
@@ -115,5 +122,63 @@ export const getLogins = (params: any, filter: any) => {
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
+  );
+};
+
+/**
+ * sendCodeToPhoneNumber
+ *
+ * Sends a one-time password via SMS to be used to verify a phone number.
+ */
+export const sendCodeToPhoneNumber = (phoneNumber: string) => {
+  return Request<PhoneNumberVerificationCode>(
+    setURL(`${API_ROOT}/profile/phone-number`),
+    setMethod('POST'),
+    setData({
+      phone_number: phoneNumber,
+    })
+  );
+};
+
+/**
+ * verifyPhoneNumberCode
+ *
+ * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
+ */
+export const verifyPhoneNumberCode = (otpCode: number) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number/verify`),
+    setMethod('POST'),
+    setData({
+      otp_code: otpCode,
+    })
+  );
+};
+
+/**
+ * getSecurityQuestions
+ *
+ * Retrieves a map of security questions and answers for the current user.
+ */
+export const getSecurityQuestions = () => {
+  return Request<SecurityQuestions>(
+    setURL(`${API_ROOT}/profile/security-questions`),
+    setMethod('GET')
+  );
+};
+
+/**
+ * updateSecurityQuestions
+ *
+ * Updates the current user's security questions. Only expected security
+ * questions may be used.
+ */
+export const updateSecurityQuestions = (payload: SecurityQuestions) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/security-questions`),
+    setMethod('PUT'),
+    setData({
+      security_questions: payload,
+    })
   );
 };

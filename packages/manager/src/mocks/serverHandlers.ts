@@ -47,8 +47,10 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   paymentMethodFactory,
+  phoneNumberVerificationCodeFactory,
   profileFactory,
   promoFactory,
+  securityQuestionsFactory,
   stackScriptFactory,
   staticObjects,
   supportReplyFactory,
@@ -238,6 +240,18 @@ export const handlers = [
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tokens)));
+  }),
+  rest.post('*/profile/phone-number', (req, res, ctx) => {
+    return res(ctx.json(phoneNumberVerificationCodeFactory.build()));
+  }),
+  rest.post('*/profile/phone-number/verify', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(securityQuestionsFactory.build()));
+  }),
+  rest.put('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json({}));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(
