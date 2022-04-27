@@ -34,6 +34,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const {
     linodeLabel,
     linodeType,
+    linodeCreated,
     match: { url },
   } = props;
 
@@ -103,7 +104,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
               <SafeTabPanel index={idx++}>
-                <LinodeSummary isBareMetalInstance={isBareMetalInstance} />
+                <LinodeSummary
+                  isBareMetalInstance={isBareMetalInstance}
+                  linodeCreated={linodeCreated}
+                />
               </SafeTabPanel>
 
               <SafeTabPanel index={idx++}>
@@ -145,6 +149,7 @@ interface ContextProps {
   linodeConfigs: Config[];
   linodeLabel: string;
   linodeRegion: string;
+  linodeCreated: string;
   linodeType?: LinodeType | null | undefined;
   readOnly: boolean;
 }
@@ -157,6 +162,7 @@ const enhanced = compose<CombinedProps, {}>(
     linodeLabel: linode.label,
     linodeRegion: linode.region,
     linodeType: linode._type,
+    linodeCreated: linode.created,
     readOnly: linode._permissions === 'read_only',
   }))
 );

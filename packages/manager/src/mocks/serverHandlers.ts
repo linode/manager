@@ -353,6 +353,10 @@ export const handlers = [
     const stats = linodeStatsFactory.build();
     return res(ctx.json(stats));
   }),
+  rest.get('*/instances/*/stats', async (req, res, ctx) => {
+    const stats = linodeStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
   rest.get('*/instances/*/ips', async (req, res, ctx) => {
     const ips = linodeIPFactory.build();
     return res(ctx.json(ips));

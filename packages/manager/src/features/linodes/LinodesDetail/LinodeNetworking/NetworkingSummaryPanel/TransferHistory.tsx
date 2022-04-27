@@ -15,14 +15,15 @@ import {
   generateNetworkUnits,
 } from 'src/features/Longview/shared/utilities';
 import {
-  useLinodeNetworkStatsByDate,
+  STATS_NOT_READY_API_MESSAGE,
+  STATS_NOT_READY_MESSAGE,
+  useLinodeStatsByDate,
   useLinodeTransferByDate,
 } from 'src/queries/linodes';
 import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { readableBytes } from 'src/utilities/unitConversions';
 import PendingIcon from 'src/assets/icons/pending.svg';
-import { parseAPIDate } from 'src/utilities/date';
 
 const useStyles = makeStyles((theme: Theme) => ({
   arrowIconOuter: {
@@ -55,11 +56,6 @@ interface Props {
   linodeCreated: string;
 }
 
-export const STATS_NOT_READY_API_MESSAGE =
-  'Stats are unavailable at this time.';
-export const STATS_NOT_READY_MESSAGE =
-  'Stats for this Linode are not yet available – check back later';
-
 export const TransferHistory: React.FC<Props> = (props) => {
   const { linodeID, linodeCreated } = props;
 
@@ -76,14 +72,11 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
   const { year, month, humanizedDate } = parseMonthOffset(monthOffset, now);
 
-  const isTooEarlyForStats =
-    parseAPIDate(linodeCreated) > DateTime.local().minus({ minutes: 7 });
-
   const {
     data: stats,
     isLoading: statsLoading,
     error: statsError,
-  } = useLinodeNetworkStatsByDate(linodeID, year, month, !isTooEarlyForStats);
+  } = useLinodeStatsByDate(linodeID, year, month, true, linodeCreated);
 
   const { data: transfer } = useLinodeTransferByDate(
     linodeID,
@@ -157,25 +150,17 @@ export const TransferHistory: React.FC<Props> = (props) => {
       );
     }
 
-    if (isTooEarlyForStats) {
-      return (
-        <ErrorState
-          CustomIcon={PendingIcon}
-          errorText={STATS_NOT_READY_MESSAGE}
-          compact
-        />
-      );
-    }
-
     if (statsErrorString) {
-      const areStatsNotReadyFromAPI =
-        statsErrorString === STATS_NOT_READY_API_MESSAGE;
+      const areStatsNotReady = [
+        STATS_NOT_READY_API_MESSAGE,
+        STATS_NOT_READY_MESSAGE,
+      ].includes(statsErrorString);
 
       return (
         <ErrorState
-          CustomIcon={areStatsNotReadyFromAPI ? PendingIcon : undefined}
+          CustomIcon={areStatsNotReady ? PendingIcon : undefined}
           errorText={
-            areStatsNotReadyFromAPI ? STATS_NOT_READY_MESSAGE : statsErrorString
+            areStatsNotReady ? STATS_NOT_READY_MESSAGE : statsErrorString
           }
           compact
         />
