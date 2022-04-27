@@ -1,8 +1,9 @@
 import * as React from 'react';
-import TextField from 'src/components/TextField';
-import Select from 'src/components/EnhancedSelect/Select';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
+import QuestionView from './Question';
+import Answer from './Answer';
+import { securityQuestions, QuestionStatus, Question, Editable } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -18,34 +19,36 @@ const useStyles = makeStyles((theme: Theme) => ({
       flexDirection: 'column',
     },
   },
-  question: {},
+  question: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   answer: {},
 }));
 
-interface Props {
-  index: 1 | 2 | 3;
-}
-
-const QuestionAndAnswerPair = (props: Props) => {
-  const { index } = props;
+const QuestionAndAnswerPair = (props: Omit<Question, keyof Editable>) => {
+  const { questionIndex } = props;
   const classes = useStyles();
-  const questionPlaceholder = 'Select a question';
-  const answerPlaceholder = 'Type your answer';
+  const [status, setStatus] = React.useState<QuestionStatus>('display');
+
+  const enableEditStatus = () => {
+    setStatus('edit');
+  };
+
   return (
     <Box className={classes.root}>
-      <Select
-        name={`question-${index}`}
-        label={`Question ${index}`}
-        placeholder={questionPlaceholder}
-        className={classes.question}
-      />
-      <TextField
-        name={`answer-${index}`}
-        label={`Answer ${index}`}
-        placeholder={answerPlaceholder}
-        className={classes.answer}
-        fullWidth
-      />
+      <Box className={classes.question}>
+        <QuestionView
+          questionIndex={questionIndex}
+          currentQuestion={securityQuestions[0]}
+          answer="Hello"
+          status={status}
+          onClickEdit={enableEditStatus}
+        />
+      </Box>
+      <Box className={classes.answer}>
+        <Answer questionIndex={questionIndex} answer="Hello" status={status} />
+      </Box>
     </Box>
   );
 };

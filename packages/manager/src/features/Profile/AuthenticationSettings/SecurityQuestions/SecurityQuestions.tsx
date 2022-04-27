@@ -6,8 +6,6 @@ import Box from 'src/components/core/Box';
 import QuestionAndAnswerPair from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
 
-// type SecurityQuestionsState = 'empty' | 'unchanged' | 'changed';
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
@@ -23,12 +21,38 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  button: {
+    paddingTop: theme.spacing(5),
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    [theme.breakpoints.down('sm')]: {
+      '& > button': {
+        width: '100%',
+      },
+    },
+  },
 }));
 
-const SecurityQuestions = () => {
-  const classes = useStyles();
-  //   const [state, setState] = React.useState('empty');
+interface Props {
+  questions: string[];
+  answers: string[];
+}
 
+const hasTheUserAnsweredQuestions = (
+  questions: Props['questions'],
+  answers: Props['answers']
+) => {
+  if (questions.length !== 3 && answers.length !== 3) {
+    return false;
+  }
+  return true;
+};
+
+const SecurityQuestions = (props: Props) => {
+  const classes = useStyles();
+  const { questions, answers } = props;
+  const isEmpty = hasTheUserAnsweredQuestions(questions, answers);
+  const submitButtonCopy = isEmpty ? 'Add' : 'Update';
   return (
     <div className={classes.root}>
       <Typography variant="h3">Security Questions</Typography>
@@ -37,10 +61,14 @@ const SecurityQuestions = () => {
         only be used to verify your identity.
       </Typography>
       <Box component={FormControl} className={classes.form}>
-        <QuestionAndAnswerPair index={1} />
-        <QuestionAndAnswerPair index={2} />
-        <QuestionAndAnswerPair index={3} />
-        <Button>Add Security Questions</Button>
+        <QuestionAndAnswerPair questionIndex={1} currentQuestion="" />
+        <QuestionAndAnswerPair questionIndex={2} />
+        <QuestionAndAnswerPair questionIndex={3} />
+      </Box>
+      <Box className={classes.button}>
+        <Button buttonType="primary">
+          {submitButtonCopy} Security Questions
+        </Button>
       </Box>
     </div>
   );
