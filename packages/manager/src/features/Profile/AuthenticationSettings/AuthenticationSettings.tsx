@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
+import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
-import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
@@ -25,9 +25,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const AuthenticationSettings: React.FC<{}> = () => {
+export const AuthenticationSettings: React.FC = () => {
   const classes = useStyles();
-  const { data: profile, isLoading: profileLoading } = useProfile();
+
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    error: profileError,
+  } = useProfile();
+
   const {
     mutateAsync: updateProfile,
     error: profileUpdateError,
@@ -38,57 +44,75 @@ export const AuthenticationSettings: React.FC<{}> = () => {
   const twoFactor = Boolean(profile?.two_factor_auth);
   const username = profile?.username;
 
-  const [success, setSuccess] = React.useState<string | undefined>(undefined);
+  const isThirdPartyAuthEnabled = authType !== 'password';
 
-  const thirdPartyEnabled = authType !== 'password';
+  const [success, setSuccess] = React.useState<string | undefined>(undefined);
 
   const clearState = () => {
     setSuccess(undefined);
   };
+
   const onAllowlistingDisable = () => {
     setSuccess('IP allowlisting disabled. This feature cannot be re-enabled.');
   };
 
+  if (profileError) {
+    return <ErrorState errorText="Unable to load your profile" />;
+  }
+
+  if (profileLoading) {
+    return <CircleProgress />;
+  }
+
   return (
     <div data-testid="authSettings">
-      <DocumentTitleSegment segment={`Login & Authentication`} />
-      {/* Remove when logic above is cleared */}
+      <DocumentTitleSegment segment="Login & Authentication" />
       {success && <Notice success text={success} />}
-      {!profileLoading && (
-        <>
-          <TPAProviders authType={authType} />
-
-          {!thirdPartyEnabled && (
-            <Paper className={classes.root}>
-              <Typography className={classes.linode} variant="h3">
-                Linode Authentication
-              </Typography>
-              <ResetPassword username={username} />
-              <TwoFactor
-                twoFactor={twoFactor}
-                username={username}
-                clearState={clearState}
+      <TPAProviders authType={authType} />
+      <Paper className={classes.root}>
+        <Typography className={classes.linode} variant="h3">
+          Security Settings
+        </Typography>
+        <Divider spacingTop={24} spacingBottom={16} />
+        {!isThirdPartyAuthEnabled ? (
+          <>
+            <ResetPassword username={username} />
+            <Divider spacingTop={22} spacingBottom={16} />
+            <TwoFactor
+              twoFactor={twoFactor}
+              username={username}
+              clearState={clearState}
+            />
+            <Divider spacingTop={22} spacingBottom={16} />
+          </>
+        ) : null}
+        <Typography variant="h3">Security Questions</Typography>
+        <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
+          This is a placeholder for the Security Questions component.
+        </Typography>
+        <Divider spacingTop={22} spacingBottom={16} />
+        <Typography variant="h3">Phone Verification</Typography>
+        <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
+          This is a placeholder for the Phone Verification component.
+        </Typography>
+        {!isThirdPartyAuthEnabled ? (
+          <>
+            <Divider spacingTop={22} spacingBottom={16} />
+            <TrustedDevices />
+            {ipAllowlisting ? (
+              <SecuritySettings
+                updateProfile={updateProfile}
+                onSuccess={onAllowlistingDisable}
+                updateProfileError={profileUpdateError || undefined}
+                ipAllowlistingEnabled={ipAllowlisting}
+                data-qa-allowlisting-form
               />
-              <TrustedDevices />
-              {ipAllowlisting && (
-                <SecuritySettings
-                  updateProfile={updateProfile}
-                  onSuccess={onAllowlistingDisable}
-                  updateProfileError={profileUpdateError || undefined}
-                  ipAllowlistingEnabled={ipAllowlisting}
-                  data-qa-allowlisting-form
-                />
-              )}
-            </Paper>
-          )}
-        </>
-      )}
+            ) : null}
+          </>
+        ) : null}
+      </Paper>
     </div>
   );
 };
 
-const docs = [AccountsAndPasswords, SecurityControls];
-
-const enhanced = compose(setDocs(docs));
-
-export default enhanced(AuthenticationSettings);
+export default AuthenticationSettings;
