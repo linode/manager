@@ -21,6 +21,7 @@ export interface Profile {
   authorized_keys: string[];
   two_factor_auth: boolean;
   restricted: boolean;
+  phone_number?: string;
 }
 
 export interface TokenRequest {
@@ -70,3 +71,9 @@ export interface ProfileLogin {
   username: string;
   restricted: boolean;
 }
+
+export interface PhoneNumberVerificationCode {
+  otp_code: number;
+}
+
+export type SecurityQuestions = Record<string, string>;
