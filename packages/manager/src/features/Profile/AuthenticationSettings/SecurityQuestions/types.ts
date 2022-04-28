@@ -4,8 +4,9 @@ export const securityQuestions = [
   'What time of the day were you born?(hh:mm)',
   'What primary school did you attend?',
   'In what town did your parents meet?',
-] as const;
+] as const; // the casting here is to make the array itself a type in the type system
 
+// Indexed Access Type to get a union type of the security questions
 export type SecurityQuestion = typeof securityQuestions[number];
 
 export type QuestionIndex = 1 | 2 | 3;

@@ -16,7 +16,8 @@ type SecurityQuestionOption = {
   label: SecurityQuestion;
 };
 
-export const isAnsweredQuestionProps = (
+// Type predicate to determine if a given
+export const isQuestionAnswered = (
   question: QuestionView
 ): question is Extract<QuestionView, AnsweredQuestion> => {
   const answeredQuestion = question as AnsweredQuestion;
@@ -85,8 +86,8 @@ const UnansweredOrEditingQuestion = (props: QuestionView) => {
 };
 
 const QuestionView = (props: QuestionView) => {
-  const isAnsweredQuestion = isAnsweredQuestionProps(props);
-  return isAnsweredQuestion ? (
+  const isAnswered = isQuestionAnswered(props);
+  return isAnswered ? (
     <AnsweredQuestion {...props} />
   ) : (
     <UnansweredOrEditingQuestion {...props} />
