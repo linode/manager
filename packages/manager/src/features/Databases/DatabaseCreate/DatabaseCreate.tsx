@@ -445,9 +445,9 @@ const DatabaseCreate: React.FC<{}> = () => {
           },
         ]}
         labelOptions={{
-          suffixComponent: (
+          suffixComponent: flags.databaseBeta ? (
             <Chip className={classes.chip} label="beta" component="span" />
-          ),
+          ) : null,
         }}
       />
       <Paper>
