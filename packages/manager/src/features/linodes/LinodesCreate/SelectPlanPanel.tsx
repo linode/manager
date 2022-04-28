@@ -194,7 +194,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const databasePrices = selectedEngine
       ? ((type as unknown) as ExtendedDatabaseType).engines[
           selectedEngine
-        ].find((cluster: any) => cluster.quantity === 1)
+        ]?.find((cluster: any) => cluster.quantity === 1)
       : undefined;
 
     const databaseSubheadings = [
@@ -317,10 +317,11 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const renderPlanContainer = (plans: ExtendedTypes) => {
-    // Show the Transfer column if, for any plan, the api returned data
+    // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
     const shouldShowTransfer =
       showTransfer &&
-      plans.some((plan: ExtendedType | ExtendedDatabaseType) => plan.transfer);
+      !selectedEngine &&
+      plans.some((plan: ExtendedType) => plan.transfer);
 
     // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
     const shouldShowNetwork =

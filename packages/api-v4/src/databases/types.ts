@@ -7,18 +7,15 @@ export interface DatabasePriceObject {
   hourly: number;
 }
 
-interface DatabaseClusterSizeObject {
+export interface DatabaseClusterSizeObject {
   quantity: number;
   price: DatabasePriceObject;
 }
 
-interface Engines {
-  [engineType: string]: DatabaseClusterSizeObject[];
-}
-export interface DatabaseType extends Omit<BaseType, 'transfer'> {
+type Engines = Partial<Record<Engine, DatabaseClusterSizeObject[]>>;
+export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   engines: Engines;
-  transfer?: number;
 }
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';

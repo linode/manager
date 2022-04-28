@@ -5,6 +5,7 @@ import {
   DatabasePriceObject,
   DatabaseType,
   Engine,
+  DatabaseClusterSizeObject,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -208,9 +209,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [selectedEngine, setSelectedEngine] = React.useState<
-    Engine | undefined
-  >();
+  const [selectedEngine, setSelectedEngine] = React.useState<Engine>('mysql');
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
@@ -311,7 +310,7 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useFormik({
     initialValues: {
       label: '',
-      engine: '' as Engine,
+      engine: 'mysql' as Engine,
       region: '',
       type: '',
       cluster_size: -1 as ClusterSize,
@@ -388,13 +387,15 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
-    const engineType = values.engine.split('/')[0] || 'mysql'; // If an engine has not yet been selected, default to 'mysql' to prevent crashes from setNodePricing().
+    const engineType = values.engine.split('/')[0];
 
     setNodePricing({
-      single: type.engines[engineType].find((cluster) => cluster.quantity === 1)
-        ?.price,
-      multi: type.engines[engineType].find((cluster) => cluster.quantity === 3)
-        ?.price,
+      single: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
+      )?.price,
+      multi: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
+      )?.price,
     });
     setFieldValue(
       'cluster_size',
@@ -508,7 +509,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
-            selectedEngine={selectedEngine ?? 'mysql'} // `selectedEngine` is undefined upon page load, so pass 'mysql' as a default to prevent SelectPlanPanel.tsx crashes.
+            selectedEngine={selectedEngine}
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
