@@ -175,8 +175,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 };
 
 export interface ExtendedDatabaseType extends DatabaseType {
-  heading?: string;
-  subHeadings?: [string, string];
+  heading: string;
 }
 
 interface NodePricing {
@@ -505,7 +504,7 @@ const DatabaseCreate: React.FC<{}> = () => {
               setFieldValue('type', selected);
             }}
             selectedID={values.type}
-            updateFor={[values.type, errors]}
+            updateFor={[values.type, selectedEngine, errors]}
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate

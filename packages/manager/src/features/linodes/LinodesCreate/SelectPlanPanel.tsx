@@ -167,7 +167,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return arrayToList(withCapability);
   };
 
-  const renderSelection = (type: any, idx: number) => {
+  const renderSelection = (type: ExtendedType, idx: number) => {
     const selectedDiskSize = props.selectedDiskSize
       ? props.selectedDiskSize
       : 0;
@@ -192,9 +192,9 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
 
     // If `selectedEngine` is present, it indicates that <SelectPlanPanel /> is being called from <DatabaseCreate />.
     const databasePrices = selectedEngine
-      ? type.engines[selectedEngine].find(
-          (cluster: any) => cluster.quantity === 1
-        )
+      ? ((type as unknown) as ExtendedDatabaseType).engines[
+          selectedEngine
+        ].find((cluster: any) => cluster.quantity === 1)
       : undefined;
 
     const databaseSubheadings = [
@@ -258,13 +258,20 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             </TableCell>
             <TableCell data-qa-monthly>
               {' '}
-              ${type.price?.monthly ?? databasePrices.price.monthly}
+              $
+              {!selectedEngine
+                ? type.price?.monthly
+                : databasePrices?.price.monthly ?? 0}
             </TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly ?? 0} />
               ) : (
-                `$${type.price?.hourly ?? databasePrices.price.hourly}`
+                `$${
+                  !selectedEngine
+                    ? type.price?.hourly
+                    : databasePrices?.price.hourly ?? 0
+                }`
               )}
             </TableCell>
             <TableCell center noWrap data-qa-ram>
@@ -299,7 +306,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             onClick={onSelect(type.id)}
             heading={type.heading}
             subheadings={
-              selectedEngine ? databaseSubheadings : type.subHeadings
+              !selectedEngine ? type.subHeadings : databaseSubheadings
             }
             disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
             tooltip={tooltip}
