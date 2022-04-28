@@ -101,6 +101,29 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
         },
       },
     ],
+    redis: [
+      {
+        quantity: 1,
+        price: {
+          hourly: 0.08,
+          monthly: 180,
+        },
+      },
+      {
+        quantity: 2,
+        price: {
+          hourly: 0.16,
+          monthly: 360,
+        },
+      },
+      {
+        quantity: 3,
+        price: {
+          hourly: 0.32,
+          monthly: 540,
+        },
+      },
+    ],
   },
   memory: 2048,
   disk: 20480,

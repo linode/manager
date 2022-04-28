@@ -12,7 +12,7 @@ export interface DatabaseClusterSizeObject {
   price: DatabasePriceObject;
 }
 
-type Engines = Partial<Record<Engine, DatabaseClusterSizeObject[]>>;
+type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
   engines: Engines;
