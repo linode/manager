@@ -1,7 +1,7 @@
 import sanitize from 'sanitize-html';
 import { allowedHTMLAttr, allowedHTMLTags } from 'src/constants';
 
-export const sanitizeHTML = (text: string) =>
+export const sanitizeHTML = (text: string, options: sanitize.IOptions = {}) =>
   sanitize(text, {
     allowedTags: allowedHTMLTags,
     allowedAttributes: {
@@ -53,6 +53,7 @@ export const sanitizeHTML = (text: string) =>
       },
     },
     disallowedTagsMode: 'escape',
+    ...options,
   }).trim();
 
 export const isURLValid = (url: string) =>
