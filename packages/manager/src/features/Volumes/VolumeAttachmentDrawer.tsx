@@ -206,7 +206,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         />
         {!(linodeError || linodesError) && (
           <FormHelperText>
-            Only Linodes in this Volume&#39;s region are displayed.
+            Only Linodes in this Volume&rsquo;s region are displayed.
           </FormHelperText>
         )}
 
