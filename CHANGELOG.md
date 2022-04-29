@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-04-28] - v1.64.1
+
+### Changed
+
+- Code refactors to accommodate API database type changes
+
 ## [2022-04-18] - v1.64.0
 
 ### Added:
