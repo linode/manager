@@ -85,7 +85,7 @@ const AutoBackups: React.FC<Props> = (props) => {
               label={
                 backups_enabled || isManagedCustomer
                   ? 'Enabled (Auto enroll all new Linodes in Backups)'
-                  : "Disabled (Don't enroll new Linodes in Backups automatically)"
+                  : 'Disabled (Don\u{2019}t enroll new Linodes in Backups automatically)'
               }
             />
           </Grid>

@@ -90,7 +90,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting this {entity} is permanent and
-          can&apos;t be undone.
+          can&rsquo;t be undone.
         </Typography>
       </Notice>
       <TypeToConfirm

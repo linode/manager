@@ -119,7 +119,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
   const MaintenanceText = () => {
     return (
       <>
-        This Linode&apos;s maintenance window opens at{' '}
+        This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
         <Link className={classes.statusLink} to="/support/tickets?type=open">
           open support tickets.

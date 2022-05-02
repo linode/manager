@@ -124,7 +124,7 @@ const generateIntroText = (
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
-          This Linode&apos;s physical host is currently undergoing maintenance.{' '}
+          This Linode&rsquo;s physical host is currently undergoing maintenance.{' '}
           {maintenanceActionTextMap[type]} Please refer to
           <Link to="/support/tickets"> your Support tickets </Link> for more
           information.
@@ -142,7 +142,7 @@ const generateIntroText = (
 
       return (
         <React.Fragment>
-          This Linode&apos;s physical host will be undergoing maintenance at{' '}
+          This Linode&rsquo;s physical host will be undergoing maintenance at{' '}
           {rawDate}
           {'. '}
           {maintenanceActionTextMap[type]}
@@ -164,7 +164,7 @@ const generateIntroText = (
   /** We are on the Dashboard or Linode Landing page. */
   return (
     <React.Fragment>
-      Maintenance is required for one or more of your Linodes&apos; physical
+      Maintenance is required for one or more of your Linodes&rsquo; physical
       hosts. Your maintenance times will be listed under the &quot;Status&quot;
       column
       {!location.pathname.includes('/linodes') && (

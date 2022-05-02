@@ -258,7 +258,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
             <strong>Warning:</strong> Deleting a bucket is permanent and
-            can&apos;t be undone.
+            can&rsquo;t be undone.
           </Typography>
         </Notice>
         <Typography className={classes.copy}>

@@ -93,7 +93,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           {disks.length === 1 ? 'image' : 'images'}.
         </Typography>
         <Typography className={classes.text}>
-          <strong>Note: </strong> This section represents your plan&#39;s
+          <strong>Note: </strong> This section represents your plan&rsquo;s
           available storage that has been allocated to your disks. Install{' '}
           <Link to="/longview">Longview</Link> or run:
         </Typography>
