@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-05-02] - v1.65.0
+
+### Added:
+- Outlined chip variant
+
+### Changed:
+- Hyphenate “type-to-confirm”
+- Curly all single quotes
+- Max node pool copy
+- Limit collection of country and tax information
+- Spacing on DBaaS Settings page
+- Unbold Object links in Object Storage
+- All No Stats Available States
+
+### Fixed:
+- Linode Activity Feed undefined loading state
+- Button text not vertically centered in Firefox
+
 ## [2022-04-28] - v1.64.1
 
 ### Changed

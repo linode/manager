@@ -1,3 +1,7 @@
+## [2022-05-02] - v0.10.0
+### Changed:
+- Replace all single quotes with curly quotes
+
 ## [2022-04-18] - v0.9.0
 ### Changed:
 - updateDatabaseSchema to include maintenance updates
