@@ -11,6 +11,11 @@ import IconButton from 'src/components/IconButton';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& $textField': {
+      width: 53,
+    },
+  },
   typeHeader: {
     fontSize: '16px',
     fontWeight: 600,
@@ -65,6 +70,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
         display="flex"
         flexDirection="column"
         data-testid="node-pool-summary"
+        className={classes.root}
       >
         <Box display="flex" justifyContent="space-between">
           <div>
