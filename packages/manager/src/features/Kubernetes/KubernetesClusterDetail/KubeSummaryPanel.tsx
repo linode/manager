@@ -588,7 +588,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             : undefined
         }
       >
-        This will delete and regenerate the cluster&apos;s Kubeconfig file. You
+        This will delete and regenerate the cluster&rsquo;s Kubeconfig file. You
         will no longer be able to access this cluster via your previous
         Kubeconfig file. This action cannot be undone.
       </ConfirmationDialog>

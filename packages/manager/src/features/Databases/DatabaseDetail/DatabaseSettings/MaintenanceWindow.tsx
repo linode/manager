@@ -189,8 +189,8 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
           ) : null}
           <Typography className={classes.sectionText}>
             OS and DB engine updates will be performed on the schedule below.
-            Select the frequency, day, and time you&apos;d prefer maintenance to
-            occur.{' '}
+            Select the frequency, day, and time you&rsquo;d prefer maintenance
+            to occur.{' '}
             {database.cluster_size !== 3
               ? 'For non-HA plans, expect downtime during this window.'
               : null}
