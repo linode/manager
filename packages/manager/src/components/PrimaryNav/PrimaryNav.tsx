@@ -179,7 +179,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           display: 'Databases',
           href: '/databases',
           icon: <Database />,
-          isBeta: true,
+          isBeta: flags.databaseBeta,
         },
         {
           display: 'Kubernetes',
@@ -230,6 +230,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       domains.lastUpdated,
       _isLargeAccount,
       allowObjPrefetch,
+      flags.databaseBeta,
     ]
   );
 
