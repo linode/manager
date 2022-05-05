@@ -1574,7 +1574,7 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Wazuh through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/webuzo-marketplace-app/',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
       },
     ],
     related_info: [
