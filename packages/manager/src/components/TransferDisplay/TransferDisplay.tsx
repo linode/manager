@@ -202,7 +202,7 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
         </strong>
       </Typography>
       <Typography className={classes.proratedNotice}>
-        Your account&apos;s network transfer pool adds up all the included
+        Your account&rsquo;s network transfer pool adds up all the included
         transfer associated with the active Linode services on your account, and
         is prorated based on service creation and deletion dates.
       </Typography>

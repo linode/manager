@@ -155,8 +155,17 @@ const databases = [
   }),
 
   rest.get('*/databases/engines', (req, res, ctx) => {
-    const engine = databaseEngineFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(engine)));
+    const engine1 = databaseEngineFactory.buildList(3);
+    const engine2 = databaseEngineFactory.buildList(3, {
+      engine: 'postgresql',
+    });
+    const engine3 = databaseEngineFactory.buildList(3, {
+      engine: 'mongodb',
+    });
+
+    const combinedList = [...engine1, ...engine2, ...engine3];
+
+    return res(ctx.json(makeResourcePage(combinedList)));
   }),
 
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
@@ -350,6 +359,10 @@ export const handlers = [
     return res(ctx.json(transfer));
   }),
   rest.get('*/instances/*/stats*', async (req, res, ctx) => {
+    const stats = linodeStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
+  rest.get('*/instances/*/stats', async (req, res, ctx) => {
     const stats = linodeStatsFactory.build();
     return res(ctx.json(stats));
   }),

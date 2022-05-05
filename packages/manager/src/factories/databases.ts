@@ -1,15 +1,15 @@
-import * as Factory from 'factory.ts';
-import { pickRandom, randomDate } from 'src/utilities/random';
-import { v4 } from 'uuid';
 import {
   Database,
   DatabaseBackup,
+  DatabaseEngine,
   DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
-  DatabaseEngine,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
+import * as Factory from 'factory.ts';
+import { pickRandom, randomDate } from 'src/utilities/random';
+import { v4 } from 'uuid';
 
 // These are not all of the possible statuses, but these are some common ones.
 const possibleStatuses: DatabaseStatus[] = [
@@ -31,27 +31,103 @@ export const databaseTypeFactory = Factory.Sync.makeFactory<DatabaseType>({
   id: Factory.each((i) => `g6-standard-${i}`),
   label: Factory.each((i) => `Linode ${i} GB`),
   class: 'standard',
-  cluster_size: [
-    {
-      quantity: 1,
-      price: {
-        hourly: 0.4,
-        monthly: 60,
+  engines: {
+    mysql: [
+      {
+        quantity: 1,
+        price: {
+          hourly: 0.09,
+          monthly: 60,
+        },
       },
-    },
-    {
-      quantity: 3,
-      price: {
-        hourly: 0.3,
-        monthly: 90,
+      {
+        quantity: 2,
+        price: {
+          hourly: 0.15,
+          monthly: 100,
+        },
       },
-    },
-  ],
+      {
+        quantity: 3,
+        price: {
+          hourly: 0.21,
+          monthly: 140,
+        },
+      },
+    ],
+    postgresql: [
+      {
+        quantity: 1,
+        price: {
+          hourly: 0.05,
+          monthly: 70,
+        },
+      },
+      {
+        quantity: 2,
+        price: {
+          hourly: 0.12,
+          monthly: 116,
+        },
+      },
+      {
+        quantity: 3,
+        price: {
+          hourly: 0.25,
+          monthly: 180,
+        },
+      },
+    ],
+    mongodb: [
+      {
+        quantity: 1,
+        price: {
+          hourly: 0.03,
+          monthly: 50,
+        },
+      },
+      {
+        quantity: 2,
+        price: {
+          hourly: 0.08,
+          monthly: 88,
+        },
+      },
+      {
+        quantity: 3,
+        price: {
+          hourly: 0.22,
+          monthly: 116,
+        },
+      },
+    ],
+    redis: [
+      {
+        quantity: 1,
+        price: {
+          hourly: 0.08,
+          monthly: 180,
+        },
+      },
+      {
+        quantity: 2,
+        price: {
+          hourly: 0.16,
+          monthly: 360,
+        },
+      },
+      {
+        quantity: 3,
+        price: {
+          hourly: 0.32,
+          monthly: 540,
+        },
+      },
+    ],
+  },
   memory: 2048,
-  transfer: 30,
   disk: 20480,
   vcpus: 2,
-  deprecated: false,
 });
 
 export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance>(
@@ -118,7 +194,7 @@ export const databaseBackupFactory = Factory.Sync.makeFactory<DatabaseBackup>({
 });
 
 export const databaseEngineFactory = Factory.Sync.makeFactory<DatabaseEngine>({
-  id: Factory.each((i) => `mysql/${i}`),
+  id: Factory.each((i) => `test/${i}`),
   engine: 'mysql',
   version: Factory.each((i) => `${i}`),
   deprecated: false,

@@ -97,7 +97,7 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
           onSelect={(newType: string) => setSelectedType(newType)}
           error={apiError}
           header="Add Node Pools"
-          copy="Add groups of Linodes to your cluster with a chosen size."
+          copy="Add groups of Linodes to your cluster. You can have a maximum of 100 Linodes per node pool."
           updatePlanCount={updatePlanCount}
           submitForm={submitForm}
           isOnCreate={isOnCreate}

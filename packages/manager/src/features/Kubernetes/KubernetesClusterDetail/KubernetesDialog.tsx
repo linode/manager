@@ -95,7 +95,7 @@ export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
             {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
           </strong>
           that will be deleted along with the cluster. Deleting a cluster is
-          permanent and can&apos;t be undone.
+          permanent and can&rsquo;t be undone.
         </Typography>
       </Notice>
       <TypeToConfirm

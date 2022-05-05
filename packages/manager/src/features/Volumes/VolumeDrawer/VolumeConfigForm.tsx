@@ -40,8 +40,8 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = (props) => {
 
       <div className={classes.copySection}>
         <Typography variant="body1" data-qa-config-help-msg>
-          To get started with a new volume, you'll want to create a filesystem
-          on it:
+          To get started with a new volume, you&rsquo;ll want to create a
+          filesystem on it:
         </Typography>
         <CopyableTextField
           className={classes.copyField}
@@ -81,8 +81,8 @@ const VolumeConfigDrawer: React.FC<CombinedProps> = (props) => {
       <div className={classes.copySection}>
         <Typography variant="body1" data-qa-config-help-msg>
           If you want the volume to automatically mount every time your Linode
-          boots, you'll want to add a line like the following to your /etc/fstab
-          file:
+          boots, you&rsquo;ll want to add a line like the following to your
+          /etc/fstab file:
         </Typography>
         <CopyableTextField
           className={classes.copyField}

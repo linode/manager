@@ -130,7 +130,7 @@ export class OtherWays extends React.Component<CombinedProps, State> {
         <Grid container className={classes.wrapper}>
           <Grid item xs={12}>
             <Typography variant="h2" className={classes.heading}>
-              Didn&apos;t find what you need? Get help.
+              Didn&rsquo;t find what you need? Get help.
             </Typography>
           </Grid>
           <Grid item xs={12} md={4}>
