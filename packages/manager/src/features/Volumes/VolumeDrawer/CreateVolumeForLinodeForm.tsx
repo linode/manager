@@ -112,11 +112,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
         /** Status holds our success and generalError messages. */
         setStatus(undefined);
-
         createVolume({
           label,
           size: maybeCastToNumber(size),
-          linode_id: maybeCastToNumber(linode_id),
+          linode_id: linode_id,
           config_id:
             // If the config_id still set to default value of -1, set this to undefined, so volume gets created on back-end according to the API logic
             config_id === -1 ? undefined : maybeCastToNumber(config_id),

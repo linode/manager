@@ -43,7 +43,6 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
       profile,
       grants,
     } = this.props;
-
     const volumesPermissions = getGrants(grants.data, 'volume');
 
     const volumePermissions = volumesPermissions.find(

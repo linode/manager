@@ -22,7 +22,7 @@ export const CreateVolumeSchema = object({
     is: (id: any) => id === undefined || id === '',
     then: string().required('Must provide a region or a Linode ID.'),
   }),
-  linode_id: number(),
+  // linode_id: number(),
   size: createSizeValidation(1),
   label: string()
     .required('Label is required.')
