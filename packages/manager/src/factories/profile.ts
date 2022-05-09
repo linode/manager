@@ -36,8 +36,8 @@ export const phoneNumberVerificationCodeFactory = Factory.Sync.makeFactory<Phone
 
 export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestions>(
   {
-    'Security question 1': 'Answer 1',
-    'Security question 2': 'Answer 2',
-    'Security question 3': 'Answer 3',
+    // "What were the last four digits of your childhood phone number?": 'Answer 1',
+    // "In what town or city did your parents meet?": 'Answer 2',
+    // "What are the last five digits of your driver's license number?": 'Answer 3',
   }
 );

@@ -76,4 +76,10 @@ export interface PhoneNumberVerificationCode {
   otp_code: number;
 }
 
-export type SecurityQuestions = Record<string, string>;
+export type AnsweredSecurityQuestions = Record<string, string>;
+
+export type NullSecurityQuestions = {};
+
+export type SecurityQuestions =
+  | AnsweredSecurityQuestions
+  | NullSecurityQuestions;
