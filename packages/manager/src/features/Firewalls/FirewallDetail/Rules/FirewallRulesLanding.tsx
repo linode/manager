@@ -301,9 +301,9 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
               )}
             >
               <Typography variant="subtitle1">
-                The changes you made to this Firewall haven&apos;t been applied.
-                If you navigate away from this page, your changes will be
-                discarded.
+                The changes you made to this Firewall haven&rsquo;t been
+                applied. If you navigate away from this page, your changes will
+                be discarded.
               </Typography>
             </ConfirmationDialog>
           );

@@ -166,7 +166,7 @@ const UsersLanding: React.FC<Props> = (props) => {
                 <UserIcon className={classes.avatar} />
               ) : (
                 <img
-                  alt={`user ${user.username}'s avatar`}
+                  alt={`user ${user.username}\u{2019}s avatar`}
                   src={user.gravatarUrl}
                   className={classes.avatar}
                 />

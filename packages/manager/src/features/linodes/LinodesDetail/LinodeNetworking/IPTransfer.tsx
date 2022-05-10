@@ -492,7 +492,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
         <Typography className={classes.networkActionText}>
           If you have two Linodes in the same data center, you can use the IP
           transfer feature to switch their IP addresses. This could be useful in
-          several situations. For example, if you&#39;ve built a new server to
+          several situations. For example, if you&rsquo;ve built a new server to
           replace an old one, you could swap IP addresses instead of updating
           the DNS records.
         </Typography>
@@ -521,7 +521,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             </Grid>
             {linodes.length === 0 && searchText === '' ? (
               <Typography className={classes.emptyStateText}>
-                You have no other linodes in this Linode&#39;s datacenter with
+                You have no other linodes in this Linode&rsquo;s datacenter with
                 which to transfer IPs.
               </Typography>
             ) : (

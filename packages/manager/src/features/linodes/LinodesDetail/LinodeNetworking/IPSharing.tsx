@@ -341,7 +341,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
               </Grid>
               {noChoices ? (
                 <Typography className={classes.noIPsMessage}>
-                  You have no other Linodes in this Linode&apos;s datacenter
+                  You have no other Linodes in this Linode&rsquo;s datacenter
                   with which to share IPs.
                 </Typography>
               ) : (

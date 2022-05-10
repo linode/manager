@@ -7,15 +7,15 @@ export interface DatabasePriceObject {
   hourly: number;
 }
 
-interface DatabaseClusterSizeObject {
+export interface DatabaseClusterSizeObject {
   quantity: number;
   price: DatabasePriceObject;
 }
 
+type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
-  deprecated: boolean;
-  cluster_size: DatabaseClusterSizeObject[];
+  engines: Engines;
 }
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
