@@ -771,5 +771,41 @@ export default (e: Event): string => {
   }
 
   /** return either the message or an empty string */
-  return message;
+  return applyBolding(e, message);
 };
+
+function applyBolding(event: Event, message: string) {
+  const wordsToBold: string[] = [
+    'updated',
+    'deleted',
+    'created',
+    'attached',
+    'detached',
+    'booted',
+    'shut down',
+    'resized',
+    'Resize',
+    'cloned',
+    'enabled',
+    'disabled',
+    'revised',
+    'Upgrade',
+    'failed',
+  ];
+
+  if (event.entity) {
+    wordsToBold.push(event.entity.label);
+  }
+
+  if (event.secondary_entity) {
+    wordsToBold.push(event.secondary_entity.label);
+  }
+
+  let newMessage = message;
+
+  for (const word of wordsToBold) {
+    newMessage = newMessage.replace(word, `**${word}**`);
+  }
+
+  return newMessage;
+}
