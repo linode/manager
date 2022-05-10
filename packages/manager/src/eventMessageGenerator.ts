@@ -791,6 +791,8 @@ function applyBolding(event: Event, message: string) {
     'revised',
     'Upgrade',
     'failed',
+    'added',
+    'removed',
   ];
 
   if (event.entity) {
