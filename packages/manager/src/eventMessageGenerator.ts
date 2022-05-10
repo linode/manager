@@ -793,6 +793,7 @@ function applyBolding(event: Event, message: string) {
     'failed',
     'added',
     'removed',
+    'migrated',
   ];
 
   if (event.entity) {
