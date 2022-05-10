@@ -775,6 +775,10 @@ export default (e: Event): string => {
 };
 
 function applyBolding(event: Event, message: string) {
+  if (!message) {
+    return '';
+  }
+
   const wordsToBold: string[] = [
     'updated',
     'deleted',
