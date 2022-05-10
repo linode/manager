@@ -3,20 +3,26 @@ import TextField from 'src/components/TextField';
 
 interface Props {
   answer?: string;
-  index: number;
   isReadOnly: boolean;
+  name: string;
+  setFieldValue: (field: string, value: string) => void;
 }
 
 const Answer = (props: Props) => {
-  const { index, isReadOnly } = props;
+  const { isReadOnly, name, answer, setFieldValue } = props;
+  const label = name.replace('answer-', 'Answer ');
   if (isReadOnly) {
     return <></>;
   }
   return (
     <TextField
-      name={`answer-${index}`}
-      label={`Answer ${index}`}
+      name={name}
+      label={label}
       placeholder="Type your answer"
+      defaultValue={answer}
+      onChange={(e) => {
+        setFieldValue(name, e.target.value);
+      }}
     />
   );
 };
