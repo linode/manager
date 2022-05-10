@@ -18,8 +18,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: theme.spacing(),
     },
     '&:hover': {
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       textDecoration: 'underline',
+    },
+  },
+  '@supports (-moz-appearance: none)': {
+    /* Fix text alignment for Firefox */
+    root: {
+      '& span': {
+        top: 1,
+      },
     },
   },
 }));

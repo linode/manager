@@ -22,7 +22,7 @@ import RestrictedUserLabel from './RestrictedUserLabel';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& a': {
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
     },
     '& a:hover': {
       color: theme.palette.primary.main,

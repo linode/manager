@@ -10,7 +10,6 @@ export type StyleProps = WithStyles<ClassNames> & WithTheme;
 
 type ClassNames =
   | 'bodyRow'
-  | 'status'
   | 'statusCell'
   | 'statusCellMaintenance'
   | 'statusLink'
@@ -29,6 +28,7 @@ const styles = (theme: Theme) =>
     bodyRow: {
       height: 'auto',
       '&:hover': {
+        backgroundColor: theme.bg.lightBlue1,
         '& [data-qa-copy-ip]': {
           opacity: 1,
         },
@@ -38,12 +38,7 @@ const styles = (theme: Theme) =>
       display: 'inline-block',
     },
     statusCell: {
-      whiteSpace: 'nowrap',
       width: '17%',
-    },
-    status: {
-      display: 'flex',
-      alignItems: 'center',
     },
     statusCellMaintenance: {
       [theme.breakpoints.up('md')]: {
@@ -59,7 +54,7 @@ const styles = (theme: Theme) =>
         },
       },
       '& button': {
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         padding: '0 6px',
         position: 'relative',
       },
@@ -67,11 +62,11 @@ const styles = (theme: Theme) =>
     statusLink: {
       backgroundColor: 'transparent',
       border: 'none',
-      color: theme.cmrTextColors.linkActiveLight,
+      color: theme.textColors.linkActiveLight,
       cursor: 'pointer',
       padding: 0,
       '& p': {
-        color: theme.cmrTextColors.linkActiveLight,
+        color: theme.textColors.linkActiveLight,
         fontFamily: theme.font.bold,
       },
     },
@@ -79,6 +74,7 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
     },
     ipCell: {
+      paddingRight: 0,
       width: '14%',
     },
     ipCellWrapper: {
@@ -90,11 +86,17 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingBottom: 0,
       },
+      '& button:hover': {
+        backgroundColor: 'transparent',
+      },
       '& [data-qa-copy-ip]': {
         opacity: 0,
       },
       '& svg': {
         marginTop: 2,
+        '&:hover': {
+          color: theme.palette.primary.main,
+        },
       },
     },
     regionCell: {

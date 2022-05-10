@@ -4,12 +4,7 @@ import Info from 'src/assets/icons/info.svg';
 import Link from 'src/assets/icons/moreInfo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { APP_ROOT } from 'src/constants';
@@ -18,68 +13,52 @@ import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
 import TipSection from './TipSection';
 
-type ClassNames =
-  | 'logo'
-  | 'appName'
-  | 'summary'
-  | 'description'
-  | 'image'
-  | 'wrapLogo'
-  | 'wrapAppName';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    logo: {
-      marginRight: theme.spacing(1),
-    },
-    appName: {
-      fontSize: '2.0rem',
-      fontFamily: theme.font.normal,
-      color: theme.color.grey4,
-      lineHeight: '2.5rem',
-    },
-    summary: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-      textAlign: 'center',
-    },
-    description: {
-      lineHeight: 1.5,
-    },
-
-    image: {
-      maxWidth: 50,
-    },
-    wrapLogo: {
-      alignSelf: 'flex-start',
-      marginLeft: -theme.spacing(3),
-    },
-    wrapAppName: {
-      maxWidth: 'fit-content',
-      minWidth: 170,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  logo: {
+    marginRight: theme.spacing(1),
+  },
+  appName: {
+    fontSize: '2.0rem',
+    fontFamily: theme.font.normal,
+    color: theme.color.grey4,
+    lineHeight: '2.5rem',
+  },
+  summary: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    textAlign: 'center',
+  },
+  description: {
+    lineHeight: 1.5,
+  },
+  image: {
+    maxWidth: 50,
+  },
+  wrapLogo: {
+    marginLeft: -theme.spacing(3),
+  },
+  wrapAppName: {
+    maxWidth: 'fit-content',
+    minWidth: 170,
+  },
+}));
 
 interface Props {
-  stackscriptID: string;
+  stackScriptLabel: string;
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
+  const { stackScriptLabel, open, onClose } = props;
+  const classes = useStyles();
 
-export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
-  const { classes, stackscriptID, open, onClose } = props;
-  const app = oneClickApps.find((eachApp) => {
-    const cleanedAppName = eachApp.name.replace(
-      /[-\/\\^$*+?.()|[\]{}]/g,
-      '\\$&'
-    );
-    const strippedAppName = cleanedAppName.replace('&reg;', '');
-    const regex = new RegExp(strippedAppName);
-    return Boolean(stackscriptID.match(regex));
+  const app = oneClickApps.find((app) => {
+    const cleanedStackScriptLabel = stackScriptLabel
+      .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
+      .trim();
+    const cleanedAppName = app.name.replace('&reg;', '');
+    return cleanedStackScriptLabel === cleanedAppName;
   }); // This is horrible
   if (!app) {
     return null;
@@ -156,6 +135,4 @@ export const AppDetailDrawer: React.FunctionComponent<CombinedProps> = (
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(AppDetailDrawer);
+export default AppDetailDrawer;

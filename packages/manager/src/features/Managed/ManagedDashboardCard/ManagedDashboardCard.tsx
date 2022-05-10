@@ -15,7 +15,7 @@ import CircleProgress from 'src/components/CircleProgress/CircleProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     margin: 0,
     width: '100%',
     [theme.breakpoints.up('sm')]: {

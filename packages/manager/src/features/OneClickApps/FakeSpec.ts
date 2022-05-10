@@ -73,6 +73,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/antmediaserver_color.svg',
   },
   {
+    name: 'Ant Media Enterprise Edition',
+    description: `Ant Media Server makes it easy to set up a video streaming platform with ultra low latency. The Enterprise edition supports WebRTC Live Streaming in addition to CMAF and HLS streaming. Set up live restreaming to social media platforms to reach more viewers.`,
+    summary: 'Highly scalable and feature-rich live video streaming platform.',
+    related_guides: [
+      {
+        title:
+          'Deploying Ant Media Enterprise Edition through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://antmedia.io/',
+        href: 'https://antmedia.io/',
+      },
+    ],
+    logo_url: 'assets/antmediaserver_color.svg',
+  },
+  {
     name: 'Ark',
     description: `In Ark: Survival Evolved, you are placed on a series of fictional islands inhabited by dinosaurs and other prehistoric animals. Ark is an ongoing battle where animals and other players have the ability to destroy you. You must build structures, farm resources, breed dinosaurs, and even set up
       trading hubs with neighboring tribes. Hosting an Ark server gives you control of the entire game. You can define the leveling speed, the amount of players, and the types of weapons available.`,
@@ -554,6 +574,44 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/jitsi_color.svg',
+  },
+  {
+    name: 'Joomla',
+    description: `Free open source CMS optimized for building custom functionality and design.`,
+    summary: 'Flexible and security-focused content management system.',
+    related_guides: [
+      {
+        title: 'Deploying Joomla through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/joomla',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.joomla.org/',
+        href: 'https://www.joomla.org/',
+      },
+    ],
+    logo_url: 'assets/joomla_color.svg',
+  },
+  {
+    name: 'Joplin',
+    description: `Capture your thoughts and securely access them from any device with a highly customizable note-taking software.`,
+    summary: 'Open source multimedia note-taking app.',
+    related_guides: [
+      {
+        title: 'Deploying Joplin through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/joplin',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://joplinapp.org/',
+        href: 'https://joplinapp.org/',
+      },
+    ],
+    logo_url: 'assets/joplin_color.svg',
   },
   {
     name: 'Kepler Builder',
@@ -1119,6 +1177,25 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/prometheus_color.svg',
   },
   {
+    name: 'Prometheus & Grafana',
+    description: `Free industry-standard monitoring tools that work better together. Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed. Use Grafana to create visuals, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
+    summary: 'Open source metrics and monitoring for real-time insights.',
+    related_guides: [
+      {
+        title: 'Deploying Prometheus & Grafana through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://prometheus.io/docs/visualization/grafana/',
+        href: 'https://prometheus.io/docs/visualization/grafana/',
+      },
+    ],
+    logo_url: 'assets/prometheus_grafana_color.svg',
+  },
+  {
     name: 'RabbitMQ',
     description: `Connect and scale applications with asynchronous messaging and highly available work queues, all controlled through an intuitive management UI.`,
     summary: 'Most popular open source message broker',
@@ -1497,7 +1574,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Wazuh through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/guides/webuzo-marketplace-app/',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
       },
     ],
     related_info: [

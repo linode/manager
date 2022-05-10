@@ -5,6 +5,7 @@ import {
   DatabasePriceObject,
   DatabaseType,
   Engine,
+  DatabaseClusterSizeObject,
   ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -25,6 +26,7 @@ import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -35,11 +37,11 @@ import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
+import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -55,6 +57,7 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -118,7 +121,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   notice: {
-    borderColor: theme.color.green,
     fontSize: 15,
     lineHeight: '18px',
   },
@@ -175,7 +177,6 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 
 export interface ExtendedDatabaseType extends DatabaseType {
   heading: string;
-  subHeadings: [string, string];
 }
 
 interface NodePricing {
@@ -186,6 +187,7 @@ interface NodePricing {
 const DatabaseCreate: React.FC<{}> = () => {
   const classes = useStyles();
   const history = useHistory();
+  const flags = useFlags();
 
   const {
     data: regionsData,
@@ -207,6 +209,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
+  const [selectedEngine, setSelectedEngine] = React.useState<Engine>('mysql');
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
@@ -223,20 +226,13 @@ const DatabaseCreate: React.FC<{}> = () => {
       return [];
     }
     return dbtypes.map((type) => {
-      const { label, memory, vcpus, disk, cluster_size } = type;
+      const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const singleNodePricing = cluster_size.find(
-        (cluster) => cluster.quantity === 1
-      )?.price;
+
       return {
         ...type,
-        price: singleNodePricing,
         label: formattedLabel,
         heading: formattedLabel,
-        subHeadings: [
-          `$${singleNodePricing?.monthly}/mo ($${singleNodePricing?.hourly}/hr)`,
-          typeLabelDetails(memory, disk, vcpus),
-        ] as [string, string],
       };
     });
   }, [dbtypes]);
@@ -314,7 +310,7 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useFormik({
     initialValues: {
       label: '',
-      engine: '' as Engine,
+      engine: 'mysql' as Engine,
       region: '',
       type: '',
       cluster_size: -1 as ClusterSize,
@@ -391,10 +387,15 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
+    const engineType = values.engine.split('/')[0];
+
     setNodePricing({
-      single: type.cluster_size.find((cluster) => cluster.quantity === 1)
-        ?.price,
-      multi: type.cluster_size.find((cluster) => cluster.quantity === 3)?.price,
+      single: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
+      )?.price,
+      multi: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
+      )?.price,
     });
     setFieldValue(
       'cluster_size',
@@ -404,7 +405,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       'replication_type',
       values.cluster_size === 1 ? 'none' : 'semi_synch'
     );
-  }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
+  }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
@@ -416,6 +417,22 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      {flags.databaseBeta ? (
+        <DismissibleBanner
+          preferenceKey="dbaas-open-beta-notice"
+          productInformationIndicator
+        >
+          <Typography>
+            Managed Database for MySQL is available in a free, open beta period
+            until May 2nd, 2022. This is a beta environment and should not be
+            used to support production workloads. Review the{' '}
+            <Link to="https://www.linode.com/legal-eatp">
+              Early Adopter Program SLA
+            </Link>
+            .
+          </Typography>
+        </DismissibleBanner>
+      ) : null}
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}
@@ -426,9 +443,9 @@ const DatabaseCreate: React.FC<{}> = () => {
           },
         ]}
         labelOptions={{
-          suffixComponent: (
+          suffixComponent: flags.databaseBeta ? (
             <Chip className={classes.chip} label="beta" component="span" />
-          ),
+          ) : null,
         }}
       />
       <Paper>
@@ -460,6 +477,9 @@ const DatabaseCreate: React.FC<{}> = () => {
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
+
+              const selection = selected.value.split('/')[0];
+              setSelectedEngine(selection as Engine);
             }}
             isClearable={false}
           />
@@ -473,18 +493,7 @@ const DatabaseCreate: React.FC<{}> = () => {
             regions={regionsData}
             selectedID={values.region}
           />
-          <Typography style={{ marginTop: 8 }}>
-            <a
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-              href="https://www.linode.com/speed-test/"
-            >
-              Use our speedtest page
-            </a>
-            {` `}
-            to find the best region for your current location.
-          </Typography>
+          <div style={{ marginTop: 8 }}>{regionHelperText()}</div>
         </Grid>
         <Divider spacingTop={38} spacingBottom={12} />
         <Grid item>
@@ -496,10 +505,11 @@ const DatabaseCreate: React.FC<{}> = () => {
               setFieldValue('type', selected);
             }}
             selectedID={values.type}
-            updateFor={[values.type, errors]}
+            updateFor={[values.type, selectedEngine, errors]}
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
+            selectedEngine={selectedEngine}
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
@@ -541,14 +551,19 @@ const DatabaseCreate: React.FC<{}> = () => {
             </RadioGroup>
           </FormControl>
           <Grid item xs={12} md={8}>
-            <Notice success className={classes.notice}>
-              <strong>
-                Notice: There is no charge for database clusters during beta.
-              </strong>{' '}
-              You will be notified before the beta period ends and database
-              clusters are subject to charges.{' '}
-              <Link to="https://www.linode.com/pricing/">View pricing</Link>.
-            </Notice>
+            {flags.databaseBeta ? (
+              <Notice informational className={classes.notice}>
+                <strong>
+                  Notice: There is no charge for database clusters during beta.
+                </strong>{' '}
+                Database clusters will be subject to charges when the beta
+                period ends on May 2nd, 2022.{' '}
+                <Link to="https://www.linode.com/pricing/#databases">
+                  View pricing
+                </Link>
+                .
+              </Notice>
+            ) : undefined}
           </Grid>
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />

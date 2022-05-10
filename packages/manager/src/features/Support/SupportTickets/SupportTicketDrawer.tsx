@@ -504,7 +504,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
           {generalError && <Notice error text={generalError} data-qa-notice />}
 
           <Typography data-qa-support-ticket-helper-text>
-            {`We love our customers, and we're here to help if you need us.
+            {`We love our customers, and we\u{2019}re here to help if you need us.
           Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see `}
             <a
@@ -553,7 +553,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
                   />
                   {!areEntitiesLoading && entityOptions.length === 0 ? (
                     <FormHelperText>
-                      You don&apos;t have any ${entityIdToNameMap[entityType]}s
+                      You don&rsquo;t have any {entityIdToNameMap[entityType]}s
                       on your account.
                     </FormHelperText>
                   ) : null}

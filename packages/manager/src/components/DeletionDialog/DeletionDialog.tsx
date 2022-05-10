@@ -1,14 +1,18 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
 import { titlecase } from 'src/features/linodes/presentation';
 import { capitalize } from 'src/utilities/capitalize';
 import { DialogProps } from '../Dialog';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -28,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Props;
+type CombinedProps = Props & PreferencesProps;
 
 const DeletionDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -40,10 +44,15 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
     onDelete,
     open,
     loading,
+    preferences,
     typeToConfirm,
+    getUserPreferences,
+    updateUserPreferences,
     ...rest
   } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
+  const typeToConfirmRequired =
+    typeToConfirm && preferences?.type_to_confirm !== false;
   const renderActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
@@ -52,7 +61,7 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
       <Button
         buttonType="primary"
         onClick={onDelete}
-        disabled={typeToConfirm && confirmationText !== label}
+        disabled={typeToConfirmRequired && confirmationText !== label}
         loading={loading}
         data-qa-confirm
         data-testid="delete-btn"
@@ -78,27 +87,32 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
       {...rest}
     >
       {error && <Notice error text={error} />}
-      <Typography>
-        Deleting this {entity} is permanent and can&apos;t be undone.
-      </Typography>
-      {typeToConfirm && (
-        <>
-          <Typography className={classes.text}>
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> Deleting this {entity} is permanent and
+          can&rsquo;t be undone.
+        </Typography>
+      </Notice>
+      <TypeToConfirm
+        onChange={(input) => {
+          setConfirmationText(input);
+        }}
+        value={confirmationText}
+        label={`${capitalize(entity)} Name:`}
+        placeholder={label}
+        visible={typeToConfirmRequired}
+        confirmationText={
+          <Typography component={'span'} className={classes.text}>
             To confirm deletion, type the name of the {entity} (
             <strong>{label}</strong>) in the field below:
           </Typography>
-          <TextField
-            label={`${capitalize(entity)} Name:`}
-            value={confirmationText}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setConfirmationText(e.target.value)
-            }
-            placeholder={label}
-          />
-        </>
-      )}
+        }
+      />
     </ConfirmationDialog>
   );
 };
 
-export default React.memo(DeletionDialog);
+export default compose<CombinedProps, Props>(
+  React.memo,
+  withPreferences()
+)(DeletionDialog);

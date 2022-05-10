@@ -1,14 +1,8 @@
-import { makeTestLabel } from '../../support/api/common';
-import {
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from '../../support/helpers';
-import strings from '../../support/cypresshelpers';
+import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
+import { randomLabel, randomString } from 'support/util/random';
 
 const createLinode = () => {
-  const password = strings.randomPass();
+  const password = randomString(32);
   fbtClick('Select a Region');
   fbtClick('Newark, NJ');
   fbtClick('Shared CPU');
@@ -21,7 +15,7 @@ describe('stackscripts', () => {
   it('create stackscript, use it to deploy linode', () => {
     const disk = 'Alpine 3.15';
     cy.intercept('POST', `*/linode/instances`).as('createLinode');
-    const ssLabel = makeTestLabel();
+    const ssLabel = randomLabel();
     cy.visitWithLogin('/stackscripts');
     cy.url().should('endWith', '/account');
     fbtVisible('Create StackScript').click();

@@ -13,14 +13,14 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { renderUnitPrice } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
-    border: `1px solid ${theme.cmrBorderColors.borderTable}`,
+    border: `1px solid ${theme.borderColors.borderTable}`,
     '& thead th': {
-      borderBottom: `1px solid ${theme.cmrBorderColors.borderTable}`,
+      borderBottom: `1px solid ${theme.borderColors.borderTable}`,
       '&:last-of-type': {
         paddingRight: 15,
       },
@@ -140,22 +140,6 @@ const RenderData: React.FC<{
   );
 };
 
-const RenderLoading: React.FC<{}> = () => {
-  return <TableRowLoading colSpan={8} />;
-};
-
-const RenderErrors: React.FC<{
-  errors: APIError[];
-}> = (props) => {
-  return (
-    <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
-  );
-};
-
-const RenderEmpty: React.FC<{}> = () => {
-  return <TableRowEmptyState colSpan={8} />;
-};
-
 const MaybeRenderContent: React.FC<{
   loading: boolean;
   errors?: APIError[];
@@ -164,18 +148,20 @@ const MaybeRenderContent: React.FC<{
   const { loading, errors, items } = props;
 
   if (loading) {
-    return <RenderLoading />;
+    return <TableRowLoading columns={8} />;
   }
 
   if (errors) {
-    return <RenderErrors errors={errors} />;
+    return (
+      <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
+    );
   }
 
   if (items && items.length > 0) {
     return <RenderData items={items} />;
   }
 
-  return <RenderEmpty />;
+  return <TableRowEmptyState colSpan={8} />;
 };
 
 export default InvoiceTable;

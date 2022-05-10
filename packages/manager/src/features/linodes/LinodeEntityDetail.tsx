@@ -70,7 +70,7 @@ interface LinodeEntityDetailProps {
   linodeConfigs: Config[];
   numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
-  openNotificationDrawer?: () => void;
+  openNotificationMenu?: () => void;
   isDetailLanding?: boolean;
 }
 
@@ -88,7 +88,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer,
+    openNotificationMenu,
     recentEvent,
   } = props;
 
@@ -136,7 +136,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           isDetailLanding={isDetailLanding}
           type={linodeType}
           image={linode.image ?? 'Unknown Image'}
-          openNotificationDrawer={openNotificationDrawer || (() => null)}
+          openNotificationMenu={openNotificationMenu || (() => null)}
           progress={progress}
           transitionText={transitionText}
         />
@@ -200,17 +200,17 @@ export interface HeaderProps {
   image: string;
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
-  openNotificationDrawer: () => void;
+  openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
 }
 
 const useHeaderStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
   },
   linodeLabel: {
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     marginLeft: theme.spacing(),
     '&:hover': {
       color: theme.palette.primary.light,
@@ -244,21 +244,21 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusRunning: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGreen,
+      backgroundColor: theme.color.teal,
     },
   },
   statusOffline: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iGrey,
+      backgroundColor: theme.color.grey8,
     },
   },
   statusOther: {
     '&:before': {
-      backgroundColor: theme.cmrIconColors.iOrange,
+      backgroundColor: theme.color.orange,
     },
   },
   divider: {
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     paddingRight: `16px !important`,
   },
   actionItemsOuter: {
@@ -270,6 +270,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   actionItem: {
     borderRadius: 0,
+    color: theme.textColors.linkActiveLight,
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
     height: theme.spacing(5),
@@ -312,7 +313,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     isDetailLanding,
     progress,
     transitionText,
-    openNotificationDrawer,
+    openNotificationMenu,
   } = props;
 
   const isDetails = variant === 'details';
@@ -360,6 +361,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               className={`p0 ${isDetailLanding && classes.chipWrapper}`}
             >
               <Chip
+                data-qa-linode-status
                 className={classNames({
                   [classes.statusChip]: true,
                   [classes.statusChipLandingDetailView]: isDetailLanding,
@@ -382,7 +384,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               >
                 <button
                   className={classes.statusLink}
-                  onClick={openNotificationDrawer}
+                  onClick={openNotificationMenu}
                 >
                   <ProgressDisplay
                     progress={progress ?? 0}
@@ -480,7 +482,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
   },
   columnLabel: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
   summaryContainer: {
@@ -494,7 +496,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
       },
     },
     '& p': {
-      color: theme.cmrTextColors.tableStatic,
+      color: theme.textColors.tableStatic,
     },
   },
   rightColumn: {
@@ -606,7 +608,7 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
 // be used elsewhere.
 const useAccessTableStyles = makeStyles((theme: Theme) => ({
   columnLabel: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
   },
   accessTableContent: {
@@ -621,9 +623,9 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       height: 32,
     },
     '& th': {
-      backgroundColor: theme.cmrBGColors.bgApp,
-      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
-      color: theme.cmrTextColors.textAccessTable,
+      backgroundColor: theme.bg.app,
+      borderBottom: `1px solid ${theme.bg.bgPaper}`,
+      color: theme.textColors.textAccessTable,
       fontSize: '0.875rem',
       fontWeight: 'bold',
       lineHeight: 1,
@@ -633,48 +635,49 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       width: 170,
     },
     '& td': {
-      backgroundColor: theme.cmrBGColors.bgAccessRow,
       border: 'none',
-      borderBottom: `1px solid ${theme.cmrBGColors.bgPaper}`,
+      borderBottom: `1px solid ${theme.bg.bgPaper}`,
       fontSize: '0.875rem',
       lineHeight: 1,
-      padding: theme.spacing(),
       whiteSpace: 'nowrap',
     },
   },
   code: {
-    color: theme.cmrTextColors.tableStatic,
+    backgroundColor: theme.bg.bgAccessRow,
+    color: theme.textColors.tableStatic,
     fontFamily: '"UbuntuMono", monospace, sans-serif',
+    padding: theme.spacing(),
     position: 'relative',
     '& div': {
       fontSize: 15,
     },
   },
   copyCell: {
-    width: 36,
+    backgroundColor: theme.bg.lightBlue2,
     height: 33,
-    backgroundColor: `${theme.cmrBGColors.bgCopyButton} !important`,
-    padding: '0px !important',
+    width: 36,
+    padding: 0,
     '& svg': {
-      width: 16,
       height: 16,
+      width: 16,
       '& path': {
-        fill: theme.cmrBorderColors.borderBalance,
+        fill: theme.textColors.linkActiveLight,
       },
     },
-    '& button': {
-      padding: 0,
-    },
-    '&:last-child': {
-      paddingRight: theme.spacing(),
+    '&:hover': {
+      backgroundColor: '#3683dc',
+      '& svg path': {
+        fill: '#fff',
+      },
     },
   },
   copyButton: {
     display: 'flex',
-    justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    justifyContent: 'center',
+    borderRadius: 1,
     height: '100%',
+    width: '100%',
     '&:hover': {
       backgroundColor: 'transparent',
     },
@@ -690,7 +693,7 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       right: 0,
       bottom: 0,
-      backgroundImage: `linear-gradient(to right,  ${theme.cmrBGColors.bgAccessRowTransparentGradient}, ${theme.cmrBGColors.bgAccessRow});`,
+      backgroundImage: `linear-gradient(to right,  ${theme.bg.bgAccessRowTransparentGradient}, ${theme.bg.bgAccessRow});`,
     },
   },
 }));
@@ -788,8 +791,8 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
   listItem: {
     display: 'flex',
-    borderRight: `1px solid ${theme.cmrBorderColors.borderTypography}`,
-    color: theme.cmrTextColors.tableStatic,
+    borderRight: `1px solid ${theme.borderColors.borderTypography}`,
+    color: theme.textColors.tableStatic,
     padding: `0px 10px`,
     [theme.breakpoints.down('sm')]: {
       flex: '50%',

@@ -1,100 +1,65 @@
-import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Skeleton from 'src/components/Skeleton';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import Hidden, { HiddenProps } from '../core/Hidden';
+import Skeleton from '../core/Skeleton';
+import { makeStyles } from '../core/styles';
+import TableCell from '../TableCell/TableCell';
+import TableRow from '../TableRow/TableRow';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  tableCell: {
-    paddingTop: 0,
-    paddingBottom: 0,
-    textAlign: 'center',
-  },
-  transparent: {
-    backgroundColor: theme.bg.main,
+const useStyles = makeStyles(() => ({
+  root: {
+    '& :last-child': {
+      paddingRight: 15,
+    },
   },
 }));
 
-type Columns = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-
 export interface Props {
-  colSpan: Columns;
-  numberOfRows?: number;
-  numberOfColumns?: Columns;
-  widths?: number[];
-  transparent?: any;
-  oneLine?: boolean;
-  compact?: boolean;
-  hasEntityIcon?: boolean;
+  columns?: number;
+  rows?: number;
+  responsive?: Record<number, HiddenProps>;
 }
 
-type CombinedProps = Props;
-
-export const TableRowLoading: React.FC<CombinedProps> = (props) => {
+export const TableRowLoading: React.FC<Props> = ({
+  rows = 1,
+  columns = 1,
+  responsive,
+}) => {
   const classes = useStyles();
+  const cols = [];
 
-  const {
-    transparent,
-    colSpan,
-    widths,
-    oneLine,
-    numberOfRows,
-    hasEntityIcon,
-    compact,
-    numberOfColumns,
-  } = props;
+  for (let j = 0; j < columns; j++) {
+    const Cell = (
+      <TableCell key={`table-loading-cell-${j}`}>
+        <Skeleton />
+      </TableCell>
+    );
 
-  // Default number of columns for the <Skeleton />.
-  let numColumns: Columns = 8;
-
-  // If the consumer has explicitly specified the number of columns to use, go with that.
-  // This may be different than colSpan... for example, if one column contains an Icon,
-  // we'd like colSpan to be numberOfColumns + 1.
-  if (numberOfColumns) {
-    numColumns = numberOfColumns;
-    // Otherwise if they've specified a colSpan, use that, since it's a pretty good guess.
-  } else if (colSpan) {
-    numColumns = colSpan;
+    if (responsive && responsive[j]) {
+      cols.push(
+        <Hidden key={`table-loading-hidden-${j}`} {...responsive[j]}>
+          {Cell}
+        </Hidden>
+      );
+    } else {
+      cols.push(Cell);
+    }
   }
 
-  const ifRows = numberOfRows ?? 1;
-  const rowBuilder = () => {
-    const rows: JSX.Element[] = [];
-    for (let rowCount = 0; rowCount <= ifRows - 1; rowCount++) {
-      rows.push(
-        <TableRow
-          className={classNames({
-            [classes.transparent]: transparent,
-          })}
-          data-testid="table-row-loading"
-          aria-label="Table content is loading"
-          key={`table-row-loading-${rowCount}`}
-        >
-          <TableCell
-            colSpan={colSpan}
-            className={classNames({
-              [classes.tableCell]: true,
-              [classes.transparent]: transparent,
-            })}
-          >
-            <Skeleton
-              table
-              numColumns={numColumns}
-              widths={widths}
-              oneLine={oneLine}
-              compact={compact}
-              hasEntityIcon={hasEntityIcon}
-            />
-          </TableCell>
-        </TableRow>
-      );
-    }
-    return rows;
-  };
+  const tableRows = [];
+
+  for (let i = 0; i < rows; i++) {
+    tableRows.push(
+      <TableRow
+        className={classes.root}
+        data-testid="table-row-loading"
+        aria-label="Table content is loading"
+        key={`table-loading-row-${i}`}
+      >
+        {cols}
+      </TableRow>
+    );
+  }
 
   // eslint-disable-next-line react/jsx-no-useless-fragment
-  return <>{rowBuilder()}</>;
+  return <>{tableRows}</>;
 };
-
-export default TableRowLoading;

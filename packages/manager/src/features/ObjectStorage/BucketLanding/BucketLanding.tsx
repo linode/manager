@@ -17,12 +17,15 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
-import TextField from 'src/components/TextField';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import TransferDisplay from 'src/components/TransferDisplay';
 import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
   BucketError,
@@ -57,10 +60,10 @@ interface Props {
   isRestrictedUser: boolean;
 }
 
-export type CombinedProps = Props & DispatchProps;
+export type CombinedProps = Props & DispatchProps & PreferencesProps;
 
 export const BucketLanding: React.FC<CombinedProps> = (props) => {
-  const { isRestrictedUser, openBucketDrawer } = props;
+  const { isRestrictedUser, openBucketDrawer, preferences } = props;
 
   const {
     data: objectStorageClusters,
@@ -141,12 +144,9 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     removeBucketConfirmationDialog.close();
   }, [removeBucketConfirmationDialog]);
 
-  const setConfirmBucketNameToInput = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setConfirmBucketName(e.target.value);
-    },
-    []
-  );
+  const setConfirmBucketNameToInput = React.useCallback((input: string) => {
+    setConfirmBucketName(input);
+  }, []);
 
   const actions = () => (
     <ActionsPanel>
@@ -161,7 +161,10 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         buttonType="primary"
         onClick={removeBucket}
         disabled={
-          bucketToRemove ? confirmBucketName !== bucketToRemove.label : true
+          bucketToRemove
+            ? preferences?.type_to_confirm !== false &&
+              confirmBucketName !== bucketToRemove.label
+            : true
         }
         loading={isLoading}
         data-qa-submit-rebuild
@@ -170,45 +173,6 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       </Button>
     </ActionsPanel>
   );
-
-  const deleteBucketConfirmationMessage = bucketToRemove ? (
-    <React.Fragment>
-      <Typography>
-        Deleting a bucket is permanent and can&apos;t be undone.
-      </Typography>
-      <Typography className={classes.copy}>
-        A bucket must be empty before deleting it. Please{' '}
-        <a
-          href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-        >
-          delete all objects
-        </a>
-        , or use{' '}
-        <a
-          href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-        >
-          another tool
-        </a>{' '}
-        to force deletion.
-      </Typography>
-      {/* If the user is attempting to delete their last Bucket, remind them
-      that they will still be billed unless they cancel Object Storage in
-      Account Settings. */}
-      {objectStorageBucketsResponse?.buckets.length === 1 && (
-        <CancelNotice className={classes.copy} />
-      )}
-      <Typography className={classes.copy}>
-        To confirm deletion, type the name of the bucket (
-        <b>{bucketToRemove.label}</b>) in the field below:
-      </Typography>
-    </React.Fragment>
-  ) : null;
 
   const unavailableClusters =
     objectStorageBucketsResponse?.errors.map(
@@ -291,11 +255,51 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         actions={actions}
         error={error}
       >
-        {deleteBucketConfirmationMessage}
-        <TextField
-          onChange={setConfirmBucketNameToInput}
-          expand
+        <Notice warning>
+          <Typography style={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Deleting a bucket is permanent and
+            can&rsquo;t be undone.
+          </Typography>
+        </Notice>
+        <Typography className={classes.copy}>
+          A bucket must be empty before deleting it. Please{' '}
+          <a
+            href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+          >
+            delete all objects
+          </a>
+          , or use{' '}
+          <a
+            href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+            target="_blank"
+            aria-describedby="external-site"
+            rel="noopener noreferrer"
+          >
+            another tool
+          </a>{' '}
+          to force deletion.
+        </Typography>
+        {/* If the user is attempting to delete their last Bucket, remind them
+        that they will still be billed unless they cancel Object Storage in
+        Account Settings. */}
+        {objectStorageBucketsResponse?.buckets.length === 1 && (
+          <CancelNotice className={classes.copy} />
+        )}
+        <TypeToConfirm
+          confirmationText={
+            <Typography component={'span'} className={classes.copy}>
+              To confirm deletion, type the name of the bucket (
+              <b>{bucketToRemove?.label}</b>) in the field below:
+            </Typography>
+          }
+          onChange={(input) => setConfirmBucketNameToInput(input)}
+          value={confirmBucketName}
           label="Bucket Name"
+          visible={preferences?.type_to_confirm}
+          expand
         />
       </ConfirmationDialog>
       <BucketDetailsDrawer
@@ -364,7 +368,8 @@ const RenderEmpty: React.FC<{
 
 const enhanced = compose<CombinedProps, Props>(
   React.memo,
-  bucketDrawerContainer
+  bucketDrawerContainer,
+  withPreferences()
 );
 
 export default enhanced(BucketLanding);

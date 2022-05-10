@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     height: '100%',
     minHeight: 60,
-    backgroundColor: theme.bg.offWhiteDT,
+    backgroundColor: theme.bg.offWhite,
     border: `1px solid ${theme.bg.main}`,
     margin: 0,
     padding: `0 ${theme.spacing(1)}px !important`,

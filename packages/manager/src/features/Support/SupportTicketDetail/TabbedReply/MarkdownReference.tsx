@@ -1,38 +1,30 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root' | 'header' | 'example';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    header: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(1),
-    },
-    example: {
-      backgroundColor:
-        theme.name === 'darkTheme' ? theme.bg.white : theme.bg.offWhite,
-      margin: `${theme.spacing(2)}px 0`,
-      padding: theme.spacing(2),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  header: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(),
+  },
+  example: {
+    backgroundColor:
+      theme.name === 'darkTheme' ? theme.bg.white : theme.bg.offWhite,
+    margin: `${theme.spacing(2)}px 0`,
+    padding: theme.spacing(2),
+  },
+}));
 
 interface Props {
   rootClass?: string;
   isReply?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const MarkdownReference: React.FC<CombinedProps> = (props) => {
-  const { classes } = props;
+  const classes = useStyles();
+
   return (
     <div className={props.rootClass}>
       <Typography>
@@ -78,6 +70,4 @@ const MarkdownReference: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default React.memo(styled(MarkdownReference));
+export default React.memo(MarkdownReference);

@@ -1,17 +1,16 @@
 import { getTags } from '@linode/api-v4/lib/tags';
 import classNames from 'classnames';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
-import Tag from 'src/components/Tag';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
+import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { Theme, makeStyles } from 'src/components/core/styles';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -52,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.color.tagButton,
     border: 'none',
     borderRadius: 3,
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     cursor: 'pointer',
     fontFamily: theme.font.normal,
     fontSize: '0.875rem',
@@ -126,25 +125,22 @@ interface ActionMeta {
 }
 
 export interface Props {
+  align?: 'left' | 'right';
   tags: string[];
   updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithSnackbarProps;
-
-const TagsPanel: React.FC<CombinedProps> = (props) => {
+const TagsPanel: React.FC<Props> = (props) => {
   const classes = useStyles();
+  const { tags, disabled, updateTags } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
-  const { tags, updateTags, disabled } = props;
-
-  const [isCreatingTag, setIsCreatingTag] = React.useState<boolean>(false);
-  const [listDeletingTags, setListDeletingTags] = React.useState<string[]>([]);
-  const [tagError, setTagError] = React.useState<string>('');
-  const [tagInputValue, setTagInputValue] = React.useState<string>('');
-  const [label, setLabel] = React.useState<string>('');
-  const [loading, setLoading] = React.useState<boolean>(false);
   const [tagsToSuggest, setTagsToSuggest] = React.useState<Item[]>([]);
+  const [tagError, setTagError] = React.useState('');
+  const [isCreatingTag, setIsCreatingTag] = React.useState(false);
+  const [tagInputValue, setTagInputValue] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
     if (!isRestrictedUser()) {
@@ -174,17 +170,24 @@ const TagsPanel: React.FC<CombinedProps> = (props) => {
         })
         .catch((e) => e);
     }
-  }, [tags]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  React.useEffect(() => {
-    /*
-     * Update the new list of tags (which is the previous list but
-     * with the deleted tag filtered out). It's important to note that the Tag is *not*
-     * being deleted here - it's just being removed from the list
-     */
-    const tagsWithoutDeletedTag = tags.filter((thisTag: string) => {
-      return listDeletingTags.indexOf(thisTag) === -1;
-    });
+  const toggleTagInput = () => {
+    if (!disabled) {
+      if (tagError) {
+        setTagError('');
+      }
+      setIsCreatingTag((prev) => !prev);
+    }
+  };
+
+  const handleDeleteTag = (label: string) => {
+    setLoading(true);
+
+    const tagsWithoutDeletedTag = tags.filter(
+      (thisTag: string) => thisTag !== label
+    );
 
     updateTags(tagsWithoutDeletedTag)
       .then(() => {
@@ -199,41 +202,15 @@ const TagsPanel: React.FC<CombinedProps> = (props) => {
           },
           ...cloneTagSuggestions,
         ]);
-        setListDeletingTags(
-          listDeletingTags.filter((thisTag) => thisTag !== label)
-        );
         setLoading(false);
         setTagError('');
       })
       .catch((_) => {
-        props.enqueueSnackbar(`Could not delete Tag: ${label}`, {
+        enqueueSnackbar(`Could not delete Tag: ${label}`, {
           variant: 'error',
         });
-        /*
-         * Remove this tag from the current list of tags that are queued for deletion
-         */
-        setListDeletingTags(
-          listDeletingTags.filter((thisTag) => thisTag !== label)
-        );
         setLoading(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [label]);
-
-  const toggleTagInput = () => {
-    if (!disabled) {
-      setTagError('');
-      setIsCreatingTag(!isCreatingTag);
-    }
-  };
-
-  const handleDeleteTag = (label: string) => {
-    /*
-     * Add this tag to the current list of tags that are queued for deletion
-     */
-    setListDeletingTags([...listDeletingTags, label]);
-    setLabel(label);
-    setLoading(true);
   };
 
   const handleCreateTag = (value: Item, actionMeta: ActionMeta) => {
@@ -281,8 +258,12 @@ const TagsPanel: React.FC<CombinedProps> = (props) => {
           setLoading(false);
         })
         .catch((e) => {
-          setTagError(getErrorStringOrDefault(e, 'Error while creating tag'));
+          const tagError = getErrorStringOrDefault(
+            e,
+            'Error while creating tag'
+          );
           setLoading(false);
+          setTagError(tagError);
         });
     }
   };
@@ -293,7 +274,7 @@ const TagsPanel: React.FC<CombinedProps> = (props) => {
         <Select
           onChange={handleCreateTag}
           options={tagsToSuggest}
-          variant="creatable"
+          creatable
           onBlur={toggleTagInput}
           placeholder="Create or Select a Tag"
           label="Create or Select a Tag"
@@ -353,4 +334,4 @@ const TagsPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(withSnackbar)(TagsPanel);
+export default TagsPanel;

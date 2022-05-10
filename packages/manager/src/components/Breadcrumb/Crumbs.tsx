@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   crumbLink: {
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
     '&:hover': {
       textDecoration: 'underline',
     },
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textTransform: 'initial',
   },
   slash: {
-    color: theme.cmrTextColors.tableHeader,
+    color: theme.textColors.tableHeader,
     fontSize: 20,
     marginRight: 2,
     marginLeft: 2,

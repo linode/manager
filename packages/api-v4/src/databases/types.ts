@@ -7,15 +7,15 @@ export interface DatabasePriceObject {
   hourly: number;
 }
 
-interface DatabaseClusterSizeObject {
+export interface DatabaseClusterSizeObject {
   quantity: number;
   price: DatabasePriceObject;
 }
 
+type Engines = Record<Engine, DatabaseClusterSizeObject[]>;
 export interface DatabaseType extends BaseType {
   class: DatabaseTypeClass;
-  deprecated: boolean;
-  cluster_size: DatabaseClusterSizeObject[];
+  engines: Engines;
 }
 
 export type Engine = 'mysql' | 'postgresql' | 'mongodb' | 'redis';
@@ -99,6 +99,15 @@ interface ConnectionStrings {
   value: string;
 }
 
+export type UpdatesFrequency = 'weekly' | 'monthly';
+export interface UpdatesSchedule {
+  frequency: UpdatesFrequency;
+  duration: number;
+  hour_of_day: number;
+  day_of_week: number;
+  week_of_month: number | null;
+}
+
 // Database is the interface for the shape of data returned by /databases/{engine}/instances
 export interface Database {
   id: number;
@@ -120,11 +129,13 @@ export interface Database {
   updated: string;
   hosts: DatabaseHosts;
   port: number;
+  updates: UpdatesSchedule;
 }
 
 export interface UpdateDatabasePayload {
   label?: string;
   allow_list?: string[];
+  updates?: UpdatesSchedule;
 }
 
 export interface UpdateDatabaseResponse {

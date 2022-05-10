@@ -20,7 +20,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   link: {
     '& label': {
-      color: theme.cmrTextColors.headlineStatic,
+      color: theme.textColors.headlineStatic,
+    },
+  },
+  removeDisabledStyles: {
+    '&.Mui-disabled': {
+      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
+      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      opacity: 1,
     },
   },
   resultsWrapper: {
@@ -33,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 180,
   },
   referrals: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
   },
   earned: {
     color: theme.color.green,
@@ -42,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   limitNotice: {
     marginLeft: theme.spacing(),
     '& p': {
-      color: `${theme.cmrTextColors.tableStatic} !important`,
+      color: `${theme.textColors.tableStatic} !important`,
       fontSize: '0.875rem',
     },
   },
@@ -69,14 +76,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     '& svg': {
-      color: theme.cmrBGColors.bgReferralsImage,
+      color: theme.name === 'lightTheme' ? '#ededf4' : '#83868c',
     },
     [theme.breakpoints.down('xs')]: {
       marginBottom: theme.spacing(2),
     },
   },
   imageCopy: {
-    color: theme.cmrTextColors.headlineStatic,
+    color: theme.textColors.headlineStatic,
     fontFamily: theme.font.bold,
     textAlign: 'center',
     marginTop: theme.spacing(2),
@@ -123,13 +130,13 @@ export const Referrals: React.FC<{}> = () => {
         <Grid item>
           <Typography variant="body1" style={{ marginBottom: 12 }}>
             When you refer friends or colleagues to Linode using your referral
-            link, they&apos;ll receive a $100, 60-day credit once a valid
+            link, they&rsquo;ll receive a $100, 60-day credit once a valid
             payment method is added to their new account.
           </Typography>
           <Typography variant="body1">
             When the referred customer spends $25 on Linode services, and has
             remained an active customer in good standing for 90 days,
-            you&apos;ll receive a $25 non-expiring account credit. There are no
+            you&rsquo;ll receive a $25 non-expiring account credit. There are no
             limits to the number of people you can refer.{' '}
             <Link to="https://www.linode.com/promotional-policy/">
               Read more about our promotions policy

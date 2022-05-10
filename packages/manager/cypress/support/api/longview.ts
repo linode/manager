@@ -1,14 +1,7 @@
-import {
-  apiCheckErrors,
-  deleteById,
-  getAll,
-  isTestEntity,
-  makeTestLabel,
-} from './common';
+import { apiCheckErrors, deleteById, getAll, isTestEntity } from './common';
 const oauthtoken = Cypress.env('MANAGER_OAUTH');
 
 export const getClients = () => getAll('longview/clients');
-export const makeClientLabel = makeTestLabel;
 
 export const deleteClientById = (clientId: number) =>
   deleteById('longview/clients', clientId);

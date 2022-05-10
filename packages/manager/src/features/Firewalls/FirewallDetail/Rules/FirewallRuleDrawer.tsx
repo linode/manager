@@ -183,7 +183,7 @@ const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
         }}
       </Formik>
       <Typography variant="body1">
-        Rule changes don&apos;t take effect immediately. You can add or delete
+        Rule changes don&rsquo;t take effect immediately. You can add or delete
         rules before saving all your changes to this Firewall.
       </Typography>
     </Drawer>
@@ -533,7 +533,8 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
             />
             <FormControlLabel value="DROP" label="Drop" control={<Radio />} />
             <Typography style={{ paddingTop: 4 }}>
-              This will take precedence over the Firewall's {category} policy.
+              This will take precedence over the Firewall&rsquo;s {category}{' '}
+              policy.
             </Typography>
           </RadioGroup>
         </div>

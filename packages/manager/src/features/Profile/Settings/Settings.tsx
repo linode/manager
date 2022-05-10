@@ -5,6 +5,7 @@ import { makeStyles, Theme, withTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -104,6 +105,43 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
             />
           </Grid>
         </Grid>
+      </Paper>
+      <Paper className={classes.root}>
+        <Typography variant="h2" className={classes.title}>
+          Type-to-Confirm
+        </Typography>
+        <Typography variant="body1">
+          For some products and services, the type-to-confirm setting requires
+          entering the label before deletion.
+        </Typography>
+        <PreferenceToggle<boolean>
+          preferenceKey="type_to_confirm"
+          preferenceOptions={[true, false]}
+          localStorageKey="typeToConfirm"
+        >
+          {({
+            preference: istypeToConfirm,
+            togglePreference: toggleTypeToConfirm,
+          }: ToggleProps<boolean>) => {
+            return (
+              <Grid container alignItems="center">
+                <Grid item xs={12}>
+                  <FormControlLabel
+                    control={
+                      <Toggle
+                        onChange={toggleTypeToConfirm}
+                        checked={istypeToConfirm}
+                      />
+                    }
+                    label={`Type-to-confirm is${
+                      istypeToConfirm ? ' enabled' : ' disabled'
+                    }`}
+                  />
+                </Grid>
+              </Grid>
+            );
+          }}
+        </PreferenceToggle>
       </Paper>
     </>
   );

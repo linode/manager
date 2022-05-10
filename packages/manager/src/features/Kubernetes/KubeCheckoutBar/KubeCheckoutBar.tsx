@@ -3,18 +3,17 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
-import useFlags from 'src/hooks/useFlags';
+import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { useAccount } from 'src/queries/account';
+import { useAccountAgreements } from 'src/queries/accountAgreements';
+import { useProfile } from 'src/queries/profile';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import { PoolNodeWithPrice } from '../types';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
-import { useProfile } from 'src/queries/profile';
-import { useAccountAgreements } from 'src/queries/accountAgreements';
-import { useAccount } from 'src/queries/account';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export interface Props {
   pools: PoolNodeWithPrice[];
@@ -45,8 +44,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     toggleHasAgreed,
   } = props;
 
-  const flags = useFlags();
-
   // Show a warning if any of the pools have fewer than 3 nodes
   const showWarning = pools.some((thisPool) => thisPool.count < 3);
 
@@ -64,11 +61,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     needsAPool || (!hasAgreed && showGDPRCheckbox)
   );
 
-  const showHighAvalibility = Boolean(
+  const capabilities = account?.capabilities ?? [];
+  const showHighAvalibility =
     HIGH_AVAILABILITY_PRICE !== undefined &&
-      flags.lkeHighAvailability &&
-      account?.capabilities.includes('LKE HA Control Planes')
-  );
+    capabilities.includes('LKE HA Control Planes');
 
   return (
     <CheckoutBar
@@ -78,7 +74,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
       isMakingRequest={submitting}
       disabled={disableCheckout}
       onDeploy={createCluster}
-      submitText={'Create Cluster'}
+      submitText="Create Cluster"
       agreement={
         showGDPRCheckbox ? (
           <EUAgreementCheckbox checked={hasAgreed} onChange={toggleHasAgreed} />
@@ -103,12 +99,12 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
         ))}
         {showHighAvalibility ? (
           <>
-            <Divider spacingTop={16} />
+            <Divider dark spacingTop={16} spacingBottom={12} />
             <HACheckbox
               checked={highAvailability}
               onChange={(e) => setHighAvailability(e.target.checked)}
             />
-            <Divider spacingTop={16} />
+            <Divider dark spacingTop={16} spacingBottom={0} />
           </>
         ) : null}
         {showWarning && (

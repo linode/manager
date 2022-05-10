@@ -6,7 +6,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import MonitorRow from './MonitorRow';
 
 interface Props {
@@ -33,7 +33,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
   } = props;
 
   if (loading) {
-    return <TableRowLoading colSpan={2} widths={[45]} oneLine hasEntityIcon />;
+    return <TableRowLoading columns={3} />;
   }
 
   if (error) {

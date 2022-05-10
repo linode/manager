@@ -2,6 +2,7 @@ import { Grant } from '@linode/api-v4/lib/account';
 import { getLinodeConfigs } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
@@ -21,7 +22,6 @@ import { getGrants } from 'src/features/Profile/permissionsHelpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { compose } from 'recompose';
 
 interface Props {
   open: boolean;
@@ -195,13 +195,18 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         <LinodeSelect
           selectedLinode={selectedLinode}
           region={linodeRegion}
-          handleChange={(linode) => this.changeSelectedLinode(linode.id)}
+          handleChange={(linode) => {
+            if (linode !== null) {
+              this.changeSelectedLinode(linode.id);
+            }
+          }}
           linodeError={linodeError}
           disabled={disabled || readOnly}
+          isClearable={false}
         />
         {!(linodeError || linodesError) && (
           <FormHelperText>
-            Only Linodes in this Volume&#39;s region are displayed.
+            Only Linodes in this Volume&rsquo;s region are displayed.
           </FormHelperText>
         )}
 

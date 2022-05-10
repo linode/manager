@@ -37,14 +37,14 @@ export const useStyles = makeStyles((theme: Theme) => ({
       marginTop: `${theme.spacing()}px !important`,
     },
     '& $important': {
-      backgroundColor: theme.cmrBGColors.bgPaper,
+      backgroundColor: theme.bg.bgPaper,
     },
     '& $error': {
-      borderLeftColor: theme.cmrIconColors.iRed,
+      borderLeftColor: theme.color.red,
     },
   },
   important: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     padding: theme.spacing(2),
     paddingRight: 18,
     '& $noticeText': {
@@ -59,7 +59,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   closeIcon: {
     ...theme.applyLinkStyles,
     display: 'flex',
-    color: theme.cmrTextColors.tableStatic,
+    color: theme.textColors.tableStatic,
     marginLeft: 20,
   },
   inner: {
@@ -114,6 +114,16 @@ export const useStyles = makeStyles((theme: Theme) => ({
   flag: {
     marginRight: theme.spacing(2),
   },
+  informational: {
+    animation: '$fadeIn 225ms linear forwards',
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
+    '&$important': {
+      borderLeftWidth: 32,
+    },
+  },
+  informationalList: {
+    borderLeft: `5px solid ${theme.palette.primary.main}`,
+  },
 }));
 
 interface Props extends GridProps {
@@ -128,12 +138,13 @@ interface Props extends GridProps {
   flag?: boolean;
   notificationList?: boolean;
   spacingTop?: 0 | 8 | 16 | 24;
-  spacingBottom?: 0 | 8 | 16 | 20 | 24;
+  spacingBottom?: 0 | 8 | 16 | 20 | 24 | 32;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   // Dismissible Props
   dismissible?: boolean;
   onClose?: () => void;
+  informational?: boolean;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -157,6 +168,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
     onClose,
     spacingTop,
     spacingBottom,
+    informational,
   } = props;
 
   const classes = useStyles();
@@ -215,6 +227,8 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
         [classes.warningList]: warning && notificationList,
+        [classes.informational]: informational && !notificationList,
+        [classes.informationalList]: informational && notificationList,
         notice: true,
         ...(className && { [className]: true }),
       })}

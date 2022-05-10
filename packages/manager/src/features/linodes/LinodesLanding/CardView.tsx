@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   summaryOuter: {
-    backgroundColor: theme.cmrBGColors.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     margin: `${theme.spacing()}px 0`,
     marginBottom: 20,
     '&.MuiGrid-item': {
@@ -145,7 +145,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
                 openTagDrawer={openTagDrawer}
                 openDialog={openDialog}
                 openPowerActionDialog={openPowerActionDialog}
-                openNotificationDrawer={notificationContext.openDrawer}
+                openNotificationMenu={notificationContext.openMenu}
               />
             </Grid>
           </React.Fragment>

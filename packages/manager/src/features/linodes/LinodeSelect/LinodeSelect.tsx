@@ -29,7 +29,7 @@ interface Props {
   selectedLinode: number | null;
   disabled?: boolean;
   region?: string;
-  handleChange: (linode: Linode) => void;
+  handleChange: (linode: Linode | null) => void;
   textFieldProps?: Omit<TextFieldProps, 'label'>;
   groupByRegion?: boolean;
   placeholder?: string;
@@ -45,6 +45,8 @@ interface Props {
   // Formik stuff to be passed down to the inner Select
   onBlur?: (e: any) => void;
   name?: string;
+  width?: number;
+  isClearable?: boolean;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -69,8 +71,21 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     value,
     inputId,
     noOptionsMessage,
+    width,
+    isClearable,
     ...rest
   } = props;
+
+  const onChange = React.useCallback(
+    (selected: Item<number> | null) => {
+      if (selected === null) {
+        handleChange(null);
+        return;
+      }
+      return handleChange(selected.data);
+    },
+    [handleChange]
+  );
 
   const { _loading } = useReduxLoad(['linodes']);
 
@@ -93,38 +108,38 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
       : 'No Options';
 
   return (
-    <EnhancedSelect
-      value={
-        // Use the `value` prop if provided.
-        typeof value === 'undefined'
-          ? groupByRegion
-            ? linodeFromGroupedItems(
-                options as GroupType<number>[],
-                selectedLinode
-              )
-            : linodeFromItems(options as Item<number>[], selectedLinode)
-          : value
-      }
-      label={props.label || 'Linode'}
-      className={className}
-      noMarginTop={props.noMarginTop}
-      placeholder={placeholder || 'Select a Linode'}
-      options={options}
-      disabled={disabled}
-      small={props.small}
-      isLoading={linodesLoading || _loading}
-      inputId={inputId}
-      onChange={(selected: Item<number>) => {
-        return handleChange(selected.data);
-      }}
-      errorText={getErrorStringOrDefault(
-        generalError || linodeError || linodesError || ''
-      )}
-      isClearable={false}
-      textFieldProps={props.textFieldProps}
-      noOptionsMessage={() => noOptionsMessage || defaultNoOptionsMessage}
-      {...rest}
-    />
+    <div style={{ width: width ? width : '100%' }}>
+      <EnhancedSelect
+        value={
+          // Use the `value` prop if provided.
+          typeof value === 'undefined'
+            ? groupByRegion
+              ? linodeFromGroupedItems(
+                  options as GroupType<number>[],
+                  selectedLinode
+                )
+              : linodeFromItems(options as Item<number>[], selectedLinode)
+            : value
+        }
+        label={props.label || 'Linode'}
+        className={className}
+        noMarginTop={props.noMarginTop}
+        placeholder={placeholder || 'Select a Linode'}
+        options={options}
+        disabled={disabled}
+        small={props.small}
+        isLoading={linodesLoading || _loading}
+        inputId={inputId}
+        onChange={onChange}
+        errorText={getErrorStringOrDefault(
+          generalError || linodeError || linodesError || ''
+        )}
+        isClearable={isClearable}
+        textFieldProps={props.textFieldProps}
+        noOptionsMessage={() => noOptionsMessage || defaultNoOptionsMessage}
+        {...rest}
+      />
+    </div>
   );
 };
 

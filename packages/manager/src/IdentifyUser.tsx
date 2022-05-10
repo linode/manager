@@ -77,6 +77,7 @@ export const IdentifyUser: React.FC<{}> = () => {
             custom: {
               taxID: _taxID,
             },
+            privateAttributeNames: ['country', 'taxID'],
           })
           .then(() => setFeatureFlagsLoaded())
           /**
@@ -87,7 +88,7 @@ export const IdentifyUser: React.FC<{}> = () => {
           .catch(() => setFeatureFlagsLoaded());
       }
     }
-  }, [client, userID, username, account]);
+  }, [client, userID, username, account, accountError]);
 
   return null;
 };

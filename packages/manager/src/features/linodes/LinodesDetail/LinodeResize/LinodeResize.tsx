@@ -26,8 +26,11 @@ import Dialog from 'src/components/Dialog';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
-import TextField from 'src/components/TextField';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -115,6 +118,7 @@ type CombinedProps = Props &
   WithTypesProps &
   WithStyles<ClassNames> &
   DispatchProps &
+  PreferencesProps &
   WithSnackbarProps &
   StateProps &
   ProfileProps;
@@ -264,6 +268,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeLabel,
       linodeId,
       grants,
+      preferences,
     } = this.props;
     const { confirmationText, submissionError } = this.state;
     const type = typesData.find((t) => t.id === linodeType);
@@ -276,7 +281,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const tableDisabled =
       hostMaintenance || unauthorized || Boolean(disksError);
 
-    const submitButtonDisabled = confirmationText !== linodeLabel;
+    const submitButtonDisabled =
+      preferences?.type_to_confirm !== false &&
+      confirmationText !== linodeLabel;
 
     const currentPlanHeading = linodeType
       ? type
@@ -309,14 +316,15 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         {disksError && (
           <Notice
             error
-            text="There was an error loading your Linode's Disks."
+            text="There was an error loading your Linode\u{2019}s Disks."
           />
         )}
         {submissionError && <Notice error>{submissionError}</Notice>}
         <Typography data-qa-description>
-          If you&apos;re expecting a temporary burst of traffic to your website,
-          or if you&apos;re not using your Linode as much as you thought, you
-          can temporarily or permanently resize your Linode to a different plan.{' '}
+          If you&rsquo;re expecting a temporary burst of traffic to your
+          website, or if you&rsquo;re not using your Linode as much as you
+          thought, you can temporarily or permanently resize your Linode to a
+          different plan.{' '}
           <ExternalLink
             fixedIcon
             text="Learn more."
@@ -341,7 +349,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           {disksError ? (
             <HelpIcon
               className={classes.toolTip}
-              text={`There was an error loading your Linode's disks.`}
+              text={`There was an error loading your Linode&rsquo; disks.`}
             />
           ) : isSmaller ? (
             <HelpIcon
@@ -372,7 +380,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               ) : (
                 'your disk'
               )}{' '}
-              to be automatically scaled with this Linode&apos;s new size? We
+              to be automatically scaled with this Linode&rsquo;s new size? We
               recommend you keep this option enabled when available. Automatic
               resizing is only available when moving to a larger plan, and when
               you have a single ext disk (or one ext and one swap disk) on your
@@ -382,18 +390,23 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
 
         <ActionsPanel className={classes.actionPanel}>
-          <Typography variant="h2">Confirm</Typography>
-          <Typography style={{ marginBottom: 8 }}>
-            To confirm these changes, type the label of the Linode{' '}
-            <strong>({linodeLabel})</strong> in the field below:
-          </Typography>
-          <TextField
-            label="Linode Label"
-            hideLabel
-            onChange={(e) =>
-              this.setState({ confirmationText: e.target.value })
+          <TypeToConfirm
+            title="Confirm"
+            confirmationText={
+              <span>
+                To confirm these changes, type the label of the Linode (
+                <strong>{linodeLabel}</strong>) in the field below:
+              </span>
             }
-            style={{ marginBottom: 16 }}
+            typographyStyle={{ marginBottom: 8 }}
+            onChange={(input) => {
+              this.setState({ confirmationText: input });
+            }}
+            value={confirmationText}
+            hideLabel
+            visible={preferences?.type_to_confirm}
+            label="Linode Label"
+            textFieldStyle={{ marginBottom: 16 }}
           />
           <Button
             disabled={
@@ -530,5 +543,6 @@ export default compose<CombinedProps, Props>(
   styled,
   withSnackbar,
   connected,
-  withProfile
+  withProfile,
+  withPreferences()
 )(LinodeResize);

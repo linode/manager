@@ -20,9 +20,12 @@ export const styles = (theme: Theme) =>
   createStyles({
     row: {
       height: 46,
+      '& > button': {
+        height: 46,
+      },
     },
     link: {
-      color: theme.cmrTextColors.tableStatic,
+      color: theme.textColors.tableStatic,
     },
     libRadio: {
       display: 'flex',
@@ -45,7 +48,7 @@ export const styles = (theme: Theme) =>
       },
     },
     libDescription: {
-      color: theme.cmrTextColors.tableHeader,
+      color: theme.textColors.tableHeader,
       fontSize: '.75rem',
       overflow: 'hidden',
       textOverflow: 'ellipsis',
@@ -55,6 +58,7 @@ export const styles = (theme: Theme) =>
       },
     },
     selectionGrid: {
+      width: '100%',
       flexWrap: 'nowrap',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -84,7 +88,7 @@ export const styles = (theme: Theme) =>
       width: '100%',
     },
     stackScriptUsername: {
-      color: theme.cmrTextColors.tableStatic,
+      color: theme.textColors.tableStatic,
       fontSize: '0.875rem',
       lineHeight: '1.125rem',
     },

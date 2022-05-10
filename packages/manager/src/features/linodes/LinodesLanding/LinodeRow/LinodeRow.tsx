@@ -71,7 +71,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openNotificationDrawer: () => void;
+  openNotificationMenu: () => void;
 }
 
 export type CombinedProps = Props &
@@ -104,7 +104,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     linodeNotifications,
     openDialog,
     openPowerActionDialog,
-    openNotificationDrawer,
+    openNotificationMenu,
     recentEvent,
     mutationAvailable,
   } = props;
@@ -119,7 +119,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
   const MaintenanceText = () => {
     return (
       <>
-        This Linode&apos;s maintenance window opens at{' '}
+        This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
         <Link className={classes.statusLink} to="/support/tickets?type=open">
           open support tickets.
@@ -171,15 +171,16 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           [classes.statusCell]: true,
           [classes.statusCellMaintenance]: maintenanceStartTime,
         })}
+        statusCell
         data-qa-status
       >
         {!maintenanceStartTime ? (
           loading ? (
-            <div className={classes.status}>
+            <>
               <StatusIcon status={iconStatus} />
               <button
                 className={classes.statusLink}
-                onClick={() => openNotificationDrawer()}
+                onClick={() => openNotificationMenu()}
               >
                 <ProgressDisplay
                   className={classes.progressDisplay}
@@ -187,14 +188,14 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
                   text={transitionText(status, id, recentEvent)}
                 />
               </button>
-            </div>
+            </>
           ) : (
-            <div className={classes.status}>
+            <>
               <StatusIcon status={iconStatus} />
               {displayStatus.includes('_')
                 ? capitalizeAllWords(displayStatus.replace('_', ' '))
                 : capitalize(displayStatus)}
-            </div>
+            </>
           )
         ) : (
           <div className={classes.maintenanceOuter}>
@@ -248,7 +249,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           linodeBackups={backups}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
-          inTableContext
+          inListView
         />
       </TableCell>
     </TableRow>

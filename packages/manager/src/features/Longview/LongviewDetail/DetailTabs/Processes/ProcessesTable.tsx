@@ -9,7 +9,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import { formatCPU } from 'src/features/Longview/shared/formatters';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all',
     alignItems: 'center',
   },
-  cmrTableModifier: {
+  tableModifier: {
     '& tbody': {
       transition: theme.transitions.create(['opacity']),
     },
@@ -87,7 +87,7 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
           // This prop is necessary to show the "ActiveCaret", and we only
           // want it on large viewports.
           noOverflow={width >= 1280}
-          className={classes.cmrTableModifier}
+          className={classes.tableModifier}
         >
           <TableHead>
             <TableRow>
@@ -173,7 +173,7 @@ const renderLoadingErrorData = (
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading) {
-    return <TableRowLoading colSpan={7} />;
+    return <TableRowLoading columns={6} />;
   }
   if (data.length === 0) {
     return <TableRowEmptyState colSpan={12} />;
@@ -195,7 +195,6 @@ const renderLoadingErrorData = (
 export interface ProcessTableRowProps extends ExtendedProcess {
   isSelected: boolean;
   setSelectedProcess: (process: Process) => void;
-  cmrFlag?: boolean;
 }
 
 export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(

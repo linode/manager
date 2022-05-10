@@ -1,13 +1,15 @@
 import * as React from 'react';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import { makeStyles } from 'src/components/core/styles';
 
-const useStyles = makeStyles(() => ({
-  helper: {
-    marginTop: 4,
+const useStyles = makeStyles((theme: Theme) => ({
+  createVolumeText: {
+    display: 'block',
+    marginBottom: theme.spacing(),
+    marginLeft: theme.spacing(1.5),
   },
 }));
 
@@ -20,6 +22,7 @@ interface Props {
   error?: string;
   isFromLinode?: boolean;
   resize?: number;
+  textFieldStyles?: string;
 }
 
 type CombinedProps = Props;
@@ -30,11 +33,12 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   const {
     name,
     value,
+    error,
     onBlur,
     onChange,
-    error,
     isFromLinode,
     resize,
+    textFieldStyles,
     ...rest
   } = props;
 
@@ -47,26 +51,27 @@ const SizeField: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <TextField
-        data-qa-size
+        className={textFieldStyles}
+        label="Size"
+        name={name}
+        value={value}
         errorText={error}
         helperText={helperText}
         InputProps={{
           endAdornment: <InputAdornment position="end"> GB </InputAdornment>,
         }}
-        label="Size"
-        name={name}
-        type="number"
         onBlur={onBlur}
         onChange={onChange}
         required
-        value={value}
+        type="number"
+        data-qa-size
         {...rest}
       />
       <FormHelperText>
         {resize || isFromLinode ? (
           'The size of the new volume in GB.'
         ) : (
-          <span className={classes.helper}>${price}/month</span>
+          <span className={classes.createVolumeText}>${price}/month</span>
         )}
       </FormHelperText>
     </>

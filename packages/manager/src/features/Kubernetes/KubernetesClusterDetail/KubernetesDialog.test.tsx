@@ -4,15 +4,20 @@ import * as React from 'react';
 import { node1, node2 } from 'src/__data__/nodePools';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
-import KubernetesDialog from './KubernetesDialog';
+import { CombinedProps, KubernetesDialog } from './KubernetesDialog';
 
-const props = {
+const props: CombinedProps = {
   open: true,
   loading: false,
   clusterLabel: 'this-cluster',
   clusterPools: [node1],
   onClose: jest.fn(),
   onDelete: jest.fn(),
+  getUserPreferences: jest.fn(),
+  updateUserPreferences: jest.fn(),
+  preferences: {
+    type_to_confirm: true,
+  },
 };
 
 describe('Kubernetes deletion dialog', () => {

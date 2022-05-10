@@ -4,6 +4,145 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-05-02] - v1.65.0
+
+### Added:
+- Outlined chip variant
+
+### Changed:
+- Hyphenate “type-to-confirm”
+- Curly all single quotes
+- Max node pool copy
+- Limit collection of country and tax information
+- Spacing on DBaaS Settings page
+- Unbold Object links in Object Storage
+- All No Stats Available States
+
+### Fixed:
+- Linode Activity Feed undefined loading state
+- Button text not vertically centered in Firefox
+
+## [2022-04-28] - v1.64.1
+
+### Changed
+
+- Code refactors to accommodate API database type changes
+
+## [2022-04-18] - v1.64.0
+
+### Added:
+
+- Support for DBaaS Maintenance Windows
+
+### Changed:
+
+- Update DBaaS Beta notice to include end date
+- Notification Drawer updates and refinements
+- Improve Table Loading States
+- Premium LKE Create page UI refinements
+- Display placeholder text while stats are not yet available in Linode Network tab
+- Support Ticket Refinements
+
+### Fixed:
+
+- Show /116s in networking panel
+- Typo in migrate Linode modal
+- Max value for Node Pools is 100
+
+## [2022-04-08] - v1.63.1
+
+### Fixed:
+
+- Issue where Community StackScripts were inaccessible
+
+## [2022-04-07] - v1.63.0
+
+### Added:
+
+- IPv6 sharing support
+- Ability to add Gravatars to My Profile settings
+
+### Changed:
+
+- Font size for "Billing & Payment History" header
+- Swapped button order in Restore from Backup drawer
+- Events page refinements
+- Default permissions and expiry for personal access tokens
+
+### Fixed:
+
+- Prometheus & Grafana and Ant Media Enterprise docs link
+- Linodes missing from Firewall Linode selection
+- Prevent Linode Landing table from scrolling
+
+## [2022-03-28] - v1.62.1
+
+### Added:
+
+- March 2022 Marketplace release
+
+## [2022-03-21] - v1.62.0
+
+### Added:
+
+- Dynamically-shown warning for raw disks in Capture Image tab
+- Kubernetes Dashboard link
+
+### Changed:
+
+- Replace Linode Checkout Sidebar with Summary Paper
+- Prevent referral link from being modified
+- Remove manage SSH keys link from success notice
+- DBaaS cluster labels now editable
+
+### Fixed:
+
+- Tags Panel causing extra PUT requests
+- Select Dropdown overflow
+- Linode Disk delete modal cancel button
+- Mismatching Marketplace app drawers
+- Hover state for Linode Detail header copy icon on Safari
+
+## [2022-03-08] - v1.61.1
+
+### Added:
+
+- Early Adopter Program SLA banners to Database Create and empty state Database landing pages for beta
+
+### Fixed:
+
+- Fixed issue where limited users without billing access could not use the app
+
+## [2022-03-07] - v1.61.0
+
+### Added:
+
+- Transfer and Network In/Out columns to Linode plans tables
+- Type to confirm toggle
+
+### Changed:
+
+- Drupal Marketplace app logo
+- Feedback link
+- Improve styling consistency for backup auto enrollment
+- Replaced copy icon and added copy tooltip on hover
+
+#### Storybook
+
+- Colors
+- Icons
+- Loading states
+- Notifications
+- Tooltip
+- Typography
+
+### Fixed:
+
+- Extra character in Support Ticket entity selection
+- Status icon alignment in tables
+- Linode Details action link colors in dark mode
+- Linode Details Configurations table alignment
+
 ## [2022-02-25] - v1.60.1
 
 ### Added:
@@ -13,14 +152,17 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2022-02-21] - v1.60.0
 
 ### Added:
+
 - Copy IP address tooltip in the Linode Networking tab
 - February 2022 Marketplace release
 
 ### Changed:
+
 - Update Storybook components
 - Glish URL root from “alpha” to “dev”
 
 ### Fixed:
+
 - Prevent previous saved support text from loading into a ticket reply
 
 ## [2022-02-14] - v1.59.1

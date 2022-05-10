@@ -42,10 +42,8 @@ declare module '@material-ui/core/styles/createTheme' {
     '@keyframes rotate': any;
     '@keyframes dash': any;
     bg: any;
-    cmrBGColors: any;
-    cmrTextColors: any;
-    cmrBorderColors: any;
-    cmrIconColors: any;
+    textColors: any;
+    borderColors: any;
     color: any;
     graphs: any;
     visually: any;
@@ -78,52 +76,18 @@ declare module '@material-ui/core/styles/createTheme' {
 
 const breakpoints = createBreakpoints({});
 
-const cmrBGColors = {
-  bgApp: '#f4f5f6',
-  bgPrimaryNav: '#3a3f46',
-  bgPrimaryNavActive: '#515861',
-  bgPaper: '#ffffff',
-  bgPrimaryButton: '#3683dc',
-  // notification center, add a tag, breadcrumb
-  bgSecondaryButton: '#f5f8ff',
-  bgCopyButton: '#e5f1ff',
-  bgTPAButton: '#f5f6f7',
-  bgTableHeader: '#f9fafa',
-  bgBillingSummary: '#f5f9ff',
-  bgAccessRow: '#fafafa',
-  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-  bgGooglePay: '#000',
-  bgTableRow: '#fbfbfb',
-  bgReferralsImage: '#EDEDF4',
-};
-
-const cmrTextColors = {
+const textColors = {
   linkActiveLight: '#2575d0',
   headlineStatic: '#32363c',
-  tableHeader: '#888F91',
+  tableHeader: '#888f91',
   tableStatic: '#606469',
   textAccessTable: '#606469',
-  secondaryButton: '#2575d0',
-  textGooglePay: '#fff',
 };
 
-const cmrBorderColors = {
+const borderColors = {
   borderTypography: '#e3e5e8',
-  borderBillingSummary: '#cce2ff',
-  borderBalance: '#c2daff',
   borderTable: '#f4f5f6',
-  borderSecondaryButton: '#d7dfed',
   divider: '#e3e5e8',
-  dividerLight: '#e3e5e8',
-};
-
-const cmrIconColors = {
-  iActiveLight: '#3683dc',
-  iGreen: '#17cf73',
-  iOrange: '#ffb31a',
-  iRed: '#cf1e1e',
-  // Offline status
-  iGrey: '#dbdde1',
 };
 
 const primaryColors = {
@@ -133,7 +97,6 @@ const primaryColors = {
   text: '#606469',
   headline: '#32363c',
   divider: '#f4f4f4',
-  offBlack: '#444',
   white: '#fff',
 };
 
@@ -172,7 +135,7 @@ const iconCircleHoverEffect = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: cmrTextColors.linkActiveLight,
+  color: textColors.linkActiveLight,
   border: 'none',
   font: 'inherit',
   padding: 0,
@@ -188,7 +151,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: cmrTextColors.tableStatic,
+  color: textColors.tableStatic,
   fontFamily: primaryFonts.bold,
   fontSize: '1rem',
   padding: 0,
@@ -207,7 +170,7 @@ const genericTableHeaderStyle = {
   '&:hover': {
     cursor: 'pointer',
     '& span': {
-      color: cmrTextColors.linkActiveLight,
+      color: textColors.linkActiveLight,
     },
   },
 };
@@ -279,32 +242,28 @@ const themeDefaults: ThemeDefaults = () => {
       },
     },
     bg: {
+      app: '#f4f5f6',
       main: '#f4f4f4',
       offWhite: '#fbfbfb',
-      offWhiteDT: '#fbfbfb', // better handing for dark theme
-      navy: '#32363c',
-      lightBlue: '#f0f7ff',
+      lightBlue1: '#f0f7ff',
+      lightBlue2: '#e5f1ff',
       white: '#fff',
-      pureWhite: '#fff',
-      tableHeader: '#fbfbfb',
-      primaryNavActive: '#f4f4f4',
-      primaryNavActiveBG: '#515861',
+      tableHeader: '#f9fafa',
       primaryNavPaper: '#3a3f46',
-      mainContentBanner: '#33373D',
-      topMenu: '#fff',
-      billingHeader: '#f5f9ff',
-      controlHeader: '#f9fafa',
-      chipActive: '#cecece',
+      mainContentBanner: '#33373d',
+      bgPaper: '#ffffff',
+      bgAccessRow: '#fafafa',
+      bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
     },
     color: {
       headline: primaryColors.headline,
       red: '#ca0813',
-      green: '#00b159',
       orange: '#ffb31a',
       yellow: '#fecf2f',
+      green: '#00b159',
+      teal: '#17cf73',
       border2: '#c5c6c8',
       border3: '#eee',
-      borderPagination: '#ccc',
       grey1: '#abadaf',
       grey2: '#e7e7e7',
       grey3: '#ccc',
@@ -312,41 +271,23 @@ const themeDefaults: ThemeDefaults = () => {
       grey5: '#f5f5f5',
       grey6: '#e3e5e8',
       grey7: '#e9eaef',
+      grey8: '#dbdde1',
       grey9: '#f4f5f6',
-      grey10: '#dbdde1',
       white: '#fff',
       black: '#222',
-      blue: primaryColors.main,
-      offBlack: primaryColors.offBlack,
-      greenCyan: '#17cf73',
+      offBlack: '#444',
       boxShadow: '#ddd',
       boxShadowDark: '#aaa',
-      focusBorder: '#999',
-      absWhite: '#fff',
       blueDTwhite: '#3683dc',
-      selectDropDowns: primaryColors.main,
-      borderRow: 'white',
       tableHeaderText: 'rgba(0, 0, 0, 0.54)',
-      toggleActive: '#606469',
-      diskSpaceBorder: '#f4f4f4',
       drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
       label: '#555',
       disabledText: '#c9cacb',
-      kubeLabel: '#272b31',
-      primaryNavText: '#fff',
-      borderBilling: '#cce2ff',
-      billingText: '#313335',
       tagButton: '#f1f7fd',
-      tagText: '#3a3f46',
       tagIcon: '#7daee8',
-      tagBorder: '#fff',
-      chipButton: '#e5f1ff',
-      chipButtonHover: '#cce2ff',
     },
-    cmrBGColors,
-    cmrTextColors,
-    cmrBorderColors,
-    cmrIconColors,
+    textColors,
+    borderColors,
     graphs: {
       load: `rgba(255, 220, 77, ${graphTransparency})`,
       requests: `rgba(34, 206, 182, ${graphTransparency})`,
@@ -489,15 +430,6 @@ const themeDefaults: ThemeDefaults = () => {
         lineHeight: '0.625rem',
         color: primaryColors.text,
       },
-      h4: {
-        fontSize: '2.188rem',
-        lineHeight: '2.188rem',
-        color: primaryColors.text,
-        [breakpoints.up('lg')]: {
-          fontSize: '2.5rem',
-          lineHeight: '2.5rem',
-        },
-      },
       subtitle1: {
         fontSize: '1.075rem',
         lineHeight: '1.5rem',
@@ -556,10 +488,10 @@ const themeDefaults: ThemeDefaults = () => {
         },
         containedSecondary: {
           backgroundColor: 'transparent',
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
-            color: cmrTextColors.linkActiveLight,
+            color: textColors.linkActiveLight,
           },
           '&:active': {
             backgroundColor: 'transparent',
@@ -578,12 +510,12 @@ const themeDefaults: ThemeDefaults = () => {
         outlined: {
           backgroundColor: 'transparent',
           border: `1px solid ${primaryColors.main}`,
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: `${cmrBGColors.bgSecondaryButton} !important`,
-            border: `1px solid ${cmrBorderColors.borderSecondaryButton}`,
-            color: cmrTextColors.secondaryButton,
+            backgroundColor: '#f5f8ff !important',
+            border: '1px solid #d7dfed',
+            color: '#2575d0',
           },
         },
       },
@@ -632,9 +564,25 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
         clickable: {
+          backgroundColor: '#e5f1ff',
           '&:hover': {
-            background: 'rgb(206, 206, 206)',
+            backgroundColor: '#cce2ff',
           },
+          '&:focus': {
+            backgroundColor: '#cce2ff',
+          },
+        },
+        sizeSmall: {
+          height: 20,
+          fontSize: '.65rem',
+        },
+        labelSmall: {
+          paddingLeft: 4,
+          paddingRight: 4,
+        },
+        outlined: {
+          borderRadius: 1,
+          backgroundColor: 'transparent',
         },
         label: {
           paddingLeft: 4,
@@ -841,7 +789,7 @@ const themeDefaults: ThemeDefaults = () => {
       MuiIconButton: {
         root: {
           padding: 12,
-          color: cmrTextColors.linkActiveLight,
+          color: textColors.linkActiveLight,
           '&:hover': {
             color: primaryColors.main,
             backgroundColor: 'transparent',
@@ -1369,7 +1317,7 @@ const themeDefaults: ThemeDefaults = () => {
           lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
           '&.MuiTableSortLabel-active': {
-            color: cmrTextColors.tableHeader,
+            color: textColors.tableHeader,
           },
           '&:hover': {
             color: primaryColors.main,

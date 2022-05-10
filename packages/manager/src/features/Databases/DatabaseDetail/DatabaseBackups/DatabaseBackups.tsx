@@ -10,15 +10,15 @@ import TableSortCell from 'src/components/TableSortCell';
 import DatabaseBackupTableRow from './DatabaseBackupTableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import Skeleton from 'src/components/core/Skeleton';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
-import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
+import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId, engine } = useParams<{
@@ -74,19 +74,7 @@ export const DatabaseBackups: React.FC = () => {
       return <TableRowError message={backupsError[0].reason} colSpan={3} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
-      return (
-        <TableRow data-testid="table-row-loading">
-          <TableCell>
-            <Skeleton />
-          </TableCell>
-          <TableCell>
-            <Skeleton />
-          </TableCell>
-          <TableCell>
-            <Skeleton style={{ maxWidth: '85%' }} />
-          </TableCell>
-        </TableRow>
-      );
+      return <TableRowLoading columns={3} />;
     }
     if (backups?.results === 0) {
       return (

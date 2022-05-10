@@ -36,10 +36,8 @@ interface Theme extends _Theme {
   '@keyframes rotate': any;
   '@keyframes dash': any;
   bg: any;
-  cmrBGColors: any;
-  cmrTextColors: any;
-  cmrBorderColors: any;
-  cmrIconColors: any;
+  textColors: any;
+  borderColors: any;
   color: any;
   graphs: any;
   visually: any;

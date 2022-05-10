@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   controlHeader: {
     display: 'flex',
     justifyContent: 'flex-end',
-    backgroundColor: theme.cmrBGColors.bgTableHeader,
+    backgroundColor: theme.bg.tableHeader,
   },
   toggleButton: {
     color: '#d2d3d4',
@@ -48,13 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '14%',
     [theme.breakpoints.only('sm')]: {
       width: '15%',
-    },
-  },
-  ipAddressCell: {
-    ...theme.applyTableHeaderStyles,
-    width: '14%',
-    [theme.breakpoints.only('sm')]: {
-      width: '22%',
     },
   },
   regionCell: {
@@ -150,7 +143,6 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
                 active={isActive('ipv4[0]')}
                 handleClick={handleOrderChange}
                 direction={order}
-                className={classes.ipAddressCell}
               >
                 IP Address
               </TableSortCell>

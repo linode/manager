@@ -1,18 +1,21 @@
 import Divider, {
   DividerProps as _DividerProps,
 } from '@material-ui/core/Divider';
+import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    backgroundColor: theme.cmrBorderColors.divider,
+    backgroundColor: theme.borderColors.divider,
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),
   },
   light: {
-    backgroundColor: theme.cmrBorderColors.dividerLight,
+    backgroundColor: theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238',
+  },
+  dark: {
+    backgroundColor: theme.color.border2,
   },
 }));
 
@@ -20,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface DividerProps extends _DividerProps {}
 
 interface Props extends _DividerProps {
+  dark?: boolean;
   light?: boolean;
   spacingTop?: number;
   spacingBottom?: number;
@@ -27,12 +31,13 @@ interface Props extends _DividerProps {
 
 const _Divider: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { light, spacingTop, spacingBottom, ...rest } = props;
+  const { dark, light, spacingTop, spacingBottom, ...rest } = props;
 
   return (
     <Divider
       className={classNames({
         [classes.root]: true,
+        [classes.dark]: dark,
         [classes.light]: light,
       })}
       style={{ marginTop: spacingTop, marginBottom: spacingBottom }}

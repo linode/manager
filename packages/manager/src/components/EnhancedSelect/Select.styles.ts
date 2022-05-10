@@ -69,12 +69,12 @@ export const styles = (theme: Theme) =>
         margin: '-1px 0 0 0',
         borderRadius: 0,
         boxShadow: 'none',
-        border: `1px solid ${theme.color.selectDropDowns}`,
+        border: `1px solid ${theme.palette.primary.main}`,
         maxWidth: 415,
         zIndex: 100,
       },
       '& .react-select__group': {
-        width: `calc(100% + ${theme.spacing(1) / 2}px)`,
+        width: '100%',
         '&:last-child': {
           paddingBottom: 0,
         },
@@ -138,7 +138,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__multi-value': {
         borderRadius: 4,
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.bg.lightBlue1,
         alignItems: 'center',
       },
       '& .react-select__multi-value__label': {
@@ -258,7 +258,7 @@ export const styles = (theme: Theme) =>
     selectedMenuItem: {
       backgroundColor: `${theme.bg.main} !important`,
       '& .tag': {
-        backgroundColor: theme.bg.lightBlue,
+        backgroundColor: theme.bg.lightBlue1,
         color: theme.palette.text.primary,
         '&:hover': {
           backgroundColor: theme.palette.primary.main,
@@ -392,7 +392,7 @@ export const reactSelectStyles = (theme: Theme) => ({
     margin: 0,
     borderRadius: 0,
     boxShadow: 'none',
-    border: `1px solid ${theme.color.selectDropDowns}`,
+    border: `1px solid ${theme.palette.primary.main}`,
     maxWidth: 415,
     zIndex: 100,
     // The following three rules are different than the class above:
@@ -468,7 +468,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   multiValue: (base: any) => ({
     ...base,
     borderRadius: 4,
-    backgroundColor: theme.bg.lightBlue,
+    backgroundColor: theme.bg.lightBlue1,
     alignItems: 'center',
   }),
   clearIndicator: (base: any) => ({

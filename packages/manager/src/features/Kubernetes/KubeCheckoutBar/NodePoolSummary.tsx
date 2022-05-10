@@ -1,33 +1,46 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
-import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(),
+    '& $textField': {
+      width: 53,
+    },
   },
   typeHeader: {
-    paddingLeft: theme.spacing(),
-    paddingBottom: theme.spacing(0.5),
     fontSize: '16px',
     fontWeight: 600,
+    paddingBottom: theme.spacing(0.5),
   },
   typeSubheader: {
-    paddingLeft: theme.spacing(),
     fontSize: '14px',
   },
   button: {
+    alignItems: 'flex-start',
     color: '#979797',
+    marginTop: -4,
+    padding: 0,
     '&:hover': {
       color: '#6e6e6e',
+    },
+  },
+  numberInput: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1.5),
+  },
+  price: {
+    '& h3': {
+      color: `${theme.palette.text.primary} !important`,
+      fontFamily: '"LatoWebRegular", sans-serif',
     },
   },
 }));
@@ -41,9 +54,8 @@ export interface Props {
 }
 
 export const NodePoolSummary: React.FC<Props> = (props) => {
-  const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
-
   const classes = useStyles();
+  const { nodeCount, onRemove, poolType, price, updateNodeCount } = props;
 
   // This should never happen but TS wants us to account for the situation
   // where we fail to match a selected type against our types list.
@@ -52,23 +64,16 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
   }
 
   return (
-    <React.Fragment>
-      <Divider spacingTop={16} />
-      <Grid
-        container
-        alignItems="flex-start"
-        direction="column"
-        className={classes.root}
+    <>
+      <Divider dark spacingTop={24} spacingBottom={12} />
+      <Box
+        display="flex"
+        flexDirection="column"
         data-testid="node-pool-summary"
+        className={classes.root}
       >
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          wrap="nowrap"
-        >
-          <Grid item>
+        <Box display="flex" justifyContent="space-between">
+          <div>
             <Typography className={classes.typeHeader}>
               {poolType.label} Plan
             </Typography>
@@ -76,29 +81,27 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
               {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
               GB Storage
             </Typography>
-          </Grid>
-          <Grid item>
-            <IconButton
-              className={classes.button}
-              onClick={onRemove}
-              data-testid="remove-pool-button"
-            >
-              <Close />
-            </IconButton>
-          </Grid>
-        </Grid>
-        <Grid item>
+          </div>
+          <IconButton
+            className={classes.button}
+            onClick={onRemove}
+            data-testid="remove-pool-button"
+          >
+            <Close />
+          </IconButton>
+        </Box>
+        <div className={classes.numberInput}>
           <EnhancedNumberInput
             value={nodeCount}
             setValue={updateNodeCount}
             min={1}
           />
-        </Grid>
-        <Grid item>
-          <DisplayPrice price={price} fontSize="16px" interval="month" />
-        </Grid>
-      </Grid>
-    </React.Fragment>
+        </div>
+        <div className={classes.price}>
+          <DisplayPrice price={price} fontSize="14px" interval="month" />
+        </div>
+      </Box>
+    </>
   );
 };
 

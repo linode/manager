@@ -10,13 +10,13 @@ import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
-import { capitalize } from 'src/utilities/capitalize';
+import capitalize from 'src/utilities/capitalize';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
     display: 'block',
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
     fontSize: '.875rem',
     lineHeight: '1.125rem',
     '&:hover, &:focus': {
@@ -73,7 +73,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell>
+      <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
         {capitalize(status)}
       </TableCell>

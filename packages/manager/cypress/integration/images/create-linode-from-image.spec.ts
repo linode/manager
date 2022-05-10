@@ -6,12 +6,12 @@ import {
   fbtVisible,
   getClick,
 } from 'cypress/support/helpers';
-import strings from '../../support/cypresshelpers';
+import { randomString } from 'support/util/random';
 
 const mockImage = createMockImage().data[0];
 const imageLabel = mockImage.label;
 const linodeId = 99999999;
-const rootpass = strings.randomPass();
+const rootpass = randomString(32);
 const region = 'us-west';
 const regionSelect = 'Fremont, CA';
 const imageId = mockImage.id;

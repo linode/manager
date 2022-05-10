@@ -4,32 +4,50 @@ import TextField from 'src/components/TextField';
 interface Props {
   onBlur: (e: any) => void;
   onChange: (e: React.ChangeEvent<any>) => void;
-  error?: string;
-  value: string;
   name: string;
+  value: string;
   disabled?: boolean;
+  error?: string;
+  textFieldStyles?: string;
+  tooltipClasses?: string;
+  tooltipPosition?:
+    | 'bottom'
+    | 'bottom-end'
+    | 'bottom-start'
+    | 'left-end'
+    | 'left-start'
+    | 'left'
+    | 'right-end'
+    | 'right-start'
+    | 'right'
+    | 'top-end'
+    | 'top-start'
+    | 'top';
+  tooltipText?: string | JSX.Element;
 }
 
 type CombinedProps = Props;
 
 const LabelField: React.FC<CombinedProps> = ({
+  name,
+  value,
   error,
   onBlur,
   onChange,
-  value,
-  name,
+  textFieldStyles,
   ...rest
 }) => {
   return (
     <TextField
-      data-qa-volume-label
-      errorText={error}
+      className={textFieldStyles}
       label="Label"
       name={name}
+      value={value}
+      errorText={error}
       onBlur={onBlur}
       onChange={onChange}
       required
-      value={value}
+      data-qa-volume-label
       {...rest}
     />
   );

@@ -14,17 +14,17 @@ import ObjectActionMenu from './ObjectActionMenu';
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
-      backgroundColor: theme.bg.lightBlue,
+      backgroundColor: theme.bg.lightBlue1,
     },
   },
   manuallyCreatedIcon: {
     '& g': {
-      fill: theme.bg.lightBlue,
+      fill: theme.bg.lightBlue1,
     },
   },
   objectNameButton: {
     ...theme.applyLinkStyles,
-    color: theme.cmrTextColors.linkActiveLight,
+    color: theme.textColors.linkActiveLight,
   },
 }));
 
@@ -74,7 +74,7 @@ const ObjectTableRow: React.FC<Props> = (props) => {
                   className={classes.objectNameButton}
                   onClick={handleClickDetails}
                 >
-                  <strong>{displayName}</strong>
+                  {displayName}
                 </button>
               </Typography>
             </Box>

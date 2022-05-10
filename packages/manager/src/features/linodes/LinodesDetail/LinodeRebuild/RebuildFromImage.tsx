@@ -10,10 +10,12 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import TextField from 'src/components/TextField';
+import TypeToConfirm from 'src/components/TypeToConfirm';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
@@ -54,6 +56,7 @@ export type CombinedProps = Props &
   WithImages &
   UserSSHKeyProps &
   RouteComponentProps &
+  PreferencesProps &
   WithSnackbarProps;
 
 interface RebuildFromImageForm {
@@ -80,6 +83,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     onClose,
     enqueueSnackbar,
     passwordHelperText,
+    preferences,
   } = props;
 
   const classes = useStyles();
@@ -87,7 +91,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
-  const submitButtonDisabled = confirmationText !== linodeLabel;
+  const submitButtonDisabled =
+    preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
     { image, root_pass }: RebuildFromImageForm,
@@ -203,16 +208,23 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 passwordHelperText={passwordHelperText}
               />
               <ActionsPanel className={classes.actionPanel}>
-                <Typography variant="h2">Confirm</Typography>
-                <Typography style={{ marginBottom: 8 }}>
-                  To confirm these changes, type the label of the Linode{' '}
-                  <strong>({linodeLabel})</strong> in the field below:
-                </Typography>
-                <TextField
-                  label="Linode Label"
+                <TypeToConfirm
+                  confirmationText={
+                    <span>
+                      To confirm these changes, type the label of the Linode (
+                      <strong>{linodeLabel}</strong>) in the field below:
+                    </span>
+                  }
+                  title="Confirm"
+                  typographyStyle={{ marginBottom: 8 }}
+                  onChange={(input) => {
+                    setConfirmationText(input);
+                  }}
+                  value={confirmationText}
                   hideLabel
-                  onChange={(e) => setConfirmationText(e.target.value)}
-                  style={{ marginBottom: 16 }}
+                  visible={preferences?.type_to_confirm}
+                  label="Linode Label"
+                  textFieldStyle={{ marginBottom: 16 }}
                 />
                 <Button
                   disabled={submitButtonDisabled || disabled}
@@ -233,6 +245,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withImages(),
+  withPreferences(),
   userSSHKeyHoc,
   withSnackbar,
   withRouter
