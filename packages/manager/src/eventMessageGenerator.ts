@@ -28,24 +28,23 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: () => 'The EU Model Contract has been signed.',
   },
   account_update: {
-    notification: (e) => `Your account settings have been **updated**.`,
+    notification: (e) => `Your account settings have been updated.`,
   },
   account_settings_update: {
-    notification: (e) => `Your account settings have been **updated**.`,
+    notification: (e) => `Your account settings have been updated.`,
   },
   backups_cancel: {
     notification: (e) =>
-      `Backups have been **canceled** for **${e.entity!.label}**.`,
+      `Backups have been canceled for **${e.entity!.label}**.`,
   },
   backups_enable: {
     notification: (e) =>
       `Backups have been enabled for **${e.entity!.label}**.`,
   },
   backups_restore: {
-    scheduled: (e) =>
-      `Backup restoration **scheduled** for **${e.entity!.label}**`,
+    scheduled: (e) => `Backup restoration scheduled for **${e.entity!.label}**`,
     started: (e) => `Backup restoration started for **${e.entity!.label}**`,
-    failed: (e) => `Backup restoration **failed** for **${e.entity!.label}**.`,
+    failed: (e) => `Backup restoration failed for **${e.entity!.label}**.`,
     finished: (e) => `Backup restoration completed for **${e.entity!.label}**.`,
     notification: (e) =>
       `Backup restoration completed for **${e.entity!.label}**.`,
@@ -62,67 +61,63 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       `You have been mentioned in a Community post: **${e.entity!.label}**`,
   },
   credit_card_updated: {
-    notification: (e) => `Credit card information has been **updated**.`,
+    notification: (e) => `Credit card information has been updated.`,
   },
   disk_create: {
     scheduled: (e) =>
-      `**${safeSecondaryEntityLabel(
+      `${safeSecondaryEntityLabel(
         e,
         'Disk',
         'A disk'
-      )}** is being **added** to Linode **${e.entity!.label}**.`,
+      )} is being added to Linode **${e.entity!.label}**.`,
     started: (e) =>
-      `**${safeSecondaryEntityLabel(
-        e,
-        'Disk',
-        'A disk'
-      )}** is being **added** to ${e.entity!.label}.`,
+      `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} is being added to ${
+        e.entity!.label
+      }.`,
     failed: (e) =>
-      `**${safeSecondaryEntityLabel(
+      `${safeSecondaryEntityLabel(
         e,
         'Disk',
         'A disk'
-      )}** could not be **added** to Linode **${e.entity!.label}**.`,
+      )} could not be added to Linode **${e.entity!.label}**.`,
     finished: (e) =>
-      `**${safeSecondaryEntityLabel(
+      `${safeSecondaryEntityLabel(
         e,
         'Disk',
         'A disk'
-      )}** has been **added** to Linode **${e.entity!.label}**.`,
+      )} has been added to Linode **${e.entity!.label}**.`,
     // notification: e => ``,
   },
   disk_update: {
     notification: (e) =>
-      `**${safeSecondaryEntityLabel(
+      `${safeSecondaryEntityLabel(
         e,
         'Disk',
         'A disk'
-      )}** has been **updated** on Linode **${e.entity!.label}**.`,
+      )} has been updated on Linode **${e.entity!.label}**.`,
   },
   disk_delete: {
     scheduled: (e) =>
       `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
         e.entity!.label
-      } is **scheduled** for **deletion**.`,
+      } is scheduled for deletion.`,
     started: (e) =>
       `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
         e.entity!.label
-      } is being **deleted**.`,
+      } is being deleted.`,
     failed: (e) =>
       `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
         e.entity!.label
-      } could not be **deleted**.`,
+      } could not be deleted.`,
     finished: (e) =>
       `${safeSecondaryEntityLabel(e, 'Disk', 'A disk')} on Linode ${
         e.entity!.label
-      } has been **deleted**`,
+      } has been deleted`,
     // notification: e => ``,
   },
   disk_duplicate: {
     scheduled: (e) =>
-      `A disk on Linode **${
-        e.entity!.label
-      }** is **scheduled** for duplication.`,
+      `A disk on Linode **${e.entity!.label}** is scheduled for duplication.`,
     started: (e) =>
       `A disk on Linode **${e.entity!.label}** is being duplicated.`,
     failed: (e) =>
@@ -135,71 +130,67 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: (e) =>
       `Image ${e?.secondary_entity?.label + ' ' ?? ''}scheduled for creation.`,
     started: (e) =>
-      `Image ${e?.secondary_entity?.label + ' ' ?? ''}being **created**.`,
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}being created.`,
     failed: (e) => `Error creating Image ${e?.secondary_entity?.label ?? ''}.`,
     finished: (e) =>
-      `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been **created**.`,
+      `Image ${e?.secondary_entity?.label + ' ' ?? ''}has been created.`,
   },
   disk_resize: {
     scheduled: (e) =>
-      `A disk on **${e.entity!.label}** is **scheduled** for resizing.`,
-    started: (e) =>
-      `A disk on Linode **${e.entity!.label}** is being **resized**.`,
+      `A disk on **${e.entity!.label}** is scheduled for resizing.`,
+    started: (e) => `A disk on Linode **${e.entity!.label}** is being resized.`,
     failed: (e) =>
-      `A disk on Linode **${e.entity!.label}** could not be **resized**.`,
-    finished: (e) =>
-      `A disk on Linode **${e.entity!.label}** has been **resized**`,
+      `A disk on Linode **${e.entity!.label}** could not be resized.`,
+    finished: (e) => `A disk on Linode **${e.entity!.label}** has been resized`,
     // notification: e => ``,
   },
   dns_record_create: {
-    notification: (e) =>
-      `DNS record has been **added** to **${e.entity!.label}**`,
+    notification: (e) => `DNS record has been added to **${e.entity!.label}**`,
   },
   dns_record_delete: {
     notification: (e) =>
-      `DNS record has been **removed** from **${e.entity!.label}**`,
+      `DNS record has been removed from **${e.entity!.label}**`,
   },
   dns_zone_create: {
-    notification: (e) =>
-      `DNS zone has been **added** to **${e.entity!.label}**`,
+    notification: (e) => `DNS zone has been added to **${e.entity!.label}**`,
   },
   dns_zone_delete: {
     notification: (e) =>
-      `DNS zone has been **removed** from **${e.entity!.label}**`,
+      `DNS zone has been removed from **${e.entity!.label}**`,
   },
   domain_create: {
-    notification: (e) => `Domain **${e.entity!.label}** has been **created**.`,
+    notification: (e) => `Domain **${e.entity!.label}** has been created.`,
   },
   domain_update: {
-    notification: (e) => `Domain **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `Domain **${e.entity!.label}** has been updated.`,
   },
   domain_delete: {
-    notification: (e) => `Domain **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `Domain **${e.entity!.label}** has been deleted.`,
   },
   domain_record_create: {
-    notification: (e) => `${e.message} **added** to **${e.entity!.label}**`,
+    notification: (e) => `${e.message} added to **${e.entity!.label}**`,
   },
   domain_record_update: {
-    notification: (e) => `${e.message} **updated** for **${e.entity!.label}**`,
+    notification: (e) => `${e.message} updated for **${e.entity!.label}**`,
   },
   domain_record_delete: {
     notification: (e) =>
-      `A domain record has been **deleted** from **${e.entity!.label}**`,
+      `A domain record has been deleted from **${e.entity!.label}**`,
   },
   domain_import: {
     notification: (e) => `Domain ${e.entity?.label ?? ''} has been imported.`,
   },
   entity_transfer_accept: {
-    notification: (_) => `A service transfer has been **canceled**.`,
+    notification: (_) => `A service transfer has been accepted.`,
   },
   entity_transfer_accept_recipient: {
-    notification: (_) => `You have **canceled** a service transfer.`,
+    notification: (_) => `You have accepted a service transfer.`,
   },
   entity_transfer_cancel: {
-    notification: (_) => `A service transfer has been **canceled**.`,
+    notification: (_) => `A service transfer has been canceled.`,
   },
   entity_transfer_create: {
-    notification: (_) => `A service transfer has been **created**.`,
+    notification: (_) => `A service transfer has been created.`,
   },
   entity_transfer_fail: {
     notification: (_) => `Service transfer failed.`,
@@ -214,52 +205,45 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Firewall ${e.entity?.label ?? ''} has been disabled.`,
   },
   firewall_update: {
-    notification: (e) =>
-      `Firewall ${e.entity?.label ?? ''} has been **updated**.`,
+    notification: (e) => `Firewall ${e.entity?.label ?? ''} has been updated.`,
   },
   firewall_device_add: {
     notification: (e) =>
-      `A device has been **added** to Firewall ${e.entity?.label ?? ''}.`,
+      `A device has been added to Firewall ${e.entity?.label ?? ''}.`,
   },
   firewall_device_remove: {
     notification: (e) =>
-      `A device has been **removed** from Firewall ${e.entity?.label ?? ''}.`,
+      `A device has been removed from Firewall ${e.entity?.label ?? ''}.`,
   },
   firewall_delete: {
-    notification: (e) =>
-      `Firewall ${e.entity?.label ?? ''} has been **deleted**.`,
+    notification: (e) => `Firewall ${e.entity?.label ?? ''} has been deleted.`,
   },
   firewall_create: {
-    notification: (e) =>
-      `Firewall ${e.entity?.label ?? ''} has been **created**.`,
+    notification: (e) => `Firewall ${e.entity?.label ?? ''} has been created.`,
   },
   image_update: {
-    notification: (e) => `Image ${e.entity?.label ?? ''} has been **updated**.`,
+    notification: (e) => `Image ${e.entity?.label ?? ''} has been updated.`,
   },
   image_delete: {
-    scheduled: (e) =>
-      `Image ${e.entity?.label ?? ''} **scheduled** for **deletion**.`,
-    started: (e) => `Image ${e.entity?.label ?? ''} is being **deleted**.`,
+    scheduled: (e) => `Image ${e.entity?.label ?? ''} scheduled for deletion.`,
+    started: (e) => `Image ${e.entity?.label ?? ''} is being deleted.`,
     failed: (e) => `There was a problem deleting ${e.entity?.label ?? ''}.`,
-    finished: (e) => `Image ${e.entity?.label ?? ''} has been **deleted**.`,
-    notification: (e) => `Image ${e.entity?.label ?? ''} has been **deleted**.`,
+    finished: (e) => `Image ${e.entity?.label ?? ''} has been deleted.`,
+    notification: (e) => `Image ${e.entity?.label ?? ''} has been deleted.`,
   },
   image_upload: {
-    scheduled: (e) =>
-      `Image ${e.entity?.label ?? ''} **scheduled** for upload.`,
+    scheduled: (e) => `Image ${e.entity?.label ?? ''} scheduled for upload.`,
     started: (e) => `Image ${e.entity?.label ?? ''} is being uploaded.`,
     failed: (e) => `There was a problem uploading ${e.entity?.label ?? ''}.`,
     finished: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
     notification: (e) => `Image ${e.entity?.label ?? ''} has been uploaded.`,
   },
   linode_addip: {
-    notification: (e) => `An IP has been **added** to **${e.entity!.label}**.`,
+    notification: (e) => `An IP has been added to **${e.entity!.label}**.`,
   },
   linode_boot: {
     scheduled: (e) =>
-      `Linode **${
-        e.entity!.label
-      }** is **scheduled** to ${safeSecondaryEntityLabel(
+      `Linode **${e.entity!.label}** is scheduled to ${safeSecondaryEntityLabel(
         e,
         'boot with config',
         'boot'
@@ -267,20 +251,20 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: (e) =>
       `Linode **${e.entity!.label}** is being ${safeSecondaryEntityLabel(
         e,
-        '**booted** with config',
-        '**booted**'
+        'booted with config',
+        'booted'
       )}.`,
     failed: (e) =>
       `Linode **${e.entity!.label}** could not be ${safeSecondaryEntityLabel(
         e,
-        '**booted** with config',
-        '**booted**'
+        'booted with config',
+        'booted'
       )}.`,
     finished: (e) =>
       `Linode **${e.entity!.label}** has been ${safeSecondaryEntityLabel(
         e,
-        '**booted** with config',
-        '**booted**'
+        'booted with config',
+        'booted'
       )}.`,
   },
   /**
@@ -292,7 +276,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: (e) =>
       `Linode ${
         e.entity?.label ?? ''
-      } is **scheduled** to be rebooted by the Lassie watchdog service.`,
+      } is scheduled to be rebooted by the Lassie watchdog service.`,
     started: (e) =>
       `Linode ${
         e.entity?.label ?? ''
@@ -308,58 +292,50 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   host_reboot: {
     scheduled: (e) =>
-      `Linode **${
+      `Linode ${
         e.entity?.label ?? ''
-      }** is **scheduled** to reboot (Host initiated restart).`,
+      } is scheduled to reboot (Host initiated restart).`,
     started: (e) =>
-      `Linode **${
+      `Linode ${
         e.entity?.label ?? ''
-      }** is being booted (Host initiated restart).`,
+      } is being booted (Host initiated restart).`,
     failed: (e) =>
-      `Linode **${
+      `Linode ${
         e.entity?.label ?? ''
-      }** could not be booted (Host initiated restart).`,
+      } could not be booted (Host initiated restart).`,
     finished: (e) =>
-      `Linode **${
+      `Linode ${
         e.entity?.label ?? ''
-      }** has been booted (Host initiated restart).`,
+      } has been booted (Host initiated restart).`,
   },
   ipaddress_update: {
-    notification: (e) => `An IP address has been **updated** on your account.`,
+    notification: (e) => `An IP address has been updated on your account.`,
   },
   ipv6pool_add: {
-    notification: () => 'An IPv6 range has been **added**.',
+    notification: () => 'An IPv6 range has been added.',
   },
   ipv6pool_delete: {
-    notification: () => 'An IPv6 range has been **deleted**.',
+    notification: () => 'An IPv6 range has been deleted.',
   },
   lish_boot: {
     scheduled: (e) =>
-      `Linode **${
+      `Linode ${
         e.entity?.label ?? ''
-      }** is **scheduled** to boot (Lish initiated boot).`,
+      } is scheduled to boot (Lish initiated boot).`,
     started: (e) =>
-      `Linode **${
-        e.entity?.label ?? ''
-      }** is being booted (Lish initiated boot).`,
+      `Linode ${e.entity?.label ?? ''} is being booted (Lish initiated boot).`,
     failed: (e) =>
-      `Linode **${
+      `Linode ${
         e.entity?.label ?? ''
-      }** could not be booted (Lish initiated boot).`,
+      } could not be booted (Lish initiated boot).`,
     finished: (e) =>
-      `Linode **${
-        e.entity?.label ?? ''
-      }** has been booted (Lish initiated boot).`,
+      `Linode ${e.entity?.label ?? ''} has been booted (Lish initiated boot).`,
   },
   linode_clone: {
     scheduled: (e) =>
       `Linode ${
         e.entity?.label ?? ''
-      } is **scheduled** to be cloned${safeSecondaryEntityLabel(
-        e,
-        ' to',
-        ''
-      )}.`,
+      } is scheduled to be cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     started: (e) =>
       `Linode ${
         e.entity?.label ?? ''
@@ -373,37 +349,37 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.entity?.label ?? ''
       } has been cloned${safeSecondaryEntityLabel(e, ' to', '')}.`,
     notification: (e) =>
-      `Linode **${e.entity?.label ?? ''}** is **scheduled** to be cloned.`,
+      `Linode ${e.entity?.label ?? ''} is scheduled to be cloned.`,
   },
   linode_create: {
     scheduled: (e) =>
-      `Linode **${e.entity!.label}** is **scheduled** for creation.`,
-    started: (e) => `Linode **${e.entity!.label}** is being **created**.`,
-    failed: (e) => `Linode **${e.entity!.label}** could not be **created**.`,
-    finished: (e) => `Linode **${e.entity!.label}** has been **created**.`,
+      `Linode **${e.entity!.label}** is scheduled for creation.`,
+    started: (e) => `Linode **${e.entity!.label}** is being created.`,
+    failed: (e) => `Linode **${e.entity!.label}** could not be created.`,
+    finished: (e) => `Linode **${e.entity!.label}** has been created.`,
   },
   linode_update: {
-    notification: (e) => `Linode **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `Linode **${e.entity!.label}** has been updated.`,
   },
   linode_delete: {
     scheduled: (e) =>
-      `Linode **${e.entity!.label}** is **scheduled** for **deletion**.`,
-    started: (e) => `Linode **${e.entity!.label}** is being **deleted**.`,
-    failed: (e) => `Linode **${e.entity!.label}** could not be **deleted**.`,
-    finished: (e) => `Linode **${e.entity!.label}** has been **deleted**.`,
-    notification: (e) => `Linode **${e.entity!.label}** has been **deleted**.`,
+      `Linode **${e.entity!.label}** is scheduled for deletion.`,
+    started: (e) => `Linode **${e.entity!.label}** is being deleted.`,
+    failed: (e) => `Linode **${e.entity!.label}** could not be deleted.`,
+    finished: (e) => `Linode **${e.entity!.label}** has been deleted.`,
+    notification: (e) => `Linode **${e.entity!.label}** has been deleted.`,
   },
   linode_deleteip: {
-    notification: (e) => `An IP was **deleted** from Linode ${e.entity!.id}`,
+    notification: (e) => `An IP was deleted from Linode ${e.entity!.id}`,
   },
   linode_migrate: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ?? ''} is **scheduled** for migration.`,
+      `Linode ${e.entity?.label ?? ''} is scheduled for migration.`,
     started: (e) => `Linode ${e.entity?.label ?? ''} is being migrated.`,
-    failed: (e) => `Migration **failed** for Linode ${e.entity?.label ?? ''}.`,
+    failed: (e) => `Migration failed for Linode ${e.entity?.label ?? ''}.`,
     finished: (e) => `Linode ${e.entity?.label ?? ''} has been migrated.`,
   },
-  // This event type isn't currently being displayed, but I **added** a message here just in case.
+  // This event type isn't currently being displayed, but I added a message here just in case.
   linode_migrate_datacenter_create: {
     notification: (e) =>
       `Migration for Linode **${e.entity!.label}** has been initiated.`,
@@ -411,30 +387,27 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   // These are the same as the messages for `linode_migrate`.
   linode_migrate_datacenter: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ?? ''} is **scheduled** for migration.`,
+      `Linode ${e.entity?.label ?? ''} is scheduled for migration.`,
     started: (e) => `Linode ${e.entity?.label ?? ''} is being migrated.`,
-    failed: (e) => `Migration **failed** for Linode ${e.entity?.label ?? ''}.`,
+    failed: (e) => `Migration failed for Linode ${e.entity?.label ?? ''}.`,
     finished: (e) => `Linode ${e.entity?.label ?? ''} has been migrated.`,
   },
-  // This event type isn't currently being displayed, but I **added** a message here just in case.
+  // This event type isn't currently being displayed, but I added a message here just in case.
   linode_mutate_create: {
     notification: (e) =>
       `Upgrade for Linode **${e.entity!.label}** has been initiated.`,
   },
   linode_mutate: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ?? ''} is **scheduled** for an upgrade.`,
-    started: (e) => `Linode ${e.entity?.label ?? ''} is being **upgraded**.`,
-    failed: (e) => `Linode ${e.entity?.label ?? ''} could not be **upgraded**.`,
-    finished: (e) => `Linode ${e.entity?.label ?? ''} has been **upgraded**.`,
-    notification: (e) =>
-      `Linode ${e.entity?.label ?? ''} is being **upgraded**.`,
+      `Linode ${e.entity?.label ?? ''} is scheduled for an upgrade.`,
+    started: (e) => `Linode ${e.entity?.label ?? ''} is being upgraded.`,
+    failed: (e) => `Linode ${e.entity?.label ?? ''} could not be upgraded.`,
+    finished: (e) => `Linode ${e.entity?.label ?? ''} has been upgraded.`,
+    notification: (e) => `Linode ${e.entity?.label ?? ''} is being upgraded.`,
   },
   linode_reboot: {
     scheduled: (e) =>
-      `Linode **${
-        e.entity!.label
-      }** is **scheduled** ${safeSecondaryEntityLabel(
+      `Linode **${e.entity!.label}** is scheduled ${safeSecondaryEntityLabel(
         e,
         'for a reboot with config',
         'for a reboot'
@@ -459,42 +432,38 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       )}.`,
   },
   linode_rebuild: {
-    scheduled: (e) =>
-      `Linode **${e.entity!.label}** is **scheduled** for rebuild.`,
+    scheduled: (e) => `Linode **${e.entity!.label}** is scheduled for rebuild.`,
     started: (e) => `Linode **${e.entity!.label}** is being rebuilt.`,
     failed: (e) => `Linode **${e.entity!.label}** could not be rebuilt.`,
     finished: (e) => `Linode **${e.entity!.label}** has been rebuilt.`,
   },
-  // This event type isn't currently being displayed, but I **added** a message here just in case.
+  // This event type isn't currently being displayed, but I added a message here just in case.
   linode_resize_create: {
     notification: (e) =>
-      `**Resize** for Linode **${e.entity!.label}** has been initiated.`,
+      `Resize for Linode **${e.entity!.label}** has been initiated.`,
   },
   linode_resize: {
     scheduled: (e) =>
-      `Linode ${e.entity?.label ?? ''} is **scheduled** for resizing.`,
+      `Linode ${e.entity?.label ?? ''} is scheduled for resizing.`,
     started: (e) => `Linode ${e.entity?.label ?? ''} is resizing.`,
-    failed: (e) => `Linode ${e.entity?.label ?? ''} could not be **resized**`,
-    finished: (e) => `Linode ${e.entity?.label ?? ''} has been **resized**.`,
+    failed: (e) => `Linode ${e.entity?.label ?? ''} could not be resized`,
+    finished: (e) => `Linode ${e.entity?.label ?? ''} has been resized.`,
   },
   linode_shutdown: {
     scheduled: (e) =>
-      `Linode **${e.entity!.label}** is **scheduled** for **shutdown**.`,
-    started: (e) => `Linode **${e.entity!.label}** is **shutting down**.`,
-    failed: (e) => `Linode **${e.entity!.label}** could not be **shut down**.`,
-    finished: (e) => `Linode **${e.entity!.label}** has been **shut down**.`,
+      `Linode **${e.entity!.label}** is scheduled for shutdown.`,
+    started: (e) => `Linode **${e.entity!.label}** is shutting down.`,
+    failed: (e) => `Linode **${e.entity!.label}** could not be shut down.`,
+    finished: (e) => `Linode **${e.entity!.label}** has been shut down.`,
   },
   linode_snapshot: {
     scheduled: (e) =>
-      `Linode **${e.entity!.label}** is **scheduled** for a snapshot backup.`,
+      `Linode **${e.entity!.label}** is scheduled for a snapshot backup.`,
     started: (e) =>
-      `A snapshot backup is being **created** for Linode **${
-        e.entity!.label
-      }**.`,
-    failed: (e) =>
-      `Snapshot backup **failed** on Linode **${e.entity!.label}**.`,
+      `A snapshot backup is being created for Linode **${e.entity!.label}**.`,
+    failed: (e) => `Snapshot backup failed on Linode **${e.entity!.label}**.`,
     finished: (e) =>
-      `A snapshot backup has been **created** for **${e.entity!.label}**.`,
+      `A snapshot backup has been created for **${e.entity!.label}**.`,
   },
   linode_config_create: {
     notification: (e) =>
@@ -502,7 +471,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e,
         'Config',
         'A config'
-      )} has been **created** on Linode **${e.entity!.label}**.`,
+      )} has been created on Linode **${e.entity!.label}**.`,
   },
   linode_config_update: {
     notification: (e) =>
@@ -510,7 +479,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e,
         'Config',
         'A config'
-      )} has been **updated** on Linode **${e.entity!.label}**.`,
+      )} has been updated on Linode **${e.entity!.label}**.`,
   },
   linode_config_delete: {
     notification: (e) =>
@@ -518,7 +487,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e,
         'Config',
         'A config'
-      )} has been **deleted** on Linode **${e.entity!.label}**.`,
+      )} has been deleted on Linode **${e.entity!.label}**.`,
   },
   lke_node_create: {
     // This event is a special case; a notification means the node creation failed.
@@ -530,15 +499,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   longviewclient_create: {
     notification: (e) =>
-      `Longview Client **${e.entity!.label}** has been **created**.`,
+      `Longview Client **${e.entity!.label}** has been created.`,
   },
   longviewclient_delete: {
     notification: (e) =>
-      `Longview Client **${e.entity!.label}** has been **deleted**.`,
+      `Longview Client **${e.entity!.label}** has been deleted.`,
   },
   longviewclient_update: {
     notification: (e) =>
-      `Longview Client **${e.entity!.label}** has been **updated**.`,
+      `Longview Client **${e.entity!.label}** has been updated.`,
   },
   // managed_disabled: {
   //   scheduled: e => ``,
@@ -552,75 +521,71 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   managed_service_create: {
     notification: (e) =>
-      `Managed service **${e.entity!.label}** has been **created**.`,
+      `Managed service **${e.entity!.label}** has been created.`,
   },
   managed_service_delete: {
     notification: (e) =>
-      `Managed service **${e.entity!.label}** has been **deleted**.`,
+      `Managed service **${e.entity!.label}** has been deleted.`,
   },
   nodebalancer_config_create: {
     notification: (e) =>
-      `A config on NodeBalancer **${e.entity!.label}** has been **created**.`,
+      `A config on NodeBalancer **${e.entity!.label}** has been created.`,
   },
   nodebalancer_config_update: {
     notification: (e) =>
-      `A config on NodeBalancer **${e.entity!.label}** has been **updated**.`,
+      `A config on NodeBalancer **${e.entity!.label}** has been updated.`,
   },
   nodebalancer_config_delete: {
     notification: (e) =>
-      `A config on NodeBalancer **${e.entity!.label}** has been **deleted**.`,
+      `A config on NodeBalancer **${e.entity!.label}** has been deleted.`,
   },
   nodebalancer_create: {
     notification: (e) =>
-      `NodeBalancer **${e.entity!.label}** has been **created**.`,
+      `NodeBalancer **${e.entity!.label}** has been created.`,
   },
   nodebalancer_update: {
     notification: (e) =>
-      `NodeBalancer **${e.entity!.label}** has been **updated**.`,
+      `NodeBalancer **${e.entity!.label}** has been updated.`,
   },
   nodebalancer_delete: {
     notification: (e) =>
-      `NodeBalancer **${e.entity!.label}** has been **deleted**.`,
+      `NodeBalancer **${e.entity!.label}** has been deleted.`,
   },
   nodebalancer_node_create: {
     notification: (e) =>
-      `A node on NodeBalancer **${e.entity!.label}** has been **created**.`,
+      `A node on NodeBalancer **${e.entity!.label}** has been created.`,
   },
   nodebalancer_node_delete: {
     notification: (e) =>
-      `A node on NodeBalancer **${e.entity!.label}** has been **deleted**.`,
+      `A node on NodeBalancer **${e.entity!.label}** has been deleted.`,
   },
   nodebalancer_node_update: {
     notification: (e) =>
-      `A node on NodeBalancer **${e.entity!.label}** has been **updated**.`,
+      `A node on NodeBalancer **${e.entity!.label}** has been updated.`,
   },
   oauth_client_create: {
-    notification: (e) =>
-      `OAuth App **${e.entity!.label}** has been **created**.`,
+    notification: (e) => `OAuth App **${e.entity!.label}** has been created.`,
   },
   oauth_client_update: {
-    notification: (e) =>
-      `OAuth App **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `OAuth App **${e.entity!.label}** has been updated.`,
   },
   oauth_client_secret_reset: {
     notification: (e) =>
       `Secret for OAuth App **${e.entity!.label}** has been reset.`,
   },
   oauth_client_delete: {
-    notification: (e) =>
-      `OAuth App **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `OAuth App **${e.entity!.label}** has been deleted.`,
   },
   password_reset: {
     scheduled: (e) =>
-      `A password reset is **scheduled** for **${e.entity!.label}**.`,
+      `A password reset is scheduled for **${e.entity!.label}**.`,
     started: (e) => `The password for **${e.entity!.label}** is being reset.`,
-    failed: (e) =>
-      `Password reset **failed** for Linode **${e.entity!.label}**.`,
+    failed: (e) => `Password reset failed for Linode **${e.entity!.label}**.`,
     finished: (e) =>
       `Password has been reset on Linode **${e.entity!.label}**.`,
   },
   profile_update: {
-    notification: (e) => `Your profile has been **updated**.`,
+    notification: (e) => `Your profile has been updated.`,
   },
   payment_submitted: {
     notification: (e) => `A payment was successfully submitted.`,
@@ -632,16 +597,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `A promo code was applied to your account.`,
   },
   stackscript_create: {
-    notification: (e) =>
-      `StackScript **${e.entity!.label}** has been **created**.`,
+    notification: (e) => `StackScript **${e.entity!.label}** has been created.`,
   },
   stackscript_update: {
-    notification: (e) =>
-      `StackScript **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `StackScript **${e.entity!.label}** has been updated.`,
   },
   stackscript_delete: {
-    notification: (e) =>
-      `StackScript **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `StackScript **${e.entity!.label}** has been deleted.`,
   },
   stackscript_publicize: {
     notification: (e) =>
@@ -651,10 +613,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `StackScript **${e.entity!.label}** has been revised.`,
   },
   tag_create: {
-    notification: (e) => `Tag **${e.entity!.label}** has been **created**.`,
+    notification: (e) => `Tag **${e.entity!.label}** has been created.`,
   },
   tag_delete: {
-    notification: (e) => `Tag **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `Tag **${e.entity!.label}** has been deleted.`,
   },
   tfa_disabled: {
     notification: (e) => `Two-factor authentication has been disabled.`,
@@ -663,8 +625,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Two-factor authentication has been enabled.`,
   },
   ticket_create: {
-    notification: (e) =>
-      `New support ticket "**${e.entity!.label}**" **created**.`,
+    notification: (e) => `New support ticket "**${e.entity!.label}**" created.`,
   },
   // ticket_reply: {
   //   scheduled: e => ``,
@@ -675,7 +636,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   // },
   ticket_update: {
     notification: (e) =>
-      `Support ticket "**${e.entity!.label}**" has been **updated**.`,
+      `Support ticket "**${e.entity!.label}**" has been updated.`,
   },
   ticket_attachment_upload: {
     notification: (e) =>
@@ -684,10 +645,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
       }`,
   },
   token_create: {
-    notification: (e) => `Token **${e.entity!.label}** has been **created**.`,
+    notification: (e) => `Token **${e.entity!.label}** has been created.`,
   },
   token_update: {
-    notification: (e) => `Token **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `Token **${e.entity!.label}** has been updated.`,
   },
   token_delete: {
     notification: (e) => `Token **${e.entity!.label}** has been revoked.`,
@@ -697,9 +658,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     // @todo Once we have better events, display the name of the attached Linode
     // in these messages.
     scheduled: (e) =>
-      `Volume **${e.entity!.label}** is **scheduled** to be attached.`,
+      `Volume **${e.entity!.label}** is scheduled to be attached.`,
     started: (e) => `Volume **${e.entity!.label}** is being attached.`,
-    failed: (e) => `Volume **${e.entity!.label}** **failed** to attach.`,
+    failed: (e) => `Volume **${e.entity!.label}** failed to attach.`,
     finished: (e) => `Volume **${e.entity!.label}** has been attached.`,
     notification: (e) => `Volume **${e.entity!.label}** has been attached.`,
   },
@@ -708,91 +669,85 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   volume_create: {
     scheduled: (e) =>
-      `Volume **${e.entity!.label}** is **scheduled** for creation.`,
-    started: (e) => `Volume **${e.entity!.label}** is being **created**.`,
+      `Volume **${e.entity!.label}** is scheduled for creation.`,
+    started: (e) => `Volume **${e.entity!.label}** is being created.`,
     failed: (e) => `Creation of volume **${e.entity!.label}** failed.`,
-    finished: (e) => `Volume **${e.entity!.label}** has been **created**.`,
-    notification: (e) => `Volume **${e.entity!.label}** has been **created**.`,
+    finished: (e) => `Volume **${e.entity!.label}** has been created.`,
+    notification: (e) => `Volume **${e.entity!.label}** has been created.`,
   },
   volume_update: {
-    notification: (e) => `Volume **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `Volume **${e.entity!.label}** has been updated.`,
   },
   volume_delete: {
     scheduled: (e) => ``,
     started: (e) => ``,
     failed: (e) => ``,
     finished: (e) => ``,
-    notification: (e) => `Volume **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `Volume **${e.entity!.label}** has been deleted.`,
   },
   volume_detach: {
     // @todo Once we have better events, display the name of the attached Linode
     // in these messages.
     scheduled: (e) =>
-      `Volume **${e.entity!.label}** is **scheduled** for detachment.`,
+      `Volume **${e.entity!.label}** is scheduled for detachment.`,
     started: (e) => `Volume **${e.entity!.label}** is being detached.`,
-    failed: (e) => `Volume **${e.entity!.label}** **failed** to detach.`,
+    failed: (e) => `Volume **${e.entity!.label}** failed to detach.`,
     finished: (e) => `Volume **${e.entity!.label}** has been detached.`,
     notification: (e) => `Volume **${e.entity!.label}** has been detached.`,
   },
   volume_migrate: {
-    started: (e) =>
-      `Volume **${e.entity!.label}** is being **upgraded** to NVMe.`,
-    failed: (e) =>
-      `Volume **${e.entity!.label}** **failed** to upgrade to NVMe.`,
-    finished: (e) =>
-      `Volume **${e.entity!.label}** has been **upgraded** to NVMe.`,
+    started: (e) => `Volume **${e.entity!.label}** is being upgraded to NVMe.`,
+    failed: (e) => `Volume **${e.entity!.label}** failed to upgrade to NVMe.`,
+    finished: (e) => `Volume **${e.entity!.label}** has been upgraded to NVMe.`,
   },
   volume_migrate_scheduled: {
     scheduled: (e) =>
       `Volume **${
         e.entity!.label
-      }** has been **scheduled** for an upgrade to NVMe.`,
+      }** has been scheduled for an upgrade to NVMe.`,
   },
   volume_resize: {
-    notification: (e) => `Volume **${e.entity!.label}** has been **resized**.`,
+    notification: (e) => `Volume **${e.entity!.label}** has been resized.`,
   },
   user_ssh_key_add: {
-    notification: (e) => `An SSH key has been **added** to your profile.`,
+    notification: (e) => `An SSH key has been added to your profile.`,
   },
   user_ssh_key_update: {
-    notification: (e) => `An SSH key on your profile has been **updated**.`,
+    notification: (e) => `An SSH key on your profile has been updated.`,
   },
   user_ssh_key_delete: {
-    notification: (e) => `An SSH key has been **removed** from your profile.`,
+    notification: (e) => `An SSH key has been removed from your profile.`,
   },
   user_create: {
-    notification: (e) => `User **${e.entity!.label}** has been **created**.`,
+    notification: (e) => `User **${e.entity!.label}** has been created.`,
   },
   user_delete: {
-    notification: (e) => `User **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `User **${e.entity!.label}** has been deleted.`,
   },
   user_update: {
-    notification: (e) => `User **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `User **${e.entity!.label}** has been updated.`,
   },
   database_create: {
     scheduled: (e) =>
-      `Database **${e.entity!.label}** is **scheduled** for creation.`,
+      `Database **${e.entity!.label}** is scheduled for creation.`,
     notification: (e) =>
-      `Database **${e.entity!.label}** is **scheduled** for creation.`,
-    started: (e) => `Database **${e.entity!.label}** is being **created**.`,
-    failed: (e) => `Database **${e.entity!.label}** could not be **created**.`,
-    finished: (e) => `Database **${e.entity!.label}** has been **created**.`,
+      `Database **${e.entity!.label}** is scheduled for creation.`,
+    started: (e) => `Database **${e.entity!.label}** is being created.`,
+    failed: (e) => `Database **${e.entity!.label}** could not be created.`,
+    finished: (e) => `Database **${e.entity!.label}** has been created.`,
   },
   database_delete: {
-    notification: (e) =>
-      `Database **${e.entity!.label}** has been **deleted**.`,
+    notification: (e) => `Database **${e.entity!.label}** has been deleted.`,
   },
   database_update: {
-    notification: (e) =>
-      `Database **${e.entity!.label}** has been **updated**.`,
+    notification: (e) => `Database **${e.entity!.label}** has been updated.`,
   },
   database_update_failed: {
-    notification: (e) =>
-      `Database **${e.entity!.label}** **failed** to update.`,
+    notification: (e) => `Database **${e.entity!.label}** failed to update.`,
   },
   database_backup_restore: {
     notification: (e) =>
-      `Database **${e.entity!.label}** has been **restored** from a backup.`,
+      `Database **${e.entity!.label}** has been restored from a backup.`,
   },
   database_credentials_reset: {
     notification: (e) =>
