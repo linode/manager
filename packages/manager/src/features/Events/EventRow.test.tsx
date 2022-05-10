@@ -1,6 +1,11 @@
+import { shallow } from 'enzyme';
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import { Row, RowProps } from './EventRow';
+
+jest.mock('src/components/core/styles', () => ({
+  ...(jest.requireActual('src/components/core/styles') as any),
+  makeStyles: jest.fn(() => () => ({})),
+}));
 
 const message = 'this is a message.';
 const props: RowProps = {
@@ -12,24 +17,24 @@ const props: RowProps = {
 };
 
 describe('EventRow component', () => {
-  it('should render an event with a message', () => {
-    const { getByText } = renderWithTheme(<Row {...props} />);
+  const row = shallow<RowProps>(<Row {...props} />);
 
-    expect(getByText(message)).toBeInTheDocument();
+  it('should render an event with a message', () => {
+    expect(row.find('[data-qa-event-message]').contains(message)).toBe(true);
   });
 
   it("shouldn't render events without a message", () => {
     const emptyMessageProps = { ...props, message: undefined };
-    const { container } = renderWithTheme(<Row {...emptyMessageProps} />);
-    expect(container).toBeEmptyDOMElement();
+    expect(Row(emptyMessageProps)).toBeNull();
   });
 
   it('should display the message with a username if one exists', () => {
-    const username = 'banks';
-    const propsWithUsername = { ...props, username };
-
-    const { getByText } = renderWithTheme(<Row {...propsWithUsername} />);
-
-    expect(getByText(`this is a message by ${username}.`)).toBeInTheDocument();
+    expect(row.find(`[data-qa-event-message]`).text()).toBe(
+      'this is a message.'
+    );
+    row.setProps({ username: 'marty' });
+    expect(row.find(`[data-qa-event-message]`).text()).toBe(
+      'this is a message by marty.'
+    );
   });
 });
