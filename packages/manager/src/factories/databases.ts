@@ -1,5 +1,5 @@
 import {
-  Database,
+  ComprehensiveDatabase,
   DatabaseBackup,
   DatabaseEngine,
   DatabaseInstance,
@@ -19,7 +19,7 @@ const possibleStatuses: DatabaseStatus[] = [
   'degraded',
 ];
 
-const possibleReplicationTypes: ReplicationType[] = [
+export const possibleReplicationTypes: ReplicationType[] = [
   'none',
   'semi_synch',
   'asynch',
@@ -150,7 +150,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
   }
 );
 
-export const databaseFactory = Factory.Sync.makeFactory<Database>({
+export const databaseFactory = Factory.Sync.makeFactory<ComprehensiveDatabase>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `database-${i}`),
   region: 'us-east',
@@ -160,9 +160,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   cluster_size: Factory.each(() => pickRandom([1, 3])),
   engine: 'mysql',
   encrypted: false,
-  ipv4_public: pickRandom(IPv4List),
   ssl_connection: false,
-  replication_type: pickRandom(possibleReplicationTypes),
   hosts: {
     primary: 'db-mysql-primary-0.b.linodeb.net',
     secondary: 'db-mysql-secondary-0.b.linodeb.net',

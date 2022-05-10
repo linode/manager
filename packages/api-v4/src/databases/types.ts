@@ -108,7 +108,7 @@ export interface UpdatesSchedule {
   week_of_month: number | null;
 }
 
-// Database is the interface for the shape of data returned by /databases/{engine}/instances
+// Database is the base interface for the shape of data returned by /databases/{engine}/instances
 export interface Database {
   id: number;
   label: string;
@@ -120,9 +120,7 @@ export interface Database {
   readonly_count?: ReadonlyCount;
   engine: Engine;
   encrypted: boolean;
-  ipv4_public: string;
   ssl_connection: boolean;
-  replication_type: ReplicationType;
   allow_list: string[];
   connection_strings: ConnectionStrings[];
   created: string;
@@ -131,6 +129,34 @@ export interface Database {
   port: number;
   updates: UpdatesSchedule;
 }
+
+export interface MySQLDatabase extends Database {
+  replication_type: ReplicationType;
+}
+
+type ReplicationCommitTypes =
+  | 'on'
+  | 'local'
+  | 'remote_write'
+  | 'remote_apply'
+  | 'off';
+
+export interface PostgresDatabase extends Database {
+  replication_type: ReplicationType;
+  replication_commit_type: ReplicationCommitTypes;
+}
+
+type MongoStorageEngine = 'wiredtiger' | 'mmapv1';
+type MongoCompressionType = 'none' | 'snappy' | 'zlib';
+export interface MongoDatabase extends Database {
+  storage_engine: MongoStorageEngine;
+  compression_type: MongoCompressionType;
+}
+
+export type ComprehensiveDatabase = Database &
+  Partial<MySQLDatabase> &
+  Partial<PostgresDatabase> &
+  Partial<MongoDatabase>;
 
 export interface UpdateDatabasePayload {
   label?: string;
