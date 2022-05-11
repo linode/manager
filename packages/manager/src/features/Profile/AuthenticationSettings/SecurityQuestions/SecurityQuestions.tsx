@@ -99,7 +99,7 @@ const SecurityQuestions = () => {
     <Box className={classes.root}>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <QuestionAndAnswerPair
-          questionTuple={questionAndAnswerTuples[0]}
+          questionTuple={questionAndAnswerTuples[0] as [string, string]}
           index={1}
           options={getQuestionOptions([
             formik.values['question-2'],
@@ -108,7 +108,7 @@ const SecurityQuestions = () => {
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionTuple={questionAndAnswerTuples[1]}
+          questionTuple={questionAndAnswerTuples[1] as [string, string]}
           index={2}
           options={getQuestionOptions([
             formik.values['question-1'],
@@ -117,7 +117,7 @@ const SecurityQuestions = () => {
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionTuple={questionAndAnswerTuples[2]}
+          questionTuple={questionAndAnswerTuples[2] as [string, string]}
           index={3}
           options={getQuestionOptions([
             formik.values['question-1'],
