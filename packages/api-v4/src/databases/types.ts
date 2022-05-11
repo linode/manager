@@ -79,7 +79,7 @@ export interface DatabaseInstance {
 export type ClusterSize = 1 | 3;
 type ReadonlyCount = 0 | 2;
 
-export type ReplicationType = 'none' | 'semi_synch' | 'asynch';
+export type MySQLReplicationType = 'none' | 'semi_synch' | 'asynch';
 
 export interface CreateDatabasePayload {
   label: string;
@@ -89,7 +89,7 @@ export interface CreateDatabasePayload {
   engine?: Engine;
   encrypted?: boolean;
   ssl_connection?: boolean;
-  replication_type: ReplicationType;
+  replication_type: MySQLReplicationType | PostgresReplicationType;
   allow_list?: string[];
 }
 
@@ -131,8 +131,10 @@ export interface Database {
 }
 
 export interface MySQLDatabase extends Database {
-  replication_type: ReplicationType;
+  replication_type: MySQLReplicationType;
 }
+
+export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
 
 type ReplicationCommitTypes =
   | 'on'
@@ -142,7 +144,7 @@ type ReplicationCommitTypes =
   | 'off';
 
 export interface PostgresDatabase extends Database {
-  replication_type: ReplicationType;
+  replication_type: PostgresReplicationType;
   replication_commit_type: ReplicationCommitTypes;
 }
 
@@ -152,6 +154,9 @@ export interface MongoDatabase extends Database {
   storage_engine: MongoStorageEngine;
   compression_type: MongoCompressionType;
 }
+
+export type ComprehensiveReplicationType = MySQLReplicationType &
+  PostgresReplicationType;
 
 export type ComprehensiveDatabase = Database &
   Partial<MySQLDatabase> &

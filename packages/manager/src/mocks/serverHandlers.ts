@@ -47,7 +47,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   paymentMethodFactory,
-  possibleReplicationTypes,
+  possibleMySQLReplicationTypes,
+  possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
   stackScriptFactory,
@@ -176,9 +177,12 @@ const databases = [
       label: `database-${req.params.id}`,
       engine: req.params.engine,
       ssl_connection: true,
-      replication_type: ['mysql', 'postgresql'].includes(req.params.engine)
-        ? pickRandom(possibleReplicationTypes)
-        : undefined,
+      replication_type:
+        req.params.engine === 'mysql'
+          ? pickRandom(possibleMySQLReplicationTypes)
+          : req.params.engine === 'postgresql'
+          ? pickRandom(possiblePostgresReplicationTypes)
+          : (undefined as any),
       replication_commit_type:
         req.params.engine === 'postgresql' ? 'local' : undefined,
       storage_engine:

@@ -5,7 +5,8 @@ import {
   DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
-  ReplicationType,
+  MySQLReplicationType,
+  PostgresReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import * as Factory from 'factory.ts';
 import { pickRandom, randomDate } from 'src/utilities/random';
@@ -19,9 +20,15 @@ const possibleStatuses: DatabaseStatus[] = [
   'degraded',
 ];
 
-export const possibleReplicationTypes: ReplicationType[] = [
+export const possibleMySQLReplicationTypes: MySQLReplicationType[] = [
   'none',
   'semi_synch',
+  'asynch',
+];
+
+export const possiblePostgresReplicationTypes: PostgresReplicationType[] = [
+  'none',
+  'synch',
   'asynch',
 ];
 

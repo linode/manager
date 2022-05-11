@@ -6,7 +6,9 @@ import {
   DatabaseType,
   Engine,
   DatabaseClusterSizeObject,
-  ReplicationType,
+  // MySQLReplicationType,
+  // PostgresReplicationType,
+  ComprehensiveReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
@@ -314,7 +316,8 @@ const DatabaseCreate: React.FC<{}> = () => {
       region: '',
       type: '',
       cluster_size: -1 as ClusterSize,
-      replication_type: 'none' as ReplicationType,
+      replication_type: 'none' as ComprehensiveReplicationType,
+      replication_commit_type: undefined, // specific to Postgres
       allow_list: [
         {
           address: '',
@@ -322,6 +325,8 @@ const DatabaseCreate: React.FC<{}> = () => {
         },
       ],
       ssl_connection: true,
+      storage_engine: undefined, // specific to MongoDB
+      compression_type: undefined, // specific to MongoDB
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
@@ -403,8 +408,14 @@ const DatabaseCreate: React.FC<{}> = () => {
     );
     setFieldValue(
       'replication_type',
-      values.cluster_size === 1 ? 'none' : 'semi_synch'
+      determineReplicationType(values.cluster_size, values.engine)
     );
+    setFieldValue(
+      'replication_commit_type',
+      determineReplicationCommitType(values.engine)
+    );
+    setFieldValue('storage_engine', determineStorageEngine(values.engine));
+    setFieldValue('compression_type', determineCompressionType(values.engine));
   }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
@@ -618,6 +629,51 @@ const DatabaseCreate: React.FC<{}> = () => {
       </Grid>
     </form>
   );
+};
+
+const determineReplicationType = (clusterSize: number, engine: string) => {
+  if (Boolean(engine.match(/mongo/))) {
+    return undefined;
+  }
+
+  // If engine is a MySQL or Postgres one and it's a standalone DB instance
+  if (clusterSize === 1) {
+    return 'none';
+  }
+
+  // MySQL engine & cluster = semi_synch. PostgreSQL engine & cluster = asynch.
+  if (Boolean(engine.match(/mysql/))) {
+    return 'semi_synch';
+  } else {
+    return 'asynch';
+  }
+};
+
+const determineReplicationCommitType = (engine: string) => {
+  // 'local' is the default.
+  if (Boolean(engine.match(/postgres/))) {
+    return 'local';
+  }
+
+  return undefined;
+};
+
+const determineStorageEngine = (engine: string) => {
+  // 'wiredtiger' is the default.
+  if (Boolean(engine.match(/mongo/))) {
+    return 'wiredtiger';
+  }
+
+  return undefined;
+};
+
+const determineCompressionType = (engine: string) => {
+  // 'none' is the default.
+  if (Boolean(engine.match(/mongo/))) {
+    return 'none';
+  }
+
+  return undefined;
 };
 
 export default DatabaseCreate;
