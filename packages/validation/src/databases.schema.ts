@@ -14,21 +14,20 @@ export const createDatabaseSchema = object({
   cluster_size: number()
     .oneOf([1, 3], 'Nodes are required')
     .required('Nodes are required'),
-  replication_type: string().notRequired().nullable(true),
-  // replication_type: string().when('engine', {
-  //   is: (engine: string) => Boolean(engine.match(/mysql|postgres/g)),
-  //   then: string()
-  //     .when('engine', {
-  //       is: (engine: string) => Boolean(engine.match(/mysql/)),
-  //       then: string().oneOf(['none', 'semi-synch', 'asynch']), // .required('Replication Type is required'),
-  //     })
-  //     .when('engine', {
-  //       is: (engine: string) => Boolean(engine.match(/postgres/)),
-  //       then: string().oneOf(['none', 'synch', 'asynch']), // .required('Replication Type is required'),
-  //     })
-  //     .required('Replication Type is required'),
-  //   otherwise: string().notRequired().nullable(true),
-  // }),
+  replication_type: string().when('engine', {
+    is: (engine: string) => Boolean(engine.match(/mysql|postgres/g)),
+    then: string()
+      .when('engine', {
+        is: (engine: string) => Boolean(engine.match(/mysql/)),
+        then: string().oneOf(['none', 'semi-synch', 'asynch']),
+      })
+      .when('engine', {
+        is: (engine: string) => Boolean(engine.match(/postgres/)),
+        then: string().oneOf(['none', 'synch', 'asynch']),
+      })
+      .required('Replication Type is required'),
+    otherwise: string().notRequired().nullable(true),
+  }),
   replication_commit_type: string().when('engine', {
     is: (engine: string) => Boolean(engine.match(/postgres/)),
     then: string()

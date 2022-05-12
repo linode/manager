@@ -89,7 +89,7 @@ export interface CreateDatabasePayload {
   engine?: Engine;
   encrypted?: boolean;
   ssl_connection?: boolean;
-  replication_type: MySQLReplicationType | PostgresReplicationType;
+  replication_type?: MySQLReplicationType | PostgresReplicationType;
   allow_list?: string[];
 }
 
