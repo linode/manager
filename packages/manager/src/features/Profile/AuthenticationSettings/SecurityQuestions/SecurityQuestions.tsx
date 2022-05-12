@@ -10,10 +10,17 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
 import CircleProgress from 'src/components/CircleProgress';
+import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
+  },
+  copy: {
+    lineHeight: '20px',
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(),
+    maxWidth: 960,
   },
   form: {
     width: '100%',
@@ -100,6 +107,12 @@ const SecurityQuestions = () => {
 
   return (
     <Box className={classes.root}>
+      <Typography variant="h3">Security Questions</Typography>
+      <Typography variant="body1" className={classes.copy}>
+        Adding security questions will help keep your account secure and only be
+        used to verify your identity. Choose answers that are not easily guessed
+        or discoverable through research.
+      </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <QuestionAndAnswerPair
           questionTuple={questionAndAnswerTuples[0] as [string, string]}

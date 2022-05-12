@@ -87,12 +87,6 @@ export const AuthenticationSettings: React.FC = () => {
             <Divider spacingTop={22} spacingBottom={16} />
           </>
         ) : null}
-        <Typography variant="h3">Security Questions</Typography>
-        <Typography variant="body1">
-          Adding security questions will help keep your account secure and only
-          be used to verify your identity. Choose answers that are not easily
-          guessed or discoverable through research.
-        </Typography>
         <SecurityQuestions />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
