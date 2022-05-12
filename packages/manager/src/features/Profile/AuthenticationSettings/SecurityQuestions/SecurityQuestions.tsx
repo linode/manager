@@ -95,6 +95,9 @@ const SecurityQuestions = () => {
 
   const buttonCopy = questionAndAnswerTuples?.length === 0 ? 'Add' : 'Update';
 
+  const isButtonDisabled =
+    !formik.dirty || Object.values(formik.values).includes('');
+
   return (
     <Box className={classes.root}>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
@@ -126,7 +129,11 @@ const SecurityQuestions = () => {
           {...qaProps}
         />
         <Box className={classes.button}>
-          <Button buttonType="primary" type="submit" disabled={!formik.dirty}>
+          <Button
+            buttonType="primary"
+            type="submit"
+            disabled={isButtonDisabled}
+          >
             {`${buttonCopy} Security Questions`}
           </Button>
         </Box>

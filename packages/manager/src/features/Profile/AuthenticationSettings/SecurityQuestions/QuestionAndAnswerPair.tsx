@@ -16,6 +16,8 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
+    flexBasis: 'flex-start',
+    minHeight: '74px',
     '& > div': {
       flexGrow: 1,
       width: '100%',
@@ -30,6 +32,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   question: {
     display: 'flex',
     flexDirection: 'column',
+    flexShrink: 1.5,
+  },
+  answer: {
+    paddingLeft: theme.spacing(5.75),
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 0,
+    },
   },
 }));
 
@@ -43,7 +52,10 @@ const QuestionAndAnswerPair = (props: Props) => {
   };
   return (
     <Box className={classes.root}>
-      <Box className={classes.question}>
+      <Box
+        className={classes.question}
+        style={{ paddingTop: isReadOnly ? '16px' : 0 }}
+      >
         <Question
           name={`question-${index}`}
           question={questionTuple?.[0]}
@@ -53,7 +65,7 @@ const QuestionAndAnswerPair = (props: Props) => {
           {...rest}
         />
       </Box>
-      <Box>
+      <Box className={classes.answer}>
         <Answer
           isReadOnly={isReadOnly}
           name={`answer-${index}`}

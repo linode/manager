@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect';
+import InputLabel from 'src/components/core/InputLabel';
 import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 
@@ -31,10 +32,20 @@ const Question = (props: Props) => {
   if (isReadOnly) {
     return (
       <>
-        <Typography variant="h3">{label}</Typography>
-        <Typography variant="body1">
+        <InputLabel>{label}</InputLabel>
+        <Typography variant="body1" style={{ fontSize: '0.875rem' }}>
           {question}
-          <Button buttonType="secondary" compact onClick={onClickEdit}>
+          <Button
+            buttonType="secondary"
+            compact
+            onClick={onClickEdit}
+            style={{
+              fontWeight: '400',
+              fontFamily: 'LatoWeb, sans-serif',
+              fontSize: '14px',
+              lineHeight: '18px',
+            }}
+          >
             Edit
           </Button>
         </Typography>
@@ -50,6 +61,8 @@ const Question = (props: Props) => {
       placeholder="Select a question"
       defaultValue={currentOption}
       onChange={onChange}
+      isClearable={false}
+      height="36px"
     />
   );
 };
