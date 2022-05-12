@@ -6,8 +6,6 @@ import {
   DatabaseType,
   Engine,
   DatabaseClusterSizeObject,
-  // MySQLReplicationType,
-  // PostgresReplicationType,
   ComprehensiveReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
