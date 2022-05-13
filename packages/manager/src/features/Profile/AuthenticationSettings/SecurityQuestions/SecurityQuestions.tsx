@@ -1,16 +1,14 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { useFormik } from 'formik';
-import {
-  useSecurityQuestions,
-  useMutateSecurityQuestions,
-} from 'src/queries/securityQuestions';
+import { useMutateSecurityQuestions } from 'src/queries/securityQuestions';
 import QuestionAndAnswerPair from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
+import { SecurityQuestions } from '@linode/api-v4/lib/profile/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,12 +51,15 @@ const securityQuestionOptions = securityQuestionStrings.map((question) => ({
   value: question,
 }));
 
-const SecurityQuestions = () => {
+interface Props {
+  securityQuestions?: SecurityQuestions;
+  isLoading: boolean;
+}
+
+const SecurityQuestions = (props: Props) => {
   const classes = useStyles();
-  const {
-    data: securityQuestions,
-    isLoading: securityQuestionsLoading,
-  } = useSecurityQuestions();
+
+  const { securityQuestions, isLoading } = props;
 
   const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
 
@@ -75,16 +76,20 @@ const SecurityQuestions = () => {
 
   const formik = useFormik({
     initialValues: initalFormValues,
-    onSubmit: (values) => {
-      updateSecurityQuestions({
-        [values['question-1']]: values['answer-1'],
-        [values['question-2']]: values['answer-2'],
-        [values['question-3']]: values['answer-3'],
-      });
+    onSubmit: async (values) => {
+      try {
+        await updateSecurityQuestions({
+          [values['question-1']]: values['answer-1'],
+          [values['question-2']]: values['answer-2'],
+          [values['question-3']]: values['answer-3'],
+        });
+      } catch (e) {
+        // Do something here I guess
+      }
     },
   });
 
-  if (securityQuestionsLoading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
@@ -96,8 +101,9 @@ const SecurityQuestions = () => {
     );
 
   const qaProps = {
-    isQuestionLoading: securityQuestionsLoading,
+    isQuestionLoading: isLoading,
     setFieldValue: formik.setFieldValue,
+    setTouched: formik.setTouched,
   };
 
   const buttonCopy = questionAndAnswerTuples?.length === 0 ? 'Add' : 'Update';
@@ -115,7 +121,7 @@ const SecurityQuestions = () => {
       </Typography>
       <form className={classes.form} onSubmit={formik.handleSubmit}>
         <QuestionAndAnswerPair
-          questionTuple={questionAndAnswerTuples[0] as [string, string]}
+          questionTuple={questionAndAnswerTuples[0]}
           index={1}
           options={getQuestionOptions([
             formik.values['question-2'],
@@ -124,7 +130,7 @@ const SecurityQuestions = () => {
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionTuple={questionAndAnswerTuples[1] as [string, string]}
+          questionTuple={questionAndAnswerTuples[1]}
           index={2}
           options={getQuestionOptions([
             formik.values['question-1'],
@@ -133,7 +139,7 @@ const SecurityQuestions = () => {
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionTuple={questionAndAnswerTuples[2] as [string, string]}
+          questionTuple={questionAndAnswerTuples[2]}
           index={3}
           options={getQuestionOptions([
             formik.values['question-1'],
