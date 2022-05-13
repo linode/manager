@@ -167,7 +167,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
                 </TableSortCell>
               </Hidden>
             </Hidden>
-            <Hidden mdDown>
+            {/* <Hidden mdDown>
               <TableSortCell
                 noWrap
                 label="backups:last_successful"
@@ -178,7 +178,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
               >
                 Last Backup
               </TableSortCell>
-            </Hidden>
+            </Hidden> */}
           </>
         )}
         <TableCell>

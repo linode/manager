@@ -1,11 +1,11 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
-import { Duration } from 'luxon';
+// import { Duration } from 'luxon';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { parseAPIDate } from 'src/utilities/date';
-import { formatDuration } from 'src/utilities/formatDuration';
+// import { parseAPIDate } from 'src/utilities/date';
+// import { formatDuration } from 'src/utilities/formatDuration';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 
 interface Props {
@@ -39,7 +39,7 @@ const BackupTableRow: React.FC<Props> = (props) => {
         {/** important to note that we're intentionally not humanizing the time here */}
         <DateTimeDisplay value={backup.created} />
       </TableCell>
-      <TableCell parentColumn="Duration">
+      {/* <TableCell parentColumn="Duration">
         {formatDuration(
           Duration.fromMillis(
             parseAPIDate(backup.finished).toMillis() -
@@ -53,7 +53,7 @@ const BackupTableRow: React.FC<Props> = (props) => {
             {disk.label} ({disk.filesystem}) - {disk.size} MB
           </div>
         ))}
-      </TableCell>
+      </TableCell> */}
       <TableCell parentColumn="Space Required" data-qa-space-required>
         {backup.disks.reduce((acc, disk) => acc + disk.size, 0)} MB
       </TableCell>

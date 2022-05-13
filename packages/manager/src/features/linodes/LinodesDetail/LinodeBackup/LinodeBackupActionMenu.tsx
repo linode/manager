@@ -13,7 +13,7 @@ interface Props {
 type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
-  const { backup, disabled, onRestore, onDeploy } = props;
+  const { backup, disabled, onDeploy } = props;
   const disabledProps = {
     disabled,
     tooltip: disabled
@@ -22,13 +22,13 @@ export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
   };
 
   const actions: Action[] = [
-    {
-      title: 'Restore to Existing Linode',
-      onClick: () => {
-        onRestore(backup);
-      },
-      ...disabledProps,
-    },
+    // {
+    //   title: 'Restore to Existing Linode',
+    //   onClick: () => {
+    //     onRestore(backup);
+    //   },
+    //   ...disabledProps,
+    // },
     {
       title: 'Deploy New Linode',
       onClick: () => {

@@ -14,7 +14,7 @@ import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
-import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
+// import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -91,7 +91,7 @@ export const Row: React.FC<RowProps> = (props) => {
     type,
     created,
     username,
-    duration,
+    // duration,
     history,
   } = props;
 
@@ -134,14 +134,14 @@ export const Row: React.FC<RowProps> = (props) => {
         </Typography>
       </TableCell>
 
-      <TableCell parentColumn="Duration">
-        <Typography variant="body1">
-          {/* There is currently an API bug where host_reboot event durations are
+      {/* <TableCell parentColumn="Duration"> */}
+      {/* <Typography variant="body1"> */}
+      {/* There is currently an API bug where host_reboot event durations are
           not reported correctly. This patch simply hides the duration. @todo
           remove this // check when the API bug is fixed. */}
-          {action === 'host_reboot' ? '' : formatEventSeconds(duration)}
-        </Typography>
-      </TableCell>
+      {/* {action === 'host_reboot' ? '' : formatEventSeconds(duration)} */}
+      {/* </Typography> */}
+      {/* </TableCell> */}
       <TableCell parentColumn={'When'} data-qa-event-created-cell>
         <DateTimeDisplay value={created} />
       </TableCell>

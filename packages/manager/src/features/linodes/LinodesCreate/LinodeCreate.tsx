@@ -8,7 +8,7 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
+// import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import {
@@ -17,7 +17,7 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+// import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -30,10 +30,10 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
-import {
-  getCommunityStackscripts,
-  getMineAndAccountStackScripts,
-} from 'src/features/StackScripts/stackScriptUtils';
+// import {
+//   getCommunityStackscripts,
+//   getMineAndAccountStackScripts,
+// } from 'src/features/StackScripts/stackScriptUtils';
 import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
@@ -45,11 +45,11 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import SelectPlanPanel from './SelectPlanPanel';
-import FromAppsContent from './TabbedContent/FromAppsContent';
+// import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
-import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+// import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
 import {
@@ -254,16 +254,16 @@ export class LinodeCreate extends React.PureComponent<
       type: 'fromImage',
       routeName: `${this.props.match.url}?type=Distributions`,
     },
-    {
-      title: 'Marketplace',
-      type: 'fromApp',
-      routeName: `${this.props.match.url}?type=One-Click`,
-    },
-    {
-      title: 'Images',
-      type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Images`,
-    },
+    // {
+    //   title: 'Marketplace',
+    //   type: 'fromApp',
+    //   routeName: `${this.props.match.url}?type=One-Click`,
+    // },
+    // {
+    //   title: 'Images',
+    //   type: 'fromImage',
+    //   routeName: `${this.props.match.url}?type=Images`,
+    // },
     {
       title: 'Backups',
       type: 'fromBackup',
@@ -340,7 +340,7 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   render() {
-    const { selectedTab, stackScriptSelectedTab } = this.state;
+    const { selectedTab } = this.state;
 
     const {
       classes,
@@ -469,7 +469,7 @@ export class LinodeCreate extends React.PureComponent<
                   {...rest}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={1}>
+              {/* <SafeTabPanel index={1}>
                 <FromAppsContent
                   imagesData={imagesData!}
                   regionsData={regionsData!}
@@ -515,8 +515,8 @@ export class LinodeCreate extends React.PureComponent<
                     </TabPanels>
                   </Paper>
                 </Tabs>
-              </SafeTabPanel>
-              <SafeTabPanel index={3}>
+              </SafeTabPanel> */}
+              <SafeTabPanel index={1}>
                 <FromImageContent
                   variant={'private'}
                   imagePanelTitle="Choose an Image"
@@ -528,7 +528,7 @@ export class LinodeCreate extends React.PureComponent<
                   {...rest}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={4}>
+              <SafeTabPanel index={2}>
                 <FromBackupsContent
                   errors={errors}
                   imagesData={imagesData!}
@@ -541,7 +541,7 @@ export class LinodeCreate extends React.PureComponent<
                   {...rest}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={5}>
+              <SafeTabPanel index={3}>
                 <FromLinodeContent
                   errors={errors}
                   imagesData={imagesData!}

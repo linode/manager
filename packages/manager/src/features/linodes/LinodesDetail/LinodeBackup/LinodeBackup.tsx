@@ -20,7 +20,7 @@ import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+// import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
@@ -63,7 +63,7 @@ import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
-import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+// import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
   | 'paper'
@@ -494,8 +494,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell>Date Created</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell>Disks</TableCell>
+              {/* <TableCell>Duration</TableCell>
+              <TableCell>Disks</TableCell> */}
               <TableCell>Space Required</TableCell>
               <TableCell />
             </TableRow>
@@ -696,16 +696,16 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   Management = (): JSX.Element | null => {
-    const { classes, linodeID, linodeRegion, permissions } = this.props;
+    const { permissions } = this.props;
     const disabled = isReadOnly(permissions);
 
-    const { backups: backupsResponse } = this.state;
-    const backups = aggregateBackups(backupsResponse);
+    // const { backups: backupsResponse } = this.state;
+    // const backups = aggregateBackups(backupsResponse);
 
     return (
       <React.Fragment>
         {disabled && <LinodePermissionsError />}
-        {backups.length ? (
+        {/* {backups.length ? (
           <this.Table backups={backups} />
         ) : (
           <Paper className={classes.paper} data-qa-backup-description>
@@ -713,9 +713,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               Automatic and manual backups will be listed here
             </Typography>
           </Paper>
-        )}
+        )} */}
         <this.SnapshotForm />
-        <this.SettingsForm />
+        {/* <this.SettingsForm />
         <Button
           buttonType="outlined"
           className={classes.cancelButton}
@@ -757,7 +757,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             Once backups for this Linode have been canceled, you cannot
             re-enable them for 24 hours.
           </Typography>
-        </ConfirmationDialog>
+        </ConfirmationDialog> */}
       </React.Fragment>
     );
   };
