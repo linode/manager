@@ -1,5 +1,5 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
+// import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -39,10 +39,10 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
   const { id, label, status, rules, ...actionHandlers } = props;
 
   const {
-    devices: { itemsById, error, loading, lastUpdated },
+    devices: { error, loading, lastUpdated },
     requestDevices,
   } = useFirewallDevices(id);
-  const devices = Object.values(itemsById);
+  // const devices = Object.values(itemsById);
 
   React.useEffect(() => {
     if (lastUpdated === 0 && !(loading || error.read)) {
@@ -79,9 +79,9 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
       </TableCell>
       <Hidden xsDown>
         <TableCell>{getRuleString(count)}</TableCell>
-        <TableCell>
+        {/* <TableCell>
           {getLinodesCellString(devices, loading, error.read)}
-        </TableCell>
+        </TableCell> */}
       </Hidden>
       <TableCell actionCell>
         <ActionMenu
@@ -124,25 +124,25 @@ export const getCountOfRules = (rules: Firewall['rules']): [number, number] => {
   return [(rules.inbound || []).length, (rules.outbound || []).length];
 };
 
-const getLinodesCellString = (
-  data: FirewallDevice[],
-  loading: boolean,
-  error?: APIError[]
-): string | JSX.Element => {
-  if (loading) {
-    return 'Loading...';
-  }
+// const getLinodesCellString = (
+//   data: FirewallDevice[],
+//   loading: boolean,
+//   error?: APIError[]
+// ): string | JSX.Element => {
+//   if (loading) {
+//     return 'Loading...';
+//   }
 
-  if (error) {
-    return 'Error retrieving Linodes';
-  }
+//   if (error) {
+//     return 'Error retrieving Linodes';
+//   }
 
-  if (data.length === 0) {
-    return 'None assigned';
-  }
+//   if (data.length === 0) {
+//     return 'None assigned';
+//   }
 
-  return getDeviceLinks(data);
-};
+//   return getDeviceLinks(data);
+// };
 
 export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   const firstThree = data.slice(0, 3);

@@ -98,5 +98,5 @@ export const FirewallDeviceSchema = object({
   type: string()
     .oneOf(['linode', 'nodebalancer'])
     .required('Device type is required.'),
-  id: number().required('ID is required.'),
+  id: string().required('ID is required.'),
 });

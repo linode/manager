@@ -48,6 +48,6 @@ export const UpdateVolumeSchema = object({
 });
 
 export const AttachVolumeSchema = object({
-  linode_id: number().required(),
-  config_id: number().required(),
+  linode_id: string().required(),
+  config_id: string().required(),
 });

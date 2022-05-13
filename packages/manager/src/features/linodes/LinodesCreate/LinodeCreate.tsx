@@ -1,4 +1,4 @@
-import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Interface } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -46,9 +46,9 @@ import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import SelectPlanPanel from './SelectPlanPanel';
 // import FromAppsContent from './TabbedContent/FromAppsContent';
-import FromBackupsContent from './TabbedContent/FromBackupsContent';
+// import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
+// import FromLinodeContent from './TabbedContent/FromLinodeContent';
 // import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
@@ -195,7 +195,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    const _tabs = ['Distributions', 'One-Click', 'Images', 'Backups'];
+    const _tabs = ['Distributions', 'Images'];
 
     /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -259,16 +259,16 @@ export class LinodeCreate extends React.PureComponent<
     //   type: 'fromApp',
     //   routeName: `${this.props.match.url}?type=One-Click`,
     // },
-    // {
-    //   title: 'Images',
-    //   type: 'fromImage',
-    //   routeName: `${this.props.match.url}?type=Images`,
-    // },
     {
-      title: 'Backups',
-      type: 'fromBackup',
-      routeName: `${this.props.match.url}?type=Backups`,
+      title: 'Images',
+      type: 'fromImage',
+      routeName: `${this.props.match.url}?type=Images`,
     },
+    // {
+    //   title: 'Backups',
+    //   type: 'fromBackup',
+    //   routeName: `${this.props.match.url}?type=Backups`,
+    // },
   ];
 
   stackScriptTabs: CreateTab[] = [
@@ -528,7 +528,7 @@ export class LinodeCreate extends React.PureComponent<
                   {...rest}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={2}>
+              {/* <SafeTabPanel index={2}>
                 <FromBackupsContent
                   errors={errors}
                   imagesData={imagesData!}
@@ -540,8 +540,8 @@ export class LinodeCreate extends React.PureComponent<
                   {...restoreBackup}
                   {...rest}
                 />
-              </SafeTabPanel>
-              <SafeTabPanel index={3}>
+              </SafeTabPanel> */}
+              {/* <SafeTabPanel index={3}>
                 <FromLinodeContent
                   errors={errors}
                   imagesData={imagesData!}
@@ -552,7 +552,7 @@ export class LinodeCreate extends React.PureComponent<
                   userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
-              </SafeTabPanel>
+              </SafeTabPanel> */}
             </TabPanels>
           </Tabs>
 

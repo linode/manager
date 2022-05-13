@@ -56,10 +56,10 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleShowConfig = () => {
-    const { onShowConfig, label, filesystemPath } = props;
-    onShowConfig(label, filesystemPath);
-  };
+  // const handleShowConfig = () => {
+  //   const { onShowConfig, label, filesystemPath } = props;
+  //   onShowConfig(label, filesystemPath);
+  // };
 
   const handleOpenEdit = () => {
     const { onEdit, volumeId, label, volumeTags } = props;
@@ -92,12 +92,12 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   };
 
   const actions: Action[] = [
-    {
-      title: 'Show Config',
-      onClick: () => {
-        handleShowConfig();
-      },
-    },
+    // {
+    //   title: 'Show Config',
+    //   onClick: () => {
+    //     handleShowConfig();
+    //   },
+    // },
     {
       title: 'Edit',
       onClick: () => {

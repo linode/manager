@@ -29,9 +29,9 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
   const {
     firewallID,
     firewallLabel,
-    firewallStatus,
-    triggerEnableFirewall,
-    triggerDisableFirewall,
+    // firewallStatus,
+    // triggerEnableFirewall,
+    // triggerDisableFirewall,
     triggerDeleteFirewall,
   } = props;
 
@@ -51,14 +51,14 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
     : {};
 
   const actions: Action[] = [
-    {
-      title:
-        firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
-      onClick: () => {
-        handleEnableDisable();
-      },
-      ...disabledProps,
-    },
+    // {
+    //   title:
+    //     firewallStatus === ('enabled' as FirewallStatus) ? 'Disable' : 'Enable',
+    //   onClick: () => {
+    //     handleEnableDisable();
+    //   },
+    //   ...disabledProps,
+    // },
     {
       title: 'Delete',
       onClick: () => {
@@ -68,13 +68,13 @@ const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
     },
   ];
 
-  const handleEnableDisable = () => {
-    const request = () =>
-      firewallStatus === 'disabled'
-        ? triggerEnableFirewall(firewallID, firewallLabel)
-        : triggerDisableFirewall(firewallID, firewallLabel);
-    request();
-  };
+  // const handleEnableDisable = () => {
+  //   const request = () =>
+  //     firewallStatus === 'disabled'
+  //       ? triggerEnableFirewall(firewallID, firewallLabel)
+  //       : triggerDisableFirewall(firewallID, firewallLabel);
+  //   request();
+  // };
 
   return (
     <>

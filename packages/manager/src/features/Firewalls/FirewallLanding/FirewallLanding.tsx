@@ -45,13 +45,13 @@ export const headers = [
     widthPercent: 25,
     hideOnMobile: true,
   },
-  {
-    label: 'Linodes',
-    dataColumn: 'devices',
-    sortable: false,
-    widthPercent: 25,
-    hideOnMobile: true,
-  },
+  // {
+  //   label: 'Linodes',
+  //   dataColumn: 'devices',
+  //   sortable: false,
+  //   widthPercent: 25,
+  //   hideOnMobile: true,
+  // },
   {
     label: 'Action Menu',
     visuallyHidden: true,
@@ -65,7 +65,6 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   const { data: profile } = useProfile();
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
-  console.log('Firewalls', data);
   // @TODO: Refactor so these are combined?
   const { mutateAsync: updateFirewall } = useMutateFirewall();
   const { mutateAsync: _deleteFirewall } = useDeleteFirewall();
