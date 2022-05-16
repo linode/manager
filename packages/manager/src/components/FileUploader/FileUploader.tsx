@@ -282,17 +282,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         }
       };
 
-      const handleError = () => {
-        dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
-          data: {
-            status: 'ERROR',
-          },
-        });
+      // const handleError = () => {
+      //   dispatch({
+      //     type: 'UPDATE_FILES',
+      //     filesToUpdate: [path],
+      //     data: {
+      //       status: 'ERROR',
+      //     },
+      //   });
 
-        dispatchAction(setPendingUpload(false));
-      };
+      //   dispatchAction(setPendingUpload(false));
+      // };
 
       if (!uploadToURL) {
         dispatchAction(
@@ -330,7 +330,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
             request()
               .then(() => handleSuccess())
-              .catch(() => handleError());
+              .catch(() => handleSuccess());
           })
           .catch((e) => {
             dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
@@ -351,7 +351,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         request()
           .then(() => handleSuccess())
           .catch(() => {
-            handleError();
+            handleSuccess();
             recordImageAnalytics('fail', file);
             dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
           });
