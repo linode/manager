@@ -798,6 +798,12 @@ function applyBolding(event: Event, message: string) {
     'added',
     'removed',
     'migrated',
+    'duplicated',
+    'reboot',
+    'rebooted',
+    'upgraded',
+    'rebuilt',
+    'reset',
   ];
 
   if (event.entity) {
