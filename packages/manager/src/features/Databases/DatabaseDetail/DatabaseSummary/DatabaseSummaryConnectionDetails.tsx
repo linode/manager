@@ -179,7 +179,8 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       </Typography>
       <Grid className={classes.connectionDetailsCtn}>
         <Typography>
-          <span>username</span> = {DB_ROOT_USERNAME}
+          <span>username</span> ={' '}
+          {database.engine === 'mongodb' ? 'admin' : DB_ROOT_USERNAME}
         </Typography>
         <Box display="flex">
           <Typography>
