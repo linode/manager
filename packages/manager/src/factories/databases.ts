@@ -5,7 +5,8 @@ import {
   DatabaseInstance,
   DatabaseStatus,
   DatabaseType,
-  ReplicationType,
+  MySQLReplicationType,
+  PostgresReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import * as Factory from 'factory.ts';
 import { pickRandom, randomDate } from 'src/utilities/random';
@@ -19,9 +20,15 @@ const possibleStatuses: DatabaseStatus[] = [
   'degraded',
 ];
 
-const possibleReplicationTypes: ReplicationType[] = [
+export const possibleMySQLReplicationTypes: MySQLReplicationType[] = [
   'none',
   'semi_synch',
+  'asynch',
+];
+
+export const possiblePostgresReplicationTypes: PostgresReplicationType[] = [
+  'none',
+  'synch',
   'asynch',
 ];
 
@@ -160,9 +167,7 @@ export const databaseFactory = Factory.Sync.makeFactory<Database>({
   cluster_size: Factory.each(() => pickRandom([1, 3])),
   engine: 'mysql',
   encrypted: false,
-  ipv4_public: pickRandom(IPv4List),
   ssl_connection: false,
-  replication_type: pickRandom(possibleReplicationTypes),
   hosts: {
     primary: 'db-mysql-primary-0.b.linodeb.net',
     secondary: 'db-mysql-secondary-0.b.linodeb.net',

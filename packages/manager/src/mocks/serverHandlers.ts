@@ -10,10 +10,10 @@ import {
   appTokenFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
+  databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  databaseEngineFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -47,6 +47,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   paymentMethodFactory,
+  possibleMySQLReplicationTypes,
+  possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
   stackScriptFactory,
@@ -59,6 +61,7 @@ import {
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantsFactory } from 'src/factories/grants';
+import { pickRandom } from 'src/utilities/random';
 
 export const makeResourcePage = (
   e: any[],
@@ -174,6 +177,17 @@ const databases = [
       label: `database-${req.params.id}`,
       engine: req.params.engine,
       ssl_connection: true,
+      replication_type:
+        req.params.engine === 'mysql'
+          ? pickRandom(possibleMySQLReplicationTypes)
+          : req.params.engine === 'postgresql'
+          ? pickRandom(possiblePostgresReplicationTypes)
+          : (undefined as any),
+      replication_commit_type:
+        req.params.engine === 'postgresql' ? 'local' : undefined,
+      storage_engine:
+        req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
+      compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
     });
     return res(ctx.json(database));
   }),
