@@ -1,3 +1,8 @@
+## [2022-05-16] - v0.11.0
+
+### Changed
+- Database schema to support addition of PostgreSQL and MongoDB
+
 ## [2022-05-02] - v0.10.0
 ### Changed:
 - Replace all single quotes with curly quotes

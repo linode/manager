@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-05-16] - v1.66.0
+
+### Added:
+- Support and icons for PostgreSQL and MongoDB
+
+### Changed:
+- Expanded accessibility and styling docs
+- Icon for MySQL
+
+### Fixed:
+- Marketplace Wazuh link
+
 ## [2022-05-02] - v1.65.0
 
 ### Added:
