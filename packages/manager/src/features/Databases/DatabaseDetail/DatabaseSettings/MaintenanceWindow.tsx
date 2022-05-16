@@ -1,7 +1,4 @@
-import {
-  ComprehensiveDatabase,
-  UpdatesSchedule,
-} from '@linode/api-v4/lib/databases';
+import { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
@@ -64,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  database: ComprehensiveDatabase;
+  database: Database;
   timezone?: string;
 }
 

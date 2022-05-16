@@ -109,7 +109,7 @@ export interface UpdatesSchedule {
 }
 
 // Database is the base interface for the shape of data returned by /databases/{engine}/instances
-export interface Database {
+export interface BaseDatabase {
   id: number;
   label: string;
   type: string;
@@ -130,7 +130,7 @@ export interface Database {
   updates: UpdatesSchedule;
 }
 
-export interface MySQLDatabase extends Database {
+export interface MySQLDatabase extends BaseDatabase {
   replication_type: MySQLReplicationType;
 }
 
@@ -143,14 +143,14 @@ type ReplicationCommitTypes =
   | 'remote_apply'
   | 'off';
 
-export interface PostgresDatabase extends Database {
+export interface PostgresDatabase extends BaseDatabase {
   replication_type: PostgresReplicationType;
   replication_commit_type: ReplicationCommitTypes;
 }
 
 type MongoStorageEngine = 'wiredtiger' | 'mmapv1';
 type MongoCompressionType = 'none' | 'snappy' | 'zlib';
-export interface MongoDatabase extends Database {
+export interface MongoDatabase extends BaseDatabase {
   storage_engine: MongoStorageEngine;
   compression_type: MongoCompressionType;
 }
@@ -158,7 +158,7 @@ export interface MongoDatabase extends Database {
 export type ComprehensiveReplicationType = MySQLReplicationType &
   PostgresReplicationType;
 
-export type ComprehensiveDatabase = Database &
+export type Database = BaseDatabase &
   Partial<MySQLDatabase> &
   Partial<PostgresDatabase> &
   Partial<MongoDatabase>;

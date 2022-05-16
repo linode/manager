@@ -1,5 +1,5 @@
 import {
-  ComprehensiveDatabase,
+  Database,
   DatabaseBackup,
   DatabaseEngine,
   DatabaseInstance,
@@ -157,7 +157,7 @@ export const databaseInstanceFactory = Factory.Sync.makeFactory<DatabaseInstance
   }
 );
 
-export const databaseFactory = Factory.Sync.makeFactory<ComprehensiveDatabase>({
+export const databaseFactory = Factory.Sync.makeFactory<Database>({
   id: Factory.each((i) => i),
   label: Factory.each((i) => `database-${i}`),
   region: 'us-east',
