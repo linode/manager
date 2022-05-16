@@ -14,9 +14,37 @@ export const createDatabaseSchema = object({
   cluster_size: number()
     .oneOf([1, 3], 'Nodes are required')
     .required('Nodes are required'),
-  replication_type: string()
-    .oneOf(['none', 'semi_synch', 'asynch'])
-    .required('Replication Type is required'),
+  replication_type: string().when('engine', {
+    is: (engine: string) => Boolean(engine.match(/mysql|postgres/g)),
+    then: string()
+      .when('engine', {
+        is: (engine: string) => Boolean(engine.match(/mysql/)),
+        then: string().oneOf(['none', 'semi-synch', 'asynch']),
+      })
+      .when('engine', {
+        is: (engine: string) => Boolean(engine.match(/postgres/)),
+        then: string().oneOf(['none', 'synch', 'asynch']),
+      })
+      .required('Replication Type is required'),
+    otherwise: string().notRequired().nullable(true),
+  }),
+  replication_commit_type: string().when('engine', {
+    is: (engine: string) => Boolean(engine.match(/postgres/)),
+    then: string()
+      .oneOf(['off', 'on', 'local', 'remote_write', 'remote_apply'])
+      .required(),
+    otherwise: string().notRequired().nullable(true),
+  }),
+  storage_engine: string().when('engine', {
+    is: (engine: string) => Boolean(engine.match(/mongodb/)),
+    then: string().oneOf(['wiredtiger', 'mmapv1']).notRequired(),
+    otherwise: string().notRequired().nullable(true),
+  }),
+  compression_type: string().when('engine', {
+    is: (engine: string) => Boolean(engine.match(/mongodb/)),
+    then: string().oneOf(['none', 'snappy', 'zlib']).notRequired(),
+    otherwise: string().notRequired().nullable(true),
+  }),
 });
 
 export const updateDatabaseSchema = object({
