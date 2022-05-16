@@ -1,12 +1,12 @@
 import {
   ClusterSize,
+  ComprehensiveReplicationType,
   CreateDatabasePayload,
+  DatabaseClusterSizeObject,
   DatabaseEngine,
   DatabasePriceObject,
   DatabaseType,
   Engine,
-  DatabaseClusterSizeObject,
-  ComprehensiveReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
@@ -14,7 +14,9 @@ import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
+import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import BreadCrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -42,6 +44,7 @@ import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -57,7 +60,6 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -128,6 +130,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const engineIcons = {
   mysql: () => <MySQLIcon width="24" height="24" />,
+  postgresql: () => <PostgreSQLIcon width="24" height="24" />,
+  mongodb: () => <MongoDBIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
