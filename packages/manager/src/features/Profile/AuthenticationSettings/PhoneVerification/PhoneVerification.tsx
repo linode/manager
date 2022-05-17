@@ -139,33 +139,32 @@ export const PhoneVerification = () => {
                 </Button>
               </Box>
             </>
+          ) : isCodeSent ? (
+            <TextField
+              label="Verification Code"
+              id="otp_code"
+              name="otp_code"
+              type="text"
+              onChange={verifyCodeForm.handleChange}
+              value={verifyCodeForm.values.otp_code}
+              helperText={
+                <LinkButton
+                  onClick={onResendVerificationCode}
+                  isDisabled={isResending}
+                  isLoading={isResending}
+                >
+                  Resend verification code
+                </LinkButton>
+              }
+            />
           ) : (
             <TextField
-              label={isCodeSent ? 'Verification Code' : 'Phone Number'}
-              id={isCodeSent ? 'otp_code' : 'phone_number'}
-              name={isCodeSent ? 'otp_code' : 'phone_number'}
-              type={isCodeSent ? 'text' : 'tel'}
-              onChange={
-                isCodeSent
-                  ? verifyCodeForm.handleChange
-                  : sendCodeForm.handleChange
-              }
-              value={
-                isCodeSent
-                  ? verifyCodeForm.values.otp_code
-                  : sendCodeForm.values.phone_number
-              }
-              helperText={
-                isCodeSent ? (
-                  <LinkButton
-                    onClick={onResendVerificationCode}
-                    isDisabled={isResending}
-                    isLoading={isResending}
-                  >
-                    Resend verification code
-                  </LinkButton>
-                ) : undefined
-              }
+              label="Phone Number"
+              id="phone_number"
+              name="phone_number"
+              type="tel"
+              onChange={sendCodeForm.handleChange}
+              value={sendCodeForm.values.phone_number}
             />
           )}
           <Box display="flex" justifyContent="flex-end">
