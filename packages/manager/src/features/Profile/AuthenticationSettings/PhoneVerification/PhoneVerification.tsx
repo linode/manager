@@ -4,6 +4,7 @@ import Box from 'src/components/core/Box';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { useFormik } from 'formik';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { SendPhoneVerificationCodePayload } from '@linode/api-v4/lib/profile/types';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -15,12 +16,31 @@ import {
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  codeSentMessage: {
+    marginTop: theme.spacing(1.5),
+  },
+  phoneNumberTitle: {
+    fontSize: '.875rem',
+    marginTop: theme.spacing(1.5),
+  },
+  buttonContainer: {
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(2),
+      justifyContent: 'flex-start',
+    },
+  },
+}));
+
 type VerificationFormValues = { otp_code: string };
 
 export const PhoneVerification = () => {
+  const classes = useStyles();
+
   const { data: profile } = useProfile();
-  const [view, setView] = React.useState(Boolean(profile?.phone_number));
   const { enqueueSnackbar } = useSnackbar();
+
+  const [view, setView] = React.useState(Boolean(profile?.phone_number));
 
   const {
     data,
@@ -107,8 +127,8 @@ export const PhoneVerification = () => {
   return (
     <>
       {!view && isCodeSent ? (
-        <>
-          <Typography style={{ marginTop: 12 }}>
+        <Box className={classes.codeSentMessage}>
+          <Typography>
             SMS verification code was sent to {sendCodeForm.values.phone_number}
           </Typography>
           <Typography>
@@ -116,9 +136,9 @@ export const PhoneVerification = () => {
               Enter a different phone number
             </LinkButton>
           </Typography>
-        </>
+        </Box>
       ) : null}
-      <Box style={{ marginTop: 8 }}>
+      <Box>
         <form
           onSubmit={
             isCodeSent ? verifyCodeForm.handleSubmit : sendCodeForm.handleSubmit
@@ -126,10 +146,7 @@ export const PhoneVerification = () => {
         >
           {view ? (
             <>
-              <Typography
-                variant="h3"
-                style={{ fontSize: '.875rem', marginTop: 12 }}
-              >
+              <Typography variant="h3" className={classes.phoneNumberTitle}>
                 Phone Number
               </Typography>
               <Box display="flex" alignItems="center">
@@ -167,7 +184,11 @@ export const PhoneVerification = () => {
               value={sendCodeForm.values.phone_number}
             />
           )}
-          <Box display="flex" justifyContent="flex-end">
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            className={classes.buttonContainer}
+          >
             <Button
               loading={
                 isCodeSent
