@@ -21,7 +21,7 @@ interface Props {
   paymentMethods: PaymentMethod[] | undefined;
 }
 
-export const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   methodGroup: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),

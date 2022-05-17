@@ -5,23 +5,21 @@ import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { useFormik } from 'formik';
 import { SendPhoneVerificationCodePayload } from '@linode/api-v4/lib/profile/types';
-import { useStyles } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { useSnackbar } from 'notistack';
+import { APIError } from '@linode/api-v4/lib/types';
+import { LinkButton } from 'src/components/LinkButton';
 import {
   updateProfileData,
   useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile';
-import { useSnackbar } from 'notistack';
-import { APIError } from '@linode/api-v4/lib/types';
-import { LinkButton } from 'src/components/LinkButton';
 
 type VerificationFormValues = { otp_code: string };
 
 export const PhoneVerification = () => {
   const { data: profile } = useProfile();
   const [view, setView] = React.useState(Boolean(profile?.phone_number));
-  const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -114,12 +112,9 @@ export const PhoneVerification = () => {
             SMS verification code was sent to {sendCodeForm.values.phone_number}
           </Typography>
           <Typography>
-            <button
-              className={classes.link}
-              onClick={onEnterDifferentPhoneNumber}
-            >
+            <LinkButton onClick={onEnterDifferentPhoneNumber}>
               Enter a different phone number
-            </button>
+            </LinkButton>
           </Typography>
         </>
       ) : null}
