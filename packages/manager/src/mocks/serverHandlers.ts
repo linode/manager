@@ -47,7 +47,6 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   paymentMethodFactory,
-  phoneNumberVerificationCodeFactory,
   profileFactory,
   promoFactory,
   securityQuestionsFactory,
@@ -85,6 +84,10 @@ const statusPage = [
     return res(ctx.json(response));
   }),
 ];
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
@@ -241,10 +244,12 @@ export const handlers = [
     const tokens = appTokenFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tokens)));
   }),
-  rest.post('*/profile/phone-number', (req, res, ctx) => {
-    return res(ctx.json(phoneNumberVerificationCodeFactory.build()));
+  rest.post('*/profile/phone-number', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
   }),
-  rest.post('*/profile/phone-number/verify', (req, res, ctx) => {
+  rest.post('*/profile/phone-number/verify', async (req, res, ctx) => {
+    await sleep(2000);
     return res(ctx.json({}));
   }),
   rest.get('*/profile/security-questions', (req, res, ctx) => {

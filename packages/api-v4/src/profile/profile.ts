@@ -15,7 +15,8 @@ import {
   TrustedDevice,
   UserPreferences,
   SecurityQuestions,
-  PhoneNumberVerificationCode,
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
 } from './types';
 
 /**
@@ -130,13 +131,13 @@ export const getLogins = (params: any, filter: any) => {
  *
  * Sends a one-time password via SMS to be used to verify a phone number.
  */
-export const sendCodeToPhoneNumber = (phoneNumber: string) => {
-  return Request<PhoneNumberVerificationCode>(
+export const sendCodeToPhoneNumber = (
+  data: SendPhoneVerificationCodePayload
+) => {
+  return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number`),
     setMethod('POST'),
-    setData({
-      phone_number: phoneNumber,
-    })
+    setData(data)
   );
 };
 
@@ -145,13 +146,11 @@ export const sendCodeToPhoneNumber = (phoneNumber: string) => {
  *
  * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
  */
-export const verifyPhoneNumberCode = (otpCode: number) => {
+export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
   return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number/verify`),
     setMethod('POST'),
-    setData({
-      otp_code: otpCode,
-    })
+    setData(data)
   );
 };
 

@@ -72,8 +72,12 @@ export interface ProfileLogin {
   restricted: boolean;
 }
 
-export interface PhoneNumberVerificationCode {
+export type SecurityQuestions = Record<string, string>;
+
+export interface VerifyVerificationCodePayload {
   otp_code: number;
 }
 
-export type SecurityQuestions = Record<string, string>;
+export interface SendPhoneVerificationCodePayload {
+  phone_number: string;
+}
