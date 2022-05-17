@@ -19,7 +19,7 @@ export const createDatabaseSchema = object({
     then: string()
       .when('engine', {
         is: (engine: string) => Boolean(engine.match(/mysql/)),
-        then: string().oneOf(['none', 'semi-synch', 'asynch']),
+        then: string().oneOf(['none', 'semi_synch', 'asynch']),
       })
       .when('engine', {
         is: (engine: string) => Boolean(engine.match(/postgres/)),

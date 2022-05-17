@@ -1,3 +1,8 @@
+## [2022-05-16] - v0.11.1
+
+### Fixed
+- createDatabaseSchema MySQL validation to accept semi_synch
+
 ## [2022-05-16] - v0.11.0
 
 ### Changed
