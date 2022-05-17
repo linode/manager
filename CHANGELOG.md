@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-05-16] - v1.66.2
+### Changed:
+- Display linroot as the username for MongoDB and MySQL clusters, and linpostgres as the username for PostgreSQL clusters
+
 ## [2022-05-16] - v1.66.1
 ### Changed:
 - Display 'admin' as username for MongoDB database clusters
