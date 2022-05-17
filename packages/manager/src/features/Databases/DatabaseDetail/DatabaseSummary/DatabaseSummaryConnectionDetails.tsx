@@ -180,7 +180,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       <Grid className={classes.connectionDetailsCtn}>
         <Typography>
           <span>username</span> ={' '}
-          {database.engine === 'mongodb' ? 'admin' : DB_ROOT_USERNAME}
+          {database.engine === 'postgresql' ? 'linpostgres' : DB_ROOT_USERNAME}
         </Typography>
         <Box display="flex">
           <Typography>
