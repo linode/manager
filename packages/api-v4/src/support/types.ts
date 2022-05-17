@@ -23,6 +23,7 @@ export interface SupportReply {
   description: string;
   id: number;
   from_linode: boolean;
+  friendly_name: string;
 }
 
 export interface ReplyRequest {
