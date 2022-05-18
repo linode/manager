@@ -1,3 +1,17 @@
+## [2022-05-16] - v0.11.1
+
+### Fixed
+- createDatabaseSchema MySQL validation to accept semi_synch
+
+## [2022-05-16] - v0.11.0
+
+### Changed
+- Database schema to support addition of PostgreSQL and MongoDB
+
+## [2022-05-02] - v0.10.0
+### Changed:
+- Replace all single quotes with curly quotes
+
 ## [2022-04-18] - v0.9.0
 ### Changed:
 - updateDatabaseSchema to include maintenance updates

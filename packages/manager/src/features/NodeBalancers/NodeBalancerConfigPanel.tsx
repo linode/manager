@@ -775,7 +775,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             />
             <FormHelperText>
               Roundrobin. Least connections assigns connections to the backend
-              with the least connections. Source uses the client&#39;s IPv4
+              with the least connections. Source uses the client&rsquo;s IPv4
               address
             </FormHelperText>
           </Grid>

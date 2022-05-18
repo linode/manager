@@ -17,7 +17,7 @@ export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
   const disabledProps = {
     disabled,
     tooltip: disabled
-      ? "You don't have permission to deploy from this Linode's backups"
+      ? "You don't have permission to deploy from this Linode\u{2019}s backups"
       : undefined,
   };
 

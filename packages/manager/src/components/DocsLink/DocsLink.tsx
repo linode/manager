@@ -22,6 +22,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
     },
   },
+  '@supports (-moz-appearance: none)': {
+    /* Fix text alignment for Firefox */
+    root: {
+      '& span': {
+        top: 1,
+      },
+    },
+  },
 }));
 
 interface Props {

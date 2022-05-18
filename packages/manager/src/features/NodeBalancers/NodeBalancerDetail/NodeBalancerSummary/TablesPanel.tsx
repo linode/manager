@@ -1,98 +1,64 @@
-import {
-  getNodeBalancerStats,
-  NodeBalancerStats,
-} from '@linode/api-v4/lib/nodebalancers';
-import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  WithTheme,
-  withTheme,
-} from 'src/components/core/styles';
+import { makeStyles, Theme, useTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/components/LineGraph/MetricsDisplay';
-import withProfile, { ProfileProps } from 'src/components/withProfile';
+import getUserTimezone from 'src/utilities/getUserTimezone';
+import PendingIcon from 'src/assets/icons/pending.svg';
 import { formatBitsPerSecond } from 'src/features/Longview/shared/utilities';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
-import getUserTimezone from 'src/utilities/getUserTimezone';
-import { initAll } from 'src/utilities/initAll';
+import { useProfile } from 'src/queries/profile';
 import { formatNumber, getMetrics } from 'src/utilities/statMetrics';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  NODEBALANCER_STATS_NOT_READY_API_MESSAGE,
+  useNodeBalancerStats,
+} from 'src/queries/nodebalancers';
 
-type ClassNames =
-  | 'header'
-  | 'chart'
-  | 'bottomLegend'
-  | 'graphControls'
-  | 'title'
-  | 'panel';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    header: {
-      padding: theme.spacing(2),
+const useStyles = makeStyles((theme: Theme) => ({
+  header: {
+    padding: theme.spacing(2),
+  },
+  chart: {
+    position: 'relative',
+    width: '100%',
+    paddingLeft: theme.spacing(1),
+  },
+  bottomLegend: {
+    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(1)}px`,
+    padding: 10,
+    color: '#777',
+    backgroundColor: theme.bg.offWhite,
+    border: `1px solid ${theme.color.border3}`,
+    fontSize: 14,
+  },
+  graphControls: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.up('md')]: {
+      margin: `${theme.spacing(2)}px 0`,
     },
-    chart: {
-      position: 'relative',
-      width: '100%',
-      paddingLeft: theme.spacing(1),
+  },
+  title: {
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(),
     },
-    bottomLegend: {
-      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
-        1
-      )}px`,
-      padding: 10,
-      color: '#777',
-      backgroundColor: theme.bg.offWhite,
-      border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
-    },
-    graphControls: {
-      display: 'flex',
-      alignItems: 'center',
-      [theme.breakpoints.up('md')]: {
-        margin: `${theme.spacing(2)}px 0`,
-      },
-    },
-    title: {
-      [theme.breakpoints.down('md')]: {
-        marginLeft: theme.spacing(),
-      },
-    },
-    panel: {
-      padding: theme.spacing(2),
-      marginTop: theme.spacing(2),
-    },
-  });
+  },
+  panel: {
+    padding: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  emptyText: {
+    textAlign: 'center',
+    marginTop: theme.spacing(),
+  },
+}));
 
-interface Props {
-  nodeBalancer: ExtendedNodeBalancer;
-}
-
-interface State {
-  stats: NodeBalancerStats | null;
-  loadingStats: boolean;
-  openPanels: number;
-  statsError?: string;
-}
-
-type CombinedProps = Props &
-  WithTheme &
-  ProfileProps &
-  StateProps &
-  WithStyles<ClassNames>;
-
-const statsFetchInterval = 30000;
-
-const loading = () => (
+const Loading = () => (
   <div
     style={{
       display: 'flex',
@@ -105,243 +71,203 @@ const loading = () => (
   </div>
 );
 
-class TablesPanel extends React.Component<CombinedProps, State> {
-  statsInterval?: number = undefined;
-  mounted: boolean = false;
+const STATS_NOT_READY_TITLE =
+  'Stats for this NodeBalancer are not available yet';
 
-  state: State = {
-    stats: null,
-    loadingStats: false,
-    openPanels: 0,
-  };
+interface Props {
+  nodeBalancer: ExtendedNodeBalancer;
+}
 
-  handleToggleExpand = (e: any, expanded: boolean) => {
-    const { openPanels, stats } = this.state;
-    if (expanded && !stats) {
-      /* Only set loading state on initial load
-       *  so the graphs are not disrupted on future updates. */
-      this.setState({ loadingStats: true });
-      this.getStats();
-    }
+const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
+  const classes = useStyles();
+  const theme = useTheme<Theme>();
+  const { data: profile } = useProfile();
+  const timezone = getUserTimezone(profile);
 
-    if (expanded && openPanels <= 0) {
-      /* We will regularly update the stats as long as at least one panel is open. */
-      this.statsInterval = window.setInterval(
-        () => this.getStats(),
-        statsFetchInterval
+  const { data: stats, isLoading, error } = useNodeBalancerStats(
+    nodeBalancer.id,
+    nodeBalancer.created
+  );
+
+  const statsErrorString = error
+    ? getAPIErrorOrDefault(error, 'Unable to load stats')[0].reason
+    : undefined;
+
+  const statsNotReadyError =
+    statsErrorString === NODEBALANCER_STATS_NOT_READY_API_MESSAGE;
+
+  const renderConnectionsChart = () => {
+    const data = stats?.data.connections ?? [];
+
+    if (statsNotReadyError) {
+      return (
+        <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ width: 64, height: 64 }}
+          errorText={
+            <>
+              <div>
+                <Typography variant="h2" className={classes.emptyText}>
+                  {STATS_NOT_READY_TITLE}
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="body1" className={classes.emptyText}>
+                  Connection stats will be available shortly
+                </Typography>
+              </div>
+            </>
+          }
+        />
       );
     }
 
-    /* If the panel is opening, increment the number of open panels. Otherwise decrement.
-     *  This allows us to keep track of when all of the panels are closed.
-     */
-    const updatedOpenPanels = expanded ? openPanels + 1 : openPanels - 1;
-    this.setState({ openPanels: updatedOpenPanels });
-
-    /* If all panels are closed, stop updating the stats. */
-    if (!expanded && updatedOpenPanels <= 0) {
-      window.clearInterval(this.statsInterval as number);
+    if (statsErrorString && !statsNotReadyError) {
+      return <ErrorState errorText={statsErrorString} />;
     }
-  };
 
-  getStats = () => {
-    const { nodeBalancer } = this.props;
-    getNodeBalancerStats(nodeBalancer.id)
-      .then((response: NodeBalancerStats) => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          // Occasionally the last reading of each stats reading is incorrect, so we drop
-          // the last element of each array in the stats response.
-          stats: initAll(response),
-          loadingStats: false,
-          statsError: undefined,
-        });
-      })
-      .catch((errorResponse) => {
-        if (!this.mounted) {
-          return;
-        }
-        const statsError = pathOr(
-          'There was an error loading stats for this NodeBalancer.',
-          ['reason'],
-          errorResponse[0]
-        );
-
-        /** only show an error if stats aren't already loaded */
-        return !this.state.stats
-          ? this.setState({ loadingStats: false, statsError })
-          : this.setState({ loadingStats: false });
-      });
-  };
-
-  componentDidMount() {
-    this.mounted = true;
-    this.setState({ loadingStats: true });
-    this.getStats();
-
-    this.statsInterval = window.setInterval(
-      () => this.getStats(),
-      statsFetchInterval
-    );
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    window.clearInterval(this.statsInterval as number);
-  }
-
-  renderConnectionsChart = (
-    statsError: string | undefined,
-    loadingStats: boolean
-  ) => {
-    const { classes, theme, profile } = this.props;
-    const { stats } = this.state;
-    const data = pathOr([[]], ['data', 'connections'], stats);
-
-    const timezone = getUserTimezone(profile.data);
-
-    if (loadingStats) {
-      return loading();
+    if (isLoading) {
+      return <Loading />;
     }
-    if (statsError) {
-      return <ErrorState errorText={statsError} />;
-    }
+
     const metrics = getMetrics(data);
 
     return (
       <React.Fragment>
+        <div className={classes.chart}>
+          <LineGraph
+            timezone={timezone}
+            showToday={true}
+            data={[
+              {
+                label: 'Connections',
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.purple,
+                data,
+              },
+            ]}
+          />
+        </div>
+        <div className={classes.bottomLegend}>
+          <Grid container>
+            <Grid item xs={12}>
+              <MetricsDisplay
+                rows={[
+                  {
+                    legendTitle: 'Connections',
+                    legendColor: 'purple',
+                    data: metrics,
+                    format: formatNumber,
+                  },
+                ]}
+              />
+            </Grid>
+          </Grid>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  const renderTrafficChart = () => {
+    const trafficIn = stats?.data.traffic.in ?? [];
+    const trafficOut = stats?.data.traffic.out ?? [];
+
+    if (statsNotReadyError) {
+      return (
+        <ErrorState
+          CustomIcon={PendingIcon}
+          CustomIconStyles={{ width: 64, height: 64 }}
+          errorText={
+            <>
+              <div>
+                <Typography variant="h2" className={classes.emptyText}>
+                  {STATS_NOT_READY_TITLE}
+                </Typography>
+              </div>
+              <div>
+                <Typography variant="body1" className={classes.emptyText}>
+                  Traffic stats will be available shortly
+                </Typography>
+              </div>
+            </>
+          }
+        />
+      );
+    }
+
+    if (statsErrorString && !statsNotReadyError) {
+      return <ErrorState errorText={statsErrorString} />;
+    }
+
+    if (isLoading) {
+      return <Loading />;
+    }
+
+    return (
+      <React.Fragment>
+        <div className={classes.chart}>
+          <LineGraph
+            timezone={timezone}
+            showToday={true}
+            data={[
+              {
+                label: 'Traffic In',
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.network.inbound,
+                data: trafficIn,
+              },
+              {
+                label: 'Traffic Out',
+                borderColor: 'transparent',
+                backgroundColor: theme.graphs.network.outbound,
+                data: trafficOut,
+              },
+            ]}
+          />
+        </div>
+        <div className={classes.bottomLegend}>
+          <MetricsDisplay
+            rows={[
+              {
+                legendTitle: 'Inbound',
+                legendColor: 'darkGreen',
+                data: getMetrics(trafficIn),
+                format: formatBitsPerSecond,
+              },
+              {
+                legendTitle: 'Outbound',
+                legendColor: 'lightGreen',
+                data: getMetrics(trafficOut),
+                format: formatBitsPerSecond,
+              },
+            ]}
+          />
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  return (
+    <React.Fragment>
+      <div className={classes.graphControls}>
+        <Typography className={classes.title} variant="h2">
+          Graphs
+        </Typography>
+      </div>
+      <Paper className={classes.panel}>
         <Typography variant="h3" className={classes.header}>
           Connections (CXN/s, 5 min avg.)
         </Typography>
-        <React.Fragment>
-          <div className={classes.chart}>
-            <LineGraph
-              timezone={timezone}
-              showToday={true}
-              data={[
-                {
-                  label: 'Connections',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.purple,
-                  data,
-                },
-              ]}
-            />
-          </div>
-          <div className={classes.bottomLegend}>
-            <Grid container>
-              <Grid item xs={12}>
-                <MetricsDisplay
-                  rows={[
-                    {
-                      legendTitle: 'Connections',
-                      legendColor: 'purple',
-                      data: metrics,
-                      format: formatNumber,
-                    },
-                  ]}
-                />
-              </Grid>
-            </Grid>
-          </div>
-        </React.Fragment>
-      </React.Fragment>
-    );
-  };
-
-  renderTrafficChart = (
-    statsError: string | undefined,
-    loadingStats: boolean
-  ) => {
-    const { classes, timezone, theme } = this.props;
-    const { stats } = this.state;
-    const trafficIn = pathOr([[]], ['data', 'traffic', 'in'], stats);
-    const trafficOut = pathOr([[]], ['data', 'traffic', 'out'], stats);
-
-    if (loadingStats) {
-      return loading();
-    }
-    if (statsError) {
-      return <ErrorState errorText={statsError} />;
-    }
-    return (
-      <React.Fragment>
+        {renderConnectionsChart()}
+      </Paper>
+      <Paper className={classes.panel}>
         <Typography variant="h3" className={classes.header}>
           Traffic (bits/s, 5 min avg.)
         </Typography>
-        <React.Fragment>
-          <div className={classes.chart}>
-            <LineGraph
-              timezone={timezone}
-              showToday={true}
-              data={[
-                {
-                  label: 'Traffic In',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.network.inbound,
-                  data: trafficIn,
-                },
-                {
-                  label: 'Traffic Out',
-                  borderColor: 'transparent',
-                  backgroundColor: theme.graphs.network.outbound,
-                  data: trafficOut,
-                },
-              ]}
-            />
-          </div>
-          <div className={classes.bottomLegend}>
-            <MetricsDisplay
-              rows={[
-                {
-                  legendTitle: 'Inbound',
-                  legendColor: 'darkGreen',
-                  data: getMetrics(trafficIn),
-                  format: formatBitsPerSecond,
-                },
-                {
-                  legendTitle: 'Outbound',
-                  legendColor: 'lightGreen',
-                  data: getMetrics(trafficOut),
-                  format: formatBitsPerSecond,
-                },
-              ]}
-            />
-          </div>
-        </React.Fragment>
-      </React.Fragment>
-    );
-  };
+        {renderTrafficChart()}
+      </Paper>
+    </React.Fragment>
+  );
+};
 
-  render() {
-    const { classes } = this.props;
-    const { statsError, loadingStats } = this.state;
-    return (
-      <React.Fragment>
-        <div className={classes.graphControls}>
-          <Typography className={classes.title} variant="h2">
-            Graphs
-          </Typography>
-        </div>
-        <Paper className={classes.panel}>
-          {this.renderConnectionsChart(statsError, loadingStats)}
-        </Paper>
-        <Paper className={classes.panel}>
-          {this.renderTrafficChart(statsError, loadingStats)}
-        </Paper>
-      </React.Fragment>
-    );
-  }
-}
-
-interface StateProps {
-  timezone: string;
-}
-
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(withTheme, withProfile, styled);
-
-export default enhanced(TablesPanel);
+export default TablesPanel;
