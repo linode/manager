@@ -1,7 +1,7 @@
 import * as React from 'react';
-import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
+import Status from 'src/assets/icons/status.svg';
 import Support from 'src/assets/icons/support.svg';
 import {
   createStyles,
@@ -91,12 +91,10 @@ export class OtherWays extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid item xs={12} sm={6}>
             <Tile
-              title="Linode Support Bot"
-              description={`Chat with the Linode Support Bot, trained to help answer your
-              questions instantly, accurately, and completely.`}
-              icon={<Chat />}
-              link={this.handleAdaInit}
-              errorText={this.state.error}
+              title="Linode Status Page"
+              description="Get updates on Linode incidents and maintenance"
+              icon={<Status />}
+              link="https://status.linode.com"
             />
           </Grid>
           <Grid item xs={12} sm={6}>
