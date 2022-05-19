@@ -20,7 +20,6 @@ const unwantedEvents: EventAction[] = [
 
 export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
   const events = givenEvents ?? useEvents().events;
-  console.log(events)
   const notificationContext = React.useContext(_notificationContext);
 
   const _events = events.filter(
