@@ -97,7 +97,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           container
           wrap="nowrap"
           justifyContent="space-between"
-          alignItems="flex-end"
+          alignItems="center"
         >
           {isVolumesLanding ? (
             <>
