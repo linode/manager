@@ -55,13 +55,15 @@ export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
     options: DismissibleNotificationOptions = {}
   ) => {
     setDismissed(true);
-    updatePreferences({
-      dismissed_notifications: updateDismissedNotifications(
-        dismissedNotifications,
-        _notifications,
-        options
-      ),
-    });
+    if (_notifications.length > 0) {
+      updatePreferences({
+        dismissed_notifications: updateDismissedNotifications(
+          dismissedNotifications,
+          _notifications,
+          options
+        ),
+      });
+    }
   };
 
   const hasDismissedNotifications = (
