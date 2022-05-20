@@ -43,6 +43,7 @@ const _DialogTitle: React.FC<Props> = (props) => {
 
   return (
     <DialogTitle
+      data-qa-dialog-title={title}
       title={title}
       tabIndex={0}
       className={className}
