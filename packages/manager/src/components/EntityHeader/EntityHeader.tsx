@@ -128,7 +128,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
     <>
       {isLanding && (
         <Grid
-          data-qa-entity-header={true}
+          data-qa-entity-header
           container
           item
           className={`${classes.root} ${classes.landing}`}

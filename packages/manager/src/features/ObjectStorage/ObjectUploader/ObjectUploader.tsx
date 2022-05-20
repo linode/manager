@@ -335,7 +335,7 @@ const ObjectUploader: React.FC<Props> = (props) => {
         </div>
 
         <div
-          data-qa-drop-zone={true}
+          data-qa-drop-zone
           className={classNames({
             [classes.dropzoneContent]: true,
             [classes.UploadZoneActiveButton]: UploadZoneActive,
