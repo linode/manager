@@ -1,83 +1,92 @@
-import { imageFactory, objectStorageBucketFactory } from '@src/factories';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { apiCheckErrors, deleteById, getAll, isTestEntity } from './common';
-const oauthtoken = Cypress.env('MANAGER_OAUTH');
-const apiroot = Cypress.env('REACT_APP_API_ROOT') + '/';
+import {
+    deleteBucket,
+    getBuckets,
+    getObjectList,
+    getObjectStorageKeys,
+    getObjectURL,
+    ObjectStorageBucket,
+    ObjectStorageKey,
+    ObjectStorageObject,
+    revokeObjectStorageKey
+} from '@linode/api-v4/lib/object-storage';
+import axios from 'axios';
+import { authenticate } from 'support/api/authentication';
+import { isTestLabel } from 'support/api/common';
+import { depaginate } from 'support/util/paginate';
 
-export const getAccessKeys = () => getAll('object-storage/keys');
-export const getBuckets = () => getAll('object-storage/buckets');
+/**
+ * Asynchronously deletes all objects within a test bucket.
+ *
+ * If the given bucket is not a test bucket (in other words, its label does not
+ * begin with `cy-test-`), the promise will reject.
+ *
+ * @param clusterId - ID of cluster for test bucket.
+ * @param bucketLabel - Label for test bucket.
+ *
+ * @returns Promise that resolves when all test bucket objects are deleted.
+ */
+export const deleteAllTestBucketObjects = async (clusterId: string, bucketLabel: string) => {
+  if (!isTestLabel(bucketLabel)) {
+    throw new Error(`Attempted to delete objects belonging to a non-test Object Storage bucket '${bucketLabel}'.`);
+  }
 
-export const createMockBucket = (
-  data?,
-  cluster = 'eu-central-1',
-  label = 'cy-test-bucket'
-) => {
-  return makeResourcePage(
-    objectStorageBucketFactory.buildList(1, { cluster, label, ...data })
-  );
-};
-
-const makeBucketCreateReq = (
-  label: string,
-  cluster: string,
-  bucket: undefined
-) => {
-  const bucketData = bucket ?? {
-    cluster,
-    label,
-  };
-
-  return cy.request({
-    method: 'POST',
-    url: apiroot + 'object-storage/buckets',
-    body: bucketData,
-    auth: {
-      bearer: oauthtoken,
-    },
+  authenticate();
+  // @TODO Improve object retrieval to account for pagination for buckets with many objects.
+  const storageObjects = await getObjectList(clusterId, bucketLabel);
+  const storageObjectDeletePromises = storageObjects.data.map(async (storageObject: ObjectStorageObject) => {
+    const objectUrl = await getObjectURL(clusterId, bucketLabel, storageObject.name, 'DELETE');
+    await axios.delete(objectUrl.url);
   });
+
+  return Promise.all(storageObjectDeletePromises);
 };
 
-export const createBucket = (
-  label: string,
-  cluster: string,
-  bucket = undefined
-) => {
-  return makeBucketCreateReq(label, cluster, bucket).then((resp) => {
-    apiCheckErrors(resp);
-    console.log(`Created Bucket ${resp.body.label} successfully`, resp);
-    return resp.body;
+/**
+ * Asynchronously deletes all test buckets.
+ *
+ * If a test bucket has any objects, they will all be deleted prior to deleting
+ * the bucket.
+ *
+ * @returns Promise that resolves when all test buckets are deleted.
+ */
+export const deleteAllTestBuckets = async () => {
+  authenticate();
+  const bucketsPage = (page: number) => getBuckets({ page });
+  const buckets: ObjectStorageBucket[] = (await depaginate(bucketsPage)).filter((bucket: ObjectStorageBucket) => {
+    return isTestLabel(bucket.label);
   });
-};
 
-export const deleteBucketByLabel = (cluster, bucket) => {
-  return cy.request({
-    method: 'DELETE',
-    url: `${apiroot}object-storage/buckets/${cluster}/${bucket}`,
-    auth: {
-      bearer: oauthtoken,
-    },
-  });
-};
-
-export const deleteAllTestBuckets = () => {
-  getBuckets().then((resp) => {
-    resp.body.data.forEach((bucket) => {
-      if (isTestEntity(bucket)) {
-        deleteBucketByLabel(bucket['cluster'], bucket.label);
-      }
+  const deleteBucketsPromises = buckets.map(async (bucket: ObjectStorageBucket) => {
+    await deleteAllTestBucketObjects(bucket.cluster, bucket.label);
+    return deleteBucket({
+      cluster: bucket.cluster,
+      label: bucket.label,
     });
   });
+
+  return Promise.all(deleteBucketsPromises);
 };
 
-export const deleteAccessKeyById = (keyId: number) =>
-  deleteById(`object-storage/keys/`, keyId);
+/**
+ * Asynchronously deletes all test access keys.
+ *
+ * A test access key is one whose label begins with `cy-test-`.
+ *
+ * @returns Promise that resolves when all test access keys are deleted.
+ */
+export const deleteAllTestAccessKeys = async (): Promise<ObjectStorageKey[]> => {
+  authenticate();
+  const getAccessKeysPage = (page: number) => getObjectStorageKeys({ page });
 
-export const deleteAllTestAccessKeys = () => {
-  getAccessKeys().then((resp) => {
-    resp.body.data.forEach((key) => {
-      if (isTestEntity(key)) {
-        deleteAccessKeyById(key.id);
-      }
-    });
+  // Get all access keys that begin with `cy-test`.
+  const accessKeys: ObjectStorageKey[] = (await depaginate(getAccessKeysPage)).filter((accessKey: ObjectStorageKey) => {
+    return isTestLabel(accessKey.label);
   });
+
+  // Get an array of promises to revoke each access key.
+  const revokeAccessKeysPromises = accessKeys.map((accessKey: ObjectStorageKey) => {
+    return revokeObjectStorageKey(accessKey.id);
+  });
+
+  return Promise.all(revokeAccessKeysPromises);
 };

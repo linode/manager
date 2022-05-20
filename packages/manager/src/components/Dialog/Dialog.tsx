@@ -111,6 +111,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
       {...rest}
       classes={{ paper: classes.paper }}
       data-qa-drawer
+      data-qa-dialog
       data-testid="drawer"
       role="dialog"
       aria-labelledby={titleID}
