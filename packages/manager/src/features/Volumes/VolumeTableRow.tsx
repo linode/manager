@@ -22,30 +22,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   chipWrapper: {
     alignSelf: 'center',
   },
-  chip: {
-    borderRadius: 1,
-    fontSize: '0.65rem',
-    marginTop: 0,
-    marginBottom: 0,
-    marginLeft: theme.spacing(2),
-    minHeight: theme.spacing(2),
-    paddingLeft: theme.spacing(0.5),
-    paddingRight: theme.spacing(0.5),
-  },
-  forceUpgradeChip: {
-    backgroundColor: theme.name === 'lightTheme' ? '#e5f1ff' : '#415d81',
-    '&:hover': {
-      backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#374863',
-    },
-  },
-  upgradePendingChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #ccc',
-  },
-  nvmeChip: {
-    backgroundColor: 'transparent',
-    border: '1px solid #02B159',
-  },
 }));
 
 export type CombinedProps = ExtendedVolume & ActionHandlers;
@@ -121,7 +97,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           container
           wrap="nowrap"
           justifyContent="space-between"
-          alignItems="flex-end"
+          alignItems="center"
         >
           {isVolumesLanding ? (
             <>
@@ -131,9 +107,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
               {isNVMe ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.nvmeChip}`}
+                    variant="outlined"
+                    outlineColor="green"
                     label="NVMe"
                     data-testid="nvme-chip"
+                    size="small"
                   />
                 </Grid>
               ) : linodeId &&
@@ -141,10 +119,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                 !nvmeUpgradeScheduledByUserImminent ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.forceUpgradeChip}`}
                     label="UPGRADE TO NVMe"
                     onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
                     data-testid="upgrade-chip"
+                    size="small"
+                    clickable
                   />
                 </Grid>
               ) : linodeId &&
@@ -152,9 +131,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                   nvmeUpgradeScheduledByUserInProgress) ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
-                    className={`${classes.chip} ${classes.upgradePendingChip}`}
+                    variant="outlined"
+                    outlineColor="gray"
                     label="UPGRADE PENDING"
                     data-testid="upgrading-chip"
+                    size="small"
                   />
                 </Grid>
               ) : null}

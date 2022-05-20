@@ -6,7 +6,7 @@ This library consists of [Yup](https://github.com/jquense/yup) schemas correspon
 [Linode API](https://www.linode.com/docs/api/), intended to be used for client-side validation.
 They closely (though not exactly) match the validation that is run by the API back-end when a
 request is received. They can be used to validate API request payloads manually or to validate forms (for example through
-Formik&apos;s `validationSchema`). They also work well with the [@linode/api-v4](https://npmjs.com/@linode/api-v4) package.
+Formik&rsquo;s `validationSchema`). They also work well with the [@linode/api-v4](https://npmjs.com/@linode/api-v4) package.
 
 ### Manual Validation
 
@@ -42,7 +42,7 @@ especially before @linode/api-v4 was published as a separate package. However, a
 this setup caused a few problems:
 
 1. Coupling the request handlers and validation schemas meant that it wasn't possible to turn client-side validation off, which isn't a good fit for a public package.
-2. The validation doesn't match the API&apos;s exactly. There are some things, such as uniqueness, that are
+2. The validation doesn't match the API&rsquo;s exactly. There are some things, such as uniqueness, that are
    difficult to validate on the client. There are some additional cases where the validation is too complex, and
    we made a decision to fall back on the backend validation. This was acceptable when the schemas were only used internally by the Cloud
    Manager, but can lead to confusion for external users (in fact it's unlikely that most external users were even aware that validation

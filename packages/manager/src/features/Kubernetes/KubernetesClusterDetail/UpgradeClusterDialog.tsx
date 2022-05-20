@@ -110,7 +110,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
             them.
           </li>
           <li>
-            Any local storage (such as &apos;hostPath&apos; volumes) will be
+            Any local storage (such as &rsquo;hostPath&rsquo; volumes) will be
             erased.
           </li>
           <li>

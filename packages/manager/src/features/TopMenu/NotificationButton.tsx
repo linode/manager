@@ -69,6 +69,7 @@ export const NotificationButton: React.FC<{}> = (_) => {
         <>
           <TopMenuIcon title="Notifications">
             <MenuButton
+              aria-label="Notifications"
               className={`${iconClasses.icon} ${classes.menuButton} ${
                 isExpanded ? iconClasses.hover : ''
               }`}

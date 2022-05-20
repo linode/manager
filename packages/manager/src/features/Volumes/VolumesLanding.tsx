@@ -10,7 +10,6 @@ import { bindActionCreators, Dispatch } from 'redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
@@ -31,7 +30,6 @@ import withLinodes, {
   Props as WithLinodesProps,
 } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import withNotifications, {
   WithNotifications,
@@ -143,7 +141,6 @@ export const useStyles = makeStyles(() => ({
 
 export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     volumesLoading,
@@ -284,23 +281,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const Banner = () => {
-    return flags.blockStorageAvailability ? (
-      <DismissibleBanner
-        preferenceKey="block-storage-available"
-        productInformationIndicator
-      >
-        <Typography>
-          Take advantage of high-performance{' '}
-          <Link to="https://www.linode.com/products/block-storage/">
-            NVMe Block Storage
-          </Link>
-          .
-        </Typography>
-      </DismissibleBanner>
-    ) : null;
-  };
-
   if (_loading) {
     return <Loading />;
   }
@@ -313,7 +293,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     return (
       <>
         <DocumentTitleSegment segment="Volumes" />
-        <Banner />
         <Placeholder
           title="Volumes"
           className={classes.empty}
@@ -372,7 +351,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
         }: ToggleProps<boolean>) => {
           return (
             <>
-              <Banner />
               <LandingHeader
                 title="Volumes"
                 entity="Volume"

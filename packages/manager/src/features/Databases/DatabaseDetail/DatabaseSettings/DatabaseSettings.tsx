@@ -64,7 +64,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           onClick={onResetRootPassword}
           sectionTitle="Reset Root Password"
         />
-        <Divider spacingTop={22} spacingBottom={22} />
+        <Divider spacingTop={28} spacingBottom={22} />
         <DatabaseSettingsMenuItem
           sectionTitle="Delete Cluster"
           descriptiveText={deleteClusterCopy}
@@ -72,7 +72,7 @@ export const DatabaseSettings: React.FC<Props> = (props) => {
           disabled={Boolean(profile?.restricted)}
           onClick={onDeleteCluster}
         />
-        <Divider spacingTop={22} spacingBottom={22} />
+        <Divider spacingTop={28} spacingBottom={22} />
         <MaintenanceWindow database={database} timezone={profile?.timezone} />
       </Paper>
       <DatabaseSettingsDeleteClusterDialog

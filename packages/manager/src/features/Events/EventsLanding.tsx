@@ -343,9 +343,9 @@ export const renderTableBody = (
   if (loading) {
     return (
       <TableRowLoading
-        columns={entityId ? 3 : 4}
+        columns={4}
         rows={5}
-        responsive={{ 0: { xsDown: true }, 2: { mdDown: true } }}
+        responsive={{ 0: { xsDown: true }, 3: { smDown: true } }}
       />
     );
   } else if (error) {

@@ -21,6 +21,7 @@ const featureFlagProvider = LAUNCH_DARKLY_API_KEY
       user: {
         key: 'anonymous',
         anonymous: true,
+        privateAttributeNames: ['country', 'taxID'],
       },
     })
   : (component: React.ComponentType) => component;

@@ -92,7 +92,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             between Linodes. A VLAN created or attached in this section will be
             assigned to the eth1 interface, with eth0 being used for connections
             to the public internet. VLAN configurations can be further edited in
-            the Linode&apos;s{' '}
+            the Linode&rsquo;s{' '}
             <ExternalLink
               text="Configuration Profile"
               link="https://linode.com/docs/guides/disk-images-and-configuration-profiles/"

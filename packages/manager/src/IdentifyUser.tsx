@@ -77,6 +77,7 @@ export const IdentifyUser: React.FC<{}> = () => {
             custom: {
               taxID: _taxID,
             },
+            privateAttributeNames: ['country', 'taxID'],
           })
           .then(() => setFeatureFlagsLoaded())
           /**
