@@ -3,10 +3,8 @@ import {
   createDomain,
   deleteDomainById,
   deleteAllTestDomains,
-  makeRandomIP,
-} from '../../support/api/domains';
-
-import { makeTestLabel } from '../../support/api/common';
+} from 'support/api/domains';
+import { randomIp, randomLabel } from 'support/util/random';
 import { fbtClick, getClick } from '../../support/helpers';
 
 const createRecords = () => [
@@ -16,12 +14,12 @@ const createRecords = () => [
     fields: [
       {
         name: '[data-qa-target="Hostname"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: false,
       },
       {
         name: '[data-qa-target="IP Address"]',
-        value: `${makeRandomIP()}`,
+        value: `${randomIp()}`,
         skipCheck: false,
       },
     ],
@@ -32,12 +30,12 @@ const createRecords = () => [
     fields: [
       {
         name: '[data-qa-target="Hostname"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: false,
       },
       {
         name: '[data-qa-target="Alias to"]',
-        value: `${makeTestLabel()}.net`,
+        value: `${randomLabel()}.net`,
         skipCheck: false,
       },
     ],
@@ -48,12 +46,12 @@ const createRecords = () => [
     fields: [
       {
         name: '[data-qa-target="Hostname"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: false,
       },
       {
         name: '[data-qa-target="Value"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: false,
       },
     ],
@@ -64,12 +62,12 @@ const createRecords = () => [
     fields: [
       {
         name: '[data-qa-target="Service"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: true,
       },
       {
         name: '[data-qa-target="Target"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         approximate: true,
       },
     ],
@@ -80,12 +78,12 @@ const createRecords = () => [
     fields: [
       {
         name: '[data-qa-target="Name"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: false,
       },
       {
         name: '[data-qa-target="Value"]',
-        value: makeTestLabel(),
+        value: randomLabel(),
         skipCheck: false,
       },
     ],

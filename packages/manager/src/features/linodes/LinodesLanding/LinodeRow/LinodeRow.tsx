@@ -71,7 +71,7 @@ interface Props {
     linodeLabel: string,
     linodeConfigs: Config[]
   ) => void;
-  openNotificationDrawer: () => void;
+  openNotificationMenu: () => void;
 }
 
 export type CombinedProps = Props &
@@ -104,7 +104,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     linodeNotifications,
     openDialog,
     openPowerActionDialog,
-    openNotificationDrawer,
+    openNotificationMenu,
     recentEvent,
     mutationAvailable,
   } = props;
@@ -119,7 +119,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
   const MaintenanceText = () => {
     return (
       <>
-        This Linode&apos;s maintenance window opens at{' '}
+        This Linode&rsquo;s maintenance window opens at{' '}
         {parsedMaintenanceStartTime}. For more information, see your{' '}
         <Link className={classes.statusLink} to="/support/tickets?type=open">
           open support tickets.
@@ -180,7 +180,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
               <StatusIcon status={iconStatus} />
               <button
                 className={classes.statusLink}
-                onClick={() => openNotificationDrawer()}
+                onClick={() => openNotificationMenu()}
               >
                 <ProgressDisplay
                   className={classes.progressDisplay}
@@ -249,7 +249,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
           linodeBackups={backups}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
-          inTableContext
+          inListView
         />
       </TableCell>
     </TableRow>

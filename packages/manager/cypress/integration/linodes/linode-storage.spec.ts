@@ -95,7 +95,9 @@ describe('linode storage tab', () => {
       deleteDisk(diskName);
       cy.wait('@deleteDisk').its('response.statusCode').should('eq', 200);
       cy.get('button[title="Add a Disk"]').should('be.enabled');
-      cy.contains(diskName).should('not.exist');
+      cy.findByLabelText('List of Disks').within(() => {
+        cy.contains(diskName).should('not.exist');
+      });
     });
   });
 

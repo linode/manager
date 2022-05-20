@@ -70,7 +70,7 @@ interface LinodeEntityDetailProps {
   linodeConfigs: Config[];
   numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
-  openNotificationDrawer?: () => void;
+  openNotificationMenu?: () => void;
   isDetailLanding?: boolean;
 }
 
@@ -88,7 +88,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     numVolumes,
     isDetailLanding,
     openTagDrawer,
-    openNotificationDrawer,
+    openNotificationMenu,
     recentEvent,
   } = props;
 
@@ -136,7 +136,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           isDetailLanding={isDetailLanding}
           type={linodeType}
           image={linode.image ?? 'Unknown Image'}
-          openNotificationDrawer={openNotificationDrawer || (() => null)}
+          openNotificationMenu={openNotificationMenu || (() => null)}
           progress={progress}
           transitionText={transitionText}
         />
@@ -200,7 +200,7 @@ export interface HeaderProps {
   image: string;
   linodeConfigs: Config[];
   isDetailLanding?: boolean;
-  openNotificationDrawer: () => void;
+  openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
 }
@@ -313,7 +313,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     isDetailLanding,
     progress,
     transitionText,
-    openNotificationDrawer,
+    openNotificationMenu,
   } = props;
 
   const isDetails = variant === 'details';
@@ -384,7 +384,7 @@ const Header: React.FC<HeaderProps> = (props) => {
               >
                 <button
                   className={classes.statusLink}
-                  onClick={openNotificationDrawer}
+                  onClick={openNotificationMenu}
                 >
                   <ProgressDisplay
                     progress={progress ?? 0}

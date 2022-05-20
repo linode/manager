@@ -64,7 +64,7 @@ const CautionNotice: React.FC<CombinedProps> = (props) => {
       </Typography>
       <ul>
         <li>
-          You&apos;ll be assigned new IPv4 and IPv6 addresses, which will be
+          You&rsquo;ll be assigned new IPv4 and IPv6 addresses, which will be
           accessible once your migration is complete.
         </li>
         <li>
@@ -90,7 +90,7 @@ const CautionNotice: React.FC<CombinedProps> = (props) => {
         )}
         <li>Your Linode will be powered off.</li>
         <li>
-          Block Storage can&apos;t be migrated to other regions.{' '}
+          Block Storage can&rsquo;t be migrated to other regions.{' '}
           {amountOfAttachedVolumes > 0 && (
             <React.Fragment>
               The following
@@ -108,7 +108,8 @@ const CautionNotice: React.FC<CombinedProps> = (props) => {
           When this migration begins, we estimate it will take approximately{' '}
           {DateTime.local()
             .plus({ minutes: props.migrationTimeInMins })
-            .toRelative()}{' '}
+            .toRelative()
+            ?.replace('in', '')}{' '}
           to complete.
         </li>
       </ul>

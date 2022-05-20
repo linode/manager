@@ -1,11 +1,39 @@
+## [2022-05-16] - v0.71.0
+
+### Changed:
+- Database types to support the addition of PostgreSQL and MongoDB
+
+### Fixed
+- Validation package version in api-v4/package.json
+
+## [2022-04-28] - v0.70.0
+
+### Changed:
+
+- Types for Databases (DatabaseClusterSizeObject, Engines, and DatabaseType) and and Linodes (BaseType and LinodeType)
+
+## [2022-04-18] - v0.69.0
+
+### Added:
+
+- Types for DBaaS Maintenance Window
+
+## [2022-04-07] - v0.68.0
+
+### Added:
+
+- Types and endpoints for IPv6 range sharing
+
 ## [2022-03-21] - v0.67.0
 
 ### Fixed:
+
 - KubernetesDashboardResponse reflects API return data structure
 
 ## [2022-02-07] - v0.66.0
 
 ### Added:
+
 - Types and methods for Databases
 
 ## [2022-01-10] -v0.65.0
@@ -17,6 +45,7 @@
 ## [2021-11-30] - v0.64.0
 
 ### Added:
+
 - getLinodeFirewalls method
 
 ## [2021-11-15] - v0.63.0
@@ -36,53 +65,67 @@
 - PaymentMethod
 
 ## [2021-11-09] - v0.62.0
+
 ### Added:
+
 - Types, methods, and interfaces related to Block Storage migrations
 
 ## [2021-11-01] - v0.61.0
+
 ### Added:
+
 - Support for enabling Kubernetes High Availability
 - Endpoints for getting Kubernetes Dashboard and resetting Kube config
 
 ## [2021-10-20] - v0.60.0
 
 ### Changed:
+
 Change default export from /lib to root
 Add build config for Node.js
 
 ## [2021-10-05] - v0.59.0
 
 ### Added:
+
 - AutoscaleNodePool
 - AutoscaleNodePoolRequest
 
 ## [2021-09-17] - v0.58.0
 
 ### Added:
+
 - Account Agreement types and methods
 
 ### Changed:
+
 - GiB to GB in volumes.ts
 
 ## [2021-08-24] - v0.57.0
 
 ### Changed:
+
 - Added firewalls to grants
 
 ### Fixed:
+
 - Entity import in account/types
 
 ## [2021-08-09] - v0.56.0
+
 ### Added:
+
 deletePaymentMethod
 addPromotion
 
 ### Changed:
+
 getLinodeTypes
 
 ## Validation Package
 
 ### Changed:
+
 PaymentMethodSchema
 PromoCodeSchema
 createDomainSchema
@@ -92,98 +135,107 @@ createNodeBalancerConfigSchema
 UpdateNodeBalancerConfigSchema
 CreateVolumeSchema
 
-
-
 ## [2021-07-29] - v0.55.0
 
 ### Added:
+
 - Types and endpoint support for new payment methods
 
 ## [2021-06-28] - v0.54.0
 
 ### Changed:
+
 - Removed ‘ready’ and ‘completed’ statuses from AccountMaintenance interface in account/types.ts
 
 ## [2021-05-18] - v0.53.0
 
 ### Changed:
-- Move remaining validation schemas to the validation package
 
+- Move remaining validation schemas to the validation package
 
 ## [2021-05-05] - v0.52.0
 
 ### Added:
+
 - TPA Provider types
 
 ### Changed:
+
 - Move validation schemas into separate library
 
 ## Validation Library
 
 - Add README
 
-
 ## [2021-04-22] - v0.51.0
 
 ### Added:
+
 - @linode/validation package
 - Methods and schemas for machine image uploads
 
 ### Changed:
-- UpdateAccountSettingsSchema
 
+- UpdateAccountSettingsSchema
 
 ## [2021-04-13] - v0.50.0
 
 ### Added:
+
 - resetLinodePassword (only applies to Bare Metal instances)
 
 ### Changed:
+
 - linodeInterfaceSchema (label and IPAM address field)
 
-
-##  [2021-04-05] - v0.49.0
+## [2021-04-05] - v0.49.0
 
 ### Changed:
+
 - Added metal to LinodeTypeClass type and removed LinodeInterface from linodes/types.ts
 - Added interfaces for IPAssignment, IPSharingPayload and IPAssignmentPayload in networking/types.ts
 - Added Bare Metal to Capabilities type in regions/types.ts
 
-
 ## [2021-03-23] - v0.48.0
 
 ### Changed:
+
 - Update types and schemas for Interface fields on Linode configurations
 
-
 ## [2021-02-24] - v0.44.0
+
 ### Added
+
 - Entity Transfer event actions, schema, types, and methods
 
 ## [2021-02-22] - v0.43.0
 
 ### Changed
+
 - Update TypeScript version to v4.1.5
 - Adjust types for rescueLinode to work with TypeScript
 
 ## [2021-02-15] - v0.42.0
 
 ### Added
+
 profile_update event type
 
 ### Changed
+
 Firewall validation schema (ports are now optional)
 Firewall rule validation schema (add label and description fields)
 Update Node version from 10.16 to 14.15.4
 
-
 ## [2021-01-25] - v0.41.0
 
 ### Added:
+
 - Method for recycleClusterNodes
 - Method for recycleNode
 
 ### Changed:
+
 - Update getKubernetesVersions
 - Update FirewallRuleTypeSchema
 

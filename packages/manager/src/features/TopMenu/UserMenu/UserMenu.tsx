@@ -9,21 +9,41 @@ import {
 import { positionRight } from '@reach/popover';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import UserIcon from 'src/assets/icons/account.svg';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
-import { getGravatarUrl } from 'src/utilities/gravatar';
 
 interface MenuLink {
   display: string;
   href: string;
   hide?: boolean;
 }
+
+export const menuLinkStyle = (linkColor: string) => ({
+  lineHeight: 1,
+  '&[data-reach-menu-item]': {
+    display: 'flex',
+    alignItems: 'center',
+    color: linkColor,
+    cursor: 'pointer',
+    fontSize: '0.875rem',
+    padding: '8px 24px',
+    '&:focus, &:hover': {
+      backgroundColor: 'transparent',
+      color: linkColor,
+    },
+    '&[data-reach-menu-item][data-selected]:not(:hover)': {
+      backgroundColor: 'transparent',
+      color: linkColor,
+      outline: 'dotted 1px #c1c1c0',
+    },
+  },
+});
 
 const useStyles = makeStyles((theme: Theme) => ({
   menu: {
@@ -53,12 +73,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
     borderRadius: '50%',
     transition: theme.transitions.create(['box-shadow']),
-    height: 28,
-    width: 28,
+    height: 30,
+    width: 30,
     '& svg': {
       color: '#c9c7c7',
-      width: 28,
-      height: 28,
+      width: 30,
+      height: 30,
     },
     [theme.breakpoints.down('md')]: {
       width: '28px',
@@ -191,26 +211,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'normal',
     width: '100%',
   },
-  menuItemLink: {
-    lineHeight: 1,
-    '&[data-reach-menu-item]': {
-      display: 'flex',
-      alignItems: 'center',
-      color: theme.textColors.linkActiveLight,
-      cursor: 'pointer',
-      fontSize: '0.875rem',
-      padding: '8px 24px',
-      '&:focus, &:hover': {
-        backgroundColor: 'transparent',
-        color: theme.textColors.linkActiveLight,
-      },
-      '&[data-reach-menu-item][data-selected]:not(:hover)': {
-        backgroundColor: 'transparent',
-        color: theme.textColors.linkActiveLight,
-        outline: 'dotted 1px #c1c1c0',
-      },
-    },
-  },
+  menuItemLink: menuLinkStyle(theme.textColors.linkActiveLight),
   userName: {
     color: theme.textColors.headlineStatic,
     fontSize: '1.1rem',
@@ -241,9 +242,6 @@ const profileLinks: MenuLink[] = [
 
 export const UserMenu: React.FC<{}> = () => {
   const classes = useStyles();
-
-  const [gravatarURL, setGravatarURL] = React.useState<string | undefined>();
-  const [gravatarLoading, setGravatarLoading] = React.useState<boolean>(false);
 
   const {
     profile,
@@ -288,18 +286,7 @@ export const UserMenu: React.FC<{}> = () => {
     [hasFullAccountAccess, _isRestrictedUser]
   );
 
-  const userEmail = profile?.email;
   const userName = profile?.username ?? '';
-
-  React.useEffect(() => {
-    if (userEmail) {
-      setGravatarLoading(true);
-      getGravatarUrl(userEmail).then((url) => {
-        setGravatarLoading(false);
-        setGravatarURL(url);
-      });
-    }
-  }, [userEmail]);
 
   const renderLink = (menuLink: MenuLink) =>
     menuLink.hide ? null : (
@@ -328,21 +315,7 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            {gravatarLoading ||
-            gravatarURL === 'not found' ||
-            gravatarURL === undefined ? (
-              <div className={classes.userWrapper}>
-                <UserIcon />
-              </div>
-            ) : (
-              <div className={classes.userWrapper}>
-                <img
-                  className={classes.gravatar}
-                  src={gravatarURL}
-                  alt="Gravatar"
-                />
-              </div>
-            )}
+            <GravatarIcon username={userName} className={classes.userWrapper} />
             <Hidden smDown>
               <Typography className={classes.inlineUserName}>
                 {userName}

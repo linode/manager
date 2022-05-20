@@ -19,7 +19,7 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
-import { isLinodeKubeImage } from 'src/store/image/image.helpers';
+import { isLinodeKubeImageId } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import { getDisplayName } from 'src/utilities/getDisplayName';
@@ -139,7 +139,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       filter: any = this.state.currentFilter,
       isSorting: boolean = false
     ) => {
-      const { request } = this.props;
+      const { request, category } = this.props;
       this.setState({
         gettingMoreStackScripts: true,
         isSorting,
@@ -170,35 +170,37 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
             ? response.data
             : [...this.state.listOfStackScripts, ...response.data];
 
-          /*
-           * BEGIN @TODO: deprecate this once compound filtering becomes available in the API
-           * basically, if the result set after filtering out StackScripts with
-           * deprecated distros is 0, request the next page with the same filter.
+          /**
+           * - When viewing Community StackScripts, we want to filter out
+           *   StackScripts that are not deployable (has no non-deprecated images).
+           * - When viewing Account StackScripts, we want users to be able to see
+           *   StackScripts with deprecated images so they can view and edit them.
+           * - We will always filter out LKE images to prevent confusion for the user.
            */
-          const newDataWithoutDeprecatedDistrosOrKube = newData.filter(
-            (stackScript) =>
-              this.hasNonDeprecatedImages(stackScript.images) &&
-              !this.usesKubeImage(stackScript.images)
-          );
+          const stackScriptFilter =
+            category === 'community'
+              ? (stackScript: StackScript) =>
+                  this.hasNonDeprecatedImages(stackScript.images) &&
+                  !this.usesKubeImage(stackScript.images)
+              : (stackScript: StackScript) =>
+                  !this.usesKubeImage(stackScript.images);
+
+          const filteredData = newData.filter(stackScriptFilter);
 
           // we have to make sure both the original data set
           // AND the filtered data set is 0 before we request the next page automatically
-          if (
-            isSorting &&
-            newData.length !== 0 &&
-            newDataWithoutDeprecatedDistrosOrKube.length === 0
-          ) {
+          if (isSorting && newData.length !== 0 && filteredData.length === 0) {
             this.getNext();
             return;
           }
           this.setState({
-            listOfStackScripts: newDataWithoutDeprecatedDistrosOrKube,
+            listOfStackScripts: filteredData,
             gettingMoreStackScripts: false,
             loading: false,
             isSorting: false,
             getMoreStackScriptsFailed: false,
           });
-          return newDataWithoutDeprecatedDistrosOrKube;
+          return filteredData;
         })
         .catch((e: any) => {
           if (!this.mounted) {
@@ -241,16 +243,8 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       return false;
     };
 
-    usesKubeImage = (stackScriptImages: string[]) => {
-      const { publicImages } = this.props;
-      return stackScriptImages.some((imageLabel) => {
-        const image = publicImages[imageLabel];
-        if (!image) {
-          return false;
-        }
-        return isLinodeKubeImage(image);
-      });
-    };
+    usesKubeImage = (stackScriptImages: string[]) =>
+      stackScriptImages.some((imageId) => isLinodeKubeImageId(imageId));
 
     generateFilterInfo = (value: CurrentFilter): FilterInfo => {
       switch (value) {
@@ -484,7 +478,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   title="StackScripts"
                   className={classes.stackscriptPlaceholder}
                 >
-                  You don&apos;t have any StackScripts to select from.
+                  You don&rsquo;t have any StackScripts to select from.
                 </Placeholder>
               ) : (
                 <Placeholder

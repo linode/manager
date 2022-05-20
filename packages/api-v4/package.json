@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.67.0",
+  "version": "0.71.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -21,7 +21,7 @@
   "types": "./lib/index.d.ts",
   "unpkg": "./lib/index.js",
   "dependencies": {
-    "@linode/validation": "0.8.0",
+    "@linode/validation": "0.11.1",
     "@types/yup": "^0.29.13",
     "axios": "~0.21.4",
     "ipaddr.js": "^2.0.0",

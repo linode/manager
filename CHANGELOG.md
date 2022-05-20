@@ -4,24 +4,119 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-05-16] - v1.66.2
+### Changed:
+- Display linroot as the username for MongoDB and MySQL clusters, and linpostgres as the username for PostgreSQL clusters
+
+## [2022-05-16] - v1.66.1
+### Changed:
+- Display 'admin' as username for MongoDB database clusters
+
+## [2022-05-16] - v1.66.0
+
+### Added:
+- Support and icons for PostgreSQL and MongoDB
+
+### Changed:
+- Expanded accessibility and styling docs
+- Icon for MySQL
+
+### Fixed:
+- Marketplace Wazuh link
+
+## [2022-05-02] - v1.65.0
+
+### Added:
+- Outlined chip variant
+
+### Changed:
+- Hyphenate “type-to-confirm”
+- Curly all single quotes
+- Max node pool copy
+- Limit collection of country and tax information
+- Spacing on DBaaS Settings page
+- Unbold Object links in Object Storage
+- All No Stats Available States
+
+### Fixed:
+- Linode Activity Feed undefined loading state
+- Button text not vertically centered in Firefox
+
+## [2022-04-28] - v1.64.1
+
+### Changed
+
+- Code refactors to accommodate API database type changes
+
+## [2022-04-18] - v1.64.0
+
+### Added:
+
+- Support for DBaaS Maintenance Windows
+
+### Changed:
+
+- Update DBaaS Beta notice to include end date
+- Notification Drawer updates and refinements
+- Improve Table Loading States
+- Premium LKE Create page UI refinements
+- Display placeholder text while stats are not yet available in Linode Network tab
+- Support Ticket Refinements
+
+### Fixed:
+
+- Show /116s in networking panel
+- Typo in migrate Linode modal
+- Max value for Node Pools is 100
+
+## [2022-04-08] - v1.63.1
+
+### Fixed:
+
+- Issue where Community StackScripts were inaccessible
+
+## [2022-04-07] - v1.63.0
+
+### Added:
+
+- IPv6 sharing support
+- Ability to add Gravatars to My Profile settings
+
+### Changed:
+
+- Font size for "Billing & Payment History" header
+- Swapped button order in Restore from Backup drawer
+- Events page refinements
+- Default permissions and expiry for personal access tokens
+
+### Fixed:
+
+- Prometheus & Grafana and Ant Media Enterprise docs link
+- Linodes missing from Firewall Linode selection
+- Prevent Linode Landing table from scrolling
+
 ## [2022-03-28] - v1.62.1
 
 ### Added:
+
 - March 2022 Marketplace release
 
 ## [2022-03-21] - v1.62.0
 
 ### Added:
+
 - Dynamically-shown warning for raw disks in Capture Image tab
 - Kubernetes Dashboard link
 
 ### Changed:
+
 - Replace Linode Checkout Sidebar with Summary Paper
 - Prevent referral link from being modified
 - Remove manage SSH keys link from success notice
 - DBaaS cluster labels now editable
 
 ### Fixed:
+
 - Tags Panel causing extra PUT requests
 - Select Dropdown overflow
 - Linode Disk delete modal cancel button

@@ -24,13 +24,14 @@ export interface Flags {
   mainContentBanner: MainContentBanner;
   databases: boolean;
   tpaProviders: Provider[];
+  ipv6Sharing: boolean;
   referralBannerText: ReferralBannerText;
-  blockStorageAvailability: boolean;
   apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
   kubernetesDashboardAvailability: boolean;
   regionDropdown: boolean;
   taxCollectionBanner: TaxCollectionBanner;
+  databaseBeta: boolean;
 }
 
 type PromotionalOfferFeature =

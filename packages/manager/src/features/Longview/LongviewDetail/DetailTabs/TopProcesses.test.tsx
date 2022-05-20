@@ -53,7 +53,7 @@ describe('Top Processes', () => {
           />
         )
       );
-      getAllByTestId('skeletonCol');
+      getAllByTestId('table-row-loading');
     });
 
     it('renders error state', () => {

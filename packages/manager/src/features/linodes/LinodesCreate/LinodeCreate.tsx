@@ -220,7 +220,9 @@ export class LinodeCreate extends React.PureComponent<
     this.state = {
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0,
       stackScriptSelectedTab:
-        preSelectedTab === 2 && location.search.search('Account') > -1 ? 0 : 1,
+        preSelectedTab === 2 && location.search.search('Community') > -1
+          ? 1
+          : 0,
       planKey: v4(),
     };
   }
@@ -581,7 +583,6 @@ export class LinodeCreate extends React.PureComponent<
               regions={regionsData!}
               handleSelection={this.props.updateRegionID}
               selectedID={this.props.selectedRegionID}
-              copy="Determine the best location for your Linode."
               updateFor={[this.props.selectedRegionID, regionsData, errors]}
               disabled={userCannotCreateLinode}
               helperText={this.props.regionHelperText}

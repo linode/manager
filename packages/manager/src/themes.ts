@@ -291,9 +291,17 @@ const darkThemeOptions = {
         backgroundColor: primaryColors.main,
       },
       clickable: {
+        backgroundColor: '#415d81',
         '&:hover': {
-          background: '#226dc3',
+          backgroundColor: '#374863',
         },
+        '&:focus': {
+          backgroundColor: '#374863',
+        },
+      },
+      outlined: {
+        borderRadius: 1,
+        backgroundColor: 'transparent',
       },
     },
     MuiCardActions: {

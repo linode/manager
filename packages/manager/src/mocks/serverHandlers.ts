@@ -1,19 +1,19 @@
-import { EventAction, NotificationType } from '@linode/api-v4';
+import { EventAction } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
 import {
-  // abuseTicketNotificationFactory,
+  abuseTicketNotificationFactory,
   accountFactory,
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
+  databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  databaseEngineFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -47,6 +47,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   paymentMethodFactory,
+  possibleMySQLReplicationTypes,
+  possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
   stackScriptFactory,
@@ -59,6 +61,7 @@ import {
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantsFactory } from 'src/factories/grants';
+import { pickRandom } from 'src/utilities/random';
 
 export const makeResourcePage = (
   e: any[],
@@ -155,8 +158,17 @@ const databases = [
   }),
 
   rest.get('*/databases/engines', (req, res, ctx) => {
-    const engine = databaseEngineFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(engine)));
+    const engine1 = databaseEngineFactory.buildList(3);
+    const engine2 = databaseEngineFactory.buildList(3, {
+      engine: 'postgresql',
+    });
+    const engine3 = databaseEngineFactory.buildList(3, {
+      engine: 'mongodb',
+    });
+
+    const combinedList = [...engine1, ...engine2, ...engine3];
+
+    return res(ctx.json(makeResourcePage(combinedList)));
   }),
 
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
@@ -165,6 +177,17 @@ const databases = [
       label: `database-${req.params.id}`,
       engine: req.params.engine,
       ssl_connection: true,
+      replication_type:
+        req.params.engine === 'mysql'
+          ? pickRandom(possibleMySQLReplicationTypes)
+          : req.params.engine === 'postgresql'
+          ? pickRandom(possiblePostgresReplicationTypes)
+          : (undefined as any),
+      replication_commit_type:
+        req.params.engine === 'postgresql' ? 'local' : undefined,
+      storage_engine:
+        req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
+      compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
     });
     return res(ctx.json(database));
   }),
@@ -350,6 +373,10 @@ export const handlers = [
     return res(ctx.json(transfer));
   }),
   rest.get('*/instances/*/stats*', async (req, res, ctx) => {
+    const stats = linodeStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
+  rest.get('*/instances/*/stats', async (req, res, ctx) => {
     const stats = linodeStatsFactory.build();
     return res(ctx.json(stats));
   }),
@@ -697,13 +724,13 @@ export const handlers = [
     );
   }),
   rest.get('*/events', (req, res, ctx) => {
-    // const events = eventFactory.buildList(1, {
-    //   action: 'lke_node_create',
-    //   percent_complete: 15,
-    //   entity: { type: 'linode', id: 999, label: 'linode-1' },
-    //   message:
-    //     'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
-    // });
+    const events = eventFactory.buildList(1, {
+      action: 'lke_node_create',
+      percent_complete: 15,
+      entity: { type: 'linode', id: 999, label: 'linode-1' },
+      message:
+        'Rebooting this thing and showing an extremely long event message for no discernible reason other than the fairly obvious reason that we want to do some testing of whether or not these messages wrap.',
+    });
     const volumeMigrationScheduled = eventFactory.build({
       entity: { type: 'volume', id: 6, label: 'bravoExample' },
       action: 'volume_migrate_scheduled' as EventAction,
@@ -733,8 +760,7 @@ export const handlers = [
     return res.once(
       ctx.json(
         makeResourcePage([
-          // ...events,
-          ...oldEvents,
+          ...events,
           ...oldEvents,
           volumeMigrationScheduled,
           volumeMigrating,
@@ -814,143 +840,143 @@ export const handlers = [
   }),
   rest.get('*/notifications', (req, res, ctx) => {
     // pastDueBalance included here merely for ease of testing for Notifications section in the Notifications drawer.
-    // const pastDueBalance = notificationFactory.build({
-    //   entity: null,
-    //   label: 'past due',
-    //   message: `You have a past due balance of $58.50. Please make a payment immediately to avoid service disruption.`,
-    //   type: 'payment_due',
-    //   severity: 'critical',
-    //   when: null,
-    //   until: null,
-    //   body: null
-    // });
+    const pastDueBalance = notificationFactory.build({
+      entity: null,
+      label: 'past due',
+      message: `You have a past due balance of $58.50. Please make a payment immediately to avoid service disruption.`,
+      type: 'payment_due',
+      severity: 'critical',
+      when: null,
+      until: null,
+      body: null,
+    });
 
     // const gdprNotification = gdprComplianceNotification.build();
 
-    // const generalGlobalNotice = {
-    //   type: 'notice',
-    //   entity: null,
-    //   when: null,
-    //   // eslint-disable-next-line xss/no-mixed-html
-    //   message:
-    //     "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
-    //   label: "We've updated our policies.",
-    //   severity: 'minor',
-    //   until: null,
-    //   body: null,
-    // };
+    const generalGlobalNotice = {
+      type: 'notice',
+      entity: null,
+      when: null,
+      // eslint-disable-next-line xss/no-mixed-html
+      message:
+        "We've updated our policies. See <a href='https://cloud.linode.com/support'>this page</a> for more information.",
+      label: "We've updated our policies.",
+      severity: 'minor',
+      until: null,
+      body: null,
+    };
 
-    // const outageNotification = {
-    //   type: 'outage',
-    //   entity: {
-    //     type: 'region',
-    //     label: null,
-    //     id: 'us-east',
-    //     url: '/regions/us-east',
-    //   },
-    //   when: null,
-    //   message:
-    //     'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
-    //   label: 'There is an issue affecting service in this facility',
-    //   severity: 'major',
-    //   until: null,
-    //   body: null,
-    // };
+    const outageNotification = {
+      type: 'outage',
+      entity: {
+        type: 'region',
+        label: null,
+        id: 'us-east',
+        url: '/regions/us-east',
+      },
+      when: null,
+      message:
+        'We are aware of an issue affecting service in this facility. If you are experiencing service issues in this facility, there is no need to open a support ticket at this time. Please monitor our status blog at https://status.linode.com for further information.  Thank you for your patience and understanding.',
+      label: 'There is an issue affecting service in this facility',
+      severity: 'major',
+      until: null,
+      body: null,
+    };
 
-    // const emailBounce = notificationFactory.build({
-    //   type: 'billing_email_bounce',
-    //   entity: null,
-    //   when: null,
-    //   message: 'We are unable to send emails to your billing email address!',
-    //   label: 'We are unable to send emails to your billing email address!',
-    //   severity: 'major',
-    //   until: null,
-    //   body: null,
-    // });
+    const emailBounce = notificationFactory.build({
+      type: 'billing_email_bounce',
+      entity: null,
+      when: null,
+      message: 'We are unable to send emails to your billing email address!',
+      label: 'We are unable to send emails to your billing email address!',
+      severity: 'major',
+      until: null,
+      body: null,
+    });
 
-    // const abuseTicket = abuseTicketNotificationFactory.build();
+    const abuseTicket = abuseTicketNotificationFactory.build();
 
-    // const migrationNotification = notificationFactory.build({
-    //   type: 'migration_pending',
-    //   label: 'You have a migration pending!',
-    //   message:
-    //     'You have a migration pending! Your Linode must be offline before starting the migration.',
-    //   entity: { id: 0, type: 'linode', label: 'linode-0' },
-    //   severity: 'major',
-    // });
+    const migrationNotification = notificationFactory.build({
+      type: 'migration_pending',
+      label: 'You have a migration pending!',
+      message:
+        'You have a migration pending! Your Linode must be offline before starting the migration.',
+      entity: { id: 0, type: 'linode', label: 'linode-0' },
+      severity: 'major',
+    });
 
-    // const minorSeverityNotification = notificationFactory.build({
-    //   type: 'notice',
-    //   message: 'Testing for minor notification',
-    //   severity: 'minor',
-    // });
+    const minorSeverityNotification = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for minor notification',
+      severity: 'minor',
+    });
 
-    // const criticalSeverityNotification = notificationFactory.build({
-    //   type: 'notice',
-    //   message: 'Testing for critical notification',
-    //   severity: 'critical',
-    // });
+    const criticalSeverityNotification = notificationFactory.build({
+      type: 'notice',
+      message: 'Testing for critical notification',
+      severity: 'critical',
+    });
 
-    // const balanceNotification = notificationFactory.build({
-    //   type: 'payment_due',
-    //   message: 'You have an overdue balance!',
-    //   severity: 'major',
-    // });
+    const balanceNotification = notificationFactory.build({
+      type: 'payment_due',
+      message: 'You have an overdue balance!',
+      severity: 'major',
+    });
 
-    const blockStorageMigrationScheduledNotification = notificationFactory.build(
-      {
-        type: 'volume_migration_scheduled' as NotificationType,
-        entity: {
-          type: 'volume',
-          label: 'eligibleNow',
-          id: 20,
-          url: '/volumes/20',
-        },
-        when: '2021-09-30T04:00:00',
-        message:
-          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-        label: 'You have a scheduled Block Storage volume upgrade pending!',
-        severity: 'critical',
-        until: '2021-10-16T04:00:00',
-        body: 'Your volumes in us-east will be upgraded to NVMe.',
-      }
-    );
+    // const blockStorageMigrationScheduledNotification = notificationFactory.build(
+    //   {
+    //     type: 'volume_migration_scheduled' as NotificationType,
+    //     entity: {
+    //       type: 'volume',
+    //       label: 'eligibleNow',
+    //       id: 20,
+    //       url: '/volumes/20',
+    //     },
+    //     when: '2021-09-30T04:00:00',
+    //     message:
+    //       'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+    //     label: 'You have a scheduled Block Storage volume upgrade pending!',
+    //     severity: 'critical',
+    //     until: '2021-10-16T04:00:00',
+    //     body: 'Your volumes in us-east will be upgraded to NVMe.',
+    //   }
+    // );
 
-    const blockStorageMigrationImminentNotification = notificationFactory.build(
-      {
-        type: 'volume_migration_imminent' as NotificationType,
-        entity: {
-          type: 'volume',
-          label: 'example-upgrading',
-          id: 2,
-          url: '/volumes/2',
-        },
-        when: '2021-09-30T04:00:00',
-        message:
-          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-        label: 'You have a scheduled Block Storage volume upgrade pending!',
-        severity: 'major',
-        until: '2021-10-16T04:00:00',
-        body: 'Your volumes in us-east will be upgraded to NVMe.',
-      }
-    );
+    // const blockStorageMigrationImminentNotification = notificationFactory.build(
+    //   {
+    //     type: 'volume_migration_imminent' as NotificationType,
+    //     entity: {
+    //       type: 'volume',
+    //       label: 'example-upgrading',
+    //       id: 2,
+    //       url: '/volumes/2',
+    //     },
+    //     when: '2021-09-30T04:00:00',
+    //     message:
+    //       'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+    //     label: 'You have a scheduled Block Storage volume upgrade pending!',
+    //     severity: 'major',
+    //     until: '2021-10-16T04:00:00',
+    //     body: 'Your volumes in us-east will be upgraded to NVMe.',
+    //   }
+    // );
 
     return res(
       ctx.json(
         makeResourcePage([
-          // pastDueBalance,
-          // ...notificationFactory.buildList(1),
+          pastDueBalance,
+          ...notificationFactory.buildList(1),
           // gdprNotification,
-          // generalGlobalNotice,
-          // outageNotification,
-          // minorSeverityNotification,
-          // criticalSeverityNotification,
-          // abuseTicket,
-          // emailBounce,
-          // migrationNotification,
-          // balanceNotification,
-          blockStorageMigrationScheduledNotification,
-          blockStorageMigrationImminentNotification,
+          generalGlobalNotice,
+          outageNotification,
+          minorSeverityNotification,
+          criticalSeverityNotification,
+          abuseTicket,
+          emailBounce,
+          migrationNotification,
+          balanceNotification,
+          // blockStorageMigrationScheduledNotification,
+          // blockStorageMigrationImminentNotification,
         ])
       )
     );

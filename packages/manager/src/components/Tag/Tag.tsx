@@ -137,8 +137,7 @@ export const Tag: React.FC<CombinedProps> = (props) => {
     <Chip
       {...chipProps}
       label={_label}
-      className={classNames({
-        ...(className && { [className]: true }),
+      className={classNames(className, {
         [classes[colorVariant!]]: true,
         [classes.root]: true,
       })}

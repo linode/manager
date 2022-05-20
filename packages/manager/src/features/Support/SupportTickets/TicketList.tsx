@@ -12,7 +12,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import TicketRow from './TicketRow';
 import { getTicketsPage } from './ticketUtils';
@@ -51,7 +51,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     const { data: tickets, error, loading } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={8} />;
+      return <TableRowLoading columns={6} />;
     }
 
     if (error) {

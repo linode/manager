@@ -12,10 +12,8 @@ import Form from 'src/components/core/Form';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import HelpIcon from 'src/components/HelpIcon';
-import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
@@ -24,7 +22,6 @@ import withVolumesRequests, {
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
-import useFlags from 'src/hooks/useFlags';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -123,7 +120,6 @@ type CombinedProps = Props & VolumesRequests & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
   const { onSuccess, createVolume, origin, history, regions } = props;
 
   const { data: profile } = useProfile();
@@ -150,10 +146,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
   const doesNotHavePermission =
     profile?.restricted && !hasGrant('add_volumes', grants);
-
-  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
-    'block-storage-available'
-  );
 
   const renderSelectTooltip = (tooltipText: string) => {
     return (
@@ -287,22 +279,6 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             ) : null}
             <Box display="flex" flexDirection="column">
               <Paper>
-                {flags.blockStorageAvailability && !hasDismissedBanner ? (
-                  <Notice
-                    success
-                    className={classes.notice}
-                    dismissible
-                    onClose={handleDismiss}
-                  >
-                    <strong>
-                      We&rsquo;re working quickly to expand global availability
-                      of our high-performance NVMe block storage.{' '}
-                      <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
-                        Check NVMe rollout status on our blog.
-                      </Link>
-                    </strong>
-                  </Notice>
-                ) : null}
                 <Typography
                   className={classes.copy}
                   variant="body1"

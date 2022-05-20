@@ -49,17 +49,12 @@ No action is required or enabled.
 
 <Canvas>
   <Story name="Custom">
-    {() => {
-      const classes = useStyles();
-      return (
-        <Chip
-          className={`${classes.chip} ${classes.nvmeChip}`}
-          style={{ marginLeft: 0 }}
-          label="NVMe"
-          data-testid="nvme-chip"
-        />
-      );
-    }}
+    <Chip
+      label="NVMe"
+      variant="outlined"
+      outlineColor="green"
+      size="small"
+    />
   </Story>
 </Canvas>
 
@@ -152,4 +147,4 @@ No action is required or enabled.
   </Story>
 </Canvas>
 
-<ArgsTable story="Component API" />
+<ArgsTable story="Component API"  exclude={['ref']} />
