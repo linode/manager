@@ -36,33 +36,6 @@ type CombinedProps = WithStyles<ClassNames>;
 export class OtherWays extends React.Component<CombinedProps, State> {
   state: State = {};
 
-  ada: any = undefined;
-
-  componentDidMount() {
-    /*
-     * Init Ada Chaperone chat app
-     * Script is included in index.html
-     */
-    if ('AdaChaperone' in window) {
-      this.ada = new (window as any).AdaChaperone('linode');
-    }
-  }
-
-  handleAdaInit = () => {
-    /*
-     * Show the Ada chat
-     */
-    if (typeof this.ada === 'undefined') {
-      this.setState({
-        error:
-          'There was an issue loading the chat at this time. Please try again later.',
-      });
-      return;
-    }
-    this.setState({ error: '' });
-    this.ada.show();
-  };
-
   render() {
     const { classes } = this.props;
 
