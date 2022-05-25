@@ -25,9 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1.5),
   },
   buttonContainer: {
+    gap: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(2),
-      justifyContent: 'flex-start',
     },
   },
 }));
@@ -68,20 +68,11 @@ export const PhoneVerification = () => {
   const onSubmitVerificationCode = async (values: VerificationFormValues) => {
     await sendVerificationCode({ otp_code: Number(values.otp_code) });
 
-    // Update the Profile store
+    // Manually update the React Query store so state updates
     updateProfileData({ phone_number: sendCodeForm.values.phone_number });
 
-    // put component back into view mode
-    setView(true);
+    reset();
 
-    // clear mutation data because we use that to know if a code has been sent or not
-    resetSendCodeMutation();
-
-    // reset formik forms
-    sendCodeForm.resetForm();
-    verifyCodeForm.resetForm();
-
-    // show success to user via a toast
     enqueueSnackbar('Successfully verified phone number', {
       variant: 'success',
     });
@@ -100,6 +91,18 @@ export const PhoneVerification = () => {
     },
     onSubmit: onSubmitVerificationCode,
   });
+
+  const reset = () => {
+    // put component back into view mode
+    setView(true);
+
+    // clear mutation data because we use that to know if a code has been sent or not
+    resetSendCodeMutation();
+
+    // reset formik forms
+    sendCodeForm.resetForm();
+    verifyCodeForm.resetForm();
+  };
 
   const onEdit = () => {
     setView(false);
@@ -123,6 +126,10 @@ export const PhoneVerification = () => {
         enqueueSnackbar(e?.[0].reason ?? 'Unable to resend verification code')
       );
   };
+
+  const isFormSubmitting = isCodeSent
+    ? verifyCodeForm.isSubmitting
+    : sendCodeForm.isSubmitting;
 
   return (
     <>
@@ -189,12 +196,17 @@ export const PhoneVerification = () => {
             justifyContent="flex-end"
             className={classes.buttonContainer}
           >
+            {!view ? (
+              <Button
+                buttonType="secondary"
+                disabled={isFormSubmitting}
+                onClick={reset}
+              >
+                Cancel
+              </Button>
+            ) : null}
             <Button
-              loading={
-                isCodeSent
-                  ? verifyCodeForm.isSubmitting
-                  : sendCodeForm.isSubmitting
-              }
+              loading={isFormSubmitting}
               disabled={view}
               buttonType="primary"
               type="submit"
