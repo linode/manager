@@ -4,8 +4,6 @@ import { Theme, makeStyles } from 'src/components/core/styles';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 
-import AdaLink from './AdaLink';
-
 interface Props {
   desktopMenuIsOpen: boolean;
 }
@@ -66,17 +64,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  adaLink: {
-    padding: '0 !important',
-    marginRight: theme.spacing(2),
-    position: 'fixed',
-    zIndex: 2,
-    right: 0,
-    bottom: 8,
-    [theme.breakpoints.up('sm')]: {
-      marginRight: theme.spacing(3),
-    },
-  },
 }));
 
 const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
@@ -129,9 +116,6 @@ export const Footer: React.FC<Props> = (props) => {
             link={FEEDBACK_LINK}
             hideIcon
           />
-        </Grid>
-        <Grid item className={classes.adaLink}>
-          <AdaLink />
         </Grid>
       </Grid>
     </footer>

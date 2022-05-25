@@ -35,15 +35,6 @@ export const sendLinodeActionMenuItemEvent = (eventAction: string): void => {
   });
 };
 
-// AdaLink.tsx
-export const sendAdaEvent = (): void => {
-  sendEvent({
-    category: 'Support Bot',
-    action: 'Open',
-    label: location.pathname,
-  });
-};
-
 // PaginationControls.tsx
 export const sendPaginationEvent = (
   eventCategory: string,
