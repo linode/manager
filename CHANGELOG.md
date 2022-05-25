@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022] - v1.67.0
+
+### Added:
+- Marketplace Add: May 2022 Release
+
+### Changed:
+- Allow more sorting options for Databases
+- Remove NVMe marketing banners
+- Remove Ada chat bot
+
+### Fixed:
+- Linode Configs Cancel Button functionality
+- Events sometimes disappearing from the notification menu
+
 ## [2022-05-16] - v1.66.2
 ### Changed:
 - Display linroot as the username for MongoDB and MySQL clusters, and linpostgres as the username for PostgreSQL clusters
