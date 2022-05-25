@@ -9,6 +9,7 @@ import {
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
+import { PriceObject } from '@linode/api-v4/lib/linodes'
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
@@ -181,6 +182,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 
 export interface ExtendedDatabaseType extends DatabaseType {
   heading: string;
+  price: PriceObject;
 }
 
 interface NodePricing {
@@ -232,11 +234,13 @@ const DatabaseCreate: React.FC<{}> = () => {
     return dbtypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-
+      const clusterPricing = type.engines[selectedEngine].find((cluster: any) => cluster.quantity === 1);
+      const price = clusterPricing?.price || { monthly: null, hourly: null };
       return {
         ...type,
         label: formattedLabel,
         heading: formattedLabel,
+        price: price,
       };
     });
   }, [dbtypes]);
@@ -522,7 +526,6 @@ const DatabaseCreate: React.FC<{}> = () => {
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
-            selectedEngine={selectedEngine}
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
