@@ -13,6 +13,7 @@ export const basePerms = [
   'object_storage',
   'stackscripts',
   'volumes',
+  'firewall',
   'databases',
 ];
 
@@ -29,6 +30,7 @@ export const basePermNameMap: Record<string, string> = {
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes',
+  firewall: 'Firewall',
   databases: 'Databases',
 };
 
