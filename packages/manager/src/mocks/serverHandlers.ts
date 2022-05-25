@@ -10,10 +10,10 @@ import {
   appTokenFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
+  databaseEngineFactory,
   databaseFactory,
   databaseInstanceFactory,
   databaseTypeFactory,
-  databaseEngineFactory,
   domainFactory,
   domainRecordFactory,
   entityTransferFactory,
@@ -47,6 +47,8 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
   paymentMethodFactory,
+  possibleMySQLReplicationTypes,
+  possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
   securityQuestionsFactory,
@@ -60,6 +62,7 @@ import {
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantsFactory } from 'src/factories/grants';
+import { pickRandom } from 'src/utilities/random';
 
 export const makeResourcePage = (
   e: any[],
@@ -160,8 +163,17 @@ const databases = [
   }),
 
   rest.get('*/databases/engines', (req, res, ctx) => {
-    const engine = databaseEngineFactory.buildList(3);
-    return res(ctx.json(makeResourcePage(engine)));
+    const engine1 = databaseEngineFactory.buildList(3);
+    const engine2 = databaseEngineFactory.buildList(3, {
+      engine: 'postgresql',
+    });
+    const engine3 = databaseEngineFactory.buildList(3, {
+      engine: 'mongodb',
+    });
+
+    const combinedList = [...engine1, ...engine2, ...engine3];
+
+    return res(ctx.json(makeResourcePage(combinedList)));
   }),
 
   rest.get('*/databases/:engine/instances/:id', (req, res, ctx) => {
@@ -170,6 +182,17 @@ const databases = [
       label: `database-${req.params.id}`,
       engine: req.params.engine,
       ssl_connection: true,
+      replication_type:
+        req.params.engine === 'mysql'
+          ? pickRandom(possibleMySQLReplicationTypes)
+          : req.params.engine === 'postgresql'
+          ? pickRandom(possiblePostgresReplicationTypes)
+          : (undefined as any),
+      replication_commit_type:
+        req.params.engine === 'postgresql' ? 'local' : undefined,
+      storage_engine:
+        req.params.engine === 'mongodb' ? 'wiredtiger' : undefined,
+      compression_type: req.params.engine === 'mongodb' ? 'none' : undefined,
     });
     return res(ctx.json(database));
   }),
@@ -369,6 +392,10 @@ export const handlers = [
     return res(ctx.json(transfer));
   }),
   rest.get('*/instances/*/stats*', async (req, res, ctx) => {
+    const stats = linodeStatsFactory.build();
+    return res(ctx.json(stats));
+  }),
+  rest.get('*/instances/*/stats', async (req, res, ctx) => {
     const stats = linodeStatsFactory.build();
     return res(ctx.json(stats));
   }),

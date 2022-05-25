@@ -9,21 +9,17 @@ import {
   VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery, UseQueryResult } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
 
 export const queryKey = 'profile';
 
-export const useProfile = (
-  givenProfile?: UseQueryResult<Profile, APIError[]>
-) =>
-  givenProfile ??
-  useQuery<Profile, APIError[]>(
-    queryKey,
-    getProfile,
-    queryPresets.oneTimeFetch
-  );
+export const useProfile = (givenProfile?: Profile) =>
+  useQuery<Profile, APIError[]>(queryKey, getProfile, {
+    ...queryPresets.oneTimeFetch,
+    initialData: givenProfile,
+  });
 
 export const useMutateProfile = () => {
   return useMutation<Profile, APIError[], Partial<Profile>>(
