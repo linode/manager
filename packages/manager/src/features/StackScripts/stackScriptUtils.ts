@@ -106,6 +106,10 @@ export const baseApps = {
   '971043': 'Odoo',
   '970559': 'Grav',
   '970561': 'NodeJS',
+  '985372': 'Joomla',
+  '985380': 'Joplin',
+  '985364': 'Prometheus & Grafana',
+  '985374': 'Ant Media Enterprise Edition'
 };
 
 const oneClickFilter = [

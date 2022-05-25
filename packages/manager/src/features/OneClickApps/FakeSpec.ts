@@ -357,6 +357,24 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg',
   },
   {
+    name: 'Easypanel',
+    description: `Deploy Node.js, Ruby, Python, PHP, Go, and Java applications via an intuitive control panel. Easily set up free SSL certificates, run commands with an in-browser terminal, and push your code from Github to accelerate development.`,
+    summary: 'Modern server control panel based on Docker.',
+    related_guides: [
+      {
+        title: 'Deploying Easypanel through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://easypanel.io/',
+        href: 'https://easypanel.io/',
+      },
+    ],
+    logo_url: 'assets/easypanel_color.svg',
+  },
+  {
     name: 'FileCloud',
     description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
     summary: 'Enterprise file sharing to manage and sync from any device',
@@ -676,6 +694,24 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/litespeedcpanel_color.svg',
   },
   {
+    name: 'LiveSwitch',
+    description: `Stream live audio or video while maximizing customer engagement with advanced built-in features. Liveswitch provides real-time monitoring, audience polling, and end-to-end (E2E) data encryption.`,
+    summary: 'High quality and reliable interactive live streaming.',
+    related_guides: [
+      {
+        title: 'Deploying LiveSwitch through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.liveswitch.io/',
+        href: 'https://www.liveswitch.io/',
+      },
+    ],
+    logo_url: 'assets/liveswitch_color.svg',
+  },
+  {
     name: 'MagicSpam',
     description: `MagicSpam stops inbound spam from entering your server right at the SMTP layer to lower bandwidth and overhead, as well as secure mailboxes on your server from being compromised and used to send outbound spam. MagicSpam installs directly onto the email server without any need to change A/MX records to protect unlimited users and domains, and integrates natively with your control panel interface.`,
     summary:
@@ -826,8 +862,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Nextcloud',
-    description: `Nextcloud is an open source solution to file hosting and sharing. With NextCloud, you can synchronize files from your local computer to your Linode server and share them with your collaborators. Nextcloud’s customizable security features and intuitive user interface help keep your files safe and easy to manage.`,
-    summary: `A file sharing service that allows you to store your important documents and images in one centralized location.`,
+    description: `Nextcloud AIO stands for Nextcloud All In One, and provides easy deployment and maintenance for popular Nextcloud tools. AIO includes Nextcloud, Nextcloud Office, OnlyOffice, and high-performance backend features.`,
+    summary: `A safe home for all your data.`,
     related_guides: [
       {
         title: 'Deploying Nextcloud through the Linode Marketplace',
