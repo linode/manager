@@ -13,6 +13,7 @@ export const basePerms = [
   'object_storage',
   'stackscripts',
   'volumes',
+  'databases',
 ];
 
 export const basePermNameMap: Record<string, string> = {
@@ -28,6 +29,7 @@ export const basePermNameMap: Record<string, string> = {
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes',
+  databases: 'Databases',
 };
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
