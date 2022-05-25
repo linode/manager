@@ -1,7 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
 import {
@@ -72,33 +71,6 @@ export class OtherWays extends React.Component<CombinedProps, State> {
     drawerOpen: false,
   };
 
-  ada: any = undefined;
-
-  componentDidMount() {
-    /*
-     * Init Ada Chaperone chat app
-     * Script is included in index.html
-     */
-    if ('AdaChaperone' in window) {
-      this.ada = new (window as any).AdaChaperone('linode');
-    }
-  }
-
-  handleAdaInit = () => {
-    /*
-     * Show the Ada chat
-     */
-    if (typeof this.ada === 'undefined') {
-      this.setState({
-        error:
-          'There was an issue loading the chat at this time. Please try again later.',
-      });
-      return;
-    }
-    this.setState({ error: '' });
-    this.ada.show();
-  };
-
   openTicketDrawer = () => {
     this.setState({ drawerOpen: true });
   };
@@ -130,34 +102,27 @@ export class OtherWays extends React.Component<CombinedProps, State> {
         <Grid container className={classes.wrapper}>
           <Grid item xs={12}>
             <Typography variant="h2" className={classes.heading}>
-              Didn&apos;t find what you need? Get help.
+              Didn&rsquo;t find what you need? Get help.
             </Typography>
           </Grid>
-          <Grid item xs={12} md={4}>
-            <Tile
-              title="Create a Community Post"
-              description="Find help from other Linode users in the Community"
-              icon={<Community />}
-              link="https://linode.com/community/"
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Tile
-              title="Talk to Ada"
-              description="Chat with the Linode Support bot to help troubleshoot"
-              icon={<Chat />}
-              link={this.handleAdaInit}
-              errorText={this.state.error}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <Tile
-              title="Open a ticket"
-              description="If you are not able to solve an issue with the resources listed above,
+          <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
+            <Grid item xs={12} sm={6} md={4}>
+              <Tile
+                title="Create a Community Post"
+                description="Find help from other Linode users in the Community Find help from other Linode "
+                icon={<Community />}
+                link="https://linode.com/community/"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <Tile
+                title="Open a ticket"
+                description="If you are not able to solve an issue with the resources listed above,
                 you can contact Linode Support"
-              icon={<Support />}
-              link={this.openTicketDrawer}
-            />
+                icon={<Support />}
+                link={this.openTicketDrawer}
+              />
+            </Grid>
           </Grid>
         </Grid>
         <SupportTicketDrawer

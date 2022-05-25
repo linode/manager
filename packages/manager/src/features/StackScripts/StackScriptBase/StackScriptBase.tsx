@@ -478,7 +478,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
                   title="StackScripts"
                   className={classes.stackscriptPlaceholder}
                 >
-                  You don&apos;t have any StackScripts to select from.
+                  You don&rsquo;t have any StackScripts to select from.
                 </Placeholder>
               ) : (
                 <Placeholder

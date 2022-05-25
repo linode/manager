@@ -1,11 +1,12 @@
 import {
   ClusterSize,
+  ComprehensiveReplicationType,
   CreateDatabasePayload,
+  DatabaseClusterSizeObject,
   DatabaseEngine,
   DatabasePriceObject,
   DatabaseType,
   Engine,
-  ReplicationType,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
@@ -13,7 +14,9 @@ import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
+import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import BreadCrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -41,7 +44,7 @@ import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
   useDatabaseEnginesQuery,
@@ -57,7 +60,6 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -128,6 +130,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const engineIcons = {
   mysql: () => <MySQLIcon width="24" height="24" />,
+  postgresql: () => <PostgreSQLIcon width="24" height="24" />,
+  mongodb: () => <MongoDBIcon width="24" height="24" />,
 };
 
 const getEngineOptions = (engines: DatabaseEngine[]) => {
@@ -177,7 +181,6 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
 
 export interface ExtendedDatabaseType extends DatabaseType {
   heading: string;
-  subHeadings: [string, string];
 }
 
 interface NodePricing {
@@ -210,6 +213,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
+  const [selectedEngine, setSelectedEngine] = React.useState<Engine>('mysql');
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
@@ -226,20 +230,13 @@ const DatabaseCreate: React.FC<{}> = () => {
       return [];
     }
     return dbtypes.map((type) => {
-      const { label, memory, vcpus, disk, cluster_size } = type;
+      const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const singleNodePricing = cluster_size.find(
-        (cluster) => cluster.quantity === 1
-      )?.price;
+
       return {
         ...type,
-        price: singleNodePricing,
         label: formattedLabel,
         heading: formattedLabel,
-        subHeadings: [
-          `$${singleNodePricing?.monthly}/mo ($${singleNodePricing?.hourly}/hr)`,
-          typeLabelDetails(memory, disk, vcpus),
-        ] as [string, string],
       };
     });
   }, [dbtypes]);
@@ -317,11 +314,12 @@ const DatabaseCreate: React.FC<{}> = () => {
   } = useFormik({
     initialValues: {
       label: '',
-      engine: '' as Engine,
+      engine: 'mysql' as Engine,
       region: '',
       type: '',
       cluster_size: -1 as ClusterSize,
-      replication_type: 'none' as ReplicationType,
+      replication_type: 'none' as ComprehensiveReplicationType,
+      replication_commit_type: undefined, // specific to Postgres
       allow_list: [
         {
           address: '',
@@ -329,6 +327,8 @@ const DatabaseCreate: React.FC<{}> = () => {
         },
       ],
       ssl_connection: true,
+      storage_engine: undefined, // specific to MongoDB
+      compression_type: undefined, // specific to MongoDB
     },
     validationSchema: createDatabaseSchema,
     validateOnChange: false,
@@ -394,10 +394,15 @@ const DatabaseCreate: React.FC<{}> = () => {
       return;
     }
 
+    const engineType = values.engine.split('/')[0];
+
     setNodePricing({
-      single: type.cluster_size.find((cluster) => cluster.quantity === 1)
-        ?.price,
-      multi: type.cluster_size.find((cluster) => cluster.quantity === 3)?.price,
+      single: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 1
+      )?.price,
+      multi: type.engines[engineType].find(
+        (cluster: DatabaseClusterSizeObject) => cluster.quantity === 3
+      )?.price,
     });
     setFieldValue(
       'cluster_size',
@@ -405,9 +410,15 @@ const DatabaseCreate: React.FC<{}> = () => {
     );
     setFieldValue(
       'replication_type',
-      values.cluster_size === 1 ? 'none' : 'semi_synch'
+      determineReplicationType(values.cluster_size, values.engine)
     );
-  }, [dbtypes, setFieldValue, values.cluster_size, values.type]);
+    setFieldValue(
+      'replication_commit_type',
+      determineReplicationCommitType(values.engine)
+    );
+    setFieldValue('storage_engine', determineStorageEngine(values.engine));
+    setFieldValue('compression_type', determineCompressionType(values.engine));
+  }, [dbtypes, setFieldValue, values.cluster_size, values.type, values.engine]);
 
   if (regionsLoading || !regionsData || enginesLoading || typesLoading) {
     return <CircleProgress />;
@@ -445,9 +456,9 @@ const DatabaseCreate: React.FC<{}> = () => {
           },
         ]}
         labelOptions={{
-          suffixComponent: (
+          suffixComponent: flags.databaseBeta ? (
             <Chip className={classes.chip} label="beta" component="span" />
-          ),
+          ) : null,
         }}
       />
       <Paper>
@@ -479,6 +490,9 @@ const DatabaseCreate: React.FC<{}> = () => {
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
+
+              const selection = selected.value.split('/')[0];
+              setSelectedEngine(selection as Engine);
             }}
             isClearable={false}
           />
@@ -504,10 +518,11 @@ const DatabaseCreate: React.FC<{}> = () => {
               setFieldValue('type', selected);
             }}
             selectedID={values.type}
-            updateFor={[values.type, errors]}
+            updateFor={[values.type, selectedEngine, errors]}
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
+            selectedEngine={selectedEngine}
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
@@ -616,6 +631,51 @@ const DatabaseCreate: React.FC<{}> = () => {
       </Grid>
     </form>
   );
+};
+
+const determineReplicationType = (clusterSize: number, engine: string) => {
+  if (Boolean(engine.match(/mongo/))) {
+    return undefined;
+  }
+
+  // If engine is a MySQL or Postgres one and it's a standalone DB instance
+  if (clusterSize === 1) {
+    return 'none';
+  }
+
+  // MySQL engine & cluster = semi_synch. PostgreSQL engine & cluster = asynch.
+  if (Boolean(engine.match(/mysql/))) {
+    return 'semi_synch';
+  } else {
+    return 'asynch';
+  }
+};
+
+const determineReplicationCommitType = (engine: string) => {
+  // 'local' is the default.
+  if (Boolean(engine.match(/postgres/))) {
+    return 'local';
+  }
+
+  return undefined;
+};
+
+const determineStorageEngine = (engine: string) => {
+  // 'wiredtiger' is the default.
+  if (Boolean(engine.match(/mongo/))) {
+    return 'wiredtiger';
+  }
+
+  return undefined;
+};
+
+const determineCompressionType = (engine: string) => {
+  // 'none' is the default.
+  if (Boolean(engine.match(/mongo/))) {
+    return 'none';
+  }
+
+  return undefined;
 };
 
 export default DatabaseCreate;

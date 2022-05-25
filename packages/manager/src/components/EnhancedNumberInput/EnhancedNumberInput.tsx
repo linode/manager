@@ -21,7 +21,7 @@ const useStyles = makeStyles(() => ({
       padding: '0 8px',
     },
     '& $textField': {
-      width: 50,
+      width: 53,
       minWidth: 40,
       height: 34,
       minHeight: 30,
