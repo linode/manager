@@ -185,10 +185,6 @@ b {
   display: list-item;
 }
 
-button.ada-chat-button {
-  display: none !important;
-}
-
 .block {
   display: block;
 }
