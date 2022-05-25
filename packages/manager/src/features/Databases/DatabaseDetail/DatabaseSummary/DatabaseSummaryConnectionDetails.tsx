@@ -94,6 +94,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
     alignSelf: 'baseline',
   },
+  provisioningText: {
+    fontStyle: 'italic',
+    fontWeight: 'lighter !important' as 'lighter',
+  },
 }));
 
 interface Props {
@@ -123,11 +127,91 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     setShowPassword((showCredentials) => !showCredentials);
   };
 
+  const databaseIsProvisioning = database.status === 'provisioning';
+
+  const isMongoDatabase = database.engine === 'mongodb';
+  const isStandaloneMongoDatabase =
+    isMongoDatabase && database.cluster_size === 1;
+
   React.useEffect(() => {
     if (showCredentials && !credentials) {
       getDatabaseCredentials();
     }
   }, [credentials, getDatabaseCredentials, showCredentials]);
+
+  const hostnameJSX = () => {
+    // For standalone Mongo instances, hosts.primary is populated after provisioning completes.
+    if (!isMongoDatabase || isStandaloneMongoDatabase) {
+      return (
+        <Typography>
+          <span>hostname</span> ={' '}
+          {database.hosts?.primary ?? (
+            <span className={classes.provisioningText}>
+              Your hostname will appear here once it is available.
+            </span>
+          )}
+          {database.hosts?.primary ? (
+            <CopyTooltip
+              className={classes.inlineCopyToolTip}
+              text={database.hosts?.primary}
+            />
+          ) : null}
+        </Typography>
+      );
+    }
+
+    const listOfHostnames =
+      database.peers && database.peers.length > 1
+        ? database.peers?.join(', ')
+        : undefined;
+
+    const determineHostnameFieldContents = () => {
+      return databaseIsProvisioning ? (
+        <span className={classes.provisioningText}>
+          Your hostnames will appear here once they are available.
+        </span>
+      ) : (
+        database.peers?.join(', ')
+      );
+    };
+
+    return (
+      <Typography>
+        <span>hostnames</span> = {determineHostnameFieldContents()}
+        {!databaseIsProvisioning && listOfHostnames ? (
+          <CopyTooltip
+            className={classes.inlineCopyToolTip}
+            text={listOfHostnames}
+          />
+        ) : null}
+      </Typography>
+    );
+  };
+
+  const replicaSetJSX = () => {
+    if (!isMongoDatabase) {
+      return null;
+    }
+
+    return (
+      <Typography>
+        <span>replica set</span> ={' '}
+        {databaseIsProvisioning ? (
+          <span className={classes.provisioningText}>
+            Your replica set will appear here once it is available.
+          </span>
+        ) : (
+          database.replica_set ?? 'Your replica set is unavailable.'
+        )}
+        {database.replica_set ? (
+          <CopyTooltip
+            className={classes.inlineCopyToolTip}
+            text={database.replica_set}
+          />
+        ) : null}
+      </Typography>
+    );
+  };
 
   const handleDownloadCACertificate = () => {
     getSSLFields(database.engine, database.id)
@@ -213,17 +297,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             />
           ) : null}
         </Box>
-        <Box display="flex">
-          <Typography>
-            <span>host</span> = {database.hosts?.primary}
-          </Typography>
-          {database.hosts?.primary ? (
-            <CopyTooltip
-              className={classes.inlineCopyToolTip}
-              text={database.hosts?.primary}
-            />
-          ) : null}
-        </Box>
+        <Box display="flex">{hostnameJSX}</Box>
         {database.hosts.secondary ? (
           <Box display="flex" flexDirection="row" alignItems="center">
             <Typography>
@@ -239,8 +313,10 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         <Typography>
           <span>port</span> = {database.port}
         </Typography>
+        {replicaSetJSX()}
         <Typography>
-          <span>ssl</span> = {ssl}
+          <span>ssl</span> ={' '}
+          {!isMongoDatabase ? ssl : valueForMongoSSL(database.ssl_connection)}
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
@@ -273,6 +349,10 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       </div>
     </>
   );
+};
+
+const valueForMongoSSL = (ssl_connection: boolean) => {
+  return ssl_connection ? 'TRUE' : 'FALSE';
 };
 
 export default DatabaseSummaryConnectionDetails;
