@@ -583,7 +583,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   <FormHelperText id="virtModeCaption">
                     Controls if devices inside your virtual machine are
                     paravirtualized or fully virtualized. Paravirt is what you
-                    want, unless you&apos;re doing weird things.
+                    want, unless you&rsquo;re doing weird things.
                   </FormHelperText>
                 </RadioGroup>
               </FormControl>

@@ -29,13 +29,17 @@ export const TableRowLoading: React.FC<Props> = ({
 
   for (let j = 0; j < columns; j++) {
     const Cell = (
-      <TableCell>
+      <TableCell key={`table-loading-cell-${j}`}>
         <Skeleton />
       </TableCell>
     );
 
     if (responsive && responsive[j]) {
-      cols.push(<Hidden {...responsive[j]}>{Cell}</Hidden>);
+      cols.push(
+        <Hidden key={`table-loading-hidden-${j}`} {...responsive[j]}>
+          {Cell}
+        </Hidden>
+      );
     } else {
       cols.push(Cell);
     }
@@ -49,7 +53,7 @@ export const TableRowLoading: React.FC<Props> = ({
         className={classes.root}
         data-testid="table-row-loading"
         aria-label="Table content is loading"
-        key={`table-row-loading-${i}`}
+        key={`table-loading-row-${i}`}
       >
         {cols}
       </TableRow>

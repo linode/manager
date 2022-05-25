@@ -40,6 +40,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
   },
+  '@supports (-moz-appearance: none)': {
+    /* Fix text alignment for Firefox */
+    reg: {
+      marginTop: 2,
+    },
+  },
   helpIcon: {
     marginLeft: -theme.spacing(),
   },

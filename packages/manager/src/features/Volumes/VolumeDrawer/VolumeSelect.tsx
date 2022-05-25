@@ -180,7 +180,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
         />
         {!error && (
           <FormHelperText data-qa-volume-region>
-            Only volumes in this Linode's region are displayed.
+            Only volumes in this Linode&rsquo;s region are displayed.
           </FormHelperText>
         )}
       </FormControl>

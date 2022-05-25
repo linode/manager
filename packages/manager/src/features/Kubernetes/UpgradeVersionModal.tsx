@@ -128,7 +128,7 @@ export const UpgradeDialog: React.FC<DialogProps> = (props) => {
         </>
       ) : (
         <>
-          Upgrade {clusterLabel}&apos;s Kubernetes version from{' '}
+          Upgrade {clusterLabel}&rsquo;s Kubernetes version from{' '}
           <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
           Once the upgrade is complete you will need to recycle all nodes in
           your cluster.

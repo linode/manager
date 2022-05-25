@@ -26,7 +26,6 @@ export interface Flags {
   tpaProviders: Provider[];
   ipv6Sharing: boolean;
   referralBannerText: ReferralBannerText;
-  blockStorageAvailability: boolean;
   apiMaintenance: APIMaintenance;
   productInformationBanners: ProductInformationBannerFlag[];
   kubernetesDashboardAvailability: boolean;

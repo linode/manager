@@ -1,13 +1,7 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
-import {
-  makeStyles,
-  Theme,
-  WithTheme,
-  withTheme,
-} from 'src/components/core/styles';
+import { makeStyles, Theme, useTheme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import {
@@ -22,8 +16,7 @@ import {
   Metrics,
 } from 'src/utilities/statMetrics';
 import { readableBytes } from 'src/utilities/unitConversions';
-import StatsPanel from './StatsPanel';
-import { ChartProps } from './types';
+import { StatsPanel } from './StatsPanel';
 
 export interface TotalTrafficProps {
   inTraffic: string;
@@ -67,13 +60,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export interface ChartProps {
+  height: number;
+  loading: boolean;
+  timezone: string;
+  rangeSelection: string;
+}
+
 interface Props extends ChartProps {
   timezone: string;
   rangeSelection: string;
   stats?: Stats;
 }
-
-export type CombinedProps = Props & WithTheme;
 
 interface NetworkMetrics {
   publicIn: Metrics;
@@ -98,9 +96,10 @@ const _getMetrics = (data: NetworkStats) => {
   };
 };
 
-export const NetworkGraph: React.FC<CombinedProps> = (props) => {
-  const { rangeSelection, stats, theme, ...rest } = props;
+export const NetworkGraphs: React.FC<Props> = (props) => {
+  const { rangeSelection, stats, ...rest } = props;
 
+  const theme = useTheme<Theme>();
   const classes = useStyles();
 
   const v4Data: NetworkStats = {
@@ -303,5 +302,4 @@ const Graph: React.FC<GraphProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withTheme, React.memo);
-export default enhanced(NetworkGraph);
+export default NetworkGraphs;

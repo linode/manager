@@ -1,3 +1,17 @@
+## [2022-05-16] - v0.71.0
+
+### Changed:
+- Database types to support the addition of PostgreSQL and MongoDB
+
+### Fixed
+- Validation package version in api-v4/package.json
+
+## [2022-04-28] - v0.70.0
+
+### Changed:
+
+- Types for Databases (DatabaseClusterSizeObject, Engines, and DatabaseType) and and Linodes (BaseType and LinodeType)
+
 ## [2022-04-18] - v0.69.0
 
 ### Added:

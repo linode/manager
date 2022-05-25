@@ -113,7 +113,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           <Grid item xs={8} md={9}>
             <Typography variant="h3">Google Pay</Typography>
             <Typography>
-              You&apos;ll be taken to Google Pay to complete sign up.
+              You&rsquo;ll be taken to Google Pay to complete sign up.
             </Typography>
           </Grid>
           <Grid
@@ -140,7 +140,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           <Grid item xs={8} md={9}>
             <Typography variant="h3">PayPal</Typography>
             <Typography>
-              You&apos;ll be taken to PayPal to complete sign up.
+              You&rsquo;ll be taken to PayPal to complete sign up.
             </Typography>
           </Grid>
           <Grid

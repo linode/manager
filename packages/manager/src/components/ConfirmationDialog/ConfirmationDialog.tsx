@@ -34,24 +34,25 @@ export interface Props extends DialogProps {
   title: string;
 }
 
-type CombinedProps = Props;
-
-const ConfirmationDialog: React.FC<CombinedProps> = (props) => {
+const ConfirmationDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { title, children, actions, error, onClose, ...dialogProps } = props;
+  const { title, children, actions, error, ...dialogProps } = props;
 
   return (
     <Dialog
       {...dialogProps}
       onClose={(_, reason) => {
         if (reason !== 'backdropClick') {
-          onClose();
+          dialogProps.onClose();
         }
       }}
       className={classes.root}
       PaperProps={{ role: undefined }}
       role="dialog"
+      data-qa-drawer
+      data-qa-dialog
+      data-testid="drawer"
     >
       <DialogTitle className="dialog-title" title={title} />
       <DialogContent data-qa-dialog-content className="dialog-content">

@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.64.0",
+  "version": "1.66.2",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -16,8 +16,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.69.0",
-    "@linode/validation": "0.9.0",
+    "@linode/api-v4": "^0.71.0",
+    "@linode/validation": "0.11.1",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -35,7 +35,7 @@
     "axios": "~0.21.4",
     "axios-mock-adapter": "^1.15.0",
     "bluebird": "^3.5.1",
-    "braintree-web": "^3.76.4",
+    "braintree-web": "^3.85.3",
     "browser-detect": "^0.2.28",
     "buffer": "^6.0.3",
     "chart.js": "~2.9.4",
@@ -112,6 +112,7 @@
     "build-storybook": "build-storybook",
     "cy:run": "cypress run -b chrome",
     "cy:e2e": "cypress run --headless -b chrome",
+    "cy:e2e:wait": "yarn run wait-on -d 25000 -i 3500 http://localhost:3000 && yarn cy:e2e",
     "cy:debug": "cypress open",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
@@ -146,7 +147,7 @@
     "@testing-library/user-event": "^12.1.1",
     "@types/algoliasearch": "^3.27.5",
     "@types/bluebird": "^3.5.20",
-    "@types/braintree-web": "^3.75.2",
+    "@types/braintree-web": "^3.75.19",
     "@types/chart.js": "^2.9.21",
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
@@ -235,6 +236,7 @@
     "ts-jest": "~26.4.4",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
     "url-loader": "^4.1.1",
+    "wait-on": "^6.0.1",
     "webpack": "^5.64.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",

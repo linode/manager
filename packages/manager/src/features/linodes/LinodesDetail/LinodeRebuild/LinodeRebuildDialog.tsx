@@ -97,7 +97,7 @@ const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
         {hostMaintenance && <HostMaintenanceError />}
         {rebuildError && <Notice error>{rebuildError}</Notice>}
         <Typography data-qa-rebuild-desc className={classes.helperText}>
-          If you can&#39;t rescue an existing disk, it&#39;s time to rebuild
+          If you can&rsquo;t rescue an existing disk, it&rsquo;s time to rebuild
           your Linode. There are a couple of different ways you can do this:
           either restore from a backup or start over with a fresh Linux
           distribution.&nbsp;

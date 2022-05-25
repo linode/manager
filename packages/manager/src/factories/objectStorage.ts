@@ -3,6 +3,7 @@ import {
   ObjectStorageBucket,
   ObjectStorageCluster,
   ObjectStorageObject,
+  ObjectStorageKey,
 } from '@linode/api-v4/lib/object-storage/types';
 
 export const objectStorageBucketFactory = Factory.Sync.makeFactory<ObjectStorageBucket>(
@@ -37,6 +38,17 @@ export const objectStorageObjectFactory = Factory.Sync.makeFactory<ObjectStorage
     etag: '9f254c71e28e033bf9e0e5262e3e72ab',
     last_modified: '2019-01-01T01:23:45',
     name: Factory.each((id) => `example-${id}`),
+  }
+);
+
+export const objectStorageKeyFactory = Factory.Sync.makeFactory<ObjectStorageKey>(
+  {
+    id: Factory.each((id) => id),
+    label: Factory.each((id) => `access-key-${id}`),
+    access_key: '4LRW3T5FX5Z55LB3LYQ8',
+    secret_key: 'PYiAB02QRb53JeUge872CM6wEvBUyRhl3vHn31Ol',
+    limited: false,
+    bucket_access: null,
   }
 );
 

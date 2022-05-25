@@ -24,7 +24,7 @@ import { CyHttpMessages } from 'cypress/types/net-stubbing';
  *
  * @returns Cypress `routeHandler` function for sequential stubs.
  */
-const sequentialStub = function (stubs: any | any[]) {
+export const sequentialStub = function (stubs: any | any[]) {
   const stubData = Array.isArray(stubs) ? stubs : [stubs];
   let count = 0;
 
@@ -45,5 +45,3 @@ const sequentialStub = function (stubs: any | any[]) {
 
   return get;
 };
-
-export default sequentialStub;

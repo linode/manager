@@ -52,9 +52,9 @@ export const FromImageContent: React.FC<CombinedProps> = (props) => {
         <Paper>
           <Placeholder title="My Images" icon={ImageIcon} isEntity>
             <Typography variant="subtitle1">
-              You don&#39;t have any private Images. Visit the{' '}
+              You don&rsquo;t have any private Images. Visit the{' '}
               <Link to="/images">Images section</Link> to create an Image from
-              one of your Linode&#39;s disks.
+              one of your Linode&rsquo;s disks.
             </Typography>
           </Placeholder>
         </Paper>

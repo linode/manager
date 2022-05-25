@@ -3,7 +3,6 @@ import { compose } from 'recompose';
 import NavItem, { PrimaryLink } from './NavItem';
 
 import Help from 'src/assets/icons/help.svg';
-// import { sendAdaEvent } from 'src/utilities/ga';
 
 interface Props {
   closeMenu: () => void;

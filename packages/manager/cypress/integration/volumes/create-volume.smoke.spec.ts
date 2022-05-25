@@ -90,7 +90,7 @@ describe('volumes', () => {
     getVisible('[data-qa-action-menu-item="Delete"]');
   });
 
-  it('creates volume from linode with block storage support (Atlanta)', () => {
+  it('creates volume from linode details', () => {
     interceptOnce('GET', '*/volumes*', volumeList).as('getVolumes');
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(attachedVolume);
@@ -107,12 +107,8 @@ describe('volumes', () => {
     fbtClick(linodeLabel);
     cy.wait('@getVolumes');
     cy.wait('@getLinodeDetail');
-    getVisible(
-      '[href="https://www.linode.com/products/block-storage/"]'
-    ).within(() => {
-      fbtVisible('NVMe Block Storage');
-    });
-    fbtClick('Create a Volume');
+    fbtClick('Storage');
+    fbtClick('Create Volume');
     getClick('[value="creating_for_linode"]');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
     getClick('[data-qa-volume-label="true"]').type('cy-test-volume');

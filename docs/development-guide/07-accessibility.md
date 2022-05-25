@@ -17,4 +17,4 @@ This project also uses the `jsx-a11y` eslint extension, which enforces accessibi
 
 Google Lighthouse is a great way to audit for potential accessibility issues in the app. To run a report, visit the "Lighthouse" tab in Chrome Dev Tools and select "Accessibility" as a category.
 
-To check screen-reader functionality, you may use MacOS's built-in screen-reader (VoiceOver). _Linode employees: check with a team member to get a license for JAWS to test on Windows._
+To check screen-reader functionality, you may use MacOS's built-in screen-reader (VoiceOver) or download [JAWS](https://www.freedomscientific.com/products/software/jaws/) and [NVDA](https://www.nvaccess.org) for Windows. NVDA is free and open-source but JAWS requires a license. A free demo is available that can be run for 40 minutes before it reboots.

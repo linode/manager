@@ -273,10 +273,10 @@ export interface BaseType {
   label: string;
   disk: number;
   memory: number;
-  transfer: number;
   vcpus: number;
 }
 export interface LinodeType extends BaseType {
+  transfer: number;
   class: LinodeTypeClass;
   successor: string | null;
   network_out: number;
