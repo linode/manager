@@ -5,6 +5,7 @@ import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
 import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
 import { parseAPIDate } from 'src/utilities/date';
@@ -67,7 +68,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
         [classes.unseenEvent]: !event.seen,
       })}
     >
-      {message}
+      <HighlightedMarkdown textOrMarkdown={message} />
     </Typography>
   );
 
