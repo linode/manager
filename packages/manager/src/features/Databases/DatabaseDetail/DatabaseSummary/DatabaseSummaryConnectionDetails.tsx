@@ -33,8 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: `16px`,
       width: `16px`,
     },
-    padding: `0 0 0 4px`,
     marginLeft: 4,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
   actionBtnsCtn: {
     display: 'flex',
@@ -222,7 +224,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             />
           ) : null}
         </Box>
-        <Box display="flex">
+        <Box>
           {!isMongoReplicaSet ? (
             <Typography>
               <span>host</span> ={' '}
@@ -243,31 +245,33 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
               )}
             </Typography>
           ) : (
-            <Typography>
-              <span>hosts</span> ={' '}
+            <>
+              <Typography>
+                <span>hosts</span> ={' '}
+              </Typography>
               {database.peers && database.peers.length > 0 ? (
                 database.peers.map((hostname) => (
-                  <span
+                  <Typography
                     key={hostname}
-                    style={{ display: 'flex', fontWeight: 'normal' }}
+                    style={{
+                      marginTop: 0,
+                      marginBottom: 0,
+                      marginLeft: 16,
+                    }}
                   >
-                    <p
-                      style={{ marginTop: 0, marginBottom: 0, marginLeft: 16 }}
-                    >
-                      {hostname}
-                    </p>
+                    <span style={{ fontWeight: 'normal' }}>{hostname}</span>
                     <CopyTooltip
                       className={classes.inlineCopyToolTip}
                       text={hostname}
                     />
-                  </span>
+                  </Typography>
                 ))
               ) : (
                 <span className={classes.provisioningText}>
                   Your hostnames will appear here once they are available.
                 </span>
               )}
-            </Typography>
+            </>
           )}
         </Box>
         {database.hosts.secondary ? (
@@ -291,7 +295,6 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             {database.replica_set ? (
               <>
                 <span style={{ fontWeight: 'normal' }}>
-                  {' '}
                   {database.replica_set}
                 </span>
                 <CopyTooltip
