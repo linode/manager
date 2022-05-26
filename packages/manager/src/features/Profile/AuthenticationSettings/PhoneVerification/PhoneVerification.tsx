@@ -40,7 +40,9 @@ export const PhoneVerification = () => {
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [view, setView] = React.useState(Boolean(profile?.phone_number));
+  const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
+
+  const [view, setView] = React.useState(hasVerifiedPhoneNumber);
 
   const {
     data,
@@ -71,7 +73,9 @@ export const PhoneVerification = () => {
     // Manually update the React Query store so state updates
     updateProfileData({ phone_number: sendCodeForm.values.phone_number });
 
-    reset();
+    // reset the form, but forcefully go to view mode because we can't
+    // expect the state to be updated immediately
+    reset(true);
 
     enqueueSnackbar('Successfully verified phone number', {
       variant: 'success',
@@ -92,9 +96,12 @@ export const PhoneVerification = () => {
     onSubmit: onSubmitVerificationCode,
   });
 
-  const reset = () => {
-    // put component back into view mode
-    setView(true);
+  const reset = (returnToViewMode: boolean = false) => {
+    // if the user has a verified phone number, it's always safe to return
+    // the state back to view mode.
+    if (hasVerifiedPhoneNumber || returnToViewMode) {
+      setView(true);
+    }
 
     // clear mutation data because we use that to know if a code has been sent or not
     resetSendCodeMutation();
@@ -196,11 +203,11 @@ export const PhoneVerification = () => {
             justifyContent="flex-end"
             className={classes.buttonContainer}
           >
-            {!view ? (
+            {isCodeSent || (hasVerifiedPhoneNumber && !view) ? (
               <Button
                 buttonType="secondary"
                 disabled={isFormSubmitting}
-                onClick={reset}
+                onClick={() => reset()}
               >
                 Cancel
               </Button>

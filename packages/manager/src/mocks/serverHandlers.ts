@@ -254,7 +254,10 @@ const databases = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build({ restricted: false });
+    const profile = profileFactory.build({
+      restricted: false,
+      phone_number: undefined,
+    });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
