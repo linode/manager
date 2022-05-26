@@ -2,8 +2,10 @@ export type Permission = [string, number];
 
 export const basePerms = [
   'account',
+  'databases',
   'domains',
   'events',
+  'firewall',
   'images',
   'ips',
   'linodes',
@@ -13,14 +15,14 @@ export const basePerms = [
   'object_storage',
   'stackscripts',
   'volumes',
-  'firewall',
-  'databases',
 ];
 
 export const basePermNameMap: Record<string, string> = {
   account: 'Account',
+  databases: 'Databases',
   domains: 'Domains',
   events: 'Events',
+  firewall: 'Firewall',
   images: 'Images',
   ips: 'IPs',
   linodes: 'Linodes',
@@ -30,8 +32,6 @@ export const basePermNameMap: Record<string, string> = {
   object_storage: 'Object Storage',
   stackscripts: 'StackScripts',
   volumes: 'Volumes',
-  firewall: 'Firewall',
-  databases: 'Databases',
 };
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
