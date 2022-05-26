@@ -127,91 +127,14 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
     setShowPassword((showCredentials) => !showCredentials);
   };
 
-  const databaseIsProvisioning = database.status === 'provisioning';
-
-  const isMongoDatabase = database.engine === 'mongodb';
-  const isStandaloneMongoDatabase =
-    isMongoDatabase && database.cluster_size === 1;
+  const isMongoReplicaSet =
+    database.engine === 'mongodb' && database.cluster_size > 1;
 
   React.useEffect(() => {
     if (showCredentials && !credentials) {
       getDatabaseCredentials();
     }
   }, [credentials, getDatabaseCredentials, showCredentials]);
-
-  const hostnameJSX = () => {
-    // For standalone Mongo instances, hosts.primary is populated after provisioning completes.
-    if (!isMongoDatabase || isStandaloneMongoDatabase) {
-      return (
-        <Typography>
-          <span>hostname</span> ={' '}
-          {database.hosts?.primary ?? (
-            <span className={classes.provisioningText}>
-              Your hostname will appear here once it is available.
-            </span>
-          )}
-          {database.hosts?.primary ? (
-            <CopyTooltip
-              className={classes.inlineCopyToolTip}
-              text={database.hosts?.primary}
-            />
-          ) : null}
-        </Typography>
-      );
-    }
-
-    const listOfHostnames =
-      database.peers && database.peers.length > 1
-        ? database.peers?.join(', ')
-        : undefined;
-
-    const determineHostnameFieldContents = () => {
-      return databaseIsProvisioning ? (
-        <span className={classes.provisioningText}>
-          Your hostnames will appear here once they are available.
-        </span>
-      ) : (
-        database.peers?.join(', ')
-      );
-    };
-
-    return (
-      <Typography>
-        <span>hostnames</span> = {determineHostnameFieldContents()}
-        {!databaseIsProvisioning && listOfHostnames ? (
-          <CopyTooltip
-            className={classes.inlineCopyToolTip}
-            text={listOfHostnames}
-          />
-        ) : null}
-      </Typography>
-    );
-  };
-
-  const replicaSetJSX = () => {
-    if (!isMongoDatabase) {
-      return null;
-    }
-
-    return (
-      <Typography>
-        <span>replica set</span> ={' '}
-        {databaseIsProvisioning ? (
-          <span className={classes.provisioningText}>
-            Your replica set will appear here once it is available.
-          </span>
-        ) : (
-          database.replica_set ?? 'Your replica set is unavailable.'
-        )}
-        {database.replica_set ? (
-          <CopyTooltip
-            className={classes.inlineCopyToolTip}
-            text={database.replica_set}
-          />
-        ) : null}
-      </Typography>
-    );
-  };
 
   const handleDownloadCACertificate = () => {
     getSSLFields(database.engine, database.id)
@@ -236,12 +159,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       });
   };
 
-  const ssl = database.ssl_connection ? 'ENABLED' : 'DISABLED';
   const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
-  const disableToolTipText =
-    database.status === 'provisioning'
-      ? 'Your Database Cluster is currently provisioning.'
-      : 'Your root password is unavailable when your Database Cluster has failed.';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
@@ -288,7 +206,14 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             )
           )}
           {disableShowBtn ? (
-            <HelpIcon className={classes.helpIcon} text={disableToolTipText} />
+            <HelpIcon
+              className={classes.helpIcon}
+              text={
+                database.status === 'provisioning'
+                  ? 'Your Database Cluster is currently provisioning.'
+                  : 'Your root password is unavailable when your Database Cluster has failed.'
+              }
+            />
           ) : null}
           {showCredentials && credentials ? (
             <CopyTooltip
@@ -297,7 +222,54 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             />
           ) : null}
         </Box>
-        <Box display="flex">{hostnameJSX}</Box>
+        <Box display="flex">
+          {!isMongoReplicaSet ? (
+            <Typography>
+              <span>host</span> ={' '}
+              {database.hosts?.primary ? (
+                <>
+                  <span style={{ fontWeight: 'normal' }}>
+                    {database.hosts?.primary}
+                  </span>{' '}
+                  <CopyTooltip
+                    className={classes.inlineCopyToolTip}
+                    text={database.hosts?.primary}
+                  />
+                </>
+              ) : (
+                <span className={classes.provisioningText}>
+                  Your hostname will appear here once it is available.
+                </span>
+              )}
+            </Typography>
+          ) : (
+            <Typography>
+              <span>hosts</span> ={' '}
+              {database.peers && database.peers.length > 0 ? (
+                database.peers.map((hostname) => (
+                  <span
+                    key={hostname}
+                    style={{ display: 'flex', fontWeight: 'normal' }}
+                  >
+                    <p
+                      style={{ marginTop: 0, marginBottom: 0, marginLeft: 16 }}
+                    >
+                      {hostname}
+                    </p>
+                    <CopyTooltip
+                      className={classes.inlineCopyToolTip}
+                      text={hostname}
+                    />
+                  </span>
+                ))
+              ) : (
+                <span className={classes.provisioningText}>
+                  Your hostnames will appear here once they are available.
+                </span>
+              )}
+            </Typography>
+          )}
+        </Box>
         {database.hosts.secondary ? (
           <Box display="flex" flexDirection="row" alignItems="center">
             <Typography>
@@ -313,20 +285,32 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         <Typography>
           <span>port</span> = {database.port}
         </Typography>
-        {replicaSetJSX()}
+        {isMongoReplicaSet ? (
+          <Typography>
+            <span>replica set</span> ={' '}
+            {database.replica_set ? (
+              <>
+                <span style={{ fontWeight: 'normal' }}>
+                  {' '}
+                  {database.replica_set}
+                </span>
+                <CopyTooltip
+                  className={classes.inlineCopyToolTip}
+                  text={database.replica_set}
+                />
+              </>
+            ) : (
+              <span className={classes.provisioningText}>
+                Your replica set will appear here once it is available.
+              </span>
+            )}
+          </Typography>
+        ) : null}
         <Typography>
-          <span>ssl</span> ={' '}
-          {!isMongoDatabase ? ssl : valueForMongoSSL(database.ssl_connection)}
+          <span>ssl</span> = {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
-        {/* <Grid item className={classes.actionBtn}>
-          <CopyTooltip
-            className={classes.copyToolTip}
-            text={connectionDetailsCopy}
-            displayText="Copy Connection Details"
-          />
-        </Grid> */}
         {database.ssl_connection ? (
           <Grid
             item
@@ -349,10 +333,6 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       </div>
     </>
   );
-};
-
-const valueForMongoSSL = (ssl_connection: boolean) => {
-  return ssl_connection ? 'TRUE' : 'FALSE';
 };
 
 export default DatabaseSummaryConnectionDetails;
