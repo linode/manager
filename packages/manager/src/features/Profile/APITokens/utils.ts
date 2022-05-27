@@ -22,7 +22,7 @@ export const basePermNameMap: Record<string, string> = {
   databases: 'Databases',
   domains: 'Domains',
   events: 'Events',
-  firewall: 'Firewall',
+  firewall: 'Firewalls',
   images: 'Images',
   ips: 'IPs',
   linodes: 'Linodes',
