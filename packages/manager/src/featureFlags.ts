@@ -32,6 +32,7 @@ export interface Flags {
   regionDropdown: boolean;
   taxCollectionBanner: TaxCollectionBanner;
   databaseBeta: boolean;
+  databaseEngineBetas: string[];
 }
 
 type PromotionalOfferFeature =
