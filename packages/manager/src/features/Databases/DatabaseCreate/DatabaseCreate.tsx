@@ -496,7 +496,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           {isSelectedEngineInBeta ? (
             <Typography style={{ marginTop: 8 }}>
               {databaseEngineMap[engineType]} managed databases are currently in
-              beta and after subject to the terms of the{' '}
+              beta and are subject to the terms of the{' '}
               <ExternalLink
                 text="Early Adopter Testing Agreement"
                 link="https://www.linode.com/legal-eatp/"
