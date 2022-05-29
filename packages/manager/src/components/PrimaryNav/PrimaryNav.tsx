@@ -16,7 +16,8 @@ import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Logo from 'src/assets/logo/logo.svg';
+// import Logo from 'src/assets/logo/logo.svg';
+import CompasLogo from 'src/assets/compas-logo.png';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -265,7 +266,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             aria-label="Dashboard"
             title="Dashboard"
           >
-            <Logo width={115} height={43} />
+            <img src={CompasLogo} width={115} height={43} alt="COMPS Logo" />
+            {/* <Logo width={115} height={43} /> */}
           </Link>
         </div>
       </Grid>

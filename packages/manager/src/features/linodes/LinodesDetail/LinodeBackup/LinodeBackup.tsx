@@ -20,7 +20,7 @@ import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-// import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
@@ -63,7 +63,7 @@ import LinodePermissionsError from '../LinodePermissionsError';
 import BackupsPlaceholder from './BackupsPlaceholder';
 import BackupTableRow from './BackupTableRow';
 import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
-// import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
+import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
 type ClassNames =
   | 'paper'
@@ -305,10 +305,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   takeSnapshot = () => {
-    const { linodeID, enqueueSnackbar } = this.props;
+    const { linodeID, linodeLabel, enqueueSnackbar } = this.props;
     const { snapshotForm } = this.state;
     this.setState({ loading: true });
-    takeSnapshot(linodeID, snapshotForm.label)
+    takeSnapshot(linodeID, `${linodeLabel}_${snapshotForm.label}`)
       .then(() => {
         enqueueSnackbar('A snapshot is being taken', {
           variant: 'info',
@@ -696,16 +696,16 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   Management = (): JSX.Element | null => {
-    const { permissions } = this.props;
+    const { classes, linodeID, linodeRegion, permissions } = this.props;
     const disabled = isReadOnly(permissions);
 
-    // const { backups: backupsResponse } = this.state;
-    // const backups = aggregateBackups(backupsResponse);
+    const { backups: backupsResponse } = this.state;
+    const backups = aggregateBackups(backupsResponse);
 
     return (
       <React.Fragment>
         {disabled && <LinodePermissionsError />}
-        {/* {backups.length ? (
+        {backups.length ? (
           <this.Table backups={backups} />
         ) : (
           <Paper className={classes.paper} data-qa-backup-description>
@@ -713,7 +713,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               Automatic and manual backups will be listed here
             </Typography>
           </Paper>
-        )} */}
+        )}
         <this.SnapshotForm />
         {/* <this.SettingsForm />
         <Button
@@ -732,7 +732,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Please note that when you cancel backups associated with this Linode,
           this will remove all existing backups.
-        </Typography>
+        </Typography> */}
         <RestoreToLinodeDrawer
           open={this.state.restoreDrawer.open}
           linodeID={linodeID}
@@ -757,7 +757,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             Once backups for this Linode have been canceled, you cannot
             re-enable them for 24 hours.
           </Typography>
-        </ConfirmationDialog> */}
+        </ConfirmationDialog>
       </React.Fragment>
     );
   };

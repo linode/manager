@@ -32,12 +32,12 @@ export const headers = [
     sortable: true,
     widthPercent: 25,
   },
-  {
-    label: 'Status',
-    dataColumn: 'status',
-    sortable: true,
-    widthPercent: 15,
-  },
+  // {
+  //   label: 'Status',
+  //   dataColumn: 'status',
+  //   sortable: true,
+  //   widthPercent: 15,
+  // },
   {
     label: 'Rules',
     dataColumn: 'rules',

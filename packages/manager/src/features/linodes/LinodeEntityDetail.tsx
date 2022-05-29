@@ -886,7 +886,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         </div>
         <div className={classes.detailRow}>
           <Typography className={classes.listItem}>
-            <span className={classes.label}>Linode ID:</span> {linodeId}
+            <span className={classes.label}>Server ID:</span> {linodeId}
           </Typography>
           <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
             <span className={classes.label}>Created:</span>{' '}
