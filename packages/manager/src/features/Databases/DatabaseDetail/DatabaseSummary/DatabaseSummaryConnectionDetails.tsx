@@ -248,29 +248,30 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             <>
               <Typography>
                 <span>hosts</span> ={' '}
+                {!database.peers || database.peers.length === 0 ? (
+                  <span className={classes.provisioningText}>
+                    Your hostnames will appear here once they are available.
+                  </span>
+                ) : null}
               </Typography>
-              {database.peers && database.peers.length > 0 ? (
-                database.peers.map((hostname) => (
-                  <Typography
-                    key={hostname}
-                    style={{
-                      marginTop: 0,
-                      marginBottom: 0,
-                      marginLeft: 16,
-                    }}
-                  >
-                    <span style={{ fontWeight: 'normal' }}>{hostname}</span>
-                    <CopyTooltip
-                      className={classes.inlineCopyToolTip}
-                      text={hostname}
-                    />
-                  </Typography>
-                ))
-              ) : (
-                <span className={classes.provisioningText}>
-                  Your hostnames will appear here once they are available.
-                </span>
-              )}
+              {database.peers && database.peers.length > 0
+                ? database.peers.map((hostname) => (
+                    <Typography
+                      key={hostname}
+                      style={{
+                        marginTop: 0,
+                        marginBottom: 0,
+                        marginLeft: 16,
+                      }}
+                    >
+                      <span style={{ fontWeight: 'normal' }}>{hostname}</span>
+                      <CopyTooltip
+                        className={classes.inlineCopyToolTip}
+                        text={hostname}
+                      />
+                    </Typography>
+                  ))
+                : null}
             </>
           )}
         </Box>
