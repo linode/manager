@@ -33,8 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: `16px`,
       width: `16px`,
     },
-    padding: `0 0 0 4px`,
     marginLeft: 4,
+    '&:hover': {
+      backgroundColor: 'transparent',
+    },
   },
   actionBtnsCtn: {
     display: 'flex',
@@ -94,6 +96,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
     alignSelf: 'baseline',
   },
+  provisioningText: {
+    fontStyle: 'italic',
+    fontWeight: 'lighter !important' as 'lighter',
+  },
 }));
 
 interface Props {
@@ -122,6 +128,9 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const handleShowPasswordClick = () => {
     setShowPassword((showCredentials) => !showCredentials);
   };
+
+  const isMongoReplicaSet =
+    database.engine === 'mongodb' && database.cluster_size > 1;
 
   React.useEffect(() => {
     if (showCredentials && !credentials) {
@@ -152,12 +161,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       });
   };
 
-  const ssl = database.ssl_connection ? 'ENABLED' : 'DISABLED';
   const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
-  const disableToolTipText =
-    database.status === 'provisioning'
-      ? 'Your Database Cluster is currently provisioning.'
-      : 'Your root password is unavailable when your Database Cluster has failed.';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
@@ -204,7 +208,14 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             )
           )}
           {disableShowBtn ? (
-            <HelpIcon className={classes.helpIcon} text={disableToolTipText} />
+            <HelpIcon
+              className={classes.helpIcon}
+              text={
+                database.status === 'provisioning'
+                  ? 'Your Database Cluster is currently provisioning.'
+                  : 'Your root password is unavailable when your Database Cluster has failed.'
+              }
+            />
           ) : null}
           {showCredentials && credentials ? (
             <CopyTooltip
@@ -213,16 +224,56 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
             />
           ) : null}
         </Box>
-        <Box display="flex">
-          <Typography>
-            <span>host</span> = {database.hosts?.primary}
-          </Typography>
-          {database.hosts?.primary ? (
-            <CopyTooltip
-              className={classes.inlineCopyToolTip}
-              text={database.hosts?.primary}
-            />
-          ) : null}
+        <Box>
+          {!isMongoReplicaSet ? (
+            <Typography>
+              <span>host</span> ={' '}
+              {database.hosts?.primary ? (
+                <>
+                  <span style={{ fontWeight: 'normal' }}>
+                    {database.hosts?.primary}
+                  </span>{' '}
+                  <CopyTooltip
+                    className={classes.inlineCopyToolTip}
+                    text={database.hosts?.primary}
+                  />
+                </>
+              ) : (
+                <span className={classes.provisioningText}>
+                  Your hostname will appear here once it is available.
+                </span>
+              )}
+            </Typography>
+          ) : (
+            <>
+              <Typography>
+                <span>hosts</span> ={' '}
+                {!database.peers || database.peers.length === 0 ? (
+                  <span className={classes.provisioningText}>
+                    Your hostnames will appear here once they are available.
+                  </span>
+                ) : null}
+              </Typography>
+              {database.peers && database.peers.length > 0
+                ? database.peers.map((hostname) => (
+                    <Typography
+                      key={hostname}
+                      style={{
+                        marginTop: 0,
+                        marginBottom: 0,
+                        marginLeft: 16,
+                      }}
+                    >
+                      <span style={{ fontWeight: 'normal' }}>{hostname}</span>
+                      <CopyTooltip
+                        className={classes.inlineCopyToolTip}
+                        text={hostname}
+                      />
+                    </Typography>
+                  ))
+                : null}
+            </>
+          )}
         </Box>
         {database.hosts.secondary ? (
           <Box display="flex" flexDirection="row" alignItems="center">
@@ -239,18 +290,31 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         <Typography>
           <span>port</span> = {database.port}
         </Typography>
+        {isMongoReplicaSet ? (
+          <Typography>
+            <span>replica set</span> ={' '}
+            {database.replica_set ? (
+              <>
+                <span style={{ fontWeight: 'normal' }}>
+                  {database.replica_set}
+                </span>
+                <CopyTooltip
+                  className={classes.inlineCopyToolTip}
+                  text={database.replica_set}
+                />
+              </>
+            ) : (
+              <span className={classes.provisioningText}>
+                Your replica set will appear here once it is available.
+              </span>
+            )}
+          </Typography>
+        ) : null}
         <Typography>
-          <span>ssl</span> = {ssl}
+          <span>ssl</span> = {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
-        {/* <Grid item className={classes.actionBtn}>
-          <CopyTooltip
-            className={classes.copyToolTip}
-            text={connectionDetailsCopy}
-            displayText="Copy Connection Details"
-          />
-        </Grid> */}
         {database.ssl_connection ? (
           <Grid
             item
