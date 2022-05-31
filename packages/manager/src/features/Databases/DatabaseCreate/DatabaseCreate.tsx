@@ -335,7 +335,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     onSubmit: submitForm,
   });
 
-  const selectedEngine = (values.engine.split('/')?.[0] as Engine) ?? 'mysql';
+  const selectedEngine = values.engine.split('/')[0] as Engine;
 
   React.useEffect(() => {
     if (errors || createError) {
