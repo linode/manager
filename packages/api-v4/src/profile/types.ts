@@ -80,4 +80,5 @@ export interface VerifyVerificationCodePayload {
 
 export interface SendPhoneVerificationCodePayload {
   phone_number: string;
+  iso_code: string;
 }

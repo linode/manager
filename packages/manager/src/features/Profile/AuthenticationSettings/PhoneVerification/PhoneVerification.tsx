@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import TextField from 'src/components/TextField';
@@ -9,12 +10,14 @@ import { SendPhoneVerificationCodePayload } from '@linode/api-v4/lib/profile/typ
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { LinkButton } from 'src/components/LinkButton';
+import { countries } from './countries';
 import {
   updateProfileData,
   useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile';
+import InputAdornment from 'src/components/core/InputAdornment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   codeSentMessage: {
@@ -29,6 +32,20 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(2),
     },
+  },
+  select: {
+    width: '70px',
+    height: '35px',
+  },
+  label: {
+    marginTop: theme.spacing(2),
+    color: '#555',
+    padding: 0,
+    fontSize: '.875rem',
+    fontWeight: 400,
+    lineHeight: '1',
+    marginBottom: '8px',
+    fontFamily: 'LatoWebBold',
   },
 }));
 
@@ -85,6 +102,7 @@ export const PhoneVerification = () => {
   const sendCodeForm = useFormik<SendPhoneVerificationCodePayload>({
     initialValues: {
       phone_number: '',
+      iso_code: '',
     },
     onSubmit: onSubmitPhoneNumber,
   });
@@ -121,9 +139,7 @@ export const PhoneVerification = () => {
   };
 
   const onResendVerificationCode = () => {
-    resendPhoneVerificationCode({
-      phone_number: sendCodeForm.values.phone_number,
-    })
+    resendPhoneVerificationCode(sendCodeForm.values)
       .then(() => {
         enqueueSnackbar('Successfully resent verification code', {
           variant: 'success',
@@ -133,6 +149,45 @@ export const PhoneVerification = () => {
         enqueueSnackbar(e?.[0].reason ?? 'Unable to resend verification code')
       );
   };
+
+  const getFlag = (code: string) => {
+    if (!code) {
+      return code;
+    }
+
+    const OFFSET = 127397;
+
+    if (code == 'XI') {
+      return '🇬🇧';
+    }
+    if (code == 'LO') {
+      return '🇮🇹';
+    }
+    if (code == 'LL') {
+      return '🇨🇭';
+    }
+    if (code == 'DX') {
+      return '🇧🇶';
+    }
+    return (
+      String.fromCodePoint(code.charCodeAt(0) + OFFSET) +
+      String.fromCodePoint(code.charCodeAt(1) + OFFSET)
+    );
+  };
+
+  const getCountryName = (name: string) =>
+    name
+      .split(' ')
+      .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
+      .join(' ');
+
+  const customStyles = {
+    menu: () => ({ width: '500px' }),
+  };
+
+  const selectedCountry = countries.find(
+    (country) => country.code === sendCodeForm.values.iso_code
+  );
 
   const isFormSubmitting = isCodeSent
     ? verifyCodeForm.isSubmitting
@@ -189,14 +244,54 @@ export const PhoneVerification = () => {
               }
             />
           ) : (
-            <TextField
-              label="Phone Number"
-              id="phone_number"
-              name="phone_number"
-              type="tel"
-              onChange={sendCodeForm.handleChange}
-              value={sendCodeForm.values.phone_number}
-            />
+            <>
+              <Typography className={classes.label}>Phone Number</Typography>
+              <Box display="flex">
+                <Select
+                  styles={customStyles}
+                  menuPlacement="bottom"
+                  className={classes.select}
+                  id="iso_code"
+                  name="iso_code"
+                  type="text"
+                  isClearable={false}
+                  value={{
+                    value: sendCodeForm.values.iso_code,
+                    label: getFlag(sendCodeForm.values.iso_code),
+                  }}
+                  isOptionSelected={(option: Item) =>
+                    sendCodeForm.values.iso_code === option.value
+                  }
+                  onChange={(item: Item) =>
+                    sendCodeForm.setFieldValue('iso_code', item.value)
+                  }
+                  options={countries.map((counrty) => ({
+                    label: `${getCountryName(counrty.name)} ${
+                      counrty.dialingCode
+                    } ${getFlag(counrty.code)}`,
+                    value: counrty.code,
+                  }))}
+                  noMarginTop
+                  hideLabel
+                />
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="end">
+                        {selectedCountry?.dialingCode}
+                      </InputAdornment>
+                    ),
+                  }}
+                  label="Phone Number"
+                  id="phone_number"
+                  name="phone_number"
+                  type="tel"
+                  onChange={sendCodeForm.handleChange}
+                  value={sendCodeForm.values.phone_number}
+                  hideLabel
+                />
+              </Box>
+            </>
           )}
           <Box
             display="flex"
