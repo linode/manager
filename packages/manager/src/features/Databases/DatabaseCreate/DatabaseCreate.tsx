@@ -44,7 +44,7 @@ import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionP
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
-import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel, { PlanSelectionType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -61,6 +61,7 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -180,10 +181,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-export interface ExtendedDatabaseType extends DatabaseType {
-  heading: string;
-  price: PriceObject;
-}
+export type DatabasePlanSelectionType = PlanSelectionType<DatabaseType>;
 
 interface NodePricing {
   single: DatabasePriceObject | undefined;
@@ -227,7 +225,7 @@ const DatabaseCreate: React.FC<{}> = () => {
     return getEngineOptions(engines);
   }, [engines]);
 
-  const displayTypes: ExtendedDatabaseType[] = React.useMemo(() => {
+  const displayTypes: DatabasePlanSelectionType[] = React.useMemo(() => {
     if (!dbtypes) {
       return [];
     }
@@ -236,11 +234,16 @@ const DatabaseCreate: React.FC<{}> = () => {
       const formattedLabel = formatStorageUnits(label);
       const clusterPricing = type.engines[selectedEngine].find((cluster: any) => cluster.quantity === 1);
       const price = clusterPricing?.price || { monthly: null, hourly: null };
+      const subHeadings = [
+        `$${price.monthly}/mo ($${price.hourly}/hr)`,
+        typeLabelDetails(type.memory, type.disk, type.vcpus),
+      ] as [string, string];
       return {
         ...type,
         label: formattedLabel,
         heading: formattedLabel,
         price: price,
+        subHeadings: subHeadings,
       };
     });
   }, [dbtypes]);

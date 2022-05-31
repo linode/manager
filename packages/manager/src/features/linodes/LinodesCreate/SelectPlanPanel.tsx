@@ -1,5 +1,4 @@
-import { DatabaseTypeClass } from '@linode/api-v4/lib/databases/types';
-import { LinodeTypeClass, PriceObject, BaseType } from '@linode/api-v4/lib/linodes';
+import { LinodeTypeClass, BaseType as BaseLinodeType } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
@@ -33,7 +32,7 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-// import { ExtendedDatabaseType } from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
+import { DatabaseType } from '@linode/api-v4/lib/databases/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -93,11 +92,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface SelectionType {
-  price: PriceObject;
+export interface PlanSelectionType<T> extends BaseLinodeType{
+  transfer: T extends ExtendedType ? T['transfer'] : never;
+  network_out: T extends ExtendedType ? T['network_out'] : never;
+  class: string;
 }
 
-type ExtendedTypes = Array<SelectionType>;
+type ExtendedTypes = Array<PlanSelectionType<ExtendedType>> | Array<PlanSelectionType<DatabaseType>>;
 
 interface Props {
   types: ExtendedTypes;
@@ -117,23 +118,23 @@ interface Props {
   showTransfer?: boolean;
 }
 
-const getNanodes = (types: ExtendedTypes) =>
-  types.filter((t) => /nanode/.test(t.class));
+const getNanodes = (types: Array<PlanSelectionType<unknown>>) =>
+  types.filter((t: PlanSelectionType<unknown>) => /nanode/.test(t.class));
 
-const getStandard = (types: ExtendedTypes) =>
-  types.filter((t) => /standard/.test(t.class));
+const getStandard = (types: Array<PlanSelectionType<unknown>>) =>
+  types.filter((t: PlanSelectionType<unknown>) => /standard/.test(t.class));
 
-const getHighMem = (types: ExtendedTypes) =>
-  types.filter((t) => /highmem/.test(t.class));
+const getHighMem = (types: Array<PlanSelectionType<unknown>>) =>
+  types.filter((t: PlanSelectionType<unknown>) => /highmem/.test(t.class));
 
-const getDedicated = (types: ExtendedTypes) =>
-  types.filter((t) => /dedicated/.test(t.class));
+const getDedicated = (types: Array<PlanSelectionType<unknown>>) =>
+  types.filter((t: PlanSelectionType<unknown>) => /dedicated/.test(t.class));
 
-const getGPU = (types: ExtendedTypes) =>
-  types.filter((t) => /gpu/.test(t.class));
+const getGPU = (types: Array<PlanSelectionType<unknown>>) =>
+  types.filter((t: PlanSelectionType<unknown>) => /gpu/.test(t.class));
 
-const getMetal = (types: ExtendedTypes) =>
-  types.filter((t) => t.class === 'metal');
+const getMetal = (types: Array<PlanSelectionType<unknown>>) =>
+  types.filter((t: PlanSelectionType<unknown>) => t.class === 'metal');
 
 type CombinedProps = Props & RegionsProps;
 
@@ -168,7 +169,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return arrayToList(withCapability);
   };
 
-  const renderSelection = (type: SelectionType, idx: number) => {
+  const renderSelection = (type: PlanSelectionType, idx: number) => {
     const selectedDiskSize = props.selectedDiskSize
       ? props.selectedDiskSize
       : 0;
