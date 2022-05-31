@@ -28,7 +28,6 @@ import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -60,6 +59,10 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { components } from 'react-select';
+import Box from 'src/components/core/Box';
+import ExternalLink from 'src/components/ExternalLink';
+import { GroupHeadingProps } from 'react-select/src/components/Group';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -428,24 +431,14 @@ const DatabaseCreate: React.FC<{}> = () => {
     return <ErrorState errorText="An unexpected error occurred." />;
   }
 
+  const engineType = values.engine.split('/')[0];
+
+  const isSelectedEngineInBeta = (flags.databaseEngineBetas ?? []).includes(
+    databaseEngineMap[engineType]
+  );
+
   return (
     <form onSubmit={handleSubmit}>
-      {flags.databaseBeta ? (
-        <DismissibleBanner
-          preferenceKey="dbaas-open-beta-notice"
-          productInformationIndicator
-        >
-          <Typography>
-            Managed Database for MySQL is available in a free, open beta period
-            until May 2nd, 2022. This is a beta environment and should not be
-            used to support production workloads. Review the{' '}
-            <Link to="https://www.linode.com/legal-eatp">
-              Early Adopter Program SLA
-            </Link>
-            .
-          </Typography>
-        </DismissibleBanner>
-      ) : null}
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}
@@ -486,7 +479,11 @@ const DatabaseCreate: React.FC<{}> = () => {
             )}
             errorText={errors.engine}
             options={engineOptions}
-            components={{ Option: RegionOption, SingleValue }}
+            components={{
+              Option: RegionOption,
+              SingleValue,
+              GroupHeading: DatabaseBetaGroupHeading,
+            }}
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
@@ -496,6 +493,18 @@ const DatabaseCreate: React.FC<{}> = () => {
             }}
             isClearable={false}
           />
+          {isSelectedEngineInBeta ? (
+            <Typography style={{ marginTop: 8 }}>
+              {databaseEngineMap[engineType]} managed databases are currently in
+              beta and are subject to the terms of the{' '}
+              <ExternalLink
+                text="Early Adopter Testing Agreement"
+                link="https://www.linode.com/legal-eatp/"
+                hideIcon
+              />
+              .
+            </Typography>
+          ) : null}
         </Grid>
         <Grid item>
           <RegionSelect
@@ -679,3 +688,36 @@ const determineCompressionType = (engine: string) => {
 };
 
 export default DatabaseCreate;
+
+// Adds a "BETA" chip to DB Engine Groups in beta.
+export const DatabaseBetaGroupHeading: React.FC<
+  GroupHeadingProps<{}, false>
+> = (props) => {
+  const flags = useFlags();
+
+  const { databaseEngineBetas } = flags;
+
+  const isBeta =
+    typeof props.children === 'string' &&
+    (databaseEngineBetas ?? []).includes(props.children);
+
+  return (
+    <Box display="flex">
+      <components.GroupHeading {...props} />
+      {isBeta ? (
+        <Chip
+          style={{
+            backgroundColor: '#E9E9E9',
+            fontSize: '0.625rem',
+            height: 16,
+            marginTop: 2,
+            letterSpacing: '.25px',
+            textTransform: 'uppercase',
+          }}
+          label="beta"
+          component="span"
+        />
+      ) : null}
+    </Box>
+  );
+};
