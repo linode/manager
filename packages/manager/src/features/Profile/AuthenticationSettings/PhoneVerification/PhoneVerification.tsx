@@ -183,6 +183,11 @@ export const PhoneVerification = () => {
 
   const customStyles = {
     menu: () => ({ width: '500px' }),
+    singleValue: (provided: React.CSSProperties) => ({
+      ...provided,
+      textAlign: 'center',
+      fontSize: '18px',
+    }),
   };
 
   const selectedCountry = countries.find(
