@@ -41,7 +41,7 @@ export const NotificationMenu: React.FC<Props> = (props) => {
         dismissNotifications(notifications, { prefix: 'notificationMenu' });
       }
     };
-  }, [open]);
+  }, [dismissNotifications, notifications, dispatch, open]);
 
   return (
     <Paper className={classes.root}>
