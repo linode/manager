@@ -689,7 +689,7 @@ const determineCompressionType = (engine: string) => {
 
 export default DatabaseCreate;
 
-// Add's a "BETA" chip to DB Engine Groups in beta.
+// Adds a "BETA" chip to DB Engine Groups in beta.
 export const DatabaseBetaGroupHeading: React.FC<
   GroupHeadingProps<{}, false>
 > = (props) => {
