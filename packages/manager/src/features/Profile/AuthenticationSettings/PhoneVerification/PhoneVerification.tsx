@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   phoneNumberInput: {
-    minWidth: '218px',
+    minWidth: '300px',
     border: 'unset',
     '&:focus': {
       boxShadow: 'unset',
@@ -58,6 +58,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.Mui-focused': {
       boxShadow: 'none',
       borderColor: 'unset',
+    },
+    '& .MuiInputBase-input .react-select__indicators svg': {
+      color: `${theme.palette.primary.main} !important`,
+      opacity: '1 !important',
     },
   },
   label: {
@@ -229,7 +233,7 @@ export const PhoneVerification = () => {
     singleValue: (provided: React.CSSProperties) => ({
       ...provided,
       textAlign: 'center',
-      fontSize: '18px',
+      fontSize: '20px',
     }),
   };
 
@@ -350,7 +354,7 @@ export const PhoneVerification = () => {
                 />
               </Box>
               <Notice spacingTop={16} spacingBottom={0} spacingLeft={1} warning>
-                <Typography style={{ maxWidth: 500, fontSize: '0.875rem' }}>
+                <Typography style={{ maxWidth: 600, fontSize: '0.875rem' }}>
                   <b>
                     By clicking Send Verification Code you are opting in to
                     recieve SMS messages reguarding account verification. SMS
