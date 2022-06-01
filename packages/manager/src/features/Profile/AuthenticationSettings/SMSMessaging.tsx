@@ -27,9 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const SMSMessageing = () => {
   const classes = useStyles();
+
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
+
+  const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
 
   const [open, setOpen] = React.useState(false);
 
@@ -49,8 +52,6 @@ export const SMSMessageing = () => {
       });
     });
   };
-
-  const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
 
   return (
     <>
@@ -105,8 +106,10 @@ export const SMSMessageing = () => {
       >
         <Typography>
           Opting out of SMS messaging will reduce security and limit the ways
-          you can securly access your account. Learn more about security
-          options.
+          you can securly access your account.{' '}
+          <a href="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+            Learn more about security options.
+          </a>
         </Typography>
         <Notice
           spacingTop={16}
