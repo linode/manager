@@ -1,39 +1,75 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { useProfile } from 'src/queries/profile';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import ActionsPanel from 'src/components/ActionsPanel';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   notice: {
+    borderLeft: `5px solid ${theme.color.green}`,
+  },
+  text: {
     fontSize: '0.875rem !important',
-    fontFamily: theme.font.bold,
+  },
+  button: {
+    marginTop: theme.spacing(),
+    width: '150px',
+  },
+  copy: {
+    maxWidth: 960,
   },
 }));
 
 export const SMSMessageing = () => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
+  const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
+
+  const [open, setOpen] = React.useState(false);
+
+  const onOpen = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const onOptOut = () => {
+    updateProfile({ phone_number: null }).then(() => {
+      onClose();
+      enqueueSnackbar('Successfully opted out of SMS messaging', {
+        variant: 'success',
+      });
+    });
+  };
 
   const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
 
   return (
-    <Box>
+    <>
       <Notice
         spacingTop={12}
         spacingBottom={16}
         success={hasVerifiedPhoneNumber}
         warning={!hasVerifiedPhoneNumber}
+        className={hasVerifiedPhoneNumber ? classes.notice : undefined}
       >
-        <Typography className={classes.notice}>
-          {hasVerifiedPhoneNumber
-            ? 'You have opted in to SMS messaging for phone verification'
-            : 'You are opted out of SMS messaging for phone verification'}
+        <Typography className={classes.text}>
+          <b>
+            {hasVerifiedPhoneNumber
+              ? 'You have opted in to SMS messaging for phone verification'
+              : 'You are opted out of SMS messaging for phone verification'}
+          </b>
         </Typography>
       </Notice>
-      <Typography>
+      <Typography className={classes.copy}>
         An authentication code is sent via SMS as part of the verification
         process. Messages are not sent for any other reason. SMS authentication
         by verified phone number provides an important degree of account
@@ -42,9 +78,46 @@ export const SMSMessageing = () => {
       </Typography>
       {hasVerifiedPhoneNumber ? (
         <Box display="flex" justifyContent="flex-end">
-          <Button buttonType="primary">Opt Out</Button>
+          <Button
+            className={classes.button}
+            buttonType="primary"
+            onClick={onOpen}
+          >
+            Opt Out
+          </Button>
         </Box>
       ) : null}
-    </Box>
+      <ConfirmationDialog
+        title={'Opt out of SMS messaging for phone verification'}
+        open={open}
+        onClose={onClose}
+        error={error?.[0].reason}
+        actions={() => (
+          <ActionsPanel>
+            <Button buttonType="secondary" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button buttonType="primary" loading={isLoading} onClick={onOptOut}>
+              Opt Out
+            </Button>
+          </ActionsPanel>
+        )}
+      >
+        <Typography>
+          Opting out of SMS messaging will reduce security and limit the ways
+          you can securly access your account. Learn more about security
+          options.
+        </Typography>
+        <Notice
+          spacingTop={16}
+          spacingBottom={0}
+          className={classes.text}
+          error
+        >
+          <b>Warning:</b> As part of this action, your verified phone number{' '}
+          {profile?.phone_number} will be deleted.
+        </Notice>
+      </ConfirmationDialog>
+    </>
   );
 };
