@@ -145,7 +145,7 @@ export const PhoneVerification = () => {
   const sendCodeForm = useFormik<SendPhoneVerificationCodePayload>({
     initialValues: {
       phone_number: '',
-      iso_code: '',
+      iso_code: 'US',
     },
     onSubmit: onSubmitPhoneNumber,
   });
