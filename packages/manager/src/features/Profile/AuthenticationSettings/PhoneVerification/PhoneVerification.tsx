@@ -282,11 +282,11 @@ export const PhoneVerification = () => {
                 />
                 <TextField
                   InputProps={{
-                    startAdornment: (
+                    startAdornment: selectedCountry ? (
                       <InputAdornment position="end">
-                        {selectedCountry?.dialingCode ?? ''}
+                        {selectedCountry.dialingCode}
                       </InputAdornment>
-                    ),
+                    ) : undefined,
                   }}
                   label="Phone Number"
                   id="phone_number"
