@@ -19,6 +19,7 @@ import {
 } from 'src/queries/profile';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Notice from 'src/components/Notice';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   codeSentMessage: {
@@ -34,13 +35,34 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginTop: theme.spacing(2),
     },
   },
+  phoneNumberInput: {
+    minWidth: '218px',
+    border: 'unset',
+    '&:focus': {
+      boxShadow: 'unset',
+      borderColor: 'unset',
+    },
+    '&.Mui-focused': {
+      boxShadow: 'none',
+      borderColor: 'unset',
+    },
+  },
   select: {
     width: '70px',
-    height: '35px',
+    height: '34px',
+    border: 'unset',
+    '&:focus': {
+      boxShadow: 'unset',
+      borderColor: 'unset',
+    },
+    '&.Mui-focused': {
+      boxShadow: 'none',
+      borderColor: 'unset',
+    },
   },
   label: {
     marginTop: theme.spacing(2),
-    color: '#555',
+    color: theme.name === 'lightTheme' ? '#555' : '#c9cacb',
     padding: 0,
     fontSize: '.875rem',
     fontWeight: 400,
@@ -48,6 +70,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '8px',
     fontFamily: 'LatoWebBold',
   },
+  inputContainer: {
+    border: theme.name === 'lightTheme' ? '1px solid #ccc' : '1px solid #222',
+    width: 'fit-content',
+    transition: 'border-color 225ms ease-in-out',
+  },
+  focused:
+    theme.name === 'lightTheme'
+      ? {
+          boxShadow: '0 0 2px 1px #e1edfa',
+          borderColor: '#3683dc',
+        }
+      : {
+          boxShadow: '0 0 2px 1px #222',
+          borderColor: '#3683dc',
+        },
 }));
 
 type VerificationFormValues = { otp_code: string };
@@ -61,6 +98,7 @@ export const PhoneVerification = () => {
   const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
 
   const [view, setView] = React.useState(hasVerifiedPhoneNumber);
+  const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
 
   const {
     data,
@@ -183,7 +221,11 @@ export const PhoneVerification = () => {
       .join(' ');
 
   const customStyles = {
-    menu: () => ({ width: '500px' }),
+    menu: () => ({
+      width: '500px',
+      marginLeft: '-1px !important',
+      marginTop: '0px !important',
+    }),
     singleValue: (provided: React.CSSProperties) => ({
       ...provided,
       textAlign: 'center',
@@ -252,8 +294,15 @@ export const PhoneVerification = () => {
           ) : (
             <>
               <Typography className={classes.label}>Phone Number</Typography>
-              <Box display="flex">
+              <Box
+                display="flex"
+                className={classNames(classes.inputContainer, {
+                  [classes.focused]: isPhoneInputFocused,
+                })}
+              >
                 <Select
+                  onFocus={() => setIsPhoneInputFocused(true)}
+                  onBlur={() => setIsPhoneInputFocused(false)}
                   styles={customStyles}
                   menuPlacement="bottom"
                   className={classes.select}
@@ -281,6 +330,9 @@ export const PhoneVerification = () => {
                   hideLabel
                 />
                 <TextField
+                  onFocus={() => setIsPhoneInputFocused(true)}
+                  onBlur={() => setIsPhoneInputFocused(false)}
+                  className={classes.phoneNumberInput}
                   InputProps={{
                     startAdornment: selectedCountry ? (
                       <InputAdornment position="end">
