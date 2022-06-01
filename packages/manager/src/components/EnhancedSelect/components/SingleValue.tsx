@@ -8,7 +8,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     paddingLeft: `45px !important`,
-    height: '100%',
   },
   icon: {
     fontSize: '1.8em',
