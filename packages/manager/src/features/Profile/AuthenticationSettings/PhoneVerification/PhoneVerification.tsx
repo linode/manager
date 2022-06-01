@@ -18,6 +18,7 @@ import {
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile';
 import InputAdornment from 'src/components/core/InputAdornment';
+import Notice from 'src/components/Notice';
 
 const useStyles = makeStyles((theme: Theme) => ({
   codeSentMessage: {
@@ -283,7 +284,7 @@ export const PhoneVerification = () => {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="end">
-                        {selectedCountry?.dialingCode}
+                        {selectedCountry?.dialingCode ?? ''}
                       </InputAdornment>
                     ),
                   }}
@@ -296,6 +297,18 @@ export const PhoneVerification = () => {
                   hideLabel
                 />
               </Box>
+              <Notice spacingTop={16} spacingBottom={0} spacingLeft={1} warning>
+                <Typography style={{ maxWidth: 500, fontSize: '0.875rem' }}>
+                  <b>
+                    By clicking Send Verification Code you are opting in to
+                    recieve SMS messages reguarding account verification. SMS
+                    messaging will only be used for account verification.{' '}
+                    <a href="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+                      Learn more about security options.
+                    </a>
+                  </b>
+                </Typography>
+              </Notice>
             </>
           )}
           <Box
