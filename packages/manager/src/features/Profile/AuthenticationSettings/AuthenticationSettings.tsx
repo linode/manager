@@ -10,6 +10,7 @@ import Notice from 'src/components/Notice';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
+import { SMSMessageing } from './SMSMessaging';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
@@ -95,6 +96,9 @@ export const AuthenticationSettings: React.FC = () => {
         <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
           This is a placeholder for the Phone Verification component.
         </Typography>
+        <Divider spacingTop={22} spacingBottom={16} />
+        <Typography variant="h3">SMS Messaging</Typography>
+        <SMSMessageing />
         {!isThirdPartyAuthEnabled ? (
           <>
             <Divider spacingTop={22} spacingBottom={16} />
