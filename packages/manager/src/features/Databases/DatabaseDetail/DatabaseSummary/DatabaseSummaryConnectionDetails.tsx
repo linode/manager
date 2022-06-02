@@ -109,6 +109,9 @@ interface Props {
 const privateHostCopy =
   'A private network host and a private IP can only be used to access a Database Cluster from Linodes in the same data center and will not incur transfer costs.';
 
+const mongoHostHelperCopy =
+  'This is a public hostname. Coming soon: connect to your MongoDB clusters using private IPs';
+
 export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const { database } = props;
   const classes = useStyles();
@@ -226,24 +229,35 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         </Box>
         <Box>
           {!isMongoReplicaSet ? (
-            <Typography>
-              <span>host</span> ={' '}
+            <Box display="flex" flexDirection="row" alignItems="center">
               {database.hosts?.primary ? (
                 <>
-                  <span style={{ fontWeight: 'normal' }}>
-                    {database.hosts?.primary}
-                  </span>{' '}
+                  <Typography>
+                    <span>host</span> ={' '}
+                    <span style={{ fontWeight: 'normal' }}>
+                      {database.hosts?.primary}
+                    </span>{' '}
+                  </Typography>
                   <CopyTooltip
                     className={classes.inlineCopyToolTip}
                     text={database.hosts?.primary}
                   />
+                  {database.engine === 'mongodb' ? (
+                    <HelpIcon
+                      className={classes.helpIcon}
+                      text={mongoHostHelperCopy}
+                    />
+                  ) : null}
                 </>
               ) : (
-                <span className={classes.provisioningText}>
-                  Your hostname will appear here once it is available.
-                </span>
+                <Typography>
+                  <span>host</span> ={' '}
+                  <span className={classes.provisioningText}>
+                    Your hostname will appear here once it is available.
+                  </span>
+                </Typography>
               )}
-            </Typography>
+            </Box>
           ) : (
             <>
               <Typography>
@@ -255,21 +269,34 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
                 ) : null}
               </Typography>
               {database.peers && database.peers.length > 0
-                ? database.peers.map((hostname) => (
-                    <Typography
+                ? database.peers.map((hostname, i) => (
+                    <Box
                       key={hostname}
-                      style={{
-                        marginTop: 0,
-                        marginBottom: 0,
-                        marginLeft: 16,
-                      }}
+                      display="flex"
+                      flexDirection="row"
+                      alignItems="center"
                     >
-                      <span style={{ fontWeight: 'normal' }}>{hostname}</span>
+                      <Typography
+                        style={{
+                          marginTop: 0,
+                          marginBottom: 0,
+                          marginLeft: 16,
+                        }}
+                      >
+                        <span style={{ fontWeight: 'normal' }}>{hostname}</span>
+                      </Typography>
                       <CopyTooltip
                         className={classes.inlineCopyToolTip}
                         text={hostname}
                       />
-                    </Typography>
+                      {/*  Display the helper text on the first hostname */}
+                      {i === 0 ? (
+                        <HelpIcon
+                          className={classes.helpIcon}
+                          text={mongoHostHelperCopy}
+                        />
+                      ) : null}
+                    </Box>
                   ))
                 : null}
             </>
