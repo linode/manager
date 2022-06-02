@@ -82,7 +82,9 @@ export const NotificationButton: React.FC<{}> = (_) => {
           </TopMenuIcon>
           <MenuPopover className={classes.menuPopover}>
             <MenuItems className={classes.menuItem}>
-              <NotificationMenu open={isExpanded} data={notificationData} />
+              {isExpanded && (
+                <NotificationMenu open={isExpanded} data={notificationData} />
+              )}
             </MenuItems>
           </MenuPopover>
         </>
