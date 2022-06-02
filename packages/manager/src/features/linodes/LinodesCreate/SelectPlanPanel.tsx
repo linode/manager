@@ -1,4 +1,9 @@
-import { LinodeTypeClass, BaseType as BaseLinodeType } from '@linode/api-v4/lib/linodes';
+import {
+  LinodeTypeClass,
+  BaseType,
+  PriceObject,
+  LinodeType,
+} from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
@@ -32,7 +37,6 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import { DatabaseType } from '@linode/api-v4/lib/databases/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -92,16 +96,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface PlanSelectionType<T> extends BaseLinodeType{
-  transfer: T extends ExtendedType ? T['transfer'] : never;
-  network_out: T extends ExtendedType ? T['network_out'] : never;
+export interface PlanSelectionType extends BaseType {
   class: string;
+  heading: string;
+  subHeadings: string[];
+  price: PriceObject;
+  transfer?: LinodeType['transfer'];
+  network_out?: LinodeType['network_out'];
 }
 
-type ExtendedTypes = Array<PlanSelectionType<ExtendedType>> | Array<PlanSelectionType<DatabaseType>>;
-
 interface Props {
-  types: ExtendedTypes;
+  types: Array<PlanSelectionType>;
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -118,23 +123,23 @@ interface Props {
   showTransfer?: boolean;
 }
 
-const getNanodes = (types: Array<PlanSelectionType<unknown>>) =>
-  types.filter((t: PlanSelectionType<unknown>) => /nanode/.test(t.class));
+const getNanodes = (types: Array<PlanSelectionType>) =>
+  types.filter((t: PlanSelectionType) => /nanode/.test(t.class));
 
-const getStandard = (types: Array<PlanSelectionType<unknown>>) =>
-  types.filter((t: PlanSelectionType<unknown>) => /standard/.test(t.class));
+const getStandard = (types: Array<PlanSelectionType>) =>
+  types.filter((t: PlanSelectionType) => /standard/.test(t.class));
 
-const getHighMem = (types: Array<PlanSelectionType<unknown>>) =>
-  types.filter((t: PlanSelectionType<unknown>) => /highmem/.test(t.class));
+const getHighMem = (types: Array<PlanSelectionType>) =>
+  types.filter((t: PlanSelectionType) => /highmem/.test(t.class));
 
-const getDedicated = (types: Array<PlanSelectionType<unknown>>) =>
-  types.filter((t: PlanSelectionType<unknown>) => /dedicated/.test(t.class));
+const getDedicated = (types: Array<PlanSelectionType>) =>
+  types.filter((t: PlanSelectionType) => /dedicated/.test(t.class));
 
-const getGPU = (types: Array<PlanSelectionType<unknown>>) =>
-  types.filter((t: PlanSelectionType<unknown>) => /gpu/.test(t.class));
+const getGPU = (types: Array<PlanSelectionType>) =>
+  types.filter((t: PlanSelectionType) => /gpu/.test(t.class));
 
-const getMetal = (types: Array<PlanSelectionType<unknown>>) =>
-  types.filter((t: PlanSelectionType<unknown>) => t.class === 'metal');
+const getMetal = (types: Array<PlanSelectionType>) =>
+  types.filter((t: PlanSelectionType) => t.class === 'metal');
 
 type CombinedProps = Props & RegionsProps;
 
@@ -156,8 +161,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
 
   const onSelect = (id: string) => () => props.onSelect(id);
 
-  const getDisabledClass = (thisClass: LinodeTypeClass) => {
-    const disabledClasses = props.disabledClasses ?? [];
+  const getDisabledClass = (thisClass: string) => {
+    const disabledClasses = (props.disabledClasses as string[]) ?? []; // Not a big fan of the casting here but it works
     return disabledClasses.includes(thisClass);
   };
 
@@ -246,10 +251,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 )}
               </div>
             </TableCell>
-            <TableCell data-qa-monthly>
-              {' '}
-              $ { type.price?.monthly }
-            </TableCell>
+            <TableCell data-qa-monthly> $ {type.price?.monthly}</TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly ?? 0} />
@@ -266,12 +268,12 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             <TableCell center noWrap data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
             </TableCell>
-            {shouldShowTransfer ? (
+            {shouldShowTransfer && type.transfer ? (
               <TableCell center data-qa-transfer>
                 {type.transfer / 1000} TB
               </TableCell>
             ) : null}
-            {shouldShowNetwork ? (
+            {shouldShowNetwork && type.network_out ? (
               <TableCell center noWrap data-qa-network>
                 {LINODE_NETWORK_IN} Gbps{' '}
                 <span style={{ color: '#9DA4A6' }}>/</span>{' '}
@@ -288,9 +290,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             checked={type.id === String(selectedID)}
             onClick={onSelect(type.id)}
             heading={type.heading}
-            subheadings={
-              type.subHeadings
-            }
+            subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
             tooltip={tooltip}
           />
@@ -299,11 +299,10 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const renderPlanContainer = (plans: ExtendedTypes) => {
+  const renderPlanContainer = (plans: Array<PlanSelectionType>) => {
     // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
     const shouldShowTransfer =
-      showTransfer &&
-      plans.some((plan: ExtendedType) => plan.transfer);
+      showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
 
     // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
     const shouldShowNetwork =

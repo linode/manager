@@ -5,11 +5,9 @@ import {
   DatabaseClusterSizeObject,
   DatabaseEngine,
   DatabasePriceObject,
-  DatabaseType,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
-import { PriceObject } from '@linode/api-v4/lib/linodes'
 import { createDatabaseSchema } from '@linode/validation/lib/databases.schema';
 import { useFormik } from 'formik';
 import { groupBy } from 'ramda';
@@ -44,7 +42,9 @@ import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionP
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
-import SelectPlanPanel, { PlanSelectionType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel, {
+  PlanSelectionType,
+} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -181,7 +181,7 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-export type DatabasePlanSelectionType = PlanSelectionType<DatabaseType>;
+export type DatabasePlanSelectionType = PlanSelectionType;
 
 interface NodePricing {
   single: DatabasePriceObject | undefined;
@@ -232,7 +232,9 @@ const DatabaseCreate: React.FC<{}> = () => {
     return dbtypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const clusterPricing = type.engines[selectedEngine].find((cluster: any) => cluster.quantity === 1);
+      const clusterPricing = type.engines[selectedEngine].find(
+        (cluster: any) => cluster.quantity === 1
+      );
       const price = clusterPricing?.price || { monthly: null, hourly: null };
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
