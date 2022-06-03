@@ -14,8 +14,9 @@ import {
   ProfileLogin,
   TrustedDevice,
   UserPreferences,
-  SecurityQuestions,
   PhoneNumberVerificationCode,
+  SecurityQuestionsResponse,
+  UserSecurityQuestionsRequest,
 } from './types';
 
 /**
@@ -158,11 +159,23 @@ export const verifyPhoneNumberCode = (otpCode: number) => {
 /**
  * getSecurityQuestions
  *
- * Retrieves a map of security questions and answers for the current user.
+ * Retrieves an array of all possible security questions a user can choose from.
  */
-export const getSecurityQuestions = () => {
-  return Request<SecurityQuestions>(
-    setURL(`${API_ROOT}/profile/security-questions`),
+export const getPossibleSecurityQuestions = () => {
+  return Request<SecurityQuestionsResponse>(
+    setURL(`${API_ROOT}/security-questions`),
+    setMethod('GET')
+  );
+};
+
+/**
+ * getProfileSecurityQuestions
+ *
+ * Retrieves an array of security questions for the current user.
+ */
+export const getUserSecurityQuestions = () => {
+  return Request<SecurityQuestionsResponse>(
+    setURL(`${API_ROOT}/account/security-questions`),
     setMethod('GET')
   );
 };
@@ -173,8 +186,8 @@ export const getSecurityQuestions = () => {
  * Updates the current user's security questions. Only expected security
  * questions may be used.
  */
-export const updateSecurityQuestions = (payload: SecurityQuestions) => {
-  return Request<{}>(
+export const updateUserSecurityQuestions = (payload: UserSecurityQuestionsRequest) => {
+  return Request<UserSecurityQuestionsRequest>(
     setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('PUT'),
     setData({

@@ -3,6 +3,7 @@ import {
   Profile,
   PhoneNumberVerificationCode,
   SecurityQuestions,
+  SecurityQuestion,
 } from '@linode/api-v4/lib/profile/types';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
@@ -34,12 +35,21 @@ export const phoneNumberVerificationCodeFactory = Factory.Sync.makeFactory<Phone
   }
 );
 
-export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestions>(
+export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestions<SecurityQuestion>>(
   {
-    'What were the last four digits of your childhood phone number?':
-      'Answer 1',
-    'In what town or city did your parents meet?': 'Answer 2',
-    "What are the last five digits of your driver's license number?":
-      'Answer 3',
+    security_questions: [
+      {
+        id: 1,
+        question: 'What were the last four digits of your childhood phone number?',
+      },
+      {
+        id: 2,
+        question: 'In what town or city did your parents meet?',
+      },
+      {
+        id: 3,
+        question: "What are the last five digits of your driver's license number?",
+      },
+    ],
   }
 );

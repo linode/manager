@@ -1,14 +1,14 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { useFormik } from 'formik';
-import { useMutateSecurityQuestions } from 'src/queries/securityQuestions';
+import { useMutateUserSecurityQuestions } from 'src/queries/securityQuestions';
 import QuestionAndAnswerPair from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
-import { SecurityQuestions } from '@linode/api-v4/lib/profile/types';
+import { SecurityQuestionsResponse } from '@linode/api-v4/lib/profile/types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,22 +37,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const securityQuestionStrings = [
-  'What were the last four digits of your childhood phone number?',
-  'What primary school did you attend?',
-  'In what town or city did your parents meet?',
-  'What is the middle name of your oldest child?',
-  "What are the last five digits of your driver's license number?",
-  'What time of the day were you born?(hh:mm)',
-];
-
-const securityQuestionOptions = securityQuestionStrings.map((question) => ({
-  label: question,
-  value: question,
-}));
+/* const securityQuestionOptions = securityQuestionStrings.map((question) => ({
+*   label: question,
+*   value: question,
+* })); */
 
 interface Props {
-  securityQuestions?: SecurityQuestions;
+  securityQuestions?: SecurityQuestionsResponse;
   isLoading: boolean;
 }
 
@@ -61,7 +52,7 @@ const SecurityQuestions = (props: Props) => {
 
   const { securityQuestions, isLoading } = props;
 
-  const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
+  const { mutateAsync: updateSecurityQuestions } = useMutateUserSecurityQuestions();
 
   const questionAndAnswerTuples = Object.entries(securityQuestions || {});
 

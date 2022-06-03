@@ -14,7 +14,7 @@ import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 import SecurityQuestions from './SecurityQuestions';
-import { useSecurityQuestions } from 'src/queries/securityQuestions';
+import { usePossibleSecurityQuestions } from 'src/queries/securityQuestions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,7 +44,7 @@ export const AuthenticationSettings: React.FC = () => {
   const {
     data: securityQuestions,
     isLoading: securityQuestionsLoading,
-  } = useSecurityQuestions();
+  } = usePossibleSecurityQuestions();
 
   const areSecurityQuestionsAnswered =
     securityQuestions !== undefined &&

@@ -76,10 +76,18 @@ export interface PhoneNumberVerificationCode {
   otp_code: number;
 }
 
-export type AnsweredSecurityQuestions = Record<string, string>;
+export interface SecurityQuestion {
+  id: number;
+  question: string;
+}
 
-export type NullSecurityQuestions = {};
+export interface AnsweredSecurityQuesiton extends SecurityQuestion {
+  answer: string;
+}
 
-export type SecurityQuestions =
-  | AnsweredSecurityQuestions
-  | NullSecurityQuestions;
+export interface SecurityQuestions<T> {
+  security_questions: T[];
+}
+
+export type SecurityQuestionsResponse = SecurityQuestions<SecurityQuestion>;
+export type UserSecurityQuestionsRequest = SecurityQuestions<AnsweredSecurityQuesiton>;
