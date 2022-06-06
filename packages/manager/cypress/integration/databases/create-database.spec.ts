@@ -39,6 +39,26 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     version: '5.7.30',
   },
+  {
+    label: randomLabel(),
+    linodeType: 'g6-dedicated-16',
+    clusterSize: 1,
+    dbType: 'mongodb',
+    regionTypeahead: 'Atlanta',
+    region: 'us-southeast',
+    engine: 'MongoDB',
+    version: '4.4.10',
+  },
+  {
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    clusterSize: 3,
+    dbType: 'postgresql',
+    regionTypeahead: 'Newark',
+    region: 'us-east',
+    engine: 'PostgreSQL',
+    version: '13.2',
+  },
 ];
 
 describe('create a database cluster, mocked data', () => {
@@ -53,6 +73,7 @@ describe('create a database cluster, mocked data', () => {
           version: configuration.version,
           status: 'provisioning',
           cluster_size: configuration.clusterSize,
+          engine: configuration.dbType,
           hosts: {
             primary: undefined,
             secondary: undefined,
@@ -72,9 +93,11 @@ describe('create a database cluster, mocked data', () => {
           secondary_entity: undefined,
         });
 
-        cy.intercept('POST', '*/databases/mysql/instances', databaseMock).as(
-          'createDatabase'
-        );
+        cy.intercept(
+          'POST',
+          `*/databases/${configuration.dbType}/instances`,
+          databaseMock
+        ).as('createDatabase');
 
         cy.intercept(
           'GET',
