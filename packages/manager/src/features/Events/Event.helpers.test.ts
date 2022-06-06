@@ -109,7 +109,7 @@ describe('Utility Functions', () => {
           'test-user-001',
           message
         )
-      ).toEqual('a message by test-user-001.');
+      ).toEqual('a message by **test-user-001**.');
     });
 
     it('should append the username to a normal event', () => {
