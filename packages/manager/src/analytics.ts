@@ -51,6 +51,7 @@ export const initAnalytics = (production: boolean, gaID?: string) => {
   gaInit(window, document, 'script', url, 'ga', {}, {});
 
   (window as any).ga('create', gaID, 'auto');
+  (window as any).ga('set', 'anonymizeIp', true);
   (window as any).ga('send', 'pageview');
 };
 
