@@ -445,7 +445,7 @@ export interface MakePaymentData {
 }
 
 export interface VerifyVerificationCodePayload {
-  otp_code: number;
+  otp_code: string;
 }
 
 export interface SendPhoneVerificationCodePayload {

@@ -14,7 +14,10 @@ import { updateProfileData, useProfile } from 'src/queries/profile';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Notice from 'src/components/Notice';
 import classNames from 'classnames';
-import { SendPhoneVerificationCodePayload } from '@linode/api-v4/lib/account/types';
+import {
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
+} from '@linode/api-v4/lib/account/types';
 import {
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
@@ -90,8 +93,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
 }));
 
-type VerificationFormValues = { otp_code: string };
-
 export const PhoneVerification = () => {
   const classes = useStyles();
 
@@ -128,8 +129,10 @@ export const PhoneVerification = () => {
     return await sendPhoneVerificationCode(values);
   };
 
-  const onSubmitVerificationCode = async (values: VerificationFormValues) => {
-    await sendVerificationCode({ otp_code: Number(values.otp_code) });
+  const onSubmitVerificationCode = async (
+    values: VerifyVerificationCodePayload
+  ) => {
+    await sendVerificationCode(values);
 
     // Manually update the React Query store so state updates
     updateProfileData({ phone_number: sendCodeForm.values.phone_number });
@@ -151,7 +154,7 @@ export const PhoneVerification = () => {
     onSubmit: onSubmitPhoneNumber,
   });
 
-  const verifyCodeForm = useFormik<VerificationFormValues>({
+  const verifyCodeForm = useFormik<VerifyVerificationCodePayload>({
     initialValues: {
       otp_code: '',
     },
