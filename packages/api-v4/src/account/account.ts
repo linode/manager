@@ -11,6 +11,8 @@ import {
   CancelAccountPayload,
   NetworkUtilization,
   Agreements,
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
 } from './types';
 
 /**
@@ -107,6 +109,34 @@ export const getAccountAgreements = () =>
 export const signAgreement = (data: Partial<Agreements>) => {
   return Request<{}>(
     setURL(`${BETA_API_ROOT}/account/agreements`),
+    setMethod('POST'),
+    setData(data)
+  );
+};
+
+/**
+ * sendCodeToPhoneNumber
+ *
+ * Sends a one-time password via SMS to be used to verify a phone number.
+ */
+export const sendCodeToPhoneNumber = (
+  data: SendPhoneVerificationCodePayload
+) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/account/phone-number`),
+    setMethod('POST'),
+    setData(data)
+  );
+};
+
+/**
+ * verifyPhoneNumberCode
+ *
+ * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
+ */
+export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/account/phone-number/verify`),
     setMethod('POST'),
     setData(data)
   );

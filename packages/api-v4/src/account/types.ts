@@ -443,3 +443,12 @@ export interface MakePaymentData {
   nonce?: string;
   payment_method_id?: number;
 }
+
+export interface VerifyVerificationCodePayload {
+  otp_code: number;
+}
+
+export interface SendPhoneVerificationCodePayload {
+  phone_number: string;
+  iso_code: string;
+}

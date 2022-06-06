@@ -1,7 +1,11 @@
 import {
   Account,
   getAccountInfo,
+  sendCodeToPhoneNumber,
+  SendPhoneVerificationCodePayload,
   updateAccountInfo,
+  verifyPhoneNumberCode,
+  VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -30,4 +34,14 @@ export const useAccountGravatar = (email: string) =>
       ...queryPresets.oneTimeFetch,
       enabled: Boolean(email),
     }
+  );
+
+export const useSendPhoneVerificationCodeMutation = () =>
+  useMutation<{}, APIError[], SendPhoneVerificationCodePayload>(
+    sendCodeToPhoneNumber
+  );
+
+export const useVerifyPhoneVerificationCodeMutation = () =>
+  useMutation<{}, APIError[], VerifyVerificationCodePayload>(
+    verifyPhoneNumberCode
   );

@@ -6,20 +6,19 @@ import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
 import { useFormik } from 'formik';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { SendPhoneVerificationCodePayload } from '@linode/api-v4/lib/profile/types';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { LinkButton } from 'src/components/LinkButton';
 import { countries } from './countries';
-import {
-  updateProfileData,
-  useProfile,
-  useSendPhoneVerificationCodeMutation,
-  useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/profile';
+import { updateProfileData, useProfile } from 'src/queries/profile';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Notice from 'src/components/Notice';
 import classNames from 'classnames';
+import { SendPhoneVerificationCodePayload } from '@linode/api-v4/lib/account/types';
+import {
+  useSendPhoneVerificationCodeMutation,
+  useVerifyPhoneVerificationCodeMutation,
+} from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   codeSentMessage: {
@@ -108,6 +107,7 @@ export const PhoneVerification = () => {
     data,
     mutateAsync: sendPhoneVerificationCode,
     reset: resetSendCodeMutation,
+    error: sendPhoneVerificationCodeError,
   } = useSendPhoneVerificationCodeMutation();
 
   const {
@@ -117,6 +117,7 @@ export const PhoneVerification = () => {
 
   const {
     mutateAsync: sendVerificationCode,
+    error: verifyError,
   } = useVerifyPhoneVerificationCodeMutation();
 
   const isCodeSent = data !== undefined;
@@ -278,25 +279,37 @@ export const PhoneVerification = () => {
               </Box>
             </>
           ) : isCodeSent ? (
-            <TextField
-              label="Verification Code"
-              id="otp_code"
-              name="otp_code"
-              type="text"
-              onChange={verifyCodeForm.handleChange}
-              value={verifyCodeForm.values.otp_code}
-              helperText={
-                <LinkButton
-                  onClick={onResendVerificationCode}
-                  isDisabled={isResending}
-                  isLoading={isResending}
-                >
-                  Resend verification code
-                </LinkButton>
-              }
-            />
+            <>
+              {verifyError ? (
+                <Notice spacingTop={16} spacingBottom={16} error>
+                  {verifyError[0].reason}
+                </Notice>
+              ) : null}
+              <TextField
+                label="Verification Code"
+                id="otp_code"
+                name="otp_code"
+                type="text"
+                onChange={verifyCodeForm.handleChange}
+                value={verifyCodeForm.values.otp_code}
+                helperText={
+                  <LinkButton
+                    onClick={onResendVerificationCode}
+                    isDisabled={isResending}
+                    isLoading={isResending}
+                  >
+                    Resend verification code
+                  </LinkButton>
+                }
+              />
+            </>
           ) : (
             <>
+              {sendPhoneVerificationCodeError ? (
+                <Notice spacingTop={16} spacingBottom={16} error>
+                  {sendPhoneVerificationCodeError[0].reason}
+                </Notice>
+              ) : null}
               <Typography className={classes.label}>Phone Number</Typography>
               <Box
                 display="flex"

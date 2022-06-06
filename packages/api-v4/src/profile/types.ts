@@ -73,12 +73,3 @@ export interface ProfileLogin {
 }
 
 export type SecurityQuestions = Record<string, string>;
-
-export interface VerifyVerificationCodePayload {
-  otp_code: number;
-}
-
-export interface SendPhoneVerificationCodePayload {
-  phone_number: string;
-  iso_code: string;
-}
