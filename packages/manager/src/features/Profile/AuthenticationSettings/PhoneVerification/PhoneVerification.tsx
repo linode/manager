@@ -1,9 +1,12 @@
 import * as React from 'react';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import InputAdornment from 'src/components/core/InputAdornment';
+import Notice from 'src/components/Notice';
+import classNames from 'classnames';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useFormik } from 'formik';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useSnackbar } from 'notistack';
@@ -11,9 +14,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { LinkButton } from 'src/components/LinkButton';
 import { countries } from './countries';
 import { updateProfileData, useProfile } from 'src/queries/profile';
-import InputAdornment from 'src/components/core/InputAdornment';
-import Notice from 'src/components/Notice';
-import classNames from 'classnames';
+import { parsePhoneNumber, CountryCode } from 'libphonenumber-js';
 import {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
@@ -22,6 +23,7 @@ import {
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/account';
+import FormHelperText from 'src/components/core/FormHelperText';
 
 const useStyles = makeStyles((theme: Theme) => ({
   codeSentMessage: {
@@ -91,6 +93,14 @@ const useStyles = makeStyles((theme: Theme) => ({
           boxShadow: '0 0 2px 1px #222',
           borderColor: '#3683dc',
         },
+  errorText: {
+    display: 'flex',
+    alignItems: 'center',
+    color: theme.color.red,
+    top: 42,
+    left: 5,
+    width: '100%',
+  },
 }));
 
 export const PhoneVerification = () => {
@@ -254,7 +264,12 @@ export const PhoneVerification = () => {
       {!view && isCodeSent ? (
         <Box className={classes.codeSentMessage}>
           <Typography>
-            SMS verification code was sent to {sendCodeForm.values.phone_number}
+            SMS verification code was sent to{' '}
+            {getFlag(sendCodeForm.values.iso_code)}{' '}
+            {parsePhoneNumber(
+              sendCodeForm.values.phone_number,
+              sendCodeForm.values.iso_code as CountryCode
+            )?.formatInternational()}
           </Typography>
           <Typography>
             <LinkButton onClick={onEnterDifferentPhoneNumber}>
@@ -275,7 +290,13 @@ export const PhoneVerification = () => {
                 Phone Number
               </Typography>
               <Box display="flex" alignItems="center">
-                <Typography>{profile?.phone_number}</Typography>
+                <Typography>
+                  {profile?.phone_number
+                    ? parsePhoneNumber(
+                        profile.phone_number
+                      )?.formatInternational()
+                    : 'No Phone Number'}
+                </Typography>
                 <Button buttonType="secondary" onClick={onEdit} compact>
                   Edit
                 </Button>
@@ -308,11 +329,6 @@ export const PhoneVerification = () => {
             </>
           ) : (
             <>
-              {sendPhoneVerificationCodeError ? (
-                <Notice spacingTop={16} spacingBottom={16} error>
-                  {sendPhoneVerificationCodeError[0].reason}
-                </Notice>
-              ) : null}
               <Typography className={classes.label}>Phone Number</Typography>
               <Box
                 display="flex"
@@ -369,6 +385,11 @@ export const PhoneVerification = () => {
                   hideLabel
                 />
               </Box>
+              {sendPhoneVerificationCodeError ? (
+                <FormHelperText className={classes.errorText} role="alert">
+                  {sendPhoneVerificationCodeError[0].reason}
+                </FormHelperText>
+              ) : null}
               <Notice spacingTop={16} spacingBottom={0} spacingLeft={1} warning>
                 <Typography style={{ maxWidth: 600, fontSize: '0.875rem' }}>
                   <b>

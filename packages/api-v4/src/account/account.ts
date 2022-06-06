@@ -1,4 +1,5 @@
 import {
+  SendCodeToPhoneNumberSchema,
   updateAccountSchema,
   UpdateAccountSettingsSchema,
 } from '@linode/validation/lib/account.schema';
@@ -125,7 +126,7 @@ export const sendCodeToPhoneNumber = (
   return Request<{}>(
     setURL(`${API_ROOT}/account/phone-number`),
     setMethod('POST'),
-    setData(data)
+    setData(data, SendCodeToPhoneNumberSchema)
   );
 };
 

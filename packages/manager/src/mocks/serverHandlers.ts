@@ -256,7 +256,6 @@ export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
       restricted: false,
-      phone_number: undefined,
     });
     return res(ctx.json(profile));
   }),
