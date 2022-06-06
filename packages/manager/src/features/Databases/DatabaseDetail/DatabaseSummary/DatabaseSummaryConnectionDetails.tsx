@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: 12,
   },
   inlineCopyToolTip: {
+    display: 'inline-flex',
     '& svg': {
       height: `16px`,
       width: `16px`,
@@ -93,8 +94,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpIcon: {
     padding: 0,
-    marginLeft: theme.spacing(),
-    alignSelf: 'baseline',
+    marginLeft: 4,
   },
   provisioningText: {
     fontStyle: 'italic',
@@ -318,24 +318,27 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
           <span>port</span> = {database.port}
         </Typography>
         {isMongoReplicaSet ? (
-          <Typography>
-            <span>replica set</span> ={' '}
-            {database.replica_set ? (
-              <>
+          database.replica_set ? (
+            <Box display="flex" flexDirection="row" alignItems="center">
+              <Typography>
+                <span>replica set</span> ={' '}
                 <span style={{ fontWeight: 'normal' }}>
                   {database.replica_set}
                 </span>
-                <CopyTooltip
-                  className={classes.inlineCopyToolTip}
-                  text={database.replica_set}
-                />
-              </>
-            ) : (
+              </Typography>
+              <CopyTooltip
+                className={classes.inlineCopyToolTip}
+                text={database.replica_set}
+              />
+            </Box>
+          ) : (
+            <Typography>
+              <span>replica set</span> ={' '}
               <span className={classes.provisioningText}>
                 Your replica set will appear here once it is available.
               </span>
-            )}
-          </Typography>
+            </Typography>
+          )
         ) : null}
         <Typography>
           <span>ssl</span> = {database.ssl_connection ? 'ENABLED' : 'DISABLED'}
