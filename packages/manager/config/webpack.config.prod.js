@@ -233,7 +233,7 @@ module.exports = {
   // exceed the configured size.
   // See https://webpack.js.org/configuration/performance/
   performance: {
-    hints: 'error',
+    hints: 'warning',
     maxEntrypointSize: 1250000, // ~1.2 MiB
     maxAssetSize: 1250000, // ~1.2 MiB
     assetFilter(assetFilename) {
