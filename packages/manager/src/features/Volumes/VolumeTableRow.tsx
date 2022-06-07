@@ -49,6 +49,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     handleAttach,
     handleDelete,
     handleDetach,
+    handleUpgrade,
     id,
     label,
     tags,
@@ -114,13 +115,16 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                     size="small"
                   />
                 </Grid>
-              ) : linodeId &&
-                eligibleForUpgradeToNVMe &&
+              ) : eligibleForUpgradeToNVMe &&
                 !nvmeUpgradeScheduledByUserImminent ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
                     label="UPGRADE TO NVMe"
-                    onClick={() => history.push(`/linodes/${linodeId}/upgrade`)}
+                    onClick={
+                      linodeId
+                        ? () => history.push(`/linodes/${linodeId}/upgrade`)
+                        : () => handleUpgrade?.(id, label)
+                    }
                     data-testid="upgrade-chip"
                     size="small"
                     clickable

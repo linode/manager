@@ -1,4 +1,4 @@
-import { EventAction } from '@linode/api-v4';
+import { EventAction, NotificationType } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -578,21 +578,36 @@ export const handlers = [
     );
   }),
   rest.get('*/volumes', (req, res, ctx) => {
+    const hddVolumeUnattached = volumeFactory.build({
+      id: 30,
+      label: 'hdd-unattached',
+    });
     const hddVolumeAttached = volumeFactory.build({
       id: 20,
       linode_id: 20,
-      label: 'eligibleNow',
+      label: 'eligible-now-for-nvme',
     });
     const hddVolumeAttached2 = volumeFactory.build({
       id: 2,
       linode_id: 2,
       label: 'example-upgrading',
     });
-    const nvmeVolumes = volumeFactory.buildList(2, {
+    const nvmeVolumeUpgrading = volumeFactory.build({
+      id: 2,
+      hardware_type: 'nvme',
+    });
+    const newNVMeVolume = volumeFactory.build({
+      id: 1,
       hardware_type: 'nvme',
     });
 
-    const volumes = [...nvmeVolumes, hddVolumeAttached, hddVolumeAttached2];
+    const volumes = [
+      newNVMeVolume,
+      nvmeVolumeUpgrading,
+      hddVolumeAttached,
+      hddVolumeAttached2,
+      hddVolumeUnattached,
+    ];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -923,43 +938,62 @@ export const handlers = [
       severity: 'major',
     });
 
-    // const blockStorageMigrationScheduledNotification = notificationFactory.build(
-    //   {
-    //     type: 'volume_migration_scheduled' as NotificationType,
-    //     entity: {
-    //       type: 'volume',
-    //       label: 'eligibleNow',
-    //       id: 20,
-    //       url: '/volumes/20',
-    //     },
-    //     when: '2021-09-30T04:00:00',
-    //     message:
-    //       'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-    //     label: 'You have a scheduled Block Storage volume upgrade pending!',
-    //     severity: 'critical',
-    //     until: '2021-10-16T04:00:00',
-    //     body: 'Your volumes in us-east will be upgraded to NVMe.',
-    //   }
-    // );
+    const blockStorageMigrationScheduledNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_scheduled' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'eligibleNow',
+          id: 20,
+          url: '/volumes/20',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'critical',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
 
-    // const blockStorageMigrationImminentNotification = notificationFactory.build(
-    //   {
-    //     type: 'volume_migration_imminent' as NotificationType,
-    //     entity: {
-    //       type: 'volume',
-    //       label: 'example-upgrading',
-    //       id: 2,
-    //       url: '/volumes/2',
-    //     },
-    //     when: '2021-09-30T04:00:00',
-    //     message:
-    //       'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-    //     label: 'You have a scheduled Block Storage volume upgrade pending!',
-    //     severity: 'major',
-    //     until: '2021-10-16T04:00:00',
-    //     body: 'Your volumes in us-east will be upgraded to NVMe.',
-    //   }
-    // );
+    const blockStorageMigrationScheduledNotificationUnattached = notificationFactory.build(
+      {
+        type: 'volume_migration_scheduled' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'hdd-unattached',
+          id: 30,
+          url: '/volumes/30',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'This unattached volume is scheduled to be migrated to NVMe I think.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'critical',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volume will be upgraded to NVMe.',
+      }
+    );
+
+    const blockStorageMigrationImminentNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_imminent' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'example-upgrading',
+          id: 2,
+          url: '/volumes/2',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'major',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
 
     return res(
       ctx.json(
@@ -975,8 +1009,9 @@ export const handlers = [
           emailBounce,
           migrationNotification,
           balanceNotification,
-          // blockStorageMigrationScheduledNotification,
-          // blockStorageMigrationImminentNotification,
+          blockStorageMigrationScheduledNotification,
+          blockStorageMigrationImminentNotification,
+          blockStorageMigrationScheduledNotificationUnattached,
         ])
       )
     );
