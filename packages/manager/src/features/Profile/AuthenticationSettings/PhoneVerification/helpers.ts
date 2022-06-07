@@ -1,4 +1,6 @@
-export const getFlag = (code: string) => {
+import { parsePhoneNumber } from 'libphonenumber-js';
+
+export const getCountryFlag = (code: string) => {
   if (!code) {
     return code;
   }
@@ -28,3 +30,11 @@ export const getCountryName = (name: string) =>
     .split(' ')
     .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
     .join(' ');
+
+export const getFormattedNumber = (phoneNumber: string) => {
+  try {
+    return parsePhoneNumber(phoneNumber).formatInternational();
+  } catch (error) {
+    return phoneNumber;
+  }
+};

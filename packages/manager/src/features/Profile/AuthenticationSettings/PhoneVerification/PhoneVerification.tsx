@@ -6,9 +6,9 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import TextField from 'src/components/TextField';
 import Typography from 'src/components/core/Typography';
+import FormHelperText from 'src/components/core/FormHelperText';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useFormik } from 'formik';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { LinkButton } from 'src/components/LinkButton';
@@ -23,85 +23,8 @@ import {
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/account';
-import FormHelperText from 'src/components/core/FormHelperText';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  codeSentMessage: {
-    marginTop: theme.spacing(1.5),
-  },
-  phoneNumberTitle: {
-    fontSize: '.875rem',
-    marginTop: theme.spacing(1.5),
-  },
-  buttonContainer: {
-    gap: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(2),
-    },
-  },
-  phoneNumberInput: {
-    minWidth: '300px',
-    border: 'unset',
-    '&:focus': {
-      boxShadow: 'unset',
-      borderColor: 'unset',
-    },
-    '&.Mui-focused': {
-      boxShadow: 'none',
-      borderColor: 'unset',
-    },
-  },
-  select: {
-    width: '70px',
-    height: '34px',
-    border: 'unset',
-    '&:focus': {
-      boxShadow: 'unset',
-      borderColor: 'unset',
-    },
-    '&.Mui-focused': {
-      boxShadow: 'none',
-      borderColor: 'unset',
-    },
-    '& .MuiInputBase-input .react-select__indicators svg': {
-      color: `${theme.palette.primary.main} !important`,
-      opacity: '1 !important',
-    },
-  },
-  label: {
-    marginTop: theme.spacing(2),
-    color: theme.name === 'lightTheme' ? '#555' : '#c9cacb',
-    padding: 0,
-    fontSize: '.875rem',
-    fontWeight: 400,
-    lineHeight: '1',
-    marginBottom: '8px',
-    fontFamily: 'LatoWebBold',
-  },
-  inputContainer: {
-    border: theme.name === 'lightTheme' ? '1px solid #ccc' : '1px solid #222',
-    width: 'fit-content',
-    transition: 'border-color 225ms ease-in-out',
-  },
-  focused:
-    theme.name === 'lightTheme'
-      ? {
-          boxShadow: '0 0 2px 1px #e1edfa',
-          borderColor: '#3683dc',
-        }
-      : {
-          boxShadow: '0 0 2px 1px #222',
-          borderColor: '#3683dc',
-        },
-  errorText: {
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.color.red,
-    top: 42,
-    left: 5,
-    width: '100%',
-  },
-}));
+import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
+import { useStyles } from './styles';
 
 export const PhoneVerification = () => {
   const classes = useStyles();
@@ -207,37 +130,6 @@ export const PhoneVerification = () => {
       );
   };
 
-  const getFlag = (code: string) => {
-    if (!code) {
-      return code;
-    }
-
-    const OFFSET = 127397;
-
-    if (code == 'XI') {
-      return '🇬🇧';
-    }
-    if (code == 'LO') {
-      return '🇮🇹';
-    }
-    if (code == 'LL') {
-      return '🇨🇭';
-    }
-    if (code == 'DX') {
-      return '🇧🇶';
-    }
-    return (
-      String.fromCodePoint(code.charCodeAt(0) + OFFSET) +
-      String.fromCodePoint(code.charCodeAt(1) + OFFSET)
-    );
-  };
-
-  const getCountryName = (name: string) =>
-    name
-      .split(' ')
-      .map((w) => w[0].toUpperCase() + w.substring(1).toLowerCase())
-      .join(' ');
-
   const customStyles = {
     menu: () => ({
       width: '500px',
@@ -265,7 +157,7 @@ export const PhoneVerification = () => {
         <Box className={classes.codeSentMessage}>
           <Typography>
             SMS verification code was sent to{' '}
-            {getFlag(sendCodeForm.values.iso_code)}{' '}
+            {getCountryFlag(sendCodeForm.values.iso_code)}{' '}
             {parsePhoneNumber(
               sendCodeForm.values.phone_number,
               sendCodeForm.values.iso_code as CountryCode
@@ -292,9 +184,7 @@ export const PhoneVerification = () => {
               <Box display="flex" alignItems="center">
                 <Typography>
                   {profile?.phone_number
-                    ? parsePhoneNumber(
-                        profile.phone_number
-                      )?.formatInternational()
+                    ? getFormattedNumber(profile.phone_number)
                     : 'No Phone Number'}
                 </Typography>
                 <Button buttonType="secondary" onClick={onEdit} compact>
@@ -348,7 +238,7 @@ export const PhoneVerification = () => {
                   isClearable={false}
                   value={{
                     value: sendCodeForm.values.iso_code,
-                    label: getFlag(sendCodeForm.values.iso_code),
+                    label: getCountryFlag(sendCodeForm.values.iso_code),
                   }}
                   isOptionSelected={(option: Item) =>
                     sendCodeForm.values.iso_code === option.value
@@ -359,7 +249,7 @@ export const PhoneVerification = () => {
                   options={countries.map((counrty) => ({
                     label: `${getCountryName(counrty.name)} ${
                       counrty.dialingCode
-                    } ${getFlag(counrty.code)}`,
+                    } ${getCountryFlag(counrty.code)}`,
                     value: counrty.code,
                   }))}
                   noMarginTop
