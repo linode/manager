@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Box from 'src/components/core/Box';
 import Question from './Question';
 import Answer from './Answer';
@@ -6,11 +7,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect';
 
 interface Props {
-  questionTuple: [string, string] | undefined;
+  questionResponse?: SecurityQuestion;
   isQuestionLoading: boolean;
   index: number;
   setFieldValue: (field: string, value: string) => void;
-  options: Item<string>[];
+  options: Item<number>[];
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -43,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const QuestionAndAnswerPair = (props: Props) => {
-  const { questionTuple, index, options, ...rest } = props;
-  const initalReaOnlyState = questionTuple ? true : false;
+  const { questionResponse, index, options, ...rest } = props;
+  const initalReaOnlyState = questionResponse ? true : false;
   const [isReadOnly, setIsReadOnly] = React.useState(initalReaOnlyState);
   const classes = useStyles();
   const disableReadOnly = () => {
@@ -57,8 +58,7 @@ const QuestionAndAnswerPair = (props: Props) => {
         style={{ paddingTop: isReadOnly ? '16px' : 0 }}
       >
         <Question
-          name={`question-${index}`}
-          question={questionTuple?.[0]}
+          questionResponse={questionResponse}
           isReadOnly={isReadOnly}
           onClickEdit={disableReadOnly}
           options={options}
@@ -69,7 +69,6 @@ const QuestionAndAnswerPair = (props: Props) => {
         <Answer
           isReadOnly={isReadOnly}
           name={`answer-${index}`}
-          answer={questionTuple?.[1]}
           {...rest}
         />
       </Box>

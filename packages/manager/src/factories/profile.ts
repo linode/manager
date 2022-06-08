@@ -40,15 +40,15 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
     security_questions: [
       {
         id: 1,
-        question: 'What were the last four digits of your childhood phone number?',
+        question: 'What city were you born in?',
       },
       {
         id: 2,
-        question: 'In what town or city did your parents meet?',
+        question: 'What is your oldest sibling’s middle name?',
       },
       {
         id: 3,
-        question: "What are the last five digits of your driver's license number?",
+        question: 'What was the first concert you attended?',
       },
     ],
   }

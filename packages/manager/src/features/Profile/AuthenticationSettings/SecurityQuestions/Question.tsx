@@ -1,34 +1,36 @@
 import * as React from 'react';
+import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import InputLabel from 'src/components/core/InputLabel';
 import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 
 interface Props {
-  question?: string;
+  questionResponse: SecurityQuestion;
   isQuestionLoading: boolean;
-  name: string;
   isReadOnly?: boolean;
   onClickEdit: () => void;
   setFieldValue: (field: string, value: string) => void;
-  options: Item<string>[];
+  options: Item<number>[];
 }
 
 const Question = (props: Props) => {
   const {
-    question,
-    name,
+    questionResponse,
     isQuestionLoading,
     isReadOnly,
     onClickEdit,
     setFieldValue,
     options,
   } = props;
+
+  const { id: questionID, question } = questionResponse;
+  const name = `question-${questionID}`;
   const onChange = (item: Item<string>) => {
     setFieldValue(name, item.value);
   };
   const label = name.replace('question-', 'Question ');
-  const currentOption = options.find((option) => option.value === question);
+  const currentOption = options.find((option) => option.value === questionID);
   if (isReadOnly) {
     return (
       <>

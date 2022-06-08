@@ -8,27 +8,31 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery, useMutation } from 'react-query';
 import { queryPresets, queryClient } from './base';
 
-export const queryKey = 'securityQuestion';
+export const allQuestionsQueryKey = 'allSecurityQuestions';
+export const userQuestionsQueryKey = 'securityQuestions';
 
 export const usePossibleSecurityQuestions = () =>
-  useQuery<SecurityQuestionsResponse, APIError[]>(queryKey, getPossibleSecurityQuestions, {
+  useQuery<SecurityQuestionsResponse, APIError[]>(allQuestionsQueryKey, getPossibleSecurityQuestions, {
     ...queryPresets.oneTimeFetch,
   });
 
 export const useUserSecurityQuestions = () =>
-  useQuery<SecurityQuestionsResponse, APIError[]>(queryKey, getUserSecurityQuestions, {
+  useQuery<SecurityQuestionsResponse, APIError[]>(userQuestionsQueryKey, getUserSecurityQuestions, {
     ...queryPresets.oneTimeFetch,
   });
 
-export const updateUserSecurityQuestionsData = ( newQuestions: SecurityQuestionsResponse): void => {
-  queryClient.setQueryData(queryKey, () => (newQuestions));
-};
+export const updateUserSecurityQuestionsData = (newQuestions: UserSecurityQuestionsRequest): void => {
+  const securityQuestionsWithoutAnswers = newQuestions.security_questions.map(
+    questionData =>
+      ( { id: questionData.id, question: questionData.question }
+  ));
+  queryClient.setQueryData(userQuestionsQueryKey, () => ({ security_questions: securityQuestionsWithoutAnswers }));
+}
+
 
 export const useMutateUserSecurityQuestions = () => {
   return useMutation<UserSecurityQuestionsRequest, APIError[], UserSecurityQuestionsRequest>(
-    (data) => {
-      return updateUserSecurityQuestions(data)
-    },
+    (data) => (updateUserSecurityQuestions(data)),
     { onSuccess: updateUserSecurityQuestionsData }
   );
 }

@@ -14,7 +14,7 @@ import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 import SecurityQuestions from './SecurityQuestions';
-import { usePossibleSecurityQuestions } from 'src/queries/securityQuestions';
+import { usePossibleSecurityQuestions, useUserSecurityQuestions } from 'src/queries/securityQuestions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,13 +42,19 @@ export const AuthenticationSettings: React.FC = () => {
   } = useMutateProfile();
 
   const {
-    data: securityQuestions,
-    isLoading: securityQuestionsLoading,
+    data: possibleSecurityQuestionsResponse,
+    isLoading: possibleSecurityQuestionsResponseLoading,
   } = usePossibleSecurityQuestions();
 
+
+  const {
+    data: userSecurityQuestionsResponse,
+    isLoading: userSecurityQuestionsResponseLoading,
+  } = useUserSecurityQuestions();
+
   const areSecurityQuestionsAnswered =
-    securityQuestions !== undefined &&
-    Object.entries(securityQuestions).length === 3;
+    possibleSecurityQuestionsResponse !== undefined &&
+    Object.entries(possibleSecurityQuestionsResponse).length === 3;
 
   const authType = profile?.authentication_type ?? 'password';
   const ipAllowlisting = profile?.ip_whitelist_enabled ?? false;
@@ -99,8 +105,9 @@ export const AuthenticationSettings: React.FC = () => {
           </>
         ) : null}
         <SecurityQuestions
-          securityQuestions={securityQuestions}
-          isLoading={securityQuestionsLoading}
+          possibleSecurityQuestionsResponse={possibleSecurityQuestionsResponse}
+          userSecurityQuestionsResponse={userSecurityQuestionsResponse}
+          isLoading={possibleSecurityQuestionsResponseLoading}
         />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
