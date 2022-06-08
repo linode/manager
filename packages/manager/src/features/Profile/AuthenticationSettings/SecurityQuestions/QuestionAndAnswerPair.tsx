@@ -51,6 +51,11 @@ const QuestionAndAnswerPair = (props: Props) => {
   const disableReadOnly = () => {
     setIsReadOnly(false);
   };
+
+  if (questionResponse === undefined) {
+    return null;
+  }
+
   return (
     <Box className={classes.root}>
       <Box
@@ -66,11 +71,7 @@ const QuestionAndAnswerPair = (props: Props) => {
         />
       </Box>
       <Box className={classes.answer}>
-        <Answer
-          isReadOnly={isReadOnly}
-          name={`answer-${index}`}
-          {...rest}
-        />
+        <Answer isReadOnly={isReadOnly} name={`answer-${index}`} {...rest} />
       </Box>
     </Box>
   );

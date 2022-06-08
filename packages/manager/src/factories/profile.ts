@@ -4,7 +4,7 @@ import {
   PhoneNumberVerificationCode,
   SecurityQuestions,
   SecurityQuestion,
-} from '@linode/api-v4/lib/profile/types';
+} from '@linode/api-v4/lib/profile';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   uid: 9999,
@@ -35,21 +35,21 @@ export const phoneNumberVerificationCodeFactory = Factory.Sync.makeFactory<Phone
   }
 );
 
-export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestions<SecurityQuestion>>(
-  {
-    security_questions: [
-      {
-        id: 1,
-        question: 'What city were you born in?',
-      },
-      {
-        id: 2,
-        question: 'What is your oldest sibling’s middle name?',
-      },
-      {
-        id: 3,
-        question: 'What was the first concert you attended?',
-      },
-    ],
-  }
-);
+export const securityQuestionsFactory = Factory.Sync.makeFactory<
+  SecurityQuestions<SecurityQuestion>
+>({
+  security_questions: [
+    {
+      id: 1,
+      question: 'What city were you born in?',
+    },
+    {
+      id: 2,
+      question: 'What is your oldest sibling’s middle name?',
+    },
+    {
+      id: 3,
+      question: 'What was the first concert you attended?',
+    },
+  ],
+});

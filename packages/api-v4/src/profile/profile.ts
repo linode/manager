@@ -16,7 +16,7 @@ import {
   UserPreferences,
   PhoneNumberVerificationCode,
   SecurityQuestionsResponse,
-  UserSecurityQuestionsRequest,
+  UserSecurityQuestionsRequestWithoutQuestions,
 } from './types';
 
 /**
@@ -186,8 +186,10 @@ export const getUserSecurityQuestions = () => {
  * Updates the current user's security questions. Only expected security
  * questions may be used.
  */
-export const updateUserSecurityQuestions = (payload: UserSecurityQuestionsRequest) => {
-  return Request<UserSecurityQuestionsRequest>(
+export const updateUserSecurityQuestions = (
+  payload: UserSecurityQuestionsRequestWithoutQuestions
+) => {
+  return Request<UserSecurityQuestionsRequestWithoutQuestions>(
     setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('PUT'),
     setData({
