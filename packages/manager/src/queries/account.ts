@@ -1,12 +1,14 @@
 import {
   Account,
   getAccountInfo,
+  smsOptOut,
   updateAccountInfo,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import { mutationHandlers, queryPresets } from './base';
+import { updateProfileData } from './profile';
 
 export const queryKey = 'account';
 
@@ -31,3 +33,10 @@ export const useAccountGravatar = (email: string) =>
       enabled: Boolean(email),
     }
   );
+
+export const useSMSOptOutMutation = () =>
+  useMutation<{}, APIError[]>(smsOptOut, {
+    onSuccess: () => {
+      updateProfileData({ phone_number: null });
+    },
+  });

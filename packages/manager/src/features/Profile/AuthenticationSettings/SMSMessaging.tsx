@@ -6,8 +6,9 @@ import Notice from 'src/components/Notice';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
+import { useSMSOptOutMutation } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   notice: {
@@ -30,7 +31,7 @@ export const SMSMessageing = () => {
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { mutateAsync: updateProfile, isLoading, error } = useMutateProfile();
+  const { mutateAsync: optOut, error, isLoading } = useSMSOptOutMutation();
 
   const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
 
@@ -45,7 +46,7 @@ export const SMSMessageing = () => {
   };
 
   const onOptOut = () => {
-    updateProfile({ phone_number: null }).then(() => {
+    optOut().then(() => {
       onClose();
       enqueueSnackbar('Successfully opted out of SMS messaging', {
         variant: 'success',

@@ -111,3 +111,16 @@ export const signAgreement = (data: Partial<Agreements>) => {
     setData(data)
   );
 };
+
+/**
+ * smsOptOut
+ *
+ * Opts user out of SMS messaging
+ */
+export const smsOptOut = () => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/account/phone-number/opt-out`),
+    setMethod('POST'),
+    setData({ opt_out: true })
+  );
+};
