@@ -90,9 +90,9 @@ const SecurityQuestions = (props: Props) => {
   const userSecurityQuestions = userSecurityQuestionsResponse?.security_questions || [];
 
   const initalFormValues = {
-    ['question-1']: userSecurityQuestions[0]?.id,
-    ['question-2']: userSecurityQuestions[1]?.id,
-    ['question-3']: userSecurityQuestions[2]?.id,
+    ['question-1']: userSecurityQuestions[0].id,
+    ['question-2']: userSecurityQuestions[1].id,
+    ['question-3']: userSecurityQuestions[2].id,
     ['answer-1']: '',
     ['answer-2']: '',
     ['answer-3']: '',
@@ -111,7 +111,7 @@ const SecurityQuestions = (props: Props) => {
     },
   });
 
-  if (isLoading) {
+  if (isLoading || possibleSecurityQuestionsResponse === undefined || userSecurityQuestionsResponse === undefined) {
     return <CircleProgress />;
   }
 

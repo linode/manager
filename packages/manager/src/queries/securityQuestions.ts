@@ -32,7 +32,12 @@ export const updateUserSecurityQuestionsData = (newQuestions: UserSecurityQuesti
 
 export const useMutateUserSecurityQuestions = () => {
   return useMutation<UserSecurityQuestionsRequest, APIError[], UserSecurityQuestionsRequest>(
-    (data) => (updateUserSecurityQuestions(data)),
+    (data) => {
+      const requestBodyWithoutQuestions = {
+        security_questions: data.security_questions.map(question => ({ id: question.id, answer: question.answer })),
+      };
+      return updateUserSecurityQuestions(requestBodyWithoutQuestions);
+    },
     { onSuccess: updateUserSecurityQuestionsData }
   );
 }

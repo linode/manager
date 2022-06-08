@@ -81,7 +81,7 @@ export interface SecurityQuestion {
   question: string;
 }
 
-export interface AnsweredSecurityQuesiton extends SecurityQuestion {
+export interface AnsweredSecurityQuesiton extends Omit<SecurityQuestion, 'question'> {
   answer: string;
 }
 

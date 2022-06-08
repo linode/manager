@@ -107,7 +107,7 @@ export const AuthenticationSettings: React.FC = () => {
         <SecurityQuestions
           possibleSecurityQuestionsResponse={possibleSecurityQuestionsResponse}
           userSecurityQuestionsResponse={userSecurityQuestionsResponse}
-          isLoading={possibleSecurityQuestionsResponseLoading}
+          isLoading={possibleSecurityQuestionsResponseLoading || userSecurityQuestionsResponseLoading}
         />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
