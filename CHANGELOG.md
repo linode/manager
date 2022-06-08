@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-06-08] - v1.68.1
+
+### Fixed:
+- Notification Menu spamming calls when clicking a link
+
 ## [2022-06-06] - v1.68.0
 
 ### Added:
