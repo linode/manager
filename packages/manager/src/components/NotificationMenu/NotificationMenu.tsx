@@ -7,6 +7,7 @@ import { NotificationData } from 'src/features/NotificationCenter/NotificationDa
 import Notifications from 'src/features/NotificationCenter/Notifications';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
+import usePrevious from 'src/hooks/usePrevious';
 import { markAllSeen } from 'src/store/events/event.request';
 import { ThunkDispatch } from 'src/store/types';
 
@@ -34,19 +35,24 @@ export const NotificationMenu: React.FC<Props> = (props) => {
   const notifications = useNotifications();
   const dispatch = useDispatch<ThunkDispatch>();
 
+  const wasOpen = usePrevious(open);
+
   React.useEffect(() => {
-    return () => {
-      if (open) {
-        dispatch(markAllSeen());
-        dismissNotifications(notifications, { prefix: 'notificationMenu' });
-      }
-    };
-  }, [dismissNotifications, notifications, dispatch, open]);
+    if (wasOpen && !open) {
+      // User has closed the menu.
+      dispatch(markAllSeen());
+      dismissNotifications(notifications, { prefix: 'notificationMenu' });
+    }
+  }, [dismissNotifications, notifications, dispatch, open, wasOpen]);
 
   return (
     <Paper className={classes.root}>
-      <Notifications notificationsList={formattedNotifications} />
-      <Events events={eventNotifications} />
+      {open ? (
+        <>
+          <Notifications notificationsList={formattedNotifications} />
+          <Events events={eventNotifications} />
+        </>
+      ) : null}
     </Paper>
   );
 };
