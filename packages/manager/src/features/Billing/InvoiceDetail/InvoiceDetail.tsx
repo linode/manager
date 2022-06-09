@@ -203,8 +203,8 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
                   return (
                     <Typography key={summary.name} variant="h2">
                       {summary.name === 'Standard'
-                        ? 'Standard Tax'
-                        : summary.name}{' '}
+                        ? 'Standard Tax: '
+                        : `${summary.name}: `}
                       <Currency quantity={summary.tax} />
                     </Typography>
                   );
