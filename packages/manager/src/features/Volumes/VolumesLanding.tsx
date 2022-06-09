@@ -246,8 +246,8 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const closeUpgradeVolumeDialog = () => {
-    setUpgradeVolumeDialog((value) => ({
-      ...value,
+    setUpgradeVolumeDialog((values) => ({
+      ...values,
       open: false,
     }));
   };
