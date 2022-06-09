@@ -213,7 +213,6 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [selectedEngine, setSelectedEngine] = React.useState<Engine>('mysql');
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
@@ -335,6 +334,8 @@ const DatabaseCreate: React.FC<{}> = () => {
     validate: handleIPValidation,
     onSubmit: submitForm,
   });
+
+  const selectedEngine = values.engine.split('/')[0] as Engine;
 
   React.useEffect(() => {
     if (errors || createError) {
@@ -490,9 +491,6 @@ const DatabaseCreate: React.FC<{}> = () => {
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
-
-              const selection = selected.value.split('/')[0];
-              setSelectedEngine(selection as Engine);
             }}
             isClearable={false}
           />
