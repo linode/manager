@@ -8,6 +8,32 @@ import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { useSnackbar } from 'notistack';
 
+interface CopyProps {
+  label: string;
+  type: 'volume' | 'linode';
+  isManyVolumes?: boolean;
+}
+
+export const VolumeUpgradeCopy = (props: CopyProps) => {
+  const { label, type, isManyVolumes } = props;
+
+  const prefix =
+    type === 'linode'
+      ? isManyVolumes
+        ? `Volumes attached to ${label}`
+        : `A Volume attached to Linode ${label}`
+      : `Volume ${label}`;
+
+  return (
+    <Typography>
+      {prefix} will be upgraded to high-performance NVMe Block Storage. This is
+      a free upgrade and will not incur any additional service charges. Check
+      Check upgrade eligibility or current status of Volumes on the{' '}
+      <Link to="/account/maintenance">Maintenance Page</Link>.
+    </Typography>
+  );
+};
+
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -57,12 +83,7 @@ export const UpgradeVolumeDialog: React.FC<Props> = (props) => {
           : undefined
       }
     >
-      <Typography>
-        Volume {label} will be upgraded to high-performance NVMe Block Storage.
-        This is a free upgrade and will not incur any additional service
-        charges. Check upgrade eligibility or current status of Volumes on the{' '}
-        <Link to="/account/maintenance">Maintenance Page</Link>.
-      </Typography>
+      <VolumeUpgradeCopy type="volume" label={label} />
     </Dialog>
   );
 };
