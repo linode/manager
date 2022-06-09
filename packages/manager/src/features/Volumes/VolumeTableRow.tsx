@@ -130,9 +130,8 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
                     clickable
                   />
                 </Grid>
-              ) : linodeId &&
-                (nvmeUpgradeScheduledByUserImminent ||
-                  nvmeUpgradeScheduledByUserInProgress) ? (
+              ) : nvmeUpgradeScheduledByUserImminent ||
+                nvmeUpgradeScheduledByUserInProgress ? (
                 <Grid item className={classes.chipWrapper}>
                   <Chip
                     variant="outlined"
