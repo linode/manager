@@ -28,7 +28,7 @@ export const VolumeUpgradeCopy = (props: CopyProps) => {
     <Typography>
       {prefix} will be upgraded to high-performance NVMe Block Storage. This is
       a free upgrade and will not incur any additional service charges. Check
-      Check upgrade eligibility or current status of Volumes on the{' '}
+      upgrade eligibility or current status of Volumes on the{' '}
       <Link to="/account/maintenance">Maintenance Page</Link>.
     </Typography>
   );
