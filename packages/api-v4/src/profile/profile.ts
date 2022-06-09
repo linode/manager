@@ -175,7 +175,7 @@ export const getPossibleSecurityQuestions = () => {
  */
 export const getUserSecurityQuestions = () => {
   return Request<SecurityQuestionsResponse>(
-    setURL(`${API_ROOT}/account/security-questions`),
+    setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('GET')
   );
 };

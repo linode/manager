@@ -52,6 +52,8 @@ export const AuthenticationSettings: React.FC = () => {
     isLoading: userSecurityQuestionsResponseLoading,
   } = useUserSecurityQuestions();
 
+  console.log(userSecurityQuestionsResponse);
+
   const areSecurityQuestionsAnswered =
     possibleSecurityQuestionsResponse !== undefined &&
     Object.entries(possibleSecurityQuestionsResponse).length === 3;

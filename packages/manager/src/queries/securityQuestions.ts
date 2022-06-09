@@ -34,7 +34,6 @@ export const useUserSecurityQuestions = () =>
 export const updateUserSecurityQuestionsData = (
   newQuestions: UserSecurityQuestionsRequest
 ): void => {
-  debugger;
   const securityQuestionsWithoutAnswers = newQuestions.security_questions.map(
     (questionData) => ({ id: questionData.id, question: questionData.question })
   );

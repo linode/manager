@@ -52,10 +52,6 @@ const QuestionAndAnswerPair = (props: Props) => {
     setIsReadOnly(false);
   };
 
-  if (questionResponse === undefined) {
-    return null;
-  }
-
   return (
     <Box className={classes.root}>
       <Box
@@ -67,6 +63,7 @@ const QuestionAndAnswerPair = (props: Props) => {
           isReadOnly={isReadOnly}
           onClickEdit={disableReadOnly}
           options={options}
+          index={index}
           {...rest}
         />
       </Box>

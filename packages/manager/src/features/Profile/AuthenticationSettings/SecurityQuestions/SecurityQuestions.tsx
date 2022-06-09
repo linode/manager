@@ -45,9 +45,9 @@ interface FormData {
   'question-1': number;
   'question-2': number;
   'question-3': number;
-  'answer-1': string;
-  'answer-2': string;
-  'answer-3': string;
+  'answer-1'?: string;
+  'answer-2'?: string;
+  'answer-3'?: string;
 }
 
 const getQuestionOptions = (
@@ -123,9 +123,9 @@ const SecurityQuestions = (props: Props) => {
     ['question-1']: userSecurityQuestions?.[0]?.id,
     ['question-2']: userSecurityQuestions?.[1]?.id,
     ['question-3']: userSecurityQuestions?.[2]?.id,
-    ['answer-1']: '',
-    ['answer-2']: '',
-    ['answer-3']: '',
+    ['answer-1']: undefined,
+    ['answer-2']: undefined,
+    ['answer-3']: undefined,
   };
 
   const formik = useFormik({
@@ -151,8 +151,11 @@ const SecurityQuestions = (props: Props) => {
 
   const buttonCopy = userSecurityQuestions.length === 0 ? 'Add' : 'Update';
 
-  const isButtonDisabled = false;
-  // !formik.dirty || Object.values(formik.values).length !== 0;
+  console.log(`is dirty: ${formik.dirty}`);
+  console.log(Object.values(formik.values));
+
+  const isButtonDisabled =
+    !formik.dirty || Object.values(formik.values).length === 0;
 
   if (
     isLoading ||

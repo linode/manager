@@ -6,12 +6,13 @@ import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 
 interface Props {
-  questionResponse: SecurityQuestion;
+  questionResponse?: SecurityQuestion;
   isQuestionLoading: boolean;
   isReadOnly?: boolean;
   onClickEdit: () => void;
   setFieldValue: (field: string, value: string) => void;
   options: Item<number>[];
+  index: number;
 }
 
 const Question = (props: Props) => {
@@ -22,21 +23,21 @@ const Question = (props: Props) => {
     onClickEdit,
     setFieldValue,
     options,
+    index,
   } = props;
 
-  const { id: questionID, question } = questionResponse;
-  const name = `question-${questionID}`;
+  const name = `question-${index}`;
   const onChange = (item: Item<string>) => {
     setFieldValue(name, item.value);
   };
   const label = name.replace('question-', 'Question ');
-  const currentOption = options.find((option) => option.value === questionID);
+  const currentOption = options.find((option) => option.value === questionResponse?.id);
   if (isReadOnly) {
     return (
       <>
         <InputLabel>{label}</InputLabel>
         <Typography variant="body1" style={{ fontSize: '0.875rem' }}>
-          {question}
+          {questionResponse?.question}
           <Button
             buttonType="secondary"
             compact
