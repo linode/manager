@@ -233,7 +233,7 @@ const DatabaseCreate: React.FC<{}> = () => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
       const clusterPricing = type.engines[selectedEngine].find(
-        (cluster: any) => cluster.quantity === 1
+        (cluster) => cluster.quantity === 1
       );
       const price = clusterPricing?.price || { monthly: null, hourly: null };
       const subHeadings = [
@@ -244,11 +244,11 @@ const DatabaseCreate: React.FC<{}> = () => {
         ...type,
         label: formattedLabel,
         heading: formattedLabel,
-        price: price,
-        subHeadings: subHeadings,
+        price,
+        subHeadings,
       };
     });
-  }, [dbtypes]);
+  }, [dbtypes, selectedEngine]);
 
   const handleIPBlur = (ips: ExtendedIP[]) => {
     const ipsWithMasks = enforceIPMasks(ips);

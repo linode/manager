@@ -106,7 +106,7 @@ export interface PlanSelectionType extends BaseType {
 }
 
 interface Props {
-  types: Array<PlanSelectionType>;
+  types: PlanSelectionType[];
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -123,22 +123,22 @@ interface Props {
   showTransfer?: boolean;
 }
 
-const getNanodes = (types: Array<PlanSelectionType>) =>
+const getNanodes = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /nanode/.test(t.class));
 
-const getStandard = (types: Array<PlanSelectionType>) =>
+const getStandard = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /standard/.test(t.class));
 
-const getHighMem = (types: Array<PlanSelectionType>) =>
+const getHighMem = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /highmem/.test(t.class));
 
-const getDedicated = (types: Array<PlanSelectionType>) =>
+const getDedicated = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /dedicated/.test(t.class));
 
-const getGPU = (types: Array<PlanSelectionType>) =>
+const getGPU = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /gpu/.test(t.class));
 
-const getMetal = (types: Array<PlanSelectionType>) =>
+const getMetal = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => t.class === 'metal');
 
 type CombinedProps = Props & RegionsProps;
@@ -251,7 +251,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 )}
               </div>
             </TableCell>
-            <TableCell data-qa-monthly> $ {type.price?.monthly}</TableCell>
+            <TableCell data-qa-monthly> ${type.price?.monthly}</TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly ?? 0} />
@@ -299,7 +299,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const renderPlanContainer = (plans: Array<PlanSelectionType>) => {
+  const renderPlanContainer = (plans: PlanSelectionType[]) => {
     // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
     const shouldShowTransfer =
       showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
