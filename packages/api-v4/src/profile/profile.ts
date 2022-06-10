@@ -182,3 +182,16 @@ export const updateSecurityQuestions = (payload: SecurityQuestions) => {
     })
   );
 };
+
+/**
+ * smsOptOut
+ *
+ * Opts user out of SMS messaging
+ */
+export const smsOptOut = () => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number/opt-out`),
+    setMethod('POST'),
+    setData({ opt_out: true })
+  );
+};

@@ -8,7 +8,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { useProfile } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
-import { useSMSOptOutMutation } from 'src/queries/account';
+import { useSMSOptOutMutation } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   notice: {

@@ -2,6 +2,7 @@ import {
   getProfile,
   listGrants,
   Profile,
+  smsOptOut,
   updateProfile,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -43,3 +44,10 @@ export const useGrants = () =>
 export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
 export const getGrantData = () =>
   queryClient.getQueryData<Grants>(`${queryKey}-grants`);
+
+export const useSMSOptOutMutation = () =>
+  useMutation<{}, APIError[]>(smsOptOut, {
+    onSuccess: () => {
+      updateProfileData({ phone_number: null });
+    },
+  });
