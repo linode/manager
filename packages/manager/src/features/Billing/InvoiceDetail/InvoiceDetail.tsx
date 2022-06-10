@@ -199,8 +199,18 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
                     quantity={invoice.subtotal}
                   />
                 </Typography>
+                {invoice.tax_summary.map((summary) => {
+                  return (
+                    <Typography key={summary.name} variant="h2">
+                      {summary.name === 'Standard'
+                        ? 'Standard Tax: '
+                        : `${summary.name}: `}
+                      <Currency quantity={summary.tax} />
+                    </Typography>
+                  );
+                })}
                 <Typography variant="h2">
-                  Tax: <Currency quantity={invoice.tax} />
+                  Tax Subtotal: <Currency quantity={invoice.tax} />
                 </Typography>
                 <Typography variant="h2">
                   Total:{' '}
