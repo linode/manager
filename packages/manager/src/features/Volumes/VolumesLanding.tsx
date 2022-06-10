@@ -46,6 +46,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import { ExtendedVolume } from './types';
+import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import VolumeTableRow from './VolumeTableRow';
@@ -153,6 +154,12 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     openForResize,
   } = props;
 
+  const [upgradeVolumeDialog, setUpgradeVolumeDialog] = React.useState({
+    open: false,
+    volumeId: 0,
+    volumeLabel: '',
+  });
+
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
     volumeId: 0,
@@ -185,6 +192,10 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       ...attachmentDrawer,
       open: false,
     }));
+  };
+
+  const handleUpgrade = (volumeId: number, label: string) => {
+    setUpgradeVolumeDialog({ open: true, volumeId, volumeLabel: label });
   };
 
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
@@ -230,6 +241,13 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const closeDestructiveDialog = () => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
+      open: false,
+    }));
+  };
+
+  const closeUpgradeVolumeDialog = () => {
+    setUpgradeVolumeDialog((values) => ({
+      ...values,
       open: false,
     }));
   };
@@ -326,6 +344,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     handleAttach,
     handleDetach,
     handleDelete,
+    handleUpgrade,
   };
 
   const volumeRow = {
@@ -364,6 +383,12 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
                 toggleGroupByTag={toggleGroupVolumes}
                 row={volumeRow}
                 initialOrder={{ order: 'asc', orderBy: 'label' }}
+              />
+              <UpgradeVolumeDialog
+                open={upgradeVolumeDialog.open}
+                id={upgradeVolumeDialog.volumeId}
+                label={upgradeVolumeDialog.volumeLabel}
+                onClose={closeUpgradeVolumeDialog}
               />
               <VolumeAttachmentDrawer
                 open={attachmentDrawer.open}
