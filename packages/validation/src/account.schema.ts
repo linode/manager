@@ -1,4 +1,3 @@
-import { isPossiblePhoneNumber } from 'libphonenumber-js';
 import { array, boolean, mixed, number, object, string } from 'yup';
 
 export const updateAccountSchema = object({
@@ -142,19 +141,4 @@ export const PromoCodeSchema = object({
     .required('Promo code is required.')
     .min(1, 'Promo code must be between 1 and 32 characters.')
     .max(32, 'Promo code must be between 1 and 32 characters.'),
-});
-
-export const SendCodeToPhoneNumberSchema = object({
-  iso_code: string().required(),
-  phone_number: string().test(
-    'is-phone-number',
-    'Not a valid phone number',
-    (phone_number: string | undefined, context) => {
-      const { iso_code } = context.parent;
-      if (!phone_number) {
-        return false;
-      }
-      return isPossiblePhoneNumber(phone_number, iso_code);
-    }
-  ),
 });

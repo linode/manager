@@ -1,4 +1,5 @@
 import { array, boolean, object, string } from 'yup';
+import { isPossiblePhoneNumber } from 'libphonenumber-js';
 
 export const createPersonalAccessTokenSchema = object({
   scopes: string(),
@@ -26,4 +27,19 @@ export const updateProfileSchema = object({
   two_factor_auth: boolean(),
   lish_auth_method: string().oneOf(['password_keys', 'keys_only', 'disabled']),
   authentication_type: string().oneOf(['password', 'github']),
+});
+
+export const SendCodeToPhoneNumberSchema = object({
+  iso_code: string().required(),
+  phone_number: string().test(
+    'is-phone-number',
+    'Not a valid phone number',
+    (phone_number: string | undefined, context) => {
+      const { iso_code } = context.parent;
+      if (!phone_number) {
+        return false;
+      }
+      return isPossiblePhoneNumber(phone_number, iso_code);
+    }
+  ),
 });

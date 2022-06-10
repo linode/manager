@@ -13,18 +13,19 @@ import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
 import { LinkButton } from 'src/components/LinkButton';
 import { countries } from './countries';
-import { updateProfileData, useProfile } from 'src/queries/profile';
+import { queryKey, updateProfileData, useProfile } from 'src/queries/profile';
 import { parsePhoneNumber, CountryCode } from 'libphonenumber-js';
 import {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
-} from '@linode/api-v4/lib/account/types';
+} from '@linode/api-v4/lib/profile/types';
 import {
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
-} from 'src/queries/account';
+} from 'src/queries/profile';
 import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import { useStyles } from './styles';
+import { queryClient } from 'src/queries/base';
 
 export const PhoneVerification = () => {
   const classes = useStyles();
@@ -67,8 +68,19 @@ export const PhoneVerification = () => {
   ) => {
     await sendVerificationCode(values);
 
-    // Manually update the React Query store so state updates
-    updateProfileData({ phone_number: sendCodeForm.values.phone_number });
+    const countryOfNewPhoneNumber = countries.find(
+      (country) => country.code === sendCodeForm.values.iso_code
+    );
+
+    if (countryOfNewPhoneNumber) {
+      // if Cloud Manager is aware of the country the user used, we can assume how the API will parse and return the number
+      updateProfileData({
+        phone_number: `${countryOfNewPhoneNumber.dialingCode}${sendCodeForm.values.phone_number}`,
+      });
+    } else {
+      // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
+      queryClient.invalidateQueries(queryKey);
+    }
 
     // reset the form, but forcefully go to view mode because we can't
     // expect the state to be updated immediately

@@ -1,3 +1,4 @@
+import { SendCodeToPhoneNumberSchema } from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import { Grants } from '../account';
@@ -15,6 +16,8 @@ import {
   TrustedDevice,
   UserPreferences,
   SecurityQuestions,
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
 } from './types';
 
 /**
@@ -149,5 +152,33 @@ export const updateSecurityQuestions = (payload: SecurityQuestions) => {
     setData({
       security_questions: payload,
     })
+  );
+};
+
+/**
+ * sendCodeToPhoneNumber
+ *
+ * Sends a one-time password via SMS to be used to verify a phone number.
+ */
+export const sendCodeToPhoneNumber = (
+  data: SendPhoneVerificationCodePayload
+) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number`),
+    setMethod('POST'),
+    setData(data, SendCodeToPhoneNumberSchema)
+  );
+};
+
+/**
+ * verifyPhoneNumberCode
+ *
+ * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
+ */
+export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number/verify`),
+    setMethod('POST'),
+    setData(data)
   );
 };
