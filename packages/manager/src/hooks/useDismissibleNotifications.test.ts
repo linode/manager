@@ -8,7 +8,7 @@ import {
 
 describe('Dismissible notifications', () => {
   describe('isStale handlers', () => {
-    it('Should return true if the notification was created more than 60 days ago', () => {
+    it('Should return true if the notification was created more than 45 days ago', () => {
       expect(
         isStale(
           DateTime.utc()
@@ -18,7 +18,7 @@ describe('Dismissible notifications', () => {
       ).toBe(true);
     });
 
-    it('Should return false if the notification was created fewer than 60 days ago', () => {
+    it('Should return false if the notification was created fewer than 45 days ago', () => {
       expect(
         isStale(
           DateTime.utc()
