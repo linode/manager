@@ -287,7 +287,7 @@ export const PhoneVerification = () => {
                 <Typography style={{ maxWidth: 600, fontSize: '0.875rem' }}>
                   <b>
                     By clicking Send Verification Code you are opting in to
-                    receive SMS messages reguarding account verification. SMS
+                    receive SMS messages regarding account verification. SMS
                     messaging will only be used for account verification.{' '}
                     <a href="https://www.linode.com/docs/guides/linode-manager-security-controls/">
                       Learn more about security options.
