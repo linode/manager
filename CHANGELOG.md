@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-06-13] - v1.69.0
+
+### Added:
+- Display tax lines on invoices
+- Ability for users to migrate unattached volumes to NVMe block storage
+
 ## [2022-06-08] - v1.68.1
 
 ### Fixed:

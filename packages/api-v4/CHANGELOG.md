@@ -1,3 +1,8 @@
+## [2022-06-13] - v0.73.0
+
+### Added:
+- Types and fields for invoice tax summaries
+
 ## [2022-06-06] - v0.72.0
 
 ### Changed
