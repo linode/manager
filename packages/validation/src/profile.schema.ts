@@ -43,3 +43,19 @@ export const SendCodeToPhoneNumberSchema = object({
     }
   ),
 });
+
+export const VerifyPhoneNumberCodeSchema = object({
+  otp_code: string()
+    .required('Verification Code is required.')
+    .test(
+      'digits only',
+      'The verification code must only contain digits.',
+      (value) => {
+        if (!value) {
+          return true;
+        }
+
+        return /^\d+$/.test(value);
+      }
+    ),
+});

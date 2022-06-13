@@ -1,4 +1,7 @@
-import { SendCodeToPhoneNumberSchema } from '@linode/validation/lib/profile.schema';
+import {
+  SendCodeToPhoneNumberSchema,
+  VerifyPhoneNumberCodeSchema,
+} from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import { Grants } from '../account';
@@ -179,6 +182,6 @@ export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
   return Request<{}>(
     setURL(`${API_ROOT}/profile/phone-number/verify`),
     setMethod('POST'),
-    setData(data)
+    setData(data, VerifyPhoneNumberCodeSchema)
   );
 };
