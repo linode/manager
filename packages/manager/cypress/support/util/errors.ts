@@ -15,7 +15,9 @@ export const makeError = (error: string | string[]) => {
   const errorArray = Array.isArray(error) ? error : [error];
   return {
     errors: errorArray.map((errorString: string) => {
-      reason: errorString;
+      return {
+        reason: errorString,
+      };
     }),
   };
 };
