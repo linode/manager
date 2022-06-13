@@ -21,5 +21,5 @@ export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockSmsVerificationOptOut = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/account/phone-number/opt-out', {});
+  return cy.intercept('POST', '*/profile/phone-number/opt-out', {});
 };
