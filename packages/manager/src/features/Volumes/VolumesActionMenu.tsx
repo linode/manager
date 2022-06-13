@@ -24,6 +24,7 @@ export interface ActionHandlers {
     regionID: string
   ) => void;
   handleAttach: (volumeId: number, label: string, linodeRegion: string) => void;
+  handleUpgrade?: (volumeId: number, label: string) => void;
   handleDetach: (
     volumeId: number,
     volumeLabel: string,
