@@ -192,15 +192,13 @@ export const PhoneVerification = () => {
               <Typography variant="h3" className={classes.phoneNumberTitle}>
                 Phone Number
               </Typography>
-              <Box display="flex" alignItems="center">
+              <Box display="flex" alignItems="center" style={{ gap: 16 }}>
                 <Typography>
                   {profile?.phone_number
                     ? getFormattedNumber(profile.phone_number)
                     : 'No Phone Number'}
                 </Typography>
-                <Button buttonType="secondary" onClick={onEdit} compact>
-                  Edit
-                </Button>
+                <LinkButton onClick={onEdit}>Edit</LinkButton>
               </Box>
             </>
           ) : isCodeSent ? (
