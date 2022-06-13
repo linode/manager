@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     maxWidth: 960,
+    lineHeight: '20px',
   },
 }));
 
