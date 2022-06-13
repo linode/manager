@@ -232,10 +232,10 @@ const DatabaseCreate: React.FC<{}> = () => {
     return dbtypes.map((type) => {
       const { label } = type;
       const formattedLabel = formatStorageUnits(label);
-      const clusterPricing = type.engines[selectedEngine].find(
+      const singleNodePricing = type.engines[selectedEngine].find(
         (cluster) => cluster.quantity === 1
       );
-      const price = clusterPricing?.price || { monthly: null, hourly: null };
+      const price = singleNodePricing?.price ?? { monthly: null, hourly: null };
       const subHeadings = [
         `$${price.monthly}/mo ($${price.hourly}/hr)`,
         typeLabelDetails(type.memory, type.disk, type.vcpus),
