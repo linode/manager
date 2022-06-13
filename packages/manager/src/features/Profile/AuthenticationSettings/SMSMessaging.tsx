@@ -107,7 +107,7 @@ export const SMSMessageing = () => {
       >
         <Typography>
           Opting out of SMS messaging will reduce security and limit the ways
-          you can securly access your account.{' '}
+          you can securely access your account.{' '}
           <a href="https://www.linode.com/docs/guides/linode-manager-security-controls/">
             Learn more about security options.
           </a>
