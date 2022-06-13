@@ -202,30 +202,24 @@ export const PhoneVerification = () => {
               </Box>
             </>
           ) : isCodeSent ? (
-            <>
-              {verifyError ? (
-                <Notice spacingTop={16} spacingBottom={16} error>
-                  {verifyError[0].reason}
-                </Notice>
-              ) : null}
-              <TextField
-                label="Verification Code"
-                id="otp_code"
-                name="otp_code"
-                type="text"
-                onChange={verifyCodeForm.handleChange}
-                value={verifyCodeForm.values.otp_code}
-                helperText={
-                  <LinkButton
-                    onClick={onResendVerificationCode}
-                    isDisabled={isResending}
-                    isLoading={isResending}
-                  >
-                    Resend verification code
-                  </LinkButton>
-                }
-              />
-            </>
+            <TextField
+              label="Verification Code"
+              id="otp_code"
+              name="otp_code"
+              type="text"
+              onChange={verifyCodeForm.handleChange}
+              value={verifyCodeForm.values.otp_code}
+              errorText={verifyError?.[0].reason}
+              helperText={
+                <LinkButton
+                  onClick={onResendVerificationCode}
+                  isDisabled={isResending}
+                  isLoading={isResending}
+                >
+                  Resend verification code
+                </LinkButton>
+              }
+            />
           ) : (
             <>
               <Typography className={classes.label}>Phone Number</Typography>
