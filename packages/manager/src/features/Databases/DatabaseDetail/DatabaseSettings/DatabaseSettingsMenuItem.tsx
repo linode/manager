@@ -55,7 +55,7 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <div className={classes.topSection}>
+    <div className={classes.topSection} data-qa-settings-section={sectionTitle}>
       <div className={classes.sectionTitleAndText}>
         <Typography variant="h3" className={classes.sectionTitle}>
           {sectionTitle}
@@ -65,6 +65,7 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
         </Typography>
       </div>
       <Button
+        data-qa-settings-button={buttonText}
         className={classes.sectionButton}
         disabled={disabled}
         buttonType="primary"

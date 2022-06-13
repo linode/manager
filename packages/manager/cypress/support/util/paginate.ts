@@ -44,11 +44,13 @@ export const paginate = (data: any | any[]): PaginatedData => {
  *
  * @returns Promise that resolves to an array of data.
  */
-export const depaginate = async <T>(resultGenerator: (page: number) => Promise<ResourcePage<T>>): Promise<Array<T>> => {
+export const depaginate = async <T>(
+  resultGenerator: (page: number) => Promise<ResourcePage<T>>
+): Promise<Array<T>> => {
   const firstResult: ResourcePage<T> = await resultGenerator(1);
-  let data = firstResult.data;
+  const data = firstResult.data;
   if (firstResult.pages > 1) {
-    const remainingResults: number = (firstResult.pages - 1);
+    const remainingResults: number = firstResult.pages - 1;
     const remainingResultsPromises = Array(remainingResults)
       .fill(null)
       .map(async (_element: null, index: number) => {
@@ -57,17 +59,13 @@ export const depaginate = async <T>(resultGenerator: (page: number) => Promise<R
         return results.data;
       });
 
-    const responseResults = (await Promise.all(remainingResultsPromises)).reduce((acc, cur) => {
-      return [
-        ...acc,
-        ...cur,
-      ];
+    const responseResults = (
+      await Promise.all(remainingResultsPromises)
+    ).reduce((acc, cur) => {
+      return [...acc, ...cur];
     }, []);
 
-    return [
-      ...data,
-      ...responseResults,
-    ];
+    return [...data, ...responseResults];
   }
 
   return data;

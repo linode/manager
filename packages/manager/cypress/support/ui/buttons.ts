@@ -1,4 +1,39 @@
 /**
+ * Button UI element.
+ */
+export const button = {
+  /**
+   * Finds a button by its title.
+   *
+   * Most buttons in Cloud Manager have a child `<span />` element containing
+   * the title text. Hence, the `<button />` element itself must be selected
+   * by traversing the DOM.
+   *
+   * @param buttonTitle - Title of button to find.
+   *
+   * @returns Cypress chainable.
+   */
+  findByTitle: (buttonTitle: string): Cypress.Chainable => {
+    return cy.findByText(buttonTitle).closest('button');
+  },
+
+  /**
+   * Finds a button by the value of a given attribute.
+   *
+   * @param attributeName - Attribute to compare against.
+   * @param attributeValue - Expected value for attribute.
+   *
+   * @returns Cypress chainable.
+   */
+  findByAttribute: (
+    attributeName: string,
+    attributeValue: string
+  ): Cypress.Chainable => {
+    return cy.get(`button[${attributeName}="${attributeValue}"`);
+  },
+};
+
+/**
  * Button group UI element.
  *
  * Generally used to contain buttons in drawers and dialogs.
