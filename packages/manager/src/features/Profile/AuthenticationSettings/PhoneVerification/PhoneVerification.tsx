@@ -325,7 +325,7 @@ export const PhoneVerification = () => {
               buttonType="primary"
               type="submit"
             >
-              {isCodeSent ? 'Verify Phone Number' : 'Add Phone Number'}
+              {isCodeSent ? 'Verify Phone Number' : 'Send Verification Code'}
             </Button>
           </Box>
         </form>
