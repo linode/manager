@@ -33,7 +33,7 @@ export const PhoneVerification = () => {
   const { data: profile } = useProfile();
   const { enqueueSnackbar } = useSnackbar();
 
-  const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
+  const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
 
   const [view, setView] = React.useState(hasVerifiedPhoneNumber);
   const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
@@ -75,7 +75,7 @@ export const PhoneVerification = () => {
     if (countryOfNewPhoneNumber) {
       // if Cloud Manager is aware of the country the user used, we can assume how the API will parse and return the number
       updateProfileData({
-        phone_number: `${countryOfNewPhoneNumber.dialingCode}${sendCodeForm.values.phone_number}`,
+        verified_phone_number: `${countryOfNewPhoneNumber.dialingCode}${sendCodeForm.values.phone_number}`,
       });
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
@@ -194,8 +194,8 @@ export const PhoneVerification = () => {
               </Typography>
               <Box display="flex" alignItems="center" style={{ gap: 16 }}>
                 <Typography>
-                  {profile?.phone_number
-                    ? getFormattedNumber(profile.phone_number)
+                  {profile?.verified_phone_number
+                    ? getFormattedNumber(profile.verified_phone_number)
                     : 'No Phone Number'}
                 </Typography>
                 <LinkButton onClick={onEdit}>Edit</LinkButton>
