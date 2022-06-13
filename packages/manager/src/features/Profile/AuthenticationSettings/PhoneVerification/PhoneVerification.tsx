@@ -169,7 +169,6 @@ export const PhoneVerification = () => {
         <Box className={classes.codeSentMessage}>
           <Typography>
             SMS verification code was sent to{' '}
-            {getCountryFlag(sendCodeForm.values.iso_code)}{' '}
             {parsePhoneNumber(
               sendCodeForm.values.phone_number,
               sendCodeForm.values.iso_code as CountryCode
