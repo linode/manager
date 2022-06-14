@@ -30,7 +30,7 @@ describe('SMS phone verification', () => {
     });
 
     const verificationNotice =
-      'By clicking Send Verification Code you are opting in to receive SMS messages reguarding account verification.';
+      'By clicking Send Verification Code you are opting in to receive SMS messages regarding account verification.';
     // @TODO Update this to reflect actual API error message.
     const verificationCodeError = 'Invalid verification code.';
     const confirmationMessage =
