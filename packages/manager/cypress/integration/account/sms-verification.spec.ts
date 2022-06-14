@@ -27,7 +27,7 @@ describe('SMS phone verification', () => {
     const userProfile = profileFactory.build({
       uid: randomNumber(1000, 9999),
       username: randomLabel(),
-      phone_number: userPhoneNumber,
+      verified_phone_number: userPhoneNumber,
     });
 
     const expectedOptInMessage =
