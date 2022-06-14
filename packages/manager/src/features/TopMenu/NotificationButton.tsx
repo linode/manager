@@ -2,7 +2,6 @@ import { Menu, MenuButton, MenuItems, MenuPopover } from '@reach/menu-button';
 import * as React from 'react';
 import Bell from 'src/assets/icons/notification.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { NotificationMenu } from 'src/features/NotificationCenter';
 import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import { menuId } from '../NotificationCenter/NotificationContext';
@@ -78,7 +77,7 @@ export const NotificationButton: React.FC<{}> = (_) => {
               <Bell />
               {numNotifications > 0 ? (
                 <div className={iconClasses.badge}>
-                  <Typography>{numNotifications}</Typography>
+                  <p>{numNotifications}</p>
                 </div>
               ) : null}
             </MenuButton>

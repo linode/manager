@@ -39,7 +39,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   badge: {
     display: 'flex',
     position: 'absolute',
-    top: 5,
+    top: 2,
     left: 20,
     alignItems: 'center',
     justifyContent: 'center',
