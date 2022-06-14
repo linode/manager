@@ -21,7 +21,7 @@ export const profileFactory = Factory.Sync.makeFactory<Profile>({
   two_factor_auth: false,
   restricted: false,
   authentication_type: 'password',
-  phone_number: '+15555555555',
+  verified_phone_number: '+15555555555',
 });
 
 export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestions>(
