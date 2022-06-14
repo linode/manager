@@ -73,7 +73,7 @@ describe('Dismissible notifications', () => {
       ).toHaveProperty('normal');
     });
 
-    it('should not include notifications created more than 60 days ago', () => {
+    it('should not include notifications created more than 45 days ago', () => {
       expect(
         updateDismissedNotifications(dismissedNotifications, [], {})
       ).not.toHaveProperty('stale');
