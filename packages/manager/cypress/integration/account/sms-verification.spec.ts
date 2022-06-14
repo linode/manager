@@ -26,7 +26,7 @@ describe('SMS phone verification', () => {
     const userProfile = profileFactory.build({
       uid: randomNumber(1000, 9999),
       username: randomLabel(),
-      phone_number: undefined,
+      verified_phone_number: undefined,
     });
 
     const verificationNotice =
