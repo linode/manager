@@ -48,6 +48,6 @@ export const getGrantData = () =>
 export const useSMSOptOutMutation = () =>
   useMutation<{}, APIError[]>(smsOptOut, {
     onSuccess: () => {
-      updateProfileData({ phone_number: null });
+      updateProfileData({ verified_phone_number: null });
     },
   });

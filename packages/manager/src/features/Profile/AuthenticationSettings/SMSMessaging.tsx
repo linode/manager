@@ -23,6 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     maxWidth: 960,
+    lineHeight: '20px',
   },
 }));
 
@@ -33,7 +34,7 @@ export const SMSMessageing = () => {
   const { data: profile } = useProfile();
   const { mutateAsync: optOut, error, isLoading } = useSMSOptOutMutation();
 
-  const hasVerifiedPhoneNumber = Boolean(profile?.phone_number);
+  const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
 
   const [open, setOpen] = React.useState(false);
 
@@ -119,7 +120,7 @@ export const SMSMessageing = () => {
           error
         >
           <b>Warning:</b> As part of this action, your verified phone number{' '}
-          {profile?.phone_number} will be deleted.
+          {profile?.verified_phone_number} will be deleted.
         </Notice>
       </ConfirmationDialog>
     </>
