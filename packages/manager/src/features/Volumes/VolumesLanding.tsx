@@ -10,7 +10,6 @@ import { bindActionCreators, Dispatch } from 'redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import EntityTable from 'src/components/EntityTable';
 import LandingHeader from 'src/components/LandingHeader';
@@ -31,7 +30,6 @@ import withLinodes, {
   Props as WithLinodesProps,
 } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
-import useFlags from 'src/hooks/useFlags';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import withNotifications, {
   WithNotifications,
@@ -48,6 +46,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import { ExtendedVolume } from './types';
+import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import VolumeTableRow from './VolumeTableRow';
@@ -143,7 +142,6 @@ export const useStyles = makeStyles(() => ({
 
 export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const flags = useFlags();
 
   const {
     volumesLoading,
@@ -155,6 +153,12 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     openForEdit,
     openForResize,
   } = props;
+
+  const [upgradeVolumeDialog, setUpgradeVolumeDialog] = React.useState({
+    open: false,
+    volumeId: 0,
+    volumeLabel: '',
+  });
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -188,6 +192,10 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       ...attachmentDrawer,
       open: false,
     }));
+  };
+
+  const handleUpgrade = (volumeId: number, label: string) => {
+    setUpgradeVolumeDialog({ open: true, volumeId, volumeLabel: label });
   };
 
   const handleAttach = (volumeId: number, label: string, regionID: string) => {
@@ -233,6 +241,13 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const closeDestructiveDialog = () => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
+      open: false,
+    }));
+  };
+
+  const closeUpgradeVolumeDialog = () => {
+    setUpgradeVolumeDialog((values) => ({
+      ...values,
       open: false,
     }));
   };
@@ -284,23 +299,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const Banner = () => {
-    return flags.blockStorageAvailability ? (
-      <DismissibleBanner
-        preferenceKey="block-storage-available"
-        productInformationIndicator
-      >
-        <Typography>
-          Take advantage of high-performance{' '}
-          <Link to="https://www.linode.com/products/block-storage/">
-            NVMe Block Storage
-          </Link>
-          .
-        </Typography>
-      </DismissibleBanner>
-    ) : null;
-  };
-
   if (_loading) {
     return <Loading />;
   }
@@ -313,7 +311,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     return (
       <>
         <DocumentTitleSegment segment="Volumes" />
-        <Banner />
         <Placeholder
           title="Volumes"
           className={classes.empty}
@@ -347,6 +344,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     handleAttach,
     handleDetach,
     handleDelete,
+    handleUpgrade,
   };
 
   const volumeRow = {
@@ -372,7 +370,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
         }: ToggleProps<boolean>) => {
           return (
             <>
-              <Banner />
               <LandingHeader
                 title="Volumes"
                 entity="Volume"
@@ -386,6 +383,12 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
                 toggleGroupByTag={toggleGroupVolumes}
                 row={volumeRow}
                 initialOrder={{ order: 'asc', orderBy: 'label' }}
+              />
+              <UpgradeVolumeDialog
+                open={upgradeVolumeDialog.open}
+                id={upgradeVolumeDialog.volumeId}
+                label={upgradeVolumeDialog.volumeLabel}
+                onClose={closeUpgradeVolumeDialog}
               />
               <VolumeAttachmentDrawer
                 open={attachmentDrawer.open}

@@ -149,7 +149,7 @@ export const AccessControls: React.FC<Props> = (props) => {
     }
 
     return (
-      <Table className={classes.table}>
+      <Table className={classes.table} data-qa-access-controls>
         <TableBody>
           {accessControlsList.map((accessControl) => (
             <TableRow key={`${accessControl}-row`} className={classes.row}>

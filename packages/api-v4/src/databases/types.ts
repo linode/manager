@@ -79,7 +79,7 @@ export interface DatabaseInstance {
 export type ClusterSize = 1 | 3;
 type ReadonlyCount = 0 | 2;
 
-export type ReplicationType = 'none' | 'semi_synch' | 'asynch';
+export type MySQLReplicationType = 'none' | 'semi_synch' | 'asynch';
 
 export interface CreateDatabasePayload {
   label: string;
@@ -89,7 +89,7 @@ export interface CreateDatabasePayload {
   engine?: Engine;
   encrypted?: boolean;
   ssl_connection?: boolean;
-  replication_type: ReplicationType;
+  replication_type?: MySQLReplicationType | PostgresReplicationType;
   allow_list?: string[];
 }
 
@@ -108,8 +108,8 @@ export interface UpdatesSchedule {
   week_of_month: number | null;
 }
 
-// Database is the interface for the shape of data returned by /databases/{engine}/instances
-export interface Database {
+// Database is the base interface for the shape of data returned by /databases/{engine}/instances
+export interface BaseDatabase {
   id: number;
   label: string;
   type: string;
@@ -120,9 +120,7 @@ export interface Database {
   readonly_count?: ReadonlyCount;
   engine: Engine;
   encrypted: boolean;
-  ipv4_public: string;
   ssl_connection: boolean;
-  replication_type: ReplicationType;
   allow_list: string[];
   connection_strings: ConnectionStrings[];
   created: string;
@@ -131,6 +129,41 @@ export interface Database {
   port: number;
   updates: UpdatesSchedule;
 }
+
+export interface MySQLDatabase extends BaseDatabase {
+  replication_type: MySQLReplicationType;
+}
+
+export type PostgresReplicationType = 'none' | 'synch' | 'asynch';
+
+type ReplicationCommitTypes =
+  | 'on'
+  | 'local'
+  | 'remote_write'
+  | 'remote_apply'
+  | 'off';
+
+export interface PostgresDatabase extends BaseDatabase {
+  replication_type: PostgresReplicationType;
+  replication_commit_type: ReplicationCommitTypes;
+}
+
+type MongoStorageEngine = 'wiredtiger' | 'mmapv1';
+type MongoCompressionType = 'none' | 'snappy' | 'zlib';
+export interface MongoDatabase extends BaseDatabase {
+  storage_engine: MongoStorageEngine;
+  compression_type: MongoCompressionType;
+  replica_set: string | null;
+  peers: string[];
+}
+
+export type ComprehensiveReplicationType = MySQLReplicationType &
+  PostgresReplicationType;
+
+export type Database = BaseDatabase &
+  Partial<MySQLDatabase> &
+  Partial<PostgresDatabase> &
+  Partial<MongoDatabase>;
 
 export interface UpdateDatabasePayload {
   label?: string;

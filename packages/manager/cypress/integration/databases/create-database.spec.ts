@@ -2,8 +2,8 @@ import { ClusterSize, Engine } from '@linode/api-v4/lib/databases/types';
 import { databaseInstanceFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
 import { randomLabel } from 'support/util/random';
-import sequentialStub from 'support/stubs/sequential-stub';
-import { makePaginatedResponse } from 'support/util/response';
+import { sequentialStub } from 'support/stubs/sequential-stub';
+import { paginateResponse } from 'support/util/paginate';
 import { containsClick, fbtClick, getClick } from 'support/helpers';
 
 interface databaseClusterConfiguration {
@@ -39,6 +39,26 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     engine: 'MySQL',
     version: '5.7.30',
   },
+  {
+    label: randomLabel(),
+    linodeType: 'g6-dedicated-16',
+    clusterSize: 1,
+    dbType: 'mongodb',
+    regionTypeahead: 'Atlanta',
+    region: 'us-southeast',
+    engine: 'MongoDB',
+    version: '4.4.10',
+  },
+  {
+    label: randomLabel(),
+    linodeType: 'g6-nanode-1',
+    clusterSize: 3,
+    dbType: 'postgresql',
+    regionTypeahead: 'Newark',
+    region: 'us-east',
+    engine: 'PostgreSQL',
+    version: '13.2',
+  },
 ];
 
 describe('create a database cluster, mocked data', () => {
@@ -53,6 +73,7 @@ describe('create a database cluster, mocked data', () => {
           version: configuration.version,
           status: 'provisioning',
           cluster_size: configuration.clusterSize,
+          engine: configuration.dbType,
           hosts: {
             primary: undefined,
             secondary: undefined,
@@ -72,16 +93,18 @@ describe('create a database cluster, mocked data', () => {
           secondary_entity: undefined,
         });
 
-        cy.intercept('POST', '*/databases/mysql/instances', databaseMock).as(
-          'createDatabase'
-        );
+        cy.intercept(
+          'POST',
+          `*/databases/${configuration.dbType}/instances`,
+          databaseMock
+        ).as('createDatabase');
 
         cy.intercept(
           'GET',
           '*/databases/instances?page=1&page_size=25',
           sequentialStub([
-            makePaginatedResponse(databaseMock),
-            makePaginatedResponse({ ...databaseMock, status: 'active' }),
+            paginateResponse(databaseMock),
+            paginateResponse({ ...databaseMock, status: 'active' }),
           ])
         ).as('listDatabases');
 
@@ -132,7 +155,7 @@ describe('create a database cluster, mocked data', () => {
 
         // Begin intercepting and stubbing event to mock database creation completion.
         cy.intercept('GET', '*/account/events?page_size=25', (req) => {
-          req.reply(makePaginatedResponse(eventMock));
+          req.reply(paginateResponse(eventMock));
         }).as('getEvent');
 
         cy.wait('@getEvent');

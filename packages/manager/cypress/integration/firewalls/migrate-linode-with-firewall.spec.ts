@@ -157,7 +157,7 @@ describe('Migrate Linode With Firewall', () => {
   });
 
   // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
-  it('migrates linode with firewall - real data, ', () => {
+  it('migrates linode with firewall - real data', () => {
     const validateMigration = () => {
       getVisible('[type="button"]').within(() => {
         containsClick('Enter Migration Queue');
@@ -198,9 +198,10 @@ describe('Migrate Linode With Firewall', () => {
 
       cy.get('[data-qa-enhanced-select="Select a Linode or type to search..."]')
         .should('be.visible')
-        .click();
+        .click()
+        .type(`${linode.label}{enter}`);
 
-      cy.findByText(linode.label).should('be.visible').click();
+      cy.findByText(linode.label).should('be.visible');
 
       getClick('[data-qa-submit="true"]');
       cy.wait('@createFirewall');
@@ -232,12 +233,12 @@ describe('Migrate Linode With Firewall', () => {
     });
   });
 
-  it('adds linode to firewall - real data, ', () => {
+  it('adds linode to firewall - real data', () => {
     const firewallLabel = `cy-test-firewall-${randomString(5)}`;
-    // intercept create firewall request
+    // intercept firewall requests
     cy.intercept('POST', '*/networking/firewalls').as('createFirewall');
-    // modify incoming response
     cy.intercept('*/networking/firewalls*').as('getFirewall');
+
     cy.visitWithLogin('/firewalls');
     createLinode().then((linode) => {
       const linodeLabel = linode.label;
@@ -247,15 +248,17 @@ describe('Migrate Linode With Firewall', () => {
         });
         fbtClick('Create Firewall');
       });
+
       cy.get('[data-testid="textfield-input"]')
         .should('be.visible')
         .type(firewallLabel);
 
       cy.get('[data-qa-enhanced-select="Select a Linode or type to search..."]')
         .should('be.visible')
-        .click();
+        .click()
+        .type(`${linodeLabel}{enter}`);
 
-      cy.findByText(linodeLabel).should('be.visible').click();
+      cy.findByText(linodeLabel).should('be.visible');
 
       getClick('[data-qa-submit="true"]');
       cy.wait('@createFirewall').its('response.statusCode').should('eq', 200);

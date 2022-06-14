@@ -84,9 +84,23 @@ const DatabaseLanding: React.FC = () => {
             >
               Cluster Label
             </TableSortCell>
-            <TableCell>Status</TableCell>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="status"
+              handleClick={handleOrderChange}
+            >
+              Status
+            </TableSortCell>
             <Hidden xsDown>
-              <TableCell>Configuration</TableCell>
+              <TableSortCell
+                active={orderBy === 'cluster_size'}
+                direction={order}
+                label="cluster_size"
+                handleClick={handleOrderChange}
+              >
+                Configuration
+              </TableSortCell>
             </Hidden>
             <TableCell>Engine</TableCell>
             <Hidden smDown>
