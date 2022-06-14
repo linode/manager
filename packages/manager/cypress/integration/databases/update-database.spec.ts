@@ -12,7 +12,6 @@ import {
 import { databaseFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
 import {
-  mockDeleteProvisioningDatabase,
   mockGetDatabase,
   mockResetPasswordProvisioningDatabase,
   mockUpdateProvisioningDatabase,
@@ -58,11 +57,6 @@ describe('Update database clusters', () => {
       database.engine,
       errorMessage
     ).as('resetRootPassword');
-    mockDeleteProvisioningDatabase(
-      database.id,
-      database.engine,
-      errorMessage
-    ).as('deleteDatabase');
 
     cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
     cy.wait('@getDatabase');
