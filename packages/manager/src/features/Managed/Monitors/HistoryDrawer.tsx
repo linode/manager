@@ -51,7 +51,7 @@ const renderDrawerContent = (
       />
     );
   }
-  if (loading || !issues) {
+  if (loading || issues === undefined) {
     return <CircleProgress />;
   }
   return <IssueCalendar issues={issues} />;
