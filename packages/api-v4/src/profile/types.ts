@@ -21,7 +21,7 @@ export interface Profile {
   authorized_keys: string[];
   two_factor_auth: boolean;
   restricted: boolean;
-  verified_phone_number?: string;
+  verified_phone_number?: string | null;
 }
 
 export interface TokenRequest {
