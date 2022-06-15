@@ -177,7 +177,6 @@ export const itemInListDeletionHandler = <
   E = APIError[]
 >(
   queryKey: string
-  // id?: number | string
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
