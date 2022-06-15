@@ -8,16 +8,66 @@ import {
   randomItem,
   randomNumber,
   randomIp,
+  randomString,
 } from 'support/util/random';
 import { databaseFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
 import {
   mockGetDatabase,
+  mockGetDatabaseCredentials,
+  mockResetPassword,
   mockResetPasswordProvisioningDatabase,
+  mockUpdateDatabase,
   mockUpdateProvisioningDatabase,
 } from 'support/intercepts/databases';
 
+// @TODO Consider moving this to 'support/constants' or similar.
+const databaseTypes = ['mysql', 'postgresql', 'mongodb'];
+
 describe('Update database clusters', () => {
+  /*
+   * - Tests active database update UI flows using mocked data.
+   */
+  it('Can update active database clusters', () => {
+    const allowedIp = randomIp();
+    const engineType = randomItem(databaseTypes);
+    const initialPassword = randomString(16);
+    const newPassword = randomString(16);
+    const database = databaseFactory.build({
+      id: randomNumber(1, 1000),
+      type: 'g6-nanode-1',
+      label: randomLabel(),
+      region: randomItem(regions),
+      engine: engineType,
+      status: 'active',
+      allow_list: [allowedIp],
+    });
+
+    mockGetDatabase(database).as('getDatabase');
+    mockUpdateDatabase(database.id, database.engine).as('updateDatabase');
+    mockResetPassword(database.id, database.engine).as('resetRootPassword');
+    mockGetDatabaseCredentials(
+      database.id,
+      database.engine,
+      initialPassword
+    ).as('getCredentials');
+
+    cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
+    cy.wait('@getDatabase');
+
+    cy.get('[data-qa-connection-details]').within(() => {
+      // "Show" button should be enabled to reveal password when DB is active.
+      cy.findByText('Show')
+        .closest('button')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.wait('@getCredentials');
+      cy.findByText(`= ${initialPassword}`);
+    });
+  });
+
   /*
    * - Tests provisioning database update UI flows using mocked data.
    * - Confirms that database update flows work under error conditions.
@@ -25,9 +75,9 @@ describe('Update database clusters', () => {
    * - Confirms that users cannot reset root passwords for provisioning DBs.
    * - Confirms that users cannot change maintenance schedules for provisioning DBs.
    */
-  it('Cannot update database clusters while they are provisioning', () => {
+  it.skip('Cannot update database clusters while they are provisioning', () => {
     const allowedIp = randomIp();
-    const engineType = randomItem(['mysql', 'postgresql', 'mongodb']);
+    const engineType = randomItem(databaseTypes);
     const database = databaseFactory.build({
       id: randomNumber(1, 1000),
       type: 'g6-nanode-1',
