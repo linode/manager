@@ -270,7 +270,7 @@ export const handlers = [
   rest.post('*/profile/phone-number/verify', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.post('*/account/phone-number/opt-out', (req, res, ctx) => {
+  rest.delete('*/account/phone-number/opt-out', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   rest.get('*/profile/security-questions', (req, res, ctx) => {
