@@ -46,12 +46,14 @@ describe('Update database clusters', () => {
       'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
     const hostnameRegex = /your hostnames? will appear here once (it is|they are) available./i;
 
-    mockGetDatabase(database.id, database.engine, database).as('getDatabase');
+    mockGetDatabase(database).as('getDatabase');
+
     mockUpdateProvisioningDatabase(
       database.id,
       database.engine,
       errorMessage
     ).as('updateDatabase');
+
     mockResetPasswordProvisioningDatabase(
       database.id,
       database.engine,
