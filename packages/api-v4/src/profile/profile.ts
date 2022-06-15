@@ -190,7 +190,7 @@ export const updateSecurityQuestions = (payload: SecurityQuestions) => {
  */
 export const smsOptOut = () => {
   return Request<{}>(
-    setURL(`${API_ROOT}/profile/phone-number/opt-out`),
+    setURL(`${API_ROOT}/profile/phone-number`),
     setMethod('DELETE')
   );
 };
