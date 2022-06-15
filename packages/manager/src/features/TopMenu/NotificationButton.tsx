@@ -76,7 +76,9 @@ export const NotificationButton: React.FC<{}> = (_) => {
             >
               <Bell />
               {numNotifications > 0 ? (
-                <span className={iconClasses.badge}>{numNotifications}</span>
+                <div className={iconClasses.badge}>
+                  <p>{numNotifications}</p>
+                </div>
               ) : null}
             </MenuButton>
           </TopMenuIcon>
