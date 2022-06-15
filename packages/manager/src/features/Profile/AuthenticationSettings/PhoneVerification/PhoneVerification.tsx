@@ -93,8 +93,7 @@ export const PhoneVerification = () => {
       queryClient.invalidateQueries(queryKey);
     }
 
-    // reset the form, but forcefully go to view mode because we can't
-    // expect the state to be updated immediately
+    // reset form states (the use effect will handle returning to view mode)
     reset();
 
     enqueueSnackbar('Successfully verified phone number', {
