@@ -38,6 +38,17 @@ export const PhoneVerification = () => {
   const [view, setView] = React.useState(hasVerifiedPhoneNumber);
   const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
 
+  React.useEffect(() => {
+    // If the user opts-out, hasVerifiedPhoneNumber will change, therefore
+    // we need this component to update its state.
+    // This also handles going back to view mode when we mutate the
+    // profile store to have the new phone number on verification success
+    if (view !== hasVerifiedPhoneNumber) {
+      setView(hasVerifiedPhoneNumber);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasVerifiedPhoneNumber, profile]);
+
   const {
     data,
     mutateAsync: sendPhoneVerificationCode,
@@ -82,9 +93,8 @@ export const PhoneVerification = () => {
       queryClient.invalidateQueries(queryKey);
     }
 
-    // reset the form, but forcefully go to view mode because we can't
-    // expect the state to be updated immediately
-    reset(true);
+    // reset form states (the use effect will handle returning to view mode)
+    reset();
 
     enqueueSnackbar('Successfully verified phone number', {
       variant: 'success',
@@ -106,19 +116,21 @@ export const PhoneVerification = () => {
     onSubmit: onSubmitVerificationCode,
   });
 
-  const reset = (returnToViewMode: boolean = false) => {
-    // if the user has a verified phone number, it's always safe to return
-    // the state back to view mode.
-    if (hasVerifiedPhoneNumber || returnToViewMode) {
-      setView(true);
-    }
-
+  const reset = () => {
     // clear mutation data because we use that to know if a code has been sent or not
     resetSendCodeMutation();
 
     // reset formik forms
     sendCodeForm.resetForm();
     verifyCodeForm.resetForm();
+  };
+
+  const onCancel = () => {
+    // if the user has a verified phone number, it's safe to return to view mode
+    if (hasVerifiedPhoneNumber) {
+      setView(true);
+    }
+    reset();
   };
 
   const onEdit = () => {
@@ -306,7 +318,7 @@ export const PhoneVerification = () => {
               <Button
                 buttonType="secondary"
                 disabled={isFormSubmitting}
-                onClick={() => reset()}
+                onClick={onCancel}
               >
                 Cancel
               </Button>
