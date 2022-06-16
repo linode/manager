@@ -6,7 +6,7 @@ import Typography from 'src/components/core/Typography';
 import Button from 'src/components/Button';
 
 interface Props {
-  questionResponse?: SecurityQuestion;
+  questionResponse: SecurityQuestion;
   isQuestionLoading: boolean;
   isReadOnly?: boolean;
   onClickEdit: () => void;
@@ -26,17 +26,19 @@ const Question = (props: Props) => {
     setFieldValue,
   } = props;
 
-  let currentOption;
-
-  if (questionResponse) {
-    currentOption = { value: questionResponse.id, label: questionResponse.question };
-  }
-
+  const currentOption = {
+    value: questionResponse.id,
+    label: questionResponse.question,
+  };
 
   const name = `security_questions[${index}].id`;
   const label = `Question ${index + 1}`;
   const onChange = (item: Item<string>) => {
-    setFieldValue(`security_questions[${index}]`, {id: Number.parseInt(item.value), question: item.label, response: ''});
+    setFieldValue(`security_questions[${index}]`, {
+      id: Number.parseInt(item.value, 10),
+      question: item.label,
+      response: '',
+    });
   };
   if (isReadOnly) {
     return (

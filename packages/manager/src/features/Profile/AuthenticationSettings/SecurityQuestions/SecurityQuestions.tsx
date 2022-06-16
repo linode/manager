@@ -87,7 +87,7 @@ const SecurityQuestions = (props: Props) => {
 
   const isButtonDisabled =
     !dirty ||
-    Object.values(values.security_questions).length === 0 ||
+    values.security_questions.length === 0 ||
     values.security_questions.some(
       (questionResponse) =>
         questionResponse.response === null ||
@@ -101,7 +101,7 @@ const SecurityQuestions = (props: Props) => {
     options: options,
   };
 
-  if (isLoading) {
+  if (isLoading || values.security_questions.length === 0) {
     return <CircleProgress />;
   }
 

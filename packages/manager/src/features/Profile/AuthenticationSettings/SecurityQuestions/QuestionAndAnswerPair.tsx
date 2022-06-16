@@ -8,7 +8,7 @@ import { Item } from 'src/components/EnhancedSelect';
 import CircleProgress from 'src/components/CircleProgress';
 
 interface Props {
-  questionResponse?: SecurityQuestion;
+  questionResponse: SecurityQuestion;
   isQuestionLoading: boolean;
   options: Item<number>[];
   index: number;
@@ -46,7 +46,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const QuestionAndAnswerPair = (props: Props) => {
-  const { questionResponse, options, setFieldValue, handleChange, ...rest } = props;
+  const {
+    questionResponse,
+    options,
+    setFieldValue,
+    handleChange,
+    ...rest
+  } = props;
   const initalReaOnlyState = questionResponse ? true : false;
   const [isReadOnly, setIsReadOnly] = React.useState(initalReaOnlyState);
   const classes = useStyles();
@@ -54,10 +60,8 @@ const QuestionAndAnswerPair = (props: Props) => {
     setIsReadOnly(false);
   };
 
-  if (props.isQuestionLoading){
-    return (
-      <CircleProgress />
-    )
+  if (props.isQuestionLoading) {
+    return <CircleProgress />;
   }
 
   return (
@@ -76,11 +80,12 @@ const QuestionAndAnswerPair = (props: Props) => {
         />
       </Box>
       <Box className={classes.answer}>
-        <Answer 
-        isReadOnly={isReadOnly} 
-        handleChange={handleChange} 
-        questionResponse={questionResponse} 
-        {...rest} />
+        <Answer
+          isReadOnly={isReadOnly}
+          handleChange={handleChange}
+          questionResponse={questionResponse}
+          {...rest}
+        />
       </Box>
     </Box>
   );
