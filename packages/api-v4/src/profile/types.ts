@@ -79,18 +79,9 @@ export interface PhoneNumberVerificationCode {
 export interface SecurityQuestion {
   id: number;
   question: string;
+  response: string | null;
 }
 
-export interface AnsweredSecurityQuesiton extends SecurityQuestion {
-  answer: string;
+export interface SecurityQuestionsData {
+  security_questions: SecurityQuestion[];
 }
-
-export interface SecurityQuestions<T> {
-  security_questions: T[];
-}
-
-export type SecurityQuestionsResponse = SecurityQuestions<SecurityQuestion>;
-export type UserSecurityQuestionsRequest = SecurityQuestions<AnsweredSecurityQuesiton>;
-export type UserSecurityQuestionsRequestWithoutQuestions = SecurityQuestions<
-  Omit<SecurityQuestion, 'question'>
->;

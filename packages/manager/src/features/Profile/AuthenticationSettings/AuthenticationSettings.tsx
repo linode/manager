@@ -14,7 +14,6 @@ import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 import SecurityQuestions from './SecurityQuestions';
-import { usePossibleSecurityQuestions, useUserSecurityQuestions } from 'src/queries/securityQuestions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,23 +40,6 @@ export const AuthenticationSettings: React.FC = () => {
     error: profileUpdateError,
   } = useMutateProfile();
 
-  const {
-    data: possibleSecurityQuestionsResponse,
-    isLoading: possibleSecurityQuestionsResponseLoading,
-  } = usePossibleSecurityQuestions();
-
-
-  const {
-    data: userSecurityQuestionsResponse,
-    isLoading: userSecurityQuestionsResponseLoading,
-  } = useUserSecurityQuestions();
-
-  console.log(userSecurityQuestionsResponse);
-
-  const areSecurityQuestionsAnswered =
-    possibleSecurityQuestionsResponse !== undefined &&
-    Object.entries(possibleSecurityQuestionsResponse).length === 3;
-
   const authType = profile?.authentication_type ?? 'password';
   const ipAllowlisting = profile?.ip_whitelist_enabled ?? false;
   const twoFactor = Boolean(profile?.two_factor_auth);
@@ -66,6 +48,7 @@ export const AuthenticationSettings: React.FC = () => {
   const isThirdPartyAuthEnabled = authType !== 'password';
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
+  const [areSecuirtyQuestionsAnswered, setAreSecurityQuestionsAnswered] = React.useState(false);
 
   const clearState = () => {
     setSuccess(undefined);
@@ -101,16 +84,13 @@ export const AuthenticationSettings: React.FC = () => {
               twoFactor={twoFactor}
               username={username}
               clearState={clearState}
-              hasSecurityQuestions={areSecurityQuestionsAnswered}
+              hasSecurityQuestions={areSecuirtyQuestionsAnswered}
             />
             <Divider spacingTop={22} spacingBottom={16} />
           </>
         ) : null}
-        <SecurityQuestions
-          possibleSecurityQuestionsResponse={possibleSecurityQuestionsResponse}
-          userSecurityQuestionsResponse={userSecurityQuestionsResponse}
-          isLoading={possibleSecurityQuestionsResponseLoading || userSecurityQuestionsResponseLoading}
-        />
+        <SecurityQuestions 
+          setAreSecurityQuestionsAnswered={setAreSecurityQuestionsAnswered} />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
         <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>

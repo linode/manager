@@ -1,18 +1,14 @@
 import * as React from 'react';
 import _ from 'lodash';
-import { useFormik } from 'formik';
-import { useMutateUserSecurityQuestions } from 'src/queries/securityQuestions';
+import { useFormik, FormikConfig } from 'formik';
+import { useSecurityQuestions, useMutateSecurityQuestions } from 'src/queries/securityQuestions';
 import QuestionAndAnswerPair from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
-import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
-import {
-  SecurityQuestionsResponse,
-  SecurityQuestion,
-} from '@linode/api-v4/lib/profile';
-import { Item } from 'src/components/EnhancedSelect';
+import { SecurityQuestionsData } from '@linode/api-v4';
+import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -41,129 +37,48 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface FormData {
-  'question-1': number;
-  'question-2': number;
-  'question-3': number;
-  'answer-1'?: string;
-  'answer-2'?: string;
-  'answer-3'?: string;
-}
-
-const getQuestionOptions = (
-  possibleQuestions: SecurityQuestion[],
-  selectedOptions: number[]
-) => {
-  return possibleQuestions.reduce(
-    (acc: Item<number>[], questionObject: SecurityQuestion) => {
-      const isQuestionAlreadySelected =
-        questionObject.id === selectedOptions[0] ||
-        questionObject.id === selectedOptions[1];
-      if (!isQuestionAlreadySelected) {
-        acc.push({ value: questionObject.id, label: questionObject.question });
-      }
-      return acc;
-    },
-    [] as Item<number>[]
-  );
-};
-
-const formatFormData = (
-  data: FormData,
-  possibleQuestions: SecurityQuestion[]
-) => {
-  const questionIDsAndAnswers = [];
-  const question1 =
-    possibleQuestions.find((question) => question.id === data['question-1'])
-      ?.question || '';
-  const question2 =
-    possibleQuestions.find((question) => question.id === data['question-2'])
-      ?.question || '';
-  const question3 =
-    possibleQuestions.find((question) => question.id === data['question-3'])
-      ?.question || '';
-  questionIDsAndAnswers.push(
-    ...[
-      { id: data['question-1'], answer: data['answer-1'], question: question1 },
-      { id: data['question-2'], answer: data['answer-2'], question: question2 },
-      { id: data['question-3'], answer: data['answer-3'], question: question3 },
-    ]
-  );
-  return {
-    security_questions: questionIDsAndAnswers,
-  };
-};
-
 interface Props {
-  possibleSecurityQuestionsResponse?: SecurityQuestionsResponse;
-  userSecurityQuestionsResponse?: SecurityQuestionsResponse;
-  isLoading: boolean;
+  setAreSecurityQuestionsAnswered: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const SecurityQuestions = (props: Props) => {
+// const { setAreSecurityQuestionsAnswered } = props;
+
   const classes = useStyles();
 
-  const {
-    possibleSecurityQuestionsResponse,
-    userSecurityQuestionsResponse,
-    isLoading,
-  } = props;
+  const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
+  const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
 
-  const possibleSecurityQuestionObjects =
-    possibleSecurityQuestionsResponse?.security_questions || [];
+  const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
+  const options = securityQuestionsToItems(securityQuestionsData?.security_questions ?? []);
 
-  const {
-    mutateAsync: updateSecurityQuestions,
-  } = useMutateUserSecurityQuestions();
+  const initalFormValues = { security_questions: answeredQuestions };
 
-  const userSecurityQuestions =
-    userSecurityQuestionsResponse?.security_questions || [];
-
-  const initalFormValues = {
-    ['question-1']: userSecurityQuestions?.[0]?.id,
-    ['question-2']: userSecurityQuestions?.[1]?.id,
-    ['question-3']: userSecurityQuestions?.[2]?.id,
-    ['answer-1']: undefined,
-    ['answer-2']: undefined,
-    ['answer-3']: undefined,
-  };
-
-  const formik = useFormik({
+  const formikConfig: FormikConfig<SecurityQuestionsData> = {
     initialValues: initalFormValues,
     onSubmit: async (values) => {
       try {
-        const requestPayload = formatFormData(
-          values,
-          possibleSecurityQuestionObjects
-        );
-        await updateSecurityQuestions(requestPayload);
+        await updateSecurityQuestions(values);
       } catch (e) {
         // Do something here I guess
       }
     },
-  });
-
-  const qaProps = {
-    isQuestionLoading: isLoading,
-    setFieldValue: formik.setFieldValue,
-    setTouched: formik.setTouched,
   };
 
-  const buttonCopy = userSecurityQuestions.length === 0 ? 'Add' : 'Update';
 
-  console.log(`is dirty: ${formik.dirty}`);
-  console.log(Object.values(formik.values));
+  const { values, handleSubmit, setFieldValue, handleChange, dirty } = useFormik(formikConfig);
+
+  const buttonCopy = answeredQuestions?.length === 3 ? 'Update' : 'Add';
 
   const isButtonDisabled =
-    !formik.dirty || Object.values(formik.values).length === 0;
+    !dirty || Object.values(values.security_questions).length === 0 || values.security_questions.some((questionResponse) => questionResponse.response === null || questionResponse.response.length < 3); // I hate this so much
 
-  if (
-    isLoading ||
-    possibleSecurityQuestionsResponse === undefined ||
-    userSecurityQuestionsResponse === undefined
-  ) {
-    return <CircleProgress />;
-  }
+    const qaProps = {
+    isQuestionLoading: isLoading,
+    setFieldValue: setFieldValue,
+    handleChange: handleChange,
+    options: options,
+  };
 
   return (
     <Box className={classes.root}>
@@ -173,41 +88,28 @@ const SecurityQuestions = (props: Props) => {
         used to verify your identity. Choose answers that are not easily guessed
         or discoverable through research.
       </Typography>
-      <form className={classes.form} onSubmit={formik.handleSubmit}>
+      <form className={classes.form} onSubmit={handleSubmit}>
         <QuestionAndAnswerPair
-          questionResponse={userSecurityQuestions[0]}
+          questionResponse={values.security_questions[0]}
+          index={0}
+          {...qaProps}
+        />
+        <QuestionAndAnswerPair
+          questionResponse={values.security_questions[1]}
           index={1}
-          options={getQuestionOptions(possibleSecurityQuestionObjects, [
-            formik.values['question-2'],
-            formik.values['question-3'],
-          ])}
           {...qaProps}
         />
         <QuestionAndAnswerPair
-          questionResponse={userSecurityQuestions[1]}
+          questionResponse={values.security_questions[2]}
           index={2}
-          options={getQuestionOptions(possibleSecurityQuestionObjects, [
-            formik.values['question-1'],
-            formik.values['question-3'],
-          ])}
-          {...qaProps}
-        />
-        <QuestionAndAnswerPair
-          questionResponse={userSecurityQuestions[2]}
-          index={3}
-          options={getQuestionOptions(possibleSecurityQuestionObjects, [
-            formik.values['question-1'],
-            formik.values['question-2'],
-          ])}
           {...qaProps}
         />
         <Box className={classes.button}>
-          <Button
-            buttonType="primary"
-            type="submit"
-            disabled={isButtonDisabled}
-          >
-            {`${buttonCopy} Security Questions`}
+          <Button 
+          buttonType='primary' 
+          type='submit'
+          disabled={isButtonDisabled}>
+            { `${buttonCopy} Security Questions` }
           </Button>
         </Box>
       </form>

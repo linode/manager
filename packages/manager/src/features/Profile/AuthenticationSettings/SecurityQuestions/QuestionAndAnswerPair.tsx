@@ -5,13 +5,15 @@ import Question from './Question';
 import Answer from './Answer';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect';
+import CircleProgress from 'src/components/CircleProgress';
 
 interface Props {
   questionResponse?: SecurityQuestion;
   isQuestionLoading: boolean;
-  index: number;
-  setFieldValue: (field: string, value: string) => void;
   options: Item<number>[];
+  index: number;
+  setFieldValue: (field: string, value: number | SecurityQuestion) => void;
+  handleChange: any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -44,13 +46,19 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const QuestionAndAnswerPair = (props: Props) => {
-  const { questionResponse, index, options, ...rest } = props;
+  const { questionResponse, options, setFieldValue, handleChange, ...rest } = props;
   const initalReaOnlyState = questionResponse ? true : false;
   const [isReadOnly, setIsReadOnly] = React.useState(initalReaOnlyState);
   const classes = useStyles();
   const disableReadOnly = () => {
     setIsReadOnly(false);
   };
+
+  if (props.isQuestionLoading){
+    return (
+      <CircleProgress />
+    )
+  }
 
   return (
     <Box className={classes.root}>
@@ -63,12 +71,16 @@ const QuestionAndAnswerPair = (props: Props) => {
           isReadOnly={isReadOnly}
           onClickEdit={disableReadOnly}
           options={options}
-          index={index}
+          setFieldValue={setFieldValue}
           {...rest}
         />
       </Box>
       <Box className={classes.answer}>
-        <Answer isReadOnly={isReadOnly} name={`answer-${index}`} {...rest} />
+        <Answer 
+        isReadOnly={isReadOnly} 
+        handleChange={handleChange} 
+        questionResponse={questionResponse} 
+        {...rest} />
       </Box>
     </Box>
   );

@@ -276,31 +276,6 @@ export const handlers = [
   rest.put('*/profile/security-questions', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
-  rest.get('*/security-questions', (req, res, ctx) => {
-    return res(ctx.json({
-      security_questions: [
-        { id: 1, question: 'What city were you born in?' },
-        { id: 2, question: 'What is your oldest sibling’s middle name?' },
-        { id: 3, question: 'What was the first concert you attended?' },
-        { id: 4, question: 'What was the make and model of your first car?' },
-        { id: 5, question: 'In what city or town did your parents meet?' },
-        { id: 6, question: 'What is the name of a college you applied to but didn’t attend?' },
-        { id: 7, question: 'Name of the place of your most memorable school field trip?' },
-        { id: 8, question: 'Last name of the teacher who impacted you the most?' },
-        { id: 9, question: 'City visited on first airplane flight?' },
-        { id: 10, question: 'Street your best friend in high school lives on?' },
-        { id: 11, question: 'Name of your favorite city?' },
-        { id: 12, question: 'Favorite artist of all time?' },
-        { id: 13, question: 'What is the maiden name of your grandmother?' },
-        { id: 14, question: 'What is the first name of your first roommate?' },
-        { id: 15, question: 'In what city or town was your first job?' },
-        { id: 16, question: 'Who is your favorite author?' },
-        { id: 17, question: 'What is the name of the hospital you were born in?' },
-        { id: 18, question: 'What sports team do you love to see lose?' },
-        { id: 19, question: 'On what Street is your grocery store?' },
-      ]
-    }));
-  }),
 rest.get('*/regions', async (req, res, ctx) => {
     return res(
       ctx.json(

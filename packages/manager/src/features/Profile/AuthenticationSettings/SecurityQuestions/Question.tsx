@@ -10,9 +10,9 @@ interface Props {
   isQuestionLoading: boolean;
   isReadOnly?: boolean;
   onClickEdit: () => void;
-  setFieldValue: (field: string, value: string) => void;
   options: Item<number>[];
   index: number;
+  setFieldValue: (field: string, value: SecurityQuestion) => void;
 }
 
 const Question = (props: Props) => {
@@ -21,17 +21,23 @@ const Question = (props: Props) => {
     isQuestionLoading,
     isReadOnly,
     onClickEdit,
-    setFieldValue,
     options,
     index,
+    setFieldValue,
   } = props;
 
-  const name = `question-${index}`;
+  let currentOption;
+
+  if (questionResponse) {
+    currentOption = { value: questionResponse.id, label: questionResponse.question };
+  }
+
+
+  const name = `security_questions[${index}].id`;
+  const label = `Question ${index + 1}`;
   const onChange = (item: Item<string>) => {
-    setFieldValue(name, item.value);
+    setFieldValue(`security_questions[${index}]`, {id: Number.parseInt(item.value), question: item.label, response: ''});
   };
-  const label = name.replace('question-', 'Question ');
-  const currentOption = options.find((option) => option.value === questionResponse?.id);
   if (isReadOnly) {
     return (
       <>
@@ -63,9 +69,9 @@ const Question = (props: Props) => {
       isLoading={isQuestionLoading}
       placeholder="Select a question"
       defaultValue={currentOption}
-      onChange={onChange}
       isClearable={false}
       height="36px"
+      onChange={onChange}
     />
   );
 };
