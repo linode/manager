@@ -9,6 +9,7 @@ import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { SecurityQuestionsData } from '@linode/api-v4';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
+import CircleProgress from 'src/components/CircleProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -50,6 +51,7 @@ const SecurityQuestions = (props: Props) => {
   const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
+
   const options = securityQuestionsToItems(securityQuestionsData?.security_questions ?? []);
 
   const initalFormValues = { security_questions: answeredQuestions };
@@ -79,6 +81,12 @@ const SecurityQuestions = (props: Props) => {
     handleChange: handleChange,
     options: options,
   };
+
+  if (isLoading) {
+    return (
+      <CircleProgress />
+    )
+  }
 
   return (
     <Box className={classes.root}>
