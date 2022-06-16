@@ -1,4 +1,4 @@
-import { EventAction } from '@linode/api-v4';
+import { EventAction, SecurityQuestionsPayload } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -273,10 +273,10 @@ export const handlers = [
   rest.get('*/profile/security-questions', (req, res, ctx) => {
     return res(ctx.json(securityQuestionsFactory.build()));
   }),
-  rest.put('*/profile/security-questions', (req, res, ctx) => {
-    return res(ctx.json({}));
+  rest.post('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
-rest.get('*/regions', async (req, res, ctx) => {
+  rest.get('*/regions', async (req, res, ctx) => {
     return res(
       ctx.json(
         cachedRegions.data.map((thisRegion) => ({
