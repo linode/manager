@@ -1,7 +1,10 @@
 import * as React from 'react';
 import _ from 'lodash';
 import { useFormik, FormikConfig } from 'formik';
-import { useSecurityQuestions, useMutateSecurityQuestions } from 'src/queries/securityQuestions';
+import {
+  useSecurityQuestions,
+  useMutateSecurityQuestions,
+} from 'src/queries/securityQuestions';
 import QuestionAndAnswerPair from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -39,11 +42,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  setAreSecurityQuestionsAnswered: React.Dispatch<React.SetStateAction<boolean>>
+  setAreSecurityQuestionsAnswered: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
 const SecurityQuestions = (props: Props) => {
-// const { setAreSecurityQuestionsAnswered } = props;
+  // const { setAreSecurityQuestionsAnswered } = props;
 
   const classes = useStyles();
 
@@ -52,12 +57,15 @@ const SecurityQuestions = (props: Props) => {
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
 
-  const options = securityQuestionsToItems(securityQuestionsData?.security_questions ?? []);
+  const options = securityQuestionsToItems(
+    securityQuestionsData?.security_questions ?? []
+  );
 
   const initalFormValues = { security_questions: answeredQuestions };
 
   const formikConfig: FormikConfig<SecurityQuestionsData> = {
     initialValues: initalFormValues,
+    enableReinitialize: true,
     onSubmit: async (values) => {
       try {
         await updateSecurityQuestions(values);
@@ -67,15 +75,26 @@ const SecurityQuestions = (props: Props) => {
     },
   };
 
-
-  const { values, handleSubmit, setFieldValue, handleChange, dirty } = useFormik(formikConfig);
+  const {
+    values,
+    handleSubmit,
+    setFieldValue,
+    handleChange,
+    dirty,
+  } = useFormik(formikConfig);
 
   const buttonCopy = answeredQuestions?.length === 3 ? 'Update' : 'Add';
 
   const isButtonDisabled =
-    !dirty || Object.values(values.security_questions).length === 0 || values.security_questions.some((questionResponse) => questionResponse.response === null || questionResponse.response.length < 3); // I hate this so much
+    !dirty ||
+    Object.values(values.security_questions).length === 0 ||
+    values.security_questions.some(
+      (questionResponse) =>
+        questionResponse.response === null ||
+        questionResponse.response.length < 3
+    ); // I hate this so much
 
-    const qaProps = {
+  const qaProps = {
     isQuestionLoading: isLoading,
     setFieldValue: setFieldValue,
     handleChange: handleChange,
@@ -83,9 +102,7 @@ const SecurityQuestions = (props: Props) => {
   };
 
   if (isLoading) {
-    return (
-      <CircleProgress />
-    )
+    return <CircleProgress />;
   }
 
   return (
@@ -113,11 +130,12 @@ const SecurityQuestions = (props: Props) => {
           {...qaProps}
         />
         <Box className={classes.button}>
-          <Button 
-          buttonType='primary' 
-          type='submit'
-          disabled={isButtonDisabled}>
-            { `${buttonCopy} Security Questions` }
+          <Button
+            buttonType="primary"
+            type="submit"
+            disabled={isButtonDisabled}
+          >
+            {`${buttonCopy} Security Questions`}
           </Button>
         </Box>
       </form>
