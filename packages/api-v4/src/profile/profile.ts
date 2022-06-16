@@ -172,12 +172,10 @@ export const getSecurityQuestions = () => {
  *
  * Updates the current user's security questions.
  */
-export const updateSecurityQuestions = (
-  payload: SecurityQuestionsData
-) => {
+export const updateSecurityQuestions = (payload: SecurityQuestionsData) => {
   return Request<SecurityQuestionsData>(
     setURL(`${API_ROOT}/profile/security-questions`),
-    setMethod('PUT'),
+    setMethod('POST'),
     setData(payload)
   );
 };
