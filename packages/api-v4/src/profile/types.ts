@@ -85,3 +85,10 @@ export interface SecurityQuestion {
 export interface SecurityQuestionsData {
   security_questions: SecurityQuestion[];
 }
+
+export interface SecurityQuestionsPayload {
+  security_questions: {
+    question_id: number;
+    response: string;
+  }[];
+}

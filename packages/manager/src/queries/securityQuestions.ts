@@ -2,6 +2,7 @@ import {
   getSecurityQuestions,
   updateSecurityQuestions,
   SecurityQuestionsData,
+  SecurityQuestionsPayload,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery, useMutation } from 'react-query';
@@ -10,31 +11,50 @@ import { queryPresets, queryClient } from './base';
 export const queryKey = 'securityQuestions';
 
 export const useSecurityQuestions = () =>
-  useQuery<SecurityQuestionsData, APIError[]>(
-    queryKey,
-    getSecurityQuestions,
-    {
-      ...queryPresets.oneTimeFetch,
-    }
-  );
-
-export const updateSecurityQuestionsData = (
-  newQuestions: SecurityQuestionsData
-): void => {
-  queryClient.setQueryData(queryKey, () => ({
-    security_questions: newQuestions,
-  }));
-};
+  useQuery<SecurityQuestionsData, APIError[]>(queryKey, getSecurityQuestions, {
+    ...queryPresets.oneTimeFetch,
+  });
 
 export const useMutateSecurityQuestions = () => {
   return useMutation<
-    SecurityQuestionsData,
+    SecurityQuestionsPayload,
     APIError[],
-    SecurityQuestionsData
+    SecurityQuestionsPayload
   >(
     (data) => {
       return updateSecurityQuestions(data);
     },
-    { onSuccess: updateSecurityQuestionsData }
+    {
+      onSuccess: (response) => {
+        queryClient.setQueryData<SecurityQuestionsData | undefined>(
+          queryKey,
+          (oldData) => {
+            if (oldData === undefined) {
+              return undefined;
+            }
+
+            const newQuestions: SecurityQuestionsData['security_questions'] = oldData.security_questions.map(
+              (item) => ({
+                ...item,
+                response: null,
+              })
+            );
+
+            for (let i = 0; i < response.security_questions.length; i++) {
+              const index = oldData.security_questions.findIndex(
+                (question) =>
+                  question.id === response.security_questions[i].question_id
+              );
+
+              newQuestions[index].response =
+                response.security_questions[i].response;
+            }
+            return {
+              security_questions: newQuestions,
+            };
+          }
+        );
+      },
+    }
   );
 };

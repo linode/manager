@@ -68,7 +68,12 @@ const SecurityQuestions = (props: Props) => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
-        await updateSecurityQuestions(values);
+        await updateSecurityQuestions({
+          security_questions: values.security_questions.map((item) => ({
+            question_id: item.id,
+            response: item.response as string,
+          })),
+        });
       } catch (e) {
         // Do something here I guess
       }
