@@ -13,6 +13,7 @@ import Typography from 'src/components/core/Typography';
 import { SecurityQuestionsData } from '@linode/api-v4';
 import { getAnsweredQuestions, securityQuestionsToItems } from './utilities';
 import CircleProgress from 'src/components/CircleProgress';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -53,7 +54,11 @@ const SecurityQuestions = (props: Props) => {
   const classes = useStyles();
 
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
-  const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
+  const {
+    mutateAsync: updateSecurityQuestions,
+    isSuccess,
+  } = useMutateSecurityQuestions();
+  const { enqueueSnackbar } = useSnackbar();
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
 
@@ -74,8 +79,15 @@ const SecurityQuestions = (props: Props) => {
             response: item.response as string,
           })),
         });
+        enqueueSnackbar(
+          `Successfully ${buttonCopy.toLowerCase()}ed your security questions`,
+          { variant: 'success' }
+        );
       } catch (e) {
-        // Do something here I guess
+        enqueueSnackbar(
+          `Failed to ${buttonCopy.toLowerCase()} your security questions`,
+          { variant: 'error' }
+        );
       }
     },
   };
@@ -101,9 +113,10 @@ const SecurityQuestions = (props: Props) => {
 
   const qaProps = {
     isQuestionLoading: isLoading,
-    setFieldValue: setFieldValue,
-    handleChange: handleChange,
-    options: options,
+    setFieldValue,
+    handleChange,
+    options,
+    isSuccess,
   };
 
   if (isLoading || values.security_questions.length === 0) {

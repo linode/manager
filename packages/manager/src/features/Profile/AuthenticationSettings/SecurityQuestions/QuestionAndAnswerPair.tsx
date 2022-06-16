@@ -14,6 +14,7 @@ interface Props {
   index: number;
   setFieldValue: (field: string, value: number | SecurityQuestion) => void;
   handleChange: any;
+  isSuccess: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,6 +52,7 @@ const QuestionAndAnswerPair = (props: Props) => {
     options,
     setFieldValue,
     handleChange,
+    isSuccess,
     ...rest
   } = props;
   const initalReaOnlyState = questionResponse ? true : false;
@@ -59,6 +61,10 @@ const QuestionAndAnswerPair = (props: Props) => {
   const disableReadOnly = () => {
     setIsReadOnly(false);
   };
+
+  if (isSuccess && !isReadOnly) {
+    setIsReadOnly(true);
+  }
 
   if (props.isQuestionLoading) {
     return <CircleProgress />;
