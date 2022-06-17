@@ -131,7 +131,6 @@ const SecurityQuestions = () => {
   const qaProps = {
     setFieldValue,
     handleChange,
-    options,
   };
 
   if (isLoading) {
@@ -152,6 +151,12 @@ const SecurityQuestions = () => {
           index={0}
           edit={questionEditStates[0]}
           onEdit={() => onEdit(0)}
+          options={options.filter((option) => {
+            return (
+              option.value !== values.security_questions[1].id &&
+              option.value !== values.security_questions[2].id
+            );
+          })}
           {...qaProps}
         />
         <QuestionAndAnswerPair
@@ -159,6 +164,12 @@ const SecurityQuestions = () => {
           index={1}
           edit={questionEditStates[1]}
           onEdit={() => onEdit(1)}
+          options={options.filter((option) => {
+            return (
+              option.value !== values.security_questions[0].id &&
+              option.value !== values.security_questions[2].id
+            );
+          })}
           {...qaProps}
         />
         <QuestionAndAnswerPair
@@ -166,6 +177,12 @@ const SecurityQuestions = () => {
           index={2}
           edit={questionEditStates[2]}
           onEdit={() => onEdit(2)}
+          options={options.filter((option) => {
+            return (
+              option.value !== values.security_questions[0].id &&
+              option.value !== values.security_questions[2].id
+            );
+          })}
           {...qaProps}
         />
         <Box
