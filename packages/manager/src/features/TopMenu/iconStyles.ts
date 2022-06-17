@@ -39,16 +39,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
   badge: {
     display: 'flex',
     position: 'absolute',
-    padding: theme.spacing(0.25),
-    top: 5,
+    top: 2,
     left: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white',
     backgroundColor: theme.color.green,
-    fontSize: '0.72rem',
     borderRadius: '50%',
-    minWidth: 16,
-    minHeight: 16,
+    width: '1rem',
+    height: '1rem',
+    '& p': {
+      fontSize: '0.72rem',
+      color: 'white',
+    },
   },
 }));

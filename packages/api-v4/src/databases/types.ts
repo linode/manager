@@ -153,6 +153,8 @@ type MongoCompressionType = 'none' | 'snappy' | 'zlib';
 export interface MongoDatabase extends BaseDatabase {
   storage_engine: MongoStorageEngine;
   compression_type: MongoCompressionType;
+  replica_set: string | null;
+  peers: string[];
 }
 
 export type ComprehensiveReplicationType = MySQLReplicationType &

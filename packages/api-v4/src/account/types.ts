@@ -87,6 +87,11 @@ export type CardType =
 
 export type PaymentType = 'credit_card' | ThirdPartyPayment;
 
+export interface TaxSummary {
+  tax: number;
+  name: string;
+}
+
 export interface Invoice {
   id: number;
   date: string;
@@ -94,6 +99,7 @@ export interface Invoice {
   total: number;
   tax: number;
   subtotal: number;
+  tax_summary: TaxSummary[];
 }
 
 export interface InvoiceItem {

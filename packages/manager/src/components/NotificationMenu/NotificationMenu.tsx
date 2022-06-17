@@ -47,8 +47,12 @@ export const NotificationMenu: React.FC<Props> = (props) => {
 
   return (
     <Paper className={classes.root}>
-      <Notifications notificationsList={formattedNotifications} />
-      <Events events={eventNotifications} />
+      {open ? (
+        <>
+          <Notifications notificationsList={formattedNotifications} />
+          <Events events={eventNotifications} />
+        </>
+      ) : null}
     </Paper>
   );
 };

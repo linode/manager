@@ -1,6 +1,11 @@
 import JSPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Invoice, InvoiceItem, Payment } from '@linode/api-v4/lib/account';
+import {
+  Invoice,
+  InvoiceItem,
+  Payment,
+  TaxSummary,
+} from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 
@@ -129,6 +134,18 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
   });
 };
 
+const getTaxSummaryBody = (taxSummary: TaxSummary[]) => {
+  if (!taxSummary) {
+    return [];
+  }
+  return taxSummary.map((summary: TaxSummary) => {
+    if (summary.name.toLowerCase() === 'standard') {
+      return ['Standard Tax (USD)', `$${Number(summary.tax).toFixed(2)}`];
+    }
+    return [`${summary.name} (USD)`, `$${Number(summary.tax).toFixed(2)}`];
+  });
+};
+
 /**
  * Creates the totals table for Invoice PDF
  */
@@ -161,7 +178,8 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
     rowPageBreak: 'avoid',
     body: [
       ['Subtotal (USD)', `$${Number(invoice.subtotal).toFixed(2)}`],
-      ['Tax (USD)', `$${Number(invoice.tax).toFixed(2)}`],
+      ...getTaxSummaryBody(invoice.tax_summary),
+      ['Tax Subtotal (USD)', `$${Number(invoice.tax).toFixed(2)}`],
       [`Total (USD)`, `$${Number(invoice.total).toFixed(2)}`],
     ],
   });

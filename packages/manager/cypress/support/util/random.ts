@@ -45,7 +45,7 @@ const defaultRandomStringOptions = {
  */
 export const randomNumber = (min: number = 0, max: number = 100): number => {
   const scaleMultiplier = max - min;
-  return min + Math.floor(Math.random() * scaleMultiplier);
+  return min + Math.round(Math.random() * scaleMultiplier);
 };
 
 /**

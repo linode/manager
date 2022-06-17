@@ -4,6 +4,45 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-06-13] - v1.69.0
+
+### Added:
+- Display tax lines on invoices
+- Ability for users to migrate unattached volumes to NVMe block storage
+
+## [2022-06-08] - v1.68.1
+
+### Fixed:
+- Notification Menu spamming calls when clicking a link
+
+## [2022-06-06] - v1.68.0
+
+### Added:
+- Tooltip explaining public/private hosts for MongoDB clusters
+- Support for scoping Database and Firewall permissions
+
+### Changed:
+- Tweak Connection Details for Mongo clusters
+- Bold the Entity Label, Actions, and Username in the Notification Menu
+- Enable Google Analytics IP anonymization
+
+### Fixed:
+- Height of Region select
+
+## [2022] - v1.67.0
+
+### Added:
+- Marketplace Add: May 2022 Release
+
+### Changed:
+- Allow more sorting options for Databases
+- Remove NVMe marketing banners
+- Remove Ada chat bot
+
+### Fixed:
+- Linode Configs Cancel Button functionality
+- Events sometimes disappearing from the notification menu
+
 ## [2022-05-16] - v1.66.2
 ### Changed:
 - Display linroot as the username for MongoDB and MySQL clusters, and linpostgres as the username for PostgreSQL clusters
