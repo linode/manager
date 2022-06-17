@@ -118,9 +118,9 @@ const SecurityQuestions = () => {
     <Box className={classes.root}>
       <Typography variant="h3">Security Questions</Typography>
       <Typography variant="body1" className={classes.copy}>
-        Adding security questions will help keep your account secure and only be
-        used to verify your identity. Choose answers that are not easily guessed
-        or discoverable through research.
+        Adding security questions helps keep your account secure and will only
+        be used to verify your identity when you call Linode support. Choose
+        answers that are not easily guessed or discoverable through research.
       </Typography>
       <form className={classes.form} onSubmit={handleSubmit}>
         <QuestionAndAnswerPair
