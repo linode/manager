@@ -3,7 +3,11 @@ import {
   listGrants,
   Profile,
   smsOptOut,
+  sendCodeToPhoneNumber,
+  SendPhoneVerificationCodePayload,
   updateProfile,
+  verifyPhoneNumberCode,
+  VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -51,3 +55,13 @@ export const useSMSOptOutMutation = () =>
       updateProfileData({ verified_phone_number: null });
     },
   });
+
+export const useSendPhoneVerificationCodeMutation = () =>
+  useMutation<{}, APIError[], SendPhoneVerificationCodePayload>(
+    sendCodeToPhoneNumber
+  );
+
+export const useVerifyPhoneVerificationCodeMutation = () =>
+  useMutation<{}, APIError[], VerifyVerificationCodePayload>(
+    verifyPhoneNumberCode
+  );
