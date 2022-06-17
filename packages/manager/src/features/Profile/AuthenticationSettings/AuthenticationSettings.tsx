@@ -97,7 +97,7 @@ export const AuthenticationSettings: React.FC = () => {
           This is a placeholder for the Phone Verification component.
         </Typography>
         <Divider spacingTop={22} spacingBottom={16} />
-        <Typography variant="h3">SMS Verification</Typography>
+        <Typography variant="h3">SMS Messaging</Typography>
         <SMSMessaging />
         {!isThirdPartyAuthEnabled ? (
           <>

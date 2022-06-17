@@ -75,8 +75,8 @@ export const SMSMessaging = () => {
         <Typography className={classes.text}>
           <b>
             {hasVerifiedPhoneNumber
-              ? 'You have opted in to SMS verification'
-              : 'You have opted out of SMS verification'}
+              ? 'You have opted in to SMS messaging'
+              : 'You are opted out of SMS messaging'}
           </b>
         </Typography>
       </Notice>
