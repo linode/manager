@@ -15,8 +15,7 @@ export const securityQuestionsToItems = (
 export const getAnsweredQuestions = (
   secuirtyQuestionsData?: SecurityQuestionsData
 ) => {
-  const isArray = Array.isArray(secuirtyQuestionsData?.security_questions);
-  if (isArray && secuirtyQuestionsData !== undefined) {
+  if (secuirtyQuestionsData !== undefined) {
     return secuirtyQuestionsData.security_questions.filter(
       (questionData) => questionData.response !== null
     );

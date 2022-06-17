@@ -1,5 +1,4 @@
 import * as React from 'react';
-import _ from 'lodash';
 import { useFormik, FormikConfig } from 'formik';
 import {
   useSecurityQuestions,
@@ -31,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   buttonContainer: {
+    marginTop: theme.spacing(),
     gap: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(2),
@@ -75,10 +75,7 @@ const SecurityQuestions = () => {
         );
         onCancel();
       } catch (e) {
-        enqueueSnackbar(
-          `Failed to ${buttonCopy.toLowerCase()} your security questions`,
-          { variant: 'error' }
-        );
+        enqueueSnackbar(e[0].reason, { variant: 'error' });
       }
     },
   };
@@ -86,6 +83,19 @@ const SecurityQuestions = () => {
   const [questionEditStates, setQuestionEditStates] = React.useState<boolean[]>(
     hasSecurityQuestionsCompleted ? [false, false, false] : [true, true, true]
   );
+
+  React.useEffect(() => {
+    if (
+      hasSecurityQuestionsCompleted !==
+      questionEditStates.includes(!hasSecurityQuestionsCompleted)
+    ) {
+      setQuestionEditStates(
+        hasSecurityQuestionsCompleted
+          ? [false, false, false]
+          : [true, true, true]
+      );
+    }
+  }, [hasSecurityQuestionsCompleted]);
 
   const onEdit = (index: number) => {
     setQuestionEditStates((prev) => {
@@ -96,6 +106,7 @@ const SecurityQuestions = () => {
   };
 
   const onCancel = () => {
+    resetForm();
     setQuestionEditStates([false, false, false]);
   };
 
@@ -105,6 +116,7 @@ const SecurityQuestions = () => {
     setFieldValue,
     handleChange,
     dirty,
+    resetForm,
   } = useFormik(formikConfig);
 
   const buttonCopy = answeredQuestions?.length === 3 ? 'Update' : 'Add';
