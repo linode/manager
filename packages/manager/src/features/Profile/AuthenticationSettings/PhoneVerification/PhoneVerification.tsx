@@ -1,31 +1,34 @@
-import * as React from 'react';
-import InputAdornment from 'src/components/core/InputAdornment';
-import Notice from 'src/components/Notice';
-import classNames from 'classnames';
-import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import TextField from 'src/components/TextField';
-import Typography from 'src/components/core/Typography';
-import FormHelperText from 'src/components/core/FormHelperText';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { useFormik } from 'formik';
-import { useSnackbar } from 'notistack';
-import { APIError } from '@linode/api-v4/lib/types';
-import { LinkButton } from 'src/components/LinkButton';
-import { countries } from './countries';
-import { queryKey, updateProfileData, useProfile } from 'src/queries/profile';
-import { parsePhoneNumber, CountryCode } from 'libphonenumber-js';
 import {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile/types';
+import { APIError } from '@linode/api-v4/lib/types';
+import classNames from 'classnames';
+import { useFormik } from 'formik';
+import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';
+import { useSnackbar } from 'notistack';
+import * as React from 'react';
+import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputAdornment from 'src/components/core/InputAdornment';
+import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Link from 'src/components/Link';
+import { LinkButton } from 'src/components/LinkButton';
+import Notice from 'src/components/Notice';
+import TextField from 'src/components/TextField';
+import { queryClient } from 'src/queries/base';
 import {
+  queryKey,
+  updateProfileData,
+  useProfile,
   useSendPhoneVerificationCodeMutation,
   useVerifyPhoneVerificationCodeMutation,
 } from 'src/queries/profile';
+import { countries } from './countries';
 import { getCountryFlag, getCountryName, getFormattedNumber } from './helpers';
 import { useStyles } from './styles';
-import { queryClient } from 'src/queries/base';
 
 export const PhoneVerification = () => {
   const classes = useStyles();
@@ -93,7 +96,7 @@ export const PhoneVerification = () => {
       queryClient.invalidateQueries(queryKey);
     }
 
-    // reset form states (the use effect will handle returning to view mode)
+    // reset form states (the useEffect will handle returning to view mode)
     reset();
 
     enqueueSnackbar('Successfully verified phone number', {
@@ -302,9 +305,9 @@ export const PhoneVerification = () => {
                     By clicking Send Verification Code you are opting in to
                     receive SMS messages. You can opt out of SMS messages after
                     your phone number is verified.{' '}
-                    <a href="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+                    <Link to="https://www.linode.com/docs/guides/linode-manager-security-controls/">
                       Learn more about security options.
-                    </a>
+                    </Link>
                   </b>
                 </Typography>
               </Notice>
