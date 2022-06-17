@@ -38,7 +38,7 @@ export const PhoneVerification = () => {
 
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
 
-  const [view, setView] = React.useState(hasVerifiedPhoneNumber);
+  const [isViewMode, setIsViewMode] = React.useState(hasVerifiedPhoneNumber);
   const [isPhoneInputFocused, setIsPhoneInputFocused] = React.useState(false);
 
   React.useEffect(() => {
@@ -46,8 +46,8 @@ export const PhoneVerification = () => {
     // we need this component to update its state.
     // This also handles going back to view mode when we mutate the
     // profile store to have the new phone number on verification success
-    if (view !== hasVerifiedPhoneNumber) {
-      setView(hasVerifiedPhoneNumber);
+    if (isViewMode !== hasVerifiedPhoneNumber) {
+      setIsViewMode(hasVerifiedPhoneNumber);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasVerifiedPhoneNumber, profile]);
@@ -131,13 +131,13 @@ export const PhoneVerification = () => {
   const onCancel = () => {
     // if the user has a verified phone number, it's safe to return to view mode
     if (hasVerifiedPhoneNumber) {
-      setView(true);
+      setIsViewMode(true);
     }
     reset();
   };
 
   const onEdit = () => {
-    setView(false);
+    setIsViewMode(false);
   };
 
   const onEnterDifferentPhoneNumber = () => {
@@ -180,7 +180,7 @@ export const PhoneVerification = () => {
 
   return (
     <>
-      {!view && isCodeSent ? (
+      {!isViewMode && isCodeSent ? (
         <Box className={classes.codeSentMessage}>
           <Typography>
             SMS verification code was sent to{' '}
@@ -202,7 +202,7 @@ export const PhoneVerification = () => {
             isCodeSent ? verifyCodeForm.handleSubmit : sendCodeForm.handleSubmit
           }
         >
-          {view ? (
+          {isViewMode ? (
             <>
               <Typography variant="h3" className={classes.phoneNumberTitle}>
                 Phone Number
@@ -318,7 +318,7 @@ export const PhoneVerification = () => {
             justifyContent="flex-end"
             className={classes.buttonContainer}
           >
-            {isCodeSent || (hasVerifiedPhoneNumber && !view) ? (
+            {isCodeSent || (hasVerifiedPhoneNumber && !isViewMode) ? (
               <Button
                 buttonType="secondary"
                 disabled={isFormSubmitting}
@@ -329,7 +329,7 @@ export const PhoneVerification = () => {
             ) : null}
             <Button
               loading={isFormSubmitting}
-              disabled={view}
+              disabled={isViewMode}
               buttonType="primary"
               type="submit"
             >
