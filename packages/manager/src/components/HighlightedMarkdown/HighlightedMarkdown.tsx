@@ -7,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
+import sanitize from 'sanitize-html';
 // Register all languages we intend to use
 hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
@@ -36,13 +37,14 @@ export type SupportedLanguage =
 export interface HighlightedMarkdownProps {
   textOrMarkdown: string;
   language?: SupportedLanguage;
+  sanitizeOptions?: sanitize.IOptions;
 }
 
 export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
   props
 ) => {
   const classes = useStyles();
-  const { language, textOrMarkdown } = props;
+  const { language, textOrMarkdown, sanitizeOptions } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   /**
@@ -59,7 +61,7 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
 
   const unsafe_parsedMarkdown = unsafe_MarkdownIt.render(textOrMarkdown);
 
-  const sanitizedHtml = sanitizeHTML(unsafe_parsedMarkdown);
+  const sanitizedHtml = sanitizeHTML(unsafe_parsedMarkdown, sanitizeOptions);
 
   // Adapted from https://stackblitz.com/edit/react-highlighted-markdown?file=highlighted-markdown.tsx
   // All the safety checking is due to a reported error from certain versions of FireFox.

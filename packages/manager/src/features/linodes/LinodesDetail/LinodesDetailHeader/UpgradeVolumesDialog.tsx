@@ -1,13 +1,13 @@
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
+import { useDispatch } from 'react-redux';
+import { useSnackbar } from 'notistack';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { VolumeUpgradeCopy } from 'src/features/Volumes/UpgradeVolumeDialog';
 import { Dispatch } from 'src/hooks/types';
 import { useVolumesMigrateMutation } from 'src/queries/volumesMigrations';
 import { requestNotifications } from 'src/store/notification/notification.requests';
@@ -80,13 +80,11 @@ export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
       }
     >
       <Typography>
-        {numUpgradeableVolumes === 1
-          ? 'A Volume attached to Linode '
-          : 'Volumes attached to '}
-        {linode.label} will be upgraded to high-performance NVMe Block Storage.
-        This is a free upgrade and will not incur any additional service
-        charges. Check upgrade eligibility or current status of Volumes on the{' '}
-        <Link to="/account/maintenance">Maintenance Page</Link>.
+        <VolumeUpgradeCopy
+          type="linode"
+          label={linode.label}
+          isManyVolumes={numUpgradeableVolumes > 1}
+        />
         <Paper className={classes.notice}>
           As part of the upgrade process, this Linode may be rebooted and will
           be returned to its last known state prior to the upgrade.
