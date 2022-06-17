@@ -40,7 +40,7 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
       { id: 1, question: 'What city were you born in?', response: null },
       {
         id: 2,
-        question: 'What is your oldest sibling’s middle name?',
+        question: 'What is your oldest sibling\u{2019}s middle name?',
         response: null,
       },
       {
@@ -60,61 +60,7 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
       },
       {
         id: 6,
-        question:
-          'What is the name of a college you applied to but didn’t attend?',
-        response: null,
-      },
-      {
-        id: 7,
-        question: 'Name of the place of your most memorable school field trip?',
-        response: null,
-      },
-      {
-        id: 8,
-        question: 'Last name of the teacher who impacted you the most?',
-        response: null,
-      },
-      {
-        id: 9,
-        question: 'City visited on first airplane flight?',
-        response: null,
-      },
-      {
-        id: 10,
-        question: 'Street your best friend in high school lives on?',
-        response: null,
-      },
-      { id: 11, question: 'Name of your favorite city?', response: null },
-      { id: 12, question: 'Favorite artist of all time?', response: null },
-      {
-        id: 13,
-        question: 'What is the maiden name of your grandmother?',
-        response: null,
-      },
-      {
-        id: 14,
-        question: 'What is the first name of your first roommate?',
-        response: null,
-      },
-      {
-        id: 15,
-        question: 'In what city or town was your first job?',
-        response: null,
-      },
-      { id: 16, question: 'Who is your favorite author?', response: null },
-      {
-        id: 17,
-        question: 'What is the name of the hospital you were born in?',
-        response: null,
-      },
-      {
-        id: 18,
-        question: 'What sports team do you love to see lose?',
-        response: null,
-      },
-      {
-        id: 19,
-        question: 'On what Street is your grocery store?',
+        question: 'What\u{2019}s your favorite flavor of ice cream?',
         response: null,
       },
     ],
