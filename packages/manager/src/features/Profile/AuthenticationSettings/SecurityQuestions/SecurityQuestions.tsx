@@ -47,6 +47,11 @@ const SecurityQuestions = () => {
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
 
+  const hasSecurityQuestionsCompleted =
+    securityQuestionsData?.security_questions.filter(
+      (question) => question.response
+    ).length === 3;
+
   const options = securityQuestionsToItems(
     securityQuestionsData?.security_questions ?? []
   );
@@ -79,7 +84,7 @@ const SecurityQuestions = () => {
   };
 
   const [questionEditStates, setQuestionEditStates] = React.useState<boolean[]>(
-    [false, false, false]
+    hasSecurityQuestionsCompleted ? [false, false, false] : [true, true, true]
   );
 
   const onEdit = (index: number) => {
@@ -158,7 +163,8 @@ const SecurityQuestions = () => {
           justifyContent="flex-end"
           className={classes.buttonContainer}
         >
-          {questionEditStates.includes(true) ? (
+          {hasSecurityQuestionsCompleted &&
+          questionEditStates.includes(true) ? (
             <Button buttonType="secondary" onClick={onCancel}>
               Cancel
             </Button>
