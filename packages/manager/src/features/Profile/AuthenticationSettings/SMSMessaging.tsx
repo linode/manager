@@ -81,7 +81,7 @@ export const SMSMessaging = () => {
         </Typography>
       </Notice>
       <Typography className={classes.copy}>
-        An authentication code is sent via SMS as part of the verification
+        An authentication code is sent via SMS as part of the phone verification
         process. Messages are not sent for any other reason. SMS authentication
         is optional and provides an important degree of account security. You
         may opt out at any time and your verified phone number will be deleted.
