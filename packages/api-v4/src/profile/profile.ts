@@ -1,3 +1,7 @@
+import {
+  SendCodeToPhoneNumberSchema,
+  VerifyPhoneNumberCodeSchema,
+} from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import { Grants } from '../account';
@@ -15,7 +19,8 @@ import {
   TrustedDevice,
   UserPreferences,
   SecurityQuestions,
-  PhoneNumberVerificationCode,
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
 } from './types';
 
 /**
@@ -126,36 +131,6 @@ export const getLogins = (params: any, filter: any) => {
 };
 
 /**
- * sendCodeToPhoneNumber
- *
- * Sends a one-time password via SMS to be used to verify a phone number.
- */
-export const sendCodeToPhoneNumber = (phoneNumber: string) => {
-  return Request<PhoneNumberVerificationCode>(
-    setURL(`${API_ROOT}/profile/phone-number`),
-    setMethod('POST'),
-    setData({
-      phone_number: phoneNumber,
-    })
-  );
-};
-
-/**
- * verifyPhoneNumberCode
- *
- * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
- */
-export const verifyPhoneNumberCode = (otpCode: number) => {
-  return Request<{}>(
-    setURL(`${API_ROOT}/profile/phone-number/verify`),
-    setMethod('POST'),
-    setData({
-      otp_code: otpCode,
-    })
-  );
-};
-
-/**
  * getSecurityQuestions
  *
  * Retrieves a map of security questions and answers for the current user.
@@ -180,5 +155,33 @@ export const updateSecurityQuestions = (payload: SecurityQuestions) => {
     setData({
       security_questions: payload,
     })
+  );
+};
+
+/**
+ * sendCodeToPhoneNumber
+ *
+ * Sends a one-time password via SMS to be used to verify a phone number.
+ */
+export const sendCodeToPhoneNumber = (
+  data: SendPhoneVerificationCodePayload
+) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number`),
+    setMethod('POST'),
+    setData(data, SendCodeToPhoneNumberSchema)
+  );
+};
+
+/**
+ * verifyPhoneNumberCode
+ *
+ * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
+ */
+export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number/verify`),
+    setMethod('POST'),
+    setData(data, VerifyPhoneNumberCodeSchema)
   );
 };

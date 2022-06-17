@@ -16,4 +16,9 @@ module.exports = {
       logLevel: 'warn',
     }),
   ],
+  performance: {
+    hints: 'error',
+    maxEntrypointSize: 1500000, // ~1.5 MiB
+    maxAssetSize: 1500000, // ~1.5 MiB
+  },
 };
