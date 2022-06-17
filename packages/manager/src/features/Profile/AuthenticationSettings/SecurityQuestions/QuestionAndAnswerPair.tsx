@@ -9,10 +9,11 @@ import { Item } from 'src/components/EnhancedSelect';
 interface Props {
   questionResponse: SecurityQuestion;
   options: Item<number>[];
-  index: number;
   setFieldValue: (field: string, value: number | SecurityQuestion) => void;
   handleChange: any;
-  isSuccess: boolean;
+  edit: boolean;
+  index: number;
+  onEdit: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -50,32 +51,22 @@ const QuestionAndAnswerPair = (props: Props) => {
     options,
     setFieldValue,
     handleChange,
-    isSuccess,
+    edit,
+    onEdit,
     ...rest
   } = props;
-  const initalReaOnlyState = questionResponse ? true : false;
-  const [isReadOnly, setIsReadOnly] = React.useState(initalReaOnlyState);
   const classes = useStyles();
-  const disableReadOnly = () => {
-    setIsReadOnly(false);
-  };
-
-  React.useEffect(() => {
-    if (isSuccess && !isReadOnly) {
-      setIsReadOnly(true);
-    }
-  }, [isSuccess]);
 
   return (
     <Box className={classes.root}>
       <Box
         className={classes.question}
-        style={{ paddingTop: isReadOnly ? '16px' : 0 }}
+        style={{ paddingTop: !edit ? '16px' : 0 }}
       >
         <Question
           questionResponse={questionResponse}
-          isReadOnly={isReadOnly}
-          onClickEdit={disableReadOnly}
+          isReadOnly={!edit}
+          onClickEdit={onEdit}
           options={options}
           setFieldValue={setFieldValue}
           {...rest}
@@ -83,7 +74,7 @@ const QuestionAndAnswerPair = (props: Props) => {
       </Box>
       <Box className={classes.answer}>
         <Answer
-          isReadOnly={isReadOnly}
+          isReadOnly={!edit}
           handleChange={handleChange}
           questionResponse={questionResponse}
           {...rest}

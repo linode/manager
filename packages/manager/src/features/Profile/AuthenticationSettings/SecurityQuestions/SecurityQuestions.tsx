@@ -30,14 +30,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'column',
   },
-  button: {
-    paddingTop: theme.spacing(5),
-    display: 'flex',
-    flexDirection: 'row-reverse',
+  buttonContainer: {
+    gap: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
-      '& > button': {
-        width: '100%',
-      },
+      marginTop: theme.spacing(2),
     },
   },
 }));
@@ -46,10 +42,7 @@ const SecurityQuestions = () => {
   const classes = useStyles();
 
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
-  const {
-    mutateAsync: updateSecurityQuestions,
-    isSuccess,
-  } = useMutateSecurityQuestions();
+  const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
@@ -75,6 +68,7 @@ const SecurityQuestions = () => {
           `Successfully ${buttonCopy.toLowerCase()}ed your security questions`,
           { variant: 'success' }
         );
+        onCancel();
       } catch (e) {
         enqueueSnackbar(
           `Failed to ${buttonCopy.toLowerCase()} your security questions`,
@@ -82,6 +76,22 @@ const SecurityQuestions = () => {
         );
       }
     },
+  };
+
+  const [questionEditStates, setQuestionEditStates] = React.useState<boolean[]>(
+    [false, false, false]
+  );
+
+  const onEdit = (index: number) => {
+    setQuestionEditStates((prev) => {
+      const newState = [...prev];
+      newState[index] = true;
+      return newState;
+    });
+  };
+
+  const onCancel = () => {
+    setQuestionEditStates([false, false, false]);
   };
 
   const {
@@ -101,13 +111,12 @@ const SecurityQuestions = () => {
       (questionResponse) =>
         questionResponse.response === null ||
         questionResponse.response.length < 3
-    ); // I hate this so much
+    );
 
   const qaProps = {
     setFieldValue,
     handleChange,
     options,
-    isSuccess,
   };
 
   if (isLoading) {
@@ -126,19 +135,34 @@ const SecurityQuestions = () => {
         <QuestionAndAnswerPair
           questionResponse={values.security_questions[0]}
           index={0}
+          edit={questionEditStates[0]}
+          onEdit={() => onEdit(0)}
           {...qaProps}
         />
         <QuestionAndAnswerPair
           questionResponse={values.security_questions[1]}
           index={1}
+          edit={questionEditStates[1]}
+          onEdit={() => onEdit(1)}
           {...qaProps}
         />
         <QuestionAndAnswerPair
           questionResponse={values.security_questions[2]}
           index={2}
+          edit={questionEditStates[2]}
+          onEdit={() => onEdit(2)}
           {...qaProps}
         />
-        <Box className={classes.button}>
+        <Box
+          display="flex"
+          justifyContent="flex-end"
+          className={classes.buttonContainer}
+        >
+          {questionEditStates.includes(true) ? (
+            <Button buttonType="secondary" onClick={onCancel}>
+              Cancel
+            </Button>
+          ) : null}
           <Button
             buttonType="primary"
             type="submit"
