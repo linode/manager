@@ -180,7 +180,7 @@ const SecurityQuestions = () => {
           options={options.filter((option) => {
             return (
               option.value !== values.security_questions[0]?.id &&
-              option.value !== values.security_questions[2]?.id
+              option.value !== values.security_questions[1]?.id
             );
           })}
           {...qaProps}
