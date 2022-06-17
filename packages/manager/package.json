@@ -55,6 +55,7 @@
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
     "launchdarkly-react-client-sdk": "2.11.0",
+    "libphonenumber-js": "^1.10.6",
     "logic-query-parser": "^0.0.5",
     "luxon": "^1.24.1",
     "markdown-it": "^12.3.2",

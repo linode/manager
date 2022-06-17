@@ -88,6 +88,7 @@ export const styles = (theme: Theme) =>
         paddingRight: 10,
       },
       '& .react-select__menu-list': {
+        zIndex: 100,
         padding: theme.spacing(1) / 2,
         backgroundColor: theme.bg.white,
         height: '101%',

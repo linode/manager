@@ -8,8 +8,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
+import { SMSMessaging } from './SMSMessaging';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
@@ -23,6 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linode: {
     marginBottom: theme.spacing(2),
+  },
+  copy: {
+    maxWidth: 960,
+    lineHeight: '20px',
+    marginTop: theme.spacing(),
   },
 }));
 
@@ -90,9 +97,16 @@ export const AuthenticationSettings: React.FC = () => {
         <SecurityQuestions />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
-        <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>
-          This is a placeholder for the Phone Verification component.
+        <Typography variant="body1" className={classes.copy}>
+          Providing your phone number helps ensure you can securely access an
+          account in case the other ways to connect are lost. Your phone number
+          will only be used to verify your identity by sending an SMS message.
+          Standard carrier messaging fees may apply.
         </Typography>
+        <PhoneVerification />
+        <Divider spacingTop={22} spacingBottom={16} />
+        <Typography variant="h3">SMS Messaging</Typography>
+        <SMSMessaging />
         {!isThirdPartyAuthEnabled ? (
           <>
             <Divider spacingTop={22} spacingBottom={16} />
