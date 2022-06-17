@@ -9,6 +9,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { useProfile } from 'src/queries/profile';
 import { useSnackbar } from 'notistack';
 import { useSMSOptOutMutation } from 'src/queries/profile';
+import { getFormattedNumber } from './PhoneVerification/helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   notice: {
@@ -68,6 +69,7 @@ export const SMSMessaging = () => {
       <Notice
         spacingTop={12}
         spacingBottom={16}
+        spacingLeft={1}
         success={hasVerifiedPhoneNumber}
         warning={!hasVerifiedPhoneNumber}
         className={hasVerifiedPhoneNumber ? classes.notice : undefined}
@@ -127,7 +129,10 @@ export const SMSMessaging = () => {
           error
         >
           <b>Warning:</b> As part of this action, your verified phone number{' '}
-          {profile?.verified_phone_number} will be deleted.
+          {profile?.verified_phone_number
+            ? getFormattedNumber(profile.verified_phone_number)
+            : 'No Phone Number'}{' '}
+          will be deleted.
         </Notice>
       </ConfirmationDialog>
     </>
