@@ -27,12 +27,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const SMSMessageing = () => {
+export const SMSMessaging = () => {
   const classes = useStyles();
 
   const { enqueueSnackbar } = useSnackbar();
   const { data: profile } = useProfile();
-  const { mutateAsync: optOut, error, isLoading } = useSMSOptOutMutation();
+  const {
+    mutateAsync: optOut,
+    error,
+    isLoading,
+    reset,
+  } = useSMSOptOutMutation();
 
   const hasVerifiedPhoneNumber = Boolean(profile?.verified_phone_number);
 
@@ -44,6 +49,9 @@ export const SMSMessageing = () => {
 
   const onClose = () => {
     setOpen(false);
+    if (error) {
+      reset();
+    }
   };
 
   const onOptOut = () => {
