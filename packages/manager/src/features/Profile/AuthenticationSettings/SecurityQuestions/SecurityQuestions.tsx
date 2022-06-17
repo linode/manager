@@ -4,7 +4,7 @@ import {
   useSecurityQuestions,
   useMutateSecurityQuestions,
 } from 'src/queries/securityQuestions';
-import QuestionAndAnswerPair from './QuestionAndAnswerPair';
+import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Box from 'src/components/core/Box';
@@ -63,16 +63,16 @@ const SecurityQuestions = () => {
     enableReinitialize: true,
     onSubmit: async (values) => {
       try {
+        const action = hasSecurityQuestionsCompleted ? 'updated' : 'added';
         await updateSecurityQuestions({
           security_questions: values.security_questions.map((item) => ({
             question_id: item.id,
             response: item.response as string,
           })),
         });
-        enqueueSnackbar(
-          `Successfully ${buttonCopy.toLowerCase()}ed your security questions`,
-          { variant: 'success' }
-        );
+        enqueueSnackbar(`Successfully ${action} your security questions`, {
+          variant: 'success',
+        });
         onCancel();
       } catch (e) {
         enqueueSnackbar(e[0].reason, { variant: 'error' });
@@ -118,8 +118,6 @@ const SecurityQuestions = () => {
     dirty,
     resetForm,
   } = useFormik(formikConfig);
-
-  const buttonCopy = answeredQuestions?.length === 3 ? 'Update' : 'Add';
 
   const isButtonDisabled =
     !dirty ||
@@ -186,7 +184,9 @@ const SecurityQuestions = () => {
             type="submit"
             disabled={isButtonDisabled}
           >
-            {`${buttonCopy} Security Questions`}
+            {`${
+              hasSecurityQuestionsCompleted ? 'Update' : 'Add'
+            } Security Questions`}
           </Button>
         </Box>
       </form>

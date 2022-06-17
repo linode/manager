@@ -14,7 +14,7 @@ interface Props {
   setFieldValue: (field: string, value: SecurityQuestion) => void;
 }
 
-const Question = (props: Props) => {
+export const Question = (props: Props) => {
   const {
     questionResponse,
     isReadOnly,
@@ -76,5 +76,3 @@ const Question = (props: Props) => {
     />
   );
 };
-
-export default Question;

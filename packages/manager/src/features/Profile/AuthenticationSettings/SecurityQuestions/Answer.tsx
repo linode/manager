@@ -9,14 +9,15 @@ interface Props {
   handleChange: any;
 }
 
-const Answer = (props: Props) => {
+export const Answer = (props: Props) => {
   const { isReadOnly, questionResponse, index, handleChange } = props;
   const label = `Answer ${index + 1}`;
   const name = `security_questions[${index}].response`;
 
   if (isReadOnly) {
-    return <></>;
+    return null;
   }
+
   return (
     <TextField
       name={name}
@@ -27,5 +28,3 @@ const Answer = (props: Props) => {
     />
   );
 };
-
-export default Answer;

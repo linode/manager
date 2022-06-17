@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Box from 'src/components/core/Box';
-import Question from './Question';
-import Answer from './Answer';
+import { Question } from './Question';
+import { Answer } from './Answer';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect';
 
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const QuestionAndAnswerPair = (props: Props) => {
+export const QuestionAndAnswerPair = (props: Props) => {
   const {
     questionResponse,
     options,
@@ -83,5 +83,3 @@ const QuestionAndAnswerPair = (props: Props) => {
     </Box>
   );
 };
-
-export default QuestionAndAnswerPair;
