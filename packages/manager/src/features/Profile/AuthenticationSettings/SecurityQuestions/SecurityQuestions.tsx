@@ -153,8 +153,8 @@ const SecurityQuestions = () => {
           onEdit={() => onEdit(0)}
           options={options.filter((option) => {
             return (
-              option.value !== values.security_questions[1].id &&
-              option.value !== values.security_questions[2].id
+              option.value !== values.security_questions[1]?.id &&
+              option.value !== values.security_questions[2]?.id
             );
           })}
           {...qaProps}
@@ -166,8 +166,8 @@ const SecurityQuestions = () => {
           onEdit={() => onEdit(1)}
           options={options.filter((option) => {
             return (
-              option.value !== values.security_questions[0].id &&
-              option.value !== values.security_questions[2].id
+              option.value !== values.security_questions[0]?.id &&
+              option.value !== values.security_questions[2]?.id
             );
           })}
           {...qaProps}
@@ -179,8 +179,8 @@ const SecurityQuestions = () => {
           onEdit={() => onEdit(2)}
           options={options.filter((option) => {
             return (
-              option.value !== values.security_questions[0].id &&
-              option.value !== values.security_questions[2].id
+              option.value !== values.security_questions[0]?.id &&
+              option.value !== values.security_questions[2]?.id
             );
           })}
           {...qaProps}
