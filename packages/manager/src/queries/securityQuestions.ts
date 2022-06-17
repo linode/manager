@@ -49,6 +49,15 @@ export const useMutateSecurityQuestions = () => {
               newQuestions[index].response =
                 response.security_questions[i].response;
             }
+
+            for (let i = 0; i < response.security_questions.length; i++) {
+              const index = newQuestions.findIndex(
+                (question) =>
+                  question.id === response.security_questions[i].question_id
+              );
+              moveInArray(newQuestions, index, i);
+            }
+
             return {
               security_questions: newQuestions,
             };
@@ -58,3 +67,9 @@ export const useMutateSecurityQuestions = () => {
     }
   );
 };
+
+function moveInArray(arr: any[], fromIndex: number, toIndex: number) {
+  const element = arr[fromIndex];
+  arr.splice(fromIndex, 1);
+  arr.splice(toIndex, 0, element);
+}
