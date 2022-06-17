@@ -193,6 +193,7 @@ export const styles = (theme: Theme) =>
       display: 'flex',
       color: theme.palette.text.primary,
       cursor: 'pointer',
+      minHeight: theme.spacing(5) - 6,
       // From the AutoSizeInput documentation: (https://github.com/JedWatson/react-input-autosize/blob/master/README.md#csp-and-the-ie-clear-indicator)
       // "The input will automatically inject a stylesheet that hides IE/Edge's "clear" indicator,
       // which otherwise breaks the UI. This has the downside of being incompatible with some CSP policies.
