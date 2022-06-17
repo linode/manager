@@ -54,7 +54,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const needSecurityQuestionsCopy =
-    'To use two-factor authentication you must setup your security questions listed below.';
+    'To use two-factor authentication you must set up your security questions listed below.';
 
   const { clearState, disabled, twoFactor, username } = props;
 
