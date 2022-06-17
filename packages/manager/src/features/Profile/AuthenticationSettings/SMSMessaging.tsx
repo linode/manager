@@ -75,17 +75,16 @@ export const SMSMessaging = () => {
         <Typography className={classes.text}>
           <b>
             {hasVerifiedPhoneNumber
-              ? 'You have opted in to SMS messaging for phone verification'
-              : 'You are opted out of SMS messaging for phone verification'}
+              ? 'You have opted in to SMS verification'
+              : 'You have opted out of SMS verification'}
           </b>
         </Typography>
       </Notice>
       <Typography className={classes.copy}>
         An authentication code is sent via SMS as part of the verification
         process. Messages are not sent for any other reason. SMS authentication
-        by verified phone number provides an important degree of account
-        security. You may opt out at any time and your verified phone number
-        will be deleted.
+        is optional and provides an important degree of account security. You
+        may opt out at any time and your verified phone number will be deleted.
       </Typography>
       {hasVerifiedPhoneNumber ? (
         <Box display="flex" justifyContent="flex-end">
