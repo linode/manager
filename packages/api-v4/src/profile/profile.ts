@@ -159,6 +159,18 @@ export const updateSecurityQuestions = (payload: SecurityQuestions) => {
 };
 
 /**
+ * smsOptOut
+ *
+ * Opts user out of SMS messaging
+ */
+export const smsOptOut = () => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number`),
+    setMethod('DELETE')
+  );
+};
+
+/**
  * sendCodeToPhoneNumber
  *
  * Sends a one-time password via SMS to be used to verify a phone number.

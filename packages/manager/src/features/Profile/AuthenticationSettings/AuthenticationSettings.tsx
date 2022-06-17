@@ -11,6 +11,7 @@ import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
+import { SMSMessaging } from './SMSMessaging';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
@@ -105,6 +106,9 @@ export const AuthenticationSettings: React.FC = () => {
           Standard carrier messaging fees may apply.
         </Typography>
         <PhoneVerification />
+        <Divider spacingTop={22} spacingBottom={16} />
+        <Typography variant="h3">SMS Messaging</Typography>
+        <SMSMessaging />
         {!isThirdPartyAuthEnabled ? (
           <>
             <Divider spacingTop={22} spacingBottom={16} />
