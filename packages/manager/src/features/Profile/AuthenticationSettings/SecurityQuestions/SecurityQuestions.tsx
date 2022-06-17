@@ -42,15 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  setAreSecurityQuestionsAnswered: React.Dispatch<
-    React.SetStateAction<boolean>
-  >;
-}
-
-const SecurityQuestions = (props: Props) => {
-  // const { setAreSecurityQuestionsAnswered } = props;
-
+const SecurityQuestions = () => {
   const classes = useStyles();
 
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
@@ -112,7 +104,6 @@ const SecurityQuestions = (props: Props) => {
     ); // I hate this so much
 
   const qaProps = {
-    isQuestionLoading: isLoading,
     setFieldValue,
     handleChange,
     options,

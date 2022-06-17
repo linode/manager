@@ -7,7 +7,6 @@ import Button from 'src/components/Button';
 
 interface Props {
   questionResponse: SecurityQuestion;
-  isQuestionLoading: boolean;
   isReadOnly?: boolean;
   onClickEdit: () => void;
   options: Item<number>[];
@@ -18,7 +17,6 @@ interface Props {
 const Question = (props: Props) => {
   const {
     questionResponse,
-    isQuestionLoading,
     isReadOnly,
     onClickEdit,
     options,
@@ -70,7 +68,6 @@ const Question = (props: Props) => {
       name={name}
       label={label}
       options={options}
-      isLoading={isQuestionLoading}
       placeholder="Select a question"
       defaultValue={currentOption}
       isClearable={false}

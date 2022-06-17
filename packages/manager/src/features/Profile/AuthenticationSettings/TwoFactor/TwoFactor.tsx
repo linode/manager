@@ -10,6 +10,7 @@ import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/profile';
+import { useSecurityQuestions } from 'src/queries/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -47,7 +48,6 @@ interface Props {
   twoFactor?: boolean;
   clearState: () => void;
   disabled?: boolean;
-  hasSecurityQuestions?: boolean;
 }
 
 export const TwoFactor: React.FC<Props> = (props) => {
@@ -56,13 +56,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
   const needSecurityQuestionsCopy =
     'To use two-factor authentication you must setup your security questions listed below.';
 
-  const {
-    clearState,
-    disabled,
-    twoFactor,
-    username,
-    hasSecurityQuestions,
-  } = props;
+  const { clearState, disabled, twoFactor, username } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -76,6 +70,13 @@ export const TwoFactor: React.FC<Props> = (props) => {
     boolean | undefined
   >(twoFactor);
   const [scratchCode, setScratchCode] = React.useState<string>('');
+
+  const { data: securityQuestionsData } = useSecurityQuestions();
+
+  const hasSecurityQuestions =
+    securityQuestionsData?.security_questions.filter(
+      (question) => question.response
+    ).length === 3;
 
   React.useEffect(() => {
     clearState();

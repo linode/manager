@@ -48,7 +48,6 @@ export const AuthenticationSettings: React.FC = () => {
   const isThirdPartyAuthEnabled = authType !== 'password';
 
   const [success, setSuccess] = React.useState<string | undefined>(undefined);
-  const [areSecuirtyQuestionsAnswered, setAreSecurityQuestionsAnswered] = React.useState(false);
 
   const clearState = () => {
     setSuccess(undefined);
@@ -84,13 +83,11 @@ export const AuthenticationSettings: React.FC = () => {
               twoFactor={twoFactor}
               username={username}
               clearState={clearState}
-              hasSecurityQuestions={areSecuirtyQuestionsAnswered}
             />
             <Divider spacingTop={22} spacingBottom={16} />
           </>
         ) : null}
-        <SecurityQuestions 
-          setAreSecurityQuestionsAnswered={setAreSecurityQuestionsAnswered} />
+        <SecurityQuestions />
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
         <Typography variant="body1" style={{ marginTop: 8, marginBottom: 8 }}>

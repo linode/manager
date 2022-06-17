@@ -5,11 +5,9 @@ import Question from './Question';
 import Answer from './Answer';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect';
-import CircleProgress from 'src/components/CircleProgress';
 
 interface Props {
   questionResponse: SecurityQuestion;
-  isQuestionLoading: boolean;
   options: Item<number>[];
   index: number;
   setFieldValue: (field: string, value: number | SecurityQuestion) => void;
@@ -67,10 +65,6 @@ const QuestionAndAnswerPair = (props: Props) => {
       setIsReadOnly(true);
     }
   }, [isSuccess]);
-
-  if (props.isQuestionLoading) {
-    return <CircleProgress />;
-  }
 
   return (
     <Box className={classes.root}>
