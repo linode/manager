@@ -26,10 +26,12 @@ const Question = (props: Props) => {
     setFieldValue,
   } = props;
 
-  const currentOption = {
-    value: questionResponse.id,
-    label: questionResponse.question,
-  };
+  const currentOption = questionResponse
+    ? {
+        value: questionResponse.id,
+        label: questionResponse.question,
+      }
+    : undefined;
 
   const name = `security_questions[${index}].id`;
   const label = `Question ${index + 1}`;

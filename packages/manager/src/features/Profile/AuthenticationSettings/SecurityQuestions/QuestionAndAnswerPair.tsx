@@ -62,9 +62,11 @@ const QuestionAndAnswerPair = (props: Props) => {
     setIsReadOnly(false);
   };
 
-  if (isSuccess && !isReadOnly) {
-    setIsReadOnly(true);
-  }
+  React.useEffect(() => {
+    if (isSuccess && !isReadOnly) {
+      setIsReadOnly(true);
+    }
+  }, [isSuccess]);
 
   if (props.isQuestionLoading) {
     return <CircleProgress />;

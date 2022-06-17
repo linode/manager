@@ -119,7 +119,7 @@ const SecurityQuestions = (props: Props) => {
     isSuccess,
   };
 
-  if (isLoading || values.security_questions.length === 0) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
