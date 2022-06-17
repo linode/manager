@@ -18,7 +18,8 @@ import {
   ProfileLogin,
   TrustedDevice,
   UserPreferences,
-  SecurityQuestions,
+  SecurityQuestionsData,
+  SecurityQuestionsPayload,
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
 } from './types';
@@ -133,10 +134,10 @@ export const getLogins = (params: any, filter: any) => {
 /**
  * getSecurityQuestions
  *
- * Retrieves a map of security questions and answers for the current user.
+ * Retrieves an array of security questions for the current user.
  */
 export const getSecurityQuestions = () => {
-  return Request<SecurityQuestions>(
+  return Request<SecurityQuestionsData>(
     setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('GET')
   );
@@ -145,16 +146,13 @@ export const getSecurityQuestions = () => {
 /**
  * updateSecurityQuestions
  *
- * Updates the current user's security questions. Only expected security
- * questions may be used.
+ * Updates the current user's security questions.
  */
-export const updateSecurityQuestions = (payload: SecurityQuestions) => {
-  return Request<{}>(
+export const updateSecurityQuestions = (payload: SecurityQuestionsPayload) => {
+  return Request<SecurityQuestionsPayload>(
     setURL(`${API_ROOT}/profile/security-questions`),
-    setMethod('PUT'),
-    setData({
-      security_questions: payload,
-    })
+    setMethod('POST'),
+    setData(payload)
   );
 };
 

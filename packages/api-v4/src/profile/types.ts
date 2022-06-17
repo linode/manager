@@ -78,6 +78,23 @@ export interface VerifyVerificationCodePayload {
   otp_code: string;
 }
 
+export interface SecurityQuestion {
+  id: number;
+  question: string;
+  response: string | null;
+}
+
+export interface SecurityQuestionsData {
+  security_questions: SecurityQuestion[];
+}
+
+export interface SecurityQuestionsPayload {
+  security_questions: {
+    question_id: number;
+    response: string;
+  }[];
+}
+
 export interface SendPhoneVerificationCodePayload {
   phone_number: string;
   iso_code: string;
