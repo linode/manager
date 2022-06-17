@@ -298,9 +298,10 @@ export const PhoneVerification = () => {
               <Notice spacingTop={16} spacingBottom={0} spacingLeft={1} warning>
                 <Typography style={{ maxWidth: 600, fontSize: '0.875rem' }}>
                   <b>
+                    Phone verification via SMS message is required for signup.
                     By clicking Send Verification Code you are opting in to
-                    receive SMS messages regarding account verification. SMS
-                    messaging will only be used for account verification.{' '}
+                    receive SMS messages. You can opt out of SMS messages after
+                    your phone number is verified.{' '}
                     <a href="https://www.linode.com/docs/guides/linode-manager-security-controls/">
                       Learn more about security options.
                     </a>

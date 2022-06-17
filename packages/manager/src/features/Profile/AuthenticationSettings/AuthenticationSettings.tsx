@@ -24,6 +24,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   linode: {
     marginBottom: theme.spacing(2),
   },
+  copy: {
+    maxWidth: 960,
+    lineHeight: '20px',
+    marginTop: theme.spacing(),
+  },
 }));
 
 export const AuthenticationSettings: React.FC = () => {
@@ -93,12 +98,11 @@ export const AuthenticationSettings: React.FC = () => {
         </Typography>
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
-        <Typography variant="body1" style={{ marginTop: 8 }}>
-          Your phone number will only be used to verify your identity.
-        </Typography>
-        <Typography variant="body1">
-          Use a phone number that can recieve SMS messages. You may be charged
-          messaging fees by your carrier.
+        <Typography variant="body1" className={classes.copy}>
+          Providing your phone number helps ensure you can securely access an
+          account in case the other ways to connect are lost. Your phone number
+          will only be used to verify your identity by sending an SMS message.
+          Standard carrier messaging fees may apply.
         </Typography>
         <PhoneVerification />
         {!isThirdPartyAuthEnabled ? (
