@@ -2,7 +2,12 @@ import {
   getProfile,
   listGrants,
   Profile,
+  smsOptOut,
+  sendCodeToPhoneNumber,
+  SendPhoneVerificationCodePayload,
   updateProfile,
+  verifyPhoneNumberCode,
+  VerifyVerificationCodePayload,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -43,3 +48,20 @@ export const useGrants = () =>
 export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
 export const getGrantData = () =>
   queryClient.getQueryData<Grants>(`${queryKey}-grants`);
+
+export const useSMSOptOutMutation = () =>
+  useMutation<{}, APIError[]>(smsOptOut, {
+    onSuccess: () => {
+      updateProfileData({ verified_phone_number: null });
+    },
+  });
+
+export const useSendPhoneVerificationCodeMutation = () =>
+  useMutation<{}, APIError[], SendPhoneVerificationCodePayload>(
+    sendCodeToPhoneNumber
+  );
+
+export const useVerifyPhoneVerificationCodeMutation = () =>
+  useMutation<{}, APIError[], VerifyVerificationCodePayload>(
+    verifyPhoneNumberCode
+  );

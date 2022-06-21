@@ -1,4 +1,8 @@
-import { EventAction, NotificationType } from '@linode/api-v4';
+import {
+  EventAction,
+  NotificationType,
+  SecurityQuestionsPayload,
+} from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -51,6 +55,7 @@ import {
   possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
+  securityQuestionsFactory,
   stackScriptFactory,
   staticObjects,
   supportReplyFactory,
@@ -86,6 +91,10 @@ const statusPage = [
     return res(ctx.json(response));
   }),
 ];
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
@@ -249,7 +258,9 @@ const databases = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build({ restricted: false });
+    const profile = profileFactory.build({
+      restricted: false,
+    });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
@@ -261,6 +272,23 @@ export const handlers = [
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tokens)));
+  }),
+  rest.post('*/profile/phone-number', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.post('*/profile/phone-number/verify', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.delete('*/profile/phone-number', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(securityQuestionsFactory.build()));
+  }),
+  rest.post('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(
