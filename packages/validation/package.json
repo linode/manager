@@ -10,8 +10,6 @@
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"esbuild src/*.ts --outdir=lib --watch --target=\"es6\" --format=\"cjs\" \"",
     "build": "concurrently --raw \"tsc\" \"esbuild src/*.ts --outdir=lib --target=\"es6\" --format=\"cjs\" --minify \"",
-    "test": "jest --config jestconfig.json",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "precommit": "lint-staged"
@@ -27,17 +25,14 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "concurrently": "^4.1.1",
     "esbuild": "^0.14.30",
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "jest": "~26.4.2",
     "lint-staged": "^9.4.2",
-    "prettier": "~2.2.1",
-    "ts-jest": "^24.1.0"
+    "prettier": "~2.2.1"
   },
   "keywords": [
     "linode",

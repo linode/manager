@@ -32,7 +32,7 @@
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"esbuild src/*.ts src/**/index.ts --outdir=lib --watch --target=\"es6\" --format=\"cjs\" \"",
     "build": "concurrently --raw \"tsc\" \"esbuild src/*.ts src/**/*.ts --outdir=lib --target=\"es6\" --format=\"cjs\" --minify \"",
     "build:node": "yarn build",
-    "test": "jest --config jestconfig.json",
+    "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
@@ -42,6 +42,7 @@
     "lib"
   ],
   "devDependencies": {
+    "esbuild-jest": "^0.5.0",
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "axios-mock-adapter": "^1.18.1",
@@ -52,8 +53,7 @@
     "eslint-plugin-sonarjs": "^0.5.0",
     "jest": "~26.4.2",
     "lint-staged": "^9.4.2",
-    "prettier": "~2.2.1",
-    "ts-jest": "^24.1.0"
+    "prettier": "~2.2.1"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
@@ -67,5 +67,12 @@
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
     ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(t)sx?$": "esbuild-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
   }
 }
