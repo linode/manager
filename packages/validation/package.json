@@ -5,11 +5,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "index.js",
-    "index.d.ts",
-    "lib/*",
-    "package.json",
-    "README.md"
+    "lib"
   ],
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"esbuild src/*.ts --outdir=lib --watch --target=\"es6\" --format=\"cjs\"\"",
