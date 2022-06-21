@@ -39,7 +39,10 @@ const SecurityQuestions = () => {
   const classes = useStyles();
 
   const { data: securityQuestionsData, isLoading } = useSecurityQuestions();
-  const { mutateAsync: updateSecurityQuestions } = useMutateSecurityQuestions();
+  const {
+    mutateAsync: updateSecurityQuestions,
+    isLoading: isUpdating,
+  } = useMutateSecurityQuestions();
   const { enqueueSnackbar } = useSnackbar();
 
   const answeredQuestions = getAnsweredQuestions(securityQuestionsData);
@@ -194,6 +197,7 @@ const SecurityQuestions = () => {
             </Button>
           ) : null}
           <Button
+            loading={isUpdating}
             buttonType="primary"
             type="submit"
             disabled={isButtonDisabled}
