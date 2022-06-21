@@ -1,3 +1,13 @@
+## [2022-06-13] - v0.73.0
+
+### Added:
+- Types and fields for invoice tax summaries
+
+## [2022-06-06] - v0.72.0
+
+### Changed
+- Add `replica_set` and `peers` fields to MongoDB database type
+
 ## [2022-05-16] - v0.71.0
 
 ### Changed:

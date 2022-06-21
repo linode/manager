@@ -6,6 +6,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
@@ -109,7 +110,25 @@ export const Row: React.FC<RowProps> = (props) => {
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
         <Typography data-qa-event-message variant="body1">
-          {link ? <Link to={link}>{displayedMessage}</Link> : displayedMessage}
+          {link ? (
+            <Link to={link}>
+              <HighlightedMarkdown
+                textOrMarkdown={displayedMessage}
+                sanitizeOptions={{
+                  allowedTags: [],
+                  disallowedTagsMode: 'discard',
+                }}
+              />
+            </Link>
+          ) : (
+            <HighlightedMarkdown
+              textOrMarkdown={displayedMessage}
+              sanitizeOptions={{
+                allowedTags: [],
+                disallowedTagsMode: 'discard',
+              }}
+            />
+          )}
         </Typography>
       </TableCell>
       <TableCell parentColumn="Relative Date">
