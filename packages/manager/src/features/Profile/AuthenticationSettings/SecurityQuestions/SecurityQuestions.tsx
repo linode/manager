@@ -15,9 +15,6 @@ import CircleProgress from 'src/components/CircleProgress';
 import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing(4),
-  },
   copy: {
     lineHeight: '20px',
     marginTop: theme.spacing(),
@@ -30,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
   },
   buttonContainer: {
-    marginTop: theme.spacing(),
+    marginTop: theme.spacing(2),
     gap: theme.spacing(),
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(2),
@@ -124,8 +121,8 @@ const SecurityQuestions = () => {
     values.security_questions.length === 0 ||
     values.security_questions.some(
       (questionResponse) =>
-        questionResponse.response === null ||
-        questionResponse.response.length < 3
+        questionResponse?.response === null ||
+        questionResponse?.response?.length < 3
     );
 
   const qaProps = {
@@ -138,7 +135,7 @@ const SecurityQuestions = () => {
   }
 
   return (
-    <Box className={classes.root}>
+    <Box>
       <Typography variant="h3">Security Questions</Typography>
       <Typography variant="body1" className={classes.copy}>
         Adding security questions helps keep your account secure and will only

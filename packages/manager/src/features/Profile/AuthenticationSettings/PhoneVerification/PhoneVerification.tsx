@@ -207,7 +207,7 @@ export const PhoneVerification = () => {
               <Typography variant="h3" className={classes.phoneNumberTitle}>
                 Phone Number
               </Typography>
-              <Box display="flex" alignItems="center" style={{ gap: 16 }}>
+              <Box display="flex" alignItems="center" style={{ gap: 10 }}>
                 <Typography>
                   {profile?.verified_phone_number
                     ? getFormattedNumber(profile.verified_phone_number)

@@ -7,7 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect';
 
 interface Props {
-  questionResponse: SecurityQuestion;
+  questionResponse: SecurityQuestion | undefined;
   options: Item<number>[];
   setFieldValue: (field: string, value: number | SecurityQuestion) => void;
   handleChange: any;
