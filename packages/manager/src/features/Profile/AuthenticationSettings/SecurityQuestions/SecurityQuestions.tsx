@@ -123,9 +123,7 @@ const SecurityQuestions = () => {
     !dirty ||
     values.security_questions.length === 0 ||
     values.security_questions.some(
-      (questionResponse) =>
-        questionResponse?.response === null ||
-        questionResponse?.response?.length < 3
+      (questionResponse) => !questionResponse?.response
     );
 
   const qaProps = {

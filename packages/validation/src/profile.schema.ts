@@ -1,4 +1,4 @@
-import { array, boolean, object, string } from 'yup';
+import { array, boolean, number, object, string } from 'yup';
 import { isPossiblePhoneNumber } from 'libphonenumber-js';
 
 export const createPersonalAccessTokenSchema = object({
@@ -58,4 +58,19 @@ export const VerifyPhoneNumberCodeSchema = object({
         return /^\d+$/.test(value);
       }
     ),
+});
+
+export const SecurityQuestionsSchema = object({
+  security_questions: array()
+    .of(
+      object({
+        question_id: number().required('You must pick a question.'),
+        response: string()
+          .min(3, 'Answers must be at least 3 characters')
+          .max(17, 'Answers must be at most 17 characters')
+          .required('You must provide an answer to each security question.'),
+      }).required()
+    )
+    .length(3, 'You must answer all 3 security questions.')
+    .required(),
 });
