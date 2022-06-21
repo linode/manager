@@ -66,8 +66,8 @@ export const SecurityQuestionsSchema = object({
       object({
         question_id: number().required('You must pick a question.'),
         response: string()
-          .min(3, 'Answers must be at least 3 characters')
-          .max(17, 'Answers must be at most 17 characters')
+          .min(3, 'Answers must be at least 3 characters.')
+          .max(17, 'Answers must be at most 17 characters.')
           .required('You must provide an answer to each security question.'),
       }).required()
     )
