@@ -29,8 +29,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"esbuild src/*.ts src/**/index.ts --outdir=lib --watch --target=\"es6\" --format=\"cjs\" --platform=\"browser\" \"",
-    "build": "concurrently --raw \"tsc\" \"esbuild src/*.ts src/**/*.ts --outdir=lib --target=\"es6\" --format=\"cjs\" --platform=\"browser\" \"",
+    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"esbuild src/*.ts src/**/index.ts --outdir=lib --watch --target=\"es6\" --format=\"cjs\" \"",
+    "build": "concurrently --raw \"tsc\" \"esbuild src/*.ts src/**/*.ts --outdir=lib --target=\"es6\" --format=\"cjs\" --minify \"",
     "build:node": "yarn build",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
