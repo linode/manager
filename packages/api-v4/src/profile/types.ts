@@ -21,6 +21,7 @@ export interface Profile {
   authorized_keys: string[];
   two_factor_auth: boolean;
   restricted: boolean;
+  verified_phone_number: string | null;
 }
 
 export interface TokenRequest {
@@ -69,4 +70,32 @@ export interface ProfileLogin {
   ip: string;
   username: string;
   restricted: boolean;
+}
+
+export type SecurityQuestions = Record<string, string>;
+
+export interface VerifyVerificationCodePayload {
+  otp_code: string;
+}
+
+export interface SecurityQuestion {
+  id: number;
+  question: string;
+  response: string | null;
+}
+
+export interface SecurityQuestionsData {
+  security_questions: SecurityQuestion[];
+}
+
+export interface SecurityQuestionsPayload {
+  security_questions: {
+    question_id: number;
+    response: string;
+  }[];
+}
+
+export interface SendPhoneVerificationCodePayload {
+  phone_number: string;
+  iso_code: string;
 }

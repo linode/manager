@@ -7,6 +7,12 @@ import { queryPresets } from 'src/queries/base';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { AuthenticationSettings } from './AuthenticationSettings';
 
+jest.mock('libphonenumber-js', () => ({
+  parsePhoneNumber: () => ({
+    formatInternational: () => '',
+  }),
+}));
+
 const ALLOWLIST = 'allowlisting-form';
 
 const queryClient = new QueryClient({

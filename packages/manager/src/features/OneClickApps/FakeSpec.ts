@@ -363,7 +363,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Easypanel through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
       },
     ],
     related_info: [
@@ -700,7 +701,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying LiveSwitch through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
       },
     ],
     related_info: [
