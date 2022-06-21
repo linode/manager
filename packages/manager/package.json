@@ -232,6 +232,7 @@
     "prettier": "~2.2.1",
     "react-dev-utils": "^12.0.0-next.60",
     "redux-mock-store": "^1.5.3",
+    "regenerator-runtime": "^0.13.9",
     "reselect-tools": "^0.0.7",
     "source-map-loader": "^3.0.0",
     "storybook-react-router": "~1.0.8",
