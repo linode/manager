@@ -6,7 +6,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 import { preferencesFactory } from 'src/factories/preferences';
 
-describe('RebuildFromImage', () => {
+describe.skip('RebuildFromImage', () => {
   jest.mock('src/utilities/scrollErrorIntoView');
   jest.mock('src/components/EnhancedSelect/Select');
   jest.mock('src/hooks/useReduxLoad', () => ({
