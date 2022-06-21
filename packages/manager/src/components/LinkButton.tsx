@@ -24,6 +24,7 @@ interface Props {
   className?: string;
   children: React.ReactNode | string;
   onClick: () => void;
+  style?: React.CSSProperties;
 }
 
 export const LinkButton = (props: Props) => {
@@ -34,10 +35,12 @@ export const LinkButton = (props: Props) => {
     onClick,
     className,
     children,
+    style,
   } = props;
 
   const Button = () => (
     <button
+      style={style}
       className={classNames(
         {
           [classes.disabled]: isDisabled,

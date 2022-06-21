@@ -281,7 +281,7 @@ export const handlers = [
     await sleep(2000);
     return res(ctx.json({}));
   }),
-  rest.delete('*/account/phone-number', (req, res, ctx) => {
+  rest.delete('*/profile/phone-number', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   rest.get('*/profile/security-questions', (req, res, ctx) => {

@@ -3,10 +3,10 @@ import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import InputLabel from 'src/components/core/InputLabel';
 import Typography from 'src/components/core/Typography';
-import Button from 'src/components/Button';
+import { LinkButton } from 'src/components/LinkButton';
 
 interface Props {
-  questionResponse: SecurityQuestion;
+  questionResponse: SecurityQuestion | undefined;
   isReadOnly?: boolean;
   onClickEdit: () => void;
   options: Item<number>[];
@@ -46,19 +46,9 @@ export const Question = (props: Props) => {
         <InputLabel>{label}</InputLabel>
         <Typography variant="body1" style={{ fontSize: '0.875rem' }}>
           {questionResponse?.question}
-          <Button
-            buttonType="secondary"
-            compact
-            onClick={onClickEdit}
-            style={{
-              fontWeight: '400',
-              fontFamily: 'LatoWeb, sans-serif',
-              fontSize: '14px',
-              lineHeight: '18px',
-            }}
-          >
+          <LinkButton onClick={onClickEdit} style={{ marginLeft: 10 }}>
             Edit
-          </Button>
+          </LinkButton>
         </Typography>
       </>
     );

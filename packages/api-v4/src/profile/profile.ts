@@ -1,6 +1,7 @@
 import {
   SendCodeToPhoneNumberSchema,
   VerifyPhoneNumberCodeSchema,
+  SecurityQuestionsSchema,
 } from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
@@ -152,7 +153,7 @@ export const updateSecurityQuestions = (payload: SecurityQuestionsPayload) => {
   return Request<SecurityQuestionsPayload>(
     setURL(`${API_ROOT}/profile/security-questions`),
     setMethod('POST'),
-    setData(payload)
+    setData(payload, SecurityQuestionsSchema)
   );
 };
 
