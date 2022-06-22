@@ -1,15 +1,9 @@
+import * as React from 'react';
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import classNames from 'classnames';
-import * as React from 'react';
-import {
-  createStyles,
-  SvgIconProps,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { makeStyles, SvgIconProps, Theme } from 'src/components/core/styles';
 
 interface Props {
   errorText: string | JSX.Element;
@@ -19,54 +13,51 @@ interface Props {
   CustomIconStyles?: React.CSSProperties;
 }
 
-type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    width: '100%',
+    padding: theme.spacing(10),
+  },
+  compact: {
+    padding: theme.spacing(5),
+  },
+  cozy: {
+    padding: theme.spacing(1),
+  },
+  iconContainer: {
+    textAlign: 'center',
+  },
+  icon: {
+    marginBottom: theme.spacing(2),
+    color: theme.color.red,
+    width: 50,
+    height: 50,
+  },
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      padding: theme.spacing(10),
-    },
-    compact: {
-      padding: theme.spacing(5),
-    },
-    cozy: {
-      padding: theme.spacing(1),
-    },
-    iconContainer: {
-      textAlign: 'center',
-    },
-    icon: {
-      marginBottom: theme.spacing(2),
-      color: theme.color.red,
-      width: 50,
-      height: 50,
-    },
-  });
-
-const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
+const ErrorState = (props: Props) => {
   const { CustomIcon } = props;
+  const classes = useStyles();
   return (
     <Grid
       container
-      className={classNames({
-        [props.classes.root]: true,
-        [props.classes.compact]: props.compact,
-        [props.classes.cozy]: !!props.cozy,
+      className={classNames(classes.root, {
+        [classes.compact]: props.compact,
+        [classes.cozy]: !!props.cozy,
       })}
       justifyContent="center"
       alignItems="center"
     >
       <Grid item data-testid="error-state">
-        <div className={props.classes.iconContainer}>
+        <div className={classes.iconContainer}>
           {CustomIcon ? (
             <CustomIcon
-              className={props.classes.icon}
+              className={classes.icon}
               data-qa-error-icon
               style={props.CustomIconStyles}
             />
           ) : (
-            <ErrorOutline className={props.classes.icon} data-qa-error-icon />
+            <ErrorOutline className={classes.icon} data-qa-error-icon />
           )}
         </div>
         {typeof props.errorText === 'string' ? (
@@ -85,6 +76,4 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ErrorState);
+export default ErrorState;
