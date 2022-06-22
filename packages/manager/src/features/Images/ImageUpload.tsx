@@ -216,6 +216,9 @@ export const ImageUpload: React.FC<Props> = (props) => {
 
           <RegionSelect
             label="Region"
+            helperText="For fastest initial upload, select the region that is geographically
+            closest to you. Once uploaded you will be able to deploy the image
+            to other regions."
             errorText={errorMap.region}
             handleSelection={setRegion}
             regions={regions}
@@ -234,17 +237,12 @@ export const ImageUpload: React.FC<Props> = (props) => {
           ) : null}
 
           <Typography className={classes.helperText}>
-            For fastest initial upload, select the region that is geographically
-            closest to you. Once uploaded you will be able to deploy the image
-            to other regions. Image files must be raw disk images (.img)
-            compressed using gzip (.gz). The maximum file size is 5 GB
-            (compressed).
-            <>
-              <br />
-              <br />
-              Custom Images are billed at $0.10/GB per month based on the
-              uncompressed image size.
-            </>
+            Image files must be raw disk images (.img) compressed using gzip
+            (.gz). The maximum file size is 5 GB (compressed).
+            <br />
+            <br />
+            Custom Images are billed at $0.10/GB per month based on the
+            uncompressed image size.
           </Typography>
 
           <FileUploader
