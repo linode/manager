@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -9,7 +9,6 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   warning: {
     marginTop: theme.spacing(2),
     marginLeft: '0 !important',
@@ -53,7 +52,21 @@ const ConfirmToken: React.FC<CombinedProps> = (props) => {
         onChange={handleChange}
         data-qa-confirm-token
       />
-      <ActionsPanel>
+      {twoFactorConfirmed && (
+        <Notice
+          warning
+          spacingTop={16}
+          spacingBottom={8}
+          className={classes.warning}
+          text={
+            'Confirming a new key will invalidate codes generated from any previous key.'
+          }
+        />
+      )}
+      <Box display="flex" justifyContent="flex-end" style={{ gap: 16 }}>
+        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
+          Cancel
+        </Button>
         <Button
           buttonType="primary"
           onClick={onSubmit}
@@ -62,20 +75,7 @@ const ConfirmToken: React.FC<CombinedProps> = (props) => {
         >
           Confirm Token
         </Button>
-        <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
-          Cancel
-        </Button>
-        {twoFactorConfirmed && (
-          <Notice
-            warning
-            spacingTop={8}
-            className={classes.warning}
-            text={
-              'Confirming a new key will invalidate codes generated from any previous key.'
-            }
-          />
-        )}
-      </ActionsPanel>
+      </Box>
     </React.Fragment>
   );
 };

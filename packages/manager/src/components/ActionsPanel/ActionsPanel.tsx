@@ -31,7 +31,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   className?: string;
-  style?: any;
+  style?: React.CSSProperties;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

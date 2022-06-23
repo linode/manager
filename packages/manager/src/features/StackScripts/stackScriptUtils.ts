@@ -109,7 +109,9 @@ export const baseApps = {
   '985372': 'Joomla',
   '985380': 'Joplin',
   '985364': 'Prometheus & Grafana',
-  '985374': 'Ant Media Enterprise Edition'
+  '985374': 'Ant Media Enterprise Edition',
+  '1008123': 'Liveswitch',
+  '1008125': 'Easypanel',
 };
 
 const oneClickFilter = [

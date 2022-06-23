@@ -1,3 +1,13 @@
+## [2022-06-23] - v0.74.0
+
+### Added:
+- Types and methods for SMS phone number verification opt-in and opt-out
+- Types and methods for security question management
+
+### Changed
+- Add `verified_phone_number` field to `Profile` type
+
+
 ## [2022-06-13] - v0.73.0
 
 ### Added:

@@ -17,7 +17,7 @@ import { DismissedNotification } from 'src/store/preferences/preferences.actions
  * The options object allows you to specify the following options:
  * - prefix: a string prefix to use when generating the hash.
  *    The purpose of this is to dismiss the same notification in different contexts independently.
- * - expiry: all dismissed notifications are stale after 60 days, and will be cleaned up the next time
+ * - expiry: all dismissed notifications are stale after 45 days, and will be cleaned up the next time
  *    dismissNotifications is called. However, if expiry is specified, a notification that has been dismissed
  *    and is now past the expiry date will a) no longer be considered dismissed; and b) will be cleaned up
  *    on the next preferences() call as if stale (as described above).
@@ -25,7 +25,7 @@ import { DismissedNotification } from 'src/store/preferences/preferences.actions
  *    the preferences object.
  */
 
-export const STALE_DAYS = 60;
+export const STALE_DAYS = 45;
 
 export interface DismissibleNotificationOptions {
   prefix?: string;
@@ -97,7 +97,7 @@ const getHashKey = (notification: unknown, prefix: string = '') =>
  *  1. Adds the new notifications to the list of things that
  *     have been dismissed (or overrides it if the hashkey is
  *     already present)
- *  2. Removes any notifications older than 2 months (60 days).
+ *  2. Removes any notifications older than 1.5 months (45 days).
  *     We do this to prevent user preferences from turning into
  *     an ever-expanding blob of old notification hashes.
  */

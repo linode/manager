@@ -1,3 +1,8 @@
+import {
+  SendCodeToPhoneNumberSchema,
+  VerifyPhoneNumberCodeSchema,
+  SecurityQuestionsSchema,
+} from '@linode/validation/lib/profile.schema';
 import { updateProfileSchema } from '@linode/validation/lib/profile.schema';
 import { API_ROOT } from 'src/constants';
 import { Grants } from '../account';
@@ -9,7 +14,16 @@ import Request, {
   setXFilter,
 } from '../request';
 import { ResourcePage } from '../types';
-import { Profile, ProfileLogin, TrustedDevice, UserPreferences } from './types';
+import {
+  Profile,
+  ProfileLogin,
+  TrustedDevice,
+  UserPreferences,
+  SecurityQuestionsData,
+  SecurityQuestionsPayload,
+  SendPhoneVerificationCodePayload,
+  VerifyVerificationCodePayload,
+} from './types';
 
 /**
  * getProfile
@@ -115,5 +129,70 @@ export const getLogins = (params: any, filter: any) => {
     setMethod('GET'),
     setXFilter(filter),
     setParams(params)
+  );
+};
+
+/**
+ * getSecurityQuestions
+ *
+ * Retrieves an array of security questions for the current user.
+ */
+export const getSecurityQuestions = () => {
+  return Request<SecurityQuestionsData>(
+    setURL(`${API_ROOT}/profile/security-questions`),
+    setMethod('GET')
+  );
+};
+
+/**
+ * updateSecurityQuestions
+ *
+ * Updates the current user's security questions.
+ */
+export const updateSecurityQuestions = (payload: SecurityQuestionsPayload) => {
+  return Request<SecurityQuestionsPayload>(
+    setURL(`${API_ROOT}/profile/security-questions`),
+    setMethod('POST'),
+    setData(payload, SecurityQuestionsSchema)
+  );
+};
+
+/**
+ * smsOptOut
+ *
+ * Opts user out of SMS messaging
+ */
+export const smsOptOut = () => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number`),
+    setMethod('DELETE')
+  );
+};
+
+/**
+ * sendCodeToPhoneNumber
+ *
+ * Sends a one-time password via SMS to be used to verify a phone number.
+ */
+export const sendCodeToPhoneNumber = (
+  data: SendPhoneVerificationCodePayload
+) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number`),
+    setMethod('POST'),
+    setData(data, SendCodeToPhoneNumberSchema)
+  );
+};
+
+/**
+ * verifyPhoneNumberCode
+ *
+ * Verifies a one-time password sent using `sendCodeToPhoneNumber`.
+ */
+export const verifyPhoneNumberCode = (data: VerifyVerificationCodePayload) => {
+  return Request<{}>(
+    setURL(`${API_ROOT}/profile/phone-number/verify`),
+    setMethod('POST'),
+    setData(data, VerifyPhoneNumberCodeSchema)
   );
 };
