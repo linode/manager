@@ -2,9 +2,9 @@ import {
   createLongviewClient as _create,
   deleteLongviewClient as _delete,
   getLongviewClients,
-  LongviewClient,
   updateLongviewClient as update,
-} from '@linode/api-v4/lib/longview';
+} from '@linode/api-v4/lib/longview/longview';
+import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

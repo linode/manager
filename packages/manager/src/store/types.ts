@@ -1,4 +1,4 @@
-import { Entity as EventEntity, Event } from '@linode/api-v4/lib/account';
+import { Entity as EventEntity, Event } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';

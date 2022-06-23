@@ -1,0 +1,11 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "typescript"
+    },
+    "target": "es5"
+  },
+  "module": {
+    "type": "umd"
+  }
+}

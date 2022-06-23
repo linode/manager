@@ -12,7 +12,8 @@
     "README.md"
   ],
   "scripts": {
-    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"swc src -d lib -w\"",
+    "build": "concurrently --raw \"tsc\" \"swc src -d lib\"",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -37,6 +38,8 @@
     "@babel/plugin-transform-modules-commonjs": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.204",
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "babel-plugin-module-resolver": "^4.0.0",

@@ -29,8 +29,8 @@
     "yup": "^0.32.9"
   },
   "scripts": {
-    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\"",
-    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"swc src -d lib -w\"",
+    "build": "concurrently --raw \"tsc\" \"swc src -d lib\"",
     "build:node": "yarn build --config webpack.node.config.js",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
@@ -54,6 +54,8 @@
     "@babel/plugin-transform-modules-commonjs": "^7.10.1",
     "@babel/preset-env": "^7.10.2",
     "@babel/preset-typescript": "^7.10.1",
+    "@swc/cli": "^0.1.57",
+    "@swc/core": "^1.2.204",
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "axios-mock-adapter": "^1.18.1",

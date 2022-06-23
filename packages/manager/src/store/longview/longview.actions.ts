@@ -1,4 +1,4 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { LongviewClient } from '@linode/api-v4/lib/longview/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
 

@@ -1,8 +1,8 @@
 import {
-  AccountSettings,
   getAccountSettings,
   updateAccountSettings,
-} from '@linode/api-v4/lib/account';
+} from '@linode/api-v4/lib/account/account';
+import { AccountSettings } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { queryClient, queryPresets } from './base';

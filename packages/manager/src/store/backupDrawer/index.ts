@@ -1,5 +1,6 @@
 import * as Bluebird from 'bluebird';
-import { enableBackups, Linode } from '@linode/api-v4/lib/linodes';
+import { enableBackups } from '@linode/api-v4/lib/linodes/backups';
+import { Linode } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { isEmpty } from 'ramda';
 import { Reducer } from 'redux';
@@ -14,7 +15,7 @@ import {
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
 import { queryClient } from 'src/queries/base';
-import { updateAccountSettings } from '@linode/api-v4/lib';
+import { updateAccountSettings } from '@linode/api-v4/lib/account/account';
 
 export interface BackupError {
   linodeId: number;
