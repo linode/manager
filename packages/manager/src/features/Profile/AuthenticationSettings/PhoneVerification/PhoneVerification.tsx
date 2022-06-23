@@ -14,9 +14,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Link from 'src/components/Link';
 import { LinkButton } from 'src/components/LinkButton';
-import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { queryClient } from 'src/queries/base';
 import {
@@ -298,19 +296,6 @@ export const PhoneVerification = () => {
                   {sendPhoneVerificationCodeError[0].reason}
                 </FormHelperText>
               ) : null}
-              <Notice spacingTop={16} spacingBottom={0} spacingLeft={1} warning>
-                <Typography style={{ maxWidth: 600, fontSize: '0.875rem' }}>
-                  <b>
-                    Phone verification via SMS message is required for signup.
-                    By clicking Send Verification Code you are opting in to
-                    receive SMS messages. You can opt out of SMS messages after
-                    your phone number is verified.{' '}
-                    <Link to="https://www.linode.com/docs/guides/linode-manager-security-controls/">
-                      Learn more about security options.
-                    </Link>
-                  </b>
-                </Typography>
-              </Notice>
             </>
           )}
           <Box
