@@ -22,7 +22,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import FirewallRuleDrawer, { Mode } from './FirewallRuleDrawer';
 import curriedFirewallRuleEditorReducer, {
   editorStateToRules,
-  ExtendedFirewallRule,
   hasModified as _hasModified,
   initRuleEditorState,
   prepareRules,
@@ -228,24 +227,10 @@ const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
           } else {
             const { idx, category } = parsedError;
 
-            // Refer back to the prepared list of rules to get the actual index to set the error on.
-            // This may be different than the index returned by the API, since we don't send deleted
-            // rules in the PUT request (but we still have them in state).
-            const originalRule: ExtendedFirewallRule =
-              preparedRules[category][idx];
-
-            const originalIndex = originalRule.index;
-
-            if (originalIndex === undefined) {
-              return;
-            }
-
-            const dispatch = dispatchFromCategory(
-              parsedError.category as Category
-            );
+            const dispatch = dispatchFromCategory(category as Category);
             dispatch({
               type: 'SET_ERROR',
-              idx: originalIndex,
+              idx,
               error: parsedError,
             });
           }
