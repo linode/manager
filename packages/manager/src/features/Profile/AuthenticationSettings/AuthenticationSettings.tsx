@@ -16,6 +16,7 @@ import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
 import SecurityQuestions from './SecurityQuestions';
+import Link from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -98,10 +99,15 @@ export const AuthenticationSettings: React.FC = () => {
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
         <Typography variant="body1" className={classes.copy}>
-          Providing your phone number helps ensure you can securely access an
-          account in case the other ways to connect are lost. Your phone number
-          will only be used to verify your identity by sending an SMS message.
-          Standard carrier messaging fees may apply.
+          Adding a verified phone number to your account provides our team with
+          a secure method of verifying your access to your Linode user account.
+          Your phone number will only ever be used to verify your identity by
+          sending an SMS message. Standard carrier messaging fees may apply. By
+          clicking Send Verification Code you are opting in to receive SMS
+          messages. You may opt out at any time.{' '}
+          <Link to="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+            Learn more about security options.
+          </Link>
         </Typography>
         <PhoneVerification />
         <Divider spacingTop={22} spacingBottom={16} />
