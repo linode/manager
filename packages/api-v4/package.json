@@ -16,10 +16,10 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "main": "./index.node.js",
-  "browser": "./index.js",
+  "main": "./lib/index.js",
+  "browser": "./lib/index.js",
   "types": "./lib/index.d.ts",
-  "unpkg": "./index.js",
+  "unpkg": "./lib/index.js",
   "dependencies": {
     "@linode/validation": "0.11.1",
     "@types/yup": "^0.29.13",
@@ -39,12 +39,7 @@
     "precommit": "lint-staged"
   },
   "files": [
-    "index.js",
-    "index.node.js",
-    "index.d.ts",
-    "lib/*",
-    "package.json",
-    "README.md"
+    "lib"
   ],
   "devDependencies": {
     "@babel/cli": "^7.10.1",

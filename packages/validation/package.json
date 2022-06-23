@@ -2,14 +2,10 @@
   "name": "@linode/validation",
   "version": "0.11.1",
   "description": "Yup validation schemas for use with the Linode APIv4",
-  "main": "./index.js",
+  "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "index.js",
-    "index.d.ts",
-    "lib/*",
-    "package.json",
-    "README.md"
+    "lib"
   ],
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"swc src -d lib -w\"",
