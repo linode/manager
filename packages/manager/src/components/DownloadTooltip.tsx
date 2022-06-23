@@ -11,6 +11,7 @@ interface Props {
   className?: string;
   displayText?: string;
   onClickCallback?: () => void;
+  fileName: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,12 +50,12 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [copied, setCopied] = React.useState<boolean>(false);
 
-  const { text, className, displayText, onClickCallback } = props;
+  const { text, className, displayText, onClickCallback, fileName } = props;
 
   const handleIconClick = () => {
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1500);
-    downloadFile('file.txt', text);
+    downloadFile(`${fileName}.txt`, text);
     if (onClickCallback) {
       onClickCallback();
     }

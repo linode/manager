@@ -1,4 +1,5 @@
 import * as React from 'react';
+import _ from 'lodash';
 import CopyTooltip from 'src/components/CopyTooltip';
 import DownloadTooltip from 'src/components/DownloadTooltip';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -44,7 +45,11 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
         endAdornment: hideIcon ? undefined : (
           <>
             <CopyTooltip text={`${value}`} className={classes.copyIcon} />
-            <DownloadTooltip text={`${value}`} className={classes.copyIcon} />
+            <DownloadTooltip
+              text={`${value}`}
+              className={classes.copyIcon}
+              fileName={_.snakeCase(props.label)}
+            />
           </>
         ),
       }}
