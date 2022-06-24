@@ -57,7 +57,7 @@ export const CancelLanding: React.FC<{}> = () => {
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
         Your account is closed. We hope you&rsquo;ll consider Linode for your
-        cloud hosting needs.
+        future cloud hosting needs.
       </Typography>
       <Typography>
         Would you mind taking a brief survey? It will help us understand why
