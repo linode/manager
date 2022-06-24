@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-06-23] - v1.70.0
+
+### Added:
+- June 2022 Marketplace release
+- Security questions for account verification
+- Phone number SMS verification opt-in and opt-out
+
+### Changed:
+- Move Upload Image region text to tooltip
+- Enabling or resetting 2FA requires security questions to be answered
+- Clean up dismissed notifications more frequently in User Preferences
+
+### Fixed:
+- Show errors in Firewall rules table
+- Make notification badge a true circle
+
+
 ## [2022-06-13] - v1.69.0
 
 ### Added:
