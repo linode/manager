@@ -56,12 +56,12 @@ export const CancelLanding: React.FC<{}> = () => {
       <Logo className={classes.logo} />
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
-        Your account is closed. We hope you'll consider Linode for your future
+        Your account is closed. We hope you&rsquo;ll consider Linode for your
         cloud hosting needs.
       </Typography>
       <Typography>
         Would you mind taking a brief survey? It will help us understand why
-        you're leaving and what we can do better.
+        you&rsquo;re leaving and what we can do better.
       </Typography>
       <Button
         buttonType="primary"
