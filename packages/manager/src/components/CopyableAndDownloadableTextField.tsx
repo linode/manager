@@ -44,12 +44,12 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
       InputProps={{
         endAdornment: hideIcon ? undefined : (
           <>
-            <CopyTooltip text={`${value}`} className={classes.copyIcon} />
             <DownloadTooltip
               text={`${value}`}
               className={classes.copyIcon}
               fileName={_.snakeCase(props.label)}
             />
+            <CopyTooltip text={`${value}`} className={classes.copyIcon} />
           </>
         ),
       }}

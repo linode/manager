@@ -48,13 +48,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const DownloadTooltip: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const [copied, setCopied] = React.useState<boolean>(false);
 
   const { text, className, displayText, onClickCallback, fileName } = props;
 
   const handleIconClick = () => {
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1500);
     downloadFile(`${fileName}.txt`, text);
     if (onClickCallback) {
       onClickCallback();
@@ -62,9 +59,9 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
   };
 
   return (
-    <ToolTip title={copied ? 'Copied!' : 'Copy'} placement="top" data-qa-copied>
+    <ToolTip title={'Download'} placement="top" data-qa-copied>
       <button
-        aria-label={`Copy ${text} to clipboard`}
+        aria-label={`Download ${text}`}
         name={text}
         type="button"
         onClick={handleIconClick}
