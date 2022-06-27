@@ -10,7 +10,6 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import withImages, {
@@ -20,10 +19,8 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useGrants, useProfile } from 'src/queries/profile';
-import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { convertStorageUnit } from 'src/utilities/unitConversions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -184,11 +181,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const selectedDiskData: Disk | undefined = disks.find(
     (d) => `${d.id}` === selectedDisk
   );
-  const selectedDiskSizeInGB = convertStorageUnit(
-    'MB',
-    selectedDiskData?.size,
-    'GB'
-  );
 
   const isRawDisk = selectedDiskData?.filesystem === 'raw';
   const rawDiskWarning = (
@@ -264,12 +256,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           disabled={!canCreateImage}
           data-qa-disk-select
         />
-        {selectedDiskData?.size ? (
-          <Typography className={classes.helperText} variant="body1">
-            Estimated: {calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}
-            /month
-          </Typography>
-        ) : null}
       </Box>
       {isRawDisk ? rawDiskWarning : null}
       <>
