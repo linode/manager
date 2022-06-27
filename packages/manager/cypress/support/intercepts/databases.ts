@@ -79,9 +79,14 @@ export const mockGetDatabaseCredentials = (
  */
 export const mockUpdateDatabase = (
   id: number,
-  engine: string
+  engine: string,
+  responseData: any = {}
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', `*/databases/${engine}/instances/${id}`, {});
+  return cy.intercept(
+    'PUT',
+    `*/databases/${engine}/instances/${id}`,
+    responseData
+  );
 };
 
 /**
