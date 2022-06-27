@@ -363,7 +363,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Easypanel through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
       },
     ],
     related_info: [
@@ -632,6 +633,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/joplin_color.svg',
   },
   {
+    name: 'Kali Linux',
+    description: `Kali Linux is an open source, Debian-based Linux distribution that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
+    summary:
+      'Popular Linux distribution and tool suite for penetration testing and security research',
+    related_guides: [
+      {
+        title: 'Deploying Kali Linux through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/kalilinux',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.kali.org/',
+        href: 'https://www.kali.org/',
+      },
+    ],
+    logo_url: 'assets/kalilinux_color.svg',
+  },
+  {
     name: 'Kepler Builder',
     description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
     summary: 'Powerful drag & drop WordPress website builder',
@@ -700,7 +721,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying LiveSwitch through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
       },
     ],
     related_info: [

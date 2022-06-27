@@ -1,3 +1,11 @@
+## [2022-06-23] - v0.12.0
+
+### Added
+- `SendCodeToPhoneNumberSchema`
+- `VerifyPhoneNumberCodeSchema`
+- `SecurityQuestionsSchema`
+
+
 ## [2022-05-16] - v0.11.1
 
 ### Fixed
