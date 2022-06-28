@@ -154,7 +154,6 @@ describe('Update database clusters', () => {
     const newAllowedIp = randomIp();
     const engineType = randomItem(databaseTypes);
     const initialPassword = randomString(16);
-    const newPassword = randomString(16);
     const database = databaseFactory.build({
       id: randomNumber(1, 1000),
       type: 'g6-nanode-1',
