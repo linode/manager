@@ -9,7 +9,7 @@ import { getTickets } from '@linode/api-v4/lib/support';
  *
  * @example getTicketStatus('closed');
  */
-const getStatusFilter = (ticketStatus: 'open' | 'closed' | 'all') => {
+export const getStatusFilter = (ticketStatus: 'open' | 'closed' | 'all') => {
   switch (ticketStatus) {
     case 'open':
       return { '+or': [{ status: 'open' }, { status: 'new' }] };
