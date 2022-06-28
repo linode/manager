@@ -240,6 +240,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           availableLinodesToImagize,
         ]}
         isClearable={false}
+        required
       />
 
       <Box
@@ -254,6 +255,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           handleChange={handleDiskChange}
           updateFor={[disks, selectedDisk, diskError, classes]}
           disabled={!canCreateImage}
+          required
           data-qa-disk-select
         />
       </Box>
@@ -261,6 +263,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       <>
         <TextField
           label="Label"
+          required
           value={label}
           onChange={changeLabel}
           error={Boolean(labelError)}

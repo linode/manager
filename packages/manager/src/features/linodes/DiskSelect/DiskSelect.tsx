@@ -11,6 +11,7 @@ interface Props {
   selectedDisk: string | null;
   disabled?: boolean;
   handleChange: (disk: string | null) => void;
+  required?: boolean;
 }
 
 type CombinedProps = Props;
@@ -38,6 +39,7 @@ const DiskSelect: React.FC<CombinedProps> = (props) => {
     generalError,
     handleChange,
     selectedDisk,
+    required,
   } = props;
   const options = disksToOptions(disks);
   return (
@@ -51,6 +53,7 @@ const DiskSelect: React.FC<CombinedProps> = (props) => {
         handleChange(newDisk ? newDisk.value : null)
       }
       errorText={generalError || diskError}
+      required={required}
     />
   );
 };
