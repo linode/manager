@@ -10,6 +10,7 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import withImages, {
@@ -21,6 +22,7 @@ import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import Link from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -49,8 +51,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginBottom: theme.spacing(),
-    marginLeft: theme.spacing(1.5),
     whiteSpace: 'nowrap',
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -283,7 +285,13 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           data-qa-image-description
         />
       </>
-
+      <Typography variant="body1" className={classes.helperText}>
+        Custom Images are billed at $0.10/GB per month. Maximim file size is
+        6GB.{' '}
+        <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
+          Learn more about requirements and considerations.
+        </Link>
+      </Typography>
       <Box
         display="flex"
         justifyContent="flex-end"
