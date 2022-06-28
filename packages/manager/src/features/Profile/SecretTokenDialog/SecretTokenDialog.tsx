@@ -2,9 +2,11 @@ import * as React from 'react';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import { makeStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import Dialog from 'src/components/Dialog';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import CopyableAndDownloadableTextField from 'src/components/CopyableAndDownloadableTextField';
 import Box from 'src/components/core/Box';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
 
 interface Props {
   title: string;
@@ -27,21 +29,41 @@ const useStyles = makeStyles(() => ({
 
 type CombinedProps = Props;
 
+const renderActions = (onClose: () => void) => (
+  <ActionsPanel>
+    <Button
+      buttonType="secondary"
+      onClick={onClose}
+      data-qa-cancel
+      data-testid="dialog-cancel"
+    >
+      Cancel
+    </Button>
+    <Button
+      buttonType="primary"
+      onClick={onClose}
+      data-qa-confirm
+      data-testid="dialog-confirm"
+    >
+      I Have Saved My Keys
+    </Button>
+  </ActionsPanel>
+);
+
 export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { title, value, objectStorageKey, open, onClose } = props;
 
+  const actions = renderActions(onClose);
+
   return (
-    <Dialog
+    <ConfirmationDialog
       title={title}
       open={open}
-      onClose={(_, reason) => {
-        if (reason !== 'backdropClick') {
-          onClose();
-        }
-      }}
+      onClose={onClose}
       disableEscapeKeyDown
       maxWidth="sm"
+      actions={actions}
     >
       <Notice
         spacingTop={8}
@@ -82,7 +104,7 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
           />
         </Box>
       ) : null}
-    </Dialog>
+    </ConfirmationDialog>
   );
 };
 
