@@ -70,7 +70,7 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
         warning
         className={classes.noticeText}
         text={`${
-          objectStorageKey ? '' : 'Your keys have been generated.'
+          objectStorageKey ? 'Your keys have been generated.' : ''
         } For security purposes, we can only display your ${
           objectStorageKey ? 'secret key' : title.toLowerCase()
         } once, after which it can\u{2019}t be recovered. Be sure to keep it in a safe place.`}
