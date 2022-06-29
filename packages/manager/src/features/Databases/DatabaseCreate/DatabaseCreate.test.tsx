@@ -12,7 +12,7 @@ const queryClient = new QueryClient();
 const loadingTestId = 'circle-progress';
 
 beforeAll(() => mockMatchMedia());
-afterEach(() => {
+beforeEach(() => {
   queryClient.clear();
 });
 
