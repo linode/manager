@@ -119,6 +119,17 @@ export const TwoFactor: React.FC<Props> = (props) => {
   };
 
   const getToken = () => {
+    if (!hasSecurityQuestions) {
+      setErrors([
+        {
+          reason: `You must add Security Questions to your profile in order to ${
+            twoFactor ? 'reset' : 'enable'
+          } Two-Factor Authentication`,
+        },
+      ]);
+      return Promise.reject('Error');
+    }
+
     setLoading(true);
     return getTFAToken()
       .then((response) => {
@@ -126,29 +137,13 @@ export const TwoFactor: React.FC<Props> = (props) => {
         setLoading(false);
         setErrors(undefined);
       })
-      .catch((_error) => {
-        const error = getAPIErrorOrDefault(
-          _error,
-          'There was an error retrieving your secret key. Please try again.'
+      .catch((error) => {
+        setErrors(
+          getAPIErrorOrDefault(
+            error,
+            'There was an error retrieving your secret key. Please try again.'
+          )
         );
-
-        const securityQuestionsAPIError =
-          'You must add Security Questions to your profile in order to enable Two Factor Authentication';
-
-        if (
-          error.some((e) => e.reason === securityQuestionsAPIError) &&
-          twoFactorEnabled
-        ) {
-          // User does not have security questions but wants to reset their 2FA
-          setErrors([
-            {
-              reason:
-                'You must add Security Questions to your profile in order to reset Two-Factor Authentication',
-            },
-          ]);
-        } else {
-          setErrors(error);
-        }
 
         setLoading(false);
         return Promise.reject('Error');
