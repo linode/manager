@@ -13,7 +13,6 @@ import { queryKey } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
 import ScratchDialog from './ScratchCodeDialog';
@@ -127,16 +126,31 @@ export const TwoFactor: React.FC<Props> = (props) => {
         setLoading(false);
         setErrors(undefined);
       })
-      .catch((error) => {
-        setErrors(
-          getAPIErrorOrDefault(
-            error,
-            'There was an error retrieving your secret key. Please try again.'
-          )
+      .catch((_error) => {
+        const error = getAPIErrorOrDefault(
+          _error,
+          'There was an error retrieving your secret key. Please try again.'
         );
 
+        const securityQuestionsAPIError =
+          'You must add Security Questions to your profile in order to enable Two Factor Authentication';
+
+        if (
+          error.some((e) => e.reason === securityQuestionsAPIError) &&
+          twoFactorEnabled
+        ) {
+          // User does not have security questions but wants to reset their 2FA
+          setErrors([
+            {
+              reason:
+                'You must add Security Questions to your profile in order to reset Two-Factor Authentication',
+            },
+          ]);
+        } else {
+          setErrors(error);
+        }
+
         setLoading(false);
-        scrollErrorIntoView();
         return Promise.reject('Error');
       });
   };
