@@ -1,6 +1,8 @@
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';
+import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { promoFactory } from 'src/factories';
 import {
   renderWithTheme,
@@ -15,7 +17,9 @@ const accountBalanceValue = 'account-balance-value';
 describe('BillingSummary', () => {
   it('displays appropriate helper text and value when there is no balance', () => {
     renderWithTheme(
-      <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+      </PayPalScriptProvider>
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/no balance/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$0.00');
@@ -23,7 +27,13 @@ describe('BillingSummary', () => {
 
   it('displays a credit when there is a negative balance', () => {
     renderWithTheme(
-      <BillingSummary balance={-10} balanceUninvoiced={5} paymentMethods={[]} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary
+          balance={-10}
+          balanceUninvoiced={5}
+          paymentMethods={[]}
+        />
+      </PayPalScriptProvider>
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/credit/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
@@ -31,7 +41,13 @@ describe('BillingSummary', () => {
 
   it('displays the balance when there is a positive balance that is not yet past due', () => {
     renderWithTheme(
-      <BillingSummary balance={10} balanceUninvoiced={5} paymentMethods={[]} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary
+          balance={10}
+          balanceUninvoiced={5}
+          paymentMethods={[]}
+        />
+      </PayPalScriptProvider>
     );
     within(screen.getByTestId(accountBalanceText)).getByText(/Balance/gi);
     within(screen.getByTestId(accountBalanceValue)).getByText('$10.00');
@@ -39,17 +55,21 @@ describe('BillingSummary', () => {
 
   it('does not display the promotions section unless there are promos', async () => {
     const { rerender } = renderWithTheme(
-      <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+      </PayPalScriptProvider>
     );
     expect(screen.queryByText('Promotions')).not.toBeInTheDocument();
     rerender(
       wrapWithTheme(
-        <BillingSummary
-          balance={0}
-          balanceUninvoiced={5}
-          promotions={promoFactory.buildList(1)}
-          paymentMethods={[]}
-        />
+        <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+          <BillingSummary
+            balance={0}
+            balanceUninvoiced={5}
+            promotions={promoFactory.buildList(1)}
+            paymentMethods={[]}
+          />
+        </PayPalScriptProvider>
       )
     );
     expect(screen.getByText('Promotions'));
@@ -57,17 +77,19 @@ describe('BillingSummary', () => {
 
   it('renders promo summary, expiry, and credit remaining', () => {
     renderWithTheme(
-      <BillingSummary
-        balance={0}
-        balanceUninvoiced={5}
-        paymentMethods={[]}
-        promotions={promoFactory.buildList(1, {
-          summary: 'MY_PROMO_CODE',
-          credit_remaining: '15.50',
-          expire_dt: '2020-01-01T12:00:00',
-          credit_monthly_cap: '20.00',
-        })}
-      />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary
+          balance={0}
+          balanceUninvoiced={5}
+          paymentMethods={[]}
+          promotions={promoFactory.buildList(1, {
+            summary: 'MY_PROMO_CODE',
+            credit_remaining: '15.50',
+            expire_dt: '2020-01-01T12:00:00',
+            credit_monthly_cap: '20.00',
+          })}
+        />
+      </PayPalScriptProvider>
     );
     const getByTextWithMarkup = withMarkup(screen.getByText);
     screen.getByText('MY_PROMO_CODE');
@@ -95,14 +117,18 @@ describe('BillingSummary', () => {
 
   it('displays accrued charges', () => {
     renderWithTheme(
-      <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary balance={0} balanceUninvoiced={5} paymentMethods={[]} />
+      </PayPalScriptProvider>
     );
     within(screen.getByTestId('accrued-charges-value')).getByText('$5.00');
   });
 
   it('opens "Make a Payment" drawer when "Make a payment." is clicked', () => {
     const { getByText, getByTestId } = renderWithTheme(
-      <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <BillingSummary balance={5} balanceUninvoiced={5} paymentMethods={[]} />
+      </PayPalScriptProvider>
     );
 
     const paymentButton = getByText('Make a payment', { exact: false });
