@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
-import { useProfile } from 'src/queries/profile';
+import { useGrants } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 
@@ -23,14 +23,14 @@ export const usePaymentMethodsQuery = (params: any = {}, filter: any = {}) => {
 };
 
 export const useAllPaymentMethodsQuery = () => {
-  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   return useQuery<PaymentMethod[], APIError[]>(
     queryKey + '-all',
     getAllPaymentMethodsRequest,
     {
       ...queryPresets.oneTimeFetch,
-      enabled: !profile?.restricted,
+      enabled: grants?.global.account_access !== null,
     }
   );
 };
