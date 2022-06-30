@@ -51,8 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginBottom: theme.spacing(),
-    whiteSpace: 'nowrap',
     marginTop: theme.spacing(2),
+    width: '80%',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
 }));
 
@@ -286,8 +289,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         />
       </>
       <Typography variant="body1" className={classes.helperText}>
-        Custom Images are billed at $0.10/GB per month. Maximim file size is
-        6GB.{' '}
+        Custom Images are billed at $0.10/GB per month.{' '}
         <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
           Learn more about requirements and considerations.
         </Link>
