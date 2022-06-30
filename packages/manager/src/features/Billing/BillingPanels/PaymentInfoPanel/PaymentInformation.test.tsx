@@ -6,6 +6,12 @@ import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import PaymentInformation from './PaymentInformation';
 
+jest.mock('@linode/api-v4/lib/account', () => {
+  return {
+    getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
+  };
+});
+
 /*
  * Build payment method list that includes 1 valid and default payment method,
  * 2 valid non-default payment methods, and 1 expired payment method.

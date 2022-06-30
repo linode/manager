@@ -14,6 +14,12 @@ import BillingSummary from './BillingSummary';
 const accountBalanceText = 'account-balance-text';
 const accountBalanceValue = 'account-balance-value';
 
+jest.mock('@linode/api-v4/lib/account', () => {
+  return {
+    getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
+  };
+});
+
 describe('BillingSummary', () => {
   it('displays appropriate helper text and value when there is no balance', () => {
     renderWithTheme(
