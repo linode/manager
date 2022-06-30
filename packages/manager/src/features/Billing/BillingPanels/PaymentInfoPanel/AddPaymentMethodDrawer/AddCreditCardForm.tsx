@@ -5,7 +5,7 @@ import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { addPaymentMethod } from '@linode/api-v4/lib';
+import { addPaymentMethod } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import Notice from 'src/components/Notice';
 import { queryClient } from 'src/queries/base';

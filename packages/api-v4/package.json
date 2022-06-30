@@ -16,12 +16,25 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "main": "./index.node.js",
-  "browser": "./index.js",
-  "types": "./lib/index.d.ts",
-  "unpkg": "./index.js",
+  "type": "module",
+  "exports": {
+    "./lib/*": {
+			"import": "./lib/esm/index.js",
+			"default": "./lib/index.js"
+		}
+	},
+  "typesVersions": {
+    "*": {
+      "*": ["./lib/index.d.ts"]
+    }
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "module": "lib/esm/index.js",
+  "unpkg": "lib/iife/index.js",
+  "browser": "lib/iife/index.js",
   "dependencies": {
-    "@linode/validation": "0.11.1",
+    "@linode/validation": "file:../../packages/validation",
     "@types/yup": "^0.29.13",
     "axios": "~0.21.4",
     "ipaddr.js": "^2.0.0",
@@ -31,7 +44,7 @@
   "scripts": {
     "start": "tsup --watch",
     "build": "tsup",
-    "build:node": "yarn build --config webpack.node.config.js",
+    "build:node": "echo no longer need to do this",
     "test": "jest --config jestconfig.json",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
@@ -39,12 +52,7 @@
     "precommit": "lint-staged"
   },
   "files": [
-    "index.js",
-    "index.node.js",
-    "index.d.ts",
-    "lib/*",
-    "package.json",
-    "README.md"
+    "lib"
   ],
   "devDependencies": {
     "@babel/cli": "^7.10.1",

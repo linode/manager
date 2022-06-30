@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { addPromotion } from '@linode/api-v4/lib';
+import { addPromotion } from '@linode/api-v4/lib/account';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/account';
 import { useSnackbar } from 'notistack';

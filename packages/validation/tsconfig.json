@@ -12,7 +12,7 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
-    "declarationMap": true,
+    "declarationMap": true
   },
   "include": ["src"],
   "exclude": ["node_modules/**/*", "**/__tests__/*"]

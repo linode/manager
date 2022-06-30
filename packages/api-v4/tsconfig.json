@@ -11,7 +11,7 @@
     "strict": true,
     "baseUrl": ".",
     "noUnusedLocals": true,
-    "declarationMap": true,
+    "declarationMap": true
   },
   "include": [
     "src"

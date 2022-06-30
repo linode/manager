@@ -14,7 +14,7 @@ import {
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
 import { queryClient } from 'src/queries/base';
-import { updateAccountSettings } from '@linode/api-v4/lib';
+import { updateAccountSettings } from '@linode/api-v4/lib/account';
 
 export interface BackupError {
   linodeId: number;

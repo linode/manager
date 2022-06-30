@@ -8,7 +8,7 @@ import Chip from 'src/components/core/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
+import { makeDefaultPaymentMethod } from '@linode/api-v4/lib/account';
 import { useSnackbar } from 'notistack';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';
