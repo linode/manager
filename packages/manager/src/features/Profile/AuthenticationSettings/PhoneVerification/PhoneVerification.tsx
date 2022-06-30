@@ -42,8 +42,6 @@ export const PhoneVerification = () => {
   React.useEffect(() => {
     // If the user opts-out, hasVerifiedPhoneNumber will change, therefore
     // we need this component to update its state.
-    // This also handles going back to view mode when we mutate the
-    // profile store to have the new phone number on verification success
     if (isViewMode !== hasVerifiedPhoneNumber) {
       setIsViewMode(hasVerifiedPhoneNumber);
     }
@@ -94,8 +92,11 @@ export const PhoneVerification = () => {
       queryClient.invalidateQueries(queryKey);
     }
 
-    // reset form states (the useEffect will handle returning to view mode)
+    // reset form states
     reset();
+
+    // force the flow back into view mode
+    setIsViewMode(true);
 
     enqueueSnackbar('Successfully verified phone number', {
       variant: 'success',
