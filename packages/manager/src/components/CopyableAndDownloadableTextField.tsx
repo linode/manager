@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = TextFieldProps & {
   className?: string;
   hideIcon?: boolean;
+  fileName?: string;
 };
 
 type CombinedProps = Props;
@@ -34,6 +35,8 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
 ) => {
   const classes = useStyles();
   const { value, className, hideIcon, ...restProps } = props;
+
+  const fileName = props.fileName ?? _.snakeCase(props.label);
 
   return (
     <TextField
@@ -47,7 +50,7 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
             <DownloadTooltip
               text={`${value}`}
               className={classes.copyIcon}
-              fileName={_.snakeCase(props.label)}
+              fileName={fileName}
             />
             <CopyTooltip text={`${value}`} className={classes.copyIcon} />
           </>
