@@ -231,6 +231,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
                     warning
                     text={needSecurityQuestionsCopy}
                     style={{ marginTop: '8px' }}
+                    typeProps={{ style: { fontSize: '0.875rem' } }}
                   />
                 )}
                 {twoFactorEnabled && (
