@@ -37,7 +37,7 @@ const renderActions = (onClose: () => void) => (
       data-qa-cancel
       data-testid="dialog-cancel"
     >
-      Cancel
+      Close
     </Button>
     <Button
       buttonType="primary"
