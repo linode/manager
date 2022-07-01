@@ -30,7 +30,7 @@ export const useAllPaymentMethodsQuery = () => {
     getAllPaymentMethodsRequest,
     {
       ...queryPresets.oneTimeFetch,
-      enabled: grants?.global.account_access !== null,
+      enabled: grants?.global?.account_access !== null,
     }
   );
 };
