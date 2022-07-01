@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-07-01] - v1.70.1
+
+### Fixed:
+- Banner text wrapping for certain viewport widths
+
 ## [2022-06-23] - v1.70.0
 
 ### Added:
