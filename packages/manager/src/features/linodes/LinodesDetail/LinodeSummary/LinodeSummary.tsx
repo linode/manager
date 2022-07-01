@@ -14,6 +14,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import {
   STATS_NOT_READY_API_MESSAGE,
   STATS_NOT_READY_MESSAGE,
@@ -99,10 +100,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
 
-  const [dimensions, setDimensions] = React.useState({
-    height: window.innerHeight,
-    width: window.innerWidth,
-  });
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
 
   const options = getDateOptions(linodeCreated);
   const [rangeSelection, setRangeSelection] = React.useState('24');
@@ -153,22 +151,8 @@ const LinodeSummary: React.FC<Props> = (props) => {
   ).current;
 
   React.useEffect(() => {
-    const handleWindowResize = () => {
-      setDimensions({
-        height: window.innerHeight,
-        width: window.innerWidth,
-      });
-
-      debouncedRefetchLinodeStats();
-    };
-
-    // eslint-disable-next-line scanjs-rules/call_addEventListener
-    window.addEventListener('resize', handleWindowResize);
-
-    return () => {
-      window.removeEventListener('resize', handleWindowResize);
-    };
-  }, [dimensions, debouncedRefetchLinodeStats]);
+    debouncedRefetchLinodeStats();
+  }, [windowWidth, windowHeight, debouncedRefetchLinodeStats]);
 
   const renderCPUChart = () => {
     const data = stats?.data.cpu ?? [];
