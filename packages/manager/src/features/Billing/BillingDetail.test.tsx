@@ -5,7 +5,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import { history, match, mockLocation } from 'src/__data__/reactRouterProps';
 import { BillingDetail } from './BillingDetail';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+jest.mock('@linode/api-v4', () => {
   return {
     getInvoices: jest.fn().mockResolvedValue({
       results: 2,

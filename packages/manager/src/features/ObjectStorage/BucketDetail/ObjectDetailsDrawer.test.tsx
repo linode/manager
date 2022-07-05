@@ -3,7 +3,7 @@ import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import ObjectDetailsDrawer, { Props } from './ObjectDetailsDrawer';
 
-jest.mock('@linode/api-v4/lib/object-storage/objects', () => {
+jest.mock('@linode/api-v4', () => {
   return {
     getObjectACL: jest.fn().mockResolvedValue({
       acl: 'public-read',

@@ -9,15 +9,12 @@ import {
 } from './RebuildFromStackScript';
 import { preferencesFactory } from 'src/factories/preferences';
 
-const request = jest.requireMock('@linode/api-v4/lib/account');
-
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn(),
+jest.mock('@linode/api-v4', () => ({
+  getUsers: async () => [],
+  getStackScripts: async () => [],
 }));
 
 const images = normalizeEntities(imageFactory.buildList(10));
-
-request.getUsers = jest.fn().mockResolvedValue([]);
 
 const props: CombinedProps = {
   type: 'community',
