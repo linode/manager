@@ -4,7 +4,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import Link from 'src/components/Link';
@@ -109,18 +108,8 @@ export const Row: React.FC<RowProps> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
-        <Typography data-qa-event-message variant="body1">
-          {link ? (
-            <Link to={link}>
-              <HighlightedMarkdown
-                textOrMarkdown={displayedMessage}
-                sanitizeOptions={{
-                  allowedTags: [],
-                  disallowedTagsMode: 'discard',
-                }}
-              />
-            </Link>
-          ) : (
+        {link ? (
+          <Link to={link}>
             <HighlightedMarkdown
               textOrMarkdown={displayedMessage}
               sanitizeOptions={{
@@ -128,8 +117,16 @@ export const Row: React.FC<RowProps> = (props) => {
                 disallowedTagsMode: 'discard',
               }}
             />
-          )}
-        </Typography>
+          </Link>
+        ) : (
+          <HighlightedMarkdown
+            textOrMarkdown={displayedMessage}
+            sanitizeOptions={{
+              allowedTags: [],
+              disallowedTagsMode: 'discard',
+            }}
+          />
+        )}
       </TableCell>
       <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}
