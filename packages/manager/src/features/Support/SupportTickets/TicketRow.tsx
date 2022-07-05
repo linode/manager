@@ -60,10 +60,10 @@ const TicketRow: React.FC<Props> = ({ ticket }) => {
         <TableCell data-qa-support-date>
           <DateTimeDisplay value={ticket.opened} />
         </TableCell>
-        <TableCell data-qa-support-updated>
-          <DateTimeDisplay value={ticket.updated} />
-        </TableCell>
       </Hidden>
+      <TableCell data-qa-support-updated>
+        <DateTimeDisplay value={ticket.updated} />
+      </TableCell>
       <Hidden smDown>
         <TableCell data-qa-support-updated-by>{ticket.updated_by}</TableCell>
       </Hidden>
