@@ -289,12 +289,11 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         />
       </>
       <Typography variant="body1" className={classes.helperText}>
-        Custom Images are billed at $0.10/GB per month. Learn about requirements
-        and considerations.{' '}
+        Custom Images are billed at $0.10/GB per month.{' '}
         <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
           Learn more about requirements and considerations.{' '}
         </Link>
-        For information about how to check and clean a Linux system's disk
+        For information about how to check and clean a Linux system&rsquo;s disk
         space,{' '}
         <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
           read this guide.
