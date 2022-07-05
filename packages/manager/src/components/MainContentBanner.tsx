@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'center',
   },
   header: {
+    width: '65%',
+    [theme.breakpoints.down('sm')]: {
+      width: '90%',
+    },
     color: '#fff',
     textAlign: 'center',
     [theme.breakpoints.only('xs')]: {
