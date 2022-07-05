@@ -1,4 +1,4 @@
-import { Config, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Config, LinodeType } from '@linode/api-v4';
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';

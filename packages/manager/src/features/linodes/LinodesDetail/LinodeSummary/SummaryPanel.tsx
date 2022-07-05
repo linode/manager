@@ -1,6 +1,6 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Image } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';

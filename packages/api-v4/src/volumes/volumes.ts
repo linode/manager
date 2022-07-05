@@ -3,7 +3,7 @@ import {
   CreateVolumeSchema,
   ResizeVolumeSchema,
   UpdateVolumeSchema,
-} from '@linode/validation/lib/volumes.schema';
+} from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,

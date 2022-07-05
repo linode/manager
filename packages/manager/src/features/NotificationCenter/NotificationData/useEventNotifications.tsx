@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account/types';
+import { Event, EventAction } from '@linode/api-v4';
 import { partition } from 'ramda';
 import * as React from 'react';
 import useEvents from 'src/hooks/useEvents';

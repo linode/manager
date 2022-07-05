@@ -1,5 +1,5 @@
-import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Disk, getLinodeDisks, Linode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { makeStyles } from '@material-ui/styles';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';

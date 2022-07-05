@@ -1,9 +1,9 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import { Disk } from '@linode/api-v4';
 import {
   CreateLinodeDiskSchema,
   CreateLinodeDiskFromImageSchema,
   ResizeLinodeDiskSchema,
-} from '@linode/validation/lib/linodes.schema';
+} from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';

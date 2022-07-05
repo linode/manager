@@ -1,4 +1,4 @@
-import { APIWarning } from '@linode/api-v4/lib/types';
+import { APIWarning } from '@linode/api-v4';
 import classNames from 'classnames';
 import { VariantType } from 'notistack';
 import * as React from 'react';

@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';

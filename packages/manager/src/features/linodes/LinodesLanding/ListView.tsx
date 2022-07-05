@@ -1,5 +1,5 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Image } from '@linode/api-v4';
+import { Config } from '@linode/api-v4';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';

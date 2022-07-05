@@ -1,4 +1,4 @@
-import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { LinodeStatus } from '@linode/api-v4';
 import { reportException } from 'src/exceptionReporting';
 
 export const parseMaintenanceStartTime = (startTime?: string | null) => {

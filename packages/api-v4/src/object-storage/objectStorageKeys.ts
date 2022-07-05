@@ -1,4 +1,4 @@
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+import { createObjectStorageKeysSchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

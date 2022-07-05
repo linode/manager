@@ -1,6 +1,6 @@
-import { getLinodeFirewalls } from '@linode/api-v4/lib/linodes';
-import { Firewall } from '@linode/api-v4/lib/firewalls/types';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { getLinodeFirewalls } from '@linode/api-v4';
+import { Firewall } from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 

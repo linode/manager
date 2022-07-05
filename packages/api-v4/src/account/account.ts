@@ -1,7 +1,7 @@
 import {
   updateAccountSchema,
   UpdateAccountSettingsSchema,
-} from '@linode/validation/lib/account.schema';
+} from '@linode/validation';
 import { API_ROOT, BETA_API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from 'src/request';
 import {

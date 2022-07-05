@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
@@ -6,7 +6,7 @@ import {
   UpdateVolumeRequest,
   Volume,
   VolumeRequestPayload,
-} from '@linode/api-v4/lib/volumes';
+} from '@linode/api-v4';
 import { GetAllData } from 'src/utilities/getAll';
 import { actionCreatorFactory } from 'typescript-fsa';
 

@@ -1,4 +1,4 @@
-import { NetworkUtilization } from '@linode/api-v4/lib/account';
+import { NetworkUtilization } from '@linode/api-v4';
 import {
   CreateLinodeRequest,
   Linode,
@@ -9,7 +9,7 @@ import {
   NetStats,
   Stats,
   StatsData,
-} from '@linode/api-v4/lib/linodes/types';
+} from '@linode/api-v4';
 import * as Factory from 'factory.ts';
 
 export const linodeAlertsFactory = Factory.Sync.makeFactory<LinodeAlerts>({

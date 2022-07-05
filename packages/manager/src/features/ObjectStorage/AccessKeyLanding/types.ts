@@ -1,4 +1,4 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage/types';
+import { ObjectStorageKey } from '@linode/api-v4';
 
 export type MODE = 'creating' | 'editing' | 'viewing';
 

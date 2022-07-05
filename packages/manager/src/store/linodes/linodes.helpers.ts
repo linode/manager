@@ -1,5 +1,5 @@
-import { AccountMaintenance, Notification } from '@linode/api-v4/lib/account';
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { AccountMaintenance, Notification } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
 
 // @todo: Delete this type and function after release and merge to develop.
 type Type = 'reboot-scheduled' | 'migration-pending';

@@ -1,4 +1,4 @@
-import { Domain } from '@linode/api-v4/lib/domains';
+import { Domain } from '@linode/api-v4';
 import { has } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

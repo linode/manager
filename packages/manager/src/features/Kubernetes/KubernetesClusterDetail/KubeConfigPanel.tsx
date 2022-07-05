@@ -1,5 +1,5 @@
-import { getKubeConfig } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getKubeConfig } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

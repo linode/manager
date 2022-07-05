@@ -1,6 +1,6 @@
-import { User, getUsers } from '@linode/api-v4/lib/account';
-import { ResourcePage } from '@linode/api-v4/lib/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { User, getUsers } from '@linode/api-v4';
+import { ResourcePage } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 import { map as mapPromise } from 'bluebird';

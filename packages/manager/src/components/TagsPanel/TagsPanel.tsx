@@ -1,4 +1,4 @@
-import { getTags } from '@linode/api-v4/lib/tags';
+import { getTags } from '@linode/api-v4';
 import classNames from 'classnames';
 import { clone } from 'ramda';
 import * as React from 'react';

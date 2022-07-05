@@ -1,5 +1,5 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Image } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

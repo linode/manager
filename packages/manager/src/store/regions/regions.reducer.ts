@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { Region } from '@linode/api-v4';
 import produce from 'immer';
 import { Reducer } from 'redux';
 import regions from 'src/cachedData/regions.json';

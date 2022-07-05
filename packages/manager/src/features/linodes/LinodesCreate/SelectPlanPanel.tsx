@@ -1,6 +1,6 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
-import { Capabilities } from '@linode/api-v4/lib/regions/types';
+import { Engine } from '@linode/api-v4';
+import { LinodeTypeClass } from '@linode/api-v4';
+import { Capabilities } from '@linode/api-v4';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
 import { isEmpty, pathOr } from 'ramda';

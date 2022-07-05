@@ -1,5 +1,5 @@
 import { fireEvent, waitFor } from '@testing-library/react';
-import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { LongviewClient } from '@linode/api-v4';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {

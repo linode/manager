@@ -1,5 +1,5 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Event } from '@linode/api-v4';
+import { LinodeBackups, LinodeStatus } from '@linode/api-v4';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';

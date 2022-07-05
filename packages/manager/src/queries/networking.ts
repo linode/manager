@@ -1,5 +1,5 @@
-import { getIPv6Ranges, IPRange } from '@linode/api-v4/lib/networking';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { getIPv6Ranges, IPRange } from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 

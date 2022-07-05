@@ -1,4 +1,4 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageKey } from '@linode/api-v4';
 
 export const objectStorageKey1: ObjectStorageKey = {
   id: 1,

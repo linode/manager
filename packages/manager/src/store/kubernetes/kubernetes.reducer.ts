@@ -1,4 +1,4 @@
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
+import { KubernetesCluster } from '@linode/api-v4';
 import { Reducer } from 'redux';
 import {
   createDefaultState,

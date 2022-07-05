@@ -1,4 +1,4 @@
-import { DomainRecord, DomainType } from '@linode/api-v4/lib/domains';
+import { DomainRecord, DomainType } from '@linode/api-v4';
 
 export const isValidDomainRecord = (
   hostname: string,

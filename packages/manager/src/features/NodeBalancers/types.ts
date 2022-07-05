@@ -3,8 +3,8 @@ import {
   NodeBalancerConfigPort,
   NodeBalancerConfigNodeMode,
   NodeBalancerProxyProtocol,
-} from '@linode/api-v4/lib/nodebalancers/types';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 
 export interface ExtendedNodeBalancerConfigNode {
   id: number;

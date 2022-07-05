@@ -1,4 +1,4 @@
-import { DiskDevice, VolumeDevice } from '@linode/api-v4/lib/linodes';
+import { DiskDevice, VolumeDevice } from '@linode/api-v4';
 import { compose, reduce, toPairs } from 'ramda';
 
 import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';

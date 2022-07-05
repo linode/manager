@@ -2,7 +2,7 @@
  * @file Cypress intercepts and mocks for Cloud Manager DBaaS operations.
  */
 
-import { Database } from '@linode/api-v4/lib/databases/types';
+import { Database } from '@linode/api-v4';
 import { makeErrorResponse } from 'support/util/errors';
 
 /**

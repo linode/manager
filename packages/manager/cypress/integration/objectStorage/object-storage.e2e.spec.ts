@@ -2,7 +2,7 @@
  * @file End-to-end tests for Object Storage operations.
  */
 
-import { createBucket } from '@linode/api-v4/lib/object-storage';
+import { createBucket } from '@linode/api-v4';
 import { objectStorageBucketFactory } from 'src/factories';
 import { authenticate } from 'support/api/authentication';
 import {

@@ -4,7 +4,7 @@ import {
   KubernetesEndpointResponse,
   KubeNodePoolResponse,
   PoolNodeResponse,
-} from '@linode/api-v4/lib/kubernetes/types';
+} from '@linode/api-v4';
 import {
   ExtendedCluster,
   PoolNodeWithPrice,

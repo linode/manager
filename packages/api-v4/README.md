@@ -36,7 +36,7 @@ If you would like more fine-grained control, this library is built on top of [th
 you can use to attach interceptors:
 
 ```js
-import { baseRequest } from '@linode/api-v4/lib/request';
+import { baseRequest } from '@linode/api-v4';
 
 /**
  * intercepts every request with the following config
@@ -59,7 +59,7 @@ baseRequest.interceptors.request.use((config) => {
 /** index.js */
 
 import './request';
-import { getAccount } from '@linode/api-v4/lib/account';
+import { getAccount } from '@linode/api-v4';
 
 getAccount()
   .then((response) => {
@@ -94,7 +94,7 @@ All methods are exposed from the SDK root, but we also support tree shaking:
 
 ```js
 import { getLinodes } from '@linode/api-v4'; // This is fine
-import { getLinodes } from '@linode/api-v4/lib/linodes'; // This works too
+import { getLinodes } from '@linode/api-v4'; // This works too
 ```
 
 #### Important note about imports
@@ -103,13 +103,13 @@ If you are using interceptors on the base request, you should keep your import p
 
 ```js
 import { baseRequest } from '@linode/api-v4';
-import { getLinodes } from '@linode/api-v4/lib/linodes';
+import { getLinodes } from '@linode/api-v4';
 
 baseRequest.interceptors.use(customInterceptor);
 getLinodes(); // customInterceptor not called!
 
 // To fix, change the first import to:
-// import { baseRequest } from '@linode/api-v4/lib/request';
+// import { baseRequest } from '@linode/api-v4';
 //
 // (or, import getLinodes from '@linode/api-v4')
 ```
@@ -120,7 +120,7 @@ APIv4 supports [pagination](https://developers.linode.com/api/v4/#pagination) an
 of pages, and total number of results in the response:
 
 ```js
-import { getLinodes } from '@linode/api-v4/lib/linodes';
+import { getLinodes } from '@linode/api-v4';
 
 getLinodes().then((response) => {
   console.log(response);
@@ -157,13 +157,13 @@ This library comes with TypeScript definitions so no need to write your own or f
 Most types can be imported from their corresponding pathname. For instance:
 
 ```js
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4';
 ```
 
 More general types (such as the error shape that comes back from the Linode APIv4) can be found in the `/types` directory:
 
 ```js
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 ```
 
 You can also import from the root if preferred:

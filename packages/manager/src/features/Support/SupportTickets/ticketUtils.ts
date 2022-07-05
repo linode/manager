@@ -1,4 +1,4 @@
-import { getTickets } from '@linode/api-v4/lib/support';
+import { getTickets } from '@linode/api-v4';
 
 /**
  * getStatusFilter

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
 
 export interface DefaultProps {

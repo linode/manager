@@ -1,5 +1,5 @@
-import { getTags } from '@linode/api-v4/lib/tags';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getTags } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { concat } from 'ramda';
 import * as React from 'react';
 import Select, {

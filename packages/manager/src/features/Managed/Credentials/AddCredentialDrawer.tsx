@@ -1,4 +1,4 @@
-import { CredentialPayload } from '@linode/api-v4/lib/managed';
+import { CredentialPayload } from '@linode/api-v4';
 import { Formik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

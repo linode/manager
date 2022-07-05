@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
+import { AccountMaintenance } from '@linode/api-v4';
 import { pickRandom, randomDate } from 'src/utilities/random';
 
 export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMaintenance>(

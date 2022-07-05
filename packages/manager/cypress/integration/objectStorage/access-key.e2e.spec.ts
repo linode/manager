@@ -4,7 +4,7 @@
 
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';
 import { authenticate } from 'support/api/authentication';
-import { createBucket } from '@linode/api-v4/lib/object-storage';
+import { createBucket } from '@linode/api-v4';
 import {
   interceptGetAccessKeys,
   interceptCreateAccessKey,

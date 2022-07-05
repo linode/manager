@@ -1,5 +1,5 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { getVolumes, Volume } from '@linode/api-v4/lib/volumes';
+import { Grant } from '@linode/api-v4';
+import { getVolumes, Volume } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';

@@ -1,5 +1,5 @@
-import { Image, ImageStatus } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Image, ImageStatus } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { partition } from 'ramda';

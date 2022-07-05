@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { LinodeType } from '@linode/api-v4';
 
 export const titlecase = (string: string): string => {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;

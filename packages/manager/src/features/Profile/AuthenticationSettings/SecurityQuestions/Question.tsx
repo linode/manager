@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { SecurityQuestion } from '@linode/api-v4/lib/profile';
+import { SecurityQuestion } from '@linode/api-v4';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import InputLabel from 'src/components/core/InputLabel';
 import Typography from 'src/components/core/Typography';

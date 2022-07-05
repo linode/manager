@@ -1,5 +1,5 @@
-import { Database } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Database } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';

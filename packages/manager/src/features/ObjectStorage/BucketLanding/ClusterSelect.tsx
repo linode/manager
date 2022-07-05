@@ -1,5 +1,5 @@
-import { ObjectStorageCluster } from '@linode/api-v4/lib/object-storage';
-import { Region } from '@linode/api-v4/lib/regions';
+import { ObjectStorageCluster } from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
 import * as React from 'react';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect/RegionSelect';

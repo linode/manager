@@ -1,5 +1,5 @@
-import { getSSLFields } from '@linode/api-v4/lib/databases/databases';
-import { Database, SSLFields } from '@linode/api-v4/lib/databases/types';
+import { getSSLFields } from '@linode/api-v4';
+import { Database, SSLFields } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import DownloadIcon from 'src/assets/icons/lke-download.svg';

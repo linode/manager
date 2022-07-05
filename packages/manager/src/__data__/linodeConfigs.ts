@@ -1,4 +1,4 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4';
 
 export const linodeConfigs: Config[] = [
   {

@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4';
 
 /**
  * getLinodeInfo

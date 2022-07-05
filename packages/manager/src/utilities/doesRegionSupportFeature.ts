@@ -1,4 +1,4 @@
-import { Region, Capabilities } from '@linode/api-v4/lib/regions';
+import { Region, Capabilities } from '@linode/api-v4';
 
 export const doesRegionSupportFeature = (
   region: string,

@@ -3,8 +3,8 @@ import {
   createContact,
   ManagedContact,
   updateContact,
-} from '@linode/api-v4/lib/managed';
-import { createContactSchema } from '@linode/validation/lib/managed.schema';
+} from '@linode/api-v4';
+import { createContactSchema } from '@linode/validation';
 import { Formik, FormikHelpers } from 'formik';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';

@@ -1,10 +1,10 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4';
 import {
   shareAddresses,
   shareAddressesv4,
   IPRangeInformation,
-} from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';

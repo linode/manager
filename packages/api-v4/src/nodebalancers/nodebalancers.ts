@@ -1,7 +1,7 @@
 import {
   NodeBalancerSchema,
   UpdateNodeBalancerSchema,
-} from '@linode/validation/lib/nodebalancers.schema';
+} from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,

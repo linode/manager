@@ -1,9 +1,9 @@
-import { Domain } from '@linode/api-v4/lib/domains/types';
-import { Image } from '@linode/api-v4/lib/images/types';
-import { Firewall } from '@linode/api-v4/lib/firewalls/types';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Domain } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
+import { Firewall } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { OrderByProps } from 'src/components/OrderBy';
 // eslint-disable-next-line
 export type Handlers = Record<string, Function>;

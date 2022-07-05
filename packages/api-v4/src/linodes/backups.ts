@@ -1,4 +1,4 @@
-import { CreateSnapshotSchema } from '@linode/validation/lib/linodes.schema';
+import { CreateSnapshotSchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { LinodeBackup, LinodeBackupsResponse } from './types';

@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import backups, * as B from './index';
 
 import { linode1 } from 'src/__data__/linodes';

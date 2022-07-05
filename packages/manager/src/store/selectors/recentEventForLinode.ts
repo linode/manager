@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import { useSelector } from 'react-redux';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';

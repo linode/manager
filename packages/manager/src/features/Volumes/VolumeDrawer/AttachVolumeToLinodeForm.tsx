@@ -1,6 +1,6 @@
 import { Formik } from 'formik';
-import { Grant } from '@linode/api-v4/lib/account';
-import { attachVolume } from '@linode/api-v4/lib/volumes';
+import { Grant } from '@linode/api-v4';
+import { attachVolume } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

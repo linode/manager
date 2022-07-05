@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { DNSResolvers, Region } from '@linode/api-v4/lib/regions/types';
+import { DNSResolvers, Region } from '@linode/api-v4';
 import { dcDisplayNames } from 'src/constants';
 
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({

@@ -1,4 +1,4 @@
-import { AccessType, Scope } from '@linode/api-v4/lib/object-storage/types';
+import { AccessType, Scope } from '@linode/api-v4';
 import { update } from 'ramda';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';

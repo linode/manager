@@ -1,5 +1,5 @@
-import { Database, UpdatesSchedule } from '@linode/api-v4/lib/databases';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Database, UpdatesSchedule } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
@@ -16,7 +16,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import { useDatabaseMutation } from 'src/queries/databases';
-// import { updateDatabaseSchema } from '@linode/validation/src/databases.schema';
+// import { updateDatabaseSchema } from '@linode/validation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   topSection: {

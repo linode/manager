@@ -1,8 +1,5 @@
-import {
-  NodeBalancerConfig,
-  NodeBalancerConfigNode,
-} from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { NodeBalancerConfig, NodeBalancerConfigNode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';

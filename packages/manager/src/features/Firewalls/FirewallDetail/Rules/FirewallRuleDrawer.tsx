@@ -2,7 +2,7 @@ import {
   FirewallPolicyType,
   FirewallRuleProtocol,
   FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls';
+} from '@linode/api-v4';
 import { Formik, FormikProps } from 'formik';
 import { parse as parseIP, parseCIDR } from 'ipaddr.js';
 import { uniq } from 'ramda';

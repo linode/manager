@@ -1,4 +1,4 @@
-import { ManagedContact } from '@linode/api-v4/lib/managed';
+import { ManagedContact } from '@linode/api-v4';
 
 export const contact1: ManagedContact = {
   id: 1,

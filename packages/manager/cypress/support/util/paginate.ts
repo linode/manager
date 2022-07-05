@@ -1,4 +1,4 @@
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { ResourcePage } from '@linode/api-v4';
 import { Response } from 'support/util/response';
 
 /**

@@ -1,4 +1,4 @@
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
+import { NodeBalancer } from '@linode/api-v4';
 import { Reducer } from 'redux';
 import {
   EntityError,

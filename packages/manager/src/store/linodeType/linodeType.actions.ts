@@ -1,5 +1,5 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { LinodeType } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import actionCreatorFactory from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/types`);

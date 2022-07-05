@@ -1,4 +1,4 @@
-import { Interface } from '@linode/api-v4/lib/linodes';
+import { Interface } from '@linode/api-v4';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

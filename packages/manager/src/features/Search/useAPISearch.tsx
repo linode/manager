@@ -1,11 +1,11 @@
 import { flatten } from 'ramda';
 import { useCallback } from 'react';
-import { getDomains } from '@linode/api-v4/lib/domains';
-import { getImages, Image } from '@linode/api-v4/lib/images';
-import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
-import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
-import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
-import { getVolumes } from '@linode/api-v4/lib/volumes';
+import { getDomains } from '@linode/api-v4';
+import { getImages, Image } from '@linode/api-v4';
+import { getLinodes, LinodeType } from '@linode/api-v4';
+import { getKubernetesClusters } from '@linode/api-v4';
+import { getNodeBalancers } from '@linode/api-v4';
+import { getVolumes } from '@linode/api-v4';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { API_MAX_PAGE_SIZE } from 'src/constants';

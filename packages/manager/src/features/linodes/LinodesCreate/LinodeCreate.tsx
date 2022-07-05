@@ -1,5 +1,5 @@
-import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
-import { Tag } from '@linode/api-v4/lib/tags/types';
+import { Interface, restoreBackup } from '@linode/api-v4';
+import { Tag } from '@linode/api-v4';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';

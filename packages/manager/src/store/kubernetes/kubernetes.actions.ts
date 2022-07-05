@@ -1,5 +1,5 @@
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { KubernetesCluster } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { EntityError } from 'src/store/types';

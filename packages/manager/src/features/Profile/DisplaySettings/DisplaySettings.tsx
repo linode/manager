@@ -1,4 +1,4 @@
-import { updateUser } from '@linode/api-v4/lib/account';
+import { updateUser } from '@linode/api-v4';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';

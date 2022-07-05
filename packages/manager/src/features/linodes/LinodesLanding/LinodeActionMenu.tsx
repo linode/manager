@@ -3,9 +3,9 @@ import {
   getLinodeConfigs,
   LinodeBackups,
   LinodeType,
-} from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { stringify } from 'qs';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';

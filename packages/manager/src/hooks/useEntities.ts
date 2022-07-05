@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import useDomains from './useDomains';
 import useImages from './useImages';
 import useKubernetesClusters from './useKubernetesClusters';

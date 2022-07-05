@@ -1,4 +1,4 @@
-import { enableBackups } from '@linode/api-v4/lib/linodes';
+import { enableBackups } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

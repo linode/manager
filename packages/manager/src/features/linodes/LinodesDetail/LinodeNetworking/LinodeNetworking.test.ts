@@ -6,8 +6,8 @@ import {
   listIPv6InRange,
   uniqByIP,
 } from './LinodeNetworking';
-import { LinodeIPsResponse } from '@linode/api-v4/lib/linodes';
-import { IPRange } from '@linode/api-v4/lib/networking';
+import { LinodeIPsResponse } from '@linode/api-v4';
+import { IPRange } from '@linode/api-v4';
 
 const {
   private: _privateIPs,

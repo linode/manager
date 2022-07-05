@@ -1,5 +1,5 @@
-import { LinodeDiskCreationData } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { LinodeDiskCreationData } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { Entity } from './disk.types';
 import { GetAllData } from 'src/utilities/getAll';

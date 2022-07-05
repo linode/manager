@@ -1,7 +1,7 @@
-import { rebuildLinode } from '@linode/api-v4/lib/linodes';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
-import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
+import { rebuildLinode } from '@linode/api-v4';
+import { UserDefinedField } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
+import { RebuildLinodeFromStackScriptSchema } from '@linode/validation';
 import { Formik, FormikProps } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';

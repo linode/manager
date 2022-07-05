@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageKey } from '@linode/api-v4';
 import { makeStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import Dialog from 'src/components/Dialog';

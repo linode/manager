@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { Profile } from '@linode/api-v4/lib/profile';
+import { Profile } from '@linode/api-v4';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { Account, GlobalGrantTypes } from '@linode/api-v4/lib/account';
+import { Account, GlobalGrantTypes } from '@linode/api-v4';
 import { useAccount } from 'src/queries/account';
 import { useAccountSettings } from 'src/queries/accountSettings';
 

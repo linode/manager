@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { eventFactory } from 'src/factories/events';
 import {

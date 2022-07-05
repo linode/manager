@@ -1,4 +1,4 @@
-import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
+import { getSSHKeys, SSHKey } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';

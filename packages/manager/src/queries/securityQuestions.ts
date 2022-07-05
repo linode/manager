@@ -3,8 +3,8 @@ import {
   updateSecurityQuestions,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
-} from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useQuery, useMutation } from 'react-query';
 import { queryPresets, queryClient } from './base';
 

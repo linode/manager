@@ -1,7 +1,4 @@
-import {
-  CreateLinodeSchema,
-  UpdateLinodeSchema,
-} from '@linode/validation/lib/linodes.schema';
+import { CreateLinodeSchema, UpdateLinodeSchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import { Firewall } from '../firewalls/types';
 import Request, {

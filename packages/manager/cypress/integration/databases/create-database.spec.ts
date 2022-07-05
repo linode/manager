@@ -1,4 +1,4 @@
-import { ClusterSize, Engine } from '@linode/api-v4/lib/databases/types';
+import { ClusterSize, Engine } from '@linode/api-v4';
 import { databaseInstanceFactory } from 'src/factories/databases';
 import { eventFactory } from 'src/factories/events';
 import { randomLabel } from 'support/util/random';

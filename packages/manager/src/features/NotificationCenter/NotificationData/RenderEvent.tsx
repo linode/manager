@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account/types';
+import { Event } from '@linode/api-v4';
 import classNames from 'classnames';
 import * as React from 'react';
 import Box from 'src/components/core/Box';

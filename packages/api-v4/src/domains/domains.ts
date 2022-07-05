@@ -2,7 +2,7 @@ import {
   createDomainSchema,
   importZoneSchema,
   updateDomainSchema,
-} from '@linode/validation/lib/domains.schema';
+} from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,

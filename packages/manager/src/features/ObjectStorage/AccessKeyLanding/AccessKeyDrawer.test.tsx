@@ -1,4 +1,4 @@
-import { Scope } from '@linode/api-v4/lib/object-storage/types';
+import { Scope } from '@linode/api-v4';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { objectStorageBucketFactory } from 'src/factories/objectStorage';

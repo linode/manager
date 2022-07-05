@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { NodeBalancerConfig } from '@linode/api-v4/lib/nodebalancers';
+import { NodeBalancerConfig } from '@linode/api-v4';
 import { Reducer } from 'redux';
 import { EntityError, RelationalMappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';

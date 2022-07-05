@@ -1,4 +1,4 @@
-import { LinodeStatus } from '@linode/api-v4/lib/linodes/types';
+import { LinodeStatus } from '@linode/api-v4';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';

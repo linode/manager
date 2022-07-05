@@ -1,5 +1,5 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Event } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';

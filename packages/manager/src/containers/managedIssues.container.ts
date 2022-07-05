@@ -1,4 +1,4 @@
-import { ManagedIssue } from '@linode/api-v4/lib/managed';
+import { ManagedIssue } from '@linode/api-v4';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';

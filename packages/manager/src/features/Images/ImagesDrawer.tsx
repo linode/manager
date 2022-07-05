@@ -1,5 +1,5 @@
-import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Disk, getLinodeDisks } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';

@@ -1,5 +1,5 @@
-import { cancelAccount } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { cancelAccount } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';

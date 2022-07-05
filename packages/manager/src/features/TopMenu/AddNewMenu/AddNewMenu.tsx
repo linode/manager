@@ -1,4 +1,4 @@
-import { Account, AccountCapability } from '@linode/api-v4/lib/account';
+import { Account, AccountCapability } from '@linode/api-v4';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import {
   Menu,

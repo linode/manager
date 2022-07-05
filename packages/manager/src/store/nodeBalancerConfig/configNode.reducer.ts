@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import { NodeBalancerConfigNode } from '@linode/api-v4';
 import { Reducer } from 'redux';
 import {
   ensureInitializedNestedState,

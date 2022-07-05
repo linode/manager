@@ -5,7 +5,7 @@ import {
   credentialLabel,
   credentialPassword,
   credentialUsername,
-} from '@linode/validation/lib/managed.schema';
+} from '@linode/validation';
 
 export const creationSchema = createCredentialSchema.shape({
   password: string().required('Password is required.'),

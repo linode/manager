@@ -1,5 +1,5 @@
-import { getUsers } from '@linode/api-v4/lib/account';
-import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
+import { getUsers } from '@linode/api-v4';
+import { getSSHKeys, SSHKey } from '@linode/api-v4';
 import { assoc, clone, equals, map } from 'ramda';
 import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';

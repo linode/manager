@@ -1,4 +1,4 @@
-import { DataSeries, ManagedStatsData } from '@linode/api-v4/lib/managed';
+import { DataSeries, ManagedStatsData } from '@linode/api-v4';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {

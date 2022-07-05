@@ -1,10 +1,10 @@
 import { FormikProps } from 'formik';
-import { AccountSettings } from '@linode/api-v4/lib/account';
+import { AccountSettings } from '@linode/api-v4';
 import {
   ObjectStorageClusterID,
   ObjectStorageObject,
   ACLType,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 import { Item } from 'src/components/EnhancedSelect/Select';
 

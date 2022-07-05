@@ -1,11 +1,7 @@
-import {
-  GlobalGrantTypes,
-  Grants,
-  GrantType,
-} from '@linode/api-v4/lib/account';
+import { GlobalGrantTypes, Grants, GrantType } from '@linode/api-v4';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/profile';
-import { Profile } from '@linode/api-v4/lib/profile';
+import { Profile } from '@linode/api-v4';
 
 export const isRestrictedUser = () =>
   queryClient.getQueryData<Profile>(queryKey)?.restricted || false;

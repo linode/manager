@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { LinodeType } from '@linode/api-v4';
 
 export type MappedLinodeType = Record<string, LinodeType>;
 

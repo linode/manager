@@ -1,4 +1,4 @@
-import { nodeBalancerConfigNodeSchema } from '@linode/validation/lib/nodebalancers.schema';
+import { nodeBalancerConfigNodeSchema } from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { ResourcePage as Page } from '../types';

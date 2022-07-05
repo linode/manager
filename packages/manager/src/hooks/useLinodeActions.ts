@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Linode } from '@linode/api-v4';
 import { useDispatch } from 'react-redux';
 import {
   deleteLinode as _deleteLinode,

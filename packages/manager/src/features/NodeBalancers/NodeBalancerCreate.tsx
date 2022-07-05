@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import {
   append,
   clone,
@@ -48,7 +48,7 @@ import { isEURegion } from 'src/utilities/formatRegion';
 import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
+import { Agreements, signAgreement } from '@linode/api-v4';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import withAgreements, {
   AgreementsProps,

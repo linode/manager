@@ -1,4 +1,4 @@
-import * as tags from '@linode/api-v4/lib/tags/tags';
+import * as tags from '@linode/api-v4';
 import { fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';

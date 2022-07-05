@@ -2,7 +2,7 @@ import {
   CreateBucketSchema,
   UpdateBucketAccessSchema,
   UploadCertificateSchema,
-} from '@linode/validation/lib/buckets.schema';
+} from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

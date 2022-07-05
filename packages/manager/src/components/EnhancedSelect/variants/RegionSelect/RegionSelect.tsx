@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { Region } from '@linode/api-v4';
 import AU from 'flag-icon-css/flags/4x3/au.svg';
 import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';

@@ -1,4 +1,4 @@
-import { Region } from '@linode/api-v4/lib/regions';
+import { Region } from '@linode/api-v4';
 
 const resolvers = {
   ipv4: '8.8.8.8',

@@ -3,7 +3,7 @@ import {
   getManagedContacts,
   ManagedContact,
   ManagedCredential,
-} from '@linode/api-v4/lib/managed';
+} from '@linode/api-v4';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import LandingHeader from 'src/components/LandingHeader';

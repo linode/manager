@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Agreements } from '@linode/api-v4/lib/account';
+import { Agreements } from '@linode/api-v4';
 
 export const accountAgreementsFactory = Factory.Sync.makeFactory<Agreements>({
   eu_model: false,

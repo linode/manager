@@ -1,4 +1,4 @@
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageClusterID } from '@linode/api-v4';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';

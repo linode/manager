@@ -1,5 +1,5 @@
 import { castDraft } from 'immer';
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import {
   cloneLinode,
   cloneLinodeDisk,
@@ -7,8 +7,8 @@ import {
   Disk,
   Linode,
   LinodeStatus,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

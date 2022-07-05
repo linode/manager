@@ -1,4 +1,4 @@
-import { FirewallStatus } from '@linode/api-v4/lib/firewalls';
+import { FirewallStatus } from '@linode/api-v4';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';

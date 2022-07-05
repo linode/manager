@@ -1,11 +1,6 @@
 import JSPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import {
-  Invoice,
-  InvoiceItem,
-  Payment,
-  TaxSummary,
-} from '@linode/api-v4/lib/account';
+import { Invoice, InvoiceItem, Payment, TaxSummary } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 

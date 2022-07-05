@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { storage } from 'src/utilities/storage';
@@ -114,6 +114,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       return this.request();
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     private request = (map?: Function) => {
       /**
        * we might potentially have a search term to filter by

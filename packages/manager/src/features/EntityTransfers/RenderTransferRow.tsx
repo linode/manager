@@ -1,4 +1,4 @@
-import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
+import { TransferEntities } from '@linode/api-v4';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';

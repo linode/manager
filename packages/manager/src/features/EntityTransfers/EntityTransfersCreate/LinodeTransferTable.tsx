@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';

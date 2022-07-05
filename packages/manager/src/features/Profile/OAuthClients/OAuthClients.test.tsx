@@ -1,4 +1,4 @@
-import { OAuthClient } from '@linode/api-v4/lib/account';
+import { OAuthClient } from '@linode/api-v4';
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { clearDocs, setDocs } from 'src/store/documentation';

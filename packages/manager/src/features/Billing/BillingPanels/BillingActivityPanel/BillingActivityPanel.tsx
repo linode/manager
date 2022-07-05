@@ -1,9 +1,4 @@
-import {
-  getInvoiceItems,
-  Invoice,
-  InvoiceItem,
-  Payment,
-} from '@linode/api-v4/lib/account';
+import { getInvoiceItems, Invoice, InvoiceItem, Payment } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';

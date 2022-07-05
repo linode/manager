@@ -1,4 +1,4 @@
-import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import { StackScript as StackScriptType } from '@linode/api-v4';
 import { stringify } from 'qs';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';

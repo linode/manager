@@ -1,15 +1,15 @@
-import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
+import { Agreements, signAgreement } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
 import {
   cloneLinode,
   CreateLinodeRequest,
   Interface,
   Linode,
   LinodeTypeClass,
-} from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
+import { StackScript, UserDefinedField } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';

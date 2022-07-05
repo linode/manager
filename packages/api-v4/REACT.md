@@ -5,7 +5,7 @@ Here's a common case on how one would use the SDK with React and TypeScript. The
 ```js
 /** request.ts */
 
-import { baseRequest } from '@linode/api-v4/lib/request';
+import { baseRequest } from '@linode/api-v4';
 
 /**
  * intercepts every request with the following config
@@ -35,7 +35,7 @@ baseRequest.interceptors.request.use(config => {
 import './request'
 import { AxiosError } from 'axios'
 import { getLinodes, Linode } from '@linode/api-v4/lib/linodes'
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import React from 'react'
 
 const MyComponent: React.FC<{}> = () => {

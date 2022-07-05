@@ -1,4 +1,4 @@
-import { Kernel } from '@linode/api-v4/lib/linodes/types';
+import { Kernel } from '@linode/api-v4';
 import { screen } from '@testing-library/react';
 import * as React from 'react';
 import { renderWithTheme } from 'src/utilities/testHelpers';

@@ -5,8 +5,8 @@ import {
   DomainType,
   RecordType,
   updateDomainRecord,
-} from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import produce from 'immer';
 import {
   cond,

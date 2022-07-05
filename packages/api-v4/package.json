@@ -16,25 +16,11 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "type": "module",
-  "exports": {
-    "./lib/*": {
-			"import": "./lib/esm/index.js",
-			"default": "./lib/index.js"
-		}
-	},
-  "typesVersions": {
-    "*": {
-      "*": ["./lib/index.d.ts"]
-    }
-  },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib/esm/index.js",
-  "unpkg": "lib/iife/index.js",
-  "browser": "lib/iife/index.js",
   "dependencies": {
-    "@linode/validation": "file:../../packages/validation",
+    "@linode/validation": "*",
     "@types/yup": "^0.29.13",
     "axios": "~0.21.4",
     "ipaddr.js": "^2.0.0",

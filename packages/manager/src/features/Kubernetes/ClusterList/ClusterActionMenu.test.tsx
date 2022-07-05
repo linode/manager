@@ -1,4 +1,4 @@
-import * as kube from '@linode/api-v4/lib/kubernetes/kubernetes';
+import * as kube from '@linode/api-v4';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';

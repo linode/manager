@@ -1,5 +1,5 @@
-import { restoreBackup } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { restoreBackup } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -20,7 +20,7 @@ import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissio
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { Grants } from '@linode/api-v4/lib';
+import { Grants } from '@linode/api-v4';
 
 interface Props {
   open: boolean;

@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Box from 'src/components/core/Box';

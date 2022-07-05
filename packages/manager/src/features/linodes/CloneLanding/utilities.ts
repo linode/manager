@@ -1,6 +1,6 @@
 import produce from 'immer';
-import { Config, Disk } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Config, Disk } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 

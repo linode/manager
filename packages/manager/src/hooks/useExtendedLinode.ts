@@ -1,7 +1,7 @@
-import { Event, GrantLevel, Notification } from '@linode/api-v4/lib/account';
-import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Event, GrantLevel, Notification } from '@linode/api-v4';
+import { Config, Disk, LinodeType } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { useSelector } from 'react-redux';
 import { useGrants } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';

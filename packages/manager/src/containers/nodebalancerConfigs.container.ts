@@ -1,5 +1,5 @@
-import { NodeBalancerConfig } from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { NodeBalancerConfig } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { connect, MapStateToProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 

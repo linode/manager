@@ -1,6 +1,6 @@
-import { allocateIPAddress } from '@linode/api-v4/lib/linodes';
-import { createIPv6Range, IPv6Prefix } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
+import { allocateIPAddress } from '@linode/api-v4';
+import { createIPv6Range, IPv6Prefix } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';

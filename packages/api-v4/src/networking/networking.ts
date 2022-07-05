@@ -3,7 +3,7 @@ import {
   assignAddressesSchema,
   shareAddressesSchema,
   updateIPSchema,
-} from '@linode/validation/lib/networking.schema';
+} from '@linode/validation';
 import { API_ROOT, BETA_API_ROOT } from '../constants';
 import Request, {
   setData,

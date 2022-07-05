@@ -1,4 +1,4 @@
-import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { recycleClusterNodes } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

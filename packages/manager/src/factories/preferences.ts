@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { UserPreferences } from '@linode/api-v4/lib';
+import { UserPreferences } from '@linode/api-v4';
 
 export const preferencesFactory = Factory.Sync.makeFactory<UserPreferences>({
   longviewTimeRange: '',

@@ -2,7 +2,7 @@ import {
   ObjectStorageObject,
   ObjectStorageObjectListResponse,
 } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';

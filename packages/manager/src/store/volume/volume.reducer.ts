@@ -1,4 +1,4 @@
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { MappedEntityState2 as MappedEntityState } from 'src/store/types';

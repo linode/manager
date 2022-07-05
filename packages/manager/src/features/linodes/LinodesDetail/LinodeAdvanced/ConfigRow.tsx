@@ -1,5 +1,5 @@
-import { Config, Disk, Interface } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Config, Disk, Interface } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';

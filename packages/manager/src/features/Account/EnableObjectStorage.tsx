@@ -1,6 +1,6 @@
-import { AccountSettings } from '@linode/api-v4/lib/account';
-import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
-import { APIError } from '@linode/api-v4/lib/types';
+import { AccountSettings } from '@linode/api-v4';
+import { cancelObjectStorage } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Accordion from 'src/components/Accordion';

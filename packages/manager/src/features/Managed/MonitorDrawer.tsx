@@ -3,8 +3,8 @@ import {
   ManagedServiceMonitor,
   ManagedServicePayload,
   ServiceType,
-} from '@linode/api-v4/lib/managed';
-import { createServiceMonitorSchema } from '@linode/validation/lib/managed.schema';
+} from '@linode/api-v4';
+import { createServiceMonitorSchema } from '@linode/validation';
 import { Formik } from 'formik';
 import { pickBy } from 'ramda';
 import * as React from 'react';

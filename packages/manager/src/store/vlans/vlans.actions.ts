@@ -1,5 +1,5 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
-import { APIError } from '@linode/api-v4/lib/types';
+import { VLAN } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 

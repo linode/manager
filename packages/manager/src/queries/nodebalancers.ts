@@ -1,8 +1,5 @@
-import {
-  getNodeBalancerStats,
-  NodeBalancerStats,
-} from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getNodeBalancerStats, NodeBalancerStats } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { useQuery } from 'react-query';
 import { parseAPIDate } from 'src/utilities/date';

@@ -1,4 +1,4 @@
-import { NotificationType } from '@linode/api-v4/lib/account';
+import { NotificationType } from '@linode/api-v4';
 import ErrorIcon from '@material-ui/icons/Error';
 import WarningIcon from '@material-ui/icons/Warning';
 import classNames from 'classnames';

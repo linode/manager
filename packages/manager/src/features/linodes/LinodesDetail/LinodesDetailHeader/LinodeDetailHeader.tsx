@@ -1,5 +1,5 @@
-import { Config, Disk, LinodeStatus } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Config, Disk, LinodeStatus } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';

@@ -5,8 +5,8 @@ import {
   OAuthClient,
   resetOAuthClientSecret,
   updateOAuthClient,
-} from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';

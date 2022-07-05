@@ -4,7 +4,7 @@ import {
   PaymentSchema,
   StagePaypalPaymentSchema,
   PaymentMethodSchema,
-} from '@linode/validation/lib/account.schema';
+} from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,

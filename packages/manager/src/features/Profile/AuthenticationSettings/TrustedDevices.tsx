@@ -1,4 +1,4 @@
-import { getTrustedDevices, TrustedDevice } from '@linode/api-v4/lib/profile';
+import { getTrustedDevices, TrustedDevice } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';

@@ -4,8 +4,8 @@ import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
   Scope,
-} from '@linode/api-v4/lib/object-storage';
-import { createObjectStorageKeysSchema } from '@linode/validation/lib/objectStorageKeys.schema';
+} from '@linode/api-v4';
+import { createObjectStorageKeysSchema } from '@linode/validation';
 import { Formik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

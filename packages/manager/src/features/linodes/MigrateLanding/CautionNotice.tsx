@@ -1,4 +1,4 @@
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import Checkbox from 'src/components/CheckBox';

@@ -1,4 +1,4 @@
-import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
+import { getActiveLongviewPlan } from '@linode/api-v4';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

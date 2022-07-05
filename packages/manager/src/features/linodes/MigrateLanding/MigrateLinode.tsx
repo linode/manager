@@ -1,6 +1,6 @@
-import { Event, Notification } from '@linode/api-v4/lib/account';
-import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
-import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
+import { Event, Notification } from '@linode/api-v4';
+import { scheduleOrQueueMigration } from '@linode/api-v4';
+import { APIError as APIErrorType } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';

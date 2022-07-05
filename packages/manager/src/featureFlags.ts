@@ -1,4 +1,4 @@
-import { TPAProvider } from '@linode/api-v4/lib/profile';
+import { TPAProvider } from '@linode/api-v4';
 // These flags should correspond with active features flags in LD
 
 interface TaxBanner {

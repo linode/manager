@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Image } from '@linode/api-v4/lib/images/types';
+import { Image } from '@linode/api-v4';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
   id: Factory.each((id) => `private/${id}`),

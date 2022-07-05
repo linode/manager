@@ -1,4 +1,4 @@
-import { APIWarning } from '@linode/api-v4/lib/types';
+import { APIWarning } from '@linode/api-v4';
 export type SetSuccess = (
   message: string | null,
   paymentWasMade?: boolean,

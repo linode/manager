@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Event, EventAction } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

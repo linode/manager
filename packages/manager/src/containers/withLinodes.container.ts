@@ -1,5 +1,5 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Linode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { path } from 'ramda';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';

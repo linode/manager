@@ -3,7 +3,7 @@ import {
   NodeBalancer,
   NodeBalancerConfig,
   NodeBalancerConfigNode,
-} from '@linode/api-v4/lib/nodebalancers/types';
+} from '@linode/api-v4';
 
 export const nodeBalancerFactory = Factory.Sync.makeFactory<NodeBalancer>({
   id: Factory.each((id) => id),

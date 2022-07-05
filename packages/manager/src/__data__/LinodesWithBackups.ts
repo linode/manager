@@ -3,7 +3,7 @@ import {
   LinodeBackupStatus,
   LinodeBackupType,
   LinodeStatus,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 
 export const LinodesWithBackups = [
   {

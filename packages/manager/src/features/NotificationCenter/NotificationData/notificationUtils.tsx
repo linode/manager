@@ -1,4 +1,4 @@
-import { NotificationType } from '@linode/api-v4/lib/account';
+import { NotificationType } from '@linode/api-v4';
 
 export const maintenanceNotificationTypes = [
   'maintenance',

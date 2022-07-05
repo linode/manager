@@ -1,4 +1,4 @@
-import { NodeBalancerConfigNode } from '@linode/api-v4/lib/nodebalancers';
+import { NodeBalancerConfigNode } from '@linode/api-v4';
 
 export const nodes: NodeBalancerConfigNode[] = [
   {

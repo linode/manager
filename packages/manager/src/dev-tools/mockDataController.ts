@@ -1,7 +1,7 @@
-import { Domain } from '@linode/api-v4/lib/domains/types';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers/types';
-import { Volume } from '@linode/api-v4/lib/volumes/types';
+import { Domain } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
+import { NodeBalancer } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { v4 } from 'uuid';
 
 // Simple pub/sub class to keep track of mock data for the local dev tools. This allows subscription

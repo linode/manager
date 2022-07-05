@@ -1,5 +1,5 @@
-import { deleteUser } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { deleteUser } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { makeStyles } from '@material-ui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

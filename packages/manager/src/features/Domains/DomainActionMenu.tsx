@@ -1,4 +1,4 @@
-import { DomainStatus } from '@linode/api-v4/lib/domains';
+import { DomainStatus } from '@linode/api-v4';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';

@@ -1,4 +1,4 @@
-import { Image } from '@linode/api-v4/lib/images';
+import { Image } from '@linode/api-v4';
 import { propOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';

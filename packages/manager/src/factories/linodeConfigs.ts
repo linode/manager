@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Config } from '@linode/api-v4/lib/linodes/types';
+import { Config } from '@linode/api-v4';
 import { LinodeConfigInterfaceFactory } from 'src/factories/linodeConfigInterfaceFactory';
 
 const generateRandomId = () => Math.floor(Math.random() * 10000);

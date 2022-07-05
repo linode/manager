@@ -1,9 +1,9 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Image } from '@linode/api-v4/lib/images';
-import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Domain } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
+import { KubernetesCluster } from '@linode/api-v4';
+import { Linode, LinodeType } from '@linode/api-v4';
+import { NodeBalancer } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
 import {
@@ -15,7 +15,7 @@ import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
 import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
 

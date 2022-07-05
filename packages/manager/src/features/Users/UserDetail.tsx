@@ -1,6 +1,6 @@
-import { getUser, updateUser } from '@linode/api-v4/lib/account';
-import { updateProfile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getUser, updateUser } from '@linode/api-v4';
+import { updateProfile } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { clone } from 'ramda';
 import * as React from 'react';
 import {

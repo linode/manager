@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';

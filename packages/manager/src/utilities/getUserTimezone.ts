@@ -1,5 +1,5 @@
 import { DateTime, IANAZone } from 'luxon';
-import { Profile } from '@linode/api-v4/lib';
+import { Profile } from '@linode/api-v4';
 import { getProfileData } from 'src/queries/profile';
 
 const getUserTimezone = (profile?: Profile) => {

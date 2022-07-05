@@ -1,5 +1,5 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Disk } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';

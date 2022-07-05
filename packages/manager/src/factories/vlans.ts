@@ -1,4 +1,4 @@
-import { VLAN } from '@linode/api-v4/lib/vlans/types';
+import { VLAN } from '@linode/api-v4';
 import * as Factory from 'factory.ts';
 
 export const VLANFactory = Factory.Sync.makeFactory<VLAN>({

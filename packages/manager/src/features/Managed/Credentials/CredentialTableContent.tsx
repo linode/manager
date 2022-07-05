@@ -1,5 +1,5 @@
-import { ManagedCredential } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
+import { ManagedCredential } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';

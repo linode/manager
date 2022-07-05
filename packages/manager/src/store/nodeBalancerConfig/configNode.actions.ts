@@ -2,8 +2,8 @@ import {
   CreateNodeBalancerConfigNode,
   NodeBalancerConfigNode,
   UpdateNodeBalancerConfigNode,
-} from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { GetAllData } from 'src/utilities/getAll';
 import { BalancerParams } from '../nodeBalancer/nodeBalancer.actions';

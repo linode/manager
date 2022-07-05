@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Linode } from '@linode/api-v4';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,

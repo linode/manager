@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import { reducer, ReducerActions, ReducerState } from './EventsLanding';
 

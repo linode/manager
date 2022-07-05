@@ -1,6 +1,6 @@
 import * as Factory from 'factory.ts';
 import { DateTime } from 'luxon';
-import { Notification, Entity } from '@linode/api-v4/lib/account';
+import { Notification, Entity } from '@linode/api-v4';
 
 const generateEntity = (
   id: number,

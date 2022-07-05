@@ -1,4 +1,4 @@
-import { EntityTransfer } from '@linode/api-v4/lib/entity-transfers';
+import { EntityTransfer } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

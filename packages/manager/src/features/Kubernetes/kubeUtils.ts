@@ -1,8 +1,5 @@
-import {
-  KubernetesCluster,
-  KubernetesVersion,
-} from '@linode/api-v4/lib/kubernetes';
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { KubernetesCluster, KubernetesVersion } from '@linode/api-v4';
+import { LinodeType } from '@linode/api-v4';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';

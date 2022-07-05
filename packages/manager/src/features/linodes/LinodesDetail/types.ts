@@ -1,7 +1,7 @@
-import { Event, GrantLevel, Notification } from '@linode/api-v4/lib/account';
-import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Event, GrantLevel, Notification } from '@linode/api-v4';
+import { Config, Disk, LinodeType } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {

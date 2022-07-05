@@ -1,4 +1,4 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
+import { Stats } from '@linode/api-v4';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme, useTheme } from 'src/components/core/styles';

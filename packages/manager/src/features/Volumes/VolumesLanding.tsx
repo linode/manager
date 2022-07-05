@@ -1,6 +1,6 @@
-import { Event, Notification } from '@linode/api-v4/lib/account';
-import { Config, Linode } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Event, Notification } from '@linode/api-v4';
+import { Config, Linode } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';

@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account/types';
+import { Notification } from '@linode/api-v4';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 

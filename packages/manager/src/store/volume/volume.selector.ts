@@ -1,4 +1,4 @@
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4';
 
 export const getVolumesForLinode = (
   itemsById: Record<string, Volume>,

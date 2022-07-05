@@ -1,7 +1,4 @@
-import {
-  CreateUserSchema,
-  UpdateUserSchema,
-} from '@linode/validation/lib/account.schema';
+import { CreateUserSchema, UpdateUserSchema } from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,

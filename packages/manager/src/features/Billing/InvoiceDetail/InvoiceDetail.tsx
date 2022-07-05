@@ -4,8 +4,8 @@ import {
   getInvoiceItems,
   Invoice,
   InvoiceItem,
-} from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';

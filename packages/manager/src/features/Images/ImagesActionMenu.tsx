@@ -1,5 +1,5 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { ImageStatus } from '@linode/api-v4/lib/images/types';
+import { Event } from '@linode/api-v4';
+import { ImageStatus } from '@linode/api-v4';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

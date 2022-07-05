@@ -1,4 +1,4 @@
-import { longviewClientCreate } from '@linode/validation/lib/longview.schema';
+import { longviewClientCreate } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

@@ -3,7 +3,7 @@ import {
   getLinodeTypes,
   getType,
   LinodeType,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 import { ThunkActionCreator, ThunkDispatch } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';

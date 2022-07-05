@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Event } from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Event } from '@linode/api-v4';
+import { Linode, LinodeType } from '@linode/api-v4';
 import Link from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
 import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';

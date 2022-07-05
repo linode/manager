@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageBucket } from '@linode/api-v4';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';

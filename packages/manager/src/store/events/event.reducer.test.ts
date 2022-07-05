@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { addEvents } from './event.actions';
 import reducer, { defaultState } from './event.reducer';

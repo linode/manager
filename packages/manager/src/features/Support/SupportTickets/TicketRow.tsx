@@ -4,7 +4,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { SupportTicket } from '@linode/api-v4/lib/support';
+import { SupportTicket } from '@linode/api-v4';
 import { Link } from 'react-router-dom';
 import { makeStyles } from 'src/components/core/styles';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';

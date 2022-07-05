@@ -1,5 +1,5 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Domain } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
 import { lensPath, view } from 'ramda';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';

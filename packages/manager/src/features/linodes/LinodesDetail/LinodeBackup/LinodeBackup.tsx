@@ -1,4 +1,4 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
+import { GrantLevel } from '@linode/api-v4';
 import {
   cancelBackups,
   Day,
@@ -10,8 +10,8 @@ import {
   LinodeType,
   takeSnapshot,
   Window,
-} from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

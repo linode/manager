@@ -1,4 +1,4 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4';
 import { compose } from 'ramda';
 import * as React from 'react';
 import GroupByTag from 'src/assets/icons/group-by-tag.svg';

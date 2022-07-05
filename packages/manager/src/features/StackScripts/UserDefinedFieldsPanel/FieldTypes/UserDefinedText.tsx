@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { UserDefinedField } from '@linode/api-v4';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
 import {

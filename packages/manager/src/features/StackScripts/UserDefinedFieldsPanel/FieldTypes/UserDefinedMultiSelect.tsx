@@ -1,4 +1,4 @@
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { UserDefinedField } from '@linode/api-v4';
 import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';

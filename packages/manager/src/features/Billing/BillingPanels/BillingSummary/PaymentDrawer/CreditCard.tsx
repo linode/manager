@@ -1,4 +1,4 @@
-import { CardType, CreditCardData } from '@linode/api-v4/lib/account/types';
+import { CardType, CreditCardData } from '@linode/api-v4';
 import * as React from 'react';
 import GenericCardIcon from 'src/assets/icons/credit-card.svg';
 import AmexIcon from 'src/assets/icons/payment/amex.svg';

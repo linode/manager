@@ -1,4 +1,4 @@
-import { getEvents } from '@linode/api-v4/lib/account';
+import { getEvents } from '@linode/api-v4';
 
 type EntityTypes = 'linode' | 'volume' | 'nodebalancer' | 'domain';
 

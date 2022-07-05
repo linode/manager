@@ -1,6 +1,6 @@
 import { Formik } from 'formik';
-import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { CreateBucketSchema } from '@linode/validation/lib/buckets.schema';
+import { ObjectStorageBucket } from '@linode/api-v4';
+import { CreateBucketSchema } from '@linode/validation';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
 import { makeStyles, Theme } from 'src/components/core/styles';

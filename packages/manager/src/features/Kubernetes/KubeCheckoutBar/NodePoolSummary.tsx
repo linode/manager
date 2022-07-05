@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import { LinodeType } from '@linode/api-v4';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Box from 'src/components/core/Box';

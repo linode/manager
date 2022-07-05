@@ -1,4 +1,4 @@
-import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
+import { ObjectStorageKey } from '@linode/api-v4';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';

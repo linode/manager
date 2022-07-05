@@ -1,4 +1,4 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
+import { VLAN } from '@linode/api-v4';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { getAllVlans as _getVLANs } from 'src/store/vlans/vlans.requests';

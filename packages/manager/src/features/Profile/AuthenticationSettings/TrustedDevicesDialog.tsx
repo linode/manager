@@ -1,4 +1,4 @@
-import { deleteTrustedDevice } from '@linode/api-v4/lib/profile';
+import { deleteTrustedDevice } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';

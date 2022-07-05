@@ -2,7 +2,7 @@ import * as React from 'react';
 import ActionsPanel from '../ActionsPanel';
 import Button from '../Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
 import Grid from '../Grid';

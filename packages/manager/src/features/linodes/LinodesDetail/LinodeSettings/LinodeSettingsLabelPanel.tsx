@@ -1,5 +1,5 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { GrantLevel } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';

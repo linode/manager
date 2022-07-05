@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { LinodeType } from '@linode/api-v4';
 import { connect } from 'react-redux';
 import { MapState } from 'src/store/types';
 import getLinodeType from 'src/utilities/getLinodeType';

@@ -1,4 +1,4 @@
-import { makePayment } from '@linode/api-v4/lib/account/payments';
+import { makePayment } from '@linode/api-v4';
 import {
   BraintreePayPalButtons,
   CreateOrderBraintreeActions,

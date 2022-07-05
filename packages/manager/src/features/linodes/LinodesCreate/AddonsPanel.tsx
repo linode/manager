@@ -1,4 +1,4 @@
-import { Interface } from '@linode/api-v4/lib/linodes';
+import { Interface } from '@linode/api-v4';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CheckBox from 'src/components/CheckBox';

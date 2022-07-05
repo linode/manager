@@ -1,5 +1,5 @@
-import { getTFAToken } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getTFAToken } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';

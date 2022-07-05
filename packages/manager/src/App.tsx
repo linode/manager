@@ -1,9 +1,9 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { Image } from '@linode/api-v4/lib/images';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { Region } from '@linode/api-v4/lib/regions';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Image } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';

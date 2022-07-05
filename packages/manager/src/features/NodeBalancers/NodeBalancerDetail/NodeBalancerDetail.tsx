@@ -2,8 +2,8 @@ import {
   getNodeBalancer,
   getNodeBalancerConfigs,
   NodeBalancer,
-} from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { last, pathOr } from 'ramda';
 import * as React from 'react';

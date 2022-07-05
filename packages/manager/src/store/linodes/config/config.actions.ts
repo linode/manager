@@ -1,5 +1,5 @@
-import { LinodeConfigCreationData } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { LinodeConfigCreationData } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { GetAllData } from 'src/utilities/getAll';
 import { Entity } from './config.types';

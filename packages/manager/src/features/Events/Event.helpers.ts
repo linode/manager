@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Event, EventAction } from '@linode/api-v4';
 import { equals } from 'ramda';
 
 /**

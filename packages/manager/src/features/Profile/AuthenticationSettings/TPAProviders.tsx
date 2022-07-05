@@ -1,4 +1,4 @@
-import { TPAProvider } from '@linode/api-v4/lib/profile';
+import { TPAProvider } from '@linode/api-v4';
 import classNames from 'classnames';
 import * as React from 'react';
 import EnabledIcon from 'src/assets/icons/checkmark-enabled.svg';

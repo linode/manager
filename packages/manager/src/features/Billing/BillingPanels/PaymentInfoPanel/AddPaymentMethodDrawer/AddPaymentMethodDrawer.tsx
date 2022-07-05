@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PaymentMethod } from '@linode/api-v4/lib/account';
+import { PaymentMethod } from '@linode/api-v4';
 import { useSnackbar, VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';

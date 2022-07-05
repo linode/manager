@@ -1,5 +1,5 @@
-import { Profile } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Profile } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';

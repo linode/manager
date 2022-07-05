@@ -1,5 +1,5 @@
-import { rebuildLinode, RebuildRequest } from '@linode/api-v4/lib/linodes';
-import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import { rebuildLinode, RebuildRequest } from '@linode/api-v4';
+import { RebuildLinodeSchema } from '@linode/validation';
 import { Formik, FormikProps } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';

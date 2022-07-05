@@ -1,4 +1,4 @@
-import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
+import { CloneVolumeSchema } from '@linode/validation';
 import { Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';

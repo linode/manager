@@ -1,4 +1,4 @@
-import { Token } from '@linode/api-v4/lib/profile/types';
+import { Token } from '@linode/api-v4';
 import * as Factory from 'factory.ts';
 
 export const appTokenFactory = Factory.Sync.makeFactory<Token>({

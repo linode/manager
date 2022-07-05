@@ -1,7 +1,4 @@
-import {
-  SecurityQuestion,
-  SecurityQuestionsData,
-} from '@linode/api-v4/lib/profile';
+import { SecurityQuestion, SecurityQuestionsData } from '@linode/api-v4';
 
 export const securityQuestionsToItems = (
   questions: SecurityQuestion[] = []

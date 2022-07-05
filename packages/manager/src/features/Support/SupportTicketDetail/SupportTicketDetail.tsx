@@ -3,8 +3,8 @@ import {
   getTicketReplies,
   SupportReply,
   SupportTicket,
-} from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as Bluebird from 'bluebird';
 import classNames from 'classnames';
 import { compose, isEmpty, pathOr } from 'ramda';

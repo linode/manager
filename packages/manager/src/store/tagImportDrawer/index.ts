@@ -1,7 +1,7 @@
 import * as Bluebird from 'bluebird';
 import produce from 'immer';
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Domain } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
 import { isEmpty } from 'ramda';
 import { Action, Reducer } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';

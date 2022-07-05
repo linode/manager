@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import { reverse } from 'ramda';
 import { getAPIErrorOrDefault } from './errorUtils';
 import isNilOrEmpty from './isNilOrEmpty';

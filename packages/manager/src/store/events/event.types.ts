@@ -1,4 +1,4 @@
-import { Entity, Event } from '@linode/api-v4/lib/account';
+import { Entity, Event } from '@linode/api-v4';
 
 export interface ExtendedEvent extends Event {
   _deleted?: string;

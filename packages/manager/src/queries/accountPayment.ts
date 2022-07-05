@@ -1,9 +1,9 @@
-import { getPaymentMethods, PaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { getPaymentMethods, PaymentMethod } from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
-import { getClientToken, ClientToken } from '@linode/api-v4/lib/account';
+import { getClientToken, ClientToken } from '@linode/api-v4';
 
 export const queryKey = 'account-payment-methods';
 

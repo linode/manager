@@ -1,5 +1,5 @@
-import { assignAddresses, IPRange } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
+import { assignAddresses, IPRange } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import {
   both,
   compose,

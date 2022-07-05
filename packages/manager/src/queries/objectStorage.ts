@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { queryClient, queryPresets } from './base';
@@ -17,7 +17,7 @@ import {
   ObjectStorageObjectListResponse,
   getBucketsInCluster,
   getBucket,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 
 export interface BucketError {
   cluster: ObjectStorageCluster;

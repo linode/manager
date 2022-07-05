@@ -1,5 +1,5 @@
-import { EventStatus } from '@linode/api-v4/lib/account/types';
-import { ImageStatus } from '@linode/api-v4/lib/images/types';
+import { EventStatus } from '@linode/api-v4';
+import { ImageStatus } from '@linode/api-v4';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';

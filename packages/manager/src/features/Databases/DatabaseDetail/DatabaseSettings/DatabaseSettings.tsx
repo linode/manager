@@ -1,4 +1,4 @@
-import { Database } from '@linode/api-v4/lib/databases/types';
+import { Database } from '@linode/api-v4';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';

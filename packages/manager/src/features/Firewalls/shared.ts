@@ -1,7 +1,4 @@
-import {
-  FirewallRuleProtocol,
-  FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls/types';
+import { FirewallRuleProtocol, FirewallRuleType } from '@linode/api-v4';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 

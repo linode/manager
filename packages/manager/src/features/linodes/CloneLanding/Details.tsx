@@ -1,4 +1,4 @@
-import { Disk, Linode } from '@linode/api-v4/lib/linodes';
+import { Disk, Linode } from '@linode/api-v4';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';

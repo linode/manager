@@ -1,4 +1,4 @@
-import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import { FirewallPolicyType } from '@linode/api-v4';
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import * as React from 'react';

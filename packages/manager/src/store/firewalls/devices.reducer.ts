@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { FirewallDevice } from '@linode/api-v4/lib/firewalls';
+import { FirewallDevice } from '@linode/api-v4';
 import { Reducer } from 'redux';
 import {
   ensureInitializedNestedState,

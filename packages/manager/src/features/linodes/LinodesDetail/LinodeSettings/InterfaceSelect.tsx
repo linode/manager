@@ -1,4 +1,4 @@
-import { Interface, InterfacePurpose } from '@linode/api-v4/lib/linodes/types';
+import { Interface, InterfacePurpose } from '@linode/api-v4';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';

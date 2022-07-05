@@ -1,5 +1,5 @@
-import { MonitorStatus } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
+import { MonitorStatus } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';

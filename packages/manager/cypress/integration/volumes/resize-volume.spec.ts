@@ -1,4 +1,4 @@
-import { createVolume, Volume } from '@linode/api-v4/lib/volumes';
+import { createVolume, Volume } from '@linode/api-v4';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomNumber, randomLabel } from 'support/util/random';

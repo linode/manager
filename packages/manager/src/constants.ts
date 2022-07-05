@@ -1,5 +1,5 @@
-import { ZoneName } from '@linode/api-v4/lib/networking';
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
+import { ZoneName } from '@linode/api-v4';
+import { ObjectStorageClusterID } from '@linode/api-v4';
 
 const PRODUCTION = 'production';
 

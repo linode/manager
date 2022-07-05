@@ -1,4 +1,4 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import { Disk } from '@linode/api-v4';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';

@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { Notification } from '@linode/api-v4';
 import { ExtendedEvent } from 'src/store/events/event.types';
 import { NotificationItem } from '../NotificationSection';
 import useEventNotifications from './useEventNotifications';

@@ -8,7 +8,7 @@ import {
   ObjectStorageKey,
   ObjectStorageObject,
   revokeObjectStorageKey,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 import axios from 'axios';
 import { authenticate } from 'support/api/authentication';
 import { isTestLabel } from 'support/api/common';

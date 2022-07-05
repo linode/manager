@@ -1,6 +1,6 @@
-import { AccountMaintenance } from '@linode/api-v4/lib/account';
-import { getAccountMaintenance } from '@linode/api-v4/lib/account/maintenance';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { AccountMaintenance } from '@linode/api-v4';
+import { getAccountMaintenance } from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';

@@ -1,4 +1,4 @@
-import { Stats } from '@linode/api-v4/lib/linodes';
+import { Stats } from '@linode/api-v4';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import classNames from 'classnames';
 import { DateTime, Interval } from 'luxon';

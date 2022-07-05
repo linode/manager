@@ -1,5 +1,5 @@
-import { TrustedDevice } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { TrustedDevice } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import InlineMenuAction from 'src/components/InlineMenuAction';

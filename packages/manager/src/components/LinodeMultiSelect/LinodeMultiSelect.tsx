@@ -2,7 +2,7 @@ import * as React from 'react';
 import Select, { BaseSelectProps, Item } from 'src/components/EnhancedSelect';
 import { useAllLinodesQuery } from 'src/queries/linodes';
 import { Linode } from '@linode/api-v4';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 
 export interface Props extends Partial<BaseSelectProps> {
   selectedLinodes?: number[];

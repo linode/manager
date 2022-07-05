@@ -2,8 +2,8 @@ import {
   getActiveLongviewPlan,
   LongviewSubscription,
   updateActiveLongviewPlan,
-} from '@linode/api-v4/lib/longview';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';

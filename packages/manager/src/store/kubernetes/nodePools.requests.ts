@@ -5,7 +5,7 @@ import {
   getNodePools,
   KubeNodePoolResponse,
   updateNodePool as _updateNodePool,
-} from '@linode/api-v4/lib/kubernetes';
+} from '@linode/api-v4';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';

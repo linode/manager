@@ -1,6 +1,6 @@
 import { PaymentMethod } from '@linode/api-v4';
-import { makePayment } from '@linode/api-v4/lib/account';
-import { APIWarning } from '@linode/api-v4/lib/types';
+import { makePayment } from '@linode/api-v4';
+import { APIWarning } from '@linode/api-v4';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

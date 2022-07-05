@@ -6,8 +6,8 @@ import { mockMatchMedia } from 'src/utilities/testHelpers';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { Grants, Profile, UserPreferences } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Grants, Profile, UserPreferences } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,

@@ -1,5 +1,5 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Image } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
 import { displayType } from 'src/features/linodes/presentation';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { ExtendedLinode } from './types';

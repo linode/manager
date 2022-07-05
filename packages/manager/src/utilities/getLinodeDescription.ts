@@ -1,4 +1,4 @@
-import { Image } from '@linode/api-v4/lib/images';
+import { Image } from '@linode/api-v4';
 import { typeLabelLong } from 'src/features/linodes/presentation';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 

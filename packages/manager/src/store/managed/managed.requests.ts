@@ -6,7 +6,7 @@ import {
   getServices,
   ManagedServicePayload,
   updateServiceMonitor as _update,
-} from '@linode/api-v4/lib/managed';
+} from '@linode/api-v4';
 import { omit } from 'ramda';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers.tmp';

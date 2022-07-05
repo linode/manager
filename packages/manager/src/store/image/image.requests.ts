@@ -6,7 +6,7 @@ import {
   Image,
   updateImage as _update,
   uploadImage as _upload,
-} from '@linode/api-v4/lib/images';
+} from '@linode/api-v4';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

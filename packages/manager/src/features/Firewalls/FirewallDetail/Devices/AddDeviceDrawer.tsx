@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import v4 from 'uuid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

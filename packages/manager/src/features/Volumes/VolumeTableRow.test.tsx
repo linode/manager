@@ -1,4 +1,4 @@
-import { VolumeStatus } from '@linode/api-v4/lib/volumes';
+import { VolumeStatus } from '@linode/api-v4';
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';

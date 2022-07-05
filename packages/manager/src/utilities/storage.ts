@@ -1,4 +1,4 @@
-import { StackScriptPayload } from '@linode/api-v4/lib/stackscripts/types';
+import { StackScriptPayload } from '@linode/api-v4';
 import { devToolsEnabled } from 'src/dev-tools/load';
 const localStorageCache = {};
 

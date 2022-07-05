@@ -1,6 +1,6 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { StackScript } from '@linode/api-v4/lib/stackscripts';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { Image } from '@linode/api-v4';
+import { StackScript } from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import classNames from 'classnames';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';

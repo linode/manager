@@ -1,4 +1,4 @@
-import { Disk } from '@linode/api-v4/lib/linodes';
+import { Disk } from '@linode/api-v4';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Hidden from 'src/components/core/Hidden';

@@ -1,8 +1,5 @@
 import { PaymentMethod } from '@linode/api-v4';
-import {
-  ActivePromotion,
-  PromotionServiceType,
-} from '@linode/api-v4/lib/account/types';
+import { ActivePromotion, PromotionServiceType } from '@linode/api-v4';
 import { GridSize } from '@material-ui/core/Grid';
 import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
 import classNames from 'classnames';

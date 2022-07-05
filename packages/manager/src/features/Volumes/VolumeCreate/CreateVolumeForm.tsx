@@ -1,6 +1,6 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
-import { Region } from '@linode/api-v4/lib/regions/types';
-import { CreateVolumeSchema } from '@linode/validation/lib/volumes.schema';
+import { Linode } from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
+import { CreateVolumeSchema } from '@linode/validation';
 import { Formik } from 'formik';
 import * as React from 'react';
 import { connect, useSelector } from 'react-redux';

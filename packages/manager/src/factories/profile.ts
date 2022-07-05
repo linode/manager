@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import { Profile, SecurityQuestionsData } from '@linode/api-v4/lib/profile';
+import { Profile, SecurityQuestionsData } from '@linode/api-v4';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   uid: 9999,

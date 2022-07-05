@@ -1,4 +1,4 @@
-import { PromoCodeSchema } from '@linode/validation/lib/account.schema';
+import { PromoCodeSchema } from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { ActivePromotion } from './types';

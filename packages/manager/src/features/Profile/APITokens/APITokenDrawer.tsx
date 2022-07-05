@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { equals } from 'ramda';
 import * as React from 'react';

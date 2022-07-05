@@ -1,8 +1,8 @@
 import {
   SendPhoneVerificationCodePayload,
   VerifyVerificationCodePayload,
-} from '@linode/api-v4/lib/profile/types';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
 import { CountryCode, parsePhoneNumber } from 'libphonenumber-js';

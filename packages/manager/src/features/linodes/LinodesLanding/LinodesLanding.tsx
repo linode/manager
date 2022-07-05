@@ -1,5 +1,5 @@
-import { Config, Linode } from '@linode/api-v4/lib/linodes/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Config, Linode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';

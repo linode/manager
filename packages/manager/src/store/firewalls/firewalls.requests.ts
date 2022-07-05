@@ -7,7 +7,7 @@ import {
   getFirewalls,
   updateFirewall as _update,
   updateFirewallRules as _updateRules,
-} from '@linode/api-v4/lib/firewalls';
+} from '@linode/api-v4';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

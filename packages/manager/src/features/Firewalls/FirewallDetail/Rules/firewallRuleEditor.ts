@@ -25,7 +25,7 @@
 // instance manages "outbound" rules.
 
 import produce, { Draft, castDraft } from 'immer';
-import { FirewallRuleType } from '@linode/api-v4/lib/firewalls';
+import { FirewallRuleType } from '@linode/api-v4';
 import { compose, last, omit } from 'ramda';
 import { FirewallRuleError } from './shared';
 

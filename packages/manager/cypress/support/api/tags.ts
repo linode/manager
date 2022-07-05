@@ -1,4 +1,4 @@
-import { deleteTag, getTags } from '@linode/api-v4/lib/tags';
+import { deleteTag, getTags } from '@linode/api-v4';
 import { isTestLabel } from './common';
 
 /**

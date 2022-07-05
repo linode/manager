@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import { IncidentResponse, MaintenanceResponse } from './types';
 import { useQuery, UseQueryOptions } from 'react-query';
 import { LINODE_STATUS_PAGE_URL } from 'src/constants';

@@ -4,7 +4,7 @@ import {
   parseMonthOffset,
   getOffsetFromDate,
 } from './TransferHistory';
-import { Stats } from '@linode/api-v4/lib/linodes';
+import { Stats } from '@linode/api-v4';
 
 describe('combineGraphData', () => {
   const netStats: Stats['data']['netv4'] = {

@@ -1,8 +1,5 @@
-import { Image } from '@linode/api-v4/lib/images';
-import {
-  deleteStackScript,
-  updateStackScript,
-} from '@linode/api-v4/lib/stackscripts';
+import { Image } from '@linode/api-v4';
+import { deleteStackScript, updateStackScript } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

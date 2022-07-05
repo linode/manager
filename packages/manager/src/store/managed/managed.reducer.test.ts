@@ -1,7 +1,4 @@
-import {
-  ManagedServiceMonitor,
-  MonitorStatus,
-} from '@linode/api-v4/lib/managed';
+import { ManagedServiceMonitor, MonitorStatus } from '@linode/api-v4';
 import { monitorFactory } from 'src/factories/managed';
 
 const monitors = monitorFactory.buildList(5);

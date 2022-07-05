@@ -1,8 +1,5 @@
-import {
-  cancelTransfer,
-  TransferEntities,
-} from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { cancelTransfer, TransferEntities } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

@@ -6,8 +6,8 @@ import {
   getDomain,
   getDomains,
   updateDomain as _updateDomain,
-} from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { Dispatch } from 'redux';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';

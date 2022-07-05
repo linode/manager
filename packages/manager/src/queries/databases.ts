@@ -11,7 +11,7 @@ import {
   restoreWithBackup,
   updateDatabase,
   resetDatabaseCredentials,
-} from '@linode/api-v4/lib/databases';
+} from '@linode/api-v4';
 import {
   CreateDatabasePayload,
   Database,
@@ -23,12 +23,12 @@ import {
   Engine,
   UpdateDatabasePayload,
   UpdateDatabaseResponse,
-} from '@linode/api-v4/lib/databases/types';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryClient, queryPresets } from './base';
-import { Event } from '@linode/api-v4/lib/account/types';
+import { Event } from '@linode/api-v4';
 
 export const queryKey = 'databases';
 

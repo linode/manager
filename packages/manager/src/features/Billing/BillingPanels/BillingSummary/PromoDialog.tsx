@@ -7,11 +7,11 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { addPromotion } from '@linode/api-v4/lib/account';
+import { addPromotion } from '@linode/api-v4';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/account';
 import { useSnackbar } from 'notistack';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 
 const useStyles = makeStyles(() => ({
   input: {

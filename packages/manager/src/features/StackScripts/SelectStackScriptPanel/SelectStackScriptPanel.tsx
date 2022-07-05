@@ -1,12 +1,8 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
-import { Linode } from '@linode/api-v4/lib/linodes';
-import {
-  getStackScript,
-  StackScript,
-  UserDefinedField,
-} from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Grant } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
+import { getStackScript, StackScript, UserDefinedField } from '@linode/api-v4';
+import { ResourcePage } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';

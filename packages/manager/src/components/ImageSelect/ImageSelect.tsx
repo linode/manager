@@ -1,4 +1,4 @@
-import { Image } from '@linode/api-v4/lib/images';
+import { Image } from '@linode/api-v4';
 import produce from 'immer';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';

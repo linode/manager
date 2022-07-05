@@ -1,4 +1,4 @@
-import { AccountCapability } from '@linode/api-v4/lib/account';
+import { AccountCapability } from '@linode/api-v4';
 
 import { curry } from 'ramda';
 

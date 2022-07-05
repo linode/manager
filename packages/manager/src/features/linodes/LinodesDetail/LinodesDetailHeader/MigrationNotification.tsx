@@ -1,5 +1,5 @@
-import { NotificationType } from '@linode/api-v4/lib/account';
-import { scheduleOrQueueMigration } from '@linode/api-v4/lib/linodes';
+import { NotificationType } from '@linode/api-v4';
+import { scheduleOrQueueMigration } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

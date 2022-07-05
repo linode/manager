@@ -1,10 +1,5 @@
 import jsPDF from 'jspdf';
-import {
-  Account,
-  Invoice,
-  InvoiceItem,
-  Payment,
-} from '@linode/api-v4/lib/account';
+import { Account, Invoice, InvoiceItem, Payment } from '@linode/api-v4';
 import { splitEvery } from 'ramda';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet } from 'src/featureFlags';

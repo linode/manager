@@ -1,4 +1,4 @@
-import { VLAN } from '@linode/api-v4/lib/vlans';
+import { VLAN } from '@linode/api-v4';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import {

@@ -1,6 +1,6 @@
-import { Grant } from '@linode/api-v4/lib/account';
-import { getStackScripts, StackScript } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Grant } from '@linode/api-v4';
+import { getStackScripts, StackScript } from '@linode/api-v4';
+import { ResourcePage } from '@linode/api-v4';
 import { StackScriptsRequest } from './types';
 
 export type StackScriptCategory = 'account' | 'community';

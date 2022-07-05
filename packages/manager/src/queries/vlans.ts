@@ -1,5 +1,5 @@
-import { getVlans, VLAN } from '@linode/api-v4/lib/vlans';
-import { APIError } from '@linode/api-v4/lib/types';
+import { getVlans, VLAN } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { queryPresets } from './base';
 

@@ -1,4 +1,4 @@
-import { createPersonalAccessTokenSchema } from '@linode/validation/lib/profile.schema';
+import { createPersonalAccessTokenSchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

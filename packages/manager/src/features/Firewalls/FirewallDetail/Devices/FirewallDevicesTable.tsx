@@ -1,5 +1,5 @@
-import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { FirewallDevice } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import TableBody from 'src/components/core/TableBody';

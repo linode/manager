@@ -1,7 +1,4 @@
-import {
-  stackScriptSchema,
-  updateStackScriptSchema,
-} from '@linode/validation/lib/stackscripts.schema';
+import { stackScriptSchema, updateStackScriptSchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

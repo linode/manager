@@ -3,7 +3,7 @@ import PaymentMethodRow from './PaymentMethodRow';
 import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { makeDefaultPaymentMethod } from '@linode/api-v4/lib';
+import { makeDefaultPaymentMethod } from '@linode/api-v4';
 import * as React from 'react';
 
 jest.mock('@linode/api-v4/lib', () => {

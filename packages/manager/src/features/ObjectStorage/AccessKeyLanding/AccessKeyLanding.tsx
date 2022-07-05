@@ -4,7 +4,7 @@ import {
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 import { FormikBag } from 'formik';
 import * as React from 'react';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';

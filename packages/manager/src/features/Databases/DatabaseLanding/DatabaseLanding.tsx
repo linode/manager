@@ -17,7 +17,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useDatabasesQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { DatabaseRow } from './DatabaseRow';
-import { DatabaseInstance } from '@linode/api-v4/lib/databases';
+import { DatabaseInstance } from '@linode/api-v4';
 
 const preferenceKey = 'databases';
 

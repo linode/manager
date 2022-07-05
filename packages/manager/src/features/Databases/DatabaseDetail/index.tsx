@@ -1,5 +1,5 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Engine } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { matchPath, useHistory, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';

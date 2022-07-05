@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { LinodeType } from '@linode/api-v4';
 
 export const types: LinodeType[] = [
   {

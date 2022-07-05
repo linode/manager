@@ -3,7 +3,7 @@ import {
   PoolNodeResponse,
   autoscaleNodePool,
   AutoscaleNodePool as AutoscaleNodePoolValues,
-} from '@linode/api-v4/lib/kubernetes';
+} from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useSelector } from 'react-redux';

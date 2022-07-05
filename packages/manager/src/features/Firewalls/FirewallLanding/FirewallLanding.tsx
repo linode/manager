@@ -1,4 +1,4 @@
-import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4';
 import * as React from 'react';
 import {
   RouteComponentProps,

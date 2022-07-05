@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { UseQueryResult } from 'react-query';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { Grants, Profile } from '@linode/api-v4/lib';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Grants, Profile } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 
 export interface ProfileProps {
   profile: UseQueryResult<Profile, APIError[]>;

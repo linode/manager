@@ -2,10 +2,10 @@ import {
   getAccountInfo,
   getAccountSettings,
   Notification,
-} from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
-import { getProfile } from '@linode/api-v4/lib/profile';
-import { Region } from '@linode/api-v4/lib/regions';
+} from '@linode/api-v4';
+import { Linode, LinodeType } from '@linode/api-v4';
+import { getProfile } from '@linode/api-v4';
+import { Region } from '@linode/api-v4';
 import { difference, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

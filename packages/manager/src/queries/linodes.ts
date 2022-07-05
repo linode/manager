@@ -1,5 +1,5 @@
-import { NetworkTransfer } from '@linode/api-v4/lib/account/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { NetworkTransfer } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { listToItemsByID, queryPresets } from './base';
@@ -10,7 +10,7 @@ import {
   Stats,
   getLinodeTransferByDate,
   getLinodeStats,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 import { parseAPIDate } from 'src/utilities/date';
 import { DateTime } from 'luxon';
 

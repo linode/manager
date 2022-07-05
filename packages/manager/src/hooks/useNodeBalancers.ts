@@ -1,4 +1,4 @@
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers/types';
+import { NodeBalancer } from '@linode/api-v4';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/nodeBalancer/nodeBalancer.reducer';

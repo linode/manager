@@ -1,4 +1,4 @@
-import { Notification } from '@linode/api-v4/lib/account';
+import { Notification } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 

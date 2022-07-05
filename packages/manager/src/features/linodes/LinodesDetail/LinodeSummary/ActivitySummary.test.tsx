@@ -1,4 +1,4 @@
-import * as account from '@linode/api-v4/lib/account/events';
+import * as account from '@linode/api-v4';
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { ActivitySummary } from './ActivitySummary';

@@ -19,10 +19,7 @@
  * instructions
  *
  */
-import {
-  executePaypalPayment,
-  stagePaypalPayment,
-} from '@linode/api-v4/lib/account';
+import { executePaypalPayment, stagePaypalPayment } from '@linode/api-v4';
 import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';

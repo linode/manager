@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { PaymentMethod } from '@linode/api-v4/lib/account/types';
+import { PaymentMethod } from '@linode/api-v4';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
@@ -8,7 +8,7 @@ import Chip from 'src/components/core/Chip';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { makeDefaultPaymentMethod } from '@linode/api-v4/lib/account';
+import { makeDefaultPaymentMethod } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountPayment';

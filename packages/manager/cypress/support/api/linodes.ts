@@ -7,7 +7,7 @@ import {
 } from './common';
 import { randomLabel, randomString } from 'support/util/random';
 
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
+import { CreateLinodeRequest } from '@linode/api-v4';
 import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 

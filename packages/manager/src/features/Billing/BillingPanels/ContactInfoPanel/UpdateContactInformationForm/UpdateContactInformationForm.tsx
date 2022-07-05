@@ -1,5 +1,5 @@
-import { Account, updateAccountInfo } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Account, updateAccountInfo } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import countryData, { Region } from 'country-region-data';
 import { defaultTo, lensPath, pathOr, pick, set } from 'ramda';
 import * as React from 'react';

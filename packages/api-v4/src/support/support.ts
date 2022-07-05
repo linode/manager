@@ -1,7 +1,7 @@
 import {
   createReplySchema,
   createSupportTicketSchema,
-} from '@linode/validation/lib/support.schema';
+} from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

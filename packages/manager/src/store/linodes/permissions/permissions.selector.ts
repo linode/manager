@@ -1,4 +1,4 @@
-import { Grant, GrantLevel, Grants } from '@linode/api-v4/lib/account';
+import { Grant, GrantLevel, Grants } from '@linode/api-v4';
 
 export const getPermissionsForLinode = (
   grants: Grants | null | undefined,

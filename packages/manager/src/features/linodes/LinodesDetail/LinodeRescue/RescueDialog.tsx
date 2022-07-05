@@ -1,5 +1,5 @@
-import { rescueLinode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { rescueLinode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import { assoc, clamp, equals, pathOr } from 'ramda';
 import * as React from 'react';

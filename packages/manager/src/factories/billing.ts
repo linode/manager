@@ -1,12 +1,12 @@
 import * as Factory from 'factory.ts';
-import { APIWarning } from '@linode/api-v4/lib/types';
+import { APIWarning } from '@linode/api-v4';
 import {
   InvoiceItem,
   Payment,
   PaymentResponse,
   PaypalResponse,
   Invoice,
-} from '@linode/api-v4/lib/account';
+} from '@linode/api-v4';
 
 export const invoiceItemFactory = Factory.Sync.makeFactory<InvoiceItem>({
   label: Factory.each((i) => `Nanode 1GB - my-linode-${i} (${i})`),

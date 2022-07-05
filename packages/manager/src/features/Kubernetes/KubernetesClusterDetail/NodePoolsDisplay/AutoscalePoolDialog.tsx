@@ -1,5 +1,5 @@
-import { AutoscaleNodePool } from '@linode/api-v4/lib/kubernetes';
-import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
+import { AutoscaleNodePool } from '@linode/api-v4';
+import { AutoscaleNodePoolSchema } from '@linode/validation';
 import { useFormik } from 'formik';
 import * as React from 'react';
 import classNames from 'classnames';

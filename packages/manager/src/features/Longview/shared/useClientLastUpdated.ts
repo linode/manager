@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import { useEffect, useRef, useState } from 'react';
 import { getLastUpdated } from '../request';

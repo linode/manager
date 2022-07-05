@@ -18,8 +18,8 @@ import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { NodeBalancer } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useHistory } from 'react-router-dom';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';

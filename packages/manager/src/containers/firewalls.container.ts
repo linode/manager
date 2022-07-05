@@ -1,8 +1,4 @@
-import {
-  CreateFirewallPayload,
-  Firewall,
-  FirewallRules,
-} from '@linode/api-v4/lib/firewalls';
+import { CreateFirewallPayload, Firewall, FirewallRules } from '@linode/api-v4';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import {

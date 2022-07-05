@@ -2,7 +2,7 @@
  * @file Functions and utilities to assist with Linode API v4 authentication.
  */
 
-import { baseRequest } from '@linode/api-v4/lib/request';
+import { baseRequest } from '@linode/api-v4';
 
 const oauthToken = Cypress.env('MANAGER_OAUTH');
 

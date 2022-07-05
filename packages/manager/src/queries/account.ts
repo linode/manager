@@ -1,9 +1,5 @@
-import {
-  Account,
-  getAccountInfo,
-  updateAccountInfo,
-} from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Account, getAccountInfo, updateAccountInfo } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useMutation, useQuery } from 'react-query';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import { mutationHandlers, queryPresets } from './base';

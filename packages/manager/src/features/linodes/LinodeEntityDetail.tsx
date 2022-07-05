@@ -1,5 +1,5 @@
-import { Config, LinodeBackups } from '@linode/api-v4/lib/linodes';
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Config, LinodeBackups } from '@linode/api-v4';
+import { Linode } from '@linode/api-v4';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

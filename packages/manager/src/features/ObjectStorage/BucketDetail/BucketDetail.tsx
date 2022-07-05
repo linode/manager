@@ -3,7 +3,7 @@ import {
   ObjectStorageClusterID,
   ObjectStorageObject,
   ObjectStorageObjectListResponse,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';

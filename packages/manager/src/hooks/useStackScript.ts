@@ -1,5 +1,5 @@
-import { Image } from '@linode/api-v4/lib/images';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { Image } from '@linode/api-v4';
+import { UserDefinedField } from '@linode/api-v4';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 

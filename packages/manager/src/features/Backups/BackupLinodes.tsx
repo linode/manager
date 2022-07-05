@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { LinodeType } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {

@@ -1,5 +1,5 @@
-import { Event } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
+import { Event } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';

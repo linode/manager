@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
+import { DatabaseBackup } from '@linode/api-v4';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';

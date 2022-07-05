@@ -1,4 +1,4 @@
-import { Firewall } from '@linode/api-v4/lib/firewalls';
+import { Firewall } from '@linode/api-v4';
 
 export const firewall: Firewall = {
   id: 1,

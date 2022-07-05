@@ -1,4 +1,4 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Event, EventAction } from '@linode/api-v4';
 
 // Removes events we don't want to display.
 export const removeBlocklistedEvents = (

@@ -2,7 +2,7 @@ import {
   createImageSchema,
   updateImageSchema,
   uploadImageSchema,
-} from '@linode/validation/lib/images.schema';
+} from '@linode/validation';
 import { API_ROOT } from '../constants';
 import Request, {
   setData,

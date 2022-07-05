@@ -3,7 +3,7 @@ import {
   deleteFirewallDevice as _delete,
   FirewallDevice,
   getFirewallDevices as _get,
-} from '@linode/api-v4/lib/firewalls';
+} from '@linode/api-v4';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

@@ -1,5 +1,5 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
-import { APIError } from '@linode/api-v4/lib/types';
+import { LongviewClient } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { GetAllData } from 'src/utilities/getAll';
 
 import actionCreatorFactory from 'typescript-fsa';

@@ -1,4 +1,4 @@
-import { GrantLevel } from '@linode/api-v4/lib/account';
+import { GrantLevel } from '@linode/api-v4';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as recompose } from 'recompose';

@@ -1,5 +1,5 @@
-import { Notification } from '@linode/api-v4/lib/account';
-import { LinodeStatus } from '@linode/api-v4/lib/linodes';
+import { Notification } from '@linode/api-v4';
+import { LinodeStatus } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import MaintenanceBanner from 'src/components/MaintenanceBanner';

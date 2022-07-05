@@ -2,8 +2,8 @@ import {
   FirewallPolicyType,
   FirewallRules,
   FirewallRuleType,
-} from '@linode/api-v4/lib/firewalls';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';

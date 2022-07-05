@@ -1,5 +1,5 @@
 // @todo rename this file to store.helpers when all reducers are using MappedEntityState2
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import { assoc, omit } from 'ramda';
 import {
   Entity,

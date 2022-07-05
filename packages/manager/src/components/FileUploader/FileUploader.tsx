@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4';
 import classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';

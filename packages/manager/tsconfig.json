@@ -23,8 +23,6 @@
     "baseUrl": ".",
     "paths": {
       "src/*": ["src/*"]
-      // "@linode/api-v4": ["../../packages/api-v4"],
-      // "@linode/validation": ["../../packages/validation"],
     }
   },
   "exclude": [

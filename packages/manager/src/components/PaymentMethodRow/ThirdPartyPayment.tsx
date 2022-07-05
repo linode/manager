@@ -1,4 +1,4 @@
-import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4/lib/account';
+import { PaymentMethod, ThirdPartyPayment } from '@linode/api-v4';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';

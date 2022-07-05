@@ -1,5 +1,5 @@
-import * as profile from '@linode/api-v4/lib/profile/profile';
-import * as account from '@linode/api-v4/lib/account/account';
+import * as profile from '@linode/api-v4';
+import * as account from '@linode/api-v4';
 import { waitFor, fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import { notificationFactory } from 'src/factories';

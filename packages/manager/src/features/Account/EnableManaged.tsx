@@ -1,5 +1,5 @@
-import { enableManaged } from '@linode/api-v4/lib/managed';
-import { APIError } from '@linode/api-v4/lib/types';
+import { enableManaged } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';

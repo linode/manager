@@ -1,5 +1,5 @@
-import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { deletePaymentMethod, PaymentMethod } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';

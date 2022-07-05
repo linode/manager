@@ -11,7 +11,7 @@ import {
   CreateFirewallSchema,
   FirewallDeviceSchema,
   UpdateFirewallSchema,
-} from '@linode/validation/lib/firewalls.schema';
+} from '@linode/validation';
 import {
   CreateFirewallPayload,
   Firewall,

@@ -1,4 +1,4 @@
-import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
+import { CreateTransferPayload } from '@linode/api-v4';
 import { curry } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';

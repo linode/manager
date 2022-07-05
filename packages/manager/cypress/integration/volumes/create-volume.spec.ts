@@ -1,4 +1,4 @@
-import { createLinode, Linode } from '@linode/api-v4/lib/linodes';
+import { createLinode, Linode } from '@linode/api-v4';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { regions, regionsMap } from 'support/constants/regions';

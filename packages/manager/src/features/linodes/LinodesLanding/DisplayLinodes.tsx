@@ -1,4 +1,4 @@
-import { Config } from '@linode/api-v4/lib/linodes';
+import { Config } from '@linode/api-v4';
 import * as React from 'react';
 import { useLocation } from 'react-router-dom';
 import TableBody from 'src/components/core/TableBody';

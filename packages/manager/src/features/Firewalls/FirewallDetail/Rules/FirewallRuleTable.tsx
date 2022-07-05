@@ -1,4 +1,4 @@
-import { FirewallPolicyType } from '@linode/api-v4/lib/firewalls/types';
+import { FirewallPolicyType } from '@linode/api-v4';
 import classNames from 'classnames';
 import { prop, uniqBy } from 'ramda';
 import * as React from 'react';

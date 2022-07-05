@@ -1,4 +1,4 @@
-import { EventAction, EventStatus } from '@linode/api-v4/lib/account';
+import { EventAction, EventStatus } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';

@@ -1,4 +1,4 @@
-import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
+import { ManagedLinodeSetting } from '@linode/api-v4';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import TableCell from 'src/components/TableCell';

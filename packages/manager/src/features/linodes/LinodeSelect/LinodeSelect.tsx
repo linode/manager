@@ -1,5 +1,5 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { Linode } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

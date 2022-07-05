@@ -1,4 +1,4 @@
-import { createKubeClusterSchema } from '@linode/validation/lib/kubernetes.schema';
+import { createKubeClusterSchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

@@ -1,7 +1,4 @@
-import {
-  AutoscaleNodePool,
-  PoolNodeResponse,
-} from '@linode/api-v4/lib/kubernetes';
+import { AutoscaleNodePool, PoolNodeResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Button from 'src/components/Button';

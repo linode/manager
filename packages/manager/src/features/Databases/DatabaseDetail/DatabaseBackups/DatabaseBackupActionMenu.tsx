@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { DatabaseBackup } from '@linode/api-v4/lib/databases';
+import { DatabaseBackup } from '@linode/api-v4';
 import { makeStyles } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 

@@ -1,13 +1,13 @@
-import { Account, Grant } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
+import { Account, Grant } from '@linode/api-v4';
+import { Image } from '@linode/api-v4';
 import {
   createStackScript,
   getStackScript,
   StackScript,
   StackScriptPayload,
   updateStackScript,
-} from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

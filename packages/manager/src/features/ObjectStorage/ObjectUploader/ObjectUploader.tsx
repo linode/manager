@@ -1,4 +1,4 @@
-import { getObjectURL } from '@linode/api-v4/lib/object-storage';
+import { getObjectURL } from '@linode/api-v4';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';

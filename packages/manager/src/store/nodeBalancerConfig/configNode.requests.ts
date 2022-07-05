@@ -4,7 +4,7 @@ import {
   getNodeBalancerConfigNodes as _getConfigNodes,
   NodeBalancerConfig,
   updateNodeBalancerConfigNode as _updateNode,
-} from '@linode/api-v4/lib/nodebalancers';
+} from '@linode/api-v4';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

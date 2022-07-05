@@ -1,5 +1,5 @@
-import { IPAddress, updateIP } from '@linode/api-v4/lib/networking';
-import { APIError } from '@linode/api-v4/lib/types';
+import { IPAddress, updateIP } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

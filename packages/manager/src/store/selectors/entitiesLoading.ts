@@ -1,8 +1,8 @@
-import { Domain } from '@linode/api-v4/lib/domains';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
+import { Domain } from '@linode/api-v4';
+import { Linode, LinodeType } from '@linode/api-v4';
+import { NodeBalancer } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
+import { Volume } from '@linode/api-v4';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import {

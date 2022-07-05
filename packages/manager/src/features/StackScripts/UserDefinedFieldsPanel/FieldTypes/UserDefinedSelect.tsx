@@ -1,4 +1,4 @@
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { UserDefinedField } from '@linode/api-v4';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputLabel from 'src/components/core/InputLabel';

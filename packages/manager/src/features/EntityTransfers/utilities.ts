@@ -1,4 +1,4 @@
-import { TransferEntities } from '@linode/api-v4/lib/entity-transfers';
+import { TransferEntities } from '@linode/api-v4';
 import capitalize from 'src/utilities/capitalize';
 
 // Return the count of each transferred entity by type, for reporting to GA.

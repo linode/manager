@@ -1,5 +1,5 @@
-import { CreateFirewallPayload, Firewall } from '@linode/api-v4/lib/firewalls';
-import { CreateFirewallSchema } from '@linode/validation/lib/firewalls.schema';
+import { CreateFirewallPayload, Firewall } from '@linode/api-v4';
+import { CreateFirewallSchema } from '@linode/validation';
 import { Formik, FormikBag } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

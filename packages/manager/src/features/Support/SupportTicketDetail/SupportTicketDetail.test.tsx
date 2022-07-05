@@ -12,8 +12,8 @@ import { rest, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { profileFactory } from 'src/factories';
 import { UseQueryResult } from 'react-query';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Grants, Profile } from '@linode/api-v4/lib';
+import { APIError } from '@linode/api-v4';
+import { Grants, Profile } from '@linode/api-v4';
 
 const classes: Record<ClassNames, string> = {
   title: '',

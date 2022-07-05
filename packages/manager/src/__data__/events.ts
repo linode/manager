@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account';
+import { Event } from '@linode/api-v4';
 import { ExtendedEvent } from 'src/store/events/event.types';
 
 export const events: Event[] = [

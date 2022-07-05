@@ -1,4 +1,4 @@
-import { getDomain } from '@linode/api-v4/lib/domains';
+import { getDomain } from '@linode/api-v4';
 import { deleteDomain, upsertDomain } from 'src/store/domains/domains.actions';
 import { EventHandler } from 'src/store/types';
 

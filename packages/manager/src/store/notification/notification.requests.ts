@@ -1,4 +1,4 @@
-import { getNotifications, Notification } from '@linode/api-v4/lib/account';
+import { getNotifications, Notification } from '@linode/api-v4';
 import { ThunkActionCreator } from '../types';
 import {
   handleError,

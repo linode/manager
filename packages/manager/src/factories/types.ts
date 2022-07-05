@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
+import { LinodeType } from '@linode/api-v4';
 import * as Factory from 'factory.ts';
 
 export const typeFactory = Factory.Sync.makeFactory<LinodeType>({

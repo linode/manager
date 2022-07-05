@@ -1,8 +1,5 @@
-import {
-  createSupportTicket,
-  uploadAttachment,
-} from '@linode/api-v4/lib/support';
-import { APIError } from '@linode/api-v4/lib/types';
+import { createSupportTicket, uploadAttachment } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';

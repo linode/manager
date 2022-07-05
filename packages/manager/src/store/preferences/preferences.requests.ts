@@ -1,7 +1,7 @@
 import {
   getUserPreferences as _getUserPreferences,
   updateUserPreferences as _updateUserPreferences,
-} from '@linode/api-v4/lib/profile';
+} from '@linode/api-v4';
 import { createRequestThunk } from '../store.helpers';
 
 import {

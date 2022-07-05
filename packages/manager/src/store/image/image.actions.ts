@@ -3,8 +3,8 @@ import {
   Image,
   ImageUploadPayload,
   UploadImageResponse,
-} from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/images`);

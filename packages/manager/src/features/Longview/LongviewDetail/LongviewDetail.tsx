@@ -1,4 +1,4 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
+import { LongviewClient } from '@linode/api-v4';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';

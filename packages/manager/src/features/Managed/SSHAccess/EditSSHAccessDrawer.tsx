@@ -1,8 +1,5 @@
 import { Formik, FormikHelpers } from 'formik';
-import {
-  ManagedLinodeSetting,
-  updateLinodeSettings,
-} from '@linode/api-v4/lib/managed';
+import { ManagedLinodeSetting, updateLinodeSettings } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';

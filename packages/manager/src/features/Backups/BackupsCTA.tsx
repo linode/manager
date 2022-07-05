@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4';
 import Close from '@material-ui/icons/Close';
 import { isEmpty } from 'ramda';
 import * as React from 'react';

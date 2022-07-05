@@ -1,4 +1,4 @@
-import { VLAN } from '@linode/api-v4/lib/vlans/types';
+import { VLAN } from '@linode/api-v4';
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/vlans/vlans.reducer';

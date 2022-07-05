@@ -1,4 +1,4 @@
-import { Domain, getDomains } from '@linode/api-v4/lib/domains';
+import { Domain, getDomains } from '@linode/api-v4';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';

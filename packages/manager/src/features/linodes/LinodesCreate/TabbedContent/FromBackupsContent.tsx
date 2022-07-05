@@ -2,7 +2,7 @@ import {
   getLinodeBackups,
   Linode,
   LinodeBackupsResponse,
-} from '@linode/api-v4/lib/linodes';
+} from '@linode/api-v4';
 import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';

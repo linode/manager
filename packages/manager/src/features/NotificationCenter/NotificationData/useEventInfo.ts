@@ -1,4 +1,4 @@
-import { Event } from '@linode/api-v4/lib/account/types';
+import { Event } from '@linode/api-v4';
 import { path } from 'ramda';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { formatEventWithUsername } from 'src/features/Events/Event.helpers';

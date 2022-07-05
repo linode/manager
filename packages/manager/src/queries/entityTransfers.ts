@@ -4,8 +4,8 @@ import {
   EntityTransfer,
   getEntityTransfer,
   getEntityTransfers,
-} from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { useMutation, useQuery } from 'react-query';
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
 

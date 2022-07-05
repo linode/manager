@@ -1,4 +1,4 @@
-import { createSSHKeySchema } from '@linode/validation/lib/profile.schema';
+import { createSSHKeySchema } from '@linode/validation';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
+import { AccountMaintenance } from '@linode/api-v4';
 import Hidden from 'src/components/core/Hidden';
 import Link from 'src/components/Link';
 import StatusIcon from 'src/components/StatusIcon';

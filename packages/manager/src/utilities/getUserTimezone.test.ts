@@ -1,6 +1,6 @@
 import getUserTimezone from './getUserTimezone';
 import { DateTime } from 'luxon';
-import { Profile } from '@linode/api-v4/lib/profile';
+import { Profile } from '@linode/api-v4';
 import { profileFactory } from 'src/factories/profile';
 
 const mockProfile: Profile = profileFactory.build();

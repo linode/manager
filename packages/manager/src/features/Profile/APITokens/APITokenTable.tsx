@@ -1,4 +1,4 @@
-import { Account } from '@linode/api-v4/lib';
+import { Account } from '@linode/api-v4';
 import {
   createPersonalAccessToken,
   deleteAppToken,
@@ -7,8 +7,8 @@ import {
   getPersonalAccessTokens,
   Token,
   updatePersonalAccessToken,
-} from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+} from '@linode/api-v4';
+import { APIError } from '@linode/api-v4';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import { compose } from 'recompose';

@@ -3,7 +3,7 @@
 Cloud Manager makes requests of the Linode API using the methods imported from the **api-v4** package:
 
 ```ts
-import { getLinodes } from '@linode/api-v4/lib/linodes';
+import { getLinodes } from '@linode/api-v4';
 
 getLinodes().then({ data } => {
   console.log(data);
@@ -37,7 +37,7 @@ The basic way to fetch data in a component is to use an **api-v4** method direct
 
 ```tsx
 import * as React from 'react';
-import { getProfile } from '@linode/api-v4/lib/profile';
+import { getProfile } from '@linode/api-v4';
 // ... other imports
 
 const UsernameDisplay: React.FC<> = () => {
