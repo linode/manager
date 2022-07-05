@@ -6,6 +6,7 @@
   "types": "lib/index.d.ts",
   "typings": "lib/index.d.ts",
   "module": "lib/esm/index.js",
+  "unpkg": "lib/iife/index.js",
   "files": [
     "lib"
   ],

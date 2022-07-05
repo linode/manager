@@ -19,6 +19,7 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "module": "lib/esm/index.js",
+  "unpkg": "lib/iife/index.js",
   "dependencies": {
     "@linode/validation": "*",
     "@types/yup": "^0.29.13",
