@@ -42,7 +42,7 @@ export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
     <TextField
       value={value}
       {...restProps}
-      className={`${className} ${'copy'} ${classes.removeDisabledStyles}`}
+      className={`${className} ${classes.removeDisabledStyles}`}
       disabled
       InputProps={{
         endAdornment: hideIcon ? undefined : (

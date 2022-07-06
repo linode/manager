@@ -32,14 +32,6 @@ type CombinedProps = Props;
 const renderActions = (onClose: () => void) => (
   <ActionsPanel>
     <Button
-      buttonType="secondary"
-      onClick={onClose}
-      data-qa-cancel
-      data-testid="dialog-cancel"
-    >
-      Close
-    </Button>
-    <Button
       buttonType="primary"
       onClick={onClose}
       data-qa-confirm
