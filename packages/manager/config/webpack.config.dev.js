@@ -11,6 +11,7 @@ const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const getClientEnvironment = require('./env');
 const paths = require('./paths');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const ExtraWatchWebpackPlugin = require('extra-watch-webpack-plugin');
 
 // Webpack uses `publicPath` to determine where the app is being served from.
 // In development, we always serve from the root. This makes config easier.
@@ -201,6 +202,9 @@ module.exports = {
         enabled: false,
         files: './src/**/*.{ts,tsx,js,jsx}',
       },
+    }),
+    new ExtraWatchWebpackPlugin({
+      files: ['../api-v4/lib/index.d.ts', '../validation/lib/index.d.ts'],
     }),
     new CircularDependencyPlugin({
       // exclude detection of files based on a RegExp
