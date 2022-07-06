@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.Mui-disabled': {
       borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
       color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      background: theme.bg.main,
       opacity: 1,
     },
   },
