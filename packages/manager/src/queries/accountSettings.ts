@@ -5,15 +5,20 @@ import {
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
+import { useProfile } from 'src/queries/profile';
 import { queryClient, queryPresets } from './base';
 
 export const queryKey = 'account-settings';
 
-export const useAccountSettings = () =>
-  useQuery<AccountSettings, APIError[]>(queryKey, getAccountSettings, {
+export const useAccountSettings = () => {
+  const { data: profile } = useProfile();
+
+  return useQuery<AccountSettings, APIError[]>(queryKey, getAccountSettings, {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
+    enabled: !profile?.restricted,
   });
+};
 
 export const useMutateAccountSettings = () => {
   return useMutation<AccountSettings, APIError[], Partial<AccountSettings>>(

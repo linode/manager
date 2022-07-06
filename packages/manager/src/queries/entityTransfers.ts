@@ -7,6 +7,7 @@ import {
 } from '@linode/api-v4/lib/entity-transfers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
+import { useProfile } from 'src/queries/profile';
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
 
 export const queryKey = 'entity-transfers';
@@ -43,10 +44,15 @@ const getAllEntityTransfersRequest = (
   }));
 
 export const useEntityTransfersQuery = (params: any = {}, filter: any = {}) => {
+  const { data: profile } = useProfile();
+
   return useQuery<EntityTransfersData, APIError[]>(
     [queryKey, params, filter],
     () => getAllEntityTransfersRequest(params, filter),
-    queryPresets.longLived
+    {
+      ...queryPresets.longLived,
+      enabled: !profile?.restricted,
+    }
   );
 };
 
