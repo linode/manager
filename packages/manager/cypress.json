@@ -7,7 +7,7 @@
   "viewportWidth": 1440,
   "viewportHeight": 900,
   "projectId": "5rhsif",
-  "requestTimeout": 20000,
+  "requestTimeout": 30000,
   "responseTimeout": 80000,
   "retries": 2
 }
