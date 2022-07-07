@@ -1,8 +1,10 @@
 import { NetworkTransfer } from '@linode/api-v4/lib/account/types';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import { listToItemsByID, queryPresets } from './base';
+import { parseAPIDate } from 'src/utilities/date';
+import { DateTime } from 'luxon';
 import {
   Linode,
   getLinodes,
@@ -11,8 +13,6 @@ import {
   getLinodeTransferByDate,
   getLinodeStats,
 } from '@linode/api-v4/lib/linodes';
-import { parseAPIDate } from 'src/utilities/date';
-import { DateTime } from 'luxon';
 
 export const STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
@@ -27,6 +27,18 @@ interface LinodeData {
 }
 
 export const useLinodesQuery = (
+  params: any = {},
+  filter: any = {},
+  enabled: boolean = true
+) => {
+  return useQuery<ResourcePage<Linode>, APIError[]>(
+    [queryKey, params, filter],
+    () => getLinodes(params, filter),
+    { ...queryPresets.longLived, enabled }
+  );
+};
+
+export const useLinodesByIdQuery = (
   params: any = {},
   filter: any = {},
   enabled: boolean = true

@@ -1,15 +1,12 @@
-import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
 
 interface Props {
-  updateDomain: (
-    payload: UpdateDomainPayload & { domainId: number }
-  ) => Promise<Domain>;
   selectedDomainID?: number;
   selectedDomainLabel: string;
   closeDialog: () => void;
@@ -17,11 +14,10 @@ interface Props {
   errors?: APIError[];
 }
 
-type CombinedProps = Props;
-
-const DisableDomainDialog: React.FC<CombinedProps> = (props) => {
+const DisableDomainDialog: React.FC<Props> = (props) => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
   React.useEffect(() => {
     if (props.open) {
@@ -40,11 +36,10 @@ const DisableDomainDialog: React.FC<CombinedProps> = (props) => {
 
     setSubmitting(true);
 
-    props
-      .updateDomain({
-        domainId: props.selectedDomainID,
-        status: 'disabled',
-      })
+    updateDomain({
+      id: props.selectedDomainID,
+      status: 'disabled',
+    })
       .then(() => {
         setSubmitting(false);
         sendDomainStatusChangeEvent('Disable');
