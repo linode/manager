@@ -10,6 +10,7 @@ import {
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { queryClient } from './base';
+import { EntityEvent } from '@linode/api-v4';
 
 export const queryKey = 'domains';
 
@@ -23,14 +24,14 @@ export const useDomainsQuery = (params: any, filter: any) =>
 export const useCreateDomainMutation = () =>
   useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
     onSuccess: () => {
-      queryClient.invalidateQueries(`${queryKey}-list`);
+      invalidatePaginatedStore();
     },
   });
 
 export const useDeleteDomainMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteDomain(id), {
     onSuccess: () => {
-      queryClient.invalidateQueries(`${queryKey}-list`);
+      invalidatePaginatedStore();
     },
   });
 
@@ -74,4 +75,49 @@ const updatePaginatedDomainsStore = (id: number, newData: Partial<Domain>) => {
       return oldData;
     }
   );
+};
+
+// @TODO: make this generic
+const doesDomainExistInPaginatedStore = (id: number) => {
+  const stores = queryClient.getQueriesData<ResourcePage<Domain> | undefined>(
+    `${queryKey}-list`
+  );
+
+  for (const store of stores) {
+    const data = store[1]?.data;
+    if (data?.some((domain) => domain.id === id)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+// @TODO: make this generic
+const doesDomainExistInStore = (id: number) => {
+  const data = queryClient.getQueryData<Domain | undefined>([queryKey, id]);
+
+  return data !== undefined;
+};
+
+const invalidatePaginatedStore = () => {
+  queryClient.invalidateQueries(`${queryKey}-list`);
+};
+
+export const domainEventsHandler = (event: EntityEvent) => {
+  const { action, entity } = event;
+  const { id } = entity;
+
+  if (action === 'domain_create' && !doesDomainExistInPaginatedStore(id)) {
+    invalidatePaginatedStore();
+  }
+
+  if (action === 'domain_delete') {
+    if (doesDomainExistInPaginatedStore(id)) {
+      invalidatePaginatedStore();
+    }
+    if (doesDomainExistInStore(id)) {
+      queryClient.removeQueries([queryKey, id], { exact: true });
+    }
+  }
 };
