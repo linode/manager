@@ -43,7 +43,6 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
     <TableRow
       key={id}
       data-qa-domain-cell={domain}
-      className="fade-in-table"
       ariaLabel={`Domain ${domain}`}
     >
       <TableCell data-qa-domain-label>

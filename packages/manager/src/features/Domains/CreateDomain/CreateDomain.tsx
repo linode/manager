@@ -9,7 +9,6 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { useFormik } from 'formik';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -36,6 +35,7 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import {
@@ -43,10 +43,6 @@ import {
   resetDrawer,
 } from 'src/store/domainDrawer';
 import { upsertDomain } from 'src/store/domains/domains.actions';
-import {
-  DomainActionsProps,
-  withDomainActions,
-} from 'src/store/domains/domains.container';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -90,11 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
-type CombinedProps = DomainActionsProps &
-  DispatchProps &
-  RouteComponentProps<{}> &
-  StateProps &
-  WithSnackbarProps;
+type CombinedProps = DispatchProps & RouteComponentProps<{}> & StateProps;
 
 export const generateDefaultDomainRecords = (
   domain: string,
@@ -162,10 +154,11 @@ export const generateDefaultDomainRecords = (
 export const CreateDomain: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { domainActions, origin } = props;
+  const { origin } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { mutateAsync: createDomain } = useCreateDomainMutation();
 
   const disabled = profile?.restricted && !hasGrant('add_domains', grants);
 
@@ -272,8 +265,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
         : { domain, type, tags, master_ips };
 
     formik.setSubmitting(true);
-    domainActions
-      .createDomain(data)
+    createDomain(data)
       .then((domainData: Domain) => {
         if (!mounted) {
           return;
@@ -614,9 +606,4 @@ const mapStateToProps = (state: ApplicationState) => {
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export default compose<CombinedProps, {}>(
-  withDomainActions,
-  connected,
-  withRouter,
-  withSnackbar
-)(CreateDomain);
+export default compose<CombinedProps, {}>(connected, withRouter)(CreateDomain);
