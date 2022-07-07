@@ -23,7 +23,6 @@ import withGlobalErrors, {
 } from 'src/containers/globalErrors.container';
 import { useDialogContext } from 'src/context';
 import BackupDrawer from 'src/features/Backups';
-import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import GlobalNotifications from 'src/features/GlobalNotifications';
 import {
@@ -373,7 +372,6 @@ const MainContent: React.FC<CombinedProps> = (props) => {
             </NotificationProvider>
             <Footer desktopMenuIsOpen={desktopMenuIsOpen} />
             <ToastNotifications />
-            <DomainDrawer />
             <VolumeDrawer />
             <BackupDrawer />
           </ComplianceUpdateProvider>

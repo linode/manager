@@ -1,4 +1,5 @@
 import {
+  cloneDomain,
   createDomain,
   CreateDomainPayload,
   deleteDomain,
@@ -6,6 +7,8 @@ import {
   getDomains,
   updateDomain,
   UpdateDomainPayload,
+  CloneDomainPayload,
+  getDomain,
 } from '@linode/api-v4/lib/domains';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -20,12 +23,25 @@ export const useDomainsQuery = (params: any, filter: any) =>
     { keepPreviousData: true }
   );
 
+export const useDomainQuery = (id: number) =>
+  useQuery<Domain, APIError[]>([queryKey, id], () => getDomain(id));
+
 export const useCreateDomainMutation = () =>
   useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
     onSuccess: () => {
       queryClient.invalidateQueries(`${queryKey}-list`);
     },
   });
+
+export const useCloneDomainMutation = (id: number) =>
+  useMutation<Domain, APIError[], CloneDomainPayload>(
+    (data) => cloneDomain(id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+      },
+    }
+  );
 
 export const useDeleteDomainMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteDomain(id), {
@@ -43,6 +59,7 @@ export const useUpdateDomainMutation = () =>
     {
       onSuccess: (data, vars) => {
         updatePaginatedDomainsStore(vars.id, data);
+        queryClient.setQueryData<Domain>([queryKey, data.id], data);
       },
     }
   );

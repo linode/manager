@@ -1,4 +1,4 @@
-import { DomainStatus } from '@linode/api-v4/lib/domains';
+import { Domain } from '@linode/api-v4/lib/domains';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
@@ -24,50 +24,38 @@ export interface Handlers {
     domain: string,
     id: number
   ) => void;
-  onClone: (domain: string, id: number) => void;
-  onEdit: (domain: string, id: number) => void;
-  [index: string]: any;
+  onClone: (domain: Domain) => void;
+  onEdit: (domain: Domain) => void;
 }
 
 interface Props extends Handlers {
-  type: 'master' | 'slave';
-  domain: string;
-  id: number;
-  status: DomainStatus;
+  domain: Domain;
 }
 
 interface ExtendedAction extends Action {
   className?: string;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & Handlers;
 
 export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    domain,
-    id,
-    onClone,
-    onDisableOrEnable,
-    onEdit,
-    onRemove,
-    status,
-  } = props;
+  const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleRemove = () => {
-    onRemove(domain, id);
+    onRemove(domain.domain, domain.id);
   };
 
   const handleEdit = () => {
-    onEdit(domain, id);
+    onEdit(domain);
   };
 
   const handleClone = () => {
-    onClone(domain, id);
+    onClone(domain);
   };
 
   const actions = [
@@ -78,13 +66,13 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
       },
     },
     {
-      title: status === 'active' ? 'Disable' : 'Enable',
+      title: domain.status === 'active' ? 'Disable' : 'Enable',
       className: classes.button,
       onClick: () => {
         onDisableOrEnable(
-          status === 'active' ? 'disable' : 'enable',
-          domain,
-          id
+          domain.status === 'active' ? 'disable' : 'enable',
+          domain.domain,
+          domain.id
         );
       },
     },

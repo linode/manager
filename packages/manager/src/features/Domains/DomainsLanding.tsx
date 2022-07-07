@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { useSnackbar } from 'notistack';
-import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import Button from 'src/components/Button';
@@ -15,10 +14,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import {
-  openForCloning as _openForCloning,
-  openForEditing as _openForEditing,
-} from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DisableDomainDialog from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
@@ -42,6 +37,8 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableCell from 'src/components/core/TableCell';
 import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
 import Hidden from 'src/components/core/Hidden';
+import { CloneDomainDrawer } from './CloneDomainDrawer';
+import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
@@ -63,10 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
-  domainForEditing?: {
-    domainId: number;
-    domainLabel: string;
-  };
+  domainForEditing?: Domain;
 }
 
 const preferenceKey = 'domains';
@@ -110,8 +104,6 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const { domainForEditing } = props;
 
-  const dispatch = useDispatch();
-
   const [selectedDomainLabel, setSelectedDomainLabel] = React.useState<string>(
     ''
   );
@@ -133,6 +125,11 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   const [disableDialogOpen, setDisableDialogOpen] = React.useState<boolean>(
     false
   );
+  const [cloneDialogOpen, setCloneDialogOpen] = React.useState<boolean>(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState<boolean>(false);
+  const [selectedDomain, setSelectedDomain] = React.useState<
+    Domain | undefined
+  >();
 
   const { mutateAsync: deleteDomain } = useDeleteDomainMutation(
     selectedDomainID ?? 0
@@ -140,19 +137,22 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
-  const openForEditing = (domain: string, id: number) =>
-    dispatch(_openForEditing(domain, id));
+  const onClone = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setCloneDialogOpen(true);
+  };
 
-  const openForCloning = (domain: string, id: number) =>
-    dispatch(_openForCloning(domain, id));
+  const onEdit = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setEditDialogOpen(true);
+  };
 
   React.useEffect(() => {
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
-      const { domainId, domainLabel } = domainForEditing;
-      dispatch(_openForEditing(domainLabel, domainId));
+      onEdit(domainForEditing);
     }
-  }, [dispatch, domainForEditing]);
+  }, [domainForEditing]);
 
   const navigateToCreate = () => {
     history.push(DOMAIN_CREATE_ROUTE);
@@ -225,8 +225,8 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   };
 
   const handlers: DomainHandlers = {
-    onClone: openForCloning,
-    onEdit: openForEditing,
+    onClone,
+    onEdit,
     onRemove: openRemoveDialog,
     onDisableOrEnable: handleClickEnableOrDisableDomain,
   };
@@ -363,7 +363,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainRow key={domain.id} {...domain} {...handlers} />
+            <DomainRow key={domain.id} domain={domain} {...handlers} />
           ))}
         </TableBody>
       </Table>
@@ -385,6 +385,16 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         selectedDomainLabel={selectedDomainLabel}
         closeDialog={() => setDisableDialogOpen(false)}
         open={disableDialogOpen}
+      />
+      <CloneDomainDrawer
+        open={cloneDialogOpen}
+        onClose={() => setCloneDialogOpen(false)}
+        domain={selectedDomain}
+      />
+      <EditDomainDrawer
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        domain={selectedDomain}
       />
       <DeletionDialog
         typeToConfirm
