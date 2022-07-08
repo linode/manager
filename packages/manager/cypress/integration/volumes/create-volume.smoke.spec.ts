@@ -55,26 +55,22 @@ const attachedVolume = attachedVolumeList.data[0];
 const attachedVolumeLabel = attachedVolume.label;
 const attachedVolumeId = attachedVolume.id;
 
+const preferenceOverrides = {
+  linodes_view_style: 'list',
+  linodes_group_by_tag: false,
+  volumes_group_by_tag: false,
+  desktop_sidebar_open: false,
+  sortKeys: {
+    'linodes-landing': { order: 'asc', orderBy: 'label' },
+    volume: { order: 'desc', orderBy: 'label' },
+  },
+};
 describe('volumes', () => {
-  beforeEach(() => {
-    interceptOnce('GET', '*/profile/preferences*', {
-      linodes_view_style: 'list',
-      linodes_group_by_tag: false,
-      volumes_group_by_tag: false,
-      desktop_sidebar_open: false,
-      sortKeys: {
-        'linodes-landing': { order: 'asc', orderBy: 'label' },
-        volume: { order: 'desc', orderBy: 'label' },
-      },
-    }).as('getProfilePreferences');
-  });
-
   it('creates a volume without linode from volumes page', () => {
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(volume);
     }).as('createVolume');
-    cy.visitWithLogin('/volumes');
-    cy.wait('@getProfilePreferences');
+    cy.visitWithLogin('/volumes', { preferenceOverrides });
     fbtClick('Create Volume');
     cy.findByText('volumes');
     fbtClick('Create Volume');
@@ -101,8 +97,7 @@ describe('volumes', () => {
     cy.intercept('GET', `*/linode/instances/${linodeId}*`, (req) => {
       req.reply(linode);
     }).as('getLinodeDetail');
-    cy.visitWithLogin('/linodes');
-    cy.wait('@getProfilePreferences');
+    cy.visitWithLogin('/linodes', { preferenceOverrides });
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
     cy.wait('@getVolumes');
@@ -127,8 +122,7 @@ describe('volumes', () => {
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(linodeList);
     }).as('getLinodes');
-    cy.visitWithLogin('/volumes');
-    cy.wait('@getProfilePreferences');
+    cy.visitWithLogin('/volumes', { preferenceOverrides });
     cy.wait('@getLinodes');
     cy.wait('@getAttachedVolumes');
     cy.intercept('POST', '*/volumes/' + attachedVolumeId + '/detach', (req) => {
