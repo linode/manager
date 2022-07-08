@@ -111,7 +111,7 @@ export const styles = (theme: Theme) =>
         backgroundColor: theme.bg.white,
         cursor: 'pointer',
         padding: '10px',
-        fontSize: '0.9rem',
+        fontSize: '1rem',
         '& svg': {
           marginTop: 2,
         },
@@ -188,7 +188,7 @@ export const styles = (theme: Theme) =>
       },
     },
     input: {
-      fontSize: '0.9rem',
+      fontSize: '1rem',
       padding: 0,
       display: 'flex',
       color: theme.palette.text.primary,
@@ -428,7 +428,7 @@ export const reactSelectStyles = (theme: Theme) => ({
       backgroundColor: theme.bg.white,
       cursor: 'pointer',
       padding: '10px',
-      fontSize: '0.9rem',
+      fontSize: '1rem',
     };
 
     if (state.isFocused) {

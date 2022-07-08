@@ -850,7 +850,7 @@ const themeDefaults: ThemeDefaults = () => {
         disabled: {},
         input: {
           boxSizing: 'border-box',
-          fontSize: '.9rem',
+          fontSize: '1rem',
           padding: 8,
         },
         formControl: {
@@ -866,11 +866,11 @@ const themeDefaults: ThemeDefaults = () => {
       },
       MuiInputAdornment: {
         root: {
-          fontSize: '.9rem',
+          fontSize: '1rem',
           color: '#606469',
           whiteSpace: 'nowrap',
           '& p': {
-            fontSize: '.9rem',
+            fontSize: '1rem',
             color: '#606469',
           },
         },
