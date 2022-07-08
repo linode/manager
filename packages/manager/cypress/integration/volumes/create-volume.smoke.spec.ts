@@ -65,12 +65,23 @@ const preferenceOverrides = {
     volume: { order: 'desc', orderBy: 'label' },
   },
 };
+
+// Local storage override to force volume table to list up to 100 items.
+// This is a workaround while we wait to get stuck volumes removed.
+// @TODO Remove local storage override when stuck volumes are removed from test accounts.
+const localStorageOverrides = {
+  PAGE_SIZE: 100,
+};
+
 describe('volumes', () => {
   it('creates a volume without linode from volumes page', () => {
     cy.intercept('POST', `*/volumes`, (req) => {
       req.reply(volume);
     }).as('createVolume');
-    cy.visitWithLogin('/volumes', { preferenceOverrides });
+    cy.visitWithLogin('/volumes', {
+      preferenceOverrides,
+      localStorageOverrides,
+    });
     fbtClick('Create Volume');
     cy.findByText('volumes');
     fbtClick('Create Volume');
@@ -97,7 +108,10 @@ describe('volumes', () => {
     cy.intercept('GET', `*/linode/instances/${linodeId}*`, (req) => {
       req.reply(linode);
     }).as('getLinodeDetail');
-    cy.visitWithLogin('/linodes', { preferenceOverrides });
+    cy.visitWithLogin('/linodes', {
+      preferenceOverrides,
+      localStorageOverrides,
+    });
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
     cy.wait('@getVolumes');
@@ -122,7 +136,10 @@ describe('volumes', () => {
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(linodeList);
     }).as('getLinodes');
-    cy.visitWithLogin('/volumes', { preferenceOverrides });
+    cy.visitWithLogin('/volumes', {
+      preferenceOverrides,
+      localStorageOverrides,
+    });
     cy.wait('@getLinodes');
     cy.wait('@getAttachedVolumes');
     cy.intercept('POST', '*/volumes/' + attachedVolumeId + '/detach', (req) => {
