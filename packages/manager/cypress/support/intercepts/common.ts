@@ -4,10 +4,16 @@
 
 import { accountFactory } from 'src/factories/account';
 
+/**
+ * Options for mocking common Linode APIv4 requests.
+ */
 export interface CommonRequestMockOptions {
+  /**
+   * Whether or not the `/account` API request should be mocked.
+   *
+   * @var {boolean}
+   */
   account?: boolean;
-  agreements?: boolean;
-  launchDarkly?: boolean;
 }
 
 /**
@@ -22,10 +28,10 @@ export interface CommonRequestMockOptions {
 export const mockCommonRequests = (
   options?: CommonRequestMockOptions | undefined
 ) => {
+  // Default mock options
   const defaultOptions: CommonRequestMockOptions = {
-    account: true,
-    agreements: true,
-    launchDarkly: true,
+    // @TODO Consider making this `true` by default to speed up page load times.
+    account: false,
   };
 
   const resolvedOptions = options
@@ -41,10 +47,6 @@ export const mockCommonRequests = (
     const mockedAccount = accountFactory.build();
     cy.intercept('GET', `*/account`, mockedAccount).as('getAccount');
     aliases.push('@getAccount');
-  }
-
-  if (resolvedOptions.launchDarkly) {
-    cy.intercept('GET', '*clientstream.launchdarkly.com*', {});
   }
 
   return aliases;
