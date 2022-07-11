@@ -13,6 +13,7 @@ import { useFormik } from 'formik';
 import { useUpdateDomainMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { transferHelperText as helperText } from './domainUtils';
+import { useGrants, useProfile } from 'src/queries/profile';
 import {
   ExtendedIP,
   extendedIPToString,
@@ -32,6 +33,9 @@ interface Props {
 
 export const EditDomainDrawer = (props: Props) => {
   const { open, onClose, domain } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const { mutateAsync: updateDomain, error, reset } = useUpdateDomainMutation();
 
@@ -110,11 +114,22 @@ export const EditDomainDrawer = (props: Props) => {
     formik.setFieldValue('master_ips', master_ips);
   };
 
-  const disabled = false;
+  const canEdit = !(
+    profile?.restricted &&
+    grants?.domain.find((grant) => grant.id === domain?.id)?.permissions ===
+      'read_only'
+  );
+
+  const disabled = !canEdit;
 
   return (
     <Drawer title="Edit Domain" open={open} onClose={onClose}>
-      {errorMap.none && !disabled && (
+      {!canEdit && (
+        <Notice error spacingTop={8}>
+          You do not have permission to modify this Domain.
+        </Notice>
+      )}
+      {errorMap.none && (
         <Notice error spacingTop={8}>
           {errorMap.none}
         </Notice>
