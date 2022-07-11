@@ -104,36 +104,21 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const { domainForEditing } = props;
 
-  const [selectedDomainLabel, setSelectedDomainLabel] = React.useState<string>(
-    ''
-  );
-  const [selectedDomainID, setselectedDomainID] = React.useState<
-    number | undefined
-  >(undefined);
-  const [importDrawerOpen, setImportDrawerOpen] = React.useState<boolean>(
-    false
-  );
-  const [removeDialogOpen, setRemoveDialogOpen] = React.useState<boolean>(
-    false
-  );
-  const [removeDialogLoading, setRemoveDialogLoading] = React.useState<boolean>(
-    false
-  );
-  const [removeDialogError, setRemoveDialogError] = React.useState<
-    string | undefined
-  >(undefined);
-  const [disableDialogOpen, setDisableDialogOpen] = React.useState<boolean>(
-    false
-  );
-  const [cloneDialogOpen, setCloneDialogOpen] = React.useState<boolean>(false);
-  const [editDialogOpen, setEditDialogOpen] = React.useState<boolean>(false);
+  const [importDrawerOpen, setImportDrawerOpen] = React.useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+  const [disableDialogOpen, setDisableDialogOpen] = React.useState(false);
+  const [cloneDialogOpen, setCloneDialogOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
+
   const [selectedDomain, setSelectedDomain] = React.useState<
     Domain | undefined
   >();
 
-  const { mutateAsync: deleteDomain } = useDeleteDomainMutation(
-    selectedDomainID ?? 0
-  );
+  const {
+    mutateAsync: deleteDomain,
+    isLoading: isDeleting,
+    error: deleteError,
+  } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
@@ -158,18 +143,17 @@ export const DomainsLanding: React.FC<Props> = (props) => {
     history.push(DOMAIN_CREATE_ROUTE);
   };
 
-  const openImportZoneDrawer = () => setImportDrawerOpen(true);
+  const openImportZoneDrawer = () => {
+    setImportDrawerOpen(true);
+  };
 
   const closeImportZoneDrawer = () => {
-    setSelectedDomainLabel('');
     setImportDrawerOpen(false);
   };
 
-  const openRemoveDialog = (domain: string, domainId: number) => {
-    setSelectedDomainLabel(domain);
-    setselectedDomainID(domainId);
+  const onRemove = (domain: Domain) => {
+    setSelectedDomain(domain);
     setRemoveDialogOpen(true);
-    setRemoveDialogError(undefined);
   };
 
   const closeRemoveDialog = () => {
@@ -177,30 +161,15 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   };
 
   const removeDomain = () => {
-    setRemoveDialogLoading(true);
-    setRemoveDialogError(undefined);
-
-    deleteDomain()
-      .then(() => {
-        closeRemoveDialog();
-        setRemoveDialogLoading(false);
-      })
-      .catch((e) => {
-        setRemoveDialogLoading(false);
-        setRemoveDialogError(
-          getAPIErrorOrDefault(e, 'Error deleting Domain.')[0].reason
-        );
-      });
+    deleteDomain().then(() => {
+      closeRemoveDialog();
+    });
   };
 
-  const handleClickEnableOrDisableDomain = (
-    action: 'enable' | 'disable',
-    domain: string,
-    domainId: number
-  ) => {
+  const onDisableOrEnable = (action: 'enable' | 'disable', domain: Domain) => {
     if (action === 'enable') {
       updateDomain({
-        id: domainId,
+        id: domain.id,
         status: 'active',
       }).catch((e) => {
         return enqueueSnackbar(
@@ -212,8 +181,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         );
       });
     } else {
-      setSelectedDomainLabel(domain);
-      setselectedDomainID(domainId);
+      setSelectedDomain(domain);
       setDisableDialogOpen(true);
     }
   };
@@ -221,8 +189,8 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   const handlers: DomainHandlers = {
     onClone,
     onEdit,
-    onRemove: openRemoveDialog,
-    onDisableOrEnable: handleClickEnableOrDisableDomain,
+    onRemove,
+    onDisableOrEnable,
   };
 
   if (isLoading) {
@@ -373,9 +341,8 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         onClose={closeImportZoneDrawer}
       />
       <DisableDomainDialog
-        selectedDomainID={selectedDomainID}
-        selectedDomainLabel={selectedDomainLabel}
-        closeDialog={() => setDisableDialogOpen(false)}
+        domain={selectedDomain}
+        onClose={() => setDisableDialogOpen(false)}
         open={disableDialogOpen}
       />
       <CloneDomainDrawer
@@ -392,9 +359,14 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         typeToConfirm
         entity="domain"
         open={removeDialogOpen}
-        label={selectedDomainLabel}
-        loading={removeDialogLoading}
-        error={removeDialogError}
+        label={selectedDomain?.domain ?? 'Unknown'}
+        loading={isDeleting}
+        error={
+          deleteError
+            ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
+                .reason
+            : undefined
+        }
         onClose={closeRemoveDialog}
         onDelete={removeDomain}
       />

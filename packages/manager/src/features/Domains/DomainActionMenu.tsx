@@ -18,12 +18,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface Handlers {
-  onRemove: (domain: string, id: number) => void;
-  onDisableOrEnable: (
-    status: 'enable' | 'disable',
-    domain: string,
-    id: number
-  ) => void;
+  onRemove: (domain: Domain) => void;
+  onDisableOrEnable: (status: 'enable' | 'disable', domain: Domain) => void;
   onClone: (domain: Domain) => void;
   onEdit: (domain: Domain) => void;
 }
@@ -46,23 +42,11 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleRemove = () => {
-    onRemove(domain.domain, domain.id);
-  };
-
-  const handleEdit = () => {
-    onEdit(domain);
-  };
-
-  const handleClone = () => {
-    onClone(domain);
-  };
-
   const actions = [
     {
       title: 'Edit',
       onClick: () => {
-        handleEdit();
+        onEdit(domain);
       },
     },
     {
@@ -71,21 +55,20 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
       onClick: () => {
         onDisableOrEnable(
           domain.status === 'active' ? 'disable' : 'enable',
-          domain.domain,
-          domain.id
+          domain
         );
       },
     },
     {
       title: 'Clone',
       onClick: () => {
-        handleClone();
+        onClone(domain);
       },
     },
     {
       title: 'Delete',
       onClick: () => {
-        handleRemove();
+        onRemove(domain);
       },
     },
   ] as ExtendedAction[];
