@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { useSnackbar } from 'notistack';
-import { useDispatch } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import Button from 'src/components/Button';
@@ -15,10 +14,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
-import {
-  openForCloning as _openForCloning,
-  openForEditing as _openForEditing,
-} from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import DisableDomainDialog from './DisableDomainDialog';
 import { Handlers as DomainHandlers } from './DomainActionMenu';
@@ -42,6 +37,8 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableCell from 'src/components/core/TableCell';
 import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
 import Hidden from 'src/components/core/Hidden';
+import { CloneDomainDrawer } from './CloneDomainDrawer';
+import { EditDomainDrawer } from './EditDomainDrawer';
 
 const DOMAIN_CREATE_ROUTE = '/domains/create';
 
@@ -63,10 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   // Since secondary Domains do not have a Detail page, we allow the consumer to
   // render this component with the "Edit Domain" drawer already opened.
-  domainForEditing?: {
-    domainId: number;
-    domainLabel: string;
-  };
+  domainForEditing?: Domain;
 }
 
 const preferenceKey = 'domains';
@@ -110,72 +104,56 @@ export const DomainsLanding: React.FC<Props> = (props) => {
 
   const { domainForEditing } = props;
 
-  const dispatch = useDispatch();
+  const [importDrawerOpen, setImportDrawerOpen] = React.useState(false);
+  const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false);
+  const [disableDialogOpen, setDisableDialogOpen] = React.useState(false);
+  const [cloneDialogOpen, setCloneDialogOpen] = React.useState(false);
+  const [editDialogOpen, setEditDialogOpen] = React.useState(false);
 
-  const [selectedDomainLabel, setSelectedDomainLabel] = React.useState<string>(
-    ''
-  );
-  const [selectedDomainID, setselectedDomainID] = React.useState<
-    number | undefined
-  >(undefined);
-  const [importDrawerOpen, setImportDrawerOpen] = React.useState<boolean>(
-    false
-  );
-  const [removeDialogOpen, setRemoveDialogOpen] = React.useState<boolean>(
-    false
-  );
-  const [removeDialogLoading, setRemoveDialogLoading] = React.useState<boolean>(
-    false
-  );
-  const [removeDialogError, setRemoveDialogError] = React.useState<
-    string | undefined
-  >(undefined);
-  const [disableDialogOpen, setDisableDialogOpen] = React.useState<boolean>(
-    false
-  );
+  const [selectedDomain, setSelectedDomain] = React.useState<
+    Domain | undefined
+  >();
 
-  const { mutateAsync: deleteDomain } = useDeleteDomainMutation(
-    selectedDomainID ?? 0
-  );
+  const {
+    mutateAsync: deleteDomain,
+    isLoading: isDeleting,
+    error: deleteError,
+  } = useDeleteDomainMutation(selectedDomain?.id ?? 0);
 
   const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
-  const openForEditing = (domain: string, id: number) =>
-    dispatch(_openForEditing(domain, id));
+  const onClone = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setCloneDialogOpen(true);
+  };
 
-  const openForCloning = (domain: string, id: number) =>
-    dispatch(_openForCloning(domain, id));
+  const onEdit = (domain: Domain) => {
+    setSelectedDomain(domain);
+    setEditDialogOpen(true);
+  };
 
   React.useEffect(() => {
     // Open the "Edit Domain" drawer if so specified by this component's props.
     if (domainForEditing) {
-      const { domainId, domainLabel } = domainForEditing;
-      dispatch(_openForEditing(domainLabel, domainId));
+      onEdit(domainForEditing);
     }
-  }, [dispatch, domainForEditing]);
+  }, [domainForEditing]);
 
   const navigateToCreate = () => {
     history.push(DOMAIN_CREATE_ROUTE);
   };
 
-  const openImportZoneDrawer = () => setImportDrawerOpen(true);
+  const openImportZoneDrawer = () => {
+    setImportDrawerOpen(true);
+  };
 
   const closeImportZoneDrawer = () => {
-    setSelectedDomainLabel('');
     setImportDrawerOpen(false);
   };
 
-  const handleSuccess = (domain: Domain) => {
-    if (domain.id) {
-      return history.push(`/domains/${domain.id}`);
-    }
-  };
-
-  const openRemoveDialog = (domain: string, domainId: number) => {
-    setSelectedDomainLabel(domain);
-    setselectedDomainID(domainId);
+  const onRemove = (domain: Domain) => {
+    setSelectedDomain(domain);
     setRemoveDialogOpen(true);
-    setRemoveDialogError(undefined);
   };
 
   const closeRemoveDialog = () => {
@@ -183,30 +161,15 @@ export const DomainsLanding: React.FC<Props> = (props) => {
   };
 
   const removeDomain = () => {
-    setRemoveDialogLoading(true);
-    setRemoveDialogError(undefined);
-
-    deleteDomain()
-      .then(() => {
-        closeRemoveDialog();
-        setRemoveDialogLoading(false);
-      })
-      .catch((e) => {
-        setRemoveDialogLoading(false);
-        setRemoveDialogError(
-          getAPIErrorOrDefault(e, 'Error deleting Domain.')[0].reason
-        );
-      });
+    deleteDomain().then(() => {
+      closeRemoveDialog();
+    });
   };
 
-  const handleClickEnableOrDisableDomain = (
-    action: 'enable' | 'disable',
-    domain: string,
-    domainId: number
-  ) => {
+  const onDisableOrEnable = (action: 'enable' | 'disable', domain: Domain) => {
     if (action === 'enable') {
       updateDomain({
-        id: domainId,
+        id: domain.id,
         status: 'active',
       }).catch((e) => {
         return enqueueSnackbar(
@@ -218,17 +181,16 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         );
       });
     } else {
-      setSelectedDomainLabel(domain);
-      setselectedDomainID(domainId);
+      setSelectedDomain(domain);
       setDisableDialogOpen(true);
     }
   };
 
   const handlers: DomainHandlers = {
-    onClone: openForCloning,
-    onEdit: openForEditing,
-    onRemove: openRemoveDialog,
-    onDisableOrEnable: handleClickEnableOrDisableDomain,
+    onClone,
+    onEdit,
+    onRemove,
+    onDisableOrEnable,
   };
 
   if (isLoading) {
@@ -276,7 +238,6 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         <DomainZoneImportDrawer
           open={importDrawerOpen}
           onClose={closeImportZoneDrawer}
-          onSuccess={handleSuccess}
         />
       </>
     );
@@ -363,7 +324,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         </TableHead>
         <TableBody>
           {domains?.data.map((domain: Domain) => (
-            <DomainRow key={domain.id} {...domain} {...handlers} />
+            <DomainRow key={domain.id} domain={domain} {...handlers} />
           ))}
         </TableBody>
       </Table>
@@ -378,21 +339,34 @@ export const DomainsLanding: React.FC<Props> = (props) => {
       <DomainZoneImportDrawer
         open={importDrawerOpen}
         onClose={closeImportZoneDrawer}
-        onSuccess={handleSuccess}
       />
       <DisableDomainDialog
-        selectedDomainID={selectedDomainID}
-        selectedDomainLabel={selectedDomainLabel}
-        closeDialog={() => setDisableDialogOpen(false)}
+        domain={selectedDomain}
+        onClose={() => setDisableDialogOpen(false)}
         open={disableDialogOpen}
+      />
+      <CloneDomainDrawer
+        open={cloneDialogOpen}
+        onClose={() => setCloneDialogOpen(false)}
+        domain={selectedDomain}
+      />
+      <EditDomainDrawer
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        domain={selectedDomain}
       />
       <DeletionDialog
         typeToConfirm
         entity="domain"
         open={removeDialogOpen}
-        label={selectedDomainLabel}
-        loading={removeDialogLoading}
-        error={removeDialogError}
+        label={selectedDomain?.domain ?? 'Unknown'}
+        loading={isDeleting}
+        error={
+          deleteError
+            ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
+                .reason
+            : undefined
+        }
         onClose={closeRemoveDialog}
         onDelete={removeDomain}
       />

@@ -1,140 +1,96 @@
-import { Domain, importZone } from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import LinodeTextField from 'src/components/TextField';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import TextField from 'src/components/TextField';
+import { ImportZonePayload } from '@linode/api-v4/lib/domains';
+import { useFormik } from 'formik';
+import { useHistory } from 'react-router-dom';
+import { useImportZoneMutation } from 'src/queries/domains';
+import { getErrorMap } from 'src/utilities/errorUtils';
+import { useProfile, useGrants } from 'src/queries/profile';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSuccess: (domain: Domain) => void;
 }
 
-interface State {
-  submitting: boolean;
-  errors?: APIError[];
-  domain?: string;
-  remote_nameserver?: string;
-}
+const DomainZoneImportDrawer = (props: Props) => {
+  const { open, onClose: _onClose } = props;
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
-type CombinedProps = Props;
+  const history = useHistory();
 
-class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
-  state: State = {
-    submitting: false,
+  const { mutateAsync: importZone, error, reset } = useImportZoneMutation();
+
+  const formik = useFormik<ImportZonePayload>({
+    initialValues: {
+      domain: '',
+      remote_nameserver: '',
+    },
+    onSubmit: async (values) => {
+      const result = await importZone(values);
+      history.push(`/domains/${result.id}`);
+    },
+  });
+
+  const onClose = () => {
+    _onClose();
+    formik.resetForm();
+    reset();
   };
 
-  static errorResources = {
-    domain: 'domain',
-    remote_nameserver: 'remote nameserver',
-  };
+  const errorMap = getErrorMap(['domain', 'remote_nameserver'], error);
 
-  render() {
-    const { open } = this.props;
-    const { submitting, errors } = this.state;
-    const hasErrorFor = getAPIErrorsFor(
-      DomainZoneImportDrawer.errorResources,
-      errors
-    );
-    const generalError = hasErrorFor('none');
-    const domainError = hasErrorFor('domain');
-    const remoteNameserverError = hasErrorFor('remote_nameserver');
+  const generalError = errorMap.none;
+  const domainError = errorMap.domain;
+  const remoteNameserverError = errorMap.remote_nameserver;
 
-    const requirementsMet = this.checkRequirements();
+  const noPermission = profile?.restricted && !grants?.global.add_domains;
 
-    return (
-      <Drawer open={open} onClose={this.onClose} title="Import a Zone">
+  return (
+    <Drawer open={open} onClose={onClose} title="Import a Zone">
+      {noPermission && (
+        <Notice error>You do not have permission to create new Domains.</Notice>
+      )}
+      <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice error text={generalError} />}
-        <LinodeTextField
+        <TextField
           label="Domain"
-          onChange={this.updateDomain}
+          id="domain"
+          name="domain"
+          onChange={formik.handleChange}
+          value={formik.values.domain}
           errorText={domainError}
+          disabled={noPermission}
         />
-        <LinodeTextField
+        <TextField
           label="Remote Nameserver"
-          onChange={this.updateRemoteNameserver}
+          id="remote_nameserver"
+          name="remote_nameserver"
+          onChange={formik.handleChange}
+          value={formik.values.remote_nameserver}
           errorText={remoteNameserverError}
+          disabled={noPermission}
         />
         <ActionsPanel>
-          <Button buttonType="secondary" onClick={this.onClose}>
+          <Button buttonType="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
-            onClick={this.onSubmit}
-            disabled={!requirementsMet}
-            loading={submitting}
+            disabled={!formik.dirty}
+            loading={formik.isSubmitting}
+            type="submit"
           >
             Import
           </Button>
         </ActionsPanel>
-      </Drawer>
-    );
-  }
-
-  updateRemoteNameserver = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ remote_nameserver: e.target.value });
-
-  updateDomain = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ domain: e.target.value });
-
-  reset = () =>
-    this.setState({
-      submitting: false,
-      errors: undefined,
-      domain: undefined,
-      remote_nameserver: undefined,
-    });
-
-  onClose = () => {
-    const { onClose } = this.props;
-    this.reset();
-    onClose();
-  };
-
-  checkRequirements() {
-    return !!this.state.domain && !!this.state.remote_nameserver;
-  }
-
-  onSubmit = () => {
-    const { domain, remote_nameserver } = this.state;
-
-    // Validate text fields
-    const errors = [];
-    if (!domain) {
-      errors.push({ field: 'domain', reason: 'Domain is required.' });
-    }
-    if (!remote_nameserver) {
-      errors.push({
-        field: 'remote_nameserver',
-        reason: 'Remote nameserver is required.',
-      });
-    }
-    if (errors.length > 0) {
-      this.setState({ errors });
-      return;
-    }
-
-    this.setState({ submitting: true });
-
-    // Since we've validated test fields, we can assume domain and
-    // remote_nameserver won't be undefined
-    importZone(domain!, remote_nameserver!)
-      .then((data) => {
-        this.props.onSuccess(data);
-      })
-      .catch((error) => {
-        this.setState({
-          submitting: false,
-          errors: getAPIErrorOrDefault(error),
-        });
-      });
-  };
-}
+      </form>
+    </Drawer>
+  );
+};
 
 export default DomainZoneImportDrawer;
