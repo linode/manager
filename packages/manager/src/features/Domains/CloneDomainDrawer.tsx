@@ -17,9 +17,9 @@ interface Props {
 }
 
 export const CloneDomainDrawer = (props: Props) => {
-  const { onClose, open, domain } = props;
+  const { onClose: _onClose, open, domain } = props;
 
-  const { mutateAsync: cloneDomain, error } = useCloneDomainMutation(
+  const { mutateAsync: cloneDomain, error, reset } = useCloneDomainMutation(
     domain?.id ?? 0
   );
 
@@ -30,6 +30,12 @@ export const CloneDomainDrawer = (props: Props) => {
       onClose();
     },
   });
+
+  const onClose = () => {
+    _onClose();
+    formik.resetForm();
+    reset();
+  };
 
   return (
     <Drawer title="Clone Domain" open={open} onClose={onClose}>
@@ -73,6 +79,7 @@ export const CloneDomainDrawer = (props: Props) => {
           <Button
             buttonType="primary"
             loading={formik.isSubmitting}
+            disabled={!formik.dirty}
             type="submit"
             data-qa-submit
             data-testid="create-domain-submit"

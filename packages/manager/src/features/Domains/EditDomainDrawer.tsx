@@ -200,7 +200,7 @@ export const EditDomainDrawer = (props: Props) => {
           </Button>
           <Button
             buttonType="primary"
-            disabled={disabled}
+            disabled={disabled || !formik.dirty}
             loading={formik.isSubmitting}
             type="submit"
             data-qa-submit
