@@ -1,5 +1,5 @@
 import { linodeFactory } from 'src/factories/linodes';
-import { generateDefaultDomainRecords } from './EditDomainDrawer';
+import { generateDefaultDomainRecords } from './domainUtils';
 
 const testLinode = linodeFactory.build({
   ipv6: null,

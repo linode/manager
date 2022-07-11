@@ -11,6 +11,7 @@ import { useFormik } from 'formik';
 import { Domain } from '@linode/api-v4';
 import { useProfile, useGrants } from 'src/queries/profile';
 import Notice from 'src/components/Notice';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   onClose: () => void;
@@ -28,10 +29,13 @@ export const CloneDomainDrawer = (props: Props) => {
     domain?.id ?? 0
   );
 
+  const history = useHistory();
+
   const formik = useFormik<{ domain: string }>({
     initialValues: { domain: '' },
     onSubmit: async (values) => {
-      await cloneDomain(values);
+      const newDomain = await cloneDomain(values);
+      history.push(`/domains/${newDomain.id}`);
       onClose();
     },
   });

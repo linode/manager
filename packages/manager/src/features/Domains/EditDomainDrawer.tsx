@@ -14,16 +14,12 @@ import { useUpdateDomainMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { transferHelperText as helperText } from './domainUtils';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
 import {
   ExtendedIP,
   extendedIPToString,
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
-import {
-  createDomainRecord,
-  Domain,
-  UpdateDomainPayload,
-} from '@linode/api-v4/lib/domains';
 
 interface Props {
   open: boolean;
@@ -49,15 +45,15 @@ export const EditDomainDrawer = (props: Props) => {
       axfr_ips: domain?.axfr_ips,
     },
     onSubmit: async (values) => {
-      const primaryIPs = values?.master_ips?.filter((v) => v !== '');
-      const finalTransferIPs = values?.axfr_ips?.filter((v) => v !== '');
-
       if (!domain) {
         return;
       }
 
+      const primaryIPs = values?.master_ips?.filter((v) => v !== '');
+      const finalTransferIPs = values?.axfr_ips?.filter((v) => v !== '');
+
       const data =
-        domain?.type === 'master'
+        domain.type === 'master'
           ? // Not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
             {
               domain: values.domain,
@@ -220,68 +216,5 @@ export const EditDomainDrawer = (props: Props) => {
         </ActionsPanel>
       </form>
     </Drawer>
-  );
-};
-
-export const generateDefaultDomainRecords = (
-  domain: string,
-  domainID: number,
-  ipv4?: string,
-  ipv6?: string | null
-) => {
-  /**
-   * At this point, the IPv6 is including the prefix and we need to strip that
-   *
-   * BUT
-   *
-   * this logic only applies to Linodes' ipv6, not NodeBalancers. No stripping
-   * needed for NodeBalancers.
-   */
-  const cleanedIPv6 =
-    ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
-
-  const baseIPv4Requests = [
-    createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
-    }),
-    createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
-      name: 'www',
-    }),
-    createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
-      name: 'mail',
-    }),
-  ];
-
-  return Promise.all(
-    /** ipv6 can be null so don't try to create domain records in that case */
-    !!cleanedIPv6
-      ? [
-          ...baseIPv4Requests,
-          createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
-          }),
-          createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
-            name: 'www',
-          }),
-          createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
-            name: 'mail',
-          }),
-          createDomainRecord(domainID, {
-            type: 'MX',
-            priority: 10,
-            target: `mail.${domain}`,
-          }),
-        ]
-      : baseIPv4Requests
   );
 };
