@@ -59,7 +59,7 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
   };
 
   return (
-    <ToolTip title={'Download'} placement="top" data-qa-copied>
+    <ToolTip title="Download" placement="top" data-qa-copied>
       <button
         aria-label={`Download ${text}`}
         name={text}
