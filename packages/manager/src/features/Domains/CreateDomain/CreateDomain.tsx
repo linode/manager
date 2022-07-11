@@ -1,6 +1,5 @@
 import {
   CreateDomainPayload,
-  createDomainRecord,
   Domain,
   DomainType,
 } from '@linode/api-v4/lib/domains';
@@ -11,10 +10,7 @@ import { createDomainSchema } from '@linode/validation/lib/domains.schema';
 import { useFormik } from 'formik';
 import { path } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
-import { bindActionCreators, Dispatch } from 'redux';
+import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -37,12 +33,6 @@ import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useCreateDomainMutation } from 'src/queries/domains';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { ApplicationState } from 'src/store';
-import {
-  Origin as DomainDrawerOrigin,
-  resetDrawer,
-} from 'src/store/domainDrawer';
-import { upsertDomain } from 'src/store/domains/domains.actions';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -55,6 +45,7 @@ import {
   stringToExtendedIP,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { generateDefaultDomainRecords } from '../domainUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   main: {
@@ -86,75 +77,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
-type CombinedProps = DispatchProps & RouteComponentProps<{}> & StateProps;
-
-export const generateDefaultDomainRecords = (
-  domain: string,
-  domainID: number,
-  ipv4?: string,
-  ipv6?: string | null
-) => {
-  /**
-   * At this point, the IPv6 is including the prefix and we need to strip that
-   *
-   * BUT
-   *
-   * this logic only applies to Linodes' ipv6, not NodeBalancers. No stripping
-   * needed for NodeBalancers.
-   */
-  const cleanedIPv6 =
-    ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
-
-  const baseIPv4Requests = [
-    createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
-    }),
-    createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
-      name: 'www',
-    }),
-    createDomainRecord(domainID, {
-      type: 'A',
-      target: ipv4,
-      name: 'mail',
-    }),
-  ];
-
-  return Promise.all(
-    /** ipv6 can be null so don't try to create domain records in that case */
-    !!cleanedIPv6
-      ? [
-          ...baseIPv4Requests,
-          createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
-          }),
-          createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
-            name: 'www',
-          }),
-          createDomainRecord(domainID, {
-            type: 'AAAA',
-            target: cleanedIPv6,
-            name: 'mail',
-          }),
-          createDomainRecord(domainID, {
-            type: 'MX',
-            priority: 10,
-            target: `mail.${domain}`,
-          }),
-        ]
-      : baseIPv4Requests
-  );
-};
-
-export const CreateDomain: React.FC<CombinedProps> = (props) => {
+export const CreateDomain = () => {
   const classes = useStyles();
-
-  const { origin } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -166,6 +90,8 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   // Errors for selecting Linode/NB for default records aren't part
   // of the payload and must be handled separately.
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+
+  const history = useHistory();
 
   const [defaultRecordsSetting, setDefaultRecordsSetting] = React.useState<
     Item<DefaultRecordsType>
@@ -216,7 +142,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
 
   const redirect = (id: number | '', state?: Record<string, string>) => {
     const returnPath = !!id ? `/domains/${id}` : '/domains';
-    props.history.push(returnPath, state);
+    history.push(returnPath, state);
   };
 
   const redirectToLandingOrDetail = (
@@ -270,7 +196,7 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
         if (!mounted) {
           return;
         }
-        sendCreateDomainEvent(origin);
+        sendCreateDomainEvent('Domain Create Page');
         /**
          * Now we check to see if the user wanted us to automatically create
          * domain records for them. If so, create some A/AAAA and MX records
@@ -577,33 +503,4 @@ export const CreateDomain: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface DispatchProps {
-  resetDrawer: () => void;
-  upsertDomain: (domain: Domain) => void;
-}
-
-const mapDispatchToProps = (dispatch: Dispatch) =>
-  bindActionCreators({ resetDrawer, upsertDomain }, dispatch);
-
-interface StateProps {
-  domain?: string;
-  domainProps?: Domain;
-  id?: number;
-  origin: DomainDrawerOrigin;
-}
-
-const mapStateToProps = (state: ApplicationState) => {
-  const id = state.domainDrawer?.id ?? '0';
-  const domainEntities = state.__resources.domains.itemsById;
-  const domainProps = domainEntities[String(id)];
-  return {
-    domain: path(['domainDrawer', 'domain'], state),
-    domainProps,
-    id,
-    origin: state.domainDrawer.origin,
-  };
-};
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
-
-export default compose<CombinedProps, {}>(connected, withRouter)(CreateDomain);
+export default CreateDomain;

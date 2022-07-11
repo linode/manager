@@ -22,7 +22,6 @@ import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useStyles from './PrimaryNav.styles';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useDomains from 'src/hooks/useDomains';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
@@ -76,15 +75,9 @@ export const PrimaryNav: React.FC<Props> = (props) => {
   const flags = useFlags();
   const location = useLocation();
 
-  const { domains, requestDomains } = useDomains();
-
   const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
 
-  const {
-    _isManagedAccount,
-    _isLargeAccount,
-    account,
-  } = useAccountManagement();
+  const { _isManagedAccount, account } = useAccountManagement();
 
   const {
     data: clusters,
@@ -170,9 +163,6 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           display: 'Domains',
           href: '/domains',
           icon: <Domain />,
-          prefetchRequestFn: requestDomains,
-          prefetchRequestCondition:
-            !domains.loading && domains.lastUpdated === 0 && !_isLargeAccount,
         },
         {
           hide: !showDatabases,
@@ -223,15 +213,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         },
       ],
     ],
-    [
-      showDatabases,
-      _isManagedAccount,
-      domains.loading,
-      domains.lastUpdated,
-      _isLargeAccount,
-      allowObjPrefetch,
-      flags.databaseBeta,
-    ]
+    [showDatabases, _isManagedAccount, allowObjPrefetch, flags.databaseBeta]
   );
 
   return (
