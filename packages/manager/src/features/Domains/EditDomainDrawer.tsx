@@ -125,15 +125,9 @@ export const EditDomainDrawer = (props: Props) => {
   return (
     <Drawer title="Edit Domain" open={open} onClose={onClose}>
       {!canEdit && (
-        <Notice error spacingTop={8}>
-          You do not have permission to modify this Domain.
-        </Notice>
+        <Notice error>You do not have permission to modify this Domain.</Notice>
       )}
-      {errorMap.none && (
-        <Notice error spacingTop={8}>
-          {errorMap.none}
-        </Notice>
-      )}
+      {errorMap.none && <Notice error>{errorMap.none}</Notice>}
       <form onSubmit={formik.handleSubmit}>
         <RadioGroup aria-label="type" name="type" value={domain?.type} row>
           <FormControlLabel

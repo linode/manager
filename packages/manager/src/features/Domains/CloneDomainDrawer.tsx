@@ -9,6 +9,8 @@ import Button from 'src/components/Button/Button';
 import { useCloneDomainMutation } from 'src/queries/domains';
 import { useFormik } from 'formik';
 import { Domain } from '@linode/api-v4';
+import { useProfile, useGrants } from 'src/queries/profile';
+import Notice from 'src/components/Notice';
 
 interface Props {
   onClose: () => void;
@@ -18,6 +20,9 @@ interface Props {
 
 export const CloneDomainDrawer = (props: Props) => {
   const { onClose: _onClose, open, domain } = props;
+
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const { mutateAsync: cloneDomain, error, reset } = useCloneDomainMutation(
     domain?.id ?? 0
@@ -37,8 +42,15 @@ export const CloneDomainDrawer = (props: Props) => {
     reset();
   };
 
+  const noPermission = profile?.restricted && !grants?.global.add_domains;
+
   return (
     <Drawer title="Clone Domain" open={open} onClose={onClose}>
+      {noPermission && (
+        <Notice error>
+          You do not have permission to clone or create Domains.
+        </Notice>
+      )}
       <form onSubmit={formik.handleSubmit}>
         <RadioGroup aria-label="type" name="type" value={domain?.type} row>
           <FormControlLabel
@@ -71,6 +83,7 @@ export const CloneDomainDrawer = (props: Props) => {
           onChange={formik.handleChange}
           data-qa-clone-name
           errorText={error ? error[0]?.reason : undefined}
+          disabled={noPermission}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
