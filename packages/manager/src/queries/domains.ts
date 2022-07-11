@@ -1,3 +1,6 @@
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery } from 'react-query';
+import { queryClient } from './base';
 import {
   cloneDomain,
   createDomain,
@@ -9,10 +12,9 @@ import {
   UpdateDomainPayload,
   CloneDomainPayload,
   getDomain,
+  ImportZonePayload,
+  importZone,
 } from '@linode/api-v4/lib/domains';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
-import { queryClient } from './base';
 
 export const queryKey = 'domains';
 
@@ -28,8 +30,9 @@ export const useDomainQuery = (id: number) =>
 
 export const useCreateDomainMutation = () =>
   useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
-    onSuccess: () => {
+    onSuccess: (domain) => {
       queryClient.invalidateQueries(`${queryKey}-list`);
+      queryClient.setQueryData([queryKey, domain.id], domain);
     },
   });
 
@@ -37,8 +40,20 @@ export const useCloneDomainMutation = (id: number) =>
   useMutation<Domain, APIError[], CloneDomainPayload>(
     (data) => cloneDomain(id, data),
     {
-      onSuccess: () => {
+      onSuccess: (domain) => {
         queryClient.invalidateQueries(`${queryKey}-list`);
+        queryClient.setQueryData([queryKey, domain.id], domain);
+      },
+    }
+  );
+
+export const useImportZoneMutation = () =>
+  useMutation<Domain, APIError[], ImportZonePayload>(
+    (data) => importZone(data),
+    {
+      onSuccess: (domain) => {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+        queryClient.setQueryData([queryKey, domain.id], domain);
       },
     }
   );

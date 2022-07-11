@@ -165,12 +165,6 @@ export const DomainsLanding: React.FC<Props> = (props) => {
     setImportDrawerOpen(false);
   };
 
-  const handleSuccess = (domain: Domain) => {
-    if (domain.id) {
-      return history.push(`/domains/${domain.id}`);
-    }
-  };
-
   const openRemoveDialog = (domain: string, domainId: number) => {
     setSelectedDomainLabel(domain);
     setselectedDomainID(domainId);
@@ -276,7 +270,6 @@ export const DomainsLanding: React.FC<Props> = (props) => {
         <DomainZoneImportDrawer
           open={importDrawerOpen}
           onClose={closeImportZoneDrawer}
-          onSuccess={handleSuccess}
         />
       </>
     );
@@ -378,7 +371,6 @@ export const DomainsLanding: React.FC<Props> = (props) => {
       <DomainZoneImportDrawer
         open={importDrawerOpen}
         onClose={closeImportZoneDrawer}
-        onSuccess={handleSuccess}
       />
       <DisableDomainDialog
         selectedDomainID={selectedDomainID}

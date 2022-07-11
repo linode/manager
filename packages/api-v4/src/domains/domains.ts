@@ -16,6 +16,7 @@ import {
   CloneDomainPayload,
   CreateDomainPayload,
   Domain,
+  ImportZonePayload,
   UpdateDomainPayload,
 } from './types';
 
@@ -92,9 +93,9 @@ export const cloneDomain = (domainId: number, data: CloneDomainPayload) =>
  * @param domain { string } The domain to import.
  * @param remote_nameserver { string } The remote nameserver that allows zone transfers (AXFR).
  */
-export const importZone = (domain: string, remote_nameserver: string) =>
+export const importZone = (data: ImportZonePayload) =>
   Request<Domain>(
-    setData({ domain, remote_nameserver }, importZoneSchema),
+    setData(data, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST')
   );
