@@ -64,6 +64,7 @@ const DomainZoneImportDrawer = (props: Props) => {
           onChange={formik.handleChange}
           value={formik.values.domain}
           errorText={domainError}
+          disabled={noPermission}
         />
         <TextField
           label="Remote Nameserver"
@@ -72,6 +73,7 @@ const DomainZoneImportDrawer = (props: Props) => {
           onChange={formik.handleChange}
           value={formik.values.remote_nameserver}
           errorText={remoteNameserverError}
+          disabled={noPermission}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>
