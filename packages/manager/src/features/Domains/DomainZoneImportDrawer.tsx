@@ -9,6 +9,8 @@ import { useFormik } from 'formik';
 import { useHistory } from 'react-router-dom';
 import { useImportZoneMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { useProfile, useGrants } from 'src/queries/profile';
+import { importZoneSchema } from '@linode/validation';
 
 interface Props {
   open: boolean;
@@ -17,6 +19,8 @@ interface Props {
 
 const DomainZoneImportDrawer = (props: Props) => {
   const { open, onClose: _onClose } = props;
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const history = useHistory();
 
@@ -45,8 +49,13 @@ const DomainZoneImportDrawer = (props: Props) => {
   const domainError = errorMap.domain;
   const remoteNameserverError = errorMap.remote_nameserver;
 
+  const noPermission = profile?.restricted && !grants?.global.add_domains;
+
   return (
     <Drawer open={open} onClose={onClose} title="Import a Zone">
+      {noPermission && (
+        <Notice error>You do not have permission to create new Domains.</Notice>
+      )}
       <form onSubmit={formik.handleSubmit}>
         {generalError && <Notice error text={generalError} />}
         <TextField
@@ -71,7 +80,7 @@ const DomainZoneImportDrawer = (props: Props) => {
           </Button>
           <Button
             buttonType="primary"
-            disabled={!formik.isValid}
+            disabled={!formik.dirty}
             loading={formik.isSubmitting}
             type="submit"
           >
