@@ -10,7 +10,6 @@ import { useHistory } from 'react-router-dom';
 import { useImportZoneMutation } from 'src/queries/domains';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { useProfile, useGrants } from 'src/queries/profile';
-import { importZoneSchema } from '@linode/validation';
 
 interface Props {
   open: boolean;
