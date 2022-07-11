@@ -30,8 +30,7 @@ export const mockCommonRequests = (
 ) => {
   // Default mock options
   const defaultOptions: CommonRequestMockOptions = {
-    // @TODO Consider making this `true` by default to speed up page load times.
-    account: false,
+    account: true,
   };
 
   const resolvedOptions = options
