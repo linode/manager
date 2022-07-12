@@ -14,7 +14,7 @@ import BillingSummary from './BillingSummary';
 const accountBalanceText = 'account-balance-text';
 const accountBalanceValue = 'account-balance-value';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+jest.mock('@linode/api-v4', () => {
   return {
     getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
   };

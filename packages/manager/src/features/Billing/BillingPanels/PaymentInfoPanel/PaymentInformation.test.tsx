@@ -6,7 +6,7 @@ import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import PaymentInformation from './PaymentInformation';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+jest.mock('@linode/api-v4', () => {
   return {
     getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
   };

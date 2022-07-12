@@ -8,7 +8,7 @@ import BillingSummary from 'src/features/Billing/BillingPanels/BillingSummary';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import PaymentMethodRow from './PaymentMethodRow';
 
-jest.mock('@linode/api-v4/lib/account', () => {
+jest.mock('@linode/api-v4', () => {
   return {
     makeDefaultPaymentMethod: jest.fn().mockResolvedValue({}),
     getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
