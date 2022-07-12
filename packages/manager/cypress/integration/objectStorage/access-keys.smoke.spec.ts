@@ -67,13 +67,23 @@ describe('object storage access keys smoke tests', () => {
 
     cy.wait(['@createKey', '@getKeys']);
 
-    cy.get('input[id="access-key"]')
+    ui.dialog
+      .findByTitle('Access Keys')
       .should('be.visible')
-      .should('have.value', accessKey);
-    cy.get('input[id="secret-key"]')
-      .should('be.visible')
-      .should('have.value', secretKey);
-    cy.findByLabelText('Close drawer').should('be.visible').click();
+      .within(() => {
+        cy.get('input[id="access-key"]')
+          .should('be.visible')
+          .should('have.value', accessKey);
+        cy.get('input[id="secret-key"]')
+          .should('be.visible')
+          .should('have.value', secretKey);
+
+        ui.buttonGroup
+          .findButtonByTitle('I Have Saved My Keys')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
 
     cy.findByLabelText('List of Object Storage Access Keys').within(() => {
       cy.findByText(keyLabel).should('be.visible');
