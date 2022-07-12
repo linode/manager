@@ -26,7 +26,7 @@ import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
 import { ipv6RangeQueryKey } from 'src/queries/networking';
 import { queryClient } from 'src/queries/base';
-import { useLinodesQuery } from 'src/queries/linodes';
+import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
@@ -167,7 +167,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     })
   ).current;
 
-  const { data, isLoading, error: linodesError } = useLinodesQuery(
+  const { data, isLoading, error: linodesError } = useLinodesByIdQuery(
     {},
     {
       region: linodeRegion,

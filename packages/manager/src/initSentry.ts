@@ -10,6 +10,7 @@ export const initSentry = () => {
       release: process.env.VERSION,
       environment: process.env.NODE_ENV,
       beforeSend,
+      autoSessionTracking: false,
       ignoreErrors: [
         // Random plugins/extensions
         'top.GLOBALS',
@@ -57,12 +58,12 @@ export const initSentry = () => {
         // This is apparently a benign error: https://stackoverflow.com/questions/49384120/resizeobserver-loop-limit-exceeded
         'ResizeObserver loop limit exceeded',
       ],
-      whitelistUrls: [
+      allowUrls: [
         /** anything from either *.linode.com/* or localhost:3000 */
         /linode.com{1}/g,
         /localhost:3000{1}/g,
       ],
-      blacklistUrls: [
+      denyUrls: [
         // New Relic script
         /new-relic\.js/i,
         // Chrome extensions

@@ -1,49 +1,33 @@
 import * as React from 'react';
-import {
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter,
-} from 'react-router-dom';
-import { compose } from 'recompose';
-
+import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 
 const DomainCreate = React.lazy(() => import('./CreateDomain'));
 const DomainsLanding = React.lazy(() => import('./DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
-type CombinedProps = RouteComponentProps<{ domainId?: string }>;
-
-const DomainsRoutes: React.FC<CombinedProps> = (props) => {
-  const {
-    match: { path },
-  } = props;
-
+const DomainsRoutes = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
-        <Route component={DomainCreate} exact path={`${path}/create`} />
+        <Route component={DomainCreate} exact path="/domains/create" />
         <Route
-          path={`${path}/:domainId/records`}
+          path="/domains/:domainId/records"
           exact
           strict
           component={DomainDetail}
         />
         <Route
-          path={`${path}/:domainId`}
+          path="/domains/:domainId"
           exact
           strict
           component={DomainDetail}
         />
-        <Route component={DomainsLanding} path={path} exact strict />
-        <Redirect to={`${path}`} />
+        <Route component={DomainsLanding} path="/domains" exact strict />
+        <Redirect to="/domains" />
       </Switch>
     </React.Suspense>
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withRouter);
-
-export default enhanced(DomainsRoutes);
+export default DomainsRoutes;

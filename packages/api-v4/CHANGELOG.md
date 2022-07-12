@@ -1,3 +1,9 @@
+## [2022-07-12] - v0.75.0
+
+### Added:
+
+- CloneDomainPayload and ImportZonePayload interfaces
+
 ## [2022-06-23] - v0.74.0
 
 ### Added:
