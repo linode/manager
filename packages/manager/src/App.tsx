@@ -32,6 +32,7 @@ import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
 import GoTo from './GoTo';
 import { databaseEventsHandler } from './queries/databases';
+import { domainEventsHandler } from './queries/domains';
 
 interface Props {
   toggleTheme: () => void;
@@ -109,6 +110,13 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('database') && !event._initial)
       .subscribe(databaseEventsHandler);
+
+    /*
+     * Send any Domain events to the Domain events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('domain') && !event._initial)
+      .subscribe(domainEventsHandler);
 
     /*
      * We want to listen for migration events side-wide

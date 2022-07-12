@@ -63,7 +63,9 @@ describe('create image', () => {
       cy.wait('@getDisks').then(() => {
         containsClick('Select a Disk').type(`${diskLabel}{enter}`);
       });
-      cy.findAllByLabelText('Label').type(`${imageLabel}{enter}`);
+      cy.findAllByLabelText('Label', { exact: false }).type(
+        `${imageLabel}{enter}`
+      );
       cy.findAllByLabelText('Description').type(
         `${imageLabel} is an amazing image`
       );
