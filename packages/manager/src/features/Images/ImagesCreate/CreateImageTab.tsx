@@ -20,10 +20,9 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { useGrants, useProfile } from 'src/queries/profile';
-import calculateCostFromUnitPrice from 'src/utilities/calculateCostFromUnitPrice';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import { convertStorageUnit } from 'src/utilities/unitConversions';
+import Link from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -52,8 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helperText: {
     marginBottom: theme.spacing(),
-    marginLeft: theme.spacing(1.5),
-    whiteSpace: 'nowrap',
+    marginTop: theme.spacing(2),
+    width: '80%',
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
 }));
 
@@ -184,11 +186,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const selectedDiskData: Disk | undefined = disks.find(
     (d) => `${d.id}` === selectedDisk
   );
-  const selectedDiskSizeInGB = convertStorageUnit(
-    'MB',
-    selectedDiskData?.size,
-    'GB'
-  );
 
   const isRawDisk = selectedDiskData?.filesystem === 'raw';
   const rawDiskWarning = (
@@ -248,6 +245,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           availableLinodesToImagize,
         ]}
         isClearable={false}
+        required
       />
 
       <Box
@@ -262,14 +260,9 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           handleChange={handleDiskChange}
           updateFor={[disks, selectedDisk, diskError, classes]}
           disabled={!canCreateImage}
+          required
           data-qa-disk-select
         />
-        {selectedDiskData?.size ? (
-          <Typography className={classes.helperText} variant="body1">
-            Estimated: {calculateCostFromUnitPrice(0.1, selectedDiskSizeInGB)}
-            /month
-          </Typography>
-        ) : null}
       </Box>
       {isRawDisk ? rawDiskWarning : null}
       <>
@@ -294,7 +287,17 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           data-qa-image-description
         />
       </>
-
+      <Typography variant="body1" className={classes.helperText}>
+        Custom Images are billed at $0.10/GB per month.{' '}
+        <Link to="https://www.linode.com/docs/products/tools/images/guides/capture-an-image/">
+          Learn more about requirements and considerations.{' '}
+        </Link>
+        For information about how to check and clean a Linux system&rsquo;s disk
+        space,{' '}
+        <Link to="https://www.linode.com/docs/guides/check-and-clean-linux-disk-space/">
+          read this guide.
+        </Link>
+      </Typography>
       <Box
         display="flex"
         justifyContent="flex-end"
