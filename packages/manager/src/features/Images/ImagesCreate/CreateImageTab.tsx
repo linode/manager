@@ -268,7 +268,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       <>
         <TextField
           label="Label"
-          required
           value={label}
           onChange={changeLabel}
           error={Boolean(labelError)}
