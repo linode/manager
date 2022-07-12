@@ -63,6 +63,7 @@ export const useDeleteDomainMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteDomain(id), {
     onSuccess: () => {
       invalidatePaginatedStore();
+      queryClient.removeQueries([queryKey, id], { exact: true });
     },
   });
 
