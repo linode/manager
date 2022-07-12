@@ -36,7 +36,7 @@ describe('Delete database clusters', () => {
       allow_list: [allowedIp],
     });
 
-    mockGetDatabase(database.id, database.engine, database).as('getDatabase');
+    mockGetDatabase(database).as('getDatabase');
     mockDeleteDatabase(database.id, database.engine).as('deleteDatabase');
 
     cy.visitWithLogin(`/databases/${database.engine}/${database.id}/settings`);
@@ -90,7 +90,7 @@ describe('Delete database clusters', () => {
     const errorMessage =
       'Your database is provisioning; please wait until provisioning is complete to perform this operation.';
 
-    mockGetDatabase(database.id, database.engine, database).as('getDatabase');
+    mockGetDatabase(database).as('getDatabase');
     mockDeleteProvisioningDatabase(
       database.id,
       database.engine,

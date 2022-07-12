@@ -20,10 +20,6 @@ import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState,
 } from 'src/store/documentation';
-import domainDrawer, {
-  defaultState as domainDrawerDefaultState,
-  State as DomainDrawerState,
-} from 'src/store/domainDrawer';
 import domainEvents from 'src/store/domains/domains.events';
 import domains, {
   defaultState as defaultDomainsState,
@@ -205,7 +201,6 @@ export interface ApplicationState {
   authentication: AuthState;
   backups: BackupDrawerState;
   documentation: DocumentationState;
-  domainDrawer: DomainDrawerState;
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
   tagImportDrawer: TagImportDrawerState;
@@ -229,7 +224,6 @@ export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
   documentation: documentationDefaultState,
-  domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
@@ -275,7 +269,6 @@ const reducers = combineReducers<ApplicationState>({
   authentication,
   backups,
   documentation,
-  domainDrawer,
   stackScriptDialog,
   tagImportDrawer,
   volumeDrawer,

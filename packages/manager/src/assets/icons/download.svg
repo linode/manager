@@ -1,21 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg width="18px" height="19px" viewBox="0 0 18 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
-    <title>icon/download</title>
-    <desc>Created with Sketch.</desc>
-    <g id="2.-Continuted" stroke="none" stroke-width="1" fill="currentColor" fill-rule="evenodd">
-        <g id="Kube-Detail-3.1" transform="translate(-1222.000000, -242.000000)">
-            <g id="right-rail" transform="translate(1112.000000, 169.000000)">
-                <g id="Kubeconfig">
-                    <g id="icon/download" transform="translate(23.000000, 62.000000)">
-                        <g id="button/download">
-                            <g id="icon/download" transform="translate(88.000000, 11.000000)">
-                                <polygon id="Shape" fill="currentColor" transform="translate(14.7, -3) rotate(90)" fill-rule="nonzero" points="10.5 10.5 14.5 6.5 10.5 2.5 10.5 5.5 1.5 5.5 1.5 7.5 10.5 7.5"></polygon>
-                                <polyline id="Line" stroke="currentColor" stroke-width="2" stroke-linecap="square" points="0 14 0 17.3767844 16 17.3767844 16 14"></polyline>
-                            </g>
-                        </g>
-                    </g>
-                </g>
+<svg width="14px" height="17px" viewBox="0 0 14 17" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Shape</title>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Personal-Access-Token-modal" transform="translate(-851.000000, -404.000000)" fill="currentColor" fill-rule="nonzero">
+            <g id="get_app-24px" transform="translate(846.000000, 401.000000)">
+                <path d="M19,9 L15,9 L15,3 L9,3 L9,9 L5,9 L12,16 L19,9 Z M5,18 L5,20 L19,20 L19,18 L5,18 Z" id="Shape"></path>
             </g>
         </g>
     </g>

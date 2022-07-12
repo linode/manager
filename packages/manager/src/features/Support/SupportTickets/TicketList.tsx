@@ -1,11 +1,8 @@
-import { SupportTicket } from '@linode/api-v4/lib/support';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { SupportTicket } from '@linode/api-v4/lib/support';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import { OrderByProps } from 'src/components/OrderBy';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -15,43 +12,60 @@ import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import TicketRow from './TicketRow';
-import { getTicketsPage } from './ticketUtils';
+import { useSupportTicketsQuery } from 'src/queries/support';
+import { usePagination } from 'src/hooks/usePagination';
+import { useOrder } from 'src/hooks/useOrder';
+import { getStatusFilter } from './ticketUtils';
 
-interface Props {
+export interface Props {
   filterStatus: 'open' | 'closed';
   newTicket?: SupportTicket;
 }
 
-export type CombinedProps = Props &
-  PaginationProps<SupportTicket> &
-  Omit<OrderByProps, 'data'>;
+const preferenceKey = 'support-tickets';
 
-export class TicketList extends React.Component<CombinedProps, {}> {
-  mounted: boolean = false;
+export const TicketList = (props: Props) => {
+  const { filterStatus, newTicket } = props;
 
-  componentDidMount() {
-    this.mounted = true;
-    this.props.request();
-  }
+  const pagination = usePagination(1, preferenceKey);
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.filterStatus !== this.props.filterStatus) {
-      this.props.handlePageChange(1);
-    }
-    if (prevProps.newTicket !== this.props.newTicket) {
-      this.props.request();
-    }
-  }
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'opened',
+      order: 'desc',
+    },
+    `${preferenceKey}-order`
+  );
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
 
-  renderContent = () => {
-    const { data: tickets, error, loading } = this.props;
+  const { data, isLoading, error, refetch } = useSupportTicketsQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    { ...filter, ...getStatusFilter(filterStatus) }
+  );
 
-    if (loading) {
-      return <TableRowLoading columns={6} />;
+  React.useEffect(() => {
+    refetch();
+  }, [newTicket]);
+
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <TableRowLoading
+          columns={6}
+          responsive={{
+            1: { smDown: true },
+            3: { xsDown: true },
+            5: { smDown: true },
+          }}
+        />
+      );
     }
 
     if (error) {
@@ -63,114 +77,94 @@ export class TicketList extends React.Component<CombinedProps, {}> {
       );
     }
 
-    return tickets && tickets.length > 0 ? (
-      this.renderTickets(tickets)
-    ) : (
-      <TableRowEmptyState colSpan={8} />
-    );
+    if (data && data.results > 0) {
+      return data.data.map((ticket, idx) => (
+        <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />
+      ));
+    }
+
+    return <TableRowEmptyState colSpan={8} />;
   };
 
-  renderTickets = (tickets: SupportTicket[]) =>
-    tickets.map((ticket, idx) => {
-      return <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />;
-    });
+  const isActive = (label: string) => label === orderBy;
 
-  render() {
-    const {
-      order,
-      orderBy,
-      handleOrderChange,
-      count,
-      page,
-      pageSize,
-    } = this.props;
-
-    const isActive = (label: string) => label === orderBy;
-
-    return (
-      <>
-        <Table aria-label="List of Tickets">
-          <TableHead>
-            <TableRow>
+  return (
+    <>
+      <Table aria-label="List of Tickets">
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              label="summary"
+              direction={order}
+              handleClick={handleOrderChange}
+              active={isActive('summary')}
+              data-qa-support-subject-header
+              noWrap
+            >
+              Subject
+            </TableSortCell>
+            <Hidden smDown>
               <TableSortCell
-                label="summary"
+                label="id"
                 direction={order}
                 handleClick={handleOrderChange}
-                active={isActive('summary')}
-                data-qa-support-subject-header
+                active={isActive('id')}
+                data-qa-support-id-header
                 noWrap
               >
-                Subject
+                Ticket ID
               </TableSortCell>
-              <Hidden smDown>
-                <TableSortCell
-                  label="id"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('id')}
-                  data-qa-support-id-header
-                  noWrap
-                >
-                  Ticket ID
-                </TableSortCell>
-              </Hidden>
-              <TableCell data-qa-support-regarding-header>Regarding</TableCell>
-              <Hidden xsDown>
-                <TableSortCell
-                  label="opened"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('opened')}
-                  data-qa-support-date-header
-                  noWrap
-                >
-                  Date Created
-                </TableSortCell>
-                <TableSortCell
-                  label="updated"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updated')}
-                  data-qa-support-updated-header
-                  noWrap
-                >
-                  Last Updated
-                </TableSortCell>
-              </Hidden>
-              <Hidden smDown>
-                <TableSortCell
-                  label="updated_by"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updated_by')}
-                  data-qa-support-updated-by-header
-                  noWrap
-                >
-                  Updated By
-                </TableSortCell>
-              </Hidden>
-            </TableRow>
-          </TableHead>
-          <TableBody>{this.renderContent()}</TableBody>
-        </Table>
-        <PaginationFooter
-          count={count}
-          page={page}
-          pageSize={pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="ticket list"
-          padded
-        />
-      </>
-    );
-  }
-}
-
-const updatedRequest = (ownProps: Props, params: any, filters: any) => {
-  return getTicketsPage(params, filters, ownProps.filterStatus);
+            </Hidden>
+            <TableCell data-qa-support-regarding-header>Regarding</TableCell>
+            <Hidden xsDown>
+              <TableSortCell
+                label="opened"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('opened')}
+                data-qa-support-date-header
+                noWrap
+              >
+                Date Created
+              </TableSortCell>
+            </Hidden>
+            <TableSortCell
+              label="updated"
+              direction={order}
+              handleClick={handleOrderChange}
+              active={isActive('updated')}
+              data-qa-support-updated-header
+              noWrap
+            >
+              Last Updated
+            </TableSortCell>
+            <Hidden smDown>
+              <TableSortCell
+                label="updated_by"
+                direction={order}
+                handleClick={handleOrderChange}
+                active={isActive('updated_by')}
+                data-qa-support-updated-by-header
+                noWrap
+              >
+                Updated By
+              </TableSortCell>
+            </Hidden>
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        eventCategory="ticket list"
+        padded
+      />
+    </>
+  );
 };
 
-const paginated = Pagey(updatedRequest);
-
-export default compose<CombinedProps, Props>(paginated)(TicketList);
+export default TicketList;
