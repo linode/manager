@@ -17,7 +17,7 @@ $ yarn add @linode/api-v4
 or with a CDN:
 
 ```js
-<script src="https://unpkg.com/@linode/api-v4/index.js"></script>
+<script src="https://unpkg.com/@linode/api-v4/lib/iife/index.js"></script>
 ```
 
 ## Usage
@@ -88,32 +88,6 @@ Other examples:
 - Angular (example wanted)
 - Vue (example wanted)
 
-### Tree Shaking
-
-All methods are exposed from the SDK root, but we also support tree shaking:
-
-```js
-import { getLinodes } from '@linode/api-v4'; // This is fine
-import { getLinodes } from '@linode/api-v4'; // This works too
-```
-
-#### Important note about imports
-
-If you are using interceptors on the base request, you should keep your import paths consistent (import either from root or from `/lib`) or else the interceptors will not work.
-
-```js
-import { baseRequest } from '@linode/api-v4';
-import { getLinodes } from '@linode/api-v4';
-
-baseRequest.interceptors.use(customInterceptor);
-getLinodes(); // customInterceptor not called!
-
-// To fix, change the first import to:
-// import { baseRequest } from '@linode/api-v4';
-//
-// (or, import getLinodes from '@linode/api-v4')
-```
-
 ### Pagination and Filtering
 
 APIv4 supports [pagination](https://developers.linode.com/api/v4/#pagination) and [filtering and sorting](https://developers.linode.com/api/v4/#filtering-and-sorting). Paginated endpoints include the current page, total number
@@ -154,22 +128,14 @@ as well as examples of more complex filtering and sorting operations.
 
 This library comes with TypeScript definitions so no need to write your own or find them elsewhere online. Just import the functions as normal and they should play nicely with TypeScript!
 
-Most types can be imported from their corresponding pathname. For instance:
-
 ```js
 import { Linode } from '@linode/api-v4';
 ```
 
-More general types (such as the error shape that comes back from the Linode APIv4) can be found in the `/types` directory:
+More general types are included (such as the error shape that comes back from the Linode APIv4) 
 
 ```js
 import { APIError } from '@linode/api-v4';
-```
-
-You can also import from the root if preferred:
-
-```js
-import { APIError, Linode } from '@linode/api-v4';
 ```
 
 ## Contributing

@@ -3,7 +3,7 @@
  */
 
 import { makeErrorResponse } from 'support/util/errors';
-import { Profile } from '@linode/api-v4/lib/profile/types';
+import { Profile } from '@linode/api-v4';
 
 /**
  * Intercepts GET request to fetch profile and mocks response.

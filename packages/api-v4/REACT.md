@@ -32,13 +32,12 @@ baseRequest.interceptors.request.use(config => {
  * your Linodes' labels
  */
 
-import './request'
-import { AxiosError } from 'axios'
-import { getLinodes, Linode } from '@linode/api-v4/lib/linodes'
-import { APIError, ResourcePage } from '@linode/api-v4';
 import React from 'react'
+import { AxiosError } from 'axios'
+import { getLinodes, Linode, APIError, ResourcePage } from '@linode/api-v4'
+import './request'
 
-const MyComponent: React.FC<{}> = () => {
+const MyComponent = () => {
   const [linodes, setLinodesData] = React.useState<Linode[] | undefined>(undefined);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);

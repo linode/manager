@@ -17,7 +17,7 @@ The `baseRequest` is used by Cloud Manager for authentication and error shaping:
 ```ts
 // packages/manager/src/request.tsx (simplified)
 
-import { baseRequest } from "@linode/api-v4/lib/request";
+import { baseRequest } from "@linode/api-v4";
 
 // Adds the bearer token from local storage to each request, using an interceptor
 baseRequest.interceptors.request.use((config) => {
@@ -82,8 +82,7 @@ A better way to fetch data is to use React Query. It address the issues listed a
 To fetch data with React Query, check to see if the API method you want to use has a query written for it in `packages/manager/src/queries`. If not, feel free to write one. It should look something like this:
 
 ```ts
-import { getProfile, Profile } from "@linode/api-v4/lib/profile";
-import { APIError } from "@linode/api-v4/lib/types";
+import { APIError, getProfile, Profile } from "@linode/api-v4";
 import { useQuery } from "react-query";
 
 const queryKey = "profile";

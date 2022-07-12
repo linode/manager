@@ -45,7 +45,7 @@ export default SayHello;
 
 - Import React with `import * as React from 'react'`.
 - Use absolute imports, e.g. `import { queryClient } from 'src/queries/base'`.
-- Methods from the api-v4 package should be imported from `@linode/api-v4/lib/..`.
+- Methods from the api-v4 package should be imported from `@linode/api-v4`.
 
 #### Styles
 
