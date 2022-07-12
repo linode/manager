@@ -2,8 +2,12 @@
  * @file Cypress intercepts and mocks for Cloud Manager DBaaS operations.
  */
 
-import { Database } from '@linode/api-v4/lib/databases/types';
+import {
+  Database,
+  DatabaseCredentials,
+} from '@linode/api-v4/lib/databases/types';
 import { makeErrorResponse } from 'support/util/errors';
+import { randomString } from 'support/util/random';
 
 /**
  * Default message to use when performing operations on provisioning DBs.
@@ -14,18 +18,75 @@ const defaultErrorMessageProvisioning =
 /**
  * Intercepts GET request to fetch database instance and mocks response.
  *
- * @param id - Database ID.
- * @param engine - Database engine type.
  * @param database - Response database.
  *
  * @returns Cypress chainable.
  */
 export const mockGetDatabase = (
-  id: number,
-  engine: string,
   database: Database
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `*/databases/${engine}/instances/${id}`, database);
+  return cy.intercept(
+    'GET',
+    `*/databases/${database.engine}/instances/${database.id}`,
+    database
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve database credentials and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine.
+ * @param password - Optional response password. If not specified, a random string is returned.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetDatabaseCredentials = (
+  id: number,
+  engine: string,
+  password?: string | undefined
+): Cypress.Chainable<null> => {
+  const username = engine === 'postgresql' ? 'linpostgres' : 'linroot';
+  const responsePassword =
+    password ||
+    randomString(16, {
+      spaces: false,
+      uppercase: true,
+      lowercase: true,
+      symbols: true,
+      numbers: true,
+    });
+
+  const credentials: DatabaseCredentials = {
+    username,
+    password: responsePassword,
+  };
+
+  return cy.intercept(
+    'GET',
+    `*/databases/${engine}/instances/${id}/credentials`,
+    credentials
+  );
+};
+
+/**
+ * Intercepts PUT request to update an active database and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateDatabase = (
+  id: number,
+  engine: string,
+  responseData: any = {}
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    `*/databases/${engine}/instances/${id}`,
+    responseData
+  );
 };
 
 /**
@@ -46,6 +107,25 @@ export const mockUpdateProvisioningDatabase = (
     responseErrorMessage || defaultErrorMessageProvisioning
   );
   return cy.intercept('PUT', `*/databases/${engine}/instances/${id}`, error);
+};
+
+/**
+ * Intercepts POST request to reset an active database's password and mocks response.
+ *
+ * @param id - Database ID.
+ * @param engine - Database engine type.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockResetPassword = (
+  id: number,
+  engine: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    `*/databases/${engine}/instances/${id}/credentials/reset`,
+    {}
+  );
 };
 
 /**

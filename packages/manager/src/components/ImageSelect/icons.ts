@@ -7,6 +7,7 @@ export const distroIcons = {
   Debian: 'debian',
   Fedora: 'fedora',
   Gentoo: 'gentoo',
+  Kali: 'kali-linux',
   openSUSE: 'opensuse',
   Rocky: 'rocky-linux',
   Slackware: 'slackware',

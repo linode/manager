@@ -9,7 +9,7 @@ import TableContentWrapper from 'src/components/TableContentWrapper';
 import { useTypes } from 'src/hooks/useTypes';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
-import { useLinodesQuery } from 'src/queries/linodes';
+import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { usePagination } from 'src/hooks/usePagination';
 
 interface Props {
@@ -25,7 +25,13 @@ export const LinodeTransferTable: React.FC<Props> = (props) => {
 
   const pagination = usePagination();
 
-  const { data, isError, isLoading, error, dataUpdatedAt } = useLinodesQuery(
+  const {
+    data,
+    isError,
+    isLoading,
+    error,
+    dataUpdatedAt,
+  } = useLinodesByIdQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,

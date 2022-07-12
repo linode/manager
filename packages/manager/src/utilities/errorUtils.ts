@@ -83,7 +83,7 @@ export const getErrorStringOrDefault = (
 // type = GetReturnType<E, Record<T | 'none', (string | undefined)>>
 export const getErrorMap = <T extends string = string>(
   fields: T[] = [],
-  errors?: APIError[]
+  errors?: APIError[] | null
 ): Partial<Record<T | 'none', string | undefined>> => {
   if (!errors) {
     return {} as Partial<Record<any, any>>;
