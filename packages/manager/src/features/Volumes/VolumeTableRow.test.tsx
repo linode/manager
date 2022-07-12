@@ -1,7 +1,6 @@
 import { VolumeStatus } from '@linode/api-v4/lib/volumes';
-import { render } from '@testing-library/react';
 import * as React from 'react';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
 import { volumes } from 'src/__data__/volumes';
 import { VolumeTableRow, CombinedProps } from './VolumeTableRow';
 
@@ -42,14 +41,16 @@ const props: CombinedProps = {
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByText } = render(wrapWithTheme(<VolumeTableRow {...props} />));
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(<VolumeTableRow {...props} />)
+    );
     expect(getByText(volumeWithLinodeLabel.linodeLabel));
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', () => {
     const unattachedProps = { ...props, volume: unattachedVolume };
-    const { getByText } = render(
-      wrapWithTheme(<VolumeTableRow {...unattachedProps} />)
+    const { getByText } = renderWithTheme(
+      wrapWithTableBody(<VolumeTableRow {...unattachedProps} />)
     );
     expect(getByText('Detach'));
   });

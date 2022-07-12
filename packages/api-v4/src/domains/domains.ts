@@ -12,7 +12,13 @@ import Request, {
   setXFilter,
 } from '../request';
 import { ResourcePage as Page } from '../types';
-import { CreateDomainPayload, Domain, UpdateDomainPayload } from './types';
+import {
+  CloneDomainPayload,
+  CreateDomainPayload,
+  Domain,
+  ImportZonePayload,
+  UpdateDomainPayload,
+} from './types';
 
 /**
  * Returns a paginated list of Domains.
@@ -74,9 +80,9 @@ export const deleteDomain = (domainId: number) =>
  * @param domainId { number } The ID of the Domain to clone.
  * @param cloneName { string } The name of the new domain.
  */
-export const cloneDomain = (domainId: number, cloneName: string) =>
+export const cloneDomain = (domainId: number, data: CloneDomainPayload) =>
   Request<Domain>(
-    setData({ domain: cloneName }),
+    setData(data),
     setURL(`${API_ROOT}/domains/${domainId}/clone`),
     setMethod('POST')
   );
@@ -87,9 +93,9 @@ export const cloneDomain = (domainId: number, cloneName: string) =>
  * @param domain { string } The domain to import.
  * @param remote_nameserver { string } The remote nameserver that allows zone transfers (AXFR).
  */
-export const importZone = (domain: string, remote_nameserver: string) =>
+export const importZone = (data: ImportZonePayload) =>
   Request<Domain>(
-    setData({ domain, remote_nameserver }, importZoneSchema),
+    setData(data, importZoneSchema),
     setURL(`${API_ROOT}/domains/import`),
     setMethod('POST')
   );

@@ -22,65 +22,53 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Domain & Handlers;
+type CombinedProps = { domain: Domain } & Handlers;
 
 const DomainTableRow: React.FC<CombinedProps> = (props) => {
-  const {
-    domain,
-    id,
-    type,
-    status,
-    onDisableOrEnable,
-    updated,
-    onClone,
-    onRemove,
-    onEdit,
-  } = props;
+  const { domain, onDisableOrEnable, onClone, onRemove, onEdit } = props;
 
   const classes = useStyles();
 
   return (
     <TableRow
-      key={id}
-      data-qa-domain-cell={domain}
-      className="fade-in-table"
-      ariaLabel={`Domain ${domain}`}
+      key={domain.id}
+      data-qa-domain-cell={domain.domain}
+      ariaLabel={`Domain ${domain.domain}`}
     >
       <TableCell data-qa-domain-label>
         <div className={classes.labelStatusWrapper}>
-          {type !== 'slave' ? (
-            <Link to={`/domains/${id}`} tabIndex={0}>
-              {domain}
+          {domain.type !== 'slave' ? (
+            <Link to={`/domains/${domain.id}`} tabIndex={0}>
+              {domain.domain}
             </Link>
           ) : (
             <button
               className={classes.button}
-              onClick={() => props.onEdit(domain, id)}
+              onClick={() => props.onEdit(domain)}
             >
-              {domain}
+              {domain.domain}
             </button>
           )}
         </div>
       </TableCell>
       <TableCell statusCell data-qa-domain-status>
-        <StatusIcon status={domainStatusToIconStatus(status)} />
-        {humanizeDomainStatus(status)}
+        <StatusIcon status={domainStatusToIconStatus(domain.status)} />
+        {humanizeDomainStatus(domain.status)}
       </TableCell>
       <Hidden xsDown>
-        <TableCell data-qa-domain-type>{getDomainDisplayType(type)}</TableCell>
+        <TableCell data-qa-domain-type>
+          {getDomainDisplayType(domain.type)}
+        </TableCell>
         <TableCell data-qa-domain-lastmodified>
-          <DateTimeDisplay value={updated} />
+          <DateTimeDisplay value={domain.updated} />
         </TableCell>
       </Hidden>
       <TableCell actionCell>
         <ActionMenu
           domain={domain}
           onDisableOrEnable={onDisableOrEnable}
-          id={id}
-          type={type}
           onRemove={onRemove}
           onClone={onClone}
-          status={status}
           onEdit={onEdit}
         />
       </TableCell>

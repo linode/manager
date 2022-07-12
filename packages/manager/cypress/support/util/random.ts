@@ -153,3 +153,27 @@ export const randomIp = () => {
   const randomOctet = () => randomNumber(0, 254);
   return `${randomOctet()}.${randomOctet()}.${randomOctet()}.${randomOctet()}`;
 };
+
+/**
+ * Returns a random phone number.
+ *
+ * The three digits following the area code will always be '555'.
+ *
+ * @param randomCountryCode - Whether country code should be random. If not, '1' is used.
+ *
+ * @example
+ * randomPhoneNumber(); // Example output: `+19965551794`.
+ * randomPhoneNumber(false); // Equivalent to above.
+ * randomPhoneNumber(true); // Example output: `+2642285555485`.
+ *
+ * @returns Random phone number.
+ */
+export const randomPhoneNumber = (
+  randomCountryCode: boolean = false
+): string => {
+  const countryCode = randomCountryCode ? randomNumber(1, 999) : 1;
+  return `+${countryCode}${randomNumber(100, 999)}555${randomNumber(
+    1000,
+    9999
+  )}`;
+};

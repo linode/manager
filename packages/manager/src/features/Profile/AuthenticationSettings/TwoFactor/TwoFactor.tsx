@@ -13,7 +13,6 @@ import { queryKey } from 'src/queries/profile';
 import { useSecurityQuestions } from 'src/queries/securityQuestions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DisableTwoFactorDialog from './DisableTwoFactorDialog';
 import EnableTwoFactorForm from './EnableTwoFactorForm';
 import ScratchDialog from './ScratchCodeDialog';
@@ -120,6 +119,17 @@ export const TwoFactor: React.FC<Props> = (props) => {
   };
 
   const getToken = () => {
+    if (!hasSecurityQuestions) {
+      setErrors([
+        {
+          reason: `You must add Security Questions to your profile in order to ${
+            twoFactor ? 'reset' : 'enable'
+          } Two-Factor Authentication`,
+        },
+      ]);
+      return Promise.reject('Error');
+    }
+
     setLoading(true);
     return getTFAToken()
       .then((response) => {
@@ -136,7 +146,6 @@ export const TwoFactor: React.FC<Props> = (props) => {
         );
 
         setLoading(false);
-        scrollErrorIntoView();
         return Promise.reject('Error');
       });
   };
@@ -222,6 +231,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
                     warning
                     text={needSecurityQuestionsCopy}
                     style={{ marginTop: '8px' }}
+                    typeProps={{ style: { fontSize: '0.875rem' } }}
                   />
                 )}
                 {twoFactorEnabled && (

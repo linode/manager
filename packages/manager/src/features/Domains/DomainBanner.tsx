@@ -51,10 +51,10 @@ export const DomainBanner: React.FC<Props> = (props) => {
       dismissible
       onClose={handleClose}
     >
+      <Typography className={classes.banner}>
+        <strong>Your DNS zones are not being served.</strong>
+      </Typography>
       <Typography>
-        <div className={classes.banner}>
-          <strong>Your DNS zones are not being served.</strong>
-        </div>
         Your domains will not be served by Linode&rsquo;s nameservers unless you
         have at least one active Linode on your account.{` `}
         <Link to="/linodes/create">You can create one here.</Link>
