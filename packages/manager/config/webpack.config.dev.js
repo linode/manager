@@ -65,6 +65,7 @@ module.exports = {
     },
     // Use a faster hash function
     hashFunction: 'xxhash64',
+    pathinfo: false,
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -233,5 +234,8 @@ module.exports = {
   },
   experiments: {
     cacheUnaffected: true,
+  },
+  watchOptions: {
+    aggregateTimeout: 10,
   },
 };
