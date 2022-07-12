@@ -1,4 +1,9 @@
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery } from 'react-query';
+import { queryClient } from './base';
+import { EntityEvent } from '@linode/api-v4';
 import {
+  cloneDomain,
   createDomain,
   CreateDomainPayload,
   deleteDomain,
@@ -6,11 +11,11 @@ import {
   getDomains,
   updateDomain,
   UpdateDomainPayload,
+  CloneDomainPayload,
+  getDomain,
+  ImportZonePayload,
+  importZone,
 } from '@linode/api-v4/lib/domains';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
-import { queryClient } from './base';
-import { EntityEvent } from '@linode/api-v4';
 
 export const queryKey = 'domains';
 
@@ -21,12 +26,38 @@ export const useDomainsQuery = (params: any, filter: any) =>
     { keepPreviousData: true }
   );
 
+export const useDomainQuery = (id: number) =>
+  useQuery<Domain, APIError[]>([queryKey, id], () => getDomain(id));
+
 export const useCreateDomainMutation = () =>
   useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
-    onSuccess: () => {
+    onSuccess: (domain) => {
       invalidatePaginatedStore();
+      queryClient.setQueryData([queryKey, domain.id], domain);
     },
   });
+
+export const useCloneDomainMutation = (id: number) =>
+  useMutation<Domain, APIError[], CloneDomainPayload>(
+    (data) => cloneDomain(id, data),
+    {
+      onSuccess: (domain) => {
+        invalidatePaginatedStore();
+        queryClient.setQueryData([queryKey, domain.id], domain);
+      },
+    }
+  );
+
+export const useImportZoneMutation = () =>
+  useMutation<Domain, APIError[], ImportZonePayload>(
+    (data) => importZone(data),
+    {
+      onSuccess: (domain) => {
+        invalidatePaginatedStore();
+        queryClient.setQueryData([queryKey, domain.id], domain);
+      },
+    }
+  );
 
 export const useDeleteDomainMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteDomain(id), {
@@ -44,6 +75,7 @@ export const useUpdateDomainMutation = () =>
     {
       onSuccess: (data, vars) => {
         updatePaginatedDomainsStore(vars.id, data);
+        queryClient.setQueryData<Domain>([queryKey, data.id], data);
       },
     }
   );
