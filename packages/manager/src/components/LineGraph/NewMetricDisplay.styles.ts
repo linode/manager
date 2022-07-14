@@ -55,7 +55,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       '& td:first-child': {
         backgroundColor: 'transparent !important',
         [theme.breakpoints.down('sm')]: {
-          marginLeft: -50,
+          marginLeft: -45,
         },
       },
       '& .data': {
