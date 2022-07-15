@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   icon: {
-    fontSize: '1.8em',
+    fontSize: '1.52em',
+    marginLeft: theme.spacing(),
   },
 }));
 
@@ -50,9 +51,7 @@ export const ImageOption: React.FC<CombinedProps> = (props) => {
         alignItems="center"
         justifyContent="flex-start"
       >
-        <Grid item className="py0">
-          <span className={`${props.data.className} ${classes.icon}`} />
-        </Grid>
+        <span className={`${props.data.className} ${classes.icon}`} />
         <Grid item>{label}</Grid>
       </Grid>
     </Option>
