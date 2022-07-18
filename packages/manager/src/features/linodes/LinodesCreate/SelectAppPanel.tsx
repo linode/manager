@@ -179,7 +179,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
               openDrawer={openDrawer}
               disabled={disabled}
               id={eachApp.id}
-              iconUrl={eachApp.logo_url || ''}
+              iconUrl={eachApp.logo_url.toLowerCase() || ''}
               classes={classes}
             />
           ))}
