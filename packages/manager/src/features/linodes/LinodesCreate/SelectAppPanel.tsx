@@ -2,7 +2,7 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { decode } from 'he';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Info from 'src/assets/icons/info.svg';
+import Info from 'src/assets/icons/info2.svg';
 import {
   createStyles,
   Theme,
@@ -52,23 +52,8 @@ const styles = (theme: Theme) =>
       paddingLeft: 0,
       maxWidth: 40,
       '& svg': {
-        width: 28,
-        height: 28,
-      },
-      '& .circle': {
-        transition: theme.transitions.create('fill'),
-      },
-      '& .path': {
-        transition: theme.transitions.create('stroke'),
-      },
-      '&:hover': {
-        color: theme.palette.primary.main,
-        '& .circle': {
-          fill: theme.palette.primary.main,
-        },
-        '& .path': {
-          color: 'white',
-        },
+        width: 19,
+        height: 19,
       },
     },
   });
