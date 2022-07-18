@@ -56,7 +56,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     isLoading: clientTokenLoading,
     error: clientTokenError,
   } = useClientToken();
-  const [{ options }, dispatch] = usePayPalScriptReducer();
+  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
 
   const {
     usd,
@@ -193,7 +193,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     );
   };
 
-  if (clientTokenLoading || !options['data-client-token']) {
+  if (clientTokenLoading || isPending || !options['data-client-token']) {
     return (
       <Grid
         container
