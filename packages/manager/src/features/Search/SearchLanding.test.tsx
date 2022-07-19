@@ -83,10 +83,7 @@ describe('Component', () => {
   });
 
   it('should show an empty state', async () => {
-    const { getByText, getByTestId } = renderWithTheme(
-      <SearchLanding {...props} />
-    );
-    await waitForElementToBeRemoved(getByTestId('loading'));
+    const { getByText } = renderWithTheme(<SearchLanding {...props} />);
     getByText(/no results/i);
   });
 
