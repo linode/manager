@@ -1,17 +1,21 @@
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { decode } from 'he';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Info from 'src/assets/icons/info2.svg';
+import Divider from 'src/components/core/Divider';
+import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
 import { getParamFromUrl } from 'src/utilities/queryParams';
@@ -29,10 +33,14 @@ const styles = (theme: Theme) =>
   createStyles({
     flatImagePanelSelections: {
       marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(),
       padding: `${theme.spacing(1)}px 0`,
     },
     panel: {
       marginBottom: theme.spacing(3),
+      height: 576,
+      overflowY: 'auto',
+      boxShadow: `${theme.color.boxShadow} 0px 20px 10px -10px`,
     },
     loading: {
       marginTop: theme.spacing(2),
@@ -116,6 +124,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       this.clickAppIfQueryParamExists();
     }
   }
+
   render() {
     const {
       disabled,
@@ -149,10 +158,12 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       return null;
     }
 
-    return (
-      <Panel className={classes.panel} error={error} title="Select App">
+    const panelSection = (heading: string, apps: StackScript[]) => (
+      <>
+        <Typography variant="h2">{heading}</Typography>
+        <Divider spacingTop={16} spacingBottom={16} />
         <Grid className={classes.flatImagePanelSelections} container>
-          {appInstances.map((eachApp) => (
+          {apps.map((eachApp) => (
             <SelectionCardWrapper
               key={eachApp.id}
               checked={eachApp.id === selectedStackScriptID}
@@ -169,7 +180,29 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
             />
           ))}
         </Grid>
-      </Panel>
+      </>
+    );
+
+    const newApps = appInstances.filter((app) => {
+      return ['kali linux', 'easypanel', 'liveswitch', 'saltcorn'].includes(
+        app.label.toLowerCase().trim()
+      );
+    });
+
+    const popularApps = appInstances.slice(0, 10);
+
+    return (
+      <Paper className={classes.panel} data-qa-tp="Select Image">
+        {error && <Notice text={error} error />}
+        {panelSection('New apps', newApps)}
+        {panelSection('Popular apps', popularApps)}
+        {panelSection(
+          'All apps',
+          appInstances.sort((a, b) =>
+            a.label.toLowerCase().localeCompare(b.label.toLowerCase())
+          )
+        )}
+      </Paper>
     );
   }
 }
