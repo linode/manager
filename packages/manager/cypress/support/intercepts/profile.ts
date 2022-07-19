@@ -3,7 +3,11 @@
  */
 
 import { makeErrorResponse } from 'support/util/errors';
-import { Profile } from '@linode/api-v4/lib/profile/types';
+import {
+  Profile,
+  SecurityQuestionsData,
+  SecurityQuestionsPayload,
+} from '@linode/api-v4/lib/profile/types';
 
 /**
  * Intercepts GET request to fetch profile and mocks response.
@@ -27,6 +31,8 @@ export const mockSmsVerificationOptOut = (): Cypress.Chainable<null> => {
 
 /**
  * Intercepts POST request to send SMS verification code and mocks response.
+ *
+ * @returns Cypress chainable.
  */
 export const mockSendVerificationCode = (): Cypress.Chainable<null> => {
   return cy.intercept('POST', '*/profile/phone-number', {});
@@ -47,4 +53,38 @@ export const mockVerifyVerificationCode = (
 ): Cypress.Chainable<null> => {
   const response = !!errorMessage ? makeErrorResponse(errorMessage) : {};
   return cy.intercept('POST', '*/profile/phone-number/verify', response);
+};
+
+/**
+ * Intercepts GET request to fetch security question data and mocks response.
+ *
+ * @param securityQuestionsData - Security questions response data.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSecurityQuestions = (
+  securityQuestionsData: SecurityQuestionsData
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    '*/profile/security-questions',
+    securityQuestionsData
+  );
+};
+
+/**
+ * Intercepts POST request to update security questions and mocks response.
+ *
+ * @param securityQuestionsPayload - Security questions response data.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateSecurityQuestions = (
+  securityQuestionsPayload: SecurityQuestionsPayload
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    '*/profile/security-questions',
+    securityQuestionsPayload
+  );
 };
