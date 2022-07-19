@@ -141,7 +141,7 @@ const SecurityQuestions = () => {
       <Typography variant="h3">Security Questions</Typography>
       <Typography variant="body1" className={classes.copy}>
         Security questions enable you to regain access to your Linode user
-        account in certain situations, such as when TFA is enabled and you no
+        account in certain situations, such as when 2FA is enabled and you no
         longer have access to the token or recovery codes. Answers to security
         questions should not be easily guessed or discoverable through research.{' '}
         <Link to="https://www.linode.com/docs/guides/user-security-controls#security-questions">
