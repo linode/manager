@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { APP_ROOT } from 'src/constants';
+import useFlags from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
@@ -52,6 +53,7 @@ interface Props {
 export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   const { stackScriptLabel, open, onClose } = props;
   const classes = useStyles();
+  const { oneClickAppsDocsOverride } = useFlags();
 
   const app = oneClickApps.find((app) => {
     const cleanedStackScriptLabel = stackScriptLabel
@@ -125,7 +127,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
         {app.related_guides && (
           <LinkSection
             title="Guides"
-            links={app.related_guides}
+            links={oneClickAppsDocsOverride?.[app.name] ?? app.related_guides}
             icon={LibraryBook}
           />
         )}
