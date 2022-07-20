@@ -1,4 +1,6 @@
+import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 import * as React from 'react';
+import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
@@ -7,17 +9,16 @@ import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import PaginationFooter from 'src/components/PaginationFooter';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import DatabaseEmptyState from './DatabaseEmptyState';
-import { useHistory } from 'react-router-dom';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useDatabasesQuery } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import DatabaseEmptyState from './DatabaseEmptyState';
 import { DatabaseRow } from './DatabaseRow';
-import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 
 const preferenceKey = 'databases';
 
@@ -66,6 +67,11 @@ const DatabaseLanding: React.FC = () => {
 
   return (
     <React.Fragment>
+      <ProductInformationBanner
+        bannerLocation="Databases"
+        productInformationIndicator={false}
+        productInformationWarning
+      />
       <LandingHeader
         title="Database Clusters"
         createButtonText="Create Database Cluster"
