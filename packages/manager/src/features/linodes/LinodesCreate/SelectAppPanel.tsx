@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(3),
       height: 576,
       overflowY: 'auto',
-      boxShadow: `${theme.color.boxShadow} 0px -10px 10px -5px inset`,
+      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
     },
     loading: {
       marginTop: theme.spacing(2),
