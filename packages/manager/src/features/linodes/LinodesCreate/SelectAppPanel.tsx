@@ -192,17 +192,17 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
 
     const popularApps = appInstances.slice(0, 10);
 
+    // sort mutates original array so make a copy first
+    const allApps = [...appInstances].sort((a, b) =>
+      a.label.toLowerCase().localeCompare(b.label.toLowerCase())
+    );
+
     return (
       <Paper className={classes.panel} data-qa-tp="Select Image">
         {error && <Notice text={error} error />}
         {panelSection('New apps', newApps)}
         {panelSection('Popular apps', popularApps)}
-        {panelSection(
-          'All apps',
-          appInstances.sort((a, b) =>
-            a.label.toLowerCase().localeCompare(b.label.toLowerCase())
-          )
-        )}
+        {panelSection('All apps', allApps)}
       </Paper>
     );
   }
