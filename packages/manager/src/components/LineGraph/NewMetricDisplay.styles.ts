@@ -55,7 +55,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       '& td:first-child': {
         backgroundColor: 'transparent !important',
         [theme.breakpoints.down('sm')]: {
-          marginLeft: -50,
+          marginLeft: -45,
         },
       },
       '& .data': {
@@ -78,13 +78,6 @@ const newMetricDisplayStyles = (theme: Theme) =>
           justifyContent: 'normal',
           minHeight: 'auto',
         },
-        '& tr:not(:first-child) td': {
-          '&:first-child': {
-            marginTop: theme.spacing(2),
-          },
-        },
-      },
-      [theme.breakpoints.only('sm')]: {
         '& tbody': {
           display: 'flex',
           flexWrap: 'wrap',
@@ -92,6 +85,8 @@ const newMetricDisplayStyles = (theme: Theme) =>
         },
         '& tr': {
           flexBasis: '100%',
+          display: 'flex',
+          flexDirection: 'column',
         },
       },
     },
@@ -105,8 +100,8 @@ const newMetricDisplayStyles = (theme: Theme) =>
         '& tr': {
           display: 'flex',
           flexDirection: 'column',
-          marginTop: 26,
-          marginBottom: 42,
+          marginTop: theme.spacing(5.25),
+          marginBottom: theme.spacing(5.25),
           marginRight: theme.spacing(2),
           '&:last-of-type': {
             marginBottom: 0,
