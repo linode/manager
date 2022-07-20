@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
     selectionCard: {
-      mixBlendMode: 'darken',
+      mixBlendMode: theme.name === 'darkTheme' ? 'initial' : 'darken',
       '& .cardBaseIcon': {
         width: 40,
         paddingRight: 0,
