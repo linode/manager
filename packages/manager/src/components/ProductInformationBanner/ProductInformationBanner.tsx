@@ -8,29 +8,27 @@ import { isAfter } from 'src/utilities/date';
 import { reportException } from 'src/exceptionReporting';
 import Warning from 'src/assets/icons/warning.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import classNames from 'classnames';
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
     borderRadius: 1,
     fontSize: '1rem',
-    // marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     maxWidth: '100%',
-    // padding: '4px 16px',
-    // paddingRight: 18,
+    padding: '4px 16px',
+    paddingRight: 18,
     position: 'relative',
-    // '& + .notice': {
-    //   marginTop: `${theme.spacing()}px !important`,
-    // },
+    '& + .notice': {
+      marginTop: `${theme.spacing()}px !important`,
+    },
     '& $important': {
       backgroundColor: theme.bg.bgPaper,
     },
-    // '& $error': {
-    //   borderLeftColor: theme.color.red,
-    // },
+    '& $error': {
+      borderLeftColor: theme.color.red,
+    },
   },
   icon: {
     color: 'white',
@@ -54,6 +52,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& $icon': {
       color: '#555',
     },
+  },
+  content: {
+    // Compensate for HighlightedMarkdown component's margin.
+    marginLeft: '-8px',
   },
 }));
 
@@ -103,30 +105,22 @@ const ProductInformationBanner: React.FC<Props> = (props) => {
 
   return (
     <DismissibleBanner
+      className={classNames({
+        [classes.root]: true,
+        [classes.important]: true,
+        [classes.warning]: true,
+        notice: true,
+      })}
       preferenceKey={thisBanner.key}
       productInformationIndicator={displayProductInformationIndicator}
     >
       <>
         {displayProductInformationWarning ? (
-          <Grid
-            item
-            className={classNames({
-              [classes.root]: true,
-              [classes.important]: true,
-              [classes.warning]: true,
-              notice: true,
-            })}
-            style={{
-              marginTop: 0,
-              marginBottom: 24,
-              marginLeft: 0,
-            }}
-            role="alert"
-          >
-            <Warning className={classes.icon} data-qa-warning-img />
-          </Grid>
+          <Warning className={classes.icon} data-qa-warning-img />
         ) : null}
-        <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
+        <div className={classes.content}>
+          <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
+        </div>
       </>
     </DismissibleBanner>
   );
