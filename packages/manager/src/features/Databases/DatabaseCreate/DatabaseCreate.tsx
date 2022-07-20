@@ -38,6 +38,7 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import Radio from 'src/components/Radio';
 import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
@@ -447,6 +448,11 @@ const DatabaseCreate: React.FC<{}> = () => {
           </Typography>
         </DismissibleBanner>
       ) : null}
+      <ProductInformationBanner
+        bannerLocation="Databases"
+        productInformationIndicator={false}
+        productInformationWarning
+      />
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}
