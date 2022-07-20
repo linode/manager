@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   content: {
     // Compensate for HighlightedMarkdown component's margin.
     marginLeft: '-8px',
+    width: '100%',
   },
 }));
 
