@@ -44,7 +44,7 @@ const QRCodeForm: React.FC<CombinedProps> = (props) => {
   return (
     <React.Fragment>
       <Typography variant="h3" data-qa-copy className={classes.instructions}>
-        Scan this QR code to add your Linode account to your TFA app:
+        Scan this QR code to add your Linode account to your 2FA app:
       </Typography>
       <div className={classes.qrcodeContainer}>
         <QRCode
@@ -56,7 +56,7 @@ const QRCodeForm: React.FC<CombinedProps> = (props) => {
         />
       </div>
       <Typography variant="h3" data-qa-copy className={classes.instructions}>
-        If your TFA app does not have a scanner, you can use this secret key:
+        If your 2FA app does not have a scanner, you can use this secret key:
       </Typography>
       <CopyableTextField
         className={classes.root}

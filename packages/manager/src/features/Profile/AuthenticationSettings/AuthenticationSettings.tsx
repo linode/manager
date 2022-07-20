@@ -99,13 +99,13 @@ export const AuthenticationSettings: React.FC = () => {
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">Phone Verification</Typography>
         <Typography variant="body1" className={classes.copy}>
-          Adding a verified phone number to your account provides our team with
-          a secure method of verifying your access to your Linode user account.
-          Your phone number will only ever be used to verify your identity by
-          sending an SMS message. Standard carrier messaging fees may apply. By
+          A verified phone number provides our team with a secure method of
+          verifying your identity as the owner of your Linode user account. This
+          phone number is only ever used to send an SMS message with a
+          verification code. Standard carrier messaging fees may apply. By
           clicking Send Verification Code you are opting in to receive SMS
           messages. You may opt out at any time.{' '}
-          <Link to="https://www.linode.com/docs/guides/linode-manager-security-controls/">
+          <Link to="https://www.linode.com/docs/guides/user-security-controls#phone-verification">
             Learn more about security options.
           </Link>
         </Typography>
