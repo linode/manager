@@ -188,7 +188,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
             <React.Fragment>
               <div className={disabled ? classes.disabled : undefined}>
                 <Typography variant="h3" data-qa-title>
-                  Two-Factor Authentication (TFA)
+                  Two-Factor Authentication (2FA)
                 </Typography>
                 {success && (
                   <Notice

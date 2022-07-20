@@ -145,7 +145,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
           <Link to="https://www.linode.com/docs/guides/third-party-authentication/">
             How to Enable Third Party Authentication on Your Linode Account
           </Link>
-          . We strongly recommend setting up Two-Factor Authentication (TFA).
+          . We strongly recommend setting up Two-Factor Authentication (2FA).
         </Typography>
         <Grid container className={classes.providersList}>
           {providersIncludingLinode.map((thisProvider) => {
@@ -201,7 +201,7 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
             </Notice>
             <Typography variant="body1" className={classes.copy}>
               If you need to reset your password or set up Two-Factor
-              Authentication (TFA), please visit the{' '}
+              Authentication (2FA), please visit the{' '}
               <ExternalLink
                 hideIcon
                 link={currentProvider.href}
