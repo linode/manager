@@ -85,7 +85,7 @@ const humanizeLargeData = (value: number) => {
 const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const inputEl: React.RefObject<any> = React.useRef(null);
   const chartInstance: React.MutableRefObject<any> = React.useRef(null);
