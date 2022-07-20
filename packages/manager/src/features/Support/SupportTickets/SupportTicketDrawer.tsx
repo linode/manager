@@ -20,6 +20,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import useEntities, { Entity } from 'src/hooks/useEntities';
 import { useAllDatabasesQuery } from 'src/queries/databases';
+import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
 import {
   getAPIErrorOrDefault,
@@ -179,6 +180,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     entityType === 'firewall_id'
   );
 
+  const { data: domains, isLoading: domainsLoading } = useAllDomainsQuery(
+    entityType === 'domain_id'
+  );
+
   const saveText = (_title: string, _description: string) => {
     storage.supportText.set({ title: _title, description: _description });
   };
@@ -229,10 +234,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         handleSetOrRequestEntities(entities.volumes, _entityType);
         return;
       }
-      case 'domain_id': {
-        handleSetOrRequestEntities(entities.domains, _entityType);
-        return;
-      }
       case 'nodebalancer_id': {
         handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
         return;
@@ -242,6 +243,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         return;
       }
       case 'firewall_id':
+      case 'domain_id':
       case 'database_id': {
         // intentionally do nothing for React Query entities
         return;
@@ -457,11 +459,22 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     const reactQueryEntityDataMap = {
       database_id: databases,
       firewall_id: firewalls,
+      domain_id: domains,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
       // We are dealing with an entity found in Redux. Return the data from state.
       return data;
+    }
+
+    // domain's don't have a label so we map the domain as the label
+    if (entityType === 'domain_id') {
+      return (
+        reactQueryEntityDataMap[entityType]?.map(({ id, domain }) => ({
+          value: id,
+          label: domain,
+        })) || []
+      );
     }
 
     return (
@@ -480,6 +493,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
     if (entityType === 'firewall_id') {
       return firewallsLoading;
+    }
+    if (entityType === 'domain_id') {
+      return domainsLoading;
     }
     return entitiesLoading;
   };

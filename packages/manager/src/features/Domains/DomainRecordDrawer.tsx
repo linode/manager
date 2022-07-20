@@ -4,6 +4,7 @@ import {
   DomainRecord,
   DomainType,
   RecordType,
+  UpdateDomainPayload,
   updateDomainRecord,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -19,7 +20,6 @@ import {
   set,
 } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button, { ButtonProps } from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -27,10 +27,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import {
-  DomainActionsProps,
-  withDomainActions,
-} from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import {
@@ -57,6 +53,7 @@ interface Props
   mode: 'create' | 'edit';
   records: DomainRecord[];
   updateRecords: () => void;
+  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
 
   /**
    * Used to populate fields on edits.
@@ -96,8 +93,6 @@ interface State {
   fields: EditableRecordFields | EditableDomainFields;
 }
 
-type CombinedProps = Props & DomainActionsProps;
-
 interface AdjustedTextFieldProps {
   label: string;
   field: keyof EditableRecordFields | keyof EditableDomainFields;
@@ -112,12 +107,12 @@ interface NumberFieldProps extends AdjustedTextFieldProps {
   defaultValue?: number;
 }
 
-class DomainRecordDrawer extends React.Component<CombinedProps, State> {
+class DomainRecordDrawer extends React.Component<Props, State> {
   /**
    * the defaultFieldState is used to pre-populate the drawer with either
    * editable data or defaults.
    */
-  static defaultFieldsState = (props: Partial<CombinedProps>) => ({
+  static defaultFieldsState = (props: Partial<Props>) => ({
     id: props.id,
     name: props.name ?? '',
     port: props.port ?? '80',
@@ -464,7 +459,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onDomainEdit = () => {
-    const { domainId, type, domainActions } = this.props;
+    const { domainId, type, updateDomain } = this.props;
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
@@ -482,8 +477,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         .map((ip) => ip.trim());
     }
 
-    domainActions
-      .updateDomain({ domainId, ...data, status: 'active' })
+    updateDomain({ id: domainId, ...data, status: 'active' })
       .then(() => {
         this.onClose();
       })
@@ -759,7 +753,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     this.props.onClose();
   };
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     if (this.props.open && !prevProps.open) {
       // Drawer is opening, set the fields according to props
       this.setState({
@@ -891,6 +885,4 @@ export const castFormValuesToNumeric = (
   });
 };
 
-const enhanced = compose<CombinedProps, Props>(withDomainActions);
-
-export default enhanced(DomainRecordDrawer);
+export default DomainRecordDrawer;

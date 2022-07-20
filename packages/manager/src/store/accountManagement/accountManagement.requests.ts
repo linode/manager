@@ -1,5 +1,4 @@
 import { LARGE_ACCOUNT_THRESHOLD } from 'src/constants';
-import { getDomainsPage } from '../domains/domains.requests';
 import { getLinodesPage } from '../linodes/linode.requests';
 import { setLargeAccount } from './accountManagement.actions';
 import { ThunkActionCreator, ThunkDispatch } from '../types';
@@ -13,10 +12,7 @@ export const checkAccountSize: ThunkActionCreator<Promise<null>> = () => async (
    * on the account). If so, it will bump lastUpdated and store the info in
    * Redux.
    */
-  return Promise.all([
-    dispatch(getDomainsPage({ params: { page_size: 100 } })),
-    dispatch(getLinodesPage({ params: { page_size: 100 } })),
-  ])
+  return Promise.all([dispatch(getLinodesPage({ params: { page_size: 100 } }))])
     .then((combinedResults) => {
       dispatch(
         setLargeAccount(

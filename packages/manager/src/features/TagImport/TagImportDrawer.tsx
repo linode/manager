@@ -64,7 +64,7 @@ export const getGroupImportList = (entities: GroupImportProps[]) => {
 export const TagImportDrawer: React.FC<CombinedProps> = (props) => {
   const {
     actions: { close, update },
-    entitiesWithGroupsToImport: { linodes, domains },
+    entitiesWithGroupsToImport: { linodes },
     errors,
     loading,
     open,
@@ -73,24 +73,23 @@ export const TagImportDrawer: React.FC<CombinedProps> = (props) => {
   const handleSubmit = () => {
     // Send event to GA
     sendImportDisplayGroupSubmitEvent(
-      createLabel(linodes.length, domains.length),
-      linodes.length + domains.length
+      createLabel(linodes.length),
+      linodes.length
     );
     // Add tags to entities (Redux action)
     update();
   };
 
   const linodeGroups = getGroupImportList(linodes);
-  const domainGroups = getGroupImportList(domains);
+
   return (
     <Drawer title="Import Display Groups as Tags" open={open} onClose={close}>
       <Grid container direction={'column'}>
         <Grid item>
           <Typography variant="body1" data-qa-group-body>
             You now have the ability to import your Display Groups from Classic
-            Manager as tags and they will be associated with your Linodes and
-            Domains. This will give you the ability to organize and view your
-            Linodes and Domains by tags.{' '}
+            Manager as tags and they will be associated with your Linodes. This
+            will give you the ability to organize and view your Linodes by tags.{' '}
             <strong>Your existing tags will not be affected.</strong>
           </Typography>
         </Grid>
@@ -106,9 +105,6 @@ export const TagImportDrawer: React.FC<CombinedProps> = (props) => {
           ))}
         <Grid item data-qa-linode-group-list>
           <DisplayGroupList entity="Linode" groups={linodeGroups} />
-        </Grid>
-        <Grid item data-qa-domain-group-list>
-          <DisplayGroupList entity="Domain" groups={domainGroups} />
         </Grid>
         <Grid item>
           <ActionsPanel style={{ marginTop: 16 }}>
@@ -159,14 +155,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-// Create Label for GA event. Contains the number of Linodes and Domains
-// with groups that have been imported. Example: "Linodes: 3; Domains: 0"
-export const createLabel = (numLinodes: number, numDomains: number) => {
+// Create Label for GA event. Contains the number of Linodes
+// with groups that have been imported. Example: "Linodes: 3"
+export const createLabel = (numLinodes: number) => {
   // Arbitrary set upper limit – just in case.
   const numLinodesDisplay = numLinodes < 10000 ? String(numLinodes) : '9999+';
-  const numDomainsDisplay = numDomains < 10000 ? String(numDomains) : '9999+';
 
-  return `Linodes: ${numLinodesDisplay}; Domains: ${numDomainsDisplay}`;
+  return `Linodes: ${numLinodesDisplay}`;
 };
 
 export const withUpdates = lifecycle({

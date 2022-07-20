@@ -3,7 +3,6 @@ import { SetupWorkerApi } from 'msw/lib/types/setupWorker/setupWorker';
 import { ENABLE_DEV_TOOLS, isProductionBuild } from 'src/constants';
 import { MockData, mockDataController } from 'src/dev-tools/mockDataController';
 import store, { ApplicationState } from 'src/store';
-import { requestDomains } from 'src/store/domains/domains.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
@@ -37,9 +36,6 @@ const requestEntities = (mockData: MockData, reduxState: ApplicationState) => {
   }
   if (mockData.nodeBalancer && !reduxState.__resources.nodeBalancers.loading) {
     store.dispatch(getAllNodeBalancers() as any);
-  }
-  if (mockData.domain && !reduxState.__resources.domains.loading) {
-    store.dispatch(requestDomains() as any);
   }
   if (mockData.volume && !reduxState.__resources.volumes.loading) {
     store.dispatch(getAllVolumes() as any);

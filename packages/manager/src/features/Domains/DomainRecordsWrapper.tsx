@@ -10,6 +10,7 @@ import TagsPanel from 'src/components/TagsPanel';
 import summaryPanelStyles, {
   StyleProps,
 } from 'src/containers/SummaryPanels.styles';
+import { useUpdateDomainMutation } from 'src/queries/domains';
 import DeleteDomain from './DeleteDomain';
 import DomainRecords from './DomainRecords';
 
@@ -58,12 +59,14 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
   const hookClasses = useStyles();
   const history = useHistory();
+  const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
   return (
     <Grid container className={hookClasses.root}>
       <Grid item xs={12} className={hookClasses.main}>
         <DomainRecords
           domain={domain}
+          updateDomain={updateDomain}
           domainRecords={records}
           updateRecords={updateRecords}
         />

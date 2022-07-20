@@ -20,11 +20,6 @@ import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState,
 } from 'src/store/documentation';
-import domainEvents from 'src/store/domains/domains.events';
-import domains, {
-  defaultState as defaultDomainsState,
-  State as DomainsState,
-} from 'src/store/domains/domains.reducer';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
@@ -160,7 +155,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  domains: defaultDomainsState,
   images: defaultImagesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
@@ -179,7 +173,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  domains: DomainsState;
   images: ImagesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
@@ -247,7 +240,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  domains,
   images,
   kubernetes,
   nodePools,
@@ -294,7 +286,6 @@ const enhancers = compose(
       linodeEvents,
       longviewEvents,
       imageEvents,
-      domainEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       volumeEvents,

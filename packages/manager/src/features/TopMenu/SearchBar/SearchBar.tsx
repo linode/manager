@@ -25,6 +25,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useAllDomainsQuery } from 'src/queries/domains';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -70,7 +71,6 @@ const searchDeps: ReduxEntity[] = [
   'linodes',
   'nodeBalancers',
   'images',
-  'domains',
   'volumes',
   'kubernetes',
 ];
@@ -94,10 +94,13 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { data: objectStorageClusters } = useObjectStorageClusters(
     shouldMakeRequests
   );
+
   const { data: objectStorageBuckets } = useObjectStorageBuckets(
     objectStorageClusters,
     shouldMakeRequests
   );
+
+  const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
 
   const { _loading } = useReduxLoad(
     searchDeps,
@@ -126,13 +129,15 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     })
   ).current;
 
+  const buckets = objectStorageBuckets?.buckets || [];
+
   React.useEffect(() => {
     // We can't store all data for large accounts for client side search,
     // so use the API's filtering instead.
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, objectStorageBuckets?.buckets || []);
+      search(searchText, buckets, domains ?? []);
     }
   }, [
     _loading,
@@ -141,6 +146,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     _searchAPI,
     _isLargeAccount,
     objectStorageBuckets,
+    domains,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {

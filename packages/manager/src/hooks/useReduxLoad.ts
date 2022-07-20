@@ -5,7 +5,6 @@ import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ApplicationState } from 'src/store';
-import { requestDomains } from 'src/store/domains/domains.requests';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
 import { requestImages } from 'src/store/image/image.requests';
@@ -27,7 +26,6 @@ interface UseReduxPreload {
 export type ReduxEntity =
   | 'linodes'
   | 'volumes'
-  | 'domains'
   | 'images'
   | 'kubernetes'
   | 'managed'
@@ -45,7 +43,6 @@ type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   volumes: getAllVolumes,
-  domains: requestDomains,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
   events: getEvents,

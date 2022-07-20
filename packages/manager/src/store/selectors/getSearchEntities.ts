@@ -174,8 +174,6 @@ const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const imageSelector = (state: State) => state.images.itemsById || {};
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const domainSelector = (state: State) =>
-  Object.values(state.domains.itemsById) || [];
 const typesSelector = (state: State) => state.types.entities;
 const kubernetesClusterSelector = (state: State) =>
   Object.values(state.kubernetes.itemsById);
@@ -186,7 +184,6 @@ export default createSelector<
   Linode[],
   Volume[],
   { [key: string]: Image },
-  Domain[],
   NodeBalancer[],
   LinodeType[],
   KubernetesCluster[],
@@ -196,7 +193,6 @@ export default createSelector<
   linodeSelector,
   volumeSelector,
   imageSelector,
-  domainSelector,
   nodebalSelector,
   typesSelector,
   kubernetesClusterSelector,
@@ -205,7 +201,6 @@ export default createSelector<
     linodes,
     volumes,
     images,
-    domains,
     nodebalancers,
     types,
     kubernetesClusters,
@@ -217,7 +212,6 @@ export default createSelector<
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
     const searchableImages = arrOfImages.reduce(imageReducer, []);
-    const searchableDomains = domains.map(domainToSearchableItem);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
     const searchableKubernetesClusters = kubernetesClusters
       .map((thisCluster) => {
@@ -232,7 +226,6 @@ export default createSelector<
       ...searchableLinodes,
       ...searchableVolumes,
       ...searchableImages,
-      ...searchableDomains,
       ...searchableNodebalancers,
       ...searchableKubernetesClusters,
     ];

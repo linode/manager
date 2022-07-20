@@ -159,7 +159,6 @@ export class App extends React.Component<CombinedProps, State> {
     const {
       toggleTheme,
       linodesError,
-      domainsError,
       typesError,
       imagesError,
       notificationsError,
@@ -180,7 +179,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (
       hasOauthError(
         linodesError,
-        domainsError,
         typesError,
         imagesError,
         notificationsError,
@@ -234,7 +232,6 @@ interface StateProps {
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
-  domainsError?: APIError[];
   imagesError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
@@ -248,7 +245,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
   typesError: state.__resources.types.error,

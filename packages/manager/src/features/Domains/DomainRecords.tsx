@@ -4,6 +4,7 @@ import {
   DomainRecord,
   DomainType,
   RecordType,
+  UpdateDomainPayload,
 } from '@linode/api-v4/lib/domains';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
@@ -53,7 +54,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { storage } from 'src/utilities/storage';
 import { truncateEnd } from 'src/utilities/truncate';
 import ActionMenu from './DomainRecordActionMenu';
-import Drawer from './DomainRecordDrawer';
+import DomainRecordDrawer from './DomainRecordDrawer';
 
 type ClassNames = 'root' | 'cells' | 'linkContainer';
 
@@ -106,6 +107,7 @@ interface Props {
   domain: Domain;
   domainRecords: DomainRecord[];
   updateRecords: () => void;
+  updateDomain: (data: { id: number } & UpdateDomainPayload) => Promise<Domain>;
 }
 
 interface ConfirmationState {
@@ -668,7 +670,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         <Button buttonType="secondary" onClick={this.handleCloseDialog}>
           Cancel
         </Button>
-        <Button buttonType="primary" onClick={this.deleteDomainRecord}>
+        <Button
+          buttonType="primary"
+          onClick={this.deleteDomainRecord}
+          loading={this.state.confirmDialog.submitting}
+        >
           Delete
         </Button>
       </ActionsPanel>
@@ -817,7 +823,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         >
           Are you sure you want to delete this record?
         </ConfirmationDialog>
-        <Drawer
+        <DomainRecordDrawer
           open={drawer.open}
           domain={this.props.domain.domain}
           domainId={this.props.domain.id}
@@ -826,6 +832,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           records={domainRecords}
           type={drawer.type}
           updateRecords={this.props.updateRecords}
+          updateDomain={this.props.updateDomain}
           {...drawer.fields}
         />
       </>

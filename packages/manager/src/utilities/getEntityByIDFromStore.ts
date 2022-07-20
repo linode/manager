@@ -4,7 +4,6 @@ import store from 'src/store';
 export type EntityType =
   | 'linode'
   | 'nodebalancer'
-  | 'domain'
   | 'image'
   | 'volume'
   | 'kubeCluster';
@@ -36,7 +35,6 @@ const _getEntityByIDFromStore = (
   const _store = store.getState();
   const {
     linodes,
-    domains,
     kubernetes,
     nodeBalancers,
     images,
@@ -49,11 +47,6 @@ const _getEntityByIDFromStore = (
       return (images.itemsById || {})[entityID];
     case 'nodebalancer':
       return nodeBalancers.itemsById[entityID];
-    case 'domain':
-      if (!domains.itemsById) {
-        return;
-      }
-      return domains.itemsById[entityID];
     case 'volume':
       return volumes.itemsById[entityID];
     case 'kubeCluster':

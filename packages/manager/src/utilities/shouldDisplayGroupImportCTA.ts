@@ -3,8 +3,8 @@ import { GroupedEntitiesForImport } from 'src/store/selectors/getEntitiesWithGro
 const shouldDisplayGroupImport = (
   groupedEntities: GroupedEntitiesForImport
 ) => {
-  const { linodes, domains } = groupedEntities;
-  return linodes.length > 0 || domains.length > 0;
+  const { linodes } = groupedEntities;
+  return linodes.length > 0;
 };
 
 export default shouldDisplayGroupImport;

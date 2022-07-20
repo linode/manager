@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { domains, linodes } from 'src/__data__/groupImports';
+import { linodes } from 'src/__data__/groupImports';
 import { sendImportDisplayGroupSubmitEvent } from 'src/utilities/ga';
 import {
   createLabel,
@@ -27,7 +27,7 @@ const props = {
   errors,
   loading: false,
   success: false,
-  entitiesWithGroupsToImport: { domains, linodes },
+  entitiesWithGroupsToImport: { linodes },
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
   classes: { root: '' },
@@ -72,50 +72,46 @@ describe('TagImportDrawer', () => {
     expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalled();
   });
 
-  it('should send a GA event with the number of Linodes and Domains with imported tags', () => {
+  it('should send a GA event with the number of Linodes with imported tags', () => {
     component.find('[data-qa-submit]').simulate('click');
     expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
-      createLabel(3, 2),
-      5
+      createLabel(3),
+      3
     );
   });
 
   it('should send a GA event with category of "Dashboard"', () => {
     component.find('[data-qa-submit]').simulate('click');
     expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
-      createLabel(3, 2),
-      5
+      createLabel(3),
+      3
     );
   });
 
-  it('should send a GA event with value of number of Linodes + number of Domains', () => {
+  it('should send a GA event with value of number of Linodes', () => {
     component.find('[data-qa-submit]').simulate('click');
     expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
-      createLabel(3, 2),
-      5
+      createLabel(3),
+      3
     );
   });
 
   it('should send a GA event with action of "import display groups"', () => {
     component.find('[data-qa-submit]').simulate('click');
     expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
-      createLabel(3, 2),
-      5
+      createLabel(3),
+      3
     );
   });
 });
 
 describe('GA Label Creator', () => {
-  it('should return the number of Linodes and number of Domains', () => {
-    expect(createLabel(0, 3)).toBe('Linodes: 0; Domains: 3');
-    expect(createLabel(0, 0)).toBe('Linodes: 0; Domains: 0');
-    expect(createLabel(8, 123)).toBe('Linodes: 8; Domains: 123');
+  it('should return the number of Linodes', () => {
+    expect(createLabel(0)).toBe('Linodes: 0');
+    expect(createLabel(8)).toBe('Linodes: 8');
   });
 
   it('should clamp values if num > 9999', () => {
-    expect(createLabel(1, 10000)).toBe('Linodes: 1; Domains: 9999+');
-    expect(createLabel(99999999, 99999999)).toBe(
-      'Linodes: 9999+; Domains: 9999+'
-    );
+    expect(createLabel(99999999)).toBe('Linodes: 9999+');
   });
 });

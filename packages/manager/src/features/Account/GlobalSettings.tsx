@@ -65,7 +65,7 @@ const GlobalSettings: React.FC<CombinedProps> = (props) => {
 
   const { mutateAsync: updateAccount } = useMutateAccountSettings();
 
-  const { _loading } = useReduxLoad(['domains', 'linodes']);
+  const { _loading } = useReduxLoad(['linodes']);
 
   const displayError = (errors: APIError[] | undefined) => {
     if (!errors) {
