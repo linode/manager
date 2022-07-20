@@ -545,18 +545,6 @@ export const handlers = [
     );
   }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    return res.once(
-      ctx.status(500),
-      ctx.json([{ reason: 'Cluster offline!' }])
-    );
-  }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    return res.once(
-      ctx.status(400),
-      ctx.json([{ reason: 'Cluster offline!' }])
-    );
-  }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
     // Temporarily added pagination logic to make sure my use of
     // getAll worked for fetching all buckets.
 
