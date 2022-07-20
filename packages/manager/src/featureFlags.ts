@@ -88,7 +88,7 @@ interface ReferralBannerText {
   };
 }
 
-export type ProductInformationBannerLocation = 'Object Storage';
+export type ProductInformationBannerLocation = 'Object Storage' | 'Databases';
 
 export interface ProductInformationBannerFlag {
   // `key` should be unique across product information banners
