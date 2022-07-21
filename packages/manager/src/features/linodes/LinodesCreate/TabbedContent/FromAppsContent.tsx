@@ -27,6 +27,7 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
+import { APP_ROOT } from 'src/constants';
 
 type ClassNames = 'main' | 'sidebar';
 
@@ -154,6 +155,20 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       userCannotCreateLinode,
     } = this.props;
 
+    const logoUrl = appInstances?.find(
+      (app) => app.id === selectedStackScriptID
+    )?.logo_url;
+
+    const renderLogo =
+      logoUrl === undefined ? (
+        <span className="fl-tux" />
+      ) : (
+        <img
+          src={`${APP_ROOT}/${logoUrl}`}
+          alt={`${selectedStackScriptLabel} logo`}
+        />
+      );
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     return (
@@ -180,6 +195,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
                 userDefinedFields={userDefinedFields}
                 updateFor={[userDefinedFields, udf_data, errors]}
                 udf_data={udf_data || {}}
+                appLogo={renderLogo}
               />
             )}
           {!userCannotCreateLinode &&

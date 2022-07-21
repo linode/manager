@@ -11,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Box from 'src/components/core/Box';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
@@ -21,7 +22,8 @@ type ClassNames =
   | 'root'
   | 'username'
   | 'advDescription'
-  | 'optionalFieldWrapper';
+  | 'optionalFieldWrapper'
+  | 'header';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -41,6 +43,15 @@ const styles = (theme: Theme) =>
       color: theme.color.grey1,
     },
     optionalFieldWrapper: {},
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      columnGap: theme.spacing(2),
+      '& > img': {
+        width: 60,
+        height: 60,
+      },
+    },
   });
 
 interface Props {
@@ -50,6 +61,7 @@ interface Props {
   udf_data: any;
   selectedLabel: string;
   selectedUsername: string;
+  appLogo?: JSX.Element;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -149,9 +161,12 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
 
     return (
       <Paper className={classes.root}>
-        <Typography variant="h2" data-qa-user-defined-field-header>
-          <span>{`${this.props.selectedLabel} Options`}</span>
-        </Typography>
+        <Box className={classes.header}>
+          {this.props.appLogo}
+          <Typography variant="h2" data-qa-user-defined-field-header>
+            <span>{`${this.props.selectedLabel} Setup`}</span>
+          </Typography>
+        </Box>
 
         {/* Required Fields */}
         {requiredUDFs.map((field: UserDefinedField) => {
