@@ -17,13 +17,16 @@ import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
+import AppInfo from '../../linodes/LinodesCreate/AppInfo';
+import classnames from 'classnames';
 
 type ClassNames =
   | 'root'
   | 'username'
   | 'advDescription'
   | 'optionalFieldWrapper'
-  | 'header';
+  | 'header'
+  | 'marketplaceSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -46,11 +49,15 @@ const styles = (theme: Theme) =>
     header: {
       display: 'flex',
       alignItems: 'center',
-      columnGap: theme.spacing(2),
+      columnGap: theme.spacing(),
       '& > img': {
         width: 60,
         height: 60,
       },
+    },
+    marketplaceSpacing: {
+      paddingTop: theme.spacing(),
+      paddingBottom: theme.spacing(),
     },
   });
 
@@ -62,6 +69,7 @@ interface Props {
   selectedLabel: string;
   selectedUsername: string;
   appLogo?: JSX.Element;
+  openDrawer?: (stackScriptLabel: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -152,6 +160,10 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     );
   };
 
+  handleOpenDrawer = () => {
+    this.props.openDrawer?.(this.props.selectedLabel);
+  };
+
   render() {
     const { userDefinedFields, classes } = this.props;
 
@@ -160,12 +172,20 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     );
 
     return (
-      <Paper className={classes.root}>
+      <Paper
+        className={classnames(classes.root, {
+          [`${classes.marketplaceSpacing}`]:
+            this.props.openDrawer !== undefined,
+        })}
+      >
         <Box className={classes.header}>
           {this.props.appLogo}
           <Typography variant="h2" data-qa-user-defined-field-header>
             <span>{`${this.props.selectedLabel} Setup`}</span>
           </Typography>
+          {this.props.openDrawer ? (
+            <AppInfo onClick={this.handleOpenDrawer} />
+          ) : null}
         </Box>
 
         {/* Required Fields */}

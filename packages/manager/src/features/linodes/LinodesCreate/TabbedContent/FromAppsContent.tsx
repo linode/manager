@@ -184,20 +184,19 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
           />
-          {!userCannotCreateLinode &&
-            userDefinedFields &&
-            userDefinedFields.length > 0 && (
-              <UserDefinedFieldsPanel
-                errors={filterUDFErrors(errorResources, errors)}
-                selectedLabel={selectedStackScriptLabel || ''}
-                selectedUsername="Linode"
-                handleChange={this.handleChangeUDF}
-                userDefinedFields={userDefinedFields}
-                updateFor={[userDefinedFields, udf_data, errors]}
-                udf_data={udf_data || {}}
-                appLogo={renderLogo}
-              />
-            )}
+          {!userCannotCreateLinode && userDefinedFields && (
+            <UserDefinedFieldsPanel
+              errors={filterUDFErrors(errorResources, errors)}
+              selectedLabel={selectedStackScriptLabel || ''}
+              selectedUsername="Linode"
+              handleChange={this.handleChangeUDF}
+              userDefinedFields={userDefinedFields}
+              updateFor={[userDefinedFields, udf_data, errors]}
+              udf_data={udf_data || {}}
+              appLogo={renderLogo}
+              openDrawer={this.openDrawer}
+            />
+          )}
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (
