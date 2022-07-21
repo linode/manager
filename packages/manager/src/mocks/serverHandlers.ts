@@ -50,6 +50,7 @@ import {
   notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
+  objectStorageKeyFactory,
   paymentMethodFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
@@ -574,6 +575,11 @@ export const handlers = [
     const clusters = objectStorageClusterFactory.buildList(3);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
+  rest.get('*object-storage/keys', (req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
+    );
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
@@ -722,6 +728,31 @@ export const handlers = [
     }
 
     return res(ctx.json(makeResourcePage(accountMaintenance)));
+  }),
+  rest.get('*/account/users', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([profileFactory.build()])));
+  }),
+  rest.get('*/account/users/:user', (req, res, ctx) => {
+    return res(ctx.json(profileFactory.build()));
+  }),
+  rest.get('*/account/users/:user/grants', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        grantsFactory.build({
+          global: {
+            cancel_account: true,
+          },
+          domain: [],
+          firewall: [],
+          image: [],
+          linode: [],
+          longview: [],
+          nodebalancer: [],
+          stackscript: [],
+          volume: [],
+        })
+      )
+    );
   }),
   rest.get('*/account/payment-methods', (req, res, ctx) => {
     const defaultPaymentMethod = paymentMethodFactory.build({
