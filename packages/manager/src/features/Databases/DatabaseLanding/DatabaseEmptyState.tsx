@@ -6,6 +6,7 @@ import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import useFlags from 'src/hooks/useFlags';
 
 const useStyles = makeStyles(() => ({
@@ -42,6 +43,11 @@ const DatabaseEmptyState: React.FC = () => {
           </Typography>
         </DismissibleBanner>
       ) : null}
+      <ProductInformationBanner
+        bannerLocation="Databases"
+        productInformationIndicator={false}
+        productInformationWarning
+      />
       <Placeholder
         title="Databases"
         className={classes.root}
