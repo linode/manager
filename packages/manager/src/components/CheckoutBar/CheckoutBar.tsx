@@ -17,9 +17,7 @@ interface Props {
   agreement?: JSX.Element;
 }
 
-type CombinedProps = Props;
-
-const CheckoutBar: React.FC<CombinedProps> = (props) => {
+const CheckoutBar: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

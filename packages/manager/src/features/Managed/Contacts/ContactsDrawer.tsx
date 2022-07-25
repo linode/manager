@@ -30,8 +30,6 @@ interface Props {
   contact?: ManagedContact;
 }
 
-type CombinedProps = Props;
-
 const emptyContactPayload: ContactPayload = {
   name: '',
   email: '',
@@ -42,7 +40,7 @@ const emptyContactPayload: ContactPayload = {
   group: '',
 };
 
-const ContactsDrawer: React.FC<CombinedProps> = (props) => {
+const ContactsDrawer = (props: Props) => {
   const { isOpen, closeDrawer, mode, contact, updateOrAdd, groups } = props;
 
   const isEditing = mode === 'edit' && contact;

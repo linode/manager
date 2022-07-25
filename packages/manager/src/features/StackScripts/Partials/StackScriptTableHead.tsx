@@ -109,9 +109,7 @@ interface Props {
   currentFilterType: CurrentFilter | null;
 }
 
-type CombinedProps = Props;
-
-export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
+export const StackScriptTableHead = (props: Props) => {
   const classes = useStyles();
   const {
     currentFilterType,

@@ -11,9 +11,7 @@ interface Props {
   openDrawer: (contactId: number) => void;
 }
 
-export type CombinedProps = Props;
-
-export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
+export const ContactsActionMenu = (props: Props) => {
   const { contactId, openDrawer, openDialog } = props;
 
   const actions: Action[] = [

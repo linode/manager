@@ -139,6 +139,7 @@ interface RowActionHandlers {
   triggerUndo: (idx: number) => void;
   triggerReorder: (startIdx: number, endIdx: number) => void;
 }
+
 interface Props extends RowActionHandlers {
   category: Category;
   policy: FirewallPolicyType;
@@ -151,9 +152,7 @@ interface Props extends RowActionHandlers {
   disabled: boolean;
 }
 
-type CombinedProps = Props;
-
-const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
+const FirewallRuleTable = (props: Props) => {
   const {
     category,
     openRuleDrawer,

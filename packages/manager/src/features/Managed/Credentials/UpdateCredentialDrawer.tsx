@@ -22,9 +22,7 @@ export interface Props {
   ) => void;
 }
 
-type CombinedProps = Props;
-
-const CredentialDrawer: React.FC<CombinedProps> = (props) => {
+const CredentialDrawer = (props: Props) => {
   const { label, open, onClose, onSubmitLabel, onSubmitPassword } = props;
 
   return (

@@ -14,13 +14,7 @@ interface Props {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-type CombinedProps = Props;
-
-export const ModeSelect: React.FC<CombinedProps> = ({
-  modes,
-  onChange,
-  selected,
-}) => {
+export const ModeSelect = ({ modes, onChange, selected }: Props) => {
   return (
     <RadioGroup
       aria-label="mode"

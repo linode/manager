@@ -29,8 +29,6 @@ export interface Props {
   onSubmit: (values: ManagedServicePayload, formikProps: any) => void;
 }
 
-type CombinedProps = Props;
-
 export const modes = {
   CREATING: 'create',
   EDITING: 'edit',
@@ -98,7 +96,7 @@ const emptyInitialValues = {
   notes: '',
 } as ManagedServicePayload;
 
-const MonitorDrawer: React.FC<CombinedProps> = (props) => {
+const MonitorDrawer = (props: Props) => {
   const { credentials, groups, mode, monitor, open, onClose, onSubmit } = props;
 
   const credentialOptions = getCredentialOptions(credentials);

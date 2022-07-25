@@ -8,8 +8,6 @@ interface Props {
   username?: string;
 }
 
-type CombinedProps = Props;
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(4),
@@ -26,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ResetPassword: React.FC<CombinedProps> = (props) => {
+export const ResetPassword = (props: Props) => {
   const classes = useStyles();
   const { username } = props;
 

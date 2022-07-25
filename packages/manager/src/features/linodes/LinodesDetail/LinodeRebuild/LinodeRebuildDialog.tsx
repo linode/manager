@@ -43,8 +43,6 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props;
-
 type MODES =
   | 'fromImage'
   | 'fromCommunityStackScript'
@@ -57,7 +55,7 @@ const options = [
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
+const LinodeRebuildDialog = (props: Props) => {
   const { linodeId, open, onClose } = props;
   const linode = useExtendedLinode(linodeId);
   const linodeLabel = linode?.label;

@@ -6,7 +6,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -61,9 +60,7 @@ interface Props {
   lastReply?: ExtendedReply;
 }
 
-type CombinedProps = Props;
-
-const ReplyContainer: React.FC<CombinedProps> = (props) => {
+const ReplyContainer = (props: Props) => {
   const classes = useStyles();
 
   const { onSuccess, reloadAttachments, lastReply, ...rest } = props;
@@ -204,4 +201,4 @@ const ReplyContainer: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(ReplyContainer);
+export default React.memo(ReplyContainer);

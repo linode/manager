@@ -82,9 +82,7 @@ interface Props {
   handleTokenClick: (token: string, entities: TransferEntities) => void;
 }
 
-type CombinedProps = Props;
-
-export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
+export const RenderTransferRow = (props: Props) => {
   const {
     token,
     created,

@@ -94,9 +94,7 @@ interface Props {
   readOnly: boolean;
 }
 
-type CombinedProps = Props;
-
-const AddIPDrawer: React.FC<CombinedProps> = (props) => {
+const AddIPDrawer = (props: Props) => {
   const classes = useStyles();
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);

@@ -18,9 +18,7 @@ interface Props extends ActionHandlers {
   firewallStatus: FirewallStatus;
 }
 
-type CombinedProps = Props;
-
-const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
+const FirewallActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const { data: profile } = useProfile();

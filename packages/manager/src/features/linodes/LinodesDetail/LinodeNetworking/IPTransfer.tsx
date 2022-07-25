@@ -110,8 +110,6 @@ interface Swap extends Move {
   selectedLinodesIPs: string[];
 }
 
-type CombinedProps = Props;
-
 const defaultState = (
   sourceIP: string,
   sourceIPsLinodeID: number
@@ -137,7 +135,7 @@ export const getLinodeIPv6Ranges = (
   );
 };
 
-const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
+const LinodeNetworkingIPTransferPanel = (props: Props) => {
   const {
     ipAddresses,
     linodeID,

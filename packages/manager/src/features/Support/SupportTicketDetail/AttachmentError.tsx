@@ -6,13 +6,11 @@ interface Props {
   reason: string;
 }
 
-type CombinedProps = Props;
-
 const getText = (fileName: string, reason: string) => {
   return `Error attaching ${fileName}: ${reason}`;
 };
 
-const AttachmentError: React.FC<CombinedProps> = (props) => {
+const AttachmentError = (props: Props) => {
   const { fileName, reason } = props;
   return <Notice error text={getText(fileName, reason)} />;
 };

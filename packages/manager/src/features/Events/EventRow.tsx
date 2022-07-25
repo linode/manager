@@ -1,13 +1,12 @@
 import { Event, EventAction } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import Link from 'src/components/Link';
-import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import renderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import eventMessageGenerator from 'src/eventMessageGenerator';
@@ -42,9 +41,7 @@ interface Props {
   entityId?: number;
 }
 
-type CombinedProps = Props;
-
-export const EventRow: React.FC<CombinedProps> = (props) => {
+export const EventRow = (props: Props) => {
   const { event, entityId } = props;
   const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -140,6 +137,4 @@ export const Row: React.FC<RowProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props & RenderGuardProps>(renderGuard);
-
-export default enhanced(EventRow);
+export default renderGuard(EventRow);

@@ -51,9 +51,7 @@ interface Props {
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
 }
 
-type CombinedProps = Props;
-
-const InlineMenuAction: React.FC<CombinedProps> = (props) => {
+const InlineMenuAction = (props: Props) => {
   const {
     actionText,
     className,
@@ -72,27 +70,27 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
         <span>{actionText}</span>
       </Link>
     );
-  } else {
-    return (
-      <Tooltip
-        title={tooltip ?? ''}
-        disableTouchListener
-        enterDelay={500}
-        leaveDelay={0}
-      >
-        <>
-          <Button
-            className={`${className} ${classes.btnRoot}`}
-            onClick={onClick}
-            disabled={disabled}
-            loading={loading}
-          >
-            {actionText}
-          </Button>
-        </>
-      </Tooltip>
-    );
   }
+
+  return (
+    <Tooltip
+      title={tooltip ?? ''}
+      disableTouchListener
+      enterDelay={500}
+      leaveDelay={0}
+    >
+      <>
+        <Button
+          className={`${className} ${classes.btnRoot}`}
+          onClick={onClick}
+          disabled={disabled}
+          loading={loading}
+        >
+          {actionText}
+        </Button>
+      </>
+    </Tooltip>
+  );
 };
 
 export default InlineMenuAction;

@@ -1,7 +1,6 @@
 import { FirewallDevice } from '@linode/api-v4/lib/firewalls/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import OrderBy from 'src/components/OrderBy';
@@ -23,9 +22,7 @@ interface Props {
   triggerRemoveDevice: (deviceID: number, deviceLabel: string) => void;
 }
 
-type CombinedProps = Props;
-
-const FirewallTable: React.FC<CombinedProps> = (props) => {
+const FirewallTable = (props: Props) => {
   const {
     devices,
     error,
@@ -105,4 +102,4 @@ const FirewallTable: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FirewallTable);
+export default React.memo(FirewallTable);

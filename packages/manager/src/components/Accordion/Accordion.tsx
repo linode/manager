@@ -44,9 +44,7 @@ export interface Props extends AccordionProps {
   headingNumberCount?: number;
 }
 
-type CombinedProps = Props;
-
-export const Accordion: React.FC<CombinedProps> = (props) => {
+export const Accordion: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

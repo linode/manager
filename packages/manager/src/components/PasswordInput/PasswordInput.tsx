@@ -7,13 +7,13 @@ import * as zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
-type Props = TextFieldProps & {
+interface Props extends TextFieldProps {
   value?: string | undefined;
   required?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
   hideValidation?: boolean;
-};
+}
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -25,9 +25,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type CombinedProps = Props;
-
-const PasswordInput: React.FC<CombinedProps> = (props) => {
+const PasswordInput = (props: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
       props.onChange(e);

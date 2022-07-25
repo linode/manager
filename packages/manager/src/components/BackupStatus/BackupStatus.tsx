@@ -53,9 +53,7 @@ interface Props {
   isBareMetalInstance?: boolean;
 }
 
-type CombinedProps = Props;
-
-const BackupStatus: React.FC<CombinedProps> = (props) => {
+const BackupStatus = (props: Props) => {
   const {
     mostRecentBackup,
     linodeId,

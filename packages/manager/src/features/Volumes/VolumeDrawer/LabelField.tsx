@@ -26,9 +26,7 @@ interface Props {
   tooltipText?: string | JSX.Element;
 }
 
-type CombinedProps = Props;
-
-const LabelField: React.FC<CombinedProps> = ({
+const LabelField = ({
   name,
   value,
   error,
@@ -36,7 +34,7 @@ const LabelField: React.FC<CombinedProps> = ({
   onChange,
   textFieldStyles,
   ...rest
-}) => {
+}: Props) => {
   return (
     <TextField
       className={textFieldStyles}

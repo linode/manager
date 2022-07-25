@@ -46,9 +46,7 @@ interface Props {
   migrationTimeInMins: number;
 }
 
-type CombinedProps = Props;
-
-const CautionNotice: React.FC<CombinedProps> = (props) => {
+const CautionNotice = (props: Props) => {
   const classes = useStyles();
   const { data: account } = useAccount();
 

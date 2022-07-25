@@ -17,9 +17,7 @@ interface Props {
   toggleDialog: () => void;
 }
 
-type CombinedProps = Props;
-
-export const TrustedDevicesTable: React.FC<CombinedProps> = (props) => {
+export const TrustedDevicesTable = (props: Props) => {
   const { loading, error, data } = props;
 
   const triggerDeletion = (deviceId: number) => {

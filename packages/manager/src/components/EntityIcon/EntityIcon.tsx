@@ -51,8 +51,6 @@ interface Props {
   stopAnimation?: boolean;
 }
 
-type CombinedProps = Props;
-
 const iconMap = {
   managed: ManagedIcon,
   linode: LinodeIcon,
@@ -75,7 +73,7 @@ const getIcon = (variant: Variant) => {
   return iconMap[variant] ?? LinodeIcon;
 };
 
-const EntityIcon: React.FC<CombinedProps> = (props) => {
+const EntityIcon = (props: Props) => {
   const classes = useStyles();
 
   const {

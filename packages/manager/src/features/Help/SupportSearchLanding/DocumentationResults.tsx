@@ -50,9 +50,7 @@ interface Props {
   target: string;
 }
 
-type CombinedProps = Props;
-
-const DocumentationResults: React.FC<CombinedProps> = (props) => {
+const DocumentationResults = (props: Props) => {
   const classes = useStyles();
   const { results, sectionTitle, target } = props;
 

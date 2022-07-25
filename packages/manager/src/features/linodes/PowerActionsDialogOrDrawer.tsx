@@ -6,7 +6,6 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
@@ -50,8 +49,6 @@ interface Props {
   linodeConfigs?: Config[];
 }
 
-type CombinedProps = Props;
-
 /**
  * In special cases, such as Rescue mode, the API's method
  * for determining the last booted config doesn't work as
@@ -63,7 +60,7 @@ type CombinedProps = Props;
 export const selectDefaultConfig = (configs?: Config[]) =>
   configs?.length === 1 ? configs[0].id : undefined;
 
-const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
+const PowerActionsDialogOrDrawer = (props: Props) => {
   const { linodeConfigs } = props;
   const classes = useStyles();
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
@@ -217,6 +214,4 @@ const determineBootPromise = (action: Action) => {
   }
 };
 
-export default compose<CombinedProps, Props>(React.memo)(
-  PowerActionsDialogOrDrawer
-);
+export default React.memo(PowerActionsDialogOrDrawer);

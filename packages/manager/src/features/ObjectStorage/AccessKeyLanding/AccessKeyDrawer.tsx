@@ -24,6 +24,7 @@ import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import LimitedAccessControls from './LimitedAccessControls';
 import { MODE } from './types';
+
 export interface Props {
   open: boolean;
   onClose: () => void;
@@ -33,8 +34,6 @@ export interface Props {
   objectStorageKey?: ObjectStorageKey;
   isRestrictedUser: boolean;
 }
-
-type CombinedProps = Props;
 
 interface FormState {
   label: string;
@@ -66,7 +65,7 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
     }))
     .sort(sortByCluster);
 
-export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
+export const AccessKeyDrawer = (props: Props) => {
   const {
     isRestrictedUser,
     open,

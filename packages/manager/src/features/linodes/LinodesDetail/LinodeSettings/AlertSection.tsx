@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -82,9 +81,7 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const AlertSection: React.FC<CombinedProps> = (props) => {
+export const AlertSection = (props: Props) => {
   const classes = useStyles();
   const {
     title,
@@ -149,4 +146,4 @@ export const AlertSection: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, any>(RenderGuard)(AlertSection);
+export default RenderGuard(AlertSection);

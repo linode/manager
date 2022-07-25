@@ -27,8 +27,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type CombinedProps = Props;
-
 const renderActions = (onClose: () => void) => (
   <ActionsPanel>
     <Button
@@ -42,7 +40,7 @@ const renderActions = (onClose: () => void) => (
   </ActionsPanel>
 );
 
-export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
+export const SecretTokenDialog = (props: Props) => {
   const classes = useStyles();
   const { title, value, objectStorageKey, open, onClose } = props;
 

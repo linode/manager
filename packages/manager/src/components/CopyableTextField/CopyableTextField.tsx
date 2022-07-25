@@ -20,14 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Props = TextFieldProps & {
+interface Props extends TextFieldProps {
   className?: string;
   hideIcon?: boolean;
-};
+}
 
-type CombinedProps = Props;
-
-export const CopyableTextField: React.FC<CombinedProps> = (props) => {
+export const CopyableTextField = (props: Props) => {
   const classes = useStyles();
   const { value, className, hideIcon, ...restProps } = props;
 

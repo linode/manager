@@ -17,9 +17,7 @@ interface Props {
   open: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const EnableBackupsDialog: React.FC<Props> = (props) => {
+export const EnableBackupsDialog = (props: Props) => {
   const { linodeId, onClose, open } = props;
   /**
    * Calculate the monthly backup price here.

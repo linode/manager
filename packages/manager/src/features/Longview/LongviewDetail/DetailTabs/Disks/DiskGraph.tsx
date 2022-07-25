@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import { Disk } from '../../../request.types';
 import Graphs from './Graphs';
 
@@ -13,9 +12,7 @@ interface Props {
   loading: boolean;
 }
 
-type CombinedProps = Props;
-
-const DiskGraph: React.FC<CombinedProps> = (props) => {
+const DiskGraph = (props: Props) => {
   const {
     diskLabel,
     loading,

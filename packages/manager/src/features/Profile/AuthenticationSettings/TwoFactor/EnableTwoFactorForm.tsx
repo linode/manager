@@ -19,9 +19,7 @@ interface Props {
   toggleDialog: () => void;
 }
 
-type CombinedProps = Props;
-
-export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
+export const EnableTwoFactorForm = (props: Props) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');

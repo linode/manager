@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
@@ -14,9 +13,7 @@ interface Props {
   handleDelete: (linodeID: number) => Promise<{}>;
 }
 
-type CombinedProps = Props;
-
-const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
+const DeleteLinodeDialog = (props: Props) => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
@@ -55,11 +52,18 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
       onClose={props.onClose}
       error={errors ? errors[0].reason : ''}
       actions={
-        <Actions
-          onClose={props.onClose}
-          loading={isDeleting}
-          onSubmit={handleSubmit}
-        />
+        <ActionsPanel>
+          <Button onClick={props.onClose} buttonType="secondary">
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={handleSubmit}
+            loading={isDeleting}
+          >
+            Delete Linode
+          </Button>
+        </ActionsPanel>
       }
     >
       <Typography>
@@ -70,27 +74,4 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  loading: boolean;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
-    <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="secondary">
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.loading}
-      >
-        Delete Linode
-      </Button>
-    </ActionsPanel>
-  );
-};
-
-export default compose<CombinedProps, Props>(React.memo)(DeleteLinodeDialog);
+export default React.memo(DeleteLinodeDialog);

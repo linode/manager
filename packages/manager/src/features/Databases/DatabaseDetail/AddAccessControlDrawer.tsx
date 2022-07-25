@@ -37,9 +37,7 @@ interface Values {
   _allowList: ExtendedIP[];
 }
 
-type CombinedProps = Props;
-
-const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
+const AddAccessControlDrawer = (props: Props) => {
   const { open, onClose, updateDatabase, allowList } = props;
 
   const classes = useStyles();

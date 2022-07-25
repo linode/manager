@@ -6,9 +6,7 @@ interface Props {
   subtext: string;
 }
 
-type CombinedProps = Props;
-
-const RestrictedUserLabel: React.FC<CombinedProps> = (props) => {
+const RestrictedUserLabel = (props: Props) => {
   return (
     <React.Fragment>
       <Typography>

@@ -8,9 +8,7 @@ export interface Props {
   message: string | JSX.Element;
 }
 
-type CombinedProps = Props;
-
-const TableRowError: React.FC<CombinedProps> = (props) => {
+const TableRowError = (props: Props) => {
   return (
     <TableRow data-testid="table-row-error">
       <TableCell colSpan={props.colSpan}>

@@ -58,9 +58,7 @@ interface Props {
   analyticsKey?: string;
 }
 
-export type CombinedProps = Props;
-
-export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
+export const ImageUploadSuccessDialog = (props: Props) => {
   const { isOpen, onClose, command, analyticsKey } = props;
   const classes = useStyles();
 

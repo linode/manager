@@ -21,9 +21,7 @@ interface Props {
   handleClickDetails: (bucket: ObjectStorageBucket) => void;
 }
 
-type CombinedProps = Props;
-
-export const BucketTable: React.FC<CombinedProps> = (props) => {
+export const BucketTable = (props: Props) => {
   const {
     data,
     orderBy,
@@ -104,14 +102,16 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <RenderData
-                data={paginatedData}
-                onRemove={handleClickRemove}
-                onDetails={handleClickDetails}
-              />
+              {paginatedData.map((bucket) => (
+                <BucketTableRow
+                  {...bucket}
+                  key={`${bucket.label}-${bucket.cluster}`}
+                  onRemove={() => handleClickRemove(bucket)}
+                  onDetails={() => handleClickDetails(bucket)}
+                />
+              ))}
             </TableBody>
           </Table>
-
           <PaginationFooter
             count={count}
             page={page}
@@ -123,30 +123,6 @@ export const BucketTable: React.FC<CombinedProps> = (props) => {
         </React.Fragment>
       )}
     </Paginate>
-  );
-};
-
-interface RenderDataProps {
-  data: ObjectStorageBucket[];
-  onRemove: (bucket: ObjectStorageBucket) => void;
-  onDetails: (bucket: ObjectStorageBucket) => void;
-}
-
-const RenderData: React.FC<RenderDataProps> = (props) => {
-  const { data, onRemove, onDetails } = props;
-
-  return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
-      {data.map((bucket) => (
-        <BucketTableRow
-          {...bucket}
-          key={`${bucket.label}-${bucket.cluster}`}
-          onRemove={() => onRemove(bucket)}
-          onDetails={() => onDetails(bucket)}
-        />
-      ))}
-    </>
   );
 };
 

@@ -20,9 +20,7 @@ interface Props {
   ticketId: number;
 }
 
-type CombinedProps = Props;
-
-const ReplyActions: React.FC<CombinedProps> = (props) => {
+const ReplyActions = (props: Props) => {
   const classes = useStyles();
 
   const {

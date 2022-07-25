@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import CopyTooltip from 'src/components/CopyTooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -42,9 +41,7 @@ interface Props {
   installationKey: string;
 }
 
-type CombinedProps = Props;
-
-const InstallationInstructions: React.FC<CombinedProps> = (props) => {
+const InstallationInstructions = (props: Props) => {
   const classes = useStyles();
 
   const command = `curl -s https://lv.linode.com/${props.installationKey} | sudo bash`;

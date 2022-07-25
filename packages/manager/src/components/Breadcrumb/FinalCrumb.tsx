@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
@@ -35,9 +34,7 @@ interface Props {
   onEditHandlers?: EditableProps;
 }
 
-type CombinedProps = Props;
-
-const FinalCrumb: React.FC<CombinedProps> = (props) => {
+const FinalCrumb = (props: Props) => {
   const classes = useStyles();
   const { crumb, labelOptions, onEditHandlers } = props;
 
@@ -74,4 +71,4 @@ const FinalCrumb: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FinalCrumb);
+export default React.memo(FinalCrumb);

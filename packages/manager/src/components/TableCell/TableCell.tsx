@@ -78,9 +78,7 @@ export interface Props extends TableCellProps {
   center?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const WrappedTableCell: React.FC<CombinedProps> = (props) => {
+export const WrappedTableCell = (props: Props) => {
   const classes = useStyles();
 
   const {

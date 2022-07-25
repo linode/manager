@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import ErrorState from 'src/components/ErrorState';
-import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import renderGuard from 'src/components/RenderGuard';
 import SelectPlanQuantityPanel, {
   ExtendedType,
   ExtendedTypeWithCount,
@@ -20,8 +19,6 @@ interface Props {
   addNodePool: (pool: Partial<PoolNodeWithPrice>) => any; // Has to accept both extended and non-extended pools
 }
 
-type CombinedProps = Props;
-
 export const addCountToTypes = (
   types: ExtendedType[]
 ): ExtendedTypeWithCount[] => {
@@ -31,15 +28,11 @@ export const addCountToTypes = (
   }));
 };
 
-export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const NodePoolPanel = (props: Props) => {
   return <RenderLoadingOrContent {...props} />;
 };
 
-const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+const RenderLoadingOrContent = (props: Props) => {
   const { typesError, typesLoading } = props;
 
   if (typesError) {
@@ -53,7 +46,7 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
   return <Panel {...props} />;
 };
 
-const Panel: React.FunctionComponent<CombinedProps> = (props) => {
+const Panel = (props: Props) => {
   const { addNodePool, apiError, types, isOnCreate } = props;
 
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(
@@ -108,6 +101,4 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props & RenderGuardProps>(renderGuard);
-
-export default enhanced(NodePoolPanel);
+export default renderGuard(NodePoolPanel);

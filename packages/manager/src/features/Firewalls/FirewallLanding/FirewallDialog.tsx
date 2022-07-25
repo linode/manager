@@ -19,13 +19,11 @@ interface Props
   selectedFirewallLabel: string;
 }
 
-type CombinedProps = Props;
-
 const toContinuousTense = (s: string) => {
   return s.replace(/e$/, 'ing');
 };
 
-const FirewallDialog: React.FC<CombinedProps> = (props) => {
+const FirewallDialog = (props: Props) => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 

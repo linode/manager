@@ -9,13 +9,11 @@ interface Props extends TagProps {
   onDelete?: (tag: string) => void;
 }
 
-type CombinedProps = Props;
-
 /*
  * Abstraction of the Tag component for the purposes of passing the
  * delete payload to the onDelete function
  */
-class TagsPanelItem extends React.Component<CombinedProps, {}> {
+class TagsPanelItem extends React.Component<Props, {}> {
   handleDelete = () => {
     const { onDelete } = this.props;
     /*

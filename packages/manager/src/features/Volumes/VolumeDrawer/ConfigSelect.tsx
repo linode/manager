@@ -16,11 +16,9 @@ interface Props {
   width?: number;
 }
 
-type CombinedProps = Props;
-
 export const initialValueDefaultId = -1;
 
-const ConfigSelect: React.FC<CombinedProps> = (props) => {
+const ConfigSelect = (props: Props) => {
   const {
     error,
     onChange,

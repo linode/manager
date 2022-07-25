@@ -107,9 +107,7 @@ export interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props;
-
-const ActionMenu: React.FC<CombinedProps> = (props) => {
+const ActionMenu = (props: Props) => {
   const classes = useStyles();
   const { toggleOpenCallback, actionsList } = props;
 

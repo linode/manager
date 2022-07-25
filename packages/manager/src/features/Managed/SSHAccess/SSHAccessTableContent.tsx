@@ -16,9 +16,7 @@ interface Props {
   error?: APIError[];
 }
 
-export type CombinedProps = Props;
-
-export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
+export const SSHAccessTableContent = (props: Props) => {
   const {
     linodeSettings,
     loading,

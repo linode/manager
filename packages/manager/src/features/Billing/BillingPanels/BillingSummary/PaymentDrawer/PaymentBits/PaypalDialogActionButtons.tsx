@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 
@@ -11,9 +10,7 @@ export interface Props {
   closeDialog: (wasCanceled: boolean) => void;
 }
 
-type CombinedProps = Props;
-
-const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
+const PaypalDialogActionButtons = (props: Props) => {
   const {
     isStagingPaypalPayment,
     paypalPaymentFailed,
@@ -62,6 +59,4 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = (props) => {
   }
 };
 
-export default compose<CombinedProps, Props>(React.memo)(
-  PaypalDialogActionButtons
-);
+export default React.memo(PaypalDialogActionButtons);

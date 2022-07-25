@@ -11,9 +11,7 @@ interface Props {
   isBareMetalInstance: boolean;
 }
 
-type CombinedProps = Props;
-
-const LinodeSettings: React.FC<CombinedProps> = (props) => {
+const LinodeSettings = (props: Props) => {
   const { isBareMetalInstance } = props;
 
   return (

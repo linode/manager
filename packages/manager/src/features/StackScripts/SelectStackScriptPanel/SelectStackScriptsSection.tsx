@@ -27,9 +27,7 @@ export interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
+export const SelectStackScriptsSection = (props: Props) => {
   const classes = useStyles();
   const { onSelect, selectedId, data, isSorting, disabled } = props;
 
@@ -64,4 +62,4 @@ export const SelectStackScriptsSection: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default SelectStackScriptsSection as React.FC<Props>;
+export default SelectStackScriptsSection;

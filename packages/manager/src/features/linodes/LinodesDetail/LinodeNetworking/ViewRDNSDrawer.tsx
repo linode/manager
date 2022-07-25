@@ -16,9 +16,7 @@ interface Props {
   ips: IPAddress[];
 }
 
-type CombinedProps = Props;
-
-const ViewRDNSDrawer: React.FC<CombinedProps> = (props) => {
+const ViewRDNSDrawer = (props: Props) => {
   const { open, onClose, ips } = props;
   const classes = useStyles();
 

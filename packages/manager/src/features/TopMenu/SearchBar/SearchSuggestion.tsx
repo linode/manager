@@ -25,9 +25,7 @@ interface Props extends OptionProps<any, any> {
   searchText: string;
 }
 
-type CombinedProps = Props;
-
-class SearchSuggestion extends React.Component<CombinedProps> {
+class SearchSuggestion extends React.Component<Props> {
   maybeStyleSegment = (
     text: string,
     searchText: string,

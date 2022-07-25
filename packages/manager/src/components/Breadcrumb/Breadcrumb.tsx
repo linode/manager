@@ -16,8 +16,6 @@ export interface Props {
   pathname: string;
 }
 
-export type CombinedProps = Props;
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
@@ -43,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Breadcrumb: React.FC<CombinedProps> = (props) => {
+export const Breadcrumb = (props: Props) => {
   const classes = useStyles();
 
   const {

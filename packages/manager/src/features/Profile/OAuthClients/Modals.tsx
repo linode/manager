@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -22,9 +21,7 @@ interface Props {
   deleteClient: (id?: string) => void;
 }
 
-type CombinedProps = Props;
-
-const Modals: React.FC<CombinedProps> = (props) => {
+const Modals = (props: Props) => {
   const {
     secretID,
     secret,
@@ -48,7 +45,6 @@ const Modals: React.FC<CombinedProps> = (props) => {
         onClose={closeDialogs}
         value={secret}
       />
-
       <ConfirmationDialog
         error={modalErrors ? modalErrors[0].reason : undefined}
         title={`Delete ${label}?`}
@@ -84,7 +80,7 @@ const Modals: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(Modals);
+export default React.memo(Modals);
 
 interface ActionsProps {
   resetSecret: () => void;

@@ -18,9 +18,7 @@ interface Props {
   clientID: string;
 }
 
-type CombinedProps = Props;
-
-export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
+export const OAuthClientActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -33,9 +32,7 @@ export interface Props extends LineGraphProps {
   loading?: boolean;
 }
 
-type CombinedProps = Props;
-
-const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
+const LongviewLineGraph = (props: Props) => {
   const classes = useStyles();
 
   const { error, loading, title, subtitle, ...rest } = props;
@@ -82,4 +79,4 @@ export const isDataEmpty = (data: DataSet[]) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(LongviewLineGraph);
+export default React.memo(LongviewLineGraph);

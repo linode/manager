@@ -33,8 +33,6 @@ interface Props {
   preferenceKey?: string; // If provided, will store/read values from user preferences
 }
 
-export type CombinedProps = Props;
-
 /**
  * Given a set of UserPreferences (returned from the API),
  * and a preferenceKey, returns the order and orderby for
@@ -148,7 +146,7 @@ export const sortData = (orderBy: string, order: Order) => {
   });
 };
 
-export const OrderBy: React.FC<CombinedProps> = (props) => {
+export const OrderBy: React.FC<Props> = (props) => {
   const { preferences, updatePreferences } = usePreferences();
   const location = useLocation();
   const history = useHistory();

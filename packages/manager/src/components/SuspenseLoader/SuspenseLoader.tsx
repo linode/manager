@@ -5,9 +5,7 @@ interface Props {
   delay?: number;
 }
 
-export type CombinedProps = Props;
-
-export const SuspenseLoader: React.FC<Props> = (props) => {
+export const SuspenseLoader = (props: Props) => {
   const { delay } = props;
   const [show, setShow] = React.useState<boolean>(false);
 

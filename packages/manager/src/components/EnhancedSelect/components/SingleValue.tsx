@@ -19,11 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props extends SingleValueProps<any> {}
-
-type CombinedProps = Props;
-
-const _SingleValue: React.FC<CombinedProps> = (props) => {
+const _SingleValue = (props: SingleValueProps<any>) => {
   const classes = useStyles();
   return (
     <>

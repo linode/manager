@@ -8,9 +8,7 @@ interface Props {
   onClick?: LinkProps['onClick'];
 }
 
-type CombinedProps = Props;
-
-const SupportLink: React.FunctionComponent<CombinedProps> = (props) => {
+const SupportLink = (props: Props) => {
   const { description, text, title, onClick } = props;
   return (
     <Link

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -92,8 +91,6 @@ export interface Props {
   ticketUpdated?: string;
 }
 
-type CombinedProps = Props;
-
 interface Data {
   gravatar_id: string;
   gravatarUrl: string;
@@ -106,7 +103,7 @@ interface Data {
   updated: string;
 }
 
-export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
+export const ExpandableTicketPanel = (props: Props) => {
   const classes = useStyles();
 
   const {
@@ -223,4 +220,4 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(ExpandableTicketPanel);
+export default React.memo(ExpandableTicketPanel);

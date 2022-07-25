@@ -1,7 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
@@ -25,9 +24,7 @@ export interface PrimaryLink {
   isDisabled?: () => string;
 }
 
-type CombinedProps = Props;
-
-const NavItem: React.SFC<CombinedProps> = (props) => {
+const NavItem = (props: Props) => {
   const {
     href,
     onClick,
@@ -98,4 +95,4 @@ const NavItem: React.SFC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(NavItem);
+export default React.memo(NavItem);

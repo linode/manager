@@ -11,9 +11,7 @@ export interface Props {
   styles?: React.CSSProperties;
 }
 
-type CombinedProps = Props;
-
-export const DateTimeDisplay: React.FC<CombinedProps> = (props) => {
+export const DateTimeDisplay = (props: Props) => {
   const { format, humanizeCutoff, displayTime, value, className } = props;
   return (
     <Typography style={props.styles} component="span" className={className}>

@@ -8,30 +8,22 @@ interface Props {
   warning?: string;
 }
 
-type CombinedProps = Props;
-
-class UserAgentNotification extends React.Component<CombinedProps, {}> {
-  actions = () => (
-    <Button onClick={this.props.onClose} buttonType="primary">
-      Dismiss
-    </Button>
+const UserAgentNotification = ({ open, onClose, warning }: Props) => {
+  return (
+    <ConfirmationDialog
+      data-qa-browser-warning
+      actions={
+        <Button onClick={onClose} buttonType="primary">
+          Dismiss
+        </Button>
+      }
+      open={open}
+      onClose={onClose}
+      title="Please update your browser"
+    >
+      {warning}
+    </ConfirmationDialog>
   );
-
-  render() {
-    const { warning } = this.props;
-
-    return (
-      <ConfirmationDialog
-        data-qa-browser-warning
-        actions={this.actions}
-        open={this.props.open}
-        onClose={this.props.onClose}
-        title="Please update your browser"
-      >
-        {warning}
-      </ConfirmationDialog>
-    );
-  }
-}
+};
 
 export default UserAgentNotification;

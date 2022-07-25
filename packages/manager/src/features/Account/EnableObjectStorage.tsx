@@ -12,18 +12,12 @@ import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
 
-interface Props {
-  object_storage: AccountSettings['object_storage'];
-}
-
-type CombinedProps = Props;
-
 interface ContentProps {
   object_storage: AccountSettings['object_storage'];
   openConfirmationModal: () => void;
 }
 
-export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
+export const ObjectStorageContent = (props: ContentProps) => {
   const { object_storage, openConfirmationModal } = props;
 
   if (object_storage !== 'disabled') {
@@ -61,7 +55,11 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
   );
 };
 
-export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
+interface Props {
+  object_storage: AccountSettings['object_storage'];
+}
+
+export const EnableObjectStorage = (props: Props) => {
   const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();

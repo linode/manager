@@ -7,7 +7,6 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { remove, uniq, update } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Link from 'src/components/Link';
@@ -19,7 +18,7 @@ import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import renderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import useFlags from 'src/hooks/useFlags';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
@@ -72,11 +71,9 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props;
-
 type AvailableRangesMap = { [linode_id: number]: string[] };
 
-const IPSharingPanel: React.FC<CombinedProps> = (props) => {
+const IPSharingPanel = (props: Props) => {
   const classes = useStyles();
   const flags = useFlags();
   const {
@@ -535,8 +532,4 @@ export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
   );
 });
 
-const enhanced = recompose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard
-);
-
-export default enhanced(IPSharingPanel);
+export default renderGuard(IPSharingPanel);

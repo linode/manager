@@ -4,9 +4,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
@@ -40,9 +38,7 @@ interface Props {
   updateIPs?: (ip: IPAddress) => void;
 }
 
-type CombinedProps = Props;
-
-export const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
+export const ViewRangeDrawer = (props: Props) => {
   const { open, onClose, rdns, range, address, ips, updateIPs } = props;
 
   const [currentRDNS, setRDNS] = React.useState<string | null | undefined>(

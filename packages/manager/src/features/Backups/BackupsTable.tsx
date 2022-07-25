@@ -27,9 +27,7 @@ interface Props {
   loading: boolean;
 }
 
-type CombinedProps = Props;
-
-export const BackupsTable: React.FC<CombinedProps> = (props) => {
+export const BackupsTable = (props: Props) => {
   const classes = useStyles();
 
   const { linodes, loading } = props;

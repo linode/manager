@@ -75,9 +75,7 @@ interface Props {
   bucketName: string;
 }
 
-type CombinedProps = Props;
-
-const BucketBreadcrumb: React.FC<CombinedProps> = (props) => {
+const BucketBreadcrumb = (props: Props) => {
   const classes = useStyles();
 
   const [copied, setCopied] = React.useState<boolean>(false);

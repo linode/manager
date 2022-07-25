@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -33,9 +32,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props;
-
-const Disks: React.FC<CombinedProps> = (props) => {
+const Disks = (props: Props) => {
   const classes = useStyles();
 
   const {
@@ -135,4 +132,4 @@ const Disks: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(Disks);
+export default React.memo(Disks);

@@ -7,7 +7,7 @@ import { stringToExtendedIP } from 'src/utilities/ipUtils';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import RuleDrawer, {
   classifyIPs,
-  CombinedProps,
+  Props,
   deriveTypeFromValuesAndIPs,
   formValueToIPs,
   getInitialIPs,
@@ -27,7 +27,7 @@ const baseItems = [PORT_PRESETS['22'], PORT_PRESETS['443']];
 
 jest.mock('src/components/EnhancedSelect/Select');
 
-const props: CombinedProps = {
+const props: Props = {
   category: 'inbound',
   mode: 'create',
   isOpen: true,

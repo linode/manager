@@ -1,9 +1,7 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-
 import Paper from 'src/components/core/Paper';
-
 import Instructions from '../../shared/InstallationInstructions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -17,9 +15,7 @@ interface Props {
   clientAPIKey: string;
 }
 
-type CombinedProps = Props;
-
-const Installation: React.FC<CombinedProps> = (props) => {
+const Installation = (props: Props) => {
   const classes = useStyles();
 
   return (

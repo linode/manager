@@ -96,8 +96,6 @@ interface Props {
   authType: TPAProvider;
 }
 
-type CombinedProps = Props;
-
 const icons: Record<TPAProvider, any> = {
   password: LinodeLogo,
   google: GoogleIcon,
@@ -111,7 +109,7 @@ const linode = {
   href: '',
 };
 
-export const TPAProviders: React.FC<CombinedProps> = (props) => {
+export const TPAProviders = (props: Props) => {
   const classes = useStyles();
   const flags = useFlags();
 

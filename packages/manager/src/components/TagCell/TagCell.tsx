@@ -115,9 +115,7 @@ const checkOverflow = (el: any) => {
   return isOverflowing;
 };
 
-export type CombinedProps = Props;
-
-export const TagCell: React.FC<Props> = (props) => {
+export const TagCell = (props: Props) => {
   const classes = useStyles();
 
   const { addTag, className, tags, width, inTableContext } = props;

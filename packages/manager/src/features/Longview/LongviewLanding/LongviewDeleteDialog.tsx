@@ -12,9 +12,7 @@ interface Props {
   deleteClient: (id: number) => Promise<{}>;
 }
 
-type CombinedProps = Props;
-
-const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
+const LongviewDeleteDialog = (props: Props) => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
@@ -62,39 +60,23 @@ const LongviewDeleteDialog: React.FC<CombinedProps> = (props) => {
       onClose={props.closeDialog}
       error={errors ? errors[0].reason : ''}
       actions={
-        <Actions
-          onClose={props.closeDialog}
-          isDeleting={isDeleting}
-          onSubmit={handleDelete}
-        />
+        <ActionsPanel>
+          <Button buttonType="secondary" onClick={props.closeDialog}>
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={handleDelete}
+            loading={isDeleting}
+            data-testid="delete-button"
+          >
+            Delete
+          </Button>
+        </ActionsPanel>
       }
     >
       Are you sure you want to delete this Longview Client?
     </Dialog>
-  );
-};
-
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  isDeleting: boolean;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={props.onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.isDeleting}
-        data-testid="delete-button"
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
   );
 };
 

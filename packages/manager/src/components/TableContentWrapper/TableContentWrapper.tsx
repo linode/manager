@@ -16,9 +16,7 @@ interface Props {
   loadingProps?: TableLoadingProps;
 }
 
-type CombinedProps = Props;
-
-const TableContentWrapper: React.FC<CombinedProps> = (props) => {
+const TableContentWrapper: React.FC<Props> = (props) => {
   const {
     length,
     loading,

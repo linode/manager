@@ -1,6 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
-
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import DialogActions, {
@@ -12,15 +10,13 @@ interface Props extends ActionsProps {
   usd: string;
 }
 
-type CombinedProps = Props;
-
 interface Content {
   title: string;
   message?: string;
   error?: string;
 }
 
-const PaypalDialog: React.SFC<CombinedProps> = (props) => {
+const PaypalDialog = (props: Props) => {
   const {
     open,
     closeDialog,
@@ -61,4 +57,4 @@ const PaypalDialog: React.SFC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(PaypalDialog);
+export default React.memo(PaypalDialog);

@@ -22,19 +22,14 @@ interface State {
   sshKey: string;
 }
 
-type CombinedProps = Props;
-
-export class SSHKeyCreationDrawer extends React.PureComponent<
-  CombinedProps,
-  State
-> {
+export class SSHKeyCreationDrawer extends React.PureComponent<Props, State> {
   state: State = {
     submitting: false,
     label: '',
     sshKey: '',
   };
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     /** Reset the form when opening. */
     if (!prevProps.open && this.props.open) {
       this.setState({

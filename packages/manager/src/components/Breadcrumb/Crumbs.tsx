@@ -1,8 +1,7 @@
+import * as React from 'react';
 import classNames from 'classnames';
 import { LocationDescriptor } from 'history';
-import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import FinalCrumb from './FinalCrumb';
@@ -53,9 +52,7 @@ interface Props {
   onEditHandlers?: EditableProps;
 }
 
-type CombinedProps = Props;
-
-const Crumbs: React.FC<CombinedProps> = (props) => {
+const Crumbs = (props: Props) => {
   const classes = useStyles();
 
   const {
@@ -148,4 +145,4 @@ const Crumbs: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(Crumbs);
+export default React.memo(Crumbs);

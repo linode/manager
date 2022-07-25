@@ -59,9 +59,7 @@ export const getIcon = (type: CardType | undefined) => {
   return iconMap[type];
 };
 
-export type CombinedProps = Props;
-
-export const CreditCard: React.FC<CombinedProps> = (props) => {
+export const CreditCard = (props: Props) => {
   const {
     creditCard: { card_type: type = undefined, last_four: lastFour, expiry },
     showIcon = true,

@@ -13,9 +13,7 @@ interface Props {
   openRevokeDialog: (token: Token, type: string) => void;
 }
 
-type CombinedProps = Props;
-
-export const APITokenMenu: React.FC<CombinedProps> = (props) => {
+export const APITokenMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 

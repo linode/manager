@@ -9,7 +9,7 @@ import { accountSettingsFactory } from 'src/factories';
 import { longviewSubscriptionFactory } from 'src/factories/longviewSubscription';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import {
-  CombinedProps,
+  Props,
   formatPrice,
   LONGVIEW_FREE_ID,
   LongviewPlans,
@@ -32,7 +32,7 @@ afterEach(() => {
 });
 afterAll(() => server.close());
 
-const props: CombinedProps = {
+const props: Props = {
   subscriptionRequestHook: {
     data: mockLongviewSubscriptions,
     lastUpdated: 0,

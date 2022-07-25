@@ -54,8 +54,6 @@ export interface Props {
   formatTooltip?: (value: number) => string;
 }
 
-type CombinedProps = Props;
-
 const useStyles = makeStyles((theme: Theme) => ({
   ...MetricDisplayStyles(theme),
   canvasContainer: {
@@ -82,7 +80,7 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
-const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
+const LineGraph = (props: Props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down(960));

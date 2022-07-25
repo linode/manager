@@ -25,9 +25,7 @@ interface Props {
   textFieldStyles?: string;
 }
 
-type CombinedProps = Props;
-
-const SizeField: React.FC<CombinedProps> = (props) => {
+const SizeField = (props: Props) => {
   const classes = useStyles();
 
   const {

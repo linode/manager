@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 import Button from '../Button';
 
@@ -11,17 +10,7 @@ export interface Props extends Omit<TooltipProps, 'children' | 'title'> {
   onClick: (e?: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CombinedProps = Props;
-
-const useStyles = makeStyles(() => ({
-  root: {
-    minHeight: 30,
-  },
-}));
-
-const AddNewLink: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
+const AddNewLink = (props: Props) => {
   const {
     disabled,
     disabledReason,
@@ -52,7 +41,7 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
       >
         <div>
           {/* Wrapping in div because the child of tooltip needs to be able to hold a ref */}
-          <Button buttonType="primary" className={classes.root} {...baseProps}>
+          <Button buttonType="primary" {...baseProps}>
             {display || label}
           </Button>
         </div>
@@ -61,7 +50,7 @@ const AddNewLink: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <Button buttonType="primary" className={classes.root} {...baseProps}>
+    <Button buttonType="primary" {...baseProps}>
       {display || label}
     </Button>
   );

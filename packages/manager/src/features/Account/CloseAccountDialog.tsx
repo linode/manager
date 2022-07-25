@@ -2,7 +2,6 @@ import { cancelAccount } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
@@ -18,15 +17,13 @@ interface Props {
   closeDialog: () => void;
 }
 
-type CombinedProps = Props;
-
 const useStyles = makeStyles((theme: Theme) => ({
   dontgo: {
     marginTop: theme.spacing(2),
   },
 }));
 
-const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
+const CloseAccountDialog = (props: Props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
@@ -177,4 +174,4 @@ const Actions: React.FC<ActionsProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(CloseAccountDialog);
+export default React.memo(CloseAccountDialog);

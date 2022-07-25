@@ -30,9 +30,7 @@ export interface TagDrawerProps {
   entityID: number;
 }
 
-export type CombinedProps = Props;
-
-export const TagDrawer: React.FC<Props> = (props) => {
+export const TagDrawer = (props: Props) => {
   const { addTag, entityLabel, deleteTag, onClose, open, tags } = props;
   // @todo the new tag component should have a loading state for when a tag is being deleted
   // const [loadingTag, setLoadingTag] = React.useState<string>('');
@@ -73,7 +71,7 @@ export const TagDrawer: React.FC<Props> = (props) => {
         />
       ))}
       <div className={classes.addTag}>
-        <AddTag tags={tags} addTag={_addTag} label={'Add a tag'} />
+        <AddTag tags={tags} addTag={_addTag} label="Add a tag" />
       </div>
     </Drawer>
   );

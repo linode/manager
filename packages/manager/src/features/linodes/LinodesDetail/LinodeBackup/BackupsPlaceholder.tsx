@@ -13,17 +13,15 @@ interface Props {
   linodeId: number;
 }
 
-export type CombinedProps = Props;
-
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   empty: {
     '& svg': {
       transform: 'scale(0.75)',
     },
   },
-}));
+});
 
-export const BackupsPlaceholder: React.FC<Props> = (props) => {
+export const BackupsPlaceholder = (props: Props) => {
   const classes = useStyles();
 
   const { backupsMonthlyPrice, linodeId, disabled } = props;

@@ -51,8 +51,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Props;
-
 const getVariant = cond([
   [propEq('buttonType', 'primary'), always('contained')],
   [propEq('buttonType', 'secondary'), always('contained')],
@@ -66,7 +64,7 @@ const getColor = cond([
   [() => true, always(undefined)],
 ]);
 
-export const Button: React.FC<CombinedProps> = (props) => {
+export const Button: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

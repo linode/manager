@@ -2,9 +2,9 @@ import * as React from 'react';
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import AddFirewallDrawer, { CombinedProps } from './AddFirewallDrawer';
+import AddFirewallDrawer, { Props } from './AddFirewallDrawer';
 
-const props: CombinedProps = {
+const props: Props = {
   onClose: jest.fn(),
   onSubmit: jest.fn().mockResolvedValue({}),
   title: 'Create Firewall',

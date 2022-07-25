@@ -48,9 +48,7 @@ interface Props {
   onClose: () => void;
 }
 
-export type CombinedProps = Props;
-
-export const RenderNotification: React.FC<Props> = (props) => {
+export const RenderNotification = (props: Props) => {
   const { notification, onClose } = props;
   const classes = useStyles();
 

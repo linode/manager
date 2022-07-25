@@ -1,21 +1,14 @@
 import * as React from 'react';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 
 const FirewallLanding = React.lazy(() => import('./FirewallLanding'));
-
 const FirewallDetail = React.lazy(() => import('./FirewallDetail'));
 
-type Props = RouteComponentProps<{}>;
-
-type CombinedProps = Props;
-
-const Firewall: React.FC<CombinedProps> = (props) => {
-  const {
-    match: { path },
-  } = props;
+const Firewall = () => {
+  const { path } = useRouteMatch();
 
   useReduxLoad(['firewalls']);
 

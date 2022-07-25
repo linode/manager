@@ -14,9 +14,7 @@ interface Props {
   error?: APIError[];
 }
 
-export type CombinedProps = Props;
-
-export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
+export const CredentialTableContent = (props: Props) => {
   const { error, loading, credentials, openDialog, openForEdit } = props;
   if (loading) {
     return <TableRowLoading columns={2} />;

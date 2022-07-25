@@ -57,9 +57,7 @@ interface Props {
   onKeyAddSuccess: () => void;
 }
 
-type CombinedProps = Props;
-
-const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
+const UserSSHKeyPanel = (props: Props) => {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);

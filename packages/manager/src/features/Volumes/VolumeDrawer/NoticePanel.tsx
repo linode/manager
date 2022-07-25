@@ -7,13 +7,7 @@ interface Props {
   important?: boolean;
 }
 
-type CombinedProps = Props;
-
-const NoticePanel: React.FC<CombinedProps> = ({
-  success,
-  error,
-  important,
-}) => {
+const NoticePanel = ({ success, error, important }: Props) => {
   return (
     <>
       {success && (

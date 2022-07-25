@@ -12,7 +12,6 @@ import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -25,17 +24,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
-
 import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  section: {},
-  divider: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
-    width: `calc(100% - ${theme.spacing(2)}px)`,
-  },
-}));
 
 /**
  * This is a situation-specific schemas that doesn't correspond to
@@ -64,8 +53,6 @@ export interface Props {
   userSSHKeys?: UserSSHKeyObject[];
   requestKeys?: () => void;
 }
-
-type CombinedProps = Props;
 
 export const modes = {
   EMPTY: 'create_empty' as diskMode,
@@ -104,7 +91,7 @@ const getTitle = (v: DrawerMode) => {
   }
 };
 
-export const DiskDrawer: React.FC<CombinedProps> = (props) => {
+export const DiskDrawer = (props: Props) => {
   const {
     disk,
     open,
@@ -132,7 +119,6 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const classes = useStyles();
   const [selectedMode, setSelectedMode] = React.useState<diskMode>(modes.EMPTY);
 
   const { resetForm, ...formik } = useFormik({
@@ -202,7 +188,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
             />
           )}
         </Grid>
-        <Grid item xs={12} className={classes.section}>
+        <Grid item xs={12}>
           <form>
             <TextField
               disabled={['resize'].includes(props.mode)}

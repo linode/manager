@@ -10,15 +10,13 @@ interface Props {
   submitText?: string;
 }
 
-type CombinedProps = Props;
-
-const VolumesActionsPanel: React.FC<CombinedProps> = ({
+const VolumesActionsPanel = ({
   onSubmit,
   isSubmitting,
   onCancel,
   disabled,
   submitText,
-}) => {
+}: Props) => {
   return (
     <ActionsPanel>
       {onCancel && (

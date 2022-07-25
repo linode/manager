@@ -21,9 +21,7 @@ interface Props {
   error?: APIError[];
 }
 
-type CombinedProps = Props;
-
-const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
+const LinodeConfigSelectionDrawer = (props: Props) => {
   const {
     onClose,
     onSubmit,

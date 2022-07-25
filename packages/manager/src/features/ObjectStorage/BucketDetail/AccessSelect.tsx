@@ -32,9 +32,7 @@ export interface Props {
   updateAccess: (acl: ACLType, cors_enabled?: boolean) => Promise<{}>;
 }
 
-type CombinedProps = Props;
-
-const AccessSelect: React.FC<CombinedProps> = (props) => {
+const AccessSelect = (props: Props) => {
   const classes = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;

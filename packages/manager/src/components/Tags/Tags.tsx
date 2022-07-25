@@ -7,11 +7,7 @@ export interface Props {
   tags: string[];
 }
 
-type CombinedProps = Props;
-
-export const Tags: React.FC<CombinedProps> = (props) => {
-  const { tags } = props;
-
+export const Tags = ({ tags }: Props) => {
   const renderTags = (tags: string[]) => {
     return tags.map((eachTag) => {
       return (

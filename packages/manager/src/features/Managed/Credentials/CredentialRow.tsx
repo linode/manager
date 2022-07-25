@@ -33,11 +33,7 @@ interface Props {
   openForEdit: (id: number) => void;
 }
 
-type CombinedProps = Props;
-
-export const CredentialRow: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const CredentialRow = (props: Props) => {
   const { credential, openDialog, openForEdit } = props;
   const classes = useStyles();
 

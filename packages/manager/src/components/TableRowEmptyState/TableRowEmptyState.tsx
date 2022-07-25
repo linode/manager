@@ -15,13 +15,11 @@ export interface Props {
   message?: string;
 }
 
-type CombinedProps = Props;
-
-const TableRowEmptyState: React.FC<CombinedProps> = (props) => {
+const TableRowEmptyState = (props: Props) => {
   const classes = useStyles();
 
   return (
-    <TableRow data-testid={'table-row-empty'}>
+    <TableRow data-testid="table-row-empty">
       <TableCell colSpan={props.colSpan} className={classes.root}>
         {props.message || 'No items to display.'}
       </TableCell>

@@ -29,9 +29,7 @@ interface Props {
   errorText?: string;
 }
 
-type CombinedProps = Props;
-
-const DeviceSelection: React.FC<CombinedProps> = (props) => {
+const DeviceSelection = (props: Props) => {
   const {
     devices,
     onChange,

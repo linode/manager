@@ -44,9 +44,7 @@ interface Props {
   linodeLabel: string;
 }
 
-type CombinedProps = Props;
-
-const LinodeNetworkingSummaryPanel: React.FC<CombinedProps> = (props) => {
+const LinodeNetworkingSummaryPanel = (props: Props) => {
   const { linodeID, linodeRegion, linodeCreated, linodeLabel } = props;
   const classes = useStyles();
 

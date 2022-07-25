@@ -80,9 +80,7 @@ export interface Props {
   renderVariant?: () => JSX.Element | null;
 }
 
-type CombinedProps = Props;
-
-const CardBase: React.FC<CombinedProps> = (props) => {
+const CardBase = (props: Props) => {
   const { renderIcon, heading, subheadings, renderVariant } = props;
 
   const classes = useStyles();

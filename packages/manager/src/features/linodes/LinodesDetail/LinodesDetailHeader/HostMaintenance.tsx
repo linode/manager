@@ -7,9 +7,7 @@ interface Props {
   linodeStatus: LinodeStatus;
 }
 
-export type CombinedProps = Props;
-
-export const HostMaintenance: React.FC<Props> = (props) => {
+export const HostMaintenance = (props: Props) => {
   const { linodeStatus } = props;
   if (linodeStatus !== 'stopped') {
     return null;

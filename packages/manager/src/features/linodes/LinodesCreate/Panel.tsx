@@ -9,9 +9,7 @@ interface Props {
   className?: string;
 }
 
-type CombinedProps = Props;
-
-const Panel: React.FC<CombinedProps> = (props) => {
+const Panel: React.FC<Props> = (props) => {
   const { children, error, title } = props;
 
   return (

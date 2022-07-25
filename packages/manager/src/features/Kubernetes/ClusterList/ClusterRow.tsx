@@ -50,9 +50,7 @@ export interface Props {
   openUpgradeDialog: () => void;
 }
 
-type CombinedProps = Props;
-
-export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
+export const ClusterRow = (props: Props) => {
   const classes = useStyles();
 
   const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
@@ -61,7 +59,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
     <TableRow
       key={cluster.id}
       data-qa-cluster-cell={cluster.id}
-      data-testid={'cluster-row'}
+      data-testid="cluster-row"
       className={classes.clusterRow}
       ariaLabel={`Cluster ${cluster.label}`}
     >

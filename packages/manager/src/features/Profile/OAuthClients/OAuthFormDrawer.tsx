@@ -25,9 +25,7 @@ interface Props {
   onChangePublic: () => void;
 }
 
-type CombinedProps = Props;
-
-const OAuthCreationDrawer: React.FC<CombinedProps> = (props) => {
+const OAuthCreationDrawer = (props: Props) => {
   const {
     label,
     redirect_uri,

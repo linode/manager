@@ -2,17 +2,15 @@ import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-
 import { AccessTable } from './LimitedAccessControls';
+
 export interface Props {
   open: boolean;
   onClose: () => void;
   objectStorageKey: ObjectStorageKey | null;
 }
 
-type CombinedProps = Props;
-
-export const ViewPermissionsDrawer: React.FC<CombinedProps> = (props) => {
+export const ViewPermissionsDrawer = (props: Props) => {
   const { open, onClose, objectStorageKey } = props;
 
   if (objectStorageKey === null) {

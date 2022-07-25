@@ -17,9 +17,7 @@ interface Props {
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
 }
 
-type CombinedProps = Props;
-
-const ListVolumes: React.FC<CombinedProps> = (props) => {
+const ListVolumes = (props: Props) => {
   const { orderBy, order, handleOrderChange, data, renderProps } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();

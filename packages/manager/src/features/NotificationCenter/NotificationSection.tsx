@@ -87,9 +87,7 @@ interface Props {
   emptyMessage?: string;
 }
 
-export type CombinedProps = Props;
-
-export const NotificationSection: React.FC<Props> = (props) => {
+export const NotificationSection = (props: Props) => {
   const classes = useStyles();
 
   const {
@@ -185,7 +183,7 @@ interface BodyProps {
   loading: boolean;
 }
 
-const ContentBody: React.FC<BodyProps> = React.memo((props) => {
+const ContentBody = React.memo((props: BodyProps) => {
   const classes = useStyles();
 
   const { header, content, count, emptyMessage, loading } = props;

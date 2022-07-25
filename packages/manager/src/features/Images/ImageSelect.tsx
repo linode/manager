@@ -39,9 +39,7 @@ interface Props {
   required?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const ImageSelect: React.FC<CombinedProps> = (props) => {
+export const ImageSelect = (props: Props) => {
   const {
     helperText,
     images,

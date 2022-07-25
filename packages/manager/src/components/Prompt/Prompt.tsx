@@ -47,9 +47,7 @@ const handleBeforeUnload = (e: BeforeUnloadEvent) => {
   e.returnValue = '';
 };
 
-type CombinedProps = Props;
-
-const Prompt: React.FC<CombinedProps> = (props) => {
+const Prompt = (props: Props) => {
   const history = useHistory();
 
   React.useEffect(() => {

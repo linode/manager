@@ -45,9 +45,7 @@ interface Props {
   linodeSetting?: ManagedLinodeSetting;
 }
 
-type CombinedProps = Props;
-
-const EditSSHAccessDrawer: React.FC<CombinedProps> = (props) => {
+const EditSSHAccessDrawer = (props: Props) => {
   const classes = useStyles();
 
   const { isOpen, closeDrawer, linodeSetting, updateOne } = props;

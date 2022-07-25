@@ -1,7 +1,5 @@
-import { LongviewClient } from '@linode/api-v4/lib/longview';
 import * as React from 'react';
-import { compose } from 'recompose';
-
+import { LongviewClient } from '@linode/api-v4/lib/longview';
 import ClientRow from './LongviewClientRow';
 
 interface Props {
@@ -13,9 +11,7 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props;
-
-const LongviewListRows: React.FC<CombinedProps> = (props) => {
+const LongviewListRows = (props: Props) => {
   const {
     longviewClientsData,
     openPackageDrawer,
@@ -25,23 +21,21 @@ const LongviewListRows: React.FC<CombinedProps> = (props) => {
   return (
     // eslint-disable-next-line
     <React.Fragment>
-      {longviewClientsData.map((eachClient) => {
-        return (
-          <ClientRow
-            key={`longview-client-${eachClient.label}`}
-            clientInstallKey={eachClient.install_code}
-            clientID={eachClient.id}
-            clientLabel={eachClient.label}
-            clientAPIKey={eachClient.api_key}
-            openPackageDrawer={() =>
-              openPackageDrawer(eachClient.id, eachClient.label)
-            }
-            triggerDeleteLongviewClient={triggerDeleteLongviewClient}
-          />
-        );
-      })}
+      {longviewClientsData.map((eachClient) => (
+        <ClientRow
+          key={`longview-client-${eachClient.label}`}
+          clientInstallKey={eachClient.install_code}
+          clientID={eachClient.id}
+          clientLabel={eachClient.label}
+          clientAPIKey={eachClient.api_key}
+          openPackageDrawer={() =>
+            openPackageDrawer(eachClient.id, eachClient.label)
+          }
+          triggerDeleteLongviewClient={triggerDeleteLongviewClient}
+        />
+      ))}
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(LongviewListRows);
+export default React.memo(LongviewListRows);

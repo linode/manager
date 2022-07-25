@@ -1,11 +1,11 @@
 import { getTags } from '@linode/api-v4/lib/tags';
 import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 
-const useStyles = makeStyles((_: Theme) => ({
+const useStyles = makeStyles({
   root: {
     width: '100%',
     padding: '0px',
@@ -21,7 +21,7 @@ const useStyles = makeStyles((_: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
   },
-}));
+});
 
 interface Props {
   label?: string;
@@ -32,9 +32,7 @@ interface Props {
   inDetailsContext?: boolean;
 }
 
-export type CombinedProps = Props;
-
-export const AddTag: React.FC<Props> = (props) => {
+export const AddTag = (props: Props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
   const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);

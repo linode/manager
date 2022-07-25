@@ -23,14 +23,12 @@ interface State {
   errors?: APIError[];
 }
 
-type CombinedProps = Props;
-
-class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
+class CreateIPv4Drawer extends React.Component<Props, State> {
   state: State = {
     forPublic: this.props.forPublic,
   };
 
-  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     this.setState({
       errors: undefined,
       forPublic: nextProps.forPublic,

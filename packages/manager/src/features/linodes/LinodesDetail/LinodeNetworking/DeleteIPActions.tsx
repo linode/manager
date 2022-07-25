@@ -11,9 +11,7 @@ interface Props {
   loading: boolean;
 }
 
-type CombinedProps = Props;
-
-const DeleteIPActions: React.FC<CombinedProps> = (props) => {
+const DeleteIPActions = (props: Props) => {
   const { handleCancel, loading, linodeID, handleDelete, IPAddress } = props;
 
   const handleDeleteIP = () => {

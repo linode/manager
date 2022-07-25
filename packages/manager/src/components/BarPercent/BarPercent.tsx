@@ -41,9 +41,7 @@ interface Props {
   narrow?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const BarPercent: React.FC<CombinedProps> = (props) => {
+export const BarPercent = (props: Props) => {
   const classes = useStyles();
 
   const {

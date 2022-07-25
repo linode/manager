@@ -15,20 +15,16 @@ interface Props {
   onDelete: () => void;
 }
 
-type CombinedProps = Props;
+const NodePoolDialog = (props: Props) => {
+  const { error, loading, nodeCount, open, onClose, onDelete } = props;
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
         onClick={onClose}
         data-qa-cancel
-        data-testid={'dialog-cancel'}
+        data-testid="dialog-cancel"
       >
         Cancel
       </Button>
@@ -37,23 +33,19 @@ const renderActions = (
         onClick={onDelete}
         loading={loading}
         data-qa-confirm
-        data-testid={'dialog-confirm'}
+        data-testid="dialog-confirm"
       >
         Delete
       </Button>
     </ActionsPanel>
   );
-};
-
-const NodePoolDialog: React.FC<CombinedProps> = (props) => {
-  const { error, loading, nodeCount, open, onClose, onDelete } = props;
 
   return (
     <ConfirmationDialog
       open={open}
       title={'Delete Node Pool?'}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onDelete)}
+      actions={actions}
     >
       {error && <Notice error text={error} />}
       <Typography>

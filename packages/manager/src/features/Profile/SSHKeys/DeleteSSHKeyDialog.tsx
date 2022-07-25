@@ -19,14 +19,12 @@ interface State {
   error?: Error;
 }
 
-type CombinedProps = Props;
-
-class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
+class DeleteSSHKeyDialog extends React.PureComponent<Props, State> {
   state: State = {
     submitting: false,
   };
 
-  componentDidUpdate(prevProps: CombinedProps) {
+  componentDidUpdate(prevProps: Props) {
     /** Clear state (when opening dialog) left on state from previous interactions. */
     if (!prevProps.open && this.props.open) {
       this.setState({ submitting: false, error: undefined });

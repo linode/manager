@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
 import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
@@ -19,9 +18,7 @@ interface Props {
   isBareMetalInstance: boolean;
 }
 
-type CombinedProps = Props;
-
-const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
+const LinodeRowBackupCell = (props: Props) => {
   const classes = useStyles();
 
   const {
@@ -43,4 +40,4 @@ const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(LinodeRowBackupCell);
+export default React.memo(LinodeRowBackupCell);

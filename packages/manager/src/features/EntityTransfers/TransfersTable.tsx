@@ -53,9 +53,7 @@ interface Props {
   handlePageSizeChange: (v: number) => void;
 }
 
-type CombinedProps = Props;
-
-export const TransfersTable: React.FC<CombinedProps> = (props) => {
+export const TransfersTable = (props: Props) => {
   const {
     transferType,
     isLoading,

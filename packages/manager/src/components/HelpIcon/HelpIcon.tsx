@@ -41,10 +41,8 @@ interface Props
     | 'top';
 }
 
-type CombinedProps = Props;
-
 // @TODO: M3-5457 refactor this component to be generic
-const HelpIcon: React.FC<CombinedProps> = (props) => {
+const HelpIcon = (props: Props) => {
   const styles = useStyles();
 
   const {

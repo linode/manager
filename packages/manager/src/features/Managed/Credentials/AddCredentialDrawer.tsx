@@ -17,9 +17,7 @@ export interface Props {
   onSubmit: (values: CredentialPayload, formikProps: any) => void;
 }
 
-type CombinedProps = Props;
-
-const CredentialDrawer: React.FC<CombinedProps> = (props) => {
+const CredentialDrawer = (props: Props) => {
   const { open, onClose, onSubmit } = props;
 
   return (

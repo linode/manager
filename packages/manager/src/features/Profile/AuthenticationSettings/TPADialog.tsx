@@ -28,9 +28,7 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props;
-
-const TPADialog: React.FC<CombinedProps> = (props) => {
+const TPADialog = (props: Props) => {
   const classes = useStyles();
   const flags = useFlags();
 

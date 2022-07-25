@@ -115,11 +115,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 // we'll create a fake ID for it.
 export const LONGVIEW_FREE_ID = 'longview-free';
 
-interface Props {
+export interface Props {
   subscriptionRequestHook: UseAPIRequest<LongviewSubscription[]>;
 }
-
-export type CombinedProps = Props;
 
 export const managedText = (
   <span>
@@ -134,7 +132,7 @@ export const managedText = (
   </span>
 );
 
-export const LongviewPlans: React.FC<CombinedProps> = (props) => {
+export const LongviewPlans = (props: Props) => {
   const { subscriptionRequestHook: subscriptions } = props;
   const classes = useStyles();
   const mounted = React.useRef<boolean>(false);
@@ -328,8 +326,8 @@ interface LongviewPlansTableBodyProps {
   disabled: boolean;
 }
 
-export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
-  (props) => {
+export const LongviewPlansTableBody = React.memo(
+  (props: LongviewPlansTableBodyProps) => {
     const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
     if (loading) {
@@ -392,8 +390,8 @@ interface LongviewSubscriptionRowProps {
   disabled: boolean;
 }
 
-export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
-  (props) => {
+export const LongviewSubscriptionRow = React.memo(
+  (props: LongviewSubscriptionRowProps) => {
     const {
       id,
       plan,

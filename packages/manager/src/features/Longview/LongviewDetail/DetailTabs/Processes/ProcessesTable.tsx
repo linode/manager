@@ -60,9 +60,7 @@ export interface Props {
   lastUpdatedError?: APIError[];
 }
 
-export type CombinedProps = Props;
-
-export const ProcessesTable: React.FC<CombinedProps> = (props) => {
+export const ProcessesTable = (props: Props) => {
   const classes = useStyles();
   const { width } = useWindowDimensions();
 
@@ -77,8 +75,8 @@ export const ProcessesTable: React.FC<CombinedProps> = (props) => {
   return (
     <OrderBy
       data={processesData}
-      orderBy={'name'}
-      order={'asc'}
+      orderBy="name"
+      order="asc"
       preferenceKey="lv-detail-processes"
     >
       {({ data: orderedData, handleOrderChange, order, orderBy }) => (
@@ -197,56 +195,54 @@ export interface ProcessTableRowProps extends ExtendedProcess {
   setSelectedProcess: (process: Process) => void;
 }
 
-export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
-  (props) => {
-    const {
-      name,
-      user,
-      maxCount,
-      averageIO,
-      averageCPU,
-      averageMem,
-      setSelectedProcess,
-      isSelected,
-    } = props;
+export const ProcessesTableRow = React.memo((props: ProcessTableRowProps) => {
+  const {
+    name,
+    user,
+    maxCount,
+    averageIO,
+    averageCPU,
+    averageMem,
+    setSelectedProcess,
+    isSelected,
+  } = props;
 
-    const classes = useStyles();
+  const classes = useStyles();
 
-    return (
-      <TableRow
-        onClick={() => setSelectedProcess({ name, user })}
-        onKeyUp={(e: any) =>
-          e.keyCode === 13 && setSelectedProcess({ name, user })
+  return (
+    <TableRow
+      onClick={() => setSelectedProcess({ name, user })}
+      onKeyUp={(e: any) =>
+        e.keyCode === 13 && setSelectedProcess({ name, user })
+      }
+      selected={isSelected}
+      data-testid="longview-service-row"
+      forceIndex
+      ariaLabel={`${name} for ${user}`}
+    >
+      <TableCell data-testid={`name-${name}`}>
+        <div className={classes.processName}>{name}</div>
+      </TableCell>
+      <TableCell data-testid={`user-${user}`}>{user}</TableCell>
+      <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
+        {Math.round(maxCount)}
+      </TableCell>
+      <TableCell data-testid={`average-io-${averageIO}`}>
+        {
+          readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
+            .formatted
         }
-        selected={isSelected}
-        data-testid="longview-service-row"
-        forceIndex
-        ariaLabel={`${name} for ${user}`}
-      >
-        <TableCell data-testid={`name-${name}`}>
-          <div className={classes.processName}>{name}</div>
-        </TableCell>
-        <TableCell data-testid={`user-${user}`}>{user}</TableCell>
-        <TableCell data-testid={`max-count-${Math.round(maxCount)}`}>
-          {Math.round(maxCount)}
-        </TableCell>
-        <TableCell data-testid={`average-io-${averageIO}`}>
-          {
-            readableBytes(averageIO, { round: 0, unitLabels: { bytes: 'B' } })
-              .formatted
-          }
-          /s
-        </TableCell>
-        <TableCell data-testid={`average-cpu-${averageCPU}`}>
-          {formatCPU(averageCPU)}
-        </TableCell>
-        <TableCell data-testid={`average-mem-${averageMem}`}>
-          {readableBytes(averageMem * 1024, { round: 0 }).formatted}
-        </TableCell>
-      </TableRow>
-    );
-  }
-);
+        /s
+      </TableCell>
+      <TableCell data-testid={`average-cpu-${averageCPU}`}>
+        {formatCPU(averageCPU)}
+      </TableCell>
+      <TableCell data-testid={`average-mem-${averageMem}`}>
+        {readableBytes(averageMem * 1024, { round: 0 }).formatted}
+      </TableCell>
+    </TableRow>
+  );
+});
 
 export interface ExtendedProcess {
   id: string;

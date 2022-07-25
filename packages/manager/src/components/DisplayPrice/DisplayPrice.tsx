@@ -17,11 +17,9 @@ interface Props {
   fontSize?: string; // optional override
 }
 
-type CombinedProps = Props;
-
 export const displayPrice = (v: number) => `$${v.toFixed(2)}`;
 
-export const DisplayPrice: React.FC<CombinedProps> = (props) => {
+export const DisplayPrice = (props: Props) => {
   const classes = useStyles();
   const { interval, price } = props;
 

@@ -28,9 +28,7 @@ interface Props extends ActionHandlers {
   inlineLabel?: string;
 }
 
-type CombinedProps = Props;
-
-const DatabaseActionMenu: React.FC<CombinedProps> = (props) => {
+const DatabaseActionMenu = (props: Props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));

@@ -45,9 +45,7 @@ interface Props {
   helperText?: string;
 }
 
-type CombinedProps = Props;
-
-const ConfigureForm: React.FC<CombinedProps> = (props) => {
+const ConfigureForm = (props: Props) => {
   const classes = useStyles();
   const { allRegions, currentRegion } = props;
 

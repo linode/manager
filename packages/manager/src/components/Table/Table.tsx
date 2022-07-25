@@ -52,9 +52,7 @@ export interface Props extends TableProps {
   rowCount?: number;
 }
 
-type CombinedProps = Props;
-
-export const WrappedTable: React.FC<CombinedProps> = (props) => {
+export const WrappedTable = (props: Props) => {
   const classes = useStyles();
 
   const {

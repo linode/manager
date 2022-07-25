@@ -8,9 +8,7 @@ export interface Props {
   linodeId: number;
 }
 
-type CombinedProps = Props;
-
-export const RenderIPs: React.FC<CombinedProps> = (props) => {
+export const RenderIPs = (props: Props) => {
   const { ipv4, ipv6, linodeId } = props;
 
   const ipv4ShouldTruncate = ipv4.length > 4;

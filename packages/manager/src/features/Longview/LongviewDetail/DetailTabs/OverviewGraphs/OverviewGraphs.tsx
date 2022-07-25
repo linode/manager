@@ -42,9 +42,8 @@ interface Props {
   lastUpdated?: number;
   lastUpdatedError: boolean;
 }
-export type CombinedProps = Props;
 
-export const OverviewGraphs: React.FC<CombinedProps> = (props) => {
+export const OverviewGraphs = (props: Props) => {
   const classes = useStyles();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;

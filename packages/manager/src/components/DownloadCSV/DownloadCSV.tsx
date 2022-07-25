@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
-import { compose } from 'recompose';
 
 /**
  * these aren't all the props provided by react-csv
@@ -13,9 +12,7 @@ interface Props {
   className?: string;
 }
 
-type CombinedProps = Props;
-
-const DownloadCSV: React.FC<CombinedProps> = (props) => {
+const DownloadCSV: React.FC<Props> = (props) => {
   const { className, headers, filename, data, children } = props;
   return (
     <CSVLink
@@ -77,4 +74,4 @@ export const cleanCSVData = (data: any): any => {
   return data;
 };
 
-export default compose<CombinedProps, Props>(React.memo)(DownloadCSV);
+export default DownloadCSV;

@@ -33,9 +33,7 @@ interface Props {
   listeningPortsData: LongviewPortsResponse;
 }
 
-export type CombinedProps = Props;
-
-export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
+export const LongviewDetailOverview = (props: Props) => {
   const {
     client,
     clientID,

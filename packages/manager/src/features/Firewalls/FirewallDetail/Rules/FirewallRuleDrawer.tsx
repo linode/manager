@@ -55,7 +55,7 @@ export const IP_ERROR_MESSAGE = 'Must be a valid IPv4 or IPv6 range.';
 // =============================================================================
 // <FirewallRuleDrawer />
 // =============================================================================
-interface Props {
+export interface Props {
   category: Category;
   mode: Mode;
   isOpen: boolean;
@@ -74,9 +74,7 @@ interface Form {
   description: string;
 }
 
-export type CombinedProps = Props;
-
-const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
+const FirewallRuleDrawer = (props: Props) => {
   const { isOpen, onClose, category, mode, ruleToModify } = props;
 
   // Custom IPs are tracked separately from the form. The <MultipleIPs />

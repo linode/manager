@@ -10,9 +10,7 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props;
-
-const CreateIPv6Drawer: React.FC<CombinedProps> = (props) => {
+const CreateIPv6Drawer = (props: Props) => {
   return (
     <Drawer
       open={props.open}

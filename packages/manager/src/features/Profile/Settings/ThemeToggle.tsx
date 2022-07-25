@@ -11,9 +11,7 @@ const onClickHandler = () => {
   document.body.classList.add('no-transition');
 };
 
-type CombinedProps = Props;
-
-export const ThemeToggle: React.FC<CombinedProps> = (props) => {
+export const ThemeToggle = (props: Props) => {
   const { toggleTheme } = props;
   const theme = useTheme<Theme>();
   const { name: themeName } = theme;

@@ -19,9 +19,7 @@ export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onSubmit: (payload: CreateFirewallPayload) => Promise<Firewall>;
 }
 
-export type FormikProps = FormikBag<CombinedProps, CreateFirewallPayload>;
-
-export type CombinedProps = Props;
+export type FormikProps = FormikBag<Props, CreateFirewallPayload>;
 
 const initialValues: CreateFirewallPayload = {
   label: '',
@@ -34,7 +32,7 @@ const initialValues: CreateFirewallPayload = {
   },
 };
 
-const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
+const AddFirewallDrawer = (props: Props) => {
   const { onClose, onSubmit, ...restOfDrawerProps } = props;
 
   /**

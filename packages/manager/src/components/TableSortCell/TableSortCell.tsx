@@ -51,9 +51,7 @@ export interface Props extends TableCellProps {
   noWrap?: boolean;
 }
 
-type CombinedProps = Props;
-
-export const TableSortCell: React.FC<CombinedProps> = (props) => {
+export const TableSortCell = (props: Props) => {
   const classes = useStyles();
 
   const {

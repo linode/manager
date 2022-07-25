@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { CSSProperties, makeStyles } from 'src/components/core/styles';
 
 const useStyles = makeStyles({
@@ -18,9 +17,7 @@ interface Props {
   prefixComponent: JSX.Element | null;
 }
 
-type CombinedProps = Props;
-
-const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
+const FinalCrumbPrefix = (props: Props) => {
   const classes = useStyles();
 
   const { prefixComponent, prefixStyle } = props;
@@ -36,4 +33,4 @@ const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FinalCrumbPrefix);
+export default React.memo(FinalCrumbPrefix);

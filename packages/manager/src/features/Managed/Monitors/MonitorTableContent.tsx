@@ -17,9 +17,7 @@ interface Props {
   error?: APIError[];
 }
 
-export type CombinedProps = Props;
-
-export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
+export const MonitorTableContent = (props: Props) => {
   const {
     error,
     issues,

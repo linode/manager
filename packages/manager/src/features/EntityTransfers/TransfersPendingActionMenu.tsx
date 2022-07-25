@@ -15,9 +15,7 @@ interface Props {
   onCancelClick: () => void;
 }
 
-type CombinedProps = Props;
-
-const TransfersPendingActionMenu: React.FC<CombinedProps> = (props) => {
+const TransfersPendingActionMenu = (props: Props) => {
   const classes = useStyles();
 
   const { onCancelClick } = props;

@@ -54,9 +54,7 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props;
-
-const GoTo: React.FC<CombinedProps> = (props) => {
+const GoTo = (props: Props) => {
   const classes = useStyles();
   const routerHistory = useHistory();
   const { _isManagedAccount, _hasAccountAccess } = useAccountManagement();

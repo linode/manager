@@ -10,9 +10,7 @@ interface Props {
   onDelete: (username: string) => void;
 }
 
-type CombinedProps = Props;
-
-const UsersActionMenu: React.FC<CombinedProps> = (props) => {
+const UsersActionMenu = (props: Props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));

@@ -27,9 +27,7 @@ interface Props {
   errors?: ConfigOrNodeErrorResponse[];
 }
 
-type CombinedProps = Props;
-
-const NodeBalancerCreationError: React.FC<CombinedProps> = (props) => {
+const NodeBalancerCreationError = (props: Props) => {
   const { errors } = props;
 
   return !errors || errors.length === 0 ? null : (

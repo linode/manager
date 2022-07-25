@@ -20,9 +20,7 @@ interface Props {
   isReply?: boolean;
 }
 
-type CombinedProps = Props;
-
-const MarkdownReference: React.FC<CombinedProps> = (props) => {
+const MarkdownReference = (props: Props) => {
   const classes = useStyles();
 
   return (

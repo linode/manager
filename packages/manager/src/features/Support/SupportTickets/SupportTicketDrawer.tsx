@@ -6,7 +6,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as Bluebird from 'bluebird';
 import { update } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -86,8 +85,6 @@ export interface Props {
   hideProductSelection?: boolean;
 }
 
-export type CombinedProps = Props;
-
 const entityMap: Record<string, EntityType> = {
   Linodes: 'linode_id',
   Volumes: 'volume_id',
@@ -136,7 +133,7 @@ export const getInitialValue = (
   return fromProps ?? fromStorage ?? '';
 };
 
-export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
+export const SupportTicketDrawer: React.FC<Props> = (props) => {
   const { open, prefilledDescription, prefilledTitle } = props;
 
   const valuesFromStorage = storage.supportText.get();
@@ -605,6 +602,4 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default recompose<CombinedProps, Props>(SectionErrorBoundary)(
-  SupportTicketDrawer
-);
+export default SectionErrorBoundary<Props>(SupportTicketDrawer);

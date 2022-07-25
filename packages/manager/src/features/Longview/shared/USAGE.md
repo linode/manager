@@ -34,9 +34,7 @@ interface Props {
   clientAPIKey: string;
 }
 
-type CombinedProps = Props;
-
-const Installation: React.FC<CombinedProps> = props => {
+const Installation = (props: Props) => {
   return (
     <TimeRangeSelect
       handleStatsChange={(start, end) => {

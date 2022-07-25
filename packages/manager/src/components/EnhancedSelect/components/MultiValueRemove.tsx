@@ -3,11 +3,7 @@ import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
 import { MultiValueProps } from 'react-select';
 
-interface Props extends MultiValueProps<any> {}
-
-type CombinedProps = Props;
-
-const MultiValueRemove: React.FC<CombinedProps> = (props) => {
+const MultiValueRemove = (props: MultiValueProps<any>) => {
   return (
     <reactSelectComponents.MultiValueRemove {...props}>
       <Close data-qa-select-remove />

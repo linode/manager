@@ -45,10 +45,8 @@ interface State {
   extendedUpgradeInfo: ExtendedUpgradeInfo;
 }
 
-type CombinedProps = Props;
-
-class MutateDrawer extends React.Component<CombinedProps, State> {
-  constructor(props: CombinedProps) {
+class MutateDrawer extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -199,7 +197,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 
 export default MutateDrawer;
 
-const HighmemG6ToG7: React.FC<{}> = () => {
+const HighmemG6ToG7 = () => {
   return (
     <ul className="nonMUI-list">
       <ListItem>
