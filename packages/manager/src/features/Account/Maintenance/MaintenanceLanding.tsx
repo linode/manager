@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const MaintenanceLanding: React.FC = () => {
+const MaintenanceLanding = () => {
   const classes = useStyles();
   const [accordians, setAccordians] = React.useState([
     { expanded: true },

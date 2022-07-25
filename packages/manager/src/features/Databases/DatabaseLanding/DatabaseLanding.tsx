@@ -21,7 +21,7 @@ import { DatabaseInstance } from '@linode/api-v4/lib/databases';
 
 const preferenceKey = 'databases';
 
-const DatabaseLanding: React.FC = () => {
+const DatabaseLanding = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 

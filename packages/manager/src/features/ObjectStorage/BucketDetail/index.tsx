@@ -96,7 +96,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
         <React.Suspense fallback={<SuspenseLoader />}>
           <TabPanels>
             <SafeTabPanel index={0}>
-              <ObjectList {...props} />
+              <ObjectList />
             </SafeTabPanel>
             <SafeTabPanel index={1}>
               <BucketAccess bucketName={bucketName} clusterId={clusterId} />

@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const DatabaseEmptyState: React.FC = () => {
+const DatabaseEmptyState = () => {
   const classes = useStyles();
   const history = useHistory();
   const flags = useFlags();

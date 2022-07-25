@@ -71,7 +71,7 @@ interface MatchParams {
   bucketName: string;
 }
 
-export const BucketDetail: React.FC = () => {
+export const BucketDetail = () => {
   const classes = useStyles();
   const match = useRouteMatch<MatchParams>(
     '/object-storage/buckets/:clusterId/:bucketName'

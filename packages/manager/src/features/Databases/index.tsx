@@ -10,7 +10,7 @@ const DatabaseLanding = React.lazy(() => import('./DatabaseLanding'));
 const DatabaseDetail = React.lazy(() => import('./DatabaseDetail'));
 const DatabaseCreate = React.lazy(() => import('./DatabaseCreate'));
 
-const Database: React.FC = () => {
+const Database = () => {
   // @TODO: Remove when Database goes to GA
   const { account } = useAccountManagement();
   const flags = useFlags();
