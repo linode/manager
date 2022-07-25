@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const UpgradeVolumesDialog: React.FC<Props> = (props) => {
+export const UpgradeVolumesDialog = (props: Props) => {
   const { open, onClose, linode, upgradeableVolumeIds } = props;
   const { enqueueSnackbar } = useSnackbar();
   const classes = useStyles();

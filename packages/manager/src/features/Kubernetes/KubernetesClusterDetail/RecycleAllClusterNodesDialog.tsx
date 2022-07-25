@@ -13,18 +13,16 @@ interface Props {
   onSubmit: () => void;
 }
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onSubmit: () => void
-) => {
-  return (
+const RecycleAllClusterNodesDialog = (props: Props) => {
+  const { error, loading, open, onClose, onSubmit } = props;
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
         onClick={onClose}
         data-qa-cancel
-        data-testid={'dialog-cancel'}
+        data-testid="dialog-cancel"
       >
         Cancel
       </Button>
@@ -33,23 +31,19 @@ const renderActions = (
         onClick={onSubmit}
         loading={loading}
         data-qa-confirm
-        data-testid={'dialog-confirm'}
+        data-testid="dialog-confirm"
       >
         Recycle All Nodes
       </Button>
     </ActionsPanel>
   );
-};
-
-const RecycleAllClusterNodesDialog: React.FC<Props> = (props) => {
-  const { error, loading, open, onClose, onSubmit } = props;
 
   return (
     <ConfirmationDialog
       open={open}
       title="Recycle all nodes in cluster?"
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onSubmit)}
+      actions={actions}
     >
       {error && <Notice error text={error} />}
       <Typography>

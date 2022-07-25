@@ -9,11 +9,11 @@ import { Link } from 'react-router-dom';
 import { makeStyles } from 'src/components/core/styles';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   regarding: {
     lineHeight: 1.1,
   },
-}));
+});
 
 interface Props {
   ticket: SupportTicket;
@@ -37,7 +37,7 @@ const renderEntityLink = (ticket: SupportTicket) => {
   null;
 };
 
-const TicketRow: React.FC<Props> = ({ ticket }) => {
+const TicketRow = ({ ticket }: Props) => {
   const classes = useStyles();
 
   return (

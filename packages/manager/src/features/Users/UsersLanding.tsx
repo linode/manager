@@ -23,6 +23,7 @@ import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import usePagination from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
+import { useProfile } from 'src/queries/profile';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
@@ -78,11 +79,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  isRestrictedUser: boolean;
-}
-
-const UsersLanding: React.FC<Props> = (props) => {
+const UsersLanding = () => {
   const pagination = usePagination(1, 'account-users');
   const { data: users, isLoading, error, refetch } = useAccountUsers(
     {
@@ -91,6 +88,11 @@ const UsersLanding: React.FC<Props> = (props) => {
     },
     true
   );
+
+  const { data: profile } = useProfile();
+
+  const isRestrictedUser = Boolean(profile?.restricted);
+
   const { enqueueSnackbar } = useSnackbar();
   const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -233,9 +235,9 @@ const UsersLanding: React.FC<Props> = (props) => {
       >
         <Grid item className={classes.addNewWrapper}>
           <AddNewLink
-            disabled={props.isRestrictedUser}
+            disabled={isRestrictedUser}
             disabledReason={
-              props.isRestrictedUser
+              isRestrictedUser
                 ? 'You cannot create other users as a restricted user.'
                 : undefined
             }

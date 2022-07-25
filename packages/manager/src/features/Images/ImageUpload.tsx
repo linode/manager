@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 700,
   },
 }));
+
 export interface Props {
   label: string;
   description: string;
@@ -63,7 +64,7 @@ export interface Props {
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ImageUpload: React.FC<Props> = (props) => {
+export const ImageUpload = (props: Props) => {
   const { label, description, changeLabel, changeDescription } = props;
 
   const { data: profile } = useProfile();

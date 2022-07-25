@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import Drawer from 'src/components/Drawer';
 import bucketDrawerContainer, {
   DispatchProps,
@@ -8,14 +7,10 @@ import bucketDrawerContainer, {
 } from 'src/containers/bucketDrawer.container';
 import CreateBucketForm from './CreateBucketForm';
 
-interface Props {
-  isRestrictedUser: boolean;
-}
+export type CombinedProps = StateProps & DispatchProps;
 
-export type CombinedProps = Props & StateProps & DispatchProps;
-
-export const BucketDrawer: React.FC<CombinedProps> = (props) => {
-  const { isOpen, isRestrictedUser, closeBucketDrawer } = props;
+export const BucketDrawer = (props: CombinedProps) => {
+  const { isOpen, closeBucketDrawer } = props;
 
   const { replace } = useHistory();
 
@@ -26,14 +21,9 @@ export const BucketDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer onClose={closeDrawer} open={isOpen} title="Create Bucket">
-      <CreateBucketForm
-        isRestrictedUser={isRestrictedUser}
-        onClose={closeDrawer}
-        onSuccess={closeDrawer}
-      />
+      <CreateBucketForm onClose={closeDrawer} onSuccess={closeDrawer} />
     </Drawer>
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(bucketDrawerContainer);
-export default enhanced(BucketDrawer);
+export default bucketDrawerContainer(BucketDrawer);

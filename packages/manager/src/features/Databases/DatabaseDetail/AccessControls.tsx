@@ -81,7 +81,7 @@ interface Props {
   description?: JSX.Element;
 }
 
-export const AccessControls: React.FC<Props> = (props) => {
+export const AccessControls = (props: Props) => {
   const {
     database: { id, engine, allow_list: allowList },
     description,
@@ -176,7 +176,6 @@ export const AccessControls: React.FC<Props> = (props) => {
       <Button buttonType="secondary" onClick={handleDialogClose}>
         Cancel
       </Button>
-
       <Button
         buttonType="primary"
         onClick={handleRemoveIPAddress}

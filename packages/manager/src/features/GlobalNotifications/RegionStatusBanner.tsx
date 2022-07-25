@@ -4,6 +4,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames } from 'src/constants';
+
 export interface Props {
   regions: Region[];
 }
@@ -59,7 +60,7 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
   );
 };
 
-export const RegionStatusBanner: React.FC<Props> = (props) => {
+export const RegionStatusBanner = (props: Props) => {
   const { regions } = props;
 
   const statusWarnings = regions

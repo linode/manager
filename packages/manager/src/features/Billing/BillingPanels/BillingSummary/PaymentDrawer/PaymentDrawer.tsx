@@ -80,7 +80,7 @@ export const getMinimumPayment = (balance: number | false) => {
   return Math.min(5, balance).toFixed(2);
 };
 
-export const PaymentDrawer: React.FC<Props> = (props) => {
+export const PaymentDrawer = (props: Props) => {
   const { paymentMethods, selectedPaymentMethod, open, onClose } = props;
 
   const {
@@ -377,7 +377,7 @@ interface WarningProps {
   warning: APIWarning;
 }
 
-const Warning: React.FC<WarningProps> = (props) => {
+const Warning = (props: WarningProps) => {
   const { warning } = props;
   /** The most common API warning includes "please open a Support ticket",
    * which we'd like to be a link.

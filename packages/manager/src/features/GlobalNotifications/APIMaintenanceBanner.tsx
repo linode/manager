@@ -12,7 +12,7 @@ interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
 }
 
-export const APIMaintenanceBanner: React.FC<Props> = (props) => {
+export const APIMaintenanceBanner = (props: Props) => {
   const { suppliedMaintenances } = props;
 
   const {

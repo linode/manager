@@ -38,7 +38,7 @@ interface Props {
   analyticsLabel?: string;
 }
 
-export const DocsLink: React.FC<Props> = (props) => {
+export const DocsLink = (props: Props) => {
   const classes = useStyles();
 
   const { href, label, analyticsLabel } = props;

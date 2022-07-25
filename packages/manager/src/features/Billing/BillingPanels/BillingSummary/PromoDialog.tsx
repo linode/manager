@@ -4,7 +4,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { addPromotion } from '@linode/api-v4/lib';
@@ -25,7 +24,7 @@ interface Props {
   onClose: () => void;
 }
 
-const PromoDialog: React.FC<Props> = (props) => {
+const PromoDialog = (props: Props) => {
   const { open, onClose } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -83,8 +82,8 @@ const PromoDialog: React.FC<Props> = (props) => {
       open={open}
       onClose={onClose}
       actions={actions}
+      error={error}
     >
-      {error && <Notice error text={error} />}
       <Typography>
         Enter the promo code in the field below. You will see promo details in
         the Promotions panel on the Billing Info tab.

@@ -56,7 +56,7 @@ interface Props {
   originalEmail?: string;
 }
 
-const UserProfile: React.FC<Props> = (props) => {
+const UserProfile = (props: Props) => {
   const classes = useStyles();
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();

@@ -5,20 +5,20 @@ import { makeStyles } from 'src/components/core/styles';
 import usePagination from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   avatar: {
     height: 28,
     width: 28,
     borderRadius: '50%',
   },
-}));
+});
 
 interface Props {
   username: string | null;
   className?: string;
 }
 
-export const GravatarIcon: React.FC<Props> = (props) => {
+export const GravatarIcon = (props: Props) => {
   const { username, className } = props;
   const pagination = usePagination(1, 'account-users');
   const {

@@ -1,13 +1,7 @@
 import Warning from '@material-ui/icons/CheckCircle';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { useHistory } from 'react-router-dom';
+import { makeStyles, Theme, useTheme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
@@ -26,10 +20,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = WithTheme & RouteComponentProps;
-
-const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
+const AccountActivationLanding = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const theme = useTheme<Theme>();
 
   const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
     false
@@ -39,7 +33,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
     ticketID: number,
     attachmentErrors?: AttachmentError[]
   ) => {
-    props.history.push({
+    history.push({
       pathname: `/support/tickets/${ticketID}`,
       state: { attachmentErrors },
     });
@@ -51,7 +45,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
     <ErrorState
       CustomIcon={Warning}
       CustomIconStyles={{
-        color: props.theme.color.blue,
+        color: theme.color.blue,
       }}
       errorText={
         <React.Fragment>
@@ -84,7 +78,4 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  React.memo,
-  withTheme
-)(AccountActivationLanding);
+export default React.memo(AccountActivationLanding);

@@ -24,7 +24,7 @@ interface Props {
   manuallyCreated: boolean;
 }
 
-const FolderTableRow: React.FC<Props> = (props) => {
+const FolderTableRow = (props: Props) => {
   const classes = useStyles();
 
   const { folderName, displayName, manuallyCreated } = props;

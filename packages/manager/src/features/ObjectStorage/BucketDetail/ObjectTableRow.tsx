@@ -39,7 +39,7 @@ interface Props {
   manuallyCreated: boolean;
 }
 
-const ObjectTableRow: React.FC<Props> = (props) => {
+const ObjectTableRow = (props: Props) => {
   const {
     displayName,
     fullName,

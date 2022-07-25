@@ -3,20 +3,20 @@ import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { makeStyles } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-}));
+});
 
 interface Props {
   backup: DatabaseBackup;
   onRestore: (id: number) => void;
 }
 
-const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
+const DatabaseBackupActionMenu = (props: Props) => {
   const classes = useStyles();
   const { backup, onRestore } = props;
 

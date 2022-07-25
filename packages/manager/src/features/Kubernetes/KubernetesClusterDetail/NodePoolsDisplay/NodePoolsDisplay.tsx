@@ -83,7 +83,7 @@ export interface Props {
   getNodePools: () => Promise<any>;
 }
 
-export const NodePoolsDisplay: React.FC<Props> = (props) => {
+export const NodePoolsDisplay = (props: Props) => {
   const {
     clusterID,
     clusterLabel,

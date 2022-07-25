@@ -29,7 +29,7 @@ export interface Props {
   toggleHasAgreed: () => void;
 }
 
-export const KubeCheckoutBar: React.FC<Props> = (props) => {
+export const KubeCheckoutBar = (props: Props) => {
   const {
     pools,
     submitting,

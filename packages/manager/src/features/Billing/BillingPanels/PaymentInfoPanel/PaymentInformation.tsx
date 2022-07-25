@@ -83,7 +83,7 @@ interface Props {
   paymentMethods: PaymentMethod[] | undefined;
 }
 
-const PaymentInformation: React.FC<Props> = (props) => {
+const PaymentInformation = (props: Props) => {
   const { loading, error, paymentMethods } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 

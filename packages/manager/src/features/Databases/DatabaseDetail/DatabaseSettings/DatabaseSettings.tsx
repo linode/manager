@@ -14,7 +14,7 @@ interface Props {
   database: Database;
 }
 
-export const DatabaseSettings: React.FC<Props> = (props) => {
+export const DatabaseSettings = (props: Props) => {
   const { database } = props;
   const { data: profile } = useProfile();
 

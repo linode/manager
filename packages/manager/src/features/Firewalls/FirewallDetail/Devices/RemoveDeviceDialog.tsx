@@ -15,7 +15,7 @@ export interface Props {
   onRemove: () => void;
 }
 
-export const RemoveDeviceDialog: React.FC<Props> = (props) => {
+export const RemoveDeviceDialog = (props: Props) => {
   const {
     deviceLabel,
     error,
@@ -25,27 +25,8 @@ export const RemoveDeviceDialog: React.FC<Props> = (props) => {
     onRemove,
     open,
   } = props;
-  return (
-    <ConfirmationDialog
-      title={`Remove ${deviceLabel} from ${firewallLabel}?`}
-      open={open}
-      onClose={onClose}
-      actions={renderActions(loading, onClose, onRemove)}
-    >
-      {error && <Notice error text={error} />}
-      <Typography>
-        Are you sure you want to remove {deviceLabel} from {firewallLabel}?
-      </Typography>
-    </ConfirmationDialog>
-  );
-};
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -57,7 +38,7 @@ const renderActions = (
       </Button>
       <Button
         buttonType="primary"
-        onClick={onDelete}
+        onClick={onRemove}
         loading={loading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
@@ -65,6 +46,20 @@ const renderActions = (
         Remove
       </Button>
     </ActionsPanel>
+  );
+
+  return (
+    <ConfirmationDialog
+      title={`Remove ${deviceLabel} from ${firewallLabel}?`}
+      open={open}
+      onClose={onClose}
+      actions={actions}
+    >
+      {error && <Notice error text={error} />}
+      <Typography>
+        Are you sure you want to remove {deviceLabel} from {firewallLabel}?
+      </Typography>
+    </ConfirmationDialog>
   );
 };
 

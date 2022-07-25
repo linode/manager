@@ -13,7 +13,7 @@ interface Props {
   database: Database;
 }
 
-export const DatabaseSummary: React.FC<Props> = (props) => {
+export const DatabaseSummary = (props: Props) => {
   const { database } = props;
 
   const description = (

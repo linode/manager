@@ -199,7 +199,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
             </SafeTabPanel>
           </TabPanels>
         </React.Suspense>
-        <BucketDrawer isRestrictedUser={_isRestrictedUser} />
+        <BucketDrawer />
       </Tabs>
     </React.Fragment>
   );

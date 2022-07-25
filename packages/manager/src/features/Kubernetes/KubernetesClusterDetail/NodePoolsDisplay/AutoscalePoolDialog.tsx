@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const AutoscalePoolDialog: React.FC<Props> = (props) => {
+const AutoscalePoolDialog = (props: Props) => {
   const {
     poolID,
     error,
@@ -81,6 +81,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
     onClose,
     onSubmit,
   } = props;
+
   const [warningMessage, setWarningMessage] = React.useState('');
   const autoscaler = getAutoscaler();
   const classes = useStyles();

@@ -14,14 +14,14 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { DiskSelection } from './utilities';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   labelCol: {
     width: '65%',
   },
   sizeCol: {
     width: '35%',
   },
-}));
+});
 
 export interface Props {
   disks: Disk[];
@@ -30,7 +30,7 @@ export interface Props {
   handleSelect: (id: number) => void;
 }
 
-export const Disks: React.FC<Props> = (props) => {
+export const Disks = (props: Props) => {
   const { disks, diskSelection, selectedConfigIds, handleSelect } = props;
 
   const classes = useStyles();

@@ -17,7 +17,7 @@ interface Props {
   agreement?: JSX.Element;
 }
 
-const CheckoutBar: React.FC<Props> = (props) => {
+const CheckoutBar = (props: Props) => {
   const classes = useStyles();
 
   const {

@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
+export const DatabaseSettingsMenuItem = (props: Props) => {
   const {
     buttonText,
     descriptiveText,

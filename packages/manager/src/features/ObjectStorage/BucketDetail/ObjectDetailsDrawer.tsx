@@ -15,7 +15,7 @@ import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import AccessSelect from './AccessSelect';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   copy: {
     marginLeft: '1em',
     padding: 0,
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   link: {
     display: 'flex',
   },
-}));
+});
 
 export interface Props {
   open: boolean;
@@ -37,7 +37,7 @@ export interface Props {
   clusterId: string;
 }
 
-const ObjectDetailsDrawer: React.FC<Props> = (props) => {
+const ObjectDetailsDrawer = (props: Props) => {
   const classes = useStyles();
 
   const {

@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
 import Notice from '../Notice';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   itemCount: {
     display: 'flex',
     alignItems: 'center',
@@ -29,7 +29,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     right: 50,
   },
-}));
+});
 
 export interface Props extends AccordionProps {
   heading: string | React.ReactNode;
@@ -44,7 +44,7 @@ export interface Props extends AccordionProps {
   headingNumberCount?: number;
 }
 
-export const Accordion: React.FC<Props> = (props) => {
+export const Accordion = (props: Props) => {
   const classes = useStyles();
 
   const {

@@ -65,7 +65,7 @@ interface Props {
 
 const preferenceKey = 'domains';
 
-export const DomainsLanding: React.FC<Props> = (props) => {
+export const DomainsLanding = (props: Props) => {
   const classes = useStyles();
   const history = useHistory();
   const location = useLocation<{ recordError?: string }>();

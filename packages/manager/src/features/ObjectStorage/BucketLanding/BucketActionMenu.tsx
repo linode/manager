@@ -19,7 +19,7 @@ export interface Props {
   cluster: string;
 }
 
-export const BucketActionMenu: React.FC<Props> = (props) => {
+export const BucketActionMenu = (props: Props) => {
   const classes = useStyles();
 
   const actions: Action[] = [

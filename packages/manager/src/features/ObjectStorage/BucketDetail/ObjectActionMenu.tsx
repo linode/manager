@@ -12,7 +12,7 @@ export interface Props extends Handlers {
   objectName: string;
 }
 
-export const ObjectActionMenu: React.FC<Props> = (props) => {
+export const ObjectActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 

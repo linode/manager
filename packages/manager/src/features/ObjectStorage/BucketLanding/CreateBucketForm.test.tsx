@@ -6,11 +6,7 @@ import { screen } from '@testing-library/react';
 
 describe('CreateBucketForm', () => {
   renderWithTheme(
-    <CreateBucketForm
-      onClose={jest.fn()}
-      onSuccess={jest.fn()}
-      isRestrictedUser={false}
-    />
+    <CreateBucketForm onClose={jest.fn()} onSuccess={jest.fn()} />
   );
 
   it('should render without crashing', () => {

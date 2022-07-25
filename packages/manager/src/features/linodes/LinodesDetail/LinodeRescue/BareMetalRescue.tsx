@@ -15,7 +15,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const BareMetalRescue: React.FC<Props> = (props) => {
+export const BareMetalRescue = (props: Props) => {
   const { isOpen, onClose, linodeID, linodeLabel } = props;
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
@@ -48,7 +48,7 @@ export const BareMetalRescue: React.FC<Props> = (props) => {
       });
   };
 
-  const actions = () => (
+  const actions = (
     <ActionsPanel>
       <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
         Cancel

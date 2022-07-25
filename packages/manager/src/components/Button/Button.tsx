@@ -64,7 +64,7 @@ const getColor = cond([
   [() => true, always(undefined)],
 ]);
 
-export const Button: React.FC<Props> = (props) => {
+export const Button = (props: Props) => {
   const classes = useStyles();
 
   const {

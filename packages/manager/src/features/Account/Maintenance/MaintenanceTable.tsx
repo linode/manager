@@ -77,7 +77,7 @@ interface Props {
   addTopMargin: boolean;
 }
 
-const MaintenanceTable: React.FC<Props> = (props) => {
+const MaintenanceTable = (props: Props) => {
   const { type, expanded, toggleExpanded, addTopMargin } = props;
   const csvRef = React.useRef<any>();
   const classes = useStyles();

@@ -1,6 +1,5 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CPUIcon from 'src/assets/icons/longview/cpu-icon.svg';
 import DiskIcon from 'src/assets/icons/longview/disk.svg';
 import PackageIcon from 'src/assets/icons/longview/package-icon.svg';
@@ -69,7 +68,7 @@ interface Props {
   openPackageDrawer: () => void;
 }
 
-const IconSection: React.FC<Props> = (props) => {
+const IconSection = (props: Props) => {
   const classes = useStyles();
 
   const hostname = pathOr(
@@ -295,4 +294,4 @@ const IconSection: React.FC<Props> = (props) => {
   );
 };
 
-export default compose<Props, Props>(React.memo)(IconSection);
+export default React.memo(IconSection);

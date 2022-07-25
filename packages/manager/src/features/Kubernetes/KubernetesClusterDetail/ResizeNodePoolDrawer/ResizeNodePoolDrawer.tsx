@@ -37,7 +37,7 @@ export interface Props {
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
-export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
+export const ResizeNodePoolDrawer = (props: Props) => {
   const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
   const { types } = useTypes();
   const classes = useStyles();

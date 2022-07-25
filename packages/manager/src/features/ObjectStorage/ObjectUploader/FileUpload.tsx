@@ -108,7 +108,7 @@ interface Props {
   type?: string;
 }
 
-const FileUpload: React.FC<Props> = (props) => {
+const FileUpload = (props: Props) => {
   const classes = useStyles();
 
   const resumeUpload = () =>

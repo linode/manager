@@ -37,7 +37,7 @@ interface Props {
   productInformationIndicator?: boolean;
 }
 
-export const DismissibleBanner: React.FC<Props> = (props) => {
+export const DismissibleBanner = (props: Props) => {
   const { className, preferenceKey, productInformationIndicator } = props;
   const classes = useStyles();
 

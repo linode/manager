@@ -10,6 +10,7 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';
+
 interface Props {
   open: boolean;
   error?: APIError[];
@@ -20,7 +21,7 @@ interface Props {
   addDevice: (selectedLinodes: number[]) => void;
 }
 
-export const AddDeviceDrawer: React.FC<Props> = (props) => {
+export const AddDeviceDrawer = (props: Props) => {
   const {
     open,
     error,

@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Typography from 'src/components/core/Typography';
 import SupportLink from 'src/components/SupportLink';
 
@@ -8,7 +7,7 @@ interface Props {
   description?: string;
 }
 
-export const VerificationError: React.FC<Props> = (props) => {
+export const VerificationError = (props: Props) => {
   const { title, description } = props;
   return (
     <Typography>

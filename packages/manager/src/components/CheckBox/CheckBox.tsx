@@ -37,7 +37,7 @@ interface Props extends CheckboxProps {
   toolTipText?: string;
 }
 
-const LinodeCheckBox: React.FC<Props> = (props) => {
+const LinodeCheckBox = (props: Props) => {
   const { toolTipText, text, ...rest } = props;
   const classes = useStyles();
 

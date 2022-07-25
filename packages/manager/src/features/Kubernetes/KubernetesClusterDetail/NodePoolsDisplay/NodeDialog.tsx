@@ -14,12 +14,10 @@ interface Props {
   label?: string;
 }
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
+const NodeDialog = (props: Props) => {
+  const { error, loading, open, onClose, onDelete, label } = props;
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -40,17 +38,13 @@ const renderActions = (
       </Button>
     </ActionsPanel>
   );
-};
-
-const NodeDialog: React.FC<Props> = (props) => {
-  const { error, loading, open, onClose, onDelete, label } = props;
 
   return (
     <ConfirmationDialog
       open={open}
       title={`Recycle ${label ? label : 'this Node'}?`}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onDelete)}
+      actions={actions}
     >
       {error && <Notice error text={error} />}
       <Typography>

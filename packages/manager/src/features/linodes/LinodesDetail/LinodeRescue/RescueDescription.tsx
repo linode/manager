@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   lishLink: theme.applyLinkStyles,
 }));
 
-const RescueDescription: React.FC<Props> = (props) => {
+const RescueDescription = (props: Props) => {
   const { linodeId, isBareMetal } = props;
   const classes = useStyles();
 

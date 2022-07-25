@@ -31,35 +31,7 @@ interface Props {
   clusterID: number;
 }
 
-const renderActions = (
-  disabled: boolean,
-  onClose: () => void,
-  onUpgrade: () => void
-) => {
-  return (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onUpgrade}
-        disabled={disabled}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Upgrade to HA
-      </Button>
-    </ActionsPanel>
-  );
-};
-
-const UpgradeClusterDialog: React.FC<Props> = (props) => {
+const UpgradeClusterDialog = (props: Props) => {
   const { open, onClose, clusterID } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState(false);
@@ -69,6 +41,8 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const classes = useStyles();
+
+  const disabled = !checked || submitting;
 
   const onUpgrade = () => {
     setSubmitting(true);
@@ -87,12 +61,34 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       });
   };
 
+  const actions = (
+    <ActionsPanel>
+      <Button
+        buttonType="secondary"
+        onClick={onClose}
+        data-qa-cancel
+        data-testid="dialog-cancel"
+      >
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={onUpgrade}
+        disabled={disabled}
+        data-qa-confirm
+        data-testid="dialog-confirm"
+      >
+        Upgrade to HA
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
     <ConfirmationDialog
       open={open}
       title="Upgrade to High Availability"
       onClose={onClose}
-      actions={renderActions(!checked || submitting, onClose, onUpgrade)}
+      actions={actions}
       error={error}
     >
       <HACopy />

@@ -69,7 +69,7 @@ interface Props {
   disabled: boolean;
 }
 
-export const GooglePayButton: React.FC<Props> = (props) => {
+export const GooglePayButton = (props: Props) => {
   const classes = useStyles();
   const status = useScript('https://pay.google.com/gp/p/js/pay.js');
   const { data, isLoading, error: clientTokenError } = useClientToken();

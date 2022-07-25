@@ -1,10 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
-
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-
 import CPUGauge from '../../LongviewLanding/Gauges/CPU';
 import LoadGauge from '../../LongviewLanding/Gauges/Load';
 import NetworkGauge from '../../LongviewLanding/Gauges/Network';
@@ -31,7 +28,7 @@ interface Props {
   lastUpdatedError?: APIError[];
 }
 
-const GaugesSection: React.FC<Props> = (props) => {
+const GaugesSection = (props: Props) => {
   const classes = useStyles();
 
   return (
@@ -76,4 +73,4 @@ const GaugesSection: React.FC<Props> = (props) => {
   );
 };
 
-export default compose<Props, Props>(React.memo)(GaugesSection);
+export default React.memo(GaugesSection);

@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
+export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();

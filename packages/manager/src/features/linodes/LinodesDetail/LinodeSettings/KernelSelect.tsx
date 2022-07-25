@@ -18,7 +18,7 @@ export interface Props {
  * menu that makes more sense.
  */
 
-export const KernelSelect: React.FC<Props> = (props) => {
+export const KernelSelect = (props: Props) => {
   const { selectedKernel, kernels, onChange, readOnly, errorText } = props;
 
   const options = kernelsToGroupedItems(kernels);

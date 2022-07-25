@@ -8,7 +8,6 @@ import { pluralize } from 'src/utilities/pluralize';
 import { TransferState } from './transferReducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   header: {
     color: theme.color.green,
     fontSize: '1.25rem',
@@ -82,25 +81,24 @@ export const generatePayload = (
   return { entities };
 };
 
-export const TransferRow: React.FC<{
-  label: string;
-  onClick: () => void;
-}> = React.memo((props) => {
-  const { label, onClick } = props;
-  const classes = useStyles();
-  return (
-    <div className={classes.row}>
-      <Typography>
-        <strong>{label}</strong>
-      </Typography>
-      <button className={classes.button} onClick={onClick}>
-        <Close className={classes.close} />
-      </button>
-    </div>
-  );
-});
+export const TransferRow = React.memo(
+  (props: { label: string; onClick: () => void }) => {
+    const { label, onClick } = props;
+    const classes = useStyles();
+    return (
+      <div className={classes.row}>
+        <Typography>
+          <strong>{label}</strong>
+        </Typography>
+        <button className={classes.button} onClick={onClick}>
+          <Close className={classes.close} />
+        </button>
+      </div>
+    );
+  }
+);
 
-export const TransferCheckoutBar: React.FC<Props> = (props) => {
+export const TransferCheckoutBar = (props: Props) => {
   const { handleSubmit, isCreating, selectedEntities, removeEntities } = props;
   const classes = useStyles();
   const onSubmit = () => {
@@ -110,7 +108,7 @@ export const TransferCheckoutBar: React.FC<Props> = (props) => {
 
   const totalSelectedLinodes = Object.keys(selectedEntities.linodes).length;
   return (
-    <div className={classes.root}>
+    <div>
       <Typography className={classes.header}>
         Service Transfer Summary
       </Typography>

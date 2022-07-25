@@ -16,12 +16,12 @@ import { queryKey } from 'src/queries/entityTransfers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendEntityTransferCancelEvent } from 'src/utilities/ga';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   actions: {
     display: 'flex',
     justifyContent: 'flex-end',
   },
-}));
+});
 
 export interface Props {
   onClose: () => void;
@@ -30,7 +30,7 @@ export interface Props {
   entities?: TransferEntities;
 }
 
-export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
+export const ConfirmTransferCancelDialog = (props: Props) => {
   const { onClose, open, token, entities } = props;
 
   const classes = useStyles();

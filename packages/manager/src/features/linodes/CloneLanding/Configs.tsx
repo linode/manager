@@ -11,7 +11,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ConfigSelection } from './utilities';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     '& td': {
       borderBottom: 'none',
@@ -19,14 +19,15 @@ const useStyles = makeStyles(() => ({
       paddingBottom: 0,
     },
   },
-}));
+});
+
 export interface Props {
   configs: Config[];
   configSelection: ConfigSelection;
   handleSelect: (id: number) => void;
 }
 
-export const Configs: React.FC<Props> = (props) => {
+export const Configs = (props: Props) => {
   const { configs, handleSelect, configSelection } = props;
 
   const classes = useStyles();

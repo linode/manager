@@ -9,7 +9,7 @@ export interface Props {
   linodeId: number;
 }
 
-export const RescueContainer: React.FC<Props> = (props) => {
+export const RescueContainer = (props: Props) => {
   const { linodeId, open, onClose } = props;
   const linode = useExtendedLinode(linodeId);
   const isBareMetalInstance = linode?._type?.class === 'metal';

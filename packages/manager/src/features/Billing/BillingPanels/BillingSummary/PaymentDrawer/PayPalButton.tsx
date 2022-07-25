@@ -18,7 +18,7 @@ import { useClientToken } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { SetSuccess } from './types';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     position: 'relative',
   },
@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
     left: 0,
     top: 0,
   },
-}));
+});
 
 interface Props {
   usd: string;
@@ -49,7 +49,7 @@ interface TransactionInfo {
   orderID: string;
 }
 
-export const PayPalButton: React.FC<Props> = (props) => {
+export const PayPalButton = (props: Props) => {
   const classes = useStyles();
   const {
     data,

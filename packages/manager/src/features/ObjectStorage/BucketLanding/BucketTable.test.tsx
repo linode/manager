@@ -34,7 +34,4 @@ describe('BucketTable', () => {
   it('renders a "Size" column', () => {
     expect(innerComponent.find('[data-qa-size]')).toHaveLength(1);
   });
-  it('renders a RenderData component with the provided data', () => {
-    expect(innerComponent.find('RenderData').prop('data')).toEqual(buckets);
-  });
 });

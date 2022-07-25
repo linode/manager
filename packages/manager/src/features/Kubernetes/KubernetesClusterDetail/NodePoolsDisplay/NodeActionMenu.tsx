@@ -14,15 +14,15 @@ interface Props {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-}));
+});
 
-export const NodeActionMenu: React.FC<Props> = (props) => {
+export const NodeActionMenu = (props: Props) => {
   const { nodeId, instanceLabel, openRecycleNodeDialog } = props;
   const theme = useTheme<Theme>();
   const classes = useStyles();

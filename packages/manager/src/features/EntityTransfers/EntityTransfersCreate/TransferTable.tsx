@@ -70,7 +70,7 @@ export interface Props {
   children: JSX.Element;
 }
 
-export const TransferTable: React.FC<Props> = (props) => {
+export const TransferTable = (props: Props) => {
   const {
     count,
     hasSelectedAll,
@@ -81,6 +81,7 @@ export const TransferTable: React.FC<Props> = (props) => {
     requestPage,
     toggleSelectAll,
   } = props;
+
   const classes = useStyles();
 
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {

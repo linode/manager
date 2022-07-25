@@ -20,7 +20,7 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketAccess: React.FC<Props> = (props) => {
+export const BucketAccess = (props: Props) => {
   const classes = useStyles();
 
   const { bucketName, clusterId } = props;

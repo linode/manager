@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
-export const Footer: React.FC<Props> = (props) => {
+export const Footer = (props: Props) => {
   const classes = useStyles();
 
   const { desktopMenuIsOpen } = props;
@@ -79,20 +79,14 @@ export const Footer: React.FC<Props> = (props) => {
         container
         spacing={4}
         alignItems="center"
-        className={classNames({
-          [classes.container]: true,
+        className={classNames(classes.container, {
           [classes.desktopMenuIsOpen]: desktopMenuIsOpen,
         })}
       >
         <Grid item className={classes.version}>
           {renderVersion(classes.link)}
         </Grid>
-        <Grid
-          item
-          className={classNames({
-            [classes.linkContainer]: true,
-          })}
-        >
+        <Grid item className={classes.linkContainer}>
           <a
             className={classes.link}
             href="https://developers.linode.com"
@@ -105,10 +99,7 @@ export const Footer: React.FC<Props> = (props) => {
         </Grid>
         <Grid
           item
-          className={classNames({
-            [classes.linkContainer]: true,
-            [classes.feedbackLink]: true,
-          })}
+          className={classNames(classes.linkContainer, classes.feedbackLink)}
         >
           <ExternalLink
             className={classes.link}

@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
 }));
+
 interface Props {
   title: string;
   className?: string;
@@ -30,7 +31,7 @@ interface Props {
 // Accessibility Feature:
 // Focus on modal title on component mount
 
-const _DialogTitle: React.FC<Props> = (props) => {
+const _DialogTitle = (props: Props) => {
   const dialogTitle = React.useRef<HTMLDivElement>(null);
   const { className, onClose, title } = props;
   const classes = useStyles();

@@ -96,7 +96,7 @@ const _getMetrics = (data: NetworkStats) => {
   };
 };
 
-export const NetworkGraphs: React.FC<Props> = (props) => {
+export const NetworkGraphs = (props: Props) => {
   const { rangeSelection, stats, ...rest } = props;
 
   const theme = useTheme<Theme>();

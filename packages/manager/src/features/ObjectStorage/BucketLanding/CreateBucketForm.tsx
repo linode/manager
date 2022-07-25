@@ -42,13 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  isRestrictedUser: boolean;
   onClose: () => void;
   onSuccess: (bucketLabel: string) => void;
 }
 
-export const CreateBucketForm: React.FC<Props> = (props) => {
-  const { isRestrictedUser, onClose, onSuccess } = props;
+export const CreateBucketForm = (props: Props) => {
+  const { onClose, onSuccess } = props;
 
   const {
     data: accountSettings,
@@ -66,6 +65,8 @@ export const CreateBucketForm: React.FC<Props> = (props) => {
   const { data: clusters } = useObjectStorageClusters();
   const { data: bucketsResponse } = useObjectStorageBuckets(clusters);
   const { mutateAsync: createBucket } = useCreateBucketMutation();
+
+  const isRestrictedUser = profile?.restricted;
 
   return (
     <Formik
@@ -239,6 +240,7 @@ export const CreateBucketForm: React.FC<Props> = (props) => {
     </Formik>
   );
 };
+
 interface FormState {
   label: string;
   cluster: string;

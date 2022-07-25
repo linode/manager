@@ -34,7 +34,7 @@ interface Props {
   items?: InvoiceItem[];
 }
 
-const InvoiceTable: React.FC<Props> = (props) => {
+const InvoiceTable = (props: Props) => {
   const classes = useStyles();
 
   const { loading, errors, items } = props;
@@ -67,9 +67,7 @@ const renderDate = (v: null | string) =>
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
-const RenderData: React.FC<{
-  items: InvoiceItem[];
-}> = (props) => {
+const RenderData = (props: { items: InvoiceItem[] }) => {
   const { items } = props;
 
   const MIN_PAGE_SIZE = 25;
@@ -140,11 +138,11 @@ const RenderData: React.FC<{
   );
 };
 
-const MaybeRenderContent: React.FC<{
+const MaybeRenderContent = (props: {
   loading: boolean;
   errors?: APIError[];
   items?: any[];
-}> = (props) => {
+}) => {
   const { loading, errors, items } = props;
 
   if (loading) {

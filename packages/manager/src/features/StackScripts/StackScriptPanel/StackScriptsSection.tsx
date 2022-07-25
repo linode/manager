@@ -16,12 +16,12 @@ import { formatDate } from 'src/utilities/formatDate';
 import stripImageName from 'src/utilities/stripImageName';
 import StackScriptRow from './StackScriptRow';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   loadingWrapper: {
     border: 0,
     paddingTop: 100,
   },
-}));
+});
 
 export interface Props {
   data: StackScript[];
@@ -37,7 +37,7 @@ export interface Props {
   category: StackScriptCategory | string;
 }
 
-const StackScriptsSection: React.FC<Props> = (props) => {
+const StackScriptsSection = (props: Props) => {
   const classes = useStyles();
   const { data, isSorting, triggerDelete, triggerMakePublic, category } = props;
 

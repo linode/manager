@@ -78,7 +78,7 @@ interface Props {
   nodeBalancer: ExtendedNodeBalancer;
 }
 
-const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
+const TablesPanel = ({ nodeBalancer }: Props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const { data: profile } = useProfile();

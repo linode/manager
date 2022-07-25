@@ -23,7 +23,7 @@ interface Props {
 
 const KEY = 'domain-banner';
 
-export const DomainBanner: React.FC<Props> = (props) => {
+export const DomainBanner = (props: Props) => {
   const { hidden } = props;
   const classes = useStyles();
 

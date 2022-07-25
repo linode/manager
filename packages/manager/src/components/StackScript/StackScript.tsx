@@ -89,7 +89,7 @@ interface StackScriptImages {
   deprecated: JSX.Element[];
 }
 
-export const StackScript: React.FC<Props> = (props) => {
+export const StackScript = (props: Props) => {
   const {
     data: {
       username,

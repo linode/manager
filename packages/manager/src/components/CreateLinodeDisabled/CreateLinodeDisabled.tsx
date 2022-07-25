@@ -5,7 +5,7 @@ export interface Props {
   isDisabled?: boolean;
 }
 
-export const CreateLinodeDisabled: React.FC<Props> = (props) => {
+export const CreateLinodeDisabled = (props: Props) => {
   const { isDisabled } = props;
   if (!isDisabled) {
     return null;
@@ -15,7 +15,7 @@ export const CreateLinodeDisabled: React.FC<Props> = (props) => {
       text={
         "You don't have permissions to create a new Linode. Please contact an account administrator for details."
       }
-      error={true}
+      error
       important
     />
   );

@@ -20,7 +20,7 @@ const typeMap = {
   snapshot: 'Manual',
 };
 
-const BackupTableRow: React.FC<Props> = (props) => {
+const BackupTableRow = (props: Props) => {
   const { backup, disabled, handleRestore } = props;
 
   const onDeploy = () => {

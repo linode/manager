@@ -1,5 +1,4 @@
 import * as React from 'react';
-
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import EditableEntityLabel from 'src/components/EditableEntityLabel';
@@ -8,7 +7,6 @@ import { DispatchProps } from 'src/containers/longview.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 import RestrictedUserLabel from './RestrictedUserLabel';
-
 import Instructions from '../shared/InstallationInstructions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -33,7 +31,7 @@ interface Props extends ActionHandlers {
   userCanModifyClient: boolean;
 }
 
-export const LongviewClientInstructions: React.FC<Props> = (props) => {
+export const LongviewClientInstructions = (props: Props) => {
   const {
     clientID,
     clientLabel,

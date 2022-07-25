@@ -49,7 +49,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const TwoFactor: React.FC<Props> = (props) => {
+export const TwoFactor = (props: Props) => {
   const classes = useStyles();
 
   const needSecurityQuestionsCopy =

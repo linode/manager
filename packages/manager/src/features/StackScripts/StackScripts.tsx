@@ -15,7 +15,7 @@ const StackScriptCreate = React.lazy(() => import('./StackScriptCreate'));
 
 type Props = RouteComponentProps<{}>;
 
-export const StackScripts: React.FC<Props> = (props) => {
+export const StackScripts = (props: Props) => {
   const {
     match: { path },
     location: { search },

@@ -22,14 +22,14 @@ import {
 import { readableBytes } from 'src/utilities/unitConversions';
 import { formatCPU } from '../../shared/formatters';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   detailsLink: {
     fontSize: 16,
     fontWeight: 'bold',
     position: 'relative',
     top: 3,
   },
-}));
+});
 
 export interface Props {
   topProcessesData: LongviewTopProcesses;
@@ -39,7 +39,7 @@ export interface Props {
   clientID: number;
 }
 
-export const TopProcesses: React.FC<Props> = (props) => {
+export const TopProcesses = (props: Props) => {
   const classes = useStyles();
   const {
     topProcessesData,
@@ -156,28 +156,26 @@ interface TopProcessRowProps {
   mem: number;
 }
 
-export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
-  (props) => {
-    const { name, cpu, mem } = props;
+export const TopProcessRow = React.memo((props: TopProcessRowProps) => {
+  const { name, cpu, mem } = props;
 
-    // Memory is given from the API in KB.
-    const memInBytes = mem * 1024;
+  // Memory is given from the API in KB.
+  const memInBytes = mem * 1024;
 
-    return (
-      <TableRow ariaLabel={name} data-testid="longview-top-process-row">
-        <TableCell parentColumn="Process" data-qa-top-process-process>
-          {name}
-        </TableCell>
-        <TableCell parentColumn="CPU" data-qa-top-process-cpu>
-          {formatCPU(cpu)}
-        </TableCell>
-        <TableCell parentColumn="Memory" data-qa-top-process-memory>
-          {readableBytes(memInBytes, { round: 0 }).formatted}
-        </TableCell>
-      </TableRow>
-    );
-  }
-);
+  return (
+    <TableRow ariaLabel={name} data-testid="longview-top-process-row">
+      <TableCell parentColumn="Process" data-qa-top-process-process>
+        {name}
+      </TableCell>
+      <TableCell parentColumn="CPU" data-qa-top-process-cpu>
+        {formatCPU(cpu)}
+      </TableCell>
+      <TableCell parentColumn="Memory" data-qa-top-process-memory>
+        {readableBytes(memInBytes, { round: 0 }).formatted}
+      </TableCell>
+    </TableRow>
+  );
+});
 
 export default React.memo(TopProcesses);
 

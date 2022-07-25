@@ -42,7 +42,7 @@ interface Values {
   country: string;
 }
 
-const AddCreditCardForm: React.FC<Props> = (props) => {
+const AddCreditCardForm = (props: Props) => {
   const { onClose, disabled } = props;
   const [error, setError] = React.useState<string>();
   const classes = useStyles();

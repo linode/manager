@@ -56,7 +56,7 @@ interface Props {
   linodeCreated: string;
 }
 
-export const TransferHistory: React.FC<Props> = (props) => {
+export const TransferHistory = (props: Props) => {
   const { linodeID, linodeCreated } = props;
 
   const classes = useStyles();

@@ -3,7 +3,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   graphsUnavailable: {
     display: 'flex',
     alignItems: 'center',
@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center',
     width: '100%',
   },
-}));
+});
 
 interface Props {
   renderBody: () => JSX.Element;
@@ -27,7 +27,7 @@ interface Props {
   height: number;
 }
 
-export const StatsPanel: React.FC<Props> = (props) => {
+export const StatsPanel = (props: Props) => {
   const classes = useStyles();
 
   const { height, loading, renderBody, title } = props;

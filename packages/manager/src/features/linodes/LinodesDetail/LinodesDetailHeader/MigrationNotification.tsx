@@ -29,7 +29,7 @@ interface Props {
   migrationTime: string | null;
 }
 
-const MigrationNotification: React.FC<Props> = (props) => {
+const MigrationNotification = (props: Props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
