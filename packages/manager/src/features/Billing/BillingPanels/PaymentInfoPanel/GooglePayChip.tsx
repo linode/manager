@@ -1,15 +1,15 @@
+import classNames from 'classnames';
 import * as React from 'react';
-import { VariantType } from 'notistack';
 import GooglePayIcon from 'src/assets/icons/payment/googlePay.svg';
+import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles } from 'src/components/core/styles';
+import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import {
+  gPay,
+  initGooglePaymentInstance,
+} from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
 import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles } from 'src/components/core/styles';
-import {
-  initGooglePaymentInstance,
-  gPay,
-} from 'src/features/Billing/GooglePayProvider';
-import CircleProgress from 'src/components/CircleProgress';
-import classNames from 'classnames';
 
 const useStyles = makeStyles(() => ({
   button: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 interface Props {
-  makeToast: (message: string, variant: VariantType) => void;
+  setMessage: (message: PaymentMessage) => void;
   setProcessing: (processing: boolean) => void;
   onClose: () => void;
   renderError: (errorMsg: string) => JSX.Element;
@@ -42,7 +42,7 @@ interface Props {
 export const GooglePayChip: React.FC<Props> = (props) => {
   const {
     disabled: disabledDueToProcessing,
-    makeToast,
+    setMessage,
     setProcessing,
     onClose,
     renderError,
@@ -68,9 +68,9 @@ export const GooglePayChip: React.FC<Props> = (props) => {
     init();
   }, [status, data]);
 
-  const handleMessage = (message: string, variant: VariantType) => {
-    makeToast(message, variant);
-    if (variant === 'success') {
+  const handleMessage = (message: PaymentMessage) => {
+    setMessage(message);
+    if (message.variant === 'success') {
       onClose();
     }
   };

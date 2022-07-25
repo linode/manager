@@ -1,12 +1,12 @@
 import { APIWarning } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
-import { VariantType } from 'notistack';
 import * as React from 'react';
 import GooglePayIcon from 'src/assets/icons/payment/gPayButton.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
+import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
 import {
   gPay,
   initGooglePaymentInstance,
@@ -112,15 +112,11 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     init();
   }, [status, data]);
 
-  const handleMessage = (
-    message: string,
-    variant: VariantType,
-    warning?: APIWarning[]
-  ) => {
-    if (variant === 'error') {
-      setError(message);
-    } else if (variant === 'success') {
-      setSuccess(message, true, warning);
+  const handleMessage = (message: PaymentMessage, warning?: APIWarning[]) => {
+    if (message.variant === 'error') {
+      setError(message.text);
+    } else if (message.variant === 'success') {
+      setSuccess(message.text, true, warning);
     }
   };
 
@@ -133,7 +129,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   }
 
   if (initializationError) {
-    return renderError('Eror initializing Google Pay.');
+    return renderError('Error initializing Google Pay.');
   }
 
   if (isLoading) {

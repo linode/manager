@@ -1,15 +1,16 @@
-import braintree, { GooglePayment } from 'braintree-web';
 import {
   addPaymentMethod,
   makePayment,
 } from '@linode/api-v4/lib/account/payments';
 import { APIWarning } from '@linode/api-v4/lib/types';
+import braintree, { GooglePayment } from 'braintree-web';
 import { VariantType } from 'notistack';
-import { queryClient } from 'src/queries/base';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
-import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
+import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const merchantInfo: google.payments.api.MerchantInfo = {
@@ -105,11 +106,7 @@ export const gPay = async (
   transactionInfo: Omit<google.payments.api.TransactionInfo, 'totalPrice'> & {
     totalPrice?: string;
   },
-  setMessage: (
-    message: string,
-    variant: VariantType,
-    warnings?: APIWarning[]
-  ) => void,
+  setMessage: (message: PaymentMessage, warnings?: APIWarning[]) => void,
   setProcessing: (processing: boolean) => void
 ) => {
   const makeOneTimePayment = async (nonce: string) => {
@@ -118,11 +115,11 @@ export const gPay = async (
       usd: transactionInfo.totalPrice as string,
     });
     queryClient.invalidateQueries(`${accountBillingKey}-payments`);
-    setMessage(
-      `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
-      'success',
-      response.warnings
-    );
+    const message = {
+      text: `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
+      variant: 'success' as VariantType,
+    };
+    setMessage(message, response.warnings);
   };
 
   const addRecurringPayment = async (nonce: string) => {
@@ -132,7 +129,10 @@ export const gPay = async (
       is_default: true,
     });
     queryClient.invalidateQueries(`${accountPaymentKey}-all`);
-    setMessage('Successfully added Google Pay', 'success');
+    setMessage({
+      text: 'Successfully added Google Pay',
+      variant: 'success',
+    });
   };
 
   tokenizePaymentDataRequest(transactionInfo)
@@ -156,7 +156,10 @@ export const gPay = async (
         reportException(error, {
           message: errorMsg,
         });
-        setMessage(getAPIErrorOrDefault(error, errorMsg)[0].reason, 'error');
+        setMessage({
+          text: getAPIErrorOrDefault(error, errorMsg)[0].reason,
+          variant: 'error',
+        });
       }
     })
     .catch((error) => {
@@ -166,6 +169,9 @@ export const gPay = async (
       reportException(error, {
         message: unableToOpenGPayError,
       });
-      setMessage(unableToOpenGPayError, 'error');
+      setMessage({
+        text: unableToOpenGPayError,
+        variant: 'error',
+      });
     });
 };

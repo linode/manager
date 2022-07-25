@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
-import { useSnackbar, VariantType } from 'notistack';
+import { VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -19,6 +19,11 @@ interface Props {
   open: boolean;
   onClose: () => void;
   paymentMethods: PaymentMethod[] | undefined;
+}
+
+export interface PaymentMessage {
+  text: string;
+  variant: VariantType;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,20 +75,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
   const { onClose, open, paymentMethods } = props;
+
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
+
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
+  const [noticeMessage, setNoticeMessage] = React.useState<
+    PaymentMessage | undefined
+  >(undefined);
 
   React.useEffect(() => {
     if (open) {
       setIsProcessing(false);
+      setNoticeMessage(undefined);
     }
   }, [open]);
 
-  const makeToast = (message: string, variant: VariantType) => {
-    enqueueSnackbar(message, {
-      variant,
-    });
+  const setMessage = (message: PaymentMessage) => {
+    setNoticeMessage(message);
   };
 
   const renderError = (errorMsg: string) => {
@@ -107,6 +115,13 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           text="You reached the maximum number of payment methods on your account. Delete an existing payment method to add a new one."
         />
       ) : null}
+      {noticeMessage ? (
+        <Notice
+          error={noticeMessage.variant === 'error'}
+          warning={noticeMessage.variant === 'warning'}
+          text={noticeMessage.text}
+        />
+      ) : null}
       <>
         <Divider />
         <Grid className={classes.root} container>
@@ -126,7 +141,7 @@ export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
           >
             <GooglePayChip
               disabled={disabled}
-              makeToast={makeToast}
+              setMessage={setMessage}
               onClose={onClose}
               setProcessing={setIsProcessing}
               renderError={renderError}
