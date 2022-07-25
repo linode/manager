@@ -1,5 +1,4 @@
 import * as React from 'react';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import Grid from 'src/components/core/Grid';
 import { MockData, mockDataController } from './mockDataController';
 import ServiceWorkerTool from './ServiceWorkerTool';
@@ -11,7 +10,7 @@ const options: { label: string; key: keyof MockData }[] = [
   { label: 'Volumes', key: 'volume' },
 ];
 
-const MockDataTool: React.FC<{}> = () => {
+const MockDataTool = () => {
   // Keep track of mockData state locally to this component, so it can be referenced during render.
   const [localMockData, setLocalMockData] = React.useState<MockData>(
     mockDataController.mockData
@@ -62,4 +61,4 @@ const MockDataTool: React.FC<{}> = () => {
   );
 };
 
-export default withFeatureFlagProvider(MockDataTool);
+export default MockDataTool;

@@ -34,7 +34,7 @@ const variantList = [
   { displayName: 'Marketplace', name: 'oca' },
 ];
 
-const EntityIconStory: React.FC<{}> = () => {
+const EntityIconStory = () => {
   const classes = useStyles();
 
   return (

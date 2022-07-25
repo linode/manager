@@ -1,9 +1,8 @@
 import * as React from 'react';
-
 import Typography from 'src/components/core/Typography';
 import SupportLink from 'src/components/SupportLink';
 
-export const MigrateError: React.FC<{}> = () => {
+export const MigrateError = () => {
   return (
     <Typography>
       Self-serve migrations are currently disabled on this account. {` `}

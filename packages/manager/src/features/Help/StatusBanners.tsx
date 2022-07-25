@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const StatusBanners: React.FC<{}> = (_) => {
+export const StatusBanners = () => {
   const { data: incidentsData } = useIncidentQuery();
   const incidents = incidentsData?.incidents ?? [];
 
@@ -75,7 +75,7 @@ export interface IncidentProps {
   impact: IncidentImpact;
 }
 
-export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
+export const IncidentBanner = React.memo((props: IncidentProps) => {
   const { message, status: _status, title, impact, href } = props;
   const status = _status ?? '';
   const classes = useStyles();

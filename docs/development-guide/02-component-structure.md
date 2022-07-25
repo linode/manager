@@ -29,7 +29,7 @@ interface Props {
   name: string;
 }
 
-const SayHello: React.FC<Props> = (props) => {
+const SayHello = (props: Props) => {
   const classes = useStyles();
   return <h1 className={classes.name}>Hello, {capitalize(props.name)}</h1>;
 };
@@ -58,7 +58,7 @@ export default SayHello;
 #### Types and Interfaces
 
 - To specify component props, define an interface called `Props` and pass it to the component as a type argument
-  - e.g. `const SayHello: React.FC<Props> // ...`
+  - e.g. `const SayHello = (props: Props) =>  // ...`
 
 #### Function Component Definition
 

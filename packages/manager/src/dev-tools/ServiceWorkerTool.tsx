@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { worker } from '../mocks/testBrowser';
 
-export const ServiceWorkerTool: React.FC<{}> = (_) => {
+export const ServiceWorkerTool = () => {
   const _workerActive =
     localStorage.getItem('devTools/mock-service-worker-enabled') ?? 'disabled';
   const workerActive = _workerActive === 'enabled';

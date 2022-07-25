@@ -220,7 +220,7 @@ const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
 
 const NOTIFICATION_KEY = 'obj-billing-notification';
 
-export const BillingNotice: React.FC<{}> = React.memo(() => {
+export const BillingNotice = React.memo(() => {
   const classes = useBillingNoticeStyles();
 
   const dispatch: Dispatch = useDispatch();

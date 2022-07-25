@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TaxCollectionBanner: React.FC<{}> = () => {
+const TaxCollectionBanner = () => {
   const classes = useStyles();
   const history = useHistory();
   const flags = useFlags();

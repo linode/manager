@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 
-export const TransferHeader: React.FC<{}> = (_) => {
+export const TransferHeader = () => {
   return (
     <Typography variant="body1">
       To transfer ownership of one or more Linodes make your selections below
@@ -10,4 +10,4 @@ export const TransferHeader: React.FC<{}> = (_) => {
   );
 };
 
-export default React.memo(TransferHeader);
+export default TransferHeader;

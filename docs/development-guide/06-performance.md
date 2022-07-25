@@ -11,7 +11,7 @@ interface Props {
   linode: Linode;
 }
 
-const LinodeLabelDisplay: React.FC<Props> = (props) => {
+const LinodeLabelDisplay = (props: Props) => {
   return <span>{props.linode.label}</span>;
 };
 
@@ -20,7 +20,7 @@ interface Props {
   label: string;
 }
 
-const LinodeLabelDisplay: React.FC<Props> = (props) => {
+const LinodeLabelDisplay = (props: Props) => {
   return <span>{props.label}</span>;
 };
 

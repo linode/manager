@@ -1,9 +1,7 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -37,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CancelLanding: React.FC<{}> = () => {
+export const CancelLanding = () => {
   const classes = useStyles();
   const location = useLocation();
 
@@ -74,4 +72,4 @@ export const CancelLanding: React.FC<{}> = () => {
   );
 };
 
-export default compose<{}, {}>(React.memo)(CancelLanding);
+export default React.memo(CancelLanding);

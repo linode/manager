@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const request = () =>
   getAll<ManagedLinodeSetting>(getLinodeSettings)().then((res) => res.data);
 
-const SSHAccessTable: React.FC<{}> = () => {
+const SSHAccessTable = () => {
   const classes = useStyles();
 
   const { data, loading, lastUpdated, transformData, error } = useAPIRequest<

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { Flags, FlagSet } from 'src/featureFlags';
 import { Dispatch } from 'src/hooks/types';
 import useFlags from 'src/hooks/useFlags';
@@ -13,7 +12,7 @@ const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Database Beta', flag: 'databaseBeta' },
 ];
 
-const FeatureFlagTool: React.FC<{}> = () => {
+const FeatureFlagTool = () => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
 
@@ -57,4 +56,4 @@ const FeatureFlagTool: React.FC<{}> = () => {
   );
 };
 
-export default withFeatureFlagProvider(FeatureFlagTool);
+export default FeatureFlagTool;

@@ -6,14 +6,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ToolTip from 'src/components/core/Tooltip';
 
-interface Props {
-  text: string;
-  className?: string;
-  displayText?: string;
-  onClickCallback?: () => void;
-  fileName: string;
-}
-
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative',
@@ -46,7 +38,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DownloadTooltip: React.FC<Props> = (props) => {
+interface Props {
+  text: string;
+  className?: string;
+  displayText?: string;
+  onClickCallback?: () => void;
+  fileName: string;
+}
+
+export const DownloadTooltip = (props: Props) => {
   const classes = useStyles();
 
   const { text, className, displayText, onClickCallback, fileName } = props;
@@ -65,8 +65,7 @@ export const DownloadTooltip: React.FC<Props> = (props) => {
         name={text}
         type="button"
         onClick={handleIconClick}
-        className={classNames(className, {
-          [classes.root]: true,
+        className={classNames(className, classes.root, {
           [classes.flex]: Boolean(displayText),
         })}
       >

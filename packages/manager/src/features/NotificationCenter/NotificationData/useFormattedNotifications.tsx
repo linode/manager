@@ -365,7 +365,7 @@ const useComplianceNotificationStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ComplianceNotification: React.FC<{}> = () => {
+const ComplianceNotification = () => {
   const classes = useComplianceNotificationStyles();
   const complianceModelContext = React.useContext(complianceUpdateContext);
 

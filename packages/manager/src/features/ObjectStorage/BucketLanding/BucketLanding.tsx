@@ -184,7 +184,12 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   }
 
   if (clustersErrors || bucketsErrors) {
-    return <RenderError data-qa-error-state />;
+    return (
+      <ErrorState
+        data-qa-error-state
+        errorText="There was an error retrieving your buckets. Please reload and try again."
+      />
+    );
   }
 
   if (
@@ -192,7 +197,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     areBucketsLoading ||
     objectStorageBucketsResponse === undefined
   ) {
-    return <RenderLoading />;
+    return <CircleProgress />;
   }
 
   if (objectStorageBucketsResponse?.buckets.length === 0) {
@@ -316,19 +321,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const RenderLoading: React.FC<{}> = () => {
-  return <CircleProgress />;
-};
-
-const RenderError: React.FC<{}> = () => {
-  return (
-    <ErrorState errorText="There was an error retrieving your buckets. Please reload and try again." />
-  );
-};
-
-const RenderEmpty: React.FC<{
-  onClick: () => void;
-}> = (props) => {
+const RenderEmpty = (props: { onClick: () => void }) => {
   const classes = useStyles();
 
   return (

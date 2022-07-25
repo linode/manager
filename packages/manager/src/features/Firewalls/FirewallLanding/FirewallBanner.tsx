@@ -6,7 +6,7 @@ import { dcDisplayNames } from 'src/constants';
 import { useRegionsQuery } from 'src/queries/regions';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 
-export const FirewallBanner: React.FC<{}> = (_) => {
+export const FirewallBanner = () => {
   const regions = useRegionsQuery().data ?? [];
   const regionsWithFirewalls = regions.filter((thisRegion) =>
     thisRegion.capabilities.includes('Cloud Firewall')

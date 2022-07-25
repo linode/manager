@@ -8,7 +8,7 @@ import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { ApplicationState } from 'src/store';
 
-export const AbuseTicketBanner: React.FC<{}> = (_) => {
+export const AbuseTicketBanner = () => {
   const abuseTickets = useSelector((state: ApplicationState) =>
     getAbuseTicket(state.__resources)
   );

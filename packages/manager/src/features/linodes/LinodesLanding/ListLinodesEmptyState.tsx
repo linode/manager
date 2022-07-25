@@ -5,7 +5,7 @@ import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 
-export const ListLinodesEmptyState: React.FC<{}> = (_) => {
+export const ListLinodesEmptyState = () => {
   const { push } = useHistory();
 
   return (
@@ -37,4 +37,4 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   );
 };
 
-export default React.memo(ListLinodesEmptyState);
+export default ListLinodesEmptyState;

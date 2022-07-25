@@ -8,7 +8,7 @@ import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import useNotifications from 'src/hooks/useNotifications';
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
 
-const ComplianceBanner: React.FC<{}> = () => {
+const ComplianceBanner = () => {
   const context = React.useContext(complianceUpdateContext);
   const notifications = useNotifications();
 
