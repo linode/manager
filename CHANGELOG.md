@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-07-25] - v1.72.0
+
+### Changed:
+- Phone Verification and Security Questions copy
+- PayPal Loading State improvement
+- Button placement in User Permissions
+- Add Payment Drawer error from toast to notice
+
+### Fixed:
+- Mobile graph legends alignment
+- Region selection not clearing when switching between Linode Create tabs
+
 ## [2022-07-20] - v1.71.1
 
 ### Added:
