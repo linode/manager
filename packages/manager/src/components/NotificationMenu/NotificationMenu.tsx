@@ -24,7 +24,7 @@ export interface Props {
   open: boolean;
 }
 
-export const NotificationMenu: React.FC<Props> = (props) => {
+export const NotificationMenu = (props: Props) => {
   const {
     data: { eventNotifications, formattedNotifications },
     open,

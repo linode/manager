@@ -11,7 +11,7 @@ interface Props {
   bannerLocation: ProductInformationBannerLocation;
 }
 
-const ProductInformationBanner: React.FC<Props> = (props) => {
+const ProductInformationBanner = (props: Props) => {
   const { productInformationBanners } = useFlags();
 
   const thisBanner = (productInformationBanners ?? []).find(

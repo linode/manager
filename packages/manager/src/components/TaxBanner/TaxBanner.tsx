@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
@@ -10,15 +9,14 @@ interface Props {
   marginBottom?: 0 | 8 | 16 | 24 | undefined;
 }
 
-const VATBanner: React.FC<Props> = (props) => {
+const VATBanner = (props: Props) => {
   const { marginBottom } = props;
   const flags = useFlags();
   const location = useLocation();
 
   const isBillingPage = location.pathname.match(/account[/]billing/);
 
-  {
-    /*
+  /*
     launch darkly is responsible for determining who and who doesn't see this banner
     based on country information we send to the service in IdentifyUser.tsx
 
@@ -29,7 +27,7 @@ const VATBanner: React.FC<Props> = (props) => {
       date: string;
     }
   */
-  }
+
   if (flags.vatBanner && !!Object.keys(flags.vatBanner).length) {
     const { tax_name, date } = flags.vatBanner!;
 
@@ -85,4 +83,4 @@ const VATBanner: React.FC<Props> = (props) => {
   }
 };
 
-export default compose<Props, Props>(React.memo)(VATBanner);
+export default React.memo(VATBanner);

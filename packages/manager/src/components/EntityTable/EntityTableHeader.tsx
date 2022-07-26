@@ -35,7 +35,7 @@ interface NormalCellProps {
   thisCell: HeaderCell;
 }
 
-export const EntityTableHeader: React.FC<Props> = (props) => {
+export const EntityTableHeader = (props: Props) => {
   const {
     headers,
     handleOrderChange,
@@ -47,7 +47,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
   } = props;
   const classes = useStyles();
 
-  const SortCell: React.FC<SortCellProps> = (props) => {
+  const SortCell = (props: SortCellProps) => {
     const { orderBy, order, thisCell, handleOrderChange } = props;
     return (
       <TableSortCell
@@ -63,7 +63,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     );
   };
 
-  const _NormalCell: React.FC<NormalCellProps> = (props) => {
+  const _NormalCell = (props: NormalCellProps) => {
     const { thisCell } = props;
     return (
       <TableCell
@@ -154,7 +154,7 @@ interface GroupByTagToggleProps {
   isLargeAccount?: boolean;
 }
 
-const useGroupByTagToggleStyles = makeStyles(() => ({
+const useGroupByTagToggleStyles = makeStyles({
   toggleButton: {
     color: '#d2d3d4',
     padding: '0 10px',
@@ -165,39 +165,37 @@ const useGroupByTagToggleStyles = makeStyles(() => ({
       display: 'none',
     },
   },
-}));
+});
 
-export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
-  (props) => {
-    const classes = useGroupByTagToggleStyles();
+export const GroupByTagToggle = React.memo((props: GroupByTagToggleProps) => {
+  const classes = useGroupByTagToggleStyles();
 
-    const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
+  const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
 
-    return (
-      <>
-        <div id="groupByDescription" className="visually-hidden">
-          {isGroupedByTag
-            ? 'group by tag is currently enabled'
-            : 'group by tag is currently disabled'}
-        </div>
-        <Tooltip
-          placement="top-end"
-          title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
+  return (
+    <>
+      <div id="groupByDescription" className="visually-hidden">
+        {isGroupedByTag
+          ? 'group by tag is currently enabled'
+          : 'group by tag is currently disabled'}
+      </div>
+      <Tooltip
+        placement="top-end"
+        title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
+      >
+        <IconButton
+          aria-label={`Toggle group by tag`}
+          aria-describedby={'groupByDescription'}
+          onClick={toggleGroupByTag}
+          disableRipple
+          className={classes.toggleButton}
+          // Group by Tag is not available if you have a large account.
+          // See https://github.com/linode/manager/pull/6653 for more details
+          disabled={isLargeAccount}
         >
-          <IconButton
-            aria-label={`Toggle group by tag`}
-            aria-describedby={'groupByDescription'}
-            onClick={toggleGroupByTag}
-            disableRipple
-            className={classes.toggleButton}
-            // Group by Tag is not available if you have a large account.
-            // See https://github.com/linode/manager/pull/6653 for more details
-            disabled={isLargeAccount}
-          >
-            <GroupByTag />
-          </IconButton>
-        </Tooltip>
-      </>
-    );
-  }
-);
+          <GroupByTag />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+});

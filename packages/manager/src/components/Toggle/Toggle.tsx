@@ -10,7 +10,7 @@ interface Props extends SwitchProps {
   interactive?: boolean;
 }
 
-const Toggle: React.FC<Props> = (props) => {
+const Toggle = (props: Props) => {
   const { tooltipText, interactive, ...rest } = props;
 
   return (

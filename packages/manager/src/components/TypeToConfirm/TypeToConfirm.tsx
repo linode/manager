@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TypeToConfirm: React.FC<Props> = (props) => {
+const TypeToConfirm = (props: Props) => {
   const {
     confirmationText,
     onChange,

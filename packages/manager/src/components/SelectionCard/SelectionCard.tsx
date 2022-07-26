@@ -50,7 +50,7 @@ export interface Props {
   renderVariant?: () => JSX.Element | null;
 }
 
-const SelectionCard: React.FC<Props> = (props) => {
+const SelectionCard = (props: Props) => {
   const {
     heading,
     subheadings,

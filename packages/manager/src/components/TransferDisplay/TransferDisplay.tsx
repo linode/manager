@@ -71,7 +71,7 @@ export interface Props {
   spacingTop?: number;
 }
 
-export const TransferDisplay: React.FC<Props> = (props) => {
+export const TransferDisplay = (props: Props) => {
   const { spacingTop } = props;
   const classes = useStyles();
 
@@ -144,7 +144,7 @@ interface DialogProps {
   onClose: () => void;
 }
 
-export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
+export const TransferDialog = React.memo((props: DialogProps) => {
   const classes = useStyles();
   const { isOpen, onClose, poolUsagePct, quota, used } = props;
 

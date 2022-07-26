@@ -5,13 +5,13 @@ import { makeStyles } from '../core/styles';
 import TableCell from '../TableCell/TableCell';
 import TableRow from '../TableRow/TableRow';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     '& :last-child': {
       paddingRight: 15,
     },
   },
-}));
+});
 
 export interface Props {
   columns?: number;
@@ -19,11 +19,11 @@ export interface Props {
   responsive?: Record<number, HiddenProps>;
 }
 
-export const TableRowLoading: React.FC<Props> = ({
+export const TableRowLoading = ({
   rows = 1,
   columns = 1,
   responsive,
-}) => {
+}: Props) => {
   const classes = useStyles();
   const cols = [];
 

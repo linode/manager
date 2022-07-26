@@ -6,7 +6,7 @@ interface Props {
   displaySections?: { title: string; details?: string | number }[];
 }
 
-export const DisplaySectionList: React.FC<Props> = ({ displaySections }) => {
+export const DisplaySectionList = ({ displaySections }: Props) => {
   if (!displaySections) {
     return null;
   }

@@ -48,7 +48,7 @@ const renderContent = (
   return renderMainContent();
 };
 
-const ExtendedAccordion: React.FC<Props> = (props) => {
+const ExtendedAccordion = (props: Props) => {
   const {
     error,
     heading,

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ControlProps } from 'react-select';
-
 import TextField from 'src/components/TextField';
 
 interface SelectProps {
@@ -8,13 +7,11 @@ interface SelectProps {
   props: any;
 }
 
-const inputComponent: React.FC<SelectProps> = ({ inputRef, ...props }) => {
+const inputComponent = ({ inputRef, ...props }: SelectProps) => {
   return <div ref={inputRef} {...props} />;
 };
 
-interface Props extends ControlProps<any, any> {}
-
-const SelectControl: React.FC<Props> = (props) => {
+const SelectControl = (props: ControlProps<any, any>) => {
   return (
     <TextField
       data-qa-enhanced-select={

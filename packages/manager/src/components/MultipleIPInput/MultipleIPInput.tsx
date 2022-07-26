@@ -74,7 +74,7 @@ export interface Props {
   forDatabaseAccessControls?: boolean;
 }
 
-export const MultipleIPInput: React.FC<Props> = (props) => {
+export const MultipleIPInput = (props: Props) => {
   const {
     error,
     onChange,

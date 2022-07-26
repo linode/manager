@@ -54,7 +54,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const ExternalLink: React.FC<Props> = (props) => {
+const ExternalLink = (props: Props) => {
   const classes = useStyles();
   const {
     link,
@@ -75,8 +75,8 @@ const ExternalLink: React.FC<Props> = (props) => {
       rel="noopener noreferrer"
       href={link}
       className={classNames(
+        classes.root,
         {
-          [classes.root]: true,
           [classes.absoluteIcon]: absoluteIcon,
           [classes.black]: black,
         },

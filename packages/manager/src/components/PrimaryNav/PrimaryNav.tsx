@@ -68,7 +68,7 @@ export interface Props {
   isCollapsed: boolean;
 }
 
-export const PrimaryNav: React.FC<Props> = (props) => {
+export const PrimaryNav = (props: Props) => {
   const { closeMenu, isCollapsed } = props;
   const classes = useStyles();
 
@@ -310,7 +310,7 @@ interface PrimaryLinkProps extends PrimaryLink {
   };
 }
 
-const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
+const PrimaryLink = React.memo((props: PrimaryLinkProps) => {
   const classes = useStyles();
 
   const {
@@ -377,20 +377,20 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<
-  PrimaryLinkProps & PrefetchPrimaryLinkProps
-> = React.memo((props) => {
-  const { makeRequest, cancelRequest } = usePrefetch(
-    props.prefetchRequestFn,
-    props.prefetchRequestCondition
-  );
+export const PrefetchPrimaryLink = React.memo(
+  (props: PrimaryLinkProps & PrefetchPrimaryLinkProps) => {
+    const { makeRequest, cancelRequest } = usePrefetch(
+      props.prefetchRequestFn,
+      props.prefetchRequestCondition
+    );
 
-  const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
-    onMouseEnter: makeRequest,
-    onFocus: makeRequest,
-    onMouseLeave: cancelRequest,
-    onBlur: cancelRequest,
-  };
+    const prefetchProps: PrimaryLinkProps['prefetchProps'] = {
+      onMouseEnter: makeRequest,
+      onFocus: makeRequest,
+      onMouseLeave: cancelRequest,
+      onBlur: cancelRequest,
+    };
 
-  return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
-});
+    return <PrimaryLink {...props} prefetchProps={prefetchProps} />;
+  }
+);

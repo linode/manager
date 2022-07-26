@@ -38,7 +38,7 @@ interface Props {
   onDelete: () => void;
 }
 
-const PaymentMethodRow: React.FC<Props> = (props) => {
+const PaymentMethodRow = (props: Props) => {
   const { paymentMethod, onDelete } = props;
   const { type, is_default } = paymentMethod;
   const classes = useStyles();

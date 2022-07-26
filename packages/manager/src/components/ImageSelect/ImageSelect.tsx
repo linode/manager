@@ -105,7 +105,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect: React.FC<Props> = (props) => {
+export const ImageSelect = (props: Props) => {
   const {
     disabled,
     error,

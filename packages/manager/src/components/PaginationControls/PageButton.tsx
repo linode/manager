@@ -37,10 +37,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-/* tslint:disable-next-line */
-export interface Props extends ButtonProps {}
+export type Props = ButtonProps;
 
-const PageButton: React.FC<Props> = (props) => {
+const PageButton = (props: Props) => {
   const classes = useStyles();
 
   const { children, ...rest } = props;

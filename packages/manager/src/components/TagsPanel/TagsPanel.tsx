@@ -131,7 +131,7 @@ export interface Props {
   disabled?: boolean;
 }
 
-const TagsPanel: React.FC<Props> = (props) => {
+const TagsPanel = (props: Props) => {
   const classes = useStyles();
   const { tags, disabled, updateTags } = props;
   const { enqueueSnackbar } = useSnackbar();

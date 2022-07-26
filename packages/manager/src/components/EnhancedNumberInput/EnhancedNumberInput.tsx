@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import { makeStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     '& $button': {
       width: 35,
@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
       minHeight: 'fit-content',
     },
   },
-}));
+});
 
 interface Props {
   inputLabel?: string;
@@ -83,7 +83,7 @@ interface Props {
   min?: number;
 }
 
-export const EnhancedNumberInput: React.FC<Props> = (props) => {
+export const EnhancedNumberInput = (props: Props) => {
   const { inputLabel, setValue, disabled } = props;
 
   const max = props.max ?? 100;

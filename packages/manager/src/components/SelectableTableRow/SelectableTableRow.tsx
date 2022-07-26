@@ -4,7 +4,7 @@ import { makeStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     '& td': {
       padding: '0px 15px',
@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
       height: 20,
     },
   },
-}));
+});
 
 interface Props {
   children: JSX.Element[];
@@ -28,7 +28,7 @@ interface Props {
   handleToggleCheck: () => void;
 }
 
-export const SelectableTableRow: React.FC<Props> = (props) => {
+export const SelectableTableRow = (props: Props) => {
   const { isChecked, handleToggleCheck } = props;
   const classes = useStyles();
   return (
