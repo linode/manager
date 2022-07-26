@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
@@ -70,6 +71,53 @@ interface State {
   selectedScriptForDrawer: string;
 }
 
+export const getCompatibleImages = (
+  imagesData: Record<string, Image>,
+  stackScriptImages: string[]
+) => {
+  /* return _.compact(
+   *   stackScriptImages.map((stackScriptImage) => imagesData[stackScriptImage])
+   * ); */
+
+  return Object.keys(imagesData).reduce((acc, eachKey) => {
+    if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
+      acc.push(imagesData[eachKey]);
+    }
+
+    return acc;
+  }, [] as Image[]);
+};
+
+export const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
+  return userDefinedFields.reduce((accum, eachField) => {
+    if (eachField.default) {
+      accum[eachField.name] = eachField.default;
+    }
+    return accum;
+  }, {});
+};
+
+export const handleSelectStackScript = (
+  id: number,
+  label: string,
+  username: string,
+  stackScriptImages: string[],
+  userDefinedFields: UserDefinedField[],
+  imagesData: Record<string, Image>,
+  updateStackScript: CombinedProps['updateStackScript']
+) => {
+  const compatibleImages = getCompatibleImages(imagesData, stackScriptImages);
+  const defaultUDFData = getDefaultUDFData(userDefinedFields);
+  updateStackScript(
+    id,
+    label,
+    username,
+    userDefinedFields,
+    compatibleImages,
+    defaultUDFData
+  );
+};
+
 class FromAppsContent extends React.PureComponent<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
@@ -89,25 +137,13 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
      * to our list of public images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
-        acc.push(imagesData[eachKey]);
-      }
-
-      return acc;
-    }, [] as Image[]);
+    const compatibleImages = getCompatibleImages(imagesData, stackScriptImages);
 
     /**
      * if a UDF field comes back from the API with a "default"
      * value, it means we need to pre-populate the field and form state
      */
-    const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {
-      if (eachField.default) {
-        accum[eachField.name] = eachField.default;
-      }
-      return accum;
-    }, {});
-
+    const defaultUDFData = getDefaultUDFData(userDefinedFields);
     this.props.updateStackScript(
       id,
       label,
