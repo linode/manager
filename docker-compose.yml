@@ -10,6 +10,13 @@ services:
     container_name: web
     ports:
       - "3000:3000"
+    volumes:
+      - .:/home/node/app
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000']
+      interval: 20s
+      timeout: 10s
+      retries: 100
 
   e2e:
     build:
@@ -17,7 +24,10 @@ services:
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
     depends_on:
-      - web
+      web:
+        condition: service_healthy
     environment:
       - CYPRESS_BASE_URL=http://web:3000
     env_file: ./packages/manager/.env
+    volumes:
+      - .:/app
