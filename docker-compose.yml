@@ -1,0 +1,23 @@
+---
+version: '3'
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: manager
+    container_name: web
+    ports:
+      - "3000:3000"
+
+  e2e:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    depends_on:
+      - web
+    environment:
+      - CYPRESS_BASE_URL=http://web:3000
+    env_file: ./packages/manager/.env
