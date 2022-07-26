@@ -1,99 +1,65 @@
-import { Domain, UpdateDomainPayload } from '@linode/api-v4/lib/domains';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import ActionPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import { Domain } from '@linode/api-v4/lib/domains';
+import { useUpdateDomainMutation } from 'src/queries/domains';
 import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
 
 interface Props {
-  updateDomain: (
-    payload: UpdateDomainPayload & { domainId: number }
-  ) => Promise<Domain>;
-  selectedDomainID?: number;
-  selectedDomainLabel: string;
-  closeDialog: () => void;
+  domain: Domain | undefined;
+  onClose: () => void;
   open: boolean;
-  errors?: APIError[];
 }
 
-type CombinedProps = Props;
-
-const DisableDomainDialog: React.FC<CombinedProps> = (props) => {
-  const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+const DisableDomainDialog = (props: Props) => {
+  const { domain, open, onClose } = props;
+  const {
+    mutateAsync: updateDomain,
+    error,
+    isLoading,
+    reset,
+  } = useUpdateDomainMutation();
 
   React.useEffect(() => {
-    if (props.open) {
-      setErrors(undefined);
+    if (open) {
+      reset();
     }
-  }, [props.open]);
+  }, [open]);
 
-  const handleSubmit = () => {
-    if (!props.selectedDomainID) {
-      return setErrors([
-        {
-          reason: 'Something went wrong.',
-        },
-      ]);
+  const onSubmit = () => {
+    if (!domain) {
+      return;
     }
 
-    setSubmitting(true);
-
-    props
-      .updateDomain({
-        domainId: props.selectedDomainID,
-        status: 'disabled',
-      })
-      .then(() => {
-        setSubmitting(false);
-        sendDomainStatusChangeEvent('Disable');
-        props.closeDialog();
-      })
-      .catch((e) => {
-        setSubmitting(false);
-        setErrors(e);
-      });
+    updateDomain({
+      id: domain.id,
+      status: 'disabled',
+    }).then(() => {
+      sendDomainStatusChangeEvent('Disable');
+      onClose();
+    });
   };
+
   return (
     <Dialog
-      open={props.open}
-      title={`Disable Domain ${props.selectedDomainLabel}?`}
-      onClose={props.closeDialog}
-      error={errors ? errors[0].reason : ''}
+      open={open}
+      title={`Disable Domain ${domain?.domain}?`}
+      onClose={onClose}
+      error={error?.[0]?.reason}
       actions={
-        <Actions
-          onClose={props.closeDialog}
-          isSubmitting={isSubmitting}
-          onSubmit={handleSubmit}
-        />
+        <ActionPanel>
+          <Button buttonType="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button buttonType="primary" onClick={onSubmit} loading={isLoading}>
+            Disable Domain
+          </Button>
+        </ActionPanel>
       }
     >
       Are you sure you want to disable this DNS zone?
     </Dialog>
-  );
-};
-
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  isSubmitting: boolean;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
-    <ActionPanel>
-      <Button buttonType="secondary" onClick={props.onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.isSubmitting}
-      >
-        Disable Domain
-      </Button>
-    </ActionPanel>
   );
 };
 

@@ -134,7 +134,7 @@ const uploadImage = (label: string) => {
   fbtClick(regionSelect);
   // Pass `null` to `cy.fixture()` to ensure file is encoded as a Cypress buffer object.
   cy.fixture(upload, null).then((fileContent) => {
-    cy.get('input[accept="application/x-gzip"]').attachFile({
+    cy.get('input[type="file"]').attachFile({
       fileContent,
       fileName: 'testImage',
       mimeType: 'application/x-gzip',

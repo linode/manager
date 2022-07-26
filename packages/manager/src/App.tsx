@@ -32,6 +32,7 @@ import IdentifyUser from './IdentifyUser';
 import MainContent from './MainContent';
 import GoTo from './GoTo';
 import { databaseEventsHandler } from './queries/databases';
+import { domainEventsHandler } from './queries/domains';
 
 interface Props {
   toggleTheme: () => void;
@@ -111,6 +112,13 @@ export class App extends React.Component<CombinedProps, State> {
       .subscribe(databaseEventsHandler);
 
     /*
+     * Send any Domain events to the Domain events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('domain') && !event._initial)
+      .subscribe(domainEventsHandler);
+
+    /*
      * We want to listen for migration events side-wide
      * It's unpredictable when a migration is going to happen. It could take
      * hours and it could take days. We want to notify to the user when it happens
@@ -151,7 +159,6 @@ export class App extends React.Component<CombinedProps, State> {
     const {
       toggleTheme,
       linodesError,
-      domainsError,
       typesError,
       imagesError,
       notificationsError,
@@ -172,7 +179,6 @@ export class App extends React.Component<CombinedProps, State> {
     if (
       hasOauthError(
         linodesError,
-        domainsError,
         typesError,
         imagesError,
         notificationsError,
@@ -226,7 +232,6 @@ interface StateProps {
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
-  domainsError?: APIError[];
   imagesError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
@@ -240,7 +245,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
   typesError: state.__resources.types.error,

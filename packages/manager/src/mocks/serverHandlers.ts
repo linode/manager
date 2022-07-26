@@ -1,5 +1,9 @@
 import { DateTime } from 'luxon';
-import { EventAction, NotificationType } from '@linode/api-v4';
+import {
+  EventAction,
+  NotificationType,
+  SecurityQuestionsPayload,
+} from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -47,11 +51,13 @@ import {
   notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
+  objectStorageKeyFactory,
   paymentMethodFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
+  securityQuestionsFactory,
   stackScriptFactory,
   staticObjects,
   supportReplyFactory,
@@ -88,6 +94,10 @@ const statusPage = [
     return res(ctx.json(response));
   }),
 ];
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
@@ -251,7 +261,9 @@ const databases = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build({ restricted: false });
+    const profile = profileFactory.build({
+      restricted: false,
+    });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
@@ -263,6 +275,23 @@ export const handlers = [
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tokens)));
+  }),
+  rest.post('*/profile/phone-number', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.post('*/profile/phone-number/verify', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.delete('*/profile/phone-number', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(securityQuestionsFactory.build()));
+  }),
+  rest.post('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(
@@ -519,18 +548,6 @@ export const handlers = [
     );
   }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    return res.once(
-      ctx.status(500),
-      ctx.json([{ reason: 'Cluster offline!' }])
-    );
-  }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    return res.once(
-      ctx.status(400),
-      ctx.json([{ reason: 'Cluster offline!' }])
-    );
-  }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
     // Temporarily added pagination logic to make sure my use of
     // getAll worked for fetching all buckets.
 
@@ -559,6 +576,11 @@ export const handlers = [
   rest.get('*object-storage/clusters', (req, res, ctx) => {
     const clusters = objectStorageClusterFactory.buildList(3);
     return res(ctx.json(makeResourcePage(clusters)));
+  }),
+  rest.get('*object-storage/keys', (req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
+    );
   }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
@@ -708,6 +730,31 @@ export const handlers = [
     }
 
     return res(ctx.json(makeResourcePage(accountMaintenance)));
+  }),
+  rest.get('*/account/users', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([profileFactory.build()])));
+  }),
+  rest.get('*/account/users/:user', (req, res, ctx) => {
+    return res(ctx.json(profileFactory.build()));
+  }),
+  rest.get('*/account/users/:user/grants', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        grantsFactory.build({
+          global: {
+            cancel_account: true,
+          },
+          domain: [],
+          firewall: [],
+          image: [],
+          linode: [],
+          longview: [],
+          nodebalancer: [],
+          stackscript: [],
+          volume: [],
+        })
+      )
+    );
   }),
   rest.get('*/account/payment-methods', (req, res, ctx) => {
     const defaultPaymentMethod = paymentMethodFactory.build({

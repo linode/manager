@@ -1,8 +1,16 @@
 // import { fireEvent } from '@testing-library/react';
-import PaymentInformation from './PaymentInformation';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import * as React from 'react';
+import { PAYPAL_CLIENT_ID } from 'src/constants';
 import { paymentMethodFactory } from 'src/factories';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import * as React from 'react';
+import PaymentInformation from './PaymentInformation';
+
+jest.mock('@linode/api-v4/lib/account', () => {
+  return {
+    getClientToken: jest.fn().mockResolvedValue('mockedBraintreeClientToken'),
+  };
+});
 
 /*
  * Build payment method list that includes 1 valid and default payment method,
@@ -23,7 +31,9 @@ const paymentMethods = [
 describe('Payment Info Panel', () => {
   it('Shows loading animation when loading', () => {
     const { getByLabelText } = renderWithTheme(
-      <PaymentInformation loading={true} paymentMethods={paymentMethods} />
+      <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+        <PaymentInformation loading={true} paymentMethods={paymentMethods} />
+      </PayPalScriptProvider>
     );
 
     expect(getByLabelText('Content is loading')).toBeVisible();
@@ -32,7 +42,9 @@ describe('Payment Info Panel', () => {
   // @TODO: Restore `PaymentInformation.test.tsx` tests. See M3-5768 for more information.
   // it('Opens "Add Payment Method" drawer when "Add Payment Method" is clicked', () => {
   //   const { getByTestId } = renderWithTheme(
-  //     <PaymentInformation loading={false} paymentMethods={paymentMethods} />
+  //     <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+  //       <PaymentInformation loading={false} paymentMethods={paymentMethods} />
+  //     </PayPalScriptProvider>
   //   );
 
   //   const addPaymentMethodButton = getByTestId(
@@ -45,7 +57,9 @@ describe('Payment Info Panel', () => {
 
   // it('Lists all payment methods', () => {
   //   const { getByTestId } = renderWithTheme(
-  //     <PaymentInformation loading={false} paymentMethods={paymentMethods} />
+  //     <PayPalScriptProvider options={{ 'client-id': PAYPAL_CLIENT_ID }}>
+  //       <PaymentInformation loading={false} paymentMethods={paymentMethods} />
+  //     </PayPalScriptProvider>
   //   );
 
   //   paymentMethods.forEach((paymentMethod) => {

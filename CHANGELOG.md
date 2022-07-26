@@ -4,6 +4,69 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-07-25] - v1.72.0
+
+### Changed:
+- Phone Verification and Security Questions copy
+- PayPal Loading State improvement
+- Button placement in User Permissions
+- Add Payment Drawer error from toast to notice
+
+### Fixed:
+- Mobile graph legends alignment
+- Region selection not clearing when switching between Linode Create tabs
+
+## [2022-07-20] - v1.71.1
+
+### Added:
+- Banner regarding maintenance to the Databases Landing and Database Create pages
+
+## [2022-07-12] - v1.71.0
+
+### Added:
+
+- Kali distro icon
+- Ability to download secret keys
+
+### Changed:
+
+- UI in Keys and secrets modals
+- Update 2FA Security Questions Notice font size
+- Main content banner width
+- Use React Query for Domains
+- Removed create image cost estimator
+- Don't make /account requests if restricted user
+- Persist Last Updated column on small screens in Support Ticket Table
+
+### Fixed:
+
+- Image upload max size bug on Linux
+- Responsiveness of Linode stats graphs
+- Curly apostrophe on cancel landing page
+- Phone Verification when verifying the same phone number
+
+## [2022-07-01] - v1.70.1
+
+### Fixed:
+- Banner text wrapping for certain viewport widths
+
+## [2022-06-23] - v1.70.0
+
+### Added:
+- June 2022 Marketplace release
+- Security questions for account verification
+- Phone number SMS verification opt-in and opt-out
+
+### Changed:
+- Move Upload Image region text to tooltip
+- Enabling or resetting 2FA requires security questions to be answered
+- Clean up dismissed notifications more frequently in User Preferences
+
+### Fixed:
+- Show errors in Firewall rules table
+- Make notification badge a true circle
+
+
 ## [2022-06-13] - v1.69.0
 
 ### Added:

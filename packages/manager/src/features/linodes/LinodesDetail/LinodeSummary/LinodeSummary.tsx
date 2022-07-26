@@ -1,36 +1,38 @@
-import * as React from 'react';
-import Paper from 'src/components/core/Paper';
-import Grid from 'src/components/Grid';
-import LineGraph from 'src/components/LineGraph';
-import NetworkGraph, { ChartProps } from './NetworkGraphs';
-import PendingIcon from 'src/assets/icons/pending.svg';
-import ErrorState from 'src/components/ErrorState';
-import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { DateTime } from 'luxon';
+import * as React from 'react';
 import { useParams } from 'react-router-dom';
-import { useProfile } from 'src/queries/profile';
-import { setUpCharts } from 'src/utilities/charts';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getDateOptions } from './helpers';
-import { StatsPanel } from './StatsPanel';
-import {
-  useLinodeStatsByDate,
-  useLinodeStats,
-  STATS_NOT_READY_MESSAGE,
-  STATS_NOT_READY_API_MESSAGE,
-} from 'src/queries/linodes';
-import {
-  formatNumber,
-  formatPercentage,
-  getMetrics,
-} from 'src/utilities/statMetrics';
+import PendingIcon from 'src/assets/icons/pending.svg';
+import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   makeStyles,
   Theme,
   useTheme,
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
+import LineGraph from 'src/components/LineGraph';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import {
+  STATS_NOT_READY_API_MESSAGE,
+  STATS_NOT_READY_MESSAGE,
+  useLinodeStats,
+  useLinodeStatsByDate,
+} from 'src/queries/linodes';
+import { useProfile } from 'src/queries/profile';
+import { setUpCharts } from 'src/utilities/charts';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  formatNumber,
+  formatPercentage,
+  getMetrics,
+} from 'src/utilities/statMetrics';
+import { debounce } from 'throttle-debounce';
+import { getDateOptions } from './helpers';
+import NetworkGraph, { ChartProps } from './NetworkGraphs';
+import { StatsPanel } from './StatsPanel';
 
 setUpCharts();
 
@@ -98,6 +100,8 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const timezone = profile?.timezone || DateTime.local().zoneName;
 
+  const { width: windowWidth, height: windowHeight } = useWindowDimensions();
+
   const options = getDateOptions(linodeCreated);
   const [rangeSelection, setRangeSelection] = React.useState('24');
   const [year, month] = rangeSelection.split(' ');
@@ -108,6 +112,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
     data: statsData,
     isLoading: statsLoading,
     error: statsError,
+    refetch: refetchLinodeStats,
   } = useLinodeStats(id, isLast24Hours, linodeCreated);
 
   const {
@@ -134,6 +139,20 @@ const LinodeSummary: React.FC<Props> = (props) => {
   const handleChartRangeChange = (e: Item<string>) => {
     setRangeSelection(e.value);
   };
+
+  /*
+    We create a debounced function to refetch Linode stats that will run 1.5 seconds after the window is resized.
+    This makes the graphs adjust sooner than their typical 30-second interval.
+  */
+  const debouncedRefetchLinodeStats = React.useRef(
+    debounce(1500, false, () => {
+      refetchLinodeStats();
+    })
+  ).current;
+
+  React.useEffect(() => {
+    debouncedRefetchLinodeStats();
+  }, [windowWidth, windowHeight, debouncedRefetchLinodeStats]);
 
   const renderCPUChart = () => {
     const data = stats?.data.cpu ?? [];

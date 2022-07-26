@@ -1,50 +1,39 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import NotFound from 'src/components/NotFound';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import useDomains from 'src/hooks/useDomains';
+import { useDomainQuery } from 'src/queries/domains';
+import ErrorState from 'src/components/ErrorState';
+
 const DomainsLanding = React.lazy(() => import('../DomainsLanding'));
 const DomainDetail = React.lazy(() => import('./DomainDetail'));
 
-export const DomainDetailRouting: React.FC<
-  RouteComponentProps<{
-    domainId: string;
-  }>
-> = (props) => {
-  const domainId = Number(props.match.params.domainId);
-  const { domains, requestDomain } = useDomains();
-  const request = useAPIRequest(() => requestDomain(domainId), undefined);
+const DomainDetailRouting = () => {
+  const params = useParams<{ domainId: string }>();
+  const domainId = Number(params.domainId);
 
-  // The Domain from the store that matches this ID.
-  const foundDomain = Object.values(domains.itemsById).find(
-    (thisDomain) => thisDomain.id === domainId
-  );
+  const { data: domain, isLoading, error } = useDomainQuery(domainId);
 
-  if (!foundDomain) {
-    // Did we complete a request for Domains yet? If so, this Domain doesn't exist.
-    if (!request.loading && request.lastUpdated > 0) {
-      return <NotFound />;
-    }
-    // If not, we don't know if the Domain exists yet so we have to stall
+  if (isLoading) {
     return <CircleProgress />;
   }
+
+  if (error) {
+    return <ErrorState errorText="Unable to load this domain." />;
+  }
+
+  if (!domain) {
+    return <NotFound />;
+  }
+
   // Primary Domains have a Detail page.
-  if (foundDomain.type === 'master') {
-    return <DomainDetail {...props} />;
+  if (domain.type === 'master') {
+    return <DomainDetail />;
   }
 
   // Secondary Domains do not have a Detail page, so render the Landing
   // page with an open drawer.
-  return (
-    <DomainsLanding
-      domainForEditing={{
-        domainId: foundDomain.id,
-        domainLabel: foundDomain.domain,
-      }}
-      {...props}
-    />
-  );
+  return <DomainsLanding domainForEditing={domain} />;
 };
 
 export default DomainDetailRouting;

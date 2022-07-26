@@ -1,4 +1,5 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
+import { Link } from './features/OneClickApps/LinkSection';
 // These flags should correspond with active features flags in LD
 
 interface TaxBanner {
@@ -20,6 +21,7 @@ export interface Flags {
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;
   oneClickApps: OneClickApp;
+  oneClickAppsDocsOverride: Record<string, Link[]>;
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
   databases: boolean;
@@ -88,7 +90,7 @@ interface ReferralBannerText {
   };
 }
 
-export type ProductInformationBannerLocation = 'Object Storage';
+export type ProductInformationBannerLocation = 'Object Storage' | 'Databases';
 
 export interface ProductInformationBannerFlag {
   // `key` should be unique across product information banners
