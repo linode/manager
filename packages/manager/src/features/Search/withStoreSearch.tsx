@@ -1,4 +1,4 @@
-import { ObjectStorageBucket } from '@linode/api-v4';
+import { Domain, ObjectStorageBucket } from '@linode/api-v4';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
@@ -9,6 +9,7 @@ import entitiesErrors, {
 import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   bucketToSearchableItem,
+  domainToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 import { refinedSearch } from './refinedSearch';
 import {
@@ -19,7 +20,11 @@ import {
 import { emptyResults, separateResultsByEntity } from './utils';
 
 interface HandlerProps {
-  search: (query: string, buckets: ObjectStorageBucket[]) => SearchResults;
+  search: (
+    query: string,
+    buckets: ObjectStorageBucket[],
+    domains: Domain[]
+  ) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
   combinedResults: SearchableItem[];
@@ -67,13 +72,17 @@ export default () => (Component: React.ComponentType<any>) => {
       {
         search: (_, props: SearchProps) => (
           query: string,
-          objectStorageBuckets: ObjectStorageBucket[]
+          objectStorageBuckets: ObjectStorageBucket[],
+          domains: Domain[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
             bucketToSearchableItem(bucket)
           );
+          const searchableDomains = domains.map((domain) =>
+            domainToSearchableItem(domain)
+          );
           const results = search(
-            [...props.entities, ...searchableBuckets],
+            [...props.entities, ...searchableBuckets, ...searchableDomains],
             query
           );
           const { searchResultsByEntity, combinedResults } = results;

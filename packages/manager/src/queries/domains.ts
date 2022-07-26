@@ -17,6 +17,7 @@ import {
   APIError,
   ResourcePage,
 } from '@linode/api-v4';
+import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'domains';
 
@@ -26,6 +27,11 @@ export const useDomainsQuery = (params: any, filter: any) =>
     () => getDomains(params, filter),
     { keepPreviousData: true }
   );
+
+export const useAllDomainsQuery = (enabled: boolean = false) =>
+  useQuery<Domain[], APIError[]>(`${queryKey}-all-list`, getAllDomains, {
+    enabled,
+  });
 
 export const useDomainQuery = (id: number) =>
   useQuery<Domain, APIError[]>([queryKey, id], () => getDomain(id));
@@ -155,3 +161,6 @@ export const domainEventsHandler = (event: EntityEvent) => {
     }
   }
 };
+
+export const getAllDomains = () =>
+  getAll<Domain>((params) => getDomains(params))().then((data) => data.data);

@@ -641,7 +641,7 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Deploying Kali Linux through the Linode Marketplace',
         href:
-          'https://www.linode.com/docs/products/tools/marketplace/guides/kalilinux',
+          'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux',
       },
     ],
     related_info: [

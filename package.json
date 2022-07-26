@@ -59,7 +59,8 @@
     "glob-parent": "^5.1.2",
     "browserslist": "^4.16.5",
     "nth-check": "v2.0.1",
-    "trim-newlines": "^4.0.2"
+    "trim-newlines": "^4.0.2",
+    "hosted-git-info": "^5.0.0"
   },
   "workspaces": {
     "packages": [

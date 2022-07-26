@@ -35,7 +35,7 @@ const styles = (theme: Theme) =>
     },
   });
 
-interface Link {
+export interface Link {
   href: string;
   title: string;
 }

@@ -1,63 +1,43 @@
-import classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import classNames from 'classnames';
 import RenderGuard from 'src/components/RenderGuard';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Box, { BoxProps } from '../core/Box';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(2),
-      paddingBottom: theme.spacing(1),
-      '& > button': {
-        marginBottom: theme.spacing(1),
-      },
-      '& > :first-child': {
-        marginRight: theme.spacing(),
-        marginLeft: 0,
-      },
-      '& > :only-child': {
-        marginRight: 0,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    '& > button': {
+      marginBottom: theme.spacing(1),
     },
-  });
+    '& > :first-child': {
+      marginRight: theme.spacing(),
+      marginLeft: 0,
+    },
+    '& > :only-child': {
+      marginRight: 0,
+    },
+  },
+}));
 
-interface Props {
-  className?: string;
-  style?: React.CSSProperties;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const ActionPanel: React.FC<CombinedProps> = (props) => {
-  const { classes, className, style, children } = props;
+const ActionPanel: React.FC<BoxProps> = (props) => {
+  const classes = useStyles();
+  const { className, children, ...rest } = props;
 
   return (
-    <div
+    <Box
       data-qa-buttons
-      className={classNames({
-        [classes.root]: true,
-        ...(className && { [className]: true }),
-        actionPanel: true,
-      })}
-      style={style}
+      className={classNames(classes.root, className, 'actionPanel')}
+      {...rest}
     >
       {Array.isArray(children)
         ? [...children].sort((child) =>
             child?.props?.buttonType === 'primary' ? 1 : -1
           ) // enforce that the primary button will always be to the right
         : children}
-    </div>
+    </Box>
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<any, any, any>(styled, RenderGuard)(ActionPanel);
+export default RenderGuard(ActionPanel);
