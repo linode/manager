@@ -133,7 +133,7 @@ const volumeHeaders = [
   },
 ];
 
-export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
+export const LinodeVolumes = (props: CombinedProps) => {
   const {
     volumesLoading,
     volumesLastUpdated,

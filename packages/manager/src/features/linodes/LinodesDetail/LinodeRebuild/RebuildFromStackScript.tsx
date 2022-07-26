@@ -3,10 +3,9 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
 import { Formik, FormikProps } from 'formik';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -78,9 +77,7 @@ interface Props {
 export type CombinedProps = Props &
   WithImages &
   UserSSHKeyProps &
-  RouteComponentProps &
-  PreferencesProps &
-  WithSnackbarProps;
+  PreferencesProps;
 
 interface RebuildFromStackScriptForm {
   image: string;
@@ -94,7 +91,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: '',
 };
 
-export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
+export const RebuildFromStackScript = (props: CombinedProps) => {
   const {
     imagesData,
     userSSHKeys,
@@ -104,12 +101,13 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
     linodeLabel,
     handleRebuildError,
     onClose,
-    enqueueSnackbar,
     passwordHelperText,
     preferences,
   } = props;
 
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   /**
    * Dynamic validation schema, with password validation
@@ -398,9 +396,7 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   userSSHKeyHoc,
-  withSnackbar,
   withImages(),
-  withRouter,
   withPreferences()
 );
 

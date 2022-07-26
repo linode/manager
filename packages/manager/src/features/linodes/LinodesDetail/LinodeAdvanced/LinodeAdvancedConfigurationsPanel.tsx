@@ -1,8 +1,6 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import LinodeConfigs from './LinodeConfigs';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -31,9 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = LinodeContextProps;
-
-const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
+const LinodeAdvancedConfigurationsPanel = () => {
   const classes = useStyles();
 
   return (
@@ -45,14 +41,4 @@ const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
   );
 };
 
-interface LinodeContextProps {
-  linodeID: number;
-}
-
-const linodeContext = withLinodeDetailContext(({ linode }) => ({
-  linodeID: linode.id,
-}));
-
-const enhanced = compose<CombinedProps, {}>(linodeContext);
-
-export default enhanced(LinodeAdvancedConfigurationsPanel);
+export default LinodeAdvancedConfigurationsPanel;

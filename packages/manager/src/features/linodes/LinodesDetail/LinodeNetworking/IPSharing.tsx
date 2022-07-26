@@ -424,7 +424,7 @@ interface WrapperProps {
 }
 
 // Content Wrapper
-const DialogContent: React.FC<WrapperProps> = (props) => {
+const DialogContent = (props: WrapperProps) => {
   if (props.loading) {
     return <CircleProgress />;
   }
@@ -436,7 +436,7 @@ interface RowProps {
   ip: string;
 }
 
-export const IPRow: React.FC<RowProps> = React.memo((props) => {
+export const IPRow = React.memo((props: RowProps) => {
   const { ip } = props;
   const classes = useStyles();
   return (
@@ -467,7 +467,7 @@ interface SharingRowProps extends RowProps {
   handleDelete?: (idx: number) => void;
 }
 
-export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
+export const IPSharingRow = React.memo((props: SharingRowProps) => {
   const {
     ip,
     idx,

@@ -1,7 +1,6 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { imageFactory, normalizeEntities } from 'src/factories';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
@@ -32,12 +31,9 @@ const props: CombinedProps = {
   updateUserPreferences: jest.fn(),
   preferences: preferencesFactory.build(),
   disabled: false,
-  closeSnackbar: jest.fn(),
-  enqueueSnackbar: jest.fn(),
   passwordHelperText: '',
   handleRebuildError: jest.fn(),
   onClose: jest.fn(),
-  ...reactRouterProps,
 };
 
 describe('RebuildFromStackScript', () => {

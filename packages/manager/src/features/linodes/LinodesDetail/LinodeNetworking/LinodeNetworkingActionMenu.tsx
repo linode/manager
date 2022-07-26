@@ -1,7 +1,6 @@
 import { IPAddress, IPRange } from '@linode/api-v4/lib/networking';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
   makeStyles,
@@ -12,11 +11,11 @@ import {
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import { IPTypes } from './types';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   emptyCell: {
     height: 40,
   },
-}));
+});
 
 interface Props {
   onEdit?: (ip: IPAddress | IPRange) => void;
@@ -26,9 +25,7 @@ interface Props {
   readOnly: boolean;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
+export const LinodeNetworkingActionMenu = (props: Props) => {
   const classes = useStyles();
 
   const theme = useTheme<Theme>();
@@ -93,4 +90,4 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default withRouter(LinodeNetworkingActionMenu);
+export default LinodeNetworkingActionMenu;

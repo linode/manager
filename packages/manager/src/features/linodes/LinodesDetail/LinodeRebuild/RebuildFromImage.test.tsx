@@ -1,7 +1,6 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { imageFactory, normalizeEntities } from 'src/factories';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 import { preferencesFactory } from 'src/factories/preferences';
@@ -24,8 +23,6 @@ const props: CombinedProps = {
   imagesLoading: false,
   imagesLastUpdated: 0,
   userSSHKeys: [],
-  closeSnackbar: jest.fn(),
-  enqueueSnackbar: jest.fn(),
   passwordHelperText: '',
   requestKeys: jest.fn(),
   getUserPreferences: jest.fn(),
@@ -34,7 +31,6 @@ const props: CombinedProps = {
   disabled: false,
   handleRebuildError: jest.fn(),
   onClose: jest.fn(),
-  ...reactRouterProps,
 };
 
 describe('RebuildFromImage', () => {

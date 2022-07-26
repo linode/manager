@@ -5,14 +5,12 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingErrorProps,
 } from 'src/components/withLoadingAndError';
 import DeleteIPActions from './DeleteIPActions';
-
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
@@ -35,7 +33,7 @@ export interface IPDeleteArgs {
   IPAddress: string;
 }
 
-const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
+const DeleteIPConfirm = (props: CombinedProps) => {
   const handleRemoveIP = (data: IPDeleteArgs) => {
     const {
       setErrorAndClearLoading,

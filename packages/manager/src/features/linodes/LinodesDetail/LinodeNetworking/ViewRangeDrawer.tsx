@@ -2,27 +2,18 @@ import { IPRange } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { formatRegion } from 'src/utilities';
 
-type ClassNames = 'root' | 'section';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    section: {
-      marginBottom: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  section: {
+    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 interface Props {
   open: boolean;
@@ -30,17 +21,17 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
-  const { classes, range } = props;
+const ViewRangeDrawer = (props: Props) => {
+  const { range } = props;
   const region = (range && range.region) || '';
+
+  const classes = useStyles();
 
   return (
     <Drawer
       open={props.open}
       onClose={props.onClose}
-      title={`Details for IP Range`}
+      title="Details for IP Range"
     >
       {props.range && (
         <React.Fragment>
@@ -75,6 +66,4 @@ const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ViewRangeDrawer);
+export default ViewRangeDrawer;

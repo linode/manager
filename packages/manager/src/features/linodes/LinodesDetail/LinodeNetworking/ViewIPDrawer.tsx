@@ -2,27 +2,18 @@ import { IPAddress } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { formatRegion } from 'src/utilities';
 
-type ClassNames = 'root' | 'section';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    section: {
-      marginBottom: theme.spacing(2),
-      paddingBottom: theme.spacing(2),
-      borderBottom: `1px solid ${theme.palette.divider}`,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  section: {
+    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+  },
+}));
 
 interface Props {
   open: boolean;
@@ -30,13 +21,11 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const ViewIPDrawer: React.FC<CombinedProps> = (props) => {
-  const { classes } = props;
+const ViewIPDrawer = (props: Props) => {
+  const classes = useStyles();
 
   return (
-    <Drawer open={props.open} onClose={props.onClose} title={`Details for IP`}>
+    <Drawer open={props.open} onClose={props.onClose} title="Details for IP">
       {props.ip && (
         <React.Fragment>
           <div className={classes.section} data-qa-ip-address-heading>
@@ -109,6 +98,4 @@ const ViewIPDrawer: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ViewIPDrawer);
+export default ViewIPDrawer;

@@ -1,6 +1,6 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import {
   makeStyles,
@@ -10,13 +10,13 @@ import {
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-}));
+});
 
 interface Props {
   linodeStatus: string;
@@ -30,14 +30,13 @@ interface Props {
   onDelete: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps;
-
-export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
+export const DiskActionMenu = (props: Props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
   const classes = useStyles();
+  const history = useHistory();
 
-  const { linodeStatus, readOnly, linodeId, history, diskId } = props;
+  const { linodeStatus, readOnly, linodeId, diskId } = props;
 
   let _tooltip =
     linodeStatus === 'offline'
@@ -118,4 +117,4 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default withRouter(DiskActionMenu);
+export default DiskActionMenu;

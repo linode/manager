@@ -1,6 +1,5 @@
 import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 
 interface Props {
@@ -10,9 +9,7 @@ interface Props {
   onDeploy: (backup: LinodeBackup) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
+export const LinodeBackupActionMenu = (props: Props) => {
   const { backup, disabled, onRestore, onDeploy } = props;
   const disabledProps = {
     disabled,
@@ -46,4 +43,4 @@ export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default withRouter(LinodeBackupActionMenu);
+export default LinodeBackupActionMenu;
