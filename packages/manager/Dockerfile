@@ -24,6 +24,7 @@ VOLUME /home/node/app
 USER node
 RUN mkdir -p /home/node/.cache/Cypress
 ENV CI=1
+ENV NO_COLOR=1
 ENV HOME=/home/node/
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
 ENTRYPOINT [ "yarn", "cy:ci" ]
