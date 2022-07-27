@@ -23,12 +23,13 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
-    user: "${UID}:${GID}"
+    # user: "${UID}:${GID}"
     depends_on:
       web:
         condition: service_healthy
     environment:
       - CYPRESS_BASE_URL=http://web:3000
+      - HOME=/home/node
     env_file: ./packages/manager/.env
     volumes:
-      - .:/app
+      - .:/home/node/app

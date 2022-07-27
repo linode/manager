@@ -14,13 +14,18 @@ CMD yarn start:manager:ci
 #
 # Runs Cloud Manager Cypress tests.
 FROM cypress/included:9.6.0 as e2e
-WORKDIR /app
-
-RUN chmod 777 /root
-ENV CI=1
-ENV CYPRESS_CACHE_FOLDER=/root/.cache/Cypress
+WORKDIR /home/node/app
+VOLUME /home/node/app
+# RUN chmod 777 /root
+# RUN mv /root/.cache /home/node/.cache
+# RUN chown node:node /home/node/.cache
+# RUN chmod 777 /home/node/.cache
 
 USER node
+RUN mkdir -p /home/node/.cache/Cypress
+ENV CI=1
+ENV HOME=/home/node/
+ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
 ENTRYPOINT [ "yarn", "cy:ci" ]
 
 # TODO Add `e2e-m1`.
