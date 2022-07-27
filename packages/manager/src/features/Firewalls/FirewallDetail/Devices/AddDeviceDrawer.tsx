@@ -10,6 +10,7 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';
+import { useGrants, useProfile } from 'src/queries/profile';
 interface Props {
   open: boolean;
   error?: APIError[];
@@ -30,6 +31,10 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
     onClose,
     addDevice,
   } = props;
+
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+  const isRestrictedUser = Boolean(profile?.restricted);
 
   const classes = useStyles();
 
@@ -85,6 +90,15 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
     }
   };
 
+  // If a user is restricted, they can not add a read-only Linode to a firewall.
+  const readOnlyLinodeIds = isRestrictedUser
+    ? grants?.linode
+        .filter((grant) => grant.permissions === 'read_only')
+        .map((grant) => grant.id) ?? []
+    : [];
+
+  const areSomeLinodesReadOnly = readOnlyLinodeIds.length > 0;
+
   return (
     <Drawer
       title={`Add Linode to Firewall: ${firewallLabel}`}
@@ -102,7 +116,12 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           key={key}
           handleChange={(selected) => setSelectedLinodes(selected)}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
-          filteredLinodes={currentDevices}
+          filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
+          guidance={
+            areSomeLinodesReadOnly
+              ? `Only Linodes you have permission to modify are shown.`
+              : undefined
+          }
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
