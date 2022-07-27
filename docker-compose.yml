@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: manager
+    user: "${UID}:${GID}"
     container_name: web
     ports:
       - "3000:3000"
@@ -23,6 +24,7 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
+    user: "${UID}:${GID}"
     depends_on:
       web:
         condition: service_healthy
