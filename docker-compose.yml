@@ -14,9 +14,9 @@ services:
       - .:/home/node/app
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:3000']
-      interval: 20s
+      interval: 15s
       timeout: 10s
-      retries: 100
+      retries: 10
 
   e2e:
     build:
