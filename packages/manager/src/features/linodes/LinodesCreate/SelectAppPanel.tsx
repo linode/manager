@@ -9,12 +9,12 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-import LinearProgress from 'src/components/LinearProgress';
+import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
+import AppPanelSection from 'src/features/linodes/LinodesCreate/AppPanelSection';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';
-import AppPanelSection from 'src/features/linodes/LinodesCreate/AppPanelSection';
 
 type ClassNames = 'panel' | 'loading';
 
@@ -27,8 +27,9 @@ const styles = (theme: Theme) =>
       boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
     },
     loading: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
+      '& >div:first-child': {
+        height: 450,
+      },
     },
   });
 
@@ -115,7 +116,9 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     if (appInstancesLoading) {
       return (
         <Panel className={classes.panel} error={error} title="Select App">
-          <LinearProgress className={classes.loading} />
+          <span className={classes.loading}>
+            <Loading />
+          </span>
         </Panel>
       );
     }
