@@ -1,36 +1,36 @@
+import Close from '@material-ui/icons/Close';
+import classNames from 'classnames';
 import * as React from 'react';
-import LibraryBook from 'src/assets/icons/guides.svg';
-import Info from 'src/assets/icons/info.svg';
-import Link from 'src/assets/icons/moreInfo.svg';
-import Divider from 'src/components/core/Divider';
+import Accordion from 'src/components/Accordion';
+import Button from 'src/components/Button/Button';
+import Box from 'src/components/core/Box';
+import Drawer from 'src/components/core/Drawer';
 import Grid from 'src/components/core/Grid';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Drawer from 'src/components/Drawer';
+import ExternalLink from 'src/components/ExternalLink';
 import { APP_ROOT } from 'src/constants';
 import useFlags from 'src/hooks/useFlags';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
-import LinkSection from './LinkSection';
-import TipSection from './TipSection';
 
 const useStyles = makeStyles((theme: Theme) => ({
   logo: {
     marginRight: theme.spacing(1),
   },
-  appName: {
-    fontSize: '2.0rem',
-    fontFamily: theme.font.normal,
-    color: theme.color.grey4,
-    lineHeight: '2.5rem',
+  logoContainer: {
+    height: 225,
   },
-  summary: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    textAlign: 'center',
+  appName: {
+    fontSize: '2.2rem',
+    fontFamily: theme.font.bold,
+    color: '#fff !important',
+    lineHeight: '2.5rem',
   },
   description: {
     lineHeight: 1.5,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
   },
   image: {
     maxWidth: 50,
@@ -41,6 +41,37 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapAppName: {
     maxWidth: 'fit-content',
     minWidth: 170,
+  },
+  container: {
+    padding: theme.spacing(4),
+  },
+  paper: {
+    width: 300,
+    [theme.breakpoints.up('sm')]: {
+      width: 480,
+    },
+  },
+  website: {
+    fontSize: '0.875rem',
+  },
+  accordion: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    borderTop: `1px solid ${theme.borderColors.divider}`,
+  },
+  button: {
+    position: 'absolute',
+    minWidth: 'auto',
+    minHeight: 'auto',
+    margin: theme.spacing(2),
+    padding: theme.spacing(2),
+    color: 'white',
+    borderRadius: '50%',
+    backgroundColor: 'unset !important',
+    '& :hover, & :focus, & :active': {
+      color: 'white',
+      backgroundColor: 'unset !important',
+    },
   },
 }));
 
@@ -61,78 +92,130 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
       .trim();
     const cleanedAppName = app.name.replace('&reg;', '');
     return cleanedStackScriptLabel === cleanedAppName;
-  }); // This is horrible
-  if (!app) {
-    return null;
-  }
+  });
+
+  const gradient = {
+    backgroundImage: `url(https://www.linode.com/wp-content/themes/linode-website-theme/images/Triangles-Background--Dark--Desktop.png),linear-gradient(to right, #${app?.colors.start}, #${app?.colors.end})`,
+  };
 
   return (
     <Drawer
       open={open}
       onClose={onClose}
-      title={
-        '' /* Empty so that we can display the logo beneath the close button rather than a text title */
-      }
+      anchor="right"
+      classes={{ paper: classes.paper }}
     >
-      <Grid
-        container
-        direction="row"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid
-          item
-          className={`${classes.logo} ${
-            app.name.length > 20 ? classes.wrapLogo : ''
-          }`}
+      <Box display="flex" justifyContent="flex-end">
+        <Button
+          className={classes.button}
+          onClick={onClose}
+          aria-label="Close drawer"
         >
-          <img
-            className={classes.image}
-            src={`${APP_ROOT}/${app.logo_url}`}
-            alt={`${app.name} logo`}
-          />
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="h2"
-            className={`${classes.appName} ${
-              app.name.length > 20 ? classes.wrapAppName : ''
-            }`}
-            dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
-          />
-        </Grid>
-      </Grid>
-      <Divider spacingTop={24} />
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid item>
-          <Typography variant="h3" className={classes.summary}>
-            {app.summary}
+          <Close />
+        </Button>
+      </Box>
+      {app ? (
+        <>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="center"
+            className={classes.logoContainer}
+            style={gradient}
+          >
+            <Grid
+              item
+              className={classNames(classes.logo, {
+                [classes.wrapLogo]: app.name.length > 20,
+              })}
+            >
+              <img
+                className={classes.image}
+                src={`${APP_ROOT}/${app.logo_url}`}
+                alt={`${app.name} logo`}
+              />
+            </Grid>
+            <Grid item>
+              <Typography
+                variant="h2"
+                className={classNames(classes.appName, {
+                  [classes.wrapAppName]: app.name.length > 20,
+                })}
+                dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
+              />
+            </Grid>
+          </Grid>
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="space-between"
+            height="calc(100% - 225px)"
+          >
+            <div className={classes.container}>
+              <Typography variant="h3">{app.summary}</Typography>
+              <Typography
+                variant="body1"
+                className={classes.description}
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeHTML(app.description),
+                }}
+              />
+              {app.website && (
+                <>
+                  <Typography variant="h3">Website</Typography>
+                  <ExternalLink
+                    className={classes.website}
+                    link={app.website}
+                    text={app.website}
+                    hideIcon
+                  />
+                </>
+              )}
+            </div>
+            <div>
+              {app.related_guides && (
+                <Accordion className={classes.accordion} heading="Guides">
+                  <ul>
+                    {(
+                      oneClickAppsDocsOverride?.[app.name] ?? app.related_guides
+                    ).map((link) => (
+                      <li key={link.href}>
+                        <ExternalLink text={link.title} link={link.href} />
+                      </li>
+                    ))}
+                  </ul>
+                </Accordion>
+              )}
+              {app.tips && (
+                <Accordion className={classes.accordion} heading="Tips">
+                  <ul>
+                    {app.tips.map((tip, idx) => (
+                      <li key={`${app.name}-tip-${idx}`}>{tip} </li>
+                    ))}
+                  </ul>
+                </Accordion>
+              )}
+            </div>
+          </Box>
+        </>
+      ) : (
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          style={{ height: '100%', gap: 10 }}
+        >
+          <Typography variant="h2">App Details Not Found</Typography>
+          <Typography>
+            We were unable to load the details of this app.
           </Typography>
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="body1"
-            className={classes.description}
-            dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
-          />
-        </Grid>
-        {app.related_info && (
-          <LinkSection title="More info" links={app.related_info} icon={Link} />
-        )}
-        {app.related_guides && (
-          <LinkSection
-            title="Guides"
-            links={oneClickAppsDocsOverride?.[app.name] ?? app.related_guides}
-            icon={LibraryBook}
-          />
-        )}
-        {app.tips && <TipSection title="Tips" tips={app.tips} icon={Info} />}
-      </Grid>
+          <Button buttonType="primary" onClick={onClose}>
+            Exit
+          </Button>
+        </Box>
+      )}
     </Drawer>
   );
 };

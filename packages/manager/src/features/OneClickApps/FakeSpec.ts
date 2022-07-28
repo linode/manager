@@ -6,12 +6,18 @@ export interface OCA {
   logo_url: string;
   summary: string;
   tips?: string[];
-  related_info?: Doc[];
+  website?: string;
+  colors: Colors;
 }
 
 export interface Doc {
   title: string;
   href: string;
+}
+
+export interface Colors {
+  start: string;
+  end: string;
 }
 
 export const oneClickApps: OCA[] = [
@@ -26,13 +32,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/aapanel-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.aapanel.com/reference.html',
-        href: 'https://www.aapanel.com/reference.html',
-      },
-    ],
+    website: 'https://www.aapanel.com/reference.html',
     logo_url: 'assets/aapanel_color.svg',
+    colors: {
+      start: '20a53a',
+      end: 'a3a3a3',
+    },
   },
   {
     name: 'Akaunting',
@@ -45,13 +50,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/akaunting-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://akaunting.com',
-        href: 'https://akaunting.com',
-      },
-    ],
+    website: 'https://akaunting.com',
     logo_url: 'assets/akaunting_color.svg',
+    colors: {
+      start: '6ea152',
+      end: '55588b',
+    },
   },
   {
     name: 'Ant Media Server',
@@ -64,13 +68,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/antmediaserver-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://antmedia.io/',
-        href: 'https://antmedia.io/',
-      },
-    ],
+    website: 'https://antmedia.io/',
     logo_url: 'assets/antmediaserver_color.svg',
+    colors: {
+      start: 'df0718',
+      end: '0a0a0a',
+    },
   },
   {
     name: 'Ant Media Enterprise Edition',
@@ -84,13 +87,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/antmediaenterpriseserver/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://antmedia.io/',
-        href: 'https://antmedia.io/',
-      },
-    ],
+    website: 'https://antmedia.io/',
     logo_url: 'assets/antmediaserver_color.svg',
+    colors: {
+      start: 'df0718',
+      end: '0a0a0a',
+    },
   },
   {
     name: 'Ark',
@@ -105,13 +107,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/ark-survival-evolved-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://survivetheark.com/',
-        href: 'https://survivetheark.com/',
-      },
-    ],
+    website: 'https://survivetheark.com/',
     logo_url: 'assets/ark_color.svg',
+    colors: {
+      start: '0e0b08',
+      end: '030303',
+    },
   },
   {
     name: 'Azuracast',
@@ -123,13 +124,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/azuracast-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.azuracast.com/',
-        href: 'https://www.azuracast.com/',
-      },
-    ],
+    website: 'https://www.azuracast.com/',
     logo_url: 'assets/azuracast.svg',
+    colors: {
+      start: '1f8df5',
+      end: '0b1b64',
+    },
   },
   {
     name: 'BeEF',
@@ -142,13 +142,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/beef-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://github.com/beefproject/beef',
-        href: 'https://github.com/beefproject/beef',
-      },
-    ],
+    website: 'https://github.com/beefproject/beef',
     logo_url: 'assets/beef_color.svg',
+    colors: {
+      start: '4a80a9',
+      end: '000f21',
+    },
   },
   {
     name: 'BitNinja',
@@ -160,13 +159,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/bitninja-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://doc.bitninja.io/',
-        href: 'https://doc.bitninja.io/',
-      },
-    ],
+    website: 'https://doc.bitninja.io/',
     logo_url: 'assets/bitninja_color.svg',
+    colors: {
+      start: 'c32127',
+      end: '2a2a29',
+    },
   },
   {
     name: 'Chevereto',
@@ -179,13 +177,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/chevereto-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://v3-docs.chevereto.com/',
-        href: 'https://v3-docs.chevereto.com/',
-      },
-    ],
+    website: 'https://v3-docs.chevereto.com/',
     logo_url: 'assets/chevereto_color.svg',
+    colors: {
+      start: '23a8e0',
+      end: '8e44ad',
+    },
   },
   {
     name: 'Cloudron',
@@ -198,13 +195,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/cloudron-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.cloudron.io',
-        href: 'https://docs.cloudron.io',
-      },
-    ],
+    website: 'https://docs.cloudron.io',
     logo_url: 'assets/cloudron_color.svg',
+    colors: {
+      start: '03a9f4',
+      end: '212121',
+    },
   },
   {
     name: 'ClusterControl',
@@ -218,13 +214,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/clustercontrol-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.severalnines.com/docs/clustercontrol/',
-        href: 'https://docs.severalnines.com/docs/clustercontrol/',
-      },
-    ],
+    website: 'https://docs.severalnines.com/docs/clustercontrol/',
     logo_url: 'assets/clustercontrol_color.svg',
+    colors: {
+      start: '0589de',
+      end: '3f434c',
+    },
   },
   {
     name: 'cPanel',
@@ -237,13 +232,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/cpanel-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.cpanel.net/',
-        href: 'https://www.cpanel.net/',
-      },
-    ],
+    website: 'https://www.cpanel.net/',
     logo_url: 'assets/cpanel_color.svg',
+    colors: {
+      start: 'ff6c2c',
+      end: '141d25',
+    },
   },
   {
     name: 'CS:GO',
@@ -257,13 +251,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/counter-strike-go-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://blog.counter-strike.net/index.php/about/',
-        href: 'https://blog.counter-strike.net/index.php/about/',
-      },
-    ],
+    website: 'https://blog.counter-strike.net/index.php/about/',
     logo_url: 'assets/csgo_color.svg',
+    colors: {
+      start: 'f29e1b',
+      end: '50545f',
+    },
   },
   {
     name: 'CyberPanel',
@@ -275,13 +268,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/cyberpanel-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
-        href: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
-      },
-    ],
+    website: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
     logo_url: 'assets/cyberpanel_color.svg',
+    colors: {
+      start: '3d596d',
+      end: '33cccc',
+    },
   },
   {
     name: 'Discourse',
@@ -294,13 +286,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/discourse-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.discourse.org/',
-        href: 'https://www.discourse.org/',
-      },
-    ],
+    website: 'https://www.discourse.org/',
     logo_url: 'assets/discourse_color.svg',
+    colors: {
+      start: '13b3ed',
+      end: 'eae692',
+    },
   },
   {
     name: 'Django',
@@ -312,13 +303,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/django-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.djangoproject.com/',
-        href: 'https://www.djangoproject.com/',
-      },
-    ],
+    website: 'https://www.djangoproject.com/',
     logo_url: 'assets/django_color.svg',
+    colors: {
+      start: '0a2e1f',
+      end: '136149',
+    },
   },
   {
     name: 'Docker',
@@ -330,13 +320,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/docker-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.docker.com/',
-        href: 'https://www.docker.com/',
-      },
-    ],
+    website: 'https://www.docker.com/',
     logo_url: 'assets/docker_color.svg',
+    colors: {
+      start: '2496ed',
+      end: '1e65c9',
+    },
   },
   {
     name: 'Drupal',
@@ -348,13 +337,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/drupal-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.drupal.org/',
-        href: 'https://www.drupal.org/',
-      },
-    ],
+    website: 'https://www.drupal.org/',
     logo_url: 'assets/drupal_color.svg',
+    colors: {
+      start: '0678be',
+      end: '1b64a5',
+    },
   },
   {
     name: 'Easypanel',
@@ -367,13 +355,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
       },
     ],
-    related_info: [
-      {
-        title: 'https://easypanel.io/',
-        href: 'https://easypanel.io/',
-      },
-    ],
+    website: 'https://easypanel.io/',
     logo_url: 'assets/easypanel_color.svg',
+    colors: {
+      start: '059669',
+      end: '000000',
+    },
   },
   {
     name: 'FileCloud',
@@ -385,13 +372,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/filecloud-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.getfilecloud.com',
-        href: 'https://www.getfilecloud.com',
-      },
-    ],
+    website: 'https://www.getfilecloud.com',
     logo_url: 'assets/filecloud_color.svg',
+    colors: {
+      start: '3e8cc1',
+      end: '0168ad',
+    },
   },
   {
     name: 'Flask',
@@ -403,13 +389,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/flask-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.palletsprojects.com/p/flask/',
-        href: 'https://www.palletsprojects.com/p/flask/',
-      },
-    ],
+    website: 'https://www.palletsprojects.com/p/flask/',
     logo_url: 'assets/flask_color.svg',
+    colors: {
+      start: '363b3d',
+      end: '1e2122',
+    },
   },
   {
     name: 'Focalboard',
@@ -421,13 +406,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/focalboard-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.focalboard.com/',
-        href: 'https://www.focalboard.com/',
-      },
-    ],
+    website: 'https://www.focalboard.com/',
     logo_url: 'assets/focalboard_color.svg',
+    colors: {
+      start: '2997f8',
+      end: '1d52ad',
+    },
   },
   {
     name: 'Gitea',
@@ -439,13 +423,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/gitea-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://gitea.io/',
-        href: 'https://gitea.io/',
-      },
-    ],
+    website: 'https://gitea.io/',
     logo_url: 'assets/gitea_color.svg',
+    colors: {
+      start: '609926',
+      end: '34495e',
+    },
   },
   {
     name: 'GitLab',
@@ -459,13 +442,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/gitlab-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://about.gitlab.com/',
-        href: 'https://about.gitlab.com/',
-      },
-    ],
+    website: 'https://about.gitlab.com/',
     logo_url: 'assets/gitlab_color.svg',
+    colors: {
+      start: '48357d',
+      end: '21153e',
+    },
   },
   {
     name: 'Grafana',
@@ -477,13 +459,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/grafana-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://grafana.com/',
-        href: 'https://grafana.com/',
-      },
-    ],
+    website: 'https://grafana.com/',
     logo_url: 'assets/grafana_color.svg',
+    colors: {
+      start: '606060',
+      end: 'f9b716',
+    },
   },
   {
     name: 'Grav',
@@ -495,13 +476,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/grav-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://getgrav.org/',
-        href: 'https://getgrav.org/',
-      },
-    ],
+    website: 'https://getgrav.org/',
     logo_url: 'assets/grav_color.svg',
+    colors: {
+      start: '1a0629',
+      end: 'b987cf',
+    },
   },
   {
     name: 'Guacamole',
@@ -513,13 +493,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/guacamole-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://guacamole.apache.org/',
-        href: 'https://guacamole.apache.org/',
-      },
-    ],
+    website: 'https://guacamole.apache.org/',
     logo_url: 'assets/guacamole_color.svg',
+    colors: {
+      start: '304730',
+      end: '213121',
+    },
   },
   {
     name: 'Harbor',
@@ -531,13 +510,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/harbor-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://goharbor.io/docs',
-        href: 'https://goharbor.io/docs',
-      },
-    ],
+    website: 'https://goharbor.io/docs',
     logo_url: 'assets/harbor_color.svg',
+    colors: {
+      start: '60b932',
+      end: '4495d7',
+    },
   },
   {
     name: 'Jenkins',
@@ -549,13 +527,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/jenkins-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://jenkins.io/',
-        href: 'https://jenkins.io/',
-      },
-    ],
+    website: 'https://jenkins.io/',
     logo_url: 'assets/jenkins_color.svg',
+    colors: {
+      start: 'd33833',
+      end: 'd24939',
+    },
   },
   {
     name: 'JetBackup',
@@ -568,13 +545,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/jetbackup-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.jetapps.com/',
-        href: 'https://docs.jetapps.com/',
-      },
-    ],
+    website: 'https://docs.jetapps.com/',
     logo_url: 'assets/jetbackup_color.svg',
+    colors: {
+      start: 'ff6c2c',
+      end: '1f2c38',
+    },
   },
   {
     name: 'Jitsi',
@@ -586,13 +562,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/jitsi-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://jitsi.org/',
-        href: 'https://jitsi.org/',
-      },
-    ],
+    website: 'https://jitsi.org/',
     logo_url: 'assets/jitsi_color.svg',
+    colors: {
+      start: '1d76ba',
+      end: '949699',
+    },
   },
   {
     name: 'Joomla',
@@ -605,13 +580,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/joomla',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.joomla.org/',
-        href: 'https://www.joomla.org/',
-      },
-    ],
+    website: 'https://www.joomla.org/',
     logo_url: 'assets/joomla_color.svg',
+    colors: {
+      start: 'f2a13e',
+      end: '5090cd',
+    },
   },
   {
     name: 'Joplin',
@@ -624,13 +598,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/joplin',
       },
     ],
-    related_info: [
-      {
-        title: 'https://joplinapp.org/',
-        href: 'https://joplinapp.org/',
-      },
-    ],
+    website: 'https://joplinapp.org/',
     logo_url: 'assets/joplin_color.svg',
+    colors: {
+      start: '043872',
+      end: '509df9',
+    },
   },
   {
     name: 'Kali Linux',
@@ -644,13 +617,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.kali.org/',
-        href: 'https://www.kali.org/',
-      },
-    ],
+    website: 'https://www.kali.org/',
     logo_url: 'assets/kalilinux_color.svg',
+    colors: {
+      start: '267ff7',
+      end: '2fa1bc',
+    },
   },
   {
     name: 'Kepler Builder',
@@ -662,13 +634,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/kepler-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://kepler.app/',
-        href: 'https://kepler.app/',
-      },
-    ],
+    website: 'https://kepler.app/',
     logo_url: 'assets/keplerbuilder_color.svg',
+    colors: {
+      start: '0166ff',
+      end: '4395ff',
+    },
   },
   {
     name: 'LAMP',
@@ -682,6 +653,10 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/lamp_flame_color.svg',
+    colors: {
+      start: '3c4043',
+      end: 'bfa477',
+    },
   },
   {
     name: 'LEMP',
@@ -694,6 +669,10 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/lemp_color.svg',
+    colors: {
+      start: '2e7d32',
+      end: '005138',
+    },
   },
   {
     name: 'LiteSpeed cPanel',
@@ -706,13 +685,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/litespeed-cpanel-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.litespeedtech.com/cp/cpanel/',
-        href: 'https://docs.litespeedtech.com/cp/cpanel/',
-      },
-    ],
+    website: 'https://docs.litespeedtech.com/cp/cpanel/',
     logo_url: 'assets/litespeedcpanel_color.svg',
+    colors: {
+      start: '353785',
+      end: '6e92c7',
+    },
   },
   {
     name: 'LiveSwitch',
@@ -725,13 +703,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.liveswitch.io/',
-        href: 'https://www.liveswitch.io/',
-      },
-    ],
+    website: 'https://www.liveswitch.io/',
     logo_url: 'assets/liveswitch_color.svg',
+    colors: {
+      start: '346ee0',
+      end: '4d8eff',
+    },
   },
   {
     name: 'MagicSpam',
@@ -744,13 +721,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/magicspam-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.magicspam.com/anti-spam-features.php',
-        href: 'https://www.magicspam.com/anti-spam-features.php',
-      },
-    ],
+    website: 'https://www.magicspam.com/anti-spam-features.php',
     logo_url: 'assets/magicspam_color.svg',
+    colors: {
+      start: '9c001b',
+      end: 'f4ac45',
+    },
   },
   {
     name: 'MEAN',
@@ -762,13 +738,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/mean-stack-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'http://meanjs.org/',
-        href: 'http://meanjs.org/',
-      },
-    ],
+    website: 'http://meanjs.org/',
     logo_url: 'assets/mean_color.svg',
+    colors: {
+      start: '323232',
+      end: '686868',
+    },
   },
   {
     name: 'MERN',
@@ -783,6 +758,10 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/mern_color.svg',
+    colors: {
+      start: '30383a',
+      end: '256291',
+    },
   },
   {
     name: 'Minecraft: Java Edition',
@@ -796,13 +775,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/minecraft-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.minecraft.net/',
-        href: 'https://www.minecraft.net/',
-      },
-    ],
+    website: 'https://www.minecraft.net/',
     logo_url: 'assets/minecraft_color.svg',
+    colors: {
+      start: '97948f',
+      end: 'd0c8c4',
+    },
   },
   {
     name: 'Mist.io',
@@ -815,13 +793,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/mistio-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://mist.io/',
-        href: 'https://mist.io/',
-      },
-    ],
+    website: 'https://mist.io/',
     logo_url: 'assets/mistio_color.svg',
+    colors: {
+      start: '424242',
+      end: '0099cb',
+    },
   },
   {
     name: 'MongoDB',
@@ -833,13 +810,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/mongodb-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.mongodb.com/',
-        href: 'https://www.mongodb.com/',
-      },
-    ],
+    website: 'https://www.mongodb.com/',
     logo_url: 'assets/mongodb_color.svg',
+    colors: {
+      start: '28aa52',
+      end: '136149',
+    },
   },
   {
     name: 'Moodle',
@@ -852,13 +828,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/moodle-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.moodle.org/',
-        href: 'https://docs.moodle.org/',
-      },
-    ],
+    website: 'https://docs.moodle.org/',
     logo_url: 'assets/moodle_color.svg',
+    colors: {
+      start: 'ff7800',
+      end: '494949',
+    },
   },
   {
     name: 'MySQL/MariaDB',
@@ -870,17 +845,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/mysql-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.mysql.com/',
-        href: 'https://www.mysql.com/',
-      },
-      {
-        title: 'https://mariadb.com/',
-        href: 'https://mariadb.com/',
-      },
-    ],
+    website: 'https://www.mysql.com/',
     logo_url: 'assets/mysql_color.svg',
+    colors: {
+      start: '1d758f',
+      end: '8a9177',
+    },
   },
   {
     name: 'Nextcloud',
@@ -893,6 +863,10 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/nextcloud_color.svg',
+    colors: {
+      start: '16a5f3',
+      end: '2a2a36',
+    },
   },
   {
     name: 'NirvaShare',
@@ -905,13 +879,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/nirvashare-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://nirvashare.com/setup-guide/',
-        href: 'https://nirvashare.com/setup-guide/',
-      },
-    ],
+    website: 'https://nirvashare.com/setup-guide/',
     logo_url: 'assets/nirvashare_color.svg',
+    colors: {
+      start: '1f4c8f',
+      end: '252730',
+    },
   },
   {
     name: 'NodeJS',
@@ -924,13 +897,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/nodejs-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://nodejs.org/',
-        href: 'https://nodejs.org/',
-      },
-    ],
+    website: 'https://nodejs.org/',
     logo_url: 'assets/nodejs_color.svg',
+    colors: {
+      start: '3d853c',
+      end: '333333',
+    },
   },
   {
     name: 'Odoo',
@@ -943,13 +915,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/odoo-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.odoo.com/',
-        href: 'https://www.odoo.com/',
-      },
-    ],
+    website: 'https://www.odoo.com/',
     logo_url: 'assets/odoo_color.svg',
+    colors: {
+      start: '55354c',
+      end: '027e84',
+    },
   },
   {
     name: 'OpenLiteSpeed Django',
@@ -962,13 +933,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/openlitespeed-django-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.litespeedtech.com/cloud/images/django/',
-        href: 'https://docs.litespeedtech.com/cloud/images/django/',
-      },
-    ],
+    website: 'https://docs.litespeedtech.com/cloud/images/django/',
     logo_url: 'assets/openlitespeeddjango_color.svg',
+    colors: {
+      start: '318640',
+      end: '5cbf8a',
+    },
   },
   {
     name: 'OpenLiteSpeed NodeJS',
@@ -981,13 +951,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/openlitespeed-nodejs-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
-        href: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
-      },
-    ],
+    website: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
     logo_url: 'assets/openlitespeednodejs_color.svg',
+    colors: {
+      start: '3d596d',
+      end: '33cccc',
+    },
   },
   {
     name: 'OpenLiteSpeed Rails',
@@ -1000,13 +969,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/openlitespeed-rails-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.litespeedtech.com/cloud/images/rails/',
-        href: 'https://docs.litespeedtech.com/cloud/images/rails/',
-      },
-    ],
+    website: 'https://docs.litespeedtech.com/cloud/images/rails/',
     logo_url: 'assets/openlitespeedrails_color.svg',
+    colors: {
+      start: '8e1a4a',
+      end: 'd94b7a',
+    },
   },
   {
     name: 'OpenLiteSpeed WordPress',
@@ -1020,13 +988,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/openlitespeed-wordpress-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://openlitespeed.org/',
-        href: 'https://openlitespeed.org/',
-      },
-    ],
+    website: 'https://openlitespeed.org/',
     logo_url: 'assets/openlitespeedwordpress_color.svg',
+    colors: {
+      start: '33cccc',
+      end: '3d596d',
+    },
   },
   {
     name: 'OpenVPN',
@@ -1038,13 +1005,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/openvpn-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://openvpn.net/',
-        href: 'https://openvpn.net/',
-      },
-    ],
+    website: 'https://openvpn.net/',
     logo_url: 'assets/openvpn_color.svg',
+    colors: {
+      start: 'ea7e20',
+      end: '193766',
+    },
   },
   {
     name: 'Owncast',
@@ -1057,13 +1023,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/owncast-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://owncast.online/',
-        href: 'https://owncast.online/',
-      },
-    ],
+    website: 'https://owncast.online/',
     logo_url: 'assets/owncast_color.svg',
+    colors: {
+      start: '7871ff',
+      end: '2086e1',
+    },
   },
   {
     name: 'Peppermint',
@@ -1075,13 +1040,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/peppermint-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://pmint.dev/',
-        href: 'https://pmint.dev/',
-      },
-    ],
+    website: 'https://pmint.dev/',
     logo_url: 'assets/peppermint_color.svg',
+    colors: {
+      start: '4cff4c',
+      end: '0a0a0a',
+    },
   },
   {
     name: 'Percona (PMM)',
@@ -1095,15 +1059,13 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/percona-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title:
-          'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
-        href:
-          'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
-      },
-    ],
+    website:
+      'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
     logo_url: 'assets/percona_color.svg',
+    colors: {
+      start: 'c41d13',
+      end: 'fcb42f',
+    },
   },
   {
     name: 'phpMyAdmin',
@@ -1115,13 +1077,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/phpmyadmin-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.phpmyadmin.net/',
-        href: 'https://www.phpmyadmin.net/',
-      },
-    ],
+    website: 'https://www.phpmyadmin.net/',
     logo_url: 'assets/phpmyadmin_color.svg',
+    colors: {
+      start: 'f89d10',
+      end: '6c78af',
+    },
   },
   {
     name: 'Pi-hole',
@@ -1133,13 +1094,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/pihole-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://pi-hole.net/',
-        href: 'https://pi-hole.net/',
-      },
-    ],
+    website: 'https://pi-hole.net/',
     logo_url: 'assets/pihole_color.svg',
+    colors: {
+      start: '96060c',
+      end: 'f60d1a',
+    },
   },
   {
     name: 'Plesk',
@@ -1152,13 +1112,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/plesk-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.plesk.com/',
-        href: 'https://www.plesk.com/',
-      },
-    ],
+    website: 'https://www.plesk.com/',
     logo_url: 'assets/plesk_color.svg',
+    colors: {
+      start: '53bce6',
+      end: '4b5868',
+    },
   },
   {
     name: 'Plex',
@@ -1171,13 +1130,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/plex-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.plex.tv/',
-        href: 'https://www.plex.tv/',
-      },
-    ],
+    website: 'https://www.plex.tv/',
     logo_url: 'assets/plex_color.svg',
+    colors: {
+      start: 'e5a00d',
+      end: '332c37',
+    },
   },
   {
     name: 'PostgreSQL',
@@ -1189,13 +1147,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/postgresql-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.postgresql.org/',
-        href: 'https://www.postgresql.org/',
-      },
-    ],
+    website: 'https://www.postgresql.org/',
     logo_url: 'assets/postgresql_color.svg',
+    colors: {
+      start: '326690',
+      end: '254078',
+    },
   },
   {
     name: 'Pritunl',
@@ -1207,13 +1164,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/pritunl-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.pritunl.com/docs',
-        href: 'https://docs.pritunl.com/docs',
-      },
-    ],
+    website: 'https://docs.pritunl.com/docs',
     logo_url: 'assets/pritunl_color.svg',
+    colors: {
+      start: '2e4153',
+      end: '2e72d2',
+    },
   },
   {
     name: 'Prometheus',
@@ -1226,13 +1182,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/prometheus-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://prometheus.io/',
-        href: 'https://prometheus.io/',
-      },
-    ],
+    website: 'https://prometheus.io/',
     logo_url: 'assets/prometheus_color.svg',
+    colors: {
+      start: 'e6522c',
+      end: 'e27c37',
+    },
   },
   {
     name: 'Prometheus & Grafana',
@@ -1245,13 +1200,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/prometheus-grafana',
       },
     ],
-    related_info: [
-      {
-        title: 'https://prometheus.io/docs/visualization/grafana/',
-        href: 'https://prometheus.io/docs/visualization/grafana/',
-      },
-    ],
+    website: 'https://prometheus.io/docs/visualization/grafana/',
     logo_url: 'assets/prometheus_grafana_color.svg',
+    colors: {
+      start: 'f9b716',
+      end: 'e6522c',
+    },
   },
   {
     name: 'RabbitMQ',
@@ -1263,13 +1217,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/rabbitmq-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.rabbitmq.com/',
-        href: 'https://www.rabbitmq.com/',
-      },
-    ],
+    website: 'https://www.rabbitmq.com/',
     logo_url: 'assets/rabbitmq_color.svg',
+    colors: {
+      start: 'a9b5af',
+      end: 'ff6600',
+    },
   },
   {
     name: 'Redis',
@@ -1282,13 +1235,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/redis-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://redis.io/',
-        href: 'https://redis.io/',
-      },
-    ],
+    website: 'https://redis.io/',
     logo_url: 'assets/redis_color.svg',
+    colors: {
+      start: '222222',
+      end: '722b20',
+    },
   },
   {
     name: 'Restyaboard',
@@ -1300,13 +1252,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/restyaboard-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://restya.com',
-        href: 'https://restya.com',
-      },
-    ],
+    website: 'https://restya.com',
     logo_url: 'assets/restyaboard_color.svg',
+    colors: {
+      start: 'f47564',
+      end: '555555',
+    },
   },
   {
     name: 'Rocket.Chat',
@@ -1318,13 +1269,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/rocketchat-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.rocket.chat/',
-        href: 'https://docs.rocket.chat/',
-      },
-    ],
+    website: 'https://docs.rocket.chat/',
     logo_url: 'assets/rocketchat_color.svg',
+    colors: {
+      start: 'f5445c',
+      end: '030d1a',
+    },
   },
   {
     name: 'Ruby on Rails',
@@ -1337,13 +1287,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/ruby-on-rails-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://rubyonrails.org/',
-        href: 'https://rubyonrails.org/',
-      },
-    ],
+    website: 'https://rubyonrails.org/',
     logo_url: 'assets/rubyonrails_color.svg',
+    colors: {
+      start: '722b20',
+      end: 'fa9999',
+    },
   },
   {
     name: 'Rust',
@@ -1355,13 +1304,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/rust-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://rust.facepunch.com/',
-        href: 'https://rust.facepunch.com/',
-      },
-    ],
+    website: 'https://rust.facepunch.com/',
     logo_url: 'assets/rust_color.svg',
+    colors: {
+      start: '050508',
+      end: 'cd412b',
+    },
   },
   {
     name: 'Saltcorn',
@@ -1373,13 +1321,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/saltcorn-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://saltcorn.com/',
-        href: 'https://saltcorn.com/',
-      },
-    ],
+    website: 'https://saltcorn.com/',
     logo_url: 'assets/saltcorn_color.svg',
+    colors: {
+      start: '995ad9',
+      end: 'ff8e42',
+    },
   },
   {
     name: 'Secure Your Server',
@@ -1392,6 +1339,10 @@ export const oneClickApps: OCA[] = [
       },
     ],
     logo_url: 'assets/secureyourserver_color.svg',
+    colors: {
+      start: '01b058',
+      end: '32363b',
+    },
   },
   {
     name: 'ServerWand',
@@ -1404,13 +1355,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/serverwand-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://serverwand.com/',
-        href: 'https://serverwand.com/',
-      },
-    ],
+    website: 'https://serverwand.com/',
     logo_url: 'assets/serverwand_color.svg',
+    colors: {
+      start: '4c3148',
+      end: 'a25c57',
+    },
   },
   {
     name: 'Shadowsocks',
@@ -1424,13 +1374,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/shadowsocks-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://shadowsocks.org/',
-        href: 'https://shadowsocks.org/',
-      },
-    ],
+    website: 'https://shadowsocks.org/',
     logo_url: 'assets/shadowsocks_color.svg',
+    colors: {
+      start: '227dc0',
+      end: '8d8d8d',
+    },
   },
   {
     name: 'Splunk',
@@ -1443,13 +1392,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/splunk-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.splunk.com/Documentation/Splunk',
-        href: 'https://docs.splunk.com/Documentation/Splunk',
-      },
-    ],
+    website: 'https://docs.splunk.com/Documentation/Splunk',
     logo_url: 'assets/splunk_color.svg',
+    colors: {
+      start: 'f89f24',
+      end: 'ed0181',
+    },
   },
   {
     name: 'Terraria',
@@ -1461,13 +1409,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/terraria-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://terraria.org/',
-        href: 'https://terraria.org/',
-      },
-    ],
+    website: 'https://terraria.org/',
     logo_url: 'assets/terraria_color.svg',
+    colors: {
+      start: '936543',
+      end: '40924a',
+    },
   },
   {
     name: 'TF2',
@@ -1482,13 +1429,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/team-fortress-2-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'http://www.teamfortress.com/',
-        href: 'http://www.teamfortress.com/',
-      },
-    ],
+    website: 'http://www.teamfortress.com/',
     logo_url: 'assets/teamfortress_color.svg',
+    colors: {
+      start: 'b95b26',
+      end: '873d0c',
+    },
   },
   {
     name: 'Uptime Kuma',
@@ -1500,13 +1446,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/uptimekuma-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://github.com/louislam/uptime-kuma',
-        href: 'https://github.com/louislam/uptime-kuma',
-      },
-    ],
+    website: 'https://github.com/louislam/uptime-kuma',
     logo_url: 'assets/uptimekuma_color.svg',
+    colors: {
+      start: '67de92',
+      end: 'baecca',
+    },
   },
   {
     name: 'UTunnel VPN',
@@ -1519,17 +1464,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/utunnel-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.utunnel.io/linode-vpn-server.html',
-        href: 'https://www.utunnel.io/linode-vpn-server.html',
-      },
-      {
-        title: 'https://help.utunnel.io/',
-        href: 'https://help.utunnel.io/',
-      },
-    ],
+    website: 'https://www.utunnel.io/linode-vpn-server.html',
     logo_url: 'assets/utunnel_color.svg',
+    colors: {
+      start: '2ec1cf',
+      end: '1a32b1',
+    },
   },
   {
     name: 'Valheim',
@@ -1542,13 +1482,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/valheim-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.valheimgame.com/',
-        href: 'https://www.valheimgame.com/',
-      },
-    ],
+    website: 'https://www.valheimgame.com/',
     logo_url: 'assets/valheim_color.svg',
+    colors: {
+      start: '081e2b',
+      end: 'bb470d',
+    },
   },
   {
     name: 'VictoriaMetrics Single',
@@ -1563,13 +1502,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/guides/victoriametrics-single-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://victoriametrics.com/',
-        href: 'https://victoriametrics.com/',
-      },
-    ],
+    website: 'https://victoriametrics.com/',
     logo_url: 'assets/victoriametricssingle_color.svg',
+    colors: {
+      start: '6a1e6e',
+      end: 'af3e56',
+    },
   },
   {
     name: 'Virtualmin',
@@ -1581,13 +1519,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/virtualmin-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.virtualmin.com/',
-        href: 'https://www.virtualmin.com/',
-      },
-    ],
+    website: 'https://www.virtualmin.com/',
     logo_url: 'assets/virtualmin_color.svg',
+    colors: {
+      start: '58cc00',
+      end: '005ebd',
+    },
   },
   {
     name: 'VS Code Server',
@@ -1599,13 +1536,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/vscode-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://github.com/cdr/code-server',
-        href: 'https://github.com/cdr/code-server',
-      },
-    ],
+    website: 'https://github.com/cdr/code-server',
     logo_url: 'assets/vscodeserver_color.svg',
+    colors: {
+      start: '23a9f2',
+      end: '0066b8',
+    },
   },
   {
     name: 'WarpSpeed',
@@ -1617,13 +1553,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/warpspeed-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://bunker.services/products/warpspeed',
-        href: 'https://bunker.services/products/warpspeed',
-      },
-    ],
+    website: 'https://bunker.services/products/warpspeed',
     logo_url: 'assets/warpspeed_color.svg',
+    colors: {
+      start: '1f76b7',
+      end: '333333',
+    },
   },
   {
     name: 'Wazuh',
@@ -1636,13 +1571,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/wazuh/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://documentation.wazuh.com/current/index.html',
-        href: 'https://documentation.wazuh.com/current/index.html',
-      },
-    ],
+    website: 'https://documentation.wazuh.com/current/index.html',
     logo_url: 'assets/wazuh_color.svg',
+    colors: {
+      start: '00a9e5',
+      end: 'ffb600',
+    },
   },
   {
     name: 'Webmin',
@@ -1654,13 +1588,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/webmin-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'http://www.webmin.com/',
-        href: 'http://www.webmin.com/',
-      },
-    ],
+    website: 'http://www.webmin.com/',
     logo_url: 'assets/webmin_color.svg',
+    colors: {
+      start: '6ca034',
+      end: '3a70c4',
+    },
   },
   {
     name: 'Webuzo',
@@ -1673,13 +1606,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/webuzo-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'http://www.webuzo.com/',
-        href: 'http://www.webuzo.com/',
-      },
-    ],
+    website: 'http://www.webuzo.com/',
     logo_url: 'assets/webuzo_color.svg',
+    colors: {
+      start: 'f1b55d',
+      end: '445289',
+    },
   },
   {
     name: 'WireGuard&reg;',
@@ -1692,13 +1624,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/wireguard-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.wireguard.com/',
-        href: 'https://www.wireguard.com/',
-      },
-    ],
+    website: 'https://www.wireguard.com/',
     logo_url: 'assets/wireguard_color.svg',
+    colors: {
+      start: '88171a',
+      end: '51171a',
+    },
   },
   {
     name: 'WooCommerce',
@@ -1710,13 +1641,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/woocommerce-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://woocommerce.com/features/',
-        href: 'https://woocommerce.com/features/',
-      },
-    ],
+    website: 'https://woocommerce.com/features/',
     logo_url: 'assets/woocommerce_color.svg',
+    colors: {
+      start: '96588a',
+      end: '743b8a',
+    },
   },
   {
     name: 'WordPress',
@@ -1729,13 +1659,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/wordpress-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://wordpress.org/',
-        href: 'https://wordpress.org/',
-      },
-    ],
+    website: 'https://wordpress.org/',
     logo_url: 'assets/wordpress_color.svg',
+    colors: {
+      start: '176086',
+      end: '135478',
+    },
   },
   {
     name: 'Yacht',
@@ -1747,13 +1676,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/yacht-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://github.com/SelfhostedPro/Yacht/',
-        href: 'https://github.com/SelfhostedPro/Yacht/',
-      },
-    ],
+    website: 'https://github.com/SelfhostedPro/Yacht/',
     logo_url: 'assets/yacht_color.svg',
+    colors: {
+      start: '41b883',
+      end: 'c4c4c4',
+    },
   },
   {
     name: 'Zabbix',
@@ -1765,12 +1693,11 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/zabbix-marketplace-app/',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.zabbix.com',
-        href: 'https://www.zabbix.com',
-      },
-    ],
+    website: 'https://www.zabbix.com',
     logo_url: 'assets/zabbix_color.svg',
+    colors: {
+      start: 'd40000',
+      end: '252730',
+    },
   },
 ];
