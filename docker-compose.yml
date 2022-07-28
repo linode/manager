@@ -23,7 +23,6 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
-    # user: "${UID}:${GID}"
     depends_on:
       web:
         condition: service_healthy

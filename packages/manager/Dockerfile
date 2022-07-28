@@ -16,11 +16,6 @@ CMD yarn start:manager:ci
 FROM cypress/included:9.6.0 as e2e
 WORKDIR /home/node/app
 VOLUME /home/node/app
-# RUN chmod 777 /root
-# RUN mv /root/.cache /home/node/.cache
-# RUN chown node:node /home/node/.cache
-# RUN chmod 777 /home/node/.cache
-
 USER node
 RUN mkdir -p /home/node/.cache/Cypress
 ENV CI=1
