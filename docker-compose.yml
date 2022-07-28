@@ -29,6 +29,7 @@ services:
     environment:
       - CYPRESS_BASE_URL=http://web:3000
       - CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
+      - CYPRESS_RECORD=${CYPRESS_RECORD}
       - HOME=/home/node
     env_file: ./packages/manager/.env
     volumes:
