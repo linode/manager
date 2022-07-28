@@ -1,9 +1,6 @@
-import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { decode } from 'he';
+import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Info from 'src/assets/icons/info2.svg';
-import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -11,31 +8,18 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
-import SelectionCard from 'src/components/SelectionCard';
-import { APP_ROOT } from 'src/constants';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';
+import AppPanelSection from 'src/features/linodes/LinodesCreate/AppPanelSection';
 
-type ClassNames =
-  | 'flatImagePanelSelections'
-  | 'panel'
-  | 'loading'
-  | 'selectionCard'
-  | 'info';
+type ClassNames = 'panel' | 'loading';
 
 const styles = (theme: Theme) =>
   createStyles({
-    flatImagePanelSelections: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(),
-      padding: `${theme.spacing(1)}px 0`,
-    },
     panel: {
       marginBottom: theme.spacing(3),
       height: 576,
@@ -45,25 +29,6 @@ const styles = (theme: Theme) =>
     loading: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
-    },
-    selectionCard: {
-      mixBlendMode: theme.name === 'darkTheme' ? 'initial' : 'darken',
-      '& .cardBaseIcon': {
-        width: 40,
-        paddingRight: 0,
-        justifyContent: 'flex-start',
-      },
-    },
-    info: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      color: theme.palette.primary.main,
-      paddingLeft: 0,
-      maxWidth: 40,
-      '& svg': {
-        width: 19,
-        height: 19,
-      },
     },
   });
 
@@ -159,31 +124,6 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       return null;
     }
 
-    const panelSection = (heading: string, apps: StackScript[]) => (
-      <>
-        <Typography variant="h2">{heading}</Typography>
-        <Divider spacingTop={16} spacingBottom={16} />
-        <Grid className={classes.flatImagePanelSelections} container>
-          {apps.map((eachApp) => (
-            <SelectionCardWrapper
-              key={eachApp.id}
-              checked={eachApp.id === selectedStackScriptID}
-              // Decode App labels since they may contain HTML entities.
-              label={decode(eachApp.label)}
-              availableImages={eachApp.images}
-              userDefinedFields={eachApp.user_defined_fields}
-              handleClick={handleClick}
-              openDrawer={openDrawer}
-              disabled={disabled}
-              id={eachApp.id}
-              iconUrl={eachApp.logo_url.toLowerCase() || ''}
-              classes={classes}
-            />
-          ))}
-        </Grid>
-      </>
-    );
-
     const newApps = appInstances.filter((app) => {
       return ['kali linux', 'easypanel', 'liveswitch', 'saltcorn'].includes(
         app.label.toLowerCase().trim()
@@ -200,9 +140,30 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     return (
       <Paper className={classes.panel} data-qa-tp="Select Image">
         {error && <Notice text={error} error />}
-        {panelSection('New apps', newApps)}
-        {panelSection('Popular apps', popularApps)}
-        {panelSection('All apps', allApps)}
+        <AppPanelSection
+          heading="New apps"
+          apps={newApps}
+          disabled={disabled}
+          selectedStackScriptID={selectedStackScriptID}
+          handleClick={handleClick}
+          openDrawer={openDrawer}
+        />
+        <AppPanelSection
+          heading="Popular apps"
+          apps={popularApps}
+          disabled={disabled}
+          selectedStackScriptID={selectedStackScriptID}
+          handleClick={handleClick}
+          openDrawer={openDrawer}
+        />
+        <AppPanelSection
+          heading="All apps"
+          apps={allApps}
+          disabled={disabled}
+          selectedStackScriptID={selectedStackScriptID}
+          handleClick={handleClick}
+          openDrawer={openDrawer}
+        />
       </Paper>
     );
   }
@@ -214,82 +175,3 @@ export default compose<CombinedProps, Props>(
   styled,
   React.memo
 )(SelectAppPanel);
-
-interface SelectionProps {
-  handleClick: (
-    id: number,
-    label: string,
-    username: string,
-    stackScriptImages: string[],
-    userDefinedFields: UserDefinedField[]
-  ) => void;
-  openDrawer: (stackScriptLabel: string) => void;
-  iconUrl: string;
-  id: number;
-  label: string;
-  userDefinedFields: UserDefinedField[];
-  availableImages: string[];
-  disabled: boolean;
-  checked: boolean;
-}
-
-class SelectionCardWrapper extends React.PureComponent<
-  SelectionProps & WithStyles<ClassNames>
-> {
-  handleSelectApp = () => {
-    const { id, label, userDefinedFields, availableImages } = this.props;
-
-    return this.props.handleClick(
-      id,
-      label,
-      '' /** username doesn't matter since we're not displaying it */,
-      availableImages,
-      userDefinedFields
-    );
-  };
-
-  handleOpenDrawer = () => {
-    const { label, openDrawer } = this.props;
-    openDrawer(label);
-  };
-
-  handleInfoClick = (e: React.MouseEvent<any>) => {
-    e.stopPropagation();
-    e.preventDefault();
-    this.handleOpenDrawer();
-  };
-
-  render() {
-    const { iconUrl, id, checked, label, disabled, classes } = this.props;
-    /**
-     * '' is the default value for a stackscript's logo_url;
-     * display a fallback image in this case, to avoid broken image icons
-     */
-
-    const renderIcon =
-      iconUrl === ''
-        ? () => <span className="fl-tux" />
-        : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
-
-    const renderVariant = () => (
-      <Grid item className={classes.info} xs={2}>
-        <Info onClick={this.handleInfoClick} />
-      </Grid>
-    );
-
-    return (
-      <SelectionCard
-        key={id}
-        checked={checked}
-        onClick={this.handleSelectApp}
-        renderIcon={renderIcon}
-        renderVariant={renderVariant}
-        heading={label}
-        subheadings={['']}
-        data-qa-selection-card
-        disabled={disabled}
-        className={classes.selectionCard}
-      />
-    );
-  }
-}
