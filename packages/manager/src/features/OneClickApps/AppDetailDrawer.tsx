@@ -1,31 +1,28 @@
-import Close from '@material-ui/icons/Close';
-import classNames from 'classnames';
 import * as React from 'react';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { oneClickApps } from './FakeSpec';
+import Close from '@material-ui/icons/Close';
 import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
-import Grid from 'src/components/core/Grid';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
-import { APP_ROOT } from 'src/constants';
 import useFlags from 'src/hooks/useFlags';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
-import { oneClickApps } from './FakeSpec';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  logo: {
-    marginRight: theme.spacing(1),
-  },
   logoContainer: {
     height: 225,
+    padding: theme.spacing(2),
+    gap: theme.spacing(),
   },
   appName: {
     fontSize: '2.2rem',
     fontFamily: theme.font.bold,
     color: '#fff !important',
     lineHeight: '2.5rem',
+    textAlign: 'center',
   },
   description: {
     lineHeight: 1.5,
@@ -53,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   website: {
     fontSize: '0.875rem',
+    wordBreak: 'break-word',
   },
   accordion: {
     paddingLeft: theme.spacing(2),
@@ -116,43 +114,32 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
       </Box>
       {app ? (
         <>
-          <Grid
-            container
-            direction="row"
+          <Box
+            display="flex"
             alignItems="center"
             justifyContent="center"
+            flexWrap="wrap"
             className={classes.logoContainer}
             style={gradient}
           >
-            <Grid
-              item
-              className={classNames(classes.logo, {
-                [classes.wrapLogo]: app.name.length > 20,
-              })}
-            >
-              <img
-                className={classes.image}
-                src={`${APP_ROOT}/assets/white/${app.logo_url}`}
-                alt={`${app.name} logo`}
-              />
-            </Grid>
-            <Grid item>
-              <Typography
-                variant="h2"
-                className={classNames(classes.appName, {
-                  [classes.wrapAppName]: app.name.length > 20,
-                })}
-                dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
-              />
-            </Grid>
-          </Grid>
+            <img
+              className={classes.image}
+              src={`/assets/white/${app.logo_url}`}
+              alt={`${app.name} logo`}
+            />
+            <Typography
+              variant="h2"
+              className={classes.appName}
+              dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
+            />
+          </Box>
           <Box
             display="flex"
             flexDirection="column"
             justifyContent="space-between"
             height="calc(100% - 225px)"
           >
-            <div className={classes.container}>
+            <Box className={classes.container}>
               <Typography variant="h3">{app.summary}</Typography>
               <Typography
                 variant="body1"
@@ -172,7 +159,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                   />
                 </>
               )}
-            </div>
+            </Box>
             <div>
               {app.related_guides && (
                 <Accordion className={classes.accordion} heading="Guides">
