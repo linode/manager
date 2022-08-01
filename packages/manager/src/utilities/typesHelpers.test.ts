@@ -1,16 +1,19 @@
 import { getTypeInfo } from './typesHelpers';
 
-import { types } from 'src/__data__/types';
+import { LinodeType } from '@linode/api-v4';
+import types from 'src/cachedData/types.json';
+
+const _types = types.data as LinodeType[];
 
 describe('getTypeInfo helper function', () => {
   it('should return a matching type', () => {
-    const type = types[0];
-    expect(getTypeInfo(type.id, types)).toBe(type);
+    const type = types.data[0];
+    expect(getTypeInfo(type.id, _types)).toBe(type);
   });
   it('should return undefined if there is no matching type', () => {
-    expect(getTypeInfo('linode-standard-100T', types)).toBeUndefined();
+    expect(getTypeInfo('linode-standard-100T', _types)).toBeUndefined();
   });
   it('should return undefined if the type is null or undefined', () => {
-    expect(getTypeInfo(null, types)).toBeUndefined();
+    expect(getTypeInfo(null, _types)).toBeUndefined();
   });
 });

@@ -1,8 +1,9 @@
 import { assocPath } from 'ramda';
-import { domains, linodes, types, volumes } from 'src/__data__';
+import types from 'src/cachedData/types.json';
 import { imageFactory, kubernetesClusterFactory } from 'src/factories';
 import { nodeBalancerFactory } from 'src/factories/nodebalancer';
 import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';
+import { domains, linodes, volumes } from 'src/__data__';
 import getSearchEntities from './getSearchEntities';
 
 const nodeBalancers = nodeBalancerFactory.buildList(5);
@@ -15,7 +16,7 @@ describe('getSearchEntities selector', () => {
       itemsById: apiResponseToMappedState(linodes),
     },
     images: { itemsById: apiResponseToMappedState(images) },
-    types: { entities: types },
+    types: { entities: types.data },
     volumes: {
       itemsById: volumes.reduce((result, c) => ({ ...result, [c.id]: c }), {}),
     },

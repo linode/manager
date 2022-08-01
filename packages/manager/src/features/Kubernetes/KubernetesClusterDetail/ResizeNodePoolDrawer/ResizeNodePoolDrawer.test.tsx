@@ -1,12 +1,12 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { types as _types } from 'src/__data__/types';
+import types from 'src/cachedData/types.json';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ResizeNodePoolDrawer, { Props } from './ResizeNodePoolDrawer';
 
-const pool = nodePoolFactory.build({ type: 'g5-standard-1' });
+const pool = nodePoolFactory.build({ type: 'g6-standard-1' });
 const smallPool = nodePoolFactory.build({ count: 2 });
 
 const props: Props = {
@@ -17,7 +17,7 @@ const props: Props = {
   isSubmitting: false,
 };
 
-const useTypes = jest.fn().mockReturnValue({ types: { entities: _types } });
+const useTypes = jest.fn().mockReturnValue({ types: { entities: types.data } });
 
 jest.mock('src/hooks/useTypes', () => ({
   useTypes: () => useTypes(),

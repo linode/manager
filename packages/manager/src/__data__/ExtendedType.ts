@@ -1,7 +1,10 @@
-import { types } from './types';
+import types from 'src/cachedData/types.json';
+import { LinodeType } from '@linode/api-v4';
+
+const _types = types.data as LinodeType[];
 
 const extendTypes = () => {
-  return types.map((type) => {
+  return _types.map((type) => {
     return {
       ...type,
       heading: 'test',
