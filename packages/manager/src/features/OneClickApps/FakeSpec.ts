@@ -32,7 +32,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.aapanel.com/reference.html',
       },
     ],
-    logo_url: 'assets/aapanel_color.svg',
+    logo_url: 'assets/aapanel.svg',
   },
   {
     name: 'Akaunting',
@@ -51,7 +51,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://akaunting.com',
       },
     ],
-    logo_url: 'assets/akaunting_color.svg',
+    logo_url: 'assets/akaunting.svg',
   },
   {
     name: 'Ant Media Server',
@@ -70,7 +70,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://antmedia.io/',
       },
     ],
-    logo_url: 'assets/antmediaserver_color.svg',
+    logo_url: 'assets/antmediaserver.svg',
   },
   {
     name: 'Ant Media Enterprise Edition',
@@ -90,7 +90,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://antmedia.io/',
       },
     ],
-    logo_url: 'assets/antmediaserver_color.svg',
+    logo_url: 'assets/antmediaserver.svg',
   },
   {
     name: 'Ark',
@@ -111,7 +111,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://survivetheark.com/',
       },
     ],
-    logo_url: 'assets/ark_color.svg',
+    logo_url: 'assets/ark@1x.svg',
   },
   {
     name: 'Azuracast',
@@ -148,7 +148,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://github.com/beefproject/beef',
       },
     ],
-    logo_url: 'assets/beef_color.svg',
+    logo_url: 'assets/beef.svg',
   },
   {
     name: 'BitNinja',
@@ -166,7 +166,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://doc.bitninja.io/',
       },
     ],
-    logo_url: 'assets/bitninja_color.svg',
+    logo_url: 'assets/bitninja.svg',
   },
   {
     name: 'Chevereto',
@@ -185,7 +185,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://v3-docs.chevereto.com/',
       },
     ],
-    logo_url: 'assets/chevereto_color.svg',
+    logo_url: 'assets/chevereto.svg',
   },
   {
     name: 'Cloudron',
@@ -204,7 +204,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.cloudron.io',
       },
     ],
-    logo_url: 'assets/cloudron_color.svg',
+    logo_url: 'assets/cloudron.svg',
   },
   {
     name: 'ClusterControl',
@@ -224,7 +224,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.severalnines.com/docs/clustercontrol/',
       },
     ],
-    logo_url: 'assets/clustercontrol_color.svg',
+    logo_url: 'assets/clustercontrol.svg',
   },
   {
     name: 'cPanel',
@@ -243,7 +243,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.cpanel.net/',
       },
     ],
-    logo_url: 'assets/cpanel_color.svg',
+    logo_url: 'assets/cpanel.svg',
   },
   {
     name: 'CS:GO',
@@ -263,7 +263,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://blog.counter-strike.net/index.php/about/',
       },
     ],
-    logo_url: 'assets/csgo_color.svg',
+    logo_url: 'assets/csgo2.svg',
   },
   {
     name: 'CyberPanel',
@@ -281,7 +281,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
       },
     ],
-    logo_url: 'assets/cyberpanel_color.svg',
+    logo_url: 'assets/cyberpanel.svg',
   },
   {
     name: 'Discourse',
@@ -300,7 +300,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.discourse.org/',
       },
     ],
-    logo_url: 'assets/discourse_color.svg',
+    logo_url: 'assets/discourse.svg',
   },
   {
     name: 'Django',
@@ -318,7 +318,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.djangoproject.com/',
       },
     ],
-    logo_url: 'assets/django_color.svg',
+    logo_url: 'assets/django.svg',
   },
   {
     name: 'Docker',
@@ -336,7 +336,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.docker.com/',
       },
     ],
-    logo_url: 'assets/docker_color.svg',
+    logo_url: 'assets/docker.svg',
   },
   {
     name: 'Drupal',
@@ -354,7 +354,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.drupal.org/',
       },
     ],
-    logo_url: 'assets/drupal_color.svg',
+    logo_url: 'assets/drupal.svg',
   },
   {
     name: 'Easypanel',
@@ -373,7 +373,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://easypanel.io/',
       },
     ],
-    logo_url: 'assets/easypanel_color.svg',
+    logo_url: 'assets/easypanel.svg',
   },
   {
     name: 'FileCloud',
@@ -391,7 +391,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.getfilecloud.com',
       },
     ],
-    logo_url: 'assets/filecloud_color.svg',
+    logo_url: 'assets/filecloud.svg',
   },
   {
     name: 'Flask',
@@ -409,7 +409,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.palletsprojects.com/p/flask/',
       },
     ],
-    logo_url: 'assets/flask_color.svg',
+    logo_url: 'assets/flask.svg',
   },
   {
     name: 'Focalboard',
@@ -427,7 +427,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.focalboard.com/',
       },
     ],
-    logo_url: 'assets/focalboard_color.svg',
+    logo_url: 'assets/focalboard.svg',
   },
   {
     name: 'Gitea',
@@ -445,7 +445,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://gitea.io/',
       },
     ],
-    logo_url: 'assets/gitea_color.svg',
+    logo_url: 'assets/gitea.svg',
   },
   {
     name: 'GitLab',
@@ -465,7 +465,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://about.gitlab.com/',
       },
     ],
-    logo_url: 'assets/gitlab_color.svg',
+    logo_url: 'assets/gitlab.svg',
   },
   {
     name: 'Grafana',
@@ -483,7 +483,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://grafana.com/',
       },
     ],
-    logo_url: 'assets/grafana_color.svg',
+    logo_url: 'assets/grafana.svg',
   },
   {
     name: 'Grav',
@@ -501,7 +501,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://getgrav.org/',
       },
     ],
-    logo_url: 'assets/grav_color.svg',
+    logo_url: 'assets/grav.svg',
   },
   {
     name: 'Guacamole',
@@ -519,7 +519,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://guacamole.apache.org/',
       },
     ],
-    logo_url: 'assets/guacamole_color.svg',
+    logo_url: 'assets/guacamole.svg',
   },
   {
     name: 'Harbor',
@@ -537,7 +537,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://goharbor.io/docs',
       },
     ],
-    logo_url: 'assets/harbor_color.svg',
+    logo_url: 'assets/harbor.svg',
   },
   {
     name: 'Jenkins',
@@ -555,7 +555,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://jenkins.io/',
       },
     ],
-    logo_url: 'assets/jenkins_color.svg',
+    logo_url: 'assets/jenkins.svg',
   },
   {
     name: 'JetBackup',
@@ -574,7 +574,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.jetapps.com/',
       },
     ],
-    logo_url: 'assets/jetbackup_color.svg',
+    logo_url: 'assets/jetbackup.svg',
   },
   {
     name: 'Jitsi',
@@ -592,7 +592,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://jitsi.org/',
       },
     ],
-    logo_url: 'assets/jitsi_color.svg',
+    logo_url: 'assets/jitsi.svg',
   },
   {
     name: 'Joomla',
@@ -611,7 +611,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.joomla.org/',
       },
     ],
-    logo_url: 'assets/joomla_color.svg',
+    logo_url: 'assets/joomla.svg',
   },
   {
     name: 'Joplin',
@@ -630,7 +630,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://joplinapp.org/',
       },
     ],
-    logo_url: 'assets/joplin_color.svg',
+    logo_url: 'assets/joplin.svg',
   },
   {
     name: 'Kali Linux',
@@ -650,7 +650,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.kali.org/',
       },
     ],
-    logo_url: 'assets/kalilinux_color.svg',
+    logo_url: 'assets/kalilinux.svg',
   },
   {
     name: 'Kepler Builder',
@@ -668,7 +668,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://kepler.app/',
       },
     ],
-    logo_url: 'assets/keplerbuilder_color.svg',
+    logo_url: 'assets/keplerbuilder.svg',
   },
   {
     name: 'LAMP',
@@ -681,7 +681,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/lamp-stack-marketplace-app/',
       },
     ],
-    logo_url: 'assets/lamp_flame_color.svg',
+    logo_url: 'assets/lamp.svg',
   },
   {
     name: 'LEMP',
@@ -693,7 +693,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/lemp-stack-marketplace-app/',
       },
     ],
-    logo_url: 'assets/lemp_color.svg',
+    logo_url: 'assets/lemp.svg',
   },
   {
     name: 'LiteSpeed cPanel',
@@ -712,7 +712,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.litespeedtech.com/cp/cpanel/',
       },
     ],
-    logo_url: 'assets/litespeedcpanel_color.svg',
+    logo_url: 'assets/litespeedcpanel.svg',
   },
   {
     name: 'LiveSwitch',
@@ -731,7 +731,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.liveswitch.io/',
       },
     ],
-    logo_url: 'assets/liveswitch_color.svg',
+    logo_url: 'assets/liveswitch.svg',
   },
   {
     name: 'MagicSpam',
@@ -750,7 +750,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.magicspam.com/anti-spam-features.php',
       },
     ],
-    logo_url: 'assets/magicspam_color.svg',
+    logo_url: 'assets/magicspam.svg',
   },
   {
     name: 'MEAN',
@@ -768,7 +768,7 @@ export const oneClickApps: OCA[] = [
         href: 'http://meanjs.org/',
       },
     ],
-    logo_url: 'assets/mean_color.svg',
+    logo_url: 'assets/mean.svg',
   },
   {
     name: 'MERN',
@@ -782,7 +782,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/mern-stack-marketplace-app/',
       },
     ],
-    logo_url: 'assets/mern_color.svg',
+    logo_url: 'assets/mern.svg',
   },
   {
     name: 'Minecraft: Java Edition',
@@ -802,7 +802,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.minecraft.net/',
       },
     ],
-    logo_url: 'assets/minecraft_color.svg',
+    logo_url: 'assets/minecraft.svg',
   },
   {
     name: 'Mist.io',
@@ -821,7 +821,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://mist.io/',
       },
     ],
-    logo_url: 'assets/mistio_color.svg',
+    logo_url: 'assets/mistio.svg',
   },
   {
     name: 'MongoDB',
@@ -839,7 +839,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.mongodb.com/',
       },
     ],
-    logo_url: 'assets/mongodb_color.svg',
+    logo_url: 'assets/mongodb.svg',
   },
   {
     name: 'Moodle',
@@ -858,7 +858,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.moodle.org/',
       },
     ],
-    logo_url: 'assets/moodle_color.svg',
+    logo_url: 'assets/moodle.svg',
   },
   {
     name: 'MySQL/MariaDB',
@@ -880,7 +880,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://mariadb.com/',
       },
     ],
-    logo_url: 'assets/mysql_color.svg',
+    logo_url: 'assets/mysql.svg',
   },
   {
     name: 'Nextcloud',
@@ -892,7 +892,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/nextcloud-marketplace-app/',
       },
     ],
-    logo_url: 'assets/nextcloud_color.svg',
+    logo_url: 'assets/nextcloud.svg',
   },
   {
     name: 'NirvaShare',
@@ -911,7 +911,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://nirvashare.com/setup-guide/',
       },
     ],
-    logo_url: 'assets/nirvashare_color.svg',
+    logo_url: 'assets/nirvashare.svg',
   },
   {
     name: 'NodeJS',
@@ -930,7 +930,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://nodejs.org/',
       },
     ],
-    logo_url: 'assets/nodejs_color.svg',
+    logo_url: 'assets/nodejs.svg',
   },
   {
     name: 'Odoo',
@@ -949,7 +949,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.odoo.com/',
       },
     ],
-    logo_url: 'assets/odoo_color.svg',
+    logo_url: 'assets/odoo.svg',
   },
   {
     name: 'OpenLiteSpeed Django',
@@ -968,7 +968,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.litespeedtech.com/cloud/images/django/',
       },
     ],
-    logo_url: 'assets/openlitespeeddjango_color.svg',
+    logo_url: 'assets/openlitespeeddjango.svg',
   },
   {
     name: 'OpenLiteSpeed NodeJS',
@@ -987,7 +987,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
       },
     ],
-    logo_url: 'assets/openlitespeednodejs_color.svg',
+    logo_url: 'assets/openlitespeednodejs.svg',
   },
   {
     name: 'OpenLiteSpeed Rails',
@@ -1006,7 +1006,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.litespeedtech.com/cloud/images/rails/',
       },
     ],
-    logo_url: 'assets/openlitespeedrails_color.svg',
+    logo_url: 'assets/openlitespeedrails.svg',
   },
   {
     name: 'OpenLiteSpeed WordPress',
@@ -1026,7 +1026,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://openlitespeed.org/',
       },
     ],
-    logo_url: 'assets/openlitespeedwordpress_color.svg',
+    logo_url: 'assets/openlitespeedwordpress.svg',
   },
   {
     name: 'OpenVPN',
@@ -1044,7 +1044,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://openvpn.net/',
       },
     ],
-    logo_url: 'assets/openvpn_color.svg',
+    logo_url: 'assets/openvpn.svg',
   },
   {
     name: 'Owncast',
@@ -1063,7 +1063,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://owncast.online/',
       },
     ],
-    logo_url: 'assets/owncast_color.svg',
+    logo_url: 'assets/owncast.svg',
   },
   {
     name: 'Peppermint',
@@ -1081,7 +1081,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://pmint.dev/',
       },
     ],
-    logo_url: 'assets/peppermint_color.svg',
+    logo_url: 'assets/peppermint.svg',
   },
   {
     name: 'Percona (PMM)',
@@ -1103,7 +1103,7 @@ export const oneClickApps: OCA[] = [
           'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
       },
     ],
-    logo_url: 'assets/percona_color.svg',
+    logo_url: 'assets/percona.svg',
   },
   {
     name: 'phpMyAdmin',
@@ -1121,7 +1121,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.phpmyadmin.net/',
       },
     ],
-    logo_url: 'assets/phpmyadmin_color.svg',
+    logo_url: 'assets/phpmyadmin.svg',
   },
   {
     name: 'Pi-hole',
@@ -1139,7 +1139,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://pi-hole.net/',
       },
     ],
-    logo_url: 'assets/pihole_color.svg',
+    logo_url: 'assets/pihole.svg',
   },
   {
     name: 'Plesk',
@@ -1158,7 +1158,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.plesk.com/',
       },
     ],
-    logo_url: 'assets/plesk_color.svg',
+    logo_url: 'assets/plesk.svg',
   },
   {
     name: 'Plex',
@@ -1177,7 +1177,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.plex.tv/',
       },
     ],
-    logo_url: 'assets/plex_color.svg',
+    logo_url: 'assets/plex.svg',
   },
   {
     name: 'PostgreSQL',
@@ -1195,7 +1195,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.postgresql.org/',
       },
     ],
-    logo_url: 'assets/postgresql_color.svg',
+    logo_url: 'assets/postgresql.svg',
   },
   {
     name: 'Pritunl',
@@ -1213,7 +1213,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.pritunl.com/docs',
       },
     ],
-    logo_url: 'assets/pritunl_color.svg',
+    logo_url: 'assets/pritunl.svg',
   },
   {
     name: 'Prometheus',
@@ -1232,7 +1232,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://prometheus.io/',
       },
     ],
-    logo_url: 'assets/prometheus_color.svg',
+    logo_url: 'assets/prometheus.svg',
   },
   {
     name: 'Prometheus & Grafana',
@@ -1251,7 +1251,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://prometheus.io/docs/visualization/grafana/',
       },
     ],
-    logo_url: 'assets/prometheus_grafana_color.svg',
+    logo_url: 'assets/prometheus_grafana.svg',
   },
   {
     name: 'RabbitMQ',
@@ -1269,7 +1269,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.rabbitmq.com/',
       },
     ],
-    logo_url: 'assets/rabbitmq_color.svg',
+    logo_url: 'assets/rabbitmq.svg',
   },
   {
     name: 'Redis',
@@ -1288,7 +1288,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://redis.io/',
       },
     ],
-    logo_url: 'assets/redis_color.svg',
+    logo_url: 'assets/redis.svg',
   },
   {
     name: 'Restyaboard',
@@ -1306,7 +1306,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://restya.com',
       },
     ],
-    logo_url: 'assets/restyaboard_color.svg',
+    logo_url: 'assets/restyaboard.svg',
   },
   {
     name: 'Rocket.Chat',
@@ -1324,7 +1324,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.rocket.chat/',
       },
     ],
-    logo_url: 'assets/rocketchat_color.svg',
+    logo_url: 'assets/rocketchat.svg',
   },
   {
     name: 'Ruby on Rails',
@@ -1343,7 +1343,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://rubyonrails.org/',
       },
     ],
-    logo_url: 'assets/rubyonrails_color.svg',
+    logo_url: 'assets/rubyonrails.svg',
   },
   {
     name: 'Rust',
@@ -1361,7 +1361,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://rust.facepunch.com/',
       },
     ],
-    logo_url: 'assets/rust_color.svg',
+    logo_url: 'assets/rust.svg',
   },
   {
     name: 'Saltcorn',
@@ -1379,7 +1379,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://saltcorn.com/',
       },
     ],
-    logo_url: 'assets/saltcorn_color.svg',
+    logo_url: 'assets/saltcorn.svg',
   },
   {
     name: 'Secure Your Server',
@@ -1391,7 +1391,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/securing-your-server/',
       },
     ],
-    logo_url: 'assets/secureyourserver_color.svg',
+    logo_url: 'assets/secureyourserver.svg',
   },
   {
     name: 'ServerWand',
@@ -1410,7 +1410,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://serverwand.com/',
       },
     ],
-    logo_url: 'assets/serverwand_color.svg',
+    logo_url: 'assets/serverwand.svg',
   },
   {
     name: 'Shadowsocks',
@@ -1430,7 +1430,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://shadowsocks.org/',
       },
     ],
-    logo_url: 'assets/shadowsocks_color.svg',
+    logo_url: 'assets/shadowsocks.svg',
   },
   {
     name: 'Splunk',
@@ -1449,7 +1449,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.splunk.com/Documentation/Splunk',
       },
     ],
-    logo_url: 'assets/splunk_color.svg',
+    logo_url: 'assets/splunk.svg',
   },
   {
     name: 'Terraria',
@@ -1467,7 +1467,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://terraria.org/',
       },
     ],
-    logo_url: 'assets/terraria_color.svg',
+    logo_url: 'assets/terraria.svg',
   },
   {
     name: 'TF2',
@@ -1488,7 +1488,7 @@ export const oneClickApps: OCA[] = [
         href: 'http://www.teamfortress.com/',
       },
     ],
-    logo_url: 'assets/teamfortress_color.svg',
+    logo_url: 'assets/tf2.svg',
   },
   {
     name: 'Uptime Kuma',
@@ -1506,7 +1506,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://github.com/louislam/uptime-kuma',
       },
     ],
-    logo_url: 'assets/uptimekuma_color.svg',
+    logo_url: 'assets/uptimekuma.svg',
   },
   {
     name: 'UTunnel VPN',
@@ -1529,7 +1529,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://help.utunnel.io/',
       },
     ],
-    logo_url: 'assets/utunnel_color.svg',
+    logo_url: 'assets/utunnel.svg',
   },
   {
     name: 'Valheim',
@@ -1548,7 +1548,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.valheimgame.com/',
       },
     ],
-    logo_url: 'assets/valheim_color.svg',
+    logo_url: 'assets/valheim.svg',
   },
   {
     name: 'VictoriaMetrics Single',
@@ -1569,7 +1569,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://victoriametrics.com/',
       },
     ],
-    logo_url: 'assets/victoriametricssingle_color.svg',
+    logo_url: 'assets/victoriametricssingle.svg',
   },
   {
     name: 'Virtualmin',
@@ -1587,7 +1587,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.virtualmin.com/',
       },
     ],
-    logo_url: 'assets/virtualmin_color.svg',
+    logo_url: 'assets/virtualmin.svg',
   },
   {
     name: 'VS Code Server',
@@ -1605,7 +1605,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://github.com/cdr/code-server',
       },
     ],
-    logo_url: 'assets/vscodeserver_color.svg',
+    logo_url: 'assets/vscodeserver.svg',
   },
   {
     name: 'WarpSpeed',
@@ -1623,7 +1623,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://bunker.services/products/warpspeed',
       },
     ],
-    logo_url: 'assets/warpspeed_color.svg',
+    logo_url: 'assets/warpspeed.svg',
   },
   {
     name: 'Wazuh',
@@ -1642,7 +1642,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://documentation.wazuh.com/current/index.html',
       },
     ],
-    logo_url: 'assets/wazuh_color.svg',
+    logo_url: 'assets/wazuh.svg',
   },
   {
     name: 'Webmin',
@@ -1660,7 +1660,7 @@ export const oneClickApps: OCA[] = [
         href: 'http://www.webmin.com/',
       },
     ],
-    logo_url: 'assets/webmin_color.svg',
+    logo_url: 'assets/webmin.svg',
   },
   {
     name: 'Webuzo',
@@ -1679,7 +1679,7 @@ export const oneClickApps: OCA[] = [
         href: 'http://www.webuzo.com/',
       },
     ],
-    logo_url: 'assets/webuzo_color.svg',
+    logo_url: 'assets/webuzo.svg',
   },
   {
     name: 'WireGuard&reg;',
@@ -1698,7 +1698,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.wireguard.com/',
       },
     ],
-    logo_url: 'assets/wireguard_color.svg',
+    logo_url: 'assets/wireguard.svg',
   },
   {
     name: 'WooCommerce',
@@ -1716,7 +1716,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://woocommerce.com/features/',
       },
     ],
-    logo_url: 'assets/woocommerce_color.svg',
+    logo_url: 'assets/woocommerce.svg',
   },
   {
     name: 'WordPress',
@@ -1735,7 +1735,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://wordpress.org/',
       },
     ],
-    logo_url: 'assets/wordpress_color.svg',
+    logo_url: 'assets/wordpress.svg',
   },
   {
     name: 'Yacht',
@@ -1753,7 +1753,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://github.com/SelfhostedPro/Yacht/',
       },
     ],
-    logo_url: 'assets/yacht_color.svg',
+    logo_url: 'assets/yacht.svg',
   },
   {
     name: 'Zabbix',
@@ -1771,6 +1771,6 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.zabbix.com',
       },
     ],
-    logo_url: 'assets/zabbix_color.svg',
+    logo_url: 'assets/zabbix.svg',
   },
 ];
