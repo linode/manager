@@ -22,8 +22,7 @@ export const ImageEmptyState: React.FC<Props> = (props) => {
 
   return (
     <Paper className={className}>
-      {/* empty state for images */}
-      {errorText ? <Notice error={true} text={errorText} /> : null}
+      {errorText ? <Notice error text={errorText} /> : null}
       <Typography variant="h2" data-qa-tp="Select Image">
         Select Image
       </Typography>
