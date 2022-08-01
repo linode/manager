@@ -108,7 +108,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://survivetheark.com/',
-    logo_url: 'assets/ark.svg',
+    logo_url: 'assets/ark@1x.svg',
     colors: {
       start: '0e0b08',
       end: '030303',
@@ -252,7 +252,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://blog.counter-strike.net/index.php/about/',
-    logo_url: 'assets/csgo.svg',
+    logo_url: 'assets/csgo2.svg',
     colors: {
       start: 'f29e1b',
       end: '50545f',
