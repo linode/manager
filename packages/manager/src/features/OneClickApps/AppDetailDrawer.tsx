@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   image: {
-    maxWidth: 50,
+    width: 50,
   },
   wrapLogo: {
     marginLeft: -theme.spacing(3),
@@ -132,7 +132,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
             >
               <img
                 className={classes.image}
-                src={`${APP_ROOT}/${app.logo_url}`}
+                src={`${APP_ROOT}/assets/white/${app.logo_url}`}
                 alt={`${app.name} logo`}
               />
             </Grid>
