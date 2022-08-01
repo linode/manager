@@ -1,8 +1,7 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { decode } from 'he';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Info from 'src/assets/icons/info.svg';
+import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -10,65 +9,26 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
-import LinearProgress from 'src/components/LinearProgress';
-import SelectionCard from 'src/components/SelectionCard';
-import { APP_ROOT } from 'src/constants';
+import Loading from 'src/components/LandingLoading';
+import Notice from 'src/components/Notice';
+import AppPanelSection from 'src/features/linodes/LinodesCreate/AppPanelSection';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 import Panel from './Panel';
 import { AppsData } from './types';
 
-type ClassNames =
-  | 'flatImagePanelSelections'
-  | 'panel'
-  | 'loading'
-  | 'selectionCard'
-  | 'info';
+type ClassNames = 'panel' | 'loading';
 
 const styles = (theme: Theme) =>
   createStyles({
-    flatImagePanelSelections: {
-      marginTop: theme.spacing(2),
-      padding: `${theme.spacing(1)}px 0`,
-    },
     panel: {
       marginBottom: theme.spacing(3),
+      height: 576,
+      overflowY: 'auto',
+      boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
     },
     loading: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
-    },
-    selectionCard: {
-      '& .cardBaseIcon': {
-        width: 40,
-        paddingRight: 0,
-        justifyContent: 'flex-start',
-      },
-    },
-    info: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      color: theme.palette.primary.main,
-      paddingLeft: 0,
-      maxWidth: 40,
-      '& svg': {
-        width: 28,
-        height: 28,
-      },
-      '& .circle': {
-        transition: theme.transitions.create('fill'),
-      },
-      '& .path': {
-        transition: theme.transitions.create('stroke'),
-      },
-      '&:hover': {
-        color: theme.palette.primary.main,
-        '& .circle': {
-          fill: theme.palette.primary.main,
-        },
-        '& .path': {
-          color: 'white',
-        },
+      '& >div:first-child': {
+        height: 450,
       },
     },
   });
@@ -131,6 +91,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       this.clickAppIfQueryParamExists();
     }
   }
+
   render() {
     const {
       disabled,
@@ -155,7 +116,9 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     if (appInstancesLoading) {
       return (
         <Panel className={classes.panel} error={error} title="Select App">
-          <LinearProgress className={classes.loading} />
+          <span className={classes.loading}>
+            <Loading />
+          </span>
         </Panel>
       );
     }
@@ -164,27 +127,47 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       return null;
     }
 
+    const newApps = appInstances.filter((app) => {
+      return ['kali linux', 'easypanel', 'liveswitch', 'saltcorn'].includes(
+        app.label.toLowerCase().trim()
+      );
+    });
+
+    const popularApps = appInstances.slice(0, 10);
+
+    // sort mutates original array so make a copy first
+    const allApps = [...appInstances].sort((a, b) =>
+      a.label.toLowerCase().localeCompare(b.label.toLowerCase())
+    );
+
     return (
-      <Panel className={classes.panel} error={error} title="Select App">
-        <Grid className={classes.flatImagePanelSelections} container>
-          {appInstances.map((eachApp) => (
-            <SelectionCardWrapper
-              key={eachApp.id}
-              checked={eachApp.id === selectedStackScriptID}
-              // Decode App labels since they may contain HTML entities.
-              label={decode(eachApp.label)}
-              availableImages={eachApp.images}
-              userDefinedFields={eachApp.user_defined_fields}
-              handleClick={handleClick}
-              openDrawer={openDrawer}
-              disabled={disabled}
-              id={eachApp.id}
-              iconUrl={eachApp.logo_url || ''}
-              classes={classes}
-            />
-          ))}
-        </Grid>
-      </Panel>
+      <Paper className={classes.panel} data-qa-tp="Select Image">
+        {error && <Notice text={error} error />}
+        <AppPanelSection
+          heading="New apps"
+          apps={newApps}
+          disabled={disabled}
+          selectedStackScriptID={selectedStackScriptID}
+          handleClick={handleClick}
+          openDrawer={openDrawer}
+        />
+        <AppPanelSection
+          heading="Popular apps"
+          apps={popularApps}
+          disabled={disabled}
+          selectedStackScriptID={selectedStackScriptID}
+          handleClick={handleClick}
+          openDrawer={openDrawer}
+        />
+        <AppPanelSection
+          heading="All apps"
+          apps={allApps}
+          disabled={disabled}
+          selectedStackScriptID={selectedStackScriptID}
+          handleClick={handleClick}
+          openDrawer={openDrawer}
+        />
+      </Paper>
     );
   }
 }
@@ -195,82 +178,3 @@ export default compose<CombinedProps, Props>(
   styled,
   React.memo
 )(SelectAppPanel);
-
-interface SelectionProps {
-  handleClick: (
-    id: number,
-    label: string,
-    username: string,
-    stackScriptImages: string[],
-    userDefinedFields: UserDefinedField[]
-  ) => void;
-  openDrawer: (stackScriptLabel: string) => void;
-  iconUrl: string;
-  id: number;
-  label: string;
-  userDefinedFields: UserDefinedField[];
-  availableImages: string[];
-  disabled: boolean;
-  checked: boolean;
-}
-
-class SelectionCardWrapper extends React.PureComponent<
-  SelectionProps & WithStyles<ClassNames>
-> {
-  handleSelectApp = () => {
-    const { id, label, userDefinedFields, availableImages } = this.props;
-
-    return this.props.handleClick(
-      id,
-      label,
-      '' /** username doesn't matter since we're not displaying it */,
-      availableImages,
-      userDefinedFields
-    );
-  };
-
-  handleOpenDrawer = () => {
-    const { label, openDrawer } = this.props;
-    openDrawer(label);
-  };
-
-  handleInfoClick = (e: React.MouseEvent<any>) => {
-    e.stopPropagation();
-    e.preventDefault();
-    this.handleOpenDrawer();
-  };
-
-  render() {
-    const { iconUrl, id, checked, label, disabled, classes } = this.props;
-    /**
-     * '' is the default value for a stackscript's logo_url;
-     * display a fallback image in this case, to avoid broken image icons
-     */
-
-    const renderIcon =
-      iconUrl === ''
-        ? () => <span className="fl-tux" />
-        : () => <img src={`${APP_ROOT}/${iconUrl}`} alt={`${label} logo`} />;
-
-    const renderVariant = () => (
-      <Grid item className={classes.info} xs={2}>
-        <Info onClick={this.handleInfoClick} />
-      </Grid>
-    );
-
-    return (
-      <SelectionCard
-        key={id}
-        checked={checked}
-        onClick={this.handleSelectApp}
-        renderIcon={renderIcon}
-        renderVariant={renderVariant}
-        heading={label}
-        subheadings={['']}
-        data-qa-selection-card
-        disabled={disabled}
-        className={classes.selectionCard}
-      />
-    );
-  }
-}

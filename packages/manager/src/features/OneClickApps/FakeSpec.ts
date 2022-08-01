@@ -33,7 +33,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.aapanel.com/reference.html',
-    logo_url: 'assets/aapanel_color.svg',
+    logo_url: 'assets/aapanel.svg',
     colors: {
       start: '20a53a',
       end: 'a3a3a3',
@@ -51,7 +51,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://akaunting.com',
-    logo_url: 'assets/akaunting_color.svg',
+    logo_url: 'assets/akaunting.svg',
     colors: {
       start: '6ea152',
       end: '55588b',
@@ -69,7 +69,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://antmedia.io/',
-    logo_url: 'assets/antmediaserver_color.svg',
+    logo_url: 'assets/antmediaserver.svg',
     colors: {
       start: 'df0718',
       end: '0a0a0a',
@@ -88,7 +88,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://antmedia.io/',
-    logo_url: 'assets/antmediaserver_color.svg',
+    logo_url: 'assets/antmediaserver.svg',
     colors: {
       start: 'df0718',
       end: '0a0a0a',
@@ -108,7 +108,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://survivetheark.com/',
-    logo_url: 'assets/ark_color.svg',
+    logo_url: 'assets/ark.svg',
     colors: {
       start: '0e0b08',
       end: '030303',
@@ -143,7 +143,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://github.com/beefproject/beef',
-    logo_url: 'assets/beef_color.svg',
+    logo_url: 'assets/beef.svg',
     colors: {
       start: '4a80a9',
       end: '000f21',
@@ -160,7 +160,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://doc.bitninja.io/',
-    logo_url: 'assets/bitninja_color.svg',
+    logo_url: 'assets/bitninja.svg',
     colors: {
       start: 'c32127',
       end: '2a2a29',
@@ -178,7 +178,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://v3-docs.chevereto.com/',
-    logo_url: 'assets/chevereto_color.svg',
+    logo_url: 'assets/chevereto.svg',
     colors: {
       start: '23a8e0',
       end: '8e44ad',
@@ -196,7 +196,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.cloudron.io',
-    logo_url: 'assets/cloudron_color.svg',
+    logo_url: 'assets/cloudron.svg',
     colors: {
       start: '03a9f4',
       end: '212121',
@@ -215,7 +215,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.severalnines.com/docs/clustercontrol/',
-    logo_url: 'assets/clustercontrol_color.svg',
+    logo_url: 'assets/clustercontrol.svg',
     colors: {
       start: '0589de',
       end: '3f434c',
@@ -233,7 +233,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.cpanel.net/',
-    logo_url: 'assets/cpanel_color.svg',
+    logo_url: 'assets/cpanel.svg',
     colors: {
       start: 'ff6c2c',
       end: '141d25',
@@ -252,7 +252,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://blog.counter-strike.net/index.php/about/',
-    logo_url: 'assets/csgo_color.svg',
+    logo_url: 'assets/csgo.svg',
     colors: {
       start: 'f29e1b',
       end: '50545f',
@@ -269,7 +269,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/cyberpanel/',
-    logo_url: 'assets/cyberpanel_color.svg',
+    logo_url: 'assets/cyberpanel.svg',
     colors: {
       start: '3d596d',
       end: '33cccc',
@@ -287,7 +287,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.discourse.org/',
-    logo_url: 'assets/discourse_color.svg',
+    logo_url: 'assets/discourse.svg',
     colors: {
       start: '13b3ed',
       end: 'eae692',
@@ -304,7 +304,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.djangoproject.com/',
-    logo_url: 'assets/django_color.svg',
+    logo_url: 'assets/django.svg',
     colors: {
       start: '0a2e1f',
       end: '136149',
@@ -321,7 +321,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.docker.com/',
-    logo_url: 'assets/docker_color.svg',
+    logo_url: 'assets/docker.svg',
     colors: {
       start: '2496ed',
       end: '1e65c9',
@@ -338,7 +338,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.drupal.org/',
-    logo_url: 'assets/drupal_color.svg',
+    logo_url: 'assets/drupal.svg',
     colors: {
       start: '0678be',
       end: '1b64a5',
@@ -356,7 +356,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://easypanel.io/',
-    logo_url: 'assets/easypanel_color.svg',
+    logo_url: 'assets/easypanel.svg',
     colors: {
       start: '059669',
       end: '000000',
@@ -373,7 +373,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.getfilecloud.com',
-    logo_url: 'assets/filecloud_color.svg',
+    logo_url: 'assets/filecloud.svg',
     colors: {
       start: '3e8cc1',
       end: '0168ad',
@@ -390,7 +390,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.palletsprojects.com/p/flask/',
-    logo_url: 'assets/flask_color.svg',
+    logo_url: 'assets/flask.svg',
     colors: {
       start: '363b3d',
       end: '1e2122',
@@ -407,7 +407,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.focalboard.com/',
-    logo_url: 'assets/focalboard_color.svg',
+    logo_url: 'assets/focalboard.svg',
     colors: {
       start: '2997f8',
       end: '1d52ad',
@@ -424,7 +424,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://gitea.io/',
-    logo_url: 'assets/gitea_color.svg',
+    logo_url: 'assets/gitea.svg',
     colors: {
       start: '609926',
       end: '34495e',
@@ -443,7 +443,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://about.gitlab.com/',
-    logo_url: 'assets/gitlab_color.svg',
+    logo_url: 'assets/gitlab.svg',
     colors: {
       start: '48357d',
       end: '21153e',
@@ -460,7 +460,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://grafana.com/',
-    logo_url: 'assets/grafana_color.svg',
+    logo_url: 'assets/grafana.svg',
     colors: {
       start: '606060',
       end: 'f9b716',
@@ -477,7 +477,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://getgrav.org/',
-    logo_url: 'assets/grav_color.svg',
+    logo_url: 'assets/grav.svg',
     colors: {
       start: '1a0629',
       end: 'b987cf',
@@ -494,7 +494,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://guacamole.apache.org/',
-    logo_url: 'assets/guacamole_color.svg',
+    logo_url: 'assets/guacamole.svg',
     colors: {
       start: '304730',
       end: '213121',
@@ -511,7 +511,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://goharbor.io/docs',
-    logo_url: 'assets/harbor_color.svg',
+    logo_url: 'assets/harbor.svg',
     colors: {
       start: '60b932',
       end: '4495d7',
@@ -528,7 +528,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://jenkins.io/',
-    logo_url: 'assets/jenkins_color.svg',
+    logo_url: 'assets/jenkins.svg',
     colors: {
       start: 'd33833',
       end: 'd24939',
@@ -546,7 +546,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.jetapps.com/',
-    logo_url: 'assets/jetbackup_color.svg',
+    logo_url: 'assets/jetbackup.svg',
     colors: {
       start: 'ff6c2c',
       end: '1f2c38',
@@ -563,7 +563,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://jitsi.org/',
-    logo_url: 'assets/jitsi_color.svg',
+    logo_url: 'assets/jitsi.svg',
     colors: {
       start: '1d76ba',
       end: '949699',
@@ -581,7 +581,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.joomla.org/',
-    logo_url: 'assets/joomla_color.svg',
+    logo_url: 'assets/joomla.svg',
     colors: {
       start: 'f2a13e',
       end: '5090cd',
@@ -599,7 +599,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://joplinapp.org/',
-    logo_url: 'assets/joplin_color.svg',
+    logo_url: 'assets/joplin.svg',
     colors: {
       start: '043872',
       end: '509df9',
@@ -618,7 +618,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.kali.org/',
-    logo_url: 'assets/kalilinux_color.svg',
+    logo_url: 'assets/kalilinux.svg',
     colors: {
       start: '267ff7',
       end: '2fa1bc',
@@ -635,7 +635,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://kepler.app/',
-    logo_url: 'assets/keplerbuilder_color.svg',
+    logo_url: 'assets/keplerbuilder.svg',
     colors: {
       start: '0166ff',
       end: '4395ff',
@@ -652,7 +652,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/lamp-stack-marketplace-app/',
       },
     ],
-    logo_url: 'assets/lamp_flame_color.svg',
+    logo_url: 'assets/lamp_flame.svg',
     colors: {
       start: '3c4043',
       end: 'bfa477',
@@ -668,7 +668,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/lemp-stack-marketplace-app/',
       },
     ],
-    logo_url: 'assets/lemp_color.svg',
+    logo_url: 'assets/lemp.svg',
     colors: {
       start: '2e7d32',
       end: '005138',
@@ -686,7 +686,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.litespeedtech.com/cp/cpanel/',
-    logo_url: 'assets/litespeedcpanel_color.svg',
+    logo_url: 'assets/litespeedcpanel.svg',
     colors: {
       start: '353785',
       end: '6e92c7',
@@ -704,7 +704,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.liveswitch.io/',
-    logo_url: 'assets/liveswitch_color.svg',
+    logo_url: 'assets/liveswitch.svg',
     colors: {
       start: '346ee0',
       end: '4d8eff',
@@ -722,7 +722,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.magicspam.com/anti-spam-features.php',
-    logo_url: 'assets/magicspam_color.svg',
+    logo_url: 'assets/magicspam.svg',
     colors: {
       start: '9c001b',
       end: 'f4ac45',
@@ -739,7 +739,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'http://meanjs.org/',
-    logo_url: 'assets/mean_color.svg',
+    logo_url: 'assets/mean.svg',
     colors: {
       start: '323232',
       end: '686868',
@@ -757,7 +757,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/mern-stack-marketplace-app/',
       },
     ],
-    logo_url: 'assets/mern_color.svg',
+    logo_url: 'assets/mern.svg',
     colors: {
       start: '30383a',
       end: '256291',
@@ -776,7 +776,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.minecraft.net/',
-    logo_url: 'assets/minecraft_color.svg',
+    logo_url: 'assets/minecraft.svg',
     colors: {
       start: '97948f',
       end: 'd0c8c4',
@@ -794,7 +794,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://mist.io/',
-    logo_url: 'assets/mistio_color.svg',
+    logo_url: 'assets/mistio.svg',
     colors: {
       start: '424242',
       end: '0099cb',
@@ -811,7 +811,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.mongodb.com/',
-    logo_url: 'assets/mongodb_color.svg',
+    logo_url: 'assets/mongodb.svg',
     colors: {
       start: '28aa52',
       end: '136149',
@@ -829,7 +829,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.moodle.org/',
-    logo_url: 'assets/moodle_color.svg',
+    logo_url: 'assets/moodle.svg',
     colors: {
       start: 'ff7800',
       end: '494949',
@@ -846,7 +846,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.mysql.com/',
-    logo_url: 'assets/mysql_color.svg',
+    logo_url: 'assets/mysql.svg',
     colors: {
       start: '1d758f',
       end: '8a9177',
@@ -862,7 +862,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/nextcloud-marketplace-app/',
       },
     ],
-    logo_url: 'assets/nextcloud_color.svg',
+    logo_url: 'assets/nextcloud.svg',
     colors: {
       start: '16a5f3',
       end: '2a2a36',
@@ -880,7 +880,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://nirvashare.com/setup-guide/',
-    logo_url: 'assets/nirvashare_color.svg',
+    logo_url: 'assets/nirvashare.svg',
     colors: {
       start: '1f4c8f',
       end: '252730',
@@ -898,7 +898,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://nodejs.org/',
-    logo_url: 'assets/nodejs_color.svg',
+    logo_url: 'assets/nodejs.svg',
     colors: {
       start: '3d853c',
       end: '333333',
@@ -916,7 +916,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.odoo.com/',
-    logo_url: 'assets/odoo_color.svg',
+    logo_url: 'assets/odoo.svg',
     colors: {
       start: '55354c',
       end: '027e84',
@@ -934,7 +934,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/django/',
-    logo_url: 'assets/openlitespeeddjango_color.svg',
+    logo_url: 'assets/openlitespeeddjango.svg',
     colors: {
       start: '318640',
       end: '5cbf8a',
@@ -952,7 +952,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/nodejs/',
-    logo_url: 'assets/openlitespeednodejs_color.svg',
+    logo_url: 'assets/openlitespeednodejs.svg',
     colors: {
       start: '3d596d',
       end: '33cccc',
@@ -970,7 +970,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.litespeedtech.com/cloud/images/rails/',
-    logo_url: 'assets/openlitespeedrails_color.svg',
+    logo_url: 'assets/openlitespeedrails.svg',
     colors: {
       start: '8e1a4a',
       end: 'd94b7a',
@@ -989,7 +989,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://openlitespeed.org/',
-    logo_url: 'assets/openlitespeedwordpress_color.svg',
+    logo_url: 'assets/openlitespeedwordpress.svg',
     colors: {
       start: '33cccc',
       end: '3d596d',
@@ -1006,7 +1006,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://openvpn.net/',
-    logo_url: 'assets/openvpn_color.svg',
+    logo_url: 'assets/openvpn.svg',
     colors: {
       start: 'ea7e20',
       end: '193766',
@@ -1024,7 +1024,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://owncast.online/',
-    logo_url: 'assets/owncast_color.svg',
+    logo_url: 'assets/owncast.svg',
     colors: {
       start: '7871ff',
       end: '2086e1',
@@ -1041,7 +1041,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://pmint.dev/',
-    logo_url: 'assets/peppermint_color.svg',
+    logo_url: 'assets/peppermint.svg',
     colors: {
       start: '4cff4c',
       end: '0a0a0a',
@@ -1061,7 +1061,7 @@ export const oneClickApps: OCA[] = [
     ],
     website:
       'https://www.percona.com/software/database-tools/percona-monitoring-and-management',
-    logo_url: 'assets/percona_color.svg',
+    logo_url: 'assets/percona.svg',
     colors: {
       start: 'c41d13',
       end: 'fcb42f',
@@ -1078,7 +1078,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.phpmyadmin.net/',
-    logo_url: 'assets/phpmyadmin_color.svg',
+    logo_url: 'assets/phpmyadmin.svg',
     colors: {
       start: 'f89d10',
       end: '6c78af',
@@ -1095,7 +1095,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://pi-hole.net/',
-    logo_url: 'assets/pihole_color.svg',
+    logo_url: 'assets/pihole.svg',
     colors: {
       start: '96060c',
       end: 'f60d1a',
@@ -1113,7 +1113,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.plesk.com/',
-    logo_url: 'assets/plesk_color.svg',
+    logo_url: 'assets/plesk.svg',
     colors: {
       start: '53bce6',
       end: '4b5868',
@@ -1131,7 +1131,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.plex.tv/',
-    logo_url: 'assets/plex_color.svg',
+    logo_url: 'assets/plex.svg',
     colors: {
       start: 'e5a00d',
       end: '332c37',
@@ -1148,7 +1148,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.postgresql.org/',
-    logo_url: 'assets/postgresql_color.svg',
+    logo_url: 'assets/postgresql.svg',
     colors: {
       start: '326690',
       end: '254078',
@@ -1165,7 +1165,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.pritunl.com/docs',
-    logo_url: 'assets/pritunl_color.svg',
+    logo_url: 'assets/pritunl.svg',
     colors: {
       start: '2e4153',
       end: '2e72d2',
@@ -1183,7 +1183,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://prometheus.io/',
-    logo_url: 'assets/prometheus_color.svg',
+    logo_url: 'assets/prometheus.svg',
     colors: {
       start: 'e6522c',
       end: 'e27c37',
@@ -1201,7 +1201,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://prometheus.io/docs/visualization/grafana/',
-    logo_url: 'assets/prometheus_grafana_color.svg',
+    logo_url: 'assets/prometheus_grafana.svg',
     colors: {
       start: 'f9b716',
       end: 'e6522c',
@@ -1218,7 +1218,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.rabbitmq.com/',
-    logo_url: 'assets/rabbitmq_color.svg',
+    logo_url: 'assets/rabbitmq.svg',
     colors: {
       start: 'a9b5af',
       end: 'ff6600',
@@ -1236,7 +1236,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://redis.io/',
-    logo_url: 'assets/redis_color.svg',
+    logo_url: 'assets/redis.svg',
     colors: {
       start: '222222',
       end: '722b20',
@@ -1253,7 +1253,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://restya.com',
-    logo_url: 'assets/restyaboard_color.svg',
+    logo_url: 'assets/restyaboard.svg',
     colors: {
       start: 'f47564',
       end: '555555',
@@ -1270,7 +1270,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.rocket.chat/',
-    logo_url: 'assets/rocketchat_color.svg',
+    logo_url: 'assets/rocketchat.svg',
     colors: {
       start: 'f5445c',
       end: '030d1a',
@@ -1288,7 +1288,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://rubyonrails.org/',
-    logo_url: 'assets/rubyonrails_color.svg',
+    logo_url: 'assets/rubyonrails.svg',
     colors: {
       start: '722b20',
       end: 'fa9999',
@@ -1305,7 +1305,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://rust.facepunch.com/',
-    logo_url: 'assets/rust_color.svg',
+    logo_url: 'assets/rust.svg',
     colors: {
       start: '050508',
       end: 'cd412b',
@@ -1322,7 +1322,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://saltcorn.com/',
-    logo_url: 'assets/saltcorn_color.svg',
+    logo_url: 'assets/saltcorn.svg',
     colors: {
       start: '995ad9',
       end: 'ff8e42',
@@ -1338,7 +1338,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.linode.com/docs/guides/securing-your-server/',
       },
     ],
-    logo_url: 'assets/secureyourserver_color.svg',
+    logo_url: 'assets/secureyourserver.svg',
     colors: {
       start: '01b058',
       end: '32363b',
@@ -1356,7 +1356,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://serverwand.com/',
-    logo_url: 'assets/serverwand_color.svg',
+    logo_url: 'assets/serverwand.svg',
     colors: {
       start: '4c3148',
       end: 'a25c57',
@@ -1375,7 +1375,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://shadowsocks.org/',
-    logo_url: 'assets/shadowsocks_color.svg',
+    logo_url: 'assets/shadowsocks.svg',
     colors: {
       start: '227dc0',
       end: '8d8d8d',
@@ -1393,7 +1393,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://docs.splunk.com/Documentation/Splunk',
-    logo_url: 'assets/splunk_color.svg',
+    logo_url: 'assets/splunk.svg',
     colors: {
       start: 'f89f24',
       end: 'ed0181',
@@ -1410,7 +1410,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://terraria.org/',
-    logo_url: 'assets/terraria_color.svg',
+    logo_url: 'assets/terraria.svg',
     colors: {
       start: '936543',
       end: '40924a',
@@ -1430,7 +1430,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'http://www.teamfortress.com/',
-    logo_url: 'assets/teamfortress_color.svg',
+    logo_url: 'assets/tf2.svg',
     colors: {
       start: 'b95b26',
       end: '873d0c',
@@ -1447,7 +1447,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://github.com/louislam/uptime-kuma',
-    logo_url: 'assets/uptimekuma_color.svg',
+    logo_url: 'assets/uptimekuma.svg',
     colors: {
       start: '67de92',
       end: 'baecca',
@@ -1465,7 +1465,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.utunnel.io/linode-vpn-server.html',
-    logo_url: 'assets/utunnel_color.svg',
+    logo_url: 'assets/utunnel.svg',
     colors: {
       start: '2ec1cf',
       end: '1a32b1',
@@ -1483,7 +1483,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.valheimgame.com/',
-    logo_url: 'assets/valheim_color.svg',
+    logo_url: 'assets/valheim.svg',
     colors: {
       start: '081e2b',
       end: 'bb470d',
@@ -1503,7 +1503,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://victoriametrics.com/',
-    logo_url: 'assets/victoriametricssingle_color.svg',
+    logo_url: 'assets/victoriametricssingle.svg',
     colors: {
       start: '6a1e6e',
       end: 'af3e56',
@@ -1520,7 +1520,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.virtualmin.com/',
-    logo_url: 'assets/virtualmin_color.svg',
+    logo_url: 'assets/virtualmin.svg',
     colors: {
       start: '58cc00',
       end: '005ebd',
@@ -1537,7 +1537,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://github.com/cdr/code-server',
-    logo_url: 'assets/vscodeserver_color.svg',
+    logo_url: 'assets/vscodeserver.svg',
     colors: {
       start: '23a9f2',
       end: '0066b8',
@@ -1554,7 +1554,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://bunker.services/products/warpspeed',
-    logo_url: 'assets/warpspeed_color.svg',
+    logo_url: 'assets/warpspeed.svg',
     colors: {
       start: '1f76b7',
       end: '333333',
@@ -1572,7 +1572,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://documentation.wazuh.com/current/index.html',
-    logo_url: 'assets/wazuh_color.svg',
+    logo_url: 'assets/wazuh.svg',
     colors: {
       start: '00a9e5',
       end: 'ffb600',
@@ -1589,7 +1589,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'http://www.webmin.com/',
-    logo_url: 'assets/webmin_color.svg',
+    logo_url: 'assets/webmin.svg',
     colors: {
       start: '6ca034',
       end: '3a70c4',
@@ -1607,7 +1607,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'http://www.webuzo.com/',
-    logo_url: 'assets/webuzo_color.svg',
+    logo_url: 'assets/webuzo.svg',
     colors: {
       start: 'f1b55d',
       end: '445289',
@@ -1625,7 +1625,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.wireguard.com/',
-    logo_url: 'assets/wireguard_color.svg',
+    logo_url: 'assets/wireguard.svg',
     colors: {
       start: '88171a',
       end: '51171a',
@@ -1642,7 +1642,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://woocommerce.com/features/',
-    logo_url: 'assets/woocommerce_color.svg',
+    logo_url: 'assets/woocommerce.svg',
     colors: {
       start: '96588a',
       end: '743b8a',
@@ -1660,7 +1660,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://wordpress.org/',
-    logo_url: 'assets/wordpress_color.svg',
+    logo_url: 'assets/wordpress.svg',
     colors: {
       start: '176086',
       end: '135478',
@@ -1677,7 +1677,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://github.com/SelfhostedPro/Yacht/',
-    logo_url: 'assets/yacht_color.svg',
+    logo_url: 'assets/yacht.svg',
     colors: {
       start: '41b883',
       end: 'c4c4c4',
@@ -1694,7 +1694,7 @@ export const oneClickApps: OCA[] = [
       },
     ],
     website: 'https://www.zabbix.com',
-    logo_url: 'assets/zabbix_color.svg',
+    logo_url: 'assets/zabbix.svg',
     colors: {
       start: 'd40000',
       end: '252730',

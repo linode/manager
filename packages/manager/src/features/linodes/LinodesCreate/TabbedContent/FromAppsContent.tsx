@@ -4,19 +4,17 @@ import { assocPath } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
 import { AppsDocs } from 'src/documentation';
+import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { ApplicationState } from 'src/store';
@@ -30,7 +28,7 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 
-type ClassNames = 'main' | 'sidebar' | 'emptyImagePanelText';
+type ClassNames = 'main' | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,10 +41,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%',
       },
-    },
-    emptyImagePanelText: {
-      marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)}px 0`,
     },
   });
 
@@ -200,22 +194,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               variant="public"
             />
           ) : (
-            <Paper>
-              {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
-              )}
-              <Typography variant="h2" data-qa-tp="Select Image">
-                Select Image
-              </Typography>
-              <Typography
-                variant="body1"
-                className={classes.emptyImagePanelText}
-                data-qa-no-compatible-images
-              >
-                No Compatible Images Available
-              </Typography>
-            </Paper>
+            <ImageEmptyState errorText={hasErrorFor('image')} />
           )}
         </Grid>
 
