@@ -11,6 +11,9 @@ import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/AddFirewallDrawer';
+
 interface Props {
   open: boolean;
   error?: APIError[];
@@ -92,12 +95,11 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = isRestrictedUser
-    ? grants?.linode
-        .filter((grant) => grant.permissions === 'read_only')
-        .map((grant) => grant.id) ?? []
+    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
-  const areSomeLinodesReadOnly = readOnlyLinodeIds.length > 0;
+  const linodeSelectGuidance =
+    readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
 
   return (
     <Drawer
@@ -117,11 +119,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           handleChange={(selected) => setSelectedLinodes(selected)}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
           filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
-          guidance={
-            areSomeLinodesReadOnly
-              ? `Only Linodes you have permission to modify are shown.`
-              : undefined
-          }
+          guidance={linodeSelectGuidance}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>

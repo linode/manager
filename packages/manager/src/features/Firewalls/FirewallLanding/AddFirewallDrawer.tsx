@@ -10,10 +10,14 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
+export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
+  'Only Linodes you have permission to modify are shown.';
 
 export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
@@ -96,12 +100,11 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
 
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = _isRestrictedUser
-    ? grants?.linode
-        .filter((grant) => grant.permissions === 'read_only')
-        .map((grant) => grant.id) ?? []
+    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
     : [];
 
-  const areSomeLinodesReadOnly = readOnlyLinodeIds.length > 0;
+  const linodeSelectGuidance =
+    readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
 
   return (
     <Drawer {...restOfDrawerProps} onClose={onClose}>
@@ -167,11 +170,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 }
                 filteredLinodes={readOnlyLinodeIds}
                 onBlur={handleBlur}
-                guidance={
-                  areSomeLinodesReadOnly
-                    ? `Only Linodes you have permission to modify are shown.`
-                    : undefined
-                }
+                guidance={linodeSelectGuidance}
               />
               <ActionsPanel>
                 <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
