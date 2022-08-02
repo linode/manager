@@ -168,24 +168,26 @@ export const oneClickApps: OCA[] = [
     ],
     logo_url: 'assets/bitninja_color.svg',
   },
-{
-  name: 'Budibase',
-  description: 'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
-  summary: 'Low-code platform for building modern business applications.'
-  related_guides: [
-    {
-      title: 'Deploying Budibase through the Linode Marketplace',
-      href: 'https://www.linode.com/docs/products/tools/marketplace/guides/budibase'
-    },
-  ],
-  related_info: [
-   {
-    title: 'https://docs.budibase.com/docs',
-    href: 'https://docs.budibase.com/docs',
+  {
+    name: 'Budibase',
+    description:
+      'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
+    summary: 'Low-code platform for building modern business applications.',
+    related_guides: [
+      {
+        title: 'Deploying Budibase through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/budibase',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.budibase.com/docs',
+        href: 'https://docs.budibase.com/docs',
+      },
+    ],
+    logo_url: 'assets/budibase.svg',
   },
-],
-  logo_url: 'assets/budibase.svg',
-},
   {
     name: 'Chevereto',
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
@@ -559,12 +561,14 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'HashiCorp Nomad',
-    description: 'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
+    description:
+      'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
     related_guides: [
       {
         title: 'Deploying HashiCorp Nomad through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
       },
     ],
     related_info: [
@@ -577,12 +581,14 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'HashiCorp Vault',
-    description: 'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
+    description:
+      'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
     summary: 'An open source, centralized secrets management system.',
     related_guides: [
       {
         title: 'Deploying HashiCorp Vault through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
       },
     ],
     related_info: [
