@@ -186,7 +186,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.budibase.com/docs',
       },
     ],
-    logo_url: 'assets/budibase.svg',
+    logo_url: 'assets/budibase_color.svg',
   },
   {
     name: 'Chevereto',
@@ -577,7 +577,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.nomadproject.io/docs',
       },
     ],
-    logo_url: 'assets/nomad.svg',
+    logo_url: 'assets/nomad_color.svg',
   },
   {
     name: 'HashiCorp Vault',
@@ -597,7 +597,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.vaultproject.io/docs',
       },
     ],
-    logo_url: 'assets/vault.svg',
+    logo_url: 'assets/vault_color.svg',
   },
   {
     name: 'Jenkins',
