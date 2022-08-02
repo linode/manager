@@ -113,7 +113,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       );
     }
 
-    if (appInstancesLoading) {
+    if (appInstancesLoading || !appInstances) {
       return (
         <Panel className={classes.panel} error={error} title="Select App">
           <span className={classes.loading}>
