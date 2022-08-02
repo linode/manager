@@ -1,14 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-
-type ClassNames = 'link' | 'noCount' | 'count' | 'countNumber';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 interface Props {
   text: string;
@@ -18,28 +11,26 @@ interface Props {
   className?: any;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const useStyles = makeStyles((theme: Theme) => ({
+  link: {
+    '&:hover': {
+      textDecoration: 'underline',
+    },
+  },
+  noCount: {
+    marginLeft: theme.spacing(1),
+  },
+  count: {
+    marginRight: theme.spacing(1) / 2,
+  },
+  countNumber: {
+    fontFamily: theme.font.bold,
+  },
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    link: {
-      '&:hover': {
-        textDecoration: 'underline',
-      },
-    },
-    noCount: {
-      marginLeft: theme.spacing(1),
-    },
-    count: {
-      marginRight: theme.spacing(1) / 2,
-    },
-    countNumber: {
-      fontFamily: theme.font.bold,
-    },
-  });
-
-const ViewAllLink: React.FC<CombinedProps> = (props) => {
-  const { classes, count, text, link, external, className } = props;
+const ViewAllLink = (props: Props) => {
+  const { count, text, link, external, className } = props;
+  const classes = useStyles();
   return (
     <>
       {count && (
@@ -84,6 +75,4 @@ const ViewAllLink: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ViewAllLink);
+export default ViewAllLink;

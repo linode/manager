@@ -1,35 +1,26 @@
 import * as React from 'react';
 import { PlaceholderProps } from 'react-select';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root';
+const useStyles = makeStyles({
+  root: {
+    position: 'absolute',
+    left: '10px',
+    wordWrap: 'normal',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    fontSize: '0.9rem',
+  },
+});
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      position: 'absolute',
-      left: '10px',
-      wordWrap: 'normal',
-      whiteSpace: 'nowrap',
-      overflow: 'hidden',
-      fontSize: '0.9rem',
-    },
-  });
+type Props = PlaceholderProps<any, any>;
 
-interface Props extends PlaceholderProps<any, any> {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const SelectPlaceholder: React.FC<CombinedProps> = (props) => {
+const SelectPlaceholder = (props: Props) => {
+  const classes = useStyles();
   return (
     <Typography
-      className={props.classes.root}
+      className={classes.root}
       {...props.innerProps}
       data-qa-select-placeholder
       data-qa-multi-select={
@@ -41,6 +32,4 @@ const SelectPlaceholder: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(SelectPlaceholder);
+export default SelectPlaceholder;

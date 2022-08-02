@@ -2,27 +2,18 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CopyableTextField from 'src/components/CopyableTextField';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import NoticePanel from './NoticePanel';
 
-type ClassNames = 'root' | 'copySection' | 'copyField';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    copySection: {
-      marginTop: theme.spacing(2),
-    },
-    copyField: {
-      marginTop: theme.spacing(1),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  copySection: {
+    marginTop: theme.spacing(2),
+  },
+  copyField: {
+    marginTop: theme.spacing(1),
+  },
+}));
 
 interface Props {
   volumeLabel: string;
@@ -30,10 +21,9 @@ interface Props {
   message?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
-  const { classes, message, onClose, volumeLabel } = props;
+const ResizeVolumeInstructions = (props: Props) => {
+  const { message, onClose, volumeLabel } = props;
+  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -99,6 +89,4 @@ const ResizeVolumeInstructions: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ResizeVolumeInstructions);
+export default ResizeVolumeInstructions;

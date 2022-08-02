@@ -1,38 +1,24 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Accordion from 'src/components/Accordion';
 
-type ClassNames = 'root' | 'helperText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    helperText: {
-      marginBottom: theme.spacing(2),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  helperText: {
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 interface Props {
   openDrawer: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const ImportGroupsAsTags: React.FC<CombinedProps> = (props) => {
-  const { classes, openDrawer } = props;
+export const ImportGroupsAsTags = (props: Props) => {
+  const { openDrawer } = props;
+  const classes = useStyles();
   return (
-    <Accordion
-      className={classes.root}
-      defaultExpanded={true}
-      heading={'Import Display Groups as Tags'}
-    >
+    <Accordion defaultExpanded={true} heading={'Import Display Groups as Tags'}>
       <Typography variant="body1" className={classes.helperText}>
         You now have the ability to import your Display Groups from Classic
         Manager as tags and they will be associated with your Linodes and
@@ -51,6 +37,4 @@ export const ImportGroupsAsTags: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ImportGroupsAsTags);
+export default ImportGroupsAsTags;

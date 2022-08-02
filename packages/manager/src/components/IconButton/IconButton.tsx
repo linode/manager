@@ -1,14 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import IconButton, { IconButtonProps } from 'src/components/core/IconButton';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-
-type ClassNames = 'root' | 'destructive';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 interface Props extends IconButtonProps {
   destructive?: boolean;
@@ -18,33 +11,31 @@ interface Props extends IconButtonProps {
   disabled?: boolean;
 }
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      transition: theme.transitions.create(['opacity']),
-    },
-    destructive: {
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    transition: theme.transitions.create(['opacity']),
+  },
+  destructive: {
+    color: theme.palette.status.errorDark,
+    '&:hover': {
       color: theme.palette.status.errorDark,
-      '&:hover': {
-        color: theme.palette.status.errorDark,
-        opacity: 0.8,
-      },
-      '&:focus': {
-        color: theme.palette.status.errorDark,
-      },
+      opacity: 0.8,
     },
-  });
+    '&:focus': {
+      color: theme.palette.status.errorDark,
+    },
+  },
+}));
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const IconButtonWrapper: React.FC<CombinedProps> = (props) => {
-  const { classes, destructive, style, className, ...rest } = props;
+const IconButtonWrapper = (props: Props) => {
+  const { destructive, style, className, ...rest } = props;
+  const classes = useStyles();
 
   return (
     <IconButton
       className={classNames(
+        classes.root,
         {
-          [classes.root]: true,
           [classes.destructive]: destructive,
         },
         className
@@ -57,6 +48,4 @@ const IconButtonWrapper: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(IconButtonWrapper);
+export default IconButtonWrapper;

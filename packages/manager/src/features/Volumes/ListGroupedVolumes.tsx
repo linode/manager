@@ -1,12 +1,7 @@
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { compose } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
@@ -21,48 +16,38 @@ import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
 import { ExtendedVolume } from './types';
 import TableWrapper from './VolumeTableWrapper';
 
-type ClassNames =
-  | 'root'
-  | 'tagGridRow'
-  | 'tagHeaderRow'
-  | 'tagHeader'
-  | 'tagHeaderOuter'
-  | 'paginationCell'
-  | 'groupContainer';
+const useStyles = makeStyles((theme: Theme) => ({
+  tagGridRow: {
+    marginBottom: 20,
+  },
+  tagHeaderRow: {
+    backgroundColor: theme.bg.main,
+    height: 'auto',
+    '& td': {
+      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+      padding: '20px 0 10px',
+      borderBottom: 'none',
+    },
+  },
+  groupContainer: {
+    [theme.breakpoints.up('md')]: {
+      '& $tagHeaderRow > td': {
+        padding: '10px 0',
+      },
+    },
+  },
+  tagHeader: {
+    marginBottom: 2,
+  },
+  tagHeaderOuter: {},
+  paginationCell: {
+    paddingTop: 2,
+    '& div:first-child': {
+      marginTop: 0,
+    },
+  },
+}));
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    tagGridRow: {
-      marginBottom: 20,
-    },
-    tagHeaderRow: {
-      backgroundColor: theme.bg.main,
-      height: 'auto',
-      '& td': {
-        // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-        padding: '20px 0 10px',
-        borderBottom: 'none',
-      },
-    },
-    groupContainer: {
-      [theme.breakpoints.up('md')]: {
-        '& $tagHeaderRow > td': {
-          padding: '10px 0',
-        },
-      },
-    },
-    tagHeader: {
-      marginBottom: 2,
-    },
-    tagHeaderOuter: {},
-    paginationCell: {
-      paddingTop: 2,
-      '& div:first-child': {
-        marginTop: 0,
-      },
-    },
-  });
 interface Props {
   data: ExtendedVolume[];
   orderBy: string;
@@ -71,17 +56,10 @@ interface Props {
   renderProps: RenderVolumeDataProps;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const ListGroupedVolumes = (props: Props) => {
+  const { data, order, handleOrderChange, orderBy, renderProps } = props;
 
-const ListGroupedVolumes: React.FC<CombinedProps> = (props) => {
-  const {
-    data,
-    order,
-    handleOrderChange,
-    orderBy,
-    classes,
-    renderProps,
-  } = props;
+  const classes = useStyles();
 
   const groupedVolumes = compose(sortGroups, groupByTags)(data);
   const tableWrapperProps = {
@@ -158,6 +136,4 @@ const ListGroupedVolumes: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ListGroupedVolumes);
+export default ListGroupedVolumes;

@@ -1,36 +1,27 @@
 import { AccountMaintenance } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useProfile } from 'src/queries/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
 
-type ClassNames = 'root' | 'dateTime';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      '& p': {
-        lineHeight: `20px`,
-      },
-      '& p:last-child': {
-        marginBottom: 0,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    '& p': {
+      lineHeight: `20px`,
     },
-    dateTime: {
-      fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(2.5)}px`,
+    '& p:last-child': {
+      marginBottom: 0,
     },
-  });
+  },
+  dateTime: {
+    fontSize: theme.spacing(2),
+    lineHeight: `${theme.spacing(2.5)}px`,
+  },
+}));
 
 interface Props {
   /** please keep in mind here that it's possible the start time can be in the past */
@@ -39,10 +30,9 @@ interface Props {
   type?: AccountMaintenance['type'];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
+const MaintenanceBanner = (props: Props) => {
   const { type, maintenanceEnd, maintenanceStart } = props;
+  const classes = useStyles();
   const {
     data: profile,
     isLoading: profileLoading,
@@ -83,7 +73,7 @@ const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <Notice warning important className={props.classes.root}>
+    <Notice warning important className={classes.root}>
       <Typography>
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
@@ -103,12 +93,7 @@ const MaintenanceBanner: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
-)(MaintenanceBanner);
+export default React.memo(MaintenanceBanner);
 
 const generateIntroText = (
   type?: AccountMaintenance['type'],

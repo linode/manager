@@ -1,14 +1,7 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import DisplayPrice from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-
-type ClassNames = 'root';
 
 const getPrice = (size: number) => {
   return size * 0.1;
@@ -21,25 +14,19 @@ const getClampedPrice = (newSize: number, currentSize: number) =>
       : getPrice(MAX_VOLUME_SIZE)
     : getPrice(currentSize);
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      marginTop: theme.spacing(4),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginTop: theme.spacing(4),
+  },
+}));
 
 interface Props {
   value: number;
   currentSize: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const PricePanel: React.FC<CombinedProps> = ({
-  currentSize,
-  value,
-  classes,
-}) => {
+const PricePanel = ({ currentSize, value }: Props) => {
+  const classes = useStyles();
   const price = getClampedPrice(value, currentSize);
 
   return (
@@ -49,6 +36,4 @@ const PricePanel: React.FC<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(PricePanel);
+export default PricePanel;
