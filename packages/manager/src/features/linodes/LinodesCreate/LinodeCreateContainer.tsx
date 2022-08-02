@@ -9,7 +9,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -231,24 +231,24 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       this.setState({ selectedImageID: undefined });
     }
     this.setState({ appInstancesLoading: true });
-    getOneClickApps()
-      // Don't display One-Click Helpers to the user
-      // Filter out any apps that we don't have info for
-      .then((response) =>
-        response.data.filter((script) => {
+
+    queryClient
+      .fetchQuery('stackscripts-oca', () => getOneClickApps())
+      .then((res: ResourcePage<StackScript>) => {
+        // Don't display One-Click Helpers to the user
+        // Filter out any apps that we don't have info for
+        const filteredApps = res.data.filter((script) => {
           return (
             !script.label.match(/helpers/i) &&
             allowedApps.includes(String(script.id))
           );
-        })
-      )
-      .then((response) =>
-        response.map((stackscript) => trimOneClickFromLabel(stackscript))
-      )
-      .then((response) => {
+        });
+        const trimmedApps = filteredApps.map((stackscript) =>
+          trimOneClickFromLabel(stackscript)
+        );
         this.setState({
           appInstancesLoading: false,
-          appInstances: response,
+          appInstances: trimmedApps,
         });
       })
       .catch((_) => {
