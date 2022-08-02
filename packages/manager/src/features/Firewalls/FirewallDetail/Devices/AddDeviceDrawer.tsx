@@ -10,6 +10,9 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';
+import { useGrants, useProfile } from 'src/queries/profile';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/AddFirewallDrawer';
 
 interface Props {
   open: boolean;
@@ -31,6 +34,10 @@ export const AddDeviceDrawer = (props: Props) => {
     onClose,
     addDevice,
   } = props;
+
+  const { data: grants } = useGrants();
+  const { data: profile } = useProfile();
+  const isRestrictedUser = Boolean(profile?.restricted);
 
   const classes = useStyles();
 
@@ -86,6 +93,14 @@ export const AddDeviceDrawer = (props: Props) => {
     }
   };
 
+  // If a user is restricted, they can not add a read-only Linode to a firewall.
+  const readOnlyLinodeIds = isRestrictedUser
+    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
+    : [];
+
+  const linodeSelectGuidance =
+    readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
+
   return (
     <Drawer
       title={`Add Linode to Firewall: ${firewallLabel}`}
@@ -103,7 +118,8 @@ export const AddDeviceDrawer = (props: Props) => {
           key={key}
           handleChange={(selected) => setSelectedLinodes(selected)}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
-          filteredLinodes={currentDevices}
+          filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
+          guidance={linodeSelectGuidance}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>

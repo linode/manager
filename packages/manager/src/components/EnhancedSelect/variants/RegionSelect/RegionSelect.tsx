@@ -180,7 +180,7 @@ const SelectRegionPanel = (props: Props) => {
     <div className={classes.root} style={{ width }}>
       <Select
         isClearable={Boolean(isClearable)} // Defaults to false if the prop isn't provided
-        value={getSelectedRegionById(selectedID || '', options)}
+        value={getSelectedRegionById(selectedID || '', options) ?? ''}
         label={label ?? 'Region'}
         disabled={disabled}
         placeholder="Select a Region"

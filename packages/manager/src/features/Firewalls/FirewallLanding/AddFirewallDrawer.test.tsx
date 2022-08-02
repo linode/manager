@@ -3,6 +3,14 @@ import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import AddFirewallDrawer, { Props } from './AddFirewallDrawer';
+import { rest, server } from 'src/mocks/testServer';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { linodeFactory } from 'src/factories/linodes';
+import { profileFactory } from 'src/factories';
+import { grantsFactory } from 'src/factories/grants';
+import { QueryClient } from 'react-query';
+
+jest.mock('src/components/EnhancedSelect/Select');
 
 const props: Props = {
   onClose: jest.fn(),
@@ -47,5 +55,46 @@ describe('Create Firewall Drawer', () => {
         },
       })
     );
+  });
+
+  describe('restricted user support', () => {
+    it('should not show a read only linode for a restricted user', async () => {
+      server.use(
+        rest.get('*/linode/instances', (req, res, ctx) => {
+          return res(
+            ctx.json(
+              makeResourcePage([
+                linodeFactory.build({ id: 0, label: 'linode-0' }),
+                linodeFactory.build({ id: 1, label: 'linode-1' }),
+              ])
+            )
+          );
+        }),
+        rest.get('*/profile', (req, res, ctx) => {
+          return res(ctx.json(profileFactory.build({ restricted: true })));
+        }),
+        rest.get('*/profile/grants', (req, res, ctx) => {
+          return res(
+            ctx.json(
+              grantsFactory.build({
+                global: { add_firewalls: true },
+                linode: [
+                  { id: 0, permissions: 'read_write' },
+                  { id: 1, permissions: 'read_only' },
+                ],
+              })
+            )
+          );
+        })
+      );
+
+      const { queryByText } = renderWithTheme(
+        <AddFirewallDrawer {...props} />,
+        { queryClient: new QueryClient() }
+      );
+
+      await waitFor(() => expect(queryByText('linode-0')).toBeInTheDocument());
+      expect(queryByText('linode-1')).not.toBeInTheDocument();
+    });
   });
 });
