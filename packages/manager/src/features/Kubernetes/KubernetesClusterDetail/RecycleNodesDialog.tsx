@@ -10,6 +10,8 @@ import {
 } from 'src/features/Kubernetes/kubeUtils';
 
 interface Props {
+  title: string;
+  submitBtnText: string;
   open: boolean;
   loading: boolean;
   error?: string;
@@ -19,6 +21,7 @@ interface Props {
 
 const renderActions = (
   loading: boolean,
+  submitBtnText: string,
   onClose: () => void,
   onSubmit: () => void
 ) => {
@@ -39,21 +42,29 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Recycle Pool Nodes
+        {submitBtnText}
       </Button>
     </ActionsPanel>
   );
 };
 
-const RecycleAllPoolNodesDialog: React.FC<Props> = (props) => {
-  const { error, loading, open, onClose, onSubmit } = props;
+const RecycleNodesDialog: React.FC<Props> = (props) => {
+  const {
+    title,
+    submitBtnText,
+    error,
+    loading,
+    open,
+    onClose,
+    onSubmit,
+  } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title="Recycle node pool?"
+      title={title}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onSubmit)}
+      actions={() => renderActions(loading, submitBtnText, onClose, onSubmit)}
     >
       {error && <Notice error text={error} />}
       <Typography>
@@ -64,4 +75,4 @@ const RecycleAllPoolNodesDialog: React.FC<Props> = (props) => {
   );
 };
 
-export default React.memo(RecycleAllPoolNodesDialog);
+export default React.memo(RecycleNodesDialog);
