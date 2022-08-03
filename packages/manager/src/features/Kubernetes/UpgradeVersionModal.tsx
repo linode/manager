@@ -4,6 +4,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 
 interface DialogProps {
@@ -121,19 +122,23 @@ export const UpgradeDialog: React.FC<DialogProps> = (props) => {
       onClose={onClose}
       actions={actions}
     >
-      {hasUpdatedSuccessfully ? (
-        <>
-          Kubernetes version has been updated successfully. For the changes to
-          take full effect you must recycle the nodes in your cluster.
-        </>
-      ) : (
-        <>
-          Upgrade {clusterLabel}&rsquo;s Kubernetes version from{' '}
-          <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
-          Once the upgrade is complete you will need to recycle all nodes in
-          your cluster.
-        </>
-      )}
+      <Typography>
+        {hasUpdatedSuccessfully ? (
+          <>
+            Kubernetes version has been updated successfully. <br /> <br />
+            For the changes to take full effect you must recycle the nodes in
+            your cluster. Any local storage (such as &rsquo;hostPath&rsquo;
+            volumes) will be erased.
+          </>
+        ) : (
+          <>
+            Upgrade {clusterLabel}&rsquo;s Kubernetes version from{' '}
+            <strong>{currentVersion}</strong> to <strong>{nextVersion}</strong>?
+            Once the upgrade is complete you will need to recycle all nodes in
+            your cluster.
+          </>
+        )}
+      </Typography>
     </Dialog>
   );
 };
