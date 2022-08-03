@@ -26,6 +26,7 @@ chai.use(chaiString);
 authenticate();
 
 import './commands';
+import './request-tracking';
 
 // Runs before each test file.
 before(() => {
