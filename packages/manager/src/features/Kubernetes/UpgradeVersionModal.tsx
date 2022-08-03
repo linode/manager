@@ -5,8 +5,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
-
 interface DialogProps {
   clusterID: number;
   clusterLabel: string;
@@ -127,8 +127,7 @@ export const UpgradeDialog: React.FC<DialogProps> = (props) => {
           <>
             Kubernetes version has been updated successfully. <br /> <br />
             For the changes to take full effect you must recycle the nodes in
-            your cluster. Any local storage (such as &rsquo;hostPath&rsquo;
-            volumes) will be erased.
+            your cluster. {localStorageWarning}
           </>
         ) : (
           <>
