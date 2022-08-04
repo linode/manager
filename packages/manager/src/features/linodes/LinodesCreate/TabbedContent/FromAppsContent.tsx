@@ -29,8 +29,33 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
+import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import Select from 'src/components/EnhancedSelect';
+import Box from 'src/components/core/Box';
+import Paper from 'src/components/core/Paper';
 
-type ClassNames = 'main' | 'sidebar';
+type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
+
+const appCategories = [
+  'Control Panels',
+  'Databases',
+  'Development',
+  'Games',
+  'Media and Entertainment',
+  'Monitoring',
+  'Productivity',
+  'Security',
+  'Stacks',
+  'Website',
+  'App Creators',
+] as const;
+
+const appCategoryOptions = appCategories.map((categoryName) => ({
+  label: categoryName,
+  value: categoryName,
+}));
+
+// type AppCategory = typeof appCategories;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,6 +68,20 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%',
       },
+    },
+    searchAndFilter: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      gap: theme.spacing(),
+    },
+    search: {
+      flexGrow: 10,
+      '& .input': {
+        maxWidth: 'none',
+      },
+    },
+    filter: {
+      flexGrow: 1,
     },
   });
 
@@ -184,6 +223,24 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
+          <Box component={Paper} className={classes.searchAndFilter}>
+            <Box className={classes.search}>
+              <DebouncedSearch
+                placeholder="Search marketplace"
+                fullWidth
+                onSearch={() => undefined}
+                label="Search marketplace"
+                hideLabel
+              />
+            </Box>
+            <Box className={classes.filter}>
+              <Select
+                placeholder="Select category"
+                options={appCategoryOptions}
+                hideLabel
+              />
+            </Box>
+          </Box>
           <SelectAppPanel
             appInstances={appInstances}
             appInstancesError={appInstancesError}
