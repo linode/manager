@@ -31,18 +31,14 @@ describe('TicketAttachmentList component', () => {
     expect(component).toBeDefined();
   });
   it('should render its props', () => {
-    expect(component.find('WithStyles(TicketAttachmentRow)')).toHaveLength(2);
+    expect(component.find('TicketAttachmentRow')).toHaveLength(2);
   });
   it('should only pass 5 attachments to the main attachments list', () => {
-    const first = component
-      .find('WithStyles(TicketAttachmentRow)')
-      .first() as any;
+    const first = component.find('TicketAttachmentRow').first() as any;
     expect(first.props().attachments).toHaveLength(5);
   });
   it('should pass the remaining attachments to the ShowMoreExpansion attachment row', () => {
-    const last = component
-      .find('WithStyles(TicketAttachmentRow)')
-      .last() as any;
+    const last = component.find('TicketAttachmentRow').last() as any;
     expect(last.props().attachments).toHaveLength(2);
   });
   it('should call its toggle prop when the ShowMoreExpansion button is clicked', () => {
