@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
+export interface Props {
   entity: 'Linode' | 'Domain';
   groups: string[];
 }
@@ -38,7 +38,7 @@ export const DisplayGroupList = (props: Props) => {
           <Typography
             key={`${entity}-group-item-${idx}`}
             className={classes.groupItem}
-            data-qa-display-group-item={entity}
+            data-testid="display-group-item"
           >
             - {group}
           </Typography>
