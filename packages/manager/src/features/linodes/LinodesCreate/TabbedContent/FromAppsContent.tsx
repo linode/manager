@@ -1,4 +1,4 @@
-import { curry } from 'lodash';
+import _, { curry } from 'lodash';
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
@@ -74,19 +74,10 @@ interface State {
 export const getCompatibleImages = (
   imagesData: Record<string, Image>,
   stackScriptImages: string[]
-) => {
-  /* return _.compact(
-   *   stackScriptImages.map((stackScriptImage) => imagesData[stackScriptImage])
-   * ); */
-
-  return Object.keys(imagesData).reduce((acc, eachKey) => {
-    if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
-      acc.push(imagesData[eachKey]);
-    }
-
-    return acc;
-  }, [] as Image[]);
-};
+) =>
+  _.compact(
+    stackScriptImages.map((stackScriptImage) => imagesData[stackScriptImage])
+  );
 
 export const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
   return userDefinedFields.reduce((accum, eachField) => {
@@ -126,6 +117,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     selectedScriptForDrawer: '',
   };
 
+  //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
   handleSelectStackScript = curriedHandleSelectStackScript(
     curry.placeholder,
     curry.placeholder,
@@ -215,18 +207,17 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               openDrawer={this.openDrawer}
             />
           ) : null}
-            <UserDefinedFieldsPanel
-              errors={filterUDFErrors(errorResources, errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
-              selectedUsername="Linode"
-              handleChange={this.handleChangeUDF}
-              userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
-              udf_data={udf_data || {}}
-              appLogo={renderLogo}
-              openDrawer={this.openDrawer}
-            />
-          )}
+          <UserDefinedFieldsPanel
+            errors={filterUDFErrors(errorResources, errors)}
+            selectedLabel={selectedStackScriptLabel || ''}
+            selectedUsername="Linode"
+            handleChange={this.handleChangeUDF}
+            userDefinedFields={userDefinedFields}
+            updateFor={[userDefinedFields, udf_data, errors]}
+            udf_data={udf_data || {}}
+            appLogo={renderLogo}
+            openDrawer={this.openDrawer}
+          />
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (
