@@ -16,9 +16,9 @@ import {
   createInvoiceTotalsTable,
   createPaymentsTable,
   createPaymentsTotalsTable,
+  pageMargin,
 } from './utils';
 
-const leftMargin = 30; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
 
 const addLeftHeader = (
@@ -30,7 +30,7 @@ const addLeftHeader = (
   taxID: string | undefined
 ) => {
   const addLine = (text: string, fontSize = 9) => {
-    doc.text(text, leftMargin, currentLine, { charSpace: 0.75 });
+    doc.text(text, pageMargin, currentLine, { charSpace: 0.75 });
     currentLine += fontSize;
   };
 
@@ -112,7 +112,7 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFont(baseFont, 'bold');
   doc.setFontSize(12);
   textStrings.forEach((eachString) => {
-    doc.text(eachString.text, eachString.leftMargin || leftMargin, y, {
+    doc.text(eachString.text, eachString.leftMargin || pageMargin, y, {
       charSpace: 0.75,
       maxWidth: 100,
     });

@@ -30,7 +30,7 @@ export const paymentFactory = Factory.Sync.makeFactory<Payment>({
   usd: 5,
 });
 
-const invoiceDate = new Date('2020-01-01T00:00:00');
+const invoiceDate = new Date('2022-08-01T00:00:00');
 export const invoiceFactory = Factory.Sync.makeFactory<Invoice>({
   date: Factory.each((i) => {
     invoiceDate.setDate(invoiceDate.getDate() - i + 1);
