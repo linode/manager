@@ -93,7 +93,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
   });
 
   const gradient = {
-    backgroundImage: `url(https://www.linode.com/wp-content/themes/linode-website-theme/images/Triangles-Background--Dark--Desktop.png),linear-gradient(to right, #${app?.colors.start}, #${app?.colors.end})`,
+    backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${app?.colors.start}, #${app?.colors.end})`,
   };
 
   return (
