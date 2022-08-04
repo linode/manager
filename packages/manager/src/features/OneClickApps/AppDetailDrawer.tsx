@@ -148,7 +148,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                   __html: sanitizeHTML(app.description),
                 }}
               />
-              {app.website && (
+              {app.website ? (
                 <>
                   <Typography variant="h3">Website</Typography>
                   <ExternalLink
@@ -158,10 +158,10 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                     hideIcon
                   />
                 </>
-              )}
+              ) : null}
             </Box>
             <div>
-              {app.related_guides && (
+              {app.related_guides ? (
                 <Accordion className={classes.accordion} heading="Guides">
                   <ul>
                     {(
@@ -173,8 +173,8 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                     ))}
                   </ul>
                 </Accordion>
-              )}
-              {app.tips && (
+              ) : null}
+              {app.tips ? (
                 <Accordion className={classes.accordion} heading="Tips">
                   <ul>
                     {app.tips.map((tip, idx) => (
@@ -182,7 +182,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                     ))}
                   </ul>
                 </Accordion>
-              )}
+              ) : null}
             </div>
           </Box>
         </>
