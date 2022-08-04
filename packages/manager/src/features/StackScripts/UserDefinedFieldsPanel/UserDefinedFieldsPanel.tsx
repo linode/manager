@@ -173,11 +173,12 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
       userDefinedFields!
     );
 
+    const isDrawerOpenable = this.props.openDrawer !== undefined;
+
     return (
       <Paper
         className={classnames(classes.root, {
-          [`${classes.marketplaceSpacing}`]:
-            this.props.openDrawer !== undefined,
+          [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
         })}
       >
         <Box className={classes.header}>
@@ -185,7 +186,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
           <Typography variant="h2" data-qa-user-defined-field-header>
             <span>{`${this.props.selectedLabel} Setup`}</span>
           </Typography>
-          {this.props.openDrawer ? (
+          {isDrawerOpenable ? (
             <AppInfo onClick={this.handleOpenDrawer} />
           ) : null}
         </Box>
