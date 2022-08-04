@@ -161,6 +161,12 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
   };
 
   handleOpenDrawer = () => {
+    if (this.props.openDrawer !== undefined) {
+      return this.props.openDrawer(this.props.selectedLabel);
+    }
+
+    return null;
+  };
     this.props.openDrawer !== undefined
       ? this.props.openDrawer(this.props.selectedLabel)
       : undefined;
