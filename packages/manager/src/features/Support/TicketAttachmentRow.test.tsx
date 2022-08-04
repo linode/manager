@@ -1,10 +1,8 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
-
 import { TicketAttachmentRow } from './TicketAttachmentRow';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const props = {
   attachments: ['file1', 'file2', 'file3'],
@@ -13,35 +11,17 @@ const props = {
     <InsertPhoto key={1} />,
     <InsertPhoto key={2} />,
   ],
-  classes: {
-    root: '',
-    attachmentPaper: '',
-    attachmentRow: '',
-    attachmentIcon: '',
-  },
 };
-
-const component = shallow(<TicketAttachmentRow {...props} />);
 
 describe('TicketAttachmentRow component', () => {
   it('should render', () => {
-    expect(component).toBeDefined();
+    const { getByText } = renderWithTheme(<TicketAttachmentRow {...props} />);
+    expect(getByText('file1')).toBeInTheDocument();
   });
-  it('should render its props', () => {
-    expect(component.find('[data-qa-attachment-row]')).toHaveLength(3);
-  });
-  it('should render an icon for each attachment', () => {
-    expect(
-      component
-        .find('[data-qa-attachment-row]')
-        .first()
-        .containsMatchingElement(<InsertDriveFile key={0} />)
-    ).toBeTruthy();
-    expect(
-      component
-        .find('[data-qa-attachment-row]')
-        .last()
-        .containsMatchingElement(<InsertPhoto key={2} />)
-    ).toBeTruthy();
+  it('should each attachment', () => {
+    const { getByTestId } = renderWithTheme(<TicketAttachmentRow {...props} />);
+    expect(getByTestId('attachment-row-0')).toHaveTextContent('file1');
+    expect(getByTestId('attachment-row-1')).toHaveTextContent('file2');
+    expect(getByTestId('attachment-row-2')).toHaveTextContent('file3');
   });
 });

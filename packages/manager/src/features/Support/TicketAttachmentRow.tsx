@@ -48,7 +48,7 @@ export const TicketAttachmentRow = (props: Props) => {
               wrap="nowrap"
               key={idx}
               className={classes.attachmentRow}
-              data-qa-attachment-row
+              data-testid={`attachment-row-${idx}`}
             >
               <Grid item className={classes.attachmentIcon}>
                 {icons[idx]}
