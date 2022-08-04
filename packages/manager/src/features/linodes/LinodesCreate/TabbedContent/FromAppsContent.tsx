@@ -33,6 +33,7 @@ import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import Select from 'src/components/EnhancedSelect';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
 
@@ -73,6 +74,10 @@ const styles = (theme: Theme) =>
       display: 'flex',
       justifyContent: 'space-between',
       gap: theme.spacing(),
+      marginTop: theme.spacing(),
+      '& > h2': {
+        width: '100%',
+      },
     },
     search: {
       flexGrow: 10,
@@ -223,24 +228,27 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
-          <Box component={Paper} className={classes.searchAndFilter}>
-            <Box className={classes.search}>
-              <DebouncedSearch
-                placeholder="Search marketplace"
-                fullWidth
-                onSearch={() => undefined}
-                label="Search marketplace"
-                hideLabel
-              />
+          <Paper>
+            <Typography variant="h2">Select an App</Typography>
+            <Box className={classes.searchAndFilter}>
+              <Box className={classes.search}>
+                <DebouncedSearch
+                  placeholder="Search marketplace"
+                  fullWidth
+                  onSearch={() => undefined}
+                  label="Search marketplace"
+                  hideLabel
+                />
+              </Box>
+              <Box className={classes.filter}>
+                <Select
+                  placeholder="Select category"
+                  options={appCategoryOptions}
+                  hideLabel
+                />
+              </Box>
             </Box>
-            <Box className={classes.filter}>
-              <Select
-                placeholder="Select category"
-                options={appCategoryOptions}
-                hideLabel
-              />
-            </Box>
-          </Box>
+          </Paper>
           <SelectAppPanel
             appInstances={appInstances}
             appInstancesError={appInstancesError}
