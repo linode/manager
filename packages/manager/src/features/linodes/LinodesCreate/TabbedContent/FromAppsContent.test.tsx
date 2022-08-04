@@ -20,7 +20,7 @@ describe('getCompatibleImages', () => {
   });
 
   it('should return an empty Array if an empty object or an empty array are passed', () => {
-    const bothEmtpyResult = getCompatibleImages({}, []);
+    const bothEmptyResult = getCompatibleImages({}, []);
     const emptyImagesDataResult = getCompatibleImages({}, ['Debian']);
     const emptyStackScriptImagesResult = getCompatibleImages(
       { Test: imageFactory.build() },
