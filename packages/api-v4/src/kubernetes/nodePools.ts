@@ -1,5 +1,5 @@
 import { nodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,

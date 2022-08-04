@@ -1,5 +1,5 @@
-import { BETA_API_ROOT as API_ROOT } from 'src/constants';
-import Request, { setMethod, setParams, setURL, setXFilter } from 'src/request';
+import { BETA_API_ROOT as API_ROOT } from '../constants';
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { ResourcePage as Page } from '../types';
 
 import { VLAN } from './types';

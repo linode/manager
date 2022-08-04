@@ -3,7 +3,7 @@ import {
   ResizeLinodeDiskSchema,
   UpdateLinodePasswordSchema,
 } from '@linode/validation/lib/linodes.schema';
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
