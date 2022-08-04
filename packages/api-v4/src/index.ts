@@ -38,4 +38,4 @@ export * from './databases';
 
 export * from './entity-transfers';
 
-export { baseRequest, setToken } from './request';
+export { baseRequest, setToken, isEmpty } from './request';
