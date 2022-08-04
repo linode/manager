@@ -29,6 +29,7 @@ export const ImportGroupsAsTags = (props: Props) => {
       <Button
         buttonType="primary"
         onClick={openDrawer}
+        data-testid="open-import-drawer"
         data-qa-open-import-drawer-button
       >
         Import Display Groups

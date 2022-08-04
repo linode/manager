@@ -1,22 +1,20 @@
-import { shallow } from 'enzyme';
+import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ImportGroupsAsTags } from './ImportGroupsAsTags';
 
-const classes = { root: '', helperText: '' };
-
 const props = {
-  classes,
   openDrawer: jest.fn(),
 };
 
-const component = shallow(<ImportGroupsAsTags {...props} />);
-
 describe('Component', () => {
   it('should render', () => {
-    expect(component).toBeDefined();
+    const { getByText } = renderWithTheme(<ImportGroupsAsTags {...props} />);
+    expect(getByText('Import Display Groups as Tags')).toBeInTheDocument();
   });
   it('should open the tag import drawer on click', () => {
-    component.find('[data-qa-open-import-drawer-button]').simulate('click');
+    const { getByTestId } = renderWithTheme(<ImportGroupsAsTags {...props} />);
+    fireEvent.click(getByTestId('open-import-drawer'));
     expect(props.openDrawer).toHaveBeenCalled();
   });
 });
