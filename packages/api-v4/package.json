@@ -5,9 +5,10 @@
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
   },
+  "keywords": ["linode", "api", "sdk", "api-v4"],
   "repository": {
     "type": "git",
-    "directory": "https://github.com/linode/manager/tree/develop/packages/api-v4"
+    "url": "https://github.com/linode/manager/tree/develop/packages/api-v4"
   },
   "engines": {
     "node": ">= 14.17.4"
@@ -16,14 +17,26 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
+  "type": "module",
   "main": "lib/index.js",
+  "module": "lib/esm/index.js",
   "exports": {
-    ".": "./lib/esm/index.js",
-    "./lib": "./lib/esm/index.js",
-    "./lib/*": "./lib/esm/index.js"
+    ".": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./lib": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/index.js"
+    },
+    "./lib/*": {
+      "import": "./lib/esm/index.js",
+      "require": "./lib/index.js"
+    }
   },
   "types": "./lib/index.d.ts",
-  "unpkg": "./lib/iifeindex.js",
+  "browser": "./lib/iife/index.js",
+  "unpkg": "./lib/iife/index.js",
   "dependencies": {
     "@linode/validation": "*",
     "@types/yup": "^0.29.13",
