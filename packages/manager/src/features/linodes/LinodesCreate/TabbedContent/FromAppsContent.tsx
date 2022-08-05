@@ -207,17 +207,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               openDrawer={this.openDrawer}
             />
           ) : null}
-          <UserDefinedFieldsPanel
-            errors={filterUDFErrors(errorResources, errors)}
-            selectedLabel={selectedStackScriptLabel || ''}
-            selectedUsername="Linode"
-            handleChange={this.handleChangeUDF}
-            userDefinedFields={userDefinedFields}
-            updateFor={[userDefinedFields, udf_data, errors]}
-            udf_data={udf_data || {}}
-            appLogo={renderLogo}
-            openDrawer={this.openDrawer}
-          />
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (
