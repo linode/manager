@@ -1,5 +1,5 @@
 import { assocPath } from 'ramda';
-import types from 'src/cachedData/types.json';
+import types from 'src/utilities/types.json';
 import { imageFactory, kubernetesClusterFactory } from 'src/factories';
 import { nodeBalancerFactory } from 'src/factories/nodebalancer';
 import { apiResponseToMappedState } from 'src/store/store.helpers.tmp';

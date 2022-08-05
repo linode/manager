@@ -1,7 +1,7 @@
 import { LinodeType } from '@linode/api-v4';
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import types from 'src/cachedData/types.json';
+import types from 'src/utilities/types.json';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import * as linodes from 'src/__data__/linodes';
 import { BackupsTable } from './BackupsTable';

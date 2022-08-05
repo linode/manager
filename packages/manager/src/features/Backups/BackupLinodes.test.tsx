@@ -2,7 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { LinodeType } from '@linode/api-v4';
-import types from 'src/cachedData/types.json';
+import types from 'src/utilities/types.json';
 import { displayPrice as _display } from 'src/components/DisplayPrice';
 import * as linodes from 'src/__data__/linodes';
 

@@ -1,4 +1,4 @@
-import types from 'src/cachedData/types.json';
+import types from 'src/utilities/types.json';
 import { LinodeType } from '@linode/api-v4';
 
 const _types = types.data as LinodeType[];

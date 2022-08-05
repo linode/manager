@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { LinodeType } from '@linode/api-v4/lib/linodes';
-import data from 'src/cachedData/types.json';
+import data from 'src/utilities/types.json';
 import { linodeFactory } from 'src/factories/linodes';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { getTypeInfo } from 'src/utilities/typesHelpers';

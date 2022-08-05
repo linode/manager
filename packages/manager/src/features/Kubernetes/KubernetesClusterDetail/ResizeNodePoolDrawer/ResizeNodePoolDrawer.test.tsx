@@ -1,6 +1,6 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import types from 'src/cachedData/types.json';
+import types from 'src/utilities/types.json';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
