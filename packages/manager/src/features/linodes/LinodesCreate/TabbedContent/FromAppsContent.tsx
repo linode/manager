@@ -1,3 +1,4 @@
+import _, { curry } from 'lodash';
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
@@ -27,6 +28,7 @@ import {
   WithTypesRegionsAndImages,
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
+import { APP_ROOT } from 'src/constants';
 
 type ClassNames = 'main' | 'sidebar';
 
@@ -69,53 +71,62 @@ interface State {
   selectedScriptForDrawer: string;
 }
 
+export const getCompatibleImages = (
+  imagesData: Record<string, Image>,
+  stackScriptImages: string[]
+) =>
+  _.compact(
+    stackScriptImages.map((stackScriptImage) => imagesData[stackScriptImage])
+  );
+
+export const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
+  return userDefinedFields.reduce((accum, eachField) => {
+    if (eachField.default) {
+      accum[eachField.name] = eachField.default;
+    }
+    return accum;
+  }, {});
+};
+
+export const handleSelectStackScript = (
+  id: number,
+  label: string,
+  username: string,
+  stackScriptImages: string[],
+  userDefinedFields: UserDefinedField[],
+  imagesData: Record<string, Image>,
+  updateStackScript: CombinedProps['updateStackScript']
+) => {
+  const compatibleImages = getCompatibleImages(imagesData, stackScriptImages);
+  const defaultUDFData = getDefaultUDFData(userDefinedFields);
+  updateStackScript(
+    id,
+    label,
+    username,
+    userDefinedFields,
+    compatibleImages,
+    defaultUDFData
+  );
+};
+
+const curriedHandleSelectStackScript = curry(handleSelectStackScript);
+
 class FromAppsContent extends React.PureComponent<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
     selectedScriptForDrawer: '',
   };
 
-  handleSelectStackScript = (
-    id: number,
-    label: string,
-    username: string,
-    stackScriptImages: string[],
-    userDefinedFields: UserDefinedField[]
-  ) => {
-    const { imagesData } = this.props;
-    /**
-     * based on the list of images we get back from the API, compare those
-     * to our list of public images supported by Linode and filter out the ones
-     * that aren't compatible with our selected StackScript
-     */
-    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
-        acc.push(imagesData[eachKey]);
-      }
-
-      return acc;
-    }, [] as Image[]);
-
-    /**
-     * if a UDF field comes back from the API with a "default"
-     * value, it means we need to pre-populate the field and form state
-     */
-    const defaultUDFData = userDefinedFields.reduce((accum, eachField) => {
-      if (eachField.default) {
-        accum[eachField.name] = eachField.default;
-      }
-      return accum;
-    }, {});
-
-    this.props.updateStackScript(
-      id,
-      label,
-      username,
-      userDefinedFields,
-      compatibleImages,
-      defaultUDFData
-    );
-  };
+  //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+  handleSelectStackScript = curriedHandleSelectStackScript(
+    curry.placeholder,
+    curry.placeholder,
+    curry.placeholder,
+    curry.placeholder,
+    curry.placeholder,
+    this.props.imagesData,
+    this.props.updateStackScript
+  );
 
   handleChangeUDF = (key: string, value: string) => {
     // either overwrite or create new selection
@@ -154,6 +165,20 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       userCannotCreateLinode,
     } = this.props;
 
+    const logoUrl = appInstances?.find(
+      (app) => app.id === selectedStackScriptID
+    )?.logo_url;
+
+    const renderLogo =
+      logoUrl === undefined ? (
+        <span className="fl-tux" />
+      ) : (
+        <img
+          src={`${APP_ROOT}/${logoUrl}`}
+          alt={`${selectedStackScriptLabel} logo`}
+        />
+      );
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     return (
@@ -169,19 +194,19 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
           />
-          {!userCannotCreateLinode &&
-            userDefinedFields &&
-            userDefinedFields.length > 0 && (
-              <UserDefinedFieldsPanel
-                errors={filterUDFErrors(errorResources, errors)}
-                selectedLabel={selectedStackScriptLabel || ''}
-                selectedUsername="Linode"
-                handleChange={this.handleChangeUDF}
-                userDefinedFields={userDefinedFields}
-                updateFor={[userDefinedFields, udf_data, errors]}
-                udf_data={udf_data || {}}
-              />
-            )}
+          {!userCannotCreateLinode && userDefinedFields ? (
+            <UserDefinedFieldsPanel
+              errors={filterUDFErrors(errorResources, errors)}
+              selectedLabel={selectedStackScriptLabel || ''}
+              selectedUsername="Linode"
+              handleChange={this.handleChangeUDF}
+              userDefinedFields={userDefinedFields}
+              updateFor={[userDefinedFields, udf_data, errors]}
+              udf_data={udf_data || {}}
+              appLogo={renderLogo}
+              openDrawer={this.openDrawer}
+            />
+          ) : null}
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (

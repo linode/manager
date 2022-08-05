@@ -11,17 +11,22 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Box from 'src/components/core/Box';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
+import AppInfo from '../../linodes/LinodesCreate/AppInfo';
+import classnames from 'classnames';
 
 type ClassNames =
   | 'root'
   | 'username'
   | 'advDescription'
-  | 'optionalFieldWrapper';
+  | 'optionalFieldWrapper'
+  | 'header'
+  | 'marketplaceSpacing';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -41,6 +46,19 @@ const styles = (theme: Theme) =>
       color: theme.color.grey1,
     },
     optionalFieldWrapper: {},
+    header: {
+      display: 'flex',
+      alignItems: 'center',
+      columnGap: theme.spacing(),
+      '& > img': {
+        width: 60,
+        height: 60,
+      },
+    },
+    marketplaceSpacing: {
+      paddingTop: theme.spacing(),
+      paddingBottom: theme.spacing(),
+    },
   });
 
 interface Props {
@@ -50,6 +68,8 @@ interface Props {
   udf_data: any;
   selectedLabel: string;
   selectedUsername: string;
+  appLogo?: JSX.Element;
+  openDrawer?: (stackScriptLabel: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -140,6 +160,13 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     );
   };
 
+  handleOpenDrawer = () => {
+    if (this.props.openDrawer !== undefined) {
+      return this.props.openDrawer(this.props.selectedLabel);
+    }
+    return null;
+  };
+
   render() {
     const { userDefinedFields, classes } = this.props;
 
@@ -147,11 +174,23 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
       userDefinedFields!
     );
 
+    const isDrawerOpenable = this.props.openDrawer !== undefined;
+
     return (
-      <Paper className={classes.root}>
-        <Typography variant="h2" data-qa-user-defined-field-header>
-          <span>{`${this.props.selectedLabel} Options`}</span>
-        </Typography>
+      <Paper
+        className={classnames(classes.root, {
+          [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
+        })}
+      >
+        <Box className={classes.header}>
+          {this.props.appLogo}
+          <Typography variant="h2" data-qa-user-defined-field-header>
+            <span>{`${this.props.selectedLabel} Setup`}</span>
+          </Typography>
+          {isDrawerOpenable ? (
+            <AppInfo onClick={this.handleOpenDrawer} />
+          ) : null}
+        </Box>
 
         {/* Required Fields */}
         {requiredUDFs.map((field: UserDefinedField) => {
