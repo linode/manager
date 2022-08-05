@@ -47,6 +47,7 @@ interface Props {
   name?: string;
   width?: number;
   isClearable?: boolean;
+  required?: boolean;
 }
 
 type CombinedProps = Props & WithLinodesProps;

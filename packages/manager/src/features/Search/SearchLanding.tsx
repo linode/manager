@@ -14,6 +14,7 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useAllDomainsQuery } from 'src/queries/domains';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -95,12 +96,18 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     data: objectStorageClusters,
     isLoading: areClustersLoading,
     error: objectStorageClustersError,
-  } = useObjectStorageClusters(_isLargeAccount);
+  } = useObjectStorageClusters(!_isLargeAccount);
 
   const {
     data: objectStorageBuckets,
     isLoading: areBucketsLoading,
-  } = useObjectStorageBuckets(objectStorageClusters, _isLargeAccount);
+  } = useObjectStorageBuckets(objectStorageClusters, !_isLargeAccount);
+
+  const {
+    data: domains,
+    error: domainsError,
+    isLoading: areDomainsLoading,
+  } = useAllDomainsQuery(!_isLargeAccount);
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
@@ -115,7 +122,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'volumes', 'nodeBalancers', 'images', 'domains', 'kubernetes'],
+    ['linodes', 'volumes', 'nodeBalancers', 'images', 'kubernetes'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
@@ -145,7 +152,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(query);
     } else {
-      search(query, objectStorageBuckets?.buckets || []);
+      search(query, objectStorageBuckets?.buckets ?? [], domains ?? []);
     }
   }, [
     query,
@@ -154,6 +161,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     _isLargeAccount,
     _searchAPI,
     objectStorageBuckets,
+    domains,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -161,7 +169,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (errors.linodes) {
       errorString.push('Linodes');
     }
-    if (errors.domains) {
+    if (domainsError) {
       errorString.push('Domains');
     }
     if (errors.volumes) {
@@ -194,7 +202,11 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const resultsEmpty = equals(finalResults, emptyResults);
 
-  const loading = reduxLoading || areBucketsLoading || areClustersLoading;
+  const loading =
+    reduxLoading ||
+    areBucketsLoading ||
+    areClustersLoading ||
+    areDomainsLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

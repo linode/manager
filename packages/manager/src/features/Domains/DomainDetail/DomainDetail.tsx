@@ -1,23 +1,17 @@
 import { DomainRecord, getDomainRecords } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useLocation, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';
-import summaryPanelStyles, {
-  StyleProps,
-} from 'src/containers/SummaryPanels.styles';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import useDomains from 'src/hooks/useDomains';
+import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
+import { useDomainQuery, useUpdateDomainMutation } from 'src/queries/domains';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import DomainRecords from '../DomainRecordsWrapper';
-
-type RouteProps = RouteComponentProps<{ domainId?: string }, any, any>;
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
@@ -36,21 +30,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = RouteProps & StyleProps;
-
-const DomainDetail: React.FC<CombinedProps> = (props) => {
+const DomainDetail = () => {
   const classes = useStyles();
+  const params = useParams<{ domainId: string }>();
+  const domainId = Number(params.domainId);
 
-  const {
-    location,
-    match: {
-      params: { domainId },
-    },
-  } = props;
+  const location = useLocation<any>();
 
-  const { domains, updateDomain } = useDomains();
-  const domain = domains.itemsById[String(domainId)];
-  const { loading: domainsLoading, error: domainsError } = domains;
+  const { data: domain, error, isLoading } = useDomainQuery(domainId);
+  const { mutateAsync: updateDomain } = useUpdateDomainMutation();
 
   const [records, updateRecords] = React.useState<DomainRecord[]>([]);
   const [updateError, setUpdateError] = React.useState<string | undefined>();
@@ -63,7 +51,11 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
   const handleLabelChange = (label: string) => {
     setUpdateError(undefined);
 
-    return updateDomain({ domainId: domain.id, domain: label }).catch((e) => {
+    if (!domain) {
+      return Promise.reject('No Domain found.');
+    }
+
+    return updateDomain({ id: domain.id, domain: label }).catch((e) => {
       setUpdateError(e[0].reason);
       return Promise.reject(e);
     });
@@ -71,7 +63,7 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
 
   const resetEditableLabel = () => {
     setUpdateError(undefined);
-    return domain.domain;
+    return domain?.domain;
   };
 
   const handleUpdateTags = (tagsList: string[]) => {
@@ -79,7 +71,7 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
       return Promise.reject('No Domain ID specified.');
     }
     return updateDomain({
-      domainId: +domainId,
+      id: +domainId,
       tags: tagsList,
     });
   };
@@ -93,18 +85,16 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
       .catch(() => null);
   };
 
-  if (domainsLoading) {
-    return <Loading shouldDelay />;
+  if (isLoading) {
+    return <CircleProgress />;
   }
 
-  /** Error State */
-  if (domainsError.read) {
+  if (error) {
     return (
       <ErrorState errorText="There was an error retrieving your Domain. Please reload and try again." />
     );
   }
 
-  /** Empty State */
   if (!domain) {
     return null;
   }
@@ -132,11 +122,11 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
           <DocsLink href="https://www.linode.com/docs/guides/dns-manager/" />
         </Grid>
       </Grid>
-      {props.location.state && props.location.state.recordError && (
+      {location.state && location.state.recordError && (
         <Notice
           className={classes.error}
           error
-          text={props.location.state.recordError}
+          text={location.state.recordError}
         />
       )}
       <DomainRecords
@@ -149,13 +139,4 @@ const DomainDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const reloaded = reloadableWithRouter<{}, { domainId?: number }>(
-  (routePropsOld, routePropsNew) => {
-    return (
-      routePropsOld.match.params.domainId !==
-      routePropsNew.match.params.domainId
-    );
-  }
-);
-
-export default compose<CombinedProps, RouteProps>(reloaded)(DomainDetail);
+export default DomainDetail;

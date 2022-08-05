@@ -16,6 +16,15 @@ export interface Domain {
   updated: string;
 }
 
+export interface CloneDomainPayload {
+  domain: string;
+}
+
+export interface ImportZonePayload {
+  domain: string;
+  remote_nameserver: string;
+}
+
 export type DomainStatus = 'active' | 'disabled' | 'edit_mode' | 'has_errors';
 
 export type DomainType = 'master' | 'slave';
