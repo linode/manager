@@ -7,7 +7,12 @@ WORKDIR /home/node/app
 VOLUME /home/node/app
 EXPOSE 3000/tcp
 # Curl is needed for health check.
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update \
+    && apt-get install -y curl \
+    && rm -rf /var/cache/apt/* \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean
+
 CMD yarn start:manager:ci
 
 # `e2e`
