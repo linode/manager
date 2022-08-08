@@ -8,6 +8,8 @@ import { pluralize } from 'src/utilities/pluralize';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
+export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
+export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\u{2019} volumes) will be erased.`;
 
 export const getMonthlyPrice = (
   type: string,
