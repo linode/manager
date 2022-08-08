@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-08-08] - v1.73.0
+
+### Added:
+- Local storage warning to Kubernetes upgrade flow
+- August 2022 Marketplace apps
+
+### Changed:
+- Filter `read_only` Linodes From Firewall Select For Restricted Users
+
+### Fixed:
+- Linode Backups tab error certain users were experiencing
+- Invoice formatting issue
+
 ## [2022-07-25] - v1.72.0
 
 ### Changed:
