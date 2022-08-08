@@ -1,18 +1,12 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Box from 'src/components/core/Box';
-import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
@@ -20,46 +14,37 @@ import UserDefinedText from './FieldTypes/UserDefinedText';
 import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import classnames from 'classnames';
 
-type ClassNames =
-  | 'root'
-  | 'username'
-  | 'advDescription'
-  | 'optionalFieldWrapper'
-  | 'header'
-  | 'marketplaceSpacing';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      padding: theme.spacing(3),
-      marginBottom: theme.spacing(3),
-      '& > div:last-child': {
-        border: 0,
-        marginBottom: 0,
-        paddingBottom: 0,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(3),
+    '& > div:last-child': {
+      border: 0,
+      marginBottom: 0,
+      paddingBottom: 0,
     },
-    advDescription: {
-      margin: `${theme.spacing(2)}px 0`,
+  },
+  advDescription: {
+    margin: `${theme.spacing(2)}px 0`,
+  },
+  username: {
+    color: theme.color.grey1,
+  },
+  optionalFieldWrapper: {},
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: theme.spacing(),
+    '& > img': {
+      width: 60,
+      height: 60,
     },
-    username: {
-      color: theme.color.grey1,
-    },
-    optionalFieldWrapper: {},
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      columnGap: theme.spacing(),
-      '& > img': {
-        width: 60,
-        height: 60,
-      },
-    },
-    marketplaceSpacing: {
-      paddingTop: theme.spacing(),
-      paddingBottom: theme.spacing(),
-    },
-  });
+  },
+  marketplaceSpacing: {
+    paddingTop: theme.spacing(),
+    paddingBottom: theme.spacing(),
+  },
+}));
 
 interface Props {
   errors?: APIError[];
@@ -72,11 +57,19 @@ interface Props {
   openDrawer?: (stackScriptLabel: string) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const UserDefinedFieldsPanel = (props: Props) => {
+  const classes = useStyles();
+  const {
+    udf_data,
+    handleChange,
+    openDrawer,
+    selectedLabel,
+    userDefinedFields,
+    errors,
+    appLogo,
+  } = props;
 
-class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
-  renderField = (field: UserDefinedField, error?: string) => {
-    const { udf_data, handleChange } = this.props;
+  const renderField = (field: UserDefinedField, error?: string) => {
     // if the 'default' key is returned from the API, the field is optional
     const isOptional = field.hasOwnProperty('default');
 
@@ -160,65 +153,59 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     );
   };
 
-  handleOpenDrawer = () => {
-    if (this.props.openDrawer !== undefined) {
-      return this.props.openDrawer(this.props.selectedLabel);
+  const handleOpenDrawer = () => {
+    if (openDrawer !== undefined) {
+      return openDrawer(selectedLabel);
     }
     return null;
   };
 
-  render() {
-    const { userDefinedFields, classes } = this.props;
+  const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
+    userDefinedFields!
+  );
 
-    const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
-      userDefinedFields!
-    );
+  const isDrawerOpenable = openDrawer !== undefined;
 
-    const isDrawerOpenable = this.props.openDrawer !== undefined;
+  return (
+    <Paper
+      className={classnames(classes.root, {
+        [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
+      })}
+    >
+      <Box className={classes.header}>
+        {appLogo}
+        <Typography variant="h2" data-qa-user-defined-field-header>
+          <span>{`${selectedLabel} Setup`}</span>
+        </Typography>
+        {isDrawerOpenable ? <AppInfo onClick={handleOpenDrawer} /> : null}
+      </Box>
 
-    return (
-      <Paper
-        className={classnames(classes.root, {
-          [`${classes.marketplaceSpacing}`]: isDrawerOpenable,
-        })}
-      >
-        <Box className={classes.header}>
-          {this.props.appLogo}
-          <Typography variant="h2" data-qa-user-defined-field-header>
-            <span>{`${this.props.selectedLabel} Setup`}</span>
+      {/* Required Fields */}
+      {requiredUDFs.map((field: UserDefinedField) => {
+        const error = getError(field, errors);
+        return renderField(field, error);
+      })}
+
+      {/* Optional Fields */}
+      {optionalUDFs.length !== 0 && (
+        <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
+          <Typography variant="body1" className={classes.advDescription}>
+            These fields are additional configuration options and are not
+            required for creation.
           </Typography>
-          {isDrawerOpenable ? (
-            <AppInfo onClick={this.handleOpenDrawer} />
-          ) : null}
-        </Box>
-
-        {/* Required Fields */}
-        {requiredUDFs.map((field: UserDefinedField) => {
-          const error = getError(field, this.props.errors);
-          return this.renderField(field, error);
-        })}
-
-        {/* Optional Fields */}
-        {optionalUDFs.length !== 0 && (
-          <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
-            <Typography variant="body1" className={classes.advDescription}>
-              These fields are additional configuration options and are not
-              required for creation.
-            </Typography>
-            <div
-              className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
-            >
-              {optionalUDFs.map((field: UserDefinedField) => {
-                const error = getError(field, this.props.errors);
-                return this.renderField(field, error);
-              })}
-            </div>
-          </ShowMoreExpansion>
-        )}
-      </Paper>
-    );
-  }
-}
+          <div
+            className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
+          >
+            {optionalUDFs.map((field: UserDefinedField) => {
+              const error = getError(field, errors);
+              return renderField(field, error);
+            })}
+          </div>
+        </ShowMoreExpansion>
+      )}
+    </Paper>
+  );
+};
 
 const getError = (field: UserDefinedField, errors?: APIError[]) => {
   if (!errors) {
@@ -261,9 +248,4 @@ const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[]) => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard,
-  styled
-)(UserDefinedFieldsPanel);
+export default RenderGuard(UserDefinedFieldsPanel);

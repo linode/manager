@@ -97,6 +97,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
 
   return (
     <SelectionCard
+      id={`app-${String(id)}`}
       key={id}
       checked={checked}
       onClick={handleSelectApp}
