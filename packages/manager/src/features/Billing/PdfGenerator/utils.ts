@@ -1,5 +1,5 @@
 import JSPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import autoTable, { CellHookData } from 'jspdf-autotable';
 import {
   Invoice,
   InvoiceItem,
@@ -8,6 +8,11 @@ import {
 } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
+
+/**
+ * Margin that has to be applied to every item added to the PDF.
+ */
+export const pageMargin = 30;
 
 const formatDateForTable = (date: string): [string, string] => {
   if (!date) {
@@ -166,7 +171,6 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
         },
       },
       1: {
-        cellWidth: 30,
         cellPadding: {
           right: 6,
           top: 5,
@@ -182,6 +186,25 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       ['Tax Subtotal (USD)', `$${Number(invoice.tax).toFixed(2)}`],
       [`Total (USD)`, `$${Number(invoice.total).toFixed(2)}`],
     ],
+    willDrawCell: (data: CellHookData) => {
+      const pageWidth = doc.internal.pageSize.width;
+      const tableWidth = data.table.getWidth(pageWidth);
+      const totalsWidth = data.table.columns[1].minReadableWidth;
+
+      // Recalculate column widths.
+      data.table.columns[0].width = tableWidth - totalsWidth;
+      data.table.columns[1].width = totalsWidth;
+
+      // Use recalculated column widths to recalculate cell widths and positions.
+      if (data.column.index === 0) {
+        data.cell.width = data.table.columns[0].width;
+      }
+
+      if (data.column.index === 1) {
+        data.cell.width = data.table.columns[1].width;
+        data.cell.x = pageWidth - pageMargin - totalsWidth;
+      }
+    },
   });
 };
 

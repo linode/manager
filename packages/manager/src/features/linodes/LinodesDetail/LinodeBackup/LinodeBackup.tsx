@@ -794,7 +794,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     }
 
     const backupsMonthlyPrice =
-      type?.response.addons.backups.price.monthly ?? 0;
+      type.response?.addons?.backups?.price?.monthly ?? 0;
 
     return (
       <div>
