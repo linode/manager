@@ -3,7 +3,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
 import Close from '@material-ui/icons/Close';
-import Accordion from 'src/components/Accordion';
 import Button from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
@@ -40,6 +39,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: 170,
   },
   container: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
     padding: theme.spacing(4),
   },
   paper: {
@@ -48,14 +50,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 480,
     },
   },
-  website: {
+  link: {
     fontSize: '0.875rem',
     wordBreak: 'break-word',
-  },
-  accordion: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    borderTop: `1px solid ${theme.borderColors.divider}`,
+    lineHeight: '24px',
   },
   button: {
     position: 'absolute',
@@ -133,13 +131,8 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
               dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.name) }}
             />
           </Box>
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="space-between"
-            height="calc(100% - 225px)"
-          >
-            <Box className={classes.container}>
+          <Box className={classes.container}>
+            <Box>
               <Typography variant="h3">{app.summary}</Typography>
               <Typography
                 variant="body1"
@@ -148,42 +141,48 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
                   __html: sanitizeHTML(app.description),
                 }}
               />
-              {app.website ? (
-                <>
-                  <Typography variant="h3">Website</Typography>
-                  <ExternalLink
-                    className={classes.website}
-                    link={app.website}
-                    text={app.website}
-                    hideIcon
-                  />
-                </>
-              ) : null}
             </Box>
-            <div>
-              {app.related_guides ? (
-                <Accordion className={classes.accordion} heading="Guides">
-                  <ul>
-                    {(
-                      oneClickAppsDocsOverride?.[app.name] ?? app.related_guides
-                    ).map((link) => (
-                      <li key={link.href}>
-                        <ExternalLink text={link.title} link={link.href} />
-                      </li>
-                    ))}
-                  </ul>
-                </Accordion>
-              ) : null}
-              {app.tips ? (
-                <Accordion className={classes.accordion} heading="Tips">
-                  <ul>
-                    {app.tips.map((tip, idx) => (
-                      <li key={`${app.name}-tip-${idx}`}>{tip} </li>
-                    ))}
-                  </ul>
-                </Accordion>
-              ) : null}
-            </div>
+            {app.website ? (
+              <Box>
+                <Typography variant="h3">Website</Typography>
+                <ExternalLink
+                  className={classes.link}
+                  link={app.website}
+                  text={app.website}
+                  hideIcon
+                />
+              </Box>
+            ) : null}
+            {app.related_guides ? (
+              <Box>
+                <Typography variant="h3">Guides</Typography>
+                <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
+                  {(
+                    oneClickAppsDocsOverride?.[app.name] ?? app.related_guides
+                  ).map((link, idx) => (
+                    <ExternalLink
+                      className={classes.link}
+                      key={`${app.name}-guide-${idx}`}
+                      text={link.title}
+                      link={link.href}
+                      hideIcon
+                    />
+                  ))}
+                </Box>
+              </Box>
+            ) : null}
+            {app.tips ? (
+              <Box>
+                <Typography variant="h3">Tips</Typography>
+                <Box display="flex" flexDirection="column" style={{ gap: 6 }}>
+                  {app.tips.map((tip, idx) => (
+                    <Typography variant="body1" key={`${app.name}-tip-${idx}`}>
+                      {tip}
+                    </Typography>
+                  ))}
+                </Box>
+              </Box>
+            ) : null}
           </Box>
         </>
       ) : (
