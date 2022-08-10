@@ -208,7 +208,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       this.setState({ isSearching: false });
     } else {
       const appsMatchingQuery = this.props.appInstances?.filter((app) =>
-        app.label.includes(query)
+        app.label.toLowerCase().includes(query.toLowerCase())
       );
       this.setState({
         filteredApps: appsMatchingQuery,
@@ -327,6 +327,8 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             handleClick={this.handleSelectStackScript}
             openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
+            isSearching={isSearching}
+            isFiltering={isFiltering}
           />
           {!userCannotCreateLinode && userDefinedFields ? (
             <UserDefinedFieldsPanel

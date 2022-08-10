@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  heading: string;
+  heading?: string;
   apps: StackScript[];
   disabled: boolean;
   selectedStackScriptID: number | undefined;
@@ -44,7 +44,9 @@ export const AppPanelSection: React.FC<Props> = (props) => {
   return (
     <>
       <Typography variant="h2">{heading}</Typography>
-      <Divider spacingTop={16} spacingBottom={16} />
+      {heading && heading.length > 0 ? (
+        <Divider spacingTop={16} spacingBottom={16} />
+      ) : null}
       <Grid className={classes.flatImagePanelSelections} container>
         {apps.map((eachApp) => (
           <SelectionCardWrapper

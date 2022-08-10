@@ -45,6 +45,8 @@ interface Props extends AppsData {
   disabled: boolean;
   selectedStackScriptID?: number;
   error?: string;
+  isSearching: boolean;
+  isFiltering: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -113,6 +115,8 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       appInstancesLoading,
       handleClick,
       openDrawer,
+      isSearching,
+      isFiltering,
     } = this.props;
 
     if (appInstancesError) {
@@ -150,27 +154,33 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       a.label.toLowerCase().localeCompare(b.label.toLowerCase())
     );
 
+    const isFilteringOrSearching = isFiltering || isSearching;
+
     return (
       <Paper className={classes.panel} data-qa-tp="Select Image">
         {error && <Notice text={error} error />}
+        {!isFilteringOrSearching ? (
+          <AppPanelSection
+            heading="New apps"
+            apps={newApps}
+            disabled={disabled}
+            selectedStackScriptID={selectedStackScriptID}
+            handleClick={handleClick}
+            openDrawer={openDrawer}
+          />
+        ) : null}
+        {!isFilteringOrSearching ? (
+          <AppPanelSection
+            heading="Popular apps"
+            apps={popularApps}
+            disabled={disabled}
+            selectedStackScriptID={selectedStackScriptID}
+            handleClick={handleClick}
+            openDrawer={openDrawer}
+          />
+        ) : null}
         <AppPanelSection
-          heading="New apps"
-          apps={newApps}
-          disabled={disabled}
-          selectedStackScriptID={selectedStackScriptID}
-          handleClick={handleClick}
-          openDrawer={openDrawer}
-        />
-        <AppPanelSection
-          heading="Popular apps"
-          apps={popularApps}
-          disabled={disabled}
-          selectedStackScriptID={selectedStackScriptID}
-          handleClick={handleClick}
-          openDrawer={openDrawer}
-        />
-        <AppPanelSection
-          heading="All apps"
+          heading={isFilteringOrSearching ? '' : 'All apps'}
           apps={allApps}
           disabled={disabled}
           selectedStackScriptID={selectedStackScriptID}
