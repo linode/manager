@@ -123,7 +123,11 @@ jobs:
           name: packages-api-v4-lib
           path: packages/api-v4
       - run: yarn --frozen-lockfile
-      - run: yarn workspace linode-manager run test
+      - run: yarn workspace linode-manager run test --coverage
+      - uses: actions/upload-artifact@v2
+        with:
+          name: unit-test-coverage-report
+          path: packages/manager
 
   build-manager:
     runs-on: ubuntu-latest
