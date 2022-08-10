@@ -107,11 +107,11 @@ describe('LinodeActionMenu', () => {
         buildQueryStringForLinodeClone(
           1,
           '',
-          'g5-standard-2',
+          'g6-standard-2',
           extendedTypes,
           []
         )
-      ).toMatch('typeID=g5-standard-2'));
+      ).toMatch('typeID=g6-standard-2'));
     expect(
       buildQueryStringForLinodeClone(1, '', 'invalid-type', extendedTypes, [])
     ).not.toMatch('typeID=');

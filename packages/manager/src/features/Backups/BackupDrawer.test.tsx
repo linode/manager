@@ -2,8 +2,9 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
-import { linode1, linode2, linode3 } from 'src/__data__/linodes';
-import * as types from 'src/__data__/types';
+import { LinodeType } from '@linode/api-v4/lib/linodes';
+import data from 'src/utilities/types.json';
+import { linodeFactory } from 'src/factories/linodes';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
@@ -16,6 +17,63 @@ import {
 } from './BackupDrawer';
 import { ExtendedLinode } from './types';
 
+const cachedTypesData = data.data as LinodeType[];
+
+const linode1 = linodeFactory.build({
+  specs: {
+    transfer: 1000,
+    memory: 1024,
+    vcpus: 1,
+    disk: 20480,
+    gpus: 0,
+  },
+  type: 'g6-nanode-1',
+  backups: {
+    schedule: {
+      window: 'W2',
+      day: 'Saturday',
+    },
+    enabled: true,
+    last_successful: null,
+  },
+});
+const linode2 = linodeFactory.build({
+  specs: {
+    transfer: 2000,
+    memory: 2048,
+    vcpus: 1,
+    disk: 30720,
+    gpus: 0,
+  },
+  type: 'g6-standard-1',
+  backups: {
+    schedule: {
+      window: 'Scheduling',
+      day: 'Scheduling',
+    },
+    enabled: true,
+    last_successful: null,
+  },
+});
+const linode3 = linodeFactory.build({
+  specs: {
+    transfer: 4000,
+    memory: 4096,
+    vcpus: 2,
+    disk: 81920,
+    gpus: 0,
+  },
+  type: 'g6-standard-2',
+  backups: {
+    schedule: {
+      window: 'Scheduling',
+      day: 'Scheduling',
+    },
+    enabled: false,
+    last_successful: null,
+  },
+});
+
 const linodes = [linode1, linode3];
 
 const error = {
@@ -23,8 +81,8 @@ const error = {
   reason: 'Error',
 };
 
-const linode1Type = getTypeInfo(linode1.type, types.types);
-const linode2Type = getTypeInfo(linode2.type, types.types);
+const linode1Type = getTypeInfo(linode1.type, cachedTypesData);
+const linode2Type = getTypeInfo(linode2.type, cachedTypesData);
 
 const extendedLinodes: ExtendedLinode[] = [
   { ...linode1, typeInfo: linode1Type, linodeError: error },
@@ -59,7 +117,7 @@ const props = {
   enableSuccess: false,
   enableErrors: [],
   typesLoading: false,
-  typesData: types.types,
+  typesData: cachedTypesData,
   enrolling: false,
   autoEnroll: false,
   autoEnrollError: undefined,
@@ -82,9 +140,9 @@ describe('BackupDrawer component', () => {
   });
   describe('adding type and error info to Linodes', () => {
     it('should add type info to a list of Linodes', () => {
-      const withTypes = addTypeInfo(types.types, linodes);
-      expect(withTypes[0].typeInfo).toHaveProperty('label', 'Linode 1024');
-      expect(withTypes[1].typeInfo).toHaveProperty('label', 'Linode 4096');
+      const withTypes = addTypeInfo(cachedTypesData, linodes);
+      expect(withTypes[0].typeInfo).toHaveProperty('label', 'Nanode 1GB');
+      expect(withTypes[1].typeInfo).toHaveProperty('label', 'Linode 4GB');
     });
     it('should attach an error to a Linode', () => {
       const withErrors = addErrors([error], linodes);
@@ -92,7 +150,7 @@ describe('BackupDrawer component', () => {
       expect(withErrors[1].linodeError).toBeUndefined();
     });
     it('enhanceLinodes should attach typeInfo and linodeError', () => {
-      const enhanced = enhanceLinodes(linodes, [error], types.types);
+      const enhanced = enhanceLinodes(linodes, [error], cachedTypesData);
       expect(enhanced[0]).toHaveProperty('typeInfo');
       expect(enhanced[0]).toHaveProperty('linodeError');
     });
