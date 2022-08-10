@@ -127,7 +127,7 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: unit-test-coverage-report
-          path: packages/manager
+          path: packages/manager/coverage_report.json
 
   build-manager:
     runs-on: ubuntu-latest
