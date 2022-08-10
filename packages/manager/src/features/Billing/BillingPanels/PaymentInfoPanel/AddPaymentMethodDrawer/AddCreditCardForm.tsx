@@ -124,7 +124,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
       } else {
         return {
           expiry_month:
-            'Date format must have forward slash between the month and year.',
+            'Expiration must include a slash between the month and year (MM/YY).',
         };
       }
     },
