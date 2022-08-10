@@ -30,10 +30,11 @@ import {
 import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
-import Select from 'src/components/EnhancedSelect';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
+import { oneClickApps, AppCategory } from 'src/features/OneClickApps/FakeSpec';
 
 type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
 
@@ -49,7 +50,7 @@ const appCategories = [
   'Stacks',
   'Website',
   'App Creators',
-] as const;
+];
 
 const appCategoryOptions = appCategories.map((categoryName) => ({
   label: categoryName,
@@ -113,6 +114,11 @@ type CombinedProps = WithStyles<ClassNames> &
 interface State {
   detailDrawerOpen: boolean;
   selectedScriptForDrawer: string;
+  filteredApps: CombinedProps['appInstances'];
+  isSearching: boolean;
+  isFiltering: boolean;
+  query: string;
+  categoryFilter: Item<AppCategory> | null;
 }
 
 export const getCompatibleImages = (
@@ -159,6 +165,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
     selectedScriptForDrawer: '',
+    filteredApps: [],
+    isSearching: false,
+    query: '',
+    categoryFilter: null,
+    isFiltering: false,
   };
 
   //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
@@ -192,6 +203,51 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     });
   };
 
+  onSearch = (query: string) => {
+    if (query === '') {
+      this.setState({ isSearching: false });
+    } else {
+      const appsMatchingQuery = this.props.appInstances?.filter((app) =>
+        app.label.includes(query)
+      );
+      this.setState({
+        filteredApps: appsMatchingQuery,
+        isSearching: true,
+        categoryFilter: null,
+        query: query,
+      });
+    }
+  };
+
+  handleSelectCategory = (categoryItem: Item<AppCategory>) => {
+    if (categoryItem !== null) {
+      const appsInCategory = oneClickApps.filter((oca) =>
+        oca.categories?.includes(categoryItem.value)
+      );
+      const appLabels = appsInCategory.map((app) => app.name.trim());
+      const instancesInCategory = this.props.appInstances?.filter(
+        (instance) => {
+          return appLabels.includes(instance.label.trim());
+        }
+      );
+      this.setState({
+        categoryFilter: categoryItem,
+        isSearching: false,
+        query: '',
+        filteredApps: instancesInCategory ?? [],
+        isFiltering: categoryItem !== null,
+      });
+    } else {
+      this.setState({
+        categoryFilter: categoryItem,
+        isSearching: false,
+        query: '',
+        // filteredApps: instancesInCategory ?? [],
+        isFiltering: categoryItem !== null,
+      });
+    }
+  };
+
   render() {
     const {
       classes,
@@ -223,6 +279,14 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
         />
       );
 
+    const {
+      filteredApps,
+      isSearching,
+      query,
+      categoryFilter,
+      isFiltering,
+    } = this.state;
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     return (
@@ -235,22 +299,27 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
                 <DebouncedSearch
                   placeholder="Search marketplace"
                   fullWidth
-                  onSearch={() => undefined}
+                  onSearch={this.onSearch}
                   label="Search marketplace"
                   hideLabel
+                  value={query}
                 />
               </Box>
               <Box className={classes.filter}>
                 <Select
                   placeholder="Select category"
                   options={appCategoryOptions}
+                  onChange={this.handleSelectCategory}
+                  value={categoryFilter}
                   hideLabel
                 />
               </Box>
             </Box>
           </Paper>
           <SelectAppPanel
-            appInstances={appInstances}
+            appInstances={
+              isSearching || isFiltering ? filteredApps : appInstances
+            }
             appInstancesError={appInstancesError}
             appInstancesLoading={appInstancesLoading}
             selectedStackScriptID={selectedStackScriptID}
