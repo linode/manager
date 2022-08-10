@@ -156,6 +156,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   const { accountActiveSince } = props;
 
   const { data: account } = useAccount();
+  const isAkamaiCustomer = account?.billing_source === 'akamai';
 
   const classes = useStyles();
   const flags = useFlags();
@@ -407,6 +408,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                               ]
                             : undefined
                         }
+                        isAkamaiCustomer={isAkamaiCustomer}
                       >
                         {paginatedAndOrderedData.map((thisItem) => {
                           return (
@@ -451,6 +453,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             accountInvoicesLoading,
             accountPaymentsError,
             accountInvoicesError,
+            isAkamaiCustomer,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,

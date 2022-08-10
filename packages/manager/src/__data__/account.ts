@@ -34,6 +34,7 @@ export const account: Account = {
   last_name: 'McKenna',
   balance: 70.0,
   balance_uninvoiced: 10000,
+  billing_source: 'linode',
   city: 'philadelphia',
   phone: '2151231234',
   company: 'mmckenna',
