@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useFormik } from 'formik';
+import { useFormik, yupToFormErrors } from 'formik';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
@@ -92,6 +92,9 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
   //   };
   // });
 
+  const getExpirationDelimiter = (value: string | undefined) =>
+    value?.match(/[^$,.\d]/);
+
   const {
     values,
     errors,
@@ -114,19 +117,25 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
       country: '',
     },
     onSubmit: addCreditCard,
-    validate: (values) => {
+    validate: async (values) => {
       const expiryValue = expiryRef?.current?.value;
-      const delimiter = expiryValue?.match(/[^$,.\d]/);
+      const delimiter = getExpirationDelimiter(expiryValue);
 
-      if (delimiter) {
-        CreditCardSchema.validateSync(values, { abortEarly: false });
-        return {};
-      } else {
+      const errors = await CreditCardSchema.validate(values, {
+        abortEarly: false,
+      })
+        .then(() => ({}))
+        .catch((error) => yupToFormErrors(error));
+
+      if (!delimiter) {
         return {
+          ...errors,
           expiry_month:
             'Expiration must include a slash between the month and year (MM/YY).',
         };
       }
+
+      return errors;
     },
   });
 
@@ -162,7 +171,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
             name="expiry"
             onChange={(e) => {
               const value = e.target.value;
-              const delimiter = value.match(/[^$,.\d]/);
+              const delimiter = getExpirationDelimiter(value);
 
               if (delimiter?.[0]) {
                 const values: string[] = e.target.value.split(delimiter[0]);
