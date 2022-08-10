@@ -47,6 +47,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
   const [error, setError] = React.useState<string>();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const expiryRef = React.useRef<HTMLInputElement>(null);
 
   const addCreditCard = async (
     { card_number, cvv, expiry_month, expiry_year }: Values,
@@ -113,17 +114,25 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
       country: '',
     },
     onSubmit: addCreditCard,
-    validationSchema: CreditCardSchema,
+    validate: (values) => {
+      const expiryValue = expiryRef?.current?.value;
+      const delimiter = expiryValue?.match(/[^$,.\d]/);
+
+      if (delimiter) {
+        CreditCardSchema.validateSync(values, { abortEarly: false });
+        return {};
+      } else {
+        return {
+          expiry_month:
+            'Date format must have forward slash between the month and year.',
+        };
+      }
+    },
   });
 
   const disableInput = isSubmitting || disabled;
 
-  const disableAddButton =
-    disabled ||
-    !values.card_number ||
-    !values.expiry_month ||
-    !values.expiry_year ||
-    !values.cvv;
+  const disableAddButton = disabled;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -149,11 +158,17 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
+            inputRef={expiryRef}
             name="expiry"
             onChange={(e) => {
-              const value: string[] = e.target.value.split('/');
-              setFieldValue('expiry_month', value[0]);
-              setFieldValue('expiry_year', parseExpiryYear(value[1]));
+              const value = e.target.value;
+              const delimiter = value.match(/[^$,.\d]/);
+
+              if (delimiter?.[0]) {
+                const values: string[] = e.target.value.split(delimiter[0]);
+                setFieldValue('expiry_month', values[0]);
+                setFieldValue('expiry_year', parseExpiryYear(values[1]));
+              }
             }}
             label="Expiration Date"
             placeholder="MM/YY"
