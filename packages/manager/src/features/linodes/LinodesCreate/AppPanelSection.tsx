@@ -48,6 +48,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
       <Grid className={classes.flatImagePanelSelections} container>
         {apps.map((eachApp) => (
           <SelectionCardWrapper
+            id={eachApp.id}
             key={eachApp.id}
             checked={eachApp.id === selectedStackScriptID}
             // Decode App labels since they may contain HTML entities.
@@ -57,7 +58,6 @@ export const AppPanelSection: React.FC<Props> = (props) => {
             handleClick={handleClick}
             openDrawer={openDrawer}
             disabled={disabled}
-            id={eachApp.id}
             iconUrl={eachApp.logo_url.toLowerCase() || ''}
           />
         ))}

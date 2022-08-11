@@ -71,6 +71,16 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
         matchedApp.user_defined_fields
       );
 
+      // Scroll to app when an app id is passed in the query params
+      const section = document.querySelector(`#app-${matchedApp.id}`);
+      if (section) {
+        section.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+          inline: 'start',
+        });
+      }
+
       // If the URL also included &showInfo, open the Info drawer as well
       const showInfo = getParamFromUrl(location.search, 'showInfo');
       if (showInfo) {
