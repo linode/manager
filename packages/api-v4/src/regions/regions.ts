@@ -1,5 +1,5 @@
-import { API_ROOT } from 'src/constants';
-import Request, { setMethod, setURL } from 'src/request';
+import { API_ROOT } from '../constants';
+import Request, { setMethod, setURL } from '../request';
 import { ResourcePage as Page } from '../types';
 import { Region } from './types';
 
