@@ -87,7 +87,7 @@ const styles = (theme: Theme) =>
       },
     },
     filter: {
-      flexGrow: 1,
+      flexGrow: 1.5,
     },
   });
 
@@ -297,7 +297,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             <Box className={classes.searchAndFilter}>
               <Box className={classes.search}>
                 <DebouncedSearch
-                  placeholder="Search marketplace"
+                  placeholder="Search for app name"
                   fullWidth
                   onSearch={this.onSearch}
                   label="Search marketplace"

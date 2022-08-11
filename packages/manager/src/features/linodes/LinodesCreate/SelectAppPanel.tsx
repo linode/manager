@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   createStyles({
     panel: {
       marginBottom: theme.spacing(3),
-      height: 576,
+      height: 450,
       overflowY: 'auto',
       boxShadow: `${theme.color.boxShadow} 0px -15px 10px -10px inset`,
     },
