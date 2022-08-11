@@ -112,6 +112,7 @@ export const baseApps = {
   '985374': 'Ant Media Enterprise Edition',
   '1008123': 'Liveswitch',
   '1008125': 'Easypanel',
+  '1017300': 'Kali Linux',
 };
 
 const oneClickFilter = [

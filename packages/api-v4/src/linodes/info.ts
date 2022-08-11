@@ -1,4 +1,4 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import { NetworkUtilization, NetworkTransfer } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
 import { ResourcePage as Page } from '../types';
