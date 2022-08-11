@@ -1,4 +1,4 @@
-import { BETA_API_ROOT } from 'src/constants';
+import { BETA_API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { VolumesMigrationQueue } from './types';
 

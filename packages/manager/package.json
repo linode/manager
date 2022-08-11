@@ -16,8 +16,8 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@linode/api-v4": "^0.75.0",
-    "@linode/validation": "0.12.0",
+    "@linode/api-v4": "*",
+    "@linode/validation": "*",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
@@ -282,7 +282,9 @@
       "\\.svg$": "<rootDir>/src/components/NullComponent",
       "^react-native$": "react-native-web",
       "ramda": "ramda/src/index.js",
-      "^src/(.*)": "<rootDir>/src/$1"
+      "^src/(.*)": "<rootDir>/src/$1",
+      "@linode/api-v4/lib(.*)$": "<rootDir>/../api-v4/src/$1",
+      "@linode/validation/lib(.*)$": "<rootDir>/../validation/src/$1"
     },
     "moduleFileExtensions": [
       "mjs",

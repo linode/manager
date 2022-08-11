@@ -1,11 +1,11 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
-} from 'src/request';
+  setXFilter,
+} from '../request';
 import { ResourcePage as Page } from '../types';
 import { Tag, TagRequest } from './types';
 
