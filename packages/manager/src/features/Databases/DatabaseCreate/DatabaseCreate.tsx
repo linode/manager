@@ -5,7 +5,6 @@ import {
   DatabaseClusterSizeObject,
   DatabaseEngine,
   DatabasePriceObject,
-  DatabaseType,
   Engine,
 } from '@linode/api-v4/lib/databases/types';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -44,7 +43,9 @@ import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionP
 import TextField from 'src/components/TextField';
 import { databaseEngineMap } from 'src/features/Databases/DatabaseLanding/DatabaseRow';
 import { enforceIPMasks } from 'src/features/Firewalls/FirewallDetail/Rules/FirewallRuleDrawer';
-import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel, {
+  PlanSelectionType,
+} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import useFlags from 'src/hooks/useFlags';
 import {
   useCreateDatabaseMutation,
@@ -61,6 +62,7 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { typeLabelDetails } from 'src/features/linodes/presentation';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -180,10 +182,6 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-export interface ExtendedDatabaseType extends DatabaseType {
-  heading: string;
-}
-
 interface NodePricing {
   single: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
@@ -224,22 +222,6 @@ const DatabaseCreate: React.FC<{}> = () => {
     }
     return getEngineOptions(engines);
   }, [engines]);
-
-  const displayTypes: ExtendedDatabaseType[] = React.useMemo(() => {
-    if (!dbtypes) {
-      return [];
-    }
-    return dbtypes.map((type) => {
-      const { label } = type;
-      const formattedLabel = formatStorageUnits(label);
-
-      return {
-        ...type,
-        label: formattedLabel,
-        heading: formattedLabel,
-      };
-    });
-  }, [dbtypes]);
 
   const handleIPBlur = (ips: ExtendedIP[]) => {
     const ipsWithMasks = enforceIPMasks(ips);
@@ -337,6 +319,31 @@ const DatabaseCreate: React.FC<{}> = () => {
   });
 
   const selectedEngine = values.engine.split('/')[0] as Engine;
+
+  const displayTypes: PlanSelectionType[] = React.useMemo(() => {
+    if (!dbtypes) {
+      return [];
+    }
+    return dbtypes.map((type) => {
+      const { label } = type;
+      const formattedLabel = formatStorageUnits(label);
+      const singleNodePricing = type.engines[selectedEngine].find(
+        (cluster) => cluster.quantity === 1
+      );
+      const price = singleNodePricing?.price ?? { monthly: null, hourly: null };
+      const subHeadings = [
+        `$${price.monthly}/mo ($${price.hourly}/hr)`,
+        typeLabelDetails(type.memory, type.disk, type.vcpus),
+      ] as [string, string];
+      return {
+        ...type,
+        label: formattedLabel,
+        heading: formattedLabel,
+        price,
+        subHeadings,
+      };
+    });
+  }, [dbtypes, selectedEngine]);
 
   React.useEffect(() => {
     if (errors || createError) {
@@ -526,7 +533,6 @@ const DatabaseCreate: React.FC<{}> = () => {
             header="Choose a Plan"
             className={classes.selectPlanPanel}
             isCreate
-            selectedEngine={selectedEngine}
           />
         </Grid>
         <Divider spacingTop={26} spacingBottom={12} />
