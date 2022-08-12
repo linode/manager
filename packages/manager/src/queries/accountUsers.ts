@@ -1,20 +1,26 @@
-import { User, getUsers } from '@linode/api-v4/lib/account';
-import { ResourcePage } from '@linode/api-v4/lib/types';
-import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
-import { queryPresets } from './base';
+import { getUsers, User } from '@linode/api-v4/lib/account';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { map as mapPromise } from 'bluebird';
 import { default as memoize } from 'memoizee';
+import { useQuery } from 'react-query';
+import { useProfile } from 'src/queries/profile';
 import { getGravatarUrl } from 'src/utilities/gravatar';
+import { queryPresets } from './base';
 
 export const queryKey = 'account-users';
 
-export const useAccountUsers = (params: any, withGravatar: boolean = false) =>
-  useQuery<ResourcePage<User>, APIError[]>(
+export const useAccountUsers = (params: any, withGravatar: boolean = false) => {
+  const { data: profile } = useProfile();
+
+  return useQuery<ResourcePage<User>, APIError[]>(
     [queryKey, params.page, params.page_size],
     withGravatar ? () => getUsersWithGravatar(params) : () => getUsers(params),
-    queryPresets.oneTimeFetch
+    {
+      ...queryPresets.oneTimeFetch,
+      enabled: !profile?.restricted,
+    }
   );
+};
 
 const memoizedGetGravatarURL = memoize(getGravatarUrl);
 

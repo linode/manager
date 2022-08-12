@@ -18,13 +18,12 @@ import { useDialog } from 'src/hooks/useDialog';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '../../types';
-import RecycleAllClusterNodesDialog from '../RecycleAllClusterNodesDialog';
+import RecycleNodesDialog from '../RecycleNodesDialog';
 import AddNodePoolDrawer from '../AddNodePoolDrawer';
 import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
 import NodeDialog from './NodeDialog';
 import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
-import RecycleAllPoolNodesDialog from './RecycleAllPoolNodesDialog';
 import AutoscalePoolDialog from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
 
@@ -401,14 +400,18 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
               loading={autoscalePoolDialog.dialog.isLoading}
               poolID={autoscalePoolDialog.dialog.entityID}
             />
-            <RecycleAllPoolNodesDialog
+            <RecycleNodesDialog
+              title="Recycle node pool?"
+              submitBtnText="Recycle Pool Nodes"
               open={recycleAllPoolNodesDialog.dialog.isOpen}
               loading={recycleAllPoolNodesDialog.dialog.isLoading}
               error={recycleAllPoolNodesDialog.dialog.error}
               onClose={recycleAllPoolNodesDialog.closeDialog}
               onSubmit={handleRecycleAllPoolNodes}
             />
-            <RecycleAllClusterNodesDialog
+            <RecycleNodesDialog
+              title="Recycle all nodes in cluster?"
+              submitBtnText="Recycle All Nodes"
               open={recycleAllClusterNodesDialog.dialog.isOpen}
               loading={recycleAllClusterNodesDialog.dialog.isLoading}
               error={recycleAllClusterNodesDialog.dialog.error}

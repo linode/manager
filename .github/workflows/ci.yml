@@ -91,7 +91,6 @@ jobs:
           path: packages/validation
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
-      - run: yarn workspace @linode/api-v4 run build:node
       - uses: actions/upload-artifact@v2
         with:
           name: packages-api-v4-lib

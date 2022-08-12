@@ -37,15 +37,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipsWrapper: {
     display: 'inline-flex',
     flexDirection: 'column',
-    '& [data-qa-copy-ip]': {
+    '& [data-qa-copy-ip] button > svg': {
       opacity: 0,
     },
   },
   row: {
     '&:hover': {
-      '& [data-qa-copy-ip]': {
+      '& [data-qa-copy-ip] button > svg': {
         opacity: 1,
       },
+    },
+    '& [data-qa-copy-ip] button:focus > svg': {
+      opacity: 1,
     },
   },
 }));

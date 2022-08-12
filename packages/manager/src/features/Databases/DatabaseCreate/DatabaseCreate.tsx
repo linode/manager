@@ -37,6 +37,7 @@ import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import MultipleIPInput from 'src/components/MultipleIPInput';
 import Notice from 'src/components/Notice';
+import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import Radio from 'src/components/Radio';
 import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
@@ -213,7 +214,6 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const { mutateAsync: createDatabase } = useCreateDatabaseMutation();
 
-  const [selectedEngine, setSelectedEngine] = React.useState<Engine>('mysql');
   const [nodePricing, setNodePricing] = React.useState<NodePricing>();
   const [createError, setCreateError] = React.useState<string>();
   const [ipErrorsFromAPI, setIPErrorsFromAPI] = React.useState<APIError[]>();
@@ -345,6 +345,8 @@ const DatabaseCreate: React.FC<{}> = () => {
     onSubmit: submitForm,
   });
 
+  const selectedEngine = values.engine.split('/')[0] as Engine;
+
   React.useEffect(() => {
     if (errors || createError) {
       scrollErrorIntoView();
@@ -455,6 +457,11 @@ const DatabaseCreate: React.FC<{}> = () => {
           </Typography>
         </DismissibleBanner>
       ) : null}
+      <ProductInformationBanner
+        bannerLocation="Databases"
+        productInformationIndicator={false}
+        productInformationWarning
+      />
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}
@@ -499,9 +506,6 @@ const DatabaseCreate: React.FC<{}> = () => {
             placeholder={'Select a Database Engine'}
             onChange={(selected: Item<string>) => {
               setFieldValue('engine', selected.value);
-
-              const selection = selected.value.split('/')[0];
-              setSelectedEngine(selection as Engine);
             }}
             isClearable={false}
           />

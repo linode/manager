@@ -39,7 +39,7 @@ interface Props {
 export const PayPalChip: React.FC<Props> = (props) => {
   const { onClose, disabled, setProcessing, renderError } = props;
   const { data, isLoading, error: clientTokenError } = useClientToken();
-  const [{ options }, dispatch] = usePayPalScriptReducer();
+  const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -153,7 +153,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
     return renderError('Error initializing PayPal');
   }
 
-  if (isLoading || !options['data-client-token']) {
+  if (isLoading || isPending || !options['data-client-token']) {
     return <CircleProgress mini />;
   }
 

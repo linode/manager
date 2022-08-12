@@ -169,6 +169,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/bitninja_color.svg',
   },
   {
+    name: 'Budibase',
+    description:
+      'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
+    summary: 'Low-code platform for building modern business applications.',
+    related_guides: [
+      {
+        title: 'Deploying Budibase through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/budibase',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.budibase.com/docs',
+        href: 'https://docs.budibase.com/docs',
+      },
+    ],
+    logo_url: 'assets/budibase_color.svg',
+  },
+  {
     name: 'Chevereto',
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
     summary:
@@ -363,7 +383,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying Easypanel through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/easypanel',
       },
     ],
     related_info: [
@@ -539,6 +560,46 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/harbor_color.svg',
   },
   {
+    name: 'HashiCorp Nomad',
+    description:
+      'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
+    summary: 'Flexible scheduling and orchestration for diverse workloads.',
+    related_guides: [
+      {
+        title: 'Deploying HashiCorp Nomad through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.nomadproject.io/docs',
+        href: 'https://www.nomadproject.io/docs',
+      },
+    ],
+    logo_url: 'assets/nomad_color.svg',
+  },
+  {
+    name: 'HashiCorp Vault',
+    description:
+      'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
+    summary: 'An open source, centralized secrets management system.',
+    related_guides: [
+      {
+        title: 'Deploying HashiCorp Vault through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.vaultproject.io/docs',
+        href: 'https://www.vaultproject.io/docs',
+      },
+    ],
+    logo_url: 'assets/vault_color.svg',
+  },
+  {
     name: 'Jenkins',
     description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
     summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
@@ -632,6 +693,26 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/joplin_color.svg',
   },
   {
+    name: 'Kali Linux',
+    description: `Kali Linux is an open source, Debian-based Linux distribution that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
+    summary:
+      'Popular Linux distribution and tool suite for penetration testing and security research',
+    related_guides: [
+      {
+        title: 'Deploying Kali Linux through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/kali-linux',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.kali.org/',
+        href: 'https://www.kali.org/',
+      },
+    ],
+    logo_url: 'assets/kalilinux_color.svg',
+  },
+  {
     name: 'Kepler Builder',
     description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
     summary: 'Powerful drag & drop WordPress website builder',
@@ -700,7 +781,8 @@ export const oneClickApps: OCA[] = [
     related_guides: [
       {
         title: 'Deploying LiveSwitch through the Linode Marketplace',
-        href: 'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/liveswitch',
       },
     ],
     related_info: [

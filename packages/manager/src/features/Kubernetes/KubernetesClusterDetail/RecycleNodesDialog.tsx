@@ -4,8 +4,14 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import {
+  localStorageWarning,
+  nodesDeletionWarning,
+} from 'src/features/Kubernetes/kubeUtils';
 
 interface Props {
+  title: string;
+  submitBtnText: string;
   open: boolean;
   loading: boolean;
   error?: string;
@@ -15,6 +21,7 @@ interface Props {
 
 const renderActions = (
   loading: boolean,
+  submitBtnText: string,
   onClose: () => void,
   onSubmit: () => void
 ) => {
@@ -35,31 +42,37 @@ const renderActions = (
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        Recycle Pool Nodes
+        {submitBtnText}
       </Button>
     </ActionsPanel>
   );
 };
 
-const RecycleAllPoolNodesDialog: React.FC<Props> = (props) => {
-  const { error, loading, open, onClose, onSubmit } = props;
+const RecycleNodesDialog: React.FC<Props> = (props) => {
+  const {
+    title,
+    submitBtnText,
+    error,
+    loading,
+    open,
+    onClose,
+    onSubmit,
+  } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title="Recycle node pool?"
+      title={title}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onSubmit)}
+      actions={() => renderActions(loading, submitBtnText, onClose, onSubmit)}
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to recycle the nodes in this pool? All nodes will
-        be deleted and new nodes will be created to replace them. Any local
-        storage (such as &rsquo;hostPath&rsquo; volumes) will be erased. This
-        may take several minutes, as nodes will be replaced on a rolling basis.
+        {nodesDeletionWarning} {localStorageWarning} This may take several
+        minutes, as nodes will be replaced on a rolling basis.
       </Typography>
     </ConfirmationDialog>
   );
 };
 
-export default React.memo(RecycleAllPoolNodesDialog);
+export default React.memo(RecycleNodesDialog);

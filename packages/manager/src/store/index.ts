@@ -20,15 +20,6 @@ import documentation, {
   defaultState as documentationDefaultState,
   State as DocumentationState,
 } from 'src/store/documentation';
-import domainDrawer, {
-  defaultState as domainDrawerDefaultState,
-  State as DomainDrawerState,
-} from 'src/store/domainDrawer';
-import domainEvents from 'src/store/domains/domains.events';
-import domains, {
-  defaultState as defaultDomainsState,
-  State as DomainsState,
-} from 'src/store/domains/domains.reducer';
 import events, {
   defaultState as eventsDefaultState,
   State as EventsState,
@@ -164,7 +155,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  domains: defaultDomainsState,
   images: defaultImagesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
@@ -183,7 +173,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  domains: DomainsState;
   images: ImagesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
@@ -205,7 +194,6 @@ export interface ApplicationState {
   authentication: AuthState;
   backups: BackupDrawerState;
   documentation: DocumentationState;
-  domainDrawer: DomainDrawerState;
   events: EventsState;
   stackScriptDialog: StackScriptDialogState;
   tagImportDrawer: TagImportDrawerState;
@@ -229,7 +217,6 @@ export const defaultState: ApplicationState = {
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
   documentation: documentationDefaultState,
-  domainDrawer: domainDrawerDefaultState,
   events: eventsDefaultState,
   stackScriptDialog: stackScriptDialogDefaultState,
   tagImportDrawer: tagDrawerDefaultState,
@@ -253,7 +240,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  domains,
   images,
   kubernetes,
   nodePools,
@@ -275,7 +261,6 @@ const reducers = combineReducers<ApplicationState>({
   authentication,
   backups,
   documentation,
-  domainDrawer,
   stackScriptDialog,
   tagImportDrawer,
   volumeDrawer,
@@ -301,7 +286,6 @@ const enhancers = compose(
       linodeEvents,
       longviewEvents,
       imageEvents,
-      domainEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       volumeEvents,

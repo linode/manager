@@ -89,7 +89,7 @@ const styles = (theme: Theme) =>
       },
     },
     row: {
-      '&:hover $copy > svg': {
+      '&:hover $copy > svg, & $copy:focus > svg': {
         opacity: 1,
       },
     },

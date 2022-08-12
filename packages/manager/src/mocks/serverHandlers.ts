@@ -1,4 +1,8 @@
-import { EventAction } from '@linode/api-v4';
+import {
+  EventAction,
+  NotificationType,
+  SecurityQuestionsPayload,
+} from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
 import { MockData } from 'src/dev-tools/mockDataController';
@@ -46,11 +50,13 @@ import {
   notificationFactory,
   objectStorageBucketFactory,
   objectStorageClusterFactory,
+  objectStorageKeyFactory,
   paymentMethodFactory,
   possibleMySQLReplicationTypes,
   possiblePostgresReplicationTypes,
   profileFactory,
   promoFactory,
+  securityQuestionsFactory,
   stackScriptFactory,
   staticObjects,
   supportReplyFactory,
@@ -86,6 +92,10 @@ const statusPage = [
     return res(ctx.json(response));
   }),
 ];
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 const entityTransfers = [
   rest.get('*/account/entity-transfers', (req, res, ctx) => {
@@ -249,7 +259,9 @@ const databases = [
 
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
-    const profile = profileFactory.build({ restricted: false });
+    const profile = profileFactory.build({
+      restricted: false,
+    });
     return res(ctx.json(profile));
   }),
   rest.put('*/profile', (req, res, ctx) => {
@@ -261,6 +273,23 @@ export const handlers = [
   rest.get('*/profile/apps', (req, res, ctx) => {
     const tokens = appTokenFactory.buildList(5);
     return res(ctx.json(makeResourcePage(tokens)));
+  }),
+  rest.post('*/profile/phone-number', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.post('*/profile/phone-number/verify', async (req, res, ctx) => {
+    await sleep(2000);
+    return res(ctx.json({}));
+  }),
+  rest.delete('*/profile/phone-number', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(securityQuestionsFactory.build()));
+  }),
+  rest.post('*/profile/security-questions', (req, res, ctx) => {
+    return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
     return res(
@@ -517,18 +546,6 @@ export const handlers = [
     );
   }),
   rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    return res.once(
-      ctx.status(500),
-      ctx.json([{ reason: 'Cluster offline!' }])
-    );
-  }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
-    return res.once(
-      ctx.status(400),
-      ctx.json([{ reason: 'Cluster offline!' }])
-    );
-  }),
-  rest.get('*/object-storage/buckets/*', (req, res, ctx) => {
     // Temporarily added pagination logic to make sure my use of
     // getAll worked for fetching all buckets.
 
@@ -558,6 +575,11 @@ export const handlers = [
     const clusters = objectStorageClusterFactory.buildList(3);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
+  rest.get('*object-storage/keys', (req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(objectStorageKeyFactory.buildList(3)))
+    );
+  }),
   rest.get('*/domains', (req, res, ctx) => {
     const domains = domainFactory.buildList(10);
     return res(ctx.json(makeResourcePage(domains)));
@@ -578,21 +600,36 @@ export const handlers = [
     );
   }),
   rest.get('*/volumes', (req, res, ctx) => {
+    const hddVolumeUnattached = volumeFactory.build({
+      id: 30,
+      label: 'hdd-unattached',
+    });
     const hddVolumeAttached = volumeFactory.build({
       id: 20,
       linode_id: 20,
-      label: 'eligibleNow',
+      label: 'eligible-now-for-nvme',
     });
     const hddVolumeAttached2 = volumeFactory.build({
       id: 2,
       linode_id: 2,
       label: 'example-upgrading',
     });
-    const nvmeVolumes = volumeFactory.buildList(2, {
+    const nvmeVolumeUpgrading = volumeFactory.build({
+      id: 2,
+      hardware_type: 'nvme',
+    });
+    const newNVMeVolume = volumeFactory.build({
+      id: 1,
       hardware_type: 'nvme',
     });
 
-    const volumes = [...nvmeVolumes, hddVolumeAttached, hddVolumeAttached2];
+    const volumes = [
+      newNVMeVolume,
+      nvmeVolumeUpgrading,
+      hddVolumeAttached,
+      hddVolumeAttached2,
+      hddVolumeUnattached,
+    ];
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -691,6 +728,31 @@ export const handlers = [
     }
 
     return res(ctx.json(makeResourcePage(accountMaintenance)));
+  }),
+  rest.get('*/account/users', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage([profileFactory.build()])));
+  }),
+  rest.get('*/account/users/:user', (req, res, ctx) => {
+    return res(ctx.json(profileFactory.build()));
+  }),
+  rest.get('*/account/users/:user/grants', (req, res, ctx) => {
+    return res(
+      ctx.json(
+        grantsFactory.build({
+          global: {
+            cancel_account: true,
+          },
+          domain: [],
+          firewall: [],
+          image: [],
+          linode: [],
+          longview: [],
+          nodebalancer: [],
+          stackscript: [],
+          volume: [],
+        })
+      )
+    );
   }),
   rest.get('*/account/payment-methods', (req, res, ctx) => {
     const defaultPaymentMethod = paymentMethodFactory.build({
@@ -923,43 +985,62 @@ export const handlers = [
       severity: 'major',
     });
 
-    // const blockStorageMigrationScheduledNotification = notificationFactory.build(
-    //   {
-    //     type: 'volume_migration_scheduled' as NotificationType,
-    //     entity: {
-    //       type: 'volume',
-    //       label: 'eligibleNow',
-    //       id: 20,
-    //       url: '/volumes/20',
-    //     },
-    //     when: '2021-09-30T04:00:00',
-    //     message:
-    //       'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-    //     label: 'You have a scheduled Block Storage volume upgrade pending!',
-    //     severity: 'critical',
-    //     until: '2021-10-16T04:00:00',
-    //     body: 'Your volumes in us-east will be upgraded to NVMe.',
-    //   }
-    // );
+    const blockStorageMigrationScheduledNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_scheduled' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'eligibleNow',
+          id: 20,
+          url: '/volumes/20',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'critical',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
 
-    // const blockStorageMigrationImminentNotification = notificationFactory.build(
-    //   {
-    //     type: 'volume_migration_imminent' as NotificationType,
-    //     entity: {
-    //       type: 'volume',
-    //       label: 'example-upgrading',
-    //       id: 2,
-    //       url: '/volumes/2',
-    //     },
-    //     when: '2021-09-30T04:00:00',
-    //     message:
-    //       'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
-    //     label: 'You have a scheduled Block Storage volume upgrade pending!',
-    //     severity: 'major',
-    //     until: '2021-10-16T04:00:00',
-    //     body: 'Your volumes in us-east will be upgraded to NVMe.',
-    //   }
-    // );
+    const blockStorageMigrationScheduledNotificationUnattached = notificationFactory.build(
+      {
+        type: 'volume_migration_scheduled' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'hdd-unattached',
+          id: 30,
+          url: '/volumes/30',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'This unattached volume is scheduled to be migrated to NVMe I think.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'critical',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volume will be upgraded to NVMe.',
+      }
+    );
+
+    const blockStorageMigrationImminentNotification = notificationFactory.build(
+      {
+        type: 'volume_migration_imminent' as NotificationType,
+        entity: {
+          type: 'volume',
+          label: 'example-upgrading',
+          id: 2,
+          url: '/volumes/2',
+        },
+        when: '2021-09-30T04:00:00',
+        message:
+          'The Linode that the volume is attached to will shut down in order to complete the upgrade and reboot once it is complete. Any other volumes attached to the same Linode will also be upgraded.',
+        label: 'You have a scheduled Block Storage volume upgrade pending!',
+        severity: 'major',
+        until: '2021-10-16T04:00:00',
+        body: 'Your volumes in us-east will be upgraded to NVMe.',
+      }
+    );
 
     return res(
       ctx.json(
@@ -975,8 +1056,9 @@ export const handlers = [
           emailBounce,
           migrationNotification,
           balanceNotification,
-          // blockStorageMigrationScheduledNotification,
-          // blockStorageMigrationImminentNotification,
+          blockStorageMigrationScheduledNotification,
+          blockStorageMigrationImminentNotification,
+          blockStorageMigrationScheduledNotificationUnattached,
         ])
       )
     );

@@ -137,8 +137,9 @@ interface Props extends GridProps {
   className?: string;
   flag?: boolean;
   notificationList?: boolean;
-  spacingTop?: 0 | 8 | 16 | 24;
-  spacingBottom?: 0 | 8 | 16 | 20 | 24 | 32;
+  spacingTop?: 0 | 4 | 8 | 12 | 16 | 24;
+  spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
+  spacingLeft?: number;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   // Dismissible Props
@@ -168,6 +169,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
     onClose,
     spacingTop,
     spacingBottom,
+    spacingLeft,
     informational,
   } = props;
 
@@ -235,6 +237,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
       style={{
         marginTop: spacingTop !== undefined ? spacingTop : 0,
         marginBottom: spacingBottom !== undefined ? spacingBottom : 24,
+        marginLeft: spacingLeft !== undefined ? spacingLeft : 0,
       }}
       {...dataAttributes}
       role="alert"

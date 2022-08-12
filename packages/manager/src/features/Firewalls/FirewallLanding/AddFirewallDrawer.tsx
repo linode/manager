@@ -9,10 +9,15 @@ import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
+import { useGrants } from 'src/queries/profile';
+import { getEntityIdsByPermission } from 'src/utilities/grants';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+
+export const READ_ONLY_LINODES_HIDDEN_MESSAGE =
+  'Only Linodes you have permission to modify are shown.';
 
 export interface Props extends Omit<DrawerProps, 'onClose' | 'onSubmit'> {
   onClose: () => void;
@@ -42,6 +47,8 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
    * grant here too, but it doesn't exist yet.
    */
   const { _isRestrictedUser, _hasGrant } = useAccountManagement();
+
+  const { data: grants } = useGrants();
 
   const userCannotAddFirewall =
     _isRestrictedUser && !_hasGrant('add_firewalls');
@@ -90,6 +97,14 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
 
   const firewallHelperText = `Assign one or more Linodes to this firewall. You can add
   Linodes later if you want to customize your rules first.`;
+
+  // If a user is restricted, they can not add a read-only Linode to a firewall.
+  const readOnlyLinodeIds = _isRestrictedUser
+    ? getEntityIdsByPermission(grants, 'linode', 'read_only')
+    : [];
+
+  const linodeSelectGuidance =
+    readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
 
   return (
     <Drawer {...restOfDrawerProps} onClose={onClose}>
@@ -153,7 +168,9 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
                 handleChange={(selected: number[]) =>
                   setFieldValue('devices.linodes', selected)
                 }
+                filteredLinodes={readOnlyLinodeIds}
                 onBlur={handleBlur}
+                guidance={linodeSelectGuidance}
               />
               <ActionsPanel>
                 <Button buttonType="secondary" onClick={onClose} data-qa-cancel>

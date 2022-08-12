@@ -184,7 +184,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       <Typography className={classes.header} variant="h3">
         Connection Details
       </Typography>
-      <Grid className={classes.connectionDetailsCtn}>
+      <Grid className={classes.connectionDetailsCtn} data-qa-connection-details>
         <Typography>
           <span>username</span> ={' '}
           {database.engine === 'postgresql' ? 'linpostgres' : DB_ROOT_USERNAME}

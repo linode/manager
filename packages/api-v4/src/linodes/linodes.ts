@@ -2,7 +2,7 @@ import {
   CreateLinodeSchema,
   UpdateLinodeSchema,
 } from '@linode/validation/lib/linodes.schema';
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import { Firewall } from '../firewalls/types';
 import Request, {
   setData,

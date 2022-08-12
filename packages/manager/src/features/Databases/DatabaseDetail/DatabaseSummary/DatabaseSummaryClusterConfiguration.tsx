@@ -62,7 +62,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
       <Typography className={classes.header} variant="h3">
         Cluster Configuration
       </Typography>
-      <div className={classes.configs}>
+      <div className={classes.configs} data-qa-cluster-config>
         <Box display="flex">
           <Typography className={classes.label}>Status</Typography>
           <span className={classes.status}>

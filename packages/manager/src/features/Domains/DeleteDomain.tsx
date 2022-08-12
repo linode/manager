@@ -1,17 +1,12 @@
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import DeletionDialog from 'src/components/DeletionDialog';
-import { useDialog } from 'src/hooks/useDialog';
-import {
-  DomainActionsProps,
-  withDomainActions,
-} from 'src/store/domains/domains.container';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { useDeleteDomainMutation } from 'src/queries/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useSnackbar } from 'notistack';
 
-interface Props {
+export interface Props {
   domainId: number;
   domainLabel: string;
   // Function that is invoked after Domain has been successfully deleted.
@@ -27,34 +22,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type CombinedProps = Props & WithSnackbarProps & DomainActionsProps;
-
-export const DeleteDomain: React.FC<CombinedProps> = (props) => {
+export const DeleteDomain = (props: Props) => {
   const classes = useStyles();
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    submitDialog,
-    handleError,
-  } = useDialog<number>((domainId: number) =>
-    props.domainActions.deleteDomain({ domainId })
-  );
+  const { domainId, domainLabel } = props;
+  const { enqueueSnackbar } = useSnackbar();
 
-  const handleDelete = () => {
-    submitDialog(dialog.entityID)
-      .then(() => {
-        props.enqueueSnackbar('Domain deleted successfully.', {
-          variant: 'success',
-        });
-        if (props.onSuccess) {
-          props.onSuccess();
-        }
-      })
-      .catch((e) =>
-        handleError(getAPIErrorOrDefault(e, 'Error deleting domain.')[0].reason)
-      );
+  const {
+    mutateAsync: deleteDomain,
+    error,
+    isLoading,
+  } = useDeleteDomainMutation(domainId);
+
+  const [open, setOpen] = React.useState(false);
+
+  const onDelete = () => {
+    deleteDomain().then(() => {
+      enqueueSnackbar('Domain deleted successfully.', {
+        variant: 'success',
+      });
+      if (props.onSuccess) {
+        props.onSuccess();
+      }
+    });
   };
 
   return (
@@ -62,28 +52,26 @@ export const DeleteDomain: React.FC<CombinedProps> = (props) => {
       <Button
         className={classes.button}
         buttonType="outlined"
-        onClick={() => openDialog(props.domainId, props.domainLabel)}
+        onClick={() => setOpen(true)}
       >
         Delete Domain
       </Button>
       <DeletionDialog
         typeToConfirm
         entity="domain"
-        open={dialog.isOpen}
-        label={dialog.entityLabel || ''}
-        loading={dialog.isLoading}
-        error={dialog.error}
-        onClose={closeDialog}
-        onDelete={handleDelete}
+        open={open}
+        label={domainLabel}
+        loading={isLoading}
+        error={
+          error
+            ? getAPIErrorOrDefault(error, 'Error deleting domain.')[0].reason
+            : undefined
+        }
+        onClose={() => setOpen(false)}
+        onDelete={onDelete}
       />
     </>
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withSnackbar,
-  withDomainActions,
-  React.memo
-);
-
-export default enhanced(DeleteDomain);
+export default DeleteDomain;
