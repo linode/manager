@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
-
 import * as React from 'react';
+import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import TableContentWrapper from './TableContentWrapper';
 
@@ -89,5 +89,24 @@ describe('TableContentWrapper component', () => {
       wrapWithTableBody(<TableContentWrapper {...emptyProps} />)
     );
     getByText(emptyProps.emptyMessage);
+  });
+
+  it('should display text for Akamai customers', () => {
+    const emptyProps = {
+      loading: false,
+      length: 0,
+      isAkamaiCustomer: true,
+      children,
+    };
+
+    const { getByText, rerender } = render(
+      wrapWithTableBody(<TableContentWrapper {...emptyProps} />)
+    );
+    getByText(akamaiBillingInvoiceText);
+
+    const nonEmptyProps = { ...emptyProps, length: 1 };
+
+    rerender(wrapWithTableBody(<TableContentWrapper {...nonEmptyProps} />));
+    getByText(`Future ${akamaiBillingInvoiceText}`);
   });
 });

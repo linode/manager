@@ -14,7 +14,6 @@ import Link from 'src/components/Link';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import styled from 'src/containers/SummaryPanels.styles';
 import PaymentMethods from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import { useAccount } from 'src/queries/account';
 import { queryKey } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -77,10 +76,11 @@ interface Props {
   loading: boolean;
   error?: APIError[] | null;
   paymentMethods: PaymentMethod[] | undefined;
+  isAkamaiCustomer: boolean;
 }
 
 const PaymentInformation: React.FC<Props> = (props) => {
-  const { loading, error, paymentMethods } = props;
+  const { loading, error, paymentMethods, isAkamaiCustomer } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
@@ -95,15 +95,12 @@ const PaymentInformation: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const { replace } = useHistory();
-  const { data: account } = useAccount();
-
-  const isAkamaiAccount = account?.billing_source === 'akamai';
 
   const drawerLink = '/account/billing/add-payment-method';
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
   const showPayPalAvailableNotice =
-    !isAkamaiAccount &&
+    !isAkamaiCustomer &&
     !loading &&
     !paymentMethods?.some(
       (paymetMethod: PaymentMethod) => paymetMethod.type === 'paypal'
@@ -158,7 +155,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            {!isAkamaiAccount ? (
+            {!isAkamaiCustomer ? (
               <Button
                 data-testid="payment-info-add-payment-method"
                 className={classes.edit}
@@ -169,7 +166,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
             ) : null}
           </Grid>
         </Grid>
-        {!isAkamaiAccount ? (
+        {!isAkamaiCustomer ? (
           <PaymentMethods
             loading={loading}
             error={error}
@@ -177,7 +174,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
             openDeleteDialog={openDeleteDialog}
           />
         ) : (
-          <Typography>
+          <Typography data-testid="akamai-customer-text">
             Payment method is determined by your contract with Akamai
             Technologies.
             <br />
