@@ -225,31 +225,6 @@ const DatabaseCreate: React.FC<{}> = () => {
     return getEngineOptions(engines);
   }, [engines]);
 
-  const displayTypes: DatabasePlanSelectionType[] = React.useMemo(() => {
-    if (!dbtypes) {
-      return [];
-    }
-    return dbtypes.map((type) => {
-      const { label } = type;
-      const formattedLabel = formatStorageUnits(label);
-      const singleNodePricing = type.engines[selectedEngine].find(
-        (cluster) => cluster.quantity === 1
-      );
-      const price = singleNodePricing?.price ?? { monthly: null, hourly: null };
-      const subHeadings = [
-        `$${price.monthly}/mo ($${price.hourly}/hr)`,
-        typeLabelDetails(type.memory, type.disk, type.vcpus),
-      ] as [string, string];
-      return {
-        ...type,
-        label: formattedLabel,
-        heading: formattedLabel,
-        price,
-        subHeadings,
-      };
-    });
-  }, [dbtypes, selectedEngine]);
-
   const handleIPBlur = (ips: ExtendedIP[]) => {
     const ipsWithMasks = enforceIPMasks(ips);
     setFieldValue('allow_list', ipsWithMasks);
@@ -346,6 +321,31 @@ const DatabaseCreate: React.FC<{}> = () => {
   });
 
   const selectedEngine = values.engine.split('/')[0] as Engine;
+
+  const displayTypes: DatabasePlanSelectionType[] = React.useMemo(() => {
+    if (!dbtypes) {
+      return [];
+    }
+    return dbtypes.map((type) => {
+      const { label } = type;
+      const formattedLabel = formatStorageUnits(label);
+      const singleNodePricing = type.engines[selectedEngine].find(
+        (cluster) => cluster.quantity === 1
+      );
+      const price = singleNodePricing?.price ?? { monthly: null, hourly: null };
+      const subHeadings = [
+        `$${price.monthly}/mo ($${price.hourly}/hr)`,
+        typeLabelDetails(type.memory, type.disk, type.vcpus),
+      ] as [string, string];
+      return {
+        ...type,
+        label: formattedLabel,
+        heading: formattedLabel,
+        price,
+        subHeadings,
+      };
+    });
+  }, [dbtypes, selectedEngine]);
 
   React.useEffect(() => {
     if (errors || createError) {
