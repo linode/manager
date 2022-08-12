@@ -26,7 +26,13 @@ function getConfiguration() {
       `Could not load .env from Cypress plugin/index.js: ${conf.error}`
     );
   }
-  return { env: conf.parsed };
+
+  const env = {
+    ...conf.parsed,
+    ...process.env,
+  };
+
+  return { env };
 }
 
 /**
