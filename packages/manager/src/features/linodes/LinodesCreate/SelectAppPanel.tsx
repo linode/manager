@@ -138,7 +138,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['kali linux', 'easypanel', 'liveswitch', 'saltcorn'].includes(
+      return ['budibase', 'hashicorp nomad', 'hashicorp vault'].includes(
         app.label.toLowerCase().trim()
       );
     });
