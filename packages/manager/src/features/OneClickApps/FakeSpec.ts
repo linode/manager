@@ -167,6 +167,26 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Budibase',
+    description:
+      'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
+    summary: 'Low-code platform for building modern business applications.',
+    related_guides: [
+      {
+        title: 'Deploying Budibase through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/budibase',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://docs.budibase.com/docs',
+        href: 'https://docs.budibase.com/docs',
+      },
+    ],
+    logo_url: 'assets/budibase_color.svg',
+  },
+  {
     name: 'Chevereto',
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
     summary:
@@ -516,6 +536,46 @@ export const oneClickApps: OCA[] = [
       start: '60b932',
       end: '4495d7',
     },
+  },
+  {
+    name: 'HashiCorp Nomad',
+    description:
+      'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
+    summary: 'Flexible scheduling and orchestration for diverse workloads.',
+    related_guides: [
+      {
+        title: 'Deploying HashiCorp Nomad through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.nomadproject.io/docs',
+        href: 'https://www.nomadproject.io/docs',
+      },
+    ],
+    logo_url: 'assets/nomad_color.svg',
+  },
+  {
+    name: 'HashiCorp Vault',
+    description:
+      'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
+    summary: 'An open source, centralized secrets management system.',
+    related_guides: [
+      {
+        title: 'Deploying HashiCorp Vault through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.vaultproject.io/docs',
+        href: 'https://www.vaultproject.io/docs',
+      },
+    ],
+    logo_url: 'assets/vault_color.svg',
   },
   {
     name: 'Jenkins',
