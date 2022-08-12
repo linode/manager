@@ -178,13 +178,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/budibase',
       },
     ],
-    related_info: [
-      {
-        title: 'https://docs.budibase.com/docs',
-        href: 'https://docs.budibase.com/docs',
-      },
-    ],
-    logo_url: 'assets/budibase_color.svg',
+    website: 'https://docs.budibase.com/docs',
+    logo_url: 'budibase.svg',
+    colors: {
+      start: '97948f',
+      end: 'd0c8c4',
+    },
   },
   {
     name: 'Chevereto',
@@ -549,13 +548,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-nomad',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.nomadproject.io/docs',
-        href: 'https://www.nomadproject.io/docs',
-      },
-    ],
-    logo_url: 'assets/nomad_color.svg',
+    website: 'https://www.nomadproject.io/docs',
+    logo_url: 'nomad.svg',
+    colors: {
+      start: '008661',
+      end: '60dea9',
+    },
   },
   {
     name: 'HashiCorp Vault',
@@ -569,13 +567,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/hashicorp-vault',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.vaultproject.io/docs',
-        href: 'https://www.vaultproject.io/docs',
-      },
-    ],
-    logo_url: 'assets/vault_color.svg',
+    website: 'https://www.vaultproject.io/docs',
+    logo_url: 'vault.svg',
+    colors: {
+      start: '9c6d03',
+      end: 'ffd814',
+    },
   },
   {
     name: 'Jenkins',
