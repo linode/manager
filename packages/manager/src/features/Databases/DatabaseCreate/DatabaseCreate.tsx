@@ -182,8 +182,6 @@ const getEngineOptions = (engines: DatabaseEngine[]) => {
   );
 };
 
-export type DatabasePlanSelectionType = PlanSelectionType;
-
 interface NodePricing {
   single: DatabasePriceObject | undefined;
   multi: DatabasePriceObject | undefined;
@@ -322,7 +320,7 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   const selectedEngine = values.engine.split('/')[0] as Engine;
 
-  const displayTypes: DatabasePlanSelectionType[] = React.useMemo(() => {
+  const displayTypes: PlanSelectionType[] = React.useMemo(() => {
     if (!dbtypes) {
       return [];
     }
