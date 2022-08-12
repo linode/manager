@@ -181,8 +181,8 @@ export const oneClickApps: OCA[] = [
     website: 'https://docs.budibase.com/docs',
     logo_url: 'budibase.svg',
     colors: {
-      start: '97948f',
-      end: 'd0c8c4',
+      start: '9981f5',
+      end: '000000',
     },
   },
   {
@@ -551,8 +551,8 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.nomadproject.io/docs',
     logo_url: 'nomad.svg',
     colors: {
-      start: '008661',
-      end: '60dea9',
+      start: '60dea9',
+      end: '545556',
     },
   },
   {
@@ -570,8 +570,8 @@ export const oneClickApps: OCA[] = [
     website: 'https://www.vaultproject.io/docs',
     logo_url: 'vault.svg',
     colors: {
-      start: '9c6d03',
-      end: 'ffd814',
+      start: 'ffd712',
+      end: '545556',
     },
   },
   {
