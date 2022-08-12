@@ -10,7 +10,9 @@
     "baseUrl": "..",
     "paths": {
       "@src/*": ["src/*"],
-      "support/*": ["cypress/support/*"]
+      "support/*": ["cypress/support/*"],
+      "@linode/api-v4/*": ["../api-v4/lib/index.js"],
+      "@linode/validation/*": ["../validation/lib/index.js"],
     },
     "types": ["cypress", "cypress-file-upload", "@testing-library/cypress", "cypress-real-events"]
   },
