@@ -46,7 +46,7 @@
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test": "jest --config jestconfig.json",
+    "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
