@@ -39,10 +39,8 @@
   "unpkg": "./lib/iife/index.js",
   "dependencies": {
     "@linode/validation": "*",
-    "@types/yup": "^0.29.13",
     "axios": "~0.21.4",
     "ipaddr.js": "^2.0.0",
-    "querystring": "^0.2.0",
     "yup": "^0.32.9"
   },
   "scripts": {
@@ -60,6 +58,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
+    "@types/yup": "^0.29.13",
     "axios-mock-adapter": "^1.18.1",
     "concurrently": "^4.1.1",
     "eslint": "^6.8.0",
