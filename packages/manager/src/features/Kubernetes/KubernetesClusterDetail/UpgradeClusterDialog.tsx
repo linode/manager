@@ -8,6 +8,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import {
+  localStorageWarning,
+  nodesDeletionWarning,
+} from 'src/features/Kubernetes/kubeUtils';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
 import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 
@@ -101,14 +105,8 @@ const UpgradeClusterDialog = (props: Props) => {
           Caution:
         </Typography>
         <ul className={classes.noticeList}>
-          <li>
-            All nodes will be deleted and new nodes will be created to replace
-            them.
-          </li>
-          <li>
-            Any local storage (such as &rsquo;hostPath&rsquo; volumes) will be
-            erased.
-          </li>
+          <li>{nodesDeletionWarning}</li>
+          <li>{localStorageWarning}</li>
           <li>
             This may take several minutes, as nodes will be replaced on a
             rolling basis.

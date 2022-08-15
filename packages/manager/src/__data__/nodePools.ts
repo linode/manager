@@ -4,7 +4,7 @@ import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
 export const pool1: ExtendedNodePool = {
   id: 1,
   count: 1,
-  type: 'g5-standard-1',
+  type: 'g6-standard-1',
   nodes: [
     {
       status: 'ready',
@@ -23,7 +23,7 @@ export const pool1: ExtendedNodePool = {
 export const pool2: ExtendedNodePool = {
   id: 2,
   count: 5,
-  type: 'g5-standard-2',
+  type: 'g6-standard-2',
   nodes: [
     {
       status: 'ready',
@@ -47,7 +47,7 @@ export const pool2: ExtendedNodePool = {
 export const pool3: ExtendedNodePool = {
   id: 3,
   count: 1,
-  type: 'g5-standard-1',
+  type: 'g6-standard-1',
   nodes: [
     {
       status: 'ready',

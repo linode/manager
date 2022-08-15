@@ -4,8 +4,14 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import {
+  localStorageWarning,
+  nodesDeletionWarning,
+} from 'src/features/Kubernetes/kubeUtils';
 
 interface Props {
+  title: string;
+  submitBtnText: string;
   open: boolean;
   loading: boolean;
   error?: string;
@@ -13,8 +19,16 @@ interface Props {
   onSubmit: () => void;
 }
 
-const RecycleAllPoolNodesDialog = (props: Props) => {
-  const { error, loading, open, onClose, onSubmit } = props;
+const RecycleNodesDialog: React.FC<Props> = (props) => {
+  const {
+    title,
+    submitBtnText,
+    error,
+    loading,
+    open,
+    onClose,
+    onSubmit,
+  } = props;
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -22,7 +36,7 @@ const RecycleAllPoolNodesDialog = (props: Props) => {
         buttonType="secondary"
         onClick={onClose}
         data-qa-cancel
-        data-testid="dialog-cancel"
+        data-testid={'dialog-cancel'}
       >
         Cancel
       </Button>
@@ -31,9 +45,9 @@ const RecycleAllPoolNodesDialog = (props: Props) => {
         onClick={onSubmit}
         loading={loading}
         data-qa-confirm
-        data-testid="dialog-confirm"
+        data-testid={'dialog-confirm'}
       >
-        Recycle Pool Nodes
+        {submitBtnText}
       </Button>
     </ActionsPanel>
   );
@@ -41,19 +55,17 @@ const RecycleAllPoolNodesDialog = (props: Props) => {
   return (
     <ConfirmationDialog
       open={open}
-      title="Recycle node pool?"
+      title={title}
       onClose={onClose}
       actions={actions}
     >
       {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to recycle the nodes in this pool? All nodes will
-        be deleted and new nodes will be created to replace them. Any local
-        storage (such as &rsquo;hostPath&rsquo; volumes) will be erased. This
-        may take several minutes, as nodes will be replaced on a rolling basis.
+        {nodesDeletionWarning} {localStorageWarning} This may take several
+        minutes, as nodes will be replaced on a rolling basis.
       </Typography>
     </ConfirmationDialog>
   );
 };
 
-export default React.memo(RecycleAllPoolNodesDialog);
+export default React.memo(RecycleNodesDialog);

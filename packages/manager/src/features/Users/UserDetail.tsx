@@ -182,11 +182,6 @@ const UserDetail = () => {
     return Boolean(matchPath(p, { path: location.pathname }));
   };
 
-  const clampTabChoice = () => {
-    const tabChoice = tabs.findIndex((tab) => matches(tab.routeName));
-    return tabChoice < 0 ? 0 : tabChoice;
-  };
-
   const navToURL = (index: number) => {
     history.push(tabs[index].routeName);
   };
@@ -226,7 +221,13 @@ const UserDetail = () => {
         ]}
         removeCrumbX={4}
       />
-      <Tabs defaultIndex={clampTabChoice()} onChange={navToURL}>
+      <Tabs
+        index={Math.max(
+          tabs.findIndex((tab) => matches(tab.routeName)),
+          0
+        )}
+        onChange={navToURL}
+      >
         <TabLinkList tabs={tabs} />
 
         {createdUsername && (

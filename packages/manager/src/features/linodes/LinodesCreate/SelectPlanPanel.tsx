@@ -1,5 +1,9 @@
-import { Engine } from '@linode/api-v4/lib/databases/types';
-import { LinodeTypeClass } from '@linode/api-v4/lib/linodes';
+import {
+  LinodeTypeClass,
+  BaseType,
+  PriceObject,
+  LinodeType,
+} from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
@@ -29,12 +33,10 @@ import { dcDisplayNames, LINODE_NETWORK_IN } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
-import { ExtendedDatabaseType } from 'src/features/Databases/DatabaseCreate/DatabaseCreate';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -94,10 +96,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type ExtendedTypes = Array<ExtendedType | ExtendedDatabaseType>;
+export interface PlanSelectionType extends BaseType {
+  class: string;
+  heading: string;
+  subHeadings: string[];
+  price: PriceObject;
+  transfer?: LinodeType['transfer'];
+  network_out?: LinodeType['network_out'];
+}
 
 interface Props {
-  types: ExtendedTypes;
+  types: PlanSelectionType[];
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
@@ -112,26 +121,25 @@ interface Props {
   isCreate?: boolean;
   className?: string;
   showTransfer?: boolean;
-  selectedEngine?: Engine;
 }
 
-const getNanodes = (types: ExtendedTypes) =>
-  types.filter((t) => /nanode/.test(t.class));
+const getNanodes = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => /nanode/.test(t.class));
 
-const getStandard = (types: ExtendedTypes) =>
-  types.filter((t) => /standard/.test(t.class));
+const getStandard = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => /standard/.test(t.class));
 
-const getHighMem = (types: ExtendedTypes) =>
-  types.filter((t) => /highmem/.test(t.class));
+const getHighMem = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => /highmem/.test(t.class));
 
-const getDedicated = (types: ExtendedTypes) =>
-  types.filter((t) => /dedicated/.test(t.class));
+const getDedicated = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => /dedicated/.test(t.class));
 
-const getGPU = (types: ExtendedTypes) =>
-  types.filter((t) => /gpu/.test(t.class));
+const getGPU = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => /gpu/.test(t.class));
 
-const getMetal = (types: ExtendedTypes) =>
-  types.filter((t) => t.class === 'metal');
+const getMetal = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => t.class === 'metal');
 
 type CombinedProps = Props & RegionsProps;
 
@@ -147,15 +155,14 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     className,
     copy,
     error,
-    selectedEngine,
   } = props;
 
   const classes = useStyles();
 
   const onSelect = (id: string) => () => props.onSelect(id);
 
-  const getDisabledClass = (thisClass: LinodeTypeClass) => {
-    const disabledClasses = props.disabledClasses ?? [];
+  const getDisabledClass = (thisClass: string) => {
+    const disabledClasses = (props.disabledClasses as string[]) ?? []; // Not a big fan of the casting here but it works
     return disabledClasses.includes(thisClass);
   };
 
@@ -167,7 +174,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return arrayToList(withCapability);
   };
 
-  const renderSelection = (type: ExtendedType, idx: number) => {
+  const renderSelection = (type: PlanSelectionType, idx: number) => {
     const selectedDiskSize = props.selectedDiskSize
       ? props.selectedDiskSize
       : 0;
@@ -189,18 +196,6 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         : planTooSmall
         ? `${type.label} this plan is too small for resize`
         : type.label;
-
-    // If `selectedEngine` is present, it indicates that <SelectPlanPanel /> is being called from <DatabaseCreate />.
-    const databasePrices = selectedEngine
-      ? ((type as unknown) as ExtendedDatabaseType).engines[
-          selectedEngine
-        ]?.find((cluster: any) => cluster.quantity === 1)
-      : undefined;
-
-    const databaseSubheadings = [
-      `$${databasePrices?.price?.monthly}/mo ($${databasePrices?.price?.hourly}/hr)`,
-      typeLabelDetails(type.memory, type.disk, type.vcpus),
-    ] as [string, string];
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
@@ -256,22 +251,12 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
                 )}
               </div>
             </TableCell>
-            <TableCell data-qa-monthly>
-              {' '}
-              $
-              {!selectedEngine
-                ? type.price?.monthly
-                : databasePrices?.price.monthly ?? 0}
-            </TableCell>
+            <TableCell data-qa-monthly> ${type.price?.monthly}</TableCell>
             <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly ?? 0} />
               ) : (
-                `$${
-                  !selectedEngine
-                    ? type.price?.hourly
-                    : databasePrices?.price.hourly ?? 0
-                }`
+                `$${type.price?.hourly}`
               )}
             </TableCell>
             <TableCell center noWrap data-qa-ram>
@@ -283,12 +268,12 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             <TableCell center noWrap data-qa-storage>
               {convertMegabytesTo(type.disk, true)}
             </TableCell>
-            {shouldShowTransfer ? (
+            {shouldShowTransfer && type.transfer ? (
               <TableCell center data-qa-transfer>
                 {type.transfer / 1000} TB
               </TableCell>
             ) : null}
-            {shouldShowNetwork ? (
+            {shouldShowNetwork && type.network_out ? (
               <TableCell center noWrap data-qa-network>
                 {LINODE_NETWORK_IN} Gbps{' '}
                 <span style={{ color: '#9DA4A6' }}>/</span>{' '}
@@ -305,9 +290,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             checked={type.id === String(selectedID)}
             onClick={onSelect(type.id)}
             heading={type.heading}
-            subheadings={
-              !selectedEngine ? type.subHeadings : databaseSubheadings
-            }
+            subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled || isDisabledClass}
             tooltip={tooltip}
           />
@@ -316,12 +299,10 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const renderPlanContainer = (plans: ExtendedTypes) => {
+  const renderPlanContainer = (plans: PlanSelectionType[]) => {
     // Show the Transfer column if, for any plan, the api returned data and we're not in the Database Create flow
     const shouldShowTransfer =
-      showTransfer &&
-      !selectedEngine &&
-      plans.some((plan: ExtendedType) => plan.transfer);
+      showTransfer && plans.some((plan: ExtendedType) => plan.transfer);
 
     // Show the Network throughput column if, for any plan, the api returned data (currently Bare Metal does not)
     const shouldShowNetwork =

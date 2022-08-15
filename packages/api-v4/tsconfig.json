@@ -12,6 +12,7 @@
     "baseUrl": ".",
     "noUnusedLocals": true,
     "declarationMap": true,
+    "incremental": true
   },
   "include": [
     "src"

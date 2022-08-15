@@ -6,7 +6,7 @@ import {
   updateManagedLinodeSchema,
   updatePasswordSchema,
 } from '@linode/validation/lib/managed.schema';
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
