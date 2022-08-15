@@ -141,7 +141,8 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
 
   const disableInput = isSubmitting || disabled;
 
-  const disableAddButton = disabled;
+  const disableAddButton =
+    disabled || !values.card_number || !values.cvv || !values.expiry_month;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -177,6 +178,8 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
                 const values: string[] = e.target.value.split(delimiter[0]);
                 setFieldValue('expiry_month', values[0]);
                 setFieldValue('expiry_year', parseExpiryYear(values[1]));
+              } else {
+                setFieldValue('expiry_month', value);
               }
             }}
             label="Expiration Date"
