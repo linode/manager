@@ -112,10 +112,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   pdfError: {
     color: theme.color.red,
   },
-  akamaiEmptyRow: {
-    width: '100%',
-    padding: theme.spacing(10),
-  },
 }));
 
 interface ActivityFeedItem {
@@ -149,7 +145,25 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: 'All Time', value: 'All Time' },
 ];
 
-const renderAkamaiInvoiceRow = () => {
+export const renderAkamaiRowEmptyState = () => {
+  return (
+    <TableRow>
+      <TableCell colSpan={4}>
+        <Box
+          style={{ width: '100%', padding: 80 }}
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography style={{ textAlign: 'center' }}>
+            <strong>{akamaiBillingInvoiceText}</strong>
+          </Typography>
+        </Box>
+      </TableCell>
+    </TableRow>
+  );
+};
+
+export const renderAkamaiInvoiceRow = () => {
   return (
     <TableRow>
       <TableCell colSpan={6} style={{ textAlign: 'center' }}>
@@ -324,24 +338,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     });
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
 
-  const renderAkamaiRowEmptyState = React.useCallback(() => {
-    return (
-      <TableRow>
-        <TableCell colSpan={4}>
-          <Box
-            className={classes.akamaiEmptyRow}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography style={{ textAlign: 'center' }}>
-              <strong>{akamaiBillingInvoiceText}</strong>
-            </Typography>
-          </Box>
-        </TableCell>
-      </TableRow>
-    );
-  }, [classes.akamaiEmptyRow]);
-
   return (
     <div className={classes.root}>
       <div className={classes.headerContainer}>
@@ -497,7 +493,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             isAkamaiCustomer,
             downloadInvoicePDF,
             downloadPaymentPDF,
-            renderAkamaiRowEmptyState,
             pdfErrors,
             pdfLoading,
           ]

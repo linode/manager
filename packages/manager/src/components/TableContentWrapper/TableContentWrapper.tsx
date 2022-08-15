@@ -52,7 +52,7 @@ const TableContentWrapper: React.FC<Props> = (props) => {
 
   return (
     <>
-      {renderCustomRow ? renderCustomRow() : null}
+      {renderCustomRow ? renderCustomRow() : undefined}
       {props.children}
     </>
   );

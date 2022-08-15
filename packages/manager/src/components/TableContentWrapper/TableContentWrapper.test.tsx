@@ -1,5 +1,9 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
+import {
+  renderAkamaiInvoiceRow,
+  renderAkamaiRowEmptyState,
+} from 'src/features/Billing/BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import TableContentWrapper from './TableContentWrapper';
@@ -91,22 +95,31 @@ describe('TableContentWrapper component', () => {
     getByText(emptyProps.emptyMessage);
   });
 
-  it('should display text for Akamai customers', () => {
+  it('should render custom empty row state if it is provided', () => {
     const emptyProps = {
       loading: false,
       length: 0,
-      isAkamaiCustomer: true,
+      renderRowEmptyState: renderAkamaiRowEmptyState,
       children,
     };
 
-    const { getByText, rerender } = render(
+    const { getByText } = render(
       wrapWithTableBody(<TableContentWrapper {...emptyProps} />)
     );
     getByText(akamaiBillingInvoiceText);
+  });
 
-    const nonEmptyProps = { ...emptyProps, length: 1 };
+  it('should render custom row if it is provided', () => {
+    const rowProps = {
+      loading: false,
+      length: 2,
+      renderCustomRow: renderAkamaiInvoiceRow,
+      children,
+    };
 
-    rerender(wrapWithTableBody(<TableContentWrapper {...nonEmptyProps} />));
+    const { getByText } = render(
+      wrapWithTableBody(<TableContentWrapper {...rowProps} />)
+    );
     getByText(`Future ${akamaiBillingInvoiceText}`);
   });
 });
