@@ -145,33 +145,29 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: 'All Time', value: 'All Time' },
 ];
 
-export const renderAkamaiRowEmptyState = () => {
-  return (
-    <TableRow>
-      <TableCell colSpan={4}>
-        <Box
-          style={{ width: '100%', padding: 80 }}
-          alignItems="center"
-          justifyContent="center"
-        >
-          <Typography style={{ textAlign: 'center' }}>
-            <strong>{akamaiBillingInvoiceText}</strong>
-          </Typography>
-        </Box>
-      </TableCell>
-    </TableRow>
-  );
-};
+export const akamaiRowEmptyState = (
+  <TableRow>
+    <TableCell colSpan={4}>
+      <Box
+        style={{ width: '100%', padding: 80 }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography style={{ textAlign: 'center' }}>
+          <strong>{akamaiBillingInvoiceText}</strong>
+        </Typography>
+      </Box>
+    </TableCell>
+  </TableRow>
+);
 
-export const renderAkamaiInvoiceRow = () => {
-  return (
-    <TableRow>
-      <TableCell colSpan={6} style={{ textAlign: 'center' }}>
-        <strong>Future {akamaiBillingInvoiceText}</strong>
-      </TableCell>
-    </TableRow>
-  );
-};
+export const akamaiInvoiceRow = (
+  <TableRow>
+    <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+      <strong>Future {akamaiBillingInvoiceText}</strong>
+    </TableCell>
+  </TableRow>
+);
 
 const defaultDateRange: DateRange = '6 Months';
 
@@ -438,13 +434,11 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                               ]
                             : undefined
                         }
-                        renderRowEmptyState={
-                          isAkamaiCustomer
-                            ? renderAkamaiRowEmptyState
-                            : undefined
+                        rowEmptyState={
+                          isAkamaiCustomer ? akamaiRowEmptyState : undefined
                         }
-                        renderCustomRow={
-                          isAkamaiCustomer ? renderAkamaiInvoiceRow : undefined
+                        customFirstRow={
+                          isAkamaiCustomer ? akamaiInvoiceRow : undefined
                         }
                       >
                         {paginatedAndOrderedData.map((thisItem) => {

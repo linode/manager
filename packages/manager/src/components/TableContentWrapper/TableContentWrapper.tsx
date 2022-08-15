@@ -14,8 +14,8 @@ interface Props {
   error?: APIError[];
   emptyMessage?: string;
   loadingProps?: TableLoadingProps;
-  renderRowEmptyState?: () => JSX.Element;
-  renderCustomRow?: () => JSX.Element;
+  rowEmptyState?: JSX.Element;
+  customFirstRow?: JSX.Element;
 }
 
 const TableContentWrapper: React.FC<Props> = (props) => {
@@ -26,8 +26,8 @@ const TableContentWrapper: React.FC<Props> = (props) => {
     error,
     lastUpdated,
     loadingProps,
-    renderRowEmptyState,
-    renderCustomRow,
+    rowEmptyState,
+    customFirstRow,
   } = props;
 
   if (loading) {
@@ -39,8 +39,8 @@ const TableContentWrapper: React.FC<Props> = (props) => {
   }
 
   if (lastUpdated !== 0 && length === 0) {
-    if (renderRowEmptyState) {
-      return renderRowEmptyState();
+    if (rowEmptyState) {
+      return rowEmptyState;
     }
     return (
       <TableRowEmpty
@@ -52,7 +52,7 @@ const TableContentWrapper: React.FC<Props> = (props) => {
 
   return (
     <>
-      {renderCustomRow ? renderCustomRow() : undefined}
+      {customFirstRow ? customFirstRow : undefined}
       {props.children}
     </>
   );
