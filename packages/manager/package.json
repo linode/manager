@@ -114,7 +114,7 @@
     "build-storybook": "build-storybook",
     "cy:run": "cypress run -b chrome",
     "cy:e2e": "cypress run --headless -b chrome",
-    "cy:debug": "cypress open",
+    "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
     "typecheck": "tsc --noEmit"
