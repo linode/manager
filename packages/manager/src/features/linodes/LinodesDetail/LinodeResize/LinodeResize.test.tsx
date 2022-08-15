@@ -107,8 +107,8 @@ describe('LinodeResize', () => {
       it('returns false when the first type provided is larger than the second', () => {
         expect(
           isSmallerThanCurrentPlan(
-            'g5-standard-2',
-            'g5-standard-1',
+            'g6-standard-2',
+            'g6-standard-1',
             extendedTypes
           )
         ).toBe(false);
@@ -117,8 +117,8 @@ describe('LinodeResize', () => {
       it('returns true when the first type provided is smaller than the second', () => {
         expect(
           isSmallerThanCurrentPlan(
-            'g5-standard-1',
-            'g5-standard-2',
+            'g6-standard-1',
+            'g6-standard-2',
             extendedTypes
           )
         ).toBe(true);
