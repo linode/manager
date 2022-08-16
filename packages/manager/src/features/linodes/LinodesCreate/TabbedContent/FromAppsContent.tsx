@@ -159,9 +159,20 @@ export const handleSelectStackScript = (
   );
 };
 
+const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
+  return logoUrl === undefined ? (
+    <span className="fl-tux" />
+  ) : (
+    <img
+      src={`${APP_ROOT}/${logoUrl.toLowerCase()}`}
+      alt={`${selectedStackScriptLabel} logo`}
+    />
+  );
+};
+
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
-class FromAppsContent extends React.PureComponent<CombinedProps, State> {
+class FromAppsContent extends React.Component<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
     selectedScriptForDrawer: '',
@@ -171,17 +182,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     categoryFilter: null,
     isFiltering: false,
   };
-
-  //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
-  handleSelectStackScript = curriedHandleSelectStackScript(
-    curry.placeholder,
-    curry.placeholder,
-    curry.placeholder,
-    curry.placeholder,
-    curry.placeholder,
-    this.props.imagesData,
-    this.props.updateStackScript
-  );
 
   handleChangeUDF = (key: string, value: string) => {
     // either overwrite or create new selection
@@ -248,6 +248,10 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     }
   };
 
+  shouldComponentUpdate() {
+    return true;
+  }
+
   render() {
     const {
       classes,
@@ -265,19 +269,22 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       userCannotCreateLinode,
     } = this.props;
 
+    //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+    const handleSelectStackScript = curriedHandleSelectStackScript(
+      curry.placeholder,
+      curry.placeholder,
+      curry.placeholder,
+      curry.placeholder,
+      curry.placeholder,
+      this.props.imagesData,
+      this.props.updateStackScript
+    );
+
     const logoUrl = appInstances?.find(
       (app) => app.id === selectedStackScriptID
     )?.logo_url;
 
-    const renderLogo =
-      logoUrl === undefined ? (
-        <span className="fl-tux" />
-      ) : (
-        <img
-          src={`${APP_ROOT}/${logoUrl}`}
-          alt={`${selectedStackScriptLabel} logo`}
-        />
-      );
+    const appLogo = renderLogo(selectedStackScriptLabel, logoUrl);
 
     const {
       filteredApps,
@@ -324,22 +331,27 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
             appInstancesLoading={appInstancesLoading}
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
-            handleClick={this.handleSelectStackScript}
+            handleClick={handleSelectStackScript}
             openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
             isSearching={isSearching}
             isFiltering={isFiltering}
           />
-          {!userCannotCreateLinode && userDefinedFields ? (
+          {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel
               errors={filterUDFErrors(errorResources, errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
+              selectedLabel={selectedStackScriptLabel}
               selectedUsername="Linode"
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
+              updateFor={[
+                selectedStackScriptID,
+                userDefinedFields,
+                udf_data,
+                errors,
+              ]}
               udf_data={udf_data || {}}
-              appLogo={renderLogo}
+              appLogo={appLogo}
               openDrawer={this.openDrawer}
             />
           ) : null}

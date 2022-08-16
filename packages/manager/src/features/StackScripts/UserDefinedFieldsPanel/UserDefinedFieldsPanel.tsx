@@ -57,92 +57,72 @@ interface Props {
   openDrawer?: (stackScriptLabel: string) => void;
 }
 
-const UserDefinedFieldsPanel = (props: Props) => {
-  const classes = useStyles();
-  const {
-    udf_data,
-    handleChange,
-    openDrawer,
-    selectedLabel,
-    userDefinedFields,
-    errors,
-    appLogo,
-  } = props;
+type CombinedProps = Props;
 
-  const renderField = (field: UserDefinedField, error?: string) => {
-    // if the 'default' key is returned from the API, the field is optional
-    const isOptional = field.hasOwnProperty('default');
+const renderField = (
+  udf_data: any,
+  handleChange: Props['handleChange'],
+  field: UserDefinedField,
+  error?: string
+) => {
+  // if the 'default' key is returned from the API, the field is optional
+  const isOptional = field.hasOwnProperty('default');
 
-    if (isMultiSelect(field)) {
-      return (
-        <Grid item xs={12} lg={5} key={field.name}>
-          <UserDefinedMultiSelect
-            key={field.name}
-            field={field}
-            value={udf_data[field.name] || ''}
-            updateFormState={handleChange}
-            updateFor={[field.label, udf_data[field.name], error]}
-            isOptional={isOptional}
-            error={error}
-          />
-        </Grid>
-      );
-    }
-    if (isOneSelect(field)) {
-      return (
-        <Grid item xs={12} lg={5} key={field.name}>
-          <UserDefinedSelect
-            field={field}
-            updateFormState={handleChange}
-            value={udf_data[field.name] || ''}
-            updateFor={[field.label, udf_data[field.name], error]}
-            isOptional={isOptional}
-            key={field.name}
-            error={error}
-          />{' '}
-        </Grid>
-      );
-    }
-    if (isPasswordField(field.name)) {
-      return (
-        <Grid item xs={12} lg={5} key={field.name}>
-          <UserDefinedText
-            /**
-             * we explicitly passing the value to solve for the situation
-             * where you're switching between stackscripts or one-click-apps
-             * and the same UDF with the same label appears in both stackscripts.
-             *
-             * The problem here is that unless we explicitly pass the value,
-             * the form state will be reset but because MUI handles the
-             * value internally, the pre-inputted value will still exist in the
-             * textfield
-             *
-             * To test the incorrect behavior, try removing the "value" prop here,
-             * navigate to the One-Click app creation flow, click on MERN, fill out
-             * a DB password, then switch to LAMP. You'll see the value will
-             * still be in the form field.
-             *
-             * This comment is wordy as heck but it's important that we never remove this
-             * prop or that bug will return
-             */
-            value={udf_data[field.name] || ''}
-            updateFormState={handleChange}
-            isPassword={true}
-            field={field}
-            updateFor={[field.label, udf_data[field.name], error]}
-            isOptional={isOptional}
-            placeholder={field.example}
-            error={error}
-          />
-        </Grid>
-      );
-    }
+  if (isMultiSelect(field)) {
+    return (
+      <Grid item xs={12} lg={5} key={field.name}>
+        <UserDefinedMultiSelect
+          key={field.name}
+          field={field}
+          value={udf_data[field.name] || ''}
+          updateFormState={handleChange}
+          updateFor={[field.label, udf_data[field.name], error]}
+          isOptional={isOptional}
+          error={error}
+        />
+      </Grid>
+    );
+  }
+  if (isOneSelect(field)) {
+    return (
+      <Grid item xs={12} lg={5} key={field.name}>
+        <UserDefinedSelect
+          field={field}
+          updateFormState={handleChange}
+          value={udf_data[field.name] || ''}
+          updateFor={[field.label, udf_data[field.name], error]}
+          isOptional={isOptional}
+          key={field.name}
+          error={error}
+        />{' '}
+      </Grid>
+    );
+  }
+  if (isPasswordField(field.name)) {
     return (
       <Grid item xs={12} lg={5} key={field.name}>
         <UserDefinedText
-          /** see comment above for why we're passing the value prop */
+          /**
+           * we explicitly passing the value to solve for the situation
+           * where you're switching between stackscripts or one-click-apps
+           * and the same UDF with the same label appears in both stackscripts.
+           *
+           * The problem here is that unless we explicitly pass the value,
+           * the form state will be reset but because MUI handles the
+           * value internally, the pre-inputted value will still exist in the
+           * textfield
+           *
+           * To test the incorrect behavior, try removing the "value" prop here,
+           * navigate to the One-Click app creation flow, click on MERN, fill out
+           * a DB password, then switch to LAMP. You'll see the value will
+           * still be in the form field.
+           *
+           * This comment is wordy as heck but it's important that we never remove this
+           * prop or that bug will return
+           */
           value={udf_data[field.name] || ''}
           updateFormState={handleChange}
+          isPassword={true}
           field={field}
           updateFor={[field.label, udf_data[field.name], error]}
           isOptional={isOptional}
@@ -151,14 +131,41 @@ const UserDefinedFieldsPanel = (props: Props) => {
         />
       </Grid>
     );
-  };
+  }
+  return (
+    <Grid item xs={12} lg={5} key={field.name}>
+      <UserDefinedText
+        /** see comment above for why we're passing the value prop */
+        value={udf_data[field.name] || ''}
+        updateFormState={handleChange}
+        field={field}
+        updateFor={[field.label, udf_data[field.name], error]}
+        isOptional={isOptional}
+        placeholder={field.example}
+        error={error}
+      />
+    </Grid>
+  );
+};
 
-  const handleOpenDrawer = () => {
-    if (openDrawer !== undefined) {
-      return openDrawer(selectedLabel);
-    }
-    return null;
-  };
+const handleOpenDrawer = (
+  openDrawer: CombinedProps['openDrawer'],
+  selectedLabel: string
+) => () => {
+  openDrawer?.(selectedLabel);
+};
+
+const UserDefinedFieldsPanel = (props: CombinedProps) => {
+  const classes = useStyles();
+  const {
+    userDefinedFields,
+    openDrawer,
+    selectedLabel,
+    handleChange,
+    udf_data,
+    errors,
+    appLogo,
+  } = props;
 
   const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
     userDefinedFields!
@@ -177,13 +184,15 @@ const UserDefinedFieldsPanel = (props: Props) => {
         <Typography variant="h2" data-qa-user-defined-field-header>
           <span>{`${selectedLabel} Setup`}</span>
         </Typography>
-        {isDrawerOpenable ? <AppInfo onClick={handleOpenDrawer} /> : null}
+        {isDrawerOpenable ? (
+          <AppInfo onClick={handleOpenDrawer(openDrawer, selectedLabel)} />
+        ) : null}
       </Box>
 
       {/* Required Fields */}
       {requiredUDFs.map((field: UserDefinedField) => {
         const error = getError(field, errors);
-        return renderField(field, error);
+        return renderField(udf_data, handleChange, field, error);
       })}
 
       {/* Optional Fields */}
@@ -198,7 +207,7 @@ const UserDefinedFieldsPanel = (props: Props) => {
           >
             {optionalUDFs.map((field: UserDefinedField) => {
               const error = getError(field, errors);
-              return renderField(field, error);
+              return renderField(udf_data, handleChange, field, error);
             })}
           </div>
         </ShowMoreExpansion>
@@ -232,7 +241,7 @@ const isMultiSelect = (udf: UserDefinedField) => {
  *
  * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
-const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[]) => {
+const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
     (accum, eachUDF) => {
       /**
