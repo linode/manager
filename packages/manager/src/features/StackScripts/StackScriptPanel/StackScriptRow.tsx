@@ -95,9 +95,13 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
       <Hidden mdDown>
-        <TableCell data-qa-stackscript-images className={classes.images}>
-          {images.join(',  ')}
-        </TableCell>
+        {images.includes('any/all') ? (
+          <TableCell data-qa-stackscript-images>Any/All</TableCell>
+        ) : (
+          <TableCell data-qa-stackscript-images className={classes.images}>
+            {images.join(',  ')}
+          </TableCell>
+        )}
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.
         <Hidden mdDown>
