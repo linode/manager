@@ -190,6 +190,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Budibase',
+    categories: ['Development'],
     description:
       'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
     summary: 'Low-code platform for building modern business applications.',
@@ -580,6 +581,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'HashiCorp Nomad',
+    categories: ['Development'],
     description:
       'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
@@ -599,6 +601,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'HashiCorp Vault',
+    categories: ['Security'],
     description:
       'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
     summary: 'An open source, centralized secrets management system.',
