@@ -211,6 +211,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         app.label.toLowerCase().includes(query.toLowerCase())
       );
       this.setState({
+        isFiltering: false,
         filteredApps: appsMatchingQuery,
         isSearching: true,
         categoryFilter: null,
