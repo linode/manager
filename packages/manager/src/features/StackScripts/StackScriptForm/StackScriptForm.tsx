@@ -162,7 +162,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
             label="Target Images"
             imageFieldError={hasErrorFor('images')}
             helperText={
-              'Select which images are compatible with this StackScript.'
+              'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
             }
             disabled={disabled}
             anyAllOption
