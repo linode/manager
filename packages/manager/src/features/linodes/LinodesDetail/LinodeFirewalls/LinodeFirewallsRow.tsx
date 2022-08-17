@@ -1,17 +1,13 @@
 import { Firewall, FirewallDevice } from '@linode/api-v4/lib/firewalls';
-// import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-// import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import useFirewallDevices from 'src/hooks/useFirewallDevices';
-// import { capitalize } from 'src/utilities/capitalize';
-import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -31,12 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type CombinedProps = Firewall & ActionHandlers;
+export type CombinedProps = Firewall;
 
-export const FirewallRow: React.FC<CombinedProps> = (props) => {
+export const LinodeFirewallsRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { id, label, status, rules, ...actionHandlers } = props;
+  const { id, label, rules } = props;
 
   const {
     devices: { error, loading, lastUpdated },
@@ -83,14 +79,6 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
           {getLinodesCellString(devices, loading, error.read)}
         </TableCell> */}
       </Hidden>
-      <TableCell actionCell>
-        <ActionMenu
-          firewallID={id}
-          firewallLabel={label}
-          firewallStatus={status}
-          {...actionHandlers}
-        />
-      </TableCell>
     </TableRow>
   );
 };
@@ -167,6 +155,4 @@ export const getDeviceLinks = (data: FirewallDevice[]): JSX.Element => {
   );
 };
 
-export default compose<CombinedProps, ActionHandlers & Firewall>(React.memo)(
-  FirewallRow
-);
+export default compose<CombinedProps, Firewall>(React.memo)(LinodeFirewallsRow);

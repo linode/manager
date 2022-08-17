@@ -13,6 +13,9 @@ import { withLinodeDetailContext } from './linodeDetailContext';
 const LinodeNetworking = React.lazy(
   () => import('./LinodeNetworking/LinodeNetworking')
 );
+const LinodeFirewalls = React.lazy(
+  () => import('./LinodeFirewalls/LinodeFirewalls')
+);
 const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
 // const LinodeConfigurations = React.lazy(
 //   () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
@@ -48,6 +51,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     {
       routeName: `${url}/networking`,
       title: 'Network',
+    },
+    {
+      routeName: `${url}/firewalls`,
+      title: 'Firewalls',
     },
     {
       routeName: `${url}/storage`,
@@ -108,6 +115,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
 
               <SafeTabPanel index={idx++}>
                 <LinodeNetworking />
+              </SafeTabPanel>
+
+              <SafeTabPanel index={idx++}>
+                <LinodeFirewalls />
               </SafeTabPanel>
 
               {isBareMetalInstance ? null : (
