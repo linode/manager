@@ -69,13 +69,13 @@ describe('Billing Contact', () => {
     // intercept get account request and stub response
     cy.intercept('GET', '*/account', accountData).as('getAccount');
 
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/account/billing', { mockRequests: false });
     checkAccountContactDisplay(accountData);
   });
   it('Edit Contact Info', () => {
     // intercept create account request and stub response
     cy.intercept('PUT', '*/account', newAccountData).as('createAccount');
-    cy.visitWithLogin('/account/billing');
+    cy.visitWithLogin('/account/billing', { mockRequests: false });
     cy.get('[data-qa-contact-summary]').within((_contact) => {
       fbtClick('Edit');
     });
