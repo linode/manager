@@ -1,6 +1,6 @@
 import _, { curry } from 'lodash';
 import { Image } from '@linode/api-v4/lib/images';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -221,37 +221,25 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
   };
 
   handleSelectCategory = (categoryItem: Item<AppCategory>) => {
-    if (categoryItem !== null) {
+    const didUserSelectCategory = categoryItem !== null;
+    let instancesInCategory: StackScript[] | undefined = [];
+    if (didUserSelectCategory) {
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
       const appLabels = appsInCategory.map((app) => app.name.trim());
-      const instancesInCategory = this.props.appInstances?.filter(
-        (instance) => {
-          return appLabels.includes(instance.label.trim());
-        }
-      );
-      this.setState({
-        categoryFilter: categoryItem,
-        isSearching: false,
-        query: '',
-        filteredApps: instancesInCategory ?? [],
-        isFiltering: categoryItem !== null,
-      });
-    } else {
-      this.setState({
-        categoryFilter: categoryItem,
-        isSearching: false,
-        query: '',
-        // filteredApps: instancesInCategory ?? [],
-        isFiltering: categoryItem !== null,
+      instancesInCategory = this.props.appInstances?.filter((instance) => {
+        return appLabels.includes(instance.label.trim());
       });
     }
+    this.setState({
+      categoryFilter: categoryItem,
+      isSearching: false,
+      query: '',
+      filteredApps: didUserSelectCategory ? instancesInCategory : [],
+      isFiltering: didUserSelectCategory,
+    });
   };
-
-  shouldComponentUpdate() {
-    return true;
-  }
 
   render() {
     const {
