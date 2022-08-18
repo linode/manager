@@ -166,6 +166,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
               'Select which images are compatible with this StackScript.'
             }
             disabled={disabled}
+            anyAllOption
             data-qa-stackscript-target-select
           />
         </Grid>
