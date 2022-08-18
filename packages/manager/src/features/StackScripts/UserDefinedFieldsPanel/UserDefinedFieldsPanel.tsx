@@ -103,7 +103,7 @@ const renderField = (
       <Grid item xs={12} lg={5} key={field.name}>
         <UserDefinedText
           /**
-           * we explicitly passing the value to solve for the situation
+           * we are explicitly passing the value to solve for the situation
            * where you're switching between stackscripts or one-click-apps
            * and the same UDF with the same label appears in both stackscripts.
            *
