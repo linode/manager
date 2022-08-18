@@ -3,9 +3,9 @@ import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import {
-  TableRowLoading,
   Props as TableLoadingProps,
-} from '../TableRowLoading/TableRowLoading';
+  TableRowLoading,
+} from 'src/components/TableRowLoading/TableRowLoading';
 
 interface Props {
   length: number;
@@ -14,11 +14,11 @@ interface Props {
   error?: APIError[];
   emptyMessage?: string;
   loadingProps?: TableLoadingProps;
+  rowEmptyState?: JSX.Element;
+  customFirstRow?: JSX.Element;
 }
 
-type CombinedProps = Props;
-
-const TableContentWrapper: React.FC<CombinedProps> = (props) => {
+const TableContentWrapper: React.FC<Props> = (props) => {
   const {
     length,
     loading,
@@ -26,6 +26,8 @@ const TableContentWrapper: React.FC<CombinedProps> = (props) => {
     error,
     lastUpdated,
     loadingProps,
+    rowEmptyState,
+    customFirstRow,
   } = props;
 
   if (loading) {
@@ -37,6 +39,9 @@ const TableContentWrapper: React.FC<CombinedProps> = (props) => {
   }
 
   if (lastUpdated !== 0 && length === 0) {
+    if (rowEmptyState) {
+      return rowEmptyState;
+    }
     return (
       <TableRowEmpty
         colSpan={6}
@@ -45,8 +50,12 @@ const TableContentWrapper: React.FC<CombinedProps> = (props) => {
     );
   }
 
-  /* eslint-disable-next-line */
-  return <>{props.children}</>;
+  return (
+    <>
+      {customFirstRow ? customFirstRow : undefined}
+      {props.children}
+    </>
+  );
 };
 
 export default TableContentWrapper;
