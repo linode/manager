@@ -2,6 +2,8 @@ import * as React from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader, {
   LandingHeaderProps,
@@ -10,6 +12,8 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import TaxBanner from 'src/components/TaxBanner';
+import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
+import { useAccount } from 'src/queries/account';
 import { getGrantData, useProfile } from 'src/queries/profile';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
@@ -26,10 +30,12 @@ const AccountLanding: React.FC = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: profile } = useProfile();
+  const { data: account } = useAccount();
 
   const grantData = getGrantData();
   const accountAccessGrant = grantData?.global?.account_access;
   const readOnlyAccountAccess = accountAccessGrant === 'read_only';
+  const isAkamaiAccount = account?.billing_source === 'akamai';
 
   const tabs = [
     {
@@ -99,8 +105,10 @@ const AccountLanding: React.FC = () => {
     landingHeaderProps.docsLink =
       'https://www.linode.com/docs/guides/how-linode-billing-works/';
     landingHeaderProps.createButtonText = 'Make a Payment';
-    landingHeaderProps.onAddNew = () =>
-      history.replace('/account/billing/make-payment');
+    if (!isAkamaiAccount) {
+      landingHeaderProps.onAddNew = () =>
+        history.replace('/account/billing/make-payment');
+    }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;
   }
 
@@ -108,6 +116,14 @@ const AccountLanding: React.FC = () => {
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
       <TaxBanner marginBottom={24} />
+      {isAkamaiAccount ? (
+        <DismissibleBanner
+          preferenceKey="akamai-account-billing"
+          productInformationIndicator
+        >
+          <Typography>{akamaiBillingInvoiceText}</Typography>
+        </DismissibleBanner>
+      ) : null}
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
