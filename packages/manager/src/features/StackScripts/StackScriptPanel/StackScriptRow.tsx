@@ -96,7 +96,9 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
       </Hidden>
       <Hidden mdDown>
         {images.includes('any/all') ? (
-          <TableCell data-qa-stackscript-images>Any/All</TableCell>
+          <TableCell data-qa-stackscript-images className={classes.images}>
+            Any/All
+          </TableCell>
         ) : (
           <TableCell data-qa-stackscript-images className={classes.images}>
             {images.join(',  ')}
