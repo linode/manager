@@ -82,7 +82,6 @@ export const FromStackScriptContent = (props: CombinedProps) => {
     stackScriptImages: string[],
     userDefinedFields: UserDefinedField[]
   ) => {
-    const { imagesData } = props;
     const allowAllImages = stackScriptImages.includes('any/all');
 
     /**
