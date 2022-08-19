@@ -231,9 +231,16 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   handleChooseImage = (images: Item<string>[]) => {
     const imageList = images.map((image) => image.value);
+
+    const anyAllOptionChosen = imageList.includes('any/all');
+
     this.setState(
       {
-        images: imageList,
+        /*
+        'Any/All' indicates all image options are compatible with the StackScript,
+        so users are not allowed to add additional selections.
+        */
+        images: anyAllOptionChosen ? ['any/all'] : imageList,
       },
       this.saveStateToLocalStorage
     );
