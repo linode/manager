@@ -49,7 +49,7 @@ const appCategories = [
   'Security',
   'Stacks',
   'Website',
-  'App Creators',
+  //   'App Creators',
 ];
 
 const appCategoryOptions = appCategories.map((categoryName) => ({
