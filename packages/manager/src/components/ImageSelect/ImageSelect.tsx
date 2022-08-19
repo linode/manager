@@ -53,12 +53,12 @@ export const sortByImageVersion = (a: ImageItem, b: ImageItem) => {
   return 0;
 };
 
-export const sortGroupsWithMyImagesAtTheEnd = (a: string, b: string) => {
+export const sortGroupsWithMyImagesAtTheBeginning = (a: string, b: string) => {
   if (a === 'My Images') {
-    return 1;
+    return -1;
   }
   if (b === 'My Images') {
-    return -1;
+    return 1;
   }
   if (a > b) {
     return 1;
@@ -75,7 +75,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
   }, images);
 
   return Object.keys(groupedImages)
-    .sort(sortGroupsWithMyImagesAtTheEnd)
+    .sort(sortGroupsWithMyImagesAtTheBeginning)
     .reduce((accum: GroupType<string>[], thisGroup) => {
       const group = groupedImages[thisGroup];
       if (!group || group.length === 0) {
