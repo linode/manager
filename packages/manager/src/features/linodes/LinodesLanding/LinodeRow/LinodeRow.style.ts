@@ -29,9 +29,12 @@ const styles = (theme: Theme) =>
       height: 'auto',
       '&:hover': {
         backgroundColor: theme.bg.lightBlue1,
-        '& [data-qa-copy-ip]': {
+        '& [data-qa-copy-ip] button > svg': {
           opacity: 1,
         },
+      },
+      '& [data-qa-copy-ip] button:focus > svg': {
+        opacity: 1,
       },
     },
     progressDisplay: {
@@ -89,7 +92,7 @@ const styles = (theme: Theme) =>
       '& button:hover': {
         backgroundColor: 'transparent',
       },
-      '& [data-qa-copy-ip]': {
+      '& [data-qa-copy-ip] button > svg': {
         opacity: 0,
       },
       '& svg': {

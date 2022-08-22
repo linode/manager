@@ -1,3 +1,8 @@
+## [2022-08-22] - v0.13.0
+
+### Changed:
+- `@linode/validation` is now built using `tsup` outputting esm, commonjs, and iife. Items can still be imported from the package root (`@linode/validation`) or from a subdirectory (`@linode/validation/lib/**`) on supported configurations.
+
 ## [2022-06-23] - v0.12.0
 
 ### Added

@@ -205,6 +205,11 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
     isWithinDays(90, account?.active_since) &&
     promotions?.length === 0;
 
+  const accruedChargesHelperText =
+    account?.billing_source === 'akamai'
+      ? 'Accrued charges shown are an approximation and may not exactly reflect your post-tax invoice.'
+      : 'Our billing cycle ends on the last day of the month. You may be invoiced before the end of the cycle if your balance exceeds your credit limit.';
+
   return (
     <>
       <Grid container spacing={2} className={classes.root}>
@@ -266,7 +271,7 @@ export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
               <Typography variant="h3">Accrued Charges</Typography>
               <HelpIcon
                 className={classes.helpIcon}
-                text="Our billing cycle ends on the last day of the month. You may be invoiced before the end of the cycle if your balance exceeds your credit limit."
+                text={accruedChargesHelperText}
               />
             </Box>
             <Divider />

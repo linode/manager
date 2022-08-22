@@ -24,3 +24,6 @@ export const renderUnitPrice = (v: null | string) => {
   const parsedValue = parseFloat(`${v}`);
   return Number.isNaN(parsedValue) ? null : `$${parsedValue}`;
 };
+
+export const akamaiBillingInvoiceText =
+  'Linode products and services will appear on your Akamai Technologies invoice.';

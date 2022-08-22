@@ -24,7 +24,7 @@ export const linode1: Linode = {
   image: 'linode/Ubuntu16.10',
   group: 'active',
   region: 'us-east-1a',
-  type: 'g5-nanode-1',
+  type: 'g6-nanode-1',
   backups: {
     schedule: {
       window: 'W2',
@@ -63,7 +63,7 @@ export const linode2: Linode = {
   image: 'linode/Ubuntu16.04LTS',
   group: 'inactive',
   region: 'us-east-1a',
-  type: 'g5-standard-1',
+  type: 'g6-standard-1',
   backups: {
     schedule: {
       window: 'Scheduling',
@@ -102,7 +102,7 @@ export const linode3: Linode = {
   image: 'linode/Ubuntu16.04LTS',
   group: 'inactive',
   region: 'us-east-1a',
-  type: 'g5-standard-2',
+  type: 'g6-standard-2',
   backups: {
     schedule: {
       window: 'Scheduling',
@@ -141,7 +141,7 @@ export const linode4: Linode = {
   image: 'linode/Ubuntu16.04LTS',
   group: 'inactive',
   region: 'eu-west',
-  type: 'g5-standard-2',
+  type: 'g6-standard-2',
   backups: {
     schedule: {
       window: 'Scheduling',

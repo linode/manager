@@ -121,6 +121,13 @@ export const StackScript: React.FC<Props> = (props) => {
         return acc;
       }
 
+      if (image === 'any/all') {
+        acc.available.push(
+          <Chip key={image} label="Any/All" component="span" />
+        );
+        return acc;
+      }
+
       if (imageObj) {
         acc.available.push(
           <Chip key={imageObj.id} label={imageObj.label} component="span" />

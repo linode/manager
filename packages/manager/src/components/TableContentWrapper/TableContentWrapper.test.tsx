@@ -1,6 +1,10 @@
 import { render } from '@testing-library/react';
-
 import * as React from 'react';
+import {
+  akamaiInvoiceRow,
+  akamaiRowEmptyState,
+} from 'src/features/Billing/BillingPanels/BillingActivityPanel/BillingActivityPanel';
+import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import TableContentWrapper from './TableContentWrapper';
 
@@ -89,5 +93,33 @@ describe('TableContentWrapper component', () => {
       wrapWithTableBody(<TableContentWrapper {...emptyProps} />)
     );
     getByText(emptyProps.emptyMessage);
+  });
+
+  it('should render custom empty row state if it is provided', () => {
+    const emptyProps = {
+      loading: false,
+      length: 0,
+      rowEmptyState: akamaiRowEmptyState,
+      children,
+    };
+
+    const { getByText } = render(
+      wrapWithTableBody(<TableContentWrapper {...emptyProps} />)
+    );
+    getByText(akamaiBillingInvoiceText);
+  });
+
+  it('should render custom row if it is provided', () => {
+    const rowProps = {
+      loading: false,
+      length: 2,
+      customFirstRow: akamaiInvoiceRow,
+      children,
+    };
+
+    const { getByText } = render(
+      wrapWithTableBody(<TableContentWrapper {...rowProps} />)
+    );
+    getByText(`Future ${akamaiBillingInvoiceText}`);
   });
 });

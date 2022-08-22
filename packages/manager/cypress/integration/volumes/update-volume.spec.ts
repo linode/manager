@@ -17,7 +17,14 @@ describe('volume update flow', () => {
     const newTags = [randomLabel(5), randomLabel(5), randomLabel(5)];
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      cy.visitWithLogin('/volumes');
+      cy.visitWithLogin('/volumes', {
+        // Temporarily force volume table to show up to 100 results per page.
+        // This is a workaround while we wait to get stuck volumes removed.
+        // @TODO Remove local storage override when stuck volumes are removed from test accounts.
+        localStorageOverrides: {
+          PAGE_SIZE: 100,
+        },
+      });
 
       // Confirm that volume is listed on landing page, click "Edit" to open drawer.
       cy.findByText(volume.label)

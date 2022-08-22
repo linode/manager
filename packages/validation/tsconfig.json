@@ -13,6 +13,7 @@
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
     "declarationMap": true,
+    "incremental": true
   },
   "include": ["src"],
   "exclude": ["node_modules/**/*", "**/__tests__/*"]

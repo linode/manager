@@ -7,7 +7,7 @@ import NodePoolSummary, { Props } from './NodePoolSummary';
 
 const props: Props = {
   nodeCount: 3,
-  poolType: extendedTypes[0],
+  poolType: extendedTypes[1],
   price: 1000,
   onRemove: jest.fn(),
   updateNodeCount: jest.fn(),
