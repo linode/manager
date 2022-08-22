@@ -36,22 +36,22 @@ const deleteLinodeFromActionMenu = (linodeLabel) => {
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
 };
 
+const preferenceOverrides = {
+  linodes_view_style: 'list',
+  linodes_group_by_tag: false,
+  volumes_group_by_tag: false,
+  desktop_sidebar_open: false,
+  sortKeys: {
+    'linodes-landing': { order: 'asc', orderBy: 'label' },
+    volume: { order: 'asc', orderBy: 'label' },
+  },
+};
+
 describe('linode landing checks', () => {
   beforeEach(() => {
     const mockAccountSettings = accountSettingsFactory.build({
       managed: false,
     });
-
-    interceptOnce('GET', '*/profile/preferences*', {
-      linodes_view_style: 'list',
-      linodes_group_by_tag: false,
-      volumes_group_by_tag: false,
-      desktop_sidebar_open: false,
-      sortKeys: {
-        'linodes-landing': { order: 'asc', orderBy: 'label' },
-        volume: { order: 'asc', orderBy: 'label' },
-      },
-    }).as('getProfilePreferences');
 
     cy.intercept('GET', '*/account/settings', (req) => {
       req.reply(mockAccountSettings);
@@ -60,8 +60,7 @@ describe('linode landing checks', () => {
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(mockLinodes);
     }).as('getLinodes');
-    cy.visitWithLogin('/');
-    cy.wait('@getProfilePreferences');
+    cy.visitWithLogin('/', { preferenceOverrides });
     cy.wait('@getAccountSettings');
     cy.wait('@getLinodes');
     cy.url().should('eq', `${appRoot}${routes.linodeLanding}`);
@@ -239,22 +238,11 @@ describe('linode landing actions', () => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
 
-    interceptOnce('GET', '*/profile/preferences*', {
-      linodes_view_style: 'list',
-      linodes_group_by_tag: false,
-      volumes_group_by_tag: false,
-      desktop_sidebar_open: false,
-      sortKeys: {
-        'linodes-landing': { order: 'asc', orderBy: 'label' },
-        volume: { order: 'asc', orderBy: 'label' },
-      },
-    }).as('getProfilePreferences');
     cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
     createLinode().then((linodeA) => {
       createLinode().then((linodeB) => {
-        cy.visitWithLogin('/linodes');
+        cy.visitWithLogin('/linodes', { preferenceOverrides });
         cy.wait('@getAccountSettings');
-        cy.wait('@getProfilePreferences');
         getVisible('[data-qa-header="Linodes"]');
         if (!cy.get('[data-qa-sort-label="asc"]')) {
           getClick('[aria-label="Sort by label"]');

@@ -2,14 +2,14 @@ import {
   createDatabaseSchema,
   updateDatabaseSchema,
 } from '@linode/validation/lib/databases.schema';
-import { BETA_API_ROOT as API_ROOT } from 'src/constants';
+import { BETA_API_ROOT as API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter,
-} from 'src/request';
+} from '../request';
 import { ResourcePage as Page } from '../types';
 import {
   CreateDatabasePayload,

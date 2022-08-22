@@ -95,6 +95,7 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 loading={paymentMethodsLoading}
                 error={paymentMethodsError}
                 paymentMethods={paymentMethods}
+                isAkamaiCustomer={account?.billing_source === 'akamai'}
               />
             </Grid>
             <BillingActivityPanel accountActiveSince={account?.active_since} />

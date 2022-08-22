@@ -1,0 +1,42 @@
+---
+version: '3'
+services:
+
+  web:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: manager
+    container_name: web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./packages/manager:/home/node/app/packages/manager
+      - ./package.json:/home/node/app/package.json
+      - ./node_modules:/home/node/app/node_modules
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3000']
+      interval: 15s
+      timeout: 10s
+      retries: 10
+
+  e2e:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      - CYPRESS_BASE_URL=http://web:3000
+      - CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
+      - CYPRESS_RECORD=${CYPRESS_RECORD}
+      - HOME=/home/node
+    env_file: ./packages/manager/.env
+    volumes:
+      - ./packages/manager:/home/node/app/packages/manager
+      - ./packages/validation:/home/node/app/packages/validation
+      - ./packages/api-v4:/home/node/app/packages/api-v4
+      - ./package.json:/home/node/app/package.json
+      - ./node_modules:/home/node/app/node_modules

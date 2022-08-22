@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -23,6 +24,7 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
+import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import {
   printInvoice,
   printPayment,
@@ -143,6 +145,30 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: 'All Time', value: 'All Time' },
 ];
 
+export const akamaiRowEmptyState = (
+  <TableRow>
+    <TableCell colSpan={4}>
+      <Box
+        style={{ width: '100%', padding: 80 }}
+        alignItems="center"
+        justifyContent="center"
+      >
+        <Typography style={{ textAlign: 'center' }}>
+          <strong>{akamaiBillingInvoiceText}</strong>
+        </Typography>
+      </Box>
+    </TableCell>
+  </TableRow>
+);
+
+export const akamaiInvoiceRow = (
+  <TableRow>
+    <TableCell colSpan={6} style={{ textAlign: 'center' }}>
+      <strong>Future {akamaiBillingInvoiceText}</strong>
+    </TableCell>
+  </TableRow>
+);
+
 const defaultDateRange: DateRange = '6 Months';
 
 // =============================================================================
@@ -156,6 +182,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   const { accountActiveSince } = props;
 
   const { data: account } = useAccount();
+  const isAkamaiCustomer = account?.billing_source === 'akamai';
 
   const classes = useStyles();
   const flags = useFlags();
@@ -407,6 +434,12 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                               ]
                             : undefined
                         }
+                        rowEmptyState={
+                          isAkamaiCustomer ? akamaiRowEmptyState : undefined
+                        }
+                        customFirstRow={
+                          isAkamaiCustomer ? akamaiInvoiceRow : undefined
+                        }
                       >
                         {paginatedAndOrderedData.map((thisItem) => {
                           return (
@@ -451,6 +484,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             accountInvoicesLoading,
             accountPaymentsError,
             accountInvoicesError,
+            isAkamaiCustomer,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,
