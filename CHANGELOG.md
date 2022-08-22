@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-08-22] - v1.74.0
+
+### Added:
+- Support for “Any/All” option for StackScript target images
+
+### Changed:
+- Update billing UI for Akamai customers
+- Build `api-v4` and `validation` with `tsup`
+
+### Fixed:
+- Slight adjustment to browser back button behavior on User Permissions tab
+- Make "Copy IP" buttons visible on keyboard focus as well as table row hover
+
 ## [2022-08-08] - v1.73.0
 
 ### Added:
