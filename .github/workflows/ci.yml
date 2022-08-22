@@ -128,6 +128,9 @@ jobs:
         with:
           name: unit-test-coverage-report
           path: packages/manager/coverage_report.json
+      - uses: romeovs/lcov-reporter-action@v0.3.1
+        with:
+          lcov-file: packages/manager/coverage/lcov.info
 
   build-manager:
     runs-on: ubuntu-latest
