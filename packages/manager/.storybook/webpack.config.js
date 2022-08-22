@@ -17,7 +17,6 @@ module.exports = {
     extensions: ['.ts', '.tsx', '.js', '.json', '.jsx'],
     alias: {
       'src/': paths.appSrc,
-      joi: 'joi-browser',
     },
     plugins: [new TsconfigPathsPlugin({ configFile: paths.appTsConfig })],
   },
