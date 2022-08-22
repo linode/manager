@@ -6,6 +6,9 @@ const componentsPath = '../src/components/**/*.stories.@(js|ts|jsx|tsx|mdx)';
 const featuresPath = '../src/features/**/*.stories.@(js|ts|jsx|tsx|mdx)';
 
 module.exports = {
+  core: {
+    builder: 'webpack5',
+  },
   stories: [componentsPath, featuresPath],
   addons: [
     '@storybook/addon-docs',
