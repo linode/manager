@@ -131,6 +131,7 @@ jobs:
       - uses: romeovs/lcov-reporter-action@v0.3.1
         with:
           lcov-file: packages/manager/coverage/lcov.info
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
 
   build-manager:
     runs-on: ubuntu-latest
