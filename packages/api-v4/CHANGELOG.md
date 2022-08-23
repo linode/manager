@@ -1,3 +1,11 @@
+## [2022-08-22] - v0.76.0
+
+### Added:
+- `billing_source` property to `Account` type
+
+### Changed:
+- `@linode/api-v4` is now built using `tsup` outputting esm, commonjs, and iife. Items can still be imported from the package root (`@linode/api-v4`) or from a subdirectory (`@linode/api-v4/lib/**`) on supported configurations.
+
 ## [2022-07-12] - v0.75.0
 
 ### Added:
