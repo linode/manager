@@ -195,7 +195,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    const _tabs = ['Distributions', 'Images'];
+    const _tabs = ['Distributions', 'Snapshots'];
 
     /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -260,9 +260,9 @@ export class LinodeCreate extends React.PureComponent<
     //   routeName: `${this.props.match.url}?type=One-Click`,
     // },
     {
-      title: 'Images',
+      title: 'Snapshots',
       type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Images`,
+      routeName: `${this.props.match.url}?type=Snapshots`,
     },
     // {
     //   title: 'Backups',
@@ -519,7 +519,7 @@ export class LinodeCreate extends React.PureComponent<
               <SafeTabPanel index={1}>
                 <FromImageContent
                   variant={'private'}
-                  imagePanelTitle="Choose an Image"
+                  imagePanelTitle="Choose a Snapshot"
                   imagesData={imagesData}
                   regionsData={regionsData!}
                   typesData={typesData!}
