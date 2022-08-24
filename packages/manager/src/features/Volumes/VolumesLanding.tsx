@@ -110,7 +110,13 @@ export const volumeHeaders = [
     label: 'Label',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 40,
+    widthPercent: 30,
+  },
+  {
+    label: 'Status',
+    dataColumn: 'status',
+    sortable: true,
+    widthPercent: 10,
   },
   {
     label: 'Region',

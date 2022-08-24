@@ -1,4 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
+import { Status } from 'src/components/StatusIcon/StatusIcon';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,11 +9,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
+import { capitalize } from 'src/utilities/capitalize';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
@@ -38,6 +41,15 @@ const progressFromEvent = (e?: Event) => {
   return undefined;
 };
 
+export const volumeStatusMap: Record<ExtendedVolume['status'], Status> = {
+  active: 'active',
+  resizing: 'other',
+  creating: 'other',
+  contact_support: 'error',
+  deleting: 'other',
+  deleted: 'inactive',
+};
+
 export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
@@ -52,6 +64,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     handleUpgrade,
     id,
     label,
+    status,
     tags,
     size,
     recentEvent,
@@ -149,6 +162,10 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
             </Grid>
           )}
         </Grid>
+      </TableCell>
+      <TableCell statusCell>
+        <StatusIcon status={volumeStatusMap[status]} />
+        {capitalize(status)}
       </TableCell>
       {region ? (
         <TableCell data-qa-volume-region noWrap>
