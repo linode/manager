@@ -124,14 +124,16 @@ jobs:
           path: packages/api-v4
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test --coverage --outputFile=coverage_report.json --json
+      - run: cp packages/manager/coverage/lcov.info packages/manager
       - uses: actions/upload-artifact@v2
         with:
           name: unit-test-coverage-report
           path: packages/manager/coverage_report.json
       - uses: romeovs/lcov-reporter-action@v0.3.1
         with:
-          lcov-file: packages/manager/coverage/lcov.info
+          lcov-file: packages/manager/lcov.info
           github-token: "${{ secrets.GITHUB_TOKEN }}"
+      - run: rm packages/manager/lcov.info
 
   build-manager:
     runs-on: ubuntu-latest
