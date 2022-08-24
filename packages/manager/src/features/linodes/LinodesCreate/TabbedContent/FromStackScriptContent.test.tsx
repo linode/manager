@@ -14,6 +14,11 @@ const mockImages = imageFactory.buildList(10);
 
 const mockProps: CombinedProps = {
   category: 'community',
+  classes: {
+    main: '',
+    emptyImagePanel: '',
+    emptyImagePanelText: '',
+  },
   accountBackupsEnabled: false,
   updateImageID: jest.fn(),
   updateRegionID: jest.fn(),
