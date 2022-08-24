@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-08-24] - v1.74.1
+
+### Fixed:
+- Issue causing user-defined fields to clear erroneously during Linode StackScript deploy
+
 ## [2022-08-22] - v1.74.0
 
 ### Added:
