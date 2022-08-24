@@ -66,6 +66,8 @@ import {
   VLANFactory,
   volumeFactory,
   managedIssueFactory,
+  linodeTypeFactory,
+  proDedicatedTypeFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantsFactory } from 'src/factories/grants';
@@ -329,6 +331,22 @@ export const handlers = [
       ...creatingImages,
     ];
     return res(ctx.json(makeResourcePage(images)));
+  }),
+  rest.get('*/linode/types', (req, res, ctx) => {
+    const standardTypes = linodeTypeFactory.buildList(7);
+    const dedicatedTypes = linodeTypeFactory.buildList(7, {
+      class: 'dedicated',
+    });
+    const proDedicatedType = proDedicatedTypeFactory.build();
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...standardTypes,
+          ...dedicatedTypes,
+          proDedicatedType,
+        ])
+      )
+    );
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(60, {

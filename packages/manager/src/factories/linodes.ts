@@ -6,6 +6,7 @@ import {
   LinodeBackups,
   LinodeIPsResponse,
   LinodeSpecs,
+  LinodeType,
   NetStats,
   Stats,
   StatsData,
@@ -128,6 +129,37 @@ export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization
     billable: 0,
   }
 );
+
+export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
+  id: Factory.each((i) => `g6-standard-${i}`),
+  label: Factory.each((i) => `Linode ${i}GB`),
+  price: {
+    hourly: 0.015,
+    monthly: 10.0,
+  },
+  addons: {
+    backups: {
+      price: {
+        hourly: 0.004,
+        monthly: 2.5,
+      },
+    },
+  },
+  memory: 2048,
+  disk: 51200,
+  transfer: 2000,
+  vcpus: 1,
+  gpus: 0,
+  network_out: 2000,
+  class: 'standard',
+  successor: null,
+});
+
+export const proDedicatedTypeFactory = linodeTypeFactory.extend({
+  id: Factory.each((i) => `g6-prodedicated-${i}`),
+  label: Factory.each((i) => `Pro Dedicated 2${i}GB`),
+  class: 'prodedicated',
+});
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   id: Factory.each((i) => i),
