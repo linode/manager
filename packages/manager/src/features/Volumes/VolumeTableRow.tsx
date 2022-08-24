@@ -15,7 +15,7 @@ import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import { capitalize } from 'src/utilities/capitalize';
+import SupportLink from 'src/components/SupportLink';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
@@ -41,13 +41,25 @@ const progressFromEvent = (e?: Event) => {
   return undefined;
 };
 
-export const volumeStatusMap: Record<ExtendedVolume['status'], Status> = {
+export const volumeStatusIconMap: Record<ExtendedVolume['status'], Status> = {
   active: 'active',
   resizing: 'other',
   creating: 'other',
   contact_support: 'error',
   deleting: 'other',
   deleted: 'inactive',
+};
+
+export const volumeStatusMap: Record<
+  ExtendedVolume['status'],
+  string | JSX.Element
+> = {
+  active: 'Active',
+  resizing: 'Resizing',
+  creating: 'Creating',
+  contact_support: <SupportLink text="Contact Support" />,
+  deleting: 'Deleting',
+  deleted: 'Deleted',
 };
 
 export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
@@ -163,10 +175,12 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </Grid>
       </TableCell>
-      <TableCell statusCell>
-        <StatusIcon status={volumeStatusMap[status]} />
-        {capitalize(status)}
-      </TableCell>
+      {isVolumesLanding ? (
+        <TableCell statusCell>
+          <StatusIcon status={volumeStatusIconMap[status]} />
+          {volumeStatusMap[status]}
+        </TableCell>
+      ) : null}
       {region ? (
         <TableCell data-qa-volume-region noWrap>
           {formattedRegion}
