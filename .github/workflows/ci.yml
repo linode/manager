@@ -102,6 +102,8 @@ jobs:
 
   test-manager:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     needs:
       - build-sdk
     steps:
