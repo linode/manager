@@ -50,18 +50,6 @@ export const volumeStatusIconMap: Record<ExtendedVolume['status'], Status> = {
   deleted: 'inactive',
 };
 
-export const volumeStatusMap: Record<
-  ExtendedVolume['status'],
-  string | JSX.Element
-> = {
-  active: 'Active',
-  resizing: 'Resizing',
-  creating: 'Creating',
-  contact_support: <SupportLink text="Contact Support" />,
-  deleting: 'Deleting',
-  deleted: 'Deleted',
-};
-
 export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
@@ -96,6 +84,20 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
+
+  const volumeStatusMap: Record<
+    ExtendedVolume['status'],
+    string | JSX.Element
+  > = {
+    active: 'Active',
+    resizing: 'Resizing',
+    creating: 'Creating',
+    contact_support: (
+      <SupportLink text="Contact Support" entity={{ type: 'volume_id', id }} />
+    ),
+    deleting: 'Deleting',
+    deleted: 'Deleted',
+  };
 
   const isNVMe = hardwareType === 'nvme';
 
