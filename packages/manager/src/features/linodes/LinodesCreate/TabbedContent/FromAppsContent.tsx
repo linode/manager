@@ -35,6 +35,7 @@ import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import { oneClickApps, AppCategory } from 'src/features/OneClickApps/FakeSpec';
+import { sendMarketplaceSearchEvent } from 'src/utilities/ga';
 
 type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
 
@@ -172,6 +173,10 @@ const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
 
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
+const handleSearchFieldClick = () => {
+  sendMarketplaceSearchEvent('Search Field');
+};
+
 class FromAppsContent extends React.Component<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
@@ -221,6 +226,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
   };
 
   handleSelectCategory = (categoryItem: Item<AppCategory>) => {
+    sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
     const didUserSelectCategory = categoryItem !== null;
     let instancesInCategory: StackScript[] | undefined = [];
     if (didUserSelectCategory) {
@@ -297,6 +303,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
                   fullWidth
                   onSearch={this.onSearch}
                   label="Search marketplace"
+                  onClick={handleSearchFieldClick}
                   hideLabel
                   value={query}
                 />
