@@ -8,6 +8,7 @@ export interface OCA {
   tips?: string[];
   website?: string;
   colors: Colors;
+  categories: AppCategory[];
 }
 
 export interface Doc {
@@ -20,9 +21,23 @@ export interface Colors {
   end: string;
 }
 
+export type AppCategory =
+  | 'Control Panels'
+  | 'Databases'
+  | 'Development'
+  | 'Games'
+  | 'Media and Entertainment'
+  | 'Monitoring'
+  | 'Productivity'
+  | 'Security'
+  | 'Stacks'
+  | 'Website'
+  | 'App Creators';
+
 export const oneClickApps: OCA[] = [
   {
     name: 'aaPanel',
+    categories: ['Control Panels'],
     description: `Feature-rich alternative control panel for users who need critical control panel functionality but don’t need to pay for more niche premium features. aaPanel is open source and consistently maintained with weekly updates.`,
     summary:
       'Popular open source free control panel with robust features and a mobile app.',
@@ -41,6 +56,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Akaunting',
+    categories: ['Productivity'],
     description: `Akaunting is a universal accounting software that helps small businesses run more efficiently. Track expenses, generate reports, manage your books, and get the other essential features to run your business from a single dashboard.`,
     summary:
       'Free and open source accounting software you can use in your browser.',
@@ -59,6 +75,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Ant Media Server',
+    categories: ['Media and Entertainment'],
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
     summary: 'A reliable, flexible and scalable video streaming solution.',
     related_guides: [
@@ -77,6 +94,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Ant Media Enterprise Edition',
+    categories: ['Media and Entertainment'],
     description: `Ant Media Server makes it easy to set up a video streaming platform with ultra low latency. The Enterprise edition supports WebRTC Live Streaming in addition to CMAF and HLS streaming. Set up live restreaming to social media platforms to reach more viewers.`,
     summary: 'Highly scalable and feature-rich live video streaming platform.',
     related_guides: [
@@ -96,6 +114,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Ark',
+    categories: ['Games'],
     description: `In Ark: Survival Evolved, you are placed on a series of fictional islands inhabited by dinosaurs and other prehistoric animals. Ark is an ongoing battle where animals and other players have the ability to destroy you. You must build structures, farm resources, breed dinosaurs, and even set up
       trading hubs with neighboring tribes. Hosting an Ark server gives you control of the entire game. You can define the leveling speed, the amount of players, and the types of weapons available.`,
     summary: `Multiplayer action-survival game. You have only one objective: survive.`,
@@ -116,6 +135,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Azuracast',
+    categories: ['Media and Entertainment'],
     description: `All aspects of running a radio station in one web interface so you can start your own station. Manage media, create playlists, and interact with listeners on one free platform.`,
     summary: 'Open source, self-hosted web radio tool',
     related_guides: [
@@ -133,6 +153,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'BeEF',
+    categories: ['Security'],
     description: `Test the security posture of a client or application using client-side vectors, all powered by a simple API. This project is developed solely for lawful research and penetration testing.`,
     summary:
       'Browser Exploitation Framework (BeEF) is an open source web browser penetration tool.',
@@ -151,6 +172,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'BitNinja',
+    categories: ['Security'],
     description: `Add a critical layer of security to your server with a built-in web application firewall, inbound and outbound DoS detection, and real time IP reputation protection.`,
     summary: 'Full-stack server protection suite.',
     related_guides: [
@@ -168,6 +190,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Budibase',
+    categories: ['Development'],
     description:
       'Budibase is a modern, open source low-code platform for building modern business applications in minutes. Build, design and automate business apps, such as; admin panels, forms, internal tools, client portals and more. Before Budibase, it could take developers weeks to build simple CRUD apps; with Budibase, building CRUD apps takes minutes. When self-hosting please follow best practices for securing, updating and backing up your server.',
     summary: 'Low-code platform for building modern business applications.',
@@ -187,6 +210,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Chevereto',
+    categories: ['Media and Entertainment'],
     description: `Chevereto is a full-featured image sharing solution that acts as an alternative to services like Google Photos or Flickr. Optimize image hosting by using external cloud storage (like Linode’s S3-compatible Object Storage) and connect to Chevereto using API keys.`,
     summary:
       'Self-host your own open source image library to easily upload, collaborate, and share images on your terms.',
@@ -205,6 +229,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Cloudron',
+    categories: ['Website'],
     description: `Turnkey solution for running apps like WordPress, Rocket.Chat, NextCloud, GitLab, and OpenVPN.`,
     summary:
       'End-to-end deployment and automatic updates for a range of essential applications.',
@@ -223,6 +248,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'ClusterControl',
+    categories: ['Databases'],
     description: `All-in-one interface for scripting and monitoring databases, including MySQL, MariaDB, Percona, MongoDB, PostgreSQL, Galera Cluster and more. Easily deploy database instances, manage with an included CLI, and automate performance monitoring.`,
     summary:
       'All-in-one database deployment, management, and monitoring system.',
@@ -242,6 +268,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'cPanel',
+    categories: ['Control Panels'],
     description: `The cPanel &amp; WHM&reg; Marketplace App streamlines publishing and managing a website on your Linode. cPanel 	&amp; WHM is a Linux&reg; based web hosting control panel and platform that helps you create and manage websites, servers, databases and more with a suite of hosting automation and optimization tools.`,
     summary:
       'The leading hosting automation platform that has simplified site and server management for 20 years.',
@@ -260,6 +287,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'CS:GO',
+    categories: ['Games'],
     description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists. The teams compete against each other to complete objectives or to eliminate the opposing team. A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location, so you and your friends can play with low latency. Up to 64 players can be hosted on a single server.`,
     summary: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
     related_guides: [
@@ -279,6 +307,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'CyberPanel',
+    categories: ['Control Panels'],
     description: `Reduce setup time required to host websites and applications, including popular tools like OpenLiteSpeed WordPress.`,
     summary: 'Next-generation hosting control panel by OpenLiteSpeed.',
     related_guides: [
@@ -296,6 +325,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Discourse',
+    categories: ['Media and Entertainment'],
     description: `Launch a sleek forum with robust integrations to popular tools like Slack and WordPress to start more conversations.`,
     summary:
       'Open source community and discussion forum for customers, teams, fans, and more',
@@ -314,6 +344,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Django',
+    categories: ['Development'],
     description: `Django is a web development framework for the Python programing language. It enables rapid development, while favoring pragmatic and clean design.`,
     summary: `A framework for simplifying the process of building your web applications more quickly and with less code.`,
     related_guides: [
@@ -331,6 +362,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Docker',
+    categories: ['Development'],
     description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies).`,
     summary: `Securely build, share and run modern applications anywhere.`,
     related_guides: [
@@ -348,6 +380,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Drupal',
+    categories: ['Website'],
     description: `Drupal is a content management system (CMS) designed for building custom websites for personal and business use. Built for high performance and scalability, Drupal provides the necessary tools to create rich, interactive community websites with forums, user blogs, and private messaging. Drupal also has support for personal publishing projects and can power podcasts, blogs, and knowledge-based systems, all within a single, unified platform.`,
     summary: `Powerful content management system built on PHP and supported by a database engine.`,
     related_guides: [
@@ -365,6 +398,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Easypanel',
+    categories: ['Control Panels'],
     description: `Deploy Node.js, Ruby, Python, PHP, Go, and Java applications via an intuitive control panel. Easily set up free SSL certificates, run commands with an in-browser terminal, and push your code from Github to accelerate development.`,
     summary: 'Modern server control panel based on Docker.',
     related_guides: [
@@ -383,6 +417,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'FileCloud',
+    categories: ['Productivity'],
     description: `File synchronization across multiple users’ computers and other devices to keep everyone working without interruption.`,
     summary: 'Enterprise file sharing to manage and sync from any device',
     related_guides: [
@@ -400,6 +435,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Flask',
+    categories: ['Development'],
     description: `Flask is a lightweight WSGI web application framework written in Python. It is designed to make getting started quick and easy, with the ability to scale up to complex applications.`,
     summary: `A quick light-weight web framework for Python that includes several utilities and libraries you can use to create a web application.`,
     related_guides: [
@@ -417,6 +453,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Focalboard',
+    categories: ['Productivity'],
     description: `Create boards, assign tasks, and keep projects moving with a free and robust alternative to tools like Trello and Asana.`,
     summary: 'Free open source project management tool.',
     related_guides: [
@@ -434,6 +471,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Gitea',
+    categories: ['Development'],
     description: `Self-hosted Git service built and maintained by a large developer community.`,
     summary: 'Git with a cup of tea - A painless self-hosted Git service',
     related_guides: [
@@ -451,6 +489,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'GitLab',
+    categories: ['Development'],
     description: `GitLab is a complete solution for all aspects of your software development. At its core, GitLab serves as your centralized Git repository. GitLab also features built-in tools that represent every task in your development workflow, from planning to testing to releasing.
       Self-hosting your software development with GitLab offers total control of your codebase. At the same time, its familiar interface will ease collaboration for you and your team. GitLab is the most popular self-hosted Git repository, so you'll benefit from a robust set of integrated tools and an active community.`,
     summary:
@@ -470,6 +509,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grafana',
+    categories: ['Monitoring'],
     description: `Grafana gives you the ability to create, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
     summary: `An open source analytics and monitoring solution with a focus on accessibility for metric visualization.`,
     related_guides: [
@@ -487,6 +527,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Grav',
+    categories: ['Website'],
     description: `Build websites on a CMS that prioritizes speed and simplicity over customization and integration support. Create your content in Markdown and take advantage of powerful taxonomy to customize relationships between pages and other content.`,
     summary: 'Modern and open source flat-file content management system.',
     related_guides: [
@@ -504,6 +545,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Guacamole',
+    categories: ['Development'],
     description: `Access your desktop from any device with a browser to keep your desktop hosted in the cloud.`,
     summary: 'Free open source clientless remote desktop gateway',
     related_guides: [
@@ -521,6 +563,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Harbor',
+    categories: ['Development'],
     description: `Open source registry for images and containers. Linode recommends using Harbor with Linode Kubernetes Engine (LKE).`,
     summary: 'Cloud native container registry for Kubernetes and more.',
     related_guides: [
@@ -538,6 +581,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'HashiCorp Nomad',
+    categories: ['Development'],
     description:
       'A simple and flexible scheduler and orchestrator to deploy and manage containers and non-containerized applications across on-prem and clouds at scale.',
     summary: 'Flexible scheduling and orchestration for diverse workloads.',
@@ -557,6 +601,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'HashiCorp Vault',
+    categories: ['Security'],
     description:
       'HashiCorp Vault is an open source, centralized secrets management system. It provides a secure and reliable way of storing and distributing secrets like API keys, access tokens, and passwords.',
     summary: 'An open source, centralized secrets management system.',
@@ -576,6 +621,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Jenkins',
+    categories: ['Development'],
     description: `Jenkins is an open source automation tool which can build, test, and deploy your infrastructure.`,
     summary: `A tool that gives you access to a massive library of plugins to support automation in your project's lifecycle.`,
     related_guides: [
@@ -593,6 +639,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'JetBackup',
+    categories: ['Control Panels'],
     description: `Powerful and customizable backups for several websites and data all in the same interface. JetBackup integrates with any control panel via API, and has native support for cPanel and DirectAdmin. Easily backup your data to storage you already use, including Linode’s S3-compatible Object Storage.`,
     summary:
       'Advanced customizable backups to integrate with your preferred control panel.',
@@ -611,6 +658,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Jitsi',
+    categories: ['Media and Entertainment'],
     description: `Secure, stable, and free alternative to popular video conferencing services. Use built-in features to limit meeting access with passwords or stream on YouTube so anyone can attend.`,
     summary: 'Free, open source video conferencing and communication platform',
     related_guides: [
@@ -628,6 +676,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Joomla',
+    categories: ['Website'],
     description: `Free open source CMS optimized for building custom functionality and design.`,
     summary: 'Flexible and security-focused content management system.',
     related_guides: [
@@ -646,6 +695,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Joplin',
+    categories: ['Website'],
     description: `Capture your thoughts and securely access them from any device with a highly customizable note-taking software.`,
     summary: 'Open source multimedia note-taking app.',
     related_guides: [
@@ -664,6 +714,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Kali Linux',
+    categories: ['Security'],
     description: `Kali Linux is an open source, Debian-based Linux distribution that has become an industry-standard tool for penetration testing and security audits. Kali includes hundreds of free tools for reverse engineering, penetration testing and more. Kali prioritizes simplicity, making security best practices more accessible to everyone from cybersecurity professionals to hobbyists.`,
     summary:
       'Popular Linux distribution and tool suite for penetration testing and security research',
@@ -683,6 +734,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Kepler Builder',
+    categories: ['Website'],
     description: `Use Kepler Builder to easily design and build sites in WordPress - no coding or design knowledge necessary.`,
     summary: 'Powerful drag & drop WordPress website builder',
     related_guides: [
@@ -700,6 +752,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'LAMP',
+    categories: ['Stacks'],
     description: `The LAMP stack consists of the Linux operating system, the Apache HTTP Server, the MySQL relational database management system, and the PHP programming language. This software environment is a foundation for popular PHP application
       frameworks like WordPress, Drupal, and Laravel. Upload your existing PHP application code to your new app or use a PHP framework to write a new application on the Linode.`,
     summary: `Build PHP-based applications with the LAMP software stack: Linux, Apache, MySQL, and PHP.`,
@@ -717,6 +770,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'LEMP',
+    categories: ['Stacks'],
     description: `LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because NGINX is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
     summary: `The LEMP stack replaces the Apache web server component with NGINX (“Engine-X”), providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.    `,
     related_guides: [
@@ -733,6 +787,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'LiteSpeed cPanel',
+    categories: ['Website'],
     description: `High-performance LiteSpeed web server equipped with WHM/cPanel and WHM LiteSpeed Plugin.`,
     summary: 'Next-generation web server with cPanel and WHM.',
     related_guides: [
@@ -751,6 +806,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'LiveSwitch',
+    categories: ['Media and Entertainment'],
     description: `Stream live audio or video while maximizing customer engagement with advanced built-in features. Liveswitch provides real-time monitoring, audience polling, and end-to-end (E2E) data encryption.`,
     summary: 'High quality and reliable interactive live streaming.',
     related_guides: [
@@ -769,6 +825,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'MagicSpam',
+    categories: ['Security'],
     description: `MagicSpam stops inbound spam from entering your server right at the SMTP layer to lower bandwidth and overhead, as well as secure mailboxes on your server from being compromised and used to send outbound spam. MagicSpam installs directly onto the email server without any need to change A/MX records to protect unlimited users and domains, and integrates natively with your control panel interface.`,
     summary:
       'Powerful anti-spam and email security solution for control panels (including cPanel and Plesk).',
@@ -787,6 +844,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'MEAN',
+    categories: ['Development'],
     description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,
     summary: `A MEAN (MongoDB, Express, Angular, Node.js) stack is a free and open-source web software bundle used to build modern web applications:`,
     related_guides: [
@@ -804,6 +862,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'MERN',
+    categories: [],
     description: `MERN is a full stack platform that contains everything you need to build a web application: MongoDB, a document database used to persist your application's data; Express, which serves as the web application framework; React, used to build your application's user interfaces;
       and Node.js, which serves as the run-time environment for your application. All of these technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications. Upload your
       existing MERN website code to your new Linode, or use MERN's scaffolding tool to start writing new web applications on the Linode.`,
@@ -822,6 +881,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Minecraft: Java Edition',
+    categories: ['Games'],
     description: `With over 100 million users around the world, Minecraft is the most popular online game of all time. Less of a game and more of a lifestyle choice, you and other players are free to build and explore in a 3D generated world made up of millions of mineable blocks. Collect resources by leveling mountains,
       taming forests, and venturing out to sea. Choose a home from the varied list of biomes like ice worlds, flower plains, and jungles. Build ancient castles or modern mega cities, and fill them with redstone circuit contraptions and villagers. Fight off nightly invasions of Skeletons, Zombies, and explosive
       Creepers, or adventure to the End and the Nether to summon the fabled End Dragon and the chaotic Wither. If that is not enough, Minecraft is also highly moddable and customizable. You decide the rules when hosting your own Minecraft server for you and your friends to play together in this highly addictive game.`,
@@ -841,6 +901,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Mist.io',
+    categories: ['Control Panels'],
     description: `Streamline infrastructure management in one UI or by using the Mist.io RESTful API.`,
     summary:
       'Open source, unified interface and management platform for multi-cloud deployments',
@@ -859,6 +920,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'MongoDB',
+    categories: ['Databases'],
     description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
     summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
     related_guides: [
@@ -876,6 +938,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Moodle',
+    categories: ['Website'],
     description: `Robust open-source learning platform enabling online education for more than 200 million users around the world. Create personalized learning environments within a secure and integrated system built for all education levels with an intuitive interface, drag-and-drop features, and accessible documentation.`,
     summary:
       'World’s most popular learning management system built and maintained by an active developer community.',
@@ -894,6 +957,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'MySQL/MariaDB',
+    categories: ['Databases'],
     description: `MySQL, or MariaDB for Linux distributions, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
     summary: `World's most popular open source database.`,
     related_guides: [
@@ -911,6 +975,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Nextcloud',
+    categories: ['Productivity'],
     description: `Nextcloud AIO stands for Nextcloud All In One, and provides easy deployment and maintenance for popular Nextcloud tools. AIO includes Nextcloud, Nextcloud Office, OnlyOffice, and high-performance backend features.`,
     summary: `A safe home for all your data.`,
     related_guides: [
@@ -927,6 +992,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'NirvaShare',
+    categories: ['Productivity'],
     description: `Securely share and collaborate Linode S3 object storage files/folders with your internal or external users such as customers, partners, vendors, etc with fine access control and a simple interface. Nirvashare easily integrates with many external identity providers such as Active Directory, GSuite, AWS SSO, KeyClock, etc.`,
     summary:
       'Secure file sharing for better collaboration with employees, partners, vendors, and more.',
@@ -945,6 +1011,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'NodeJS',
+    categories: ['Development'],
     description: `NodeJS is a free, open-source, and cross-platform JavaScript run-time environment that lets developers write command line tools and server-side scripts outside of a browser.`,
     summary:
       'Popular and versatile open source JavaScript run-time environment.',
@@ -963,6 +1030,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Odoo',
+    categories: ['Productivity'],
     description: `Odoo is a free and comprehensive business app suite of tools that seamlessly integrate. Choose what you need to manage your business on a single platform, including a CRM, email marketing tools, essential project management functions, and more.`,
     summary:
       'Open source, all-in-one business app suite with more than 7 million users.',
@@ -981,6 +1049,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenLiteSpeed Django',
+    categories: ['Development'],
     description: `Simple deployment for OLS web server, Python LSAPI, and CertBot.`,
     summary: 'OLS web server with Django development framework.',
     related_guides: [
@@ -999,6 +1068,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenLiteSpeed NodeJS',
+    categories: ['Development'],
     description: `High-performance open source web server with Node and CertBot, in addition to features like HTTP/3 support and easy SSL setup.`,
     summary: 'OLS web server with NodeJS JavaScript runtime environment.',
     related_guides: [
@@ -1017,6 +1087,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenLiteSpeed Rails',
+    categories: ['Development'],
     description: `Easy setup to run Ruby apps in the cloud and take advantage of OpenLiteSpeed server features like SSL, HTTP/3 support, and RewriteRules.`,
     summary: 'OLS web server with Ruby and CertBot.',
     related_guides: [
@@ -1035,6 +1106,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenLiteSpeed WordPress',
+    categories: ['Website'],
     description: `Accelerated and scalable hosting for WordPress. Includes OpenLiteSpeed, PHP, MySQL Server, WordPress, and LiteSpeed Cache.`,
     summary: 'Blazing fast, open source alternative to LiteSpeed Web Server',
     related_guides: [
@@ -1054,6 +1126,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenVPN',
+    categories: ['Security'],
     description: `OpenVPN is a widely trusted, free, and open-source virtual private network application. OpenVPN creates network tunnels between groups of computers that are not on the same local network, and it uses OpenSSL to encrypt your traffic.`,
     summary: `Open-source virtual private network (VPN) application. OpenVPN securely connects your computer to your servers, or to the public Internet.`,
     related_guides: [
@@ -1071,6 +1144,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Owncast',
+    categories: ['Media and Entertainment'],
     description: `A live streaming and chat server for use with existing popular broadcasting software.`,
     summary:
       'The standalone “Twitch in a Box” open source streaming and chat solution.',
@@ -1089,6 +1163,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Peppermint',
+    categories: ['Productivity'],
     description: `Open source alternative to paid ticket management solutions with essential features including a streamlined task list, project and client management, and ticket prioritization.`,
     summary: 'Simple yet scalable open source ticket management.',
     related_guides: [
@@ -1106,6 +1181,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Percona (PMM)',
+    categories: ['Monitoring'],
     description: `Percona Monitoring and Management (PMM) is an open source GUI for managing and monitoring the performance of your MySQL, MariaDB, PostgreSQL, and MongoDB databases. This tool helps you optimize your database’s performance, manage your database instances, and keep track of and identify security issues.`,
     summary:
       'An open source analytics and performance monitoring solution for databases with a focus on user-friendly metrics visualizations.',
@@ -1126,6 +1202,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'phpMyAdmin',
+    categories: ['Databases'],
     description: `Intuitive web interface for MySQL and MariaDB operations, including importing/exporting data, administering multiple servers, and global database search.`,
     summary: 'Popular free administration tool for MySQL and MariaDB',
     related_guides: [
@@ -1143,6 +1220,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Pi-hole',
+    categories: ['Security'],
     description: `Protect your network and devices from unwanted content. Avoid ads in non-browser locations with a free, lightweight, and comprehensive privacy solution you can self-host.`,
     summary: 'Free, open source, and highly scalable DNS sinkhole.',
     related_guides: [
@@ -1160,6 +1238,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Plesk',
+    categories: ['Control Panels'],
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary:
       'A secure, scalable, and versatile website and WordPress management platform.',
@@ -1178,6 +1257,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Plex',
+    categories: [],
     description: `Organize, stream, and share your media library with friends, in addition to free live TV in 220+ countries.`,
     summary:
       'Media server and streaming service to stay entertained across devices',
@@ -1196,6 +1276,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'PostgreSQL',
+    categories: ['Databases'],
     description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
     summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
     related_guides: [
@@ -1213,6 +1294,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Pritunl',
+    categories: ['Security'],
     description: `User-friendly VPN for both individual and commercial use. Choose from three pricing plans.`,
     summary: 'Enterprise open source VPN.',
     related_guides: [
@@ -1230,6 +1312,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Prometheus',
+    categories: ['Monitoring'],
     description: `Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed.`,
     summary:
       'Gain metrics and receive alerts with this open-source monitoring tool.',
@@ -1248,6 +1331,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Prometheus & Grafana',
+    categories: ['Monitoring'],
     description: `Free industry-standard monitoring tools that work better together. Prometheus is a powerful monitoring software tool that collects metrics from configurable data points at given intervals, evaluates rule expressions, and can trigger alerts if some condition is observed. Use Grafana to create visuals, monitor, store, and share metrics with your team to keep tabs on your infrastructure.`,
     summary: 'Open source metrics and monitoring for real-time insights.',
     related_guides: [
@@ -1266,6 +1350,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'RabbitMQ',
+    categories: ['Development'],
     description: `Connect and scale applications with asynchronous messaging and highly available work queues, all controlled through an intuitive management UI.`,
     summary: 'Most popular open source message broker',
     related_guides: [
@@ -1283,6 +1368,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Redis',
+    categories: ['Databases'],
     description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
     summary:
       'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
@@ -1301,6 +1387,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Restyaboard',
+    categories: ['Productivity'],
     description: `Restyaboard is an open-source alternative to Trello, but with additional smart features like offline sync, diff /revisions, nested comments, multiple view layouts, chat, and more.`,
     summary: 'Free and open source project management tool.',
     related_guides: [
@@ -1318,6 +1405,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Rocket.Chat',
+    categories: ['Productivity'],
     description: `Put data privacy first with an alternative to programs like Slack and Microsoft Teams.`,
     summary: 'Feature-rich self-hosted chat and collaboration platform.',
     related_guides: [
@@ -1335,6 +1423,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Ruby on Rails',
+    categories: ['Development'],
     description: `Rails is a web application development framework written in the Ruby programming language. It is designed to make programming web applications easier by giving every developer a number of common tools they need to get started. Ruby on Rails empowers you to accomplish more with less code.`,
     summary: `Ruby on Rails is a web framework that allows web designers and developers to implement dynamic, fully featured web applications. `,
     related_guides: [
@@ -1353,6 +1442,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Rust',
+    categories: ['Games'],
     description: `In Rust, you must work with or against other players to ensure your own survival. Players are able to steal, lie, cheat, or trick each other. Build a shelter, hunt animals for food, craft weapons and armor, and much more. Hosting your own Rust server allows you to customize settings and curate the number of players in the world.`,
     summary: `A free-for-all battle for survival in a harsh open-world environment. In Rust, you can do anything--but so can everyone else.`,
     related_guides: [
@@ -1370,6 +1460,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Saltcorn',
+    categories: ['Development'],
     description: `Build applications without writing a single line of code. Saltcorn is a free platform that allows you to build an app with an intuitive point-and-click, drag-and-drop UI.`,
     summary: 'Open source, no-code database application builder.',
     related_guides: [
@@ -1387,6 +1478,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Secure Your Server',
+    categories: ['Security'],
     description: `Save time on securing your Linode by deploying an instance pre-configured with some basic security best practices: limited user account access, hardened SSH, and Fail2Ban for SSH Login Protection.`,
     summary: `Harden your Linode before you deploy with the Secure Your Server One-Click App.`,
     related_guides: [
@@ -1403,6 +1495,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'ServerWand',
+    categories: ['Control Panels'],
     description: `Host multiple sites on a single server while managing apps, firewall, databases, backups, system users, cron jobs, SSL and email–  all in an intuitive interface.`,
     summary:
       'Magical control panel for hosting websites and managing your servers.',
@@ -1421,6 +1514,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Shadowsocks',
+    categories: ['Security'],
     description:
       'Shadowsocks is a lightweight SOCKS5 web proxy tool. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
     summary:
@@ -1440,6 +1534,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Splunk',
+    categories: ['Development'],
     description: `Popular data-to-everything platform with advanced security, observability, and automation features for machine learning and AI.`,
     summary:
       'All-in-one database deployment, management, and monitoring system.',
@@ -1458,6 +1553,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Terraria',
+    categories: ['Games'],
     description: `Terraria generates unique environments where a player begins by digging for ore, and the further they dig the more adventure they find. Multiplayer mode can be either cooperative or PvP. Hosting your own Terraria server gives you control over the world, the players, and the objectives. Your world, your rules.`,
     summary: `Adventure, collect resources, build structures, and battle enemies in this wildly creative two-dimensional sandbox game.`,
     related_guides: [
@@ -1475,6 +1571,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'TF2',
+    categories: ['Games'],
     description: `Team Fortress 2 is a team-based multiplayer first-person shooter. In TF2, you and your team choose from a number of hero classes and different game modes, ensuring a unique in-game experience every match.
       Setting up a personal game server puts you in control of what game modes and maps you use, as well as a variety of other settings to customize your experience.`,
     summary: `Choose from 9 unique classes in this highly original FPS. Compete against players around the world in a variety of modes such as capture the flag, king of the hill, and more.`,
@@ -1495,6 +1592,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Uptime Kuma',
+    categories: ['Monitoring'],
     description: `Uptime Kuma is self-hosted alternative to Uptime Robot. Get real-time performance insights for HTTP(s), TCP/ HTTP(s) Keyword, Ping, DNS Record, and more. Monitor everything you need in one UI dashboard, or customize how you receive alerts with a wide range of supported integrations.`,
     summary: 'Free, comprehensive, and “fancy” monitoring solution.',
     related_guides: [
@@ -1512,6 +1610,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'UTunnel VPN',
+    categories: ['Security'],
     description: `UTunnel VPN is a robust cloud-based VPN server software solution. With UTunnel VPN, businesses could easily set up secure remote access to their business network. UTunnel comes with a host of business-centric features including site-to-site connectivity, single sign-on integration, 2-factor authentication, etc.`,
     summary:
       'A powerful, user-friendly Virtual Private Network (VPN) server application that supports multiple VPN protocols.',
@@ -1530,6 +1629,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Valheim',
+    categories: ['Games'],
     description: `In the relatively peaceful place called Valheim, traveling farther comes with a price: more enemies and greater challenges to stay alive. Experience a punishing combat system, intense boss battles, and a complex building system to construct Viking warships and more.`,
     summary:
       'Explore, build, and conquer in the popular open-world Viking survival game.',
@@ -1548,6 +1648,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'VictoriaMetrics Single',
+    categories: ['Databases'],
     description: `VictoriaMetrics is designed to collect, store, and process real-time metrics.`,
     summary:
       'Free and open source time series database (TSDB) and monitoring solution.',
@@ -1568,6 +1669,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Virtualmin',
+    categories: ['Control Panels'],
     description: `Streamline domain management, included as part of Webmin. Choose between the standard free version or upgrade to their premium service to access more features.`,
     summary: 'Domain hosting and website control panel',
     related_guides: [
@@ -1585,6 +1687,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'VS Code Server',
+    categories: ['Development'],
     description: `Launch a portable development environment to speed up tests, downloads, and more.`,
     summary: 'Run VS code in the cloud, right from your browser',
     related_guides: [
@@ -1602,6 +1705,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'WarpSpeed',
+    categories: ['Security'],
     description: `Feature-rich, self-hosted VPN based on WireGuard® protocol, plus convenient features like single sign-on, real-time bandwidth monitoring, and unlimited users/devices.`,
     summary: 'Secure low-latency VPN powered by WireGuard® protocol.',
     related_guides: [
@@ -1619,6 +1723,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Wazuh',
+    categories: ['Security'],
     description: `Infrastructure monitoring solution to detect threats, intrusion attempts, unauthorized user actions, and provide security analytics.`,
     summary: 'Free open source security monitoring solution.',
     related_guides: [
@@ -1637,6 +1742,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Webmin',
+    categories: ['Control Panels'],
     description: `Web interface for Unix to optimize system management, both from the console and remotely.`,
     summary: 'Unix management in your browser',
     related_guides: [
@@ -1654,6 +1760,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Webuzo',
+    categories: ['Control Panels'],
     description: `Lightweight control panel with a suite of features to streamline app management.`,
     summary:
       'LAMP stack and single user control panel to simplify app deployment in the cloud.',
@@ -1672,6 +1779,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'WireGuard&reg;',
+    categories: ['Security'],
     description: `Configuring WireGuard&reg; is as simple as configuring SSH. A connection is established by an exchange of public keys between server and client, and only a client whose public key is present in the server's configuration file is considered authorized. WireGuard sets up
       standard network interfaces which behave similarly to other common network interfaces, like eth0. This makes it possible to configure and manage WireGuard interfaces using standard networking tools such as ifconfig and ip. "WireGuard" is a registered trademark of Jason A. Donenfeld.`,
     summary: `Modern VPN which utilizes state-of-the-art cryptography. It aims to be faster and leaner than other VPN protocols and has a smaller source code footprint.`,
@@ -1690,6 +1798,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'WooCommerce',
+    categories: ['Website'],
     description: `With WooCommerce, you can securely sell both digital and physical goods, and take payments via major credit cards, bank transfers, PayPal, and other providers like Stripe. With more than 300 extensions to choose from, WooCommerce is extremely flexible.`,
     summary: `Highly customizable, secure, open source eCommerce platform built to integrate with Wordpress.`,
     related_guides: [
@@ -1707,6 +1816,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'WordPress',
+    categories: ['Website'],
     description: `With 60 million users around the globe, WordPress is the industry standard for custom websites such as blogs, news sites, personal websites, and anything in-between. With a focus on best in class usability and flexibility, you can have a customized website up and running in minutes.`,
     summary:
       'Flexible, open source content management system (CMS) for content-focused websites of any kind.',
@@ -1725,6 +1835,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Yacht',
+    categories: ['Development'],
     description: `Simplify Docker deployments and make containerization easy for anyone to use. Please note: Yacht is still in alpha and is not recommended for production use.`,
     summary: 'Intuitive web interface for managing Docker containers.',
     related_guides: [
@@ -1742,6 +1853,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Zabbix',
+    categories: ['Monitoring'],
     description: `Monitor, track performance and maintain availability for network servers, devices, services and other IT resources– all in one tool.`,
     summary: 'Enterprise-class open source distributed monitoring solution.',
     related_guides: [

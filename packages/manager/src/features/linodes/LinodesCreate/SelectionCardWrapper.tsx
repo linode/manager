@@ -1,6 +1,6 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
-import Info from 'src/assets/icons/info2.svg';
+import Info from 'src/assets/icons/info.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';

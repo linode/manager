@@ -1,6 +1,6 @@
 import _, { curry } from 'lodash';
 import { Image } from '@linode/api-v4/lib/images';
-import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
+import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -29,8 +29,35 @@ import {
 } from '../types';
 import { filterUDFErrors } from './formUtilities';
 import { APP_ROOT } from 'src/constants';
+import DebouncedSearch from 'src/components/DebouncedSearchTextField';
+import Select, { Item } from 'src/components/EnhancedSelect';
+import Box from 'src/components/core/Box';
+import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
+import { oneClickApps, AppCategory } from 'src/features/OneClickApps/FakeSpec';
 
-type ClassNames = 'main' | 'sidebar';
+type ClassNames = 'main' | 'sidebar' | 'searchAndFilter' | 'search' | 'filter';
+
+const appCategories = [
+  'Control Panels',
+  'Databases',
+  'Development',
+  'Games',
+  'Media and Entertainment',
+  'Monitoring',
+  'Productivity',
+  'Security',
+  'Stacks',
+  'Website',
+  //   'App Creators',
+];
+
+const appCategoryOptions = appCategories.map((categoryName) => ({
+  label: categoryName,
+  value: categoryName,
+}));
+
+// type AppCategory = typeof appCategories;
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,6 +70,24 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         maxWidth: '100%',
       },
+    },
+    searchAndFilter: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      gap: theme.spacing(),
+      marginTop: theme.spacing(),
+      '& > h2': {
+        width: '100%',
+      },
+    },
+    search: {
+      flexGrow: 10,
+      '& .input': {
+        maxWidth: 'none',
+      },
+    },
+    filter: {
+      flexGrow: 1.5,
     },
   });
 
@@ -69,6 +114,11 @@ type CombinedProps = WithStyles<ClassNames> &
 interface State {
   detailDrawerOpen: boolean;
   selectedScriptForDrawer: string;
+  filteredApps: CombinedProps['appInstances'];
+  isSearching: boolean;
+  isFiltering: boolean;
+  query: string;
+  categoryFilter: Item<AppCategory> | null;
 }
 
 export const getCompatibleImages = (
@@ -109,24 +159,29 @@ export const handleSelectStackScript = (
   );
 };
 
+const renderLogo = (selectedStackScriptLabel?: string, logoUrl?: string) => {
+  return logoUrl === undefined ? (
+    <span className="fl-tux" />
+  ) : (
+    <img
+      src={`${APP_ROOT}/${logoUrl.toLowerCase()}`}
+      alt={`${selectedStackScriptLabel} logo`}
+    />
+  );
+};
+
 const curriedHandleSelectStackScript = curry(handleSelectStackScript);
 
-class FromAppsContent extends React.PureComponent<CombinedProps, State> {
+class FromAppsContent extends React.Component<CombinedProps, State> {
   state: State = {
     detailDrawerOpen: false,
     selectedScriptForDrawer: '',
+    filteredApps: [],
+    isSearching: false,
+    query: '',
+    categoryFilter: null,
+    isFiltering: false,
   };
-
-  //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
-  handleSelectStackScript = curriedHandleSelectStackScript(
-    curry.placeholder,
-    curry.placeholder,
-    curry.placeholder,
-    curry.placeholder,
-    curry.placeholder,
-    this.props.imagesData,
-    this.props.updateStackScript
-  );
 
   handleChangeUDF = (key: string, value: string) => {
     // either overwrite or create new selection
@@ -148,6 +203,44 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     });
   };
 
+  onSearch = (query: string) => {
+    if (query === '') {
+      this.setState({ isSearching: false });
+    } else {
+      const appsMatchingQuery = this.props.appInstances?.filter((app) =>
+        app.label.toLowerCase().includes(query.toLowerCase())
+      );
+      this.setState({
+        isFiltering: false,
+        filteredApps: appsMatchingQuery,
+        isSearching: true,
+        categoryFilter: null,
+        query: query,
+      });
+    }
+  };
+
+  handleSelectCategory = (categoryItem: Item<AppCategory>) => {
+    const didUserSelectCategory = categoryItem !== null;
+    let instancesInCategory: StackScript[] | undefined = [];
+    if (didUserSelectCategory) {
+      const appsInCategory = oneClickApps.filter((oca) =>
+        oca.categories?.includes(categoryItem.value)
+      );
+      const appLabels = appsInCategory.map((app) => app.name.trim());
+      instancesInCategory = this.props.appInstances?.filter((instance) => {
+        return appLabels.includes(instance.label.trim());
+      });
+    }
+    this.setState({
+      categoryFilter: categoryItem,
+      isSearching: false,
+      query: '',
+      filteredApps: didUserSelectCategory ? instancesInCategory : [],
+      isFiltering: didUserSelectCategory,
+    });
+  };
+
   render() {
     const {
       classes,
@@ -165,45 +258,89 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       userCannotCreateLinode,
     } = this.props;
 
+    //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+    const handleSelectStackScript = curriedHandleSelectStackScript(
+      curry.placeholder,
+      curry.placeholder,
+      curry.placeholder,
+      curry.placeholder,
+      curry.placeholder,
+      this.props.imagesData,
+      this.props.updateStackScript
+    );
+
     const logoUrl = appInstances?.find(
       (app) => app.id === selectedStackScriptID
     )?.logo_url;
 
-    const renderLogo =
-      logoUrl === undefined ? (
-        <span className="fl-tux" />
-      ) : (
-        <img
-          src={`${APP_ROOT}/${logoUrl}`}
-          alt={`${selectedStackScriptLabel} logo`}
-        />
-      );
+    const appLogo = renderLogo(selectedStackScriptLabel, logoUrl);
+
+    const {
+      filteredApps,
+      isSearching,
+      query,
+      categoryFilter,
+      isFiltering,
+    } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
+          <Paper>
+            <Typography variant="h2">Select an App</Typography>
+            <Box className={classes.searchAndFilter}>
+              <Box className={classes.search}>
+                <DebouncedSearch
+                  placeholder="Search for app name"
+                  fullWidth
+                  onSearch={this.onSearch}
+                  label="Search marketplace"
+                  hideLabel
+                  value={query}
+                />
+              </Box>
+              <Box className={classes.filter}>
+                <Select
+                  placeholder="Select category"
+                  options={appCategoryOptions}
+                  onChange={this.handleSelectCategory}
+                  value={categoryFilter}
+                  hideLabel
+                />
+              </Box>
+            </Box>
+          </Paper>
           <SelectAppPanel
-            appInstances={appInstances}
+            appInstances={
+              isSearching || isFiltering ? filteredApps : appInstances
+            }
             appInstancesError={appInstancesError}
             appInstancesLoading={appInstancesLoading}
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
-            handleClick={this.handleSelectStackScript}
+            handleClick={handleSelectStackScript}
             openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
+            isSearching={isSearching}
+            isFiltering={isFiltering}
           />
-          {!userCannotCreateLinode && userDefinedFields ? (
+          {!userCannotCreateLinode && selectedStackScriptLabel ? (
             <UserDefinedFieldsPanel
               errors={filterUDFErrors(errorResources, errors)}
-              selectedLabel={selectedStackScriptLabel || ''}
+              selectedLabel={selectedStackScriptLabel}
               selectedUsername="Linode"
               handleChange={this.handleChangeUDF}
               userDefinedFields={userDefinedFields}
-              updateFor={[userDefinedFields, udf_data, errors]}
+              updateFor={[
+                selectedStackScriptID,
+                userDefinedFields,
+                udf_data,
+                errors,
+              ]}
               udf_data={udf_data || {}}
-              appLogo={renderLogo}
+              appLogo={appLogo}
               openDrawer={this.openDrawer}
             />
           ) : null}
