@@ -139,6 +139,18 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
     },
   });
 
+  const onExpiryChange = (value: string) => {
+    const delimiter = getExpirationDelimiter(value);
+
+    if (delimiter?.[0]) {
+      const values: string[] = value.split(delimiter[0]);
+      setFieldValue('expiry_month', values[0]);
+      setFieldValue('expiry_year', parseExpiryYear(values[1]));
+    } else {
+      setFieldValue('expiry_month', value);
+    }
+  };
+
   const disableInput = isSubmitting || disabled;
 
   const disableAddButton =
@@ -170,18 +182,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
           <TextField
             inputRef={expiryRef}
             name="expiry"
-            onChange={(e) => {
-              const value = e.target.value;
-              const delimiter = getExpirationDelimiter(value);
-
-              if (delimiter?.[0]) {
-                const values: string[] = e.target.value.split(delimiter[0]);
-                setFieldValue('expiry_month', values[0]);
-                setFieldValue('expiry_year', parseExpiryYear(values[1]));
-              } else {
-                setFieldValue('expiry_month', value);
-              }
-            }}
+            onChange={(e) => onExpiryChange(e.target.value)}
             label="Expiration Date"
             placeholder="MM/YY"
             error={
