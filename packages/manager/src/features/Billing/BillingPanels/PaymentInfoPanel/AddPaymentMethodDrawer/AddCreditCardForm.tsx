@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const getExpirationDelimiter = (value: string | undefined) =>
+  value?.match(/[^$,.\d]/);
+
 interface Props {
   onClose: () => void;
   disabled: boolean;
@@ -91,9 +94,6 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
   //     label: country.countryName,
   //   };
   // });
-
-  const getExpirationDelimiter = (value: string | undefined) =>
-    value?.match(/[^$,.\d]/);
 
   const {
     values,
