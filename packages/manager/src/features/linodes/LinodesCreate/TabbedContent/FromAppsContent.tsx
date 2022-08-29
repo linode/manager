@@ -226,10 +226,10 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
   };
 
   handleSelectCategory = (categoryItem: Item<AppCategory>) => {
-    sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
     const didUserSelectCategory = categoryItem !== null;
     let instancesInCategory: StackScript[] | undefined = [];
     if (didUserSelectCategory) {
+      sendMarketplaceSearchEvent('Category Dropdown', categoryItem.label);
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
