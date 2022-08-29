@@ -13,6 +13,7 @@ export interface Props {
   typographyStyle?: React.CSSProperties;
   visible?: boolean | undefined;
   title?: string;
+  hideInstructions?: boolean;
   // This is a string index signature.
   // This means that all properties in 'Props' are assignable to any
   [propName: string]: any;
@@ -34,6 +35,7 @@ const TypeToConfirm: React.FC<Props> = (props) => {
     typographyStyle,
     title,
     visible,
+    hideInstructions,
     ...rest
   } = props;
 
@@ -56,10 +58,12 @@ const TypeToConfirm: React.FC<Props> = (props) => {
           />
         </>
       ) : null}
-      <Typography className={classes.description}>
-        To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm section
-        of <Link to="/profile/settings">My Settings</Link>.
-      </Typography>
+      {!hideInstructions ? (
+        <Typography className={classes.description}>
+          To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
+          section of <Link to="/profile/settings">My Settings</Link>.
+        </Typography>
+      ) : null}
     </>
   );
 };
