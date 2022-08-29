@@ -110,7 +110,7 @@ export const volumeHeaders = [
     label: 'Label',
     dataColumn: 'label',
     sortable: true,
-    widthPercent: 30,
+    widthPercent: 35,
   },
   {
     label: 'Status',
@@ -134,7 +134,7 @@ export const volumeHeaders = [
     label: 'Attached To',
     dataColumn: 'Attached To',
     sortable: false,
-    widthPercent: 25,
+    widthPercent: 20,
   },
 ];
 
