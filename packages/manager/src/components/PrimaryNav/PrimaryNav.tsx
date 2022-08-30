@@ -12,7 +12,7 @@ import Linode from 'src/assets/icons/entityIcons/linode.svg';
 import Managed from 'src/assets/icons/entityIcons/managed.svg';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OCA from 'src/assets/icons/entityIcons/oneclick.svg';
-// import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
+import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
@@ -45,7 +45,7 @@ type NavEntity =
   | 'Firewalls'
   | 'Account'
   | 'Dashboard'
-  // | 'StackScripts'
+  | 'StackScripts'
   | 'Databases'
   | 'Account'
   | 'Help & Support';
@@ -159,11 +159,11 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           href: '/firewalls',
           icon: <Firewall />,
         },
-        // {
-        //   display: 'StackScripts',
-        //   href: '/stackscripts',
-        //   icon: <StackScript />,
-        // },
+        {
+          display: 'StackScripts',
+          href: '/stackscripts',
+          icon: <StackScript />,
+        },
         {
           display: 'Images',
           href: '/images',

@@ -8,7 +8,7 @@ import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
-// import Paper from 'src/components/core/Paper';
+import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import {
@@ -17,7 +17,7 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-// import Typography from 'src/components/core/Typography';
+import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
@@ -30,10 +30,10 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
-// import {
-//   getCommunityStackscripts,
-//   getMineAndAccountStackScripts,
-// } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  // getCommunityStackscripts,
+  getMineAndAccountStackScripts,
+} from 'src/features/StackScripts/stackScriptUtils';
 import { ApplicationState } from 'src/store';
 import {
   CreateTypes,
@@ -49,7 +49,7 @@ import SelectPlanPanel from './SelectPlanPanel';
 // import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 // import FromLinodeContent from './TabbedContent/FromLinodeContent';
-// import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
+import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
 import {
@@ -195,7 +195,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    const _tabs = ['Distributions', 'Snapshots'];
+    const _tabs = ['Distributions', 'StackScripts', 'Snapshots'];
 
     /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -260,10 +260,16 @@ export class LinodeCreate extends React.PureComponent<
     //   routeName: `${this.props.match.url}?type=One-Click`,
     // },
     {
+      title: 'StackScripts',
+      type: 'fromStackScript',
+      routeName: `${this.props.match.url}?type=StackScripts`,
+    },
+    {
       title: 'Snapshots',
       type: 'fromImage',
       routeName: `${this.props.match.url}?type=Snapshots`,
     },
+
     // {
     //   title: 'Backups',
     //   type: 'fromBackup',
@@ -277,11 +283,11 @@ export class LinodeCreate extends React.PureComponent<
       type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
     },
-    {
-      title: 'Community StackScripts',
-      type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
-    },
+    // {
+    //   title: 'Community StackScripts',
+    //   type: 'fromStackScript',
+    //   routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
+    // },
   ];
 
   componentWillUnmount() {
@@ -340,7 +346,7 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   render() {
-    const { selectedTab } = this.state;
+    const { selectedTab, stackScriptSelectedTab } = this.state;
 
     const {
       classes,
@@ -479,8 +485,8 @@ export class LinodeCreate extends React.PureComponent<
                   userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
-              </SafeTabPanel>
-              <SafeTabPanel index={2}>
+              </SafeTabPanel> */}
+              <SafeTabPanel index={1}>
                 <Tabs defaultIndex={stackScriptSelectedTab}>
                   <Paper className={classes.stackScriptWrapper}>
                     <Typography variant="h2">Create From:</Typography>
@@ -499,7 +505,7 @@ export class LinodeCreate extends React.PureComponent<
                           {...rest}
                         />
                       </SafeTabPanel>
-                      <SafeTabPanel index={1}>
+                      {/* <SafeTabPanel index={1}>
                         <FromStackScriptContent
                           category="community"
                           accountBackupsEnabled={accountBackupsEnabled}
@@ -511,12 +517,12 @@ export class LinodeCreate extends React.PureComponent<
                           typesData={typesData!}
                           {...rest}
                         />
-                      </SafeTabPanel>
+                      </SafeTabPanel> */}
                     </TabPanels>
                   </Paper>
                 </Tabs>
-              </SafeTabPanel> */}
-              <SafeTabPanel index={1}>
+              </SafeTabPanel>
+              <SafeTabPanel index={2}>
                 <FromImageContent
                   variant={'private'}
                   imagePanelTitle="Choose a Snapshot"

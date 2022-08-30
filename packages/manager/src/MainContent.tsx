@@ -151,7 +151,7 @@ const Kubernetes = React.lazy(() => import('src/features/Kubernetes'));
 const ObjectStorage = React.lazy(() => import('src/features/ObjectStorage'));
 const Profile = React.lazy(() => import('src/features/Profile'));
 const NodeBalancers = React.lazy(() => import('src/features/NodeBalancers'));
-// const StackScripts = React.lazy(() => import('src/features/StackScripts'));
+const StackScripts = React.lazy(() => import('src/features/StackScripts'));
 const SupportTickets = React.lazy(
   () => import('src/features/Support/SupportTickets')
 );
@@ -332,10 +332,10 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route path="/managed" component={Managed} />
                             <Route path="/longview" component={Longview} />
                             <Route path="/images" component={Images} />
-                            {/* <Route
+                            <Route
                               path="/stackscripts"
                               component={StackScripts}
-                            /> */}
+                            />
                             <Route
                               path="/object-storage"
                               component={ObjectStorage}
