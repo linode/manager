@@ -41,11 +41,18 @@ const TypeToConfirm: React.FC<Props> = (props) => {
 
   const classes = useStyles();
 
-  const disableOrEnable = visible ? 'disable' : 'enable';
+  /*
+    There was an edge case bug where, when preferences?.type_to_confirm was undefined,
+    the type-to-confirm input did not appear and the language in the instruction text
+    did not match. If 'visible' is not explicitly false, we treat it as true.
+  */
+
+  const showTypeToConfirmInput = visible !== false;
+  const disableOrEnable = showTypeToConfirmInput ? 'disable' : 'enable';
 
   return (
     <>
-      {visible ? (
+      {showTypeToConfirmInput ? (
         <>
           <Typography variant="h2">{title}</Typography>
           <Typography style={typographyStyle}>{confirmationText}</Typography>
