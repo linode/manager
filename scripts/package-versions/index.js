@@ -160,7 +160,7 @@ const main = async () => {
     }
     else {
       if (!jobVersion) {
-        throw new Error(`Unable to increment package '${jobName}' version; -y flag was passed but no version was specified for this package`);
+        throw new Error(`Unable to increment package '${jobName}' version; -f flag was passed but no version was specified for this package`);
       }
       console.info(`Incrementing package '${jobName}' version to '${jobVersion}'`);
       result = jobVersion;
