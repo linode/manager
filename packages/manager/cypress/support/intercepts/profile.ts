@@ -3,11 +3,11 @@
  */
 
 import { makeErrorResponse } from 'support/util/errors';
-import {
+import type {
   Profile,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
-} from '@linode/api-v4/lib/profile/types';
+} from '@linode/api-v4/types';
 
 /**
  * Intercepts GET request to fetch profile and mocks response.
@@ -87,4 +87,8 @@ export const mockUpdateSecurityQuestions = (
     '*/profile/security-questions',
     securityQuestionsPayload
   );
+};
+
+export const interceptEnableTwoFactorAuth = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/profile/tfa-enable');
 };
