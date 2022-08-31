@@ -31,6 +31,7 @@
     "start:manager:ci": "yarn workspace linode-manager start:ci",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
     "test": "yarn workspace linode-manager test --maxWorkers=4",
+    "package-versions": "node ./scripts/package-version/index.js",
     "storybook": "yarn workspace linode-manager storybook",
     "storybook:e2e": "yarn workspace linode-manager storybook:e2e",
     "storybook:debug": "yarn storybook:e2e --color --debug",
