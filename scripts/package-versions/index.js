@@ -85,8 +85,8 @@ const readlinePromise = (prompt) => {
  *
  * In this case, the user is expected to have passed a version number for each
  * package and will not be prompted to specify versions interactively. If the
- * user fails to provide a version for one of the packages, the script exit with
- * an error.
+ * user fails to provide a version for one of the packages, the script will exit
+ * with an error.
  *
  * @var {boolean}
  */
@@ -113,7 +113,13 @@ const jobs = [
 const summary = [];
 
 /**
+ * Main script function.
  *
+ * This is responsible for interpreting the CLI input, updating package files
+ * as needed, and populating the `summary` array so that the results can be
+ * displayed to the user.
+ *
+ * @returns {Promise<void>}
  */
 const main = async () => {
   const currentPackageInfo = jobs.map((job) => {
