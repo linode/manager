@@ -1,5 +1,8 @@
 import * as Factory from 'factory.ts';
-import { StackScript } from '@linode/api-v4/lib/stackscripts/types';
+import {
+  StackScript,
+  UserDefinedField,
+} from '@linode/api-v4/lib/stackscripts/types';
 
 export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   id: Factory.each((i) => i),
@@ -20,3 +23,10 @@ export const stackScriptFactory = Factory.Sync.makeFactory<StackScript>({
   ordinal: 1, // default value
   logo_url: '', // default value
 });
+
+export const userDefinedFieldFactory = Factory.Sync.makeFactory<UserDefinedField>(
+  {
+    label: Factory.each((i) => `Field${i}`),
+    name: Factory.each((i) => `field${i}`),
+  }
+);

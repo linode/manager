@@ -3,17 +3,15 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
+import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import SelectStackScriptPanel from 'src/features/StackScripts/SelectStackScriptPanel/SelectStackScriptPanel';
 import StackScriptDialog from 'src/features/StackScripts/StackScriptDialog';
 import { StackScriptsRequest } from 'src/features/StackScripts/types';
@@ -196,22 +194,10 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               variant={showAllImages ? 'all' : 'public'}
             />
           ) : (
-            <Paper className={classes.emptyImagePanel}>
-              {/* empty state for images */}
-              {hasErrorFor('image') && (
-                <Notice error={true} text={hasErrorFor('image')} />
-              )}
-              <Typography variant="h2" data-qa-tp="Select Image">
-                Select Image
-              </Typography>
-              <Typography
-                variant="body1"
-                className={classes.emptyImagePanelText}
-                data-qa-no-compatible-images
-              >
-                No Compatible Images Available
-              </Typography>
-            </Paper>
+            <ImageEmptyState
+              className={classes.emptyImagePanel}
+              errorText={hasErrorFor('image')}
+            />
           )}
         </Grid>
 
