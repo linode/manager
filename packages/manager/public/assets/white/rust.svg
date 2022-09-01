@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 44 44" style="enable-background:new 0 0 44 44;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:#FFFFFF;}
+</style>
+<title>Rust</title>
+<g id="Page-1">
+	<g id="Rust">
+		<polygon id="Rectangle" class="st0" points="20.6,23.6 23.5,20.6 26.5,23.6 23.5,26.6 		"/>
+		<rect id="Rectangle_1_" x="13.4" y="20.3" class="st0" width="4.4" height="8.4"/>
+		<polygon id="Rectangle-Copy" class="st0" points="28.6,13.4 28.6,18 20.2,18 20.2,13.4 		"/>
+		<polygon id="Rectangle-Copy-2" class="st0" points="29.6,23.7 32.6,26.7 26.6,32.7 23.6,29.6 		"/>
+		<polygon id="Path" class="st0" points="0,17.6 0,31.1 11.7,28.6 11.7,20.3 		"/>
+		<polygon id="Path-Copy" class="st0" points="31.2,0.1 17.7,0.1 20.2,11.8 28.5,11.8 		"/>
+		<polygon id="Path-Copy-2" class="st0" points="34.3,44 43.9,34.5 33.8,27.9 27.9,33.8 		"/>
+	</g>
+</g>
+</svg>
