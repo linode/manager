@@ -12,16 +12,15 @@ export const ENABLE_DEV_TOOLS = Boolean(process.env.REACT_APP_ENABLE_DEV_TOOLS);
 /** required for the app to function */
 export const APP_ROOT =
   process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
+// export const LOGIN_ROOT =
+//   process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
 export const LOGIN_ROOT =
-  process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
+  process.env.REACT_APP_LOGIN_ROOT || 'http://localhost:3000/login';
+// export const API_ROOT =
+// process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 export const API_ROOT =
-<<<<<<< HEAD
-  process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
-export const BETA_API_ROOT = API_ROOT + 'beta';
-=======
   process.env.REACT_APP_API_ROOT || 'http://localhost:8080/api';
 export const BETA_API_ROOT = API_ROOT + '/beta';
->>>>>>> main
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
@@ -109,6 +108,7 @@ export const REFRESH_INTERVAL = 60 * 30 * 1000;
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */
 export const ZONES: Record<string, ZoneName> = {
+  nova: 'newark',
   'us-east': 'newark',
   'us-east-1a': 'newark',
   'us-south': 'dallas',
@@ -135,6 +135,7 @@ export const ZONES: Record<string, ZoneName> = {
 
 export const dcDisplayNames = {
   // us-east-1 is for backwards-compatibility
+  nova: 'Nova',
   'us-east-1': 'Newark, NJ',
   'us-east-1a': 'Newark, NJ',
   'us-south-1a': 'Dallas, TX',
@@ -183,6 +184,7 @@ export const extendedDCDisplayNames = {
 };
 
 export const dcDisplayCountry = {
+  nova: 'US',
   'us-east-1a': 'US',
   'us-south-1a': 'US',
   'us-west-1a': 'US',
@@ -218,6 +220,7 @@ export const objectStorageClusterDisplay: Record<
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';
 export const dcContinent: Record<string, ContinentKey> = {
+  nova: 'NA',
   'us-east-1a': 'NA',
   'us-south-1a': 'NA',
   'us-west-1a': 'NA',

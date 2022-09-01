@@ -15,9 +15,9 @@ import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import PasswordInput from 'src/components/PasswordInput';
 import Button from 'src/components/Button';
-import { API_ROOT } from 'src/constants';
-
+import { API_ROOT, APP_ROOT } from 'src/constants';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
+import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 // import { parseQueryParams } from 'src/utilities/queryParams';
 
 type CombinedProps = DispatchProps & RouteComponentProps;
@@ -106,69 +106,76 @@ export class Login extends PureComponent<
     });
   }
 
-  async handleLogin() {
+  async handleLogin(e: React.FormEvent) {
+    e.preventDefault();
     const params = new URLSearchParams(this.props.location.search);
+    const res = await axios.post(
+      `${API_ROOT}/auth-callback`,
+      JSON.stringify({
+        username: this.state.username,
+        password: this.state.password,
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    let url = new URL(`${APP_ROOT}/oauth/callback?returnTo=/`);
     const redirectUri = params.get('redirect_uri');
     if (redirectUri) {
-      const url = new URL(redirectUri);
-      const res = await axios.post(
-        `${API_ROOT}/auth-callback`,
-        JSON.stringify({
-          username: this.state.username,
-          password: this.state.password,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-      url.searchParams.append('access_token', res.data.access_token);
-      url.searchParams.append('expires_in', res.data.expires_in);
-      url.searchParams.append('state', params.get('state') ?? '');
-      url.hash = url.searchParams.toString();
-      const keys: string[] = [];
-      url.searchParams.forEach((_, key) => {
-        keys.push(key);
-      });
-      keys.forEach((key) => url.searchParams.delete(key));
-      this.props.history.replace(`${url.pathname}${url.hash}`);
+      url = new URL(redirectUri);
     }
+    url.searchParams.append('access_token', res.data.access_token);
+    url.searchParams.append('expires_in', res.data.expires_in);
+    url.searchParams.append('state', params.get('state') ?? '');
+    url.hash = url.searchParams.toString();
+    const keys: string[] = [];
+    url.searchParams.forEach((_, key) => {
+      keys.push(key);
+    });
+    keys.forEach((key) => url.searchParams.delete(key));
+    this.props.history.replace(`${url.pathname}${url.hash}`);
   }
   render() {
     return (
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100%',
-        }}
-      >
-        <div>
-          <Typography variant="h1">Log into NodeStack</Typography>
-          <TextField
-            label="Username"
-            //  errorText={errorMap.first_name}
-            onChange={this.handleUsernameChange}
-            //  value={defaultTo(account.first_name, fields.first_name)}
-            data-qa-contact-first-name
-          />
-          <PasswordInput
-            label="Password"
-            onChange={this.handlePasswordChange}
-            hideStrengthLabel
-            hideValidation
-          />
-          <Button
-            buttonType="primary"
-            style={{ backgroundColor: '#00b159', marginTop: 10 }}
-            onClick={this.handleLogin}
-          >
-            Log In
-          </Button>
+      <LinodeThemeWrapper>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+          }}
+        >
+          <div>
+            <Typography variant="h1">Log into NodeStack</Typography>
+            <form onSubmit={this.handleLogin}>
+              <TextField
+                label="Username"
+                //  errorText={errorMap.first_name}
+                onChange={this.handleUsernameChange}
+                //  value={defaultTo(account.first_name, fields.first_name)}
+                // data-qa-contact-first-name
+              />
+              <PasswordInput
+                label="Password"
+                onChange={this.handlePasswordChange}
+                hideStrengthLabel
+                hideValidation
+              />
+              <Button
+                type="submit"
+                buttonType="primary"
+                style={{ backgroundColor: '#00b159', marginTop: 10 }}
+                onClick={this.handleLogin}
+              >
+                Log In
+              </Button>
+            </form>
+          </div>
         </div>
-      </div>
+      </LinodeThemeWrapper>
     );
   }
 }

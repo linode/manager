@@ -6,8 +6,8 @@ import {
 import * as React from 'react';
 import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import TabPanels from 'src/components/core/ReachTabPanels';
-import Tabs from 'src/components/core/ReachTabs';
+// import TabPanels from 'src/components/core/ReachTabPanels';
+// import Tabs from 'src/components/core/ReachTabs';
 import {
   createStyles,
   Theme,
@@ -17,12 +17,11 @@ import {
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import NotFound from 'src/components/NotFound';
-import SafeTabPanel from 'src/components/SafeTabPanel';
-import TabLinkList from 'src/components/TabLinkList';
-import { Tab } from 'src/components/TabLinkList/TabLinkList';
-import Glish from './Glish';
-import Weblish from './Weblish';
-
+// import SafeTabPanel from 'src/components/SafeTabPanel';
+// import TabLinkList from 'src/components/TabLinkList';
+// import { Tab } from 'src/components/TabLinkList/TabLinkList';
+// import Glish from './Glish';
+// import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'progress' | 'notFound' | 'lish';
 

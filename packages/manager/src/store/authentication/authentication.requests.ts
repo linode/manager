@@ -27,13 +27,13 @@ export const handleLogout: ThunkActionCreator<
       dispatch(_handleLogout());
 
       /** send the user back to login */
-      window.location.assign(`${loginURL}/logout`);
+      window.location.assign(`${loginURL}`);
       return response;
     })
     .catch((err) => {
       dispatch(_handleLogout());
       /** send the user back to login */
-      window.location.assign(`${loginURL}/logout`);
+      window.location.assign(`${loginURL}`);
       return err;
     });
 };

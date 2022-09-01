@@ -75,27 +75,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
       <Typography variant="h2" data-qa-tp="Region">
         Region
       </Typography>
-<<<<<<< HEAD
-      {regionHelperText(() => sendLinodeCreateDocsEvent('Speedtest Link'))}
-=======
-      {/* {copy && (
-        <Typography variant="body1">
-          {copy}
-          {` `}
-          <a
-            onClick={() => sendLinodeCreateDocsEvent('Speedtest Link')}
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-            href="https://www.linode.com/speed-test/"
-          >
-            Use our speedtest page
-          </a>
-          {` `}
-          to find the best region for your current location.
-        </Typography>
-      )} */}
->>>>>>> main
+      {/* {regionHelperText(() => sendLinodeCreateDocsEvent('Speedtest Link'))} */}
       <RegionSelect
         errorText={error}
         disabled={disabled}

@@ -132,9 +132,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatchStartSession: (token, tokenType, scopes, expiry) =>
       dispatch(
         handleStartSession({
-          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-            1
-          )} ${token}`,
+          token,
+          // token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
+          //   1
+          // )} ${token}`,
           scopes,
           expires: expiry,
         })

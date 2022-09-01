@@ -373,11 +373,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     disabled: dropzoneDisabled || uploadInProgressOrFinished, // disabled when dropzoneDisabled === true, an upload is in progress, or if an upload finished.
     noClick: true,
     noKeyboard: true,
-<<<<<<< HEAD
-    accept: ['application/x-gzip', 'application/gzip'], // Uploaded files must be compressed using gzip.
-=======
-    accept: '.img', // Uploaded files must be compressed using gzip.
->>>>>>> main
+    accept: '.img', // Uploaded files must be compressed using gzip. ['application/x-gzip', 'application/gzip']
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });

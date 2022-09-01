@@ -37,7 +37,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const {
     linodeLabel,
     linodeType,
-    linodeCreated,
+    // linodeCreated,
     match: { url },
   } = props;
 

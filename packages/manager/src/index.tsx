@@ -28,6 +28,7 @@ import { queryClient } from './queries/base';
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
 const Cancel = React.lazy(() => import('src/features/CancelLanding'));
+const Login = React.lazy(() => import('src/layouts/Login'));
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
@@ -84,6 +85,7 @@ const renderCancel = () => (
 const renderAuthentication = () => (
   <React.Suspense fallback={<SplashScreen />}>
     <Switch>
+      <Route path="/login" component={Login} />
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
