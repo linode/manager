@@ -129,13 +129,13 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         aria-label="username field"
         value={inputtedUsername}
         visible
-        hideDisable
+        hideInstructions
         placeholder="Username"
       />
       <Typography className={classes.dontgo}>
-        We’d hate to see you go. Please let us know what we could be doing
+        We&rsquo;d hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is closed,
-        you’ll be directed to a quick survey so we can better gauge your
+        you&rsquo;ll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
       <TextField

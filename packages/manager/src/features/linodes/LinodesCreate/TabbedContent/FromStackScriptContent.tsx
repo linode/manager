@@ -1,6 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { assocPath } from 'ramda';
+import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -76,20 +76,25 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     stackScriptImages: string[],
     userDefinedFields: UserDefinedField[]
   ) => {
+    const allowAllImages = stackScriptImages.includes('any/all');
     const { imagesData } = this.props;
+
     /**
      * based on the list of images we get back from the API, compare those
      * to our list of public images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)) {
-        acc.push(imagesData[eachKey]);
-      }
+    const compatibleImages = allowAllImages
+      ? Object.values(imagesData)
+      : Object.keys(imagesData).reduce((acc, eachKey) => {
+          if (
+            stackScriptImages.some((eachSSImage) => eachSSImage === eachKey)
+          ) {
+            acc.push(imagesData[eachKey]);
+          }
 
-      return acc;
-    }, [] as Image[]);
-
+          return acc;
+        }, [] as Image[]);
     /**
      * if a UDF field comes back from the API with a "default"
      * value, it means we need to pre-populate the field and form state
@@ -135,6 +140,10 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedUDFs: udf_data,
       imagesData,
     } = this.props;
+
+    // If all of the StackScript's compatibleImages match the full array of images,
+    // we can assume that the StackScript specified any/all
+    const showAllImages = equals(compatibleImages, Object.values(imagesData));
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
@@ -184,7 +193,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
               handleSelectImage={updateImageID}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
-              variant="public"
+              variant={showAllImages ? 'all' : 'public'}
             />
           ) : (
             <Paper className={classes.emptyImagePanel}>

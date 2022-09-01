@@ -3,6 +3,13 @@ import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
 
+// Local storage override to force volume table to list up to 100 items.
+// This is a workaround while we wait to get stuck volumes removed.
+// @TODO Remove local storage override when stuck volumes are removed from test accounts.
+const pageSizeOverride = {
+  PAGE_SIZE: 100,
+};
+
 authenticate();
 describe('volume clone flow', () => {
   /*
@@ -18,7 +25,9 @@ describe('volume clone flow', () => {
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
       cy.intercept('POST', `*/volumes/${volume.id}/clone`).as('cloneVolume');
-      cy.visitWithLogin('/volumes');
+      cy.visitWithLogin('/volumes', {
+        localStorageOverrides: pageSizeOverride,
+      });
 
       // Confirm that volume is listed, initiate clone.
       cy.findByText(volume.label)

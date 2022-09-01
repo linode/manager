@@ -629,6 +629,18 @@ export const handlers = [
       hddVolumeAttached,
       hddVolumeAttached2,
       hddVolumeUnattached,
+      volumeFactory.build({
+        status: 'contact_support',
+      }),
+      volumeFactory.build({
+        status: 'creating',
+      }),
+      volumeFactory.build({
+        status: 'deleting',
+      }),
+      volumeFactory.build({
+        status: 'resizing',
+      }),
     ];
     return res(ctx.json(makeResourcePage(volumes)));
   }),

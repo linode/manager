@@ -316,7 +316,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         {disksError && (
           <Notice
             error
-            text="There was an error loading your Linode\u{2019}s Disks."
+            text="There was an error loading your Linode&rsquo;s Disks."
           />
         )}
         {submissionError && <Notice error>{submissionError}</Notice>}
