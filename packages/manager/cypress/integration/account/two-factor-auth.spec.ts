@@ -360,8 +360,9 @@ describe('Two-factor authentication', () => {
     getTwoFactorSection().within(() => {
       cy.findByText(securityQuestionsMessage).should('be.visible');
 
-      // Confirm that none of the usual 2FA enable/reset controls are present.
+      // Confirm that the usual 2FA enable/disable/reset controls are not present.
       cy.contains('Enabled').should('not.exist');
+      cy.contains('Disabled').should('not.exist');
       cy.contains('Reset two-factor authentication').should('not.exist');
     });
   });
