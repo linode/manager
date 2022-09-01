@@ -121,7 +121,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
     attachVolume({
       volumeId,
-      linode_id: Number(selectedLinode),
+      linode_id: selectedLinode,
       config_id: Number(selectedConfig) || undefined,
     })
       .then((_) => {

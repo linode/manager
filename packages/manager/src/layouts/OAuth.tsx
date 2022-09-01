@@ -78,7 +78,8 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     // If it exists, take everything after its index (plus 9 to remove the returnTo=)
     const returnPath = returnIdx ? location.hash.substr(returnIdx + 9) : null;
     // If this worked, we have a return URL. If not, default to the root path.
-    const returnTo = returnPath ?? '/';
+    let returnTo = returnPath ?? '/';
+    returnTo = returnTo.substring(0, returnTo.indexOf('&'));
 
     /**
      * We need to validate that the nonce returned (comes from the location.hash as the state param)
@@ -87,12 +88,10 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
      */
     this.checkNonce(nonce);
 
-    /**
-     * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
-     * the API returns the expiry time in seconds
-     */
-    const expireDate = new Date();
-    expireDate.setTime(expireDate.getTime() + +expiresIn * 1000);
+    const nowDate = new Date();
+    const expireDate = new Date(expiresIn);
+    const expiresInMs = expireDate.getTime() - nowDate.getTime();
+    expireDate.setTime(expireDate.getTime() + expiresInMs);
 
     /**
      * We have all the information we need and can persist it to localStorage and Redux.
@@ -107,7 +106,9 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
     /**
      * All done, redirect this bad-boy to the returnTo URL we generated earlier.
      */
-    history.push(returnTo);
+    window.location.replace(
+      `${window.location.origin}${decodeURIComponent(returnTo)}`
+    );
   }
 
   render() {

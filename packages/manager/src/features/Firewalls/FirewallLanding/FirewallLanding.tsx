@@ -32,12 +32,12 @@ export const headers = [
     sortable: true,
     widthPercent: 25,
   },
-  {
-    label: 'Status',
-    dataColumn: 'status',
-    sortable: true,
-    widthPercent: 15,
-  },
+  // {
+  //   label: 'Status',
+  //   dataColumn: 'status',
+  //   sortable: true,
+  //   widthPercent: 15,
+  // },
   {
     label: 'Rules',
     dataColumn: 'rules',
@@ -45,13 +45,13 @@ export const headers = [
     widthPercent: 25,
     hideOnMobile: true,
   },
-  {
-    label: 'Linodes',
-    dataColumn: 'devices',
-    sortable: false,
-    widthPercent: 25,
-    hideOnMobile: true,
-  },
+  // {
+  //   label: 'Linodes',
+  //   dataColumn: 'devices',
+  //   sortable: false,
+  //   widthPercent: 25,
+  //   hideOnMobile: true,
+  // },
   {
     label: 'Action Menu',
     visuallyHidden: true,

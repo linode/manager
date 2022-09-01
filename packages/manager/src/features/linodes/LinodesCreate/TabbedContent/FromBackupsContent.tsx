@@ -3,7 +3,7 @@ import {
   Linode,
   LinodeBackupsResponse,
 } from '@linode/api-v4/lib/linodes';
-import { compose as ramdaCompose } from 'ramda';
+// import { compose as ramdaCompose } from 'ramda';
 import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
@@ -15,17 +15,17 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
-import { reportException } from 'src/exceptionReporting';
+// import { reportException } from 'src/exceptionReporting';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectBackupPanel from '../SelectBackupPanel';
-import SelectLinodePanel from '../SelectLinodePanel';
+// import SelectLinodePanel from '../SelectLinodePanel';
 import {
   BackupFormStateHandlers,
   Info,
   ReduxStateProps,
   WithLinodesTypesRegionsAndImages,
 } from '../types';
-import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
+import { getRegionIDFromLinodeID } from '../utilities';
 
 export interface LinodeWithBackups extends Linode {
   currentBackups: LinodeBackupsResponse;
@@ -68,8 +68,8 @@ const errorResources = {
   backup_id: 'Backup ID',
 };
 
-const filterLinodesWithBackups = (linodes: Linode[]) =>
-  linodes.filter((linode) => linode.backups.enabled);
+// const filterLinodesWithBackups = (linodes: Linode[]) =>
+//   linodes.filter((linode) => linode.backups.enabled);
 
 export class FromBackupsContent extends React.Component<CombinedProps, State> {
   state: State = {
@@ -127,12 +127,12 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
      * This should never happen, but this is coming from a query string
      * so this is just a sanity check
      */
-    if (typeof selectedLinodeID !== 'number') {
-      reportException(`selectedLinodeID's type is not a number`, {
-        selectedLinodeID,
-      });
-      throw new Error('selectedLinodeID is not a number');
-    }
+    // if (typeof selectedLinodeID !== 'number') {
+    //   reportException(`selectedLinodeID's type is not a number`, {
+    //     selectedLinodeID,
+    //   });
+    //   throw new Error('selectedLinodeID is not a number');
+    // }
     const regionID = getRegionIDFromLinodeID(
       this.props.linodesData,
       selectedLinodeID
@@ -151,6 +151,16 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     if (this.props.selectedLinodeID) {
       this.updateRegion(this.props.selectedLinodeID);
       this.getBackupsForLinode(this.props.selectedLinodeID);
+    } else {
+      if (this.props.linodesData.length > 0) {
+        const linodeId = this.props.linodesData[0].id;
+        this.props.updateLinodeID(
+          linodeId,
+          this.props.linodesData[0].specs.disk
+        );
+        this.updateRegion(linodeId);
+        this.getBackupsForLinode(linodeId);
+      }
     }
   }
 
@@ -164,14 +174,14 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     const { isGettingBackups, selectedLinodeWithBackups } = this.state;
     const {
       classes,
-      disabled,
+      // disabled,
       errors,
-      imagesData,
+      // imagesData,
       linodesData,
       selectedBackupID,
       selectedLinodeID,
       setBackupID,
-      typesData,
+      // typesData,
     } = this.props;
 
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -196,7 +206,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
           </Paper>
         ) : (
           <React.Fragment>
-            <SelectLinodePanel
+            {/* <SelectLinodePanel
               error={hasErrorFor('linode_id')}
               linodes={ramdaCompose(
                 (linodes: Linode[]) =>
@@ -214,7 +224,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                           Also note that this Linode will need to be manually booted after it finishes
                           provisioning.`,
               }}
-            />
+            /> */}
             <SelectBackupPanel
               error={hasErrorFor('backup_id') || this.state.backupsError}
               selectedLinodeWithBackups={selectedLinodeWithBackups}

@@ -57,10 +57,10 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const handleShowConfig = () => {
-    const { onShowConfig, label, filesystemPath } = props;
-    onShowConfig(label, filesystemPath);
-  };
+  // const handleShowConfig = () => {
+  //   const { onShowConfig, label, filesystemPath } = props;
+  //   onShowConfig(label, filesystemPath);
+  // };
 
   const handleOpenEdit = () => {
     const { onEdit, volumeId, label, volumeTags } = props;
@@ -72,10 +72,10 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
     onResize(volumeId, size, label);
   };
 
-  const handleClone = () => {
-    const { onClone, volumeId, label, size, regionID } = props;
-    onClone(volumeId, label, size, regionID);
-  };
+  // const handleClone = () => {
+  //   const { onClone, volumeId, label, size, regionID } = props;
+  //   onClone(volumeId, label, size, regionID);
+  // };
 
   const handleAttach = () => {
     const { onAttach, volumeId, label, regionID } = props;
@@ -93,12 +93,12 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   };
 
   const actions: Action[] = [
-    {
-      title: 'Show Config',
-      onClick: () => {
-        handleShowConfig();
-      },
-    },
+    // {
+    //   title: 'Show Config',
+    //   onClick: () => {
+    //     handleShowConfig();
+    //   },
+    // },
     {
       title: 'Edit',
       onClick: () => {
@@ -111,12 +111,12 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
         handleResize();
       },
     },
-    {
-      title: 'Clone',
-      onClick: () => {
-        handleClone();
-      },
-    },
+    // {
+    //   title: 'Clone',
+    //   onClick: () => {
+    //     handleClone();
+    //   },
+    // },
   ];
 
   if (!attached && isVolumesLanding) {

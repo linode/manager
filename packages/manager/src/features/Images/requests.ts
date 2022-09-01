@@ -12,12 +12,14 @@ export const uploadImageFile = (
 ) => {
   const CancelToken = Axios.CancelToken;
   const source = CancelToken.source();
-
+  const token = window.localStorage.getItem('authentication/token');
+  // TODO: Change to proxy request
   const config: AxiosRequestConfig = {
     url: signedUrl,
     method: 'PUT',
     headers: {
       'Content-Type': headerContentType,
+      'X-Auth-Token': token,
     },
     data: file,
     onUploadProgress,

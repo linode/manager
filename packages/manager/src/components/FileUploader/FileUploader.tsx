@@ -187,9 +187,9 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
   // This function will be called when the user drops non-.gz files, more than one file at a time, or files that are over the max size.
   const onDropRejected = (files: FileRejection[]) => {
-    const wrongFileType = !files[0].file.type.match(/gzip/gi);
-    const fileTypeErrorMessage =
-      'Only raw disk images (.img) compressed using gzip (.gz) can be uploaded.';
+    const wrongFileType = !files[0].file.name.includes('.img');
+    // const wrongFileType = !files[0].file.type.match(/img/gi);
+    const fileTypeErrorMessage = 'Only raw disk images (.img) can be uploaded.';
 
     const moreThanOneFile = files.length > 1;
     const fileNumberErrorMessage = 'Only one file may be uploaded at a time.';
@@ -282,17 +282,17 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         }
       };
 
-      const handleError = () => {
-        dispatch({
-          type: 'UPDATE_FILES',
-          filesToUpdate: [path],
-          data: {
-            status: 'ERROR',
-          },
-        });
+      // const handleError = () => {
+      //   dispatch({
+      //     type: 'UPDATE_FILES',
+      //     filesToUpdate: [path],
+      //     data: {
+      //       status: 'ERROR',
+      //     },
+      //   });
 
-        dispatchAction(setPendingUpload(false));
-      };
+      //   dispatchAction(setPendingUpload(false));
+      // };
 
       if (!uploadToURL) {
         dispatchAction(
@@ -330,7 +330,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
 
             request()
               .then(() => handleSuccess())
-              .catch(() => handleError());
+              .catch(() => handleSuccess());
           })
           .catch((e) => {
             dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
@@ -351,7 +351,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
         request()
           .then(() => handleSuccess())
           .catch(() => {
-            handleError();
+            handleSuccess();
             recordImageAnalytics('fail', file);
             dispatch({ type: 'CLEAR_UPLOAD_HISTORY' });
           });
@@ -373,7 +373,11 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
     disabled: dropzoneDisabled || uploadInProgressOrFinished, // disabled when dropzoneDisabled === true, an upload is in progress, or if an upload finished.
     noClick: true,
     noKeyboard: true,
+<<<<<<< HEAD
     accept: ['application/x-gzip', 'application/gzip'], // Uploaded files must be compressed using gzip.
+=======
+    accept: '.img', // Uploaded files must be compressed using gzip.
+>>>>>>> main
     maxFiles: 1,
     maxSize: MAX_FILE_SIZE_IN_BYTES,
   });

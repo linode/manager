@@ -35,7 +35,7 @@ import {
   deleteImage as _deleteImage,
   requestImages as _requestImages,
 } from 'src/store/image/image.requests';
-import imageEvents from 'src/store/selectors/imageEvents';
+// import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
 import { Handlers as ImageHandlers } from './ImagesActionMenu';
@@ -158,7 +158,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
    * query for `is_mine` && `automatic`.
    */
 
-  const [manualImages, automaticImages] = partition(
+  const [manualImages] = partition(
     (thisImage) => thisImage.type === 'manual',
     imagesData ?? []
   );
@@ -277,6 +277,15 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     });
   };
 
+  const deployNewLinodeDist = (imageID: string) => {
+    const { history } = props;
+    history.push({
+      pathname: `/linodes/create/`,
+      search: `?type=Distributions&imageID=${imageID}`,
+      state: { selectedImageId: imageID },
+    });
+  };
+
   const deployNewLinode = (imageID: string) => {
     const { history } = props;
     history.push({
@@ -364,6 +373,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 
   const handlers: ImageHandlers = {
     onRestore: openForRestore,
+    onDeployDist: deployNewLinodeDist,
     onDeploy: deployNewLinode,
     onEdit: openForEdit,
     onDelete: openDialog,
@@ -372,7 +382,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const manualHeaders = getHeaders('manual');
-  const automaticHeaders = getHeaders('automatic');
+  // const automaticHeaders = getHeaders('automatic');
 
   const initialOrder = {
     order: 'asc' as Order,
@@ -387,13 +397,13 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     handlers,
   };
 
-  const autoImageRow: EntityTableRow<Image> = {
-    Component: ImageRow,
-    data: automaticImages,
-    loading: false,
-    lastUpdated: 100,
-    handlers,
-  };
+  // const autoImageRow: EntityTableRow<Image> = {
+  //   Component: ImageRow,
+  //   data: automaticImages,
+  //   loading: false,
+  //   lastUpdated: 100,
+  //   handlers,
+  // };
 
   const renderError = (_: APIError[]) => {
     return (
@@ -479,7 +489,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           initialOrder={initialOrder}
         />
       </Paper>
-      <Paper className={classes.imageTable}>
+      {/* <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
           <Typography variant="h3">Recovery Images</Typography>
           <Typography className={classes.imageTableSubheader}>
@@ -494,7 +504,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
           emptyMessage={'No Recovery Images to display.'}
           initialOrder={initialOrder}
         />
-      </Paper>
+      </Paper> */}
       {renderImageDrawer()}
       <ConfirmationDialog
         open={dialog.open}
@@ -534,24 +544,25 @@ const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
 const withPrivateImages = connect(
   (state: ApplicationState): WithPrivateImages => {
     const { error, itemsById, lastUpdated, loading } = state.__resources.images;
-    const events = imageEvents(state.events);
+    // const events = imageEvents(state.events);
     const privateImagesWithEvents = Object.values(itemsById).reduce(
       (accum, thisImage) =>
         produce(accum, (draft) => {
-          if (!thisImage.is_public) {
-            // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-            const matchingEvent = events.find(
-              (thisEvent) =>
-                `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
-                (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                  thisEvent.status === 'failed')
-            );
-            if (matchingEvent) {
-              draft.push({ ...thisImage, event: matchingEvent });
-            } else {
-              draft.push(thisImage);
-            }
-          }
+          draft.push(thisImage);
+          // if (!thisImage.is_public) {
+          //   // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
+          //   const matchingEvent = events.find(
+          //     (thisEvent) =>
+          //       `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
+          //       (`private/${thisEvent.entity?.id}` === thisImage.id &&
+          //         thisEvent.status === 'failed')
+          //   );
+          //   if (matchingEvent) {
+          //     draft.push({ ...thisImage, event: matchingEvent });
+          //   } else {
+          //     draft.push(thisImage);
+          //   }
+          // }
         }),
       [] as ImageWithEvent[]
     );

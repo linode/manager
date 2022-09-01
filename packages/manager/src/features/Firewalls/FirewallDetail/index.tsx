@@ -145,14 +145,14 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
         <TabPanels>
           <SafeTabPanel index={0}>
             <FirewallRulesLanding
-              firewallID={+thisFirewallId}
+              firewallID={thisFirewallId}
               rules={thisFirewall.rules}
               disabled={!userCanModifyFirewall}
             />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <FirewallLinodesLanding
-              firewallID={+thisFirewallId}
+              firewallID={thisFirewallId}
               firewallLabel={thisFirewall.label}
               disabled={!userCanModifyFirewall}
             />

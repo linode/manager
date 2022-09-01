@@ -42,7 +42,7 @@ import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
-import { lishLink, sshLink } from './LinodesDetail/utilities';
+import { sshLink } from './LinodesDetail/utilities';
 import withRecentEvent, {
   WithRecentEvent,
 } from './LinodesLanding/withRecentEvent';
@@ -510,18 +510,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
 
 export const Body: React.FC<BodyProps> = React.memo((props) => {
   const classes = useBodyStyles();
-  const {
-    numCPUs,
-    gbRAM,
-    gbStorage,
-    region,
-    ipv4,
-    ipv6,
-    username,
-    linodeLabel,
-    linodeId,
-    numVolumes,
-  } = props;
+  const { numCPUs, gbRAM, gbStorage, ipv4, ipv6, linodeId, numVolumes } = props;
 
   const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
@@ -584,16 +573,9 @@ export const Body: React.FC<BodyProps> = React.memo((props) => {
           }
           gridProps={{ md: 5 }}
         />
-
         <AccessTable
           title="Access"
-          rows={[
-            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
-            {
-              heading: 'LISH Console via SSH',
-              text: lishLink(username, region, linodeLabel),
-            },
-          ]}
+          rows={[{ heading: 'SSH Access', text: sshLink(ipv4[0]) }]}
           gridProps={{ md: 7 }}
         />
       </Grid>
@@ -907,7 +889,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         </div>
         <div className={classes.detailRow}>
           <Typography className={classes.listItem}>
-            <span className={classes.label}>Linode ID:</span> {linodeId}
+            <span className={classes.label}>Server ID:</span> {linodeId}
           </Typography>
           <Typography className={`${classes.listItem} ${classes.listItemLast}`}>
             <span className={classes.label}>Created:</span>{' '}

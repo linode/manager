@@ -8,7 +8,7 @@ import { NavTab } from 'src/components/NavTabs/NavTabs';
 import RenderGuard from 'src/components/RenderGuard';
 import { useProfile } from 'src/queries/profile';
 import {
-  getCommunityStackscripts,
+  // getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from '../stackScriptUtils';
 
@@ -50,19 +50,19 @@ const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
         />
       ),
     },
-    {
-      title: 'Community StackScripts',
-      routeName: `/stackscripts/community`,
-      render: (
-        <StackScriptPanelContent
-          category="community"
-          key="community-tab"
-          publicImages={publicImages}
-          currentUser={username}
-          request={getCommunityStackscripts}
-        />
-      ),
-    },
+    // {
+    //   title: 'Community StackScripts',
+    //   routeName: `/stackscripts/community`,
+    //   render: (
+    //     <StackScriptPanelContent
+    //       category="community"
+    //       key="community-tab"
+    //       publicImages={publicImages}
+    //       currentUser={username}
+    //       request={getCommunityStackscripts}
+    //     />
+    //   ),
+    // },
   ];
 
   return <NavTabs tabs={tabs} />;

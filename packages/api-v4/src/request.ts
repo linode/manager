@@ -9,7 +9,7 @@ interface RequestConfig extends AxiosRequestConfig {
 type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
 
 export const baseRequest = Axios.create({
-  baseURL: 'https://api.linode.com/v4',
+  baseURL: 'http://localhost:8080/api',
 });
 
 /**
@@ -154,7 +154,7 @@ export const setXFilter = (xFilter: any) => {
  */
 const reduceRequestConfig = (...fns: Function[]): RequestConfig =>
   fns.reduceRight((result, fn) => fn(result), {
-    url: 'https://api.linode.com/v4',
+    url: 'http://localhost:8080/api',
     headers: {},
   });
 

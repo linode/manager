@@ -1,4 +1,4 @@
-import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
+import { Interface } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -29,7 +29,7 @@ import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
 import {
-  getCommunityStackscripts,
+  // getCommunityStackscripts,
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import { ApplicationState } from 'src/store';
@@ -42,12 +42,11 @@ import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
-import AddonsPanel from './AddonsPanel';
 import SelectPlanPanel from './SelectPlanPanel';
-import FromAppsContent from './TabbedContent/FromAppsContent';
-import FromBackupsContent from './TabbedContent/FromBackupsContent';
+// import FromAppsContent from './TabbedContent/FromAppsContent';
+// import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
-import FromLinodeContent from './TabbedContent/FromLinodeContent';
+// import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
@@ -196,14 +195,7 @@ export class LinodeCreate extends React.PureComponent<
     /** Get the query params as an object, excluding the "?" */
     const queryParams = getParamsFromUrl(location.search);
 
-    const _tabs = [
-      'Distributions',
-      'One-Click',
-      'StackScripts',
-      'Images',
-      'Backups',
-      'Clone Linode',
-    ];
+    const _tabs = ['Distributions', 'StackScripts', 'Snapshots'];
 
     /** Will be -1 if the query param is not found */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -264,31 +256,27 @@ export class LinodeCreate extends React.PureComponent<
       type: 'fromImage',
       routeName: `${this.props.match.url}?type=Distributions`,
     },
-    {
-      title: 'Marketplace',
-      type: 'fromApp',
-      routeName: `${this.props.match.url}?type=One-Click`,
-    },
+    // {
+    //   title: 'Marketplace',
+    //   type: 'fromApp',
+    //   routeName: `${this.props.match.url}?type=One-Click`,
+    // },
     {
       title: 'StackScripts',
       type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts`,
     },
     {
-      title: 'Images',
+      title: 'Snapshots',
       type: 'fromImage',
-      routeName: `${this.props.match.url}?type=Images`,
+      routeName: `${this.props.match.url}?type=Snapshots`,
     },
-    {
-      title: 'Backups',
-      type: 'fromBackup',
-      routeName: `${this.props.match.url}?type=Backups`,
-    },
-    {
-      title: 'Clone Linode',
-      type: 'fromLinode',
-      routeName: `${this.props.match.url}?type=Clone%20Linode`,
-    },
+
+    // {
+    //   title: 'Backups',
+    //   type: 'fromBackup',
+    //   routeName: `${this.props.match.url}?type=Backups`,
+    // },
   ];
 
   stackScriptTabs: CreateTab[] = [
@@ -297,11 +285,11 @@ export class LinodeCreate extends React.PureComponent<
       type: 'fromStackScript',
       routeName: `${this.props.match.url}?type=StackScripts&subtype=Account`,
     },
-    {
-      title: 'Community StackScripts',
-      type: 'fromStackScript',
-      routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
-    },
+    // {
+    //   title: 'Community StackScripts',
+    //   type: 'fromStackScript',
+    //   routeName: `${this.props.match.url}?type=StackScripts&subtype=Community`,
+    // },
   ];
 
   componentWillUnmount() {
@@ -489,7 +477,7 @@ export class LinodeCreate extends React.PureComponent<
                   {...rest}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={1}>
+              {/* <SafeTabPanel index={1}>
                 <FromAppsContent
                   imagesData={imagesData!}
                   regionsData={regionsData!}
@@ -499,8 +487,8 @@ export class LinodeCreate extends React.PureComponent<
                   userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
-              </SafeTabPanel>
-              <SafeTabPanel index={2}>
+              </SafeTabPanel> */}
+              <SafeTabPanel index={1}>
                 <Tabs defaultIndex={stackScriptSelectedTab}>
                   <Paper className={classes.stackScriptWrapper}>
                     <Typography variant="h2">Create From:</Typography>
@@ -519,7 +507,7 @@ export class LinodeCreate extends React.PureComponent<
                           {...rest}
                         />
                       </SafeTabPanel>
-                      <SafeTabPanel index={1}>
+                      {/* <SafeTabPanel index={1}>
                         <FromStackScriptContent
                           category="community"
                           accountBackupsEnabled={accountBackupsEnabled}
@@ -531,15 +519,15 @@ export class LinodeCreate extends React.PureComponent<
                           typesData={typesData!}
                           {...rest}
                         />
-                      </SafeTabPanel>
+                      </SafeTabPanel> */}
                     </TabPanels>
                   </Paper>
                 </Tabs>
               </SafeTabPanel>
-              <SafeTabPanel index={3}>
+              <SafeTabPanel index={2}>
                 <FromImageContent
                   variant={'private'}
-                  imagePanelTitle="Choose an Image"
+                  imagePanelTitle="Choose a Snapshot"
                   imagesData={imagesData}
                   regionsData={regionsData!}
                   typesData={typesData!}
@@ -548,7 +536,7 @@ export class LinodeCreate extends React.PureComponent<
                   {...rest}
                 />
               </SafeTabPanel>
-              <SafeTabPanel index={4}>
+              {/* <SafeTabPanel index={2}>
                 <FromBackupsContent
                   errors={errors}
                   imagesData={imagesData!}
@@ -560,8 +548,8 @@ export class LinodeCreate extends React.PureComponent<
                   {...restoreBackup}
                   {...rest}
                 />
-              </SafeTabPanel>
-              <SafeTabPanel index={5}>
+              </SafeTabPanel> */}
+              {/* <SafeTabPanel index={3}>
                 <FromLinodeContent
                   errors={errors}
                   imagesData={imagesData!}
@@ -572,7 +560,7 @@ export class LinodeCreate extends React.PureComponent<
                   userCannotCreateLinode={userCannotCreateLinode}
                   {...rest}
                 />
-              </SafeTabPanel>
+              </SafeTabPanel> */}
             </TabPanels>
           </Tabs>
 
@@ -648,7 +636,7 @@ export class LinodeCreate extends React.PureComponent<
               requestKeys={requestKeys}
             />
           )}
-          <AddonsPanel
+          {/* <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}
             accountBackups={accountBackupsEnabled}
@@ -665,17 +653,16 @@ export class LinodeCreate extends React.PureComponent<
             selectedRegionID={this.props.selectedRegionID}
             labelError={hasErrorFor['interfaces[1].label']}
             ipamError={hasErrorFor['interfaces[1].ipam_address']}
-            createType={this.props.createType}
-          />
+            createType={this.props.createType}  
+          /> */}
           <CheckoutSummary
             data-qa-checkout-bar
             heading={`Summary ${this.props.label}`}
-            displaySections={displaySections}
-          >
-            {this.props.createType === 'fromApp' &&
-            this.props.documentation.length > 0 ? (
-              <DocsSidebar docs={this.props.documentation} />
-            ) : null}
+            displaySections={displaySections} >
+              {this.props.createType === 'fromApp' &&
+              this.props.documentation.length > 0 ? (
+                <DocsSidebar docs={this.props.documentation} />
+              ) : null}
           </CheckoutSummary>
           <Box
             display="flex"

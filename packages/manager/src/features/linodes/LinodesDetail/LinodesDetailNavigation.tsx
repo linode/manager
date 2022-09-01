@@ -9,14 +9,17 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { withLinodeDetailContext } from './linodeDetailContext';
-const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
+// const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
   () => import('./LinodeNetworking/LinodeNetworking')
 );
-const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
-const LinodeConfigurations = React.lazy(
-  () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
+const LinodeFirewalls = React.lazy(
+  () => import('./LinodeFirewalls/LinodeFirewalls')
 );
+const LinodeStorage = React.lazy(() => import('./LinodeStorage'));
+// const LinodeConfigurations = React.lazy(
+//   () => import('./LinodeAdvanced/LinodeAdvancedConfigurationsPanel')
+// );
 const LinodeBackup = React.lazy(() => import('./LinodeBackup'));
 const LinodeActivity = React.lazy(
   () => import('./LinodeActivity/LinodeActivity')
@@ -42,24 +45,28 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const isBareMetalInstance = linodeType?.class === 'metal';
 
   const tabs = [
-    {
-      routeName: `${url}/analytics`,
-      title: 'Analytics',
-    },
+    // {
+    //   routeName: `${url}/analytics`,
+    //   title: 'Analytics',
+    // },
     {
       routeName: `${url}/networking`,
       title: 'Network',
+    },
+    {
+      routeName: `${url}/firewalls`,
+      title: 'Firewalls',
     },
     {
       routeName: `${url}/storage`,
       title: 'Storage',
       hidden: isBareMetalInstance,
     },
-    {
-      routeName: `${url}/configurations`,
-      title: 'Configurations',
-      hidden: isBareMetalInstance,
-    },
+    // {
+    //   routeName: `${url}/configurations`,
+    //   title: 'Configurations',
+    //   hidden: isBareMetalInstance,
+    // },
     {
       routeName: `${url}/backup`,
       title: 'Backups',
@@ -103,15 +110,18 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
 
           <React.Suspense fallback={<SuspenseLoader />}>
             <TabPanels>
-              <SafeTabPanel index={idx++}>
+              {/* <SafeTabPanel index={idx++}>
                 <LinodeSummary
                   isBareMetalInstance={isBareMetalInstance}
                   linodeCreated={linodeCreated}
                 />
+              </SafeTabPanel> */}
+              <SafeTabPanel index={idx++}>
+                <LinodeNetworking />
               </SafeTabPanel>
 
               <SafeTabPanel index={idx++}>
-                <LinodeNetworking />
+                <LinodeFirewalls />
               </SafeTabPanel>
 
               {isBareMetalInstance ? null : (
@@ -119,9 +129,9 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
                   <SafeTabPanel index={idx++}>
                     <LinodeStorage />
                   </SafeTabPanel>
-                  <SafeTabPanel index={idx++}>
+                  {/* <SafeTabPanel index={idx++}>
                     <LinodeConfigurations />
-                  </SafeTabPanel>
+                  </SafeTabPanel> */}
 
                   <SafeTabPanel index={idx++}>
                     <LinodeBackup />

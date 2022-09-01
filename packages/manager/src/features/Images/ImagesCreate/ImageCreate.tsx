@@ -6,7 +6,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 
 type CombinedProps = RouteComponentProps<{}>;
 
-const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
+// const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
 export const ImageCreate: React.FC<CombinedProps> = (props) => {
@@ -30,18 +30,18 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
   };
 
   const tabs: NavTab[] = [
-    {
-      title: 'Capture Image',
-      routeName: `${props.match.url}/disk`,
-      render: (
-        <CreateImageTab
-          label={label}
-          description={description}
-          changeLabel={handleSetLabel}
-          changeDescription={handleSetDescription}
-        />
-      ),
-    },
+    // {
+    //   title: 'Capture Image',
+    //   routeName: `${props.match.url}/disk`,
+    //   render: (
+    //     <CreateImageTab
+    //       label={label}
+    //       description={description}
+    //       changeLabel={handleSetLabel}
+    //       changeDescription={handleSetDescription}
+    //     />
+    //   ),
+    // },
     {
       title: 'Upload Image',
       routeName: `${props.match.url}/upload`,

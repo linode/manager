@@ -1,6 +1,5 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import {
-  changeLinodeDiskPassword,
   changeLinodePassword,
   Disk,
   getLinodeDisks,
@@ -12,7 +11,7 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import { Item } from 'src/components/EnhancedSelect/Select';
 import Accordion from 'src/components/Accordion';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -64,12 +63,8 @@ class LinodeSettingsPasswordPanel extends React.Component<
   }
 
   handleSubmit = () => {
-    const { diskId, value } = this.state;
-    const { linodeId, isBareMetalInstance } = this.props;
-
-    if (!diskId && !isBareMetalInstance) {
-      return;
-    }
+    const { value } = this.state;
+    const { linodeId } = this.props;
 
     this.setState(
       compose(
@@ -101,15 +96,9 @@ class LinodeSettingsPasswordPanel extends React.Component<
       );
     };
 
-    if (isBareMetalInstance) {
-      changeLinodePassword(linodeId, value)
-        .then(handleSuccess)
-        .catch(handleError);
-    } else {
-      changeLinodeDiskPassword(linodeId, diskId!, value)
-        .then(handleSuccess)
-        .catch(handleError);
-    }
+    changeLinodePassword(linodeId, value)
+      .then(handleSuccess)
+      .catch(handleError);
   };
 
   handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,11 +116,11 @@ class LinodeSettingsPasswordPanel extends React.Component<
           buttonType="primary"
           onClick={this.handleSubmit}
           loading={submitting}
-          disabled={disabled || linodeStatus !== 'offline' || submitting}
+          disabled={disabled || linodeStatus === 'offline' || submitting}
           data-qa-password-save
           tooltipText={
-            linodeStatus !== 'offline'
-              ? 'Your Linode must be fully powered down in order to change your root password'
+            linodeStatus === 'offline'
+              ? 'Your server must be online in order to change your root password'
               : ''
           }
         >
@@ -211,14 +200,11 @@ class LinodeSettingsPasswordPanel extends React.Component<
   };
 
   render() {
-    const { diskId, disks, disksError, disksLoading } = this.state;
-    const { permissions, isBareMetalInstance } = this.props;
-    const selectedDisk = diskId ? this.getSelectedDisk(diskId) : null;
+    const { permissions } = this.props;
     const disabled = permissions === 'read_only';
 
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const passwordError = hasErrorFor('password');
-    const diskIdError = hasErrorFor('diskId');
     const generalError = hasErrorFor('none');
 
     return (
@@ -231,21 +217,6 @@ class LinodeSettingsPasswordPanel extends React.Component<
       >
         <form>
           {generalError && <Notice text={generalError} error />}
-          {!isBareMetalInstance ? (
-            <EnhancedSelect
-              label="Disk"
-              placeholder="Find a Disk"
-              isLoading={disksLoading}
-              errorText={disksError || diskIdError}
-              options={disks}
-              onChange={this.handleDiskSelection}
-              onInputChange={this.onInputChange}
-              value={selectedDisk}
-              data-qa-select-linode
-              disabled={disabled}
-              isClearable={false}
-            />
-          ) : null}
           <React.Suspense fallback={<SuspenseLoader />}>
             <PasswordInput
               autoComplete="new-password"

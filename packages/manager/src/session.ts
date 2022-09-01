@@ -25,6 +25,9 @@ export const genOAuthEndpoint = (
   const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
   const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
+  if (redirectUri.includes('logout')) {
+    redirectUri = '/';
+  }
   const query = {
     client_id: clientID,
     scope,

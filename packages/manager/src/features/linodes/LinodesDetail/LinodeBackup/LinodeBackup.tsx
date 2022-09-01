@@ -305,10 +305,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   takeSnapshot = () => {
-    const { linodeID, enqueueSnackbar } = this.props;
+    const { linodeID, linodeLabel, enqueueSnackbar } = this.props;
     const { snapshotForm } = this.state;
     this.setState({ loading: true });
-    takeSnapshot(linodeID, snapshotForm.label)
+    takeSnapshot(linodeID, `${linodeLabel}_${snapshotForm.label}`)
       .then(() => {
         enqueueSnackbar('A snapshot is being taken', {
           variant: 'info',
@@ -468,7 +468,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=Snapshots&imageID=${backup.id}&linodeID=${linodeID}`
     );
   };
 
@@ -494,8 +494,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             <TableRow>
               <TableCell>Label</TableCell>
               <TableCell>Date Created</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell>Disks</TableCell>
+              {/* <TableCell>Duration</TableCell>
+              <TableCell>Disks</TableCell> */}
               <TableCell>Space Required</TableCell>
               <TableCell />
             </TableRow>
@@ -715,7 +715,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           </Paper>
         )}
         <this.SnapshotForm />
-        <this.SettingsForm />
+        {/* <this.SettingsForm />
         <Button
           buttonType="outlined"
           className={classes.cancelButton}
@@ -732,7 +732,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Please note that when you cancel backups associated with this Linode,
           this will remove all existing backups.
-        </Typography>
+        </Typography> */}
         <RestoreToLinodeDrawer
           open={this.state.restoreDrawer.open}
           linodeID={linodeID}
@@ -784,7 +784,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { backupsEnabled, permissions, type } = this.props;
+    const { backupsEnabled, permissions } = this.props;
 
     if (this.props.backups.error) {
       /** @todo remove promise loader and source backups from Redux */
@@ -793,8 +793,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       );
     }
 
-    const backupsMonthlyPrice =
-      type.response?.addons?.backups?.price?.monthly ?? 0;
+    const backupsMonthlyPrice = 0;
+    // type?.response.addons.backups.price.monthly ?? 0;
 
     return (
       <div>

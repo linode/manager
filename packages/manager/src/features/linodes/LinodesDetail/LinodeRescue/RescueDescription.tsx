@@ -7,8 +7,8 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import { useLinodeFirewalls } from 'src/queries/linodeFirewalls';
 
 const rescueDescription = {
-  text: `If you suspect that your primary filesystem is corrupt, use the Linode Manager to boot your Linode into Rescue Mode. This is a safe environment for performing many system recovery and disk management tasks.`,
-  link: 'https://www.linode.com/docs/guides/rescue-and-rebuild/',
+  text: `The rescue mode is only for emergency purposes, for example in case of a system or access failure. This will shut down your instance and mount the root disk to a temporary server. Then, you will be able to connect to this server, repair the system configuration or recover your data.`,
+  link: 'https://docs.openstack.org/nova/latest/user/rescue.html',
   firewallWarning:
     'Cloud Firewall rules are not enabled when booting into Rescue Mode.',
 };
