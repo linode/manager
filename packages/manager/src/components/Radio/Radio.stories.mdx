@@ -1,0 +1,144 @@
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
+import Radio from './Radio';
+
+<Meta title="Elements/Radio" component={Radio} />
+
+export const Template = (args) => {
+  return <Radio {...args} />;
+};
+
+# Radio
+
+<hr />
+
+### Use radio buttons to
+
+- Expose all available options
+- Select a single option from a list
+
+### Guidelines
+
+- If there are 3 or fewer items to select, use radio buttons rather than drop-down menus.
+- If possible, offer a default selection.
+- Because radio buttons allow only one choice, make sure that the options are both comprehensive and distinct.
+- Let users select an option by clicking on either the button itself or its label to provide as big a target area as possible.
+
+### Reasons for a Default Selection
+
+- Expedite tasks
+- Give people control and align with their expectations
+
+<Canvas>
+  <Story name="Default">
+    <Radio />
+  </Story>
+</Canvas>
+
+## Controlled Radio
+
+<Canvas>
+  <Story name="Controlled Radio">
+    <FormControlLabel
+      style={{ marginLeft: 0 }}
+      label="Radio Label"
+      control={<Radio />}
+    />
+  </Story>
+</Canvas>
+
+## Radio Group
+
+<Canvas>
+  <Story name="Radio Group">
+    <RadioGroup>
+      <FormControlLabel
+        label="Disabled"
+        control={<Radio disabled />}
+        style={{ marginLeft: 0 }}
+      />
+      <FormControlLabel
+        label="Default"
+        control={<Radio />}
+        style={{ marginLeft: 0 }}
+      />
+    </RadioGroup>
+  </Story>
+</Canvas>
+
+## Component API
+
+<Canvas>
+  <Story
+    name="Component API"
+    args={{
+      checked: false,
+      disabled: false,
+      onChange: () => {},
+      disableRipple: false,
+      inputProps: undefined,
+      inputRef: undefined,
+      required: false,
+      size: 'medium',
+    }}
+    argTypes={{
+      checked: {
+        description: 'If `true`, the component is checked.',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      disabled: {
+        description: 'If `true`, the radio will be disabled.',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      required: {
+        description: 'If true, the input element will be required. `boolean`',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      onChange: {
+        description:
+          'Callback fired when the state is changed. Signature: `function(event: object) => void` event: The event source of the callback. You can pull out the new value by accessing `event.target.value` (`string`). You can pull out the new checked state by accessing `event.target.checked` (`boolean`).',
+        table: {
+          defaultValue: {
+            summary: 'undefined',
+          },
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable
+  story="Component API"
+  exclude={[
+    'ref',
+    'action',
+    'required',
+    'color',
+    'disableRipple',
+    'inputProps',
+    'inputRef',
+    'size',
+    'disableFocusRipple',
+    'centerRipple',
+    'disableTouchRipple',
+    'focusRipple',
+    'focusVisibleClassName',
+    'onFocusVisible',
+    'TouchRippleProps',
+  ]}
+/>

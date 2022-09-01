@@ -1,0 +1,152 @@
+import { Config } from '@linode/api-v4/lib/linodes';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import { Provider } from 'react-redux';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import OrderBy from 'src/components/OrderBy';
+import Paginate from 'src/components/Paginate';
+import PaginationFooter from 'src/components/PaginationFooter';
+import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
+import { linodeFactory } from 'src/factories/linodes';
+import LinodeRow from 'src/features/linodes/LinodesLanding/LinodeRow';
+import SortableTableHead from 'src/features/linodes/LinodesLanding/SortableTableHead';
+import store from 'src/store';
+import capitalize from 'src/utilities/capitalize';
+import TableWrapper from './Table';
+
+export const linodes = linodeFactory.buildList(30);
+
+<Meta title="Components/Table" />
+
+# Tables
+
+### Column order
+
+- As a rule, order columns by importance to the user. Position critical data on the left. Exceptions can be made to place related data adjacent
+- As viewport size decreases, rather than scrolling horizontally, data columns on the right side of the table can be dropped first. Keep in-row actions aligned right
+
+### Sizing
+
+- Tables should take the full width to the established margins of a content area or paper
+
+### Inline menu actions
+
+- Fewer than two actions: Expose them by default
+- More than two actions: Consider placing them in a dropdown
+- More than 5 actions: Consider exposing the two most-used actions and placing the remainder in a dropdown
+- If action titles are long, place them in a drop down so they don’t take up too much room in the row
+- Any exposed actions can collapse into the “kebab” icon, and drop down, at smaller viewport sizes
+- **Disclaimer:** The UX team is in the process of assessing the usability of all of the above
+
+## Table
+
+<Canvas>
+  <Story name="Table">
+    <TableWrapper>
+      <TableHead>
+        <TableRow>
+          <TableCell>Label</TableCell>
+          <TableCell>Plan</TableCell>
+          <TableCell>Region</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        <TableRow>
+          <TableCell>test-0</TableCell>
+          <TableCell>Linode 2 GB</TableCell>
+          <TableCell>Atlanta, GA</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>test-1</TableCell>
+          <TableCell>Linode 4 GB</TableCell>
+          <TableCell>Dallas, TX</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>test-2</TableCell>
+          <TableCell>Linode 8 GB</TableCell>
+          <TableCell>Newark, NJ</TableCell>
+        </TableRow>
+      </TableBody>
+    </TableWrapper>
+  </Story>
+</Canvas>
+
+## Paginated
+
+<Canvas>
+  <Story name="Paginated">
+    <PaginatedExample />
+  </Story>
+</Canvas>
+
+export const PaginatedExample = () => {
+  return (
+    <>
+      <Provider store={store}>
+        <OrderBy data={linodes} orderBy="label" order="asc">
+          {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+            <Paginate data={orderedData}>
+              {({
+                data,
+                count,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+              }) => (
+                <>
+                  <TableWrapper>
+                    <SortableTableHead
+                      order={order}
+                      orderBy={orderBy}
+                      handleOrderChange={handleOrderChange}
+                      toggleLinodeView={() => 'grid'}
+                      linodesAreGrouped={false}
+                      toggleGroupLinodes={() => true}
+                      linodeViewPreference="list"
+                    />
+                    <TableBody>
+                      {data?.map((linode) => (
+                        <LinodeRow
+                          key={linode.id}
+                          id={linode.id}
+                          image={linode.image}
+                          ipv4={linode.ipv4}
+                          ipv6={linode.ipv6}
+                          label={linode.label}
+                          backups={linode.backups}
+                          displayStatus={capitalize(linode.status)}
+                          region={linode.region}
+                          status={linode.status}
+                          disk={linode.specs.disk}
+                          memory={linode.specs.memory}
+                          mostRecentBackup={linode.backups.last_successful}
+                          tags={linode.tags}
+                          openTagDrawer={() => null}
+                          type={{ label: 'Linode 2 GB' }}
+                          vcpus={linode.specs.vcpus}
+                          openDialog={() => null}
+                          openPowerActionDialog={() => null}
+                          openNotificationMenu={() => null}
+                        ></LinodeRow>
+                      ))}
+                    </TableBody>
+                  </TableWrapper>
+                  <PaginationFooter
+                    count={count}
+                    handlePageChange={handlePageChange}
+                    handleSizeChange={handlePageSizeChange}
+                    page={page}
+                    pageSize={pageSize}
+                    eventCategory="Paginated Table"
+                  />
+                </>
+              )}
+            </Paginate>
+          )}
+        </OrderBy>
+      </Provider>
+    </>
+  );
+};

@@ -1,0 +1,150 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Chip from '/src/components/core/Chip';
+import { useStyles } from '/src/features/Volumes/VolumeTableRow';
+
+<Meta title="Elements/Chips" component={Chip} />
+
+export const Template = (args) => {
+  return <Chip {...args} />;
+};
+
+# Chips
+
+<Canvas>
+  <Story name="Default">
+    <Chip label="Chip" />
+  </Story>
+</Canvas>
+
+## Clickable
+
+Actionable Chips indicate a state and allow users to take action.
+
+**Example:** An ‘Upgrade’ chip on a Kubernetes cluster shows the software is not current and allows a user to upgrade to a new version.
+
+**Visual style:** solid color background.
+
+<Canvas>
+  <Story name="Clickable">
+    <Chip label="Upgrade" clickable />
+  </Story>
+</Canvas>
+
+## Outlined
+
+Static Chips are an indication of status and are intended to be informational.
+No action is required or enabled.
+
+**Example:** ‘NVMe’ chip on a volume.
+
+**Visual style:** outline.
+
+<Canvas>
+  <Story name="Outlined">
+    <Chip label="Chip" variant="outlined" />
+  </Story>
+</Canvas>
+
+## Custom
+
+<Canvas>
+  <Story name="Custom">
+    <Chip
+      label="NVMe"
+      variant="outlined"
+      outlineColor="green"
+      size="small"
+    />
+  </Story>
+</Canvas>
+
+## Component API
+
+<Canvas>
+  <Story
+    name="Component API"
+    args={{
+      label: 'Chip',
+      clickable: false,
+      disabled: false,
+      onClick: () => alert('Clicked!'),
+      variant: 'default',
+      color: 'default',
+      size: 'medium',
+    }}
+    argTypes={{
+      label: {
+        description: 'The content of the label.',
+        table: {
+          defaultValue: {
+            summary: 'undefined',
+          },
+        },
+      },
+      clickable: {
+        description:
+          'If `true`, the chip will appear clickable, and will raise when pressed, even if the onClick prop is not defined. If false, the chip will not be clickable, even if onClick prop is defined. This can be used, for example, along with the component prop to indicate an anchor Chip is clickable.  ',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      disabled: {
+        description:
+          'If `true`, the chip should be displayed in a disabled state.',
+        table: {
+          defaultValue: {
+            summary: 'false',
+          },
+        },
+      },
+      onClick: {
+        description: 'Function called when the object is clicked.',
+        table: {
+          defaultValue: {
+            summary: 'undefined',
+          },
+        },
+      },
+      color: {
+        description: 'Color of the Chip `"default" | "primary" | "secondary"`',
+        options: ['default', 'primary', 'secondary'],
+        control: { type: 'radio' },
+        table: {
+          defaultValue: {
+            summary: 'default',
+          },
+        },
+      },
+      variant: {
+        description: 'Variant of the Chip `"default" | "outlined"`',
+        options: ['default', 'outlined'],
+        control: { type: 'radio' },
+        table: {
+          defaultValue: {
+            summary: 'default',
+          },
+        },
+      },
+      size: {
+        description: 'Size of the Chip `"small" | "medium"`',
+        options: ['small', 'medium'],
+        control: { type: 'radio' },
+        table: {
+          defaultValue: {
+            summary: 'medium',
+          },
+        },
+      },
+      component: {
+        description:
+          'The component used for the root node. Either a string to use a HTML element or a component.',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Component API"  exclude={['ref']} />

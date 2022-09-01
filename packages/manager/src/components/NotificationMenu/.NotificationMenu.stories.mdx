@@ -1,0 +1,63 @@
+import Button from 'src/components/Button';
+import Typography from 'src/components/core/Typography';
+import ActionsPanel from '../ActionsPanel';
+import TextField from '../TextField';
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { NotificationMenu } from './NotificationMenu';
+import useNotificationData from 'src/features/NotificationCenter/NotificationData/useNotificationData';
+import { eventFactory, notificationFactory } from 'src/factories';
+
+export const mockEvents = eventFactory.buildList(1);
+export const mockNotifications = notificationFactory.buildList(1);
+
+<Meta title="Components/Notifications/Notification Menu" component={NotificationMenu} />
+
+# Notification Menu
+
+#### Overview
+
+There are two sections in the Notifications menu:
+
+- **Notifications** are informational messages and are usually not tied directly to user input or activity in the system. They inform the user of a change in the system state or of an event that may be of interest.
+- **Events** present the status of actions taken by the user.
+
+#### Behavior
+
+**Notifications can be**
+
+- Contextual: Applied to a specific piece of UI
+- General: Applied to the system as a whole
+
+**Notification types**
+
+- Action-required: Alerts users of an action that must be taken.
+- Passive: Reports system occurrences. Does not require users to take action.
+
+export const Template = (args, context) => {
+  const notificationData = useNotificationData(mockEvents, mockNotifications);
+  return (
+    <>
+      <Button buttonType="primary" onClick={() => context.setOpen(true)}>
+        Click to open menu
+      </Button>
+      <NotificationMenu
+        open={context.open}
+        data={notificationData}
+      />
+    </>
+  );
+};
+
+<Canvas>
+  <Story
+    name="Notification Menu"
+    decorators={[
+      (Story) => {
+        const [open, setOpen] = React.useState(false);
+        return Story({ open, setOpen });
+      },
+    ]}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

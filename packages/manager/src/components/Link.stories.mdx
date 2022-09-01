@@ -1,0 +1,61 @@
+import { Canvas, Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import Link from './Link';
+
+<Meta title="Elements/Links" component={Link} />
+
+# Link
+
+- A link can change routes in Cloud Manger or open a new location in a new tab or window.
+- Links should have a mouse over/hover status.
+
+export const Template = (args) => <Link {...args}>{args.children}</Link>;
+
+<Canvas>
+  <Story
+    name="Link"
+    args={{
+      to: '/account',
+      children: 'Make a Payment',
+      replace: false,
+    }}
+    argTypes={{
+      to: {
+        description:
+          "The link's destination. If the value contains `http` or `mailto`, it will be considered an external link and open in a new window.",
+        type: {
+          summary:
+            'string | LocationDescriptor<unknown> | ((location: Location<unknown>) => LocationDescriptor<unknown>)',
+          required: true,
+        },
+      },
+      children: {
+        description: 'The clickable text or content.',
+        type: { summary: 'React.ReactNode' },
+      },
+      replace: {
+        description:
+          'When `true`, clicking the link will replace the current entry in the history stack instead of adding a new one.',
+        type: { summary: 'boolean', name: 'boolean' },
+        table: {
+          defaultValue: {
+            summary: false,
+          },
+        },
+      },
+      className: {
+        description:
+          'Optional CSS class names that are applied to the component.',
+        type: { summary: 'string', name: 'string' },
+      },
+      onClick: {
+        description: 'A function that will be called onClick.',
+        type: { summary: '() => void' },
+        control: { type: null },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Link" />

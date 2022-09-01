@@ -1,0 +1,27 @@
+{
+	"presets": [
+		"@babel/typescript",
+	],
+	"plugins": [
+		"@babel/proposal-class-properties",
+		"@babel/proposal-object-rest-spread",
+		"@babel/plugin-transform-modules-commonjs",
+		[
+			"module-resolver",
+			{
+				"root": [
+					"."
+				],
+				"extensions": [
+					".ts",
+					".tsx",
+					".js",
+					".jsx",
+					".es",
+					".es6",
+					".mjs"
+				]
+			}
+		]
+	]
+}

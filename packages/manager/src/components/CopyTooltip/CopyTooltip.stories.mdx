@@ -1,0 +1,44 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import CopyTooltip from 'src/components/CopyTooltip/CopyTooltip';
+
+<Meta title="Elements/Tooltip/Copy Tooltip" component={CopyTooltip} />
+
+export const Template = (args) => {
+  return (
+    <div
+      style={{
+        marginTop: '1.5em',
+      }}
+    >
+      <CopyTooltip {...args} />
+    </div>
+  );
+};
+
+# Copy Tooltip
+
+## Usage
+
+Content that is to be copied should be displayed before (to the left of) the clipboard icon.<br />
+If horizontal space is limited, truncate the content.
+
+<Canvas>
+  <Story
+    name="Copy Tooltip"
+    args={{
+      text: 'Hello World',
+    }}
+    argTypes={{
+      text: {
+        description: 'Text to copy to the clipboard.',
+      },
+      displayText: {
+        description: 'Text to display next to the copy icon.',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Copy Tooltip" exclude={['className']} />

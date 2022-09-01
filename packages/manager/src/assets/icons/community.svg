@@ -1,0 +1,13 @@
+<svg viewBox="0 0 60.8 60.8" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="currentColor" stroke-miterlimit="10">
+  <circle class="outerCircle" cx="30.4" cy="30.4" r="29.9"/>
+    <g id="community" class="insidePath">
+    <path d="m37.91 32.45a7.22 7.22 0 0 0 -6.91-5.27h-.49a7.22 7.22 0 0 0 -7 5.48 5.16 5.16 0 0 1 1.8 3.92v5.56h10.54v-5.56a5.16 5.16 0 0 1 2.06-4.13z"/>
+      <circle cx="30.72" cy="19.12" r="5.68"/>
+      <circle cx="41.22" cy="25.6" r="4.08"/>
+      <path d="m41.39 31.4h-.39a5.17 5.17 0 0 0 -3.13 1.05 7 7 0 0 1 .27 1.95v7.74h8.4v-5.56a5.18 5.18 0 0 0 -5.15-5.18z"/>
+      <circle cx="19.9" cy="25.6" r="4.08"/>
+      <path d="m23.46 32.66a5.14 5.14 0 0 0 -3.39-1.26h-.35a5.19 5.19 0 0 0 -5.19 5.18v5.56h8.72v-7.74a7.15 7.15 0 0 1 .21-1.74z"/>
+    </g>
+  </g>
+</svg>

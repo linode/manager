@@ -1,0 +1,36 @@
+import { Canvas, Meta, Story } from '@storybook/addon-docs';
+import { profileFactory } from 'src/factories';
+import TopMenu from '/src/features/TopMenu';
+import { useProfile } from 'src/queries/profile';
+
+export const mockProfile = profileFactory.build();
+
+<Meta title="Features/Navigation/Top Menu" component={TopMenu} />
+
+# Top Menu
+
+### Overview
+
+<hr />
+
+- Items presented in the top navigation are considered universally important and should be available regardless of any particular task.
+- The number of items should be limited. In the future, **Help & Support** could become a drop down with links to **Community**, **Guides**, and etc.
+
+export const Template = () => {
+  const profileData = useProfile(mockProfile);
+  return (
+    <TopMenu
+      isSideMenuOpen={false}
+      openSideMenu={() => null}
+      desktopMenuToggle={() => null}
+      isLoggedInAsCustomer={false}
+      username=""
+    />
+  );
+};
+
+<Canvas style={{ background: '#f4f5f6' }}>
+  <Story name="Top Menu">
+    <Template />
+  </Story>
+</Canvas>

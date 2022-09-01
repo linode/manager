@@ -1,6 +1,0 @@
-dist/
-node_modules/
-linodeobjs
-variousobjs
-request_logs.txt
-.env

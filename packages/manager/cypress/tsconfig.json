@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": false,
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "baseUrl": "..",
+    "paths": {
+      "@src/*": ["src/*"],
+      "support/*": ["cypress/support/*"],
+      "@linode/api-v4/*": ["../api-v4/lib/index.js"],
+      "@linode/validation/*": ["../validation/lib/index.js"],
+    },
+    "types": ["cypress", "cypress-file-upload", "@testing-library/cypress", "cypress-real-events"]
+  },
+  "include": ["../cypress/**/*.ts"]
+}

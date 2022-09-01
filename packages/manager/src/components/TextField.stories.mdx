@@ -1,0 +1,223 @@
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import TextField from 'src/components/TextField';
+
+<Meta title="Elements/Text Field" component={TextField} />
+
+# Text Field
+
+### Overview
+
+<hr />
+
+Text fields allow users to enter text into a UI.
+
+| Elements    | Guidelines                                                                                                                                                                                                                                    |
+| :---------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Input Field | The size of the field should be proportional to the expected user input.                                                                                                                                                                      |
+| Label       | Avoid long labels; use succinct, short and descriptive labels (a word or two) so users can quickly scan your form. <br/> Label text shouldn’t take up multiple lines.                                                                         |
+| Placeholder | Placeholder is the text that users see before they interact with a field. It should be a useful guide to the input type and format <br/> Don’t make the user guess what format they should use for the field. Tell this information up front. |
+
+### Usage
+
+<hr />
+
+- Input fields should be sized to the data being entered (ex. the entry for a street address should be wider than a zip code).
+- Ensure that the field can accommodate at least one more character than the maximum number to be entered.
+
+<Canvas>
+  <Story name="Default">
+    <TextField label="Label" placeholder="Placeholder" />
+  </Story>
+  <Story name="Number">
+    <TextField label="Number Input" placeholder="0" type="number" />
+  </Story>
+</Canvas>
+
+### Rules
+
+<hr />
+
+- Every input must have a descriptive label of what that field is.
+- Required fields should include the text “(Required)” as part of the input label.
+- If most fields are required. Then indicate the optional fields with the text “(Optional)” instead.
+
+### Best Practices
+
+<hr />
+
+- A single column form with input fields stacked sequentially is the easiest to understand and leads to the highest success rate. Input fields in multiple columns can be overlooked or add unnecessary visual clutter.
+- Grouping related inputs (ex. mailing address) under a subhead or rule can add meaning and make the form feel more manageable.
+- Avoid breaking a single form into multiple “papers” unless those sections are truly independent of each other.
+- Consider sizing the input field to the data being entered (ex. the field for a street address should be wider than the field for a zip code). Balance this goal with the visual benefits of fields of the same length. A somewhat outsized input that aligns with the fields above and below it might be the best choice.
+
+### Error
+
+<hr />
+
+#### Overview
+
+Error messages are an indicator of system status: they let users know that a hurdle was encountered and give solutions to fix it. Users should not have to memorize instructions in order to fix the error.
+
+##### Main principles
+
+- Should be easy to notice and understand.
+- Should give solutions to how to fix the error.
+- Users should not have to memorize instructions in order to fix the
+  error.
+
+#### Error messages for short text fields:
+
+Long error messages for short text fields can extend beyond the text field.
+
+#### Inline validation
+
+When the user has finished filling in a field and clicks the submit button, an indicator should appear if the field contains an error. Use red to differentiate error fields from normal ones.
+
+<Canvas>
+  <Story name="Error">
+    <TextField
+      label="Label"
+      placeholder="Error state"
+      errorText="This input needs further attention!"
+    />
+  </Story>
+</Canvas>
+
+### Component API
+
+<hr />
+
+export const Template = (args) => (
+  <TextField
+    label="Label"
+    placeholder="I'm a text field, style me using the table below."
+    {...args}
+  />
+);
+
+<Canvas>
+  <Story
+    name="Component API"
+    args={{
+      disabled: false,
+      errorText: '',
+      expand: false,
+      helperText: '',
+      helperTextPosition: 'bottom',
+      hideLabel: false,
+      loading: false,
+      max: null,
+      min: null,
+      noMarginTop: false,
+      optional: false,
+      required: false,
+      type: 'string',
+      tooltipText: '',
+      value: 'This is a test input.',
+    }}
+    argTypes={{
+      disabled: {
+        description: 'If true, the component is disabled.',
+        table: {
+          type: { summary: 'boolean' },
+          defaultValue: { summary: 'false' },
+        },
+      },
+      errorText: {
+        description: 'Displays error text below the text field.',
+      },
+      expand: {
+        description:
+          'If true, the text field will take up the full width of its container.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      helperText: {
+        description: 'Displays informative text below the text field.',
+        table: {
+          type: { summary: 'string' },
+        },
+      },
+      helperTextPosition: {
+        description: 'Changes the position of the helper text.',
+        table: {
+          defaultValue: { summary: 'bottom' },
+        },
+      },
+      hideLabel: {
+        description: 'Removes the label.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      loading: {
+        description: 'Used to depict a loading state.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      min: {
+        description:
+          'The number amounts required in TextField and the "type" prop must also be set to "number"',
+      },
+      noMarginTop: {
+        description: 'Removes the spacing above the text field.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      optional: {
+        description: 'If true, the label is displayed as optional.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      required: {
+        description: 'If true, the label is displayed as required.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      tooltipText: {
+        description:
+          'Displays informative text when users hover over the icon.',
+      },
+      type: {
+        description:
+          'Type of the input element. It should be a valid HTML5 input type.',
+        table: {
+          type: { summary: 'string' },
+          defaultValue: { summary: 'string' },
+        },
+        type: 'inline-radio',
+        options: ['number', 'string'],
+      },
+      value: {
+        description:
+          'The value of the input element, required for a controlled component.',
+        table: {
+          type: { summary: 'any' },
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable
+  story="Component API"
+  sort="requiredFirst"
+  exclude={[
+    'className',
+    'dataAttrs',
+    'editable',
+    'errorGroup',
+    'focused',
+    'hasAbsoluteError',
+    'hiddenLabel',
+    'inputId',
+    'ref',
+  ]}
+/>
