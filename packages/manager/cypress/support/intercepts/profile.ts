@@ -90,21 +90,30 @@ export const mockUpdateSecurityQuestions = (
 };
 
 /**
- * Intercepts POST request to enable two factor authentication.
+ * Intercepts POST request to enable 2FA and mocks the response.
+ *
+ * @param secretString - Secret 2FA key to include in mocked response.
  *
  * @returns Cypress chainable.
  */
-export const interceptEnableTwoFactorAuth = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/profile/tfa-enable');
+export const mockEnableTwoFactorAuth = (
+  secretString: string
+): Cypress.Chainable<null> => {
+  // TODO Create an expiration date based on the current time.
+  const expiry = '2025-05-01T03:59:59';
+  return cy.intercept('POST', '*/profile/tfa-enable', {
+    secret: secretString,
+    expiry,
+  });
 };
 
 /**
- * Intercepts POST request to disable two factor authentication.
+ * Intercepts POST request to disable two factor authentication and mocks response.
  *
  * @returns Cypress chainable.
  */
-export const interceptDisableTwoFactorAuth = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/profile/tfa-disable');
+export const mockDisableTwoFactorAuth = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/profile/tfa-disable', {});
 };
 
 /**
