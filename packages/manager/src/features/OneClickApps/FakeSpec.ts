@@ -1573,8 +1573,8 @@ export const oneClickApps: OCA[] = [
   {
     name: 'UniFi Network Application',
     description:
-      `The UniFi Network Application is a multi-use application to manage networking across regions. It allows the configuration of software defined networks, and can interface directly with Ubiquiti hardware.`,
-    summary: `A multi-use network manager.`,
+      `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
+    summary: `Multi-use networking control panel`,
     related_guides: [
       {
         title: 'Deploying the UniFi Network Application through the Linode Marketplace',
