@@ -1,4 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
+import { Status } from 'src/components/StatusIcon/StatusIcon';
 import * as React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,11 +9,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
+import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
+import SupportLink from 'src/components/SupportLink';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   volumePath: {
@@ -38,6 +41,15 @@ const progressFromEvent = (e?: Event) => {
   return undefined;
 };
 
+export const volumeStatusIconMap: Record<ExtendedVolume['status'], Status> = {
+  active: 'active',
+  resizing: 'other',
+  creating: 'other',
+  contact_support: 'error',
+  deleting: 'other',
+  deleted: 'inactive',
+};
+
 export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const {
@@ -52,6 +64,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     handleUpgrade,
     id,
     label,
+    status,
     tags,
     size,
     recentEvent,
@@ -71,6 +84,20 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
 
   const formattedRegion = formatRegion(region);
+
+  const volumeStatusMap: Record<
+    ExtendedVolume['status'],
+    string | JSX.Element
+  > = {
+    active: 'Active',
+    resizing: 'Resizing',
+    creating: 'Creating',
+    contact_support: (
+      <SupportLink text="Contact Support" entity={{ type: 'volume_id', id }} />
+    ),
+    deleting: 'Deleting',
+    deleted: 'Deleted',
+  };
 
   const isNVMe = hardwareType === 'nvme';
 
@@ -150,6 +177,12 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </Grid>
       </TableCell>
+      {isVolumesLanding ? (
+        <TableCell statusCell>
+          <StatusIcon status={volumeStatusIconMap[status]} />
+          {volumeStatusMap[status]}
+        </TableCell>
+      ) : null}
       {region ? (
         <TableCell data-qa-volume-region noWrap>
           {formattedRegion}

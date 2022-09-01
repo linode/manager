@@ -17,6 +17,7 @@ import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
+import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import TextField from 'src/components/TextField';
 import useEntities, { Entity } from 'src/hooks/useEntities';
 import { useAllDatabasesQuery } from 'src/queries/databases';
@@ -81,6 +82,7 @@ export interface Props {
   open: boolean;
   prefilledTitle?: string;
   prefilledDescription?: string;
+  prefilledEntity?: EntityForTicketDetails;
   onClose: () => void;
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
   keepOpenOnSuccess?: boolean;
@@ -138,7 +140,7 @@ export const getInitialValue = (
 };
 
 export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, prefilledDescription, prefilledTitle } = props;
+  const { open, prefilledDescription, prefilledTitle, prefilledEntity } = props;
 
   const valuesFromStorage = storage.supportText.get();
 
@@ -149,8 +151,12 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const [description, setDescription] = React.useState<string>(
     getInitialValue(prefilledDescription, valuesFromStorage.description)
   );
-  const [entityType, setEntityType] = React.useState<EntityType>('general');
-  const [entityID, setEntityID] = React.useState<string>('');
+  const [entityType, setEntityType] = React.useState<EntityType>(
+    prefilledEntity?.type ?? 'general'
+  );
+  const [entityID, setEntityID] = React.useState<string>(
+    prefilledEntity ? String(prefilledEntity.id) : ''
+  );
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
@@ -166,8 +172,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   React.useEffect(() => {
-    if (open) {
+    if (!open) {
       resetDrawer();
+    }
+    if (prefilledEntity) {
+      loadSelectedEntities(prefilledEntity.type);
     }
   }, [open]);
 
