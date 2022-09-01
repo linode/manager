@@ -1,9 +1,0 @@
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve" fill="none">
-	 <desc>Linode Support Bot</desc>
-	<circle id="background" class="outerCircle" stroke-width="2" cx="31.9" cy="31.9" r="29.9"></circle>
-	<g id="chat" class="insidePath" transform="translate(14.000000, 15.000000)">
-		<polygon id="Stroke-1006" points="32.4,13.1 14.9,13.1 9.1,17.7 9.1,13.1 2.6,13.1 2.6,2.7 32.4,2.7"/>
-		<polyline id="Stroke-1007" points="5.9,17 2.6,17 2.6,26.1 20.1,26.1 25.9,31.3 25.9,26.1 32.4,26.1 32.4,17 15.6,17"/>
-	</g>
-</svg>
