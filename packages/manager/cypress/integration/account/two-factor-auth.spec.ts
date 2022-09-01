@@ -8,10 +8,10 @@ import {
   securityQuestionsFactory,
 } from 'src/factories/profile';
 import {
-  mockGetProfile,
-  interceptEnableTwoFactorAuth,
-  interceptDisableTwoFactorAuth,
   mockConfirmTwoFactorAuth,
+  mockDisableTwoFactorAuth,
+  mockEnableTwoFactorAuth,
+  mockGetProfile,
   mockGetSecurityQuestions,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
@@ -24,6 +24,23 @@ import { randomNumber, randomLabel, randomString } from 'support/util/random';
  */
 const getTwoFactorSection = (): Cypress.Chainable => {
   return cy.contains('h3', 'Two-Factor Authentication (2FA)').parent();
+};
+
+/**
+ * Generates a random 2FA secret key for mocking.
+ *
+ * @returns 2FA secret key.
+ */
+const randomSecret = (): string => {
+  const randomSecretOptions = {
+    lowercase: false,
+    uppercase: true,
+    numbers: true,
+    symbols: false,
+    spaces: false,
+  };
+
+  return randomString(16, randomSecretOptions);
 };
 
 /**
@@ -138,6 +155,7 @@ describe('Two-factor authentication', () => {
   it('can enable two factor auth', () => {
     const invalidToken = randomToken();
     const validToken = randomToken();
+    const mockedSecret = randomSecret();
     const mockedScratchCode = randomScratchCode();
 
     // Mock profile data to ensure that 2FA is disabled.
@@ -150,7 +168,7 @@ describe('Two-factor authentication', () => {
     cy.wait('@getSecurityQuestions');
 
     getTwoFactorSection().within(() => {
-      interceptEnableTwoFactorAuth().as('enableTwoFactorAuth');
+      mockEnableTwoFactorAuth(mockedSecret).as('enableTwoFactorAuth');
 
       ui.toggle
         .find()
@@ -160,6 +178,10 @@ describe('Two-factor authentication', () => {
 
       cy.wait('@enableTwoFactorAuth');
       cy.get('[data-qa-qr-code]').should('be.visible');
+
+      cy.findByLabelText('Secret Key')
+        .should('be.visible')
+        .should('have.value', mockedSecret);
 
       // Type an invalid token first, confirm that error message appears as expected.
       cy.findByLabelText('Token').should('be.visible').type(invalidToken);
@@ -241,7 +263,7 @@ describe('Two-factor authentication', () => {
     cy.wait('@getProfile');
     cy.wait('@getSecurityQuestions');
 
-    interceptDisableTwoFactorAuth().as('disableTwoFactorAuth');
+    mockDisableTwoFactorAuth().as('disableTwoFactorAuth');
     mockGetProfile(userProfile).as('getProfileTwoFactorDisabled');
 
     // Confirm that 2FA is already enabled.
@@ -290,7 +312,7 @@ describe('Two-factor authentication', () => {
     cy.wait('@getSecurityQuestions');
 
     getTwoFactorSection().within(() => {
-      interceptEnableTwoFactorAuth().as('resetTwoFactorAuth');
+      mockEnableTwoFactorAuth(randomSecret()).as('resetTwoFactorAuth');
 
       // Confirm that reset link is present, click on it.
       cy.findByText('Reset two-factor authentication')
