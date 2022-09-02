@@ -39,6 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  id?: string;
   heading: string;
   subheadings: (string | undefined)[];
   checked?: boolean;
@@ -52,6 +53,7 @@ export interface Props {
 
 const SelectionCard: React.FC<Props> = (props) => {
   const {
+    id,
     heading,
     subheadings,
     checked,
@@ -89,6 +91,7 @@ const SelectionCard: React.FC<Props> = (props) => {
 
   const cardGrid = (
     <Grid
+      id={id}
       item
       xs={12}
       sm={6}
