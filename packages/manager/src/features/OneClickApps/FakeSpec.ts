@@ -880,6 +880,25 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Microweber',
+    categories: ['Development'],
+    description: `Microweber is an easy Drag and Drop website builder and a powerful CMS of a new generation, based on the PHP Laravel Framework.`,
+    summary: `Drag and drop CMS and website builder.`,
+    related_guides: [
+      {
+        title: 'Deploying Microweber through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/microweber',
+      },
+    ],
+    website: 'https://microweber.com/',
+    logo_url: 'microweber.svg',
+    colors: {
+      start: '4592ff',
+      end: '4592ff',
+    },
+  },
+  {
     name: 'Minecraft: Java Edition',
     categories: ['Games'],
     description: `With over 100 million users around the world, Minecraft is the most popular online game of all time. Less of a game and more of a lifestyle choice, you and other players are free to build and explore in a 3D generated world made up of millions of mineable blocks. Collect resources by leveling mountains,
@@ -1588,6 +1607,26 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: 'b95b26',
       end: '873d0c',
+    },
+  },
+  {
+    name: 'UniFi Network Application',
+    categories: ['Control Panels'],
+    description: `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
+    summary: `Multi-use networking control panel`,
+    related_guides: [
+      {
+        title:
+          'Deploying the UniFi Network Application through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/unifi-network-application',
+      },
+    ],
+    website: 'https://www.ui.com/',
+    logo_url: 'unifi.svg',
+    colors: {
+      start: '1681FC',
+      end: '63666A',
     },
   },
   {
