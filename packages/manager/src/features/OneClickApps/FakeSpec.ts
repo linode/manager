@@ -881,8 +881,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Microweber',
-    description:
-      `Microweber is an easy Drag and Drop website builder and a powerful CMS of a new generation, based on the PHP Laravel Framework.`,
+    categories: ['Development'],
+    description: `Microweber is an easy Drag and Drop website builder and a powerful CMS of a new generation, based on the PHP Laravel Framework.`,
     summary: `Drag and drop CMS and website builder.`,
     related_guides: [
       {
@@ -891,13 +891,12 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/microweber',
       },
     ],
-    related_info: [
-      {
-        title: 'https://microweber.com/',
-        href: 'https://microweber.com/',
-      },
-    ],
-    logo_url: 'assets/microweber-color.svg',
+    website: 'https://microweber.com/',
+    logo_url: 'microweber.svg',
+    colors: {
+      start: '4592ff',
+      end: '4592ff',
+    },
   },
   {
     name: 'Minecraft: Java Edition',
@@ -1612,23 +1611,23 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'UniFi Network Application',
-    description:
-      `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
+    categories: ['Control Panels'],
+    description: `UniFi Network Application is a versatile control panel that simplifies network management across regions, customizes access to wifi networks, and more. Manage and apply updates to UniFi networking devices to ensure your networks are performant and secure.`,
     summary: `Multi-use networking control panel`,
     related_guides: [
       {
-        title: 'Deploying the UniFi Network Application through the Linode Marketplace',
+        title:
+          'Deploying the UniFi Network Application through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/unifi-network-application',
       },
     ],
-    related_info: [
-      {
-        title: 'https://www.ui.com/',
-        href: 'https://www.ui.com/',
-      },
-    ],
-    logo_url: 'assets/UI-color.svg',
+    website: 'https://www.ui.com/',
+    logo_url: 'unifi.svg',
+    colors: {
+      start: '1681FC',
+      end: '63666A',
+    },
   },
   {
     name: 'Uptime Kuma',
