@@ -28,10 +28,11 @@ import { queryClient } from './queries/base';
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
 const Cancel = React.lazy(() => import('src/features/CancelLanding'));
-const Login = React.lazy(() => import('src/layouts/Login'));
+const LoginPage = React.lazy(() => import('src/layouts/LoginPage'));
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
 );
+const OAuthPage = React.lazy(() => import('src/layouts/OAuthPage'));
 const OAuthCallbackPage = React.lazy(() => import('src/layouts/OAuth'));
 
 /*
@@ -85,7 +86,9 @@ const renderCancel = () => (
 const renderAuthentication = () => (
   <React.Suspense fallback={<SplashScreen />}>
     <Switch>
-      <Route path="/login" component={Login} />
+      <Route path="/login" component={LoginPage} />
+      {/* Route that makes GET request to server /oauth/callback */}
+      <Route exact path="/oauth" component={OAuthPage} />
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}

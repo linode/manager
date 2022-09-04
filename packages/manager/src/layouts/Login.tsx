@@ -7,113 +7,120 @@
  */
 
 import axios from 'axios';
-import React, { PureComponent } from 'react';
-import { connect, MapDispatchToProps } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import React from 'react';
+import { RouteComponentProps, useHistory, useLocation } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
 import PasswordInput from 'src/components/PasswordInput';
 import Button from 'src/components/Button';
+import Box from 'src/components/core/Box';
 import { API_ROOT, APP_ROOT } from 'src/constants';
-import { handleStartSession } from 'src/store/authentication/authentication.actions';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-// import { parseQueryParams } from 'src/utilities/queryParams';
+import GoogleIcon from 'src/assets/icons/providers/google-logo.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import classNames from 'classnames';
+import Grid from 'src/components/Grid';
+import Hidden from 'src/components/core/Hidden';
+import Divider from 'src/components/core/Divider';
 
-type CombinedProps = DispatchProps & RouteComponentProps;
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(3),
+    paddingTop: 17,
+  },
+  copy: {
+    lineHeight: '1.25rem',
+    marginTop: theme.spacing(),
+    marginBottom: theme.spacing(2),
+    maxWidth: 960,
+  },
+  providersList: {
+    marginBottom: 0,
+    width: 'calc(100% + 24px)',
+    '& .MuiGrid-item': {
+      [theme.breakpoints.down(1100)]: {
+        flexBasis: '50%',
+        maxWidth: '50%',
+      },
+      [theme.breakpoints.down('xs')]: {
+        flexBasis: '100%',
+        maxWidth: '100%',
+      },
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: theme.spacing(),
+    },
+  },
+  button: {
+    borderRadius: 1,
+    backgroundColor: theme.name === 'lightTheme' ? '#f5f6f7' : '#444',
+    marginTop: theme.spacing(),
+    minHeight: 70,
+    paddingRight: theme.spacing(3) - 4,
+    paddingLeft: theme.spacing(3) - 4,
+    width: 'calc(100% - 8px)',
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: 0,
+    },
+    [theme.breakpoints.down('xs')]: {
+      marginTop: 0,
+      marginLeft: 0,
+    },
+    '&:hover': {
+      backgroundColor: theme.color.grey6,
+    },
+    '& > span': {
+      display: 'inline-block',
+      color: theme.color.headline,
+    },
+  },
+  providerIcon: {
+    color: '#939598',
+    height: 32,
+    width: 32,
+    marginRight: theme.spacing(2),
+  },
+  providerContent: {
+    width: '100%',
+  },
+  isButtonEnabled: {
+    border: `1px solid ${theme.palette.primary.main} !important`,
+  },
+  enabledText: {
+    fontFamily: theme.font.normal,
+    marginLeft: 4,
+  },
+  notice: {
+    fontFamily: theme.font.bold,
+    fontSize: '0.875rem',
+  },
+}));
 
-// interface QueryParams {
-//   access_token: string;
-//   token_type: string;
-//   destination: string;
-//   expires_in: string;
-// }
+type CombinedProps = RouteComponentProps;
 
-export class Login extends PureComponent<
-  CombinedProps,
-  { username: string; password: string }
-> {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      username: '',
-      password: '',
-    };
-    this.handleUsernameChange = this.handleUsernameChange.bind(this);
-    this.handlePasswordChange = this.handlePasswordChange.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
-  }
+const Login: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
+  const location = useLocation();
+  const history = useHistory();
 
-  componentDidMount() {
-    // /**
-    //  * If this URL doesn't have a fragment, or doesn't have enough entries, we know we don't have
-    //  * the data we need and should bounce.
-    //  * location.hash is a string which starts with # and is followed by a basic query params stype string.
-    //  *
-    //  * 'location.hash = `#access_token=something&token_type=Admin&destination=linodes/1234`
-    //  *
-    //  */
-    // const { location, history } = this.props;
-    // /**
-    //  * If the hash doesn't contain a string after the #, there's no point continuing as we dont have
-    //  * the query params we need.
-    //  */
-    // if (!location.hash || location.hash.length < 2) {
-    //   return history.push('/');
-    // }
-    // const hashParams = (parseQueryParams(
-    //   location.hash.substr(1)
-    // ) as unknown) as QueryParams;
-    // const {
-    //   access_token: accessToken,
-    //   destination,
-    //   token_type: tokenType,
-    //   expires_in: expiresIn,
-    // } = hashParams;
-    // /** If the access token wasn't returned, something is wrong and we should bail. */
-    // if (!accessToken) {
-    //   return history.push('/');
-    // }
-    // /**
-    //  * We multiply the expiration time by 1000 ms because JavaSript returns time in ms, while
-    //  * the API returns the expiry time in seconds
-    //  */
-    // const expireDate = new Date();
-    // expireDate.setTime(expireDate.getTime() + +expiresIn * 1000);
-    // /**
-    //  * We have all the information we need and can persist it to localStorage and Redux.
-    //  */
-    // this.props.dispatchStartSession(
-    //   accessToken,
-    //   tokenType,
-    //   expireDate.toString()
-    // );
-    // /**
-    //  * All done, redirect to the destination from the hash params
-    //  * NOTE: the param does not include a leading slash
-    //  */
-    // history.push(`/${destination}`);
-  }
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
 
-  handleUsernameChange(e: any) {
-    this.setState({
-      username: e.target.value,
-    });
-  }
-  handlePasswordChange(e: any) {
-    this.setState({
-      password: e.target.value,
-    });
-  }
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(e.target.value);
+  };
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+  };
 
-  async handleLogin(e: React.FormEvent) {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams(this.props.location.search);
+    const params = new URLSearchParams(location.search);
     const res = await axios.post(
       `${API_ROOT}/auth-callback`,
       JSON.stringify({
-        username: this.state.username,
-        password: this.state.password,
+        username,
+        password,
       }),
       {
         headers: {
@@ -135,32 +142,78 @@ export class Login extends PureComponent<
       keys.push(key);
     });
     keys.forEach((key) => url.searchParams.delete(key));
-    this.props.history.replace(`${url.pathname}${url.hash}`);
-  }
-  render() {
-    return (
-      <LinodeThemeWrapper>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100%',
-          }}
-        >
-          <div>
-            <Typography variant="h1">Log into NodeStack</Typography>
-            <form onSubmit={this.handleLogin}>
+    history.replace(`${url.pathname}${url.hash}`);
+  };
+
+  const handleLoginWithGoogle = async () => {
+    try {
+      const res = await axios.get(`${API_ROOT}/oauthclient${location.search}`);
+      window.location.replace(res.data.authUrl);
+    } catch (err) {}
+  };
+
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100%',
+      }}
+    >
+      <div>
+        <div style={{ marginBottom: 30 }}>
+          <Typography align="center" variant="h1">
+            Welcome to NodeStack!
+          </Typography>
+        </div>
+        <Grid container>
+          <Grid item xs={12} sm={5}>
+            <Button
+              className={classNames({
+                [classes.button]: true,
+              })}
+              onClick={handleLoginWithGoogle}
+            >
+              <GoogleIcon className={classes.providerIcon} />
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="space-between"
+                className={classes.providerContent}
+              >
+                <div>Log in with Google</div>
+              </Box>
+            </Button>
+          </Grid>
+          <Hidden xsDown>
+            <Grid
+              item
+              sm={2}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Divider orientation="vertical" variant="middle" />
+            </Grid>
+          </Hidden>
+          <Grid item xs={12} sm={5}>
+            <Typography align="center" variant="h3">
+              Log in with username/password
+            </Typography>
+            <form onSubmit={handleLogin}>
               <TextField
                 label="Username"
                 //  errorText={errorMap.first_name}
-                onChange={this.handleUsernameChange}
+                onChange={handleUsernameChange}
                 //  value={defaultTo(account.first_name, fields.first_name)}
                 // data-qa-contact-first-name
               />
+
               <PasswordInput
                 label="Password"
-                onChange={this.handlePasswordChange}
+                onChange={handlePasswordChange}
                 hideStrengthLabel
                 hideValidation
               />
@@ -168,43 +221,16 @@ export class Login extends PureComponent<
                 type="submit"
                 buttonType="primary"
                 style={{ backgroundColor: '#00b159', marginTop: 10 }}
-                onClick={this.handleLogin}
+                onClick={handleLogin}
               >
-                Log In
+                Log in
               </Button>
             </form>
-          </div>
-        </div>
-      </LinodeThemeWrapper>
-    );
-  }
-}
-
-interface DispatchProps {
-  dispatchStartSession: (
-    token: string,
-    tokenType: string,
-    expires: string
-  ) => void;
-}
-
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
-  dispatch
-) => {
-  return {
-    dispatchStartSession: (token, tokenType, expires) =>
-      dispatch(
-        handleStartSession({
-          token: `${tokenType.charAt(0).toUpperCase()}${tokenType.substr(
-            1
-          )} ${token}`,
-          scopes: '*',
-          expires,
-        })
-      ),
-  };
+          </Grid>
+        </Grid>
+      </div>
+    </div>
+  );
 };
 
-const connected = connect(undefined, mapDispatchToProps);
-
-export default compose<CombinedProps, {}>(connected, withRouter)(Login);
+export default Login;
