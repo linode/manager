@@ -1,64 +1,75 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+import { profileFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { formatOffset, TimezoneForm } from './TimezoneForm';
 
-const classes = {
-  root: '',
-  copy: '',
-  button: '',
-  loggedInAsCustomerNotice: '',
-};
-
 describe('Timezone change form', () => {
-  const updateProfile = jest.fn();
-
-  const component = shallow(
-    <TimezoneForm
-      classes={classes}
-      timezone={'Pacific/Niue'}
-      updateTimezone={updateProfile}
-      loggedInAsCustomer={true}
-    />
+  // Use the MSW to mock a profile with America/New_York as the timezone
+  // for this specific suite of tests
+  server.use(
+    rest.get('*/profile', (req, res, ctx) => {
+      return res(
+        ctx.json(profileFactory.build({ timezone: 'America/New_York' }))
+      );
+    })
   );
 
-  it('should render .', () => {
-    expect(component).toHaveLength(1);
+  it('should render input label', async () => {
+    const { getByText, getByTestId } = renderWithTheme(
+      <TimezoneForm loggedInAsCustomer={true} />
+    );
+
+    // This component depends on the /profile to be loaded. Wait for
+    // loading to finish before we check anything.
+    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+
+    expect(getByText('Timezone')).toBeInTheDocument();
   });
 
   it('should show a message if an admin is logged in as a customer', () => {
-    expect(component.find('[data-qa-admin-notice]')).toHaveLength(1);
+    const { getByTestId } = renderWithTheme(
+      <TimezoneForm loggedInAsCustomer={true} />
+    );
+
+    expect(getByTestId('admin-notice')).toBeInTheDocument();
   });
 
   it('should not show a message if the user is logged in normally', () => {
-    component.setProps({ loggedInAsCustomer: false });
-    expect(component.find('[data-qa-admin-notice]')).toHaveLength(0);
+    const { queryByTestId } = renderWithTheme(
+      <TimezoneForm loggedInAsCustomer={false} />
+    );
+
+    expect(queryByTestId('admin-notice')).not.toBeInTheDocument();
   });
 
-  xit("should include text with the user's current time zone", () => {
-    expect(component.find('[data-qa-copy]').html()).toContain(
-      'Europe/San_Marino'
+  it("should include text with the user's current time zone", async () => {
+    const { getByText } = renderWithTheme(
+      <TimezoneForm loggedInAsCustomer={true} />
     );
-  });
 
-  xit("should have a select with the user's current timezone selected", () => {
-    expect(component.find('[data-qa-tz-select]').props().value).toBe(
-      'Europe/San_Marino'
-    );
+    expect(getByText('New York', { exact: false })).toBeInTheDocument();
+    expect(getByText('Eastern Time', { exact: false })).toBeInTheDocument();
   });
 });
 
 describe('formatOffset', () => {
   it('formats the offset correctly', () => {
     const testMap = [
-      { offset: -3.5, label: 'Newfoundland Time', formattedOffset: '-3:30' },
-      { offset: 0, label: 'TrollTime', formattedOffset: '+0:00' },
-      { offset: 5.75, label: 'Nepal Time', formattedOffset: '+5:45' },
-      { offset: 13, label: 'New Zealand Time', formattedOffset: '+13:00' },
+      {
+        timezone: {
+          label: 'Coordinated Universal Time',
+          name: 'UTC',
+          offset: 0,
+        },
+        expectedOffset: '+0:00',
+      },
     ];
 
-    testMap.forEach(({ offset, label, formattedOffset }) =>
-      expect(formatOffset(offset, label)).toBe(
-        `(GMT ${formattedOffset}) ${label}`
+    testMap.forEach(({ timezone, expectedOffset }) =>
+      expect(formatOffset(timezone)).toBe(
+        `(GMT ${expectedOffset}) ${timezone.label}`
       )
     );
   });
