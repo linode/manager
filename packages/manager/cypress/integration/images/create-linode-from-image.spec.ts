@@ -25,10 +25,11 @@ const mockLinodeList = createMockLinodeList({
 
 const mockLinode = mockLinodeList.data[0];
 
-const createLinodeWithImageMock = () => {
+const createLinodeWithImageMock = (preselectedImage: boolean) => {
   cy.intercept('*/images*', (req) => {
     req.reply(createMockImage());
   }).as('mockImage');
+
   cy.intercept('POST', '*/linode/instances', (req) => {
     req.reply({
       body: mockLinode,
@@ -39,15 +40,16 @@ const createLinodeWithImageMock = () => {
     req.reply(mockLinode);
   }).as('mockLinodeResponse');
 
-  cy.visitWithLogin('/linodes/create?type=Images');
   cy.wait('@mockImage');
-  cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
-    containsClick('Choose an image');
-  });
-  cy.get(`[data-qa-image-select-item="${imageId}"]`).within(() => {
-    cy.get('span').should('have.class', 'fl-tux');
-    fbtClick(imageLabel);
-  });
+  if (!preselectedImage) {
+    cy.get('[data-qa-enhanced-select="Choose an image"]').within(() => {
+      containsClick('Choose an image');
+    });
+    cy.get(`[data-qa-image-select-item="${imageId}"]`).within(() => {
+      cy.get('span').should('have.class', 'fl-tux');
+      fbtClick(imageLabel);
+    });
+  }
   getClick('[data-qa-enhanced-select="Select a Region"]').within(() => {
     containsClick('Select a Region');
   });
@@ -67,13 +69,12 @@ const createLinodeWithImageMock = () => {
 
 describe('create linode from image, mocked data', () => {
   it('creates linode from image on images tab', () => {
-    createLinodeWithImageMock();
+    cy.visitWithLogin('/linodes/create?type=Images');
+    createLinodeWithImageMock(false);
   });
 
-  it('creates linode from image on image page', () => {
-    cy.visitWithLogin(
-      `/linodes/create/?type=Images&imageID=private/${imageId}`
-    );
-    createLinodeWithImageMock();
+  it('creates linode from preselected image on images tab', () => {
+    cy.visitWithLogin(`/linodes/create/?type=Images&imageID=${imageId}`);
+    createLinodeWithImageMock(true);
   });
 });

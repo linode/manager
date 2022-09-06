@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-09-06] - v1.75.0
+
+### Added:
+
+- Marketplace Search & Filtering and UI refinements
+- Sept 2022 Marketplace Apps
+- More Insightful Credit Card Expiration Date Validation
+- Volume Status on Volumes landing page
+
+### Changed:
+
+- Remove Type-To-Confirm checkbox from Modals
+- Documentation link for Powered off Linode Accrued Charges
+
+### Fixed:
+
+- Ant Media Server display in drawer
+- Apostrophes in Linode Resize and Host Maintenance error messages
+
 ## [2022-08-24] - v1.74.1
 
 ### Fixed:
