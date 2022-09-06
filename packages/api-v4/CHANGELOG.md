@@ -1,3 +1,9 @@
+## [2022-09-06] - v0.77.0
+
+### Changed:
+
+- Unused dependencies and code clean up
+
 ## [2022-08-22] - v0.76.0
 
 ### Added:

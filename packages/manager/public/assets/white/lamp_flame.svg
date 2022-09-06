@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 32 39" style="enable-background:new 0 0 32 39;" xml:space="preserve">
+  <style type="text/css">
+    .st0{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}
+    .st1{fill:none;stroke:#FFFFFF;stroke-width:2;}
+  </style>
+  <title>LAMP</title>
+  <g id="LAMP">
+    <g>
+      <path class="st0" d="M24,23.9c0-0.1,0-0.2,0-0.2C24.1,24.3,24.1,24.5,24,23.9z"/>
+      <path class="st0" d="M24,23.7c-0.4-2.1-2.1-9.9-6.5-13.7c-1-0.9,1.1,4,0.1,6.4C16.8,16.1,15.9,16,15,16c-5,0-9,4-9,9s4,9,9,9
+        s9-4,9-9c0-0.5,0-1-0.1-1.4C23.9,23.6,23.9,23.6,24,23.7z"/>
+    </g>
+    <path id="Oval-Copy" class="st1" d="M15,36.8c6.6,0,12-5.2,12-11.6c0-4,1.6-8.4-12.9-23c-1.7-1.7,3.4,11.4,0.9,11.4
+      c-6.6,0-12,5.2-12,11.6S8.4,36.8,15,36.8z"/>
+  </g>
+</svg>

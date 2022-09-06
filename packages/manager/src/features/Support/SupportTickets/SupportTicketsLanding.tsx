@@ -19,6 +19,7 @@ import {
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import withGlobalErrors, {
   Props as GlobalErrorProps,
 } from 'src/containers/globalErrors.container';
@@ -59,6 +60,7 @@ interface State {
   newTicket?: SupportTicket;
   prefilledTitle?: string;
   prefilledDescription?: string;
+  prefilledEntity?: EntityForTicketDetails;
 }
 
 const tabs = ['open', 'closed'];
@@ -97,6 +99,7 @@ export class SupportTicketsLanding extends React.PureComponent<
       drawerOpen: stateParams ? stateParams.open : drawerOpen,
       prefilledDescription: stateParams ? stateParams.description : undefined,
       prefilledTitle: stateParams ? stateParams.title : undefined,
+      prefilledEntity: stateParams ? stateParams.entity : undefined,
     };
   }
 
@@ -155,7 +158,13 @@ export class SupportTicketsLanding extends React.PureComponent<
   };
 
   renderTicketDrawer = () => {
-    const { drawerOpen, prefilledDescription, prefilledTitle } = this.state;
+    const {
+      drawerOpen,
+      prefilledDescription,
+      prefilledTitle,
+      prefilledEntity,
+    } = this.state;
+
     return (
       <SupportTicketDrawer
         open={drawerOpen}
@@ -163,6 +172,7 @@ export class SupportTicketsLanding extends React.PureComponent<
         onSuccess={this.handleAddTicketSuccess}
         prefilledDescription={prefilledDescription}
         prefilledTitle={prefilledTitle}
+        prefilledEntity={prefilledEntity}
       />
     );
   };

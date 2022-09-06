@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useFormik } from 'formik';
+import { useFormik, yupToFormErrors } from 'formik';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const getExpirationDelimiter = (value: string | undefined) =>
+  value?.match(/[^$,.\d]/);
+
 interface Props {
   onClose: () => void;
   disabled: boolean;
@@ -47,6 +50,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
   const [error, setError] = React.useState<string>();
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const expiryRef = React.useRef<HTMLInputElement>(null);
 
   const addCreditCard = async (
     { card_number, cvv, expiry_month, expiry_year }: Values,
@@ -113,17 +117,44 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
       country: '',
     },
     onSubmit: addCreditCard,
-    validationSchema: CreditCardSchema,
+    validate: async (values) => {
+      const expiryValue = expiryRef?.current?.value;
+      const delimiter = getExpirationDelimiter(expiryValue);
+
+      const errors = await CreditCardSchema.validate(values, {
+        abortEarly: false,
+      })
+        .then(() => ({}))
+        .catch((error) => yupToFormErrors(error));
+
+      if (!delimiter) {
+        return {
+          ...errors,
+          expiry_month:
+            'Expiration must include a slash between the month and year (MM/YY).',
+        };
+      }
+
+      return errors;
+    },
   });
+
+  const onExpiryChange = (value: string) => {
+    const delimiter = getExpirationDelimiter(value);
+
+    if (delimiter?.[0]) {
+      const values: string[] = value.split(delimiter[0]);
+      setFieldValue('expiry_month', values[0]);
+      setFieldValue('expiry_year', parseExpiryYear(values[1]));
+    } else {
+      setFieldValue('expiry_month', value);
+    }
+  };
 
   const disableInput = isSubmitting || disabled;
 
   const disableAddButton =
-    disabled ||
-    !values.card_number ||
-    !values.expiry_month ||
-    !values.expiry_year ||
-    !values.cvv;
+    disabled || !values.card_number || !values.cvv || !values.expiry_month;
 
   return (
     <form onSubmit={handleSubmit}>
@@ -149,12 +180,9 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
+            inputRef={expiryRef}
             name="expiry"
-            onChange={(e) => {
-              const value: string[] = e.target.value.split('/');
-              setFieldValue('expiry_month', value[0]);
-              setFieldValue('expiry_year', parseExpiryYear(value[1]));
-            }}
+            onChange={(e) => onExpiryChange(e.target.value)}
             label="Expiration Date"
             placeholder="MM/YY"
             error={
