@@ -74,7 +74,7 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
-    name: 'Ant Media Server',
+    name: 'Ant Media Server: Community Edition',
     categories: ['Media and Entertainment'],
     description: `Self-hosted free version to optimize and record video streaming for webinars, gaming, and more.`,
     summary: 'A reliable, flexible and scalable video streaming solution.',
@@ -93,7 +93,7 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
-    name: 'Ant Media Enterprise Edition',
+    name: 'Ant Media Server: Enterprise Edition',
     categories: ['Media and Entertainment'],
     description: `Ant Media Server makes it easy to set up a video streaming platform with ultra low latency. The Enterprise edition supports WebRTC Live Streaming in addition to CMAF and HLS streaming. Set up live restreaming to social media platforms to reach more viewers.`,
     summary: 'Highly scalable and feature-rich live video streaming platform.',
