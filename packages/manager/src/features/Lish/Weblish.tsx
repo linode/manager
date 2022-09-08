@@ -1,6 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -44,9 +43,7 @@ interface State {
   error: string;
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{ linodeId?: string }>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const maxRetryAttempts: number = 3;
 
@@ -240,4 +237,4 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(Weblish));
+export default styled(Weblish);
