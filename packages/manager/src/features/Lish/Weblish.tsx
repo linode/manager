@@ -35,7 +35,6 @@ const styles = (theme: Theme) =>
 interface Props {
   linode: Linode;
   token: string;
-  refreshToken: () => Promise<void> | undefined;
 }
 
 interface State {
@@ -76,8 +75,6 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { retryAttempts, retryingConnection } = this.state;
-
     /*
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
@@ -85,24 +82,6 @@ export class Weblish extends React.Component<CombinedProps, State> {
     if (this.props.token !== prevProps.token) {
       this.socket.close();
       this.terminal.dispose();
-    }
-
-    /*
-     * If our connection failed, and we did not surpass the max number of
-     * reconnection attempts, try to reconnect
-     */
-    if (prevState.retryAttempts !== retryAttempts && retryingConnection) {
-      setTimeout(() => {
-        /*
-         * It's okay to disregard typescript checking here
-         * because the parent component <Lish /> handles
-         * the situation where refreshToken() returns undefined
-         */
-        this.props
-          .refreshToken()!
-          .then(() => this.connect())
-          .catch((e) => e);
-      }, 3000);
     }
   }
 

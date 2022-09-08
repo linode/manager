@@ -12,6 +12,8 @@ import {
   Stats,
   getLinodeTransferByDate,
   getLinodeStats,
+  getLinodeLishToken,
+  getLinode,
 } from '@linode/api-v4/lib/linodes';
 
 export const STATS_NOT_READY_API_MESSAGE =
@@ -119,6 +121,22 @@ export const useLinodeTransferByDate = (
     () => getLinodeTransferByDate(id, year, month),
     { enabled }
   );
+};
+
+export const useLinodeLishTokenQuery = (id: number, enabled = true) => {
+  return useQuery<{ lish_token: string }, APIError[]>(
+    [`${queryKey}-lish-token`, id],
+    () => getLinodeLishToken(id),
+    {
+      enabled,
+      refetchInterval: 300000,
+      staleTime: 300000,
+    }
+  );
+};
+
+export const useLinodeQuery = (id: number) => {
+  return useQuery<Linode, APIError[]>([queryKey, id], () => getLinode(id));
 };
 
 /** Use with care; originally added to request all Linodes in a given region for IP sharing and transfer */
