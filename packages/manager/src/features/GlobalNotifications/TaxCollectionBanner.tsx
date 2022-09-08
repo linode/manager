@@ -7,7 +7,7 @@ import Typography from 'src/components/core/Typography';
 import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-// import { useFlags } from 'src/hooks/useFlags';
+import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { DateTime } from 'luxon';
 
@@ -22,20 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const TaxCollectionBanner: React.FC<{}> = () => {
   const classes = useStyles();
   const history = useHistory();
-  const flags = {
-    taxCollectionBanner: {
-      date: 'October 22 2022',
-      action: false,
-      regions: [
-        { name: 'PA', date: 'July 27 2023' },
-        { name: 'CA', date: 'November 27 2022' },
-        { name: 'AZ' },
-        { name: 'VT' },
-      ],
-    },
-  };
-
-  // useFlags();
+  const flags = useFlags();
 
   const { data: account } = useAccount();
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
@@ -45,13 +32,18 @@ const TaxCollectionBanner: React.FC<{}> = () => {
   const countryDateString = flags.taxCollectionBanner?.date ?? '';
   const bannerHasAction = flags.taxCollectionBanner?.action ?? false;
   const bannerRegions =
-    flags.taxCollectionBanner?.regions.map((region) => region.name) ?? [];
+    flags.taxCollectionBanner?.regions?.map((region) => {
+      if (typeof region === 'string') {
+        return region;
+      }
+      return region.name;
+    }) ?? [];
 
   if (!account || hasDismissedBanner || !countryDateString) {
     return null;
   }
 
-  const regionDateString = flags.taxCollectionBanner?.regions.find(
+  const regionDateString = flags.taxCollectionBanner?.regions?.find(
     (region) => region.name === account.state
   )?.date;
 
