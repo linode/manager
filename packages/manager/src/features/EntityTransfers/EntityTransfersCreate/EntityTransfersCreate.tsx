@@ -23,13 +23,13 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       margin: 0,
       justifyContent: 'center',
     },
   },
   crumb: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(),
     },
     [theme.breakpoints.only('md')]: {
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   sidebar: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       padding: '0px 8px !important',
       '&.MuiGrid-item': {
         paddingLeft: 0,
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   error: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
   },

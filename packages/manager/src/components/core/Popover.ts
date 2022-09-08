@@ -1,6 +1,6 @@
 import Popover, {
   PopoverProps as _PopoverProps,
-} from '@material-ui/core/Popover';
+} from '@mui/material/Popover';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface PopoverProps extends _PopoverProps {}

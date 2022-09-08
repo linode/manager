@@ -238,10 +238,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         // Don't display One-Click Helpers to the user
         // Filter out any apps that we don't have info for
         const filteredApps = res.data.filter((script) => {
-          return (
-            !script.label.match(/helpers/i) &&
-            allowedApps.includes(String(script.id))
-          );
+          return !script.label.match(/helpers/i) &&
+          allowedApps.includes(String(script.id));
         });
         const trimmedApps = filteredApps.map((stackscript) =>
           trimOneClickFromLabel(stackscript)

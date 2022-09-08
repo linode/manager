@@ -37,7 +37,7 @@ import MonitorTableContent from './MonitorTableContent';
 const useStyles = makeStyles((theme: Theme) => ({
   addNewWrapper: {
     marginBottom: 5,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
   },

@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '0.875rem',
     marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
       paddingRight: 0,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
   },

@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'
       }`,
       marginBottom: theme.spacing(),
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         overflowX: 'auto',
         padding: 1,
       },

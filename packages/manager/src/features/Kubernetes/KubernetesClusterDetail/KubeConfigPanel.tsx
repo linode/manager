@@ -21,7 +21,7 @@ import KubeConfigDrawer from './KubeConfigDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) + 1}px ${
+    padding: `calc(${theme.spacing(3) + 5}px ${theme.spacing(3)} + 1px) ${
       theme.spacing(2) - 3
     }px`,
     [theme.breakpoints.up('md')]: {
@@ -41,14 +41,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '0.9rem',
     marginRight: 12,
     minWidth: 124,
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('xl')]: {
       marginBottom: theme.spacing(2),
       marginRight: 0,
     },
   },
   buttonSecondary: {
     minWidth: 88,
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('xl')]: {
       marginBottom: 0,
       marginRight: 0,
     },

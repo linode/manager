@@ -1,5 +1,5 @@
-import ErrorOutline from '@material-ui/icons/ErrorOutline';
-import HelpOutline from '@material-ui/icons/HelpOutline';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles } from 'src/components/core/styles';
@@ -70,7 +70,10 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
       classes={classes}
       onMouseEnter={onMouseEnter}
     >
-      <IconButton className={`${className} ${styles.root}`} data-qa-help-button>
+      <IconButton
+        className={`${className} ${styles.root}`}
+        data-qa-help-button
+        size="large">
         {isError ? <ErrorOutline /> : <HelpOutline />}
       </IconButton>
     </Tooltip>

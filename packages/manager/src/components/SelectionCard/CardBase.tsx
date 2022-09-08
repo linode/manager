@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.offWhite,
     border: `1px solid ${theme.bg.main}`,
     margin: 0,
-    padding: `0 ${theme.spacing(1)}px !important`,
+    padding: `0 ${theme.spacing(1)} !important`,
     transition: `
       ${'background-color 225ms ease-in-out, '}
       ${'border-color 225ms ease-in-out'}

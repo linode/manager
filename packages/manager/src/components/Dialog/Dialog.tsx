@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import Button from 'src/components/Button';
 import MUIDialog, {
   DialogProps as _DialogProps,
@@ -20,7 +20,7 @@ export interface DialogProps extends _DialogProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
     paddingTop: 0,
     maxHeight: '100%',
     '& .actionPanel': {

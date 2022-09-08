@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     position: 'relative',
     top: -2,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
     [theme.breakpoints.up('sm')]: {
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   header: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
     minHeight: 40,
     backgroundColor: theme.color.grey2,
     borderTopLeftRadius: theme.shape.borderRadius,

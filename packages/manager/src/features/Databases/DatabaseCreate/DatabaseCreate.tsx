@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end',
     alignItems: 'center',
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-end',
       marginTop: theme.spacing(),
@@ -81,14 +81,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   createBtn: {
     whiteSpace: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
   },
   createText: {
     marginLeft: theme.spacing(),
     marginRight: theme.spacing(3),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(),
       marginRight: 0,
     },

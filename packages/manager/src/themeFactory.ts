@@ -1,15 +1,16 @@
 import { mergeDeepRight } from 'ramda';
-import createBreakpoints from 'src/components/core/styles/createBreakpoints';
+import { adaptV4Theme } from '@mui/material/styles';
 import createMuiTheme, {
-  ThemeOptions,
+  DeprecatedThemeOptions,
 } from 'src/components/core/styles/createMuiTheme';
+import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
 
 /**
  * Augmenting Palette and Palette Options
  * @todo Move status out of the palette and add it as a custom ThemeOption.
  */
 
-declare module '@material-ui/core/styles/createPalette' {
+declare module '@mui/material/styles/createPalette' {
   interface Palette {
     status: {
       success: string;
@@ -34,9 +35,9 @@ declare module '@material-ui/core/styles/createPalette' {
 }
 
 /**
- * Augmenting the Theme and ThemeOptions.
+ * Augmenting the Theme and DeprecatedThemeOptions.
  */
-declare module '@material-ui/core/styles/createTheme' {
+declare module '@mui/material/styles/createTheme' {
   interface Theme {
     name: string;
     '@keyframes rotate': any;
@@ -58,7 +59,7 @@ declare module '@material-ui/core/styles/createTheme' {
     status: any;
   }
 
-  interface ThemeOptions {
+  interface DeprecatedThemeOptions {
     name?: string;
     '@keyframes rotate'?: any;
     '@keyframes dash'?: any;
@@ -195,7 +196,7 @@ const visuallyHidden = {
 
 const graphTransparency = '0.7';
 
-type ThemeDefaults = () => ThemeOptions;
+type ThemeDefaults = () => DeprecatedThemeOptions;
 
 const themeDefaults: ThemeDefaults = () => {
   return {
@@ -1399,9 +1400,9 @@ const themeDefaults: ThemeDefaults = () => {
   };
 };
 
-export default (options: ThemeOptions) =>
+export default (options: DeprecatedThemeOptions) =>
   createMuiTheme(
-    mergeDeepRight(themeDefaults(), {
+    adaptV4Theme(mergeDeepRight(themeDefaults(), {
       breakpoints: {
         values: {
           xs: 0,
@@ -1412,5 +1413,5 @@ export default (options: ThemeOptions) =>
         },
       },
       ...options,
-    })
+    }))
   );

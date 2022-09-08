@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.5rem',
   },
   addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
       marginTop: -theme.spacing(1),
     },

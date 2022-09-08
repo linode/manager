@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(5) + 8,
   },
   gaugesOuter: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginBottom: theme.spacing(2),
     },
     [theme.breakpoints.up('lg')]: {

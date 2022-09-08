@@ -23,7 +23,7 @@ type ClassNames = 'root' | 'copy' | 'button' | 'loggedInAsCustomerNotice';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
       },
     },

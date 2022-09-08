@@ -28,12 +28,12 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
         </Link>
       </TableCell>
       <TableCell noWrap>{formatDate(when)}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-testid="relative-date">
           {parseAPIDate(when).toRelative()}
         </TableCell>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell noWrap>{capitalize(type.replace('_', ' '))}</TableCell>
       </Hidden>
       <TableCell statusCell>
@@ -47,7 +47,7 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
             : capitalize(status)
         }
       </TableCell>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell>
           <HighlightedMarkdown textOrMarkdown={reason} />
         </TableCell>

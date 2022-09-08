@@ -16,7 +16,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       padding: '8px 12px',
     },
-    [theme.breakpoints.down(370)]: {
+    [theme.breakpoints.down(undefined)]: {
       padding: 3,
     },
     '&:hover, &:focus': {

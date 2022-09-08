@@ -51,40 +51,38 @@ export const SideMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { collapse, open, closeMenu } = props;
 
-  return (
-    <>
-      <Hidden mdUp>
-        <Drawer
-          classes={{
-            paper: classes.menuPaper,
-          }}
-          ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
-          }}
-          onClose={closeMenu}
-          open={open}
-          variant="temporary"
-        >
-          <PrimaryNav closeMenu={closeMenu} isCollapsed={false} />
-        </Drawer>
-      </Hidden>
-      <Hidden smDown implementation="css">
-        <Drawer
-          classes={{
-            paper: `${classes.menuPaper} ${
-              collapse && classes.collapsedDesktopMenu
-            }`,
-            docked: classes.menuDocked,
-          }}
-          className={classes.desktopMenu}
-          open
-          variant="permanent"
-        >
-          <PrimaryNav closeMenu={closeMenu} isCollapsed={collapse} />
-        </Drawer>
-      </Hidden>
-    </>
-  );
+  return <>
+    <Hidden mdUp>
+      <Drawer
+        classes={{
+          paper: classes.menuPaper,
+        }}
+        ModalProps={{
+          keepMounted: true, // Better open performance on mobile.
+        }}
+        onClose={closeMenu}
+        open={open}
+        variant="temporary"
+      >
+        <PrimaryNav closeMenu={closeMenu} isCollapsed={false} />
+      </Drawer>
+    </Hidden>
+    <Hidden mdDown implementation="css">
+      <Drawer
+        classes={{
+          paper: `${classes.menuPaper} ${
+            collapse && classes.collapsedDesktopMenu
+          }`,
+          docked: classes.menuDocked,
+        }}
+        className={classes.desktopMenu}
+        open
+        variant="permanent"
+      >
+        <PrimaryNav closeMenu={closeMenu} isCollapsed={collapse} />
+      </Drawer>
+    </Hidden>
+  </>;
 };
 
 export default SideMenu;

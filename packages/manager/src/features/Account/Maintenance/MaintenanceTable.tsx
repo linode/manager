@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   csvLink: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
     color: theme.textColors.tableHeader,
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '12%',
   },
   heading: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
     marginBottom: theme.spacing(),
@@ -169,21 +169,30 @@ const MaintenanceTable: React.FC<Props> = (props) => {
     csvRef.current.link.click();
   };
 
-  return (
-    <>
-      <Accordion
-        className={classNames({
-          [classes.root]: true,
-          [classes.topMargin]: addTopMargin,
-        })}
-        heading={`${type}s`}
-        expanded={expanded}
-        onChange={() => toggleExpanded()}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.cell}>Label</TableCell>
+  return <>
+    <Accordion
+      className={classNames({
+        [classes.root]: true,
+        [classes.topMargin]: addTopMargin,
+      })}
+      heading={`${type}s`}
+      expanded={expanded}
+      onChange={() => toggleExpanded()}
+    >
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell className={classes.cell}>Label</TableCell>
+            <TableSortCell
+              active={orderBy === 'when'}
+              direction={order}
+              label="when"
+              handleClick={handleOrderChange}
+              className={classes.cell}
+            >
+              Date
+            </TableSortCell>
+            <Hidden mdDown>
               <TableSortCell
                 active={orderBy === 'when'}
                 direction={order}
@@ -191,82 +200,71 @@ const MaintenanceTable: React.FC<Props> = (props) => {
                 handleClick={handleOrderChange}
                 className={classes.cell}
               >
-                Date
+                When
               </TableSortCell>
-              <Hidden smDown>
-                <TableSortCell
-                  active={orderBy === 'when'}
-                  direction={order}
-                  label="when"
-                  handleClick={handleOrderChange}
-                  className={classes.cell}
-                >
-                  When
-                </TableSortCell>
-              </Hidden>
-              <Hidden xsDown>
-                <TableSortCell
-                  active={orderBy === 'type'}
-                  direction={order}
-                  label="type"
-                  handleClick={handleOrderChange}
-                  className={classes.cell}
-                >
-                  Type
-                </TableSortCell>
-              </Hidden>
+            </Hidden>
+            <Hidden smDown>
               <TableSortCell
-                active={orderBy === 'status'}
+                active={orderBy === 'type'}
                 direction={order}
-                label="status"
+                label="type"
                 handleClick={handleOrderChange}
                 className={classes.cell}
               >
-                Status
+                Type
               </TableSortCell>
-              <Hidden mdDown>
-                <TableCell style={{ width: '40%' }}>Reason</TableCell>
-              </Hidden>
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderTableContent()}</TableBody>
-        </Table>
-        <PaginationFooter
-          count={data?.results || 0}
-          handlePageChange={pagination.handlePageChange}
-          handleSizeChange={pagination.handlePageSizeChange}
-          page={pagination.page}
-          pageSize={pagination.pageSize}
-          eventCategory={`${type} Maintenance Table`}
+            </Hidden>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="status"
+              handleClick={handleOrderChange}
+              className={classes.cell}
+            >
+              Status
+            </TableSortCell>
+            <Hidden lgDown>
+              <TableCell style={{ width: '40%' }}>Reason</TableCell>
+            </Hidden>
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderTableContent()}</TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory={`${type} Maintenance Table`}
+      />
+    </Accordion>
+    {expanded ? (
+      <Box display="flex" justifyContent="flex-end">
+        {/*
+          We are using a hidden CSVLink and an <a> to allow us to lazy load the
+          entire maintenance list for the CSV download. The <a> is what shows up
+          to the user and the onClick fetches the full user data and then
+          uses a ref to 'click' the real CSVLink.
+          This adds some complexity but gives us the benefit of lazy loading a potentially
+          large set of maintenance events on mount for the CSV download.
+        */}
+        <CSVLink
+          ref={csvRef}
+          headers={headersForCSVDownload}
+          filename={`maintenance-${Date.now()}.csv`}
+          data={cleanCSVData(csv || [])}
         />
-      </Accordion>
-      {expanded ? (
-        <Box display="flex" justifyContent="flex-end">
-          {/*
-            We are using a hidden CSVLink and an <a> to allow us to lazy load the
-            entire maintenance list for the CSV download. The <a> is what shows up
-            to the user and the onClick fetches the full user data and then
-            uses a ref to 'click' the real CSVLink.
-            This adds some complexity but gives us the benefit of lazy loading a potentially
-            large set of maintenance events on mount for the CSV download.
-          */}
-          <CSVLink
-            ref={csvRef}
-            headers={headersForCSVDownload}
-            filename={`maintenance-${Date.now()}.csv`}
-            data={cleanCSVData(csv || [])}
-          />
-          <a
-            className={classes.csvLink}
-            onClick={downloadCSV}
-            aria-hidden="true"
-          >
-            Download CSV
-          </a>
-        </Box>
-      ) : null}
-    </>
-  );
+        <a
+          className={classes.csvLink}
+          onClick={downloadCSV}
+          aria-hidden="true"
+        >
+          Download CSV
+        </a>
+      </Box>
+    ) : null}
+  </>;
 };
 
 export default MaintenanceTable;

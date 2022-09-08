@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
@@ -34,7 +34,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 18,
     position: 'relative',
     '& + .notice': {
-      marginTop: `${theme.spacing()}px !important`,
+      marginTop: `${theme.spacing()} !important`,
     },
     '& $important': {
       backgroundColor: theme.bg.bgPaper,

@@ -1,4 +1,4 @@
-import Grid, { GridProps as _GridProps } from '@material-ui/core/Grid';
+import Grid, { GridProps as _GridProps } from '@mui/material/Grid';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface GridProps extends _GridProps {}

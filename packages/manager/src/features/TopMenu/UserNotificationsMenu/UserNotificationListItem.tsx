@@ -34,7 +34,7 @@ const styles = (theme: Theme) => {
     root: {
       margin: 0,
       justifyContent: 'center',
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
       borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create('background-color'),
       '& p': {

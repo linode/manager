@@ -1,5 +1,5 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import classNames from 'classnames';
 import { Event } from '@linode/api-v4/lib/account';
 import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
       position: 'relative',
       transition: theme.transitions.create(['color', 'border-color']),
       minWidth: 145,
-      padding: `${theme.spacing(1) - 2}px ${theme.spacing(1)}px`,
+      padding: `calc(${theme.spacing(1)} - 2px) ${theme.spacing(1)}`,
       '&:hover': {
         textDecoration: 'underline',
       },

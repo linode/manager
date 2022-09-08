@@ -84,7 +84,7 @@ export const ResultRow: React.FC<CombinedProps> = (props) => {
       <TableCell className={classes.regionCell}>
         {result.data.region && <RegionIndicator region={result.data.region} />}
       </TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell className={classes.createdCell}>
           {result.data.created && (
             <Typography>

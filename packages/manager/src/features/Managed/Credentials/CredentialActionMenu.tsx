@@ -16,7 +16,7 @@ export type CombinedProps = Props & WithSnackbarProps;
 
 const CredentialActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { label, credentialID, openDialog, openForEdit } = props;
 

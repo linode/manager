@@ -1,4 +1,4 @@
-import HelpOutline from '@material-ui/icons/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 import CircularProgress from 'src/components/core/CircularProgress';
 import IconButton from 'src/components/core/IconButton';
@@ -112,7 +112,7 @@ class WrapperMenuItem extends React.Component<CombinedProps> {
               className={classes.helpButton}
               onClick={handleClick}
               data-qa-tooltip-icon
-            >
+              size="large">
               <HelpOutline className={classes.helpIcon} />
             </IconButton>
           )}

@@ -1,4 +1,4 @@
-import Search from '@material-ui/icons/Search';
+import Search from '@mui/icons-material/Search';
 import * as React from 'react';
 import { compose } from 'recompose';
 

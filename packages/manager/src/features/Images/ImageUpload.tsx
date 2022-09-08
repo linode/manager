@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginTop: theme.spacing(2),
     width: '80%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },

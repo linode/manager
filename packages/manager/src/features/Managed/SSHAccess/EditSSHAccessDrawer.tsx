@@ -24,12 +24,12 @@ import { DEFAULTS } from './common';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ip: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingBottom: '0px !important',
     },
   },
   port: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingTop: '0px !important',
     },
   },

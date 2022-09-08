@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpWrapperTextField: {
     width: 415,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },

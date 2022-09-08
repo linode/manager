@@ -25,7 +25,7 @@ export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 
 export const MonitorActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     disableServiceMonitor,
