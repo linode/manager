@@ -60,6 +60,31 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   credit_card_updated: {
     notification: (e) => `Credit card information has been updated.`,
   },
+  database_create: {
+    scheduled: (e) => `Database ${e.entity!.label} is scheduled for creation.`,
+    notification: (e) =>
+      `Database ${e.entity!.label} is scheduled for creation.`,
+    started: (e) => `Database ${e.entity!.label} is being created.`,
+    failed: (e) => `Database ${e.entity!.label} could not be created.`,
+    finished: (e) => `Database ${e.entity!.label} has been created.`,
+  },
+  database_delete: {
+    notification: (e) => `Database ${e.entity!.label} has been deleted.`,
+  },
+  database_update: {
+    notification: (e) => `Database ${e.entity!.label} has been updated.`,
+  },
+  database_update_failed: {
+    notification: (e) => `Database ${e.entity!.label} failed to update.`,
+  },
+  database_backup_restore: {
+    notification: (e) =>
+      `Database ${e.entity!.label} has been restored from a backup.`,
+  },
+  database_credentials_reset: {
+    notification: (e) =>
+      `Database ${e.entity!.label}'s credentials have been reset.`,
+  },
   disk_create: {
     scheduled: (e) =>
       `${safeSecondaryEntityLabel(
@@ -698,31 +723,6 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   user_update: {
     notification: (e) => `User ${e.entity!.label} has been updated.`,
-  },
-  database_create: {
-    scheduled: (e) => `Database ${e.entity!.label} is scheduled for creation.`,
-    notification: (e) =>
-      `Database ${e.entity!.label} is scheduled for creation.`,
-    started: (e) => `Database ${e.entity!.label} is being created.`,
-    failed: (e) => `Database ${e.entity!.label} could not be created.`,
-    finished: (e) => `Database ${e.entity!.label} has been created.`,
-  },
-  database_delete: {
-    notification: (e) => `Database ${e.entity!.label} has been deleted.`,
-  },
-  database_update: {
-    notification: (e) => `Database ${e.entity!.label} has been updated.`,
-  },
-  database_update_failed: {
-    notification: (e) => `Database ${e.entity!.label} failed to update.`,
-  },
-  database_backup_restore: {
-    notification: (e) =>
-      `Database ${e.entity!.label} has been restored from a backup.`,
-  },
-  database_credentials_reset: {
-    notification: (e) =>
-      `Database ${e.entity!.label}'s credentials have been reset.`,
   },
 };
 
