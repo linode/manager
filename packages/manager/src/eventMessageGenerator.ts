@@ -72,7 +72,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) => `Database ${e.entity!.label} has been deleted.`,
   },
   database_update: {
-    notification: (e) => `Database ${e.entity!.label} has been updated.`,
+    finished: (e) => `Database ${e.entity!.label} has been updated.`,
   },
   database_update_failed: {
     notification: (e) => `Database ${e.entity!.label} failed to update.`,
