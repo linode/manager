@@ -1,16 +1,16 @@
-import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
+import ErrorState from 'src/components/ErrorState';
+import { Linode } from '@linode/api-v4/lib/linodes';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Terminal } from 'xterm';
+import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import ErrorState from 'src/components/ErrorState';
-import { Terminal } from 'xterm';
-import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 
 type ClassNames = 'progress' | 'message' | 'errorState';
 
@@ -35,7 +35,7 @@ const styles = (theme: Theme) =>
 interface Props {
   linode: Linode;
   token: string;
-  refreshToken: () => Promise<void> | undefined;
+  refreshToken: () => Promise<void>;
 }
 
 interface State {
