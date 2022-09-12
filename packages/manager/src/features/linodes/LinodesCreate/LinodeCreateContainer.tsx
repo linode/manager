@@ -76,6 +76,7 @@ import {
   queryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
+import DocsLink from 'src/components/DocsLink';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -733,11 +734,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0} className="m0">
-          <Grid item xs={12} className="p0">
+          <Grid item xs={10} className="p0">
             <Breadcrumb
               pathname={'/linodes/create'}
               labelTitle="Create"
               data-qa-create-linode-header
+            />
+          </Grid>
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', flexDirection: 'row-reverse' }}
+          >
+            <DocsLink
+              href="https://www.linode.com/docs/guides/platform/get-started/"
+              label="Getting Started"
+              analyticsLabel="Linode Create Flow"
             />
           </Grid>
           <LinodeCreate
