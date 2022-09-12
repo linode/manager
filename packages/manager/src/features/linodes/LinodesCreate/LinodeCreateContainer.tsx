@@ -77,6 +77,7 @@ import {
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import DocsLink from 'src/components/DocsLink';
+import { sendEvent } from 'src/utilities/ga';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -749,7 +750,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             <DocsLink
               href="https://www.linode.com/docs/guides/platform/get-started/"
               label="Getting Started"
-              analyticsLabel="Linode Create Flow"
+              onClick={() => {
+                sendEvent({
+                  category: 'Linode Create Flow',
+                  action: 'Click:link',
+                  label: 'Getting Started',
+                });
+              }}
             />
           </Grid>
           <LinodeCreate
