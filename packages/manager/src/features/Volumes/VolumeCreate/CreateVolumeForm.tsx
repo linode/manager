@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 160,
   },
   linodeConfigSelectWrapper: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
     },
@@ -88,19 +88,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'flex-end',
     },
   },
   agreement: {
     maxWidth: '70%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       maxWidth: 'unset',
     },
   },
   button: {
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
   },

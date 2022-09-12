@@ -14,7 +14,7 @@ export type StyleProps = WithStyles<ClassNames>;
 const summaryPanelStyles = (theme: Theme) =>
   createStyles({
     region: {
-      [theme.breakpoints.between('sm', 'md')]: {
+      [theme.breakpoints.between('sm', 'lg')]: {
         flexBasis: '100%',
         maxWidth: '100%',
         display: 'flex',

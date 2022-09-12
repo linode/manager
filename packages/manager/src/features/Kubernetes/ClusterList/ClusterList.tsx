@@ -187,7 +187,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
                       >
                         Cluster Label
                       </TableSortCell>
-                      <Hidden smDown>
+                      <Hidden mdDown>
                         <TableSortCell
                           active={orderBy === 'k8s_version'}
                           label={'k8s_version'}
@@ -216,7 +216,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
                       >
                         Region
                       </TableSortCell>
-                      <Hidden xsDown>
+                      <Hidden smDown>
                         <TableSortCell
                           active={orderBy === 'totalMemory'}
                           label={'totalMemory'}

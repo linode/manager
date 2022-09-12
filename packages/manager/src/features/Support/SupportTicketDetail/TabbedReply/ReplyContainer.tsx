@@ -24,7 +24,7 @@ import TabbedReply from './TabbedReply';
 const useStyles = makeStyles((theme: Theme) => ({
   replyContainer: {
     paddingLeft: theme.spacing(8),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(6),
     },
   },
@@ -46,8 +46,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 4,
       padding: `0 !important`,
     },
-    [theme.breakpoints.down('xs')]: {
-      padding: `${theme.spacing(2)}px !important`,
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing(2)} !important`,
     },
   },
 }));

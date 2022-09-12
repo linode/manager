@@ -1,6 +1,6 @@
 import TableCell, {
   TableCellProps as _TableCellProps,
-} from '@material-ui/core/TableCell';
+} from '@mui/material/TableCell';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface TableCellProps extends _TableCellProps {}

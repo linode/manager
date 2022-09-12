@@ -1,6 +1,6 @@
 import Snackbar, {
   SnackbarProps as _SnackbarProps,
-} from '@material-ui/core/Snackbar';
+} from '@mui/material/Snackbar';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface SnackbarProps extends _SnackbarProps {}

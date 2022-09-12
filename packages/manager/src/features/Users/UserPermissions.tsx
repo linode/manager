@@ -56,7 +56,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     title: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         paddingLeft: theme.spacing(),
       },
     },
@@ -71,7 +71,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
     },
     globalRow: {
-      padding: `${theme.spacing(1)}px 0`,
+      padding: `${theme.spacing(1)} 0`,
     },
     section: {
       marginTop: theme.spacing(2),
@@ -84,7 +84,7 @@ const styles = (theme: Theme) =>
       },
       '& td': {
         width: '100%',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           paddingRight: '0 !important',
           paddingLeft: 0,
         },
@@ -118,7 +118,7 @@ const styles = (theme: Theme) =>
     },
     label: {
       '& div': {
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           width: '100%',
         },
       },

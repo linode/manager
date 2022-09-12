@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(1) + 2,
   },
   spacing: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },

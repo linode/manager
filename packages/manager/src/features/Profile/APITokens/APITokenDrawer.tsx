@@ -88,27 +88,27 @@ const styles = (theme: Theme) =>
     },
     accessCell: {
       width: '31%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%',
       },
     },
     noneCell: {
       width: '23%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%',
       },
       textAlign: 'center',
     },
     readOnlyCell: {
       width: '23%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%',
       },
       textAlign: 'center',
     },
     readWritecell: {
       width: '23%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         width: '100%',
       },
       textAlign: 'center',

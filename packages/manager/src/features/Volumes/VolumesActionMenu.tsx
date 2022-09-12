@@ -55,7 +55,7 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   const { attached, poweredOff, isVolumesLanding } = props;
 
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleShowConfig = () => {
     const { onShowConfig, label, filesystemPath } = props;

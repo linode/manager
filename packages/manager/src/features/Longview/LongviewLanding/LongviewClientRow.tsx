@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   gaugeContainer: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginBottom: 30,
     },
   },

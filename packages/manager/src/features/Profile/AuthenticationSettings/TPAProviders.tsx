@@ -34,16 +34,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 0,
     width: 'calc(100% + 24px)',
     '& .MuiGrid-item': {
-      [theme.breakpoints.down(1100)]: {
+      [theme.breakpoints.down(undefined)]: {
         flexBasis: '50%',
         maxWidth: '50%',
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         flexBasis: '100%',
         maxWidth: '100%',
       },
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(),
     },
   },
@@ -55,10 +55,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(3) - 4,
     paddingLeft: theme.spacing(3) - 4,
     width: 'calc(100% - 8px)',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: 0,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: 0,
       marginLeft: 0,
     },

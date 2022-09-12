@@ -26,7 +26,7 @@ type ClassNames = 'root' | 'dropDown' | 'hidden';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`,
+      transform: `translate(-${theme.spacing(1)}, ${theme.spacing(1)})`,
     },
     dropDown: {
       position: 'absolute',

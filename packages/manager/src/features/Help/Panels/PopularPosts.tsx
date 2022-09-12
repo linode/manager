@@ -15,7 +15,7 @@ type ClassNames = 'root' | 'postTitle' | 'post' | 'withSeparator' | 'postLink';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: `${theme.spacing(6)}px 0`,
+      margin: `${theme.spacing(6)} 0`,
     },
     postTitle: {
       marginBottom: theme.spacing(2),

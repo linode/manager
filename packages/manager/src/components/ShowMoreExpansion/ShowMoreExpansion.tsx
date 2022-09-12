@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
 

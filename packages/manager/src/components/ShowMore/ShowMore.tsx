@@ -46,7 +46,7 @@ const styles = (theme: Theme) =>
       maxHeight: 200,
       overflowY: 'scroll',
       padding: theme.spacing(1),
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         maxWidth: 285,
       },
       '&::-webkit-scrollbar': {

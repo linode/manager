@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'flex-end',
     paddingLeft: theme.spacing(2),
     marginLeft: -theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginTop: -theme.spacing(1),
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: 0,
     },
     '& .remove': {

@@ -37,7 +37,7 @@ const styles = (theme: Theme) =>
     },
     panelBody: {
       width: '100%',
-      padding: `${theme.spacing(2)}px 0 0`,
+      padding: `${theme.spacing(2)} 0 0`,
     },
     wrapper: {
       padding: theme.spacing(1),

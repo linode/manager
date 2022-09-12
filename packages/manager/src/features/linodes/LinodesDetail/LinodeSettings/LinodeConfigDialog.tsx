@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   divider: {
     margin: '36px 8px 12px',
-    width: `calc(100% - ${theme.spacing(2)}px)`,
+    width: `calc(100% - ${theme.spacing(2)})`,
   },
   formControlToggle: {
     '& button': {

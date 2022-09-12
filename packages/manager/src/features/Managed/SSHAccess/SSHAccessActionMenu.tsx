@@ -23,7 +23,7 @@ export type CombinedProps = Props & WithSnackbarProps;
 
 export const SSHAccessActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { linodeId, isEnabled, updateOne, openDrawer, enqueueSnackbar } = props;
 

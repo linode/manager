@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: theme.color.grey1,
     fontSize: '0.9rem',
     [theme.breakpoints.up('md')]: {
-      padding: `0 ${theme.spacing(4)}px 0 ${theme.spacing(1)}px`,
+      padding: `0 ${theme.spacing(4)} 0 ${theme.spacing(1)}`,
     },
     [theme.breakpoints.up('lg')]: {
       paddingRight: theme.spacing(6),

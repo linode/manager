@@ -60,7 +60,7 @@ const styles = (theme: Theme) =>
       lineHeight: '1.5rem',
     },
     addNewWrapper: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
         marginTop: -theme.spacing(1),
       },
@@ -227,7 +227,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                             >
                               Size
                             </TableSortCell>
-                            <Hidden smDown>
+                            <Hidden mdDown>
                               <TableSortCell
                                 active={orderBy === 'created'}
                                 label="created"

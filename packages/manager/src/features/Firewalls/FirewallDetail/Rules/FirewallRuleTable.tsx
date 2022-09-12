@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
@@ -170,7 +170,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
@@ -193,99 +193,97 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     handlePolicyChange(category, newPolicy);
   };
 
-  return (
-    <>
-      <div className={classes.header}>
-        <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
-        <Button
-          buttonType="primary"
-          onClick={openDrawerForCreating}
-          className={classes.button}
-          disabled={disabled}
-        >
-          Add an {capitalize(category)} Rule
-        </Button>
-      </div>
-      <Table style={{ tableLayout: 'auto' }}>
-        <TableHead>
-          <TableRow>
-            <TableCell
-              style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
-            >
-              Label
+  return <>
+    <div className={classes.header}>
+      <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
+      <Button
+        buttonType="primary"
+        onClick={openDrawerForCreating}
+        className={classes.button}
+        disabled={disabled}
+      >
+        Add an {capitalize(category)} Rule
+      </Button>
+    </div>
+    <Table style={{ tableLayout: 'auto' }}>
+      <TableHead>
+        <TableRow>
+          <TableCell
+            style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
+          >
+            Label
+          </TableCell>
+          <Hidden lgDown>
+            <TableCell style={{ width: '10%' }}>Protocol</TableCell>
+          </Hidden>
+          <Hidden smDown>
+            <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
+              Port Range
             </TableCell>
-            <Hidden mdDown>
-              <TableCell style={{ width: '10%' }}>Protocol</TableCell>
-            </Hidden>
-            <Hidden xsDown>
-              <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
-                Port Range
-              </TableCell>
-              <TableCell style={{ width: '15%' }}>
-                {capitalize(addressColumnLabel)}
-              </TableCell>
-            </Hidden>
-            <TableCell style={{ width: '5%' }}>Action</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable" isDropDisabled={disabled}>
-            {(provided) => (
-              <TableBody
-                {...provided.droppableProps}
-                className={classes.table}
-                innerRef={provided.innerRef}
-              >
-                {rowData.length === 0 ? (
-                  <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
-                ) : (
-                  rowData.map((thisRuleRow: RuleRow, index) => (
-                    <Draggable
-                      key={thisRuleRow.id}
-                      draggableId={String(thisRuleRow.id)}
-                      index={index}
-                    >
-                      {(provided, snapshot) => {
-                        return (
-                          <FirewallRuleTableRow
-                            isDragging={snapshot.isDragging}
-                            disabled={disabled}
-                            key={thisRuleRow.id}
-                            {...thisRuleRow}
-                            triggerCloneFirewallRule={triggerCloneFirewallRule}
-                            triggerDeleteFirewallRule={
-                              triggerDeleteFirewallRule
-                            }
-                            triggerOpenRuleDrawerForEditing={
-                              triggerOpenRuleDrawerForEditing
-                            }
-                            triggerUndo={triggerUndo}
-                            innerRef={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          />
-                        );
-                      }}
-                    </Draggable>
-                  ))
-                )}
-                {provided.placeholder}
-              </TableBody>
-            )}
-          </Droppable>
-        </DragDropContext>
-        <TableFooter className={classes.footer}>
-          <PolicyRow
-            category={category}
-            policy={policy}
-            disabled={disabled}
-            handlePolicyChange={onPolicyChange}
-          />
-        </TableFooter>
-      </Table>
-    </>
-  );
+            <TableCell style={{ width: '15%' }}>
+              {capitalize(addressColumnLabel)}
+            </TableCell>
+          </Hidden>
+          <TableCell style={{ width: '5%' }}>Action</TableCell>
+          <TableCell />
+        </TableRow>
+      </TableHead>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable" isDropDisabled={disabled}>
+          {(provided) => (
+            <TableBody
+              {...provided.droppableProps}
+              className={classes.table}
+              innerRef={provided.innerRef}
+            >
+              {rowData.length === 0 ? (
+                <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
+              ) : (
+                rowData.map((thisRuleRow: RuleRow, index) => (
+                  <Draggable
+                    key={thisRuleRow.id}
+                    draggableId={String(thisRuleRow.id)}
+                    index={index}
+                  >
+                    {(provided, snapshot) => {
+                      return (
+                        <FirewallRuleTableRow
+                          isDragging={snapshot.isDragging}
+                          disabled={disabled}
+                          key={thisRuleRow.id}
+                          {...thisRuleRow}
+                          triggerCloneFirewallRule={triggerCloneFirewallRule}
+                          triggerDeleteFirewallRule={
+                            triggerDeleteFirewallRule
+                          }
+                          triggerOpenRuleDrawerForEditing={
+                            triggerOpenRuleDrawerForEditing
+                          }
+                          triggerUndo={triggerUndo}
+                          innerRef={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        />
+                      );
+                    }}
+                  </Draggable>
+                ))
+              )}
+              {provided.placeholder}
+            </TableBody>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <TableFooter className={classes.footer}>
+        <PolicyRow
+          category={category}
+          policy={policy}
+          disabled={disabled}
+          handlePolicyChange={onPolicyChange}
+        />
+      </TableFooter>
+    </Table>
+  </>;
 };
 
 export default React.memo(FirewallRuleTable);
@@ -360,13 +358,13 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             </button>
           )}
         </TableCell>
-        <Hidden mdDown>
+        <Hidden lgDown>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
         </Hidden>
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
@@ -422,8 +420,8 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   // Calculate how many cells the text should span so that the Select lines up
   // with the Action column
   const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
   const colSpan = xsDown ? 1 : mdDown ? 3 : 4;
 
   const helperText = mdDown ? (

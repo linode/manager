@@ -59,16 +59,16 @@ const styles = (theme: Theme) =>
     breadcrumbs: {
       marginBottom: theme.spacing(2),
       marginTop: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
       },
     },
     label: {
       marginLeft: 32,
-      width: `calc(100% - (32px + ${theme.spacing(7)}px))`,
+      width: `calc(100% - (32px + ${theme.spacing(7)}))`,
       [theme.breakpoints.up('sm')]: {
-        marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
-        width: `calc(100% - (40px + ${theme.spacing(7)}px))`,
+        marginLeft: `calc(40px + ${theme.spacing(1)})`,
+        width: `calc(100% - (40px + ${theme.spacing(7)}))`,
       },
     },
     ticketLabel: {

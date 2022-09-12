@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   advDescription: {
-    margin: `${theme.spacing(2)}px 0`,
+    margin: `${theme.spacing(2)} 0`,
   },
   username: {
     color: theme.color.grey1,

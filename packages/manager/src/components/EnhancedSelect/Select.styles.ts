@@ -202,7 +202,7 @@ export const styles = (theme: Theme) =>
       '::-ms-clear': { display: 'none' },
     },
     noOptionsMessage: {
-      padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`,
+      padding: `${theme.spacing(1)} ${theme.spacing(2)}`,
     },
     divider: {
       height: theme.spacing(2),
@@ -384,7 +384,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   }),
   group: (base: any) => ({
     ...base,
-    width: `calc(100% + ${theme.spacing(1) / 2}px)`,
+    width: `calc(100% + calc(${theme.spacing(1)} / 2))`,
     '&:last-child': {
       paddingBottom: 0,
     },

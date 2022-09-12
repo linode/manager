@@ -83,7 +83,7 @@ const userNotificationButton: React.FC<CombinedProps> = ({
       onClick={onClick}
       className={`${classes.root} ${className}`}
       aria-label="User Notifications"
-    >
+      size="large">
       <div
         className={classNames({
           [classes.icon]: true,

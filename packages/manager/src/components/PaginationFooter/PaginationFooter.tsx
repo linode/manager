@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
       width: '100%',
     },
     padded: {
-      padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`,
+      padding: `0 ${theme.spacing(2)} ${theme.spacing(1)}`,
     },
     select: {
       '& .MuiInput-root': {

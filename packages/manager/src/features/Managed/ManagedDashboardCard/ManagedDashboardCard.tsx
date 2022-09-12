@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   status: {
     position: 'relative',
     [theme.breakpoints.up('sm')]: {
-      margin: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`,
+      margin: `${theme.spacing(3)} ${theme.spacing(1)} !important`,
     },
   },
   outerContainer: {

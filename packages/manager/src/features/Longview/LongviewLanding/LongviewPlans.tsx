@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginLeft: 2,
     paddingRight: theme.spacing(3),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       paddingRight: 0,
     },
   },

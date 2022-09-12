@@ -79,14 +79,14 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
         <StatusIcon status={databaseStatusMap[status]} />
         {capitalize(status)}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell>{configuration}</TableCell>
       </Hidden>
       <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell>{dcDisplayNames[region] || 'Unknown Region'}</TableCell>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell>
           {isWithinDays(3, created)
             ? parseAPIDate(created).toRelative()

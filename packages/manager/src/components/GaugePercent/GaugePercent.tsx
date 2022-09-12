@@ -34,7 +34,7 @@ const useStyles = (options: Options) =>
       width: options.width,
       textAlign: 'center',
       top: `calc(${options.height + theme.spacing(1.25)}px)`,
-      fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
+      fontSize: options.fontSize || `${theme.spacing(2.5)} `,
       color: theme.color.headline,
     },
   }));

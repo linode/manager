@@ -4,7 +4,7 @@ import Accordion from 'src/components/Accordion';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import Toggle from 'src/components/Toggle';
 import Typography from 'src/components/core/Typography';
 

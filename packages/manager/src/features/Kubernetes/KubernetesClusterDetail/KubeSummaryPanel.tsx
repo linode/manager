@@ -3,7 +3,7 @@ import {
   KubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import classNames from 'classnames';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -42,9 +42,9 @@ import KubernetesDialog from './KubernetesDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2) + 4}px ${
+    padding: `calc(${theme.spacing(2)} + 4px) ${
       theme.spacing(2) + 4
-    }px ${theme.spacing(3)}px`,
+    }px ${theme.spacing(3)}`,
   },
   mainGridContainer: {
     position: 'relative',
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     fontWeight: 'bold',
-    marginBottom: `${theme.spacing(1) - 3}px`,
+    marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
   kubeconfigElements: {
     display: 'flex',
@@ -87,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   kubeconfigIcons: {
     height: 16,
     width: 16,
-    margin: `0 ${theme.spacing(1)}px`,
+    margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
   },
   disabled: {
@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'flex-end',
       },
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '100%',
     },
   },
@@ -149,7 +149,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   actionRow: {
     flexDirection: 'column',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       justifyContent: 'flex-end',
       flexDirection: 'row',
     },
@@ -203,7 +203,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
-  const matches = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+  const matches = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'));
 
   const {
     data: dashboard,

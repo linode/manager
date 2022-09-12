@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > div': {
       flexGrow: 1,
       width: '33%',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginTop: theme.spacing(),
         width: '60%',
       },

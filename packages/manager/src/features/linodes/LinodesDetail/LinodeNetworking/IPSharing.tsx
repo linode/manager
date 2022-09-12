@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipFieldLabel: {
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing(2)}px)`,
+      width: `calc(175px + ${theme.spacing(2)})`,
     },
   },
   noIPsMessage: {
@@ -49,12 +49,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   removeCont: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
   remove: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       margin: '-16px 0 0 -26px',
     },
   },

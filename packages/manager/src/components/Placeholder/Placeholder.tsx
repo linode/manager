@@ -32,9 +32,9 @@ const styles = (theme: Theme) =>
       },
     },
     root: {
-      padding: `${theme.spacing(2)}px 0`,
+      padding: `${theme.spacing(2)} 0`,
       [theme.breakpoints.up('md')]: {
-        padding: `${theme.spacing(10)}px 0`,
+        padding: `${theme.spacing(10)} 0`,
       },
     },
     copy: {

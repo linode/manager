@@ -8,7 +8,7 @@ import Grid from 'src/components/Grid';
 const useStyles = makeStyles((theme: Theme) => ({
   copyContainer: {
     backgroundColor: theme.color.grey5,
-    margin: `${theme.spacing(1)}px 0`,
+    margin: `${theme.spacing(1)} 0`,
     borderRadius: theme.shape.borderRadius,
     maxWidth: '100%',
   },

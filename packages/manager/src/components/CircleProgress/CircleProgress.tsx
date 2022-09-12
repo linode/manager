@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   progress: {
     position: 'relative',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '72px !important',
       height: '72px !important',
     },

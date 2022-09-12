@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
       paddingRight: 0,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
   },
@@ -111,7 +111,7 @@ const UsersLanding: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const openForCreate = () => {
     setCreateDrawerOpen(true);

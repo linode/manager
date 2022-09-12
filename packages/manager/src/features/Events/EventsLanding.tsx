@@ -29,7 +29,7 @@ import EventRow from './EventRow';
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(1),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
     minWidth: 200,
     paddingLeft: 10,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '70%',
     },
   },
@@ -271,62 +271,60 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
   const { entitiesLoading, errorMessage, entityId, emptyMessage } = props;
   const isLoading = loading || entitiesLoading;
 
-  return (
-    <>
-      {/* Only display this title on the main Events landing page */}
-      {!entityId && <H1Header title="Events" className={classes.header} />}
-      <Table aria-label="List of Events">
-        <TableHead>
-          <TableRow>
-            <Hidden xsDown>
-              <TableCell style={{ padding: 0, width: '1%' }} />
-            </Hidden>
+  return <>
+    {/* Only display this title on the main Events landing page */}
+    {!entityId && <H1Header title="Events" className={classes.header} />}
+    <Table aria-label="List of Events">
+      <TableHead>
+        <TableRow>
+          <Hidden smDown>
+            <TableCell style={{ padding: 0, width: '1%' }} />
+          </Hidden>
+          <TableCell
+            data-qa-events-subject-header
+            className={`${classes.labelCell} ${classes.columnHeader}`}
+          >
+            Event
+          </TableCell>
+          <TableCell className={classes.columnHeader}>
+            Relative Date
+          </TableCell>
+          <Hidden mdDown>
             <TableCell
-              data-qa-events-subject-header
-              className={`${classes.labelCell} ${classes.columnHeader}`}
+              className={classes.columnHeader}
+              data-qa-events-time-header
             >
-              Event
+              Absolute Date
             </TableCell>
-            <TableCell className={classes.columnHeader}>
-              Relative Date
-            </TableCell>
-            <Hidden smDown>
-              <TableCell
-                className={classes.columnHeader}
-                data-qa-events-time-header
-              >
-                Absolute Date
-              </TableCell>
-            </Hidden>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {renderTableBody(
-            isLoading,
-            isRequesting,
-            errorMessage,
-            entityId,
-            error,
-            events.reactStateEvents,
-            emptyMessage
-          )}
-        </TableBody>
-      </Table>
-      {loadMoreEvents && initialLoaded && !isLoading ? (
-        <Waypoint onEnter={getNext}>
-          <div />
-        </Waypoint>
-      ) : (
-        !isLoading &&
-        !error &&
-        events.reactStateEvents.length > 0 && (
-          <Typography className={classes.noMoreEvents}>
-            No more events to show
-          </Typography>
-        )
-      )}
-    </>
-  );
+          </Hidden>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {renderTableBody(
+          isLoading,
+          isRequesting,
+          errorMessage,
+          entityId,
+          error,
+          events.reactStateEvents,
+          emptyMessage
+        )}
+      </TableBody>
+    </Table>
+    {loadMoreEvents && initialLoaded && !isLoading ? (
+      <Waypoint onEnter={getNext}>
+        <div />
+      </Waypoint>
+    ) : (
+      !isLoading &&
+      !error &&
+      events.reactStateEvents.length > 0 && (
+        <Typography className={classes.noMoreEvents}>
+          No more events to show
+        </Typography>
+      )
+    )}
+  </>;
 };
 
 export const renderTableBody = (
