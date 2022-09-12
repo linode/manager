@@ -8,10 +8,15 @@ interface TaxBanner {
   linode_tax_id?: string;
 }
 
+interface TaxCollectionRegion {
+  name: string;
+  date?: string;
+}
+
 interface TaxCollectionBanner {
   date: string;
   action?: boolean;
-  regions?: string[];
+  regions?: TaxCollectionRegion[];
 }
 
 type OneClickApp = Record<string, string>;
