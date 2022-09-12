@@ -9,6 +9,7 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
+import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -28,13 +29,28 @@ const TaxCollectionBanner: React.FC<{}> = () => {
     'tax-collection-banner'
   );
 
-  const bannerDate = flags.taxCollectionBanner?.date ?? '';
+  const countryDateString = flags.taxCollectionBanner?.date ?? '';
   const bannerHasAction = flags.taxCollectionBanner?.action ?? false;
-  const bannerRegions = flags.taxCollectionBanner?.regions ?? [];
+  const bannerRegions =
+    flags.taxCollectionBanner?.regions?.map((region) => {
+      if (typeof region === 'string') {
+        return region;
+      }
+      return region.name;
+    }) ?? [];
 
-  if (!account || hasDismissedBanner || !bannerDate) {
+  if (!account || hasDismissedBanner || !countryDateString) {
     return null;
   }
+
+  const regionDateString = flags.taxCollectionBanner?.regions?.find(
+    (region) => region.name === account.state
+  )?.date;
+
+  const bannerDateString = regionDateString ?? countryDateString;
+  const bannerDate = DateTime.fromFormat(bannerDateString, 'LLLL dd yyyy');
+  const isBannerDateWithinFiveWeeksPrior =
+    bannerDate.plus({ days: 35 }) <= DateTime.now();
 
   /**
    * If bannerRegions is empty, display the banner for everyone in the country
@@ -49,7 +65,8 @@ const TaxCollectionBanner: React.FC<{}> = () => {
   const isUserInTaxableRegion =
     bannerRegions.length > 0 && bannerRegions.includes(account.state);
 
-  return isEntireCountryTaxable || isUserInTaxableRegion ? (
+  return (isEntireCountryTaxable || isUserInTaxableRegion) &&
+    !isBannerDateWithinFiveWeeksPrior ? (
     <Notice warning important dismissible onClose={handleDismiss}>
       <Box
         display="flex"
@@ -58,8 +75,8 @@ const TaxCollectionBanner: React.FC<{}> = () => {
         justifyContent="space-between"
       >
         <Typography>
-          Starting {bannerDate}, tax may be applied to your Linode services. For
-          more information, please see the{' '}
+          Starting {bannerDateString}, tax may be applied to your Linode
+          services. For more information, please see the{' '}
           <Link to="https://www.linode.com/docs/platform/billing-and-support/tax-information/">
             Tax Information Guide
           </Link>
