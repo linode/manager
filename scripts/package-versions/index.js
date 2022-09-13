@@ -149,7 +149,7 @@ const main = async () => {
         }
         // Assumes `major.minor.patch` format, undefined behavior otherwise.
         const [major, minor, patch] = currentVersion.split('.');
-        return `${major || 0}.${Number(minor || 0) + 1}.${patch || 0}`;
+        return `${major || 0}.${Number(minor || 0) + 1}.0`;
       })();
 
       const prompt = `New version for '${jobName}' package? (${ suggestedVersion })\n`;
