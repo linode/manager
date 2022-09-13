@@ -107,6 +107,7 @@ interface EditableFields {
   useCustomRoot: boolean;
   label: string;
   devices: DevicesAsStrings;
+  initrd: string | null;
   kernel?: string;
   comments?: string;
   memory_limit?: number;
@@ -163,6 +164,7 @@ const defaultInterfaceList = padInterfaceList([
 const defaultFieldsValues = {
   comments: '',
   devices: {},
+  initrd: '',
   helpers: {
     devtmpfs_automount: true,
     distro: true,
@@ -262,6 +264,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     const {
       label,
       devices,
+      initrd,
       kernel,
       comments,
       memory_limit,
@@ -276,6 +279,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     return {
       label,
       devices: createDevicesFromStrings(devices),
+      initrd,
       kernel,
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -416,6 +420,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             useCustomRoot: isUsingCustomRoot(config.root_device),
             label: config.label,
             devices,
+            initrd: String(config.initrd),
             kernel: config.kernel,
             comments: config.comments,
             memory_limit: config.memory_limit,
@@ -445,6 +450,17 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     disks: props.disks,
     volumes: props.volumes,
   };
+
+  const initrdDisks = availableDevices.disks.filter(
+    (disk) => disk.filesystem === 'initrd'
+  );
+
+  const initrdOptions = initrdDisks.map((disk) => {
+    return {
+      label: disk.label,
+      value: String(disk.id),
+    };
+  });
 
   /**
    * Form change handlers
@@ -487,6 +503,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleRootDeviceChange = React.useCallback(
     (selected: Item<string>) => {
       setFieldValue('root_device', selected.value);
+    },
+    [setFieldValue]
+  );
+
+  const handleInitrdChange = React.useCallback(
+    (selectedDisk: Item<string>) => {
+      setFieldValue('initrd', selectedDisk.value);
     },
     [setFieldValue]
   );
@@ -718,6 +741,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               updateFor={[
                 deviceCounter,
                 values.devices,
+                values.initrd,
                 values.root_device,
                 useCustomRoot,
                 values.useCustomRoot,
@@ -734,6 +758,20 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 errorText={formik.errors.devices as string}
                 disabled={readOnly}
               />
+              <FormControl fullWidth>
+                <Select
+                  label="initrd"
+                  onChange={handleInitrdChange}
+                  options={initrdOptions}
+                  defaultValue={config?.initrd ?? ''}
+                  value={initrdOptions.find(
+                    (option) => option.value === values.initrd
+                  )}
+                  placeholder="None"
+                  isClearable={false}
+                  noMarginTop
+                />
+              </FormControl>
               <Button
                 buttonType="secondary"
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
