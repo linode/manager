@@ -108,6 +108,9 @@ const jobs = [
   { name: 'validation', path: getPackagePath('validation'), desiredVersion: desiredValidationVersion },
 ];
 
+// Describes the files that will be written to, and the changes that will be made.
+const writeTasks = [];
+
 // Describes changes that were made by this script. Used to summarize changes
 // to the user.
 const summary = [];
@@ -168,13 +171,30 @@ const main = async () => {
 
     packageData.version = result;
     const jsonString = `${JSON.stringify(packageData, null, 2)}\n`;
-    fs.writeFileSync(jobPath, jsonString);
-    summary.push({
+
+    writeTasks.push({
       name: jobName,
+      filepath: jobPath,
+      contents: jsonString,
       oldVersion: currentVersion,
       newVersion: result,
     });
   };
+
+  for (writeTask of writeTasks) {
+    try {
+      fs.writeFileSync(writeTask.filepath, writeTask.contents);
+      summary.push({
+        name: writeTask.name,
+        oldVersion: writeTask.oldVersion,
+        newVersion: writeTask.newVersion,
+      });
+    }
+    catch (e) {
+      console.error(e.message);
+      console.error(`Unable to write changes to ${writeTask.filepath}`);
+    }
+  }
 };
 
 // Run program, display errors, summary, etc .
@@ -187,11 +207,14 @@ const main = async () => {
   catch (e) {
     console.error(e.message || 'An unknown error has occurred.');
     console.error('An error has occurred and package versions were not incremented as expected.')
-    console.info('Refer to the summary below to see what changes were made.');
     error = true;
   }
   finally {
-    console.table(summary);
+    if (summary.length) {
+      console.table(summary);
+    } else {
+      console.info('No changes have been made.');
+    }
     if (error) {
       process.exit(1);
     }
