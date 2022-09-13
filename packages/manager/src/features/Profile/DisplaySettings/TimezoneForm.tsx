@@ -41,8 +41,7 @@ interface Timezone {
   offset: number;
 }
 
-export const formatOffset = ({ label, name }: Timezone) => {
-  const offset = DateTime.now().setZone(name).offset;
+export const formatOffset = ({ label, offset }: Timezone) => {
   const minutes = (Math.abs(offset) % 60).toLocaleString(undefined, {
     minimumIntegerDigits: 2,
     useGrouping: false,
@@ -54,10 +53,13 @@ export const formatOffset = ({ label, name }: Timezone) => {
 };
 
 const renderTimeZonesList = (): Item[] => {
-  return timezones.map((tz: Timezone) => {
-    const label = formatOffset(tz);
-    return { label, value: tz.name };
-  });
+  return timezones
+    .map((tz) => ({ ...tz, offset: DateTime.now().setZone(tz.name).offset }))
+    .sort((a, b) => a.offset - b.offset)
+    .map((tz: Timezone) => {
+      const label = formatOffset(tz);
+      return { label, value: tz.name };
+    });
 };
 
 const timezoneList = renderTimeZonesList();
