@@ -3,6 +3,7 @@ import * as dialog from './dialog';
 import * as drawer from './drawer';
 import * as entityHeader from './entity-header';
 import * as tabList from './tab-list';
+import * as toggle from './toggle';
 
 export const ui = {
   ...buttons,
@@ -10,4 +11,5 @@ export const ui = {
   ...drawer,
   ...entityHeader,
   ...tabList,
+  ...toggle,
 };
