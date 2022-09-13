@@ -92,7 +92,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
         {error && <Notice error>{error}</Notice>}
         <Grid className={classes.header}>
           {header !== '' && (
-            <Grid item sm={6}>
+            <Grid item xs={6}>
               <Typography variant="h2" data-qa-tp-title>
                 {header}
               </Typography>
@@ -101,7 +101,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
           {docsLink && onDocsLinkClick && (
             <Grid
               item
-              sm={6}
+              xs={6}
               style={{ display: 'flex', flexDirection: 'row-reverse' }}
             >
               {docsLink}
