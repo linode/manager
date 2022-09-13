@@ -10,7 +10,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
 
   const emptyLinodeLandingGAEventTemplate = {
-    category: 'Linodes Landing Page Empty',
+    category: 'Linodes landing page empty',
     action: 'Click:link',
   };
 
@@ -23,7 +23,8 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
         {
           onClick: () => {
             sendEvent({
-              ...emptyLinodeLandingGAEventTemplate,
+              category: 'Linodes landing page empty',
+              action: 'Click:button',
               label: 'Create Linode',
             });
             push('/linodes/create');
