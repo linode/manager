@@ -37,6 +37,7 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -121,6 +122,7 @@ interface Props {
   isCreate?: boolean;
   className?: string;
   showTransfer?: boolean;
+  docsLink?: JSX.Element;
 }
 
 const getNanodes = (types: PlanSelectionType[]) =>
@@ -155,6 +157,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     className,
     copy,
     error,
+    docsLink,
   } = props;
 
   const classes = useStyles();
@@ -553,6 +556,15 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       copy={copy}
       tabs={tabs}
       initTab={initialTab >= 0 ? initialTab : 0}
+      docsLink={docsLink}
+      docsLinkLabel="Choosing a Plan"
+      onDocsLinkClick={() => {
+        sendEvent({
+          category: 'Linode Create Flow',
+          action: 'Click:link',
+          label: 'Choosing a Plan',
+        });
+      }}
       data-qa-select-plan
     />
   );
