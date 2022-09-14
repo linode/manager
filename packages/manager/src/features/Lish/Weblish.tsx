@@ -1,30 +1,20 @@
+/* eslint-disable scanjs-rules/call_addEventListener */
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
+import CircleProgress from 'src/components/CircleProgress';
 import { Linode } from '@linode/api-v4/lib/linodes';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
 import {
   createStyles,
-  Theme,
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
 
-type ClassNames = 'progress' | 'message' | 'errorState';
+type ClassNames = 'errorState';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
-    progress: {
-      height: 'auto',
-    },
-    message: {
-      color: 'white',
-      textAlign: 'center',
-      minHeight: '30px',
-      margin: theme.spacing(2),
-    },
     errorState: {
       '& *': {
         color: '#f4f4f4 !important',
@@ -40,27 +30,18 @@ interface Props {
 
 interface State {
   renderingLish: boolean;
-  retryingConnection: boolean;
-  retryAttempts: number;
   error: string;
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> &
-  RouteComponentProps<{ linodeId?: string }>;
-
-const maxRetryAttempts: number = 3;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class Weblish extends React.Component<CombinedProps, State> {
   state: State = {
     renderingLish: true,
-    retryingConnection: false,
-    retryAttempts: 0,
     error: '',
   };
 
   mounted: boolean = false;
-
   socket: WebSocket;
 
   terminal: Terminal;
@@ -75,9 +56,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    const { retryAttempts, retryingConnection } = this.state;
-
+  componentDidUpdate(prevProps: CombinedProps) {
     /*
      * If we have a new token, refresh the webosocket connection
      * and console with the new token
@@ -85,24 +64,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     if (this.props.token !== prevProps.token) {
       this.socket.close();
       this.terminal.dispose();
-    }
-
-    /*
-     * If our connection failed, and we did not surpass the max number of
-     * reconnection attempts, try to reconnect
-     */
-    if (prevState.retryAttempts !== retryAttempts && retryingConnection) {
-      setTimeout(() => {
-        /*
-         * It's okay to disregard typescript checking here
-         * because the parent component <Lish /> handles
-         * the situation where refreshToken() returns undefined
-         */
-        this.props
-          .refreshToken()!
-          .then(() => this.connect())
-          .catch((e) => e);
-      }, 3000);
+      this.connect();
     }
   }
 
@@ -123,8 +85,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
   }
 
   renderTerminal() {
-    const { linode } = this.props;
-    const { retryAttempts } = this.state;
+    const { linode, refreshToken } = this.props;
     const { group, label } = linode;
 
     this.terminal = new Terminal({
@@ -158,28 +119,10 @@ export class Weblish extends React.Component<CombinedProps, State> {
         data?.type === 'error' &&
         data?.reason?.toLowerCase() === 'your session has expired.'
       ) {
-        /*
-         * We tried to reconnect 3 times
-         */
-        if (retryAttempts === maxRetryAttempts) {
-          this.setState({
-            error: 'Session could not be initialized. Please try again later',
-          });
-          return;
-        }
-        /*
-         * We've tried less than 3 reconnects
-         */
-        this.setState({
-          retryingConnection: true,
-          retryAttempts: retryAttempts + 1,
-        });
+        refreshToken();
         return;
       }
-      this.setState({
-        retryingConnection: false,
-        retryAttempts: 0,
-      });
+
       try {
         this.terminal.write(evt.data);
       } catch {
@@ -208,35 +151,16 @@ export class Weblish extends React.Component<CombinedProps, State> {
     window.document.title = `${linodeLabel} - Linode Lish Console`;
   }
 
-  renderErrorState = () => {
+  render() {
     const { error } = this.state;
     const { classes } = this.props;
-    return (
-      <div className={classes.errorState}>
-        <ErrorState errorText={error} />
-      </div>
-    );
-  };
-
-  renderRetryState = () => {
-    const { classes } = this.props;
-    const { retryAttempts } = this.state;
-
-    return (
-      <div className={classes.message}>
-        {`Lish Token could not be validated. Retrying in 3 seconds...
-          ${retryAttempts} / ${maxRetryAttempts}`}
-        <CircleProgress mini />
-      </div>
-    );
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { error, retryingConnection } = this.state;
 
     if (error) {
-      return this.renderErrorState();
+      return (
+        <div className={classes.errorState}>
+          <ErrorState errorText={error} />
+        </div>
+      );
     }
 
     /*
@@ -249,10 +173,8 @@ export class Weblish extends React.Component<CombinedProps, State> {
       <div>
         {this.socket && this.socket.readyState === this.socket.OPEN ? (
           <div id="terminal" className="terminal" />
-        ) : !retryingConnection ? ( // basically are we switching tabs after the lish token expired?
-          <CircleProgress className={classes.progress} noInner />
         ) : (
-          this.renderRetryState()
+          <CircleProgress />
         )}
       </div>
     );
@@ -261,4 +183,4 @@ export class Weblish extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(withRouter(Weblish));
+export default styled(Weblish);

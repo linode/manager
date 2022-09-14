@@ -131,7 +131,7 @@ export const useLinodeLishTokenQuery = (id: number) => {
   return useQuery<{ lish_token: string }, APIError[]>(
     [`${queryKey}-lish-token`, id],
     () => getLinodeLishToken(id),
-    { staleTime: 300000 }
+    { staleTime: Infinity }
   );
 };
 
