@@ -227,6 +227,7 @@
     "jest-axe": "^3.3.0",
     "jest-junit": "^10.0.0",
     "jest-sonar-reporter": "^2.0.0",
+    "jest_workaround": "^0.1.10",
     "lint-staged": "^10.0.9",
     "mini-css-extract-plugin": "^2.4.4",
     "mixin-deep": "^2.0.1",
@@ -276,7 +277,25 @@
     ],
     "testURL": "https://api.linode.com",
     "transform": {
-      "^.+\\.tsx?$": ["@swc/jest"],
+      "^.+\\.tsx?$": [
+        "@swc/jest",
+        {
+          "$schema": "http://json.schemastore.org/swcrc",
+          "jsc": {
+            "experimental": {
+              "plugins": [
+                [
+                  "jest_workaround",
+                  {}
+                ]
+              ]
+            }
+          },
+          "module": {
+            "type": "commonjs"
+          }
+        }
+      ],
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
       "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
     },
@@ -307,15 +326,7 @@
     "reporters": [
       "default",
       "jest-junit"
-    ],
-    "globals": {
-      "ts-jest": {
-        "tsconfig": "tsconfig.test.json",
-        "diagnostics": {
-          "warnOnly": true
-        }
-      }
-    }
+    ]
   },
   "babel": {
     "presets": [
