@@ -76,6 +76,7 @@ import {
   queryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
+import { timing } from 'react-ga';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -210,6 +211,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     signedAgreement: false,
     disabledClasses: [],
   };
+
+  gaUserCreateLinodeTimingStartTimestamp = Date.now();
 
   componentDidUpdate(prevProps: CombinedProps) {
     /**
@@ -593,6 +596,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ...simpleMutationHandlers(queryKey),
           });
         }
+
+        const elapsedTime =
+          Date.now() - this.gaUserCreateLinodeTimingStartTimestamp;
+        timing({
+          category: 'Linode Create',
+          variable: 'Time to Success',
+          value: elapsedTime,
+        });
 
         /** if cloning a Linode, upsert Linode in redux */
         if (createType === 'fromLinode') {
