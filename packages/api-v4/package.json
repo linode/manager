@@ -5,7 +5,12 @@
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
   },
-  "keywords": ["linode", "api", "sdk", "api-v4"],
+  "keywords": [
+    "linode",
+    "api",
+    "sdk",
+    "api-v4"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/linode/manager/tree/develop/packages/api-v4"
@@ -56,6 +61,7 @@
     "lib"
   ],
   "devDependencies": {
+    "@swc/jest": "^0.2.22",
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
     "@types/yup": "^0.29.13",
@@ -85,7 +91,7 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.(t)sx?$": "ts-jest"
+      "^.+\\.(t)sx?$": ["@swc/jest", {}]
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
     "moduleFileExtensions": [
