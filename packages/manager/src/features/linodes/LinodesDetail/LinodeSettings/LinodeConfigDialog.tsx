@@ -223,6 +223,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     open,
     onClose,
     config,
+    initrdFromConfig,
     kernels,
     linodeConfigId,
     linodeRegion,
@@ -326,6 +327,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
 
+    console.log(typeof configData.initrd);
+    console.log(configData.initrd);
+
     if (!regionHasVLANS) {
       delete configData.interfaces;
     }
@@ -420,7 +424,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             useCustomRoot: isUsingCustomRoot(config.root_device),
             label: config.label,
             devices,
-            initrd: String(config.initrd),
+            initrd: initrdFromConfig,
             kernel: config.kernel,
             comments: config.comments,
             memory_limit: config.memory_limit,
@@ -440,7 +444,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         setDeviceCounter(deviceCounterDefault);
       }
     }
-  }, [open, config, resetForm]);
+  }, [open, config, initrdFromConfig, resetForm]);
 
   const isLoading = props.kernelsLoading;
 
@@ -509,9 +513,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const handleInitrdChange = React.useCallback(
     (selectedDisk: Item<string>) => {
+      console.log(selectedDisk);
       setFieldValue('initrd', selectedDisk.value);
+      console.log(values);
     },
-    [setFieldValue]
+    [setFieldValue, values]
   );
 
   return (
@@ -763,7 +769,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                   label="initrd"
                   onChange={handleInitrdChange}
                   options={initrdOptions}
-                  defaultValue={config?.initrd ?? ''}
+                  defaultValue={initrdFromConfig}
                   value={initrdOptions.find(
                     (option) => option.value === values.initrd
                   )}
@@ -1028,6 +1034,7 @@ interface StateProps {
   disks: ExtendedDisk[];
   volumes: ExtendedVolume[];
   config?: Config;
+  initrdFromConfig: string;
 }
 
 interface LinodeContextProps {
@@ -1059,6 +1066,8 @@ const enhanced = compose<CombinedProps, Props>(
       ? state.__resources.linodeConfigs[linodeId].itemsById[linodeConfigId]
       : undefined;
 
+    const initrdFromConfig = config?.initrd ? String(config.initrd) : '';
+
     const volumes = Object.values(itemsById).reduce(
       (result: Volume[], volume: Volume) => {
         /**
@@ -1079,7 +1088,7 @@ const enhanced = compose<CombinedProps, Props>(
       },
       []
     );
-    return { config, volumes };
+    return { config, initrdFromConfig, volumes };
   })
 );
 
