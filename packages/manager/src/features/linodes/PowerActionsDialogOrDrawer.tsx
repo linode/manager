@@ -168,7 +168,7 @@ const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = (props) => {
             <strong>Note: </strong>
             Powered down Linodes will still accrue charges. See the&nbsp;
             <ExternalLink
-              link="https://www.linode.com/docs/platform/billing-and-support/how-linode-billing-works/#if-my-linode-is-powered-off-will-i-be-billed"
+              link="https://www.linode.com/docs/guides/understanding-billing-and-payments/#will-i-be-billed-for-powered-off-or-unused-services"
               text="Billing and Payments documentation"
               hideIcon
             />

@@ -6,6 +6,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
+    color:
+      theme.name === 'darkTheme' ? theme.textColors.linkActiveLight : undefined,
     display: 'inline-flex',
     alignItems: 'baseline',
     '&:hover': {

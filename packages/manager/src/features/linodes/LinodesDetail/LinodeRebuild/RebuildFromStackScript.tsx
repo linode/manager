@@ -11,18 +11,16 @@ import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -332,20 +330,10 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
                   error={errors.image}
                 />
               ) : (
-                <Paper className={classes.emptyImagePanel}>
-                  {/* empty state for images */}
-                  {errors.image && <Notice error={true} text={errors.image} />}
-                  <Typography variant="h2" data-qa-tp="Select Image">
-                    Select Image
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    className={classes.emptyImagePanelText}
-                    data-qa-no-compatible-images
-                  >
-                    No Compatible Images Available
-                  </Typography>
-                </Paper>
+                <ImageEmptyState
+                  className={classes.emptyImagePanel}
+                  errorText={errors.image}
+                />
               )}
               <AccessPanel
                 password={values.root_pass}

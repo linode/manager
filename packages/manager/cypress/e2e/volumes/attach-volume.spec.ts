@@ -7,6 +7,13 @@ import { regions } from 'support/constants/regions';
 import { assertToast } from 'support/ui/events';
 import { randomLabel, randomItem, randomString } from 'support/util/random';
 
+// Local storage override to force volume table to list up to 100 items.
+// This is a workaround while we wait to get stuck volumes removed.
+// @TODO Remove local storage override when stuck volumes are removed from test accounts.
+const pageSizeOverride = {
+  PAGE_SIZE: 100,
+};
+
 /**
  * Creates a Linode and a Volume that is attached to the created Linode.
  *
@@ -56,7 +63,9 @@ describe('volume attach and detach flows', () => {
 
     cy.defer(entityPromise).then(([volume, linode]: [Volume, Linode]) => {
       cy.intercept('POST', `*/volumes/${volume.id}/attach`).as('attachVolume');
-      cy.visitWithLogin('/volumes');
+      cy.visitWithLogin('/volumes', {
+        localStorageOverrides: pageSizeOverride,
+      });
 
       // Confirm that volume is listed, initiate attachment.
       cy.findByText(volume.label)
@@ -107,7 +116,9 @@ describe('volume attach and detach flows', () => {
         );
 
         // @TODO Wait for Linode to finish provisioning before initiating detach.
-        cy.visitWithLogin('/volumes');
+        cy.visitWithLogin('/volumes', {
+          localStorageOverrides: pageSizeOverride,
+        });
 
         // Confirm that volume is listed, initiate detachment.
         cy.findByText(volume.label)

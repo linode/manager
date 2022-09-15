@@ -1,5 +1,5 @@
 import { TPAProvider } from '@linode/api-v4/lib/profile';
-import { Link } from './features/OneClickApps/LinkSection';
+import { Doc } from './features/OneClickApps/FakeSpec';
 // These flags should correspond with active features flags in LD
 
 interface TaxBanner {
@@ -8,10 +8,15 @@ interface TaxBanner {
   linode_tax_id?: string;
 }
 
+interface TaxCollectionRegion {
+  name: string;
+  date?: string;
+}
+
 interface TaxCollectionBanner {
   date: string;
   action?: boolean;
-  regions?: string[];
+  regions?: TaxCollectionRegion[];
 }
 
 type OneClickApp = Record<string, string>;
@@ -21,7 +26,7 @@ export interface Flags {
   vatBanner: TaxBanner;
   taxBanner: TaxBanner;
   oneClickApps: OneClickApp;
-  oneClickAppsDocsOverride: Record<string, Link[]>;
+  oneClickAppsDocsOverride: Record<string, Doc[]>;
   promotionalOffers: PromotionalOffer[];
   mainContentBanner: MainContentBanner;
   databases: boolean;

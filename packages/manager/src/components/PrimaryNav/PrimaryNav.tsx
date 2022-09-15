@@ -20,16 +20,17 @@ import Logo from 'src/assets/logo/logo.svg';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
-import useStyles from './PrimaryNav.styles';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
-import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
-import { linkIsActive } from './utils';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useStackScriptsOCA } from 'src/queries/stackscripts';
+import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
+import useStyles from './PrimaryNav.styles';
+import { linkIsActive } from './utils';
 
 type NavEntity =
   | 'Linodes'
@@ -77,7 +78,18 @@ export const PrimaryNav: React.FC<Props> = (props) => {
 
   const [enableObjectPrefetch, setEnableObjectPrefetch] = React.useState(false);
 
+  const [
+    enableMarketplacePrefetch,
+    setEnableMarketplacePrefetch,
+  ] = React.useState(false);
+
   const { _isManagedAccount, account } = useAccountManagement();
+
+  const {
+    data: oneClickApps,
+    isLoading: oneClickAppsLoading,
+    error: oneClickAppsError,
+  } = useStackScriptsOCA(enableMarketplacePrefetch);
 
   const {
     data: clusters,
@@ -99,6 +111,9 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     !clustersError &&
     !bucketsError;
 
+  const allowMarketplacePrefetch =
+    !oneClickApps && !oneClickAppsLoading && !oneClickAppsError;
+
   const showDatabases = isFeatureEnabled(
     'Managed Databases',
     Boolean(flags.databases),
@@ -108,6 +123,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
   const prefetchObjectStorage = () => {
     if (!enableObjectPrefetch) {
       setEnableObjectPrefetch(true);
+    }
+  };
+
+  const prefetchMarketplace = () => {
+    if (!enableMarketplacePrefetch) {
+      setEnableMarketplacePrefetch(true);
     }
   };
 
@@ -198,6 +219,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           href: '/linodes/create?type=One-Click',
           attr: { 'data-qa-one-click-nav-btn': true },
           icon: <OCA />,
+          prefetchRequestFn: prefetchMarketplace,
+          prefetchRequestCondition: allowMarketplacePrefetch,
         },
       ],
       [
@@ -213,7 +236,13 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         },
       ],
     ],
-    [showDatabases, _isManagedAccount, allowObjPrefetch, flags.databaseBeta]
+    [
+      showDatabases,
+      _isManagedAccount,
+      allowObjPrefetch,
+      allowMarketplacePrefetch,
+      flags.databaseBeta,
+    ]
   );
 
   return (

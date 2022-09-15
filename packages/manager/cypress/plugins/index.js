@@ -21,14 +21,18 @@ function getConfiguration() {
   const conf = require('dotenv').config({
     path: dotenvPath,
   });
+  let parsedConf = {};
   if (conf.error) {
-    throw Error(
-      `Could not load .env from Cypress plugin/index.js: ${conf.error}`
+    console.warn(`Could not load .env file for Cypress: ${conf.error}`);
+    console.info(
+      'Cypress will rely on environment variables for configuration'
     );
+  } else {
+    parsedConf = conf.parsed;
   }
 
   const env = {
-    ...conf.parsed,
+    ...parsedConf,
     ...process.env,
   };
 

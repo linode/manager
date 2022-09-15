@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   drawerHeader: {
     marginBottom: theme.spacing(2),
   },
+  title: {
+    wordBreak: 'break-word',
+  },
   button: {
     minWidth: 'auto',
     minHeight: 'auto',
@@ -87,13 +90,15 @@ const DDrawer: React.FC<CombinedProps> = (props) => {
       <Grid
         className={classes.drawerHeader}
         container
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="space-between"
         updateFor={[title, classes]}
+        wrap="nowrap"
       >
         <Grid item>
           <Typography
             id={titleID}
+            className={classes.title}
             variant="h2"
             data-qa-drawer-title={title}
             data-testid="drawer-title"

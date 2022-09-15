@@ -22,6 +22,7 @@ export interface Account {
   last_name: string;
   balance: number;
   balance_uninvoiced: number;
+  billing_source: BillingSource;
   city: string;
   phone: string;
   company: string;
@@ -29,6 +30,8 @@ export interface Account {
   capabilities: AccountCapability[];
   euuid: string;
 }
+
+export type BillingSource = 'linode' | 'akamai';
 
 export type AccountCapability =
   | 'Linodes'

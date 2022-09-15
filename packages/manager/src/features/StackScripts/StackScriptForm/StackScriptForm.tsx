@@ -138,7 +138,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
             placeholder="Enter a label"
             value={label.value}
             errorText={hasErrorFor('label')}
-            tooltipText="Give your StackScript a label"
+            tooltipText="StackScript labels must be between 3 and 128 characters."
             className={classes.labelField}
             disabled={disabled}
             data-qa-stackscript-label
@@ -150,7 +150,6 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
             placeholder="Enter a description"
             onChange={description.handler}
             value={description.value}
-            tooltipText="Give your StackScript a description"
             disabled={disabled}
             data-qa-stackscript-description
           />
@@ -163,9 +162,10 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
             label="Target Images"
             imageFieldError={hasErrorFor('images')}
             helperText={
-              'Select which images are compatible with this StackScript.'
+              'Select which images are compatible with this StackScript. "Any/All" allows you to use private images.'
             }
             disabled={disabled}
+            anyAllOption
             data-qa-stackscript-target-select
           />
         </Grid>

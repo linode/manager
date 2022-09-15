@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import PayPalIcon from 'src/assets/icons/payment/payPal.svg';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -12,23 +11,19 @@ import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
-import PaymentMethodRow from 'src/components/PaymentMethodRow';
+import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import styled from 'src/containers/SummaryPanels.styles';
+import PaymentMethods from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
+import { queryKey } from 'src/queries/accountPayment';
+import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
-import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
-import { queryClient } from 'src/queries/base';
-import { queryKey } from 'src/queries/accountPayment';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
   summarySectionHeight: {
     flex: '0 1 auto',
     width: '100%',
-  },
-  loading: {
-    display: 'flex',
-    justifyContent: 'center',
   },
   container: {
     flex: 1,
@@ -81,10 +76,11 @@ interface Props {
   loading: boolean;
   error?: APIError[] | null;
   paymentMethods: PaymentMethod[] | undefined;
+  isAkamaiCustomer: boolean;
 }
 
 const PaymentInformation: React.FC<Props> = (props) => {
-  const { loading, error, paymentMethods } = props;
+  const { loading, error, paymentMethods, isAkamaiCustomer } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState<boolean>(
@@ -104,6 +100,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
   const addPaymentMethodRouteMatch = Boolean(useRouteMatch(drawerLink));
 
   const showPayPalAvailableNotice =
+    !isAkamaiCustomer &&
     !loading &&
     !paymentMethods?.some(
       (paymetMethod: PaymentMethod) => paymetMethod.type === 'paypal'
@@ -158,40 +155,31 @@ const PaymentInformation: React.FC<Props> = (props) => {
             </Typography>
           </Grid>
           <Grid item>
-            <Button
-              data-testid="payment-info-add-payment-method"
-              className={classes.edit}
-              onClick={() => replace(drawerLink)}
-            >
-              Add Payment Method
-            </Button>
+            {!isAkamaiCustomer ? (
+              <Button
+                data-testid="payment-info-add-payment-method"
+                className={classes.edit}
+                onClick={() => replace(drawerLink)}
+              >
+                Add Payment Method
+              </Button>
+            ) : null}
           </Grid>
         </Grid>
-        {loading ? (
-          <Grid className={classes.loading}>
-            <CircleProgress mini />
-          </Grid>
-        ) : error ? (
-          <Typography>
-            {
-              getAPIErrorOrDefault(
-                error,
-                'There was an error retrieving your payment methods.'
-              )[0].reason
-            }
-          </Typography>
-        ) : !paymentMethods || paymentMethods?.length == 0 ? (
-          <Typography>
-            No payment methods have been specified for this account.
-          </Typography>
+        {!isAkamaiCustomer ? (
+          <PaymentMethods
+            loading={loading}
+            error={error}
+            paymentMethods={paymentMethods}
+            openDeleteDialog={openDeleteDialog}
+          />
         ) : (
-          paymentMethods.map((paymentMethod: PaymentMethod) => (
-            <PaymentMethodRow
-              key={paymentMethod.id}
-              paymentMethod={paymentMethod}
-              onDelete={() => openDeleteDialog(paymentMethod)}
-            />
-          ))
+          <Typography data-testid="akamai-customer-text">
+            Payment method is determined by your contract with Akamai
+            Technologies.
+            <br />
+            Contact your representative with questions.
+          </Typography>
         )}
         {showPayPalAvailableNotice ? (
           <DismissibleBanner
