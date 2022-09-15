@@ -9,7 +9,7 @@ import { splitEvery } from 'ramda';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
-import LinodeLogo from './LinodeLogo';
+import LinodeLogo from './LinodeLogo.png';
 import {
   createFooter,
   createInvoiceItemsTable,
@@ -81,7 +81,7 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
     zip,
   } = account;
 
-  const RightHeaderPadding = 300;
+  const RightHeaderPadding = 310;
 
   const addLine = (text: string, fontSize = 9) => {
     const splitText = doc.splitTextToSize(text, 110);
@@ -187,7 +187,7 @@ export const printInvoice = (
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
+      doc.addImage(LinodeLogo, 'JPEG', 140, 5, 150, 50);
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -239,7 +239,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
+    doc.addImage(LinodeLogo, 'JPEG', 140, 5, 150, 50);
     const leftHeaderYPosition = addLeftHeader(
       doc,
       1,
