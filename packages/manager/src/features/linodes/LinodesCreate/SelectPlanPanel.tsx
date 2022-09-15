@@ -121,6 +121,7 @@ interface Props {
   isCreate?: boolean;
   className?: string;
   showTransfer?: boolean;
+  docsLink?: JSX.Element;
 }
 
 const getNanodes = (types: PlanSelectionType[]) =>
@@ -155,6 +156,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     className,
     copy,
     error,
+    docsLink,
   } = props;
 
   const classes = useStyles();
@@ -553,6 +555,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       copy={copy}
       tabs={tabs}
       initTab={initialTab >= 0 ? initialTab : 0}
+      docsLink={docsLink}
       data-qa-select-plan
     />
   );

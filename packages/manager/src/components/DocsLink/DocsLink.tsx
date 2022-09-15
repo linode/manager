@@ -36,12 +36,13 @@ interface Props {
   href: string;
   label?: string;
   analyticsLabel?: string;
+  onClick?: () => void;
 }
 
 export const DocsLink: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { href, label, analyticsLabel } = props;
+  const { href, label, analyticsLabel, onClick } = props;
 
   return (
     <IconTextLink
@@ -50,7 +51,11 @@ export const DocsLink: React.FC<Props> = (props) => {
       text={label ?? 'Docs'}
       title={label ?? 'Docs'}
       onClick={() => {
-        sendHelpButtonClickEvent(href, analyticsLabel);
+        if (onClick === undefined) {
+          sendHelpButtonClickEvent(href, analyticsLabel);
+        } else {
+          onClick();
+        }
         window.open(href, '_blank', 'noopener');
       }}
       aria-describedby="external-site"
