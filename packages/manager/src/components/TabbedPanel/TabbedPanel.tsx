@@ -79,8 +79,6 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
     tabs,
     handleTabChange,
     docsLink,
-    onDocsLinkClick,
-    docsLinkLabel,
     ...rest
   } = props;
 
@@ -98,7 +96,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
               </Typography>
             </Grid>
           )}
-          {docsLink && onDocsLinkClick && (
+          {docsLink ? (
             <Grid
               item
               xs={6}
@@ -106,7 +104,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
             >
               {docsLink}
             </Grid>
-          )}
+          ) : null}
         </Grid>
         {copy && (
           <Typography component="div" className={classes.copy} data-qa-tp-copy>

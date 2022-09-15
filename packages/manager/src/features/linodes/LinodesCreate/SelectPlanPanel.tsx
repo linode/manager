@@ -37,7 +37,6 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
-import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -557,14 +556,6 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       tabs={tabs}
       initTab={initialTab >= 0 ? initialTab : 0}
       docsLink={docsLink}
-      docsLinkLabel="Choosing a Plan"
-      onDocsLinkClick={() => {
-        sendEvent({
-          category: 'Linode Create Flow',
-          action: 'Click:link',
-          label: 'Choosing a Plan',
-        });
-      }}
       data-qa-select-plan
     />
   );
