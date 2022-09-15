@@ -68,10 +68,6 @@ const renderApp = (props: RouteComponentProps) => (
         </SnackBar>
       )}
     </LinodeThemeWrapper>
-    <ReactQueryDevtools
-      initialIsOpen={false}
-      toggleButtonProps={{ style: { marginLeft: '3em' } }}
-    />
   </>
 );
 
@@ -97,6 +93,10 @@ const renderAuthentication = () => (
             <Route render={renderApp} />
           </Switch>
         </AuthenticationWrapper>
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          toggleButtonProps={{ style: { marginLeft: '3em' } }}
+        />
       </QueryClientProvider>
     </Switch>
   </React.Suspense>
