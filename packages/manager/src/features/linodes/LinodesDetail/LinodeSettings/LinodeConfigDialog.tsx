@@ -107,7 +107,7 @@ interface EditableFields {
   useCustomRoot: boolean;
   label: string;
   devices: DevicesAsStrings;
-  initrd: string | null;
+  initrd: string;
   kernel?: string;
   comments?: string;
   memory_limit?: number;
