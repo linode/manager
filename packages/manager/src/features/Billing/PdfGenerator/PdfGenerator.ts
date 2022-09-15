@@ -187,7 +187,7 @@ export const printInvoice = (
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(LinodeLogo, 'JPEG', 140, 5, 150, 50);
+      doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -239,7 +239,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(LinodeLogo, 'JPEG', 140, 5, 150, 50);
+    doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
     const leftHeaderYPosition = addLeftHeader(
       doc,
       1,
