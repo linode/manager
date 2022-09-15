@@ -129,6 +129,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 15,
     lineHeight: '18px',
   },
+  engineSelect: {
+    '& .react-select__option--is-focused': {
+      '&:not(.react-select__option--is-selected)': {
+        '& svg': {
+          filter: 'brightness(0) invert(1)',
+        },
+      },
+    },
+  },
 }));
 
 const engineIcons = {
@@ -498,6 +507,7 @@ const DatabaseCreate: React.FC<{}> = () => {
               values.engine,
               engineOptions
             )}
+            className={classes.engineSelect}
             errorText={errors.engine}
             options={engineOptions}
             components={{ Option: RegionOption, SingleValue }}
