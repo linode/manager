@@ -55,11 +55,6 @@ interface Props {
   type?: ExtendedType;
   tags: string[];
   mostRecentBackup: string | null;
-  openTagDrawer: (
-    linodeID: number,
-    linodeLabel: string,
-    tags: string[]
-  ) => void;
   openDialog: (
     type: DialogType,
     linodeID: number,

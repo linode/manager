@@ -113,6 +113,9 @@ export const baseApps = {
   '1008123': 'Liveswitch',
   '1008125': 'Easypanel',
   '1017300': 'Kali Linux',
+  '1037036': 'Budibase',
+  '1037037': 'HashiCorp Nomad',
+  '1037038': 'HashiCorp Vault',
 };
 
 const oneClickFilter = [

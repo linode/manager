@@ -10,6 +10,13 @@ import {
   randomLabel,
 } from 'support/util/random';
 
+// Local storage override to force volume table to list up to 100 items.
+// This is a workaround while we wait to get stuck volumes removed.
+// @TODO Remove local storage override when stuck volumes are removed from test accounts.
+const pageSizeOverride = {
+  PAGE_SIZE: 100,
+};
+
 authenticate();
 describe('volume create flow', () => {
   /*
@@ -27,7 +34,9 @@ describe('volume create flow', () => {
     };
 
     cy.intercept('POST', '*/volumes').as('createVolume');
-    cy.visitWithLogin('/volumes/create');
+    cy.visitWithLogin('/volumes/create', {
+      localStorageOverrides: pageSizeOverride,
+    });
 
     // Fill out and submit volume create form.
     containsClick('Label').type(volume.label);
@@ -75,7 +84,9 @@ describe('volume create flow', () => {
 
     cy.defer(createLinode(linodeRequest)).then((linode) => {
       cy.intercept('POST', '*/volumes').as('createVolume');
-      cy.visitWithLogin('/volumes/create');
+      cy.visitWithLogin('/volumes/create', {
+        localStorageOverrides: pageSizeOverride,
+      });
 
       // Fill out and submit volume create form.
       containsClick('Label').type(volume.label);
@@ -128,7 +139,9 @@ describe('volume create flow', () => {
         size: `${randomNumber(10, 250)}`,
       };
 
-      cy.visitWithLogin(`/linodes/${linode.id}/storage`);
+      cy.visitWithLogin(`/linodes/${linode.id}/storage`, {
+        localStorageOverrides: pageSizeOverride,
+      });
 
       // Click "Create Volume" button, fill out and submit volume create drawer form.
       fbtClick('Create Volume');
@@ -155,7 +168,9 @@ describe('volume create flow', () => {
         });
 
       // Confirm that volume is listed on landing page with expected configuration.
-      cy.visitWithLogin('/volumes');
+      cy.visitWithLogin('/volumes', {
+        localStorageOverrides: pageSizeOverride,
+      });
       cy.findByText(volume.label)
         .closest('tr')
         .within(() => {

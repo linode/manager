@@ -1,6 +1,6 @@
 {
   "name": "@linode/api-v4",
-  "version": "0.75.0",
+  "version": "0.77.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/api-v4",
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
@@ -39,54 +39,36 @@
   "unpkg": "./lib/iife/index.js",
   "dependencies": {
     "@linode/validation": "*",
-    "@types/yup": "^0.29.13",
     "axios": "~0.21.4",
     "ipaddr.js": "^2.0.0",
-    "querystring": "^0.2.0",
     "yup": "^0.32.9"
   },
   "scripts": {
     "start": "concurrently --raw \"tsc -w --preserveWatchOutput\" \"tsup --watch\"",
     "build": "concurrently --raw \"tsc\" \"tsup\"",
-    "test": "jest --config jestconfig.json",
+    "test": "jest",
     "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
     "lint": "yarn run eslint . --quiet --ext .js,.ts,.tsx",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "precommit": "lint-staged"
   },
   "files": [
-    "index.js",
-    "index.node.js",
-    "index.d.ts",
-    "lib/*",
-    "package.json",
-    "README.md"
+    "lib"
   ],
   "devDependencies": {
-    "@babel/cli": "^7.10.1",
-    "@babel/core": "^7.10.2",
-    "@babel/plugin-proposal-class-properties": "^7.10.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.10.1",
-    "@babel/plugin-transform-modules-commonjs": "^7.10.1",
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-typescript": "^7.10.1",
     "@types/jest": "^26.0.13",
     "@types/node": "^12.7.1",
+    "@types/yup": "^0.29.13",
     "axios-mock-adapter": "^1.18.1",
-    "babel-plugin-module-resolver": "^4.0.0",
     "concurrently": "^4.1.1",
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
     "jest": "~26.4.2",
     "lint-staged": "^9.4.2",
-    "npm-dts-webpack-plugin": "^1.3.10",
     "prettier": "~2.2.1",
     "ts-jest": "^24.1.0",
-    "tsup": "^6.2.1",
-    "webpack": "^5.64.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.4.0"
+    "tsup": "^6.2.1"
   },
   "resolutions": {
     "handlebars": "^4.4.3"
@@ -99,6 +81,20 @@
     ],
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"
+    ]
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.(t)sx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
     ]
   }
 }

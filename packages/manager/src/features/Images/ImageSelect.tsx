@@ -1,5 +1,5 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { propOr } from 'ramda';
+import { clone, propOr } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
@@ -37,6 +37,7 @@ interface Props {
   onSelect: (selected: Item<any> | Item<any>[]) => void;
   label?: string;
   required?: boolean;
+  anyAllOption?: boolean;
 }
 
 type CombinedProps = Props;
@@ -53,6 +54,7 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
     value,
     disabled,
     required,
+    anyAllOption,
   } = props;
 
   const classes = useStyles();
@@ -70,6 +72,20 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
   const renderedImages = React.useMemo(() => getImagesOptions(images), [
     images,
   ]);
+
+  const imageSelectOptions = clone(renderedImages);
+
+  if (anyAllOption) {
+    imageSelectOptions.unshift({
+      label: '',
+      options: [
+        {
+          label: 'Any/All',
+          value: 'any/all',
+        },
+      ],
+    });
+  }
 
   return (
     <Grid
@@ -89,7 +105,7 @@ export const ImageSelect: React.FC<CombinedProps> = (props) => {
           errorText={imageError || imageFieldError || reduxError}
           disabled={disabled || Boolean(imageError)}
           onChange={onSelect}
-          options={renderedImages as any}
+          options={imageSelectOptions as any}
           placeholder="Select an Image"
           textFieldProps={{
             required,

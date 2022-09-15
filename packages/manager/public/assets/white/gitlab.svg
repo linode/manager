@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 39" style="enable-background:new 0 0 32 39;" xml:space="preserve">
+  <style type="text/css">
+    .st0{fill:#FFFFFF;}
+  </style>
+  <title>GitLab</title>
+  <g id="GitLab">
+    <g id="GitLab_Logo" transform="translate(0.000000, 5.000000)">
+      <polygon id="Fill-4" class="st0" points="16,29.5 16,29.5 21.9,11.4 10.1,11.4 		"/>
+      <polygon id="Fill-8" class="st0" points="16,29.5 10.1,11.4 1.9,11.4 		"/>
+      <path id="Fill-12" class="st0" d="M1.9,11.4L1.9,11.4l-1.8,5.5c-0.2,0.5,0,1.1,0.4,1.4L16,29.5L1.9,11.4z"/>
+      <path id="Fill-16" class="st0" d="M1.9,11.4h8.3L6.6,0.5c-0.2-0.6-1-0.6-1.2,0L1.9,11.4z"/>
+      <polygon id="Fill-18" class="st0" points="16,29.5 21.9,11.4 30.1,11.4 		"/>
+      <path id="Fill-20" class="st0" d="M30.1,11.4L30.1,11.4l1.8,5.5c0.2,0.5,0,1.1-0.4,1.4L16,29.5L30.1,11.4z"/>
+      <path id="Fill-22" class="st0" d="M30.1,11.4h-8.3l3.5-10.9c0.2-0.6,1-0.6,1.2,0L30.1,11.4z"/>
+    </g>
+  </g>
+</svg>

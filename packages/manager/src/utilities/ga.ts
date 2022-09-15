@@ -400,3 +400,16 @@ export const sendObjectStorageDocsEvent = (action: string) => {
     action,
   });
 };
+
+type TypeOfSearch = 'Search Field' | 'Category Dropdown';
+
+export const sendMarketplaceSearchEvent = (
+  typeOfSearch: TypeOfSearch,
+  appCategory?: string
+) => {
+  sendEvent({
+    category: 'Marketplace Create Flow',
+    action: typeOfSearch,
+    label: appCategory,
+  });
+};
