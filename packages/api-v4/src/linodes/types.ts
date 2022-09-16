@@ -247,7 +247,7 @@ export type DiskStatus =
 export interface LinodeConfigCreationData {
   label: string;
   devices: Devices;
-  initrd: string | null;
+  initrd: string | number | null;
   kernel?: string;
   comments?: string;
   memory_limit?: number;

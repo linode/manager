@@ -109,7 +109,7 @@ interface EditableFields {
   useCustomRoot: boolean;
   label: string;
   devices: DevicesAsStrings;
-  initrd: string | null;
+  initrd: string | number | null;
   kernel?: string;
   comments?: string;
   memory_limit?: number;
@@ -329,6 +329,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
 
+    // If Finnix was selected, make sure it gets sent as a number in the payload, not a string.
+    if (Number(configData.initrd) === 25669) {
+      configData.initrd = 25669;
+    }
+
     if (!regionHasVLANS) {
       delete configData.interfaces;
     }
@@ -468,19 +473,22 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
       return {
         label: categoryTitle,
         value: category,
-        options: items.map(({ label, id }) => {
-          return {
-            label,
-            value: String(id) as string | null,
-          };
-        }),
+        options: [
+          ...items.map(({ label, id }) => {
+            return {
+              label,
+              value: String(id) as string | number | null,
+            };
+          }),
+          { label: 'Recovery – Finnix (initrd)', value: '25669' },
+        ],
       };
     }
   );
 
   categorizedInitrdOptions.unshift({
-    value: '',
     label: '',
+    value: '',
     options: [{ label: 'None', value: null }],
   });
 
