@@ -90,7 +90,7 @@
   },
   "jest": {
     "transform": {
-      "^.+\\.(t)sx?$": ["@swc/jest", {}]
+      "^.+\\.(t)sx?$": "@swc/jest"
     },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
     "moduleFileExtensions": [
