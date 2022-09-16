@@ -39,6 +39,7 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { titlecase } from 'src/features/linodes/presentation';
 import { useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -52,6 +53,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   CreateLinodeConfig,
@@ -107,7 +109,7 @@ interface EditableFields {
   useCustomRoot: boolean;
   label: string;
   devices: DevicesAsStrings;
-  initrd: string;
+  initrd: string | null;
   kernel?: string;
   comments?: string;
   memory_limit?: number;
@@ -280,7 +282,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     return {
       label,
       devices: createDevicesFromStrings(devices),
-      initrd,
+      initrd: initrd !== '' ? initrd : null,
       kernel,
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -326,9 +328,6 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     formik.setSubmitting(true);
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
-
-    console.log(typeof configData.initrd);
-    console.log(configData.initrd);
 
     if (!regionHasVLANS) {
       delete configData.interfaces;
@@ -459,11 +458,30 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     (disk) => disk.filesystem === 'initrd'
   );
 
-  const initrdOptions = initrdDisks.map((disk) => {
-    return {
-      label: disk.label,
-      value: String(disk.id),
-    };
+  const initrdDisksObject = {
+    disks: initrdDisks,
+  };
+
+  const categorizedInitrdOptions = Object.entries(initrdDisksObject).map(
+    ([category, items]) => {
+      const categoryTitle = titlecase(category);
+      return {
+        label: categoryTitle,
+        value: category,
+        options: items.map(({ label, id }) => {
+          return {
+            label,
+            value: String(id) as string | null,
+          };
+        }),
+      };
+    }
+  );
+
+  categorizedInitrdOptions.unshift({
+    value: '',
+    label: '',
+    options: [{ label: 'None', value: null }],
   });
 
   /**
@@ -513,11 +531,9 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const handleInitrdChange = React.useCallback(
     (selectedDisk: Item<string>) => {
-      console.log(selectedDisk);
       setFieldValue('initrd', selectedDisk.value);
-      console.log(values);
     },
-    [setFieldValue, values]
+    [setFieldValue]
   );
 
   return (
@@ -768,10 +784,14 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 <Select
                   label="initrd"
                   onChange={handleInitrdChange}
-                  options={initrdOptions}
-                  defaultValue={initrdFromConfig}
-                  value={initrdOptions.find(
-                    (option) => option.value === values.initrd
+                  options={categorizedInitrdOptions}
+                  defaultValue={getSelectedOptionFromGroupedOptions(
+                    initrdFromConfig,
+                    categorizedInitrdOptions
+                  )}
+                  value={getSelectedOptionFromGroupedOptions(
+                    values.initrd,
+                    categorizedInitrdOptions
                   )}
                   placeholder="None"
                   isClearable={false}
