@@ -2,10 +2,17 @@ import { TPAProvider } from '@linode/api-v4/lib/profile';
 import { Doc } from './features/OneClickApps/FakeSpec';
 // These flags should correspond with active features flags in LD
 
+export interface TaxDetail {
+  tax_id: string;
+  tax_name: string;
+}
+
 interface TaxBanner {
   tax_name: string;
   date: string;
   linode_tax_id?: string;
+  country_tax?: TaxDetail;
+  provincial_tax_ids?: Record<string, TaxDetail>;
 }
 
 interface TaxCollectionRegion {
