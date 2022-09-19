@@ -220,6 +220,9 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 const deviceCounterDefault = 1;
 
+// DiskID reserved on the back-end to indicate Finnix.
+const finnixDiskID = 25669;
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
@@ -330,8 +333,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     const configData = convertStateToData(values) as LinodeConfigCreationData;
 
     // If Finnix was selected, make sure it gets sent as a number in the payload, not a string.
-    if (Number(configData.initrd) === 25669) {
-      configData.initrd = 25669;
+    if (Number(configData.initrd) === finnixDiskID) {
+      configData.initrd = finnixDiskID;
     }
 
     if (!regionHasVLANS) {
@@ -480,7 +483,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               value: String(id) as string | number | null,
             };
           }),
-          { label: 'Recovery – Finnix (initrd)', value: '25669' },
+          { label: 'Recovery – Finnix (initrd)', value: String(finnixDiskID) },
         ],
       };
     }
