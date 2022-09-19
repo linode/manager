@@ -108,6 +108,7 @@ describe('config reducer', () => {
             linodeId: 1,
             label: mockConfig1.label,
             devices: mockConfig1.devices,
+            initrd: null,
             root_device: mockConfig1.root_device,
             helpers: mockConfig1.helpers,
           },

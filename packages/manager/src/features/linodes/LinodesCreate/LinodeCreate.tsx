@@ -69,6 +69,8 @@ import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementChec
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
+import DocsLink from 'src/components/DocsLink';
+import { sendEvent } from 'src/utilities/ga';
 
 type ClassNames =
   | 'form'
@@ -605,6 +607,19 @@ export class LinodeCreate extends React.PureComponent<
             disabledClasses={this.props.disabledClasses}
             isCreate
             showTransfer
+            docsLink={
+              <DocsLink
+                href="https://www.linode.com/docs/guides/choosing-a-compute-instance-plan/"
+                label="Choosing a Plan"
+                onClick={() => {
+                  sendEvent({
+                    category: 'Linode Create Flow',
+                    action: 'Click:link',
+                    label: 'Choosing a Plan',
+                  });
+                }}
+              />
+            }
           />
           <LabelAndTagsPanel
             data-qa-label-and-tags-panel

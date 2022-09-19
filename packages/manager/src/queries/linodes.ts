@@ -12,6 +12,8 @@ import {
   Stats,
   getLinodeTransferByDate,
   getLinodeStats,
+  getLinode,
+  getLinodeLishToken,
 } from '@linode/api-v4/lib/linodes';
 
 export const STATS_NOT_READY_API_MESSAGE =
@@ -118,6 +120,18 @@ export const useLinodeTransferByDate = (
     [`${queryKey}-transfer`, id, year, month],
     () => getLinodeTransferByDate(id, year, month),
     { enabled }
+  );
+};
+
+export const useLinodeQuery = (id: number) => {
+  return useQuery<Linode, APIError[]>([queryKey, id], () => getLinode(id));
+};
+
+export const useLinodeLishTokenQuery = (id: number) => {
+  return useQuery<{ lish_token: string }, APIError[]>(
+    [`${queryKey}-lish-token`, id],
+    () => getLinodeLishToken(id),
+    { staleTime: Infinity }
   );
 };
 

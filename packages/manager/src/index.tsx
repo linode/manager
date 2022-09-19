@@ -49,7 +49,7 @@ const renderLish = () => (
 );
 
 const renderApp = (props: RouteComponentProps) => (
-  <QueryClientProvider client={queryClient}>
+  <>
     <SplashScreen />
     <LinodeThemeWrapper>
       {(toggle) => (
@@ -68,11 +68,7 @@ const renderApp = (props: RouteComponentProps) => (
         </SnackBar>
       )}
     </LinodeThemeWrapper>
-    <ReactQueryDevtools
-      initialIsOpen={false}
-      toggleButtonProps={{ style: { marginLeft: '3em' } }}
-    />
-  </QueryClientProvider>
+  </>
 );
 
 const renderCancel = () => (
@@ -90,12 +86,18 @@ const renderAuthentication = () => (
       <Route exact path="/nullauth" render={renderNullAuth} />
       <Route exact path="/logout" component={Logout} />
       <Route exact path="/cancel" render={renderCancel} />
-      <AuthenticationWrapper>
-        <Switch>
-          <Route path="/linodes/:linodeId/lish" render={renderLish} />
-          <Route render={renderApp} />
-        </Switch>
-      </AuthenticationWrapper>
+      <QueryClientProvider client={queryClient}>
+        <AuthenticationWrapper>
+          <Switch>
+            <Route path="/linodes/:linodeId/lish/:type" render={renderLish} />
+            <Route render={renderApp} />
+          </Switch>
+        </AuthenticationWrapper>
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          toggleButtonProps={{ style: { marginLeft: '3em' } }}
+        />
+      </QueryClientProvider>
     </Switch>
   </React.Suspense>
 );

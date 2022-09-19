@@ -8,6 +8,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from '../Notice';
+import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -40,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: theme.spacing(3),
     },
   },
+  header: {
+    display: 'flex',
+  },
 }));
 
 export interface Tab {
@@ -60,6 +64,7 @@ interface Props {
   noPadding?: boolean;
   handleTabChange?: (index: number) => void;
   value?: number;
+  docsLink?: JSX.Element;
 }
 
 type CombinedProps = Props;
@@ -73,6 +78,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
     innerClass,
     tabs,
     handleTabChange,
+    docsLink,
     ...rest
   } = props;
 
@@ -82,11 +88,24 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
       <div className={innerClass}>
         {error && <Notice error>{error}</Notice>}
-        {header !== '' && (
-          <Typography variant="h2" data-qa-tp-title>
-            {header}
-          </Typography>
-        )}
+        <Grid className={classes.header}>
+          {header !== '' && (
+            <Grid item xs={6}>
+              <Typography variant="h2" data-qa-tp-title>
+                {header}
+              </Typography>
+            </Grid>
+          )}
+          {docsLink ? (
+            <Grid
+              item
+              xs={6}
+              style={{ display: 'flex', flexDirection: 'row-reverse' }}
+            >
+              {docsLink}
+            </Grid>
+          ) : null}
+        </Grid>
         {copy && (
           <Typography component="div" className={classes.copy} data-qa-tp-copy>
             {copy}

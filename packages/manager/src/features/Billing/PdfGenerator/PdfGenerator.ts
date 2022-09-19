@@ -1,15 +1,15 @@
-import jsPDF from 'jspdf';
 import {
   Account,
   Invoice,
   InvoiceItem,
   Payment,
 } from '@linode/api-v4/lib/account';
+import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
 import { reportException } from 'src/exceptionReporting';
-import { FlagSet } from 'src/featureFlags';
+import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
-import LinodeLogo from './LinodeLogo';
+import LinodeLogo from './LinodeLogo.png';
 import {
   createFooter,
   createInvoiceItemsTable,
@@ -27,7 +27,8 @@ const addLeftHeader = (
   pages: number,
   date: string | null,
   type: string,
-  taxID: string | undefined
+  countryTax: TaxDetail | undefined,
+  provincialTax?: TaxDetail | undefined
 ) => {
   const addLine = (text: string, fontSize = 9) => {
     doc.text(text, pageMargin, currentLine, { charSpace: 0.75 });
@@ -52,8 +53,16 @@ const addLeftHeader = (
   addLine('249 Arch St.');
   addLine('Philadelphia, PA 19106');
   addLine('USA');
-  if (taxID) {
-    addLine(`Linode Tax ID: ${taxID}`);
+
+  doc.setFont(baseFont, 'bold');
+  addLine('Tax ID(s):');
+  doc.setFont(baseFont, 'normal');
+
+  if (countryTax) {
+    addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+  }
+  if (provincialTax) {
+    addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
   }
 
   return currentLine;
@@ -72,7 +81,7 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
     zip,
   } = account;
 
-  const RightHeaderPadding = 300;
+  const RightHeaderPadding = 310;
 
   const addLine = (text: string, fontSize = 9) => {
     const splitText = doc.splitTextToSize(text, 110);
@@ -171,11 +180,14 @@ export const printInvoice = (
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
     const hasTax = convertedInvoiceDate > TaxStartDate;
-    const taxID = hasTax ? taxBanner?.linode_tax_id : undefined;
+    const countryTax = hasTax ? taxBanner?.country_tax : undefined;
+    const provincialTax = hasTax
+      ? taxBanner?.provincial_tax_ids?.[account.state]
+      : undefined;
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
+      doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -183,7 +195,8 @@ export const printInvoice = (
         itemsChunks.length,
         date,
         'Invoice',
-        taxID
+        countryTax,
+        provincialTax
       );
       const rightHeaderYPosition = addRightHeader(doc, account);
 
@@ -217,7 +230,7 @@ export const printInvoice = (
 export const printPayment = (
   account: Account,
   payment: Payment,
-  taxID?: string
+  countryTax?: TaxDetail
 ): PdfResult => {
   try {
     const date = formatDate(payment.date, { displayTime: true });
@@ -226,17 +239,17 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
+    doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
     const leftHeaderYPosition = addLeftHeader(
       doc,
       1,
       1,
       date,
       'Payment',
-      taxID
+      countryTax
     );
     const rightHeaderYPosition = addRightHeader(doc, account);
-    addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 4, {
+    addTitle(doc, Math.max(leftHeaderYPosition, rightHeaderYPosition) + 12, {
       text: `Receipt for Payment #${payment.id}`,
     });
 

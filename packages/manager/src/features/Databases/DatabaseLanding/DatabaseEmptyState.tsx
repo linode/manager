@@ -8,6 +8,7 @@ import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import useFlags from 'src/hooks/useFlags';
+import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -24,6 +25,8 @@ const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const flags = useFlags();
+
+  const gaCategory = 'Managed Databases landing page empty';
 
   return (
     <>
@@ -55,7 +58,14 @@ const DatabaseEmptyState: React.FC = () => {
         isEntity
         buttonProps={[
           {
-            onClick: () => history.push('/databases/create'),
+            onClick: () => {
+              sendEvent({
+                category: gaCategory,
+                action: 'Click:button',
+                label: 'Create Database Cluster',
+              });
+              history.push('/databases/create');
+            },
             children: 'Create Database Cluster',
           },
         ]}
@@ -65,7 +75,16 @@ const DatabaseEmptyState: React.FC = () => {
             Fully managed and highly scalable Database Clusters. Choose your
             Linode plan, select a database engine, and deploy in minutes.
           </div>
-          <Link to="https://www.linode.com/docs/products/databases/managed-databases/">
+          <Link
+            to="https://www.linode.com/docs/products/databases/managed-databases/"
+            onClick={() => {
+              sendEvent({
+                category: gaCategory,
+                action: 'Click:link',
+                label: 'Need help getting started? Browse database guides.',
+              });
+            }}
+          >
             Need help getting started? Browse database guides.
           </Link>
         </Typography>

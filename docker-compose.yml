@@ -30,9 +30,14 @@ services:
         condition: service_healthy
     environment:
       - CYPRESS_BASE_URL=http://web:3000
-      - CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
       - CYPRESS_RECORD=${CYPRESS_RECORD}
+      - CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
       - HOME=/home/node
+      - MANAGER_OAUTH=${MANAGER_OAUTH_1}
+      - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
+      - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
+      - REACT_APP_LAUNCH_DARKLY_ID=${REACT_APP_LAUNCH_DARKLY_ID}
+      - REACT_APP_LOGIN_ROOT=${REACT_APP_LOGIN_ROOT}
     env_file: ./packages/manager/.env
     volumes:
       - ./packages/manager:/home/node/app/packages/manager

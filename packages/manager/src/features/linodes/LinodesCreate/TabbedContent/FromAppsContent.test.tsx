@@ -26,7 +26,7 @@ describe('getCompatibleImages', () => {
       { Test: imageFactory.build() },
       []
     );
-expect(bothEmptyResult).toEqual([]);
+    expect(bothEmptyResult).toEqual([]);
     expect(emptyImagesDataResult).toEqual([]);
     expect(emptyStackScriptImagesResult).toEqual([]);
   });
