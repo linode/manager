@@ -54,7 +54,7 @@ jobs:
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           yarn up &
       - name: Run tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v4
         with:
           working-directory: packages/manager
           wait-on: "http://localhost:3000"
