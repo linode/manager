@@ -1,3 +1,8 @@
+## [2202-09-19] - v0.78.0
+
+### Changed:
+- LinodeConfigCreationData now includes initrd property
+
 ## [2022-09-06] - v0.77.0
 
 ### Changed:
