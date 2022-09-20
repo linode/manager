@@ -80,7 +80,8 @@ export const CircleProgressComponent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { className, children, mini, noInner, noPadding, tag, ...rest } = props;
 
-  const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
+  const variant =
+    typeof props.value === 'number' ? 'determinate' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
 
   return mini ? (
