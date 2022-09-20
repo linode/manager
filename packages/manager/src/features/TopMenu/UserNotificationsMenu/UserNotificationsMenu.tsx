@@ -138,7 +138,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
         />
         <Menu
           anchorEl={anchorEl}
-          getContentAnchorEl={undefined}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}

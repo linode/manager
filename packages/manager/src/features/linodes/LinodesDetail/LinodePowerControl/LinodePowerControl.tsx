@@ -241,7 +241,6 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         <Menu
           id="power"
           open={Boolean(anchorEl)}
-          getContentAnchorEl={undefined}
           onClose={this.closeMenu}
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
