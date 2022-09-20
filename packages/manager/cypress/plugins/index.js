@@ -78,6 +78,18 @@ function checkNodeVersionRequiredByLinode() {
 module.exports = (on, _config) => {
   checkNodeVersionRequiredByLinode();
 
+  // Disable requests to Google's safe browsing API.
+  on('before:browser:launch', (browser = {}, launchOptions) => {
+    const originalPreferences = launchOptions.preferences.default;
+    launchOptions.preferences.default = {
+      ...originalPreferences,
+      safebrowsing: {
+        enabled: false,
+      },
+    };
+    return launchOptions;
+  });
+
   on('task', {
     datenow() {
       return Date.now();
