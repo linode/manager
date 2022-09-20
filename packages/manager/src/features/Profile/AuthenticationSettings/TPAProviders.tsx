@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 0,
     width: 'calc(100% + 24px)',
     '& .MuiGrid-item': {
-      [theme.breakpoints.down(undefined)]: {
+      [theme.breakpoints.down(1100)]: {
         flexBasis: '50%',
         maxWidth: '50%',
       },

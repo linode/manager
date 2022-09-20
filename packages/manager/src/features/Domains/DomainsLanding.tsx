@@ -45,7 +45,7 @@ const DOMAIN_CREATE_ROUTE = '/domains/create';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     // Adds spacing when the docs button wraps to make it look a little less awkward
-    [theme.breakpoints.down(undefined)]: {
+    [theme.breakpoints.down(380)]: {
       '& .docsButton': {
         paddingBottom: theme.spacing(2),
       },
@@ -260,116 +260,118 @@ export const DomainsLanding: React.FC<Props> = (props) => {
     domains &&
     domains.results > 0;
 
-  return <>
-    <DocumentTitleSegment segment="Domains" />
-    <DomainBanner hidden={!shouldShowBanner} />
-    {location.state?.recordError && (
-      <Notice error text={location.state.recordError} />
-    )}
-    <LandingHeader
-      title="Domains"
-      extraActions={
-        <Button
-          className={classes.importButton}
-          onClick={openImportZoneDrawer}
-          buttonType="secondary"
-        >
-          Import a Zone
-        </Button>
-      }
-      entity="Domain"
-      onAddNew={navigateToCreate}
-      docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
-    />
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableSortCell
-            active={orderBy === 'domain'}
-            direction={order}
-            label="domain"
-            handleClick={handleOrderChange}
+  return (
+    <>
+      <DocumentTitleSegment segment="Domains" />
+      <DomainBanner hidden={!shouldShowBanner} />
+      {location.state?.recordError && (
+        <Notice error text={location.state.recordError} />
+      )}
+      <LandingHeader
+        title="Domains"
+        extraActions={
+          <Button
+            className={classes.importButton}
+            onClick={openImportZoneDrawer}
+            buttonType="secondary"
           >
-            Domain
-          </TableSortCell>
-          <TableSortCell
-            active={orderBy === 'status'}
-            direction={order}
-            label="status"
-            handleClick={handleOrderChange}
-          >
-            Status
-          </TableSortCell>
-          <Hidden smDown>
+            Import a Zone
+          </Button>
+        }
+        entity="Domain"
+        onAddNew={navigateToCreate}
+        docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
+      />
+      <Table>
+        <TableHead>
+          <TableRow>
             <TableSortCell
-              active={orderBy === 'type'}
+              active={orderBy === 'domain'}
               direction={order}
-              label="type"
+              label="domain"
               handleClick={handleOrderChange}
             >
-              Type
+              Domain
             </TableSortCell>
             <TableSortCell
-              active={orderBy === 'updated'}
+              active={orderBy === 'status'}
               direction={order}
-              label="updated"
+              label="status"
               handleClick={handleOrderChange}
             >
-              Last Modified
+              Status
             </TableSortCell>
-          </Hidden>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {domains?.data.map((domain: Domain) => (
-          <DomainRow key={domain.id} domain={domain} {...handlers} />
-        ))}
-      </TableBody>
-    </Table>
-    <PaginationFooter
-      count={domains?.results || 0}
-      handlePageChange={pagination.handlePageChange}
-      handleSizeChange={pagination.handlePageSizeChange}
-      page={pagination.page}
-      pageSize={pagination.pageSize}
-      eventCategory="Domains Table"
-    />
-    <DomainZoneImportDrawer
-      open={importDrawerOpen}
-      onClose={closeImportZoneDrawer}
-    />
-    <DisableDomainDialog
-      domain={selectedDomain}
-      onClose={() => setDisableDialogOpen(false)}
-      open={disableDialogOpen}
-    />
-    <CloneDomainDrawer
-      open={cloneDialogOpen}
-      onClose={() => setCloneDialogOpen(false)}
-      domain={selectedDomain}
-    />
-    <EditDomainDrawer
-      open={editDialogOpen}
-      onClose={() => setEditDialogOpen(false)}
-      domain={selectedDomain}
-    />
-    <DeletionDialog
-      typeToConfirm
-      entity="domain"
-      open={removeDialogOpen}
-      label={selectedDomain?.domain ?? 'Unknown'}
-      loading={isDeleting}
-      error={
-        deleteError
-          ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
-              .reason
-          : undefined
-      }
-      onClose={closeRemoveDialog}
-      onDelete={removeDomain}
-    />
-  </>;
+            <Hidden smDown>
+              <TableSortCell
+                active={orderBy === 'type'}
+                direction={order}
+                label="type"
+                handleClick={handleOrderChange}
+              >
+                Type
+              </TableSortCell>
+              <TableSortCell
+                active={orderBy === 'updated'}
+                direction={order}
+                label="updated"
+                handleClick={handleOrderChange}
+              >
+                Last Modified
+              </TableSortCell>
+            </Hidden>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {domains?.data.map((domain: Domain) => (
+            <DomainRow key={domain.id} domain={domain} {...handlers} />
+          ))}
+        </TableBody>
+      </Table>
+      <PaginationFooter
+        count={domains?.results || 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Domains Table"
+      />
+      <DomainZoneImportDrawer
+        open={importDrawerOpen}
+        onClose={closeImportZoneDrawer}
+      />
+      <DisableDomainDialog
+        domain={selectedDomain}
+        onClose={() => setDisableDialogOpen(false)}
+        open={disableDialogOpen}
+      />
+      <CloneDomainDrawer
+        open={cloneDialogOpen}
+        onClose={() => setCloneDialogOpen(false)}
+        domain={selectedDomain}
+      />
+      <EditDomainDrawer
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        domain={selectedDomain}
+      />
+      <DeletionDialog
+        typeToConfirm
+        entity="domain"
+        open={removeDialogOpen}
+        label={selectedDomain?.domain ?? 'Unknown'}
+        loading={isDeleting}
+        error={
+          deleteError
+            ? getAPIErrorOrDefault(deleteError, 'Error deleting Domain.')[0]
+                .reason
+            : undefined
+        }
+        onClose={closeRemoveDialog}
+        onDelete={removeDomain}
+      />
+    </>
+  );
 };
 
 export default DomainsLanding;
