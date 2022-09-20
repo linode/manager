@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(3),
     },
     copyField: {
-      marginTop: theme.spacing(1) / 2,
+      marginTop: `calc(${theme.spacing(1)} / 2`,
     },
   });
 

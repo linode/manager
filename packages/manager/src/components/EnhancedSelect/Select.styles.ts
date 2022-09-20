@@ -41,7 +41,7 @@ export const styles = (theme: Theme) =>
         boxShadow: 'none',
         border: `1px solid transparent`,
         backgroundColor: theme.bg.white,
-        minHeight: theme.spacing(5) - 2,
+        minHeight: `calc(${theme.spacing(5)} - 2)`,
         '&:hover': {
           border: `1px dotted #ccc`,
           cursor: 'text',
@@ -89,7 +89,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__menu-list': {
         zIndex: 100,
-        padding: theme.spacing(1) / 2,
+        padding: `calc(${theme.spacing(1)} / 2)`,
         backgroundColor: theme.bg.white,
         height: '101%',
         overflow: 'auto',
@@ -193,7 +193,7 @@ export const styles = (theme: Theme) =>
       display: 'flex',
       color: theme.palette.text.primary,
       cursor: 'pointer',
-      minHeight: theme.spacing(5) - 6,
+      minHeight: `calc(${theme.spacing(5)} - 6)`,
       // From the AutoSizeInput documentation: (https://github.com/JedWatson/react-input-autosize/blob/master/README.md#csp-and-the-ie-clear-indicator)
       // "The input will automatically inject a stylesheet that hides IE/Edge's "clear" indicator,
       // which otherwise breaks the UI. This has the downside of being incompatible with some CSP policies.
@@ -292,7 +292,7 @@ export const styles = (theme: Theme) =>
     algoliaRoot: {
       width: '100%',
       cursor: 'pointer',
-      padding: theme.spacing(1) / 2 + 2,
+      padding: `calc(${theme.spacing(1)} / 2 + 2)`,
       '& em': {
         fontStyle: 'normal',
         color: theme.color.blueDTwhite,
@@ -309,12 +309,12 @@ export const styles = (theme: Theme) =>
       height: 12,
       position: 'relative',
       top: 5,
-      marginLeft: theme.spacing(1) / 2,
-      marginRight: theme.spacing(1) / 2,
+      marginLeft: `calc(${theme.spacing(1)} / 2)`,
+      marginRight: `calc(${theme.spacing(1)} / 2)`,
       color: theme.palette.primary.main,
     },
     source: {
-      marginTop: theme.spacing(1) / 4,
+      marginTop: `calc(${theme.spacing(1)} / 4)`,
       color: theme.color.headline,
       paddingLeft: theme.spacing(1),
       margin: 0,
@@ -359,7 +359,7 @@ export const reactSelectStyles = (theme: Theme) => ({
     boxShadow: 'none',
     border: `1px solid transparent`,
     backgroundColor: theme.bg.white,
-    minHeight: theme.spacing(5) - 2,
+    minHeight: `calc(${theme.spacing(5)} - 2)`,
     '&:hover': {
       border: `1px dotted #ccc`,
       cursor: 'text',
@@ -404,7 +404,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   }),
   menuList: (base: any) => ({
     ...base,
-    padding: theme.spacing(1) / 2,
+    padding: `calc(${theme.spacing(1)} / 2)`,
     backgroundColor: theme.bg.white,
     minHeight: '101%',
     overflow: 'auto',

@@ -1,4 +1,4 @@
-import { StyledEngineProvider } from '@mui/material';
+import { StyledEngineProvider } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { ThemeProvider, Theme } from 'src/components/core/styles';

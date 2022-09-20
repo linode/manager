@@ -7,15 +7,15 @@ import {
 } from '@mui/styles';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface SvgIconProps extends _SVGIconProps {}
+export type SvgIconProps = _SVGIconProps;
 
 export type WithStyles<P extends string> = _WithStyles<P>;
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface WithTheme extends _WithTheme {}
+export type WithTheme = _WithTheme;
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface CSSProperties extends _CSSProperties {}
+export type CSSProperties = _CSSProperties;
 
 export {
   createGenerateClassName,
@@ -27,7 +27,7 @@ export {
   useTheme,
 } from '@mui/styles';
 
-export { createTheme, ThemeProvider } from '@mui/material';
+export { createTheme, ThemeProvider } from '@mui/material/styles';
 
 interface Theme extends _Theme {
   name: string;

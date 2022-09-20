@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   userWrapper: {
-    marginTop: theme.spacing(1) / 2,
+    marginTop: `calc(${theme.spacing(1)} / 2)`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     display: 'inline-block',
     fontSize: '0.8em',
-    marginLeft: theme.spacing(1) / 3,
+    marginLeft: `calc(${theme.spacing(1)} / 3)`,
   },
   enableBackupsButton: {
     ...theme.applyLinkStyles,

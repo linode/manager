@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
   },
   mini: {
-    padding: theme.spacing() * 1.3,
+    padding: `calc(${theme.spacing()} * 1.3)`,
   },
   noPadding: {
     padding: 0,

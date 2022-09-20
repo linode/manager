@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   tag: {
-    marginTop: theme.spacing(1) / 2,
+    marginTop: `calc(${theme.spacing(1)} / 2)`,
     marginRight: 4,
   },
   addButtonWrapper: {

@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   userWrapper: {
     display: 'inline-flex',
     alignItems: 'center',
-    marginTop: theme.spacing(1) / 2,
+    marginTop: `calc(${theme.spacing(1)} / 2)`,
   },
   gravatar: {
     borderRadius: '50%',

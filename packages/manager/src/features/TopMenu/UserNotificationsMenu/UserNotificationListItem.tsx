@@ -64,7 +64,7 @@ const styles = (theme: Theme) => {
       },
     },
     innerTitle: {
-      marginBottom: theme.spacing(1) / 2,
+      marginBottom: `calc(${theme.spacing(1)} / 2)`,
     },
     noticeText: {
       color: theme.palette.text.primary,

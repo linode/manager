@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingBottom: 10,
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing(1) / 2,
+    marginBottom: `calc(${theme.spacing(1)} / 2)`,
   },
   legendItem: {
     marginTop: 10,

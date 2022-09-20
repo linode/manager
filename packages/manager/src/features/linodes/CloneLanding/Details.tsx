@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   clearButton: {
-    top: -(theme.spacing(1) / 2),
+    top: -`calc(${theme.spacing(1)} / 2)`,
   },
   list: {
     flexWrap: 'wrap',

@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   addNewWrapper: {
     [theme.breakpoints.down('sm')]: {
-      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+      marginLeft: -(theme.spacing(1) + `calc(${theme.spacing(1)} / 2)`),
       marginTop: -theme.spacing(1),
     },
     '&.MuiGrid-item': {

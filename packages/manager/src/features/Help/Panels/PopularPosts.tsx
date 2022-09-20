@@ -21,7 +21,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
     post: {
-      marginBottom: theme.spacing(1) / 2,
+      marginBottom: `calc(${theme.spacing(1)} / 2)`,
       ...theme.typography.body1,
     },
     postLink: {

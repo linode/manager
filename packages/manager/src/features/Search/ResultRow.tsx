@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   tag: {
-    margin: theme.spacing() / 2,
+    margin: `calc(${theme.spacing()} / 2)`,
   },
   link: {
     display: 'block',
