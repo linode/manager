@@ -52,6 +52,8 @@ export interface Props {
   nativeLegend?: boolean; // Display chart.js native legend
   formatData?: (value: number) => number | null;
   formatTooltip?: (value: number) => string;
+  ariaLabel?: string;
+  tabIndex?: number;
 }
 
 type CombinedProps = Props;
@@ -93,6 +95,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   const [hiddenDatasets, setHiddenDatasets] = React.useState<number[]>([]);
 
   const {
+    ariaLabel,
     chartHeight,
     formatData,
     formatTooltip,
@@ -103,6 +106,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     rowHeaders,
     legendRows,
     nativeLegend,
+    tabIndex,
     unit,
   } = props;
 
@@ -280,14 +284,14 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     }
   });
   return (
-    <div className={classes.wrapper}>
+    <div className={classes.wrapper} tabIndex={tabIndex || 0}>
       <div className={classes.canvasContainer}>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
-            aria-label="Stats and metrics"
+            aria-label={ariaLabel || 'Stats and metrics'}
             className={classes.root}
             noBorder
           >
