@@ -193,97 +193,99 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
     handlePolicyChange(category, newPolicy);
   };
 
-  return <>
-    <div className={classes.header}>
-      <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
-      <Button
-        buttonType="primary"
-        onClick={openDrawerForCreating}
-        className={classes.button}
-        disabled={disabled}
-      >
-        Add an {capitalize(category)} Rule
-      </Button>
-    </div>
-    <Table style={{ tableLayout: 'auto' }}>
-      <TableHead>
-        <TableRow>
-          <TableCell
-            style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
-          >
-            Label
-          </TableCell>
-          <Hidden lgDown>
-            <TableCell style={{ width: '10%' }}>Protocol</TableCell>
-          </Hidden>
-          <Hidden smDown>
-            <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
-              Port Range
-            </TableCell>
-            <TableCell style={{ width: '15%' }}>
-              {capitalize(addressColumnLabel)}
-            </TableCell>
-          </Hidden>
-          <TableCell style={{ width: '5%' }}>Action</TableCell>
-          <TableCell />
-        </TableRow>
-      </TableHead>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable" isDropDisabled={disabled}>
-          {(provided) => (
-            <TableBody
-              {...provided.droppableProps}
-              className={classes.table}
-              innerRef={provided.innerRef}
-            >
-              {rowData.length === 0 ? (
-                <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
-              ) : (
-                rowData.map((thisRuleRow: RuleRow, index) => (
-                  <Draggable
-                    key={thisRuleRow.id}
-                    draggableId={String(thisRuleRow.id)}
-                    index={index}
-                  >
-                    {(provided, snapshot) => {
-                      return (
-                        <FirewallRuleTableRow
-                          isDragging={snapshot.isDragging}
-                          disabled={disabled}
-                          key={thisRuleRow.id}
-                          {...thisRuleRow}
-                          triggerCloneFirewallRule={triggerCloneFirewallRule}
-                          triggerDeleteFirewallRule={
-                            triggerDeleteFirewallRule
-                          }
-                          triggerOpenRuleDrawerForEditing={
-                            triggerOpenRuleDrawerForEditing
-                          }
-                          triggerUndo={triggerUndo}
-                          innerRef={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        />
-                      );
-                    }}
-                  </Draggable>
-                ))
-              )}
-              {provided.placeholder}
-            </TableBody>
-          )}
-        </Droppable>
-      </DragDropContext>
-      <TableFooter className={classes.footer}>
-        <PolicyRow
-          category={category}
-          policy={policy}
+  return (
+    <>
+      <div className={classes.header}>
+        <Typography variant="h2">{`${capitalize(category)} Rules`}</Typography>
+        <Button
+          buttonType="primary"
+          onClick={openDrawerForCreating}
+          className={classes.button}
           disabled={disabled}
-          handlePolicyChange={onPolicyChange}
-        />
-      </TableFooter>
-    </Table>
-  </>;
+        >
+          Add an {capitalize(category)} Rule
+        </Button>
+      </div>
+      <Table style={{ tableLayout: 'auto' }}>
+        <TableHead>
+          <TableRow>
+            <TableCell
+              style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
+            >
+              Label
+            </TableCell>
+            <Hidden lgDown>
+              <TableCell style={{ width: '10%' }}>Protocol</TableCell>
+            </Hidden>
+            <Hidden smDown>
+              <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
+                Port Range
+              </TableCell>
+              <TableCell style={{ width: '15%' }}>
+                {capitalize(addressColumnLabel)}
+              </TableCell>
+            </Hidden>
+            <TableCell style={{ width: '5%' }}>Action</TableCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable" isDropDisabled={disabled}>
+            {(provided) => (
+              <TableBody
+                {...provided.droppableProps}
+                className={classes.table}
+                ref={provided.innerRef}
+              >
+                {rowData.length === 0 ? (
+                  <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
+                ) : (
+                  rowData.map((thisRuleRow: RuleRow, index) => (
+                    <Draggable
+                      key={thisRuleRow.id}
+                      draggableId={String(thisRuleRow.id)}
+                      index={index}
+                    >
+                      {(provided, snapshot) => {
+                        return (
+                          <FirewallRuleTableRow
+                            isDragging={snapshot.isDragging}
+                            disabled={disabled}
+                            key={thisRuleRow.id}
+                            {...thisRuleRow}
+                            triggerCloneFirewallRule={triggerCloneFirewallRule}
+                            triggerDeleteFirewallRule={
+                              triggerDeleteFirewallRule
+                            }
+                            triggerOpenRuleDrawerForEditing={
+                              triggerOpenRuleDrawerForEditing
+                            }
+                            triggerUndo={triggerUndo}
+                            innerRef={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          />
+                        );
+                      }}
+                    </Draggable>
+                  ))
+                )}
+                {provided.placeholder}
+              </TableBody>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <TableFooter className={classes.footer}>
+          <PolicyRow
+            category={category}
+            policy={policy}
+            disabled={disabled}
+            handlePolicyChange={onPolicyChange}
+          />
+        </TableFooter>
+      </Table>
+    </>
+  );
 };
 
 export default React.memo(FirewallRuleTable);

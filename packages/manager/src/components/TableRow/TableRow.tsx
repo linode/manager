@@ -157,7 +157,7 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
         [classes.highlight]: highlight,
         [classes.disabled]: disabled,
       })}
-      innerRef={domRef}
+      ref={domRef}
       {...rest}
     >
       {props.children}
