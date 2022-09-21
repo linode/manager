@@ -49,7 +49,7 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
 
   return (
     <SnackbarProvider
-      ref={notistackRef}
+      ref={notistackRef as React.RefObject<SnackbarProvider>}
       {...rest}
       classes={{
         root: classes.root,
