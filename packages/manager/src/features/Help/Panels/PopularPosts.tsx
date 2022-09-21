@@ -136,6 +136,6 @@ class PopularPosts extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
+const styled: any = withStyles(styles);
 
 export default styled(PopularPosts);
