@@ -42,19 +42,19 @@ export const validateFirewallPorts = string().matches(
   'Ports must be an integer, range of integers, or a comma-separated list of integers.'
 );
 
-const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP'];
+const validFirewallRuleProtocol = ['ALL', 'TCP', 'UDP', 'ICMP', 'IPENCAP'];
 export const FirewallRuleTypeSchema = object().shape({
   action: mixed().oneOf(['ACCEPT', 'DROP']).required('Action is required'),
   protocol: mixed()
     .oneOf(validFirewallRuleProtocol)
     .required('Protocol is required.'),
   ports: string().when('protocol', {
-    is: (val: any) => val !== 'ICMP',
+    is: (val: any) => val !== 'ICMP' && val !== 'IPENCAP',
     then: validateFirewallPorts,
-    // Workaround to get the test to fail if ports is defined when protocol === ICMP
+    // Workaround to get the test to fail if ports is defined when protocol === ICMP or IPENCAP
     otherwise: string().test({
       name: 'protocol',
-      message: 'Ports are not allowed for ICMP protocols.',
+      message: 'Ports are not allowed for ICMP and IPENCAP protocols.',
       test: (value) => typeof value === 'undefined',
     }),
   }),

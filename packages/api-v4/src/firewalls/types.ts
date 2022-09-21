@@ -1,6 +1,6 @@
 export type FirewallStatus = 'enabled' | 'disabled' | 'deleted';
 
-export type FirewallRuleProtocol = 'ALL' | 'TCP' | 'UDP' | 'ICMP';
+export type FirewallRuleProtocol = 'ALL' | 'TCP' | 'UDP' | 'ICMP' | 'IPENCAP';
 
 export type FirewallDeviceEntityType = 'linode' | 'nodebalancer';
 

@@ -59,6 +59,7 @@ export const protocolOptions: Item<FirewallRuleProtocol>[] = [
   { label: 'TCP', value: 'TCP' },
   { label: 'ICMP', value: 'ICMP' },
   { label: 'UDP', value: 'UDP' },
+  { label: 'IPENCAP', value: 'IPENCAP' },
 ];
 
 export const addressOptions = [
