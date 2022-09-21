@@ -1,10 +1,10 @@
 import { Theme as _Theme } from '@mui/material/styles';
 import { SvgIconProps as _SVGIconProps } from '@mui/material/SvgIcon';
 import {
-  CSSProperties as _CSSProperties,
   WithStyles as _WithStyles,
   WithTheme as _WithTheme,
 } from '@mui/styles';
+import { CSSProperties as _CSSProperties } from '@mui/styles/withStyles';
 
 /* tslint:disable-next-line:no-empty-interface */
 export type SvgIconProps = _SVGIconProps;
