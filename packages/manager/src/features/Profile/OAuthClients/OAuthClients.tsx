@@ -359,88 +359,90 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
     // TODO Need to unify internal & external usage of 'OAuth Clients'/'OAuth Apps'.
     // Currently in the context of profile, the term 'Oauth Client(s)' is referred to as 'app' or 'OAuth Apps' for user-facing displays.
-    return <>
-      <DocumentTitleSegment segment="OAuth Apps" />
-      <Grid
-        className={`${classes.root} m0`}
-        container
-        alignItems="center"
-        justifyContent="flex-end"
-      >
-        <Grid className={classes.addNewWrapper} item>
-          <AddNewLink
-            label="Add an OAuth App"
-            onClick={() => this.openDrawer()(false)}
-            data-qa-oauth-create
-          />
+    return (
+      <>
+        <DocumentTitleSegment segment="OAuth Apps" />
+        <Grid
+          className={`${classes.root} m0`}
+          container
+          alignItems="center"
+          justifyContent="flex-end"
+        >
+          <Grid className={classes.addNewWrapper} item>
+            <AddNewLink
+              label="Add an OAuth App"
+              onClick={() => this.openDrawer()(false)}
+              data-qa-oauth-create
+            />
+          </Grid>
         </Grid>
-      </Grid>
-      <Table aria-label="List of OAuth Apps">
-        <TableHead data-qa-table-head>
-          <TableRow>
-            <TableSortCell
-              active={this.props.orderBy === 'label'}
-              label="label"
-              direction={this.props.order}
-              handleClick={this.props.handleOrderChange}
-              style={{ width: '20%' }}
-            >
-              Label
-            </TableSortCell>
-            <Hidden smDown>
-              <TableCell>Access</TableCell>
-            </Hidden>
-            <TableCell style={{ width: '20%' }}>ID</TableCell>
-            <Hidden smDown>
-              <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
-            </Hidden>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>{this.renderContent()}</TableBody>
-      </Table>
+        <Table aria-label="List of OAuth Apps">
+          <TableHead data-qa-table-head>
+            <TableRow>
+              <TableSortCell
+                active={this.props.orderBy === 'label'}
+                label="label"
+                direction={this.props.order}
+                handleClick={this.props.handleOrderChange}
+                style={{ width: '20%' }}
+              >
+                Label
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Access</TableCell>
+              </Hidden>
+              <TableCell style={{ width: '20%' }}>ID</TableCell>
+              <Hidden smDown>
+                <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
+              </Hidden>
+              <TableCell />
+            </TableRow>
+          </TableHead>
+          <TableBody data-qa-table-body>{this.renderContent()}</TableBody>
+        </Table>
 
-      <Modals
-        secret={this.state.secret}
-        secretID={this.state.clientID}
-        label={this.state.clientLabel}
-        modalErrors={this.state.modalErrors}
-        secretModalOpen={this.state.secretModalOpen}
-        deleteModalOpen={this.state.deleteModalOpen}
-        secretSuccessOpen={this.state.secretModalSuccessOpen}
-        isResetting={this.state.isResetting}
-        isDeleting={this.state.isDeleting}
-        closeDialogs={this.closeModals}
-        resetClient={this.resetSecret}
-        deleteClient={this.deleteClient}
-      />
+        <Modals
+          secret={this.state.secret}
+          secretID={this.state.clientID}
+          label={this.state.clientLabel}
+          modalErrors={this.state.modalErrors}
+          secretModalOpen={this.state.secretModalOpen}
+          deleteModalOpen={this.state.deleteModalOpen}
+          secretSuccessOpen={this.state.secretModalSuccessOpen}
+          isResetting={this.state.isResetting}
+          isDeleting={this.state.isDeleting}
+          closeDialogs={this.closeModals}
+          resetClient={this.resetSecret}
+          deleteClient={this.deleteClient}
+        />
 
-      <OAuthFormDrawer
-        edit={this.state.drawerIsInEditMode}
-        open={this.state.drawerOpen}
-        errors={this.state.drawerErrors}
-        public={this.state.isPublic}
-        label={this.state.clientLabel}
-        redirect_uri={this.state.redirectUri}
-        onClose={this.closeDrawer}
-        loading={this.state.drawerLoading}
-        onChangeLabel={this.handleChangeLabel}
-        onChangeRedirectURI={this.handleChangeRedirectURI}
-        onChangePublic={this.handleChangePublic}
-        onSubmit={
-          this.state.drawerIsInEditMode ? this.editClient : this.createClient
-        }
-      />
+        <OAuthFormDrawer
+          edit={this.state.drawerIsInEditMode}
+          open={this.state.drawerOpen}
+          errors={this.state.drawerErrors}
+          public={this.state.isPublic}
+          label={this.state.clientLabel}
+          redirect_uri={this.state.redirectUri}
+          onClose={this.closeDrawer}
+          loading={this.state.drawerLoading}
+          onChangeLabel={this.handleChangeLabel}
+          onChangeRedirectURI={this.handleChangeRedirectURI}
+          onChangePublic={this.handleChangePublic}
+          onSubmit={
+            this.state.drawerIsInEditMode ? this.editClient : this.createClient
+          }
+        />
 
-      <PaginationFooter
-        page={this.props.page}
-        pageSize={this.props.pageSize}
-        count={this.props.count}
-        handlePageChange={this.props.handlePageChange}
-        handleSizeChange={this.props.handlePageSizeChange}
-        eventCategory="oauth clients"
-      />
-    </>;
+        <PaginationFooter
+          page={this.props.page}
+          pageSize={this.props.pageSize}
+          count={this.props.count}
+          handlePageChange={this.props.handlePageChange}
+          handleSizeChange={this.props.handlePageSizeChange}
+          eventCategory="oauth clients"
+        />
+      </>
+    );
   }
 
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
