@@ -269,7 +269,11 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             aria-label="Dashboard"
             title="Dashboard"
           >
-            <Logo width={115} height={43} />
+            <Logo
+              width={115}
+              height={43}
+              className={classNames({ [classes.logo]: isCollapsed })}
+            />
           </Link>
         </div>
       </Grid>

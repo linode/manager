@@ -120,6 +120,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: '.25px',
     textTransform: 'uppercase',
   },
+  logo: {
+    '& > g ': {
+      display: 'none',
+    },
+    'nav:hover & > g ': {
+      display: 'unset',
+    },
+  },
 }));
 
 export default useStyles;
