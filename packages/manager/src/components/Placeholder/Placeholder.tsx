@@ -11,7 +11,14 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 
-type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button' | 'entity';
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'copy'
+  | 'icon'
+  | 'button'
+  | 'entity'
+  | 'subtitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -74,7 +81,11 @@ const styles = (theme: Theme) =>
     },
     title: {
       textAlign: 'center',
-      marginBottom: theme.spacing(2),
+    },
+    subtitle: {
+      textAlign: 'center',
+      color: theme.palette.text.primary,
+      marginTop: theme.spacing(),
     },
     '& .insidePath path': {
       opacity: 0,
@@ -101,6 +112,7 @@ export interface Props {
   className?: string;
   isEntity?: boolean;
   renderAsSecondary?: boolean;
+  subtitle?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -113,6 +125,7 @@ const Placeholder: React.FC<CombinedProps> = (props) => {
     icon: Icon,
     buttonProps,
     renderAsSecondary,
+    subtitle,
   } = props;
   return (
     <Grid
@@ -133,6 +146,9 @@ const Placeholder: React.FC<CombinedProps> = (props) => {
           renderAsSecondary={renderAsSecondary}
           data-qa-placeholder-title
         />
+        <Typography variant="h2" className={classes.subtitle}>
+          {subtitle}
+        </Typography>
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
         {typeof props.children === 'string' ? (
