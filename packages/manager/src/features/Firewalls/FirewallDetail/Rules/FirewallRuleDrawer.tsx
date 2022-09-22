@@ -333,7 +333,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
 
         setFieldValue('protocol', item?.value);
         if (item?.value === 'ICMP' || item?.value === 'IPENCAP') {
-          // Submitting the form with ICMP and defined ports causes an error
+          // Submitting the form with ICMP or IPENCAP and defined ports causes an error
           setFieldValue('ports', '');
           setPresetPorts([]);
         }
