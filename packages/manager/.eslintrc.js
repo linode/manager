@@ -135,6 +135,18 @@ module.exports = {
     'scanjs-rules/new_Function': 'error',
     'scanjs-rules/property_crypto': 'error',
     'scanjs-rules/property_geolocation': 'error',
+    // Allow roles from WAI-ARIA graphics module proposal.
+    // See: https://www.w3.org/TR/graphics-aria-1.0/
+    'jsx-a11y/aria-role': [
+      'error',
+      {
+        allowedInvalidRoles: [
+          'graphics-document',
+          'graphics-object',
+          'graphics-symbol',
+        ],
+      },
+    ],
     // Prevent patterns susceptible to XSS, like '<div>' + userInput + '</div>'.
     // https://github.com/Rantanen/eslint-plugin-xss/blob/master/docs/rules/no-mixed-html.md
     'xss/no-mixed-html': [
