@@ -285,6 +285,8 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   });
 
   return (
+    // Allow `tabIndex` on `<div>` because it represents an interactive element.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <div
       className={classes.wrapper}
       tabIndex={tabIndex || 0}
