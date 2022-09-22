@@ -136,6 +136,7 @@ const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
       <React.Fragment>
         <div className={classes.chart}>
           <LineGraph
+            ariaLabel="Connections Graph"
             timezone={timezone}
             showToday={true}
             data={[
@@ -207,6 +208,7 @@ const TablesPanel: React.FC<Props> = ({ nodeBalancer }) => {
       <React.Fragment>
         <div className={classes.chart}>
           <LineGraph
+            ariaLabel="Traffic Graph"
             timezone={timezone}
             showToday={true}
             data={[
