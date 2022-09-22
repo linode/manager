@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { CSSProperties, makeStyles } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 
 const useStyles = makeStyles({
   prefixComponentWrapper: {
@@ -14,7 +14,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  prefixStyle?: CSSProperties;
+  prefixStyle?: React.CSSProperties;
   prefixComponent: JSX.Element | null;
 }
 
@@ -29,7 +29,7 @@ const FinalCrumbPrefix: React.FC<CombinedProps> = (props) => {
     <div
       className={classes.prefixComponentWrapper}
       data-qa-prefixwrapper
-      style={prefixStyle as React.CSSProperties}
+      style={prefixStyle}
     >
       {prefixComponent}
     </div>
