@@ -469,12 +469,11 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
           value={presetPorts}
           options={portOptions}
           onChange={handlePortPresetChange}
-          disabled={values.protocol === 'ICMP'}
+          disabled={['ICMP', 'IPENCAP'].includes(values.protocol)}
           textFieldProps={{
-            helperText:
-              values.protocol === 'ICMP'
-                ? 'Ports are not allowed for ICMP protocols.'
-                : undefined,
+            helperText: ['ICMP', 'IPENCAP'].includes(values.protocol)
+              ? `Ports are not allowed for ${values.protocol} protocols.`
+              : undefined,
           }}
         />
         {hasCustomInput ? (
@@ -848,8 +847,8 @@ export const validateForm = (
     errors.protocol = 'Protocol is required.';
   }
 
-  if (protocol === 'ICMP' && ports) {
-    errors.ports = 'Ports are not allowed for ICMP protocols.';
+  if ((protocol === 'ICMP' || protocol === 'IPENCAP') && ports) {
+    errors.ports = `Ports are not allowed for ${protocol} protocols.`;
   } else if (ports && !ports.match(/^([0-9\-]+,?\s?)+$/)) {
     errors.ports =
       'Ports must be an integer, range of integers, or a comma-separated list of integers.';
