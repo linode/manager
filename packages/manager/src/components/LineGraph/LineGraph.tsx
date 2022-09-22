@@ -283,15 +283,21 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
       });
     }
   });
+
   return (
-    <div className={classes.wrapper} tabIndex={tabIndex || 0}>
+    <div
+      className={classes.wrapper}
+      tabIndex={tabIndex || 0}
+      role="graphics-document"
+      aria-label={ariaLabel || 'Stats and metrics'}
+    >
       <div className={classes.canvasContainer}>
         <canvas height={chartHeight || 300} ref={inputEl} />
       </div>
       {legendRendered && legendRows && (
         <div className={classes.container}>
           <Table
-            aria-label={ariaLabel || 'Stats and metrics'}
+            aria-label={`Controls for ${ariaLabel || 'Stats and metrics'}`}
             className={classes.root}
             noBorder
           >
