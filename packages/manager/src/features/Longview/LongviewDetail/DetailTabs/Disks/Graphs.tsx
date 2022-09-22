@@ -117,6 +117,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                 },
               ]}
               title="Disk I/O"
+              ariaLabel="Disk I/O/ Graph"
               showToday={isToday}
               subtitle="ops/s"
               timezone={timezone}
@@ -145,6 +146,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                   showToday={isToday}
                   title="Space"
                   subtitle="GB"
+                  ariaLabel="Disk Space Graph"
                   timezone={timezone}
                   nativeLegend
                   // @todo replace with byte-to-target converter after rebase
@@ -163,6 +165,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                   ]}
                   showToday={isToday}
                   title="Inodes"
+                  ariaLabel="Inodes Graph"
                   timezone={timezone}
                   nativeLegend
                   // @todo replace with byte-to-target converter after rebase

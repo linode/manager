@@ -87,6 +87,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
           <LongviewLineGraph
             title="Queries"
             subtitle="queries/s"
+            ariaLabel="Queries Per Second Graph"
             nativeLegend
             error={error}
             loading={loading}
@@ -127,6 +128,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 title="Throughput"
                 subtitle={`${maxUnit}/s`}
                 unit={'/s'}
+                ariaLabel="Throughput Graph"
                 formatData={formatNetwork}
                 formatTooltip={formatNetworkTooltip}
                 nativeLegend
@@ -155,6 +157,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
                 title="Connections"
                 subtitle="connections/s"
                 unit={' connections/s'}
+                ariaLabel="Connections Per Second Graph"
                 nativeLegend
                 error={error}
                 loading={loading}
@@ -177,6 +180,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Slow Queries"
+                ariaLabel="Slow Queries Graph"
                 nativeLegend
                 error={error}
                 loading={loading}
@@ -195,6 +199,7 @@ export const MySQLGraphs: React.FC<CombinedProps> = (props) => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Aborted"
+                ariaLabel="Aborted Clients and Connections Graph"
                 nativeLegend
                 error={error}
                 loading={loading}

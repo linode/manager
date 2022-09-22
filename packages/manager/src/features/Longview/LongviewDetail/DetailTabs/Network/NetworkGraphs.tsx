@@ -84,9 +84,10 @@ export const NetworkGraphs: React.FC<CombinedProps> = (props) => {
             <div style={{ paddingTop: theme.spacing(2) }}>
               <LongviewLineGraph
                 title="Network Traffic"
-                nativeLegend
                 subtitle={maxUnit + '/s'}
                 unit={'/s'}
+                ariaLabel="Network Traffic Graph"
+                nativeLegend
                 formatData={(value: number) =>
                   convertNetworkToUnit(value * 8, maxUnit)
                 }
