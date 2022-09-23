@@ -8,12 +8,36 @@ import { sendEvent } from 'src/utilities/ga';
 import Divider from 'src/components/core/Divider';
 import DocsIcon from 'src/assets/icons/docs.svg';
 import List from 'src/components/core/List';
-import ListSubheader from '@material-ui/core/ListSubheader';
 import ListItem from 'src/components/core/ListItem';
 import Grid from 'src/components/Grid';
 import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import PointerIcon from 'src/assets/icons/pointer.svg';
 import ExternalLink from 'src/components/ExternalLink';
+import Chip from 'src/components/core/Chip';
+import LinksSection from './LinksSection';
+
+const chipStyle = {
+  backgroundColor: '#FBFBFB',
+  border: '1px solid #EEEEEE',
+  height: '34px',
+  width: 137,
+};
+
+const chipDeleteButton = (
+  <button
+    style={{
+      backgroundColor: '#FBFBFB',
+      borderRadius: 0,
+      border: 'none',
+      width: '30px',
+      height: '30px',
+      borderLeft: '1px solid #EEEEEE',
+    }}
+  >
+    <PointerIcon />
+  </button>
+);
 
 export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
@@ -55,103 +79,145 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
           on a scalable and reliable platform.
         </Typography>
       </Placeholder>
-      <Divider />
-      <List
-        subheader={
-          <ListSubheader
-            component={Grid}
-            style={{ display: 'flex' }}
-            disableSticky
-          >
-            <DocsIcon style={{ color: '#3683DC', marginRight: 8 }} />
-            <Typography variant="h2">Getting Started Guides</Typography>
-          </ListSubheader>
-        }
+      <Divider
+        style={{
+          marginLeft: '16px',
+          marginRight: '16px',
+          marginBottom: '32px',
+        }}
+      />
+      <Grid
+        container
+        spacing={2}
+        style={{ justifyContent: 'space-between', margin: 8 }}
       >
-        <ListItem>
-          <Link to="https://www.linode.com/docs/guides/creating-a-compute-instance/">
-            Create a Compute Instance
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="https://www.linode.com/docs/guides/getting-started">
-            Getting Started with Linode Compute Instances
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/">
-            Understanding Billing and Payment
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="https://www.linode.com/docs/guides/set-up-web-server-host-website/">
-            Hosting a Website or Application on Linode
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Link to="https://www.linode.com/docs/">Check out all our Docs</Link>
-        </ListItem>
-      </List>
-      <List
-        subheader={
-          <ListSubheader
-            component={Grid}
-            style={{ display: 'flex' }}
-            disableSticky
-          >
-            <MarketplaceIcon style={{ marginRight: 8 }} />
-            <Typography variant="h2">Deploy an App</Typography>
-          </ListSubheader>
-        }
-      ></List>
-      <List
-        subheader={
-          <ListSubheader
-            component={Grid}
-            style={{ display: 'flex' }}
-            disableSticky
-          >
-            <YoutubeIcon style={{ marginRight: 8 }} />
-            <Typography variant="h2">Getting Started Playlist</Typography>
-          </ListSubheader>
-        }
-      >
-        <ListItem>
-          <ExternalLink
-            link="https://www.youtube.com/watch?v=KEK-ZxrGxMA"
-            text="Linode Getting Started Guide"
-            fixedIcon
-          />
-        </ListItem>
-        <ListItem>
-          <ExternalLink
-            link="https://www.youtube.com/watch?v=AVXYq8aL47Q"
-            text="Common Linux Commands"
-            fixedIcon
-          />
-        </ListItem>
-        <ListItem>
-          <ExternalLink
-            link="https://www.youtube.com/watch?v=lMC5VNoZFhg"
-            text="Copying Files to a Compute Instance"
-            fixedIcon
-          />
-        </ListItem>
-        <ListItem>
-          <ExternalLink
-            link="https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2"
-            text="How to use SSH"
-            fixedIcon
-          />
-        </ListItem>
-        <ListItem>
-          <ExternalLink
-            link="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
-            text="View the complete playlist"
-            fixedIcon
-          />
-        </ListItem>
-      </List>
+        <LinksSection
+          title="Getting Started Guides"
+          icon={DocsIcon}
+          moreLink={
+            <Link to="https://www.linode.com/docs/">
+              Check out all our Docs <PointerIcon />
+            </Link>
+          }
+        >
+          <List>
+            <ListItem disableGutters>
+              <Link to="https://www.linode.com/docs/guides/creating-a-compute-instance/">
+                Create a Compute Instance
+              </Link>
+            </ListItem>
+            <ListItem disableGutters>
+              <Link to="https://www.linode.com/docs/guides/getting-started">
+                Getting Started with Linode Compute Instances
+              </Link>
+            </ListItem>
+            <ListItem disableGutters>
+              <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/">
+                Understanding Billing and Payment
+              </Link>
+            </ListItem>
+            <ListItem disableGutters>
+              <Link to="https://www.linode.com/docs/guides/set-up-web-server-host-website/">
+                Hosting a Website or Application on Linode
+              </Link>
+            </ListItem>
+          </List>
+        </LinksSection>
+        <LinksSection
+          title="Deploy an App"
+          icon={MarketplaceIcon}
+          moreLink={
+            <Link to="https://cloud.linode.com/linodes/create?type=One-Click">
+              See all Marketplace apps <PointerIcon />
+            </Link>
+          }
+        >
+          <Grid item container xs={12} spacing={1}>
+            <Chip
+              label="Wordpress"
+              deleteIcon={chipDeleteButton}
+              onDelete={() => undefined}
+              style={chipStyle}
+            />
+            <Chip
+              label="aaPanel"
+              deleteIcon={chipDeleteButton}
+              onDelete={() => undefined}
+              style={chipStyle}
+            />
+          </Grid>
+          <Grid item container xs={12} spacing={1}>
+            <Chip
+              label="cPanel"
+              deleteIcon={chipDeleteButton}
+              onDelete={() => undefined}
+              style={chipStyle}
+            />
+            <Chip
+              label="Cloudtron"
+              deleteIcon={chipDeleteButton}
+              onDelete={() => undefined}
+              style={chipStyle}
+            />
+          </Grid>
+          <Grid item container xs={12} spacing={1}>
+            <Chip
+              label="Plesk"
+              deleteIcon={chipDeleteButton}
+              onDelete={() => undefined}
+              style={chipStyle}
+            />
+            <Chip
+              label="Joomla"
+              deleteIcon={chipDeleteButton}
+              onDelete={() => undefined}
+              style={chipStyle}
+            />
+          </Grid>
+        </LinksSection>
+        <LinksSection
+          title="Getting Started Playlist"
+          icon={YoutubeIcon}
+          moreLink={
+            <ExternalLink
+              link="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+              text="View the complete playlist "
+              fixedIcon
+            />
+          }
+        >
+          <List>
+            <ListItem disableGutters>
+              <ExternalLink
+                link="https://www.youtube.com/watch?v=KEK-ZxrGxMA"
+                text="Linode Getting Started Guide "
+                fixedIcon
+              />
+            </ListItem>
+            <ListItem disableGutters>
+              <ExternalLink
+                link="https://www.youtube.com/watch?v=AVXYq8aL47Q"
+                text="Common Linux Commands "
+                fixedIcon
+              />
+            </ListItem>
+            <ListItem disableGutters>
+              <ExternalLink
+                link="https://www.youtube.com/watch?v=lMC5VNoZFhg"
+                text="Copying Files to a Compute Instance "
+                fixedIcon
+              />
+            </ListItem>
+            <ListItem disableGutters>
+              <ExternalLink
+                link="https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2"
+                text="How to use SSH "
+                fixedIcon
+              />
+            </ListItem>
+          </List>
+        </LinksSection>
+      </Grid>
     </>
   );
 };
