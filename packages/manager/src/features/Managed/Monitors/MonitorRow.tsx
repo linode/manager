@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   monitorDescription: {
-    paddingTop: `calc(${theme.spacing(1)} / 2)`,
+    paddingTop: theme.spacing(0.5),
   },
   monitorRow: {
     '&:before': {

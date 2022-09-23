@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: theme.palette.primary.main,
-    marginRight: `calc(${theme.spacing(1)} / 2)`,
+    marginRight: theme.spacing(0.5),
     fontSize: 28,
     transition: 'transform .1s ease-in-out',
     '&.rotate': {

@@ -65,7 +65,7 @@ const styles = (theme: Theme) =>
       position: 'relative',
       top: 2,
       left: 2,
-      marginLeft: `calc(${theme.spacing(1)} / 2)`,
+      marginLeft: theme.spacing(0.5),
     },
     caretDisabled: {
       color: theme.color.disabledText,

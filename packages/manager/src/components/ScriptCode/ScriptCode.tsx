@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   numberCell: {
     backgroundColor: theme.color.grey2,
-    paddingLeft: `calc(${theme.spacing(1)} / 2)`,
-    paddingRight: `calc(${theme.spacing(1)} / 2)`,
+    paddingLeft: theme.spacing(0.5),
+    paddingRight: theme.spacing(0.5),
     paddingTop: `calc(${theme.spacing(1)} / 4)`,
     paddingBottom: `calc(${theme.spacing(1)} / 4)`,
     fontSize: 14,

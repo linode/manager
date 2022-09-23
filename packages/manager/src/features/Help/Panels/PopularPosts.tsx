@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   post: {
-    marginBottom: `calc(${theme.spacing(1)} / 2)`,
+    marginBottom: theme.spacing(0.5),
     ...theme.typography.body1,
   },
   postLink: {

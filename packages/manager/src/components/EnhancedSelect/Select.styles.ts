@@ -89,7 +89,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__menu-list': {
         zIndex: 100,
-        padding: `calc(${theme.spacing(1)} / 2)`,
+        padding: theme.spacing(0.5),
         backgroundColor: theme.bg.white,
         height: '101%',
         overflow: 'auto',
@@ -309,8 +309,8 @@ export const styles = (theme: Theme) =>
       height: 12,
       position: 'relative',
       top: 5,
-      marginLeft: `calc(${theme.spacing(1)} / 2)`,
-      marginRight: `calc(${theme.spacing(1)} / 2)`,
+      marginLeft: theme.spacing(0.5),
+      marginRight: theme.spacing(0.5),
       color: theme.palette.primary.main,
     },
     source: {
@@ -404,7 +404,7 @@ export const reactSelectStyles = (theme: Theme) => ({
   }),
   menuList: (base: any) => ({
     ...base,
-    padding: `calc(${theme.spacing(1)} / 2)`,
+    padding: theme.spacing(0.5),
     backgroundColor: theme.bg.white,
     minHeight: '101%',
     overflow: 'auto',

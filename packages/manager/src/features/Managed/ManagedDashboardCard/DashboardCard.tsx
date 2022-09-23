@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     top: 6,
     left: -theme.spacing(2),
-    marginLeft: `calc(${theme.spacing(1)} / 2)`,
+    marginLeft: theme.spacing(0.5),
   },
 }));
 
