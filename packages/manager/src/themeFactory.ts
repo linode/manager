@@ -876,7 +876,10 @@ const themeDefaults: ThemeDefaults = () => {
           color: '#606469',
           whiteSpace: 'nowrap',
           '& p': {
-            fontSize: '1rem',
+            fontSize: '0.9rem',
+            [breakpoints.only('xs')]: {
+              fontSize: '1rem',
+            },
             color: '#606469',
           },
         },
