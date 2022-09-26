@@ -65,7 +65,7 @@ const styles = (theme: Theme) =>
       position: 'relative',
       top: 2,
       left: 2,
-      marginLeft: theme.spacing(1) / 2,
+      marginLeft: theme.spacing(0.5),
     },
     caretDisabled: {
       color: theme.color.disabledText,
@@ -241,7 +241,6 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         <Menu
           id="power"
           open={Boolean(anchorEl)}
-          getContentAnchorEl={undefined}
           onClose={this.closeMenu}
           anchorEl={anchorEl}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

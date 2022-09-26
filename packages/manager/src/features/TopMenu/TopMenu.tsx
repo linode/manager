@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
   },
   communityIcon: {
-    [theme.breakpoints.down(undefined)]: {
+    [theme.breakpoints.down(370)]: {
       ...theme.visually.hidden,
     },
   },
@@ -84,7 +84,8 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               color="inherit"
               aria-label="open menu"
               onClick={desktopMenuToggle}
-              size="large">
+              size="large"
+            >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon style={{ marginTop: 6 }} />
               </TopMenuIcon>
@@ -95,7 +96,8 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               color="inherit"
               aria-label="open menu"
               onClick={openSideMenu}
-              size="large">
+              size="large"
+            >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon style={{ marginTop: 6 }} />
               </TopMenuIcon>

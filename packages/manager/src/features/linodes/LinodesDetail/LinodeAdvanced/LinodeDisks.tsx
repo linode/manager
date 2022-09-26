@@ -61,7 +61,7 @@ const styles = (theme: Theme) =>
     },
     addNewWrapper: {
       [theme.breakpoints.down('sm')]: {
-        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginLeft: -(theme.spacing(1) + theme.spacing(0.5)),
         marginTop: -theme.spacing(1),
       },
       '&.MuiGrid-item': {

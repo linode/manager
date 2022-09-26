@@ -312,7 +312,6 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             disableUnderline: true,
             IconComponent: KeyboardArrowDown,
             MenuProps: {
-              getContentAnchorEl: undefined,
               anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
               transformOrigin: { vertical: 'top', horizontal: 'left' },
               MenuListProps: { className: 'selectMenuList' },

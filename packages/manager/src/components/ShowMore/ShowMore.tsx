@@ -15,7 +15,7 @@ const styles = (theme: Theme) =>
   createStyles({
     chip: {
       position: 'relative',
-      marginLeft: theme.spacing(1) / 2,
+      marginLeft: theme.spacing(0.5),
       paddingLeft: 2,
       paddingRight: 2,
       backgroundColor: theme.bg.lightBlue1,

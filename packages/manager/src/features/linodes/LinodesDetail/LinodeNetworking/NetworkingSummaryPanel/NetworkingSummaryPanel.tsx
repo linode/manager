@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     justifyContent: 'space-between',
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
+    paddingBottom: theme.spacing(2) + theme.spacing(0.5),
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },

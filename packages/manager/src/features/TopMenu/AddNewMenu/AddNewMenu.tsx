@@ -59,7 +59,8 @@ const styles = (theme: Theme) =>
         borderRadius: 1,
         fontSize: '1rem',
         lineHeight: 1,
-        fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
+        fontFamily:
+          Number(theme.spacing()) === 4 ? theme.font.normal : theme.font.bold,
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
         padding: `2px 20px`,

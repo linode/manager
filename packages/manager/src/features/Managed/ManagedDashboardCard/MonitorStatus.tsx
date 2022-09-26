@@ -31,7 +31,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   error: {
     position: 'relative',
     color: theme.color.headline,
-    marginBottom: theme.spacing(2) - 3,
+    marginBottom: `calc(${theme.spacing(2)} - 3)`,
     textAlign: 'left',
     '&:before': {
       content: '""',

@@ -35,7 +35,7 @@ const styles = (theme: Theme) =>
     },
     controls: {
       position: 'relative',
-      marginTop: 9 - theme.spacing(1) / 2, // 4
+      marginTop: `calc(9 - (${theme.spacing(1)} / 2))`, // 4
       [theme.breakpoints.down('md')]: {
         margin: 0,
         left: -8,

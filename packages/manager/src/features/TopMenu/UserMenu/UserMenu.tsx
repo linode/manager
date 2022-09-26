@@ -98,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['color']),
     whiteSpace: 'nowrap',
     // Hides username as soon as things start to scroll
-    [theme.breakpoints.down(undefined)]: {
+    [theme.breakpoints.down(1345)]: {
       ...theme.visually.hidden,
     },
   },
@@ -121,7 +121,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       paddingLeft: 12,
     },
-    [theme.breakpoints.down(undefined)]: {
+    [theme.breakpoints.down(360)]: {
       paddingLeft: 3,
     },
     '&[data-reach-menu-button]': {
@@ -145,7 +145,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingRight: 12,
         paddingLeft: 12,
       },
-      [theme.breakpoints.down(undefined)]: {
+      [theme.breakpoints.down(360)]: {
         paddingRight: theme.spacing(),
         paddingLeft: theme.spacing(),
       },

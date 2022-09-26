@@ -771,7 +771,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       flexGrow: 0,
       maxWidth: '66.67%',
     },
-    [theme.breakpoints.down(undefined)]: {
+    [theme.breakpoints.down(1400)]: {
       marginTop: 0,
       marginBottom: 0,
     },
@@ -814,7 +814,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       flexGrow: 0,
       maxWidth: '33.33%',
     },
-    [theme.breakpoints.down(undefined)]: {
+    [theme.breakpoints.down(1400)]: {
       marginLeft: theme.spacing(),
       '& > div': {
         flexDirection: 'row-reverse',

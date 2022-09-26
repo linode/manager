@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
     graphGrids: {
       flexWrap: 'nowrap',
       margin: 0,
-      [theme.breakpoints.down(undefined)]: {
+      [theme.breakpoints.down(1100)]: {
         flexWrap: 'wrap',
       },
     },

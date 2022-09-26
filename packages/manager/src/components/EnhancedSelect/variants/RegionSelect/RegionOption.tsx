@@ -52,7 +52,6 @@ export const RegionOption: React.FC<CombinedProps> = (props) => {
           title={data.disabledMessage ?? ''}
           enterTouchDelay={500}
           enterDelay={500}
-          interactive
         >
           <Grid
             container

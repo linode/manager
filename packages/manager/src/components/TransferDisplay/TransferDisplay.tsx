@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(0.5),
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing(1) / 2,
+    marginBottom: theme.spacing(0.5),
     '& .MuiLinearProgress-root': {
       borderRadius: 1,
     },
