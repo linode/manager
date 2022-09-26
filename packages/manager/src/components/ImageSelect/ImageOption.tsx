@@ -16,7 +16,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
   },
   icon: {
-    fontSize: '1.52em',
+    fontSize: '1.8em',
+    [theme.breakpoints.only('xs')]: {
+      fontSize: '1.52em',
+    },
     marginLeft: theme.spacing(),
   },
 }));

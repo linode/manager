@@ -11,7 +11,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
   },
   icon: {
-    fontSize: '1.52em',
+    fontSize: '1.8em',
+    [theme.breakpoints.only('xs')]: {
+      fontSize: '1.52em',
+    },
     height: 24,
     marginLeft: 6,
     marginRight: theme.spacing(),
