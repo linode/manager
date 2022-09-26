@@ -33,7 +33,7 @@ import {
 } from 'src/queries/objectStorage';
 
 type NavEntity =
-  | 'Servers'
+  | 'Linodes'
   | 'Volumes'
   | 'NodeBalancers'
   | 'Domains'
@@ -124,7 +124,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       ],
       [
         {
-          display: 'Servers',
+          display: 'Linodes',
           href: '/linodes',
           activeLinks: ['/linodes', '/linodes/create'],
           icon: <Linode />,

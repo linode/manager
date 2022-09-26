@@ -7,11 +7,13 @@ export const uploadObject = (
   file: File,
   onUploadProgress: (e: ProgressEvent) => void
 ) => {
+  const token = window.localStorage.getItem('authentication/token');
   const config: AxiosRequestConfig = {
     url: signedUrl,
     method: 'PUT',
     headers: {
       'Content-Type': file.type,
+      'X-Auth-Token': token,
     },
     data: file,
     onUploadProgress,
@@ -20,9 +22,13 @@ export const uploadObject = (
 };
 
 export const deleteObject = (signedUrl: string) => {
+  const token = window.localStorage.getItem('authentication/token');
   const config: AxiosRequestConfig = {
     url: signedUrl,
     method: 'DELETE',
+    headers: {
+      'X-Auth-Token': token,
+    },
   };
   return axiosInstance.request(config);
 };

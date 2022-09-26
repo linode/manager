@@ -67,7 +67,6 @@ const reducer = reducerWithInitialState(defaultState)
      */
     const token = tokenInLocalStorage.get();
     const scopes = scopesInLocalStorage.get();
-
     /** if we have no token in local storage, send us to login */
     if (!token) {
       redirectToLogin(location.pathname, location.search);

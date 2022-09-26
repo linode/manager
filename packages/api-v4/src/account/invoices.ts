@@ -25,7 +25,7 @@ export const getInvoices = (params?: any, filter?: any) =>
  * @param invoiceId { number } The ID of the invoice to be retrieved
  *
  */
-export const getInvoice = (invoiceId: number) =>
+export const getInvoice = (invoiceId: string) =>
   Request<Invoice>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
     setMethod('GET')
@@ -41,7 +41,7 @@ export const getInvoice = (invoiceId: number) =>
  *
  */
 export const getInvoiceItems = (
-  invoiceId: number,
+  invoiceId: string,
   params?: any,
   filter?: any
 ) =>

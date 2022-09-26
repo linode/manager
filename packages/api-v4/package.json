@@ -5,7 +5,12 @@
   "bugs": {
     "url": "https://github.com/linode/manager/issues"
   },
-  "keywords": ["linode", "api", "sdk", "api-v4"],
+  "keywords": [
+    "linode",
+    "api",
+    "sdk",
+    "api-v4"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/linode/manager/tree/develop/packages/api-v4"
@@ -17,7 +22,7 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "type": "module",
+  "type": "commonjs",
   "main": "lib/index.js",
   "module": "lib/esm/index.js",
   "exports": {

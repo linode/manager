@@ -85,10 +85,10 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
     setLoading(true);
 
     const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
-      getInvoiceItems(+invoiceId, params, filter)
+      getInvoiceItems(invoiceId, params, filter)
     );
 
-    Promise.all([getInvoice(+invoiceId), getAllInvoiceItems()])
+    Promise.all([getInvoice(invoiceId), getAllInvoiceItems()])
       .then(([invoice, { data: items }]) => {
         setLoading(false);
         setInvoice(invoice);

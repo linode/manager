@@ -247,7 +247,9 @@ const ObjectUploader: React.FC<Props> = (props) => {
       if (fileUpload.url) {
         uploadObject(fileUpload.url, file, onUploadProgress)
           .then((_) => handleSuccess())
-          .catch((_) => handleError());
+          .catch((err) => {
+            handleError();
+          });
       } else {
         // Otherwise, we need to make an API request to get the URL.
         getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {

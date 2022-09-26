@@ -102,7 +102,6 @@ export class OAuthCallbackPage extends Component<CombinedProps> {
       scopes,
       expireDate.toString()
     );
-
     /**
      * All done, redirect this bad-boy to the returnTo URL we generated earlier.
      */
