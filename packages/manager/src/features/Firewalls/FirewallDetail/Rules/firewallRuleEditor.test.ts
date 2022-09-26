@@ -166,17 +166,21 @@ describe('Rule Editor', () => {
   });
 
   describe('prepareRules', () => {
-    it('removes the `ports` field for ICMP rules if `ports` is an empty string', () => {
+    it('removes the `ports` field for ICMP and IPENCAP rules if `ports` is an empty string', () => {
       const rules = [
         firewallRuleFactory.build({ protocol: 'ICMP', ports: '1234' }),
         firewallRuleFactory.build({ protocol: 'ICMP', ports: '' }),
         firewallRuleFactory.build({ protocol: 'TCP', ports: '' }),
+        firewallRuleFactory.build({ protocol: 'IPENCAP', ports: '1234' }),
+        firewallRuleFactory.build({ protocol: 'IPENCAP', ports: '' }),
       ];
       const editorState = initRuleEditorState(rules);
       const result = prepareRules(editorState);
       expect(result[0]).toHaveProperty('ports', '1234');
       expect(result[1]).not.toHaveProperty('ports');
       expect(result[2]).toHaveProperty('ports', '');
+      expect(result[3]).toHaveProperty('ports', '1234');
+      expect(result[4]).not.toHaveProperty('ports');
     });
   });
 });
