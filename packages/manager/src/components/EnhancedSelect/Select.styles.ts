@@ -436,7 +436,7 @@ export const reactSelectStyles = (theme: Theme) => ({
       padding: '10px',
       fontSize: '0.9rem',
       [theme.breakpoints.only('xs')]: {
-        fontSize: '0.9rem',
+        fontSize: '1.0rem',
       },
     };
 
