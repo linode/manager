@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&[data-reach-menu-item]': {
       display: 'flex',
       justifyContent: 'space-between',
-      padding: theme.spacing(1) + 2,
+      padding: theme.spacing(1.25),
       paddingLeft: '16px',
       borderBottom: '1px solid #5294e0',
       background: '#3683dc',
