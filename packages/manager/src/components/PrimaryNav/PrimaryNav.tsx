@@ -270,8 +270,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             title="Dashboard"
           >
             <Logo
-              width={115}
-              height={43}
+              width={140}
+              height={68}
               className={classNames({ [classes.logo]: isCollapsed })}
             />
           </Link>
