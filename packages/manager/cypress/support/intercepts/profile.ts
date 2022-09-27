@@ -5,6 +5,7 @@
 import { makeErrorResponse } from 'support/util/errors';
 import type {
   Profile,
+  UserPreferences,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
 } from '@linode/api-v4/types';
@@ -27,6 +28,19 @@ export const interceptGetProfile = (): Cypress.Chainable<null> => {
  */
 export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
   return cy.intercept('GET', '*/profile', profile);
+};
+
+/**
+ * Intercepts GET request to fetch user preferences and mocks response.
+ *
+ * @param preferences - User preferences with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetUserPreferences = (
+  preferences: UserPreferences
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', '*/profile/preferences', preferences);
 };
 
 /**
