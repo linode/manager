@@ -120,12 +120,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     letterSpacing: '.25px',
     textTransform: 'uppercase',
   },
-  logo: {
+  logoSvgCollapsed: {
     '& > g ': {
       display: 'none',
     },
     'nav:hover & > g ': {
       display: 'unset',
+    },
+    width: 115,
+  },
+  logo: {
+    transition: 'all .05s linear',
+  },
+  logoContainer: {
+    'nav:hover & > svg ': {
+      width: 128,
     },
   },
 }));
