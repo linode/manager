@@ -191,6 +191,9 @@ const darkThemeOptions = {
     text: {
       primary: primaryColors.text,
     },
+    background: {
+      paper: '#2e3238',
+    },
   },
   typography: {
     h1: {
