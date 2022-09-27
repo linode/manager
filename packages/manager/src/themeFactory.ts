@@ -1317,7 +1317,7 @@ const themeDefaults: ThemeDefaults = () => {
           fontSize: '.9rem',
           lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
-          '&.MuiTableSortLabel-active': {
+          '&.Mui-active': {
             color: textColors.tableHeader,
           },
           '&:hover': {
@@ -1402,16 +1402,18 @@ const themeDefaults: ThemeDefaults = () => {
 
 export default (options: DeprecatedThemeOptions) =>
   createMuiTheme(
-    adaptV4Theme(mergeDeepRight(themeDefaults(), {
-      breakpoints: {
-        values: {
-          xs: 0,
-          sm: 600,
-          md: 960,
-          lg: 1280,
-          xl: 1920,
+    adaptV4Theme(
+      mergeDeepRight(themeDefaults(), {
+        breakpoints: {
+          values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1280,
+            xl: 1920,
+          },
         },
-      },
-      ...options,
-    }))
+        ...options,
+      })
+    )
   );
