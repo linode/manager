@@ -268,7 +268,9 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             onClick={closeMenu}
             aria-label="Dashboard"
             title="Dashboard"
-            className={classes.logoContainer}
+            className={classNames({
+              [classes.logoContainer]: isCollapsed,
+            })}
           >
             <Logo
               width={128}
