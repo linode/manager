@@ -1,93 +1,85 @@
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Button, { ButtonProps } from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 
-type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button' | 'entity';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    '@keyframes scaleIn': {
-      from: {
-        transform: 'translateX( -10px ) rotateY( -180deg )',
-      },
-      to: {
-        transformOrigin: 'center center',
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes scaleIn': {
+    from: {
+      transform: 'translateX( -10px ) rotateY( -180deg )',
     },
-    '@keyframes fadeIn': {
-      from: {
-        opacity: 0,
-      },
-      to: {
-        opacity: 1,
-      },
+    to: {
+      transformOrigin: 'center center',
     },
-    root: {
-      padding: `${theme.spacing(2)}px 0`,
-      [theme.breakpoints.up('md')]: {
-        padding: `${theme.spacing(10)}px 0`,
-      },
+  },
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
     },
-    copy: {
-      textAlign: 'center',
-      maxWidth: '85%',
-      marginTop: -theme.spacing(3),
-      [theme.breakpoints.up('md')]: {
-        maxWidth: 800,
-      },
+    to: {
+      opacity: 1,
     },
-    icon: {
-      padding: theme.spacing(2),
-      width: '160px',
-      height: '160px',
-      '& .outerCircle': {
-        fill: theme.name === 'lightTheme' ? '#fff' : '#000',
-        stroke: theme.bg.offWhite,
-      },
-      '& .circle': {
-        fill: theme.name === 'lightTheme' ? '#fff' : '#000',
-      },
-      '& .insidePath path': {
-        opacity: 0,
-        stroke: theme.palette.primary.main,
-      },
-      '& .bucket.insidePath path': {
-        fill: theme.palette.primary.main,
-      },
+  },
+  root: {
+    padding: `${theme.spacing(2)}px 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing(10)}px 0`,
     },
-    entity: {
-      borderRadius: '50%',
-      backgroundColor: theme.bg.bgPaper,
-      color: theme.color.green,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
+  },
+  copy: {
+    textAlign: 'center',
+    maxWidth: '85%',
+    marginTop: -theme.spacing(3),
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 800,
     },
-    title: {
-      textAlign: 'center',
-      marginBottom: theme.spacing(2),
+  },
+  icon: {
+    padding: theme.spacing(2),
+    width: '160px',
+    height: '160px',
+    '& .outerCircle': {
+      fill: theme.name === 'lightTheme' ? '#fff' : '#000',
+      stroke: theme.bg.offWhite,
+    },
+    '& .circle': {
+      fill: theme.name === 'lightTheme' ? '#fff' : '#000',
     },
     '& .insidePath path': {
       opacity: 0,
-      animation: '$fadeIn .2s ease-in-out forwards .3s',
       stroke: theme.palette.primary.main,
     },
     '& .bucket.insidePath path': {
       fill: theme.palette.primary.main,
     },
-    button: {
-      marginBottom: theme.spacing(4),
-    },
-  });
+  },
+  entity: {
+    borderRadius: '50%',
+    backgroundColor: theme.bg.bgPaper,
+    color: theme.color.green,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    textAlign: 'center',
+    marginBottom: theme.spacing(2),
+  },
+  '& .insidePath path': {
+    opacity: 0,
+    animation: '$fadeIn .2s ease-in-out forwards .3s',
+    stroke: theme.palette.primary.main,
+  },
+  '& .bucket.insidePath path': {
+    fill: theme.palette.primary.main,
+  },
+  button: {
+    marginBottom: theme.spacing(4),
+  },
+}));
 
 export interface ExtendedButtonProps extends ButtonProps {
   target?: string;
@@ -103,17 +95,9 @@ export interface Props {
   renderAsSecondary?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const Placeholder: React.FC<CombinedProps> = (props) => {
-  const {
-    classes,
-    isEntity,
-    title,
-    icon: Icon,
-    buttonProps,
-    renderAsSecondary,
-  } = props;
+const Placeholder: React.FC<Props> = (props) => {
+  const { isEntity, title, icon: Icon, buttonProps, renderAsSecondary } = props;
+  const classes = useStyles();
   return (
     <Grid
       container
@@ -170,6 +154,4 @@ Placeholder.defaultProps = {
   icon: LinodeIcon,
 };
 
-const styled = withStyles(styles);
-
-export default styled(Placeholder);
+export default Placeholder;
