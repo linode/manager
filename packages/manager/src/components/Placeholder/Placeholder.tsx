@@ -76,6 +76,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   '& .bucket.insidePath path': {
     fill: theme.palette.primary.main,
   },
+  titleWithSubtitle: {
+    textAlign: 'center',
+    '& + h2': {
+      marginBottom: theme.spacing(2),
+      color: theme.palette.text.primary,
+    },
+  },
   button: {
     marginBottom: theme.spacing(4),
   },
@@ -93,11 +100,23 @@ export interface Props {
   className?: string;
   isEntity?: boolean;
   renderAsSecondary?: boolean;
+  subtitle?: string;
 }
 
 const Placeholder: React.FC<Props> = (props) => {
-  const { isEntity, title, icon: Icon, buttonProps, renderAsSecondary } = props;
+  const {
+    isEntity,
+    title,
+    icon: Icon,
+    buttonProps,
+    renderAsSecondary,
+    subtitle,
+  } = props;
   const classes = useStyles();
+  const hasSubtitle = subtitle !== undefined;
+  const titleClassName = hasSubtitle
+    ? classes.titleWithSubtitle
+    : classes.title;
   return (
     <Grid
       container
@@ -113,10 +132,13 @@ const Placeholder: React.FC<Props> = (props) => {
       <Grid item xs={12}>
         <H1Header
           title={title}
-          className={classes.title}
+          className={titleClassName}
           renderAsSecondary={renderAsSecondary}
           data-qa-placeholder-title
         />
+        {subtitle !== undefined ? (
+          <Typography variant="h2">{subtitle}</Typography>
+        ) : null}
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
         {typeof props.children === 'string' ? (
