@@ -25,9 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     padding: '12px 12px 0 14px',
     position: 'relative',
-    '& svg': {
-      maxWidth: 140,
-    },
   },
   logoCollapsed: {
     background: theme.bg.primaryNavPaper,
@@ -130,7 +127,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 115,
   },
   logo: {
-    transition: 'all .05s linear',
+    transition: 'all .02s linear',
   },
   logoContainer: {
     'nav:hover & > svg ': {
