@@ -56,7 +56,12 @@ export class OAuthPage extends Component<CombinedProps> {
       keys.forEach((key) => url.searchParams.delete(key));
       history.replace(`${url.pathname}${url.hash}`);
     } catch (err) {
-      if (err.response.status === 401) {
+      if (
+        err &&
+        err.response &&
+        err.response.status &&
+        err.response.status === 401
+      ) {
         let returnTo = '/';
         if (state.redirect_uri) {
           const returnIdx = state.redirect_uri.indexOf('returnTo');

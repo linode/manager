@@ -206,7 +206,7 @@ export class App extends React.Component<CombinedProps, State> {
         <GoTo open={this.state.goToOpen} onClose={this.goToClose} />
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser />
-        <DocumentTitleSegment segment="Linode Manager" />
+        <DocumentTitleSegment segment="Clanode Manager" />
         {this.props.featureFlagsLoading ? null : (
           <MainContent
             history={this.props.history}

@@ -164,7 +164,7 @@ const Login: React.FC<CombinedProps> = (props) => {
       <div>
         <div style={{ marginBottom: 30 }}>
           <Typography align="center" variant="h1">
-            Welcome to NodeStack!
+            Welcome to Clanode!
           </Typography>
         </div>
         <Grid container>

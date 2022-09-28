@@ -6,7 +6,8 @@ import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
 
-import Logo from 'src/assets/logo/logo-animated.svg';
+// import Logo from 'src/assets/logo/logo-animated.svg';
+import Logo from 'src/assets/logo/compas-logo.png';
 import './keyframes.css';
 import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
 
@@ -52,7 +53,15 @@ const SplashScreen: React.FC<CombinedProps> = (props) => {
       aria-label="Loading Cloud Manager"
     >
       <div className={classes.logo}>
-        <Logo />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <img src={Logo} alt="Splash screen logo" />
+        </div>
         <div className="la-ball-beat la-dark">
           <div />
           <div />

@@ -7,7 +7,11 @@ const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
 const apiProxyUrl = process.env.REACT_APP_API_ROOT;
 
 module.exports = {
+  allowedHosts: 'all',
   compress: true,
+  client: {
+    webSocketURL: 'ws://0.0.0.0/ws',
+  },
   https: protocol === 'https',
   host: HOST,
   port: PORT,

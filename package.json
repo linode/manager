@@ -38,7 +38,8 @@
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:ci": "yarn cypress install && yarn cy:e2e",
     "cy:debug": "yarn workspace linode-manager cy:debug",
-    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap"
+    "cy:rec-snap": "yarn workspace linode-manager cy:rec-snap",
+    "deploy": "yarn install:all && yarn workspace linode-manager build"
   },
   "resolutions": {
     "handlebars": "^4.4.3",

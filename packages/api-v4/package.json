@@ -22,7 +22,7 @@
   "author": "Linode",
   "license": "Apache-2.0",
   "private": false,
-  "type": "commonjs",
+  "type": "module",
   "main": "lib/index.js",
   "module": "lib/esm/index.js",
   "exports": {
@@ -99,7 +99,6 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx",
       "git add"
     ],
     ".{ts,tsx}": [

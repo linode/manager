@@ -1,4 +1,4 @@
-export const API_ROOT = 'http://localhost:8080/api';
+export const API_ROOT = 'http://10.10.0.98/api';
 export const BETA_API_ROOT = API_ROOT + 'beta';
 
 // Value from  1-4 reflecting a minimum score from zxcvbn

@@ -1,5 +1,6 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { ValidationError, AnySchema } from 'yup';
+import { API_ROOT } from './constants';
 import { APIError } from './types';
 
 interface RequestConfig extends AxiosRequestConfig {
@@ -9,7 +10,7 @@ interface RequestConfig extends AxiosRequestConfig {
 type ConfigField = 'headers' | 'data' | 'params' | 'method' | 'url';
 
 export const baseRequest = Axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: API_ROOT,
 });
 
 /**
@@ -90,7 +91,7 @@ export const setData = (
   try {
     schema.validateSync(data, { abortEarly: false });
     return set('data', updatedData);
-  } catch (error) {
+  } catch (error: any) {
     return (object: any) => ({
       ...object,
       data: updatedData,
@@ -154,7 +155,7 @@ export const setXFilter = (xFilter: any) => {
  */
 const reduceRequestConfig = (...fns: Function[]): RequestConfig =>
   fns.reduceRight((result, fn) => fn(result), {
-    url: 'http://localhost:8080/api',
+    url: API_ROOT,
     headers: {},
   });
 
