@@ -117,7 +117,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                 },
               ]}
               title="Disk I/O"
-              ariaLabel="Disk I/O/ Graph"
+              ariaLabel="Disk I/O Graph"
               showToday={isToday}
               subtitle="ops/s"
               timezone={timezone}

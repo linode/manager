@@ -289,7 +289,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
     <div
       className={classes.wrapper}
-      tabIndex={tabIndex || 0}
+      tabIndex={tabIndex ?? 0}
       role="graphics-document"
       aria-label={ariaLabel || 'Stats and metrics'}
     >
