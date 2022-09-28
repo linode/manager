@@ -135,7 +135,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   logo: {
-    // give the svg a transition so it smothly resizes
+    // give the svg a transition so it smoothly resizes
     transition: 'all .03s linear',
   },
 }));
