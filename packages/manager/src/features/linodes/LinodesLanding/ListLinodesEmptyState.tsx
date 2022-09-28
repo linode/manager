@@ -3,7 +3,10 @@ import { useHistory } from 'react-router-dom';
 import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
 import Typography from 'src/components/core/Typography';
 import Placeholder from 'src/components/Placeholder';
-import { sendEvent } from 'src/utilities/ga';
+import Grid from 'src/components/Grid';
+import DocsIcon from 'src/assets/icons/docs.svg';
+import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
 
 export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
@@ -22,16 +25,33 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
       buttonProps={[
         {
           onClick: () => {
-            sendEvent({
-              category: 'Linodes landing page empty',
-              action: 'Click:button',
-              label: 'Create Linode',
-            });
             push('/linodes/create');
           },
           children: 'Create Linode',
         },
       ]}
+      linksSection={
+        <>
+          <Grid item xs={12} md={4}>
+            <DocsIcon />{' '}
+            <Typography display="inline" variant="h2">
+              Getting Started Guides
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <MarketplaceIcon />{' '}
+            <Typography display="inline" variant="h2">
+              Deploy an App
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <YoutubeIcon />{' '}
+            <Typography display="inline" variant="h2">
+              Getting Started Playlist
+            </Typography>
+          </Grid>
+        </>
+      }
     >
       <Typography
         style={{ fontSize: '1.125rem', lineHeight: '1.75rem', maxWidth: 541 }}

@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
+import Divider from 'src/components/core/Divider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes scaleIn': {
@@ -101,6 +102,7 @@ export interface Props {
   isEntity?: boolean;
   renderAsSecondary?: boolean;
   subtitle?: string;
+  linksSection?: JSX.Element;
 }
 
 const Placeholder: React.FC<Props> = (props) => {
@@ -111,6 +113,7 @@ const Placeholder: React.FC<Props> = (props) => {
     buttonProps,
     renderAsSecondary,
     subtitle,
+    linksSection,
   } = props;
   const classes = useStyles();
   const hasSubtitle = subtitle !== undefined;
@@ -148,13 +151,7 @@ const Placeholder: React.FC<Props> = (props) => {
         )}
       </Grid>
       {buttonProps && (
-        <Grid
-          container
-          item
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
+        <Grid item direction="row" alignItems="center" justifyContent="center">
           {buttonProps.map((thisButton, index) => (
             <Grid item key={`placeholder-button-${index}`}>
               <Button
@@ -168,6 +165,18 @@ const Placeholder: React.FC<Props> = (props) => {
           ))}
         </Grid>
       )}
+      {linksSection !== undefined ? (
+        <Grid
+          item
+          container
+          direction="row"
+          justifyContent="space-between"
+          xs={10}
+        >
+          <Divider spacingBottom={38} style={{ width: '100%' }} />
+          {linksSection}
+        </Grid>
+      ) : null}
     </Grid>
   );
 };
