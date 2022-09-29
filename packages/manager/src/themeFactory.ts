@@ -196,6 +196,8 @@ const visuallyHidden = {
 
 const graphTransparency = '0.7';
 
+const spacing = 8;
+
 type ThemeDefaults = () => DeprecatedThemeOptions;
 
 const themeDefaults: ThemeDefaults = () => {
@@ -228,7 +230,7 @@ const themeDefaults: ThemeDefaults = () => {
       'none',
       'none',
     ],
-    spacing: 8,
+    spacing,
     '@keyframes rotate': {
       from: {
         transform: 'rotate(0deg)',
@@ -863,6 +865,13 @@ const themeDefaults: ThemeDefaults = () => {
       MuiInputBase: {
         input: {
           height: 'auto',
+        },
+      },
+      MuiDivider: {
+        root: {
+          borderColor: 'rgba(0, 0, 0, 0.12)',
+          marginTop: spacing,
+          marginBottom: spacing,
         },
       },
       MuiInputAdornment: {
