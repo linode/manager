@@ -145,19 +145,27 @@ the Jest environment).
 
 ## End-to-End tests
 
-We use [Cypress](https://cypress.io) for end-to-end testing. Test files are found in the `packages/manager/cypress` directory.
+We use [Cypress](https://cypress.io) for end-to-end testing. Test files are found in the `packages/manager/cypress/e2e` directory.
 
-#### Running the E2E tests
+### First Time Setup
+1. Follow the [Getting Started guide](GETTING_STARTED.md) to set up your `packages/manager/.env` file and get Cloud Manager running locally.
+2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens), click "Add a Personal Access Token", and create a token to use for your end-to-end tests.
+    * Select a reasonable expiry time (avoid "Never") and make sure that every permission is set to "Read/Write".
+3. Set the `MANAGER_OAUTH` value in your `.env` to the contents of your new personal access token.
+    * Example of `.env` addition:
+        ```shell
+        # Manager OAuth token for Cypress tests:
+        # (The real token will be a 64-digit string of hexadecimals).
+        MANAGER_OAUTH='################################################################'
+        ```
 
-1. Follow the [Getting Started guide](GETTING_STARTED.md) to get Cloud Manager running locally and get your .env setup.
-2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens) and click "Add a Personal Access Token" to create a token to use for the `MANAGER_OAUTH` environment variable in `packages/manager/.env`.
-3. In one terminal window, run the app with `yarn up`.
-4. In another terminal window, run the tests with `yarn cy:e2e` (runs headlessly).
-5. Alternatively, use the interactive interface with `yarn cy:debug`.
-6. To run the tests against your PR in GitHub, add the `e2e` label
-7. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
-8. [Cypress Plugins](https://docs.cypress.io/plugins/directory)
-9. Test Example:
+### Running End-to-End Tests
+
+1. In one terminal window, run the app with `yarn up`.
+2. In another terminal window, run all of the tests with `yarn cy:run`.
+    * Alternatively, use Cypress's interactive interface with `yarn cy:debug` if you're focused on a single test suite.
+3. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
+4. Test Example:
     ```tsx
     /* this test will not pass on cloud manager.
     it is only intended to show correct test structure, syntax,
@@ -218,8 +226,7 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
       });
     });
     ```
-  
-10. How to use intercepts:
+5. How to use intercepts:
     ```tsx
       // stub response syntax:
       cy.intercept('POST', ‘/path’, {response}) or cy.intercept(‘/path’, (req) => { req.reply({response})}).as('something');
@@ -231,5 +238,3 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
       // use alias syntax:
        wait(‘@something’).then({})
       ```
-
-
