@@ -21,7 +21,8 @@ type ClassNames = 'root' | 'isOptional' | 'passwordInputOuter';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3),
+      margin: `${theme.spacing(3)}px 0px ${theme.spacing(3)}px 0px`,
+      padding: 0,
     },
     isOptional: {
       '& $passwordInputOuter': {
