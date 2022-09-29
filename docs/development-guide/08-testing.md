@@ -148,6 +148,7 @@ the Jest environment).
 We use [Cypress](https://cypress.io) for end-to-end testing. Test files are found in the `packages/manager/cypress/e2e` directory.
 
 ### First Time Setup
+
 1. Follow the [Getting Started guide](GETTING_STARTED.md) to set up your `packages/manager/.env` file and get Cloud Manager running locally.
 2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens), click "Add a Personal Access Token", and create a token to use for your end-to-end tests.
     * Select a reasonable expiry time (avoid "Never") and make sure that every permission is set to "Read/Write".
