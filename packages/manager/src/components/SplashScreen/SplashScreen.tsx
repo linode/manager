@@ -31,6 +31,9 @@ const useStyles = makeStyles({
   },
   logo: {
     position: 'relative',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 });
 
@@ -53,15 +56,7 @@ const SplashScreen: React.FC<CombinedProps> = (props) => {
       aria-label="Loading Cloud Manager"
     >
       <div className={classes.logo}>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-        >
-          <img src={Logo} alt="Splash screen logo" />
-        </div>
+        <img src={Logo} width={160} alt="Splash screen logo" />
         <div className="la-ball-beat la-dark">
           <div />
           <div />
