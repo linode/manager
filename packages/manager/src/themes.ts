@@ -1,4 +1,3 @@
-import { adaptV4Theme } from '@mui/material/styles';
 import createTheme from './themeFactory';
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
 
@@ -7,7 +6,13 @@ const breakpoints = createBreakpoints({});
 export const light = () => {
   const options: any = { name: 'lightTheme' };
 
-  return createTheme(adaptV4Theme(options));
+  return createTheme(options);
+};
+
+export const dark = () => {
+  const options: any = { ...darkThemeOptions };
+
+  return createTheme(options);
 };
 
 const textColors = {
@@ -92,12 +97,6 @@ const genericTableHeaderStyle = {
       color: textColors.linkActiveLight,
     },
   },
-};
-
-export const dark = () => {
-  const options: any = { ...darkThemeOptions };
-
-  return createTheme(adaptV4Theme(options));
 };
 
 const darkThemeOptions = {
