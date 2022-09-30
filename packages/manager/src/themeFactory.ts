@@ -482,7 +482,7 @@ const themeDefaults: ThemeDefaults = () => {
           '&:active': {
             backgroundColor: primaryColors.dark,
           },
-          '&$disabled': {
+          '&:disabled': {
             color: 'white',
           },
           '&.loading': {
@@ -501,7 +501,7 @@ const themeDefaults: ThemeDefaults = () => {
             borderColor: primaryColors.dark,
             color: primaryColors.dark,
           },
-          '&$disabled': {
+          '&:disabled': {
             backgroundColor: 'transparent',
             borderColor: '#c9cacb',
             color: '#c9cacb',

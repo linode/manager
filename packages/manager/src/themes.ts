@@ -246,7 +246,7 @@ const darkThemeOptions = {
         '&[aria-expanded="true"]': {
           backgroundColor: primaryColors.dark,
         },
-        '&$disabled': {
+        '&:disabled': {
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
@@ -261,7 +261,7 @@ const darkThemeOptions = {
         '&:active': {
           backgroundColor: primaryColors.dark,
         },
-        '&$disabled': {
+        '&:disabled': {
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
