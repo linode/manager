@@ -2,6 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Link from 'src/components/Link';
 import PointerIcon from 'src/assets/icons/pointer.svg';
+import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appSection: {
@@ -44,10 +45,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const AppsSection = () => {
+  const gaCategory = 'Linodes landing page empty';
+
+  const linkGAEventTemplate = {
+    category: gaCategory,
+    action: 'Click:link',
+  };
+
+  const onLinkClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    const label = event.currentTarget.textContent ?? '';
+    sendEvent({ ...linkGAEventTemplate, label: label });
+  };
   const classes = useStyles();
+
   return (
     <div className={classes.appSection}>
       <Link
+        onClick={onLinkClick}
         to="/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress"
         className={classes.appLink}
       >
@@ -57,6 +73,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
+        onClick={onLinkClick}
         to="/linodes/create?type=One-Click&appID=869129&utm_source=marketplace&utm_medium=website&utm_campaign=aaPanel"
         className={classes.appLink}
       >
@@ -66,6 +83,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
+        onClick={onLinkClick}
         to="/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel"
         className={classes.appLink}
       >
@@ -75,6 +93,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
+        onClick={onLinkClick}
         to="/linodes/create?type=One-Click&appID=691621&utm_source=marketplace&utm_medium=website&utm_campaign=Cloudron"
         className={classes.appLink}
       >
@@ -84,6 +103,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
+        onClick={onLinkClick}
         to="/linodes/create?type=One-Click&appID=593835&utm_source=marketplace&utm_medium=website&utm_campaign=Plesk"
         className={classes.appLink}
       >
@@ -93,6 +113,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
+        onClick={onLinkClick}
         to="/linodes/create?type=One-Click&appID=985372&utm_source=marketplace&utm_medium=website&utm_campaign=Joomla"
         className={classes.appLink}
       >
