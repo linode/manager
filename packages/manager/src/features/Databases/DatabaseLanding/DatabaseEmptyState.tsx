@@ -36,6 +36,18 @@ const DatabaseEmptyState: React.FC = () => {
 
   const gaCategory = 'Managed Databases landing page empty';
 
+  const linkGAEventTemplate = {
+    category: gaCategory,
+    action: 'Click:link',
+  };
+
+  const onLinkClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    const label = event.currentTarget.textContent ?? '';
+    sendEvent({ ...linkGAEventTemplate, label: label });
+  };
+
   return (
     <>
       {flags.databaseBeta ? (
@@ -84,7 +96,7 @@ const DatabaseEmptyState: React.FC = () => {
               title="Getting Started Guides"
               icon={<DocsIcon />}
               moreLink={
-                <Link to="">
+                <Link onClick={onLinkClick} to="">
                   Check out all our Docs
                   <PointerIcon />
                 </Link>
@@ -92,22 +104,31 @@ const DatabaseEmptyState: React.FC = () => {
             >
               <List>
                 <ListItem>
-                  <Link to="https://www.linode.com/docs/products/databases/managed-databases/">
+                  <Link
+                    onClick={onLinkClick}
+                    to="https://www.linode.com/docs/products/databases/managed-databases/"
+                  >
                     Overview of Managed Databases
                   </Link>
                 </ListItem>
                 <ListItem>
-                  <Link to="https://www.linode.com/docs/products/databases/managed-databases/get-started/">
+                  <Link
+                    onClick={onLinkClick}
+                    to="https://www.linode.com/docs/products/databases/managed-databases/get-started/"
+                  >
                     Get Started with Managed Databases
                   </Link>
                 </ListItem>
                 <ListItem>
-                  <Link to="https://www.linode.com/docs/products/databases/managed-databases/get-started/">
+                  <Link
+                    onClick={onLinkClick}
+                    to="https://www.linode.com/docs/products/databases/managed-databases/get-started/"
+                  >
                     Choosing a Database Engine
                   </Link>
                 </ListItem>
                 <ListItem>
-                  <Link to="https://www.linode.com/docs/">
+                  <Link onClick={onLinkClick} to="https://www.linode.com/docs/">
                     Check out all out Docs
                   </Link>
                 </ListItem>
@@ -117,7 +138,7 @@ const DatabaseEmptyState: React.FC = () => {
               title="Getting Started Playlist"
               icon={<YoutubeIcon />}
               moreLink={
-                <Link to="">
+                <Link onClick={onLinkClick} to="">
                   View the complete playlist
                   <ExternalLinkIcon />
                 </Link>
@@ -125,19 +146,28 @@ const DatabaseEmptyState: React.FC = () => {
             >
               <List>
                 <ListItem>
-                  <Link to="https://www.youtube.com/watch?v=loEVtzUN2i8">
+                  <Link
+                    onClick={onLinkClick}
+                    to="https://www.youtube.com/watch?v=loEVtzUN2i8"
+                  >
                     Linode Managed Databases Overview
                     <ExternalLinkIcon style={{ marginLeft: 8 }} />
                   </Link>
                 </ListItem>
                 <ListItem>
-                  <Link to="https://www.youtube.com/watch?v=dnV-6TtfYfY">
+                  <Link
+                    onClick={onLinkClick}
+                    to="https://www.youtube.com/watch?v=dnV-6TtfYfY"
+                  >
                     How to Choose the Right Database for Your Application
                     <ExternalLinkIcon style={{ marginLeft: 8 }} />
                   </Link>
                 </ListItem>
                 <ListItem>
-                  <Link to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC">
+                  <Link
+                    onClick={onLinkClick}
+                    to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC"
+                  >
                     MySQL Beginner Series
                     <ExternalLinkIcon style={{ marginLeft: 8 }} />
                   </Link>

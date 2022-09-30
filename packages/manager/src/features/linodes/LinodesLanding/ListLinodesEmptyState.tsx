@@ -14,9 +14,24 @@ import Link from 'src/components/Link';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import AppsSection from './AppsSection';
+import { sendEvent } from 'src/utilities/ga';
 
 export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
+
+  const gaCategory = 'Linodes landing page empty';
+
+  const linkGAEventTemplate = {
+    category: gaCategory,
+    action: 'Click:link',
+  };
+
+  const onLinkClick = (
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    const label = event.currentTarget.textContent ?? '';
+    sendEvent({ ...linkGAEventTemplate, label: label });
+  };
 
   return (
     <Placeholder
@@ -28,6 +43,11 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
         {
           onClick: () => {
             push('/linodes/create');
+            sendEvent({
+              category: gaCategory,
+              action: 'Click:button',
+              label: 'Create Linode',
+            });
           },
           children: 'Create Linode',
         },
@@ -38,29 +58,41 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             title="Getting Started Guides"
             icon={<DocsIcon />}
             moreLink={
-              <Link to="https://www.linode.com/docs/">
+              <Link onClick={onLinkClick} to="https://www.linode.com/docs/">
                 Check out all our Docs <PointerIcon />
               </Link>
             }
           >
             <List>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/creating-a-compute-instance/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/creating-a-compute-instance/"
+                >
                   Create a Compute Instance
                 </Link>
               </ListItem>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/getting-started/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/getting-started/"
+                >
                   Getting Started with Linode Compute Instances
                 </Link>
               </ListItem>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/understanding-billing-and-payments/"
+                >
                   Understanding Billing and Payment
                 </Link>
               </ListItem>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/set-up-web-server-host-website/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/set-up-web-server-host-website/"
+                >
                   Hosting a Website or Application on Linode
                 </Link>
               </ListItem>
@@ -70,7 +102,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             title="Deploy an App"
             icon={<MarketplaceIcon />}
             moreLink={
-              <Link to="/linodes/create?type=One-Click">
+              <Link onClick={onLinkClick} to="/linodes/create?type=One-Click">
                 See all Marketplace apps <PointerIcon />
               </Link>
             }
@@ -81,7 +113,10 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             title="Getting Started Playlist"
             icon={<YoutubeIcon />}
             moreLink={
-              <Link to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ">
+              <Link
+                onClick={onLinkClick}
+                to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+              >
                 View the complete playlist{' '}
                 <ExternalLinkIcon style={{ marginLeft: 8 }} />
               </Link>
@@ -89,25 +124,37 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
           >
             <List>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/creating-a-compute-instance/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/creating-a-compute-instance/"
+                >
                   Linode Getting Started Guide
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               </ListItem>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/getting-started/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/getting-started/"
+                >
                   Common Linux Commands
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               </ListItem>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/understanding-billing-and-payments/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/understanding-billing-and-payments/"
+                >
                   Copying Files to a Compute Instance
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               </ListItem>
               <ListItem>
-                <Link to="https://www.linode.com/docs/guides/set-up-web-server-host-website/">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/guides/set-up-web-server-host-website/"
+                >
                   How to use SSH
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
