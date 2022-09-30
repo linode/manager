@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import { GrantLevel } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -8,28 +7,18 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    margin: `${theme.spacing(3)}px 0 ${theme.spacing(3)}px 0`,
+    padding: 0,
+  },
+}));
 
 interface ContextProps {
   permissions: GrantLevel;
 }
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      margin: `${theme.spacing(3)}px 0px ${theme.spacing(3)}px 0px`,
-      padding: 0,
-    },
-  });
-
-const styled = withStyles(styles);
 
 interface Props {
   onImageChange: (selected: Item<string>) => void;
@@ -45,11 +34,10 @@ interface Props {
   className?: string;
 }
 
-type CombinedProps = Props & ContextProps & WithImages & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithImages;
 
 export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
   const {
-    classes,
     imagesData,
     imagesError,
     imageFieldError,
@@ -61,8 +49,9 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
     userSSHKeys,
     sshError,
     permissions,
-    className,
   } = props;
+
+  const classes = useStyles();
 
   const disabled = permissions === 'read_only';
 
@@ -77,12 +66,7 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
       />
       <AccessPanel
-        className={classNames(
-          {
-            [classes.root]: true,
-          },
-          className
-        )}
+        className={classes.root}
         password={password || ''}
         handleChange={onPasswordChange}
         error={passwordError}
@@ -106,8 +90,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 
 const enhanced = compose<CombinedProps, Props>(
   linodeContext,
-  withImages(),
-  styled
+  withImages()
 )(ImageAndPassword);
 
 export default enhanced;
