@@ -9,6 +9,14 @@ import Placeholder from 'src/components/Placeholder';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import useFlags from 'src/hooks/useFlags';
 import { sendEvent } from 'src/utilities/ga';
+import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
+import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
+import DocsIcon from 'src/assets/icons/docs.svg';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import PointerIcon from 'src/assets/icons/pointer.svg';
+import List from 'src/components/core/List';
+import ListItem from 'src/components/core/ListItem';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -53,6 +61,7 @@ const DatabaseEmptyState: React.FC = () => {
       />
       <Placeholder
         title="Databases"
+        subtitle="Fully managed cloud database clusters"
         className={classes.root}
         icon={DatabaseIcon}
         isEntity
@@ -69,24 +78,80 @@ const DatabaseEmptyState: React.FC = () => {
             children: 'Create Database Cluster',
           },
         ]}
+        linksSection={
+          <LinksSection>
+            <LinkSubSection
+              title="Getting Started Guides"
+              icon={<DocsIcon />}
+              moreLink={
+                <Link to="">
+                  Check out all our Docs
+                  <PointerIcon />
+                </Link>
+              }
+            >
+              <List>
+                <ListItem>
+                  <Link to="https://www.linode.com/docs/products/databases/managed-databases/">
+                    Overview of Managed Databases
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link to="https://www.linode.com/docs/products/databases/managed-databases/get-started/">
+                    Get Started with Managed Databases
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link to="https://www.linode.com/docs/products/databases/managed-databases/get-started/">
+                    Choosing a Database Engine
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link to="https://www.linode.com/docs/">
+                    Check out all out Docs
+                  </Link>
+                </ListItem>
+              </List>
+            </LinkSubSection>
+            <LinkSubSection
+              title="Getting Started Playlist"
+              icon={<YoutubeIcon />}
+              moreLink={
+                <Link to="">
+                  View the complete playlist
+                  <ExternalLinkIcon />
+                </Link>
+              }
+            >
+              <List>
+                <ListItem>
+                  <Link to="https://www.youtube.com/watch?v=loEVtzUN2i8">
+                    Linode Managed Databases Overview
+                    <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link to="https://www.youtube.com/watch?v=dnV-6TtfYfY">
+                    How to Choose the Right Database for Your Application
+                    <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                  </Link>
+                </ListItem>
+                <ListItem>
+                  <Link to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC">
+                    MySQL Beginner Series
+                    <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                  </Link>
+                </ListItem>
+              </List>
+            </LinkSubSection>
+          </LinksSection>
+        }
       >
         <Typography variant="subtitle1">
           <div className={classes.entityDescription}>
-            Fully managed and highly scalable Database Clusters. Choose your
-            Linode plan, select a database engine, and deploy in minutes.
+            Deploy popular database engines such as MySQL and PostgreSQL using
+            Linode's performant, reliable, and fully managed database solution.
           </div>
-          <Link
-            to="https://www.linode.com/docs/products/databases/managed-databases/"
-            onClick={() => {
-              sendEvent({
-                category: gaCategory,
-                action: 'Click:link',
-                label: 'Need help getting started? Browse database guides.',
-              });
-            }}
-          >
-            Need help getting started? Browse database guides.
-          </Link>
         </Typography>
       </Placeholder>
     </>
