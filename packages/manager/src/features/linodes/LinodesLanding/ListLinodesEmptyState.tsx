@@ -126,7 +126,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
               <ListItem>
                 <Link
                   onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/creating-a-compute-instance/"
+                  to="https://www.youtube.com/watch?v=KEK-ZxrGxMA"
                 >
                   Linode Getting Started Guide
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
@@ -135,7 +135,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
               <ListItem>
                 <Link
                   onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/getting-started/"
+                  to="https://www.youtube.com/watch?v=AVXYq8aL47Q"
                 >
                   Common Linux Commands
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
@@ -144,7 +144,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
               <ListItem>
                 <Link
                   onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/understanding-billing-and-payments/"
+                  to="https://www.youtube.com/watch?v=lMC5VNoZFhg"
                 >
                   Copying Files to a Compute Instance
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
@@ -153,7 +153,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
               <ListItem>
                 <Link
                   onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/set-up-web-server-host-website/"
+                  to="https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2"
                 >
                   How to use SSH
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />

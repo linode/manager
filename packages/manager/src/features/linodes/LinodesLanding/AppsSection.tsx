@@ -48,7 +48,7 @@ const AppsSection = () => {
   return (
     <div className={classes.appSection}>
       <Link
-        to="https://cloud.linode.com/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress"
+        to="/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress"
         className={classes.appLink}
       >
         Wordpress
@@ -57,7 +57,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
-        to="https://cloud.linode.com/linodes/create?type=One-Click&appID=869129&utm_source=marketplace&utm_medium=website&utm_campaign=aaPanel"
+        to="/linodes/create?type=One-Click&appID=869129&utm_source=marketplace&utm_medium=website&utm_campaign=aaPanel"
         className={classes.appLink}
       >
         aaPanel
@@ -66,7 +66,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
-        to="https://cloud.linode.com/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel"
+        to="/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel"
         className={classes.appLink}
       >
         cPanel
@@ -75,7 +75,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
-        to="https://cloud.linode.com/linodes/create?type=One-Click&appID=691621&utm_source=marketplace&utm_medium=website&utm_campaign=Cloudron"
+        to="/linodes/create?type=One-Click&appID=691621&utm_source=marketplace&utm_medium=website&utm_campaign=Cloudron"
         className={classes.appLink}
       >
         Cloudron
@@ -84,7 +84,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
-        to="https://cloud.linode.com/linodes/create?type=One-Click&appID=593835&utm_source=marketplace&utm_medium=website&utm_campaign=Plesk"
+        to="/linodes/create?type=One-Click&appID=593835&utm_source=marketplace&utm_medium=website&utm_campaign=Plesk"
         className={classes.appLink}
       >
         Plesk
@@ -93,7 +93,7 @@ const AppsSection = () => {
         </div>
       </Link>
       <Link
-        to="https://cloud.linode.com/linodes/create?type=One-Click&appID=985372&utm_source=marketplace&utm_medium=website&utm_campaign=Joomla"
+        to="/linodes/create?type=One-Click&appID=985372&utm_source=marketplace&utm_medium=website&utm_campaign=Joomla"
         className={classes.appLink}
       >
         Joomla
