@@ -48,6 +48,28 @@ const userPreferences = userPreferencesFactory.build({
   desktop_sidebar_open: false,
 });
 
+/**
+ * Visits the given Manager URL with account settings mocked to enable Managed.
+ *
+ * @param url - URL to visit.
+ */
+const visitUrlWithManagedEnabled = (url: string) => {
+  mockGetAccountSettings(managedAccount).as('getAccountSettings');
+  cy.visitWithLogin(url);
+  cy.wait('@getAccountSettings');
+};
+
+/**
+ * Visits the given Manager URL with account settings mocked to disable Managed.
+ *
+ * @param url - URL to visit.
+ */
+const visitUrlWithManagedDisabled = (url: string) => {
+  mockGetUserPreferences(nonManagedAccount).as('getAccountSettings');
+  cy.visitWithLogin(url);
+  cy.wait('@getAccountSettings');
+};
+
 describe('Managed navigation', () => {
   /*
    * - Confirms that "Managed" nav item is present when Managed is enabled.
@@ -82,18 +104,6 @@ describe('Managed navigation', () => {
    * - Confirms that Managed content is inaccessible when Managed is disabled.
    */
   it('allows access to Managed content when Managed is enabled', () => {
-    const visitUrlWithManagedEnabled = (url: string) => {
-      mockGetAccountSettings(managedAccount).as('getAccountSettings');
-      cy.visitWithLogin(url);
-      cy.wait('@getAccountSettings');
-    };
-
-    const visitUrlWithManagedDisabled = (url: string) => {
-      mockGetUserPreferences(nonManagedAccount).as('getAccountSettings');
-      cy.visitWithLogin(url);
-      cy.wait('@getAccountSettings');
-    };
-
     // Confirm that Managed pages are accessible when Managed is enabled.
     // TODO Intercept Managed requests so that pages don't have unauthorized blocks.
     managedURLs.forEach((url) => {
@@ -118,5 +128,16 @@ describe('Managed navigation', () => {
       visitUrlWithManagedDisabled(url);
       cy.findByText('Unauthorized').should('be.visible');
     });
+  });
+
+  /*
+   * - Confirms that navigating to Cloud Manager redirects you to Managed when Managed is enabled.
+   * - Confirms that navigating to Cloud Manager does not redirect you to Managed when Managed is disabled.
+   */
+  it('redirects you to Managed when you visit Cloud Manager', () => {
+    visitUrlWithManagedEnabled('/');
+    cy.url().should('endWith', '/managed/summary');
+    visitUrlWithManagedDisabled('/');
+    cy.url().should('not.endWith', '/managed/summary');
   });
 });
