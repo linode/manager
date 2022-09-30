@@ -75,7 +75,15 @@ declare module '@mui/material/styles/createTheme' {
   }
 }
 
-const breakpoints = createBreakpoints({});
+export const breakpoints = createBreakpoints({
+  values: {
+    xs: 0,
+    sm: 600,
+    md: 960,
+    lg: 1280,
+    xl: 1920,
+  },
+});
 
 const textColors = {
   linkActiveLight: '#2575d0',
@@ -1413,15 +1421,6 @@ export default (options: DeprecatedThemeOptions) =>
   createMuiTheme(
     adaptV4Theme(
       mergeDeepRight(themeDefaults(), {
-        breakpoints: {
-          values: {
-            xs: 0,
-            sm: 600,
-            md: 960,
-            lg: 1280,
-            xl: 1920,
-          },
-        },
         ...options,
       })
     )

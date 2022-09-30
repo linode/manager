@@ -1,7 +1,4 @@
-import createTheme from './themeFactory';
-import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
-
-const breakpoints = createBreakpoints({});
+import createTheme, { breakpoints } from './themeFactory';
 
 export const light = () => {
   const options: any = { name: 'lightTheme' };
