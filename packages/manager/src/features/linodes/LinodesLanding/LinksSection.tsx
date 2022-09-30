@@ -12,9 +12,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     gridAutoColumns: '1fr',
     gridAutoFlow: 'column',
     columnGap: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
+    justifyItems: 'center',
+    [theme.breakpoints.down('md')]: {
       gridAutoFlow: 'row',
       rowGap: theme.spacing(8),
+      justifyItems: 'start',
     },
   },
 }));

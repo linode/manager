@@ -15,15 +15,19 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '1.125rem',
     },
     '& > a': {
-      fontSize: '1.125rem',
+      fontSize: '0.875rem',
       fontWeight: 700,
       display: 'flex',
-      alignItems: 'center',
+      alignItems: 'baseline',
+      '& > svg': {
+        height: 12,
+        width: 12,
+      },
     },
     '& li': {
       paddingLeft: 0,
       '& > a': {
-        fontSize: '14px',
+        fontSize: '0.875rem',
         '& > svg': {
           height: 12,
           width: 12,

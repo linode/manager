@@ -20,7 +20,7 @@ import ListItem from 'src/components/core/ListItem';
 
 const useStyles = makeStyles(() => ({
   root: {
-    '& svg': {
+    '& > svg': {
       transform: 'scale(0.8)',
     },
   },
