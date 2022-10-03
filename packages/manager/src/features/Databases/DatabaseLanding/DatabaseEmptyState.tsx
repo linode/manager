@@ -18,6 +18,70 @@ import PointerIcon from 'src/assets/icons/pointer.svg';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 
+const guidesLinkData = [
+  {
+    to: 'https://www.linode.com/docs/products/databases/managed-databases/',
+    text: 'Overview of Managed Databases',
+  },
+  {
+    to:
+      'https://www.linode.com/docs/products/databases/managed-databases/get-started/',
+    text: 'Get Started with Managed Databases',
+  },
+  {
+    to:
+      'https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/',
+    text: 'Choosing a Database Engine',
+  },
+];
+
+const youtubeLinkData = [
+  {
+    to: 'https://www.youtube.com/watch?v=loEVtzUN2i8',
+    text: 'Linode Managed Databases Overview',
+  },
+  {
+    to: 'https://www.youtube.com/watch?v=dnV-6TtfYfY',
+    text: 'How to Choose the Right Database for Your Application',
+  },
+  {
+    to:
+      'https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC',
+    text: 'MySQL Beginner Series',
+  },
+];
+
+const getLinkOnClick = (linkText: string) => () => {
+  sendEvent({
+    ...linkGAEventTemplate,
+    label: linkText,
+  });
+};
+
+const guideLinks = (
+  <List>
+    {guidesLinkData.map((linkData) => (
+      <ListItem key={linkData.to}>
+        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+          {linkData.text}
+        </Link>
+      </ListItem>
+    ))}
+  </List>
+);
+
+const youtubeLinks = (
+  <List>
+    {youtubeLinkData.map((linkData) => (
+      <ListItem key={linkData.to}>
+        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+          {linkData.text}
+        </Link>
+      </ListItem>
+    ))}
+  </List>
+);
+
 const useStyles = makeStyles(() => ({
   root: {
     '& > svg': {
@@ -29,24 +93,24 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const gaCategory = 'Managed Databases landing page empty';
+
+const linkGAEventTemplate = {
+  category: gaCategory,
+  action: 'Click:link',
+};
+
+const onLinkClick = (
+  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+) => {
+  const label = event.currentTarget.textContent ?? '';
+  sendEvent({ ...linkGAEventTemplate, label });
+};
+
 const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
   const flags = useFlags();
-
-  const gaCategory = 'Managed Databases landing page empty';
-
-  const linkGAEventTemplate = {
-    category: gaCategory,
-    action: 'Click:link',
-  };
-
-  const onLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    const label = event.currentTarget.textContent ?? '';
-    sendEvent({ ...linkGAEventTemplate, label: label });
-  };
 
   return (
     <>
@@ -95,82 +159,35 @@ const DatabaseEmptyState: React.FC = () => {
             <LinkSubSection
               title="Getting Started Guides"
               icon={<DocsIcon />}
-              moreLink={
-                <Link onClick={onLinkClick} to="">
+              MoreLink={(props) => (
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.linode.com/docs/"
+                  {...props}
+                >
                   Check out all our Docs
                   <PointerIcon />
                 </Link>
-              }
+              )}
             >
-              <List>
-                <ListItem>
-                  <Link
-                    onClick={onLinkClick}
-                    to="https://www.linode.com/docs/products/databases/managed-databases/"
-                  >
-                    Overview of Managed Databases
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link
-                    onClick={onLinkClick}
-                    to="https://www.linode.com/docs/products/databases/managed-databases/get-started/"
-                  >
-                    Get Started with Managed Databases
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link
-                    onClick={onLinkClick}
-                    to="https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/"
-                  >
-                    Choosing a Database Engine
-                  </Link>
-                </ListItem>
-              </List>
+              {guideLinks}
             </LinkSubSection>
             <LinkSubSection
               title="Getting Started Playlist"
               icon={<YoutubeIcon />}
-              moreLink={
+              external
+              MoreLink={(props) => (
                 <Link
                   onClick={onLinkClick}
                   to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                  {...props}
                 >
                   View the complete playlist
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
-              }
+              )}
             >
-              <List>
-                <ListItem>
-                  <Link
-                    onClick={onLinkClick}
-                    to="https://www.youtube.com/watch?v=loEVtzUN2i8"
-                  >
-                    Linode Managed Databases Overview
-                    <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link
-                    onClick={onLinkClick}
-                    to="https://www.youtube.com/watch?v=dnV-6TtfYfY"
-                  >
-                    How to Choose the Right Database for Your Application
-                    <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link
-                    onClick={onLinkClick}
-                    to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieZl3kM_jqfnK98uqYeXbfmC"
-                  >
-                    MySQL Beginner Series
-                    <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                  </Link>
-                </ListItem>
-              </List>
+              {youtubeLinks}
             </LinkSubSection>
           </LinksSection>
         }
