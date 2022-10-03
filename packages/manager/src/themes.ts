@@ -370,7 +370,6 @@ const darkThemeOptions = {
     },
     MuiIconButton: {
       root: {
-        color: primaryColors.main,
         '&:hover': {
           color: primaryColors.light,
         },

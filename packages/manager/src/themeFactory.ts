@@ -800,7 +800,6 @@ const themeDefaults: ThemeDefaults = () => {
       MuiIconButton: {
         root: {
           padding: 12,
-          color: textColors.linkActiveLight,
           '&:hover': {
             color: primaryColors.main,
             backgroundColor: 'transparent',
