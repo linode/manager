@@ -16,15 +16,87 @@ import ListItem from 'src/components/core/ListItem';
 import AppsSection from './AppsSection';
 import { sendEvent } from 'src/utilities/ga';
 
+const gaCategory = 'Linodes landing page empty';
+
+const linkGAEventTemplate = {
+  category: gaCategory,
+  action: 'Click:link',
+};
+
+const gettingStartedGuideLinksData = [
+  {
+    to: 'https://www.linode.com/docs/guides/creating-a-compute-instance/',
+    text: 'Create a Compute Instance',
+  },
+  {
+    to: 'https://www.linode.com/docs/guides/getting-started/',
+    text: 'Getting Started with Linode Compute Instances',
+  },
+  {
+    to:
+      'https://www.linode.com/docs/guides/understanding-billing-and-payments/',
+    text: 'Understanding Billing and Payment',
+  },
+  {
+    to: 'https://www.linode.com/docs/guides/set-up-web-server-host-website/',
+    text: 'Hosting a Website or Application on Linode',
+  },
+];
+
+const youtubeLinksData = [
+  {
+    to: 'https://www.youtube.com/watch?v=KEK-ZxrGxMA',
+    text: 'Linode Getting Started Guide',
+  },
+  {
+    to: 'https://www.youtube.com/watch?v=AVXYq8aL47Q',
+    text: 'Common Linux Commands',
+  },
+  {
+    to: 'https://www.youtube.com/watch?v=lMC5VNoZFhg',
+    text: 'Copying Files to a Compute Instance',
+  },
+  {
+    to:
+      'https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2',
+    text: 'How to use SSH',
+  },
+];
+
+const getLinkOnClick = (linkText: string) => () => {
+  sendEvent({
+    ...linkGAEventTemplate,
+    label: linkText,
+  });
+};
+
+const GuideLinks = () => (
+  <List>
+    {gettingStartedGuideLinksData.map((linkData) => (
+      <ListItem key={linkData.to}>
+        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+          {linkData.text}
+        </Link>
+      </ListItem>
+    ))}
+  </List>
+);
+
+const YoutubeLinks = () => (
+  <List>
+    {youtubeLinksData.map((linkData) => (
+      <ListItem key={linkData.to}>
+        <Link onClick={getLinkOnClick(linkData.text)} to={linkData.to}>
+          {linkData.text}
+          <ExternalLinkIcon style={{ marginLeft: 8 }} />
+        </Link>
+      </ListItem>
+    ))}
+  </List>
+);
+
 export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
-
-  const gaCategory = 'Linodes landing page empty';
-
-  const linkGAEventTemplate = {
-    category: gaCategory,
-    action: 'Click:link',
-  };
 
   const onLinkClick = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -63,40 +135,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
               </Link>
             }
           >
-            <List>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/creating-a-compute-instance/"
-                >
-                  Create a Compute Instance
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/getting-started/"
-                >
-                  Getting Started with Linode Compute Instances
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/understanding-billing-and-payments/"
-                >
-                  Understanding Billing and Payment
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.linode.com/docs/guides/set-up-web-server-host-website/"
-                >
-                  Hosting a Website or Application on Linode
-                </Link>
-              </ListItem>
-            </List>
+            <GuideLinks />
           </LinksSubSection>
           <LinksSubSection
             title="Deploy an App"
@@ -122,44 +161,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
               </Link>
             }
           >
-            <List>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.youtube.com/watch?v=KEK-ZxrGxMA"
-                >
-                  Linode Getting Started Guide
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.youtube.com/watch?v=AVXYq8aL47Q"
-                >
-                  Common Linux Commands
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.youtube.com/watch?v=lMC5VNoZFhg"
-                >
-                  Copying Files to a Compute Instance
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                </Link>
-              </ListItem>
-              <ListItem>
-                <Link
-                  onClick={onLinkClick}
-                  to="https://www.youtube.com/watch?v=ZVMckBHd7WA&list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ&index=2"
-                >
-                  How to use SSH
-                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
-                </Link>
-              </ListItem>
-            </List>
+            <YoutubeLinks />
           </LinksSubSection>
         </LinksSection>
       }
