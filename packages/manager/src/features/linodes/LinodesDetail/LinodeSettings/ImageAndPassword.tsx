@@ -31,7 +31,6 @@ interface Props {
   userSSHKeys: UserSSHKeyObject[];
   requestKeys: () => void;
   sshError?: string;
-  className?: string;
 }
 
 type CombinedProps = Props & ContextProps & WithImages;
