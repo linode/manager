@@ -82,7 +82,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.5rem',
   },
   activeSince: {
-    marginRight: theme.spacing() + 2,
+    marginRight: theme.spacing(1.25),
   },
   transactionType: {
     marginRight: theme.spacing(),
