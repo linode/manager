@@ -150,7 +150,13 @@ const Placeholder: React.FC<Props> = (props) => {
         )}
       </Grid>
       {buttonProps && (
-        <Grid item direction="row" alignItems="center" justifyContent="center">
+        <Grid
+          container
+          item
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
           {buttonProps.map((thisButton, index) => (
             <Grid item key={`placeholder-button-${index}`}>
               <Button

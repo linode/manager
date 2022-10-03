@@ -8,7 +8,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateRows: `22px  ${theme.spacing(20.5)}px 1.125rem`,
     rowGap: theme.spacing(2),
-    '& h2 > svg': {
+    '& > h2': {
+      color: theme.palette.text.primary,
+    },
+    '& > h2 > svg': {
       color: theme.palette.primary.main,
       marginRight: theme.spacing(),
       height: '1.125rem',
