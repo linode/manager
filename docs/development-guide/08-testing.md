@@ -150,7 +150,7 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 ### First Time Setup
 
 1. Follow the [Getting Started guide](../GETTING_STARTED.md) to set up your `packages/manager/.env` file and get Cloud Manager running locally.
-2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens), click "Add a Personal Access Token", and create a token to use for your end-to-end tests.
+2. Go to [cloud.linode.com/profile/tokens](https://cloud.linode.com/profile/tokens), click "Create a Personal Access Token", and create a token to use for your end-to-end tests.
     * Select a reasonable expiry time (avoid "Never") and make sure that every permission is set to "Read/Write".
 3. Set the `MANAGER_OAUTH` environment variable in your `.env` file using your new personal access token.
     * Example of `.env` addition:
@@ -165,9 +165,12 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
 1. In one terminal window, run the app with `yarn up`.
 2. In another terminal window, run all of the tests with `yarn cy:run`.
     * Alternatively, use Cypress's interactive interface with `yarn cy:debug` if you're focused on a single test suite.
-3. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
-4. Test Example:
-    ```tsx
+
+### Writing End-to-End Tests
+
+1. Look here for [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
+2. Test Example:
+   ```tsx
     /* this test will not pass on cloud manager.
     it is only intended to show correct test structure, syntax,
     and to provide examples of patterns/methods commonly used in the tests */
@@ -227,7 +230,7 @@ We use [Cypress](https://cypress.io) for end-to-end testing. Test files are foun
       });
     });
     ```
-5. How to use intercepts:
+3. How to use intercepts:
     ```tsx
       // stub response syntax:
       cy.intercept('POST', ‘/path’, {response}) or cy.intercept(‘/path’, (req) => { req.reply({response})}).as('something');
