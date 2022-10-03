@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateRows: `22px  ${theme.spacing(20.5)}px 1.125rem`,
     rowGap: theme.spacing(2),
+    width: '100%',
     '& > h2': {
       color: theme.palette.text.primary,
     },
@@ -21,22 +22,34 @@ const useStyles = makeStyles((theme: Theme) => ({
       fontSize: '0.875rem',
       fontWeight: 700,
       display: 'flex',
-      alignItems: 'baseline',
+      color: theme.textColors.linkActiveLight,
       '& > svg': {
+        color: theme.textColors.linkActiveLight,
+        marginLeft: theme.spacing(),
         height: 12,
         width: 12,
       },
     },
     '& li': {
       paddingLeft: 0,
+      paddingRight: 0,
       '& > a': {
         fontSize: '0.875rem',
+        color: theme.textColors.linkActiveLight,
         '& > svg': {
+          color: theme.textColors.linkActiveLight,
+          marginLeft: theme.spacing(),
           height: 12,
           width: 12,
         },
       },
     },
+  },
+  internalLink: {
+    alignItems: 'center',
+  },
+  externalLink: {
+    alignItems: 'baseline',
   },
 }));
 
@@ -44,19 +57,22 @@ interface Props {
   children?: JSX.Element[] | JSX.Element;
   title: string;
   icon: JSX.Element;
-  moreLink: JSX.Element;
+  MoreLink: (props: { className: any }) => JSX.Element;
+  external?: boolean;
 }
 
 const LinksSubSection = (props: Props) => {
-  const { title, icon, children, moreLink } = props;
+  const { title, icon, children, MoreLink, external } = props;
   const classes = useStyles();
+  const linkClassName = external ? classes.externalLink : classes.internalLink;
+
   return (
     <div className={classes.linksSubSection}>
       <Typography variant="h2">
         {icon} {title}
       </Typography>
       {children}
-      {moreLink}
+      <MoreLink className={linkClassName} />
     </div>
   );
 };

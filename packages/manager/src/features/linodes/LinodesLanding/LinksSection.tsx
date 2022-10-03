@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridAutoColumns: '1fr',
     gridAutoFlow: 'column',
-    columnGap: theme.spacing(),
+    columnGap: theme.spacing(5),
     justifyItems: 'center',
     [theme.breakpoints.down('md')]: {
       gridAutoFlow: 'row',

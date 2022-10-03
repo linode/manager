@@ -70,7 +70,7 @@ const getLinkOnClick = (linkText: string) => () => {
   });
 };
 
-const GuideLinks = () => (
+const guideLinks = (
   <List>
     {gettingStartedGuideLinksData.map((linkData) => (
       <ListItem key={linkData.to}>
@@ -82,13 +82,17 @@ const GuideLinks = () => (
   </List>
 );
 
-const YoutubeLinks = () => (
+const guidesMoreLinkText = 'Check out all our Docs';
+const appsMoreLinkText = 'See all Marketplace apps';
+const youtubeMoreLinkText = 'View the complete playlist';
+
+const youtubeLinks = (
   <List>
     {youtubeLinksData.map((linkData) => (
       <ListItem key={linkData.to}>
         <Link onClick={getLinkOnClick(linkData.text)} to={linkData.to}>
           {linkData.text}
-          <ExternalLinkIcon style={{ marginLeft: 8 }} />
+          <ExternalLinkIcon />
         </Link>
       </ListItem>
     ))}
@@ -97,13 +101,6 @@ const YoutubeLinks = () => (
 
 export const ListLinodesEmptyState: React.FC<{}> = (_) => {
   const { push } = useHistory();
-
-  const onLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    const label = event.currentTarget.textContent ?? '';
-    sendEvent({ ...linkGAEventTemplate, label: label });
-  };
 
   return (
     <Placeholder
@@ -129,39 +126,51 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
           <LinksSubSection
             title="Getting Started Guides"
             icon={<DocsIcon />}
-            moreLink={
-              <Link onClick={onLinkClick} to="https://www.linode.com/docs/">
-                Check out all our Docs <PointerIcon />
+            MoreLink={(props) => (
+              <Link
+                onClick={getLinkOnClick(guidesMoreLinkText)}
+                to="https://www.linode.com/docs/"
+                {...props}
+              >
+                {guidesMoreLinkText}
+                <PointerIcon />
               </Link>
-            }
+            )}
           >
-            <GuideLinks />
+            {guideLinks}
           </LinksSubSection>
           <LinksSubSection
             title="Deploy an App"
             icon={<MarketplaceIcon />}
-            moreLink={
-              <Link onClick={onLinkClick} to="/linodes/create?type=One-Click">
-                See all Marketplace apps <PointerIcon />
+            MoreLink={(props) => (
+              <Link
+                onClick={getLinkOnClick(appsMoreLinkText)}
+                to="/linodes/create?type=One-Click"
+                {...props}
+              >
+                {appsMoreLinkText}
+                <PointerIcon />
               </Link>
-            }
+            )}
           >
             <AppsSection />
           </LinksSubSection>
           <LinksSubSection
             title="Getting Started Playlist"
             icon={<YoutubeIcon />}
-            moreLink={
+            external
+            MoreLink={(props) => (
               <Link
-                onClick={onLinkClick}
+                onClick={getLinkOnClick(youtubeMoreLinkText)}
                 to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                {...props}
               >
-                View the complete playlist{' '}
-                <ExternalLinkIcon style={{ marginLeft: 8 }} />
+                {youtubeMoreLinkText}
+                <ExternalLinkIcon />
               </Link>
-            }
+            )}
           >
-            <YoutubeLinks />
+            {youtubeLinks}
           </LinksSubSection>
         </LinksSection>
       }
