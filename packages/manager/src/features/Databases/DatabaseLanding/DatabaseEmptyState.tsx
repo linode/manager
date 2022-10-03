@@ -122,14 +122,9 @@ const DatabaseEmptyState: React.FC = () => {
                 <ListItem>
                   <Link
                     onClick={onLinkClick}
-                    to="https://www.linode.com/docs/products/databases/managed-databases/get-started/"
+                    to="https://www.linode.com/docs/products/databases/managed-databases/guides/database-engines/"
                   >
                     Choosing a Database Engine
-                  </Link>
-                </ListItem>
-                <ListItem>
-                  <Link onClick={onLinkClick} to="https://www.linode.com/docs/">
-                    Check out all out Docs
                   </Link>
                 </ListItem>
               </List>
@@ -138,9 +133,12 @@ const DatabaseEmptyState: React.FC = () => {
               title="Getting Started Playlist"
               icon={<YoutubeIcon />}
               moreLink={
-                <Link onClick={onLinkClick} to="">
+                <Link
+                  onClick={onLinkClick}
+                  to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                >
                   View the complete playlist
-                  <ExternalLinkIcon />
+                  <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               }
             >
