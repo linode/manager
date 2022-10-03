@@ -715,7 +715,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           </Paper>
         )}
         <this.SnapshotForm />
-        {/* <this.SettingsForm />
+        <this.SettingsForm />
         <Button
           buttonType="outlined"
           className={classes.cancelButton}
@@ -732,7 +732,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Please note that when you cancel backups associated with this Linode,
           this will remove all existing backups.
-        </Typography> */}
+        </Typography>
         <RestoreToLinodeDrawer
           open={this.state.restoreDrawer.open}
           linodeID={linodeID}

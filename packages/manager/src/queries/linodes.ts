@@ -71,7 +71,7 @@ const getIsTooEarlyForStats = (linodeCreated?: string) => {
 };
 
 export const useLinodeStats = (
-  id: number,
+  id: any,
   enabled = true,
   linodeCreated?: string
 ) => {
@@ -89,7 +89,7 @@ export const useLinodeStats = (
 };
 
 export const useLinodeStatsByDate = (
-  id: number,
+  id: any,
   year: string,
   month: string,
   enabled = true,

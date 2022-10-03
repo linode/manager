@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
+import LinodeSettingsAlertsPanel from './LinodeSettingsAlertsPanel';
 import LinodeSettingsDeletePanel from './LinodeSettingsDeletePanel';
 import LinodeSettingsLabelPanel from './LinodeSettingsLabelPanel';
 import LinodeSettingsPasswordPanel from './LinodeSettingsPasswordPanel';
+import LinodeWatchdogPanel from './LinodeWatchdogPanel';
 
 interface Props {
   isBareMetalInstance: boolean;
@@ -34,6 +36,16 @@ const LinodeSettings: React.FC<CombinedProps> = (props) => {
               isBareMetalInstance={isBareMetalInstance}
               linodeId={linode.id}
               linodeStatus={linode.status}
+            />
+            <LinodeSettingsAlertsPanel
+              isBareMetalInstance={isBareMetalInstance}
+              linodeId={linode.id}
+              linodeLabel={linode.label}
+              linodeAlerts={linode.alerts}
+            />
+            <LinodeWatchdogPanel
+              linodeId={linode.id}
+              currentStatus={linode.watchdog_enabled}
             />
             <LinodeSettingsDeletePanel
               linodeId={linode.id}

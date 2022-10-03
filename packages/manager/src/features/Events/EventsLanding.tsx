@@ -287,9 +287,9 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
             >
               Event
             </TableCell>
-            {/* <TableCell className={classes.columnHeader}>
+            <TableCell className={classes.columnHeader}>
               Relative Date
-            </TableCell> */}
+            </TableCell>
             <Hidden smDown>
               <TableCell
                 className={classes.columnHeader}

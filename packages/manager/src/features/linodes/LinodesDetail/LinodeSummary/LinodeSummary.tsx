@@ -93,7 +93,7 @@ const chartHeight = 160;
 const LinodeSummary: React.FC<Props> = (props) => {
   const { linodeCreated, isBareMetalInstance } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
-  const id = Number(linodeId);
+  const id = linodeId;
   const theme = useTheme<Theme>();
   const classes = useStyles();
 
