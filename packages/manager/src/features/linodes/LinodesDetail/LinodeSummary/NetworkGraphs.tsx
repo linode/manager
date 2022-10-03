@@ -173,6 +173,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           title={`Network — IPv4 (${v4Unit}/s)`}
           renderBody={() => (
             <Graph
+              ariaLabel="IPv4 Network Traffic Graph"
               data={v4Data}
               unit={v4Unit}
               totalTraffic={v4totalTraffic}
@@ -188,6 +189,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
           title={`Network — IPv6 (${v6Unit}/s)`}
           renderBody={() => (
             <Graph
+              ariaLabel="IPv6 Network Traffic Graph"
               data={v6Data}
               unit={v6Unit}
               totalTraffic={v6totalTraffic}
@@ -203,6 +205,7 @@ export const NetworkGraphs: React.FC<Props> = (props) => {
 };
 
 interface GraphProps {
+  ariaLabel: string;
   timezone: string;
   data: NetworkStats;
   unit: string;
@@ -215,6 +218,7 @@ interface GraphProps {
 
 const Graph: React.FC<GraphProps> = (props) => {
   const {
+    ariaLabel,
     chartHeight,
     data,
     metrics,
@@ -248,6 +252,7 @@ const Graph: React.FC<GraphProps> = (props) => {
 
   return (
     <LineGraph
+      ariaLabel={ariaLabel}
       timezone={timezone}
       chartHeight={chartHeight}
       unit={`/s`}

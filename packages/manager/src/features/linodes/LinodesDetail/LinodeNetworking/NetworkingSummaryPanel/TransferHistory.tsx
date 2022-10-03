@@ -147,6 +147,8 @@ export const TransferHistory: React.FC<Props> = (props) => {
     ? getAPIErrorOrDefault(statsError, 'Unable to load stats.')[0].reason
     : null;
 
+  const graphAriaLabel = `Network Transfer History Graph for ${humanizedDate}`;
+
   const renderStatsGraph = () => {
     if (statsLoading) {
       return (
@@ -175,6 +177,8 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
+        ariaLabel={graphAriaLabel}
+        tabIndex={-1}
         timezone={profile?.timezone ?? 'UTC'}
         chartHeight={190}
         unit={`/s`}
@@ -194,7 +198,9 @@ export const TransferHistory: React.FC<Props> = (props) => {
   };
 
   return (
-    <>
+    // Allow `tabIndex` on `<div>` because it represents an interactive element.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div tabIndex={0} role="graphics-document" aria-label={graphAriaLabel}>
       <Box
         display="flex"
         flexDirection="row"
@@ -253,7 +259,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
         </Box>
       </Box>
       {renderStatsGraph()}
-    </>
+    </div>
   );
 };
 
