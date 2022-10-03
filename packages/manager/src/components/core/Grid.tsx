@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 // A grid component using the following libs as inspiration.
 //
 // For the implementation:
@@ -202,7 +200,7 @@ export const styles = (theme: Theme) => ({
 });
 
 const Grid = React.forwardRef<any, GridProps>(function Grid(
-  props: GridProps,
+  props: GridProps & { classes: any },
   ref
 ) {
   const {
@@ -249,10 +247,14 @@ const Grid = React.forwardRef<any, GridProps>(function Grid(
     classNameProp
   );
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore 😣
   return <div className={className} ref={ref} {...other} />;
 });
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore 😣
 const StyledGrid = withStyles(styles, { name: 'MuiGrid' })(Grid);
 
-export default StyledGrid;
 export { GridProps };
+export default StyledGrid;
