@@ -138,9 +138,7 @@ const Placeholder: React.FC<Props> = (props) => {
           renderAsSecondary={renderAsSecondary}
           data-qa-placeholder-title
         />
-        {subtitle !== undefined ? (
-          <Typography variant="h2">{subtitle}</Typography>
-        ) : null}
+        {hasSubtitle ? <Typography variant="h2">{subtitle}</Typography> : null}
       </Grid>
       <Grid item xs={12} lg={10} className={classes.copy}>
         {typeof props.children === 'string' ? (
