@@ -693,18 +693,18 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           justifyContent: 'space-between',
           backgroundColor: 'transparent',
-          paddingRight: 2,
+          paddingRight: 12,
           paddingLeft: 16,
+          '& svg': {
+            fill: '#2575d0',
+            stroke: '#2575d0',
+          },
           '&:hover': {
             '& h3': {
               color: primaryColors.light,
             },
-            '& svg': {
-              fill: '#2575d0',
-              stroke: '#2575d0',
-            },
           },
-          '&$expanded': {
+          '&.Mui-expanded': {
             margin: 0,
             minHeight: 48,
             '& .caret': {
@@ -716,7 +716,7 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
         content: {
-          '&$expanded': {
+          '&.Mui-expanded': {
             margin: '12px 0',
           },
         },
