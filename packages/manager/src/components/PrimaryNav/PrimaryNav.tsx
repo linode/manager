@@ -268,8 +268,20 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             onClick={closeMenu}
             aria-label="Dashboard"
             title="Dashboard"
+            className={classNames({
+              [classes.logoContainer]: isCollapsed,
+            })}
           >
-            <Logo width={115} height={43} />
+            <Logo
+              width={128}
+              height={50}
+              className={classNames(
+                {
+                  [classes.logoSvgCollapsed]: isCollapsed,
+                },
+                classes.logo
+              )}
+            />
           </Link>
         </div>
       </Grid>

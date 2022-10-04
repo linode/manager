@@ -161,6 +161,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
+        ariaLabel="CPU Usage Graph"
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
@@ -192,6 +193,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
+        ariaLabel="Disk IO Graph"
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
