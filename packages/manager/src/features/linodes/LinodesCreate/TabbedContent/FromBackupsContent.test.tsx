@@ -28,7 +28,7 @@ describe('FromBackupsContent', () => {
   component.setState({ isGettingBackups: false }); // get rid of loading state
 
   it('should render Placeholder if no valid backups exist', () => {
-    expect(component.find('WithStyles(Placeholder)')).toHaveLength(1);
+    expect(component.find('Placeholder')).toHaveLength(1);
   });
 
   // @todo: Rewrite these tests with react-testing-library.
