@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& > span': {
       display: 'inline-block',
+      width: '95%',
       color: theme.color.headline,
     },
   },
@@ -164,19 +165,25 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                     handleProviderChange(thisProvider.name);
                   }}
                 >
-                  <ProviderIcon className={classes.providerIcon} />
                   <Box
                     display="flex"
                     alignItems="center"
                     justifyContent="space-between"
+                    flexDirection="row"
                     className={classes.providerContent}
                   >
-                    <div>
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      alignItems="center"
+                      flexGrow={1}
+                    >
+                      <ProviderIcon className={classes.providerIcon} />
                       {thisProvider.displayName}
                       {isProviderEnabled ? (
                         <span className={classes.enabledText}>(Enabled)</span>
                       ) : null}
-                    </div>
+                    </Box>
                     {isProviderEnabled ? <EnabledIcon /> : null}
                   </Box>
                 </Button>
