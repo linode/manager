@@ -335,13 +335,12 @@ const darkThemeOptions = {
       },
     },
     MuiFormControlLabel: {
-      root: {
-        '& $disabled': {
-          color: '#aaa !important',
-        },
-      },
+      root: {},
       label: {
         color: primaryColors.text,
+        '&.Mui-disabled': {
+          color: '#aaa !important',
+        },
       },
       disabled: {},
     },
@@ -376,12 +375,21 @@ const darkThemeOptions = {
       },
     },
     MuiInput: {
+      input: {
+        '&.Mui-disabled': {
+          borderColor: '#606469',
+          color: '#ccc !important',
+          opacity: 0.5,
+          '-webkit-text-fill-color': 'unset !important',
+        },
+      },
       root: {
         backgroundColor: '#444',
         border: '1px solid #222',
         color: primaryColors.text,
-        '&$disabled': {
+        '&.Mui-disabled': {
           borderColor: '#606469',
+          opacity: 0.5,
           color: '#ccc !important',
         },
         '&$focused': {

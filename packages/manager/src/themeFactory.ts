@@ -1115,6 +1115,9 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           width: 68,
           height: 48,
+          '.MuiSwitch-track': {
+            opacity: '1 !important',
+          },
           '& $checked': {
             // color: `${primaryColors.main} !important`,
             '& input': {
@@ -1180,6 +1183,12 @@ const themeDefaults: ThemeDefaults = () => {
           padding: 16,
           '&$checked': {
             transform: 'translateX(20px)',
+          },
+          '&.Mui-disabled': {
+            '& +.MuiSwitch-track': {
+              backgroundColor: '#ddd',
+              borderColor: '#ccc',
+            },
           },
         },
       },
