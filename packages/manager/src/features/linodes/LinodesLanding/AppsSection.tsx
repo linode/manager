@@ -55,86 +55,80 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
+const gaCategory = 'Linodes landing page empty';
+
+const linkGAEventTemplate = {
+  category: gaCategory,
+  action: 'Click:link',
+};
+
+const appsLinkData = [
+  {
+    to:
+      '/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress',
+    text: 'Wordpress',
+  },
+  {
+    to:
+      '/linodes/create?type=One-Click&appID=869129&utm_source=marketplace&utm_medium=website&utm_campaign=aaPanel',
+    text: 'aaPanel',
+  },
+  {
+    to:
+      '/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel',
+    text: 'cPanel',
+  },
+  {
+    to:
+      '/linodes/create?type=One-Click&appID=691621&utm_source=marketplace&utm_medium=website&utm_campaign=Cloudron',
+    text: 'Cloudron',
+  },
+  {
+    to:
+      '/linodes/create?type=One-Click&appID=593835&utm_source=marketplace&utm_medium=website&utm_campaign=Plesk',
+    text: 'Plesk',
+  },
+  {
+    to:
+      '/linodes/create?type=One-Click&appID=985372&utm_source=marketplace&utm_medium=website&utm_campaign=Joomla',
+    text: 'Joomla',
+  },
+];
+
+const getOnLinkClick = (label: string) => {
+  return () =>
+    sendEvent({
+      ...linkGAEventTemplate,
+      label,
+    });
+};
+
+interface AppLinkProps {
+  to: string;
+  text: string;
+}
+
+const AppLink = (props: AppLinkProps) => {
+  const { to, text } = props;
+  const classes = useStyles();
+  return (
+    <Link onClick={getOnLinkClick(text)} to={to} className={classes.appLink}>
+      {text}
+      <div className={classes.appLinkIcon}>
+        <PointerIcon />
+      </div>
+    </Link>
+  );
+};
+
+const appLinks = appsLinkData.map((linkData) => (
+  <AppLink {...linkData} key={linkData.to} />
+));
+
 const AppsSection = () => {
-  const gaCategory = 'Linodes landing page empty';
-
-  const linkGAEventTemplate = {
-    category: gaCategory,
-    action: 'Click:link',
-  };
-
-  const onLinkClick = (
-    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-  ) => {
-    const label = event.currentTarget.textContent ?? '';
-    sendEvent({ ...linkGAEventTemplate, label: label });
-  };
   const classes = useStyles();
 
-  return (
-    <div className={classes.appSection}>
-      <Link
-        onClick={onLinkClick}
-        to="/linodes/create?type=One-Click&appID=401697&utm_source=marketplace&utm_medium=website&utm_campaign=WordPress"
-        className={classes.appLink}
-      >
-        Wordpress
-        <div className={classes.appLinkIcon}>
-          <PointerIcon />
-        </div>
-      </Link>
-      <Link
-        onClick={onLinkClick}
-        to="/linodes/create?type=One-Click&appID=869129&utm_source=marketplace&utm_medium=website&utm_campaign=aaPanel"
-        className={classes.appLink}
-      >
-        aaPanel
-        <div className={classes.appLinkIcon}>
-          <PointerIcon />
-        </div>
-      </Link>
-      <Link
-        onClick={onLinkClick}
-        to="/linodes/create?type=One-Click&appID=595742&utm_source=marketplace&utm_medium=website&utm_campaign=cPanel"
-        className={classes.appLink}
-      >
-        cPanel
-        <div className={classes.appLinkIcon}>
-          <PointerIcon />
-        </div>
-      </Link>
-      <Link
-        onClick={onLinkClick}
-        to="/linodes/create?type=One-Click&appID=691621&utm_source=marketplace&utm_medium=website&utm_campaign=Cloudron"
-        className={classes.appLink}
-      >
-        Cloudron
-        <div className={classes.appLinkIcon}>
-          <PointerIcon />
-        </div>
-      </Link>
-      <Link
-        onClick={onLinkClick}
-        to="/linodes/create?type=One-Click&appID=593835&utm_source=marketplace&utm_medium=website&utm_campaign=Plesk"
-        className={classes.appLink}
-      >
-        Plesk
-        <div className={classes.appLinkIcon}>
-          <PointerIcon />
-        </div>
-      </Link>
-      <Link
-        onClick={onLinkClick}
-        to="/linodes/create?type=One-Click&appID=985372&utm_source=marketplace&utm_medium=website&utm_campaign=Joomla"
-        className={classes.appLink}
-      >
-        Joomla
-        <div className={classes.appLinkIcon}>
-          <PointerIcon />
-        </div>
-      </Link>
-    </div>
-  );
+  return <div className={classes.appSection}>{appLinks}</div>;
 };
 
 export default AppsSection;
