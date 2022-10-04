@@ -7,6 +7,14 @@ import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
+import { makeStyles, Theme } from 'src/components/core/styles';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    margin: `${theme.spacing(3)}px 0 ${theme.spacing(3)}px 0`,
+    padding: 0,
+  },
+}));
 
 interface ContextProps {
   permissions: GrantLevel;
@@ -42,6 +50,8 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
     permissions,
   } = props;
 
+  const classes = useStyles();
+
   const disabled = permissions === 'read_only';
 
   return (
@@ -55,6 +65,7 @@ export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
         disabled={disabled}
       />
       <AccessPanel
+        className={classes.root}
         password={password || ''}
         handleChange={onPasswordChange}
         error={passwordError}

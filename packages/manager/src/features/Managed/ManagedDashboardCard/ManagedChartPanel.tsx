@@ -127,6 +127,7 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <div className={classes.canvasContainer}>
               <LineGraph
+                ariaLabel="CPU Usage Graph"
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
@@ -152,6 +153,7 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <div className={classes.canvasContainer}>
               <LineGraph
+                ariaLabel="Network Transfer Graph"
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
@@ -187,6 +189,7 @@ const createTabs = (
             <div>{summaryCopy}</div>
             <div className={classes.canvasContainer}>
               <LineGraph
+                ariaLabel="Disk I/O Graph"
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}

@@ -25,9 +25,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     padding: '12px 12px 0 14px',
     position: 'relative',
-    '& svg': {
-      maxWidth: theme.spacing(3) + 91,
-    },
   },
   logoCollapsed: {
     background: theme.bg.primaryNavPaper,
@@ -119,6 +116,27 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(),
     letterSpacing: '.25px',
     textTransform: 'uppercase',
+  },
+  logoSvgCollapsed: {
+    // Hide 'Akamai Cloud Computing' when the navigation is collapsed and the nav is not hovered
+    '& > g ': {
+      display: 'none',
+    },
+    'nav:hover & > g ': {
+      display: 'unset',
+    },
+    // Make the logo 115px so that the Linode 'bug' is centered when the navigation is collapsed
+    width: 115,
+  },
+  logoContainer: {
+    // when the nav is collapsed, but hovered by the user, make the logo full sized
+    'nav:hover & > svg ': {
+      width: 128,
+    },
+  },
+  logo: {
+    // give the svg a transition so it smoothly resizes
+    transition: 'all .03s linear',
   },
 }));
 
