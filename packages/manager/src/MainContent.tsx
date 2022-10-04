@@ -3,7 +3,7 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
-import Logo from 'src/assets/logo/logo-text.svg';
+import Logo from 'src/assets/logo/logo.svg';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -226,7 +226,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
               display: 'flex',
             }}
           >
-            <Logo width={150} height={87} className={classes.logo} />
+            <Logo className={classes.logo} />
           </Box>
           <Switch>
             <Route

@@ -56,6 +56,7 @@ export const NetworkGraph: React.FC<CombinedProps> = (props) => {
       title="Network"
       subtitle={maxUnit + '/s'}
       unit={'/s'}
+      ariaLabel="Network Usage Graph"
       formatData={formatNetwork}
       formatTooltip={formatNetworkTooltip}
       error={error}

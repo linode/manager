@@ -36,6 +36,7 @@ export const LoadGraph: React.FC<CombinedProps> = (props) => {
     <LongviewLineGraph
       title="Load"
       subtitle="Target < 1.00"
+      ariaLabel="Load Graph"
       error={error}
       loading={loading}
       showToday={isToday}

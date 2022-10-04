@@ -60,6 +60,7 @@ export const MemoryGraph: React.FC<CombinedProps> = (props) => {
     <LongviewLineGraph
       title="Memory"
       subtitle={unit}
+      ariaLabel="Memory Usage Graph"
       formatData={(value: number) => convertBytesToTarget(unit, value)}
       formatTooltip={(value: number) => readableBytes(value).formatted}
       error={error}

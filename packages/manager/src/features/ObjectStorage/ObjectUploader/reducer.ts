@@ -110,8 +110,8 @@ const cloneLandingReducer = (
       });
       break;
 
-    case 'NOTIFY_FILE_EXISTS':
-      let foundFile = draft.files.find(
+    case 'NOTIFY_FILE_EXISTS': {
+      const foundFile = draft.files.find(
         (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
       );
       if (foundFile) {
@@ -120,9 +120,10 @@ const cloneLandingReducer = (
       }
       updateCount(draft);
       break;
+    }
 
-    case 'RESUME_UPLOAD':
-      foundFile = draft.files.find(
+    case 'RESUME_UPLOAD': {
+      const foundFile = draft.files.find(
         (fileUpload) => pathOrFileName(fileUpload.file) === action.fileName
       );
       if (foundFile) {
@@ -130,6 +131,7 @@ const cloneLandingReducer = (
       }
       updateCount(draft);
       break;
+    }
 
     case 'CANCEL_OVERWRITE':
       const idx = draft.files.findIndex(
