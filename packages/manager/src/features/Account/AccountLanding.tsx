@@ -11,7 +11,6 @@ import LandingHeader, {
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
-import TaxBanner from 'src/components/TaxBanner';
 import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { useAccount } from 'src/queries/account';
 import { getGrantData, useProfile } from 'src/queries/profile';
@@ -115,7 +114,6 @@ const AccountLanding: React.FC = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
-      <TaxBanner marginBottom={24} />
       {isAkamaiAccount ? (
         <DismissibleBanner
           preferenceKey="akamai-account-billing"
