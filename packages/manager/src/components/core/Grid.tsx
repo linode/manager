@@ -14,11 +14,12 @@ import clsx from 'clsx';
 import { Theme, withStyles } from './styles';
 import { Breakpoint } from '@mui/material';
 import type { GridProps } from '@mui/material/Grid';
+import { breakpoints } from 'src/themeFactory';
 
 const SPACINGS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const GRID_SIZES = ['auto', true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
-function generateGrid(globalStyles: any, theme: Theme, breakpoint: Breakpoint) {
+function generateGrid(globalStyles: any, breakpoint: Breakpoint) {
   const styles = {};
 
   GRID_SIZES.forEach((size) => {
@@ -59,7 +60,7 @@ function generateGrid(globalStyles: any, theme: Theme, breakpoint: Breakpoint) {
   if (breakpoint === 'xs') {
     Object.assign(globalStyles, styles);
   } else {
-    globalStyles[theme.breakpoints.up(breakpoint)] = styles;
+    globalStyles[breakpoints.up(breakpoint)] = styles;
   }
 }
 
@@ -68,7 +69,7 @@ function getOffset(val: number, div = 1) {
   return `${parse / div}${String(val).replace(String(parse), '') || 'px'}`;
 }
 
-function generateGutter(theme: Theme, breakpoint: Breakpoint) {
+function generateGutter(breakpoint: Breakpoint) {
   const styles = {};
 
   SPACINGS.forEach((spacing) => {
@@ -191,10 +192,10 @@ export const styles = (theme: Theme) => ({
   'justify-content-xs-space-evenly': {
     justifyContent: 'space-evenly',
   },
-  ...generateGutter(theme, 'xs'),
-  ...theme.breakpoints.keys.reduce((accumulator, key) => {
+  ...generateGutter('xs'),
+  ...breakpoints.keys.reduce((accumulator, key) => {
     // Use side effect over immutability for better performance.
-    generateGrid(accumulator, theme, key);
+    generateGrid(accumulator, key);
     return accumulator;
   }, {}),
 });
