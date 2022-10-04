@@ -4,45 +4,56 @@ import Link from 'src/components/Link';
 import PointerIcon from 'src/assets/icons/pointer.svg';
 import { sendEvent } from 'src/utilities/ga';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  appSection: {
-    display: 'grid',
-    gridTemplateColumns: `repeat(2, ${theme.spacing(20)}px)`,
-    columnGap: `${theme.spacing(3)}px`,
-    rowGap: `${theme.spacing()}px`,
-    gridAutoFlow: 'row',
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-  },
-  appLink: {
-    display: 'flex',
-    alignItems: 'center',
-    gridColumn: 'span 1',
-    height: theme.spacing(4.25),
-    maxWidth: theme.spacing(20),
-    paddingLeft: theme.spacing(),
-    justifyContent: 'space-between',
-    backgroundColor: theme.bg.offWhite,
-    fontSize: '0.875rem',
-    fontWeight: 700,
-    color: theme.palette.text.primary,
-    border: `1px solid ${theme.color.border3}`,
-    '&:hover': {
-      textDecoration: 'none',
+const useStyles = makeStyles((theme: Theme) => {
+  const isDarkTheme = theme.name === 'darkTheme';
+  const backgroundColor = isDarkTheme
+    ? theme.bg.primaryNavPaper
+    : theme.bg.offWhite;
+  const borderColor = isDarkTheme ? '#3a3f46' : theme.color.border3;
+  const iconColor = isDarkTheme
+    ? theme.textColors.linkActiveLight
+    : theme.palette.primary.main;
+  return {
+    appSection: {
+      display: 'grid',
+      gridTemplateColumns: `repeat(2, ${theme.spacing(20)}px)`,
+      columnGap: `${theme.spacing(3)}px`,
+      rowGap: `${theme.spacing()}px`,
+      gridAutoFlow: 'row',
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
     },
-    '&:focus': {
-      textDecoration: 'none',
+    appLink: {
+      display: 'flex',
+      alignItems: 'center',
+      gridColumn: 'span 1',
+      height: theme.spacing(4.25),
+      maxWidth: theme.spacing(20),
+      paddingLeft: theme.spacing(),
+      justifyContent: 'space-between',
+      backgroundColor: backgroundColor,
+      fontSize: '0.875rem',
+      fontWeight: 700,
+      color: theme.palette.text.primary,
+      border: `1px solid ${borderColor}`,
+      '&:hover': {
+        textDecoration: 'none',
+      },
+      '&:focus': {
+        textDecoration: 'none',
+      },
     },
-  },
-  appLinkIcon: {
-    display: 'flex',
-    height: '100%',
-    aspectRatio: '1 / 1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderLeft: `1px solid ${theme.color.border3}`,
-  },
-}));
+    appLinkIcon: {
+      display: 'flex',
+      height: '100%',
+      aspectRatio: '1 / 1',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderLeft: `1px solid ${borderColor}`,
+      color: iconColor,
+    },
+  };
+});
 
 const AppsSection = () => {
   const gaCategory = 'Linodes landing page empty';
