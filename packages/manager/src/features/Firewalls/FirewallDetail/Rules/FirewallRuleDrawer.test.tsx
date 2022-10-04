@@ -49,6 +49,16 @@ describe('AddRuleDrawer', () => {
     userEvent.selectOptions(screen.getByPlaceholderText(/protocol/i), 'ICMP');
     expect(screen.getByLabelText('Ports')).toBeDisabled();
   });
+
+  it('disables the port input when the IPENCAP protocol is selected', () => {
+    renderWithTheme(<RuleDrawer {...props} mode="create" category="inbound" />);
+    expect(screen.getByLabelText('Ports')).not.toBeDisabled();
+    userEvent.selectOptions(
+      screen.getByPlaceholderText(/protocol/i),
+      'IPENCAP'
+    );
+    expect(screen.getByLabelText('Ports')).toBeDisabled();
+  });
 });
 
 describe('utilities', () => {
@@ -93,6 +103,10 @@ describe('utilities', () => {
       expect(validateForm('ICMP', '80')).toHaveProperty(
         'ports',
         'Ports are not allowed for ICMP protocols.'
+      );
+      expect(validateForm('IPENCAP', '443')).toHaveProperty(
+        'ports',
+        'Ports are not allowed for IPENCAP protocols.'
       );
       expect(validateForm('TCP', 'invalid-port')).toHaveProperty('ports');
     });

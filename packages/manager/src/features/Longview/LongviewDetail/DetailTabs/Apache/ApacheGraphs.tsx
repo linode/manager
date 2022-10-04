@@ -112,6 +112,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
           <LongviewLineGraph
             title="Requests"
             subtitle="requests/s"
+            ariaLabel="Requests Per Second Graph"
             data={[
               {
                 label: 'Requests',
@@ -130,6 +131,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
                 title="Throughput"
                 subtitle={`${networkUnit}/s`}
                 unit={'/s'}
+                ariaLabel="Throughput Graph"
                 formatData={(value: number) =>
                   roundTo(convertNetworkToUnit(value * 8, networkUnit))
                 }
@@ -153,6 +155,7 @@ export const ApacheGraphs: React.FC<CombinedProps> = (props) => {
             <Grid item xs={12} sm={6} className={classes.smallGraph}>
               <LongviewLineGraph
                 title="Workers"
+                ariaLabel="Workers Graph"
                 data={[
                   {
                     label: 'Waiting',

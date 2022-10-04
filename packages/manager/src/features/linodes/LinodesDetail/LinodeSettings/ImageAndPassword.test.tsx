@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { imageFactory, normalizeEntities } from 'src/factories';
 
 const normalizedImages = normalizeEntities(imageFactory.buildList(10));
@@ -22,7 +22,7 @@ const props = {
   permissions: null,
 };
 
-const component = shallow(<ImageAndPassword {...props} />);
+const component = shallow(wrapWithTheme(<ImageAndPassword {...props} />));
 
 describe('Component', () => {
   it('should render', () => {

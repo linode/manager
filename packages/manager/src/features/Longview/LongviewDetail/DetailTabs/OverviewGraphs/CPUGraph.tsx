@@ -50,6 +50,7 @@ export const CPUGraph: React.FC<CombinedProps> = (props) => {
       title="CPU"
       subtitle="%"
       unit="%"
+      ariaLabel="CPU Usage Graph"
       nativeLegend
       error={error}
       loading={loading}

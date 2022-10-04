@@ -39,30 +39,60 @@ describe('combineGraphData', () => {
 
 const now = DateTime.fromISO('2020-07-01T12:00:00');
 
-describe('getYearAndMonthFromOffset', () => {
-  it('returns the current year and month with an offset is 0', () => {
-    const { year, month, humanizedDate } = parseMonthOffset(0, now);
+describe('parseMonthOffset', () => {
+  it('returns the current year and month with an offset of 0', () => {
+    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+      0,
+      now
+    );
     expect(year).toBe('2020');
     expect(month).toBe('07');
     expect(humanizedDate).toBe('Last 30 Days');
+    expect(longHumanizedDate).toBe('Last 30 Days');
   });
 
-  it('correctly adjusts the month based on the offset', () => {
-    const { year, month, humanizedDate } = parseMonthOffset(-1, now);
+  it('correctly adjusts the month with a negative offset', () => {
+    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+      -1,
+      now
+    );
     expect(year).toBe('2020');
     expect(month).toBe('06');
     expect(humanizedDate).toBe('Jun 2020');
+    expect(longHumanizedDate).toBe('June 2020');
   });
 
-  it('correctly adjusts the year', () => {
-    const { year, month, humanizedDate } = parseMonthOffset(-7, now);
+  it('correctly adjusts the year with a negative offset', () => {
+    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+      -7,
+      now
+    );
     expect(year).toBe('2019');
     expect(month).toBe('12');
     expect(humanizedDate).toBe('Dec 2019');
+    expect(longHumanizedDate).toBe('December 2019');
   });
 
-  it('throws an error if offset is > 0', () => {
-    expect(() => parseMonthOffset(1, now)).toThrowError();
+  it('correctly adjusts the month with a positive offset', () => {
+    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+      2,
+      now
+    );
+    expect(year).toBe('2020');
+    expect(month).toBe('09');
+    expect(humanizedDate).toBe('Sep 2020');
+    expect(longHumanizedDate).toBe('September 2020');
+  });
+
+  it('correctly adjusts the year with a positive offset', () => {
+    const { year, month, humanizedDate, longHumanizedDate } = parseMonthOffset(
+      9,
+      now
+    );
+    expect(year).toBe('2021');
+    expect(month).toBe('04');
+    expect(humanizedDate).toBe('Apr 2021');
+    expect(longHumanizedDate).toBe('April 2021');
   });
 });
 
