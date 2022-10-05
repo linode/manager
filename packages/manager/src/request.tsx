@@ -10,6 +10,7 @@ import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
+import { AccountLimitError } from './components/AccountLimitError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
@@ -102,6 +103,14 @@ export const handleError = (error: AxiosError) => {
           !!e.reason.match(/migrations are currently disabled/i) &&
           !!url.match(/migrate/i)
         );
+      },
+    },
+    {
+      replacementText: (
+        <AccountLimitError title={'Account Limit Increase Request'} />
+      ),
+      condition: (e) => {
+        return !!e.reason.match(/Account Limit reached *./i);
       },
     },
   ]);
