@@ -85,6 +85,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '5%',
     paddingRight: 0,
   },
+  focusedRow: {
+    '&:focus-within': {
+      backgroundColor: theme.bg.lightBlue1,
+    },
+  },
   gpuGuideLink: {
     fontSize: '0.9em',
     '& a': {
@@ -212,6 +217,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             }
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
             className={classNames({
+              [classes.focusedRow]: true,
               [classes.disabledRow]:
                 isSamePlan || planTooSmall || isDisabledClass,
             })}
