@@ -662,8 +662,8 @@ const themeDefaults: ThemeDefaults = () => {
           borderBottom: '1px solid #eee',
           marginBottom: 20,
           padding: '16px 24px',
+          color: primaryColors.headline,
           '& h2': {
-            color: primaryColors.headline,
             lineHeight: 1.2,
           },
         },

@@ -317,9 +317,7 @@ const darkThemeOptions = {
     MuiDialogTitle: {
       root: {
         borderBottom: '1px solid #222',
-        '& h2': {
-          color: primaryColors.headline,
-        },
+        color: primaryColors.headline,
       },
     },
     MuiDrawer: {
