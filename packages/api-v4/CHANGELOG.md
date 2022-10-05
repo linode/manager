@@ -1,3 +1,7 @@
+## [2022-10-04] - v0.79.0
+### Changed:
+- FirewallRuleProtocol type updated to include IPENCAP
+
 ## [2202-09-19] - v0.78.0
 
 ### Changed:
