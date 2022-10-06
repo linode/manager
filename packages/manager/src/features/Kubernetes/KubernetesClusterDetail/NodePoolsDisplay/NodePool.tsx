@@ -99,7 +99,7 @@ const NodePool: React.FC<Props> = (props) => {
             Recycle Pool Nodes
           </Button>
           <Tooltip
-            title="This is the last Node Pool"
+            title="Clusters must contain at least one node pool."
             disableFocusListener={!isOnlyNodePool}
             disableHoverListener={!isOnlyNodePool}
             disableTouchListener={!isOnlyNodePool}
