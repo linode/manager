@@ -216,8 +216,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
               !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
             }
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-            className={classNames({
-              [classes.focusedRow]: true,
+             className={classNames(classes.focusedRow, {
               [classes.disabledRow]:
                 isSamePlan || planTooSmall || isDisabledClass,
             })}
