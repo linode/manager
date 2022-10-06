@@ -1,3 +1,4 @@
+import { Account } from '@linode/api-v4/lib/account';
 import {
   KubernetesCluster,
   KubernetesVersion,
@@ -149,4 +150,24 @@ export const getNextVersion = (
     return null;
   }
   return versionStrings[currentIdx + 1];
+};
+
+export const getClusterHighAvailability = (
+  account: Account | undefined,
+  cluster: KubernetesCluster | null
+) => {
+  const isHighAvailabilityFeatureEnabled = Boolean(
+    HIGH_AVAILABILITY_PRICE !== undefined &&
+      account?.capabilities.includes('LKE HA Control Planes')
+  );
+
+  const isClusterHighlyAvailable = Boolean(
+    isHighAvailabilityFeatureEnabled &&
+      cluster?.control_plane?.high_availability
+  );
+
+  return {
+    isHighAvailabilityFeatureEnabled,
+    isClusterHighlyAvailable,
+  };
 };

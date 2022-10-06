@@ -8,6 +8,8 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
+import { getClusterHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useAccount } from 'src/queries/account';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
@@ -54,8 +56,13 @@ type CombinedProps = Props;
 
 export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
+  const { data: account } = useAccount();
 
   const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
+  const { isClusterHighlyAvailable } = getClusterHighAvailability(
+    account,
+    cluster
+  );
 
   return (
     <TableRow
@@ -66,7 +73,12 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
       ariaLabel={`Cluster ${cluster.label}`}
     >
       <TableCell data-qa-cluster-label>
-        <Grid container wrap="nowrap" alignItems="center">
+        <Grid
+          container
+          wrap="nowrap"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Grid item className="py0">
             <div className={classes.labelStatusWrapper}>
               <Link
@@ -78,6 +90,16 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
               </Link>
             </div>
           </Grid>
+          {isClusterHighlyAvailable ? (
+            <Grid item>
+              <Chip
+                label="HA"
+                variant="outlined"
+                outlineColor="green"
+                size="small"
+              />
+            </Grid>
+          ) : null}
         </Grid>
       </TableCell>
       <Hidden smDown>

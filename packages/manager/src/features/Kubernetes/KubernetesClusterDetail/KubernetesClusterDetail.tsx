@@ -19,7 +19,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { getClusterHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import KubeContainer, {
   DispatchProps,
 } from 'src/containers/kubernetes.container';
@@ -219,14 +219,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     openDialog: openUpgradeDialog,
   } = useDialog(_updateCluster);
 
-  const capabilities = account?.capabilities ?? [];
-  const isHighAvailabilityFeatureEnabled =
-    HIGH_AVAILABILITY_PRICE !== undefined &&
-    capabilities.includes('LKE HA Control Planes');
-
-  const isClusterHighlyAvailable =
-    isHighAvailabilityFeatureEnabled &&
-    cluster?.control_plane?.high_availability;
+  const {
+    isHighAvailabilityFeatureEnabled,
+    isClusterHighlyAvailable,
+  } = getClusterHighAvailability(account, cluster);
 
   if (clustersLoadError) {
     const error = getAPIErrorOrDefault(
@@ -335,10 +331,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
               tags: newTags,
             })
           }
-          isClusterHighlyAvailable={
-            isHighAvailabilityFeatureEnabled &&
-            cluster.control_plane.high_availability
-          }
+          isClusterHighlyAvailable={isClusterHighlyAvailable}
           isKubeDashboardFeatureEnabled={Boolean(
             flags.kubernetesDashboardAvailability
           )}
