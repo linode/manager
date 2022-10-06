@@ -4,13 +4,13 @@ import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as React from 'react';
 import { AccountActivationError } from 'src/components/AccountActivation';
 import { MigrateError } from 'src/components/MigrateError';
+import { SupportError } from './components/SupportError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
-import { AccountLimitError } from './components/AccountLimitError';
 import { getEnvLocalStorageOverrides } from './utilities/storage';
 
 const handleSuccess: <T extends AxiosResponse<any>>(response: T) => T | T = (
@@ -106,11 +106,9 @@ export const handleError = (error: AxiosError) => {
       },
     },
     {
-      replacementText: (
-        <AccountLimitError title={'Account Limit Increase Request'} />
-      ),
+      replacementText: <SupportError errors={errors} />,
       condition: (e) => {
-        return !!e.reason.match(/Account Limit reached *./i);
+        return !!e.reason.match(/.* open a support ticket/i);
       },
     },
   ]);
