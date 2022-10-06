@@ -19,11 +19,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import { getClusterHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import KubeContainer, {
   DispatchProps,
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
 import usePolling from 'src/hooks/usePolling';
@@ -220,9 +220,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   } = useDialog(_updateCluster);
 
   const {
-    isHighAvailabilityFeatureEnabled,
+    showHighAvalibility,
     isClusterHighlyAvailable,
-  } = getClusterHighAvailability(account, cluster);
+  } = getKubeHighAvailability(account, cluster);
 
   if (clustersLoadError) {
     const error = getAPIErrorOrDefault(
@@ -306,7 +306,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           style={{ marginTop: 14, marginBottom: 8, display: 'flex' }}
         >
           <DocsLink href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-          {isHighAvailabilityFeatureEnabled && !isClusterHighlyAvailable ? (
+          {showHighAvalibility && !isClusterHighlyAvailable ? (
             <Button
               className={classes.upgradeToHAButton}
               buttonType="primary"

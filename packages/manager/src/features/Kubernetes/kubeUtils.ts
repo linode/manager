@@ -152,22 +152,20 @@ export const getNextVersion = (
   return versionStrings[currentIdx + 1];
 };
 
-export const getClusterHighAvailability = (
+export const getKubeHighAvailability = (
   account: Account | undefined,
-  cluster: KubernetesCluster | null
+  cluster?: ExtendedCluster | null
 ) => {
-  const isHighAvailabilityFeatureEnabled = Boolean(
-    HIGH_AVAILABILITY_PRICE !== undefined &&
-      account?.capabilities.includes('LKE HA Control Planes')
+  const showHighAvalibility = account?.capabilities.includes(
+    'LKE HA Control Planes'
   );
 
   const isClusterHighlyAvailable = Boolean(
-    isHighAvailabilityFeatureEnabled &&
-      cluster?.control_plane?.high_availability
+    showHighAvalibility && cluster?.control_plane.high_availability
   );
 
   return {
-    isHighAvailabilityFeatureEnabled,
+    showHighAvalibility,
     isClusterHighlyAvailable,
   };
 };

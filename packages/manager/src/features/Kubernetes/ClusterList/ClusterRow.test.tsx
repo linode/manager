@@ -36,4 +36,12 @@ describe('ClusterRow component', () => {
     getByText('cluster-0');
     getByText('Dallas, TX');
   });
+
+  it('renders HA chip for highly available clusters', async () => {
+    const { getByTestId } = render(
+      wrapWithTableBody(<ClusterRow {...props} />)
+    );
+
+    getByTestId('ha-chip');
+  });
 });

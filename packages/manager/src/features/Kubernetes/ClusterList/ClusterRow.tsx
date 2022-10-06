@@ -8,7 +8,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
-import { getClusterHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';
@@ -59,7 +59,8 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
   const { data: account } = useAccount();
 
   const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
-  const { isClusterHighlyAvailable } = getClusterHighAvailability(
+
+  const { isClusterHighlyAvailable } = getKubeHighAvailability(
     account,
     cluster
   );
@@ -97,6 +98,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
                 variant="outlined"
                 outlineColor="green"
                 size="small"
+                data-testid={'ha-chip'}
               />
             </Grid>
           ) : null}
