@@ -37,7 +37,7 @@ describe('ClusterRow component', () => {
     getByText('Dallas, TX');
   });
 
-  it('renders HA chip for highly available clusters', async () => {
+  it('renders HA chip for highly available clusters', () => {
     const { getByTestId } = render(
       wrapWithTableBody(<ClusterRow {...props} />)
     );
