@@ -112,6 +112,9 @@ export const styles = (theme: Theme) =>
         cursor: 'pointer',
         padding: '10px',
         fontSize: '0.9rem',
+        [theme.breakpoints.only('xs')]: {
+          fontSize: '1rem',
+        },
         '& svg': {
           marginTop: 2,
         },
@@ -189,6 +192,9 @@ export const styles = (theme: Theme) =>
     },
     input: {
       fontSize: '0.9rem',
+      [theme.breakpoints.only('xs')]: {
+        fontSize: '1rem',
+      },
       padding: 0,
       display: 'flex',
       color: theme.palette.text.primary,
@@ -429,6 +435,9 @@ export const reactSelectStyles = (theme: Theme) => ({
       cursor: 'pointer',
       padding: '10px',
       fontSize: '0.9rem',
+      [theme.breakpoints.only('xs')]: {
+        fontSize: '1.0rem',
+      },
     };
 
     if (state.isFocused) {
