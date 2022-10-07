@@ -19,6 +19,9 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       overflow: 'hidden',
       fontSize: '0.9rem',
+      [theme.breakpoints.only('xs')]: {
+        fontSize: '1rem',
+      },
     },
   });
 
