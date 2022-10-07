@@ -111,6 +111,18 @@ describe('LongviewPlans', () => {
   });
 
   it('displays a notice if the user does not have permissions to modify', async () => {
+    server.use(
+      rest.get('*/account/settings', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            accountSettingsFactory.build({
+              managed: false,
+            })
+          )
+        );
+      })
+    );
+
     // Build a restricted user's profile so we get a permission error
     server.use(
       rest.get('*/profile', (req, res, ctx) => {

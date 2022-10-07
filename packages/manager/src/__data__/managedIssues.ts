@@ -1,4 +1,6 @@
-export const managedIssues = [
+import { ManagedIssue } from '@linode/api-v4';
+
+export const managedIssues: ManagedIssue[] = [
   {
     created: '2019-09-11T20:00:00',
     id: 111111,
