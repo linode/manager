@@ -2,7 +2,6 @@
  * @file Integration tests for Managed navigation.
  */
 
-import { accountSettingsFactory } from 'src/factories/accountSettings';
 import {
   contactFactory,
   credentialFactory,
@@ -22,6 +21,12 @@ import {
 } from 'support/intercepts/managed';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
+import {
+  managedAccount,
+  nonManagedAccount,
+  visitUrlWithManagedDisabled,
+  visitUrlWithManagedEnabled,
+} from './managed-utils';
 
 // Array of URLs to all Managed-related pages.
 const managedURLs = [
@@ -32,43 +37,11 @@ const managedURLs = [
   '/managed/contacts',
 ];
 
-// Account object with Managed enabled for mocking API requests.
-const managedAccount = accountSettingsFactory.build({
-  managed: true,
-});
-
-// Account object without Managed enabled for mocking API requests.
-const nonManagedAccount = accountSettingsFactory.build({
-  managed: false,
-});
-
 // User preferences object to ensure that nav sidebar is open.
 const userPreferences = userPreferencesFactory.build({
   // `false` corresponds to the sidebar being open.
   desktop_sidebar_open: false,
 });
-
-/**
- * Visits the given Manager URL with account settings mocked to enable Managed.
- *
- * @param url - URL to visit.
- */
-const visitUrlWithManagedEnabled = (url: string) => {
-  mockGetAccountSettings(managedAccount).as('getAccountSettings');
-  cy.visitWithLogin(url);
-  cy.wait('@getAccountSettings');
-};
-
-/**
- * Visits the given Manager URL with account settings mocked to disable Managed.
- *
- * @param url - URL to visit.
- */
-const visitUrlWithManagedDisabled = (url: string) => {
-  mockGetUserPreferences(nonManagedAccount).as('getAccountSettings');
-  cy.visitWithLogin(url);
-  cy.wait('@getAccountSettings');
-};
 
 describe('Managed navigation', () => {
   /*
