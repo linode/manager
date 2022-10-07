@@ -220,7 +220,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   } = useDialog(_updateCluster);
 
   const {
-    showHighAvalibility,
+    showHighAvailability,
     isClusterHighlyAvailable,
   } = getKubeHighAvailability(account, cluster);
 
@@ -306,7 +306,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           style={{ marginTop: 14, marginBottom: 8, display: 'flex' }}
         >
           <DocsLink href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-          {showHighAvalibility && !isClusterHighlyAvailable ? (
+          {showHighAvailability && !isClusterHighlyAvailable ? (
             <Button
               className={classes.upgradeToHAButton}
               buttonType="primary"

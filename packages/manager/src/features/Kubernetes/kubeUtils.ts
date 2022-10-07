@@ -156,16 +156,16 @@ export const getKubeHighAvailability = (
   account: Account | undefined,
   cluster?: ExtendedCluster | null
 ) => {
-  const showHighAvalibility = account?.capabilities.includes(
+  const showHighAvailability = account?.capabilities.includes(
     'LKE HA Control Planes'
   );
 
   const isClusterHighlyAvailable = Boolean(
-    showHighAvalibility && cluster?.control_plane.high_availability
+    showHighAvailability && cluster?.control_plane.high_availability
   );
 
   return {
-    showHighAvalibility,
+    showHighAvailability,
     isClusterHighlyAvailable,
   };
 };

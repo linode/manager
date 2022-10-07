@@ -60,7 +60,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const disableCheckout = Boolean(
     needsAPool || (!hasAgreed && showGDPRCheckbox)
   );
-  const { showHighAvalibility } = getKubeHighAvailability(account);
+  const { showHighAvailability } = getKubeHighAvailability(account);
 
   return (
     <CheckoutBar
@@ -93,7 +93,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {showHighAvalibility ? (
+        {showHighAvailability ? (
           <>
             <Divider dark spacingTop={16} spacingBottom={12} />
             <HACheckbox
