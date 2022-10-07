@@ -21,12 +21,12 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowError from 'src/components/TableRowError';
-import { isManaged } from 'src/queries/accountSettings';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { UseAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import { useAccountSettings } from 'src/queries/accountSettings';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -141,6 +141,9 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { data: accountSettings } = useAccountSettings();
+
+  const isManaged = Boolean(accountSettings?.managed);
 
   const mayUserModifyLVSubscription =
     !(profile?.restricted || false) ||
@@ -242,7 +245,7 @@ export const LongviewPlans: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Plan Details" />
-      {isManaged() ? (
+      {isManaged ? (
         <Paper className={`${classes.root} ${classes.collapsedTable}`}>
           {updateErrorMsg && <Notice error text={updateErrorMsg} />}
           {updateSuccessMsg && <Notice success text={updateSuccessMsg} />}

@@ -1,4 +1,3 @@
-import { ManagedContact } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import { Action } from 'src/components/ActionMenu';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -6,7 +5,6 @@ import InlineMenuAction from 'src/components/InlineMenuAction';
 interface Props {
   contactId: number;
   contactName: string;
-  updateOrAdd: (contact: ManagedContact) => void;
   openDialog: (id: number) => void;
   openDrawer: (contactId: number) => void;
 }

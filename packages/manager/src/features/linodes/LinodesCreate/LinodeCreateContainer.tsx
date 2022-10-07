@@ -45,7 +45,7 @@ import {
   baseApps,
   getOneClickApps,
 } from 'src/features/StackScripts/stackScriptUtils';
-import { accountBackupsEnabled } from 'src/queries/accountSettings';
+import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
@@ -73,7 +73,7 @@ import { getRegionIDFromLinodeID } from './utilities';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
 import {
-  queryKey,
+  queryKey as accountAgreementsQueryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import DocsLink from 'src/components/DocsLink';
@@ -590,9 +590,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
             variables: { eu_model: true, privacy_policy: true },
             mutationFn: signAgreement,
-            mutationKey: queryKey,
+            mutationKey: accountAgreementsQueryKey,
             onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(queryKey),
+            ...simpleMutationHandlers(accountAgreementsQueryKey),
           });
         }
 
@@ -789,7 +789,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleVLANChange={this.handleVLANChange}
             handleAgreementChange={this.handleAgreementChange}
             userCannotCreateLinode={userCannotCreateLinode}
-            accountBackupsEnabled={accountBackupsEnabled()}
+            accountBackupsEnabled={getAccountBackupsEnabled()}
             {...restOfProps}
             {...restOfState}
           />

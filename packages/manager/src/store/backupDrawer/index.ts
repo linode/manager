@@ -9,7 +9,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
 import {
-  accountBackupsEnabled,
+  getAccountBackupsEnabled,
   queryKey,
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
@@ -304,7 +304,7 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
   /** If the selected toggle setting matches the setting already on the user's account,
    * don't bother the API.
    */
-  if (accountBackupsEnabled() === shouldEnableBackups) {
+  if (getAccountBackupsEnabled() === shouldEnableBackups) {
     dispatch(enableAllBackups());
     return;
   }
