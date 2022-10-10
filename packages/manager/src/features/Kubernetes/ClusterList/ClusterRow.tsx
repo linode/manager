@@ -8,8 +8,6 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
-import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useAccount } from 'src/queries/account';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
@@ -44,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   cluster: ExtendedCluster;
   hasUpgrade: boolean;
+  isClusterHighlyAvailable: boolean;
   openDeleteDialog: (
     clusterID: number,
     clusterLabel: string,
@@ -56,14 +55,14 @@ type CombinedProps = Props;
 
 export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { data: account } = useAccount();
 
-  const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
-
-  const { isClusterHighlyAvailable } = getKubeHighAvailability(
-    account,
-    cluster
-  );
+  const {
+    cluster,
+    hasUpgrade,
+    isClusterHighlyAvailable,
+    openDeleteDialog,
+    openUpgradeDialog,
+  } = props;
 
   return (
     <TableRow

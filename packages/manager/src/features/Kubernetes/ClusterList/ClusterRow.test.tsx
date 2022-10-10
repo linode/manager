@@ -17,6 +17,7 @@ const cluster = {
 const props: Props = {
   cluster,
   hasUpgrade: false,
+  isClusterHighlyAvailable: false,
   openUpgradeDialog: jest.fn(),
   openDeleteDialog: jest.fn(),
 };
@@ -37,11 +38,15 @@ describe('ClusterRow component', () => {
     getByText('Dallas, TX');
   });
 
-  it('renders HA chip for highly available clusters', () => {
-    const { getByTestId } = render(
-      wrapWithTableBody(<ClusterRow {...props} />)
+  it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {
+    const haProps = { ...props, isClusterHighlyAvailable: true };
+    const { getByTestId, queryByTestId, rerender } = render(
+      wrapWithTableBody(<ClusterRow {...haProps} />)
     );
 
     getByTestId('ha-chip');
+
+    rerender(wrapWithTableBody(<ClusterRow {...props} />));
+    expect(queryByTestId('ha-chip')).toBeNull();
   });
 });
