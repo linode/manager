@@ -3,8 +3,8 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
@@ -60,11 +60,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const disableCheckout = Boolean(
     needsAPool || (!hasAgreed && showGDPRCheckbox)
   );
-
-  const capabilities = account?.capabilities ?? [];
-  const showHighAvalibility =
-    HIGH_AVAILABILITY_PRICE !== undefined &&
-    capabilities.includes('LKE HA Control Planes');
+  const { showHighAvailability } = getKubeHighAvailability(account);
 
   return (
     <CheckoutBar
@@ -97,7 +93,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
             }
           />
         ))}
-        {showHighAvalibility ? (
+        {showHighAvailability ? (
           <>
             <Divider dark spacingTop={16} spacingBottom={12} />
             <HACheckbox

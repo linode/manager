@@ -42,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   cluster: ExtendedCluster;
   hasUpgrade: boolean;
+  isClusterHighlyAvailable: boolean;
   openDeleteDialog: (
     clusterID: number,
     clusterLabel: string,
@@ -55,7 +56,13 @@ type CombinedProps = Props;
 export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
+  const {
+    cluster,
+    hasUpgrade,
+    isClusterHighlyAvailable,
+    openDeleteDialog,
+    openUpgradeDialog,
+  } = props;
 
   return (
     <TableRow
@@ -66,7 +73,12 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
       ariaLabel={`Cluster ${cluster.label}`}
     >
       <TableCell data-qa-cluster-label>
-        <Grid container wrap="nowrap" alignItems="center">
+        <Grid
+          container
+          wrap="nowrap"
+          alignItems="center"
+          justifyContent="space-between"
+        >
           <Grid item className="py0">
             <div className={classes.labelStatusWrapper}>
               <Link
@@ -78,6 +90,17 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
               </Link>
             </div>
           </Grid>
+          {isClusterHighlyAvailable ? (
+            <Grid item>
+              <Chip
+                label="HA"
+                variant="outlined"
+                outlineColor="green"
+                size="small"
+                data-testid={'ha-chip'}
+              />
+            </Grid>
+          ) : null}
         </Grid>
       </TableCell>
       <Hidden smDown>

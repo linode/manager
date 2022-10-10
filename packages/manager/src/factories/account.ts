@@ -43,6 +43,7 @@ export const accountFactory = Factory.Sync.makeFactory<Account>({
     'Block Storage',
     'Object Storage',
     'Kubernetes',
+    'LKE HA Control Planes',
   ],
   active_promotions: [
     {

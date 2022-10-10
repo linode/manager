@@ -508,6 +508,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
                         label="HA CLUSTER"
                         variant="outlined"
                         outlineColor="green"
+                        size="small"
                       />
                     </Grid>
                   ) : null}

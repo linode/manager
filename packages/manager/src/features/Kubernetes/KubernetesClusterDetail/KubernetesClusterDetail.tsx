@@ -19,11 +19,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 import KubeContainer, {
   DispatchProps,
 } from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
 import usePolling from 'src/hooks/usePolling';
@@ -219,14 +219,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     openDialog: openUpgradeDialog,
   } = useDialog(_updateCluster);
 
-  const capabilities = account?.capabilities ?? [];
-  const isHighAvailabilityFeatureEnabled =
-    HIGH_AVAILABILITY_PRICE !== undefined &&
-    capabilities.includes('LKE HA Control Planes');
-
-  const isClusterHighlyAvailable =
-    isHighAvailabilityFeatureEnabled &&
-    cluster?.control_plane?.high_availability;
+  const {
+    showHighAvailability,
+    isClusterHighlyAvailable,
+  } = getKubeHighAvailability(account, cluster);
 
   if (clustersLoadError) {
     const error = getAPIErrorOrDefault(
@@ -310,7 +306,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           style={{ marginTop: 14, marginBottom: 8, display: 'flex' }}
         >
           <DocsLink href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-          {isHighAvailabilityFeatureEnabled && !isClusterHighlyAvailable ? (
+          {showHighAvailability && !isClusterHighlyAvailable ? (
             <Button
               className={classes.upgradeToHAButton}
               buttonType="primary"
@@ -335,10 +331,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
               tags: newTags,
             })
           }
-          isClusterHighlyAvailable={
-            isHighAvailabilityFeatureEnabled &&
-            cluster.control_plane.high_availability
-          }
+          isClusterHighlyAvailable={isClusterHighlyAvailable}
           isKubeDashboardFeatureEnabled={Boolean(
             flags.kubernetesDashboardAvailability
           )}
