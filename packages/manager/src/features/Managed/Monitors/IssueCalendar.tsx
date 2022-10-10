@@ -1,20 +1,20 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import IssueDay from './IssueDay';
 import { parseAPIDate } from 'src/utilities/date';
 import { useProfile } from 'src/queries/profile';
 import getUserTimezone from 'src/utilities/getUserTimezone';
+import { ManagedIssue } from '@linode/api-v4';
 
 const TOTAL_DAYS = 10;
 
 interface Props {
-  issues: ExtendedIssue[];
+  issues: ManagedIssue[];
 }
 
 export const createdOnTargetDay = (
   timezone: string,
-  issue: ExtendedIssue,
+  issue: ManagedIssue,
   targetDay: DateTime
 ) => {
   return parseAPIDate(issue.created)
@@ -23,11 +23,11 @@ export const createdOnTargetDay = (
 };
 
 interface CalendarDay {
-  issues: ExtendedIssue[];
+  issues: ManagedIssue[];
   day: string;
 }
 
-export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
+export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
   /**
    * To maintain continuity with Classic, we have to generate
    * a mock calendar of the past 10 days. If an issue was created
@@ -40,17 +40,18 @@ export const generateCalendar = (timezone: string, issues: ExtendedIssue[]) => {
   const days: CalendarDay[] = [];
 
   // Start with today, since it will be at the top of our list.
-  const day = DateTime.local().setZone(timezone);
   for (let i = 0; i < TOTAL_DAYS; i++) {
+    const day = DateTime.local().minus({ days: i }).setZone(timezone);
     /**
      * Iterate through the past 10 days
      */
     const relevantIssues = issues.filter((thisIssue) =>
       createdOnTargetDay(timezone, thisIssue, day)
     );
+
     days.push({
       issues: relevantIssues,
-      day: day.minus({ days: i }).toISO(),
+      day: day.toISO(),
     });
   }
 

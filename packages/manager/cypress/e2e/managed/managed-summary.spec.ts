@@ -2,7 +2,7 @@ import {
   mockGetIssues,
   mockGetServiceMonitors,
 } from 'support/intercepts/managed';
-import { issueFactory, monitorFactory } from 'src/factories/managed';
+import { managedIssueFactory, monitorFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from './managed-utils';
 
 describe('Managed Summary tab', () => {
@@ -21,7 +21,7 @@ describe('Managed Summary tab', () => {
     });
 
     mockGetServiceMonitors(upServiceMonitors).as('getMonitors');
-    mockGetIssues(issueFactory.buildList(3)).as('getIssues');
+    mockGetIssues(managedIssueFactory.buildList(3)).as('getIssues');
     visitUrlWithManagedEnabled('/managed/summary');
     cy.wait(['@getMonitors', '@getIssues']);
 

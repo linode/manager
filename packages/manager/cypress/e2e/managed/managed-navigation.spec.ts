@@ -5,7 +5,7 @@
 import {
   contactFactory,
   credentialFactory,
-  issueFactory,
+  managedIssueFactory,
   managedStatsFactory,
   monitorFactory,
 } from 'src/factories/managed';
@@ -83,7 +83,7 @@ describe('Managed navigation', () => {
       mockGetServiceMonitors(monitorFactory.buildList(5)).as(
         'getServiceMonitors'
       );
-      mockGetIssues(issueFactory.buildList(3)).as('getIssues');
+      mockGetIssues(managedIssueFactory.buildList(3)).as('getIssues');
       mockGetContacts(contactFactory.buildList(10)).as('getContacts');
       mockGetCredentials(credentialFactory.buildList(3)).as('getCredentials');
       mockGetStats(managedStatsFactory.build()).as('getStats');

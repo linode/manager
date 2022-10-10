@@ -118,6 +118,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
           title="CPU"
           subtitle="%"
           unit="%"
+          ariaLabel="CPU Usage Graph"
           data={[
             {
               data: _convertData(cpu, start, end),
@@ -132,6 +133,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
           <LongviewLineGraph
             title="RAM"
             subtitle={memUnit}
+            ariaLabel="RAM Usage Graph"
             formatData={(value: number) => convertBytesToTarget(memUnit, value)}
             formatTooltip={(value: number) => readableBytes(value).formatted}
             data={[
@@ -149,6 +151,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
           <LongviewLineGraph
             title="Count"
             suggestedMax={10}
+            ariaLabel="Process Count Graph"
             data={[
               {
                 data: _convertData(count, start, end, formatCount),
@@ -165,6 +168,7 @@ const ProcessesGraphs: React.FC<CombinedProps> = (props) => {
             title="Disk I/O"
             subtitle={ioUnit + '/s'}
             unit={'/s'}
+            ariaLabel="Disk I/O Graph"
             formatData={(value: number) => convertBytesToTarget(ioUnit, value)}
             formatTooltip={(value: number) => readableBytes(value).formatted}
             nativeLegend

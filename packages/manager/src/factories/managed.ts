@@ -1,10 +1,11 @@
 import * as Factory from 'factory.ts';
 import {
   ManagedContact,
+  DataSeries,
   ManagedCredential,
   ManagedIssue,
   ManagedServiceMonitor,
-  ManagedStatsData,
+  ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
 
 export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
@@ -25,18 +26,6 @@ export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
   label: 'credential-1',
 });
 
-export const issueFactory = Factory.Sync.makeFactory<ManagedIssue>({
-  id: Factory.each((i) => i),
-  services: Factory.each((i) => [i]),
-  created: '2019-08-01T20:29:14',
-  entity: {
-    id: Factory.each((i) => i),
-    label: Factory.each((i) => `Managed issue #${i}`),
-    type: 'ticket',
-    url: Factory.each((i) => `/support/tickets/${i}`),
-  },
-});
-
 export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
   consultation_group: '',
   timeout: 10,
@@ -53,10 +42,33 @@ export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
   body: '',
 });
 
-export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStatsData>({
-  cpu: [],
-  disk: [],
-  net_in: [],
-  net_out: [],
-  swap: [],
+export const generateManagedStats = (modifier = 1): DataSeries[] => {
+  const stat: DataSeries[] = [];
+  let i = 0;
+  for (i; i < 200; i++) {
+    stat.push({ x: Date.now() - i * 300000, y: Math.random() * modifier });
+  }
+  return stat;
+};
+
+export const managedStatsFactory = Factory.Sync.makeFactory<ManagedStats>({
+  data: {
+    cpu: generateManagedStats(4),
+    disk: generateManagedStats(),
+    net_in: generateManagedStats(3),
+    net_out: generateManagedStats(2),
+    swap: generateManagedStats(),
+  },
+});
+
+export const managedIssueFactory = Factory.Sync.makeFactory<ManagedIssue>({
+  created: '2018-01-01T00:01:01',
+  entity: {
+    id: 98765,
+    label: 'Managed Issue opened!',
+    type: 'ticket',
+    url: '/support/tickets/98765',
+  },
+  id: 823,
+  services: [],
 });
