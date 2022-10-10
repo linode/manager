@@ -6,7 +6,6 @@ import {
   contactFactory,
   credentialFactory,
   managedIssueFactory,
-  managedStatsFactory,
   monitorFactory,
 } from 'src/factories/managed';
 import { userPreferencesFactory } from 'src/factories/profile';
@@ -54,8 +53,7 @@ describe('Managed navigation', () => {
     mockGetAccountSettings(managedAccount).as('getAccountSettings');
     mockGetUserPreferences(userPreferences).as('getUserPreferences');
     cy.visitWithLogin('/linodes');
-    cy.wait('@getAccountSettings');
-    cy.wait('@getUserPreferences');
+    cy.wait(['@getAccountSettings', '@getUserPreferences']);
 
     ui.nav.findItemByTitle('Managed').should('be.visible').click();
 
@@ -64,8 +62,7 @@ describe('Managed navigation', () => {
     // Confirm that Managed is not in sidebar when it's not enabled.
     mockGetAccountSettings(nonManagedAccount).as('getAccountSettings');
     cy.visitWithLogin('/linodes');
-    cy.wait('@getAccountSettings');
-    cy.wait('@getUserPreferences');
+    cy.wait(['@getAccountSettings', '@getUserPreferences']);
 
     ui.nav.find().within(() => {
       cy.findByText('Managed').should('not.exist');
@@ -86,7 +83,7 @@ describe('Managed navigation', () => {
       mockGetIssues(managedIssueFactory.buildList(3)).as('getIssues');
       mockGetContacts(contactFactory.buildList(10)).as('getContacts');
       mockGetCredentials(credentialFactory.buildList(3)).as('getCredentials');
-      mockGetStats(managedStatsFactory.build()).as('getStats');
+      mockGetStats().as('getStats');
       visitUrlWithManagedEnabled(url);
 
       // Wait for page to load and for "Managed" heading to be visible.

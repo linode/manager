@@ -1,6 +1,7 @@
 import {
   mockGetIssues,
   mockGetServiceMonitors,
+  mockGetStats,
 } from 'support/intercepts/managed';
 import { managedIssueFactory, monitorFactory } from 'src/factories/managed';
 import { visitUrlWithManagedEnabled } from './managed-utils';
@@ -22,8 +23,9 @@ describe('Managed Summary tab', () => {
 
     mockGetServiceMonitors(upServiceMonitors).as('getMonitors');
     mockGetIssues(managedIssueFactory.buildList(3)).as('getIssues');
+    mockGetStats().as('getStats');
     visitUrlWithManagedEnabled('/managed/summary');
-    cy.wait(['@getMonitors', '@getIssues']);
+    cy.wait(['@getMonitors', '@getIssues', '@getStats']);
 
     // Confirm that message is shown describing the good monitor state.
     cy.findByText('All monitored services are up').should('be.visible');

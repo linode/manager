@@ -9,6 +9,7 @@ import {
   ManagedServiceMonitor,
   ManagedStats,
 } from '@linode/api-v4/types';
+import { managedStatsFactory } from 'src/factories/managed';
 import { makeErrorResponse } from 'support/util/errors';
 import { paginateResponse } from 'support/util/paginate';
 
@@ -82,10 +83,16 @@ export const mockGetContacts = (
 /**
  * Intercepts GET request to fetch Managed stats and mocks response.
  *
- * @param stats - Stats with which to respond.
+ * If no stats are provided for mocking, the default factory data will be used
+ * as a default.
+ *
+ * @param stats - Stats with which to respond, or `undefined`.
  *
  * @returns Cypress chainable.
  */
-export const mockGetStats = (stats: ManagedStats): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/managed/stats*', stats);
+export const mockGetStats = (
+  stats?: ManagedStats | undefined
+): Cypress.Chainable<null> => {
+  const mockStats = stats ? stats : managedStatsFactory.build();
+  return cy.intercept('GET', '*/managed/stats*', mockStats);
 };
