@@ -24,4 +24,5 @@ export const supportReplyFactory = Factory.Sync.makeFactory<SupportReply>({
   created: '2019-04-02T12:37:47',
   gravatar_id: 'xxxxx',
   from_linode: true,
+  friendly_name: 'Lucy',
 });
