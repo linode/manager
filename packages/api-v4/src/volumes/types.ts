@@ -5,6 +5,7 @@ export interface Volume {
   size: number;
   region: string;
   linode_id: null | number;
+  linode_label: null | string;
   created: string;
   updated: string;
   filesystem_path: string;

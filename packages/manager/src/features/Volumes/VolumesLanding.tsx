@@ -1,6 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Config } from '@linode/api-v4/lib/linodes';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -41,7 +40,7 @@ import {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { DestructiveVolumeDialog } from './DestructiveVolumeDialog';
 import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
-import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import VolumeTableRow from './VolumeTableRow';
 
@@ -96,7 +95,6 @@ const preferenceKey = 'volumes';
 export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const history = useHistory();
-  const { enqueueSnackbar } = useSnackbar();
 
   const pagination = usePagination(1, preferenceKey);
 
@@ -217,31 +215,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       ...values,
       open: false,
     }));
-  };
-
-  const detachVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { detachVolume } = props;
-    if (!volumeId) {
-      return;
-    }
-
-    detachVolume({ volumeId })
-      .then((_) => {
-        /* @todo: show a progress bar for volume detachment */
-        enqueueSnackbar('Volume detachment started', {
-          variant: 'info',
-        });
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
-            .reason,
-        }));
-      });
   };
 
   const deleteVolume = () => {
@@ -401,9 +374,9 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
         volumeLabel={destructiveDialog.volumeLabel}
         linodeLabel={destructiveDialog.linodeLabel}
         linodeId={destructiveDialog.linodeId}
+        volumeId={destructiveDialog.volumeId ?? 0}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
-        onDetach={detachVolume}
         onDelete={deleteVolume}
       />
     </>

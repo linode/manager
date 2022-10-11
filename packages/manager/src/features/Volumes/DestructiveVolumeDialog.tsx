@@ -6,6 +6,11 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useLinodeQuery } from 'src/queries/linodes';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import { useDetachVolumeMutation } from 'src/queries/volumes';
+import { useSnackbar } from 'notistack';
+import { APIError } from '@linode/api-v4/lib/types';
+import { resetEventsPolling } from 'src/eventsPolling';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -19,9 +24,9 @@ interface Props {
   mode: 'detach' | 'delete';
   error?: string;
   onClose: () => void;
-  onDetach: () => void;
   onDelete: () => void;
   volumeLabel: string;
+  volumeId: number;
   linodeLabel: string;
   linodeId: number;
 }
@@ -32,6 +37,7 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const {
     error,
     volumeLabel: label,
+    volumeId,
     linodeId,
     linodeLabel,
     mode,
@@ -39,12 +45,35 @@ export const DestructiveVolumeDialog = (props: Props) => {
     onClose,
   } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { data: linode } = useLinodeQuery(linodeId, open);
+
+  const { mutateAsync: detachVolume } = useDetachVolumeMutation();
+
+  const onDetach = () => {
+    detachVolume({ id: volumeId })
+      .then(() => {
+        onClose();
+        resetEventsPolling();
+        enqueueSnackbar(`Volume detachment started`, {
+          variant: 'info',
+        });
+      })
+      .catch((error: APIError[]) => {
+        enqueueSnackbar(
+          getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0].reason,
+          {
+            variant: 'error',
+          }
+        );
+      });
+  };
 
   const poweredOff = linode?.status === 'offline';
 
   const method = {
-    detach: props.onDetach,
+    detach: onDetach,
     delete: props.onDelete,
   }[props.mode];
 

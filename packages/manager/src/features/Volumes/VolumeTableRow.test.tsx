@@ -13,6 +13,7 @@ const unattachedVolume = {
   ...volumes[0],
   linodeLabel: '',
   linode_id: null,
+  linode_label: null,
   linodeStatus: 'active',
 };
 
@@ -28,6 +29,7 @@ const props: CombinedProps = {
   filesystem_path: '',
   hardware_type: 'hdd',
   linode_id: 0,
+  linode_label: 'linode-0',
   isUpdating: false,
   isVolumesLanding: true,
   openForEdit: jest.fn(),
