@@ -118,6 +118,12 @@ export const volumeEventsHandler = (event: Event) => {
       });
       return;
     case 'volume_clone':
+      // This is very hacky, but we have no way to know when a cloned volume should transition
+      // from 'creating' to 'active' so we will wait a bit after a volume is cloned, then refresh
+      // and hopefully the volume is active.
+      setTimeout(() => {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+      }, 5000);
       return;
     case 'volume_delete':
       return;
