@@ -7,6 +7,7 @@ import {
   ManagedCredential,
   ManagedIssue,
   ManagedServiceMonitor,
+  ManagedServicePayload,
   ManagedStats,
 } from '@linode/api-v4/types';
 import { managedStatsFactory } from 'src/factories/managed';
@@ -35,6 +36,13 @@ export const mockGetServiceMonitors = (
     '*/managed/services*',
     paginateResponse(serviceMonitors)
   );
+};
+
+export const mockUpdateServiceMonitor = (
+  serviceId: number,
+  serviceMonitor: ManagedServicePayload
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', `*/managed/services/${serviceId}`, serviceMonitor);
 };
 
 /**
