@@ -27,7 +27,7 @@ export interface RenderVolumeDataProps {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => void;
   handleDelete: (volumeId: number, volumeLabel: string) => void;
 }

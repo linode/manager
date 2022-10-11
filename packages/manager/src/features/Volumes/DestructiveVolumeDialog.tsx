@@ -2,24 +2,17 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { useLinodeQuery } from 'src/queries/linodes';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
-type ClassNames = 'warningCopy';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    warningCopy: {
-      color: theme.color.red,
-      marginBottom: theme.spacing(2),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  warningCopy: {
+    color: theme.color.red,
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 interface Props {
   open: boolean;
@@ -30,80 +23,76 @@ interface Props {
   onDelete: () => void;
   volumeLabel: string;
   linodeLabel: string;
-  poweredOff: boolean;
+  linodeId: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export const DestructiveVolumeDialog = (props: Props) => {
+  const classes = useStyles();
 
-class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
-  renderActions = () => {
-    const method = {
-      detach: this.props.onDetach,
-      delete: this.props.onDelete,
-    }[this.props.mode];
+  const {
+    error,
+    volumeLabel: label,
+    linodeId,
+    linodeLabel,
+    mode,
+    open,
+    onClose,
+  } = props;
 
-    const action = {
-      detach: 'Detach',
-      delete: 'Delete',
-    }[this.props.mode];
+  const { data: linode } = useLinodeQuery(linodeId, open);
 
-    return (
-      <ActionsPanel style={{ padding: 0 }}>
-        <Button
-          buttonType="secondary"
-          onClick={this.props.onClose}
-          data-qa-cancel
-        >
-          Cancel
-        </Button>
-        <Button buttonType="primary" onClick={method} data-qa-confirm>
-          {action} Volume
-        </Button>
-      </ActionsPanel>
-    );
-  };
+  const poweredOff = linode?.status === 'offline';
 
-  render() {
-    const {
-      classes,
-      error,
-      volumeLabel: label,
-      linodeLabel,
-      poweredOff,
-      mode,
-    } = this.props;
-    const title = {
-      detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
-      delete: `Delete ${label ? `Volume ${label}` : 'Volume'}?`,
-    }[this.props.mode];
+  const method = {
+    detach: props.onDetach,
+    delete: props.onDelete,
+  }[props.mode];
 
-    return (
-      <ConfirmationDialog
-        open={this.props.open}
-        title={`${title}`}
-        onClose={this.props.onClose}
-        actions={this.renderActions}
-      >
-        {error && <Notice error text={error} />}
+  const action = {
+    detach: 'Detach',
+    delete: 'Delete',
+  }[props.mode];
 
-        {/* In 'detach' mode, show a warning if the Linode is powered on. */}
-        {mode === 'detach' && !poweredOff && (
-          <Typography className={classes.warningCopy}>
-            <strong>Warning:</strong> This operation could cause data loss.
-            Please power off the Linode first or make sure it isn't currently
-            writing to the volume before continuing. If this volume is currently
-            mounted, detaching it could cause your Linode to restart.
-          </Typography>
-        )}
-        {mode === 'delete' && (
-          <Typography>
-            Are you sure you want to {mode} this Volume
-            {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
-          </Typography>
-        )}
-      </ConfirmationDialog>
-    );
-  }
-}
+  const actions = (
+    <ActionsPanel style={{ padding: 0 }}>
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+        Cancel
+      </Button>
+      <Button buttonType="primary" onClick={method} data-qa-confirm>
+        {action} Volume
+      </Button>
+    </ActionsPanel>
+  );
 
-export default withStyles(styles)(DestructiveVolumeDialog);
+  const title = {
+    detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
+    delete: `Delete ${label ? `Volume ${label}` : 'Volume'}?`,
+  }[props.mode];
+
+  return (
+    <ConfirmationDialog
+      open={open}
+      title={title}
+      onClose={onClose}
+      actions={actions}
+    >
+      {error && <Notice error text={error} />}
+
+      {/* In 'detach' mode, show a warning if the Linode is powered on. */}
+      {mode === 'detach' && !poweredOff && (
+        <Typography className={classes.warningCopy}>
+          <strong>Warning:</strong> This operation could cause data loss. Please
+          power off the Linode first or make sure it isn't currently writing to
+          the volume before continuing. If this volume is currently mounted,
+          detaching it could cause your Linode to restart.
+        </Typography>
+      )}
+      {mode === 'delete' && (
+        <Typography>
+          Are you sure you want to {mode} this Volume
+          {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
+        </Typography>
+      )}
+    </ConfirmationDialog>
+  );
+};

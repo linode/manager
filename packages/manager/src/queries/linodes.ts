@@ -123,8 +123,10 @@ export const useLinodeTransferByDate = (
   );
 };
 
-export const useLinodeQuery = (id: number) => {
-  return useQuery<Linode, APIError[]>([queryKey, id], () => getLinode(id));
+export const useLinodeQuery = (id: number, enabled = true) => {
+  return useQuery<Linode, APIError[]>([queryKey, id], () => getLinode(id), {
+    enabled,
+  });
 };
 
 export const useLinodeLishTokenQuery = (id: number) => {

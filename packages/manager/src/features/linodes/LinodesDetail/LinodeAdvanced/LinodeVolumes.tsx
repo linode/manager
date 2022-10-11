@@ -21,7 +21,7 @@ import withVolumesRequests, {
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import DestructiveVolumeDialog from 'src/features/Volumes/DestructiveVolumeDialog';
+import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { ExtendedVolume } from 'src/features/Volumes/types';
 import VolumeAttachmentDrawer from 'src/features/Volumes/VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
@@ -200,7 +200,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
@@ -209,7 +209,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       volumeId,
       volumeLabel,
       linodeLabel,
-      poweredOff,
+      linodeId,
       error: '',
     }));
   };
@@ -362,7 +362,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
         error={destructiveDialog.error}
         volumeLabel={destructiveDialog.volumeLabel}
         linodeLabel={destructiveDialog.linodeLabel}
-        poweredOff={destructiveDialog.poweredOff || false}
+        linodeId={linodeId ?? 0}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
         onDetach={detachVolume}

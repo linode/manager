@@ -29,7 +29,7 @@ export interface ActionHandlers {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => void;
   handleDelete: (volumeId: number, volumeLabel: string) => void;
   [index: string]: any;
@@ -38,10 +38,10 @@ export interface ActionHandlers {
 interface Props extends ActionHandlers {
   attached: boolean;
   isVolumesLanding: boolean;
-  poweredOff: boolean;
   filesystemPath: string;
   label: string;
   linodeLabel: string;
+  linodeId: number;
   regionID: string;
   volumeId: number;
   volumeLabel: string;
@@ -52,7 +52,7 @@ interface Props extends ActionHandlers {
 export type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
-  const { attached, poweredOff, isVolumesLanding } = props;
+  const { attached, isVolumesLanding } = props;
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
@@ -83,8 +83,8 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   };
 
   const handleDetach = () => {
-    const { onDetach, volumeId, volumeLabel, linodeLabel, poweredOff } = props;
-    onDetach(volumeId, volumeLabel, linodeLabel, poweredOff);
+    const { onDetach, volumeId, volumeLabel, linodeLabel, linodeId } = props;
+    onDetach(volumeId, volumeLabel, linodeLabel, linodeId);
   };
 
   const handleDelete = () => {
@@ -135,14 +135,12 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
     });
   }
 
-  if (!attached || poweredOff) {
-    actions.push({
-      title: 'Delete',
-      onClick: () => {
-        handleDelete();
-      },
-    });
-  }
+  actions.push({
+    title: 'Delete',
+    onClick: () => {
+      handleDelete();
+    },
+  });
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);

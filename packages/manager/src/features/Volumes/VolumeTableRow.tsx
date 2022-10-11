@@ -5,7 +5,7 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
@@ -16,8 +16,11 @@ import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 import SupportLink from 'src/components/SupportLink';
+import useNotifications from 'src/hooks/useNotifications';
+import useEvents from 'src/hooks/useEvents';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
 
-export const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles({
   volumePath: {
     width: '35%',
     wordBreak: 'break-all',
@@ -25,9 +28,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
   chipWrapper: {
     alignSelf: 'center',
   },
-}));
+});
 
-export type CombinedProps = ExtendedVolume & ActionHandlers;
+export type CombinedProps = Volume & ActionHandlers;
 
 const progressFromEvent = (e?: Event) => {
   if (!e) {
@@ -71,19 +74,37 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     region,
     hardware_type: hardwareType,
     filesystem_path: filesystemPath,
-    linodeLabel,
+    linode_label,
     linode_id: linodeId,
     linodeStatus,
-    eligibleForUpgradeToNVMe,
-    nvmeUpgradeScheduledByUserImminent,
-    nvmeUpgradeScheduledByUserInProgress,
   } = props;
 
   const history = useHistory();
   const location = useLocation();
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
+  const notifications = useNotifications();
+  const { events } = useEvents();
 
   const formattedRegion = formatRegion(region);
+
+  const eligibleForUpgradeToNVMe = notifications.some(
+    (notification) =>
+      notification.type === 'volume_migration_scheduled' &&
+      notification.entity?.id === id
+  );
+
+  const nvmeUpgradeScheduledByUserImminent = notifications.some(
+    (notification) =>
+      notification.type === 'volume_migration_imminent' &&
+      notification.entity?.id === id
+  );
+
+  const nvmeUpgradeScheduledByUserInProgress = events.some(
+    (event) =>
+      event.action === 'volume_migrate' &&
+      event.entity?.id === id &&
+      event.status === 'started'
+  );
 
   const volumeStatusMap: Record<
     ExtendedVolume['status'],
@@ -197,10 +218,10 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         </Hidden>
       ) : null}
       {isVolumesLanding && (
-        <TableCell data-qa-volume-cell-attachment={linodeLabel}>
+        <TableCell data-qa-volume-cell-attachment={linode_label}>
           {linodeId ? (
             <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
-              {linodeLabel}
+              {linode_label}
             </Link>
           ) : (
             <Typography data-qa-unattached>Unattached</Typography>
@@ -211,7 +232,8 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
         <VolumesActionMenu
           onShowConfig={openForConfig}
           filesystemPath={filesystemPath}
-          linodeLabel={linodeLabel || ''}
+          linodeLabel={linode_label || ''}
+          linodeId={linodeId ?? 0}
           regionID={region}
           volumeId={id}
           volumeTags={tags}
@@ -227,7 +249,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
            * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
            * could sometimes get tagged as "attached" here.
            */
-          attached={Boolean(linodeLabel)}
+          attached={Boolean(linode_label)}
           isVolumesLanding={isVolumesLanding} // Passing this down to govern logic re: showing Attach or Detach in action menu.
           onAttach={handleAttach}
           onDetach={handleDetach}
