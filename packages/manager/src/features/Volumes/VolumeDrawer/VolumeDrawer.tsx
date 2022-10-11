@@ -13,7 +13,7 @@ import {
   viewResizeInstructions,
 } from 'src/store/volumeForm';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
-import CloneVolumeForm from './CloneVolumeForm';
+import { CloneVolumeForm } from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import { EditVolumeForm } from './EditVolumeForm';
 import { modes } from './modes';

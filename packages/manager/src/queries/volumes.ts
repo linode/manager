@@ -1,6 +1,6 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { updateInPaginatedStore } from './base';
+import { queryClient, updateInPaginatedStore } from './base';
 import {
   attachVolume,
   AttachVolumePayload,
@@ -12,6 +12,8 @@ import {
   updateVolume,
   ResizeVolumePayload,
   resizeVolume,
+  cloneVolume,
+  CloneVolumePayload,
 } from '@linode/api-v4';
 
 const queryKey = 'volumes';
@@ -29,6 +31,16 @@ export const useResizeVolumeMutation = () =>
     {
       onSuccess(volume) {
         updateInPaginatedStore<Volume>(queryKey, volume.id, volume);
+      },
+    }
+  );
+
+export const useCloneVolumeMutation = () =>
+  useMutation<Volume, APIError[], { volumeId: number } & CloneVolumePayload>(
+    ({ volumeId, ...data }) => cloneVolume(volumeId, data),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries(`${queryKey}-list`);
       },
     }
   );
