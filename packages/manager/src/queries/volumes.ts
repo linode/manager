@@ -86,11 +86,20 @@ export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
 export const volumeEventsHandler = (event: Event) => {
-  const { action, entity } = event;
+  const { action, status, entity } = event;
 
   switch (action) {
     case 'volume_create':
-      return;
+      switch (status) {
+        case 'scheduled':
+          return;
+        case 'failed':
+        case 'finished':
+        case 'notification':
+        case 'started':
+          queryClient.invalidateQueries(`${queryKey}-list`);
+          return;
+      }
     case 'volume_attach':
       return;
     case 'volume_update':
