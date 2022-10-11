@@ -15,10 +15,10 @@ START_INSERT=5
 
 NOT_INCLUDED_IN_LOG = []
 
-TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e']
+TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e', '[TEST]']
 BREAKING_KEYWORDS = ['break', 'deprecate']
-CHANGED_KEYWORDS = ['update', 'change']
-FIXED_KEYWORDS = ['fix', 'repair', 'bug']
+CHANGED_KEYWORDS = ['update', 'change', '[PERF]', '[CHANGED]']
+FIXED_KEYWORDS = ['fix', 'repair', 'bug', '[FIXED]', '[DOCS]', '[REFACTOR]', '[BUILD]']
 
 def incrementLine():
     global START_INSERT
