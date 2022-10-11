@@ -5,6 +5,10 @@ import sys
 RELEASE=sys.argv[1]
 DATE=sys.argv[2]
 ORIGIN=sys.argv[3]
+try:
+    REPO=sys.argv[4]
+except Exception:
+    REPO=False
 
 START_INSERT=5
 
@@ -49,8 +53,11 @@ def remove_pull_request_id(commit_message):
     regexp = "\(#\d+\)"
     return re.sub(regexp, '', commit_message).strip()
 
-def generateChangeLog(release, date, origin):
-    git_log_command = ["git", "log", "--no-merges", "--oneline", "--pretty='%s'", "{}/master...HEAD".format(origin)]
+def generateChangeLog(release, date, origin, repo=False):
+    git_log_command = ["git", "log", "--no-merges", "--oneline", "--pretty='%s'", "{}/develop...HEAD".format(origin)]
+
+    if (repo):
+        git_log_command.extend(["--", "packages/{}".format(repo)])
 
     commits = subprocess.check_output(git_log_command, subprocess.STDOUT).decode('utf-8').split('\n')
 
@@ -93,7 +100,12 @@ def generateChangeLog(release, date, origin):
 
     generateJQLQuery(jql_query)
 
-    read_change_log=open('CHANGELOG.md', 'r')
+    changelog_file = "CHANGELOG.md"
+
+    if (repo):
+        changelog_file = "packages/{}/CHANGELOG.md".format(repo)
+
+    read_change_log=open(changelog_file, 'r')
     change_log_lines=read_change_log.readlines()
     read_change_log.close()
 
@@ -125,7 +137,7 @@ def generateChangeLog(release, date, origin):
             change_log_lines.insert(incrementLine(),'- %s\n'%(commit))
         change_log_lines.insert(incrementLine(),'\n')
 
-    write_change_log=open('CHANGELOG.md', 'w')
+    write_change_log=open(changelog_file, 'w')
     write_change_log.writelines(change_log_lines)
 
-generateChangeLog(RELEASE, DATE, ORIGIN)
+generateChangeLog(RELEASE, DATE, ORIGIN, REPO)
