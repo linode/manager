@@ -4,7 +4,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { useLinodeQuery } from 'src/queries/linodes';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import {
   useDeleteVolumeMutation,
@@ -13,6 +12,7 @@ import {
 import { useSnackbar } from 'notistack';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import useLinodes from 'src/hooks/useLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -27,8 +27,8 @@ interface Props {
   onClose: () => void;
   volumeLabel: string;
   volumeId: number;
-  linodeLabel: string;
-  linodeId: number;
+  linodeLabel?: string;
+  linodeId?: number;
 }
 
 export const DestructiveVolumeDialog = (props: Props) => {
@@ -46,7 +46,11 @@ export const DestructiveVolumeDialog = (props: Props) => {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data: linode } = useLinodeQuery(linodeId, open);
+  const linodes = useLinodes();
+
+  const linode =
+    linodeId !== undefined ? linodes.linodes.itemsById[linodeId] : undefined;
+
   const {
     mutateAsync: detachVolume,
     error: detachError,
@@ -130,9 +134,8 @@ export const DestructiveVolumeDialog = (props: Props) => {
       actions={actions}
     >
       {error && <Notice error text={error} />}
-
       {/* In 'detach' mode, show a warning if the Linode is powered on. */}
-      {mode === 'detach' && !poweredOff && (
+      {mode === 'detach' && !poweredOff && linode !== undefined && (
         <Typography className={classes.warningCopy}>
           <strong>Warning:</strong> This operation could cause data loss. Please
           power off the Linode first or make sure it isn't currently writing to
@@ -140,12 +143,10 @@ export const DestructiveVolumeDialog = (props: Props) => {
           detaching it could cause your Linode to restart.
         </Typography>
       )}
-      {mode === 'delete' && (
-        <Typography>
-          Are you sure you want to {mode} this Volume
-          {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
-        </Typography>
-      )}
+      <Typography>
+        Are you sure you want to {mode} this Volume
+        {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
+      </Typography>
     </ConfirmationDialog>
   );
 };

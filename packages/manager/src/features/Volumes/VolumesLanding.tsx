@@ -138,15 +138,15 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     mode: 'detach' | 'delete';
     volumeId?: number;
     volumeLabel: string;
-    linodeLabel: string;
-    linodeId: number;
+    linodeLabel?: string;
+    linodeId?: number;
   }>({
     open: false,
     mode: 'detach',
     volumeId: 0,
     volumeLabel: '',
-    linodeId: 0,
-    linodeLabel: '',
+    linodeId: undefined,
+    linodeLabel: undefined,
   });
 
   const handleCloseAttachDrawer = () => {
