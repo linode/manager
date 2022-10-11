@@ -74,11 +74,11 @@ def generateChangeLog(release, date, origin, repo=False):
     for commit in commits:
         commit = remove_pull_request_id(commit)
 
-        jira_key_regex=re.match('M3-\d{4}', commit)
+        jira_key_regex=re.match('M3-\d{4}: ', commit)
         if (jira_key_regex is not None):
             jira_key=jira_key_regex.group(0)
             jql_query.append(jira_key)
-            commit.lstrip(jira_key)
+            commit = commit.lstrip(jira_key)
 
         if(checkKeyWords(TEST_KEYWORDS, commit.lower())):
             NOT_INCLUDED_IN_LOG.append(commit)
