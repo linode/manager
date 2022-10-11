@@ -1,17 +1,17 @@
 /**
- * @file Util functions and mock data that can be used across Managed tests.
+ * @file Util functions and mock data related to Linode Managed.
  */
 
 import { accountSettingsFactory } from 'src/factories/accountSettings';
 import { mockGetAccountSettings } from 'support/intercepts/account';
 import { mockGetUserPreferences } from 'support/intercepts/profile';
 
-// Account object with Managed enabled for mocking API requests.
+/// Account object with Managed enabled for mocking API requests.
 export const managedAccount = accountSettingsFactory.build({
   managed: true,
 });
 
-// Account object without Managed enabled for mocking API requests.
+/// Account object without Managed enabled for mocking API requests.
 export const nonManagedAccount = accountSettingsFactory.build({
   managed: false,
 });

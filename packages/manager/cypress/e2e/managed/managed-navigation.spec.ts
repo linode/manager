@@ -25,7 +25,7 @@ import {
   nonManagedAccount,
   visitUrlWithManagedDisabled,
   visitUrlWithManagedEnabled,
-} from './managed-utils';
+} from 'support/api/managed';
 
 // Array of URLs to all Managed-related pages.
 const managedURLs = [
