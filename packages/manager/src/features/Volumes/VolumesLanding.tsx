@@ -24,7 +24,6 @@ import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVolumesQuery } from 'src/queries/volumes';
@@ -141,7 +140,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     volumeLabel: string;
     linodeLabel: string;
     linodeId: number;
-    error?: string;
   }>({
     open: false,
     mode: 'detach',
@@ -149,7 +147,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     volumeLabel: '',
     linodeId: 0,
     linodeLabel: '',
-    error: '',
   });
 
   const handleCloseAttachDrawer = () => {
@@ -215,28 +212,6 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       ...values,
       open: false,
     }));
-  };
-
-  const deleteVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { deleteVolume } = props;
-
-    if (!volumeId) {
-      return;
-    }
-
-    deleteVolume({ volumeId })
-      .then(() => {
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
-            .reason,
-        }));
-      });
   };
 
   if (isLoading) {
@@ -370,14 +345,12 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       />
       <DestructiveVolumeDialog
         open={destructiveDialog.open}
-        error={destructiveDialog.error}
         volumeLabel={destructiveDialog.volumeLabel}
         linodeLabel={destructiveDialog.linodeLabel}
         linodeId={destructiveDialog.linodeId}
         volumeId={destructiveDialog.volumeId ?? 0}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
-        onDelete={deleteVolume}
       />
     </>
   );

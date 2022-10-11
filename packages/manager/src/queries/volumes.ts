@@ -14,6 +14,9 @@ import {
   resizeVolume,
   cloneVolume,
   CloneVolumePayload,
+  deleteVolume,
+  VolumeRequestPayload,
+  createVolume,
 } from '@linode/api-v4';
 
 const queryKey = 'volumes';
@@ -44,6 +47,20 @@ export const useCloneVolumeMutation = () =>
       },
     }
   );
+
+export const useDeleteVolumeMutation = () =>
+  useMutation<{}, APIError[], { id: number }>(({ id }) => deleteVolume(id), {
+    onSuccess() {
+      queryClient.invalidateQueries(`${queryKey}-list`);
+    },
+  });
+
+export const useCreateVolumeMutation = () =>
+  useMutation<Volume, APIError[], VolumeRequestPayload>(createVolume, {
+    onSuccess() {
+      queryClient.invalidateQueries(`${queryKey}-list`);
+    },
+  });
 
 export const useUpdateVolumeMutation = () =>
   useMutation<Volume, APIError[], { volumeId: number } & UpdateVolumeRequest>(

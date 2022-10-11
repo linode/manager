@@ -6,9 +6,11 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { useLinodeQuery } from 'src/queries/linodes';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { useDetachVolumeMutation } from 'src/queries/volumes';
+import {
+  useDeleteVolumeMutation,
+  useDetachVolumeMutation,
+} from 'src/queries/volumes';
 import { useSnackbar } from 'notistack';
-import { APIError } from '@linode/api-v4/lib/types';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -22,9 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   open: boolean;
   mode: 'detach' | 'delete';
-  error?: string;
   onClose: () => void;
-  onDelete: () => void;
   volumeLabel: string;
   volumeId: number;
   linodeLabel: string;
@@ -35,7 +35,6 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const classes = useStyles();
 
   const {
-    error,
     volumeLabel: label,
     volumeId,
     linodeId,
@@ -48,33 +47,39 @@ export const DestructiveVolumeDialog = (props: Props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: linode } = useLinodeQuery(linodeId, open);
-
-  const { mutateAsync: detachVolume } = useDetachVolumeMutation();
+  const {
+    mutateAsync: detachVolume,
+    error: detachError,
+    isLoading: detachLoading,
+  } = useDetachVolumeMutation();
+  const {
+    mutateAsync: deleteVolume,
+    error: deleteError,
+    isLoading: deleteLoading,
+  } = useDeleteVolumeMutation();
 
   const onDetach = () => {
-    detachVolume({ id: volumeId })
-      .then(() => {
-        onClose();
-        resetEventsPolling();
-        enqueueSnackbar(`Volume detachment started`, {
-          variant: 'info',
-        });
-      })
-      .catch((error: APIError[]) => {
-        enqueueSnackbar(
-          getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0].reason,
-          {
-            variant: 'error',
-          }
-        );
+    detachVolume({ id: volumeId }).then(() => {
+      onClose();
+      resetEventsPolling();
+      enqueueSnackbar(`Volume detachment started`, {
+        variant: 'info',
       });
+    });
+  };
+
+  const onDelete = () => {
+    deleteVolume({ id: volumeId }).then(() => {
+      onClose();
+      resetEventsPolling();
+    });
   };
 
   const poweredOff = linode?.status === 'offline';
 
   const method = {
     detach: onDetach,
-    delete: props.onDelete,
+    delete: onDelete,
   }[props.mode];
 
   const action = {
@@ -82,12 +87,31 @@ export const DestructiveVolumeDialog = (props: Props) => {
     delete: 'Delete',
   }[props.mode];
 
+  const loading = {
+    detach: detachLoading,
+    delete: deleteLoading,
+  }[props.mode];
+
+  const error = {
+    detach: detachError
+      ? getAPIErrorOrDefault(detachError, 'Unable to detach volume.')[0].reason
+      : undefined,
+    delete: deleteError
+      ? getAPIErrorOrDefault(deleteError, 'Unable to detach volume.')[0].reason
+      : undefined,
+  }[props.mode];
+
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
         Cancel
       </Button>
-      <Button buttonType="primary" onClick={method} data-qa-confirm>
+      <Button
+        buttonType="primary"
+        onClick={method}
+        loading={loading}
+        data-qa-confirm
+      >
         {action} Volume
       </Button>
     </ActionsPanel>

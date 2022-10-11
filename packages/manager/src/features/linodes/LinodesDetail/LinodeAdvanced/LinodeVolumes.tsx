@@ -18,7 +18,6 @@ import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { ExtendedVolume } from 'src/features/Volumes/types';
@@ -35,7 +34,6 @@ import {
   openForResize,
   Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -165,16 +163,12 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     volumeId?: number;
     volumeLabel: string;
     linodeLabel: string;
-    error?: string;
-    poweredOff?: boolean;
   }>({
     open: false,
     mode: 'detach',
     volumeId: 0,
     volumeLabel: '',
     linodeLabel: '',
-    error: '',
-    poweredOff: false,
   });
 
   const handleCloseAttachDrawer = () => {
@@ -229,28 +223,6 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       ...destructiveDialog,
       open: false,
     }));
-  };
-
-  const deleteVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { deleteVolume } = props;
-
-    if (!volumeId) {
-      return;
-    }
-
-    deleteVolume({ volumeId })
-      .then(() => {
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
-            .reason,
-        }));
-      });
   };
 
   const openCreateVolumeDrawer = (e: any) => {
@@ -332,14 +304,12 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       />
       <DestructiveVolumeDialog
         open={destructiveDialog.open}
-        error={destructiveDialog.error}
         volumeLabel={destructiveDialog.volumeLabel}
         linodeLabel={destructiveDialog.linodeLabel}
         linodeId={linodeId ?? 0}
         volumeId={destructiveDialog.volumeId ?? 0}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
-        onDelete={deleteVolume}
       />
     </div>
   );
