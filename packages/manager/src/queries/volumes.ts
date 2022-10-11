@@ -8,6 +8,8 @@ import {
   getVolumes,
   Volume,
   Event,
+  UpdateVolumeRequest,
+  updateVolume,
 } from '@linode/api-v4';
 
 const queryKey = 'volumes';
@@ -17,6 +19,16 @@ export const useVolumesQuery = (params: any, filters: any) =>
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
     { keepPreviousData: true }
+  );
+
+export const useUpdateVolumeMutation = () =>
+  useMutation<Volume, APIError[], { volumeId: number } & UpdateVolumeRequest>(
+    ({ volumeId, ...data }) => updateVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(queryKey, volume.id, volume);
+      },
+    }
   );
 
 export const useAttachVolumeMutation = () =>
