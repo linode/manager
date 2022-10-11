@@ -10,6 +10,8 @@ import {
   Event,
   UpdateVolumeRequest,
   updateVolume,
+  ResizeVolumePayload,
+  resizeVolume,
 } from '@linode/api-v4';
 
 const queryKey = 'volumes';
@@ -19,6 +21,16 @@ export const useVolumesQuery = (params: any, filters: any) =>
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
     { keepPreviousData: true }
+  );
+
+export const useResizeVolumeMutation = () =>
+  useMutation<Volume, APIError[], { volumeId: number } & ResizeVolumePayload>(
+    ({ volumeId, ...data }) => resizeVolume(volumeId, data),
+    {
+      onSuccess(volume) {
+        updateInPaginatedStore<Volume>(queryKey, volume.id, volume);
+      },
+    }
   );
 
 export const useUpdateVolumeMutation = () =>
@@ -55,12 +67,17 @@ export const volumeEventsHandler = (event: Event) => {
     case 'volume_update':
       return;
     case 'volume_detach':
+      // This means a detach was successful. Remove associated Linode.
       updateInPaginatedStore<Volume>(queryKey, entity!.id, {
         linode_id: null,
         linode_label: null,
       });
       return;
     case 'volume_resize':
+      // This means a resize was successful. Transition from 'resizing' to 'active'.
+      updateInPaginatedStore<Volume>(queryKey, entity!.id, {
+        status: 'active',
+      });
       return;
     case 'volume_clone':
       return;

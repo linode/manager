@@ -17,7 +17,7 @@ import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
 import { EditVolumeForm } from './EditVolumeForm';
 import { modes } from './modes';
-import ResizeVolumeForm from './ResizeVolumeForm';
+import { ResizeVolumeForm } from './ResizeVolumeForm';
 import ResizeVolumesInstruction from './ResizeVolumesInstruction';
 import VolumeConfigForm from './VolumeConfigForm';
 
