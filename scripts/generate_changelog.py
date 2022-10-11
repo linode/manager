@@ -1,15 +1,16 @@
 import subprocess
 import re
 import sys
+import datetime
 
 RELEASE=sys.argv[1]
-DATE=sys.argv[2]
-ORIGIN=sys.argv[3]
+ORIGIN=sys.argv[2]
 try:
-    REPO=sys.argv[4]
+    REPO=sys.argv[3]
 except Exception:
     REPO=False
 
+DATE = datetime.datetime.now().strftime('%Y-%m-%d')
 START_INSERT=5
 
 NOT_INCLUDED_IN_LOG = []
