@@ -1,10 +1,13 @@
 import * as Factory from 'factory.ts';
 import {
-  ManagedContact,
   DataSeries,
+  ManagedContact,
   ManagedCredential,
   ManagedIssue,
+  ManagedLinodeSetting,
   ManagedServiceMonitor,
+  ManagedSSHPubKey,
+  ManagedSSHSetting,
   ManagedStats,
 } from '@linode/api-v4/lib/managed/types';
 
@@ -23,7 +26,7 @@ export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
 export const credentialFactory = Factory.Sync.makeFactory<ManagedCredential>({
   id: Factory.each((i) => i),
   last_decrypted: '2019-07-01',
-  label: 'credential-1',
+  label: Factory.each((i) => `Credential ${i}`),
 });
 
 export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
@@ -37,7 +40,9 @@ export const monitorFactory = Factory.Sync.makeFactory<ManagedServiceMonitor>({
   service_type: 'url',
   notes: '',
   id: Factory.each((i) => i),
-  credentials: credentialFactory.buildList(3),
+  credentials: credentialFactory
+    .buildList(3)
+    .map((credential) => credential.id),
   address: 'http://www.example.com',
   body: '',
 });
@@ -72,3 +77,28 @@ export const managedIssueFactory = Factory.Sync.makeFactory<ManagedIssue>({
   id: 823,
   services: [],
 });
+
+export const managedSSHSettingFactory = Factory.Sync.makeFactory<ManagedSSHSetting>(
+  {
+    access: true,
+    user: 'root',
+    ip: 'any',
+    port: 22,
+  }
+);
+
+export const managedLinodeSettingFactory = Factory.Sync.makeFactory<ManagedLinodeSetting>(
+  {
+    id: Factory.each((i) => i),
+    label: Factory.each((i) => `Managed Linode ${i}`),
+    group: 'linodes',
+    ssh: managedSSHSettingFactory.build(),
+  }
+);
+
+export const managedSSHPubKeyFactory = Factory.Sync.makeFactory<ManagedSSHPubKey>(
+  {
+    ssh_key:
+      'ssh-rsa de83d4b20493ff0e42ac4c321308da98== managedservices@linode',
+  }
+);
