@@ -39,7 +39,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
   const [selectedLinode, setSelectedLinode] = React.useState<number>(-1);
   const [selectedConfig, setSelectedConfig] = React.useState<string>();
 
-  const { data } = useAllLinodeConfigsQuery(
+  const { data, isLoading: configsLoading } = useAllLinodeConfigsQuery(
     selectedLinode,
     selectedLinode !== -1
   );
@@ -154,6 +154,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
           disabled={disabled || readOnly || selectedLinode === -1}
           label="Config"
           isClearable={false}
+          isLoading={configsLoading}
         />
         {Boolean(configError) && (
           <FormHelperText error>{configError}</FormHelperText>
