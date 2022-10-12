@@ -9,8 +9,12 @@ import {
   ManagedServiceMonitor,
   ManagedServicePayload,
   ManagedStats,
+  ManagedLinodeSetting,
 } from '@linode/api-v4/types';
-import { managedStatsFactory } from 'src/factories/managed';
+import {
+  managedStatsFactory,
+  managedSSHPubKeyFactory,
+} from 'src/factories/managed';
 import { makeResponse } from 'support/util/response';
 import { makeErrorResponse } from 'support/util/errors';
 import { paginateResponse } from 'support/util/paginate';
@@ -192,4 +196,63 @@ export const mockGetStats = (
 ): Cypress.Chainable<null> => {
   const mockStats = stats ? stats : managedStatsFactory.build();
   return cy.intercept('GET', '*/managed/stats*', mockStats);
+};
+
+/**
+ * Intercepts GET request to fetch Managed SSH public key and mocks response.
+ *
+ * @param publicKey - Optional public key string to use for mocked value.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetSshPublicKey = (
+  publicKey?: string
+): Cypress.Chainable<null> => {
+  const publicKeyObject = publicKey
+    ? managedSSHPubKeyFactory.build({
+        ssh_key: publicKey,
+      })
+    : managedSSHPubKeyFactory.build();
+
+  return cy.intercept(
+    'GET',
+    '*/managed/credentials/sshkey',
+    makeResponse(publicKeyObject)
+  );
+};
+
+/**
+ * Intercepts GET request to fetch Managed Linode settings and mocks response.
+ *
+ * @param linodeSettings - Array of Linode settings to use for mock.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetLinodeSettings = (
+  linodeSettings: ManagedLinodeSetting[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    '*/managed/linode-settings*',
+    paginateResponse(linodeSettings)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a managed Linode's settings and mocks response.
+ *
+ * @param id - Linode ID whose settings update request will be mocked.
+ * @param linodeSettings - Mock Linode settings with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateLinodeSettings = (
+  id: number,
+  linodeSettings: ManagedLinodeSetting
+) => {
+  return cy.intercept(
+    'PUT',
+    `*/managed/linode-settings/${id}`,
+    makeResponse(linodeSettings)
+  );
 };
