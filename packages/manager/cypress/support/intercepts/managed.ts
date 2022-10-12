@@ -40,6 +40,36 @@ export const mockGetServiceMonitors = (
 };
 
 /**
+ * Intercepts POST requests to create a Managed service monitor and mocks response.
+ *
+ * @param serviceMonitor - Service monitor payload with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateServiceMonitor = (
+  serviceMonitor: ManagedServicePayload
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    '*/managed/services',
+    makeResponse(serviceMonitor)
+  );
+};
+
+/**
+ * Intercepts DELETE request to delete a Managed service monitor and mocks response.
+ *
+ * @param serviceId - ID of service monitor whose DELETE request should be mocked.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteServiceMonitor = (
+  serviceId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', `*/managed/services/${serviceId}`, {});
+};
+
+/**
  * Intercepts PUT requests to update Managed service monitors and mocks response.
  *
  * @param serviceId - ID of the monitor whose update request should be mocked.
