@@ -11,6 +11,7 @@ import {
   ManagedStats,
 } from '@linode/api-v4/types';
 import { managedStatsFactory } from 'src/factories/managed';
+import { makeResponse } from 'support/util/response';
 import { makeErrorResponse } from 'support/util/errors';
 import { paginateResponse } from 'support/util/paginate';
 
@@ -38,11 +39,69 @@ export const mockGetServiceMonitors = (
   );
 };
 
+/**
+ * Intercepts PUT requests to update Managed service monitors and mocks response.
+ *
+ * @param serviceId - ID of the monitor whose update request should be mocked.
+ * @param serviceMonitor - Service monitor payload with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
 export const mockUpdateServiceMonitor = (
   serviceId: number,
   serviceMonitor: ManagedServicePayload
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', `*/managed/services/${serviceId}`, serviceMonitor);
+  return cy.intercept(
+    'PUT',
+    `*/managed/services/${serviceId}`,
+    makeResponse(serviceMonitor)
+  );
+};
+
+/**
+ * Intercepts POST request to disable a Managed service monitor and mocks response.
+ *
+ * @param serviceId - ID of the monitor whose disable request should be mocked.
+ * @param serviceMonitor - Service monitor payload with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDisableServiceMonitor = (
+  serviceId: number,
+  serviceMonitor: ManagedServicePayload
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    `*/managed/services/${serviceId}/disable`,
+    makeResponse({
+      ...serviceMonitor,
+      status: 'disabled',
+    })
+  );
+};
+
+/**
+ * Intercepts POST request to enable a Managed service monitor and mocks response.
+ *
+ * @param serviceId - ID of the monitor whose enable request should be mocked.
+ * @param serviceMonitor - Service monitor payload with which to mock response.
+ * @param serviceMonitorStatus - Optional status for monitor after being enabled; default is `'ok'`.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockEnableServiceMonitor = (
+  serviceId: number,
+  serviceMonitor: ManagedServicePayload,
+  serviceMonitorStatus: string = 'ok'
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    `*/managed/services/${serviceId}/enable`,
+    makeResponse({
+      ...serviceMonitor,
+      status: serviceMonitorStatus,
+    })
+  );
 };
 
 /**
