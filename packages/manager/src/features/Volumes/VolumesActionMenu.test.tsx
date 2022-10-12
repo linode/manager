@@ -1,9 +1,5 @@
 import * as React from 'react';
-import {
-  includesActions,
-  renderWithTheme,
-  wrapWithTheme,
-} from 'src/utilities/testHelpers';
+import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { CombinedProps, VolumesActionMenu } from './VolumesActionMenu';
 
@@ -58,22 +54,10 @@ describe('Volume action menu', () => {
     expect(queryByText('Attach')).toBeNull();
   });
 
-  it('should include Delete if the Volume is not attached or the Linode to which it is attached is powered off', () => {
-    const { queryByText, rerender } = renderWithTheme(
+  it('should include Delete', () => {
+    const { queryByText } = renderWithTheme(
       <VolumesActionMenu {...props} attached={false} poweredOff={true} />
     );
     includesActions(['Delete'], queryByText);
-    rerender(
-      wrapWithTheme(
-        <VolumesActionMenu {...props} attached={true} poweredOff={true} />
-      )
-    );
-    includesActions(['Delete'], queryByText);
-    rerender(
-      wrapWithTheme(
-        <VolumesActionMenu {...props} attached={true} poweredOff={false} />
-      )
-    );
-    expect(queryByText('Delete')).toBeNull();
   });
 });
