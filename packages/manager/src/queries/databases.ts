@@ -71,7 +71,7 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
             }
 
             if (oldEntity.label !== data.label) {
-              updateInPaginatedStore<Database>(queryKey, id, {
+              updateInPaginatedStore<Database>(`${queryKey}-list`, id, {
                 label: data.label,
               });
             }
@@ -208,7 +208,7 @@ const updateStoreForDatabase = (
   data: Partial<Database> & Partial<DatabaseInstance>
 ) => {
   updateDatabaseStore(id, data);
-  updateInPaginatedStore<Database>(queryKey, id, data);
+  updateInPaginatedStore<Database>(`${queryKey}-list`, id, data);
 };
 
 const updateDatabaseStore = (id: number, newData: Partial<Database>) => {

@@ -201,13 +201,19 @@ export const itemInListDeletionHandler = <
   };
 };
 
+/**
+ * Use this function when you wish to update one entity within paginated React Query data
+ * @param queryKey The React Query queryKey prefix of paginated data (without the filters and page)
+ * @param id the id of the entity of you want to update within this paginated data
+ * @param newData the new data for the entity
+ */
 export const updateInPaginatedStore = <T extends { id: number | string }>(
   queryKey: string,
   id: number,
   newData: Partial<T>
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(
-    `${queryKey}-list`,
+    queryKey,
     (oldData) => {
       if (oldData === undefined) {
         return undefined;

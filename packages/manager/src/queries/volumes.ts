@@ -33,7 +33,7 @@ export const useResizeVolumeMutation = () =>
     ({ volumeId, ...data }) => resizeVolume(volumeId, data),
     {
       onSuccess(volume) {
-        updateInPaginatedStore<Volume>(queryKey, volume.id, volume);
+        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
       },
     }
   );
@@ -67,7 +67,7 @@ export const useUpdateVolumeMutation = () =>
     ({ volumeId, ...data }) => updateVolume(volumeId, data),
     {
       onSuccess(volume) {
-        updateInPaginatedStore<Volume>(queryKey, volume.id, volume);
+        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
       },
     }
   );
@@ -77,7 +77,7 @@ export const useAttachVolumeMutation = () =>
     ({ volumeId, ...data }) => attachVolume(volumeId, data),
     {
       onSuccess(volume) {
-        updateInPaginatedStore<Volume>(queryKey, volume.id, volume);
+        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
       },
     }
   );
@@ -106,14 +106,14 @@ export const volumeEventsHandler = (event: Event) => {
       return;
     case 'volume_detach':
       // This means a detach was successful. Remove associated Linode.
-      updateInPaginatedStore<Volume>(queryKey, entity!.id, {
+      updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
         linode_id: null,
         linode_label: null,
       });
       return;
     case 'volume_resize':
       // This means a resize was successful. Transition from 'resizing' to 'active'.
-      updateInPaginatedStore<Volume>(queryKey, entity!.id, {
+      updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
         status: 'active',
       });
       return;
