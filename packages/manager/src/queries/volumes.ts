@@ -101,16 +101,38 @@ export const volumeEventsHandler = (event: Event) => {
           return;
       }
     case 'volume_attach':
-      return;
+      switch (status) {
+        case 'scheduled':
+        case 'failed':
+        case 'notification':
+        case 'started':
+        case 'finished':
+          return;
+        case 'failed':
+          // This means a attach was unsuccessful. Remove associated Linode.
+          updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
+            linode_id: null,
+            linode_label: null,
+          });
+          return;
+      }
     case 'volume_update':
       return;
     case 'volume_detach':
-      // This means a detach was successful. Remove associated Linode.
-      updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-        linode_id: null,
-        linode_label: null,
-      });
-      return;
+      switch (status) {
+        case 'scheduled':
+        case 'failed':
+        case 'notification':
+        case 'started':
+          return;
+        case 'finished':
+          // This means a detach was successful. Remove associated Linode.
+          updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
+            linode_id: null,
+            linode_label: null,
+          });
+          return;
+      }
     case 'volume_resize':
       // This means a resize was successful. Transition from 'resizing' to 'active'.
       updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
