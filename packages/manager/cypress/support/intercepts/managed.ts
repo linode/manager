@@ -250,6 +250,45 @@ export const mockGetContacts = (
 };
 
 /**
+ * Intercepts POST request to create a Managed contact and mocks response.
+ *
+ * @param contact - Contact mock with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateContact = (
+  contact: ManagedContact
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/managed/contacts', makeResponse(contact));
+};
+
+/**
+ * Intercepts PUT request to update a Managed contact and mocks response.
+ *
+ * @param id - ID of contact being updated.
+ * @param contact - Contact mock with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateContact = (
+  id: number,
+  contact: ManagedContact
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', `*/managed/contacts/${id}`, makeResponse(contact));
+};
+
+/**
+ * Intercepts DELETE request to delete a Managed contact and mocks response.
+ *
+ * @param id - ID of contact whose deletion is being mocked.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteContact = (id: number): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', `*/managed/contacts/${id}`, makeResponse({}));
+};
+
+/**
  * Intercepts GET request to fetch Managed stats and mocks response.
  *
  * If no stats are provided for mocking, the default factory data will be used
