@@ -1,16 +1,8 @@
 import * as React from 'react';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { CombinedProps, VolumesActionMenu } from './VolumesActionMenu';
+import { Props, VolumesActionMenu } from './VolumesActionMenu';
 
-const props: CombinedProps = {
-  onAttach: jest.fn(),
-  onShowConfig: jest.fn(),
-  onClone: jest.fn(),
-  onDelete: jest.fn(),
-  onDetach: jest.fn(),
-  onEdit: jest.fn(),
-  onResize: jest.fn(),
+const props: Props = {
   label: '',
   linodeLabel: '',
   linodeId: 0,
@@ -29,7 +21,6 @@ const props: CombinedProps = {
   handleAttach: jest.fn(),
   handleDelete: jest.fn(),
   handleDetach: jest.fn(),
-  ...reactRouterProps,
 };
 
 describe('Volume action menu', () => {
@@ -56,7 +47,7 @@ describe('Volume action menu', () => {
 
   it('should include Delete', () => {
     const { queryByText } = renderWithTheme(
-      <VolumesActionMenu {...props} attached={false} poweredOff={true} />
+      <VolumesActionMenu {...props} attached={false} />
     );
     includesActions(['Delete'], queryByText);
   });

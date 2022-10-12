@@ -30,8 +30,6 @@ const props: CombinedProps = {
   hardware_type: 'hdd',
   linode_id: 0,
   linode_label: 'linode-0',
-  isUpdating: false,
-  isVolumesLanding: true,
   openForEdit: jest.fn(),
   openForResize: jest.fn(),
   openForClone: jest.fn(),
