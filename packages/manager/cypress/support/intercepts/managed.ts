@@ -169,6 +169,74 @@ export const mockGetCredentials = (
 };
 
 /**
+ * Intercepts POST request to create a Managed credential and mocks response.
+ *
+ * @param credential - Credential mock with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreateCredential = (
+  credential: ManagedCredential
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    '*/managed/credentials',
+    makeResponse(credential)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a Managed credential and mocks response.
+ *
+ * @param id - ID of credential being updated.
+ * @param credential - Credential mock with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateCredential = (
+  id: number,
+  credential: ManagedCredential
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    `*/managed/credentials/${id}`,
+    makeResponse(credential)
+  );
+};
+
+/**
+ * Intercepts POST request to update a Managed credential username/password pair and mocks response.
+ *
+ * @param id - ID of credential being updated.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateCredentialUsernamePassword = (
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    `*/managed/credentials/${id}/update`,
+    makeResponse({})
+  );
+};
+
+/**
+ * Intercepts POST request to delete a Managed credential and mocks response.
+ *
+ * @param id - ID of the credential whose deletion is being mocked.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockDeleteCredential = (id: number): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    `*/managed/credentials/${id}/revoke`,
+    makeResponse({})
+  );
+};
+
+/**
  * Intercepts GET request to fetch Managed contacts and mocks response.
  *
  * @param contacts - Contacts with which to respond.
