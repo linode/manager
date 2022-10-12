@@ -8,6 +8,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import NodeTable from './NodeTable';
+import Tooltip from 'src/components/core/Tooltip';
 
 interface Props {
   poolId: number;
@@ -19,6 +20,7 @@ interface Props {
   openDeletePoolDialog: (poolId: number) => void;
   openRecycleAllNodesDialog: (poolId: number) => void;
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
+  isOnlyNodePool: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -53,6 +55,7 @@ const NodePool: React.FC<Props> = (props) => {
     nodes,
     typeLabel,
     poolId,
+    isOnlyNodePool,
   } = props;
 
   const classes = useStyles();
@@ -95,12 +98,22 @@ const NodePool: React.FC<Props> = (props) => {
           >
             Recycle Pool Nodes
           </Button>
-          <Button
-            buttonType="secondary"
-            onClick={() => openDeletePoolDialog(poolId)}
+          <Tooltip
+            title="Clusters must contain at least one node pool."
+            disableFocusListener={!isOnlyNodePool}
+            disableHoverListener={!isOnlyNodePool}
+            disableTouchListener={!isOnlyNodePool}
           >
-            Delete Pool
-          </Button>
+            <div>
+              <Button
+                buttonType="secondary"
+                disabled={isOnlyNodePool}
+                onClick={() => openDeletePoolDialog(poolId)}
+              >
+                Delete Pool
+              </Button>
+            </div>
+          </Tooltip>
         </Grid>
       </Grid>
       <NodeTable
