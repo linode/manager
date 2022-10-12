@@ -122,9 +122,9 @@ export const volumeEventsHandler = (event: Event) => {
       switch (status) {
         case 'scheduled':
         case 'failed':
-        case 'notification':
         case 'started':
           return;
+        case 'notification':
         case 'finished':
           // This means a detach was successful. Remove associated Linode.
           updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
