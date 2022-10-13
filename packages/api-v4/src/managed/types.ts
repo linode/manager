@@ -7,7 +7,7 @@ export interface ManagedServiceMonitor {
   service_type: ServiceType;
   timeout: number;
   region: string | null;
-  credentials: ManagedCredential[]; // @todo
+  credentials: number[]; // @todo
   address: string;
   body: string;
   notes: string;
@@ -116,6 +116,7 @@ export interface ManagedStatsData {
   net_out: DataSeries[];
   swap: DataSeries[];
 }
+
 export interface ManagedStats {
   data: ManagedStatsData;
 }
