@@ -13,6 +13,7 @@ import {
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  credentialFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
   databaseEngineFactory,
@@ -928,6 +929,25 @@ export const handlers = [
       )
     );
   }),
+  rest.post('*/managed/services', (req, res, ctx) => {
+    const monitor = monitorFactory.build(req.body as any);
+    return res(ctx.json(monitor));
+  }),
+  rest.put('*/managed/services/:id', (req, res, ctx) => {
+    const payload = req.body as any;
+
+    return res(
+      ctx.json(
+        monitorFactory.build({
+          ...payload,
+          id: Number(req.params.id),
+        })
+      )
+    );
+  }),
+  rest.delete('*/managed/services/:id', (_req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.get('*managed/stats', (req, res, ctx) => {
     const stats = managedStatsFactory.build();
     return res(ctx.json(stats));
@@ -944,6 +964,9 @@ export const handlers = [
       created: DateTime.now().minus({ days: 2 }).toISO(),
     });
     return res(ctx.json(makeResourcePage([openIssue, closedIssue])));
+  }),
+  rest.get('*managed/credentials', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(credentialFactory.buildList(5))));
   }),
   rest.get('*stackscripts/', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));
