@@ -243,7 +243,7 @@ describe('Managed Monitors tab', () => {
 
     ui.actionMenuItem.findByTitle('Delete').click();
 
-    // Fill out type-to-confirm to initiate deletion request.
+    // Fill out and submit type-to-confirm.
     ui.dialog
       .findByTitle(`Delete Monitor ${monitorLabel}?`)
       .should('be.visible')

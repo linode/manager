@@ -67,7 +67,6 @@ describe('Managed SSH Access tab', () => {
     mockGetLinodeSettings([]).as('getLinodeSettings');
     visitUrlWithManagedEnabled('/managed/ssh-access');
     cy.wait(['@getSshPublicKey', '@getLinodeSettings']);
-
     cy.findByText(noLinodesMessage).should('be.visible');
   });
 
