@@ -13,6 +13,7 @@ import {
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  contactFactory,
   credentialFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
@@ -43,6 +44,8 @@ import {
   longviewSubscriptionFactory,
   maintenanceResponseFactory,
   makeObjectsPage,
+  managedLinodeSettingFactory,
+  managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
   nodeBalancerConfigFactory,
@@ -965,8 +968,46 @@ export const handlers = [
     });
     return res(ctx.json(makeResourcePage([openIssue, closedIssue])));
   }),
+  rest.get('*managed/linode-settings', (req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(managedLinodeSettingFactory.buildList(5)))
+    );
+  }),
+  rest.get('*managed/credentials/sshkey', (req, res, ctx) => {
+    return res(ctx.json(managedSSHPubKeyFactory.build()));
+  }),
   rest.get('*managed/credentials', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(credentialFactory.buildList(5))));
+  }),
+  rest.post('*managed/credentials', (req, res, ctx) => {
+    const response = credentialFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
+  rest.post('*managed/credentials/:id/revoke', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*managed/contacts', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(contactFactory.buildList(5))));
+  }),
+  rest.delete('*managed/contacts/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.put('*managed/contacts/:id', (req, res, ctx) => {
+    const payload = {
+      ...(req.body as any),
+      id: Number(req.params.id),
+    };
+
+    return res(ctx.json(payload));
+  }),
+  rest.post('*managed/contacts', (req, res, ctx) => {
+    const response = contactFactory.build({
+      ...(req.body as any),
+    });
+    return res(ctx.json(response));
   }),
   rest.get('*stackscripts/', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));

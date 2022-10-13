@@ -12,10 +12,10 @@ import {
 } from '@linode/api-v4/lib/managed/types';
 
 export const contactFactory = Factory.Sync.makeFactory<ManagedContact>({
-  email: 'john.doe@example.com',
+  email: Factory.each((i) => `john.doe.${i}@example.com`),
   group: 'on-call',
-  id: Factory.each((i) => i),
-  name: 'John Doe',
+  id: Factory.each((i) => i + 100),
+  name: Factory.each((i) => `John Doe ${i}`),
   phone: {
     primary: '555-555-5555',
     secondary: null,
@@ -99,6 +99,6 @@ export const managedLinodeSettingFactory = Factory.Sync.makeFactory<ManagedLinod
 export const managedSSHPubKeyFactory = Factory.Sync.makeFactory<ManagedSSHPubKey>(
   {
     ssh_key:
-      'ssh-rsa de83d4b20493ff0e42ac4c321308da98== managedservices@linode',
+      'ssh-rsa MOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEYMOCKEDSSHKEY managedservices@linode',
   }
 );
