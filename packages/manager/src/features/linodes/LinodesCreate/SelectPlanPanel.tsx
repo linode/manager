@@ -420,8 +420,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
           return (
             <>
               <Typography data-qa-prodedi className={classes.copy}>
-                Pro Dedicated CPU instances are for very large plans. They only
-                have AMD 2nd generation processors or above.
+                Pro Dedicated CPU instances are for very demanding workloads.
+                They only have AMD 2nd generation processors or newer.
               </Typography>
               {renderPlanContainer(proDedicated)}
             </>
