@@ -67,6 +67,7 @@ import {
   volumeFactory,
   managedIssueFactory,
   linodeTypeFactory,
+  dedicatedTypeFactory,
   proDedicatedTypeFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
@@ -334,9 +335,7 @@ export const handlers = [
   }),
   rest.get('*/linode/types', (req, res, ctx) => {
     const standardTypes = linodeTypeFactory.buildList(7);
-    const dedicatedTypes = linodeTypeFactory.buildList(7, {
-      class: 'dedicated',
-    });
+    const dedicatedTypes = dedicatedTypeFactory.buildList(7);
     const proDedicatedType = proDedicatedTypeFactory.build();
     return res(
       ctx.json(

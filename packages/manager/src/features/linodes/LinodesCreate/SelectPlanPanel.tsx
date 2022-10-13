@@ -142,7 +142,7 @@ const getProDedicated = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /prodedicated/.test(t.class));
 
 const getDedicated = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /dedicated/.test(t.class));
+  types.filter((t: PlanSelectionType) => /^dedicated/.test(t.class));
 
 const getGPU = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /gpu/.test(t.class));
@@ -219,7 +219,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
               !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
             }
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-             className={classNames(classes.focusedRow, {
+            className={classNames(classes.focusedRow, {
               [classes.disabledRow]:
                 isSamePlan || planTooSmall || isDisabledClass,
             })}

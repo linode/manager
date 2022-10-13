@@ -155,10 +155,35 @@ export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   successor: null,
 });
 
-export const proDedicatedTypeFactory = linodeTypeFactory.extend({
+export const dedicatedTypeFactory = linodeTypeFactory.extend({
+  id: Factory.each((i) => `g6-dedicated-${i}`),
+  label: Factory.each((i) => `Dedicated 2${i}GB`),
+  class: 'dedicated',
+});
+
+export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
   id: Factory.each((i) => `g6-prodedicated-${i}`),
   label: Factory.each((i) => `Pro Dedicated 2${i}GB`),
   class: 'prodedicated',
+  price: {
+    hourly: 2.88,
+    monthly: 1920.0,
+  },
+  addons: {
+    backups: {
+      price: {
+        hourly: null,
+        monthly: null,
+      },
+    },
+  },
+  memory: 262144,
+  disk: 5120000,
+  transfer: 11000,
+  vcpus: 56,
+  gpus: 0,
+  network_out: 11000,
+  successor: null,
 });
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
