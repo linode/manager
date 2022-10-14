@@ -7,7 +7,7 @@ interface Props {
   errors: APIError[];
 }
 
-export const SupportError: React.FC<Props> = (props) => {
+export const AccountLimitError: React.FC<Props> = (props) => {
   const { errors } = props;
   const [reason] = errors[0].reason.split(/open a support ticket\./i);
 
