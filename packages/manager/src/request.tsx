@@ -3,7 +3,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import * as React from 'react';
 import { AccountActivationError } from 'src/components/AccountActivation';
-import { AccountLimitError } from './components/AccountLimitError';
+import { SupportError } from './components/SupportError';
 import { MigrateError } from 'src/components/MigrateError';
 import { VerificationError } from 'src/components/VerificationError';
 import { ACCESS_TOKEN, API_ROOT, DEFAULT_ERROR_MESSAGE } from 'src/constants';
@@ -106,7 +106,7 @@ export const handleError = (error: AxiosError) => {
       },
     },
     {
-      replacementText: <AccountLimitError errors={errors} />,
+      replacementText: <SupportError errors={errors} />,
       condition: (e) => {
         return !!e.reason.match(
           /Account Limit reached. Please open a support ticket./i

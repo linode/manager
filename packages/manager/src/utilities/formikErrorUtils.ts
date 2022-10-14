@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import { reverse } from 'ramda';
-import * as React from 'react';
 import { getAPIErrorOrDefault } from './errorUtils';
 import isNilOrEmpty from './isNilOrEmpty';
 
@@ -30,14 +29,12 @@ export const handleGeneralErrors = (
 
   const _apiErrors = getAPIErrorOrDefault(apiErrors, defaultMessage);
 
-  const generalError = React.isValidElement(_apiErrors[0].reason)
-    ? _apiErrors[0].reason
-    : _apiErrors
-        .reduce(
-          (result, { field, reason }) => (field ? result : [...result, reason]),
-          []
-        )
-        .join(',');
+  const generalError = _apiErrors
+    .reduce(
+      (result, { field, reason }) => (field ? result : [...result, reason]),
+      []
+    )
+    .join(',');
 
   if (!isNilOrEmpty(generalError)) {
     return callback(generalError);
