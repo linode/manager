@@ -351,7 +351,7 @@ export const MaintenanceWindow: React.FC<Props> = (props) => {
           loading={isSubmitting}
           type="submit"
           buttonType="primary"
-          compact
+          compactX
         >
           Save Changes
         </Button>

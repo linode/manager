@@ -88,7 +88,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
         <Button
           className={classes.attachFileButton}
           buttonType="secondary"
-          compact
+          compactX
           onClick={this.clickAttachButton}
         >
           <AttachFile />

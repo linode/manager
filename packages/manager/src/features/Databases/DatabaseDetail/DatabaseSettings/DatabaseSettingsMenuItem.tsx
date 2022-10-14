@@ -70,7 +70,7 @@ export const DatabaseSettingsMenuItem: React.FC<Props> = (props) => {
         disabled={disabled}
         buttonType="primary"
         onClick={onClick}
-        compact
+        compactX
       >
         {buttonText}
       </Button>
