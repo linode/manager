@@ -582,9 +582,9 @@ export const paymentToActivityFeedItem = (
 ): ActivityFeedItem => {
   const { date, id, usd } = payment;
   // Refunds are issued as negative payments.
-  const label = usd < 0 ? 'Refund' : `Payment #${payment.id}`;
+  const label = `${payment.id}`;
 
-  const total = Math.abs(usd);
+  const total = usd;
 
   return {
     label,
