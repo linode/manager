@@ -88,9 +88,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 4,
     },
   },
-  buttons: {
-    marginRight: theme.spacing(),
-  },
   actionRow: {
     flexDirection: 'column',
     [theme.breakpoints.down('md')]: {
@@ -269,48 +266,39 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             >
               <Grid
                 item
-                container
-                lg={12}
-                alignContent="flex-end"
-                style={matches ? { margin: 1 } : undefined}
+                direction={matches ? 'row-reverse' : 'row'}
+                justifyContent={matches ? 'flex-start' : 'flex-end'}
               >
-                <Grid
-                  item
-                  container
-                  direction={matches ? 'row-reverse' : 'row'}
-                  justifyContent={matches ? 'flex-start' : 'flex-end'}
-                >
-                  {isClusterHighlyAvailable ? (
-                    <Grid item>
-                      <Chip
-                        label="HA CLUSTER"
-                        variant="outlined"
-                        outlineColor="green"
-                        size="small"
-                      />
-                    </Grid>
-                  ) : null}
-                  {isKubeDashboardFeatureEnabled ? (
-                    <Button
-                      className={`${classes.dashboard} ${classes.buttons}`}
-                      buttonType="secondary"
-                      disabled={Boolean(dashboardError) || !dashboard}
-                      onClick={() => {
-                        window.open(dashboard?.url, '_blank');
-                      }}
-                    >
-                      Kubernetes Dashboard
-                      <OpenInNewIcon />
-                    </Button>
-                  ) : null}
+                {isClusterHighlyAvailable ? (
+                  <Chip
+                    label="HA CLUSTER"
+                    variant="outlined"
+                    outlineColor="green"
+                    size="small"
+                  />
+                ) : null}
+                {isKubeDashboardFeatureEnabled ? (
                   <Button
-                    className={classes.buttons}
+                    className={`${classes.dashboard}`}
                     buttonType="secondary"
-                    onClick={() => openDialog(cluster.id)}
+                    compactY
+                    disabled={Boolean(dashboardError) || !dashboard}
+                    onClick={() => {
+                      window.open(dashboard?.url, '_blank');
+                    }}
                   >
-                    Delete Cluster
+                    Kubernetes Dashboard
+                    <OpenInNewIcon />
                   </Button>
-                </Grid>
+                ) : null}
+                <Button
+                  buttonType="secondary"
+                  compactY
+                  onClick={() => openDialog(cluster.id)}
+                  style={{ paddingRight: 0 }}
+                >
+                  Delete Cluster
+                </Button>
               </Grid>
               <Grid item className={classes.tags} xs={12} lg={12}>
                 <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
