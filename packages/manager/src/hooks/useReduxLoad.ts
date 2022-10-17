@@ -12,8 +12,6 @@ import { requestKubernetesClusters } from 'src/store/kubernetes/kubernetes.reque
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
-import { requestManagedIssues } from 'src/store/managed/issues.requests';
-import { requestManagedServices } from 'src/store/managed/managed.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
@@ -28,8 +26,6 @@ export type ReduxEntity =
   | 'volumes'
   | 'images'
   | 'kubernetes'
-  | 'managed'
-  | 'managedIssues'
   | 'nodeBalancers'
   | 'notifications'
   | 'types'
@@ -48,8 +44,6 @@ const requestMap: RequestMap = {
   events: getEvents,
   types: requestTypes,
   notifications: requestNotifications,
-  managed: requestManagedServices,
-  managedIssues: requestManagedIssues,
   kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),

@@ -1,3 +1,4 @@
+import { ManagedIssue } from '@linode/api-v4';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Bad from 'src/assets/icons/monitor-failed.svg';
@@ -7,7 +8,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import { ExtendedIssue } from 'src/store/managed/issues.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  issues: ExtendedIssue[];
+  issues: ManagedIssue[];
   day: string;
 }
 

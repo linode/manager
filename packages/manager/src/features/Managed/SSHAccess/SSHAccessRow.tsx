@@ -7,12 +7,11 @@ import ActionMenu from './SSHAccessActionMenu';
 
 interface Props {
   linodeSetting: ManagedLinodeSetting;
-  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
-  const { linodeSetting, updateOne, openDrawer } = props;
+  const { linodeSetting, openDrawer } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;
 
@@ -38,7 +37,6 @@ export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
         <ActionMenu
           linodeId={linodeSetting.id}
           isEnabled={isAccessEnabled}
-          updateOne={updateOne}
           openDrawer={openDrawer}
           linodeLabel={linodeSetting.label}
         />

@@ -100,6 +100,7 @@ interface Data {
   date: string;
   description: string;
   username: string;
+  friendly_name: string;
   from_linode: boolean;
   ticket_id: string;
   reply_id: string;
@@ -134,6 +135,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
         description: ticket.description,
         username: ticket.opened_by,
         from_linode: false,
+        friendly_name: ticket.opened_by,
         updated: ticket.updated,
       });
     } else if (reply) {
@@ -146,6 +148,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
         description: reply.description,
         username: reply.created_by,
         from_linode: reply.from_linode,
+        friendly_name: reply.friendly_name,
         updated: ticketUpdated!,
       });
     }
@@ -186,7 +189,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
               <Grid container className={classes.header}>
                 <Grid item className={classes.headerInner}>
                   <Typography className={classes.userName} component="span">
-                    {data.username}
+                    {data.friendly_name}
                   </Typography>
                   {data.from_linode &&
                   !OFFICIAL_USERNAMES.includes(data.username) ? (

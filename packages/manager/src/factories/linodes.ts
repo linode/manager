@@ -6,6 +6,7 @@ import {
   LinodeBackups,
   LinodeIPsResponse,
   LinodeSpecs,
+  LinodeType,
   NetStats,
   Stats,
   StatsData,
@@ -128,6 +129,62 @@ export const linodeTransferFactory = Factory.Sync.makeFactory<NetworkUtilization
     billable: 0,
   }
 );
+
+export const linodeTypeFactory = Factory.Sync.makeFactory<LinodeType>({
+  id: Factory.each((i) => `g6-standard-${i}`),
+  label: Factory.each((i) => `Linode ${i}GB`),
+  price: {
+    hourly: 0.015,
+    monthly: 10.0,
+  },
+  addons: {
+    backups: {
+      price: {
+        hourly: 0.004,
+        monthly: 2.5,
+      },
+    },
+  },
+  memory: 2048,
+  disk: 51200,
+  transfer: 2000,
+  vcpus: 1,
+  gpus: 0,
+  network_out: 2000,
+  class: 'standard',
+  successor: null,
+});
+
+export const dedicatedTypeFactory = linodeTypeFactory.extend({
+  id: Factory.each((i) => `g6-dedicated-${i}`),
+  label: Factory.each((i) => `Dedicated 2${i}GB`),
+  class: 'dedicated',
+});
+
+export const proDedicatedTypeFactory = Factory.Sync.makeFactory<LinodeType>({
+  id: Factory.each((i) => `g6-prodedicated-${i}`),
+  label: Factory.each((i) => `Pro Dedicated 2${i}GB`),
+  class: 'prodedicated',
+  price: {
+    hourly: 2.88,
+    monthly: 1920.0,
+  },
+  addons: {
+    backups: {
+      price: {
+        hourly: null,
+        monthly: null,
+      },
+    },
+  },
+  memory: 262144,
+  disk: 5120000,
+  transfer: 11000,
+  vcpus: 56,
+  gpus: 0,
+  network_out: 11000,
+  successor: null,
+});
 
 export const linodeFactory = Factory.Sync.makeFactory<Linode>({
   id: Factory.each((i) => i),

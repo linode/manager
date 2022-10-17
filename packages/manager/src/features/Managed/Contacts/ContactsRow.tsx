@@ -7,13 +7,12 @@ import ActionMenu from './ContactsActionMenu';
 
 interface Props {
   contact: ManagedContact;
-  updateOrAdd: (contact: ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
   openDialog: (contactId: number) => void;
 }
 
 export const ContactsRow: React.FunctionComponent<Props> = (props) => {
-  const { contact, updateOrAdd, openDrawer, openDialog } = props;
+  const { contact, openDrawer, openDialog } = props;
 
   return (
     <TableRow ariaLabel={`Contact ${contact.id}`} key={contact.id}>
@@ -29,7 +28,6 @@ export const ContactsRow: React.FunctionComponent<Props> = (props) => {
       <TableCell actionCell>
         <ActionMenu
           contactId={contact.id}
-          updateOrAdd={updateOrAdd}
           openDrawer={openDrawer}
           openDialog={openDialog}
           contactName={contact.name}

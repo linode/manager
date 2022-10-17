@@ -1,3 +1,11 @@
+## [2022-10-17] - v0.80.0
+
+### Changed:
+
+- Updates to Managed
+- LinodeTypeClass to support prodedicated
+- SupportReply interface to include friendly_name
+
 ## [2022-10-04] - v0.79.0
 ### Changed:
 - FirewallRuleProtocol type updated to include IPENCAP

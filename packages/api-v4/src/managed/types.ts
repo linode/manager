@@ -93,7 +93,7 @@ export interface ManagedIssue {
   id: number;
   services: number[];
   created: string;
-  entity: any;
+  entity: IssueEntity;
 }
 
 // This is much like a support ticket but it's a special case so here's a special type:

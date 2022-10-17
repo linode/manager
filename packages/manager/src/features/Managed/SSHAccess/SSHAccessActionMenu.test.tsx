@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 import {
-  CombinedProps,
+  Props,
   SSHAccessActionMenu as ActionMenu,
 } from './SSHAccessActionMenu';
 
@@ -10,14 +10,11 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 
 const mockOpenDrawer = jest.fn();
 
-const props: CombinedProps = {
+const props: Props = {
   linodeId: 1,
   isEnabled: true,
-  updateOne: jest.fn(),
   linodeLabel: 'label',
   openDrawer: mockOpenDrawer,
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
 };
 
 describe('SSH Access Action Menu', () => {

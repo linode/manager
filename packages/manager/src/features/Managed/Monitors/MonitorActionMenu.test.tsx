@@ -1,24 +1,14 @@
 import * as React from 'react';
 import { includesActions, renderWithTheme } from 'src/utilities/testHelpers';
-import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { CombinedProps, MonitorActionMenu } from './MonitorActionMenu';
+import { Props, MonitorActionMenu } from './MonitorActionMenu';
 
-const props: CombinedProps = {
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
+const props: Props = {
   status: 'disabled',
   label: 'this-monitor',
   openDialog: jest.fn(),
   monitorID: 1,
   openMonitorDrawer: jest.fn(),
   openHistoryDrawer: jest.fn(),
-  updateServiceMonitor: jest.fn(),
-  createServiceMonitor: jest.fn(),
-  requestManagedServices: jest.fn(),
-  enableServiceMonitor: jest.fn(),
-  deleteServiceMonitor: jest.fn(),
-  disableServiceMonitor: jest.fn(),
-  ...reactRouterProps,
 };
 
 describe('Monitor action menu', () => {

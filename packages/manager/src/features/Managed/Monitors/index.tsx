@@ -1,1 +1,1 @@
-export { default } from './Monitors';
+export { default } from './MonitorTable';

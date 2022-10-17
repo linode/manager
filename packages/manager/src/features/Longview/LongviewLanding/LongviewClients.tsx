@@ -19,7 +19,7 @@ import withLongviewClients, {
   Props as LongviewProps,
 } from 'src/containers/longview.container';
 import { useGrants, useProfile } from 'src/queries/profile';
-import { isManaged } from 'src/queries/accountSettings';
+import { useAccountSettings } from 'src/queries/accountSettings';
 import { State as StatsState } from 'src/store/longviewStats/longviewStats.reducer';
 import { MapState } from 'src/store/types';
 import LongviewPackageDrawer from '../LongviewPackageDrawer';
@@ -88,9 +88,11 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { data: accountSettings } = useAccountSettings();
 
   const isRestrictedUser = Boolean(profile?.restricted);
   const hasAddLongviewGrant = Boolean(grants?.global?.add_longview);
+  const isManaged = Boolean(accountSettings?.managed);
 
   const userCanCreateClient =
     !isRestrictedUser || (hasAddLongviewGrant && isRestrictedUser);
@@ -164,7 +166,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       history: { push },
     } = props;
 
-    if (isManaged()) {
+    if (isManaged) {
       push({
         pathname: '/support/tickets',
         state: {
@@ -291,7 +293,7 @@ export const LongviewClients: React.FC<CombinedProps> = (props) => {
       />
       <SubscriptionDialog
         isOpen={subscriptionDialogOpen}
-        isManaged={isManaged()}
+        isManaged={isManaged}
         onClose={() => setSubscriptionDialogOpen(false)}
         onSubmit={handleSubmit}
         clientLimit={

@@ -1,8 +1,5 @@
 import { Formik, FormikHelpers } from 'formik';
-import {
-  ManagedLinodeSetting,
-  updateLinodeSettings,
-} from '@linode/api-v4/lib/managed';
+import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,6 +18,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
 import { DEFAULTS } from './common';
+import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ip: {
@@ -41,16 +39,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   isOpen: boolean;
   closeDrawer: () => void;
-  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   linodeSetting?: ManagedLinodeSetting;
 }
 
-type CombinedProps = Props;
-
-const EditSSHAccessDrawer: React.FC<CombinedProps> = (props) => {
+const EditSSHAccessDrawer: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { isOpen, closeDrawer, linodeSetting, updateOne } = props;
+  const { isOpen, closeDrawer, linodeSetting } = props;
+
+  const { mutateAsync: updateLinodeSettings } = useUpdateLinodeSettingsMutation(
+    linodeSetting?.id || -1
+  );
 
   const title = linodeSetting
     ? `Edit SSH Access for ${linodeSetting.label}`
@@ -74,12 +73,11 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = (props) => {
     const port =
       String(values.ssh.port) !== '' ? values.ssh.port : DEFAULTS.port;
 
-    updateLinodeSettings(linodeSetting.id, {
+    updateLinodeSettings({
       ssh: { ...values.ssh, user, port },
     })
-      .then((updatedLinodeSetting) => {
+      .then(() => {
         setSubmitting(false);
-        updateOne(updatedLinodeSetting);
         closeDrawer();
       })
       .catch((err) => {

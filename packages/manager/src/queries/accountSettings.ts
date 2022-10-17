@@ -29,10 +29,10 @@ export const useMutateAccountSettings = () => {
   );
 };
 
-export const isManaged = () =>
+export const getIsManaged = () =>
   Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.managed);
 
-export const accountBackupsEnabled = () =>
+export const getAccountBackupsEnabled = () =>
   Boolean(queryClient.getQueryData<AccountSettings>(queryKey)?.backups_enabled);
 
 /**

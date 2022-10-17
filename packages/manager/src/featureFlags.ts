@@ -30,7 +30,6 @@ type OneClickApp = Record<string, string>;
 
 export interface Flags {
   promos: boolean;
-  vatBanner: TaxBanner;
   taxBanner: TaxBanner;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;

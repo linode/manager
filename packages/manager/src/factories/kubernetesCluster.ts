@@ -70,7 +70,7 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<ExtendedCluster
     totalCPU: 4,
     totalStorage: 1000,
     tags: [],
-    control_plane: { high_availability: false },
+    control_plane: { high_availability: true },
   }
 );
 
@@ -90,6 +90,6 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     label: Factory.each((i) => `test-cluster-${i}`),
     k8s_version: '1.21',
     tags: [],
-    control_plane: { high_availability: false },
+    control_plane: { high_availability: true },
   }
 );
