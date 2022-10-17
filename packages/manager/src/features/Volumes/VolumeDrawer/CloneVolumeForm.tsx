@@ -8,6 +8,7 @@ import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -52,8 +53,8 @@ const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) =>
-              setStatus({ generalError });
+            const mapErrorToStatus = () =>
+              setStatus({ generalError: getErrorMap([], errorResponse).none });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);

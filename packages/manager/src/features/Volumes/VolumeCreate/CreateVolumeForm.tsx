@@ -32,6 +32,7 @@ import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { isEURegion } from 'src/utilities/formatRegion';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -209,8 +210,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) =>
-              setStatus({ generalError });
+            const mapErrorToStatus = () =>
+              setStatus({ generalError: getErrorMap([], errorResponse).none });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);
