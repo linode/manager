@@ -1,16 +1,8 @@
-import * as Bluebird from 'bluebird';
-import { getManagedIssues, ManagedIssue } from '@linode/api-v4/lib/managed';
-import { getTicket } from '@linode/api-v4/lib/support';
+import Bluebird from 'bluebird';
 import { DateTime } from 'luxon';
-import { getAll } from 'src/utilities/getAll';
-import { createRequestThunk } from '../store.helpers';
-import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
 import { parseAPIDate } from 'src/utilities/date';
-const _getAllIssues = getAll<ManagedIssue>(getManagedIssues);
-const getAllIssues = () =>
-  _getAllIssues()
-    .then(({ data }) => extendIssues(data))
-    .then((data) => ({ data, results: data.length }));
+import { ExtendedIssue } from './types';
+import { ManagedIssue, getTicket } from '@linode/api-v4';
 
 export const extendIssues = async (issues: ManagedIssue[]) => {
   /**
@@ -31,7 +23,7 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
      * does not include the status or date closed.
      */
     return (
-      getTicket(thisIssue.id)
+      getTicket(thisIssue.entity.id)
         .then((ticket) => {
           return {
             ...thisIssue,
@@ -44,8 +36,3 @@ export const extendIssues = async (issues: ManagedIssue[]) => {
     );
   });
 };
-
-export const requestManagedIssues = createRequestThunk(
-  requestManagedIssuesActions,
-  getAllIssues
-);

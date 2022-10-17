@@ -11,6 +11,7 @@ import TextField from 'src/components/TextField';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -86,8 +87,8 @@ const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
         onClose();
       })
       .catch((err) => {
-        const mapErrorToStatus = (generalError: string) =>
-          setStatus({ generalError });
+        const mapErrorToStatus = () =>
+          setStatus({ generalError: getErrorMap([], err).none });
 
         setSubmitting(false);
         handleFieldErrors(setErrors, err);

@@ -11,7 +11,7 @@ interface Props {
   loading: boolean;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
-  error?: APIError[];
+  error?: APIError[] | null;
 }
 
 export type CombinedProps = Props;
@@ -19,11 +19,11 @@ export type CombinedProps = Props;
 export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
   const { error, loading, credentials, openDialog, openForEdit } = props;
   if (loading) {
-    return <TableRowLoading columns={2} />;
+    return <TableRowLoading columns={3} />;
   }
 
   if (error) {
-    return <TableRowError colSpan={2} message={error[0].reason} />;
+    return <TableRowError colSpan={3} message={error[0].reason} />;
   }
 
   if (credentials.length === 0) {

@@ -1,9 +1,4 @@
-import {
-  ContactPayload,
-  createContact,
-  ManagedContact,
-  updateContact,
-} from '@linode/api-v4/lib/managed';
+import { ContactPayload, ManagedContact } from '@linode/api-v4/lib/managed';
 import { createContactSchema } from '@linode/validation/lib/managed.schema';
 import { Formik, FormikHelpers } from 'formik';
 import { pathOr, pick } from 'ramda';
@@ -16,6 +11,10 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
+  useCreateContactMutation,
+  useUpdateContactMutation,
+} from 'src/queries/managed/managed';
+import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
@@ -25,7 +24,6 @@ interface Props {
   isOpen: boolean;
   closeDrawer: () => void;
   mode: Mode;
-  updateOrAdd: (contact: ManagedContact) => void;
   groups: ManagedContactGroup[];
   contact?: ManagedContact;
 }
@@ -43,9 +41,14 @@ const emptyContactPayload: ContactPayload = {
 };
 
 const ContactsDrawer: React.FC<CombinedProps> = (props) => {
-  const { isOpen, closeDrawer, mode, contact, updateOrAdd, groups } = props;
+  const { isOpen, closeDrawer, mode, contact, groups } = props;
 
   const isEditing = mode === 'edit' && contact;
+
+  const { mutateAsync: createContact } = useCreateContactMutation();
+  const { mutateAsync: updateContact } = useUpdateContactMutation(
+    contact?.id || -1
+  );
 
   // If we're in Edit mode, take the initialValues from the contact we're editing.
   // Otherwise, all initial values should be empty strings.
@@ -71,15 +74,14 @@ const ContactsDrawer: React.FC<CombinedProps> = (props) => {
     let createOrUpdate: () => Promise<ManagedContact>;
 
     if (mode === 'edit' && contact) {
-      createOrUpdate = () => updateContact(contact.id, payload);
+      createOrUpdate = () => updateContact(payload);
     } else {
       createOrUpdate = () => createContact(payload);
     }
 
     createOrUpdate()
-      .then((updatedContact) => {
+      .then(() => {
         setSubmitting(false);
-        updateOrAdd(updatedContact);
         closeDrawer();
       })
       .catch((err) => {

@@ -23,7 +23,8 @@ import {
 } from 'support/intercepts/databases';
 
 // @TODO Consider moving this to 'support/constants' or similar.
-const databaseTypes = ['mysql', 'postgresql', 'mongodb'];
+// const databaseTypes = ['mysql', 'postgresql', 'mongodb'];
+const databaseTypes = ['mysql', 'postgresql'];
 
 /**
  * Updates a database cluster's label.

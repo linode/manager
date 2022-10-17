@@ -12,7 +12,7 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { accountBackupsEnabled } from 'src/queries/accountSettings';
+import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { ApplicationState } from 'src/store';
 import {
   BackupError,
@@ -267,7 +267,7 @@ const mapStateToProps: MapStateToProps<
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
-    accountBackups: accountBackupsEnabled(),
+    accountBackups: getAccountBackupsEnabled(),
     backupLoadError: pathOr('', ['backups', 'error'], state),
     backupsLoading: pathOr(false, ['backups', 'loading'], state),
     enableErrors,

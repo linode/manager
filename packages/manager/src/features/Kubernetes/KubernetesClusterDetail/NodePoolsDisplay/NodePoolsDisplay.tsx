@@ -337,6 +337,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
                       }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
                       openAutoscalePoolDialog={autoscalePoolDialog.openDialog}
+                      isOnlyNodePool={pools.length === 1}
                     />
                   </div>
                 );
