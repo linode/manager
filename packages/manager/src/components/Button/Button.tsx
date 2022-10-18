@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   compactY: {
     minHeight: 20,
-    maxHeight: 20,
     paddingTop: 0,
     paddingBottom: 0,
   },
