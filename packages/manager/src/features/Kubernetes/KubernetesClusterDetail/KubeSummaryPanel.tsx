@@ -13,7 +13,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme, useMediaQuery } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
 import { reportException } from 'src/exceptionReporting';
@@ -42,9 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   mainGridContainer: {
     position: 'relative',
-    [theme.breakpoints.up('lg')]: {
-      justifyContent: 'space-between',
-    },
+    justifyContent: 'space-between',
   },
   tags: {
     display: 'flex',
@@ -69,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       // Add a Tag button
       '& > div:first-child': {
         justifyContent: 'flex-end',
-        marginTop: theme.spacing(5),
+        marginTop: theme.spacing(4),
       },
       // Tags Panel wrapper
       '& > div:last-child': {
@@ -89,10 +87,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   actionRow: {
-    flexDirection: 'column',
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'flex-end',
-      flexDirection: 'row',
+    display: 'flex',
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+    '& button': {
+      alignItems: 'flex-start',
     },
   },
 }));
@@ -127,7 +128,6 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [drawerError, setDrawerError] = React.useState<string | null>(null);
   const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
-  const matches = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
   const {
     data: dashboard,
@@ -228,11 +228,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   return (
     <>
       <Paper className={classes.root}>
-        <Grid
-          container
-          alignItems="flex-start"
-          className={classes.mainGridContainer}
-        >
+        <Grid container className={classes.mainGridContainer}>
           <KubeClusterSpecs
             cluster={cluster}
             isClusterHighlyAvailable={isClusterHighlyAvailable}
@@ -240,9 +236,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
           <Grid
             item
             container
-            direction="row"
-            lg={9}
+            direction="column"
             justifyContent="space-between"
+            xs={12}
+            lg={4}
           >
             <KubeConfigDisplay
               clusterLabel={cluster.label}
@@ -256,53 +253,49 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               handleOpenDrawer={handleOpenDrawer}
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
-            <Grid
-              item
-              container
-              direction="row"
-              xs={12}
-              lg={7}
-              justifyContent="flex-end"
-            >
-              <Grid
-                item
-                direction={matches ? 'row-reverse' : 'row'}
-                justifyContent={matches ? 'flex-start' : 'flex-end'}
-              >
-                {isClusterHighlyAvailable ? (
-                  <Chip
-                    label="HA CLUSTER"
-                    variant="outlined"
-                    outlineColor="green"
-                    size="small"
-                  />
-                ) : null}
-                {isKubeDashboardFeatureEnabled ? (
-                  <Button
-                    className={`${classes.dashboard}`}
-                    buttonType="secondary"
-                    compactY
-                    disabled={Boolean(dashboardError) || !dashboard}
-                    onClick={() => {
-                      window.open(dashboard?.url, '_blank');
-                    }}
-                  >
-                    Kubernetes Dashboard
-                    <OpenInNewIcon />
-                  </Button>
-                ) : null}
+          </Grid>
+          <Grid
+            item
+            container
+            xs={12}
+            lg={5}
+            justifyContent="flex-end"
+            direction="column"
+          >
+            <Grid item className={classes.actionRow}>
+              {isClusterHighlyAvailable ? (
+                <Chip
+                  label="HA CLUSTER"
+                  variant="outlined"
+                  outlineColor="green"
+                  size="small"
+                />
+              ) : null}
+              {isKubeDashboardFeatureEnabled ? (
                 <Button
+                  className={`${classes.dashboard}`}
                   buttonType="secondary"
                   compactY
-                  onClick={() => openDialog(cluster.id)}
-                  style={{ paddingRight: 0 }}
+                  disabled={Boolean(dashboardError) || !dashboard}
+                  onClick={() => {
+                    window.open(dashboard?.url, '_blank');
+                  }}
                 >
-                  Delete Cluster
+                  Kubernetes Dashboard
+                  <OpenInNewIcon />
                 </Button>
-              </Grid>
-              <Grid item className={classes.tags} xs={12} lg={12}>
-                <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
-              </Grid>
+              ) : null}
+              <Button
+                buttonType="secondary"
+                compactY
+                onClick={() => openDialog(cluster.id)}
+                style={{ paddingRight: 0 }}
+              >
+                Delete Cluster
+              </Button>
+            </Grid>
+            <Grid item className={classes.tags}>
+              <TagsPanel tags={cluster.tags} updateTags={handleUpdateTags} />
             </Grid>
           </Grid>
         </Grid>

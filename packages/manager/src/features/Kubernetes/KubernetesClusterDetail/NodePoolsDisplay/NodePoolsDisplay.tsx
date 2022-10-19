@@ -39,7 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   displayTable: {
     width: '100%',
     '& > div': {
-      marginTop: theme.spacing(),
       marginBottom: theme.spacing(3),
     },
     '& > div:last-child': {
@@ -54,7 +53,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
   },
   nodePool: {
-    marginTop: theme.spacing(),
     marginBottom: theme.spacing(3),
   },
   mobileSpacing: {

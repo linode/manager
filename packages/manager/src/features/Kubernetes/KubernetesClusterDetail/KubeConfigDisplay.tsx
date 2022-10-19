@@ -96,14 +96,7 @@ export const KubeConfigDisplay: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   return (
-    <Grid
-      item
-      container
-      direction="column"
-      justifyContent="space-between"
-      xs={12}
-      lg={5}
-    >
+    <>
       <Grid item>
         <Typography className={classes.label}>
           Kubernetes API Endpoint:
@@ -113,7 +106,9 @@ export const KubeConfigDisplay: React.FC<Props> = (props) => {
         </Typography>
       </Grid>
       <Grid item>
-        <Typography className={classes.label}>Kubeconfig:</Typography>
+        <Typography className={classes.label} style={{ marginTop: 8 }}>
+          Kubeconfig:
+        </Typography>
         {kubeconfigAvailable ? (
           <div className={classes.kubeconfigElements}>
             <Grid
@@ -167,7 +162,7 @@ export const KubeConfigDisplay: React.FC<Props> = (props) => {
           </Typography>
         )}
       </Grid>
-    </Grid>
+    </>
   );
 };
 
