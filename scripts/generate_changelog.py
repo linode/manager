@@ -11,7 +11,7 @@ except Exception:
     REPO=False
 
 DATE = datetime.datetime.now().strftime('%Y-%m-%d')
-START_INSERT=5
+START_INSERT=5 if REPO.lower() == 'manager' else 0
 
 NOT_INCLUDED_IN_LOG = []
 
@@ -103,7 +103,9 @@ def generateChangeLog(release, date, origin, repo=False):
 
     changelog_file = "CHANGELOG.md"
 
-    if (repo):
+    if (repo == 'manager'):
+        changelog_file = "CHANGELOG.md"
+    else:
         changelog_file = "packages/{}/CHANGELOG.md".format(repo)
 
     read_change_log=open(changelog_file, 'r')
@@ -111,7 +113,7 @@ def generateChangeLog(release, date, origin, repo=False):
     read_change_log.close()
 
     change_log_lines.insert(START_INSERT,'\n')
-    change_log_lines.insert(incrementLine(),'## [%s] - %s\n'%(release,date))
+    change_log_lines.insert(incrementLine(),'## [%s] - %s\n'%(date, release))
     change_log_lines.insert(incrementLine(),'\n')
 
     if( breaking ):
