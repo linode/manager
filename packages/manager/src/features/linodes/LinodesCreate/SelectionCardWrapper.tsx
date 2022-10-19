@@ -84,6 +84,12 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
     openDrawer(label);
   };
 
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      openDrawer(label);
+    }
+  };
+
   const renderIcon =
     iconUrl === ''
       ? () => <span className="fl-tux" />
@@ -91,7 +97,13 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
 
   const renderVariant = () => (
     <Grid item className={classes.info} xs={2}>
-      <Info onClick={handleInfoClick} />
+      <Info
+        role="button"
+        aria-label={`Info for "${label}"`}
+        onClick={handleInfoClick}
+        onKeyDown={handleKeyPress}
+        tabIndex={0}
+      />
     </Grid>
   );
 
