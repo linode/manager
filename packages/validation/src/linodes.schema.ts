@@ -90,8 +90,8 @@ export const CreateLinodeSchema = object({
   label: string()
     .transform((v) => (v === '' ? undefined : v))
     .notRequired()
-    .min(3, 'Label must contain between 3 and 32 characters.')
-    .max(32, 'Label must contain between 3 and 32 characters.'),
+    .min(3, 'Label must contain between 3 and 64 characters.')
+    .max(64, 'Label must contain between 3 and 64 characters.'),
   tags: array().of(string()).notRequired(),
   private_ip: boolean().notRequired(),
   authorized_users: array().of(string()).notRequired(),
@@ -159,8 +159,8 @@ export const UpdateLinodeSchema = object({
   label: string()
     .transform((v) => (v === '' ? undefined : v))
     .notRequired()
-    .min(3, 'Label must contain between 3 and 32 characters.')
-    .max(32, 'Label must contain between 3 and 32 characters.'),
+    .min(3, 'Label must contain between 3 and 64 characters.')
+    .max(64, 'Label must contain between 3 and 64 characters.'),
   tags: array().of(string()).notRequired(),
   watchdog_enabled: boolean().notRequired(),
   alerts,
