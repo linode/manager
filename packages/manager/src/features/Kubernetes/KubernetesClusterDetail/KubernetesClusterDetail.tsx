@@ -377,7 +377,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           recycleNode={handleRecycleNode}
           recycleAllClusterNodes={handleRecycleAllClusterNodes}
           getNodePools={() =>
-            props.requestNodePools(+props.match.params.clusterID)
+            props.requestNodePools(props.match.params.clusterID as any)
           }
         />
       </Grid>
@@ -403,8 +403,9 @@ const withCluster = KubeContainer<
     nodePoolsLoading
   ) => {
     const cluster =
-      clustersData.find((c) => +c.id === +ownProps.match.params.clusterID) ||
-      null;
+      clustersData.find(
+        (c) => c.id === (ownProps.match.params.clusterID as any)
+      ) || null;
     return {
       ...ownProps,
       cluster,
