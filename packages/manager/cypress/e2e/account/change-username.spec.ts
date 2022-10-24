@@ -1,9 +1,9 @@
 import { getProfile } from 'support/api/account';
+import { interceptGetProfile } from 'support/intercepts/profile';
 import {
-  interceptGetProfile,
   interceptGetUser,
   mockUpdateUsername,
-} from 'support/intercepts/profile';
+} from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { randomString } from 'support/util/random';
 
