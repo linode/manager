@@ -85,7 +85,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' || e.key === ' ') {
       openDrawer(label);
     }
   };
