@@ -291,8 +291,7 @@ export const mockDeleteContact = (id: number): Cypress.Chainable<null> => {
 /**
  * Intercepts GET request to fetch Managed stats and mocks response.
  *
- * If no stats are provided for mocking, the default factory data will be used
- * as a default.
+ * If no stats are provided for mocking, the default factory data will be used.
  *
  * @param stats - Stats with which to respond, or `undefined`.
  *
