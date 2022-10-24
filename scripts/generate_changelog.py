@@ -3,7 +3,7 @@ import re
 import sys
 import datetime
 
-RELEASE=sys.argv[1]
+RELEASE='v' + sys.argv[1].strip('v')
 ORIGIN=sys.argv[2]
 try:
     REPO=sys.argv[3]
