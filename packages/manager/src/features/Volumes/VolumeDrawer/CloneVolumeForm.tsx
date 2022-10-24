@@ -1,13 +1,10 @@
 import { CloneVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useCloneVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -25,25 +22,17 @@ interface Props {
   volumeRegion: string;
 }
 
-type CombinedProps = Props & VolumesRequests;
-
-const validationScheme = CloneVolumeSchema;
-
 const initialValues = { label: '' };
 
-const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
-  const {
-    onClose,
-    volumeId,
-    volumeRegion,
-    volumeLabel,
-    volumeSize,
-    cloneVolume,
-  } = props;
+export const CloneVolumeForm = (props: Props) => {
+  const { onClose, volumeId, volumeRegion, volumeLabel, volumeSize } = props;
+
+  const { mutateAsync: cloneVolume } = useCloneVolumeMutation();
+
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationScheme}
+      validationSchema={CloneVolumeSchema}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         cloneVolume({ volumeId, label: values.label })
           .then((_) => {
@@ -112,7 +101,3 @@ const CloneVolumeForm: React.FC<CombinedProps> = (props) => {
     </Formik>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withVolumesRequests);
-
-export default enhanced(CloneVolumeForm);

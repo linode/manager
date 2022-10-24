@@ -49,6 +49,7 @@ const attachedVolumeList = makeResourcePage(
   volumeFactory.buildList(1, {
     label: volumeLabel,
     linode_id: linodeId,
+    linode_label: linodeLabel,
   })
 );
 const attachedVolume = attachedVolumeList.data[0];
@@ -90,6 +91,9 @@ describe('volumes', () => {
     fbtClick('Create Volume');
     fbtVisible('Must provide a region or a Linode ID.');
     fbtClick(selectRegionString).type('new {enter}');
+    cy.intercept('GET', `*/volumes*`, (req) => {
+      req.reply(makeResourcePage([volume]));
+    }).as('createVolume');
     fbtClick('Create Volume');
     cy.wait('@createVolume');
     validateBasicVolume(volumeLabel, volumeId);
@@ -133,19 +137,15 @@ describe('volumes', () => {
     interceptOnce('GET', `*/volumes*`, attachedVolumeList).as(
       'getAttachedVolumes'
     );
-    cy.intercept('GET', '*/linode/instances/*', (req) => {
-      req.reply(linodeList);
-    }).as('getLinodes');
     cy.visitWithLogin('/volumes', {
       preferenceOverrides,
       localStorageOverrides,
     });
-    cy.wait('@getLinodes');
     cy.wait('@getAttachedVolumes');
     cy.intercept('POST', '*/volumes/' + attachedVolumeId + '/detach', (req) => {
       req.reply({ statusCode: 200 });
     }).as('volumeDetached');
-    containsVisible(linodeLabel);
+    containsVisible(attachedVolume.linode_label);
     containsVisible(attachedVolumeLabel);
     clickVolumeActionMenu(attachedVolumeLabel);
     // getVisible('[data-qa-action-menu-item="Detach"]')

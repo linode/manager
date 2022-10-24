@@ -1,39 +1,32 @@
-import { Event, Notification } from '@linode/api-v4/lib/account';
-import { Config, Linode } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { Event } from '@linode/api-v4/lib/account';
+import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import { makeStyles } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable from 'src/components/EntityTable';
+import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Loading from 'src/components/LandingLoading';
 import Link from 'src/components/Link';
-import { PaginationProps } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
-import PreferenceToggle from 'src/components/PreferenceToggle';
-import { ToggleProps } from 'src/components/PreferenceToggle/PreferenceToggle';
-import _withEvents, { EventsProps } from 'src/containers/events.container';
-import withVolumes, {
-  StateProps as WithVolumesProps,
-} from 'src/containers/volumes.container';
+import Table from 'src/components/Table/Table';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
-import withLinodes, {
-  Props as WithLinodesProps,
-} from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import withNotifications, {
-  WithNotifications,
-} from 'src/store/notification/notification.containers';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { useVolumesQuery } from 'src/queries/volumes';
 import {
   LinodeOptions,
   openForClone,
@@ -44,10 +37,9 @@ import {
   Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import DestructiveVolumeDialog from './DestructiveVolumeDialog';
-import { ExtendedVolume } from './types';
+import { DestructiveVolumeDialog } from './DestructiveVolumeDialog';
 import { UpgradeVolumeDialog } from './UpgradeVolumeDialog';
-import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+import { VolumeAttachmentDrawer } from './VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from './VolumesActionMenu';
 import VolumeTableRow from './VolumeTableRow';
 
@@ -61,10 +53,6 @@ interface Props {
   readOnly?: boolean;
   removeBreadCrumb?: boolean;
   fromLinodes?: boolean;
-}
-
-interface WithMappedVolumesProps {
-  mappedVolumesDataWithLinodes: ExtendedVolume[];
 }
 
 interface DispatchProps {
@@ -91,52 +79,7 @@ interface DispatchProps {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
-type RouteProps = RouteComponentProps<{ linodeId: string }>;
-
-type CombinedProps = Props &
-  VolumesRequests &
-  WithVolumesProps &
-  WithLinodesProps &
-  EventsProps &
-  PaginationProps<ExtendedVolume> &
-  DispatchProps &
-  RouteProps &
-  WithSnackbarProps &
-  WithMappedVolumesProps &
-  WithNotifications;
-
-export const volumeHeaders = [
-  {
-    label: 'Label',
-    dataColumn: 'label',
-    sortable: true,
-    widthPercent: 35,
-  },
-  {
-    label: 'Status',
-    dataColumn: 'status',
-    sortable: true,
-    widthPercent: 10,
-  },
-  {
-    label: 'Region',
-    dataColumn: 'region',
-    sortable: true,
-    widthPercent: 15,
-  },
-  {
-    label: 'Size',
-    dataColumn: 'size',
-    sortable: true,
-    widthPercent: 5,
-  },
-  {
-    label: 'Attached To',
-    dataColumn: 'Attached To',
-    sortable: false,
-    widthPercent: 20,
-  },
-];
+type CombinedProps = Props & VolumesRequests & DispatchProps;
 
 export const useStyles = makeStyles(() => ({
   empty: {
@@ -146,19 +89,36 @@ export const useStyles = makeStyles(() => ({
   },
 }));
 
+const preferenceKey = 'volumes';
+
 export const VolumesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const history = useHistory();
 
-  const {
-    volumesLoading,
-    mappedVolumesDataWithLinodes,
-    volumesLastUpdated,
-    volumesError,
-    openForConfig,
-    openForClone,
-    openForEdit,
-    openForResize,
-  } = props;
+  const pagination = usePagination(1, preferenceKey);
+
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'desc',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
+
+  const { data: volumes, isLoading, error } = useVolumesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
+
+  const { openForConfig, openForClone, openForEdit, openForResize } = props;
 
   const [upgradeVolumeDialog, setUpgradeVolumeDialog] = React.useState({
     open: false,
@@ -178,20 +138,16 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     mode: 'detach' | 'delete';
     volumeId?: number;
     volumeLabel: string;
-    linodeLabel: string;
-    error?: string;
-    poweredOff?: boolean;
+    linodeLabel?: string;
+    linodeId?: number;
   }>({
     open: false,
     mode: 'detach',
     volumeId: 0,
     volumeLabel: '',
-    linodeLabel: '',
-    error: '',
-    poweredOff: false,
+    linodeId: undefined,
+    linodeLabel: undefined,
   });
-
-  const { _loading } = useReduxLoad(['volumes', 'linodes']);
 
   const handleCloseAttachDrawer = () => {
     setAttachmentDrawer((attachmentDrawer) => ({
@@ -218,7 +174,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
@@ -227,7 +183,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       volumeId,
       volumeLabel,
       linodeLabel,
-      poweredOff,
+      linodeId,
       error: '',
     }));
   };
@@ -258,62 +214,21 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     }));
   };
 
-  const detachVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { detachVolume } = props;
-    if (!volumeId) {
-      return;
-    }
-
-    detachVolume({ volumeId })
-      .then((_) => {
-        /* @todo: show a progress bar for volume detachment */
-        props.enqueueSnackbar('Volume detachment started', {
-          variant: 'info',
-        });
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
-            .reason,
-        }));
-      });
-  };
-
-  const deleteVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { deleteVolume } = props;
-
-    if (!volumeId) {
-      return;
-    }
-
-    deleteVolume({ volumeId })
-      .then(() => {
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
-            .reason,
-        }));
-      });
-  };
-
-  if (_loading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (
-    mappedVolumesDataWithLinodes.length === 0 &&
-    !volumesError.read &&
-    volumesLastUpdated > 0
-  ) {
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your volumes.')[0].reason
+        }
+      />
+    );
+  }
+
+  if (volumes?.results === 0) {
     return (
       <>
         <DocumentTitleSegment segment="Volumes" />
@@ -324,7 +239,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
           isEntity
           buttonProps={[
             {
-              onClick: () => props.history.push('/volumes/create'),
+              onClick: () => history.push('/volumes/create'),
               children: 'Create Volume',
             },
           ]}
@@ -353,71 +268,90 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
     handleUpgrade,
   };
 
-  const volumeRow = {
-    handlers,
-    Component: VolumeTableRow,
-    data: mappedVolumesDataWithLinodes ?? [],
-    loading: volumesLoading,
-    lastUpdated: volumesLastUpdated,
-    error: volumesError.read,
-  };
-
   return (
     <>
       <DocumentTitleSegment segment="Volumes" />
-      <PreferenceToggle<boolean>
-        preferenceKey="volumes_group_by_tag"
-        preferenceOptions={[false, true]}
-        localStorageKey="GROUP_VOLUMES"
-      >
-        {({
-          preference: volumesAreGrouped,
-          togglePreference: toggleGroupVolumes,
-        }: ToggleProps<boolean>) => {
-          return (
-            <>
-              <LandingHeader
-                title="Volumes"
-                entity="Volume"
-                onAddNew={() => props.history.push('/volumes/create')}
-                docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
-              />
-              <EntityTable
-                entity="volume"
-                headers={volumeHeaders}
-                isGroupedByTag={volumesAreGrouped}
-                toggleGroupByTag={toggleGroupVolumes}
-                row={volumeRow}
-                initialOrder={{ order: 'asc', orderBy: 'label' }}
-              />
-              <UpgradeVolumeDialog
-                open={upgradeVolumeDialog.open}
-                id={upgradeVolumeDialog.volumeId}
-                label={upgradeVolumeDialog.volumeLabel}
-                onClose={closeUpgradeVolumeDialog}
-              />
-              <VolumeAttachmentDrawer
-                open={attachmentDrawer.open}
-                volumeId={attachmentDrawer.volumeId || 0}
-                volumeLabel={attachmentDrawer.volumeLabel || ''}
-                linodeRegion={attachmentDrawer.linodeRegion || ''}
-                onClose={handleCloseAttachDrawer}
-              />
-              <DestructiveVolumeDialog
-                open={destructiveDialog.open}
-                error={destructiveDialog.error}
-                volumeLabel={destructiveDialog.volumeLabel}
-                linodeLabel={destructiveDialog.linodeLabel}
-                poweredOff={destructiveDialog.poweredOff || false}
-                mode={destructiveDialog.mode}
-                onClose={closeDestructiveDialog}
-                onDetach={detachVolume}
-                onDelete={deleteVolume}
-              />
-            </>
-          );
-        }}
-      </PreferenceToggle>
+      <LandingHeader
+        title="Volumes"
+        entity="Volume"
+        onAddNew={() => history.push('/volumes/create')}
+        docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
+      />
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              label="label"
+              handleClick={handleOrderChange}
+            >
+              Label
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="status"
+              handleClick={handleOrderChange}
+            >
+              Status
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'region'}
+              direction={order}
+              label="region"
+              handleClick={handleOrderChange}
+            >
+              Region
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'size'}
+              direction={order}
+              label="size"
+              handleClick={handleOrderChange}
+            >
+              Size
+            </TableSortCell>
+            <TableCell>Attaced To</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {volumes?.data.map((volume) => (
+            <VolumeTableRow key={volume.id} {...volume} {...handlers} />
+          ))}
+        </TableBody>
+      </Table>
+      <PaginationFooter
+        count={volumes?.results ?? 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Volumes Table"
+      />
+      <UpgradeVolumeDialog
+        open={upgradeVolumeDialog.open}
+        id={upgradeVolumeDialog.volumeId}
+        label={upgradeVolumeDialog.volumeLabel}
+        onClose={closeUpgradeVolumeDialog}
+      />
+      <VolumeAttachmentDrawer
+        open={attachmentDrawer.open}
+        volumeId={attachmentDrawer.volumeId || 0}
+        volumeLabel={attachmentDrawer.volumeLabel || ''}
+        linodeRegion={attachmentDrawer.linodeRegion || ''}
+        onClose={handleCloseAttachDrawer}
+      />
+      <DestructiveVolumeDialog
+        open={destructiveDialog.open}
+        volumeLabel={destructiveDialog.volumeLabel}
+        linodeLabel={destructiveDialog.linodeLabel}
+        linodeId={destructiveDialog.linodeId}
+        volumeId={destructiveDialog.volumeId ?? 0}
+        mode={destructiveDialog.mode}
+        onClose={closeDestructiveDialog}
+      />
     </>
   );
 };
@@ -436,128 +370,7 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const addAttachedLinodeInfoToVolume = (
-  volume: Volume,
-  linodes: Linode[]
-): Volume | ExtendedVolume => {
-  if (!volume.linode_id) {
-    return volume;
-  }
-  const attachedLinode = linodes.find(
-    (linode) => linode.id === volume.linode_id
-  );
-  if (attachedLinode) {
-    return {
-      ...volume,
-      linodeLabel: attachedLinode.label,
-      linodeStatus: attachedLinode.status,
-    };
-  } else {
-    return volume;
-  }
-};
-
-const addRecentEventToVolume = (volume: Volume, events: Event[]) => {
-  // We're filtering out events without entities in the reducer, so we can assume these
-  // all have an entity attached.
-  const recentEvent = events.find((event) => event.entity!.id === volume.id);
-  if (recentEvent) {
-    return { ...volume, recentEvent };
-  } else {
-    return volume;
-  }
-};
-
-const filterVolumeEvents = (event: Event): boolean => {
-  return (
-    !event._initial && Boolean(event.entity) && event.entity!.type === 'volume'
-  );
-};
-
-const addNVMeBooleansToVolume = (
-  volumes: Volume[],
-  notifications: Notification[],
-  events: Event[]
-) => {
-  return volumes.reduce((acc: ExtendedVolume[], eachVolume) => {
-    const { id } = eachVolume;
-
-    const eligibleForUpgradeToNVMe = notifications.some(
-      (notification) =>
-        notification.type === 'volume_migration_scheduled' &&
-        notification.entity?.id === id
-    );
-
-    const nvmeUpgradeScheduledByUserImminent = notifications.some(
-      (notification) =>
-        notification.type === 'volume_migration_imminent' &&
-        notification.entity?.id === id
-    );
-
-    const nvmeUpgradeScheduledByUserInProgress = events.some(
-      (event) =>
-        event.action === 'volume_migrate' &&
-        event.entity?.id === id &&
-        event.status === 'started'
-    );
-
-    return [
-      ...acc,
-      {
-        ...eachVolume,
-        eligibleForUpgradeToNVMe,
-        nvmeUpgradeScheduledByUserImminent,
-        nvmeUpgradeScheduledByUserInProgress,
-      },
-    ];
-  }, []);
-};
-
 export default compose<CombinedProps, Props>(
   connected,
-  withVolumesRequests,
-  _withEvents((ownProps: CombinedProps, eventsData) => ({
-    ...ownProps,
-    eventsData: eventsData.filter(filterVolumeEvents),
-  })),
-  withNotifications(),
-  withLinodes(),
-  withVolumes(
-    (
-      ownProps: CombinedProps,
-      volumesData,
-      volumesLoading,
-      volumesLastUpdated,
-      volumesResults,
-      volumesError
-    ) => {
-      const volumesWithNVMeBooleans = addNVMeBooleansToVolume(
-        volumesData,
-        ownProps.notifications,
-        ownProps.eventsData
-      );
-
-      const mappedVolumesDataWithLinodes = volumesWithNVMeBooleans.map(
-        (volume: ExtendedVolume) => {
-          const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
-            volume,
-            ownProps.linodesData
-          );
-          return addRecentEventToVolume(
-            volumeWithLinodeData,
-            ownProps.eventsData
-          );
-        }
-      );
-      return {
-        ...ownProps,
-        volumesData,
-        mappedVolumesDataWithLinodes,
-        volumesLoading,
-        volumesLastUpdated,
-        volumesError,
-      };
-    }
-  ),
-  withSnackbar
+  withVolumesRequests
 )(VolumesLanding);

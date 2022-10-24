@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { QueryClient, UseMutationOptions, UseQueryOptions } from 'react-query';
 import { isEmpty } from '@linode/api-v4/lib/request';
 
@@ -199,4 +199,42 @@ export const itemInListDeletionHandler = <
       });
     },
   };
+};
+
+/**
+ * Use this function when you wish to update one entity within paginated React Query data
+ * @param queryKey The React Query queryKey prefix of paginated data (without the filters and page)
+ * @param id the id of the entity of you want to update within this paginated data
+ * @param newData the new data for the entity
+ */
+export const updateInPaginatedStore = <T extends { id: number | string }>(
+  queryKey: string,
+  id: number,
+  newData: Partial<T>
+) => {
+  queryClient.setQueriesData<ResourcePage<T> | undefined>(
+    queryKey,
+    (oldData) => {
+      if (oldData === undefined) {
+        return undefined;
+      }
+
+      const toUpdateIndex = oldData.data.findIndex(
+        (entity) => entity.id === id
+      );
+
+      const isEntityOnPage = toUpdateIndex !== -1;
+
+      if (!isEntityOnPage) {
+        return oldData;
+      }
+
+      oldData.data[toUpdateIndex] = {
+        ...oldData.data[toUpdateIndex],
+        ...newData,
+      };
+
+      return oldData;
+    }
+  );
 };

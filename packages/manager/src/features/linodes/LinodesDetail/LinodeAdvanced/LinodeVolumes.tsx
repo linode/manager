@@ -1,6 +1,5 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Volume } from '@linode/api-v4/lib/volumes';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -19,11 +18,10 @@ import withVolumesRequests, {
   VolumesRequests,
 } from 'src/containers/volumesRequests.container';
 import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import DestructiveVolumeDialog from 'src/features/Volumes/DestructiveVolumeDialog';
+import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
 import { ExtendedVolume } from 'src/features/Volumes/types';
-import VolumeAttachmentDrawer from 'src/features/Volumes/VolumeAttachmentDrawer';
+import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -36,7 +34,6 @@ import {
   openForResize,
   Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -152,7 +149,6 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
-  const { enqueueSnackbar } = useSnackbar();
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -167,16 +163,12 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     volumeId?: number;
     volumeLabel: string;
     linodeLabel: string;
-    error?: string;
-    poweredOff?: boolean;
   }>({
     open: false,
     mode: 'detach',
     volumeId: 0,
     volumeLabel: '',
     linodeLabel: '',
-    error: '',
-    poweredOff: false,
   });
 
   const handleCloseAttachDrawer = () => {
@@ -200,7 +192,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => {
     setDestructiveDialog((destructiveDialog) => ({
       ...destructiveDialog,
@@ -209,7 +201,7 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       volumeId,
       volumeLabel,
       linodeLabel,
-      poweredOff,
+      linodeId,
       error: '',
     }));
   };
@@ -231,53 +223,6 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       ...destructiveDialog,
       open: false,
     }));
-  };
-
-  const detachVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { detachVolume } = props;
-    if (!volumeId) {
-      return;
-    }
-
-    detachVolume({ volumeId })
-      .then((_) => {
-        /* @todo: show a progress bar for volume detachment */
-        enqueueSnackbar('Volume detachment started', {
-          variant: 'info',
-        });
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
-            .reason,
-        }));
-      });
-  };
-
-  const deleteVolume = () => {
-    const { volumeId } = destructiveDialog;
-    const { deleteVolume } = props;
-
-    if (!volumeId) {
-      return;
-    }
-
-    deleteVolume({ volumeId })
-      .then(() => {
-        closeDestructiveDialog();
-        resetEventsPolling();
-      })
-      .catch((error) => {
-        setDestructiveDialog((destructiveDialog) => ({
-          ...destructiveDialog,
-          error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
-            .reason,
-        }));
-      });
   };
 
   const openCreateVolumeDrawer = (e: any) => {
@@ -359,14 +304,12 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       />
       <DestructiveVolumeDialog
         open={destructiveDialog.open}
-        error={destructiveDialog.error}
         volumeLabel={destructiveDialog.volumeLabel}
         linodeLabel={destructiveDialog.linodeLabel}
-        poweredOff={destructiveDialog.poweredOff || false}
+        linodeId={linodeId ?? 0}
+        volumeId={destructiveDialog.volumeId ?? 0}
         mode={destructiveDialog.mode}
         onClose={closeDestructiveDialog}
-        onDetach={detachVolume}
-        onDelete={deleteVolume}
       />
     </div>
   );
