@@ -11,7 +11,7 @@ except Exception:
     REPO=False
 
 DATE = datetime.datetime.now().strftime('%Y-%m-%d')
-START_INSERT=5 if REPO.lower() == 'manager' else 0
+START_INSERT=0 if (REPO and REPO.lower() != 'manager') else 5
 
 NOT_INCLUDED_IN_LOG = []
 
