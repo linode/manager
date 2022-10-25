@@ -126,9 +126,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-typescript": "^7.10.1",
     "@mdx-js/loader": "^1.6.22",
     "@storybook/addon-actions": "~6.5.10",
     "@storybook/addon-controls": "~6.5.10",
@@ -187,8 +184,6 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "axe-core": "^3.5.1",
-    "babel-core": "^7.0.0-bridge",
-    "babel-preset-react-app": "^9.1.2",
     "browserslist": "^4.16.5",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chai-string": "^1.5.0",
@@ -325,12 +320,6 @@
     "reporters": [
       "default",
       "jest-junit"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-typescript"
     ]
   },
   "resolutions": {
