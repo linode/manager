@@ -103,7 +103,8 @@ def generateChangeLog(release, date, origin, repo=''):
 
     changelog_file = "CHANGELOG.md"
 
-    if (repo == 'manager'):
+    # If the repo isn't explicitly passed in, we default to Manager's CHANGELOG.
+    if (repo == 'manager' or repo == '' or repo is False):
         changelog_file = "CHANGELOG.md"
     else:
         changelog_file = "packages/{}/CHANGELOG.md".format(repo)
