@@ -4,7 +4,7 @@ import {
   deleteDomainById,
   deleteAllTestDomains,
 } from 'support/api/domains';
-import { randomIp, randomLabel } from 'support/util/random';
+import { randomIp, randomLabel, randomDomainName } from 'support/util/random';
 import { fbtClick, getClick } from '../../support/helpers';
 
 const createRecords = () => [
@@ -83,7 +83,7 @@ const createRecords = () => [
       },
       {
         name: '[data-qa-target="Value"]',
-        value: randomLabel(),
+        value: randomDomainName(),
         skipCheck: false,
       },
     ],
