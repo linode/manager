@@ -54,7 +54,7 @@ def remove_pull_request_id(commit_message):
     regexp = "\(#\d+\)"
     return re.sub(regexp, '', commit_message).strip()
 
-def generateChangeLog(release, date, origin, repo=False):
+def generateChangeLog(release, date, origin, repo=''):
     git_log_command = ["git", "log", "--no-merges", "--oneline", "--pretty='%s'", "{}/develop...HEAD".format(origin)]
 
     if (repo):
