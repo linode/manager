@@ -1,6 +1,10 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { queryClient, updateInPaginatedStore } from './base';
+import {
+  getItemInPaginatedStore,
+  queryClient,
+  updateInPaginatedStore,
+} from './base';
 import {
   attachVolume,
   AttachVolumePayload,
@@ -17,6 +21,7 @@ import {
   deleteVolume,
   VolumeRequestPayload,
   createVolume,
+  getLinodeVolumes,
 } from '@linode/api-v4';
 
 const queryKey = 'volumes';
@@ -25,6 +30,17 @@ export const useVolumesQuery = (params: any, filters: any) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
+    { keepPreviousData: true }
+  );
+
+export const useLinodeVolumesQuery = (
+  linodeId: number,
+  params: any = {},
+  filters: any = {}
+) =>
+  useQuery<ResourcePage<Volume>, APIError[]>(
+    [`${queryKey}-list`, `linode-${linodeId}`, params, filters],
+    () => getLinodeVolumes(linodeId, params, filters),
     { keepPreviousData: true }
   );
 
@@ -77,6 +93,10 @@ export const useAttachVolumeMutation = () =>
     ({ volumeId, ...data }) => attachVolume(volumeId, data),
     {
       onSuccess(volume) {
+        queryClient.invalidateQueries([
+          `${queryKey}-list`,
+          `linode-${volume.linode_id}`,
+        ]);
         updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
       },
     }
@@ -91,12 +111,12 @@ export const volumeEventsHandler = (event: Event) => {
   switch (action) {
     case 'volume_create':
       switch (status) {
+        case 'started':
         case 'scheduled':
           return;
         case 'failed':
         case 'finished':
         case 'notification':
-        case 'started':
           queryClient.invalidateQueries(`${queryKey}-list`);
           return;
       }
@@ -127,6 +147,16 @@ export const volumeEventsHandler = (event: Event) => {
         case 'notification':
         case 'finished':
           // This means a detach was successful. Remove associated Linode.
+          const volume = getItemInPaginatedStore<Volume>(
+            `${queryKey}-list`,
+            entity!.id
+          );
+          if (volume && volume.linode_id !== null) {
+            queryClient.invalidateQueries([
+              `${queryKey}-list`,
+              `linode-${volume.linode_id}`,
+            ]);
+          }
           updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
             linode_id: null,
             linode_label: null,

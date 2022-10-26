@@ -1,14 +1,10 @@
 import { Formik } from 'formik';
 import { Grant } from '@linode/api-v4/lib/account';
-import { attachVolume } from '@linode/api-v4/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeForm';
@@ -24,6 +20,7 @@ import NoticePanel from './NoticePanel';
 import Notice from 'src/components/Notice';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
+import { useAttachVolumeMutation } from 'src/queries/volumes';
 
 interface Props {
   onClose: () => void;
@@ -33,7 +30,7 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps & VolumesRequests;
+type CombinedProps = Props & StateProps & DispatchProps;
 
 /**
  * I had to provide a separate validation schema since the linode_id (which is required by API) is
@@ -60,11 +57,15 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
   )[0];
   const disabled =
     readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
+
+  const { mutateAsync: attachVolume } = useAttachVolumeMutation();
+
   return (
     <Formik
       validationSchema={validationScheme}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
-        attachVolume(values.volume_id, {
+        attachVolume({
+          volumeId: values.volume_id,
           linode_id: linodeId,
           config_id: values.config_id,
         })
@@ -196,6 +197,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(connected, withVolumesRequests);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(AttachVolumeToLinodeForm);

@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
@@ -18,13 +17,14 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useNotifications from 'src/hooks/useNotifications';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import useVolumes from 'src/hooks/useVolumes';
+import { useOrder } from 'src/hooks/useOrder';
+import usePagination from 'src/hooks/usePagination';
 import { useProfile } from 'src/queries/profile';
-import { getVolumesForLinode } from 'src/store/volume/volume.selector';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
+import { preferenceKey } from '../LinodeAdvanced/LinodeVolumes';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
@@ -268,20 +268,34 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
     });
   };
+
+  const { order, orderBy } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'desc',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
+
+  const pagination = usePagination(1, preferenceKey);
+
   const { data: profile } = useProfile();
-  const { _loading } = useReduxLoad(['volumes']);
-  const { volumes } = useVolumes();
+  const { data: volumesData } = useLinodeVolumesQuery(
+    matchedLinodeId,
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
 
-  if (!profile?.username) {
-    return null;
-  }
-
-  if (_loading) {
-    return <CircleProgress />;
-  }
-
-  const volumesForLinode = getVolumesForLinode(volumes.itemsById, linode.id);
-  const numAttachedVolumes = volumesForLinode.length;
+  const volumesForLinode = volumesData?.data ?? [];
+  const numAttachedVolumes = volumesData?.results ?? 0;
 
   const handleDeleteLinode = (linodeId: number) => {
     history.push('/linodes');
