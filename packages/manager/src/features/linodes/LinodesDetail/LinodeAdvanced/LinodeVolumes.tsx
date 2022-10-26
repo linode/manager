@@ -282,7 +282,14 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
             >
               Label
             </TableSortCell>
-            <TableCell>Region</TableCell>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="Status"
+              handleClick={handleOrderChange}
+            >
+              Status
+            </TableSortCell>
             <TableSortCell
               active={orderBy === 'size'}
               direction={order}

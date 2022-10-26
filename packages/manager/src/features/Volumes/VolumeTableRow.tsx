@@ -196,13 +196,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </Grid>
       </TableCell>
-      {isVolumesLanding ? (
-        <TableCell statusCell>
-          <StatusIcon status={volumeStatusIconMap[status]} />
-          {volumeStatusMap[status]}
-        </TableCell>
-      ) : null}
-      {region ? (
+      <TableCell statusCell>
+        <StatusIcon status={volumeStatusIconMap[status]} />
+        {volumeStatusMap[status]}
+      </TableCell>
+      {isVolumesLanding && region ? (
         <TableCell data-qa-volume-region noWrap>
           {formattedRegion}
         </TableCell>
