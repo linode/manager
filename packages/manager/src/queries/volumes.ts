@@ -24,6 +24,15 @@ import {
   getLinodeVolumes,
 } from '@linode/api-v4';
 
+/**
+ * For Volumes, we must maintain the following stores to keep our cache up to date.
+ * When we manually mutate our cache, we must keep data under the following queryKeys up to date.
+ *
+ * Query Keys:
+ * - `volumes-list` - Contains Paginated Volumes
+ * - [`volumes-list`, `linode-{id}`] - Conatins Paginated Volumes for a Specifc Linode
+ */
+
 const queryKey = 'volumes';
 
 export const useVolumesQuery = (params: any, filters: any) =>

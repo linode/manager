@@ -262,3 +262,13 @@ export const getItemInPaginatedStore = <T extends { id: number | string }>(
 
   return null;
 };
+
+export const doesItemExistInPaginatedStore = <
+  T extends { id: number | string }
+>(
+  queryKey: QueryKey,
+  id: number
+) => {
+  const item = getItemInPaginatedStore<T>(queryKey, id);
+  return item !== null;
+};
