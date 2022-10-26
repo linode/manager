@@ -1,6 +1,7 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import {
+  doesItemExistInPaginatedStore,
   getItemInPaginatedStore,
   queryClient,
   updateInPaginatedStore,
@@ -132,10 +133,17 @@ export const volumeEventsHandler = (event: Event) => {
     case 'volume_attach':
       switch (status) {
         case 'scheduled':
-        case 'failed':
-        case 'notification':
         case 'started':
+          return;
+        case 'notification':
         case 'finished':
+          const volume = getItemInPaginatedStore<Volume>(
+            `${queryKey}-list`,
+            entity!.id
+          );
+          if (volume && volume.linode_id === null) {
+            queryClient.invalidateQueries(`${queryKey}-list`);
+          }
           return;
         case 'failed':
           // This means a attach was unsuccessful. Remove associated Linode.
@@ -187,6 +195,9 @@ export const volumeEventsHandler = (event: Event) => {
       }, 5000);
       return;
     case 'volume_delete':
+      if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+      }
       return;
     case 'volume_migrate':
       return;
