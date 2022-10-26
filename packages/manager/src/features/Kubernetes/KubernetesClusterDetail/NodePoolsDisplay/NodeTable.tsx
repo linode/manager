@@ -23,6 +23,8 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
 import { useRecentEventForLinode } from 'src/store/selectors/recentEventForLinode';
 import NodeActionMenu from './NodeActionMenu';
+import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   table: {
@@ -40,6 +42,36 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipCell: {
     ...theme.applyTableHeaderStyles,
     width: '25%',
+  },
+  ipsWrapper: {
+    display: 'inline-flex',
+    flexDirection: 'column',
+    '& [data-qa-copy-ip] button > svg': {
+      opacity: 0,
+    },
+    '&:hover': {
+      '& [data-qa-copy-ip] button > svg': {
+        opacity: 0,
+        '& path': {
+          fill: theme.textColors.linkActiveLight,
+          backgroundColor: theme.bg.lightBlue2,
+        },
+      },
+    },
+    '& [data-qa-copy-ip] button:focus > svg': {
+      opacity: 1,
+    },
+  },
+  row: {
+    '&:hover': {
+      backgroundColor: theme.bg.lightBlue2,
+      '& [data-qa-copy-ip] button > svg': {
+        opacity: 1,
+      },
+    },
+    '& [data-qa-copy-ip] button:focus > svg': {
+      opacity: 1,
+    },
   },
   error: {
     color: theme.color.red,
@@ -218,7 +250,10 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow ariaLabel={label}>
+    <TableRow
+      ariaLabel={label}
+      className={classes.row}
+    >
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
@@ -248,7 +283,9 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
         {linodeError ? (
           <Typography className={classes.error}>Error retrieving IP</Typography>
         ) : (
-          displayIP
+         <div className={classes.ipsWrapper}>
+           <IPAddress ips={[displayIP]} showMore />
+         </div>
         )}
       </TableCell>
       <TableCell>
