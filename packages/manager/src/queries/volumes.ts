@@ -93,10 +93,10 @@ export const useAttachVolumeMutation = () =>
     ({ volumeId, ...data }) => attachVolume(volumeId, data),
     {
       onSuccess(volume) {
-        queryClient.invalidateQueries([
-          `${queryKey}-list`,
-          `linode-${volume.linode_id}`,
-        ]);
+        queryClient.invalidateQueries(
+          [`${queryKey}-list`, `linode-${volume.linode_id}`],
+          { exact: false, refetchInactive: true }
+        );
         updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
       },
     }
@@ -152,10 +152,10 @@ export const volumeEventsHandler = (event: Event) => {
             entity!.id
           );
           if (volume && volume.linode_id !== null) {
-            queryClient.invalidateQueries([
-              `${queryKey}-list`,
-              `linode-${volume.linode_id}`,
-            ]);
+            queryClient.invalidateQueries(
+              [`${queryKey}-list`, `linode-${volume.linode_id}`],
+              { exact: false, refetchInactive: true }
+            );
           }
           updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
             linode_id: null,
