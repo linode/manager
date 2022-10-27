@@ -9,20 +9,18 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
+import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import withAgreements, {
-  AgreementsProps,
-} from 'src/features/Account/Agreements/withAgreements';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
@@ -35,17 +33,25 @@ import withImages, {
 } from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import withAgreements, {
+  AgreementsProps,
+} from 'src/features/Account/Agreements/withAgreements';
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
 import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
+import userSSHKeyHoc, {
+  State as userSSHKeysProps,
+} from 'src/features/linodes/userSSHKeyHoc';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
+import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
 import {
-  baseApps,
-  getOneClickApps,
-} from 'src/features/StackScripts/stackScriptUtils';
+  queryKey as accountAgreementsQueryKey,
+  reportAgreementSigningError,
+} from 'src/queries/accountAgreements';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
+import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
   LinodeActionsProps,
@@ -55,12 +61,12 @@ import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendCreateLinodeEvent } from 'src/utilities/ga';
+import { isEURegion } from 'src/utilities/formatRegion';
+import { sendCreateLinodeEvent, sendEvent } from 'src/utilities/ga';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
-import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
 import {
   HandleSubmit,
   Info,
@@ -70,14 +76,6 @@ import {
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
-import { isEURegion } from 'src/utilities/formatRegion';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import {
-  queryKey as accountAgreementsQueryKey,
-  reportAgreementSigningError,
-} from 'src/queries/accountAgreements';
-import DocsLink from 'src/components/DocsLink';
-import { sendEvent } from 'src/utilities/ga';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -235,11 +233,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ appInstancesLoading: true });
 
     queryClient
-      .fetchQuery('stackscripts-oca', () => getOneClickApps())
-      .then((res: ResourcePage<StackScript>) => {
+      .fetchQuery('stackscripts-oca-all', () => getAllOCAsRequest())
+      .then((res: StackScript[]) => {
         // Don't display One-Click Helpers to the user
         // Filter out any apps that we don't have info for
-        const filteredApps = res.data.filter((script) => {
+        const filteredApps = res.filter((script) => {
           return (
             !script.label.match(/helpers/i) &&
             allowedApps.includes(String(script.id))
