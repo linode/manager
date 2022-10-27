@@ -54,7 +54,7 @@
     "ipaddr.js": "^1.9.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
-    "launchdarkly-react-client-sdk": "2.11.0",
+    "launchdarkly-react-client-sdk": "^2.29.1",
     "libphonenumber-js": "^1.10.6",
     "logic-query-parser": "^0.0.5",
     "luxon": "^1.24.1",
@@ -110,7 +110,6 @@
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
-    "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",
     "cy:run": "cypress run -b chrome",
     "cy:e2e": "cypress run --headless -b chrome",
@@ -340,13 +339,6 @@
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
     "axe-core": "^3.4.0"
-  },
-  "workspaces": {
-    "nohoist": [
-      "launchdarkly-js-client-sdk",
-      "launchdarkly-js-sdk-common",
-      "launchdarkly-react-client-sdk"
-    ]
   },
   "browserslist": [
     ">1%",
