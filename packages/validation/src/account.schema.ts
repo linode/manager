@@ -4,9 +4,7 @@ export const updateAccountSchema = object({
   email: string().max(128, 'Email must be 128 characters or less.'),
   address_1: string().max(64, 'Address must be 64 characters or less.'),
   city: string().max(24, 'City must be 24 characters or less.'),
-  company: string()
-    .max(128, 'Company must be 128 characters or less.')
-    .nullable(true),
+  company: string().max(128, 'Company must be 128 characters or less.'),
   country: string()
     .min(2, 'Country code must be two letters.')
     .max(2, 'Country code must be two letters.'),
