@@ -115,6 +115,7 @@ export const linodeIPFactory = Factory.Sync.makeFactory<LinodeIPsResponse>({
 
 export const linodeBackupsFactory = Factory.Sync.makeFactory<LinodeBackups>({
   enabled: true,
+  available: true,
   schedule: {
     day: 'Scheduling',
     window: 'Scheduling',

@@ -41,6 +41,7 @@ export interface LinodeAlerts {
 
 export interface LinodeBackups {
   enabled: boolean;
+  available: boolean;
   schedule: LinodeBackupSchedule;
   last_successful: string | null;
 }
@@ -94,6 +95,7 @@ export interface LinodeBackup {
   id: number;
   label: string | null;
   status: LinodeBackupStatus;
+  available: boolean;
   type: LinodeBackupType;
   region: string;
   created: string;
