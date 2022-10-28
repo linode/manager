@@ -702,8 +702,17 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     const { backups: backupsResponse } = this.state;
     const backups = aggregateBackups(backupsResponse);
 
+    const backupsUnavailable = backups.some((backup) => !backup.available);
+
     return (
       <React.Fragment>
+        {backupsUnavailable && (
+          <Notice
+            warning
+            important
+            text="The Backup Service for this Linode is currently undergoing maintenance."
+          />
+        )}
         {disabled && <LinodePermissionsError />}
         {backups.length ? (
           <this.Table backups={backups} />
