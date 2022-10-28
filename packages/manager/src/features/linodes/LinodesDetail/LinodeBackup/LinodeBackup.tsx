@@ -5,6 +5,7 @@ import {
   getLinodeBackups,
   getType,
   LinodeBackup,
+  LinodeBackups,
   LinodeBackupSchedule,
   LinodeBackupsResponse,
   LinodeType,
@@ -135,6 +136,7 @@ const styles = (theme: Theme) =>
 interface ContextProps {
   linodeID: number;
   linodeRegion: string;
+  linodeBackups: LinodeBackups;
   linodeType: null | string;
   backupsEnabled: boolean;
   backupsSchedule: LinodeBackupSchedule;
@@ -696,13 +698,20 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   Management = (): JSX.Element | null => {
-    const { classes, linodeID, linodeRegion, permissions } = this.props;
+    const {
+      classes,
+      linodeID,
+      linodeRegion,
+      permissions,
+      linodeBackups,
+    } = this.props;
+
     const disabled = isReadOnly(permissions);
 
     const { backups: backupsResponse } = this.state;
     const backups = aggregateBackups(backupsResponse);
 
-    const backupsUnavailable = backups.some((backup) => !backup.available);
+    const backupsUnavailable = !linodeBackups.available;
 
     return (
       <React.Fragment>
@@ -842,6 +851,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
   linodeRegion: linode.region,
   linodeType: linode.type,
+  linodeBackups: linode.backups,
   permissions: linode._permissions,
 }));
 
