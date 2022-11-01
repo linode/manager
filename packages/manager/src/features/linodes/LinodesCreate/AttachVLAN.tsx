@@ -95,7 +95,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
             the Linode&rsquo;s{' '}
             <ExternalLink
               text="Configuration Profile"
-              link="https://linode.com/docs/guides/disk-images-and-configuration-profiles/"
+              link="https://www.linode.com/docs/guides/linode-configuration-profiles/"
               hideIcon
             />
             .

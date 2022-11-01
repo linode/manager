@@ -50,7 +50,12 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
         <LinodeThemeWrapper theme="dark" shouldGetPreferences={false}>
-          <LDProvider value={{ flags: options.flags ?? {} }}>
+          <LDProvider
+            value={{
+              flags: options.flags ?? {},
+              flagKeyMap: {},
+            }}
+          >
             <SnackbarProvider>
               <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
             </SnackbarProvider>

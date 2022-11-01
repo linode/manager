@@ -108,9 +108,7 @@ export const handleError = (error: AxiosError) => {
     {
       replacementText: <SupportError errors={errors} />,
       condition: (e) => {
-        return !!e.reason.match(
-          /Account Limit reached. Please open a support ticket./i
-        );
+        return !!e.reason.match(/.*open a support ticket/i) && !e.field;
       },
     },
   ]);
