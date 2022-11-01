@@ -19,7 +19,7 @@
     "cost-of-modules": "yarn global add cost-of-modules && cost-of-modules --less --no-install --include-dev",
     "install:all": "yarn install --frozen-lockfile",
     "upgrade:sdk": "yarn workspace @linode/api-v4 version --no-git-tag-version --no-commit-hooks && yarn workspace linode-manager upgrade @linode/api-v4",
-    "postinstall": "yarn workspaces run postinstall && patch-package",
+    "postinstall": "echo \"Skipping Patching: yarn workspaces run postinstall && patch-package\"",
     "build:sdk": "yarn workspace @linode/api-v4 build",
     "build:validation": "yarn workspace @linode/validation build",
     "build": "yarn build:validation && yarn build:sdk && yarn workspace linode-manager build",
@@ -59,9 +59,10 @@
     "lodash": "^4.17.21",
     "glob-parent": "^5.1.2",
     "browserslist": "^4.16.5",
-    "nth-check": "v2.0.1",
     "trim-newlines": "^4.0.2",
-    "hosted-git-info": "^5.0.0"
+    "hosted-git-info": "^5.0.0",
+    "minimatch": "^3.0.5",
+    "nth-check": "^2.0.1"
   },
   "workspaces": {
     "packages": [

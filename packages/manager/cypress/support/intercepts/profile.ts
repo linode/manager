@@ -1,24 +1,14 @@
 /**
- * @file Cypress intercepts and mocks for Cloud Manager profile and account requests.
+ * @file Cypress intercepts and mocks for Cloud Manager profile requests.
  */
 
 import { makeErrorResponse } from 'support/util/errors';
 import type {
   Profile,
+  UserPreferences,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
 } from '@linode/api-v4/types';
-
-/**
- * Intercepts GET request to fetch account user information.
- *
- * @param username - Username of user whose info is being fetched.
- *
- * @returns Cypress chainable.
- */
-export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `*/account/users/${username}`);
-};
 
 /**
  * Intercepts GET request to fetch user profile.
@@ -38,6 +28,19 @@ export const interceptGetProfile = (): Cypress.Chainable<null> => {
  */
 export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
   return cy.intercept('GET', '*/profile', profile);
+};
+
+/**
+ * Intercepts GET request to fetch user preferences and mocks response.
+ *
+ * @param preferences - User preferences with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetUserPreferences = (
+  preferences: UserPreferences
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', '*/profile/preferences', preferences);
 };
 
 /**
@@ -148,29 +151,5 @@ export const mockConfirmTwoFactorAuth = (
 ): Cypress.Chainable<null> => {
   return cy.intercept('POST', '*/profile/tfa-enable-confirm', {
     scratch: scratchCode,
-  });
-};
-
-/**
- * Intercepts PUT request to update account username and mocks response.
- *
- * @param oldUsername - The original username which will be changed.
- * @param newUsername - The new username for the account.
- * @param restricted - Whether or not the account is restricted.
- *
- * @returns Cypress chainable.
- */
-export const mockUpdateUsername = (
-  oldUsername: string,
-  newUsername: string,
-  restricted: boolean = false
-) => {
-  return cy.intercept('PUT', `*/account/users/${oldUsername}`, {
-    username: newUsername,
-    email: 'mockEmail@example.com',
-    restricted,
-    ssh_keys: [],
-    tfa_enabled: false,
-    verified_phone_number: null,
   });
 };
