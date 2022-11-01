@@ -229,7 +229,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
               buttonType="secondary"
               onClick={incrementCounter}
               className={classes.button}
-              compact
+              compactX
               disabled={disabled || counter >= 6}
             >
               Add Disk
