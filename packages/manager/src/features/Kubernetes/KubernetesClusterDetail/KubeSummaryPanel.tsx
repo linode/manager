@@ -259,7 +259,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             container
             xs={12}
             lg={5}
-            justifyContent="flex-end"
+            justifyContent="flex-start"
             direction="column"
           >
             <Grid item className={classes.actionRow}>
