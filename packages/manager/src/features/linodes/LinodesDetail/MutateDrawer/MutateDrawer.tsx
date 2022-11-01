@@ -172,7 +172,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             loading={loading}
             onClick={this.props.initMutation}
             buttonType="primary"
-            compact
+            compactX
           >
             Enter the Upgrade Queue
           </Button>

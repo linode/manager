@@ -813,7 +813,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 buttonType="secondary"
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 className={classes.button}
-                compact
+                compactX
                 disabled={readOnly || deviceCounter >= deviceSlots.length - 1}
               >
                 Add a Device

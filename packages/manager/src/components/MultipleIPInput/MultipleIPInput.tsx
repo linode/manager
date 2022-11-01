@@ -198,7 +198,7 @@ export const MultipleIPInput: React.FC<Props> = (props) => {
         buttonType="secondary"
         onClick={addNewInput}
         className={classes.addIP}
-        compact
+        compactX
       >
         Add an IP
       </Button>

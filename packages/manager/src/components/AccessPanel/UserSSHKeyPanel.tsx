@@ -157,7 +157,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
       <Button
         buttonType="outlined"
         onClick={handleOpenDrawer}
-        compact
+        compactX
         disabled={disabled}
       >
         Add an SSH Key

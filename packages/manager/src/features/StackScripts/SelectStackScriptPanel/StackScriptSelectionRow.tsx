@@ -86,7 +86,7 @@ export class StackScriptSelectionRow extends React.Component<
             <Button
               buttonType="secondary"
               className={classes.detailsButton}
-              compact
+              compactX
               onClick={openDialog}
             >
               Show Details
