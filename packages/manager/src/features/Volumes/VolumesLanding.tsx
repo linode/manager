@@ -309,7 +309,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
             >
               Size
             </TableSortCell>
-            <TableCell>Attaced To</TableCell>
+            <TableCell>Attached To</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
