@@ -103,11 +103,11 @@ export const useAttachVolumeMutation = () =>
     ({ volumeId, ...data }) => attachVolume(volumeId, data),
     {
       onSuccess(volume) {
-        queryClient.invalidateQueries(
-          [`${queryKey}-list`, `linode-${volume.linode_id}`],
-          { exact: false, refetchInactive: true }
-        );
         updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
+        queryClient.invalidateQueries([
+          `${queryKey}-list`,
+          `linode-${volume.linode_id}`,
+        ]);
       },
     }
   );
@@ -134,8 +134,8 @@ export const volumeEventsHandler = (event: Event) => {
       switch (status) {
         case 'scheduled':
         case 'started':
-          return;
         case 'notification':
+          return;
         case 'finished':
           const volume = getItemInPaginatedStore<Volume>(
             `${queryKey}-list`,
@@ -160,24 +160,24 @@ export const volumeEventsHandler = (event: Event) => {
         case 'scheduled':
         case 'failed':
         case 'started':
-          return;
         case 'notification':
+          return;
         case 'finished':
           // This means a detach was successful. Remove associated Linode.
           const volume = getItemInPaginatedStore<Volume>(
             `${queryKey}-list`,
             entity!.id
           );
-          if (volume && volume.linode_id !== null) {
-            queryClient.invalidateQueries(
-              [`${queryKey}-list`, `linode-${volume.linode_id}`],
-              { exact: false, refetchInactive: true }
-            );
-          }
           updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
             linode_id: null,
             linode_label: null,
           });
+          if (volume && volume.linode_id !== null) {
+            queryClient.invalidateQueries([
+              `${queryKey}-list`,
+              `linode-${volume.linode_id}`,
+            ]);
+          }
           return;
       }
     case 'volume_resize':
