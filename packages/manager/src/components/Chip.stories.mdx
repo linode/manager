@@ -1,5 +1,6 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Chip from '/src/components/core/Chip';
+import Breadcrumb from '/src/components/Breadcrumb';
 import { useStyles } from '/src/features/Volumes/VolumeTableRow';
 
 <Meta title="Elements/Chips" component={Chip} />
@@ -57,6 +58,63 @@ No action is required or enabled.
     />
   </Story>
 </Canvas>
+
+## Beta
+
+Beta chips label features that are not yet part of Cloud Manager's core supported functionality. Beta features should display text communicating the [Early Adopter SLA](https://www.linode.com/legal-eatp/). When a feature is in beta, beta chips may label the feature in the primary nav, breadcrumbs, banners, tabs, and/or plain text.
+
+<Canvas>
+  <Story name="Beta">
+    <Chip
+      label="beta"
+      style={{
+        fontFamily: '"LatoWebBold", sans-serif',
+        fontSize: '0.625rem',
+        height: 16,
+        letterSpacing: '.25px',
+        textTransform: 'uppercase',
+      }}
+    />
+  </Story>
+</Canvas>
+
+### Examples
+
+<Canvas>
+  <Story name="Examples">
+    <BreadcrumbBetaExample />
+  </Story>
+</Canvas>
+
+
+export const BreadcrumbBetaExample = () => {
+  return (
+    <>
+  <Breadcrumb
+        labelTitle="Create"
+        pathname={"Databases Cluster / Create"}
+        crumbOverrides={[
+          {
+            position: 1,
+            label: 'Database Clusters',
+          },
+        ]}
+        labelOptions={{
+          suffixComponent:
+            <Chip style={{
+              fontFamily: '"LatoWebBold", sans-serif',
+              fontSize: '0.625rem',
+              height: 16,
+              letterSpacing: '.25px',
+              marginLeft: '4px',
+              textTransform: 'uppercase',
+            }}
+            label="beta" component="span" />
+        }}
+      />
+    </>
+  );
+};
 
 ## Component API
 
