@@ -52,6 +52,9 @@ const Glish = (props: Props) => {
       }
     }, 30 * 1000);
 
+    // eslint-disable-next-line scanjs-rules/call_addEventListener
+    document.addEventListener('paste', handlePaste);
+
     return () => {
       clearInterval(monitorInterval);
       clearInterval(renewInterval);
@@ -64,6 +67,30 @@ const Glish = (props: Props) => {
     connectMonitor();
     ref.current?.connect();
   }, [token]);
+
+  const handlePaste = (event: ClipboardEvent) => {
+    event.preventDefault();
+    if (!ref.current?.rfb) {
+      return;
+    }
+    if (event.clipboardData === null) {
+      return;
+    }
+    if (event.clipboardData.getData('text') === null) {
+      return;
+    }
+
+    const text = event.clipboardData.getData('text/plain');
+    console.log(text);
+
+    ref.current?.rfb.clipboardPasteFrom(text);
+
+    // setTimeout(() => {
+    //   for (let i = 0; i < text.length; i++) {
+    //     ref.current?.rfb?.sendKey(text.charCodeAt(i), 1, false);
+    //   }
+    // }, 100);
+  };
 
   const connectMonitor = () => {
     if (monitor && monitor.readyState === monitor.OPEN) {
