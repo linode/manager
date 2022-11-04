@@ -780,11 +780,11 @@ export const handlers = [
           domain: [],
           firewall: [],
           image: [],
-          linode: grantFactory.buildList(6),
+          linode: grantFactory.buildList(6000),
           longview: [],
           nodebalancer: [],
           stackscript: grantFactory.buildList(30),
-          volume: grantFactory.buildList(1),
+          volume: grantFactory.buildList(100),
         })
       )
     );
