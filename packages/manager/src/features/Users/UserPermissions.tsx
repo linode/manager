@@ -181,17 +181,26 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (username) {
       getGrants(username)
         .then((grants) => {
-          const { showTabs, tabs } = this.getTabInformation(grants);
+          if (grants.global) {
+            const { showTabs, tabs } = this.getTabInformation(grants);
 
-          this.setState({
-            grants,
-            originalGrants: grants,
-            loading: false,
-            loadingGrants: false,
-            restricted: true,
-            showTabs,
-            tabs,
-          });
+            this.setState({
+              grants,
+              originalGrants: grants,
+              loading: false,
+              loadingGrants: false,
+              restricted: true,
+              showTabs,
+              tabs,
+            });
+          } else {
+            this.setState({
+              grants,
+              loading: false,
+              loadingGrants: false,
+              restricted: false,
+            });
+          }
         })
         .catch((errResponse) => {
           this.setState({
