@@ -22,23 +22,26 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Radio from 'src/components/Radio';
 import SelectionCard from 'src/components/SelectionCard';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import Toggle from 'src/components/Toggle';
 import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import {
+  entityNameMap,
+  UserPermissionsEntitySection,
+} from './UserPermissionsEntitySection';
+import TabPanels from 'src/components/core/ReachTabPanels';
+import Tabs from 'src/components/core/ReachTabs';
+import Tab from 'src/components/core/ReachTab';
+import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
+import TabList from 'src/components/core/ReachTabList';
 
 type ClassNames =
   | 'title'
@@ -47,11 +50,7 @@ type ClassNames =
   | 'globalSection'
   | 'globalRow'
   | 'section'
-  | 'grantTable'
-  | 'selectAll'
-  | 'tableSubheading'
-  | 'setAll'
-  | 'label';
+  | 'setAll';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -77,26 +76,6 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
       paddingBottom: 0,
     },
-    grantTable: {
-      '& th': {
-        width: '25%',
-        minWidth: 150,
-      },
-      '& td': {
-        width: '100%',
-        [theme.breakpoints.down('sm')]: {
-          paddingRight: '0 !important',
-          paddingLeft: 0,
-        },
-      },
-    },
-    tableSubheading: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(2),
-    },
-    selectAll: {
-      cursor: 'pointer',
-    },
     setAll: {
       '& > div': {
         display: 'flex',
@@ -114,13 +93,6 @@ const styles = (theme: Theme) =>
       },
       '& .react-select__menu-list': {
         width: '100%',
-      },
-    },
-    label: {
-      '& div': {
-        [theme.breakpoints.down('sm')]: {
-          width: '100%',
-        },
       },
     },
   });
@@ -509,7 +481,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         className={classes.section}
       >
         <Button buttonType="secondary" onClick={onCancel} data-qa-cancel>
-          Cancel
+          Reset
         </Button>
         <Button
           buttonType="primary"
@@ -600,135 +572,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['grants', entity, idx, 'permissions']), value));
   };
 
-  renderEntitySection = (entity: GrantType) => {
-    const { classes } = this.props;
-    const { grants } = this.state;
-    if (!(grants && grants[entity] && grants[entity].length)) {
-      return null;
-    }
-    const entityGrants = grants[entity];
-
-    const entityNameMap = {
-      linode: 'Linodes',
-      stackscript: 'StackScripts',
-      image: 'Images',
-      volume: 'Volumes',
-      nodebalancer: 'NodeBalancers',
-      domain: 'Domains',
-      longview: 'Longview Clients',
-      firewall: 'Firewalls',
-    };
-
-    return (
-      <div key={entity} className={classes.section}>
-        <Typography
-          variant="h3"
-          className={classes.tableSubheading}
-          data-qa-permissions-header={entityNameMap[entity]}
-        >
-          {entityNameMap[entity]}
-        </Typography>
-        <Table
-          aria-label="User Permissions"
-          className={classes.grantTable}
-          noBorder
-        >
-          <TableHead data-qa-table-head>
-            <TableRow>
-              <TableCell>Label</TableCell>
-              <TableCell padding="checkbox">
-                {/* eslint-disable-next-line */}
-                <label
-                  className={classes.selectAll}
-                  style={{ marginLeft: -35 }}
-                >
-                  None
-                  <Radio
-                    name={`${entity}-select-all`}
-                    checked={this.entityIsAll(entity, null)}
-                    value="null"
-                    onChange={this.entitySetAllTo(entity, null)}
-                    data-qa-permission-header="None"
-                  />
-                </label>
-              </TableCell>
-              <TableCell padding="checkbox">
-                {/* eslint-disable-next-line */}
-                <label
-                  className={classes.selectAll}
-                  style={{ marginLeft: -65 }}
-                >
-                  Read Only
-                  <Radio
-                    name={`${entity}-select-all`}
-                    checked={this.entityIsAll(entity, 'read_only')}
-                    value="read_only"
-                    onChange={this.entitySetAllTo(entity, 'read_only')}
-                    data-qa-permission-header="Read Only"
-                  />
-                </label>
-              </TableCell>
-              <TableCell padding="checkbox">
-                {/* eslint-disable-next-line */}
-                <label
-                  className={classes.selectAll}
-                  style={{ marginLeft: -73 }}
-                >
-                  Read-Write
-                  <Radio
-                    name={`${entity}-select-all`}
-                    checked={this.entityIsAll(entity, 'read_write')}
-                    value="read_write"
-                    onChange={this.entitySetAllTo(entity, 'read_write')}
-                    data-qa-permission-header="Read-Write"
-                  />
-                </label>
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {entityGrants.map((grant, idx) => {
-              return (
-                <TableRow key={grant.id} data-qa-specific-grant={grant.label}>
-                  <TableCell className={classes.label} parentColumn="Label">
-                    {grant.label}
-                  </TableCell>
-                  <TableCell parentColumn="None" padding="checkbox">
-                    <Radio
-                      name={`${grant.id}-perms`}
-                      checked={grant.permissions === null}
-                      value="null"
-                      onChange={this.setGrantTo(entity, idx, null)}
-                      data-qa-permission="None"
-                    />
-                  </TableCell>
-                  <TableCell parentColumn="Read Only" padding="checkbox">
-                    <Radio
-                      name={`${grant.id}-perms`}
-                      checked={grant.permissions === 'read_only'}
-                      value="read_only"
-                      onChange={this.setGrantTo(entity, idx, 'read_only')}
-                      data-qa-permission="Read Only"
-                    />
-                  </TableCell>
-                  <TableCell parentColumn="Read-Write" padding="checkbox">
-                    <Radio
-                      name={`${grant.id}-perms`}
-                      checked={grant.permissions === 'read_write'}
-                      value="read_write"
-                      onChange={this.setGrantTo(entity, idx, 'read_write')}
-                      data-qa-permission="Read-Write"
-                    />
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  };
-
   setAllEntitiesTo = (e: Item) => {
     const value = e.value === 'null' ? null : e.value;
     this.entityPerms.map((entity: GrantType) =>
@@ -752,6 +595,16 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     const defaultPerm = permOptions.find((eachPerm) => {
       return eachPerm.value === setAllPerm;
     });
+
+    const tabs = this.entityPerms.reduce((acc: string[], entity: string) => {
+      const grantsForEntity = this.state.grants?.[entity];
+      if (grantsForEntity && grantsForEntity.length > 25) {
+        acc.push(entity);
+      }
+      return acc;
+    }, []);
+
+    const showTabs = tabs.length > 0;
 
     return (
       <Paper className={classes.globalSection} data-qa-entity-section>
@@ -782,10 +635,40 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <div className={classes.section}>
-          {grants &&
-            this.entityPerms.map((entity: GrantType) => {
-              return this.renderEntitySection(entity);
-            })}
+          {showTabs ? (
+            <Tabs>
+              <TabList>
+                {tabs.map((entity) => (
+                  <Tab key={`${entity}-tab`}>{entityNameMap[entity]}</Tab>
+                ))}
+              </TabList>
+              <TabPanels>
+                {tabs.map((entity: GrantType, idx) => (
+                  <SafeTabPanel key={`${entity}-tab-content`} index={idx}>
+                    <UserPermissionsEntitySection
+                      key={entity}
+                      grants={this.state.grants?.[entity]}
+                      entity={entity}
+                      setGrantTo={this.setGrantTo}
+                      entitySetAllTo={this.entitySetAllTo}
+                    />
+                  </SafeTabPanel>
+                ))}
+              </TabPanels>
+            </Tabs>
+          ) : (
+            grants &&
+            this.entityPerms.map((entity: GrantType) => (
+              <UserPermissionsEntitySection
+                key={entity}
+                grants={this.state.grants?.[entity]}
+                entity={entity}
+                setGrantTo={this.setGrantTo}
+                entitySetAllTo={this.entitySetAllTo}
+                showHeading
+              />
+            ))
+          )}
         </div>
         {success && success.specific && (
           <Notice

@@ -3,9 +3,10 @@ import * as React from 'react';
 import scrollTo from 'src/utilities/scrollTo';
 import { storage } from 'src/utilities/storage';
 
-const createDisplayPage = <T extends any>(page: number, pageSize: number) => (
-  list: T[]
-): T[] => {
+export const createDisplayPage = <T extends any>(
+  page: number,
+  pageSize: number
+) => (list: T[]): T[] => {
   const count = list.length;
   if (count === 0) {
     return list;
