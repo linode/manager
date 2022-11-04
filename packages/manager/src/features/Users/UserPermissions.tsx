@@ -104,6 +104,11 @@ interface Props {
   clearNewUser: () => void;
 }
 
+interface TabInfo {
+  showTabs: boolean;
+  tabs: string[];
+}
+
 interface State {
   loading: boolean;
   /* need this separated so we can show just the restricted toggle when it's in use */
@@ -116,6 +121,9 @@ interface State {
   errors?: APIError[];
   /* null needs to be a string here because it's a Select value */
   setAllPerm: 'null' | 'read_only' | 'read_write';
+  /* Large Account Support */
+  showTabs?: boolean;
+  tabs?: string[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
@@ -142,7 +150,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'cancel_account',
   ];
 
-  entityPerms = [
+  entityPerms: GrantType[] = [
     'linode',
     'firewall',
     'stackscript',
@@ -158,22 +166,29 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     if (username) {
       getGrants(username)
         .then((grants) => {
-          if (grants.global) {
-            this.setState({
-              grants,
-              originalGrants: grants,
-              loading: false,
-              loadingGrants: false,
-              restricted: true,
-            });
-          } else {
-            this.setState({
-              grants,
-              loading: false,
-              loadingGrants: false,
-              restricted: false,
-            });
-          }
+          const { showTabs, tabs } = this.entityPerms.reduce(
+            (acc: TabInfo, entity: GrantType) => {
+              const grantsForEntity = grants[entity];
+              if (grantsForEntity.length > 25) {
+                return { showTabs: true, tabs: [...acc.tabs, entity] };
+              }
+              if (grantsForEntity.length > 0) {
+                return { ...acc, tabs: [...acc.tabs, entity] };
+              }
+              return acc;
+            },
+            { tabs: [], showTabs: false }
+          );
+
+          this.setState({
+            grants,
+            originalGrants: grants,
+            loading: false,
+            loadingGrants: false,
+            restricted: true,
+            showTabs,
+            tabs,
+          });
         })
         .catch((errResponse) => {
           this.setState({
@@ -560,15 +575,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return eachPerm.value === setAllPerm;
     });
 
-    const tabs = this.entityPerms.reduce((acc: string[], entity: string) => {
-      const grantsForEntity = this.state.grants?.[entity];
-      if (grantsForEntity && grantsForEntity.length > 25) {
-        acc.push(entity);
-      }
-      return acc;
-    }, []);
-
-    const showTabs = tabs.length > 0;
+    // const { showTabs, tabs } = this.entityPerms.reduce(
+    //   (acc: TabInfo, entity: GrantType) => {
+    //     const grantsForEntity = this.state.grants?.[entity];
+    //     if (grantsForEntity && grantsForEntity.length > 25) {
+    //       return { showTabs: true, tabs: [...acc.tabs, entity] };
+    //     }
+    //     if (grantsForEntity && grantsForEntity.length > 0) {
+    //       return { ...acc, tabs: [...acc.tabs, entity] };
+    //     }
+    //     return acc;
+    //   },
+    //   { tabs: [], showTabs: false }
+    // );
 
     return (
       <Paper className={classes.globalSection} data-qa-entity-section>
@@ -599,15 +618,15 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <div className={classes.section}>
-          {showTabs ? (
+          {this.state.showTabs ? (
             <Tabs>
               <TabList>
-                {tabs.map((entity) => (
+                {this.state.tabs?.map((entity) => (
                   <Tab key={`${entity}-tab`}>{entityNameMap[entity]}</Tab>
                 ))}
               </TabList>
               <TabPanels>
-                {tabs.map((entity: GrantType, idx) => (
+                {this.state.tabs?.map((entity: GrantType, idx) => (
                   <SafeTabPanel key={`${entity}-tab-content`} index={idx}>
                     <UserPermissionsEntitySection
                       key={entity}
