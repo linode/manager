@@ -161,24 +161,27 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'longview',
   ];
 
+  getTabInformation = (grants: Grants) =>
+    this.entityPerms.reduce(
+      (acc: TabInfo, entity: GrantType) => {
+        const grantsForEntity = grants[entity];
+        if (grantsForEntity.length > 25) {
+          return { showTabs: true, tabs: [...acc.tabs, entity] };
+        }
+        if (grantsForEntity.length > 0) {
+          return { ...acc, tabs: [...acc.tabs, entity] };
+        }
+        return acc;
+      },
+      { tabs: [], showTabs: false }
+    );
+
   getUserGrants = () => {
     const { username } = this.props;
     if (username) {
       getGrants(username)
         .then((grants) => {
-          const { showTabs, tabs } = this.entityPerms.reduce(
-            (acc: TabInfo, entity: GrantType) => {
-              const grantsForEntity = grants[entity];
-              if (grantsForEntity.length > 25) {
-                return { showTabs: true, tabs: [...acc.tabs, entity] };
-              }
-              if (grantsForEntity.length > 0) {
-                return { ...acc, tabs: [...acc.tabs, entity] };
-              }
-              return acc;
-            },
-            { tabs: [], showTabs: false }
-          );
+          const { showTabs, tabs } = this.getTabInformation(grants);
 
           this.setState({
             grants,
@@ -238,7 +241,11 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               set(lensPath(['originalGrants', 'global']), grantsResponse.global)
             )
           );
-          this.setState({ isSavingGlobal: false });
+
+          // In the chance a new type entity was added to the account, re-calculate what tabs need to be shown.
+          const { tabs } = this.getTabInformation(grantsResponse);
+          this.setState({ isSavingGlobal: false, tabs });
+
           this.props.enqueueSnackbar('Successfully saved global permissions', {
             variant: 'success',
           });
@@ -259,11 +266,12 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   };
 
   saveSpecificGrants = () => {
-    this.setState({ errors: undefined });
+    this.setState({ errors: undefined, isSavingEntity: true });
     const { username } = this.props;
     const { grants } = this.state;
     if (!username || !grants) {
       return this.setState({
+        isSavingEntity: false,
         errors: [
           {
             reason: `Can\'t set entity-specific permissions at this time. Please try again later`,
@@ -272,9 +280,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       });
     }
 
-    this.setState({ isSavingEntity: true });
-    const requestPayload = omit(['global'], grants);
-    updateGrants(username, requestPayload as Partial<Grants>)
+    // You would think ramda could do a TS omit, but I guess not
+    const requestPayload = omit(['global'], grants) as Omit<Grants, 'global'>;
+    updateGrants(username, requestPayload)
       .then((grantsResponse) => {
         /* build array of update fns */
         let updateFns = this.entityPerms.map((entity) => {
@@ -294,7 +302,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           'Successfully saved entity-specific permissions',
           { variant: 'success' }
         );
-        this.setState({ isSavingEntity: false });
+        // In the chance a new type entity was added to the account, re-calculate what tabs need to be shown.
+        const { tabs } = this.getTabInformation(grantsResponse);
+        this.setState({ isSavingEntity: false, tabs });
       })
       .catch((errResponse) => {
         this.setState({
