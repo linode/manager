@@ -42,6 +42,7 @@ import Tabs from 'src/components/core/ReachTabs';
 import Tab from 'src/components/core/ReachTab';
 import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabList from 'src/components/core/ReachTabList';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 type ClassNames =
   | 'title'
@@ -103,38 +104,29 @@ interface Props {
   clearNewUser: () => void;
 }
 
-interface Success {
-  global: string;
-  specific: string;
-}
-
 interface State {
   loading: boolean;
   /* need this separated so we can show just the restricted toggle when it's in use */
   loadingGrants: boolean;
-  saving: {
-    [key: string]: boolean;
-  };
+  isSavingGlobal: boolean;
+  isSavingEntity: boolean;
   grants?: Grants;
   originalGrants?: Grants /* used to implement cancel functionality */;
   restricted?: boolean;
   errors?: APIError[];
-  success?: Success;
   /* null needs to be a string here because it's a Select value */
   setAllPerm: 'null' | 'read_only' | 'read_write';
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 
 class UserPermissions extends React.Component<CombinedProps, State> {
   state: State = {
     loadingGrants: false,
     loading: true,
     setAllPerm: 'null',
-    saving: {
-      global: false,
-      entity: false,
-    },
+    isSavingGlobal: false,
+    isSavingEntity: false,
   };
 
   globalBooleanPerms = [
@@ -222,40 +214,30 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     clearNewUser();
 
     if (type === 'global') {
-      this.setState(
-        compose(
-          set(lensPath(['success', 'global']), ''),
-          set(lensPath(['saving', 'global']), true)
-        )
-      );
-      updateGrants(username, { global: grants.global } as Partial<Grants>)
+      this.setState({ isSavingGlobal: true });
+      updateGrants(username, { global: grants.global })
         .then((grantsResponse) => {
           this.setState(
             compose(
               set(lensPath(['grants', 'global']), grantsResponse.global),
-              set(
-                lensPath(['originalGrants', 'global']),
-                grantsResponse.global
-              ),
-              set(
-                lensPath(['success', 'global']),
-                'Successfully updated global permissions'
-              ) as () => Success,
-              set(lensPath(['saving', 'global']), false)
+              set(lensPath(['originalGrants', 'global']), grantsResponse.global)
             )
           );
+          this.setState({ isSavingGlobal: false });
+          this.props.enqueueSnackbar('Successfully saved global permissions', {
+            variant: 'success',
+          });
         })
         .catch((errResponse) => {
           this.setState({
+            isSavingGlobal: false,
             errors: getAPIErrorOrDefault(
               errResponse,
               'Error while updating global permissions for this user. Please try again later.'
             ),
           });
-          this.setState(set(lensPath(['saving', 'global']), false));
           scrollErrorIntoView();
         });
-      return;
     }
 
     /* This is where individual entity saving could be implemented */
@@ -275,12 +257,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       });
     }
 
-    this.setState(
-      compose(
-        set(lensPath(['success', 'specific']), ''),
-        set(lensPath(['saving', 'entity']), true)
-      )
-    );
+    this.setState({ isSavingEntity: true });
     const requestPayload = omit(['global'], grants);
     updateGrants(username, requestPayload as Partial<Grants>)
       .then((grantsResponse) => {
@@ -298,24 +275,20 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         if (updateFns.length) {
           this.setState((compose as any)(...updateFns));
         }
-        this.setState(
-          compose(
-            set(
-              lensPath(['success', 'specific']),
-              'Successfully updated entity-specific permissions'
-            ),
-            set(lensPath(['saving', 'entity']), false)
-          )
+        this.props.enqueueSnackbar(
+          'Successfully saved entity-specific permissions',
+          { variant: 'success' }
         );
+        this.setState({ isSavingEntity: false });
       })
       .catch((errResponse) => {
         this.setState({
+          isSavingEntity: false,
           errors: getAPIErrorOrDefault(
             errResponse,
             'Error while updating entity-specific permissions for this user. Please try again later'
           ),
         });
-        this.setState(set(lensPath(['saving', 'entity']), false));
         scrollErrorIntoView();
       });
   };
@@ -356,7 +329,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         .then((user) => {
           this.setState({
             restricted: user.restricted,
-            success: undefined,
           });
         })
         .then(() => {
@@ -497,7 +469,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   renderGlobalPerms = () => {
     const { classes } = this.props;
-    const { grants, success, saving } = this.state;
+    const { grants, isSavingGlobal } = this.state;
     return (
       <Paper className={classes.globalSection} data-qa-global-section>
         <Typography
@@ -506,14 +478,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         >
           Global Permissions
         </Typography>
-        {success && success.global && (
-          <Notice
-            success
-            text={success.global}
-            className={classes.section}
-            spacingTop={8}
-          />
-        )}
         <Grid container className={classes.section}>
           {grants &&
             grants.global &&
@@ -532,7 +496,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         {this.renderActions(
           this.savePermsType('global'),
           this.cancelPermsType('global'),
-          saving.global
+          isSavingGlobal
         )}
       </Paper>
     );
@@ -584,7 +548,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   renderSpecificPerms = () => {
     const { classes } = this.props;
-    const { grants, success, setAllPerm, saving } = this.state;
+    const { grants, setAllPerm, isSavingEntity } = this.state;
 
     const permOptions = [
       { label: 'None', value: 'null' },
@@ -670,18 +634,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ))
           )}
         </div>
-        {success && success.specific && (
-          <Notice
-            success
-            text={success.specific}
-            className={classes.section}
-            spacingTop={8}
-          />
-        )}
         {this.renderActions(
           this.saveSpecificGrants,
           this.cancelPermsType('entity'),
-          saving.entity
+          isSavingEntity
         )}
       </Paper>
     );
@@ -769,4 +725,4 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(UserPermissions);
+export default withSnackbar(styled(UserPermissions));
