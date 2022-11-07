@@ -148,12 +148,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
           name="config"
           id="config"
           errorText={linodeError}
-          disabled={
-            disabled ||
-            readOnly ||
-            selectedLinode === -1 ||
-            configChoices.length === 1
-          }
+          disabled={disabled || readOnly || selectedLinode === -1}
           label="Config"
           isClearable={false}
           isLoading={configsLoading}
