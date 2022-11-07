@@ -75,7 +75,7 @@ import {
   proDedicatedTypeFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
-import { grantsFactory } from 'src/factories/grants';
+import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 
 export const makeResourcePage = (
@@ -780,11 +780,11 @@ export const handlers = [
           domain: [],
           firewall: [],
           image: [],
-          linode: [],
+          linode: grantFactory.buildList(6000),
           longview: [],
           nodebalancer: [],
-          stackscript: [],
-          volume: [],
+          stackscript: grantFactory.buildList(30),
+          volume: grantFactory.buildList(100),
         })
       )
     );
