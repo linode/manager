@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
@@ -37,7 +37,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
   } = useAttachVolumeMutation();
 
   const [selectedLinode, setSelectedLinode] = React.useState<number>(-1);
-  const [selectedConfig, setSelectedConfig] = React.useState<string>();
+  const [selectedConfig, setSelectedConfig] = React.useState<Item<string>>();
 
   const { data, isLoading: configsLoading } = useAllLinodeConfigsQuery(
     selectedLinode,
@@ -47,17 +47,14 @@ export const VolumeAttachmentDrawer = (props: Props) => {
   const configs = data ?? [];
 
   const configChoices = configs.map((config) => {
-    return [`${config.id}`, config.label];
+    return { value: `${config.id}`, label: config.label };
   });
 
-  const configList =
-    configChoices &&
-    configChoices.map((el) => {
-      return {
-        label: el[1],
-        value: el[0],
-      };
-    });
+  React.useEffect(() => {
+    if (configChoices.length === 1) {
+      setSelectedConfig(configChoices[0]);
+    }
+  }, [configChoices]);
 
   const reset = () => {
     setSelectedLinode(-1);
@@ -69,7 +66,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
   };
 
   const changeSelectedConfig = (e: Item<string>) => {
-    setSelectedConfig(e.value);
+    setSelectedConfig(e);
   };
 
   const handleClose = () => {
@@ -81,7 +78,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
     attachVolume({
       volumeId,
       linode_id: Number(selectedLinode),
-      config_id: Number(selectedConfig) || undefined,
+      config_id: Number(selectedConfig?.value) || undefined,
     }).then((_) => {
       resetEventsPolling();
       handleClose();
@@ -120,7 +117,7 @@ export const VolumeAttachmentDrawer = (props: Props) => {
       {readOnly && (
         <Notice
           text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
-          error={true}
+          error
           important
         />
       )}
@@ -145,13 +142,18 @@ export const VolumeAttachmentDrawer = (props: Props) => {
       {/* Config Selection */}
       <FormControl fullWidth>
         <Select
-          options={configList}
-          defaultValue={selectedConfig || ''}
+          options={configChoices}
+          value={selectedLinode !== -1 ? selectedConfig : ''}
           onChange={changeSelectedConfig}
           name="config"
           id="config"
           errorText={linodeError}
-          disabled={disabled || readOnly || selectedLinode === -1}
+          disabled={
+            disabled ||
+            readOnly ||
+            selectedLinode === -1 ||
+            configChoices.length === 1
+          }
           label="Config"
           isClearable={false}
           isLoading={configsLoading}
