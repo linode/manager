@@ -68,6 +68,14 @@ const renderField = (
   // if the 'default' key is returned from the API, the field is optional
   const isOptional = field.hasOwnProperty('default');
 
+  if (isHeader(field)) {
+    return (
+      <Grid item xs={12} lg={5} key={field.name}>
+        <Typography variant="h2">{field.label}</Typography>
+      </Grid>
+    );
+  }
+
   if (isMultiSelect(field)) {
     return (
       <Grid item xs={12} lg={5} key={field.name}>
@@ -234,6 +242,10 @@ const isOneSelect = (udf: UserDefinedField) => {
 
 const isMultiSelect = (udf: UserDefinedField) => {
   return !!udf.manyof; // if we have a manyof prop, it's a checkbox
+};
+
+const isHeader = (udf: UserDefinedField) => {
+  return udf.header?.toLowerCase() === 'yes';
 };
 
 /**
