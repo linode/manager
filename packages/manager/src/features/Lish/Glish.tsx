@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import * as React from 'react';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { VncScreen, VncScreenHandle } from 'react-vnc';
@@ -81,15 +82,8 @@ const Glish = (props: Props) => {
     }
 
     const text = event.clipboardData.getData('text/plain');
-    console.log(text);
 
-    ref.current?.rfb.clipboardPasteFrom(text);
-
-    // setTimeout(() => {
-    //   for (let i = 0; i < text.length; i++) {
-    //     ref.current?.rfb?.sendKey(text.charCodeAt(i), 1, false);
-    //   }
-    // }, 100);
+    sendString(text, ref);
   };
 
   const connectMonitor = () => {
@@ -146,3 +140,62 @@ const Glish = (props: Props) => {
 };
 
 export default Glish;
+
+/**
+ * Sends RFB keystrokes for an individual character.
+ *
+ * Key strokes for `shift` will be simulated for characters which require
+ * them.
+ *
+ * @param character - Character keystroke(s) to send via RFB.
+ */
+const sendCharacter = (
+  character: string,
+  ref: React.RefObject<VncScreenHandle>
+) => {
+  const actualCharacter = character[0];
+  const requiresShift = actualCharacter.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
+
+  // Necessary key codes.
+  const returnCode = 0xff0d;
+  const shiftCode = 0xffe1;
+  const charCode = actualCharacter.charCodeAt(0);
+
+  // Handle newline.
+  if (character.match(/\n/)) {
+    ref.current?.rfb?.sendKey(returnCode, undefined, undefined);
+    return;
+  }
+
+  if (requiresShift) {
+    ref.current?.rfb?.sendKey(shiftCode, undefined, true);
+  }
+  ref.current?.rfb?.sendKey(charCode, undefined, undefined);
+  if (requiresShift) {
+    ref?.current?.rfb?.sendKey(shiftCode, undefined, false);
+  }
+};
+
+/**
+ * Sends a complete string by sending RFB keystrokes for each character.
+ *
+ * @param contents - String contents to send via RFB keystrokes.
+ * @param delay - Delay between sent characters, in milliseconds.
+ */
+const sendString = (
+  contents: string,
+  ref: React.RefObject<VncScreenHandle>,
+  delay: number = 10
+) => {
+  // Bail out if contents is empty.
+  if (contents.length < 1) {
+    return;
+  }
+
+  const character = contents[0];
+
+  setTimeout(() => {
+    sendCharacter(character, ref);
+    sendString(contents.slice(1), ref);
+  }, delay);
+};
