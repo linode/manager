@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-11-07] - v1.79.1
+### Fixed:
+- Bug when managing user permissions for large accounts
+
 ## [2022-11-01] - v1.79.0
 ### Added:
 - Set custom UserAgent header for api-v4 when run in node
