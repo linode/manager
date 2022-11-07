@@ -594,20 +594,6 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       return eachPerm.value === setAllPerm;
     });
 
-    // const { showTabs, tabs } = this.entityPerms.reduce(
-    //   (acc: TabInfo, entity: GrantType) => {
-    //     const grantsForEntity = this.state.grants?.[entity];
-    //     if (grantsForEntity && grantsForEntity.length > 25) {
-    //       return { showTabs: true, tabs: [...acc.tabs, entity] };
-    //     }
-    //     if (grantsForEntity && grantsForEntity.length > 0) {
-    //       return { ...acc, tabs: [...acc.tabs, entity] };
-    //     }
-    //     return acc;
-    //   },
-    //   { tabs: [], showTabs: false }
-    // );
-
     return (
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justifyContent="space-between" alignItems="center">
