@@ -34,4 +34,5 @@ export interface UserDefinedField {
   oneof?: string;
   manyof?: string;
   default?: string;
+  header?: string;
 }
