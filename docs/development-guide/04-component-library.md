@@ -15,3 +15,24 @@ We do this because it gives us the ability to customize the component and still 
 ## Reusable Components
 
 Reusable components such as MUI abstractions and other common UI elements should be placed in the `packages/manager/src/components` directory and have an associated Storybook story.
+
+### Storybook
+
+We use [Storybook](https://storybook.js.org/) to document our component library UI behavior and guidelines with sample components and code. It is located at [https://design.linode.com](https://design.linode.com).
+
+#### Running Storybook Locally
+
+`yarn build-storybook`: builds Storybook as a static web application, with build output located in `/packages/manager/storybook-static`; must be run from `/packages/manager` directory
+
+`yarn storybook`: starts the local dev server at `localhost:6006`
+
+#### Best Practices
+
+TODO?
+
+#### Development Tips
+
+- MDX is unforgiving. Check the console in Storybook for errors in syntax, imports, etc.
+- Use the Markdown and MDX VSCode plugins outlined in our [Coding Standards](./13-coding-standards.md).
+- If you need to wrap a component in order to use hooks, etc. you can use [decorators]().
+  - From a decorator, make sure you return `Story(props)` instead of `<Story {…props}/>` or else you’ll see `<No Display Name />` in the  code preview tab
