@@ -160,8 +160,8 @@ export const volumeEventsHandler = (event: Event) => {
         case 'scheduled':
         case 'failed':
         case 'started':
-        case 'notification':
           return;
+        case 'notification':
         case 'finished':
           // This means a detach was successful. Remove associated Linode.
           const volume = getItemInPaginatedStore<Volume>(
