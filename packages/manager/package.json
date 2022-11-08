@@ -253,6 +253,13 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.stories.{js,jsx,ts,tsx}"
     ],
+    "coverageReporters": [
+      "clover",
+      "json",
+      "text",
+      "lcov",
+      "cobertura"
+    ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
