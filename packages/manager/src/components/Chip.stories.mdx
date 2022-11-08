@@ -1,7 +1,6 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Chip from '/src/components/core/Chip';
 import Breadcrumb from '/src/components/Breadcrumb';
-import PrimaryNav from '/src/components/PrimaryNav'
 import { useStyles } from '/src/features/Volumes/VolumeTableRow';
 
 <Meta title="Elements/Chips" component={Chip} />
@@ -59,26 +58,20 @@ No action is required or enabled.
     />
     <Chip
       label="beta"
-      style={{
-        fontFamily: '"LatoWebBold", sans-serif',
-        fontSize: '0.625rem',
-        height: 16,
-        letterSpacing: '.25px',
-        textTransform: 'uppercase',
-      }}
+      variant="beta"
     />
   </Story>
 </Canvas>
 
 ### Beta
 
-Beta chips label features that are not yet part of Cloud Manager's core supported functionality. Beta features should display text communicating the [Early Adopter SLA](https://www.linode.com/legal-eatp/).
+Beta chips label features that are not yet part of Cloud Manager's core supported functionality.
 
-**Example:** A 'beta' chip may appear in the side menu navigation, breadcrumbs, banners, tabs, and/or plain text to designate beta functionality.
+**Example:** A 'beta' chip may appear in the [primary navigation](https://github.com/linode/manager/pull/8104), breadcrumbs, [banners](/src/components/DismissibleBanner/DismissibleBanner.stories.mdx), tabs, and/or plain text to designate beta functionality.
 
-**Visual style:** bold, capitalized text; reduced height, letter spacing, and font size; solid color background: MUI default color for light mode and MUI primary color for dark mode.
+**Visual style:** variant styling has bold, capitalized text; reduced height, letter spacing, and font size; solid color background: MUI default color for light mode and MUI primary color for dark mode.
 
-#### Examples
+#### Example
 
 <Canvas>
   <Story name="Beta">
@@ -100,29 +93,16 @@ export const BreadcrumbBetaExample = () => {
         ]}
         labelOptions={{
           suffixComponent:
-            <Chip style={{
-              fontFamily: '"LatoWebBold", sans-serif',
-              fontSize: '0.625rem',
-              height: 16,
-              letterSpacing: '.25px',
-              marginLeft: '4px',
-              textTransform: 'uppercase',
-            }}
-            label="beta" component="span" />
+            <Chip 
+              label="beta" 
+              variant="beta"
+              style={{marginLeft: '4px'}}
+              component="span" />
         }}
       />
     </>
   );
 };
-
-export const SideMenuBetaExample = () => {
-  return (
-    <>
-       <PrimaryNav /> {/*TODO*/}
-    </>
-  );
-}
-
 
 ## Component API
 
