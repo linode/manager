@@ -4,7 +4,6 @@ import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
@@ -20,12 +19,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
   },
   clusterRow: {
     '&:before': {
@@ -66,19 +59,13 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
       ariaLabel={`Cluster ${cluster.label}`}
     >
       <TableCell data-qa-cluster-label>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <div className={classes.labelStatusWrapper}>
-              <Link
-                className={classes.link}
-                to={`/kubernetes/clusters/${cluster.id}/summary`}
-                tabIndex={0}
-              >
-                {cluster.label}
-              </Link>
-            </div>
-          </Grid>
-        </Grid>
+        <Link
+          className={classes.link}
+          to={`/kubernetes/clusters/${cluster.id}/summary`}
+          tabIndex={0}
+        >
+          {cluster.label}
+        </Link>
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-cluster-version>

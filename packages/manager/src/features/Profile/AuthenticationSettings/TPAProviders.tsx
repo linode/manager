@@ -52,8 +52,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.name === 'lightTheme' ? '#f5f6f7' : '#444',
     marginTop: theme.spacing(),
     minHeight: 70,
-    paddingRight: `calc(${theme.spacing(3)} - 4)`,
-    paddingLeft: `calc(${theme.spacing(3)} - 4)`,
+    paddingRight: `calc(${theme.spacing(3)} - 4px)`,
+    paddingLeft: `calc(${theme.spacing(3)} - 4px)`,
     width: 'calc(100% - 8px)',
     [theme.breakpoints.down('md')]: {
       marginLeft: 0,
@@ -67,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& > span': {
       display: 'inline-block',
+      width: '100%',
       color: theme.color.headline,
     },
   },
@@ -164,19 +165,25 @@ export const TPAProviders: React.FC<CombinedProps> = (props) => {
                     handleProviderChange(thisProvider.name);
                   }}
                 >
-                  <ProviderIcon className={classes.providerIcon} />
                   <Box
                     display="flex"
                     alignItems="center"
                     justifyContent="space-between"
+                    flexDirection="row"
                     className={classes.providerContent}
                   >
-                    <div>
+                    <Box
+                      display="flex"
+                      flexDirection="row"
+                      alignItems="center"
+                      flexGrow={1}
+                    >
+                      <ProviderIcon className={classes.providerIcon} />
                       {thisProvider.displayName}
                       {isProviderEnabled ? (
                         <span className={classes.enabledText}>(Enabled)</span>
                       ) : null}
-                    </div>
+                    </Box>
                     {isProviderEnabled ? <EnabledIcon /> : null}
                   </Box>
                 </Button>

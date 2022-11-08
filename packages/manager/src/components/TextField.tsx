@@ -268,6 +268,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         <TextField
           {...textFieldProps}
           {...dataAttrs}
+          variant="standard"
           error={!!error || !!errorText}
           /**
            * Set _helperText_ and _label_ to no value because we want to

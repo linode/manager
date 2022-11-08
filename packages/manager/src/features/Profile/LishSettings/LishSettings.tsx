@@ -183,7 +183,7 @@ const LishSettings: React.FC = () => {
                   onChange={onPublicKeyChange(idx)}
                   value={authorizedKeys[idx] || ''}
                   multiline
-                  rows="4"
+                  rows={1.75}
                   className={classes.keyTextarea}
                   data-qa-public-key
                 />

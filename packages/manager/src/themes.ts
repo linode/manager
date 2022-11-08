@@ -1,13 +1,15 @@
-import { adaptV4Theme } from '@mui/material/styles';
-import createTheme from './themeFactory';
-import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
-
-const breakpoints = createBreakpoints({});
+import createTheme, { breakpoints } from './themeFactory';
 
 export const light = () => {
   const options: any = { name: 'lightTheme' };
 
-  return createTheme(adaptV4Theme(options));
+  return createTheme(options);
+};
+
+export const dark = () => {
+  const options: any = { ...darkThemeOptions };
+
+  return createTheme(options);
 };
 
 const textColors = {
@@ -92,12 +94,6 @@ const genericTableHeaderStyle = {
       color: textColors.linkActiveLight,
     },
   },
-};
-
-export const dark = () => {
-  const options: any = { ...darkThemeOptions };
-
-  return createTheme(adaptV4Theme(options));
 };
 
 const darkThemeOptions = {
@@ -191,6 +187,9 @@ const darkThemeOptions = {
     text: {
       primary: primaryColors.text,
     },
+    background: {
+      paper: '#2e3238',
+    },
   },
   typography: {
     h1: {
@@ -244,7 +243,7 @@ const darkThemeOptions = {
         '&[aria-expanded="true"]': {
           backgroundColor: primaryColors.dark,
         },
-        '&$disabled': {
+        '&:disabled': {
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
@@ -259,7 +258,7 @@ const darkThemeOptions = {
         '&:active': {
           backgroundColor: primaryColors.dark,
         },
-        '&$disabled': {
+        '&:disabled': {
           backgroundColor: '#454b54',
           color: '#5c6470',
         },
@@ -318,9 +317,7 @@ const darkThemeOptions = {
     MuiDialogTitle: {
       root: {
         borderBottom: '1px solid #222',
-        '& h2': {
-          color: primaryColors.headline,
-        },
+        color: primaryColors.headline,
       },
     },
     MuiDrawer: {
@@ -336,13 +333,12 @@ const darkThemeOptions = {
       },
     },
     MuiFormControlLabel: {
-      root: {
-        '& $disabled': {
-          color: '#aaa !important',
-        },
-      },
+      root: {},
       label: {
         color: primaryColors.text,
+        '&.Mui-disabled': {
+          color: '#aaa !important',
+        },
       },
       disabled: {},
     },
@@ -371,19 +367,27 @@ const darkThemeOptions = {
     },
     MuiIconButton: {
       root: {
-        color: primaryColors.main,
         '&:hover': {
           color: primaryColors.light,
         },
       },
     },
     MuiInput: {
+      input: {
+        '&.Mui-disabled': {
+          borderColor: '#606469',
+          color: '#ccc !important',
+          opacity: 0.5,
+          '-webkit-text-fill-color': 'unset !important',
+        },
+      },
       root: {
         backgroundColor: '#444',
         border: '1px solid #222',
         color: primaryColors.text,
-        '&$disabled': {
+        '&.Mui-disabled': {
           borderColor: '#606469',
+          opacity: 0.5,
           color: '#ccc !important',
         },
         '&$focused': {
