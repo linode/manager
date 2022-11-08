@@ -276,12 +276,12 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       pdfErrors.delete(id);
 
       const taxBanner = flags.taxBanner;
-      const taxId = getTaxID(
+      const countryTax = getTaxID(
         payment.date,
         taxBanner?.date,
-        taxBanner?.linode_tax_id
+        taxBanner?.country_tax
       );
-      const result = printPayment(account, payment, taxId);
+      const result = printPayment(account, payment, countryTax);
 
       if (result.status === 'error') {
         pdfErrors.add(id);

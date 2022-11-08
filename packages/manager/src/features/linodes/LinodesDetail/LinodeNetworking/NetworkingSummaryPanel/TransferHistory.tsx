@@ -124,8 +124,14 @@ export const TransferHistory: React.FC<Props> = (props) => {
   const decrementOffset = () =>
     setMonthOffset((prevOffset) => Math.max(prevOffset - 1, maxMonthOffset));
 
+  const decrementLabel = parseMonthOffset(monthOffset - 1, now)
+    .longHumanizedDate;
+
   const incrementOffset = () =>
     setMonthOffset((prevOffset) => Math.min(prevOffset + 1, minMonthOffset));
+
+  const incrementLabel = parseMonthOffset(monthOffset + 1, now)
+    .longHumanizedDate;
 
   // In/Out totals from the /transfer endpoint are per-month (to align with billing cycle).
   // Graph data from the /stats endpoint works a bit differently: when you request data for the
@@ -140,6 +146,8 @@ export const TransferHistory: React.FC<Props> = (props) => {
   const statsErrorString = statsError
     ? getAPIErrorOrDefault(statsError, 'Unable to load stats.')[0].reason
     : null;
+
+  const graphAriaLabel = `Network Transfer History Graph for ${humanizedDate}`;
 
   const renderStatsGraph = () => {
     if (statsLoading) {
@@ -169,6 +177,8 @@ export const TransferHistory: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
+        ariaLabel={graphAriaLabel}
+        tabIndex={-1}
         timezone={profile?.timezone ?? 'UTC'}
         chartHeight={190}
         unit={`/s`}
@@ -188,7 +198,9 @@ export const TransferHistory: React.FC<Props> = (props) => {
   };
 
   return (
-    <>
+    // Allow `tabIndex` on `<div>` because it represents an interactive element.
+    // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
+    <div tabIndex={0} role="graphics-document" aria-label={graphAriaLabel}>
       <Box
         display="flex"
         flexDirection="row"
@@ -212,7 +224,12 @@ export const TransferHistory: React.FC<Props> = (props) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          <button className={classes.arrowIconOuter} onClick={decrementOffset}>
+          <button
+            className={classes.arrowIconOuter}
+            onClick={decrementOffset}
+            aria-label={`Show Network Transfer History for ${decrementLabel}`}
+            disabled={monthOffset === maxMonthOffset}
+          >
             <ArrowBackIosIcon
               className={classNames({
                 [classes.arrowIconInner]: true,
@@ -225,7 +242,12 @@ export const TransferHistory: React.FC<Props> = (props) => {
           <span style={{ minWidth: 80, textAlign: 'center' }}>
             <Typography>{humanizedDate}</Typography>
           </span>
-          <button className={classes.arrowIconOuter} onClick={incrementOffset}>
+          <button
+            className={classes.arrowIconOuter}
+            onClick={incrementOffset}
+            aria-label={`Show Network Transfer History for ${incrementLabel}`}
+            disabled={monthOffset === minMonthOffset}
+          >
             <ArrowBackIosIcon
               className={classNames({
                 [classes.arrowIconInner]: true,
@@ -237,7 +259,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
         </Box>
       </Box>
       {renderStatsGraph()}
-    </>
+    </div>
   );
 };
 
@@ -268,20 +290,26 @@ export const sumPublicOutboundTraffic = (stats: Stats) => {
   return summed;
 };
 
-// Get the year, month, and humanized month/year, assuming an offset of `0` refers to "now".
-// An offset of `-1` refers to the previous month, `-2` refers to two months ago, etc.
+/**
+ * Get the year, month, and humanized month and year from a given offset.
+ *
+ * `0` refers to now, `1` refers to one month in the future, `-1` refers to
+ * one month in the past, etc..
+ *
+ * @param offset - Number of months in the future or past to parse.
+ * @param date - Date from which to base offset calculations.
+ *
+ * @returns Object containing numeric year, numeric month, and humanized dates for the given offset.
+ */
 export const parseMonthOffset = (offset: number, date: DateTime) => {
-  if (offset > 0) {
-    throw Error('Offset must be <= 0');
-  }
-
-  const resultingDate = date.minus({ months: Math.abs(offset) });
-
+  const resultingDate = date.plus({ months: offset });
   const year = String(resultingDate.year);
   const month = String(resultingDate.month).padStart(2, '0');
   const humanizedDate =
     offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLL y');
-  return { year, month, humanizedDate };
+  const longHumanizedDate =
+    offset === 0 ? 'Last 30 Days' : resultingDate.toFormat('LLLL y');
+  return { year, month, humanizedDate, longHumanizedDate };
 };
 
 // We don't want to allow the user to scroll back further than the Linode was created,

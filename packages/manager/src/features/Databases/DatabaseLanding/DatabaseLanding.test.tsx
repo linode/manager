@@ -103,7 +103,7 @@ describe('Database Table', () => {
 
     expect(
       getByText(
-        'Fully managed and highly scalable Database Clusters. Choose your Linode plan, select a database engine, and deploy in minutes.'
+        "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
       )
     ).toBeInTheDocument();
   });

@@ -231,6 +231,14 @@ class UpdateContactInformationForm extends React.Component<
       filteredRegionResults = regionResults;
     }
 
+    // Prevent edge case field error for "Company Name" when updating billing info
+    // for accounts that did not initially require an address.
+    if (this.state.fields.company === null) {
+      this.setState({
+        fields: { ...this.state.fields, company: '' },
+      });
+    }
+
     return (
       <Grid
         container

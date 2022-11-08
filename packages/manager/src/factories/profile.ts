@@ -1,5 +1,9 @@
 import * as Factory from 'factory.ts';
-import { Profile, SecurityQuestionsData } from '@linode/api-v4/lib/profile';
+import {
+  Profile,
+  SecurityQuestionsData,
+  UserPreferences,
+} from '@linode/api-v4/lib/profile';
 
 export const profileFactory = Factory.Sync.makeFactory<Profile>({
   uid: 9999,
@@ -120,5 +124,27 @@ export const securityQuestionsFactory = Factory.Sync.makeFactory<SecurityQuestio
         response: null,
       },
     ],
+  }
+);
+
+export const userPreferencesFactory = Factory.Sync.makeFactory<UserPreferences>(
+  {
+    desktop_sidebar_open: true,
+    type_to_confirm: true,
+    theme: 'light',
+    sortKeys: {
+      'linodes-landing': {
+        order: 'desc',
+        orderBy: '_statusPriority',
+      },
+      'database-order': {
+        order: 'asc',
+        orderBy: 'created',
+      },
+      volume: {
+        order: 'asc',
+        orderBy: 'label',
+      },
+    },
   }
 );

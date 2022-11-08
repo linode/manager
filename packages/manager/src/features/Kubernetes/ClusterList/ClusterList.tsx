@@ -16,6 +16,8 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import { useAccount } from 'src/queries/account';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { DeleteClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import { EntityError } from 'src/store/types';
@@ -24,7 +26,6 @@ import UpgradeVersionModal from '../UpgradeVersionModal';
 import ClusterDialog from './../KubernetesClusterDetail/KubernetesDialog';
 import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ClusterRow from './ClusterRow';
-
 interface Props {
   clusters: ExtendedCluster[];
   deleteCluster: (data: DeleteClusterParams) => Promise<void>;
@@ -72,6 +73,8 @@ const defaultUpgradeDialogState = {
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
   const { clearErrors, clusters, deleteCluster, error, history } = props;
+
+  const { data: account } = useAccount();
   const { data: versionData } = useKubernetesVersionQuery();
   const versions = versionData ?? [];
 
@@ -245,6 +248,10 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = (props) => {
                         key={`kubernetes-cluster-list-${idx}`}
                         cluster={cluster}
                         hasUpgrade={Boolean(cluster.nextVersion)}
+                        isClusterHighlyAvailable={
+                          getKubeHighAvailability(account, cluster)
+                            .isClusterHighlyAvailable
+                        }
                         openDeleteDialog={openDialog}
                         openUpgradeDialog={() =>
                           openUpgradeDialog(

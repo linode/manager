@@ -156,7 +156,7 @@ export const updateCredential = (
   credentialID: number,
   data: UpdateCredentialPayload
 ) =>
-  Request<Page<ManagedCredential>>(
+  Request<ManagedCredential>(
     setMethod('PUT'),
     setData(data, updateCredentialSchema),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
@@ -171,7 +171,7 @@ export const updatePassword = (
   credentialID: number,
   data: UpdatePasswordPayload
 ) =>
-  Request<Page<ManagedCredential>>(
+  Request<{}>(
     setMethod('POST'),
     setData(data, updatePasswordSchema),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)

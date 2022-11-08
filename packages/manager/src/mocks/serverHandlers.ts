@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import {
   EventAction,
   NotificationType,
@@ -12,6 +13,8 @@ import {
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  contactFactory,
+  credentialFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
   databaseEngineFactory,
@@ -41,6 +44,8 @@ import {
   longviewSubscriptionFactory,
   maintenanceResponseFactory,
   makeObjectsPage,
+  managedLinodeSettingFactory,
+  managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
   nodeBalancerConfigFactory,
@@ -64,6 +69,10 @@ import {
   tagFactory,
   VLANFactory,
   volumeFactory,
+  managedIssueFactory,
+  linodeTypeFactory,
+  dedicatedTypeFactory,
+  proDedicatedTypeFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantsFactory } from 'src/factories/grants';
@@ -327,6 +336,20 @@ export const handlers = [
       ...creatingImages,
     ];
     return res(ctx.json(makeResourcePage(images)));
+  }),
+  rest.get('*/linode/types', (req, res, ctx) => {
+    const standardTypes = linodeTypeFactory.buildList(7);
+    const dedicatedTypes = dedicatedTypeFactory.buildList(7);
+    const proDedicatedType = proDedicatedTypeFactory.build();
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...standardTypes,
+          ...dedicatedTypes,
+          proDedicatedType,
+        ])
+      )
+    );
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(60, {
@@ -847,6 +870,13 @@ export const handlers = [
     const tickets = supportTicketFactory.buildList(15, { status: 'open' });
     return res(ctx.json(makeResourcePage(tickets)));
   }),
+  rest.get('*/support/tickets/999', (req, res, ctx) => {
+    const ticket = supportTicketFactory.build({
+      id: 999,
+      closed: new Date().toISOString(),
+    });
+    return res(ctx.json(ticket));
+  }),
   rest.get('*/support/tickets/:ticketId', (req, res, ctx) => {
     const ticket = supportTicketFactory.build({ id: req.params.ticketId });
     return res(ctx.json(ticket));
@@ -900,14 +930,101 @@ export const handlers = [
   }),
   rest.get('*managed/services', (req, res, ctx) => {
     const monitors = monitorFactory.buildList(5);
-    return res(ctx.json(makeResourcePage(monitors)));
+    const downUnresolvedMonitor = monitorFactory.build({
+      id: 998,
+      status: 'problem',
+    });
+    const downResolvedMonitor = monitorFactory.build({
+      id: 999,
+      label: 'Problem',
+      status: 'problem',
+    });
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...monitors,
+          downUnresolvedMonitor,
+          downResolvedMonitor,
+        ])
+      )
+    );
+  }),
+  rest.post('*/managed/services', (req, res, ctx) => {
+    const monitor = monitorFactory.build(req.body as any);
+    return res(ctx.json(monitor));
+  }),
+  rest.put('*/managed/services/:id', (req, res, ctx) => {
+    const payload = req.body as any;
+
+    return res(
+      ctx.json(
+        monitorFactory.build({
+          ...payload,
+          id: Number(req.params.id),
+        })
+      )
+    );
+  }),
+  rest.delete('*/managed/services/:id', (_req, res, ctx) => {
+    return res(ctx.json({}));
   }),
   rest.get('*managed/stats', (req, res, ctx) => {
     const stats = managedStatsFactory.build();
     return res(ctx.json(stats));
   }),
   rest.get('*managed/issues', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([])));
+    const openIssue = managedIssueFactory.build({
+      services: [998],
+      entity: { id: 1 },
+      created: DateTime.now().minus({ days: 2 }).toISO(),
+    });
+    const closedIssue = managedIssueFactory.build({
+      services: [999],
+      entity: { id: 999 },
+      created: DateTime.now().minus({ days: 2 }).toISO(),
+    });
+    return res(ctx.json(makeResourcePage([openIssue, closedIssue])));
+  }),
+  rest.get('*managed/linode-settings', (req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(managedLinodeSettingFactory.buildList(5)))
+    );
+  }),
+  rest.get('*managed/credentials/sshkey', (req, res, ctx) => {
+    return res(ctx.json(managedSSHPubKeyFactory.build()));
+  }),
+  rest.get('*managed/credentials', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(credentialFactory.buildList(5))));
+  }),
+  rest.post('*managed/credentials', (req, res, ctx) => {
+    const response = credentialFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
+  rest.post('*managed/credentials/:id/revoke', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*managed/contacts', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(contactFactory.buildList(5))));
+  }),
+  rest.delete('*managed/contacts/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.put('*managed/contacts/:id', (req, res, ctx) => {
+    const payload = {
+      ...(req.body as any),
+      id: Number(req.params.id),
+    };
+
+    return res(ctx.json(payload));
+  }),
+  rest.post('*managed/contacts', (req, res, ctx) => {
+    const response = contactFactory.build({
+      ...(req.body as any),
+    });
+    return res(ctx.json(response));
   }),
   rest.get('*stackscripts/', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));

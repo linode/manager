@@ -247,6 +247,7 @@ export type DiskStatus =
 export interface LinodeConfigCreationData {
   label: string;
   devices: Devices;
+  initrd: string | number | null;
   kernel?: string;
   comments?: string;
   memory_limit?: number;
@@ -293,7 +294,8 @@ export type LinodeTypeClass =
   | 'dedicated'
   | 'highmem'
   | 'gpu'
-  | 'metal';
+  | 'metal'
+  | 'prodedicated';
 
 export interface IPAllocationRequest {
   type: 'ipv4';

@@ -192,7 +192,7 @@ const LishSettings: React.FC = () => {
                   <Button
                     buttonType="outlined"
                     className={classes.sshKeyButton}
-                    compact
+                    compactX
                     onClick={onPublicKeyRemove(idx)}
                     data-qa-remove
                   >
@@ -208,7 +208,7 @@ const LishSettings: React.FC = () => {
               onClick={addSSHPublicKeyField}
               className={classes.sshKeyButton}
               buttonType="outlined"
-              compact
+              compactX
             >
               Add SSH Public Key
             </Button>

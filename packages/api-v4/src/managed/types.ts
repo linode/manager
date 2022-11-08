@@ -7,7 +7,7 @@ export interface ManagedServiceMonitor {
   service_type: ServiceType;
   timeout: number;
   region: string | null;
-  credentials: ManagedCredential[]; // @todo
+  credentials: number[]; // @todo
   address: string;
   body: string;
   notes: string;
@@ -93,7 +93,7 @@ export interface ManagedIssue {
   id: number;
   services: number[];
   created: string;
-  entity: any;
+  entity: IssueEntity;
 }
 
 // This is much like a support ticket but it's a special case so here's a special type:
@@ -116,6 +116,7 @@ export interface ManagedStatsData {
   net_out: DataSeries[];
   swap: DataSeries[];
 }
+
 export interface ManagedStats {
   data: ManagedStatsData;
 }
