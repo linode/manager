@@ -33,8 +33,6 @@
     "test": "yarn workspace linode-manager test --maxWorkers=4",
     "package-versions": "node ./scripts/package-versions/index.js",
     "storybook": "yarn workspace linode-manager storybook",
-    "storybook:e2e": "yarn workspace linode-manager storybook:e2e",
-    "storybook:debug": "yarn storybook:e2e --color --debug",
     "cy:run": "yarn workspace linode-manager cy:run",
     "cy:e2e": "yarn workspace linode-manager cy:e2e",
     "cy:ci": "yarn cypress install && yarn cy:e2e",
