@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface ChipProps extends _ChipProps {
+export interface ChipProps extends Omit<_ChipProps, 'variant'> {
+  variant?: _ChipProps['variant'] | 'beta';
   outlineColor?: 'green' | 'gray';
   component?: string;
   inTable?: boolean;
-  beta?: boolean;
 }
 
 const Chip: React.FC<ChipProps> = ({
@@ -50,9 +50,10 @@ const Chip: React.FC<ChipProps> = ({
       className={classNames(className, {
         [classes.inTable]: inTable,
         [classes[`outline-${outlineColor}`]]: props.variant === 'outlined',
-        //[classes.beta]: props.variant === 'beta',
+        [classes.beta]: props.variant === 'beta',
       })}
       {...props}
+      variant={props.variant === 'beta' ? 'default' : props.variant}
     />
   );
 };
