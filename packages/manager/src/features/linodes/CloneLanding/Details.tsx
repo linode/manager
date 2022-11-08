@@ -169,7 +169,7 @@ export const Configs: React.FC<Props> = (props) => {
           className={classes.clearButton}
           onClick={clearAll}
           buttonType="secondary"
-          compact
+          compactX
         >
           Clear
         </Button>

@@ -1,7 +1,4 @@
-import {
-  getLinodeSettings,
-  ManagedLinodeSetting,
-} from '@linode/api-v4/lib/managed';
+import { ManagedLinodeSetting } from '@linode/api-v4/lib/managed';
 import produce from 'immer';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
@@ -15,9 +12,8 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { getAll } from 'src/utilities/getAll';
+import { useAllLinodeSettingsQuery } from 'src/queries/managed/managed';
 import { DEFAULTS } from './common';
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
@@ -31,22 +27,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const request = () =>
-  getAll<ManagedLinodeSetting>(getLinodeSettings)().then((res) => res.data);
-
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
-    ManagedLinodeSetting[]
-  >(request, []);
+  const { data: settings, isLoading, error } = useAllLinodeSettingsQuery();
 
-  const updateOne = (linodeSetting: ManagedLinodeSetting) => {
-    transformData((draft) => {
-      const idx = draft.findIndex((l) => l.id === linodeSetting.id);
-      draft[idx] = linodeSetting;
-    });
-  };
+  const data = settings || [];
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
     null
@@ -69,110 +55,111 @@ const SSHAccessTable: React.FC<{}> = () => {
     });
   });
 
-  return <>
-    <OrderBy data={normalizedData} orderBy="label" order="asc">
-      {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-        return (
-          <Paginate data={orderedData}>
-            {({
-              count,
-              data: paginatedData,
-              handlePageChange,
-              handlePageSizeChange,
-              page,
-              pageSize,
-            }) => {
-              return <>
-                <div className={classes.root}>
-                  <Table aria-label="List of Your Managed SSH Access Settings">
-                    <TableHead>
-                      <TableRow>
-                        <TableSortCell
-                          active={orderBy === 'label'}
-                          label={'label'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-ssh-linode-header
-                        >
-                          Linode
-                        </TableSortCell>
-                        <TableSortCell
-                          active={orderBy === 'ssh:access'}
-                          label={'ssh:access'}
-                          direction={order}
-                          handleClick={handleOrderChange}
-                          data-qa-ssh-access-header
-                        >
-                          SSH Access
-                        </TableSortCell>
-                        <Hidden smDown>
-                          <TableSortCell
-                            active={orderBy === 'ssh:user'}
-                            label={'ssh:user'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-ssh-user-header
-                          >
-                            User
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'ssh:ip'}
-                            label={'ssh:ip'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-ssh-ip-header
-                          >
-                            IP
-                          </TableSortCell>
-                          <TableSortCell
-                            active={orderBy === 'ssh:port'}
-                            label={'ssh:port'}
-                            direction={order}
-                            handleClick={handleOrderChange}
-                            data-qa-ssh-port-header
-                          >
-                            Port
-                          </TableSortCell>
-                        </Hidden>
-                        <TableCell />
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <SSHAccessTableContent
-                        linodeSettings={paginatedData}
-                        loading={loading}
-                        lastUpdated={lastUpdated}
-                        updateOne={updateOne}
-                        openDrawer={(linodeId: number) => {
-                          setSelectedLinodeId(linodeId);
-                          drawer.open();
-                        }}
-                        error={error}
-                      />
-                    </TableBody>
-                  </Table>
-                </div>
-                <PaginationFooter
-                  count={count}
-                  handlePageChange={handlePageChange}
-                  handleSizeChange={handlePageSizeChange}
-                  page={page}
-                  pageSize={pageSize}
-                  eventCategory="managed ssh access table"
-                />
-              </>;
-            }}
-          </Paginate>
-        );
-      }}
-    </OrderBy>
-    <EditSSHAccessDrawer
-      isOpen={drawer.isOpen}
-      closeDrawer={drawer.close}
-      linodeSetting={normalizedData.find((l) => l.id === selectedLinodeId)}
-      updateOne={updateOne}
-    />
-  </>;
+  return (
+    <>
+      <OrderBy data={normalizedData} orderBy="label" order="asc">
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+          return (
+            <Paginate data={orderedData}>
+              {({
+                count,
+                data: paginatedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize,
+              }) => {
+                return (
+                  <>
+                    <div className={classes.root}>
+                      <Table aria-label="List of Your Managed SSH Access Settings">
+                        <TableHead>
+                          <TableRow>
+                            <TableSortCell
+                              active={orderBy === 'label'}
+                              label={'label'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              data-qa-ssh-linode-header
+                            >
+                              Linode
+                            </TableSortCell>
+                            <TableSortCell
+                              active={orderBy === 'ssh:access'}
+                              label={'ssh:access'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              data-qa-ssh-access-header
+                            >
+                              SSH Access
+                            </TableSortCell>
+                            <Hidden smDown>
+                              <TableSortCell
+                                active={orderBy === 'ssh:user'}
+                                label={'ssh:user'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                data-qa-ssh-user-header
+                              >
+                                User
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'ssh:ip'}
+                                label={'ssh:ip'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                data-qa-ssh-ip-header
+                              >
+                                IP
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'ssh:port'}
+                                label={'ssh:port'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                data-qa-ssh-port-header
+                              >
+                                Port
+                              </TableSortCell>
+                            </Hidden>
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <SSHAccessTableContent
+                            linodeSettings={paginatedData}
+                            loading={isLoading}
+                            openDrawer={(linodeId: number) => {
+                              setSelectedLinodeId(linodeId);
+                              drawer.open();
+                            }}
+                            error={error}
+                          />
+                        </TableBody>
+                      </Table>
+                    </div>
+                    <PaginationFooter
+                      count={count}
+                      handlePageChange={handlePageChange}
+                      handleSizeChange={handlePageSizeChange}
+                      page={page}
+                      pageSize={pageSize}
+                      eventCategory="managed ssh access table"
+                    />
+                  </>
+                );
+              }}
+            </Paginate>
+          );
+        }}
+      </OrderBy>
+      <EditSSHAccessDrawer
+        isOpen={drawer.isOpen}
+        closeDrawer={drawer.close}
+        linodeSetting={normalizedData.find((l) => l.id === selectedLinodeId)}
+      />
+    </>
+  );
 };
 
 export default SSHAccessTable;

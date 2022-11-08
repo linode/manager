@@ -9,7 +9,8 @@ import HelpIcon from 'src/components/HelpIcon';
 export interface Props extends ButtonProps {
   buttonType?: 'primary' | 'secondary' | 'outlined';
   className?: string;
-  compact?: boolean;
+  compactX?: boolean;
+  compactY?: boolean;
   loading?: boolean;
   tooltipText?: string;
 }
@@ -31,10 +32,15 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: `${theme.spacing(2)} !important`,
     },
   },
-  compact: {
+  compactX: {
     minWidth: 50,
     paddingRight: 0,
     paddingLeft: 0,
+  },
+  compactY: {
+    minHeight: 20,
+    paddingTop: 0,
+    paddingBottom: 0,
   },
   reg: {
     display: 'flex',
@@ -72,7 +78,8 @@ export const Button: React.FC<CombinedProps> = (props) => {
   const {
     buttonType,
     className,
-    compact,
+    compactX,
+    compactY,
     loading,
     tooltipText,
     ...rest
@@ -85,7 +92,8 @@ export const Button: React.FC<CombinedProps> = (props) => {
         className={classNames(
           buttonType,
           {
-            [classes.compact]: buttonType === 'secondary' ? compact : false,
+            [classes.compactX]: buttonType === 'secondary' ? compactX : false,
+            [classes.compactY]: buttonType === 'secondary' ? compactY : false,
             [classes.loading]: loading,
             disabled: props.disabled,
             loading,

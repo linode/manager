@@ -20,7 +20,6 @@ import { ApplicationState } from 'src/store';
 import withNotifications, {
   WithNotifications,
 } from 'src/store/notification/notification.containers';
-import getUserTimezone from 'src/utilities/getUserTimezone';
 import { v4 } from 'uuid';
 import TimezoneForm from './TimezoneForm';
 
@@ -89,7 +88,6 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   const noGravatar =
     gravatarLoading || gravatarError || gravatarURL === 'not found';
 
-  const timezone = getUserTimezone();
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
   );
@@ -107,11 +105,9 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
   // Used as React keys to force-rerender forms.
   const [emailResetToken, setEmailResetToken] = React.useState(v4());
   const [usernameResetToken, setUsernameResetToken] = React.useState(v4());
-  const [timezoneResetToken, setTimezoneResetToken] = React.useState(v4());
 
   const updateUsername = (newUsername: string) => {
     setEmailResetToken(v4());
-    setTimezoneResetToken(v4());
     // Default to empty string... but I don't believe this is possible.
     return updateUser(profile?.username ?? '', {
       username: newUsername,
@@ -120,14 +116,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
 
   const updateEmail = (newEmail: string) => {
     setUsernameResetToken(v4());
-    setTimezoneResetToken(v4());
     return updateProfile({ email: newEmail });
-  };
-
-  const updateTimezone = (newTimezone: string) => {
-    setUsernameResetToken(v4());
-    setEmailResetToken(v4());
-    return updateProfile({ timezone: newTimezone });
   };
 
   const helpIconText = (
@@ -218,12 +207,7 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
         type="email"
       />
       <Divider spacingTop={24} spacingBottom={16} />
-      <TimezoneForm
-        key={timezoneResetToken}
-        timezone={timezone}
-        loggedInAsCustomer={loggedInAsCustomer}
-        updateTimezone={updateTimezone}
-      />
+      <TimezoneForm loggedInAsCustomer={loggedInAsCustomer} />
     </Paper>
   );
 };

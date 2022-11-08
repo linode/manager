@@ -85,6 +85,7 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               aria-label="open menu"
               onClick={desktopMenuToggle}
               size="large"
+              data-testid="open-nav-menu"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon style={{ marginTop: 6 }} />

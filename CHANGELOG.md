@@ -4,6 +4,80 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-11-01] - v1.79.0
+### Added:
+- Set custom UserAgent header for api-v4 when run in node
+
+### Changed:
+- Linode label max characters increased to 64 chars
+- Update Configuration Profile doc link
+- Marketplace app info button can be focused via keyboard
+- Notices that suggest opening a support ticket now include a link to do so
+
+### Fixed:
+- Error when swapping Linode IPs after having already done so
+- Issue preventing more than 100 Marketplace apps from appearing
+- Error when updating billing contact info without a company name in certain circumstances
+
+
+## [2022-10-17] - v1.78.0
+
+### Added:
+
+- Support for Pro Dedicated Plans
+- Support ticket link for Account Limit notice text
+- HA chip for highly available clusters in the Kubernetes landing page
+- Visual indicator when keyboard navigating Linode and Database plan selection tables
+- React Query for Managed
+
+### Changed:
+
+- Disable delete pool button if there is only one pool
+- Display friendly name for Support ticket reply
+
+### Fixed:
+
+- Accessibility and zoom issue for inputs on Safari iOS
+
+## [2022-10-04] - v1.77.0
+
+### Added:
+
+- ARIA labels for network transfer history previous/next buttons
+- Firewall Support for `IPENCAP` Protocol
+- New Linode Logo
+- Getting Started links on the Linodes and Databases empty landing pages
+
+### Changed:
+
+- New environment docs and updated PR Template
+
+### Fixed:
+
+- Linode “Add Disk” drawer UI width bug
+- Object Storage overwrite file error causing the app to crash
+
+## [2022-09-19] - v1.76.0
+
+### Added:
+
+- Ability to select a disk for initrd in Linode Config modal
+- Contextual help links on Linode create page
+
+### Changed:
+
+- Invoice tax and logo updates
+- Improve timezone offsets by pulling them from `Luxon`
+- Allow deletion of private IPv4 addresses
+- Make database engine icons more visible on focus
+- Replace `novnc-node` with `react-vnc`
+
+### Fixed:
+
+- Issue where long drawer titles force "Close" button to new line
+- Database maintenance window day mapping and notification message for database_update
+- Confirm that 2FA toggle is not present in either state when security questions are not answered
+
 ## [2022-09-06] - v1.75.0
 
 ### Added:
@@ -26,49 +100,59 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2022-08-24] - v1.74.1
 
 ### Fixed:
+
 - Issue causing user-defined fields to clear erroneously during Linode StackScript deploy
 
 ## [2022-08-22] - v1.74.0
 
 ### Added:
+
 - Support for “Any/All” option for StackScript target images
 
 ### Changed:
+
 - Update billing UI for Akamai customers
 - Build `api-v4` and `validation` with `tsup`
 
 ### Fixed:
+
 - Slight adjustment to browser back button behavior on User Permissions tab
 - Make "Copy IP" buttons visible on keyboard focus as well as table row hover
 
 ## [2022-08-08] - v1.73.0
 
 ### Added:
+
 - Local storage warning to Kubernetes upgrade flow
 - August 2022 Marketplace apps
 
 ### Changed:
+
 - Filter `read_only` Linodes From Firewall Select For Restricted Users
 
 ### Fixed:
+
 - Linode Backups tab error certain users were experiencing
 - Invoice formatting issue
 
 ## [2022-07-25] - v1.72.0
 
 ### Changed:
+
 - Phone Verification and Security Questions copy
 - PayPal Loading State improvement
 - Button placement in User Permissions
 - Add Payment Drawer error from toast to notice
 
 ### Fixed:
+
 - Mobile graph legends alignment
 - Region selection not clearing when switching between Linode Create tabs
 
 ## [2022-07-20] - v1.71.1
 
 ### Added:
+
 - Banner regarding maintenance to the Databases Landing and Database Create pages
 
 ## [2022-07-12] - v1.71.0
@@ -98,90 +182,110 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2022-07-01] - v1.70.1
 
 ### Fixed:
+
 - Banner text wrapping for certain viewport widths
 
 ## [2022-06-23] - v1.70.0
 
 ### Added:
+
 - June 2022 Marketplace release
 - Security questions for account verification
 - Phone number SMS verification opt-in and opt-out
 
 ### Changed:
+
 - Move Upload Image region text to tooltip
 - Enabling or resetting 2FA requires security questions to be answered
 - Clean up dismissed notifications more frequently in User Preferences
 
 ### Fixed:
+
 - Show errors in Firewall rules table
 - Make notification badge a true circle
-
 
 ## [2022-06-13] - v1.69.0
 
 ### Added:
+
 - Display tax lines on invoices
 - Ability for users to migrate unattached volumes to NVMe block storage
 
 ## [2022-06-08] - v1.68.1
 
 ### Fixed:
+
 - Notification Menu spamming calls when clicking a link
 
 ## [2022-06-06] - v1.68.0
 
 ### Added:
+
 - Tooltip explaining public/private hosts for MongoDB clusters
 - Support for scoping Database and Firewall permissions
 
 ### Changed:
+
 - Tweak Connection Details for Mongo clusters
 - Bold the Entity Label, Actions, and Username in the Notification Menu
 - Enable Google Analytics IP anonymization
 
 ### Fixed:
+
 - Height of Region select
 
 ## [2022] - v1.67.0
 
 ### Added:
+
 - Marketplace Add: May 2022 Release
 
 ### Changed:
+
 - Allow more sorting options for Databases
 - Remove NVMe marketing banners
 - Remove Ada chat bot
 
 ### Fixed:
+
 - Linode Configs Cancel Button functionality
 - Events sometimes disappearing from the notification menu
 
 ## [2022-05-16] - v1.66.2
+
 ### Changed:
+
 - Display linroot as the username for MongoDB and MySQL clusters, and linpostgres as the username for PostgreSQL clusters
 
 ## [2022-05-16] - v1.66.1
+
 ### Changed:
+
 - Display 'admin' as username for MongoDB database clusters
 
 ## [2022-05-16] - v1.66.0
 
 ### Added:
+
 - Support and icons for PostgreSQL and MongoDB
 
 ### Changed:
+
 - Expanded accessibility and styling docs
 - Icon for MySQL
 
 ### Fixed:
+
 - Marketplace Wazuh link
 
 ## [2022-05-02] - v1.65.0
 
 ### Added:
+
 - Outlined chip variant
 
 ### Changed:
+
 - Hyphenate “type-to-confirm”
 - Curly all single quotes
 - Max node pool copy
@@ -191,6 +295,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - All No Stats Available States
 
 ### Fixed:
+
 - Linode Activity Feed undefined loading state
 - Button text not vertically centered in Firefox
 

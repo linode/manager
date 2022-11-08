@@ -64,8 +64,11 @@ The bold text is intentionally understated to pair well with a primary button, s
     <Button buttonType="secondary" data-qa-button="secondary">
       Secondary
     </Button>
-    <Button buttonType="secondary" compact data-qa-button="secondary">
-      Compact Secondary
+    <Button buttonType="secondary" compactX data-qa-button="secondary">
+      CompactX Secondary
+    </Button>
+    <Button buttonType="secondary" compactY data-qa-button="secondary" style={{ marginTop: 7, maxHeight: 20 }}>
+      CompactY Secondary
     </Button>
     <Button buttonType="secondary" disabled data-qa-button="secondary">
       Disabled Secondary
@@ -116,7 +119,8 @@ export const Template = (args) => (
     name="Component API"
     args={{
       buttonType: 'primary',
-      compact: false,
+      compactX: false,
+      compactY: false,
       disabled: false,
       disableRipple: false,
       fullWidth: false,
@@ -127,9 +131,16 @@ export const Template = (args) => (
       buttonType: {
         description: 'The variant to use.',
       },
-      compact: {
+      compactX: {
         description:
-          'Removes the spacing to the left and right of the text for secondary buttons only.',
+          'Removes the left and right spacing of the text for secondary buttons only.',
+        table: {
+          defaultValue: { summary: 'false' },
+        },
+      },
+      compactY: {
+        description:
+          'Removes the top and bottom spacing of the text for secondary buttons only.',
         table: {
           defaultValue: { summary: 'false' },
         },

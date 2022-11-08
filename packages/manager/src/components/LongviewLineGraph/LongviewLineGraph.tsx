@@ -31,6 +31,7 @@ export interface Props extends LineGraphProps {
   subtitle?: string;
   error?: string;
   loading?: boolean;
+  ariaLabel?: string;
 }
 
 type CombinedProps = Props;
@@ -38,7 +39,7 @@ type CombinedProps = Props;
 const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { error, loading, title, subtitle, ...rest } = props;
+  const { error, loading, title, subtitle, ariaLabel, ...rest } = props;
 
   const message = error // Error state is separate, don't want to put text on top of it
     ? undefined
@@ -65,7 +66,7 @@ const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
             <ErrorState errorText={error} />
           </div>
         ) : (
-          <LineGraph {...rest} />
+          <LineGraph {...rest} ariaLabel={ariaLabel} />
         )}
         {message && <div className={classes.message}>{message}</div>}
       </div>

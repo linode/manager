@@ -53,6 +53,7 @@ export const DiskGraph: React.FC<CombinedProps> = (props) => {
       loading={loading}
       subtitle={'ops/second'}
       unit={' ops/second'}
+      ariaLabel="Disk I/O Graph"
       showToday={isToday}
       timezone={timezone}
       nativeLegend

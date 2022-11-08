@@ -163,7 +163,7 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
             buttonType="primary"
             disabled={disabled}
             onClick={() => setDeviceDrawerOpen(true)}
-            compact
+            compactX
           >
             Add Linodes to Firewall
           </Button>

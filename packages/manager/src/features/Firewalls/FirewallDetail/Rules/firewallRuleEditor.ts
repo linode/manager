@@ -246,7 +246,10 @@ export const removeICMPPort = (
   rules: ExtendedFirewallRule[]
 ): ExtendedFirewallRule[] =>
   rules.map((thisRule) => {
-    if (thisRule.protocol === 'ICMP' && thisRule.ports === '') {
+    if (
+      (thisRule.protocol === 'ICMP' || thisRule.protocol === 'IPENCAP') &&
+      thisRule.ports === ''
+    ) {
       delete thisRule.ports;
     }
     return thisRule;

@@ -1,13 +1,8 @@
-import {
-  ManagedCredential,
-  ManagedServiceMonitor,
-  ManagedServicePayload,
-} from '@linode/api-v4/lib/managed';
+import { ManagedServicePayload } from '@linode/api-v4/lib/managed';
 import { APIError } from '@linode/api-v4/lib/types';
 import { FormikBag } from 'formik';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -22,9 +17,16 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { ManagedIssuesProps } from 'src/containers/managedIssues.container';
-import { DispatchProps } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
+import {
+  useAllManagedContactsQuery,
+  useAllManagedCredentialsQuery,
+  useAllManagedIssuesQuery,
+  useAllManagedMonitorsQuery,
+  useCreateMonitorMutation,
+  useDeleteMonitorMutation,
+  useUpdateMonitorMutation,
+} from 'src/queries/managed/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -52,38 +54,39 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  monitors: ManagedServiceMonitor[];
-  credentials: ManagedCredential[];
-  groups: string[];
-  loading: boolean;
-  error?: APIError[];
-}
-
 export type Modes = 'create' | 'edit';
-export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
+export type FormikProps = FormikBag<{}, ManagedServicePayload>;
 
-export type CombinedProps = Props &
-  DispatchProps &
-  ManagedIssuesProps &
-  WithSnackbarProps;
-
-export const MonitorTable: React.FC<CombinedProps> = (props) => {
+export const MonitorTable = () => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
+  const { data, isLoading, error } = useAllManagedMonitorsQuery();
   const {
-    deleteServiceMonitor,
-    enqueueSnackbar,
-    error,
-    loading,
-    monitors,
-    groups,
-    credentials,
-    issues,
-    issuesError,
-    issuesLoading,
-    issuesLastUpdated,
-  } = props;
+    data: issues,
+    isLoading: areIssuesLoading,
+    error: issuesError,
+  } = useAllManagedIssuesQuery();
+  const { data: credentials } = useAllManagedCredentialsQuery();
+  const { data: contacts } = useAllManagedContactsQuery();
+
+  const { mutateAsync: deleteServiceMonitor } = useDeleteMonitorMutation();
+
+  const groups = React.useMemo(() => {
+    if (!contacts) {
+      return [];
+    }
+    const _groups: string[] = [];
+    let i = 0;
+    for (i; i < contacts.length; i++) {
+      if (contacts[i].group !== null && !_groups.includes(contacts[i].group!)) {
+        _groups.push(contacts[i].group as string);
+      }
+    }
+    return _groups;
+  }, [contacts]);
+
+  const monitors = data || [];
 
   const {
     dialog,
@@ -91,7 +94,7 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
     closeDialog,
     submitDialog,
     handleError,
-  } = useDialog<number>(deleteServiceMonitor);
+  } = useDialog<number>((id) => deleteServiceMonitor({ id: id || -1 }));
 
   const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
     false
@@ -102,6 +105,11 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
   );
   const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
   const [editID, setEditID] = React.useState<number>(0);
+
+  const { mutateAsync: updateServiceMonitor } = useUpdateMonitorMutation(
+    editID
+  );
+  const { mutateAsync: createServiceMonitor } = useCreateMonitorMutation();
 
   const [editLabel, setEditLabel] = React.useState<string>('');
 
@@ -145,7 +153,6 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
     values: ManagedServicePayload,
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
-    const { createServiceMonitor, updateServiceMonitor } = props;
     const _success = () => {
       setSubmitting(false);
       handleDrawerClose();
@@ -174,7 +181,6 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
           .catch(_error)
       : updateServiceMonitor({
           ...values,
-          monitorID: editID,
           timeout: +values.timeout,
         })
           .then(_success)
@@ -250,8 +256,8 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
                   <TableBody>
                     <MonitorTableContent
                       monitors={data}
-                      issues={issues}
-                      loading={loading}
+                      issues={issues || []}
+                      loading={isLoading}
                       error={error}
                       openDialog={openDialog}
                       openMonitorDrawer={handleMonitorDrawerOpen}
@@ -288,21 +294,20 @@ export const MonitorTable: React.FC<CombinedProps> = (props) => {
         mode={drawerMode}
         monitor={monitors.find((m) => m.id === editID)}
         groups={groups}
-        credentials={credentials}
+        credentials={credentials || []}
       />
       <HistoryDrawer
         open={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
         monitorLabel={editLabel}
-        issues={issues.filter((thisIssue) =>
+        issues={issues?.filter((thisIssue) =>
           thisIssue.services.includes(editID)
         )}
-        loading={issuesLoading && issuesLastUpdated === 0}
-        error={issuesError.read}
+        loading={areIssuesLoading}
+        error={issuesError}
       />
     </>
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar);
-export default enhanced(MonitorTable);
+export default MonitorTable;

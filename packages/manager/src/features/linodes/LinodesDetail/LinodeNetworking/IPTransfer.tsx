@@ -25,8 +25,11 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
 import { ipv6RangeQueryKey } from 'src/queries/networking';
+import {
+  queryKey as linodesQueryKey,
+  useAllLinodesQuery,
+} from 'src/queries/linodes';
 import { queryClient } from 'src/queries/base';
-import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { debounce } from 'throttle-debounce';
@@ -167,7 +170,11 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     })
   ).current;
 
-  const { data, isLoading, error: linodesError } = useLinodesByIdQuery(
+  const {
+    data: allLinodes,
+    isLoading,
+    error: linodesError,
+  } = useAllLinodesQuery(
     {},
     {
       region: linodeRegion,
@@ -182,9 +189,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
     error: ipv6RangesError,
   } = useIpv6RangesQuery();
 
-  const linodes = Object.values(data?.linodes ?? []).filter(
-    (l) => l.id !== linodeID
-  );
+  const linodes = (allLinodes ?? []).filter((l) => l.id !== linodeID);
 
   const onModeChange = (ip: string) => (e: Item) => {
     const mode = e.value as Mode;
@@ -438,6 +443,7 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             setSuccessMessage('IP transferred successfully.');
             // get updated route_target for ipv6 ranges
             queryClient.invalidateQueries(ipv6RangeQueryKey);
+            queryClient.invalidateQueries(`${linodesQueryKey}-all`);
           })
           .catch((err) => {
             setError(

@@ -39,6 +39,7 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
+import { titlecase } from 'src/features/linodes/presentation';
 import { useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
@@ -52,6 +53,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import {
   CreateLinodeConfig,
@@ -107,6 +109,7 @@ interface EditableFields {
   useCustomRoot: boolean;
   label: string;
   devices: DevicesAsStrings;
+  initrd: string | number | null;
   kernel?: string;
   comments?: string;
   memory_limit?: number;
@@ -163,6 +166,7 @@ const defaultInterfaceList = padInterfaceList([
 const defaultFieldsValues = {
   comments: '',
   devices: {},
+  initrd: '',
   helpers: {
     devtmpfs_automount: true,
     distro: true,
@@ -216,11 +220,15 @@ const interfacesToPayload = (interfaces?: ExtendedInterface[]) => {
 const deviceSlots = ['sda', 'sdb', 'sdc', 'sdd', 'sde', 'sdf', 'sdg', 'sdh'];
 const deviceCounterDefault = 1;
 
+// DiskID reserved on the back-end to indicate Finnix.
+const finnixDiskID = 25669;
+
 const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const {
     open,
     onClose,
     config,
+    initrdFromConfig,
     kernels,
     linodeConfigId,
     linodeRegion,
@@ -262,6 +270,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     const {
       label,
       devices,
+      initrd,
       kernel,
       comments,
       memory_limit,
@@ -276,6 +285,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     return {
       label,
       devices: createDevicesFromStrings(devices),
+      initrd: initrd !== '' ? initrd : null,
       kernel,
       comments,
       /** if the user did not toggle the limit radio button, send a value of 0 */
@@ -321,6 +331,11 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     formik.setSubmitting(true);
 
     const configData = convertStateToData(values) as LinodeConfigCreationData;
+
+    // If Finnix was selected, make sure it gets sent as a number in the payload, not a string.
+    if (Number(configData.initrd) === finnixDiskID) {
+      configData.initrd = finnixDiskID;
+    }
 
     if (!regionHasVLANS) {
       delete configData.interfaces;
@@ -416,6 +431,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
             useCustomRoot: isUsingCustomRoot(config.root_device),
             label: config.label,
             devices,
+            initrd: initrdFromConfig,
             kernel: config.kernel,
             comments: config.comments,
             memory_limit: config.memory_limit,
@@ -435,7 +451,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
         setDeviceCounter(deviceCounterDefault);
       }
     }
-  }, [open, config, resetForm]);
+  }, [open, config, initrdFromConfig, resetForm]);
 
   const isLoading = props.kernelsLoading;
 
@@ -445,6 +461,39 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
     disks: props.disks,
     volumes: props.volumes,
   };
+
+  const initrdDisks = availableDevices.disks.filter(
+    (disk) => disk.filesystem === 'initrd'
+  );
+
+  const initrdDisksObject = {
+    disks: initrdDisks,
+  };
+
+  const categorizedInitrdOptions = Object.entries(initrdDisksObject).map(
+    ([category, items]) => {
+      const categoryTitle = titlecase(category);
+      return {
+        label: categoryTitle,
+        value: category,
+        options: [
+          ...items.map(({ label, id }) => {
+            return {
+              label,
+              value: String(id) as string | number | null,
+            };
+          }),
+          { label: 'Recovery – Finnix (initrd)', value: String(finnixDiskID) },
+        ],
+      };
+    }
+  );
+
+  categorizedInitrdOptions.unshift({
+    label: '',
+    value: '',
+    options: [{ label: 'None', value: null }],
+  });
 
   /**
    * Form change handlers
@@ -487,6 +536,13 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   const handleRootDeviceChange = React.useCallback(
     (selected: Item<string>) => {
       setFieldValue('root_device', selected.value);
+    },
+    [setFieldValue]
+  );
+
+  const handleInitrdChange = React.useCallback(
+    (selectedDisk: Item<string>) => {
+      setFieldValue('initrd', selectedDisk.value);
     },
     [setFieldValue]
   );
@@ -718,6 +774,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
               updateFor={[
                 deviceCounter,
                 values.devices,
+                values.initrd,
                 values.root_device,
                 useCustomRoot,
                 values.useCustomRoot,
@@ -734,11 +791,29 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                 errorText={formik.errors.devices as string}
                 disabled={readOnly}
               />
+              <FormControl fullWidth>
+                <Select
+                  label="initrd"
+                  onChange={handleInitrdChange}
+                  options={categorizedInitrdOptions}
+                  defaultValue={getSelectedOptionFromGroupedOptions(
+                    initrdFromConfig,
+                    categorizedInitrdOptions
+                  )}
+                  value={getSelectedOptionFromGroupedOptions(
+                    values.initrd,
+                    categorizedInitrdOptions
+                  )}
+                  placeholder="None"
+                  isClearable={false}
+                  noMarginTop
+                />
+              </FormControl>
               <Button
                 buttonType="secondary"
                 onClick={() => setDeviceCounter((counter) => counter + 1)}
                 className={classes.button}
-                compact
+                compactX
                 disabled={readOnly || deviceCounter >= deviceSlots.length - 1}
               >
                 Add a Device
@@ -990,6 +1065,7 @@ interface StateProps {
   disks: ExtendedDisk[];
   volumes: ExtendedVolume[];
   config?: Config;
+  initrdFromConfig: string;
 }
 
 interface LinodeContextProps {
@@ -1021,6 +1097,8 @@ const enhanced = compose<CombinedProps, Props>(
       ? state.__resources.linodeConfigs[linodeId].itemsById[linodeConfigId]
       : undefined;
 
+    const initrdFromConfig = config?.initrd ? String(config.initrd) : '';
+
     const volumes = Object.values(itemsById).reduce(
       (result: Volume[], volume: Volume) => {
         /**
@@ -1041,7 +1119,7 @@ const enhanced = compose<CombinedProps, Props>(
       },
       []
     );
-    return { config, volumes };
+    return { config, initrdFromConfig, volumes };
   })
 );
 

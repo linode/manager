@@ -11,8 +11,12 @@
     "paths": {
       "@src/*": ["src/*"],
       "support/*": ["cypress/support/*"],
-      "@linode/api-v4/*": ["../api-v4/lib/index.js"],
-      "@linode/validation/*": ["../validation/lib/index.js"],
+      "@linode/api-v4/lib": ["../api-v4/lib/index.js"],
+      "@linode/api-v4/lib/*": ["../api-v4/lib/index.js"],
+      "@linode/api-v4/types": ["../api-v4/lib/index.d.ts"],
+      "@linode/validation/lib": ["../validation/lib/index.js"],
+      "@linode/validation/lib/*": ["../validation/lib/index.js"],
+      "@linode/validation/types": ["../validation/lib/index.d.ts"]
     },
     "types": ["cypress", "cypress-file-upload", "@testing-library/cypress", "cypress-real-events"]
   },

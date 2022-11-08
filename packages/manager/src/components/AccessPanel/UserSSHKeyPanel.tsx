@@ -86,7 +86,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
   };
 
   const usersWithKeys = users
-    ? users.filter((thisUser) => thisUser.keys.length > 0)
+    ? users.filter((thisUser) => thisUser.keys?.length > 0)
     : [];
 
   return (
@@ -157,7 +157,7 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
       <Button
         buttonType="outlined"
         onClick={handleOpenDrawer}
-        compact
+        compactX
         disabled={disabled}
       >
         Add an SSH Key

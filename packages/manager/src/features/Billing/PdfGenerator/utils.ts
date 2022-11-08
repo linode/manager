@@ -33,7 +33,7 @@ const formatDateForTable = (date: string): [string, string] => {
  */
 export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
   autoTable(doc, {
-    startY: 150,
+    startY: 165,
     styles: {
       lineWidth: 1,
     },
@@ -73,7 +73,7 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
  */
 export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
   autoTable(doc, {
-    startY: 155,
+    startY: 165,
     styles: {
       lineWidth: 1,
     },

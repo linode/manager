@@ -44,7 +44,7 @@ import {
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
-import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDialog';
+import LinodeConfigDialog from '../LinodeSettings/LinodeConfigDialog';
 import ConfigRow from './ConfigRow';
 
 type ClassNames =
@@ -195,7 +195,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           </Grid>
         </Grid>
         <this.linodeConfigsTable />
-        <LinodeConfigDrawer
+        <LinodeConfigDialog
           linodeConfigId={this.state.configDrawer.linodeConfigId}
           linodeHypervisor={this.props.linodeHypervisor}
           linodeRegion={this.props.linodeRegion}

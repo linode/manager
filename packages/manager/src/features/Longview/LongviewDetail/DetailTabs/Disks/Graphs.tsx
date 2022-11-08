@@ -73,6 +73,15 @@ const Graphs: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
+  const isToday = _isToday(startTime, endTime);
+  const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
+
+  const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
+  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
+    iFree,
+    iTotal,
+  ]);
+
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */
     return (
@@ -85,15 +94,6 @@ const Graphs: React.FC<CombinedProps> = (props) => {
       </Typography>
     );
   }
-
-  const isToday = _isToday(startTime, endTime);
-  const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
-
-  const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
-  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
-    iFree,
-    iTotal,
-  ]);
 
   return (
     <GraphCard title={diskLabel} helperText={labelHelperText}>
@@ -117,6 +117,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                 },
               ]}
               title="Disk I/O"
+              ariaLabel="Disk I/O Graph"
               showToday={isToday}
               subtitle="ops/s"
               timezone={timezone}
@@ -145,6 +146,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                   showToday={isToday}
                   title="Space"
                   subtitle="GB"
+                  ariaLabel="Disk Space Graph"
                   timezone={timezone}
                   nativeLegend
                   // @todo replace with byte-to-target converter after rebase
@@ -163,6 +165,7 @@ const Graphs: React.FC<CombinedProps> = (props) => {
                   ]}
                   showToday={isToday}
                   title="Inodes"
+                  ariaLabel="Inodes Graph"
                   timezone={timezone}
                   nativeLegend
                   // @todo replace with byte-to-target converter after rebase

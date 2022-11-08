@@ -4,6 +4,7 @@ import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
@@ -20,6 +21,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       textDecoration: 'underline',
     },
   },
+  labelStatusWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    whiteSpace: 'nowrap',
+  },
   clusterRow: {
     '&:before': {
       display: 'none',
@@ -35,6 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   cluster: ExtendedCluster;
   hasUpgrade: boolean;
+  isClusterHighlyAvailable: boolean;
   openDeleteDialog: (
     clusterID: number,
     clusterLabel: string,
@@ -48,7 +56,13 @@ type CombinedProps = Props;
 export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const { cluster, hasUpgrade, openDeleteDialog, openUpgradeDialog } = props;
+  const {
+    cluster,
+    hasUpgrade,
+    isClusterHighlyAvailable,
+    openDeleteDialog,
+    openUpgradeDialog,
+  } = props;
 
   return (
     <TableRow
@@ -59,13 +73,35 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
       ariaLabel={`Cluster ${cluster.label}`}
     >
       <TableCell data-qa-cluster-label>
-        <Link
-          className={classes.link}
-          to={`/kubernetes/clusters/${cluster.id}/summary`}
-          tabIndex={0}
+        <Grid
+          container
+          wrap="nowrap"
+          alignItems="center"
+          justifyContent="space-between"
         >
-          {cluster.label}
-        </Link>
+          <Grid item className="py0">
+            <div className={classes.labelStatusWrapper}>
+              <Link
+                className={classes.link}
+                to={`/kubernetes/clusters/${cluster.id}/summary`}
+                tabIndex={0}
+              >
+                {cluster.label}
+              </Link>
+            </div>
+          </Grid>
+          {isClusterHighlyAvailable ? (
+            <Grid item>
+              <Chip
+                label="HA"
+                variant="outlined"
+                outlineColor="green"
+                size="small"
+                data-testid={'ha-chip'}
+              />
+            </Grid>
+          ) : null}
+        </Grid>
       </TableCell>
       <Hidden mdDown>
         <TableCell data-qa-cluster-version>

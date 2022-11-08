@@ -8,7 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { ExtendedIssue } from 'src/store/managed/issues.actions';
+import { ExtendedIssue } from 'src/queries/managed/types';
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
 
@@ -45,9 +45,7 @@ interface Props {
   openHistoryDrawer: (id: number, label: string) => void;
 }
 
-type CombinedProps = Props;
-
-export const MonitorRow: React.FunctionComponent<CombinedProps> = (props) => {
+export const MonitorRow: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

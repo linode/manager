@@ -1,3 +1,12 @@
+## [2022-11-01] - v0.16.0
+### Changed:
+- Linode max label length from 32 to 64 characters
+
+## [2022-10-04] - v0.15.0
+
+### Changed:
+- validFirewallRuleProtocol and FirewallRuleTypeSchema updated to account for IPENCAP
+
 ## [2022-09-06] - v0.14.0
 
 ### Changed:

@@ -1,3 +1,5 @@
+import { TaxDetail } from 'src/featureFlags';
+
 export const cleanCVV = (input: string): string => {
   // All characters except numbers
   const regex = /(([\D]))/g;
@@ -10,14 +12,14 @@ export const cleanCVV = (input: string): string => {
 export const getTaxID = (
   invoiceItemDate: string,
   taxDate?: string,
-  taxID?: string
+  country_tax?: TaxDetail
 ) => {
-  if (!taxID || !taxDate) {
+  if (!country_tax?.tax_id || !taxDate) {
     return undefined;
   }
   const taxStartedBeforeThisInvoiceItem =
     Date.parse(invoiceItemDate) > Date.parse(taxDate);
-  return taxStartedBeforeThisInvoiceItem ? taxID : undefined;
+  return taxStartedBeforeThisInvoiceItem ? country_tax : undefined;
 };
 
 export const renderUnitPrice = (v: null | string) => {

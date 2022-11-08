@@ -32,9 +32,7 @@ interface Props {
   noHeaderActionStyles?: boolean;
 }
 
-type CombinedProps = Props;
-
-const DashboardCard: React.FC<CombinedProps> = (props) => {
+const DashboardCard: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const {

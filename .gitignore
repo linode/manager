@@ -15,6 +15,9 @@ lib
 # misc
 .DS_Store
 
+# swc data
+.swc
+
 # local restart script with keys
 restart.sh
 

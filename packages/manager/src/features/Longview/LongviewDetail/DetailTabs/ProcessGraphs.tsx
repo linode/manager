@@ -84,6 +84,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               title="CPU"
               subtitle={'%'}
               unit="%"
+              ariaLabel="CPU Usage Graph"
               data={[
                 {
                   label: 'CPU',
@@ -99,6 +100,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
             <LongviewLineGraph
               title="RAM"
               subtitle={memoryUnit}
+              ariaLabel="RAM Usage Graph"
               formatData={(value: number) =>
                 convertBytesToTarget(memoryUnit, value)
               }
@@ -123,6 +125,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
               title="Disk I/O"
               subtitle={`${diskUnit}/s`}
               unit={`/s`}
+              ariaLabel="Disk I/O Graph"
               formatData={(value: number) =>
                 convertBytesToTarget(diskUnit, value)
               }
@@ -147,6 +150,7 @@ export const ProcessGraphs: React.FC<CombinedProps> = (props) => {
           <Grid item xs={12} sm={6} className={classes.smallGraph}>
             <LongviewLineGraph
               title="Process Count"
+              ariaLabel="Process Count Graph"
               suggestedMax={maxProcessCount}
               data={[
                 {

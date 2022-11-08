@@ -1,6 +1,4 @@
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -12,9 +10,7 @@ interface Props {
   openForEdit: (id: number) => void;
 }
 
-export type CombinedProps = Props & WithSnackbarProps;
-
-const CredentialActionMenu: React.FC<CombinedProps> = (props) => {
+const CredentialActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -62,6 +58,4 @@ const CredentialActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar);
-
-export default enhanced(CredentialActionMenu);
+export default CredentialActionMenu;
