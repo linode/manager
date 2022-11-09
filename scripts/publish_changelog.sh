@@ -84,7 +84,25 @@ generate_post_content() {
     printf -- "%s\n\n%s\n" "$front_matter" "$changelog_entry_without_version_and_date"
 }
 
+generate_post_filename() {
+    package=$1
+    version=$2
+    case "$package" in
+        "manager")
+            package_filename="cloud-manager-version"
+        ;;
+        "api-v4")
+            package_filename="js-client-version"
+        ;;
+        "validation")
+            package_filename="validation-changelog"
+        ;;
+    esac
+    echo "$package_filename-${version//./-}.md"
+}
+
 changelog_entry=$(get_changelog_entry $PACKAGE)
 version=$(get_version_from_changelog_entry $changelog_entry)
 front_matter=$(generate_front_matter $PACKAGE $version)
-generate_post_content "$front_matter" "$changelog_entry"
+filename=$(generate_post_filename ${PACKAGE,,} ${version/v/})
+generate_post_content "$front_matter" "$changelog_entry" >> "/tmp/$filename"
