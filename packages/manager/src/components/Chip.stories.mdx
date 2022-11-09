@@ -67,7 +67,7 @@ No action is required or enabled.
 
 Beta chips label features that are not yet part of Cloud Manager's core supported functionality.
 
-**Example:** A 'beta' chip may appear in the [primary navigation](https://github.com/linode/manager/pull/8104), breadcrumbs, [banners](/src/components/DismissibleBanner/DismissibleBanner.stories.mdx), tabs, and/or plain text to designate beta functionality.
+**Example:** A 'beta' chip may appear in the [primary navigation](https://github.com/linode/manager/pull/8104), breadcrumbs, [banners](/docs/components-notifications-dismissible-banners--beta-banners), tabs, and/or plain text to designate beta functionality.
 
 **Visual style:** variant styling has bold, capitalized text; reduced height, letter spacing, and font size; solid color background: MUI default color for light mode and MUI primary color for dark mode.
 
@@ -163,8 +163,8 @@ export const BreadcrumbBetaExample = () => {
         },
       },
       variant: {
-        description: 'Variant of the Chip `"default" | "outlined"`',
-        options: ['default', 'outlined'],
+        description: 'Variant of the Chip `"default" | "outlined" | "beta"`',
+        options: ['default', 'outlined', 'beta'],
         control: { type: 'radio' },
         table: {
           defaultValue: {
