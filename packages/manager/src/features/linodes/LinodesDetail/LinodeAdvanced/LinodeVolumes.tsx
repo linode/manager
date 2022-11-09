@@ -239,8 +239,10 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       return <TableRowLoading rows={1} columns={5} />;
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
-    } else if (data?.results == 0) {
-      return <TableRowEmptyState colSpan={5} />;
+    } else if (data?.results === 0) {
+      return (
+        <TableRowEmptyState colSpan={5} message="No Volumes to display." />
+      );
     } else if (data) {
       return data.data.map((volume) => (
         <VolumeTableRow key={volume.id} {...volume} {...handlers} />

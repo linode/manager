@@ -36,9 +36,13 @@ type CombinedProps = Props & StateProps & DispatchProps;
  * I had to provide a separate validation schema since the linode_id (which is required by API) is
  * provided as a prop and not a user input value.
  */
-const validationScheme = object({
-  volume_id: number().required(),
-  config_id: number().required(),
+const AttachVolumeValidationSchema = object({
+  volume_id: number()
+    .min(0, 'Volume is required.')
+    .required('Volume is required.'),
+  config_id: number()
+    .min(0, 'Config is required.')
+    .required('Config is required.'),
 });
 
 const initialValues = { volume_id: -1, config_id: -1 };
@@ -62,7 +66,7 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
 
   return (
     <Formik
-      validationSchema={validationScheme}
+      validationSchema={AttachVolumeValidationSchema}
       onSubmit={(values, { setSubmitting, setStatus, setErrors }) => {
         attachVolume({
           volumeId: values.volume_id,
