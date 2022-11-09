@@ -1,19 +1,24 @@
 import subprocess
 import re
 import sys
+import datetime
 
-RELEASE=sys.argv[1]
-DATE=sys.argv[2]
-ORIGIN=sys.argv[3]
+RELEASE='v' + sys.argv[1].strip('v')
+ORIGIN=sys.argv[2]
+try:
+    REPO=sys.argv[3]
+except Exception:
+    REPO=False
 
-START_INSERT=5
+DATE = datetime.datetime.now().strftime('%Y-%m-%d')
+START_INSERT=0 if (REPO and REPO.lower() != 'manager') else 5
 
 NOT_INCLUDED_IN_LOG = []
 
-TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e']
+TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e', '[TEST]']
 BREAKING_KEYWORDS = ['break', 'deprecate']
-CHANGED_KEYWORDS = ['update', 'change']
-FIXED_KEYWORDS = ['fix', 'repair', 'bug']
+CHANGED_KEYWORDS = ['update', 'change', '[PERF]', '[CHANGED]']
+FIXED_KEYWORDS = ['fix', 'repair', 'bug', '[FIXED]', '[DOCS]', '[REFACTOR]', '[BUILD]']
 
 def incrementLine():
     global START_INSERT
@@ -49,8 +54,11 @@ def remove_pull_request_id(commit_message):
     regexp = "\(#\d+\)"
     return re.sub(regexp, '', commit_message).strip()
 
-def generateChangeLog(release, date, origin):
-    git_log_command = ["git", "log", "--no-merges", "--oneline", "--pretty='%s'", "{}/master...HEAD".format(origin)]
+def generateChangeLog(release, date, origin, repo=''):
+    git_log_command = ["git", "log", "--no-merges", "--oneline", "--pretty='%s'", "{}/develop...HEAD".format(origin)]
+
+    if (repo):
+        git_log_command.extend(["--", "packages/{}".format(repo)])
 
     commits = subprocess.check_output(git_log_command, subprocess.STDOUT).decode('utf-8').split('\n')
 
@@ -66,11 +74,11 @@ def generateChangeLog(release, date, origin):
     for commit in commits:
         commit = remove_pull_request_id(commit)
 
-        jira_key_regex=re.match('M3-\d{4}', commit)
+        jira_key_regex=re.match('M3-\d{4}: ', commit)
         if (jira_key_regex is not None):
             jira_key=jira_key_regex.group(0)
             jql_query.append(jira_key)
-            commit.lstrip(jira_key)
+            commit = commit.lstrip(jira_key)
 
         if(checkKeyWords(TEST_KEYWORDS, commit.lower())):
             NOT_INCLUDED_IN_LOG.append(commit)
@@ -93,12 +101,20 @@ def generateChangeLog(release, date, origin):
 
     generateJQLQuery(jql_query)
 
-    read_change_log=open('CHANGELOG.md', 'r')
+    changelog_file = "CHANGELOG.md"
+
+    # If the repo isn't explicitly passed in, we default to Manager's CHANGELOG.
+    if (repo == 'manager' or repo == '' or repo is False):
+        changelog_file = "CHANGELOG.md"
+    else:
+        changelog_file = "packages/{}/CHANGELOG.md".format(repo)
+
+    read_change_log=open(changelog_file, 'r')
     change_log_lines=read_change_log.readlines()
     read_change_log.close()
 
     change_log_lines.insert(START_INSERT,'\n')
-    change_log_lines.insert(incrementLine(),'## [%s] - %s\n'%(release,date))
+    change_log_lines.insert(incrementLine(),'## [%s] - %s\n'%(date, release))
     change_log_lines.insert(incrementLine(),'\n')
 
     if( breaking ):
@@ -125,7 +141,7 @@ def generateChangeLog(release, date, origin):
             change_log_lines.insert(incrementLine(),'- %s\n'%(commit))
         change_log_lines.insert(incrementLine(),'\n')
 
-    write_change_log=open('CHANGELOG.md', 'w')
+    write_change_log=open(changelog_file, 'w')
     write_change_log.writelines(change_log_lines)
 
-generateChangeLog(RELEASE, DATE, ORIGIN)
+generateChangeLog(RELEASE, DATE, ORIGIN, REPO)
