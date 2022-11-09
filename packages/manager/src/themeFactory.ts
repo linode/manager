@@ -607,18 +607,6 @@ const themeDefaults: ThemeDefaults = () => {
             borderRadius: '50%',
           },
         },
-        variants: [
-          {
-            props: { variant: 'beta' },
-            styles: {
-              fontFamily: primaryFonts.bold,
-              fontSize: '0.625rem',
-              height: 16,
-              letterSpacing: '.25px',
-              textTransform: 'uppercase',
-            },
-          },
-        ],
       },
       MuiCircularProgress: {
         circle: {

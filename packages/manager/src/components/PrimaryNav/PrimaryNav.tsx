@@ -405,7 +405,13 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
       >
         {display}
         {isBeta ? (
-          <Chip className={classes.chip} label="beta" component="span" />
+          <Chip
+            className={classes.chip}
+            color="primary"
+            label="beta"
+            variant="beta"
+            component="span"
+          />
         ) : null}
       </p>
     </Link>

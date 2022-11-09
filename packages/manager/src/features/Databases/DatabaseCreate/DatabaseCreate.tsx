@@ -110,13 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: '-2px',
   },
   chip: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.625rem',
-    height: 16,
     marginTop: 4,
-    marginLeft: theme.spacing(),
-    letterSpacing: '.25px',
-    textTransform: 'uppercase',
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -480,7 +474,12 @@ const DatabaseCreate: React.FC<{}> = () => {
         ]}
         labelOptions={{
           suffixComponent: flags.databaseBeta ? (
-            <Chip className={classes.chip} label="beta" component="span" />
+            <Chip
+              className={classes.chip}
+              label="beta"
+              variant="beta"
+              component="span"
+            />
           ) : null,
         }}
       />
