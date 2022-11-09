@@ -139,7 +139,7 @@ The /src directory has several subdirectories:
 2. Author the React component, unit tests, and Storybook stories across four files:
    a. `<ComponentName>.tsx` (React component code)
    b. `<ComponentName>.test.tsx` (unit tests for the React component)
-   c. `<ComponentName>.stories.tsx` (Storybook stories for the React component
+   c. `<ComponentName>.stories.mdx` (Storybook stories for the React component)
    d. `index.ts` (export the React component)
 
 **"... implement a new feature in an existing section of the app"**
