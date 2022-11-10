@@ -36,8 +36,9 @@ get_changelog_entry() {
 
 get_version_from_changelog_entry() {
     changelog_entry=$1
-    IFS=$' ' read -A word <<< $changelog_entry
-    echo $word[4]
+    IFS=$' ' read -A version_maybe_with_prefix <<< $changelog_entry
+    version=${version_maybe_with_prefix[4]#v}
+    echo $version
 }
 
 get_package_display_name() {
@@ -70,7 +71,7 @@ generate_title_for_post() {
             title="Linode Validation"
         ;;
     esac
-    echo "$title $version"
+    echo "$title v$version"
 }
 
 generate_front_matter() {
@@ -99,7 +100,7 @@ generate_post_filename() {
             package_filename="cloud-manager-version"
         ;;
         "api-v4")
-            package_filename="js-client-version"
+            package_filename="js-client-changelog"
         ;;
         "validation")
             package_filename="validation-changelog"
@@ -108,12 +109,32 @@ generate_post_filename() {
     echo "$package_filename-${version//./-}.md"
 }
 
+prompt_user_for_developers_repo_path() {
+    read "?type path to your clone of the developers repo: " developers_repo_path
+    if [[ -d "$developers_repo_path/.git" ]]; then
+        cd "$developers_repo_path"
+        upstream=$(git remote get-url upstream)
+        if [[ $upstream == "git@github.com:linode/developers.git" ]]; then
+            echo $developers_repo_path
+        else
+            echo "The upstream repo is not git@github.com:linode/developers"
+            return 1
+        fi
+        echo
+    else
+        echo "path does not point to a git repo"
+        return 1
+    fi
+}
+
 if (($VALID_PACKAGES[(Ie)$PACKAGE])); then
     changelog_entry=$(get_changelog_entry $PACKAGE)
     version=$(get_version_from_changelog_entry "$changelog_entry")
     front_matter=$(generate_front_matter $PACKAGE $version)
     filename=$(generate_post_filename ${PACKAGE:l} $version)
-    generate_post_content "$front_matter" "$changelog_entry" > "/tmp/$filename"
+    developers_repo_path=$(prompt_user_for_developers_repo_path)
+    generate_post_content "$front_matter" "$changelog_entry" > "$developers_repo_path/src/content/changelog/$filename"
+
 else
     echo "$PACKAGE is not a valid package"
     return 1
