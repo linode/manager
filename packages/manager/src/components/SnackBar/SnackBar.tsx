@@ -47,7 +47,7 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
       ref={notistackRef}
       {...rest}
       classes={{
-        containerRoot: classes.root,
+        root: classes.root,
         variantSuccess: classes.success,
         variantError: classes.error,
         variantWarning: classes.warning,
