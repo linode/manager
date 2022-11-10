@@ -1,6 +1,11 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
-PACKAGE=$1
+VALID_PACKAGES=("manager" "api-v4" "validation")
+
+# If the user provides a package save it to transform to all lowercase and set PACKAGE to it
+# Otherwise default to manager package
+PACKAGE=${1:="manager"}
+PACKAGE=$PACKAGE:l
 
 get_date_time() {
     echo $(date +"%FT%TZ")
@@ -8,10 +13,10 @@ get_date_time() {
 
 get_changelog_entry() {
     package=$1
-    if [[ ${package,,} == "manager" ]]; then
+    if [[ $package == "manager" ]]; then
         file="./CHANGELOG.md"
     else
-        file="packages/${package,,}/CHANGELOG.md"
+        file="packages/${package:l}/CHANGELOG.md"
     fi
     declare -a changelog_lines
     number_of_release_headers_read=0
@@ -30,7 +35,9 @@ get_changelog_entry() {
 }
 
 get_version_from_changelog_entry() {
-    echo $4
+    changelog_entry=$1
+    IFS=$' ' read -A word <<< $changelog_entry
+    echo $word[4]
 }
 
 get_package_display_name() {
@@ -101,8 +108,13 @@ generate_post_filename() {
     echo "$package_filename-${version//./-}.md"
 }
 
-changelog_entry=$(get_changelog_entry $PACKAGE)
-version=$(get_version_from_changelog_entry $changelog_entry)
-front_matter=$(generate_front_matter $PACKAGE $version)
-filename=$(generate_post_filename ${PACKAGE,,} ${version/v/})
-generate_post_content "$front_matter" "$changelog_entry" >> "/tmp/$filename"
+if (($VALID_PACKAGES[(Ie)$PACKAGE])); then
+    changelog_entry=$(get_changelog_entry $PACKAGE)
+    version=$(get_version_from_changelog_entry "$changelog_entry")
+    front_matter=$(generate_front_matter $PACKAGE $version)
+    filename=$(generate_post_filename ${PACKAGE:l} $version)
+    generate_post_content "$front_matter" "$changelog_entry" > "/tmp/$filename"
+else
+    echo "$PACKAGE is not a valid package"
+    return 1
+fi
