@@ -21,9 +21,6 @@ import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { useVolumesQuery } from 'src/queries/volumes';
@@ -79,7 +76,7 @@ interface DispatchProps {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
-type CombinedProps = Props & VolumesRequests & DispatchProps;
+type CombinedProps = Props & DispatchProps;
 
 export const useStyles = makeStyles(() => ({
   empty: {
@@ -312,7 +309,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
             >
               Size
             </TableSortCell>
-            <TableCell>Attaced To</TableCell>
+            <TableCell>Attached To</TableCell>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
@@ -370,7 +367,4 @@ const mapDispatchToProps = (dispatch: Dispatch) =>
 
 const connected = connect(undefined, mapDispatchToProps);
 
-export default compose<CombinedProps, Props>(
-  connected,
-  withVolumesRequests
-)(VolumesLanding);
+export default compose<CombinedProps, Props>(connected)(VolumesLanding);

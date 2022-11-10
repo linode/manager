@@ -1,5 +1,10 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { QueryClient, UseMutationOptions, UseQueryOptions } from 'react-query';
+import {
+  QueryClient,
+  QueryKey,
+  UseMutationOptions,
+  UseQueryOptions,
+} from 'react-query';
 import { isEmpty } from '@linode/api-v4/lib/request';
 
 // =============================================================================
@@ -237,4 +242,33 @@ export const updateInPaginatedStore = <T extends { id: number | string }>(
       return oldData;
     }
   );
+};
+
+export const getItemInPaginatedStore = <T extends { id: number | string }>(
+  queryKey: QueryKey,
+  id: number
+) => {
+  const stores = queryClient.getQueriesData<ResourcePage<T> | undefined>(
+    queryKey
+  );
+
+  for (const store of stores) {
+    const data = store[1]?.data;
+    const item = data?.find((item) => item.id === id);
+    if (item) {
+      return item;
+    }
+  }
+
+  return null;
+};
+
+export const doesItemExistInPaginatedStore = <
+  T extends { id: number | string }
+>(
+  queryKey: QueryKey,
+  id: number
+) => {
+  const item = getItemInPaginatedStore<T>(queryKey, id);
+  return item !== null;
 };

@@ -1,11 +1,12 @@
 import { Grant } from '@linode/api-v4/lib/account';
+import { useFormik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Drawer from 'src/components/Drawer';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
@@ -14,6 +15,7 @@ import { useAllLinodeConfigsQuery } from 'src/queries/linodes';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
+import { number, object } from 'yup';
 
 interface Props {
   open: boolean;
@@ -24,68 +26,63 @@ interface Props {
   disabled?: boolean;
 }
 
-export const VolumeAttachmentDrawer = (props: Props) => {
+const AttachVolumeValidationSchema = object({
+  linode_id: number()
+    .min(0, 'Linode is required.')
+    .required('Linode is required.'),
+  config_id: number()
+    .min(0, 'Config is required.')
+    .required('Config is required.'),
+});
+
+export const VolumeAttachmentDrawer = React.memo((props: Props) => {
   const { open, volumeLabel, disabled, linodeRegion, volumeId } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 
-  const {
-    mutateAsync: attachVolume,
-    error,
-    isLoading,
-  } = useAttachVolumeMutation();
+  const { mutateAsync: attachVolume, error } = useAttachVolumeMutation();
 
-  const [selectedLinode, setSelectedLinode] = React.useState<number>(-1);
-  const [selectedConfig, setSelectedConfig] = React.useState<string>();
+  const formik = useFormik({
+    initialValues: { linode_id: -1, config_id: -1 },
+    validationSchema: AttachVolumeValidationSchema,
+    validateOnBlur: false,
+    validateOnChange: false,
+    async onSubmit(values) {
+      await attachVolume({
+        volumeId,
+        ...values,
+      }).then((_) => {
+        resetEventsPolling();
+        handleClose();
+      });
+    },
+  });
 
   const { data, isLoading: configsLoading } = useAllLinodeConfigsQuery(
-    selectedLinode,
-    selectedLinode !== -1
+    formik.values.linode_id,
+    formik.values.linode_id !== -1
   );
 
   const configs = data ?? [];
 
   const configChoices = configs.map((config) => {
-    return [`${config.id}`, config.label];
+    return { value: `${config.id}`, label: config.label };
   });
 
-  const configList =
-    configChoices &&
-    configChoices.map((el) => {
-      return {
-        label: el[1],
-        value: el[0],
-      };
-    });
+  React.useEffect(() => {
+    if (configs.length === 1) {
+      formik.setFieldValue('config_id', configs[0].id);
+    }
+  }, [configs]);
 
   const reset = () => {
-    setSelectedLinode(-1);
-    setSelectedConfig(undefined);
-  };
-
-  const changeSelectedLinode = (linodeId: number) => {
-    setSelectedLinode(linodeId);
-  };
-
-  const changeSelectedConfig = (e: Item<string>) => {
-    setSelectedConfig(e.value);
+    formik.resetForm();
   };
 
   const handleClose = () => {
     reset();
     props.onClose();
-  };
-
-  const attachToLinode = () => {
-    attachVolume({
-      volumeId,
-      linode_id: Number(selectedLinode),
-      config_id: Number(selectedConfig) || undefined,
-    }).then((_) => {
-      resetEventsPolling();
-      handleClose();
-    });
   };
 
   const errorResources = {
@@ -117,63 +114,66 @@ export const VolumeAttachmentDrawer = (props: Props) => {
       onClose={handleClose}
       title={`Attach Volume ${volumeLabel}`}
     >
-      {readOnly && (
-        <Notice
-          text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
-          error={true}
-          important
-        />
-      )}
-      {generalError && <Notice text={generalError} error={true} />}
-      <LinodeSelect
-        selectedLinode={selectedLinode}
-        region={linodeRegion}
-        handleChange={(linode) => {
-          if (linode !== null) {
-            changeSelectedLinode(linode.id);
-          }
-        }}
-        linodeError={linodeError}
-        disabled={disabled || readOnly}
-        isClearable={false}
-      />
-      {!linodeError && (
-        <FormHelperText>
-          Only Linodes in this Volume&rsquo;s region are displayed.
-        </FormHelperText>
-      )}
-      {/* Config Selection */}
-      <FormControl fullWidth>
-        <Select
-          options={configList}
-          defaultValue={selectedConfig || ''}
-          onChange={changeSelectedConfig}
-          name="config"
-          id="config"
-          errorText={linodeError}
-          disabled={disabled || readOnly || selectedLinode === -1}
-          label="Config"
-          isClearable={false}
-          isLoading={configsLoading}
-        />
-        {Boolean(configError) && (
-          <FormHelperText error>{configError}</FormHelperText>
+      <form onSubmit={formik.handleSubmit}>
+        {readOnly && (
+          <Notice
+            text={`You don't have permissions to edit ${volumeLabel}. Please contact an account administrator for details.`}
+            error
+            important
+          />
         )}
-      </FormControl>
-      <ActionsPanel>
-        <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={attachToLinode}
-          loading={isLoading}
+        {generalError && <Notice text={generalError} error={true} />}
+        <LinodeSelect
+          selectedLinode={formik.values.linode_id}
+          region={linodeRegion}
+          handleChange={(linode) => {
+            if (linode !== null) {
+              formik.setFieldValue('linode_id', linode.id);
+            }
+          }}
+          linodeError={formik.errors.linode_id ?? linodeError}
           disabled={disabled || readOnly}
-          data-qa-submit
-        >
-          Attach
-        </Button>
-      </ActionsPanel>
+          isClearable={false}
+        />
+        {!linodeError && (
+          <FormHelperText>
+            Only Linodes in this Volume&rsquo;s region are displayed.
+          </FormHelperText>
+        )}
+        {/* Config Selection */}
+        <FormControl fullWidth>
+          <Select
+            options={configChoices}
+            onChange={(item: Item<string>) =>
+              formik.setFieldValue('config_id', Number(item.value))
+            }
+            value={configChoices.find(
+              (item) => item.value === String(formik.values.config_id)
+            )}
+            name="config_id"
+            id="config_id"
+            errorText={formik.errors.config_id ?? configError}
+            disabled={disabled || readOnly || formik.values.linode_id === -1}
+            label="Config"
+            isClearable={false}
+            isLoading={configsLoading}
+          />
+        </FormControl>
+        <ActionsPanel>
+          <Button buttonType="secondary" onClick={handleClose} data-qa-cancel>
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            type="submit"
+            loading={formik.isSubmitting}
+            disabled={disabled || readOnly}
+            data-qa-submit
+          >
+            Attach
+          </Button>
+        </ActionsPanel>
+      </form>
     </Drawer>
   );
-};
+});

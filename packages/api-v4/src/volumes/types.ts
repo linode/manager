@@ -19,6 +19,7 @@ export type VolumeStatus =
   | 'resizing'
   | 'deleting'
   | 'deleted'
+  | 'migrating'
   | 'contact_support';
 
 type VolumeHardwareType = 'hdd' | 'nvme';

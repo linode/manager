@@ -1,6 +1,11 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { queryClient, updateInPaginatedStore } from './base';
+import {
+  doesItemExistInPaginatedStore,
+  getItemInPaginatedStore,
+  queryClient,
+  updateInPaginatedStore,
+} from './base';
 import {
   attachVolume,
   AttachVolumePayload,
@@ -17,7 +22,17 @@ import {
   deleteVolume,
   VolumeRequestPayload,
   createVolume,
+  getLinodeVolumes,
 } from '@linode/api-v4';
+
+/**
+ * For Volumes, we must maintain the following stores to keep our cache up to date.
+ * When we manually mutate our cache, we must keep data under the following queryKeys up to date.
+ *
+ * Query Keys:
+ * - `volumes-list` - Contains Paginated Volumes
+ * - [`volumes-list`, `linode-{id}`] - Conatins Paginated Volumes for a Specifc Linode
+ */
 
 const queryKey = 'volumes';
 
@@ -25,6 +40,17 @@ export const useVolumesQuery = (params: any, filters: any) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
+    { keepPreviousData: true }
+  );
+
+export const useLinodeVolumesQuery = (
+  linodeId: number,
+  params: any = {},
+  filters: any = {}
+) =>
+  useQuery<ResourcePage<Volume>, APIError[]>(
+    [`${queryKey}-list`, `linode-${linodeId}`, params, filters],
+    () => getLinodeVolumes(linodeId, params, filters),
     { keepPreviousData: true }
   );
 
@@ -78,6 +104,10 @@ export const useAttachVolumeMutation = () =>
     {
       onSuccess(volume) {
         updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
+        queryClient.invalidateQueries([
+          `${queryKey}-list`,
+          `linode-${volume.linode_id}`,
+        ]);
       },
     }
   );
@@ -91,22 +121,29 @@ export const volumeEventsHandler = (event: Event) => {
   switch (action) {
     case 'volume_create':
       switch (status) {
+        case 'started':
         case 'scheduled':
           return;
         case 'failed':
         case 'finished':
         case 'notification':
-        case 'started':
           queryClient.invalidateQueries(`${queryKey}-list`);
           return;
       }
     case 'volume_attach':
       switch (status) {
         case 'scheduled':
-        case 'failed':
-        case 'notification':
         case 'started':
+        case 'notification':
+          return;
         case 'finished':
+          const volume = getItemInPaginatedStore<Volume>(
+            `${queryKey}-list`,
+            entity!.id
+          );
+          if (volume && volume.linode_id === null) {
+            queryClient.invalidateQueries(`${queryKey}-list`);
+          }
           return;
         case 'failed':
           // This means a attach was unsuccessful. Remove associated Linode.
@@ -127,10 +164,20 @@ export const volumeEventsHandler = (event: Event) => {
         case 'notification':
         case 'finished':
           // This means a detach was successful. Remove associated Linode.
+          const volume = getItemInPaginatedStore<Volume>(
+            `${queryKey}-list`,
+            entity!.id
+          );
           updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
             linode_id: null,
             linode_label: null,
           });
+          if (volume && volume.linode_id !== null) {
+            queryClient.invalidateQueries([
+              `${queryKey}-list`,
+              `linode-${volume.linode_id}`,
+            ]);
+          }
           return;
       }
     case 'volume_resize':
@@ -148,6 +195,9 @@ export const volumeEventsHandler = (event: Event) => {
       }, 5000);
       return;
     case 'volume_delete':
+      if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+      }
       return;
     case 'volume_migrate':
       return;

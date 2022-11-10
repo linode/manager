@@ -58,6 +58,7 @@ export const isVolumeUpdating = (e?: Event) => {
 export const volumeStatusIconMap: Record<ExtendedVolume['status'], Status> = {
   active: 'active',
   resizing: 'other',
+  migrating: 'other',
   creating: 'other',
   contact_support: 'error',
   deleting: 'other',
@@ -132,6 +133,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     ),
     deleting: 'Deleting',
     deleted: 'Deleted',
+    migrating: 'Migrating',
   };
 
   const isNVMe = hardwareType === 'nvme';
@@ -196,13 +198,11 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           )}
         </Grid>
       </TableCell>
-      {isVolumesLanding ? (
-        <TableCell statusCell>
-          <StatusIcon status={volumeStatusIconMap[status]} />
-          {volumeStatusMap[status]}
-        </TableCell>
-      ) : null}
-      {region ? (
+      <TableCell statusCell>
+        <StatusIcon status={volumeStatusIconMap[status]} />
+        {volumeStatusMap[status]}
+      </TableCell>
+      {isVolumesLanding && region ? (
         <TableCell data-qa-volume-region noWrap>
           {formattedRegion}
         </TableCell>

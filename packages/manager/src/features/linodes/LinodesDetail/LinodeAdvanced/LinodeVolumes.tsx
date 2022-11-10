@@ -1,30 +1,31 @@
-import { Event } from '@linode/api-v4/lib/account';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import AddNewLink from 'src/components/AddNewLink';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import EntityTable from 'src/components/EntityTable';
 import Grid from 'src/components/Grid';
-import Loading from 'src/components/LandingLoading';
-import { PaginationProps } from 'src/components/Pagey';
-import _withEvents, { EventsProps } from 'src/containers/events.container';
-import { StateProps as WithVolumesProps } from 'src/containers/volumes.container';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
-import { Props as WithLinodesProps } from 'src/containers/withLinodes.container';
+import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
+import Table from 'src/components/Table/Table';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError/TableRowError';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { DestructiveVolumeDialog } from 'src/features/Volumes/DestructiveVolumeDialog';
-import { ExtendedVolume } from 'src/features/Volumes/types';
 import { VolumeAttachmentDrawer } from 'src/features/Volumes/VolumeAttachmentDrawer';
 import { ActionHandlers as VolumeHandlers } from 'src/features/Volumes/VolumesActionMenu';
 import VolumeTableRow from 'src/features/Volumes/VolumeTableRow';
+import { useOrder } from 'src/hooks/useOrder';
+import usePagination from 'src/hooks/usePagination';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import {
   LinodeOptions,
   openForClone,
@@ -85,57 +86,12 @@ interface DispatchProps {
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
-type RouteProps = RouteComponentProps<{ linodeId: string }>;
+type CombinedProps = LinodeContextProps & DispatchProps;
 
-type CombinedProps = LinodeContextProps &
-  VolumesRequests &
-  WithVolumesProps &
-  WithLinodesProps &
-  EventsProps &
-  PaginationProps<ExtendedVolume> &
-  DispatchProps &
-  RouteProps;
-
-const volumeHeaders = [
-  {
-    label: 'Label',
-    dataColumn: 'label',
-    sortable: true,
-    widthPercent: 25,
-  },
-  {
-    label: 'Region',
-    dataColumn: 'region',
-    sortable: true,
-    widthPercent: 20,
-  },
-  {
-    label: 'Size',
-    dataColumn: 'size',
-    sortable: true,
-    widthPercent: 5,
-  },
-  {
-    label: 'File System Path',
-    dataColumn: 'File System Path',
-    sortable: false,
-    widthPercent: 25,
-  },
-  {
-    label: 'Action Menu',
-    visuallyHidden: true,
-    dataColumn: '',
-    sortable: false,
-    widthPercent: 25,
-  },
-];
+export const preferenceKey = 'linode-volumes';
 
 export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
   const {
-    volumesLoading,
-    volumesLastUpdated,
-    volumesError,
-    linodeVolumes,
     openForConfig,
     openForClone,
     openForEdit,
@@ -146,9 +102,32 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     linodeRegion,
   } = props;
 
+  const { order, orderBy, handleOrderChange } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'desc',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
+
+  const pagination = usePagination(1, preferenceKey);
+
   const classes = useStyles();
 
   const regions = useRegionsQuery().data ?? [];
+  const { data, isLoading, error } = useLinodeVolumesQuery(
+    linodeId ?? 0,
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
 
   const [attachmentDrawer, setAttachmentDrawer] = React.useState({
     open: false,
@@ -255,18 +234,23 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
     handleDelete,
   };
 
-  const volumeRow = {
-    handlers,
-    Component: VolumeTableRow,
-    data: linodeVolumes ?? [],
-    loading: volumesLoading,
-    lastUpdated: volumesLastUpdated,
-    error: volumesError?.read,
-  };
+  const renderTableContent = () => {
+    if (isLoading) {
+      return <TableRowLoading rows={1} columns={5} />;
+    } else if (error) {
+      return <TableRowError colSpan={6} message={error[0].reason} />;
+    } else if (data?.results === 0) {
+      return (
+        <TableRowEmptyState colSpan={5} message="No Volumes to display." />
+      );
+    } else if (data) {
+      return data.data.map((volume) => (
+        <VolumeTableRow key={volume.id} {...volume} {...handlers} />
+      ));
+    }
 
-  if (volumesLoading) {
-    return <Loading shouldDelay />;
-  }
+    return null;
+  };
 
   return (
     <div className={classes.volumesPanel}>
@@ -289,11 +273,46 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
       </Grid>
-      <EntityTable
-        entity="volume"
-        headers={volumeHeaders}
-        row={volumeRow}
-        initialOrder={{ order: 'asc', orderBy: 'label' }}
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableSortCell
+              active={orderBy === 'label'}
+              direction={order}
+              label="label"
+              handleClick={handleOrderChange}
+            >
+              Label
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="Status"
+              handleClick={handleOrderChange}
+            >
+              Status
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'size'}
+              direction={order}
+              label="size"
+              handleClick={handleOrderChange}
+            >
+              Size
+            </TableSortCell>
+            <TableCell>File System Path</TableCell>
+            <TableCell></TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderTableContent()}</TableBody>
+      </Table>
+      <PaginationFooter
+        count={data?.results ?? 0}
+        handlePageChange={pagination.handlePageChange}
+        handleSizeChange={pagination.handlePageSizeChange}
+        page={pagination.page}
+        pageSize={pagination.pageSize}
+        eventCategory="Volumes Table"
       />
       <VolumeAttachmentDrawer
         open={attachmentDrawer.open}
@@ -347,18 +366,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const connected = connect(undefined, mapDispatchToProps);
 
-const filterVolumeEvents = (event: Event): boolean => {
-  return (
-    !event._initial && Boolean(event.entity) && event.entity!.type === 'volume'
-  );
-};
-
 export default compose<CombinedProps, {}>(
   connected,
-  linodeContext,
-  withVolumesRequests,
-  _withEvents((ownProps: CombinedProps, eventsData) => ({
-    ...ownProps,
-    eventsData: eventsData.filter(filterVolumeEvents),
-  }))
+  linodeContext
 )(LinodeVolumes);
