@@ -5,26 +5,23 @@ import CloseSnackbar from './CloseSnackbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    '& span': {
+    '& div': {
+      backgroundColor: `${theme.bg.white} !important`,
       color: theme.palette.text.primary,
       fontSize: '0.875rem',
     },
   },
   info: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main,
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   success: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main,
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   error: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.errorDark,
+    borderLeft: `6px solid ${theme.palette.status.errorDark}`,
   },
   warning: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.warningDark,
+    borderLeft: `6px solid ${theme.palette.status.warningDark}`,
   },
 }));
 
@@ -50,7 +47,7 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
       ref={notistackRef}
       {...rest}
       classes={{
-        root: classes.root,
+        containerRoot: classes.root,
         variantSuccess: classes.success,
         variantError: classes.error,
         variantWarning: classes.warning,
