@@ -117,12 +117,11 @@ prompt_user_for_developers_repo_path() {
         if [[ $upstream == "git@github.com:linode/developers.git" ]]; then
             echo $developers_repo_path
         else
-            echo "The upstream repo is not git@github.com:linode/developers"
+            echo "The upstream repo is not git@github.com:linode/developers" >&2
             return 1
         fi
-        echo
     else
-        echo "path does not point to a git repo"
+        echo "path does not point to a git repo" >&2
         return 1
     fi
 }
@@ -133,9 +132,11 @@ if (($VALID_PACKAGES[(Ie)$PACKAGE])); then
     front_matter=$(generate_front_matter $PACKAGE $version)
     filename=$(generate_post_filename ${PACKAGE:l} $version)
     developers_repo_path=$(prompt_user_for_developers_repo_path)
-    generate_post_content "$front_matter" "$changelog_entry" > "$developers_repo_path/src/content/changelog/$filename"
+    if [[ -d $developers_repo_path ]]; then
+        generate_post_content "$front_matter" "$changelog_entry" > "$developers_repo_path/src/content/changelog/$filename"
+    fi
 
 else
     echo "$PACKAGE is not a valid package"
-    return 1
+    exit
 fi
