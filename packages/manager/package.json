@@ -191,7 +191,7 @@
     "core-js": "^2.6.5",
     "css-loader": "^6.5.1",
     "csstype": "^2.5.5",
-    "cypress": "^11.0.0",
+    "cypress": "^11.0.1",
     "cypress-axe": "^1.0.0",
     "cypress-file-upload": "^5.0.7",
     "cypress-real-events": "^1.7.0",
