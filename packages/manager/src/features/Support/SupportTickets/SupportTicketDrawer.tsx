@@ -23,6 +23,7 @@ import useEntities, { Entity } from 'src/hooks/useEntities';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 import {
   getAPIErrorOrDefault,
   getErrorMap,
@@ -193,6 +194,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     entityType === 'domain_id'
   );
 
+  const { data: volumes, isLoading: volumesLoading } = useAllVolumesQuery(
+    entityType === 'volume_id'
+  );
+
   const saveText = (_title: string, _description: string) => {
     storage.supportText.set({ title: _title, description: _description });
   };
@@ -239,10 +244,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         handleSetOrRequestEntities(entities.linodes, _entityType);
         return;
       }
-      case 'volume_id': {
-        handleSetOrRequestEntities(entities.volumes, _entityType);
-        return;
-      }
       case 'nodebalancer_id': {
         handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
         return;
@@ -251,6 +252,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
         return;
       }
+      case 'volume_id':
       case 'firewall_id':
       case 'domain_id':
       case 'database_id': {
@@ -469,6 +471,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       database_id: databases,
       firewall_id: firewalls,
       domain_id: domains,
+      volume_id: volumes,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
@@ -505,6 +508,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
     if (entityType === 'domain_id') {
       return domainsLoading;
+    }
+    if (entityType === 'volume_id') {
+      return volumesLoading;
     }
     return entitiesLoading;
   };

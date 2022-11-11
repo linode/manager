@@ -24,6 +24,7 @@ import {
   createVolume,
   getLinodeVolumes,
 } from '@linode/api-v4';
+import { getAll } from 'src/utilities/getAll';
 
 /**
  * For Volumes, we must maintain the following stores to keep our cache up to date.
@@ -46,13 +47,18 @@ export const useVolumesQuery = (params: any, filters: any) =>
 export const useLinodeVolumesQuery = (
   linodeId: number,
   params: any = {},
-  filters: any = {}
+  filters: any = {},
+  enabled = true
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
     [`${queryKey}-list`, `linode-${linodeId}`, params, filters],
     () => getLinodeVolumes(linodeId, params, filters),
-    { keepPreviousData: true }
+    { keepPreviousData: true, enabled }
   );
+export const useAllVolumesQuery = (enabled = false) =>
+  useQuery<Volume[], APIError[]>([`${queryKey}-all`], getAllVolumes, {
+    enabled,
+  });
 
 export const useResizeVolumeMutation = () =>
   useMutation<Volume, APIError[], { volumeId: number } & ResizeVolumePayload>(
@@ -205,3 +211,8 @@ export const volumeEventsHandler = (event: Event) => {
       return;
   }
 };
+
+const getAllVolumes = (passedParams: any = {}, passedFilter: any = {}) =>
+  getAll<Volume>((params, filter) =>
+    getVolumes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => data.data);

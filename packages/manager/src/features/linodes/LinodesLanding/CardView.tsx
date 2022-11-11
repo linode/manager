@@ -14,9 +14,8 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import useVolumes from 'src/hooks/useVolumes';
 import { useProfile } from 'src/queries/profile';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 
@@ -63,8 +62,10 @@ const CardView: React.FC<CombinedProps> = (props) => {
 
   const { updateLinode } = useLinodeActions();
   const { data: profile } = useProfile();
-  const { _loading } = useReduxLoad(['volumes']);
-  const { volumes } = useVolumes();
+
+  // This is bad
+  const { data: volumes, isLoading } = useAllVolumesQuery(true);
+
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,
     tags: [],
@@ -112,7 +113,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
     return null;
   }
 
-  if (_loading) {
+  if (isLoading) {
     return <CircleProgress />;
   }
 
@@ -125,7 +126,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
   }
 
   const getVolumesByLinode = (linodeId: number) =>
-    getVolumesForLinode(volumes.itemsById, linodeId).length;
+    volumes ? getVolumesForLinode(volumes, linodeId).length : 0;
 
   return (
     <React.Fragment>

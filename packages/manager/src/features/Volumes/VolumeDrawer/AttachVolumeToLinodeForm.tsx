@@ -1,12 +1,10 @@
 import { Formik } from 'formik';
 import { Grant } from '@linode/api-v4/lib/account';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
-import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeForm';
 import {
   handleFieldErrors,
@@ -21,6 +19,7 @@ import Notice from 'src/components/Notice';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 import { useAttachVolumeMutation } from 'src/queries/volumes';
+import { useGrants } from 'src/queries/profile';
 
 interface Props {
   onClose: () => void;
@@ -30,7 +29,7 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props & StateProps & DispatchProps;
+type CombinedProps = Props & DispatchProps;
 
 /**
  * I had to provide a separate validation schema since the linode_id (which is required by API) is
@@ -48,17 +47,16 @@ const AttachVolumeValidationSchema = object({
 const initialValues = { volume_id: -1, config_id: -1 };
 
 const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
-  const {
-    actions,
-    onClose,
-    linodeId,
-    linodeRegion,
-    linodeGrants,
-    readOnly,
-  } = props;
+  const { actions, onClose, linodeId, linodeRegion, readOnly } = props;
+
+  const { data: grants } = useGrants();
+
+  const linodeGrants = grants?.linode ?? [];
+
   const linodeGrant = linodeGrants.filter(
     (grant: Grant) => grant.id === linodeId
   )[0];
+
   const disabled =
     readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
 
@@ -187,19 +185,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   },
 });
 
-interface StateProps {
-  linodeGrants: Grant[];
-}
-
-const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
-  linodeGrants: pathOr(
-    [],
-    ['__resources', 'profile', 'data', 'grants', 'linode'],
-    state
-  ),
-});
-
-const connected = connect(mapStateToProps, mapDispatchToProps);
+const connected = connect(mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, Props>(connected);
 

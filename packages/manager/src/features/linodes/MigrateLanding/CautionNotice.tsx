@@ -1,4 +1,3 @@
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import Checkbox from 'src/components/CheckBox';
@@ -7,6 +6,7 @@ import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { useAccount } from 'src/queries/account';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -39,23 +39,23 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeVolumes: Volume[];
   hasConfirmed: boolean;
   setConfirmed: (value: boolean) => void;
   error?: string;
   migrationTimeInMins: number;
+  linodeId: number;
 }
 
-type CombinedProps = Props;
-
-const CautionNotice: React.FC<CombinedProps> = (props) => {
+const CautionNotice: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { data: account } = useAccount();
 
   const capabilities = account?.capabilities ?? [];
   const vlansCapability = capabilities.includes('Vlans');
 
-  const amountOfAttachedVolumes = props.linodeVolumes.length;
+  const { data: volumesData } = useLinodeVolumesQuery(props.linodeId);
+
+  const amountOfAttachedVolumes = volumesData?.results ?? 0;
 
   return (
     <div className={classes.root}>
@@ -97,7 +97,7 @@ const CautionNotice: React.FC<CombinedProps> = (props) => {
               {amountOfAttachedVolumes > 1 ? ' volumes' : ' volume'} will be
               detached from this Linode:
               <ul className={classes.volumes}>
-                {props.linodeVolumes.map((eachVolume) => {
+                {volumesData?.data.map((eachVolume) => {
                   return <li key={eachVolume.id}>{eachVolume.label}</li>;
                 })}
               </ul>

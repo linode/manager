@@ -26,6 +26,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -71,7 +72,6 @@ const searchDeps: ReduxEntity[] = [
   'linodes',
   'nodeBalancers',
   'images',
-  'volumes',
   'kubernetes',
 ];
 
@@ -101,6 +101,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
 
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
+
+  const { data: volumes } = useAllVolumesQuery(shouldMakeRequests);
 
   const { _loading } = useReduxLoad(
     searchDeps,
@@ -137,7 +139,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, buckets, domains ?? []);
+      search(searchText, buckets, domains ?? [], volumes ?? []);
     }
   }, [
     _loading,
@@ -147,6 +149,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     _isLargeAccount,
     objectStorageBuckets,
     domains,
+    volumes,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
