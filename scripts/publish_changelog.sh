@@ -77,11 +77,11 @@ generate_title_for_post() {
 generate_front_matter() {
     package=$1
     version=$2
-    formated_version=${version/#v}
+    formatted_version=${version/#v}
     title=$(generate_title_for_post $package $version)
     date=$(get_date_time)
     changelog=$(get_package_display_name $package)
-    printf -- "---\ntitle: %s\ndate: %s\nversion: %s\nchangelog:\n  - %s\n---\n" "$title" "$date" "$formated_version" "$changelog"
+    printf -- "---\ntitle: %s\ndate: %s\nversion: %s\nchangelog:\n  - %s\n---\n" "$title" "$date" "$formatted_version" "$changelog"
 }
 
 generate_post_content() {
