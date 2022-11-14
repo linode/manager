@@ -117,7 +117,7 @@ prompt_user_for_developers_repo_path() {
         if [[ $upstream == "git@github.com:linode/developers.git" ]]; then
             echo $developers_repo_path
         else
-            echo "The upstream repo is not git@github.com:linode/developers" >&2
+            echo "The upstream repo is not git@github.com:linode/developers.git" >&2
             return 1
         fi
     else
