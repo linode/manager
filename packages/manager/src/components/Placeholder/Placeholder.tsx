@@ -3,7 +3,6 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Button, { ButtonProps } from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,6 +22,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'auto 70vw auto',
+    gridTemplateRows: 'repeat(6, max-content)',
+    gridTemplateAreas: `
+      ". icon ."
+      ". title . "
+      ". subtitle ."
+      ". copy ."
+      ". button ."
+      ". links ."
+    `,
+    justifyItems: 'center',
+  },
   root: {
     padding: `${theme.spacing(2)}px 0`,
     [theme.breakpoints.up('md')]: {
@@ -31,14 +44,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     textAlign: 'center',
-    maxWidth: '85%',
-    marginTop: -theme.spacing(3),
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 600,
-    },
+    gridArea: 'copy',
   },
   icon: {
-    padding: theme.spacing(2),
+    gridArea: 'icon',
     width: '160px',
     height: '160px',
     '& .outerCircle': {
@@ -68,6 +77,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     marginBottom: theme.spacing(2),
   },
+  subtitle: {
+    gridArea: 'subtitle',
+  },
   '& .insidePath path': {
     opacity: 0,
     animation: '$fadeIn .2s ease-in-out forwards .3s',
@@ -77,6 +89,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fill: theme.palette.primary.main,
   },
   titleWithSubtitle: {
+    gridArea: 'title',
     textAlign: 'center',
     '& + h2': {
       marginBottom: theme.spacing(2),
@@ -84,8 +97,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   button: {
+    gridArea: 'button',
     marginBottom: theme.spacing(4),
   },
+  linksSection: {
+    gridArea: 'links',
+  }
 }));
 
 export interface ExtendedButtonProps extends ButtonProps {
@@ -106,7 +123,6 @@ export interface Props {
 
 const Placeholder: React.FC<Props> = (props) => {
   const {
-    isEntity,
     title,
     icon: Icon,
     buttonProps,
@@ -120,56 +136,43 @@ const Placeholder: React.FC<Props> = (props) => {
     ? classes.titleWithSubtitle
     : classes.title;
   return (
-    <Grid
-      container
-      spacing={3}
-      alignItems="center"
-      direction="column"
-      justifyContent="center"
-      className={`${classes.root} ${props.className}`}
-    >
-      <Grid item xs={12} className={isEntity ? classes.entity : ''}>
-        {Icon && <Icon className={classes.icon} />}
-      </Grid>
-      <Grid item xs={12}>
-        <H1Header
-          title={title}
-          className={titleClassName}
-          renderAsSecondary={renderAsSecondary}
-          data-qa-placeholder-title
-        />
-        {hasSubtitle ? <Typography variant="h2">{subtitle}</Typography> : null}
-      </Grid>
-      <Grid item xs={12} lg={2} className={classes.copy}>
+    <div className={classes.container}>
+      {Icon && <Icon className={classes.icon} />}
+
+
+      <H1Header
+        title={title}
+        className={titleClassName}
+        renderAsSecondary={renderAsSecondary}
+        data-qa-placeholder-title
+      />
+      {hasSubtitle ? <Typography variant="h2" className={classes.subtitle}>{subtitle}</Typography> : null}
+
+
+      <div className={classes.copy}>
         {typeof props.children === 'string' ? (
           <Typography variant="subtitle1">{props.children}</Typography>
         ) : (
           props.children
         )}
-      </Grid>
+      </div>
+
       {buttonProps && (
-        <Grid
-          container
-          item
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {buttonProps.map((thisButton, index) => (
-            <Grid item key={`placeholder-button-${index}`}>
-              <Button
-                buttonType="primary"
-                className={classes.button}
-                {...thisButton}
-                data-qa-placeholder-button
-                data-testid="placeholder-button"
-              />
-            </Grid>
-          ))}
-        </Grid>
+        buttonProps.map((thisButton, index) => (
+          <Button
+            buttonType="primary"
+            className={classes.button}
+            {...thisButton}
+            data-qa-placeholder-button
+            data-testid="placeholder-button"
+          />
+        ))
+
       )}
-      {linksSection !== undefined ? linksSection : null}
-    </Grid>
+      <div className={classes.linksSection}>
+        {linksSection !== undefined ? linksSection : null}
+      </div>
+    </div>
   );
 };
 
