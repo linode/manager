@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: '85%',
     marginTop: -theme.spacing(3),
     [theme.breakpoints.up('md')]: {
-      maxWidth: 800,
+      maxWidth: 600,
     },
   },
   icon: {
@@ -140,7 +140,7 @@ const Placeholder: React.FC<Props> = (props) => {
         />
         {hasSubtitle ? <Typography variant="h2">{subtitle}</Typography> : null}
       </Grid>
-      <Grid item xs={12} lg={10} className={classes.copy}>
+      <Grid item xs={12} lg={2} className={classes.copy}>
         {typeof props.children === 'string' ? (
           <Typography variant="subtitle1">{props.children}</Typography>
         ) : (
