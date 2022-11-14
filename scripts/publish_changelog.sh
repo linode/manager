@@ -134,6 +134,7 @@ if (($VALID_PACKAGES[(Ie)$PACKAGE])); then
     developers_repo_path=$(prompt_user_for_developers_repo_path)
     if [[ -d $developers_repo_path ]]; then
         generate_post_content "$front_matter" "$changelog_entry" > "$developers_repo_path/src/content/changelog/$filename"
+        echo "Changelog entry succesfully generated at: $developers_repo_path/src/content/changelog/$filename"
     fi
 
 else
