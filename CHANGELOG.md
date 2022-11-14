@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-11-14] - v1.80.0
+
+### Added:
+- Restore paste functionality for Glish
+- Enable Cobertura coverage report
+- add top margin
+- add user defined headers
+- Revised copy on Database Backups tab
+- LKE UI refinements
+- 
+
+
 ## [2022-11-07] - v1.79.1
 ### Fixed:
 - Bug when managing user permissions for large accounts

@@ -1,3 +1,8 @@
+## [2022-11-14] - v0.82.0
+
+### Added:
+- add user defined headers
+
 ## [2022-11-01] - v0.81.0
 ### Added:
 - `setUserAgentPrefix` helper function to change API request user agent prefix
