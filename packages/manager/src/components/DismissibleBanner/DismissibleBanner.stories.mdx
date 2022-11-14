@@ -1,4 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Link from 'src/components/Link';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from './DismissibleBanner';
 // import StatusBanners from 'src/features/Help/StatusBanners';
@@ -22,6 +23,7 @@ Banners appear between the top nav and page content and are a visual interruptio
 
 ### Variants
 
+- Beta: Informs users of a feature in beta and includes the [Early Adopter SLA](https://www.linode.com/legal-eatp/).
 - Marketing: Informs users of a new feature or improved service.
 - Warning: Informs users of an impending change that will have an impact on their service(s).
 - Call to action: Primary Button or text link allows a user to take action directly from the banner.
@@ -42,6 +44,22 @@ export const StatusBannersTemplate = (args) => {
   return <StatusBanners {...args} />;
 };
 
+export const BetaBannerTemplate = () => {
+    return (
+      <DismissibleBanner productInformationIndicator>
+        <Typography>
+          Managed Database for MySQL is available in a free, open beta period
+          until May 2nd, 2022. This is a beta environment and should not be
+          used to support production workloads. Review the{' '}
+          <Link to="https://www.linode.com/legal-eatp">
+            Early Adopter Program SLA
+          </Link>
+          .
+        </Typography>
+      </DismissibleBanner>
+  );
+}
+
 <Canvas>
   <Story
     name="Dismissible Banners"
@@ -56,6 +74,16 @@ export const StatusBannersTemplate = (args) => {
     }}
   >
     {DismissibleBannerTemplate.bind({})}
+  </Story>
+</Canvas>
+
+#### Beta
+
+Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
+
+<Canvas>
+  <Story name="Beta Banners">
+    {BetaBannerTemplate.bind({})}
   </Story>
 </Canvas>
 
