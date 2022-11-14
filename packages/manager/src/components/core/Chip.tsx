@@ -21,18 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   ['outline-green']: {
     border: '1px solid #02B159',
   },
-  beta: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.625rem',
-    height: 16,
-    letterSpacing: '.25px',
-    textTransform: 'uppercase',
-    marginLeft: theme.spacing(),
-  },
 }));
 
-export interface ChipProps extends Omit<_ChipProps, 'variant'> {
-  variant?: _ChipProps['variant'] | 'beta';
+export interface ChipProps extends _ChipProps {
   outlineColor?: 'green' | 'gray';
   component?: string;
   inTable?: boolean;
@@ -51,10 +42,8 @@ const Chip: React.FC<ChipProps> = ({
       className={classNames(className, {
         [classes.inTable]: inTable,
         [classes[`outline-${outlineColor}`]]: props.variant === 'outlined',
-        [classes.beta]: props.variant === 'beta',
       })}
       {...props}
-      variant={props.variant === 'beta' ? 'default' : props.variant}
     />
   );
 };

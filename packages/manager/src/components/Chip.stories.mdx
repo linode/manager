@@ -1,7 +1,5 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Chip from '/src/components/core/Chip';
-import Breadcrumb from '/src/components/Breadcrumb';
-import { useStyles } from '/src/features/Volumes/VolumeTableRow';
 
 <Meta title="Elements/Chips" component={Chip} />
 
@@ -56,52 +54,8 @@ No action is required or enabled.
       outlineColor="green"
       size="small"
     />
-    <Chip
-      label="beta"
-      variant="beta"
-    />
   </Story>
 </Canvas>
-
-### Beta
-
-Beta chips label features that are not yet part of Cloud Manager's core supported functionality.
-
-**Example:** A 'beta' chip may appear in the [primary navigation](https://github.com/linode/manager/pull/8104), breadcrumbs, [banners](/docs/components-notifications-dismissible-banners--beta-banners), tabs, and/or plain text to designate beta functionality.
-
-**Visual style:** variant styling has bold, capitalized text; reduced height, letter spacing, and font size; solid color background: MUI default color for light mode and MUI primary color for dark mode.
-
-#### Example
-
-<Canvas>
-  <Story name="Beta">
-    <BreadcrumbBetaExample />
-  </Story>
-</Canvas>
-
-export const BreadcrumbBetaExample = () => {
-  return (
-    <>
-      <Breadcrumb
-        labelTitle="Create"
-        pathname={"Databases Cluster / Create"}
-        crumbOverrides={[
-          {
-            position: 1,
-            label: 'Database Clusters',
-          },
-        ]}
-        labelOptions={{
-          suffixComponent:
-            <Chip 
-              label="beta" 
-              variant="beta"
-              component="span" />
-        }}
-      />
-    </>
-  );
-};
 
 ## Component API
 
@@ -163,8 +117,8 @@ export const BreadcrumbBetaExample = () => {
         },
       },
       variant: {
-        description: 'Variant of the Chip `"default" | "outlined" | "beta"`',
-        options: ['default', 'outlined', 'beta'],
+        description: 'Variant of the Chip `"default" | "outlined"`',
+        options: ['default', 'outlined'],
         control: { type: 'radio' },
         table: {
           defaultValue: {
