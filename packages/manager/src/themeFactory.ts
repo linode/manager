@@ -596,9 +596,8 @@ const themeDefaults: ThemeDefaults = () => {
           height: 'inherit',
         },
         deleteIcon: {
+          margin: 0,
           padding: 2,
-          marginLeft: 2,
-          marginRight: 2,
           color: primaryColors.text,
         },
       },
