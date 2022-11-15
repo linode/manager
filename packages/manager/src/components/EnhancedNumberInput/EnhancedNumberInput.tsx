@@ -122,7 +122,7 @@ export const EnhancedNumberInput: React.FC<Props> = (props) => {
       <Button
         buttonType="outlined"
         className={classes.button}
-        compact
+        compactX
         disabled={disabled || value === min}
         onClick={decrementValue}
         name="Subtract 1"
@@ -153,7 +153,7 @@ export const EnhancedNumberInput: React.FC<Props> = (props) => {
       <Button
         buttonType="outlined"
         className={classes.button}
-        compact
+        compactX
         disabled={disabled || value === max}
         onClick={incrementValue}
         name="Add 1"
