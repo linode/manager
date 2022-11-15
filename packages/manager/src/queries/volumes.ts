@@ -51,7 +51,7 @@ export const useLinodeVolumesQuery = (
   enabled = true
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
-    [`${queryKey}-list`, `linode-${linodeId}`, params, filters],
+    [`${queryKey}-list`, 'linode', linodeId, params, filters],
     () => getLinodeVolumes(linodeId, params, filters),
     { keepPreviousData: true, enabled }
   );
@@ -112,7 +112,8 @@ export const useAttachVolumeMutation = () =>
         updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
         queryClient.invalidateQueries([
           `${queryKey}-list`,
-          `linode-${volume.linode_id}`,
+          'linode',
+          volume.linode_id,
         ]);
       },
     }
@@ -123,6 +124,9 @@ export const useDetachVolumeMutation = () =>
 
 export const volumeEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
+
+  // Keep the getALl query up to date so that when we have to use it, it contains accurate data
+  queryClient.invalidateQueries(`${queryKey}-all`);
 
   switch (action) {
     case 'volume_create':
@@ -169,7 +173,6 @@ export const volumeEventsHandler = (event: Event) => {
           return;
         case 'notification':
         case 'finished':
-          // This means a detach was successful. Remove associated Linode.
           const volume = getItemInPaginatedStore<Volume>(
             `${queryKey}-list`,
             entity!.id
@@ -181,7 +184,8 @@ export const volumeEventsHandler = (event: Event) => {
           if (volume && volume.linode_id !== null) {
             queryClient.invalidateQueries([
               `${queryKey}-list`,
-              `linode-${volume.linode_id}`,
+              'linode',
+              volume.linode_id,
             ]);
           }
           return;

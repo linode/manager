@@ -34,6 +34,7 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import DeviceSelection, {
   ExtendedDisk,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -457,7 +458,12 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const generalError = formik.status?.generalError;
 
-  const { data: volumeData } = useLinodeVolumesQuery(props.linodeId);
+  const { data: volumeData } = useLinodeVolumesQuery(
+    props.linodeId,
+    { page_size: API_MAX_PAGE_SIZE },
+    {},
+    open
+  );
 
   const availableDevices = {
     disks: props.disks,

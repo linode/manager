@@ -4,6 +4,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 
@@ -55,7 +56,9 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     readOnly,
   } = props;
 
-  const { data: volumes } = useLinodeVolumesQuery(linodeId);
+  const { data: volumes } = useLinodeVolumesQuery(linodeId, {
+    page_size: API_MAX_PAGE_SIZE,
+  });
 
   const classes = useStyles();
   const interfaces = config?.interfaces ?? [];

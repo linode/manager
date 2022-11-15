@@ -17,14 +17,11 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useNotifications from 'src/hooks/useNotifications';
-import { useOrder } from 'src/hooks/useOrder';
-import usePagination from 'src/hooks/usePagination';
 import { useProfile } from 'src/queries/profile';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
-import { preferenceKey } from '../LinodeAdvanced/LinodeVolumes';
 import EnableBackupDialog from '../LinodeBackup/EnableBackupsDialog';
 import {
   LinodeDetailContext,
@@ -269,30 +266,8 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const { order, orderBy } = useOrder(
-    {
-      orderBy: 'label',
-      order: 'desc',
-    },
-    `${preferenceKey}-order`
-  );
-
-  const filter = {
-    ['+order_by']: orderBy,
-    ['+order']: order,
-  };
-
-  const pagination = usePagination(1, preferenceKey);
-
   const { data: profile } = useProfile();
-  const { data: volumesData } = useLinodeVolumesQuery(
-    matchedLinodeId,
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
-    filter
-  );
+  const { data: volumesData } = useLinodeVolumesQuery(matchedLinodeId);
 
   const volumesForLinode = volumesData?.data ?? [];
   const numAttachedVolumes = volumesData?.results ?? 0;
