@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: theme.spacing(4),
   },
   errorState: {
-    padding: `calc(${theme.spacing(2)} - 1)`,
+    padding: `calc(${theme.spacing(2)} - 1px)`,
     '& > div': {
       padding: 0,
     },
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     marginRight: theme.spacing(1),
-    marginBottom: `calc(${theme.spacing(1)} - 2)`,
+    marginBottom: `calc(${theme.spacing(1)} - 2px)`,
     stroke: theme.color.offBlack,
   },
   sshKeyContainer: {

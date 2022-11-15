@@ -24,7 +24,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     header: {
-      marginTop: theme.spacing(1) + 6,
+      marginTop: `calc(${theme.spacing(1)} + 6px)`,
       marginBottom: theme.spacing(1),
     },
     bar: {
