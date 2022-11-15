@@ -7,14 +7,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2022-11-14] - v1.80.0
 
 ### Added:
-- Restore paste functionality for Glish
-- Enable Cobertura coverage report
-- add top margin
-- add user defined headers
-- Revised copy on Database Backups tab
-- LKE UI refinements
-- 
+- Paste functionality restored for Glish
+- Support for user-defined headers in stackscripts
 
+### Changed:
+- LKE UI refinements
 
 ## [2022-11-07] - v1.79.1
 ### Fixed:
