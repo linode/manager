@@ -561,15 +561,6 @@ const themeDefaults: ThemeDefaults = () => {
           '&:last-child': {
             marginRight: 0,
           },
-          '&:hover': {
-            '& $deleteIcon': {
-              color: primaryColors.white,
-              '&:hover': {
-                color: primaryColors.main,
-                backgroundColor: primaryColors.white,
-              },
-            },
-          },
           '&:focus': {
             outline: '1px dotted #999',
           },
@@ -606,17 +597,9 @@ const themeDefaults: ThemeDefaults = () => {
         },
         deleteIcon: {
           padding: 2,
-          marginLeft: 4,
+          marginLeft: 2,
           marginRight: 2,
           color: primaryColors.text,
-          borderRadius: '50%',
-          width: 18,
-          height: 18,
-          '& svg': {
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-          },
         },
       },
       MuiCircularProgress: {
