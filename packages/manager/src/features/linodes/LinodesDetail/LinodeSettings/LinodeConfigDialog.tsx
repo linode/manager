@@ -460,6 +460,8 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const { data: volumeData } = useLinodeVolumesQuery(
     props.linodeId,
+    // This is not great, but lets us get all of the volumes for a Linode while keeping the store paginated.
+    // We can safely do this because linodes can't have more than 64 volumes.
     { page_size: API_MAX_PAGE_SIZE },
     {},
     open

@@ -125,7 +125,7 @@ export const useDetachVolumeMutation = () =>
 export const volumeEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
 
-  // Keep the getALl query up to date so that when we have to use it, it contains accurate data
+  // Keep the getAll query up to date so that when we have to use it, it contains accurate data
   queryClient.invalidateQueries(`${queryKey}-all`);
 
   switch (action) {
