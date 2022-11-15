@@ -31,8 +31,10 @@ import { getAll } from 'src/utilities/getAll';
  * When we manually mutate our cache, we must keep data under the following queryKeys up to date.
  *
  * Query Keys:
+ * - `volumes-all` - Contains an array of all volumes
+ *   - ONLY USE WHEN ABSOLUTELY NECESSARY
  * - `volumes-list` - Contains Paginated Volumes
- * - [`volumes-list`, `linode-{id}`] - Conatins Paginated Volumes for a Specifc Linode
+ * - [`volumes-list`, 'linode', id] - Conatins Paginated Volumes for a Specifc Linode
  */
 
 const queryKey = 'volumes';
