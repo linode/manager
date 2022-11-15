@@ -3,20 +3,27 @@ import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Notice from 'src/components/Notice';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import { useProfile } from 'src/queries/profile';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & PreferencesProps;
 
 interface ContentProps {
   object_storage: AccountSettings['object_storage'];
@@ -62,10 +69,15 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
 };
 
 export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
-  const { object_storage } = props;
+  const { object_storage, preferences } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [confirmText, setConfirmText] = React.useState('');
+  const { data: profile } = useProfile();
+  const username = profile?.username;
+  const disabled =
+    preferences?.type_to_confirm !== false && confirmText !== username;
 
   const handleClose = () => {
     setOpen(false);
@@ -88,13 +100,23 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
       .catch(handleError);
   };
 
-  const actions = () => (
+  const renderActions = (
+    disabled: boolean,
+    loading: boolean,
+    onClose: () => void,
+    onSubmit: () => void
+  ) => (
     <ActionsPanel>
-      <Button buttonType="secondary" onClick={handleClose}>
+      <Button buttonType="secondary" onClick={onClose}>
         Cancel
       </Button>
 
-      <Button buttonType="primary" onClick={handleSubmit} loading={isLoading}>
+      <Button
+        buttonType="primary"
+        onClick={onSubmit}
+        disabled={disabled}
+        loading={loading}
+      >
         Confirm cancellation
       </Button>
     </ActionsPanel>
@@ -112,15 +134,35 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         open={isOpen}
         error={error}
         onClose={() => handleClose()}
-        title="Just to confirm..."
-        actions={actions}
+        title="Cancel Object Storage"
+        actions={renderActions(disabled, isLoading, handleClose, handleSubmit)}
       >
-        <Typography variant="subtitle1">
-          Are you sure you want to cancel Object Storage?
-        </Typography>
+        <Notice warning>
+          <Typography style={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Canceling Object Storage will permanently
+            delete all buckets and their objects. Object Storage Access Keys
+            will be revoked.
+          </Typography>
+        </Notice>
+        <TypeToConfirm
+          data-testid={'dialog-confirm-text-input'}
+          label="Username"
+          onChange={(input) => setConfirmText(input)}
+          expand
+          value={confirmText}
+          confirmationText={
+            <span>
+              To confirm cancellation, type your username (<b>{username}</b>) in
+              the field below:
+            </span>
+          }
+          visible={preferences?.type_to_confirm}
+        />
       </ConfirmationDialog>
     </>
   );
 };
 
-export default React.memo(EnableObjectStorage);
+const enhanced = compose<CombinedProps, Props>(withPreferences());
+
+export default enhanced(React.memo(EnableObjectStorage));
