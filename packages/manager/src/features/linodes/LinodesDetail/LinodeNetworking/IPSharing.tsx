@@ -29,7 +29,7 @@ import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 const useStyles = makeStyles((theme: Theme) => ({
   addNewButton: {
     marginTop: theme.spacing(3),
-    marginBottom: -theme.spacing(2),
+    marginBottom: `-${theme.spacing(2)}`,
   },
   ipField: {
     width: '100%',

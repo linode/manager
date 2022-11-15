@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   radio: {
-    marginLeft: -theme.spacing(0.5),
+    marginLeft: `-${theme.spacing(0.5)}`,
     marginRight: theme.spacing(2),
     padding: 2,
   },

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     textAlign: 'center',
     maxWidth: '85%',
-    marginTop: -theme.spacing(3),
+    marginTop: `-${theme.spacing(3)}`,
     [theme.breakpoints.up('md')]: {
       maxWidth: 800,
     },
