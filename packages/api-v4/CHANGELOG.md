@@ -1,7 +1,7 @@
 ## [2022-11-14] - v0.82.0
 
 ### Added:
-- add user defined headers
+- Support for user-defined headers in UDF (user-defined fields) schema
 
 ## [2022-11-01] - v0.81.0
 ### Added:
