@@ -293,14 +293,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
             >
               Status
             </TableSortCell>
-            <TableSortCell
-              active={orderBy === 'region'}
-              direction={order}
-              label="region"
-              handleClick={handleOrderChange}
-            >
-              Region
-            </TableSortCell>
+            <TableCell>Region</TableCell>
             <TableSortCell
               active={orderBy === 'size'}
               direction={order}
