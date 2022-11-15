@@ -317,7 +317,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           ) : null}
         </Grid>
       </Grid>
-      <Grid item xs={12}>
+      <Grid item>
         <KubeSummaryPanel
           cluster={cluster}
           endpoint={endpoint}
@@ -337,7 +337,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           )}
         />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item>
         <NodePoolsDisplay
           clusterID={cluster.id}
           clusterLabel={cluster.label}

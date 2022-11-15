@@ -17,7 +17,7 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import Logo from 'src/assets/logo/logo.svg';
-import Chip from 'src/components/core/Chip';
+import BetaChip from 'src/components/BetaChip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import useAccountManagement from 'src/hooks/useAccountManagement';
@@ -405,7 +405,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
       >
         {display}
         {isBeta ? (
-          <Chip className={classes.chip} label="beta" component="span" />
+          <BetaChip className={classes.chip} color="primary" component="span" />
         ) : null}
       </p>
     </Link>

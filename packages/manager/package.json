@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.79.1",
+  "version": "1.80.0",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -252,6 +252,13 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.stories.{js,jsx,ts,tsx}"
+    ],
+    "coverageReporters": [
+      "clover",
+      "json",
+      "text",
+      "lcov",
+      "cobertura"
     ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"

@@ -32,15 +32,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `${theme.spacing(2)}px 0`,
     },
   },
-  container: {
-    display: 'flex',
-  },
   button: {
     paddingRight: 8,
   },
-  text: {
+  autoscaleText: {
+    paddingRight: theme.spacing(2),
     alignSelf: 'center',
-    paddingRight: 16,
+  },
+  deletePoolBtn: {
+    paddingRight: 0,
+    marginBottom: 3,
   },
 }));
 
@@ -71,29 +72,30 @@ const NodePool: React.FC<Props> = (props) => {
         <Grid item>
           <Typography variant="h2">{typeLabel}</Typography>
         </Grid>
-        <Grid item className={classes.container}>
-          <div className={classes.container}>
-            <Button
-              className={`${autoscaler.enabled ? classes.button : ''}`}
-              buttonType="secondary"
-              onClick={() => openAutoscalePoolDialog(poolId)}
-            >
-              Autoscale Pool
-            </Button>
-            {autoscaler.enabled ? (
-              <Typography className={classes.text}>
-                {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
-              </Typography>
-            ) : null}
-          </div>
+        <Grid item style={{ display: 'flex' }}>
+          <Button
+            className={`${autoscaler.enabled ? classes.button : ''}`}
+            buttonType="secondary"
+            compactY
+            onClick={() => openAutoscalePoolDialog(poolId)}
+          >
+            Autoscale Pool
+          </Button>
+          {autoscaler.enabled ? (
+            <Typography className={classes.autoscaleText}>
+              {`(Min ${autoscaler.min} / Max ${autoscaler.max})`}
+            </Typography>
+          ) : null}
           <Button
             buttonType="secondary"
+            compactY
             onClick={() => handleClickResize(poolId)}
           >
             Resize Pool
           </Button>
           <Button
             buttonType="secondary"
+            compactY
             onClick={() => openRecycleAllNodesDialog(poolId)}
           >
             Recycle Pool Nodes
@@ -106,7 +108,9 @@ const NodePool: React.FC<Props> = (props) => {
           >
             <div>
               <Button
+                className={classes.deletePoolBtn}
                 buttonType="secondary"
+                compactY
                 disabled={isOnlyNodePool}
                 onClick={() => openDeletePoolDialog(poolId)}
               >
