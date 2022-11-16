@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     display: 'grid',
-    gridTemplateColumns: 'auto 70vw auto',
+    gridTemplateColumns: '15% auto 15%',
     gridTemplateRows: 'repeat(6, max-content)',
     gridTemplateAreas: `
       ". icon ."
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       ". subtitle ."
       ". copy ."
       ". button ."
-      ". links ."
+      "links links links"
     `,
     justifyItems: 'center',
   },
@@ -45,11 +45,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     textAlign: 'center',
     gridArea: 'copy',
+    minWidth: 'min-content',
+    maxWidth: '70%',
   },
   icon: {
-    gridArea: 'icon',
     width: '160px',
     height: '160px',
+    padding: '16px',
     '& .outerCircle': {
       fill: theme.name === 'lightTheme' ? '#fff' : '#000',
       stroke: theme.bg.offWhite,
@@ -102,6 +104,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linksSection: {
     gridArea: 'links',
+  },
+  iconWrapper: {
+    gridArea: 'icon',
   }
 }));
 
@@ -123,6 +128,7 @@ export interface Props {
 
 const Placeholder: React.FC<Props> = (props) => {
   const {
+    isEntity,
     title,
     icon: Icon,
     buttonProps,
@@ -136,8 +142,10 @@ const Placeholder: React.FC<Props> = (props) => {
     ? classes.titleWithSubtitle
     : classes.title;
   return (
-    <div className={classes.container}>
-      {Icon && <Icon className={classes.icon} />}
+    <div className={`${classes.container} ${classes.root} ${props.className}`}>
+      <div className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}>
+        {Icon && <Icon className={classes.icon} />}
+      </div>
 
 
       <H1Header
