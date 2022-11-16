@@ -1,18 +1,20 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import classnames from 'classnames';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Box from 'src/components/core/Box';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
-import AppInfo from '../../linodes/LinodesCreate/AppInfo';
-import classnames from 'classnames';
+import { addOrdinalSuffix } from 'src/utilities/stringUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -43,6 +45,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   marketplaceSpacing: {
     paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
+  },
+  clusterNotice: {
+    paddingTop: '1rem',
   },
 }));
 
@@ -179,6 +184,14 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
     userDefinedFields!
   );
 
+  // console.log(userDefinedFields);
+
+  const isCluster = userDefinedFields?.some(
+    (udf) => udf.name === 'node_options'
+  );
+  const numberOfNodes = Number(udf_data['node_options']) ?? 3;
+  const temporaryNodeNumber = numberOfNodes + 1; // A temporary additional node is created.
+
   const isDrawerOpenable = openDrawer !== undefined;
 
   return (
@@ -197,12 +210,23 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
         ) : null}
       </Box>
 
+      {isCluster ? (
+        <div className={classes.clusterNotice}>
+          <Notice informational>
+            <strong>
+              You are creating a cluster with {numberOfNodes} nodes. A temporary{' '}
+              {addOrdinalSuffix(temporaryNodeNumber)} node will be provisioned
+              and deleted once the provisioning is complete.
+            </strong>
+          </Notice>
+        </div>
+      ) : null}
+
       {/* Required Fields */}
       {requiredUDFs.map((field: UserDefinedField) => {
         const error = getError(field, errors);
         return renderField(udf_data, handleChange, field, error);
       })}
-
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
         <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
