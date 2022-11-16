@@ -44,7 +44,11 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button buttonType="outlined" onClick={openConfirmationModal}>
+          <Button
+            data-testid="open-dialog-button"
+            buttonType="outlined"
+            onClick={openConfirmationModal}
+          >
             Cancel Object Storage
           </Button>
         </Grid>
@@ -107,7 +111,11 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
     onSubmit: () => void
   ) => (
     <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
+      <Button
+        buttonType="secondary"
+        onClick={onClose}
+        data-testid={'dialog-cancel'}
+      >
         Cancel
       </Button>
 
@@ -116,6 +124,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         onClick={onSubmit}
         disabled={disabled}
         loading={loading}
+        data-testid={'dialog-confirm'}
       >
         Confirm cancellation
       </Button>
