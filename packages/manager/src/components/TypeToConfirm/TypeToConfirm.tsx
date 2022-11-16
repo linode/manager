@@ -66,7 +66,10 @@ const TypeToConfirm: React.FC<Props> = (props) => {
         </>
       ) : null}
       {!hideInstructions ? (
-        <Typography className={classes.description}>
+        <Typography
+          data-testid={'instructions-to-enable-or-disable'}
+          className={classes.description}
+        >
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
           section of <Link to="/profile/settings">My Settings</Link>.
         </Typography>
