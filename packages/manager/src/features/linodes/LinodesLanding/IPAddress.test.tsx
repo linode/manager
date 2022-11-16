@@ -16,6 +16,7 @@ const classes = {
   multipleAddresses: '',
   ipLink: '',
   hide: 'hide',
+  ipCopyBtn: '',
 };
 
 const component = shallow(

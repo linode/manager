@@ -1,6 +1,7 @@
 import copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
+import CopyableTextWithTooltip from 'src/components/CopyableTextWithTooltip/CopyableTextWithTooltip';
 import CopyTooltip from 'src/components/CopyTooltip';
 import {
   createStyles,
@@ -131,7 +132,7 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
         className={`${classes.row} ${showAll && classes.multipleAddresses}`}
         data-qa-ip-main
       >
-        {ip}
+        <CopyableTextWithTooltip text={ip} />
         {this.renderCopyIcon(ip)}
       </div>
     );
