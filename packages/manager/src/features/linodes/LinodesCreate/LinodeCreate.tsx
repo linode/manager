@@ -396,7 +396,6 @@ export class LinodeCreate extends React.PureComponent<
       updateLabel,
       tags,
       updateTags,
-      updatePassword,
       errors,
       sshError,
       userSSHKeys,
