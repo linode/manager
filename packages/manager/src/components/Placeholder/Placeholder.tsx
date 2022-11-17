@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 35% 35% 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateRows: 'auto 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
+    gridTemplateRows:
+      'auto 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
     gridTemplateAreas: `
       ". . . . . icon icon . . . . ."
       ". . . . . . . . . . . ."
@@ -108,12 +109,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linksSection: {
     gridArea: 'links',
-    borderTop: `1px solid ${theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'}`,
+    borderTop: `1px solid ${
+      theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'
+    }`,
     paddingTop: '38px',
   },
   iconWrapper: {
     gridArea: 'icon',
-  }
+  },
 }));
 
 export interface ExtendedButtonProps extends ButtonProps {
@@ -146,10 +149,11 @@ const Placeholder: React.FC<Props> = (props) => {
   const hasSubtitle = subtitle !== undefined;
   return (
     <div className={`${classes.container} ${classes.root} ${props.className}`}>
-      <div className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}>
+      <div
+        className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}
+      >
         {Icon && <Icon className={classes.icon} />}
       </div>
-
 
       <H1Header
         title={title}
@@ -157,8 +161,11 @@ const Placeholder: React.FC<Props> = (props) => {
         renderAsSecondary={renderAsSecondary}
         data-qa-placeholder-title
       />
-      {hasSubtitle ? <Typography variant="h2" className={classes.subtitle}>{subtitle}</Typography> : null}
-
+      {hasSubtitle ? (
+        <Typography variant="h2" className={classes.subtitle}>
+          {subtitle}
+        </Typography>
+      ) : null}
 
       <div className={classes.copy}>
         {typeof props.children === 'string' ? (
@@ -168,7 +175,7 @@ const Placeholder: React.FC<Props> = (props) => {
         )}
       </div>
 
-      {buttonProps && (
+      {buttonProps &&
         buttonProps.map((thisButton, index) => (
           <Button
             buttonType="primary"
@@ -176,10 +183,9 @@ const Placeholder: React.FC<Props> = (props) => {
             {...thisButton}
             data-qa-placeholder-button
             data-testid="placeholder-button"
+            key={index}
           />
-        ))
-
-      )}
+        ))}
       <div className={classes.linksSection}>
         {linksSection !== undefined ? linksSection : null}
       </div>

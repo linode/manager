@@ -191,7 +191,8 @@ const DatabaseEmptyState: React.FC = () => {
       >
         <Typography variant="subtitle1">
           Deploy popular database engines such as MySQL and PostgreSQL using
-          Linode's performant, reliable, and fully managed database solution.
+          Linode&rsquo;s performant, reliable, and fully managed database
+          solution.
         </Typography>
       </Placeholder>
     </>
