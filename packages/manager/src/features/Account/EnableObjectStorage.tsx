@@ -3,7 +3,6 @@ import { cancelObjectStorage } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -13,17 +12,15 @@ import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import usePreferences from 'src/hooks/usePreferences';
 import { useProfile } from 'src/queries/profile';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props & PreferencesProps;
+type CombinedProps = Props;
 
 interface ContentProps {
   object_storage: AccountSettings['object_storage'];
@@ -73,11 +70,12 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
 };
 
 export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
-  const { object_storage, preferences } = props;
+  const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [confirmText, setConfirmText] = React.useState('');
+  const { preferences } = usePreferences();
   const { data: profile } = useProfile();
   const username = profile?.username;
   const disabled =
@@ -104,29 +102,24 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
       .catch(handleError);
   };
 
-  const renderActions = (
-    disabled: boolean,
-    loading: boolean,
-    onClose: () => void,
-    onSubmit: () => void
-  ) => (
+  const actions = (
     <ActionsPanel>
       <Button
         buttonType="secondary"
-        onClick={onClose}
-        data-testid={'dialog-cancel'}
+        onClick={handleClose}
+        data-testid="dialog-cancel"
       >
         Cancel
       </Button>
 
       <Button
         buttonType="primary"
-        onClick={onSubmit}
+        onClick={handleSubmit}
         disabled={disabled}
-        loading={loading}
-        data-testid={'dialog-confirm'}
+        loading={isLoading}
+        data-testid="dialog-confirm"
       >
-        Confirm cancellation
+        Confirm Cancellation
       </Button>
     </ActionsPanel>
   );
@@ -144,7 +137,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         error={error}
         onClose={() => handleClose()}
         title="Cancel Object Storage"
-        actions={renderActions(disabled, isLoading, handleClose, handleSubmit)}
+        actions={actions}
       >
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
@@ -154,7 +147,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
           </Typography>
         </Notice>
         <TypeToConfirm
-          data-testid={'dialog-confirm-text-input'}
+          data-testid="dialog-confirm-text-input"
           label="Username"
           onChange={(input) => setConfirmText(input)}
           expand
@@ -172,6 +165,4 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences());
-
-export default enhanced(React.memo(EnableObjectStorage));
+export default React.memo(EnableObjectStorage);

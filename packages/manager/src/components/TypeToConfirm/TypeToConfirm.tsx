@@ -67,7 +67,7 @@ const TypeToConfirm: React.FC<Props> = (props) => {
       ) : null}
       {!hideInstructions ? (
         <Typography
-          data-testid={'instructions-to-enable-or-disable'}
+          data-testid="instructions-to-enable-or-disable"
           className={classes.description}
         >
           To {disableOrEnable} type-to-confirm, go to the Type-to-Confirm
