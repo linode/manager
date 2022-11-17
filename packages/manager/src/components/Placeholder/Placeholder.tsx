@@ -25,13 +25,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 35% 35% 1fr 1fr 1fr 1fr 1fr',
-    gridTemplateRows: 'repeat(6, max-content)',
+    gridTemplateRows: 'auto 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
     gridTemplateAreas: `
       ". . . . . icon icon . . . . ."
+      ". . . . . . . . . . . ."
       ". . . . . title title . . . . ."
+      ". . . . . . . . . . . ."
       ". . . . . subtitle subtitle . . . . ."
+      ". . . . . . . . . . . ."
       ". . . . . copy copy . . . . ."
+      ". . . . . . . . . . . ."
       ". . . . . button button . . . . ."
+      ". . . . . . . . . . . ."
       ". . . . links links links links . . . ."
     `,
     justifyItems: 'center',
@@ -46,7 +51,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
     gridArea: 'copy',
     minWidth: 'min-content',
-    maxWidth: '70%',
+    maxWidth: '75%',
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: 'none',
+    },
   },
   icon: {
     width: '160px',
@@ -77,10 +85,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     textAlign: 'center',
-    marginBottom: theme.spacing(2),
+    gridArea: 'title',
+    /*     marginBottom: theme.spacing(2), */
   },
   subtitle: {
     gridArea: 'subtitle',
+    textAlign: 'center',
+    /*     marginBottom: theme.spacing(2), */
+    color: theme.palette.text.primary,
   },
   '& .insidePath path': {
     opacity: 0,
@@ -90,20 +102,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   '& .bucket.insidePath path': {
     fill: theme.palette.primary.main,
   },
-  titleWithSubtitle: {
-    gridArea: 'title',
-    textAlign: 'center',
-    '& + h2': {
-      marginBottom: theme.spacing(2),
-      color: theme.palette.text.primary,
-    },
-  },
   button: {
     gridArea: 'button',
-    marginBottom: theme.spacing(4),
+    /*     marginBottom: theme.spacing(4), */
   },
   linksSection: {
     gridArea: 'links',
+    borderTop: `1px solid ${theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'}`,
+    paddingTop: '38px',
   },
   iconWrapper: {
     gridArea: 'icon',
@@ -138,9 +144,6 @@ const Placeholder: React.FC<Props> = (props) => {
   } = props;
   const classes = useStyles();
   const hasSubtitle = subtitle !== undefined;
-  const titleClassName = hasSubtitle
-    ? classes.titleWithSubtitle
-    : classes.title;
   return (
     <div className={`${classes.container} ${classes.root} ${props.className}`}>
       <div className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}>
@@ -150,7 +153,7 @@ const Placeholder: React.FC<Props> = (props) => {
 
       <H1Header
         title={title}
-        className={titleClassName}
+        className={classes.title}
         renderAsSecondary={renderAsSecondary}
         data-qa-placeholder-title
       />
