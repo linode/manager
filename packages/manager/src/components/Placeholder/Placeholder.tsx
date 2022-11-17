@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 35% 35% 1fr 1fr 1fr 1fr 1fr',
     gridTemplateRows:
-      'auto 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
+      'max-content 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
     gridTemplateAreas: `
       ". . . . . icon icon . . . . ."
       ". . . . . . . . . . . ."
@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   icon: {
     width: '160px',
     height: '160px',
-    padding: '16px',
+    padding: theme.spacing(2),
     '& .outerCircle': {
       fill: theme.name === 'lightTheme' ? '#fff' : '#000',
       stroke: theme.bg.offWhite,
@@ -116,6 +116,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconWrapper: {
     gridArea: 'icon',
+    padding: theme.spacing(2),
   },
 }));
 
