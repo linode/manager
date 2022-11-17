@@ -74,6 +74,7 @@ export const CopyTooltip: React.FC<Props> = (props) => {
           [classes.root]: true,
           [classes.copyableTextBtn]: copyableText,
         })}
+        data-qa-copy-btn
       >
         {copyableText ? text : <FileCopy />}
       </button>
