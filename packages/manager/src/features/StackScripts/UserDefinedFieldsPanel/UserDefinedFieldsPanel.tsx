@@ -60,6 +60,7 @@ interface Props {
   selectedUsername: string;
   appLogo?: JSX.Element;
   openDrawer?: (stackScriptLabel: string) => void;
+  setNumberOfNodesForUDFSummary?: (num: number) => void;
 }
 
 type CombinedProps = Props;
@@ -178,19 +179,26 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
     udf_data,
     errors,
     appLogo,
+    setNumberOfNodesForUDFSummary,
   } = props;
 
-  const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
+  const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
     userDefinedFields!
   );
-
-  // console.log(userDefinedFields);
 
   const isCluster = userDefinedFields?.some(
     (udf) => udf.name === 'node_options'
   );
-  const numberOfNodes = Number(udf_data['node_options']) ?? 3;
-  const temporaryNodeNumber = numberOfNodes + 1; // A temporary additional node is created.
+  const numberOfNodes =
+    udf_data['node_options'] !== undefined && udf_data['node_options'] !== null
+      ? Number(udf_data['node_options'])
+      : 0;
+
+  if (setNumberOfNodesForUDFSummary) {
+    setNumberOfNodesForUDFSummary(numberOfNodes);
+  }
+
+  const temporaryNodeNumber = numberOfNodes > 0 ? numberOfNodes + 1 : 0; // A temporary additional node is created for clusters.
 
   const isDrawerOpenable = openDrawer !== undefined;
 
@@ -277,7 +285,7 @@ const isHeader = (udf: UserDefinedField) => {
  *
  * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
-const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
+const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
     (accum, eachUDF) => {
       /**
