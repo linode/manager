@@ -24,15 +24,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     display: 'grid',
-    gridTemplateColumns: '15% auto 15%',
+    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 35% 35% 1fr 1fr 1fr 1fr 1fr',
     gridTemplateRows: 'repeat(6, max-content)',
     gridTemplateAreas: `
-      ". icon ."
-      ". title . "
-      ". subtitle ."
-      ". copy ."
-      ". button ."
-      "links links links"
+      ". . . . . icon icon . . . . ."
+      ". . . . . title title . . . . ."
+      ". . . . . subtitle subtitle . . . . ."
+      ". . . . . copy copy . . . . ."
+      ". . . . . button button . . . . ."
+      ". . . . links links links links . . . ."
     `,
     justifyItems: 'center',
   },
