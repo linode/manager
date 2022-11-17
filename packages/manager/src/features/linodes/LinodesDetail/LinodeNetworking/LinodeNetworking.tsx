@@ -19,7 +19,6 @@ import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import CopyableTextWithTooltip from 'src/components/CopyableTextWithTooltip/CopyableTextWithTooltip';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
@@ -408,7 +407,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           className={classes.ipAddress}
           data-qa-ip-address
         >
-          <CopyableTextWithTooltip text={address} />
+          <CopyTooltip text={address} copyableText />
           <CopyTooltip className={classes.copy} text={address} />
         </TableCell>
         <TableCell parentColumn="Type" data-qa-ip-address>

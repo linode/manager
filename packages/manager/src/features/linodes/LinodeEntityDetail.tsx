@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import CopyableTextWithTooltip from 'src/components/CopyableTextWithTooltip/CopyableTextWithTooltip';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
@@ -733,7 +732,7 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
                   ) : null}
                   <TableCell className={classes.code}>
                     <div className={classes.gradient}>
-                      <CopyableTextWithTooltip text={thisRow.text} />
+                      <CopyTooltip text={thisRow.text} copyableText />
                     </div>
                     <CopyTooltip className={classes.copy} text={thisRow.text} />
                   </TableCell>

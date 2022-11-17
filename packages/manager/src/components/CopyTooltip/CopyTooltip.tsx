@@ -3,13 +3,12 @@ import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import FileCopy from 'src/assets/icons/copy.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import ToolTip from 'src/components/core/Tooltip';
 
 interface Props {
   text: string;
   className?: string;
-  displayText?: string;
+  copyableText?: boolean;
   onClickCallback?: () => void;
 }
 
@@ -39,9 +38,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     width: 'auto !important',
   },
-  displayText: {
-    color: theme.textColors.linkActiveLight,
-    marginLeft: 6,
+  copyableTextBtn: {
+    padding: 0,
+    backgroundColor: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    font: 'inherit',
+    color: theme.palette.text.primary,
   },
 }));
 
@@ -49,7 +52,7 @@ export const CopyTooltip: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [copied, setCopied] = React.useState<boolean>(false);
 
-  const { text, className, displayText, onClickCallback } = props;
+  const { text, className, copyableText, onClickCallback } = props;
 
   const handleIconClick = () => {
     setCopied(true);
@@ -69,13 +72,10 @@ export const CopyTooltip: React.FC<Props> = (props) => {
         onClick={handleIconClick}
         className={classNames(className, {
           [classes.root]: true,
-          [classes.flex]: Boolean(displayText),
+          [classes.copyableTextBtn]: copyableText,
         })}
       >
-        <FileCopy />
-        {displayText && (
-          <Typography className={classes.displayText}>{displayText}</Typography>
-        )}
+        {copyableText ? text : <FileCopy />}
       </button>
     </ToolTip>
   );
