@@ -390,11 +390,11 @@ const darkThemeOptions = {
           opacity: 0.5,
           color: '#ccc !important',
         },
-        '&$focused': {
+        '&.Mui-focused': {
           borderColor: primaryColors.main,
           boxShadow: '0 0 2px 1px #222',
         },
-        '&$error': {
+        '&.Mui-error': {
           borderColor: '#fb6d6d',
         },
         '& svg': {

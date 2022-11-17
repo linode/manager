@@ -807,14 +807,14 @@ const themeDefaults: ThemeDefaults = () => {
             color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5,
           },
-          '&$focused': {
+          '&.Mui-focused': {
             borderColor: primaryColors.main,
             boxShadow: '0 0 2px 1px #e1edfa',
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
           },
-          '&$error': {
+          '&.Mui-error': {
             borderColor: '#ca0813',
           },
           [breakpoints.down('xs')]: {
