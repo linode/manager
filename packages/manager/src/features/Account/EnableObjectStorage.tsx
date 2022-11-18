@@ -7,10 +7,16 @@ import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Notice from 'src/components/Notice';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
+import usePreferences from 'src/hooks/usePreferences';
+import { useProfile } from 'src/queries/profile';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/objectStorage';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
@@ -37,7 +43,11 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <Button buttonType="outlined" onClick={openConfirmationModal}>
+          <Button
+            data-testid="open-dialog-button"
+            buttonType="outlined"
+            onClick={openConfirmationModal}
+          >
             Cancel Object Storage
           </Button>
         </Grid>
@@ -66,6 +76,12 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
+  const [confirmText, setConfirmText] = React.useState('');
+  const { preferences } = usePreferences();
+  const { data: profile } = useProfile();
+  const username = profile?.username;
+  const disabledConfirm =
+    preferences?.type_to_confirm !== false && confirmText !== username;
 
   const handleClose = () => {
     setOpen(false);
@@ -84,18 +100,30 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
       .then(() => {
         updateAccountSettingsData({ object_storage: 'disabled' });
         handleClose();
+        queryClient.invalidateQueries(`${queryKey}-buckets`);
+        queryClient.invalidateQueries(`${queryKey}-access-keys`);
       })
       .catch(handleError);
   };
 
-  const actions = () => (
+  const actions = (
     <ActionsPanel>
-      <Button buttonType="secondary" onClick={handleClose}>
+      <Button
+        buttonType="secondary"
+        onClick={handleClose}
+        data-testid="dialog-cancel"
+      >
         Cancel
       </Button>
 
-      <Button buttonType="primary" onClick={handleSubmit} loading={isLoading}>
-        Confirm cancellation
+      <Button
+        buttonType="primary"
+        onClick={handleSubmit}
+        disabled={disabledConfirm}
+        loading={isLoading}
+        data-testid="dialog-confirm"
+      >
+        Confirm Cancellation
       </Button>
     </ActionsPanel>
   );
@@ -112,12 +140,30 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
         open={isOpen}
         error={error}
         onClose={() => handleClose()}
-        title="Just to confirm..."
+        title="Cancel Object Storage"
         actions={actions}
       >
-        <Typography variant="subtitle1">
-          Are you sure you want to cancel Object Storage?
-        </Typography>
+        <Notice warning>
+          <Typography style={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Canceling Object Storage will permanently
+            delete all buckets and their objects. Object Storage Access Keys
+            will be revoked.
+          </Typography>
+        </Notice>
+        <TypeToConfirm
+          data-testid="dialog-confirm-text-input"
+          label="Username"
+          onChange={(input) => setConfirmText(input)}
+          expand
+          value={confirmText}
+          confirmationText={
+            <span>
+              To confirm cancellation, type your username (<b>{username}</b>) in
+              the field below:
+            </span>
+          }
+          visible={preferences?.type_to_confirm}
+        />
       </ConfirmationDialog>
     </>
   );
