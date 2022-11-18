@@ -221,7 +221,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       </Box>
 
       {isCluster ? (
-        <div className={classes.clusterNotice}>
+        <div className={classes.clusterNotice} data-testid="temp-node-notice">
           <Notice informational>
             <strong>
               You are creating a cluster with {numberOfNodes} nodes. A temporary{' '}

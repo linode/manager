@@ -85,7 +85,10 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
       {props.children}
       {numberOfNodesForUDFSummary !== undefined &&
       numberOfNodesForUDFSummary > 0 ? (
-        <Typography className={classes.summaryClusterBlurb}>
+        <Typography
+          className={classes.summaryClusterBlurb}
+          data-testid="summary-blurb-clusters"
+        >
           To provision a cluster, a{' '}
           {addOrdinalSuffix(numberOfNodesForUDFSummary + 1)} node is created and
           then deleted, usually within an hour. You will see this charge on your
