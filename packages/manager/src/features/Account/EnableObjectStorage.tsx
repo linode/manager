@@ -15,6 +15,8 @@ import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
 import usePreferences from 'src/hooks/usePreferences';
 import { useProfile } from 'src/queries/profile';
+import { queryClient } from 'src/queries/base';
+import { queryKey } from 'src/queries/objectStorage';
 
 interface Props {
   object_storage: AccountSettings['object_storage'];
@@ -78,7 +80,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   const { preferences } = usePreferences();
   const { data: profile } = useProfile();
   const username = profile?.username;
-  const disabled =
+  const disabledConfirm =
     preferences?.type_to_confirm !== false && confirmText !== username;
 
   const handleClose = () => {
@@ -98,6 +100,8 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
       .then(() => {
         updateAccountSettingsData({ object_storage: 'disabled' });
         handleClose();
+        queryClient.invalidateQueries(`${queryKey}-buckets`);
+        queryClient.invalidateQueries(`${queryKey}-access-keys`);
       })
       .catch(handleError);
   };
@@ -115,7 +119,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
       <Button
         buttonType="primary"
         onClick={handleSubmit}
-        disabled={disabled}
+        disabled={disabledConfirm}
         loading={isLoading}
         data-testid="dialog-confirm"
       >
