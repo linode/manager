@@ -9,11 +9,13 @@ import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
+import Notice from 'src/components/Notice';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
   Action as BootAction,
 } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
@@ -355,6 +357,20 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         openPowerActionDialog={openPowerActionDialog}
         openNotificationMenu={notificationContext.openMenu}
       />
+      <SMTPRestrictionText>
+        {({ text }) => (
+          <Notice
+            style={{ marginTop: '24px' }} // TODO: Fix styling.
+            warning
+            dismissible
+            onClose={() => null}
+          >
+            <Grid item xs={12}>
+              {text}
+            </Grid>
+          </Notice>
+        )}
+      </SMTPRestrictionText>
       <PowerDialogOrDrawer
         isOpen={powerDialog.open}
         action={powerDialog.bootAction}

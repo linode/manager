@@ -66,6 +66,7 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
@@ -699,6 +700,15 @@ export class LinodeCreate extends React.PureComponent<
             flexWrap="wrap"
             className={classes.buttonGroup}
           >
+            <SMTPRestrictionText>
+              {(
+                { text } // TODO: Fix styling.
+              ) => (
+                <Grid item xs={12}>
+                  {text}
+                </Grid>
+              )}
+            </SMTPRestrictionText>
             {showAgreement ? (
               <EUAgreementCheckbox
                 checked={signedAgreement}
