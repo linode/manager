@@ -194,9 +194,11 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       ? Number(udf_data['node_options'])
       : 0;
 
-  if (setNumberOfNodesForUDFSummary) {
-    setNumberOfNodesForUDFSummary(numberOfNodes);
-  }
+  React.useEffect(() => {
+    if (setNumberOfNodesForUDFSummary) {
+      setNumberOfNodesForUDFSummary(numberOfNodes);
+    }
+  }, [setNumberOfNodesForUDFSummary, numberOfNodes]);
 
   const temporaryNodeNumber = numberOfNodes > 0 ? numberOfNodes + 1 : 0; // A temporary additional node is created for clusters.
 
