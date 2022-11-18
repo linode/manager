@@ -43,9 +43,9 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.up('lg')]: {
         '&:first-of-type': {
-          padding: `${theme.spacing(1)} ${theme.spacing(
+          padding: `${theme.spacing(1)} ${theme.spacing(1)} 0 ${theme.spacing(
             1
-          )}px 0 ${theme.spacing(1)} !important`,
+          )} !important`,
         },
         '&:last-of-type': {
           padding: `0 ${theme.spacing(1)} !important`,

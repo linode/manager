@@ -561,15 +561,6 @@ const themeDefaults: ThemeDefaults = () => {
           '&:last-child': {
             marginRight: 0,
           },
-          '&:hover': {
-            '& $deleteIcon': {
-              color: primaryColors.white,
-              '&:hover': {
-                color: primaryColors.main,
-                backgroundColor: primaryColors.white,
-              },
-            },
-          },
           '&:focus': {
             outline: '1px dotted #999',
           },
@@ -605,18 +596,9 @@ const themeDefaults: ThemeDefaults = () => {
           height: 'inherit',
         },
         deleteIcon: {
+          margin: 0,
           padding: 2,
-          marginLeft: 4,
-          marginRight: 2,
           color: primaryColors.text,
-          borderRadius: '50%',
-          width: 18,
-          height: 18,
-          '& svg': {
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-          },
         },
       },
       MuiCircularProgress: {
@@ -825,14 +807,14 @@ const themeDefaults: ThemeDefaults = () => {
             color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5,
           },
-          '&$focused': {
+          '&.Mui-focused': {
             borderColor: primaryColors.main,
             boxShadow: '0 0 2px 1px #e1edfa',
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
           },
-          '&$error': {
+          '&.Mui-error': {
             borderColor: '#ca0813',
           },
           [breakpoints.down('xs')]: {

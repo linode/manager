@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'flex-end',
     paddingLeft: theme.spacing(2),
-    marginLeft: -theme.spacing(1),
+    marginLeft: `-${theme.spacing()}`,
     [theme.breakpoints.down('lg')]: {
-      marginTop: -theme.spacing(1),
+      marginTop: `-${theme.spacing()}`,
     },
     [theme.breakpoints.down('sm')]: {
       marginTop: 0,

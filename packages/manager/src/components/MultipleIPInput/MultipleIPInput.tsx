@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     marginTop: 4,
-    marginLeft: -theme.spacing(),
+    marginLeft: `-${theme.spacing()}`,
     minWidth: 'auto',
     minHeight: 'auto',
     padding: 0,

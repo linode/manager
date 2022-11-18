@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 50,
   },
   wrapLogo: {
-    marginLeft: -theme.spacing(3),
+    marginLeft: `-${theme.spacing(3)}`,
   },
   wrapAppName: {
     maxWidth: 'fit-content',
