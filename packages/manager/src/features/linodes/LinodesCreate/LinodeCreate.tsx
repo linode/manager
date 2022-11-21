@@ -78,7 +78,8 @@ type ClassNames =
   | 'stackScriptWrapper'
   | 'imageSelect'
   | 'buttonGroup'
-  | 'agreement'
+  | 'messageGroup'
+  | 'messageGroupMaxWidth'
   | 'createButton';
 
 const styles = (theme: Theme) =>
@@ -103,7 +104,16 @@ const styles = (theme: Theme) =>
         justifyContent: 'flex-end',
       },
     },
-    agreement: {
+    messageGroup: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(2),
+      flexGrow: 1,
+      [theme.breakpoints.down('sm')]: {
+        margin: theme.spacing(1),
+      },
+    },
+    messageGroupMaxWidth: {
       maxWidth: '70%',
       [theme.breakpoints.down('xs')]: {
         maxWidth: 'unset',
@@ -700,23 +710,26 @@ export class LinodeCreate extends React.PureComponent<
             flexWrap="wrap"
             className={classes.buttonGroup}
           >
-            <SMTPRestrictionText>
-              {(
-                { text } // TODO: Fix styling.
-              ) => (
-                <Grid item xs={12}>
-                  {text}
-                </Grid>
-              )}
-            </SMTPRestrictionText>
-            {showAgreement ? (
-              <EUAgreementCheckbox
-                checked={signedAgreement}
-                onChange={handleAgreementChange}
-                className={classes.agreement}
-                centerCheckbox
-              />
-            ) : null}
+            <div
+              className={`${classes.messageGroup} ${
+                showAgreement ? classes.messageGroupMaxWidth : ''
+              }`}
+            >
+              <SMTPRestrictionText>
+                {({ text }) => (
+                  <Grid item xs={12}>
+                    {text}
+                  </Grid>
+                )}
+              </SMTPRestrictionText>
+              {showAgreement ? (
+                <EUAgreementCheckbox
+                  checked={signedAgreement}
+                  onChange={handleAgreementChange}
+                  centerCheckbox
+                />
+              ) : null}
+            </div>
             <Button
               data-qa-deploy-linode
               buttonType="primary"

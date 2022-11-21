@@ -103,7 +103,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       {tabs[getIndex()]?.title === 'Network' ? (
         <SMTPRestrictionText>
           {({ text }) => (
-            <Notice warning dismissible onClose={() => null}>
+            <Notice warning dismissible onClose={() => null} spacingTop={32}>
               <Grid item xs={12}>
                 {text}
               </Grid>
