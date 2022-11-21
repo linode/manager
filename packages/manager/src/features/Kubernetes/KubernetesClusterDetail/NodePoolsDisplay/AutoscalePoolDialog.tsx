@@ -163,7 +163,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             <Button
               buttonType="secondary"
               className={classes.resize}
-              compact
+              compactX
               onClick={() => {
                 handleClose();
                 handleOpenResizeDrawer(poolID);

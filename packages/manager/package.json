@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.78.0",
+  "version": "1.80.0",
   "private": true,
   "engines": {
     "node": ">= 14.17.4"
@@ -54,7 +54,7 @@
     "ipaddr.js": "^1.9.1",
     "jspdf": "^2.3.1",
     "jspdf-autotable": "^3.5.14",
-    "launchdarkly-react-client-sdk": "2.11.0",
+    "launchdarkly-react-client-sdk": "^2.29.1",
     "libphonenumber-js": "^1.10.6",
     "logic-query-parser": "^0.0.5",
     "luxon": "^1.24.1",
@@ -110,7 +110,6 @@
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "yarn run start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
-    "storybook:e2e": "yarn run wait-on http://localhost:6006 && yarn run wdio ./e2e/config/wdio.storybook.conf.js",
     "build-storybook": "build-storybook",
     "cy:run": "cypress run -b chrome",
     "cy:e2e": "cypress run --headless -b chrome",
@@ -126,9 +125,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.10.2",
-    "@babel/preset-env": "^7.10.2",
-    "@babel/preset-typescript": "^7.10.1",
     "@mdx-js/loader": "^1.6.22",
     "@storybook/addon-actions": "~6.5.10",
     "@storybook/addon-controls": "~6.5.10",
@@ -187,8 +183,6 @@
     "@typescript-eslint/eslint-plugin": "^4.1.1",
     "@typescript-eslint/parser": "^4.1.1",
     "axe-core": "^3.5.1",
-    "babel-core": "^7.0.0-bridge",
-    "babel-preset-react-app": "^9.1.2",
     "browserslist": "^4.16.5",
     "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "chai-string": "^1.5.0",
@@ -259,6 +253,13 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.stories.{js,jsx,ts,tsx}"
     ],
+    "coverageReporters": [
+      "clover",
+      "json",
+      "text",
+      "lcov",
+      "cobertura"
+    ],
     "setupFiles": [
       "<rootDir>/config/polyfills.js"
     ],
@@ -327,12 +328,6 @@
       "jest-junit"
     ]
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-typescript"
-    ]
-  },
   "resolutions": {
     "csv-parse": "^4.6.3",
     "mixin-deep": "^2.0.1",
@@ -340,13 +335,6 @@
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1",
     "axe-core": "^3.4.0"
-  },
-  "workspaces": {
-    "nohoist": [
-      "launchdarkly-js-client-sdk",
-      "launchdarkly-js-sdk-common",
-      "launchdarkly-react-client-sdk"
-    ]
   },
   "browserslist": [
     ">1%",
