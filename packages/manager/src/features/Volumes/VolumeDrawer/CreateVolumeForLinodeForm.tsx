@@ -32,7 +32,7 @@ import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
-import ModeSelection from './ModeSelection';
+import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
@@ -176,9 +176,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             )}
             <ModeSelection
               mode={modes.CREATING_FOR_LINODE}
-              onChange={() => {
-                actions.switchToAttaching();
-              }}
+              onChange={actions.switchToAttaching}
             />
 
             <Typography

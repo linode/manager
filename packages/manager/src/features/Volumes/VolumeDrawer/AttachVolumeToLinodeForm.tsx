@@ -13,7 +13,7 @@ import {
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import { modes } from './modes';
-import ModeSelection from './ModeSelection';
+import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import Notice from 'src/components/Notice';
 import VolumesActionsPanel from './VolumesActionsPanel';
@@ -185,7 +185,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   },
 });
 
-const connected = connect(mapDispatchToProps);
+const connected = connect(undefined, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, Props>(connected);
 
