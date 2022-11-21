@@ -5,9 +5,12 @@ import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { withLinodeDetailContext } from './linodeDetailContext';
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
@@ -97,6 +100,17 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment
         segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
+      {tabs[getIndex()]?.title === 'Network' ? (
+        <SMTPRestrictionText>
+          {({ text }) => (
+            <Notice warning dismissible onClose={() => null}>
+              <Grid item xs={12}>
+                {text}
+              </Grid>
+            </Notice>
+          )}
+        </SMTPRestrictionText>
+      ) : null}
       <div style={{ marginTop: 8 }}>
         <Tabs index={getIndex()} onChange={navToURL}>
           <TabLinkList tabs={tabs} />
