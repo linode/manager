@@ -49,6 +49,7 @@ interface Props {
   availableImages: string[];
   disabled: boolean;
   checked: boolean;
+  labelDecoration?: JSX.Element;
 }
 
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
@@ -62,6 +63,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
     disabled,
     handleClick,
     openDrawer,
+    labelDecoration,
   } = props;
   /**
    * '' is the default value for a stackscript's logo_url;
@@ -120,6 +122,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
       data-qa-selection-card
       disabled={disabled}
       className={classes.selectionCard}
+      headingDecoration={labelDecoration}
     />
   );
 };
