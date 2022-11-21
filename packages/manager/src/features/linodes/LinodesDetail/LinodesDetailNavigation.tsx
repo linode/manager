@@ -41,6 +41,8 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     match: { url },
   } = props;
 
+  const [isNoticeDismissed, setIsNoticeDismissed] = React.useState(false);
+
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = linodeType?.class === 'metal';
 
@@ -102,13 +104,20 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       />
       {tabs[getIndex()]?.title === 'Network' ? (
         <SMTPRestrictionText>
-          {({ text }) => (
-            <Notice warning dismissible onClose={() => null} spacingTop={32}>
-              <Grid item xs={12}>
-                {text}
-              </Grid>
-            </Notice>
-          )}
+          {({ text }) =>
+            !isNoticeDismissed && text !== null ? (
+              <Notice
+                warning
+                dismissible
+                onClose={() => setIsNoticeDismissed(true)}
+                spacingTop={32}
+              >
+                <Grid item xs={12}>
+                  {text}
+                </Grid>
+              </Notice>
+            ) : null
+          }
         </SMTPRestrictionText>
       ) : null}
       <div style={{ marginTop: 8 }}>
