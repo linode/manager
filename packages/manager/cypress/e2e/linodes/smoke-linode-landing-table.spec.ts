@@ -10,7 +10,7 @@ import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'cypress/support/ui/constants';
-import { interceptOnce } from 'cypress/support/ui/common';
+import { ui } from 'support/ui';
 
 const regions = {
   'us-west': 'Fremont, CA',
@@ -66,7 +66,7 @@ describe('linode landing checks', () => {
     cy.url().should('eq', `${appRoot}${routes.linodeLanding}`);
   });
 
-  it('checks the landng page side menu items', () => {
+  it('checks the landing page side menu items', () => {
     getVisible('[title="Dashboard"][href="/dashboard"]');
     getVisible('[data-testid="menu-item-Linodes"][href="/linodes"]');
     getVisible('[data-testid="menu-item-Volumes"][href="/volumes"]');
@@ -91,7 +91,7 @@ describe('linode landing checks', () => {
     getVisible('[data-testid="menu-item-Help & Support"][href="/support"]');
   });
 
-  it('checks the landng top menu items', () => {
+  it('checks the landing top menu items', () => {
     cy.wait('@getProfile').then((xhr) => {
       const username = xhr.response?.body.username;
       getVisible('[aria-label="open menu"]');
@@ -111,7 +111,7 @@ describe('linode landing checks', () => {
     });
   });
 
-  it('checks the landng labels and buttons', () => {
+  it('checks the landing labels and buttons', () => {
     getVisible('h1[data-qa-header="Linodes"]');
     getVisible('button[title="Docs"][data-qa-icon-text-link="Docs"]');
     fbtVisible('Create Linode');
@@ -202,7 +202,9 @@ describe('linode landing checks', () => {
     );
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
-      cy.get(`[data-qa-ip-main]`)
+      ui.button
+        .findByTitle(ip)
+        .should('be.visible')
         .realHover()
         .then(() => {
           getVisible(`[aria-label="Copy ${ip} to clipboard"]`);
