@@ -30,9 +30,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
       height: 20,
     },
-    '&:hover': {
-      backgroundColor: theme.color.white,
-    },
   },
   flex: {
     display: 'flex',
