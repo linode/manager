@@ -28,7 +28,7 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
       <ExternalLink
         onClick={() => sendLinodeCreateDocsEvent('SMTP Notice Link')}
         link="https://www.linode.com/docs/email/best-practices/running-a-mail-server/"
-        text="Mail Server Guide"
+        text="mail server guide"
         hideIcon
       />
       , then{' '}

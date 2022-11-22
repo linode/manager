@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import * as React from 'react';
@@ -711,9 +712,10 @@ export class LinodeCreate extends React.PureComponent<
             className={classes.buttonGroup}
           >
             <div
-              className={`${classes.messageGroup} ${
-                showAgreement ? classes.messageGroupMaxWidth : ''
-              }`}
+              className={classNames({
+                [classes.messageGroup]: true,
+                [classes.messageGroupMaxWidth]: !!showAgreement,
+              })}
             >
               <SMTPRestrictionText>
                 {({ text }) => (
