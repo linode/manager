@@ -12,9 +12,11 @@ const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
 
 interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
+  supportLink?: boolean;
 }
 
 const SMTPRestrictionText: React.FC<Props> = (props) => {
+  const { supportLink } = props;
   const { data: account } = useAccount();
 
   // If there account was created before restrictions were put into place,
@@ -32,7 +34,14 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
         hideIcon
       />
       , then{' '}
-      <SupportLink text="open a support ticket" title="Re: SMTP Restrictions" />
+      {supportLink ? (
+        <SupportLink
+          text="open a support ticket"
+          title="Re: SMTP Restrictions"
+        />
+      ) : (
+        'open a support ticket'
+      )}
       .
     </Typography>
   );
