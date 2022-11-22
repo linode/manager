@@ -21,3 +21,20 @@ export const truncateAndJoinList = (strList: string[], max = 100) => {
 };
 
 export const wrapInQuotes = (s: string) => '"' + s + '"';
+
+export const addOrdinalSuffix = (num: number) => {
+  const rules = new Intl.PluralRules('en', {
+    type: 'ordinal',
+  });
+
+  const suffixes = {
+    one: 'st',
+    two: 'nd',
+    few: 'rd',
+    other: 'th',
+  };
+
+  const suffix = suffixes[rules.select(num)];
+
+  return `${num}${suffix}`;
+};

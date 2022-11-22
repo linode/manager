@@ -679,6 +679,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         title: type.label,
         details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
+        hourly: type.price.hourly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
       }
     );

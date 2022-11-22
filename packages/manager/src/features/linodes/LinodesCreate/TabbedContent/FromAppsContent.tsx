@@ -102,7 +102,12 @@ const errorResources = {
   stackscript_id: 'The selected App',
 };
 
-type InnerProps = AppsData &
+interface Props {
+  setNumberOfNodesForUDFSummary: (num: number) => void;
+}
+
+type InnerProps = Props &
+  AppsData &
   ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
@@ -292,9 +297,10 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       appInstancesError,
       appInstancesLoading,
       userCannotCreateLinode,
+      setNumberOfNodesForUDFSummary,
     } = this.props;
 
-    //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+    // ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
     const handleSelectStackScript = curriedHandleSelectStackScript(
       curry.placeholder,
       curry.placeholder,
@@ -379,6 +385,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
               udf_data={udf_data || {}}
               appLogo={appLogo}
               openDrawer={this.openDrawer}
+              setNumberOfNodesForUDFSummary={setNumberOfNodesForUDFSummary}
             />
           ) : null}
           {!userCannotCreateLinode &&
