@@ -1,5 +1,6 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
+import { getAll } from 'src/utilities/getAll';
 import {
   doesItemExistInPaginatedStore,
   getItemInPaginatedStore,
@@ -24,7 +25,6 @@ import {
   createVolume,
   getLinodeVolumes,
 } from '@linode/api-v4';
-import { getAll } from 'src/utilities/getAll';
 
 /**
  * For Volumes, we must maintain the following stores to keep our cache up to date.
@@ -222,3 +222,6 @@ const getAllVolumes = (passedParams: any = {}, passedFilter: any = {}) =>
   getAll<Volume>((params, filter) =>
     getVolumes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
+
+export const getVolumesForLinode = (volumes: Volume[], linodeId: number) =>
+  volumes.filter(({ linode_id }) => linode_id && linode_id === linodeId);

@@ -15,9 +15,8 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useProfile } from 'src/queries/profile';
-import { useAllVolumesQuery } from 'src/queries/volumes';
+import { getVolumesForLinode, useAllVolumesQuery } from 'src/queries/volumes';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
-import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes pulse': {
