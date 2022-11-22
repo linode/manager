@@ -242,7 +242,7 @@ describe('machine image', () => {
    * - Confirms that machine image is listed in landing page as expected.
    * - Confirms that notifications appear that describe the image's success status.
    */
-  it.skip('uploads machine image, mock finish event', () => {
+  it('uploads machine image, mock finish event', () => {
     const label = randomLabel();
     const status = 'finished';
 
@@ -271,7 +271,7 @@ describe('machine image', () => {
    * - Confirms that machine image is listed in landing page as expected.
    * - Confirms that notifications appear that describe the image's failed status.
    */
-  it.skip('uploads machine image, mock upload canceled failed event', () => {
+  it('uploads machine image, mock upload canceled failed event', () => {
     const label = randomLabel();
     const status = 'failed';
     const message = 'Upload canceled';
@@ -291,7 +291,7 @@ describe('machine image', () => {
    * - Confirms that machine image is listed in landing page as expected.
    * - Confirms that notifications appear that describe the image's failed status.
    */
-  it.skip('uploads machine image, mock failed to decompress failed event', () => {
+  it('uploads machine image, mock failed to decompress failed event', () => {
     const label = randomLabel();
     const status = 'failed';
     const message = 'Failed to decompress image';
@@ -311,7 +311,7 @@ describe('machine image', () => {
    * - Confirms that machine image is listed in landing page as expected.
    * - Confirms that notifications appear that describe the image's failed status.
    */
-  it.skip('uploads machine image, mock expired upload event', () => {
+  it('uploads machine image, mock expired upload event', () => {
     const label = randomLabel();
     const status = 'failed';
     const message = 'Upload window expired';
