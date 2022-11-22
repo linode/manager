@@ -68,7 +68,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
               openDrawer={openDrawer}
               disabled={disabled}
               iconUrl={eachApp.logo_url.toLowerCase() || ''}
-              labelDecoration={isCluster ? <Chip label="Cluster" /> : undefined}
+              labelDecoration={isCluster ? <Chip label="CLUSTER" /> : undefined}
             />
           );
         })}
