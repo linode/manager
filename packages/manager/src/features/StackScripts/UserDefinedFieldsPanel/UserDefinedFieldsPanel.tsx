@@ -1,18 +1,20 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import classnames from 'classnames';
 import * as React from 'react';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Box from 'src/components/core/Box';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
-import AppInfo from '../../linodes/LinodesCreate/AppInfo';
-import classnames from 'classnames';
+import { addOrdinalSuffix } from 'src/utilities/stringUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,6 +46,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
   },
+  clusterNotice: {
+    paddingTop: '1rem',
+  },
 }));
 
 interface Props {
@@ -55,6 +60,7 @@ interface Props {
   selectedUsername: string;
   appLogo?: JSX.Element;
   openDrawer?: (stackScriptLabel: string) => void;
+  setNumberOfNodesForUDFSummary?: (num: number) => void;
 }
 
 type CombinedProps = Props;
@@ -173,11 +179,28 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
     udf_data,
     errors,
     appLogo,
+    setNumberOfNodesForUDFSummary,
   } = props;
 
-  const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
+  const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
     userDefinedFields!
   );
+
+  const isCluster = userDefinedFields?.some(
+    (udf) => udf.name === 'node_options'
+  );
+  const numberOfNodes =
+    udf_data['node_options'] !== undefined && udf_data['node_options'] !== null
+      ? Number(udf_data['node_options'])
+      : 0;
+
+  React.useEffect(() => {
+    if (setNumberOfNodesForUDFSummary) {
+      setNumberOfNodesForUDFSummary(numberOfNodes);
+    }
+  }, [setNumberOfNodesForUDFSummary, numberOfNodes]);
+
+  const temporaryNodeNumber = numberOfNodes > 0 ? numberOfNodes + 1 : 0; // A temporary additional node is created for clusters.
 
   const isDrawerOpenable = openDrawer !== undefined;
 
@@ -197,12 +220,23 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
         ) : null}
       </Box>
 
+      {isCluster ? (
+        <div className={classes.clusterNotice} data-testid="temp-node-notice">
+          <Notice informational>
+            <strong>
+              You are creating a cluster with {numberOfNodes} nodes. A temporary{' '}
+              {addOrdinalSuffix(temporaryNodeNumber)} node will be provisioned
+              and deleted once the provisioning is complete.
+            </strong>
+          </Notice>
+        </div>
+      ) : null}
+
       {/* Required Fields */}
       {requiredUDFs.map((field: UserDefinedField) => {
         const error = getError(field, errors);
         return renderField(udf_data, handleChange, field, error);
       })}
-
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
         <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
@@ -253,7 +287,7 @@ const isHeader = (udf: UserDefinedField) => {
  *
  * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
-const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
+const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
     (accum, eachUDF) => {
       /**
