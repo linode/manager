@@ -1,5 +1,4 @@
-import { EventStatus } from '@linode/api-v4/types';
-import { ImageStatus } from '@linode/api-v4/types';
+import { EventStatus, ImageStatus } from '@linode/api-v4/types';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
@@ -7,9 +6,9 @@ import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { regionsFriendly } from 'support/constants/regions';
 import { fbtClick, fbtVisible, getClick } from 'support/helpers';
-import { interceptOnce } from 'support/ui/common';
-import { randomLabel, randomItem, randomPhrase } from 'support/util/random';
 import { ui } from 'support/ui';
+import { interceptOnce } from 'support/ui/common';
+import { randomItem, randomLabel, randomPhrase } from 'support/util/random';
 
 /*
  * Amount of time to wait for toast notification after uploading image, in ms.
