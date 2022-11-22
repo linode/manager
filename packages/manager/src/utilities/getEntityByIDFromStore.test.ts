@@ -32,7 +32,7 @@ describe('getEntityByIDFromStore utility function', () => {
   });
 
   it('should work as a curried function', () => {
-    const getVolume = getEntityByIDFromStore('linode');
-    expect(getVolume(mockLinode.id)).toEqual(mockLinode);
+    const getLinode = getEntityByIDFromStore('linode');
+    expect(getLinode(mockLinode.id)).toEqual(mockLinode);
   });
 });
