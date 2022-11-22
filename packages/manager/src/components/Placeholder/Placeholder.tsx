@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     display: 'grid',
-    gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr 35% 35% 1fr 1fr 1fr 1fr 1fr',
+    gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
     gridTemplateRows:
       'max-content 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
     gridTemplateAreas: `
