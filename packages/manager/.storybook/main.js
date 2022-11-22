@@ -49,10 +49,12 @@ module.exports = {
               options: {
                 svgoConfig: {
                   plugins: [
-                    // by default preffixes classes with svg path or random string
-                    { prefixIds: false },
-                    // by default removes the viewbox attribute
-                    { removeViewBox: false },
+                    {
+                      name: 'preset-default',
+                      params: {
+                        overrides: { removeViewBox: false },
+                      },
+                    },
                   ],
                 },
               },
