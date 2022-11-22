@@ -177,3 +177,25 @@ export const randomPhoneNumber = (
     9999
   )}`;
 };
+
+/**
+ * Returns a random phrase of random strings.
+ *
+ * @param count - Number of strings to include in phrase.
+ *
+ * @returns Random phrase.
+ */
+export const randomPhrase = (count: number = 5): string => {
+  return [...Array(count)]
+    .map(() => {
+      const length = randomNumber(3, 9);
+      return randomString(length, {
+        lowercase: true,
+        uppercase: false,
+        numbers: false,
+        symbols: false,
+        spaces: false,
+      });
+    })
+    .join(' ');
+};
