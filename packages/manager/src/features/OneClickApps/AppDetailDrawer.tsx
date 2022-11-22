@@ -86,14 +86,14 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
   const [selectedApp, setSelectedApp] = React.useState<OCA | null>(null);
 
-  const labelIndicatesCluster = stackScriptLabel.includes(' Cluster ');
+  const labelIndicatesCluster = /.+\s(Cluster)/.test(stackScriptLabel);
 
   /*
     Since we use the label to search within the OCA array and clusters use
     the app info from their individual app counterparts, we need to extract
     the base StackScript label out to be able to search the array successfully.
   */
-  const baseStackScriptLabel = stackScriptLabel.replace(' Cluster ', '');
+  const baseStackScriptLabel = stackScriptLabel.replace(' Cluster', '');
 
   const gradient = {
     backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.colors.start}, #${selectedApp?.colors.end})`,
@@ -183,6 +183,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
             <Typography
               variant="h2"
               className={classes.appName}
+              data-testid="app-name"
               dangerouslySetInnerHTML={{
                 __html: sanitizeHTML(selectedApp.name),
               }}
