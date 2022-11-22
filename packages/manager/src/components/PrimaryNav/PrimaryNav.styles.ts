@@ -107,15 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: '#222',
   },
   chip: {
-    backgroundColor: theme.palette.primary.main,
-    color: '#fff',
-    fontFamily: theme.font.bold,
-    fontSize: '0.625rem',
-    height: 16,
     marginTop: 2,
-    marginLeft: theme.spacing(),
-    letterSpacing: '.25px',
-    textTransform: 'uppercase',
   },
   logoSvgCollapsed: {
     // Hide 'Akamai Cloud Computing' when the navigation is collapsed and the nav is not hovered

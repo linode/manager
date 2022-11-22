@@ -129,9 +129,8 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
       <div
         key={key}
         className={`${classes.row} ${showAll && classes.multipleAddresses}`}
-        data-qa-ip-main
       >
-        {ip}
+        <CopyTooltip text={ip} copyableText data-qa-copy-ip-text />
         {this.renderCopyIcon(ip)}
       </div>
     );

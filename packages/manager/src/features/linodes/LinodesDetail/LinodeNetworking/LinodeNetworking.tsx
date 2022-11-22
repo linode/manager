@@ -407,7 +407,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           className={classes.ipAddress}
           data-qa-ip-address
         >
-          {address}
+          <CopyTooltip text={address} copyableText />
           <CopyTooltip className={classes.copy} text={address} />
         </TableCell>
         <TableCell parentColumn="Type" data-qa-ip-address>
