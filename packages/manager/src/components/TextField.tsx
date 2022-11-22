@@ -102,6 +102,7 @@ interface BaseProps {
     | 'top-start'
     | 'top';
   tooltipText?: string | JSX.Element;
+  tooltipInteractive?: boolean;
   tooltipClasses?: string;
   tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
   value?: Value;
@@ -152,6 +153,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     tooltipPosition,
     tooltipText,
     tooltipClasses,
+    tooltipInteractive,
     tooltipOnMouseEnter,
     type,
     value,
@@ -337,6 +339,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             classes={{ popper: tooltipClasses }}
             text={tooltipText}
             tooltipPosition={tooltipPosition}
+            interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
           />
         )}

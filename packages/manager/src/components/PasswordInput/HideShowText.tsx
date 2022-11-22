@@ -10,7 +10,8 @@ interface State {
 
 type Props = TextFieldProps & {
   required?: boolean;
-  tooltipText?: string;
+  tooltipText?: string | JSX.Element;
+  tooltipInteractive?: boolean;
   label: string;
   value: string | undefined;
 };

@@ -30,6 +30,8 @@ interface Props {
   placeholder?: string;
   error?: string;
   value: string;
+  tooltip?: JSX.Element | undefined;
+  tooltipInteractive?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -51,7 +53,15 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   };
 
   renderPasswordField = () => {
-    const { error, field, placeholder, isOptional, classes } = this.props;
+    const {
+      error,
+      field,
+      placeholder,
+      isOptional,
+      tooltip,
+      tooltipInteractive,
+      classes,
+    } = this.props;
 
     return (
       <AccessPanel
@@ -67,6 +77,8 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         })}
         isOptional={isOptional}
         password={this.props.value}
+        disabledReason={tooltip}
+        tooltipInteractive={tooltipInteractive}
       />
     );
   };
