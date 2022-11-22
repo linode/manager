@@ -87,12 +87,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     textAlign: 'center',
     gridArea: 'title',
-    /*     marginBottom: theme.spacing(2), */
   },
   subtitle: {
     gridArea: 'subtitle',
     textAlign: 'center',
-    /*     marginBottom: theme.spacing(2), */
     color: theme.palette.text.primary,
   },
   '& .insidePath path': {
@@ -105,7 +103,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     gridArea: 'button',
-    /*     marginBottom: theme.spacing(4), */
   },
   linksSection: {
     gridArea: 'links',
