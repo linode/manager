@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       ". . . . . . . . . . . ."
       ". . . . . button button . . . . ."
       ". . . . . . . . . . . ."
-      ". . . . links links links links . . . ."
+      ". . . links links links links links links . . ."
     `,
     justifyItems: 'center',
   },
