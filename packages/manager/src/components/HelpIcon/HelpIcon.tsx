@@ -26,19 +26,7 @@ interface Props
   isError?: boolean;
   classes?: any;
   leaveDelay?: boolean;
-  tooltipPosition?:
-    | 'bottom'
-    | 'bottom-end'
-    | 'bottom-start'
-    | 'left-end'
-    | 'left-start'
-    | 'left'
-    | 'right-end'
-    | 'right-start'
-    | 'right'
-    | 'top-end'
-    | 'top-start'
-    | 'top';
+  tooltipPosition?: TooltipProps['placement'];
 }
 
 type CombinedProps = Props;
