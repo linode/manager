@@ -14,6 +14,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
     padding: `${theme.spacing(1)}px 0`,
   },
+  chip: {
+    '& span': {
+      color: 'inherit !important',
+    },
+  },
 }));
 
 interface Props {
@@ -75,7 +80,9 @@ export const AppPanelSection: React.FC<Props> = (props) => {
               disabled={disabled}
               iconUrl={eachApp.logo_url.toLowerCase() || ''}
               labelDecoration={
-                isCluster ? <Chip size="small" label="CLUSTER" /> : undefined
+                isCluster ? (
+                  <Chip size="small" label="CLUSTER" className={classes.chip} />
+                ) : undefined
               }
             />
           );
