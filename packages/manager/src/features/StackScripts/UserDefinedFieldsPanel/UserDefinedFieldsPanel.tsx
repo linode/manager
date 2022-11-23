@@ -2,6 +2,7 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import classnames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -10,11 +11,11 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import { addOrdinalSuffix } from 'src/utilities/stringUtils';
 import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
-import { addOrdinalSuffix } from 'src/utilities/stringUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -113,6 +114,7 @@ const renderField = (
     );
   }
   if (isPasswordField(field.name)) {
+    const isTokenPassword = field.name === 'token_password';
     return (
       <Grid item xs={12} lg={5} key={field.name}>
         <UserDefinedText
@@ -140,8 +142,18 @@ const renderField = (
           field={field}
           updateFor={[field.label, udf_data[field.name], error]}
           isOptional={isOptional}
-          placeholder={field.example}
+          placeholder={isTokenPassword ? 'Enter your token' : field.example}
           error={error}
+          tooltip={
+            isTokenPassword ? (
+              <>
+                {' '}
+                To create an API token, go to{' '}
+                <Link to="/profile/tokens">your profile</Link>
+              </>
+            ) : undefined
+          }
+          tooltipInteractive={isTokenPassword}
         />
       </Grid>
     );
