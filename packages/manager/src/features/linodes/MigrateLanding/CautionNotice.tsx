@@ -55,8 +55,8 @@ const CautionNotice: React.FC<Props> = (props) => {
   const vlansCapability = capabilities.includes('Vlans');
 
   // This is not great, but lets us get all of the volumes for a Linode while keeping
-  // the React Query store in a paginated shape. We want to keep datat in a paginated shape
-  // because the event handler automaticly updates stored paginated data.
+  // the React Query store in a paginated shape. We want to keep data in a paginated shape
+  // because the event handler automatically updates stored paginated data.
   // We can safely do this because linodes can't have more than 64 volumes.
   const { data: volumesData } = useLinodeVolumesQuery(props.linodeId, {
     page_size: API_MAX_PAGE_SIZE,
