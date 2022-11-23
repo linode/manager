@@ -50,10 +50,16 @@ export const AppPanelSection: React.FC<Props> = (props) => {
       ) : null}
       <Grid className={classes.flatImagePanelSelections} container>
         {apps.map((eachApp) => {
+          const decodedLabel = decode(eachApp.label);
           const isCluster =
-            eachApp.user_defined_fields.find(
+            decodedLabel.endsWith('Cluster ') &&
+            eachApp.user_defined_fields.some(
               (field) => field.name === 'node_options'
-            ) !== undefined;
+            );
+
+          const label = isCluster
+            ? decodedLabel.split(' Cluster')[0]
+            : decodedLabel;
 
           return (
             <SelectionCardWrapper
@@ -61,7 +67,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
               key={eachApp.id}
               checked={eachApp.id === selectedStackScriptID}
               // Decode App labels since they may contain HTML entities.
-              label={decode(eachApp.label)}
+              label={label}
               availableImages={eachApp.images}
               userDefinedFields={eachApp.user_defined_fields}
               handleClick={handleClick}
