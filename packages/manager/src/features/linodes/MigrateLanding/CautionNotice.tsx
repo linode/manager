@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
 import { useAccount } from 'src/queries/account';
 import { useLinodeVolumesQuery } from 'src/queries/volumes';
 
@@ -53,7 +54,13 @@ const CautionNotice: React.FC<Props> = (props) => {
   const capabilities = account?.capabilities ?? [];
   const vlansCapability = capabilities.includes('Vlans');
 
-  const { data: volumesData } = useLinodeVolumesQuery(props.linodeId);
+  // This is not great, but lets us get all of the volumes for a Linode while keeping
+  // the React Query store in a paginated shape. We want to keep datat in a paginated shape
+  // because the event handler automaticly updates stored paginated data.
+  // We can safely do this because linodes can't have more than 64 volumes.
+  const { data: volumesData } = useLinodeVolumesQuery(props.linodeId, {
+    page_size: API_MAX_PAGE_SIZE,
+  });
 
   const amountOfAttachedVolumes = volumesData?.results ?? 0;
 

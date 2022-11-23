@@ -30,10 +30,10 @@ import {
  * For Volumes, we must maintain the following stores to keep our cache up to date.
  * When we manually mutate our cache, we must keep data under the following queryKeys up to date.
  *
- * Query Keys:
+ * Query Key Prefixes:
  * - `volumes-all` - Contains an array of all volumes
- *   - ONLY USE WHEN ABSOLUTELY NECESSARY
- * - `volumes-list` - Contains Paginated Volumes
+ *   - Only use this when absolutely necessary
+ * - `volumes-list` - Contains ResourcePage of Paginated Volumes
  * - [`volumes-list`, 'linode', id] - Conatins Paginated Volumes for a Specifc Linode
  */
 
