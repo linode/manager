@@ -195,6 +195,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   );
 
   const { data: volumes, isLoading: volumesLoading } = useAllVolumesQuery(
+    {},
+    {},
     entityType === 'volume_id'
   );
 

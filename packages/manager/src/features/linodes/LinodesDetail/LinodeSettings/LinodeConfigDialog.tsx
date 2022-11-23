@@ -34,7 +34,6 @@ import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import { API_MAX_PAGE_SIZE } from 'src/constants';
 import DeviceSelection, {
   ExtendedDisk,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
@@ -43,7 +42,7 @@ import { useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -458,22 +457,38 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const generalError = formik.status?.generalError;
 
-  const { data: volumeData } = useLinodeVolumesQuery(
-    props.linodeId,
-    // This is not great, but lets us get all of the volumes for a Linode while keeping the store paginated.
-    // We can safely do this because linodes can't have more than 64 volumes.
-    { page_size: API_MAX_PAGE_SIZE },
+  // We need the API to allow us to filter on `linode_id`
+  // const { data: volumes } = useAllVolumesQuery(
+  //   {},
+  //   {
+  //     '+or': [
+  //       { linode_id: props.linodeId },
+  //       { linode_id: null, region: linodeRegion },
+  //     ],
+  //   },
+  //   open
+  // );
+
+  const { data: volumesData } = useAllVolumesQuery(
     {},
+    { region: linodeRegion },
     open
   );
 
+  const volumes =
+    volumesData?.filter((volume) => {
+      const isAttachedToLinode = volume.linode_id === props.linodeId;
+      const isUnattached = volume.linode_id === null;
+
+      return isAttachedToLinode || isUnattached;
+    }) ?? [];
+
   const availableDevices = {
     disks: props.disks,
-    volumes:
-      volumeData?.data.map((volume) => ({
-        ...volume,
-        _id: String(volume.id),
-      })) ?? [],
+    volumes: volumes.map((volume) => ({
+      ...volume,
+      _id: `volume-${volume.id}`,
+    })),
   };
 
   const initrdDisks = availableDevices.disks.filter(

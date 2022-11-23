@@ -114,7 +114,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     data: volumes,
     isLoading: areVolumesLoading,
     error: volumesError,
-  } = useAllVolumesQuery(!_isLargeAccount);
+  } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);

@@ -62,8 +62,8 @@ const CardView: React.FC<CombinedProps> = (props) => {
   const { updateLinode } = useLinodeActions();
   const { data: profile } = useProfile();
 
-  // This is bad
-  const { data: volumes, isLoading } = useAllVolumesQuery(true);
+  // When someone uses card view, sadly, this is the best way for us to populate volume counts.
+  const { data: volumes, isLoading } = useAllVolumesQuery();
 
   const [tagDrawer, setTagDrawer] = React.useState<TagDrawerProps>({
     open: false,

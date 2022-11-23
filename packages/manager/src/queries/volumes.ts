@@ -57,10 +57,18 @@ export const useLinodeVolumesQuery = (
     () => getLinodeVolumes(linodeId, params, filters),
     { keepPreviousData: true, enabled }
   );
-export const useAllVolumesQuery = (enabled = false) =>
-  useQuery<Volume[], APIError[]>([`${queryKey}-all`], getAllVolumes, {
-    enabled,
-  });
+export const useAllVolumesQuery = (
+  params: any = {},
+  filters: any = {},
+  enabled = true
+) =>
+  useQuery<Volume[], APIError[]>(
+    [`${queryKey}-all`, params, filters],
+    () => getAllVolumes(params, filters),
+    {
+      enabled,
+    }
+  );
 
 export const useResizeVolumeMutation = () =>
   useMutation<Volume, APIError[], { volumeId: number } & ResizeVolumePayload>(

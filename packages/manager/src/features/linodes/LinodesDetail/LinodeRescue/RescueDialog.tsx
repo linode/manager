@@ -17,7 +17,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import usePrevious from 'src/hooks/usePrevious';
-import { useLinodeVolumesQuery } from 'src/queries/volumes';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -102,29 +102,33 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
     assoc('_id', `disk-${disk.id}`, disk)
   );
 
-  const { data: volumes, error: volumesError } = useLinodeVolumesQuery(
-    linodeId,
+  // We need the API to allow us to filter on `linode_id`
+  // const { data: volumes } = useAllVolumesQuery(
+  //   {},
+  //   {
+  //     '+or': [
+  //       { linode_id: props.linodeId },
+  //       { linode_id: null, region: linodeRegion },
+  //     ],
+  //   },
+  //   open
+  // );
+
+  const { data: volumes, error: volumesError } = useAllVolumesQuery(
     {},
-    {},
+    { region: linodeRegion },
     open
   );
 
-  const filteredVolumes = React.useMemo(() => {
-    return volumes
-      ? volumes.data.filter((volume) => {
-          // whether volume is not attached to any Linode
-          const volumeIsUnattached = volume.linode_id === null;
-          // whether volume is attached to the current Linode we're viewing
-          const volumeIsAttachedToCurrentLinode = volume.linode_id === linodeId;
-          // whether volume is in the same region as the current Linode we're viewing
-          const volumeAndLinodeRegionMatch = linodeRegion === volume.region;
-          return (
-            (volumeIsAttachedToCurrentLinode || volumeIsUnattached) &&
-            volumeAndLinodeRegionMatch
-          );
-        })
-      : [];
-  }, [volumes, linodeId, linodeRegion]);
+  const filteredVolumes =
+    volumes?.filter((volume) => {
+      // whether volume is not attached to any Linode
+      const volumeIsUnattached = volume.linode_id === null;
+      // whether volume is attached to the current Linode we're viewing
+      const volumeIsAttachedToCurrentLinode = volume.linode_id === linodeId;
+
+      return volumeIsAttachedToCurrentLinode || volumeIsUnattached;
+    }) ?? [];
 
   const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
     linodeDisks ?? []
@@ -154,7 +158,7 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
     volumes:
       filteredVolumes.map((volume) => ({
         ...volume,
-        _id: String(volume.id),
+        _id: `volume-${volume.id}`,
       })) ?? [],
   };
 

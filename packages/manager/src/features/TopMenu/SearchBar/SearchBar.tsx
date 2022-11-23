@@ -102,7 +102,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
 
-  const { data: volumes } = useAllVolumesQuery(shouldMakeRequests);
+  const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
   const { _loading } = useReduxLoad(
     searchDeps,
