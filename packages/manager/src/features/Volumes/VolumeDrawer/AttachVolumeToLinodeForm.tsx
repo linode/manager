@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { openForCreating } from 'src/store/volumeForm';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -77,8 +78,8 @@ const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to attach this volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) =>
-              setStatus({ generalError });
+            const mapErrorToStatus = () =>
+              setStatus({ generalError: getErrorMap([], errorResponse).none });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);

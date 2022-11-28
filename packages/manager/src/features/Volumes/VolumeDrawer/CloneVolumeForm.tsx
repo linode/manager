@@ -5,6 +5,7 @@ import Form from 'src/components/core/Form';
 import Typography from 'src/components/core/Typography';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { useCloneVolumeMutation } from 'src/queries/volumes';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -41,8 +42,8 @@ export const CloneVolumeForm = (props: Props) => {
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) =>
-              setStatus({ generalError });
+            const mapErrorToStatus = () =>
+              setStatus({ generalError: getErrorMap([], errorResponse).none });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);

@@ -16,10 +16,10 @@ import { useHistory } from 'react-router-dom';
 import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
+import BetaChip from 'src/components/BetaChip';
 import BreadCrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -110,13 +110,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: '-2px',
   },
   chip: {
-    fontFamily: theme.font.bold,
-    fontSize: '0.625rem',
-    height: 16,
     marginTop: 4,
-    marginLeft: theme.spacing(),
-    letterSpacing: '.25px',
-    textTransform: 'uppercase',
   },
   tooltip: {
     '& .MuiTooltip-tooltip': {
@@ -480,7 +474,7 @@ const DatabaseCreate: React.FC<{}> = () => {
         ]}
         labelOptions={{
           suffixComponent: flags.databaseBeta ? (
-            <Chip className={classes.chip} label="beta" component="span" />
+            <BetaChip className={classes.chip} component="span" />
           ) : null,
         }}
       />

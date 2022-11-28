@@ -1,11 +1,12 @@
-import { createLinode, Linode } from '@linode/api-v4/lib/linodes';
-import { createVolume, Volume } from '@linode/api-v4/lib/volumes';
+import { createLinode } from '@linode/api-v4/lib/linodes';
+import { createVolume } from '@linode/api-v4/lib/volumes';
+import { Linode, Volume } from '@linode/api-v4/types';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { regions } from 'support/constants/regions';
 import { assertToast } from 'support/ui/events';
-import { randomLabel, randomItem, randomString } from 'support/util/random';
+import { randomItem, randomLabel, randomString } from 'support/util/random';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -104,11 +105,12 @@ describe('volume attach and detach flows', () => {
     });
   });
 
+  // TODO Unskip once volume detach issue is resolved.
   /*
    * - Clicks "Detach" action menu item for volume.
    * - Confirms that volume detach toast appears and that Linode is no longer listed as attached for Volume.
    */
-  it('detaches a volume from a Linode', () => {
+  it.skip('detaches a volume from a Linode', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
       ([linode, volume]: [Linode, Volume]) => {
         cy.intercept('POST', `*/volumes/${volume.id}/detach`).as(
@@ -156,12 +158,13 @@ describe('volume attach and detach flows', () => {
     );
   });
 
+  // TODO Unskip once volume detach issue is resolved.
   /*
    * - Clicks "Detach" action menu item for volume on Linode details page.
    * - Confirms that volume is no longer listed on Linode details page.
    * - Confirms that Linode is no longer listed as attached to Volume on Volumes landing page.
    */
-  it('detaches a volume from a Linode via Linode details page', () => {
+  it.skip('detaches a volume from a Linode via Linode details page', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
       ([linode, volume]: [Linode, Volume]) => {
         // Wait for Linode to finish provisioning and booting.

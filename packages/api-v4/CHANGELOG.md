@@ -1,3 +1,24 @@
+## [2022-11-14] - v0.82.0
+
+### Added:
+- Support for user-defined headers in UDF (user-defined fields) schema
+
+## [2022-11-01] - v0.81.0
+### Added:
+- `setUserAgentPrefix` helper function to change API request user agent prefix
+
+### Changed:
+- `credentials` field on `ManagedServiceMonitor` is now an array of numbers
+- API request user agent reflects environment
+
+## [2022-10-17] - v0.80.0
+
+### Changed:
+
+- Updates to Managed
+- LinodeTypeClass to support prodedicated
+- SupportReply interface to include friendly_name
+
 ## [2022-10-04] - v0.79.0
 ### Changed:
 - FirewallRuleProtocol type updated to include IPENCAP

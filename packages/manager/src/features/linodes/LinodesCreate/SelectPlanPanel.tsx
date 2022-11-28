@@ -138,8 +138,11 @@ const getStandard = (types: PlanSelectionType[]) =>
 const getHighMem = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /highmem/.test(t.class));
 
+const getProDedicated = (types: PlanSelectionType[]) =>
+  types.filter((t: PlanSelectionType) => /prodedicated/.test(t.class));
+
 const getDedicated = (types: PlanSelectionType[]) =>
-  types.filter((t: PlanSelectionType) => /dedicated/.test(t.class));
+  types.filter((t: PlanSelectionType) => /^dedicated/.test(t.class));
 
 const getGPU = (types: PlanSelectionType[]) =>
   types.filter((t: PlanSelectionType) => /gpu/.test(t.class));
@@ -216,7 +219,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
               !isSamePlan && !isDisabledClass ? onSelect(type.id) : undefined
             }
             aria-disabled={isSamePlan || planTooSmall || isDisabledClass}
-             className={classNames(classes.focusedRow, {
+            className={classNames(classes.focusedRow, {
               [classes.disabledRow]:
                 isSamePlan || planTooSmall || isDisabledClass,
             })}
@@ -402,6 +405,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
+    const proDedicated = getProDedicated(types);
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
     const metal = getMetal(types);
@@ -409,6 +413,24 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const tabOrder: LinodeTypeClass[] = [];
 
     const shared = [...nanodes, ...standards];
+
+    if (!isEmpty(proDedicated)) {
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Typography data-qa-prodedi className={classes.copy}>
+                Pro Dedicated CPU instances are for very demanding workloads.
+                They only have AMD 2nd generation processors or newer.
+              </Typography>
+              {renderPlanContainer(proDedicated)}
+            </>
+          );
+        },
+        title: 'Pro Dedicated CPU',
+      });
+      tabOrder.push('prodedicated');
+    }
 
     if (!isEmpty(dedicated)) {
       tabs.push({

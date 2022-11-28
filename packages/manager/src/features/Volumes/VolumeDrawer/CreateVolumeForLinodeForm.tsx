@@ -21,7 +21,7 @@ import {
   openForAttaching,
   Origin as VolumeDrawerOrigin,
 } from 'src/store/volumeForm';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { getErrorMap, getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -122,8 +122,8 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
           })
           .catch((errorResponse) => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
-            const mapErrorToStatus = (generalError: string) =>
-              setStatus({ generalError });
+            const mapErrorToStatus = () =>
+              setStatus({ generalError: getErrorMap([], errorResponse).none });
 
             setSubmitting(false);
             handleFieldErrors(setErrors, errorResponse);

@@ -13,6 +13,8 @@ import {
   accountMaintenanceFactory,
   accountTransferFactory,
   appTokenFactory,
+  contactFactory,
+  credentialFactory,
   creditPaymentResponseFactory,
   databaseBackupFactory,
   databaseEngineFactory,
@@ -42,6 +44,8 @@ import {
   longviewSubscriptionFactory,
   maintenanceResponseFactory,
   makeObjectsPage,
+  managedLinodeSettingFactory,
+  managedSSHPubKeyFactory,
   managedStatsFactory,
   monitorFactory,
   nodeBalancerConfigFactory,
@@ -66,9 +70,12 @@ import {
   VLANFactory,
   volumeFactory,
   managedIssueFactory,
+  linodeTypeFactory,
+  dedicatedTypeFactory,
+  proDedicatedTypeFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
-import { grantsFactory } from 'src/factories/grants';
+import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 
 export const makeResourcePage = <T>(
@@ -329,6 +336,20 @@ export const handlers = [
       ...creatingImages,
     ];
     return res(ctx.json(makeResourcePage(images)));
+  }),
+  rest.get('*/linode/types', (req, res, ctx) => {
+    const standardTypes = linodeTypeFactory.buildList(7);
+    const dedicatedTypes = dedicatedTypeFactory.buildList(7);
+    const proDedicatedType = proDedicatedTypeFactory.build();
+    return res(
+      ctx.json(
+        makeResourcePage([
+          ...standardTypes,
+          ...dedicatedTypes,
+          proDedicatedType,
+        ])
+      )
+    );
   }),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(60, {
@@ -759,11 +780,11 @@ export const handlers = [
           domain: [],
           firewall: [],
           image: [],
-          linode: [],
+          linode: grantFactory.buildList(6000),
           longview: [],
           nodebalancer: [],
-          stackscript: [],
-          volume: [],
+          stackscript: grantFactory.buildList(30),
+          volume: grantFactory.buildList(100),
         })
       )
     );
@@ -928,6 +949,25 @@ export const handlers = [
       )
     );
   }),
+  rest.post('*/managed/services', (req, res, ctx) => {
+    const monitor = monitorFactory.build(req.body as any);
+    return res(ctx.json(monitor));
+  }),
+  rest.put('*/managed/services/:id', (req, res, ctx) => {
+    const payload = req.body as any;
+
+    return res(
+      ctx.json(
+        monitorFactory.build({
+          ...payload,
+          id: Number(req.params.id),
+        })
+      )
+    );
+  }),
+  rest.delete('*/managed/services/:id', (_req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   rest.get('*managed/stats', (req, res, ctx) => {
     const stats = managedStatsFactory.build();
     return res(ctx.json(stats));
@@ -944,6 +984,47 @@ export const handlers = [
       created: DateTime.now().minus({ days: 2 }).toISO(),
     });
     return res(ctx.json(makeResourcePage([openIssue, closedIssue])));
+  }),
+  rest.get('*managed/linode-settings', (req, res, ctx) => {
+    return res(
+      ctx.json(makeResourcePage(managedLinodeSettingFactory.buildList(5)))
+    );
+  }),
+  rest.get('*managed/credentials/sshkey', (req, res, ctx) => {
+    return res(ctx.json(managedSSHPubKeyFactory.build()));
+  }),
+  rest.get('*managed/credentials', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(credentialFactory.buildList(5))));
+  }),
+  rest.post('*managed/credentials', (req, res, ctx) => {
+    const response = credentialFactory.build({
+      ...(req.body as any),
+    });
+
+    return res(ctx.json(response));
+  }),
+  rest.post('*managed/credentials/:id/revoke', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.get('*managed/contacts', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(contactFactory.buildList(5))));
+  }),
+  rest.delete('*managed/contacts/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
+  rest.put('*managed/contacts/:id', (req, res, ctx) => {
+    const payload = {
+      ...(req.body as any),
+      id: Number(req.params.id),
+    };
+
+    return res(ctx.json(payload));
+  }),
+  rest.post('*managed/contacts', (req, res, ctx) => {
+    const response = contactFactory.build({
+      ...(req.body as any),
+    });
+    return res(ctx.json(response));
   }),
   rest.get('*stackscripts/', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(stackScriptFactory.buildList(1))));

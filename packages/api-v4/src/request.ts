@@ -12,6 +12,18 @@ export const baseRequest = Axios.create({
   baseURL: 'https://api.linode.com/v4',
 });
 
+baseRequest.interceptors.request.use((config) => {
+  const isRunningInNode = typeof process === 'object';
+  const newConfig = {
+    ...config,
+    headers: {
+      ...config.headers,
+      'User-Agent': 'linodejs',
+    },
+  };
+  return isRunningInNode ? newConfig : config;
+});
+
 /**
  * setToken
  *
@@ -275,6 +287,25 @@ export const CancellableRequest = <T>(
         (response) => response.data
       ),
   };
+};
+
+/**
+ * setUserAgentPrefix
+ *
+ * Helper function to set a custom prefix on the user agent
+ *
+ * @param prefix
+ */
+export const setUserAgentPrefix = (prefix: string) => {
+  return baseRequest.interceptors.request.use((config) => {
+    return {
+      ...config,
+      headers: {
+        ...config.headers,
+        'User-Agent': `${prefix}/${config.headers['User-Agent']}`,
+      },
+    };
+  });
 };
 
 export default requestGenerator;

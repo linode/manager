@@ -643,13 +643,21 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
     },
   },
   code: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     backgroundColor: theme.bg.bgAccessRow,
     color: theme.textColors.tableStatic,
     fontFamily: '"UbuntuMono", monospace, sans-serif',
-    padding: theme.spacing(),
+    padding: '4px 8px',
     position: 'relative',
     '& div': {
       fontSize: 15,
+    },
+  },
+  row: {
+    '&:hover $copy > svg, & $copy:focus > svg': {
+      opacity: 1,
     },
   },
   copyCell: {
@@ -671,15 +679,11 @@ const useAccessTableStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  copyButton: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 1,
-    height: '100%',
-    width: '100%',
-    '&:hover': {
-      backgroundColor: 'transparent',
+  copy: {
+    '& svg': {
+      height: `12px`,
+      width: `12px`,
+      opacity: 0,
     },
   },
   gradient: {
@@ -722,18 +726,15 @@ export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
           <TableBody>
             {props.rows.map((thisRow) => {
               return thisRow.text ? (
-                <TableRow key={thisRow.text}>
+                <TableRow key={thisRow.text} className={classes.row}>
                   {thisRow.heading ? (
                     <th scope="row">{thisRow.heading}</th>
                   ) : null}
                   <TableCell className={classes.code}>
-                    <div className={classes.gradient}>{thisRow.text}</div>
-                  </TableCell>
-                  <TableCell className={classes.copyCell}>
-                    <CopyTooltip
-                      text={thisRow.text}
-                      className={classes.copyButton}
-                    />
+                    <div className={classes.gradient}>
+                      <CopyTooltip text={thisRow.text} copyableText />
+                    </div>
+                    <CopyTooltip className={classes.copy} text={thisRow.text} />
                   </TableCell>
                 </TableRow>
               ) : null;

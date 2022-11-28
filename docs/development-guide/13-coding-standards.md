@@ -5,6 +5,8 @@
 We use [ESLint](https://eslint.org/) to enforce coding and formatting standards. The config is found at `packages/manager/.eslintrc.js`. We also use several plugins to extend linting features; here are just a few:
 
 - **@typescript-eslint** (TypeScript-specific rules)
+- **markdownlint** (Markdown-specific rules)
+- **MDX** (MDX-specific rules)
 - **jsx-a11y** (accessibility)
 - **prettier** (code formatting)
 - **scanjs** (security)

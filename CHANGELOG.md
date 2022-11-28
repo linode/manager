@@ -4,6 +4,54 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-11-14] - v1.80.0
+
+### Added:
+- Paste functionality restored for Glish
+- Support for user-defined headers in stackscripts
+
+### Changed:
+- LKE UI refinements
+
+## [2022-11-07] - v1.79.1
+### Fixed:
+- Bug when managing user permissions for large accounts
+
+## [2022-11-01] - v1.79.0
+### Added:
+- Set custom UserAgent header for api-v4 when run in node
+
+### Changed:
+- Linode label max characters increased to 64 chars
+- Update Configuration Profile doc link
+- Marketplace app info button can be focused via keyboard
+- Notices that suggest opening a support ticket now include a link to do so
+
+### Fixed:
+- Error when swapping Linode IPs after having already done so
+- Issue preventing more than 100 Marketplace apps from appearing
+- Error when updating billing contact info without a company name in certain circumstances
+
+
+## [2022-10-17] - v1.78.0
+
+### Added:
+
+- Support for Pro Dedicated Plans
+- Support ticket link for Account Limit notice text
+- HA chip for highly available clusters in the Kubernetes landing page
+- Visual indicator when keyboard navigating Linode and Database plan selection tables
+- React Query for Managed
+
+### Changed:
+
+- Disable delete pool button if there is only one pool
+- Display friendly name for Support ticket reply
+
+### Fixed:
+
+- Accessibility and zoom issue for inputs on Safari iOS
+
 ## [2022-10-04] - v1.77.0
 
 ### Added:
