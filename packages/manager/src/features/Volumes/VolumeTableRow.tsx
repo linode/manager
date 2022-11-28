@@ -218,7 +218,10 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={linode_label}>
           {linodeId ? (
-            <Link to={`/linodes/${linodeId}`} className="link secondaryLink">
+            <Link
+              to={`/linodes/${linodeId}/storage`}
+              className="link secondaryLink"
+            >
               {linode_label}
             </Link>
           ) : (

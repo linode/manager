@@ -1,4 +1,3 @@
-import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -352,7 +351,6 @@ interface LinodeContextProps {
   linodeLabel?: string;
   linodeRegion?: string;
   readOnly: boolean;
-  linodeVolumes?: Volume[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -361,7 +359,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeLabel: linode.label,
   linodeRegion: linode.region,
   readOnly: linode._permissions === 'read_only',
-  linodeVolumes: linode._volumes,
 }));
 
 const connected = connect(undefined, mapDispatchToProps);
