@@ -105,6 +105,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     gridArea: 'button',
     display: 'flex',
     gap: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
   },
   linksSection: {
     gridArea: 'links',
