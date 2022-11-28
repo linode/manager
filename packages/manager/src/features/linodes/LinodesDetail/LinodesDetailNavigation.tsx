@@ -4,10 +4,14 @@ import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { withLinodeDetailContext } from './linodeDetailContext';
 const LinodeSummary = React.lazy(() => import('./LinodeSummary/LinodeSummary'));
 const LinodeNetworking = React.lazy(
@@ -37,6 +41,10 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     linodeCreated,
     match: { url },
   } = props;
+
+  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
+    `smtp-restriction-notice-${linodeLabel}`
+  );
 
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = linodeType?.class === 'metal';
@@ -97,6 +105,24 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment
         segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
+      {tabs[getIndex()]?.title === 'Network' ? (
+        <SMTPRestrictionText supportLink={true}>
+          {({ text }) =>
+            !hasDismissedBanner && text !== null ? (
+              <Notice
+                warning
+                dismissible
+                onClose={handleDismiss}
+                spacingTop={32}
+              >
+                <Grid item xs={12}>
+                  {text}
+                </Grid>
+              </Notice>
+            ) : null
+          }
+        </SMTPRestrictionText>
+      ) : null}
       <div style={{ marginTop: 8 }}>
         <Tabs index={getIndex()} onChange={navToURL}>
           <TabLinkList tabs={tabs} />
