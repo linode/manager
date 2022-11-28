@@ -2,6 +2,7 @@ import { PoolNodeResponse } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import CopyTooltip from 'src/components/CopyTooltip';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableFooter from 'src/components/core/TableFooter';
@@ -40,6 +41,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipCell: {
     ...theme.applyTableHeaderStyles,
     width: '25%',
+  },
+  row: {
+    '&:hover': {
+      backgroundColor: theme.bg.lightBlue1,
+    },
+    '&:hover $copy > svg, & $copy:focus > svg': {
+      opacity: 1,
+    },
+  },
+  copy: {
+    top: 1,
+    marginLeft: 4,
+    '& svg': {
+      height: `12px`,
+      width: `12px`,
+      opacity: 0,
+    },
   },
   error: {
     color: theme.color.red,
@@ -218,7 +236,7 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
   const displayIP = ip ?? '';
 
   return (
-    <TableRow ariaLabel={label}>
+    <TableRow ariaLabel={label} className={classes.row}>
       <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item>
@@ -247,9 +265,12 @@ export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
       <TableCell>
         {linodeError ? (
           <Typography className={classes.error}>Error retrieving IP</Typography>
-        ) : (
-          displayIP
-        )}
+        ) : displayIP.length > 0 ? (
+          <>
+            <CopyTooltip text={displayIP} copyableText />
+            <CopyTooltip className={classes.copy} text={displayIP} />
+          </>
+        ) : null}
       </TableCell>
       <TableCell>
         <NodeActionMenu

@@ -30,8 +30,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 20,
       height: 20,
     },
-    '&:hover': {
-      backgroundColor: theme.color.white,
+    '& svg:hover': {
+      color: theme.palette.primary.main,
     },
   },
   flex: {
