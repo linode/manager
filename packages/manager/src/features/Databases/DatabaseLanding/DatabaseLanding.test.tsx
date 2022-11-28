@@ -103,7 +103,7 @@ describe('Database Table', () => {
 
     expect(
       getByText(
-        "Deploy popular database engines such as MySQL and PostgreSQL using Linode's performant, reliable, and fully managed database solution."
+        'Deploy popular database engines such as MySQL and PostgreSQL using Linode’s performant, reliable, and fully managed database solution.'
       )
     ).toBeInTheDocument();
   });

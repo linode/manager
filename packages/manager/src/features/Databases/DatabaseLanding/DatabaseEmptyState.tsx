@@ -88,9 +88,6 @@ const useStyles = makeStyles(() => ({
       transform: 'scale(0.8)',
     },
   },
-  entityDescription: {
-    marginBottom: '1rem',
-  },
 }));
 
 const gaCategory = 'Managed Databases landing page empty';
@@ -193,10 +190,9 @@ const DatabaseEmptyState: React.FC = () => {
         }
       >
         <Typography variant="subtitle1">
-          <div className={classes.entityDescription}>
-            Deploy popular database engines such as MySQL and PostgreSQL using
-            Linode's performant, reliable, and fully managed database solution.
-          </div>
+          Deploy popular database engines such as MySQL and PostgreSQL using
+          Linode&rsquo;s performant, reliable, and fully managed database
+          solution.
         </Typography>
       </Placeholder>
     </>
