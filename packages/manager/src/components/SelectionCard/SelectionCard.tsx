@@ -49,6 +49,7 @@ export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   renderVariant?: () => JSX.Element | null;
+  headingDecoration?: JSX.Element;
 }
 
 const SelectionCard: React.FC<Props> = (props) => {
@@ -63,6 +64,7 @@ const SelectionCard: React.FC<Props> = (props) => {
     onClick,
     renderIcon,
     renderVariant,
+    headingDecoration,
   } = props;
 
   const classes = useStyles();
@@ -86,6 +88,7 @@ const SelectionCard: React.FC<Props> = (props) => {
       heading={heading}
       subheadings={subheadings}
       renderVariant={renderVariant}
+      headingDecoration={headingDecoration}
     />
   );
 

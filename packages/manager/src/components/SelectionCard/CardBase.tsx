@@ -29,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     color: theme.color.headline,
     wordBreak: 'break-word',
+    display: 'flex',
+    alignItems: 'center',
+    columnGap: theme.spacing(2),
   },
   subheading: {
     fontSize: '0.875rem',
@@ -75,15 +78,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   renderIcon?: () => JSX.Element;
-  heading: string;
+  heading: string | JSX.Element;
   subheadings: (string | undefined)[];
   renderVariant?: () => JSX.Element | null;
+  headingDecoration?: JSX.Element;
 }
 
 type CombinedProps = Props;
 
 const CardBase: React.FC<CombinedProps> = (props) => {
-  const { renderIcon, heading, subheadings, renderVariant } = props;
+  const {
+    renderIcon,
+    heading,
+    subheadings,
+    renderVariant,
+    headingDecoration,
+  } = props;
 
   const classes = useStyles();
 
@@ -101,6 +111,7 @@ const CardBase: React.FC<CombinedProps> = (props) => {
       <Grid item className={`${classes.flex} cardBaseHeadings`}>
         <div className={classes.heading} data-qa-select-card-heading={heading}>
           {heading}
+          {headingDecoration}
         </div>
         {subheadings.map((subheading, idx) => {
           return (
