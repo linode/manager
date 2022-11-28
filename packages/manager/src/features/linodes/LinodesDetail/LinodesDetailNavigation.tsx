@@ -4,6 +4,7 @@ import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
+import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -41,7 +42,9 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
     match: { url },
   } = props;
 
-  const [isNoticeDismissed, setIsNoticeDismissed] = React.useState(false);
+  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
+    `smtp-restriction-notice-${linodeLabel}`
+  );
 
   // Bare metal Linodes have a very different detail view
   const isBareMetalInstance = linodeType?.class === 'metal';
@@ -105,11 +108,11 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       {tabs[getIndex()]?.title === 'Network' ? (
         <SMTPRestrictionText supportLink={true}>
           {({ text }) =>
-            !isNoticeDismissed && text !== null ? (
+            !hasDismissedBanner && text !== null ? (
               <Notice
                 warning
                 dismissible
-                onClose={() => setIsNoticeDismissed(true)}
+                onClose={handleDismiss}
                 spacingTop={32}
               >
                 <Grid item xs={12}>
