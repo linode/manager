@@ -35,7 +35,9 @@ describe('accountCreatedAfterRestrictions', () => {
   it('only returns true when the account was created after the magic date', () => {
     expect(accountCreatedAfterRestrictions('2022-11-27 00:00:00Z')).toBe(false);
     expect(accountCreatedAfterRestrictions('2022-11-28 23:59:59Z')).toBe(false);
-    expect(accountCreatedAfterRestrictions('2022-11-29 00:00:00Z')).toBe(true);
+    expect(accountCreatedAfterRestrictions(MAGIC_IMPLEMENTATION_DATE)).toBe(
+      true
+    );
     expect(accountCreatedAfterRestrictions('2022-11-29 00:00:01Z')).toBe(true);
   });
 });
