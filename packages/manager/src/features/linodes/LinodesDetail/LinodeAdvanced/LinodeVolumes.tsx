@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { bindActionCreators, Dispatch } from 'redux';
 import AddNewLink from 'src/components/AddNewLink';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -299,7 +300,9 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
             >
               Size
             </TableSortCell>
-            <TableCell>File System Path</TableCell>
+            <Hidden xsDown>
+              <TableCell>File System Path</TableCell>
+            </Hidden>
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
