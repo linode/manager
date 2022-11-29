@@ -10,7 +10,7 @@ import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
   '2022-11-29T00:00:00.000Z'; // Date of release for Manager v1.81.0.
 
-interface Props {
+export interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
   supportLink?: boolean;
 }
