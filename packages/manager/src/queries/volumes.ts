@@ -37,7 +37,7 @@ import {
  * - [`volumes-list`, 'linode', id] - Conatins Paginated Volumes for a Specifc Linode
  */
 
-const queryKey = 'volumes';
+export const queryKey = 'volumes';
 
 export const useVolumesQuery = (params: any, filters: any) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
