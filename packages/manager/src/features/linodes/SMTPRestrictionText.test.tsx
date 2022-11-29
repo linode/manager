@@ -7,7 +7,7 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>
 );
-const MAGIC_IMPLEMENTATION_DATE = '2022-11-29 00:00:00Z';
+const MAGIC_IMPLEMENTATION_DATE = '2022-11-30 00:00:00Z';
 
 let mockActiveSince = MAGIC_IMPLEMENTATION_DATE;
 
@@ -34,11 +34,11 @@ describe('accountCreatedAfterRestrictions', () => {
 
   it('only returns true when the account was created after the magic date', () => {
     expect(accountCreatedAfterRestrictions('2022-11-27 00:00:00Z')).toBe(false);
-    expect(accountCreatedAfterRestrictions('2022-11-28 23:59:59Z')).toBe(false);
+    expect(accountCreatedAfterRestrictions('2022-11-29 23:59:59Z')).toBe(false);
     expect(accountCreatedAfterRestrictions(MAGIC_IMPLEMENTATION_DATE)).toBe(
       true
     );
-    expect(accountCreatedAfterRestrictions('2022-11-29 00:00:01Z')).toBe(true);
+    expect(accountCreatedAfterRestrictions('2022-11-30 00:00:01Z')).toBe(true);
   });
 });
 
