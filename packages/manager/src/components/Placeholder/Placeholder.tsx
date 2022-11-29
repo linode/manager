@@ -103,6 +103,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     gridArea: 'button',
+    display: 'flex',
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+    },
   },
   linksSection: {
     gridArea: 'links',
@@ -172,18 +177,18 @@ const Placeholder: React.FC<Props> = (props) => {
           props.children
         )}
       </div>
-
-      {buttonProps &&
-        buttonProps.map((thisButton, index) => (
-          <Button
-            buttonType="primary"
-            className={classes.button}
-            {...thisButton}
-            data-qa-placeholder-button
-            data-testid="placeholder-button"
-            key={index}
-          />
-        ))}
+      <div className={classes.button}>
+        {buttonProps &&
+          buttonProps.map((thisButton, index) => (
+            <Button
+              buttonType="primary"
+              {...thisButton}
+              data-qa-placeholder-button
+              data-testid="placeholder-button"
+              key={index}
+            />
+          ))}
+      </div>
       <div className={classes.linksSection}>
         {linksSection !== undefined ? linksSection : null}
       </div>
