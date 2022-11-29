@@ -56,6 +56,7 @@ export const DestructiveVolumeDialog = (props: Props) => {
     error: detachError,
     isLoading: detachLoading,
   } = useDetachVolumeMutation();
+
   const {
     mutateAsync: deleteVolume,
     error: deleteError,
@@ -96,8 +97,13 @@ export const DestructiveVolumeDialog = (props: Props) => {
     delete: deleteLoading,
   }[props.mode];
 
-  const error = detachError
-    ? getAPIErrorOrDefault(detachError, `Unable to ${mode} volume.`)[0].reason
+  const selectedError = {
+    detach: detachError,
+    delete: deleteError,
+  }[props.mode];
+
+  const error = selectedError
+    ? getAPIErrorOrDefault(selectedError, `Unable to ${mode} volume.`)[0].reason
     : undefined;
 
   const actions = (
