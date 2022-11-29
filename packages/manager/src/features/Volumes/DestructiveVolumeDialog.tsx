@@ -96,14 +96,9 @@ export const DestructiveVolumeDialog = (props: Props) => {
     delete: deleteLoading,
   }[props.mode];
 
-  const error = {
-    detach: detachError
-      ? getAPIErrorOrDefault(detachError, 'Unable to detach volume.')[0].reason
-      : undefined,
-    delete: deleteError
-      ? getAPIErrorOrDefault(deleteError, 'Unable to detach volume.')[0].reason
-      : undefined,
-  }[props.mode];
+  const error = detachError
+    ? getAPIErrorOrDefault(detachError, `Unable to ${mode} volume.`)[0].reason
+    : undefined;
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>

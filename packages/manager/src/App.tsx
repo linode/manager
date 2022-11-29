@@ -120,7 +120,7 @@ export class App extends React.Component<CombinedProps, State> {
       .subscribe(domainEventsHandler);
 
     /*
-     * Send any Volume events to the Domain events handler in the queries file
+     * Send any Volume events to the Volume events handler in the queries file
      */
     events$
       .filter((event) => event.action.startsWith('volume') && !event._initial)
