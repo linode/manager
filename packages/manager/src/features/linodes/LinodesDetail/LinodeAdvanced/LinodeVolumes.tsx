@@ -236,7 +236,15 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
 
   const renderTableContent = () => {
     if (isLoading) {
-      return <TableRowLoading rows={1} columns={5} />;
+      return (
+        <TableRowLoading
+          rows={1}
+          columns={5}
+          responsive={{
+            3: { xsDown: true },
+          }}
+        />
+      );
     } else if (error) {
       return <TableRowError colSpan={6} message={error[0].reason} />;
     } else if (data?.results === 0) {
