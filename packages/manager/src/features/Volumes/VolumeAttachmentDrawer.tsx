@@ -155,6 +155,7 @@ export const VolumeAttachmentDrawer = React.memo((props: Props) => {
             errorText={formik.errors.config_id ?? configError}
             disabled={disabled || readOnly || formik.values.linode_id === -1}
             label="Config"
+            placeholder="Select a Config"
             isClearable={false}
             isLoading={configsLoading}
           />

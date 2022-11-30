@@ -37,11 +37,18 @@ const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
 const linode = linodeList.data[1];
 const linodeLabel = linode.label;
 const linodeId = linode.id;
-const volumeList = makeResourcePage(
-  volumeFactory.buildList(2, {
+
+const emptyVolumeList = makeResourcePage([]);
+
+const volumeList = makeResourcePage([
+  volumeFactory.build({
     label: randomLabel(),
-  })
-);
+  }),
+  volumeFactory.build({
+    label: randomLabel(),
+  }),
+]);
+
 const volume = volumeList.data[1];
 const volumeLabel = volume.label;
 const volumeId = volume.id;
@@ -102,9 +109,14 @@ describe('volumes', () => {
   });
 
   it('creates volume from linode details', () => {
-    interceptOnce('GET', '*/volumes*', volumeList).as('getVolumes');
+    const newVolumeLabel = randomLabel();
+    const newVolume = volumeFactory.build({
+      label: newVolumeLabel,
+    });
+    const newVolumeList = makeResourcePage([newVolume]);
+
     cy.intercept('POST', `*/volumes`, (req) => {
-      req.reply(attachedVolume);
+      req.reply(newVolume);
     }).as('createVolume');
     cy.intercept('GET', '*/linode/instances/*', (req) => {
       req.reply(linodeList);
@@ -112,23 +124,40 @@ describe('volumes', () => {
     cy.intercept('GET', `*/linode/instances/${linodeId}*`, (req) => {
       req.reply(linode);
     }).as('getLinodeDetail');
+    cy.intercept(
+      'GET',
+      `*/linode/instances/${linodeId}/volumes*`,
+      emptyVolumeList
+    ).as('getEmptyVolumes');
+
     cy.visitWithLogin('/linodes', {
       preferenceOverrides,
       localStorageOverrides,
     });
+
+    // Visit a Linode's details page.
     cy.wait('@getLinodes');
     fbtClick(linodeLabel);
-    cy.wait('@getVolumes');
+    cy.wait('@getEmptyVolumes');
     cy.wait('@getLinodeDetail');
+
+    // Create a new volume.
     fbtClick('Storage');
     fbtClick('Create Volume');
     getClick('[value="creating_for_linode"]');
+    cy.intercept(
+      'GET',
+      `*/linode/instances/${linodeId}/volumes*`,
+      newVolumeList
+    ).as('getNewVolumes');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
-    getClick('[data-qa-volume-label="true"]').type('cy-test-volume');
+    getClick('[data-qa-volume-label="true"]').type(newVolumeLabel);
     getClick('[data-qa-submit="true"]');
-    cy.wait('@createVolume');
+
+    // Confirm that new volume is shown.
+    cy.wait(['@createVolume', '@getNewVolumes']);
     containsVisible('Volume Configuration');
-    cy.findByDisplayValue(`mkdir "/mnt/${volumeLabel}"`);
+    cy.findByDisplayValue(`mkdir "/mnt/${newVolumeLabel}"`);
     getClick('[data-qa-close-drawer="true"][aria-label="Close drawer"]');
     fbtVisible('1 Volume');
   });
