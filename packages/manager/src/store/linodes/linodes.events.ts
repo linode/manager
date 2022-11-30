@@ -9,6 +9,8 @@ import { EventHandler } from 'src/store/types';
 import { requestNotifications } from '../notification/notification.requests';
 import { deleteLinode } from './linodes.actions';
 import { parseAPIDate } from 'src/utilities/date';
+import { queryClient } from 'src/queries/base';
+import { queryKey as volumesQueryKey } from 'src/queries/volumes';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, percent_complete, status, id: eventID } = event;
@@ -180,6 +182,13 @@ const handleLinodeDelete = (
   state: ApplicationState
 ) => {
   const found = state.__resources.linodes.itemsById[id];
+
+  // Removed unneeded volume stores
+  queryClient.removeQueries([`${volumesQueryKey}-list`, 'linode', id]);
+
+  // A Linode that was deleted may have had volumes attached.
+  // Invalidate paginated volume stores so they will reflect there is no attached Linode.
+  queryClient.invalidateQueries([`${volumesQueryKey}-list`]);
 
   if (!found) {
     return;

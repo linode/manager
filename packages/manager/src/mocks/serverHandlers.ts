@@ -78,8 +78,8 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 
-export const makeResourcePage = (
-  e: any[],
+export const makeResourcePage = <T>(
+  e: T[],
   override: { page: number; pages: number; results?: number } = {
     page: 1,
     pages: 1,

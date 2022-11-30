@@ -30,7 +30,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
   const params = useParams<{ linodeId: string }>();
   const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
-  const { _loading } = useReduxLoad(['images', 'volumes']);
+  const { _loading } = useReduxLoad(['images']);
   const { configs, disks } = useSelector((state: ApplicationState) => {
     const disks = state.__resources.linodeDisks[linodeId];
     const configs = state.__resources.linodeConfigs[linodeId];

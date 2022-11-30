@@ -95,11 +95,6 @@ import tagImportDrawer, {
   defaultState as tagDrawerDefaultState,
   State as TagImportDrawerState,
 } from 'src/store/tagImportDrawer';
-import volumeEvents from 'src/store/volume/volume.events';
-import volumes, {
-  defaultState as defaultVolumesState,
-  State as VolumesState,
-} from 'src/store/volume/volume.reducer';
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState,
@@ -157,7 +152,6 @@ const __resourcesDefaultState = {
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   types: defaultTypesState,
-  volumes: defaultVolumesState,
   vlans: defaultVLANState,
 };
 
@@ -173,7 +167,6 @@ export interface ResourcesState {
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   types: TypesState;
-  volumes: VolumesState;
   vlans: VlanState;
 }
 
@@ -238,7 +231,6 @@ const __resources = combineReducers({
   nodeBalancerConfigs,
   notifications,
   types,
-  volumes,
   vlans,
 });
 
@@ -274,7 +266,6 @@ const enhancers = compose(
       imageEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
-      volumeEvents,
       diskEvents,
       linodeConfigEvents
     )

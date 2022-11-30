@@ -170,7 +170,6 @@ export const bucketToSearchableItem = (
 });
 
 const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
-const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const imageSelector = (state: State) => state.images.itemsById || {};
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
@@ -182,7 +181,6 @@ const kubePoolSelector = (state: State) => state.nodePools.entities;
 export default createSelector<
   State,
   Linode[],
-  Volume[],
   { [key: string]: Image },
   NodeBalancer[],
   LinodeType[],
@@ -191,26 +189,16 @@ export default createSelector<
   SearchableItem[]
 >(
   linodeSelector,
-  volumeSelector,
   imageSelector,
   nodebalSelector,
   typesSelector,
   kubernetesClusterSelector,
   kubePoolSelector,
-  (
-    linodes,
-    volumes,
-    images,
-    nodebalancers,
-    types,
-    kubernetesClusters,
-    nodePools
-  ) => {
+  (linodes, images, nodebalancers, types, kubernetesClusters, nodePools) => {
     const arrOfImages = Object.values(images);
     const searchableLinodes = linodes.map((linode) =>
       formatLinode(linode, types, images)
     );
-    const searchableVolumes = volumes.map(volumeToSearchableItem);
     const searchableImages = arrOfImages.reduce(imageReducer, []);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
     const searchableKubernetesClusters = kubernetesClusters
@@ -224,7 +212,6 @@ export default createSelector<
 
     return [
       ...searchableLinodes,
-      ...searchableVolumes,
       ...searchableImages,
       ...searchableNodebalancers,
       ...searchableKubernetesClusters,

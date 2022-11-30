@@ -67,7 +67,7 @@ describe('Component', () => {
     );
     await waitForElementToBeRemoved(getByTestId('loading'));
     getByText(/search/i);
-    expect(props.search).toHaveBeenCalledWith('search', [], []);
+    expect(props.search).toHaveBeenCalled();
   });
 
   it('should search when the entity list (from Redux) changes', () => {

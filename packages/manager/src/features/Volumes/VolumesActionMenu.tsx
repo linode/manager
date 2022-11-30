@@ -1,6 +1,5 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
@@ -29,19 +28,18 @@ export interface ActionHandlers {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => void;
   handleDelete: (volumeId: number, volumeLabel: string) => void;
-  [index: string]: any;
 }
 
-interface Props extends ActionHandlers {
+export interface Props extends ActionHandlers {
   attached: boolean;
   isVolumesLanding: boolean;
-  poweredOff: boolean;
   filesystemPath: string;
   label: string;
   linodeLabel: string;
+  linodeId: number;
   regionID: string;
   volumeId: number;
   volumeLabel: string;
@@ -49,47 +47,51 @@ interface Props extends ActionHandlers {
   size: number;
 }
 
-export type CombinedProps = Props & RouteComponentProps<{}>;
-
-export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
-  const { attached, poweredOff, isVolumesLanding } = props;
+export const VolumesActionMenu = (props: Props) => {
+  const { attached, isVolumesLanding } = props;
 
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleShowConfig = () => {
-    const { onShowConfig, label, filesystemPath } = props;
-    onShowConfig(label, filesystemPath);
+    const { openForConfig, label, filesystemPath } = props;
+    openForConfig(label, filesystemPath);
   };
 
   const handleOpenEdit = () => {
-    const { onEdit, volumeId, label, volumeTags } = props;
-    onEdit(volumeId, label, volumeTags);
+    const { openForEdit, volumeId, label, volumeTags } = props;
+    openForEdit(volumeId, label, volumeTags);
   };
 
   const handleResize = () => {
-    const { onResize, volumeId, size, label } = props;
-    onResize(volumeId, size, label);
+    const { openForResize, volumeId, size, label } = props;
+    openForResize(volumeId, size, label);
   };
 
   const handleClone = () => {
-    const { onClone, volumeId, label, size, regionID } = props;
-    onClone(volumeId, label, size, regionID);
+    const { openForClone, volumeId, label, size, regionID } = props;
+    openForClone(volumeId, label, size, regionID);
   };
 
   const handleAttach = () => {
-    const { onAttach, volumeId, label, regionID } = props;
-    onAttach(volumeId, label, regionID);
+    const { handleAttach, volumeId, label, regionID } = props;
+    handleAttach(volumeId, label, regionID);
   };
 
   const handleDetach = () => {
-    const { onDetach, volumeId, volumeLabel, linodeLabel, poweredOff } = props;
-    onDetach(volumeId, volumeLabel, linodeLabel, poweredOff);
+    const {
+      handleDetach,
+      volumeId,
+      volumeLabel,
+      linodeLabel,
+      linodeId,
+    } = props;
+    handleDetach(volumeId, volumeLabel, linodeLabel, linodeId);
   };
 
   const handleDelete = () => {
-    const { onDelete, volumeId, volumeLabel } = props;
-    onDelete(volumeId, volumeLabel);
+    const { handleDelete, volumeId, volumeLabel } = props;
+    handleDelete(volumeId, volumeLabel);
   };
 
   const actions: Action[] = [
@@ -135,14 +137,12 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
     });
   }
 
-  if (!attached || poweredOff) {
-    actions.push({
-      title: 'Delete',
-      onClick: () => {
-        handleDelete();
-      },
-    });
-  }
+  actions.push({
+    title: 'Delete',
+    onClick: () => {
+      handleDelete();
+    },
+  });
 
   const splitActionsArrayIndex = matchesSmDown ? 0 : 2;
   const [inlineActions, menuActions] = splitAt(splitActionsArrayIndex, actions);
@@ -167,4 +167,4 @@ export const VolumesActionMenu: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default withRouter(VolumesActionMenu);
+export default VolumesActionMenu;

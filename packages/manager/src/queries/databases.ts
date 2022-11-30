@@ -27,7 +27,7 @@ import {
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient, queryPresets } from './base';
+import { queryClient, queryPresets, updateInPaginatedStore } from './base';
 import { Event } from '@linode/api-v4/lib/account/types';
 
 export const queryKey = 'databases';
@@ -71,7 +71,9 @@ export const useDatabaseMutation = (engine: Engine, id: number) =>
             }
 
             if (oldEntity.label !== data.label) {
-              updatePaginatedDatabaseStore(id, { label: data.label });
+              updateInPaginatedStore<Database>(`${queryKey}-list`, id, {
+                label: data.label,
+              });
             }
 
             return { ...oldEntity, ...data };
@@ -206,7 +208,7 @@ const updateStoreForDatabase = (
   data: Partial<Database> & Partial<DatabaseInstance>
 ) => {
   updateDatabaseStore(id, data);
-  updatePaginatedDatabaseStore(id, data);
+  updateInPaginatedStore<Database>(`${queryKey}-list`, id, data);
 };
 
 const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
@@ -229,35 +231,4 @@ const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
       }
     );
   }
-};
-
-const updatePaginatedDatabaseStore = (
-  id: number,
-  newData: Partial<DatabaseInstance>
-) => {
-  queryClient.setQueriesData<ResourcePage<DatabaseInstance> | undefined>(
-    `${queryKey}-list`,
-    (oldData) => {
-      if (oldData === undefined) {
-        return undefined;
-      }
-
-      const databaseToUpdateIndex = oldData.data.findIndex(
-        (database) => database.id === id
-      );
-
-      const isDatabaseOnPage = databaseToUpdateIndex !== -1;
-
-      if (!isDatabaseOnPage) {
-        return oldData;
-      }
-
-      oldData.data[databaseToUpdateIndex] = {
-        ...oldData.data[databaseToUpdateIndex],
-        ...newData,
-      };
-
-      return oldData;
-    }
-  );
 };

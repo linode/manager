@@ -4,7 +4,6 @@ import useKubernetesClusters from './useKubernetesClusters';
 import useLinodeActions from './useLinodeActions';
 import useLinodes from './useLinodes';
 import useNodeBalancers from './useNodeBalancers';
-import useVolumes from './useVolumes';
 
 export interface Entity<T> {
   data: T[];
@@ -27,7 +26,6 @@ export const useEntities = () => {
   const { linodes: _linodes } = useLinodes();
   const { requestLinodes } = useLinodeActions();
   const { images: _images, requestImages } = useImages();
-  const { volumes: _volumes, requestVolumes } = useVolumes();
   const {
     nodeBalancers: _nodeBalancers,
     requestNodeBalancers,
@@ -50,7 +48,6 @@ export const useEntities = () => {
   const images = (Object.values(_images.itemsById) ?? []).filter(
     (thisImage) => !thisImage.is_public
   );
-  const volumes = Object.values(_volumes.itemsById);
   const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
   const nodeBalancers = Object.values(_nodeBalancers.itemsById);
 
@@ -78,12 +75,6 @@ export const useEntities = () => {
       request: () => requestNodeBalancers().then((response) => response.data),
       lastUpdated: _nodeBalancers.lastUpdated,
       error: _nodeBalancers.error?.read,
-    },
-    volumes: {
-      data: volumes,
-      request: () => requestVolumes().then((response) => response.data),
-      lastUpdated: _volumes.lastUpdated,
-      error: _volumes.error?.read,
     },
   };
 };

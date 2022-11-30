@@ -8,7 +8,6 @@ import {
   scheduleOrQueueMigration,
 } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -206,7 +205,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        linodeVolumes={props.linodeVolumes}
+        linodeId={linodeId}
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
         error={acceptError}
@@ -243,7 +242,6 @@ interface LinodeContextProps {
   linodeEvents: Event[];
   type: string | null;
   image: Image;
-  linodeVolumes: Volume[];
   recentEvents: Event[];
   linodeDisks: Disk[];
 }
@@ -257,7 +255,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeSpecs: linode.specs,
   linodeStatus: linode.status,
   linodeEvents: linode._events,
-  linodeVolumes: linode._volumes,
   recentEvents: linode._events,
   linodeDisks: linode._disks,
 }));

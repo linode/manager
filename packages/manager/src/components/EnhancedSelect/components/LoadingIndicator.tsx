@@ -26,7 +26,13 @@ class LoadingIndicator extends React.PureComponent<CombinedProps> {
   render() {
     const { classes } = this.props;
 
-    return <CircularProgress size={20} className={classes.root} />;
+    return (
+      <CircularProgress
+        data-testid="input-loading"
+        size={20}
+        className={classes.root}
+      />
+    );
   }
 }
 

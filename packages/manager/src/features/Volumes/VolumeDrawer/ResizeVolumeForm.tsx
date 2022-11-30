@@ -1,13 +1,10 @@
 import { ResizeVolumeSchema } from '@linode/validation/lib/volumes.schema';
 import { Formik } from 'formik';
 import * as React from 'react';
-import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
 import Notice from 'src/components/Notice';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
+import { useResizeVolumeMutation } from 'src/queries/volumes';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -26,18 +23,18 @@ interface Props {
   onSuccess: (volumeLabel: string, message?: string) => void;
 }
 
-type CombinedProps = Props & VolumesRequests;
-
-const ResizeVolumeForm: React.FC<CombinedProps> = (props) => {
+export const ResizeVolumeForm = (props: Props) => {
   const {
     volumeId,
     volumeSize,
     onClose,
     volumeLabel,
     onSuccess,
-    resizeVolume,
     readOnly,
   } = props;
+
+  const { mutateAsync: resizeVolume } = useResizeVolumeMutation();
+
   const initialValues = { size: volumeSize };
   const validationSchema = ResizeVolumeSchema(volumeSize);
 
@@ -126,7 +123,3 @@ const ResizeVolumeForm: React.FC<CombinedProps> = (props) => {
     </Formik>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withVolumesRequests);
-
-export default enhanced(ResizeVolumeForm);

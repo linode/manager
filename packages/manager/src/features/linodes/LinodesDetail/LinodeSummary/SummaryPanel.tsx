@@ -1,6 +1,4 @@
 import { Image } from '@linode/api-v4/lib/images';
-import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
@@ -152,8 +150,6 @@ interface LinodeContextProps {
   linodeRegion: string;
   linodeTags: string[];
   mostRecentBackup: string | null;
-  linodeVolumes: Volume[];
-  linodeVolumesError?: APIError[];
   backupsEnabled: boolean;
   readOnly: boolean;
 }
@@ -166,8 +162,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeTags: linode.tags,
   linodeId: linode.id,
   backupsEnabled: linode.backups.enabled,
-  linodeVolumes: linode._volumes,
-  linodeVolumesError: linode._volumesError,
   readOnly: linode._permissions === 'read_only',
   mostRecentBackup: linode.backups.last_successful,
 }));

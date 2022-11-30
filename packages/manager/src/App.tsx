@@ -33,6 +33,7 @@ import MainContent from './MainContent';
 import GoTo from './GoTo';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
+import { volumeEventsHandler } from './queries/volumes';
 
 interface Props {
   toggleTheme: () => void;
@@ -117,6 +118,13 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('domain') && !event._initial)
       .subscribe(domainEventsHandler);
+
+    /*
+     * Send any Volume events to the Volume events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('volume') && !event._initial)
+      .subscribe(volumeEventsHandler);
 
     /*
      * We want to listen for migration events side-wide

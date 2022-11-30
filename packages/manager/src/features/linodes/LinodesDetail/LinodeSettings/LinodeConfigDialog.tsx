@@ -6,7 +6,6 @@ import {
   LinodeConfigCreationData,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { useFormik } from 'formik';
 import { equals, pathOr, repeat } from 'ramda';
 import * as React from 'react';
@@ -37,13 +36,13 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import DeviceSelection, {
   ExtendedDisk,
-  ExtendedVolume,
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
 import { titlecase } from 'src/features/linodes/presentation';
 import { useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings,
@@ -343,6 +342,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
     const handleSuccess = () => {
       formik.setSubmitting(false);
+      queryClient.invalidateQueries(['linode', 'configs', props.linodeId]);
       // If there's any chance a VLAN changed here, make sure our query data is up to date
       if (
         configData.interfaces?.some(
@@ -457,9 +457,38 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
 
   const generalError = formik.status?.generalError;
 
+  // We need the API to allow us to filter on `linode_id`
+  // const { data: volumes } = useAllVolumesQuery(
+  //   {},
+  //   {
+  //     '+or': [
+  //       { linode_id: props.linodeId },
+  //       { linode_id: null, region: linodeRegion },
+  //     ],
+  //   },
+  //   open
+  // );
+
+  const { data: volumesData } = useAllVolumesQuery(
+    {},
+    { region: linodeRegion },
+    open
+  );
+
+  const volumes =
+    volumesData?.filter((volume) => {
+      const isAttachedToLinode = volume.linode_id === props.linodeId;
+      const isUnattached = volume.linode_id === null;
+
+      return isAttachedToLinode || isUnattached;
+    }) ?? [];
+
   const availableDevices = {
     disks: props.disks,
-    volumes: props.volumes,
+    volumes: volumes.map((volume) => ({
+      ...volume,
+      _id: `volume-${volume.id}`,
+    })),
   };
 
   const initrdDisks = availableDevices.disks.filter(
@@ -1063,7 +1092,6 @@ const isUsingCustomRoot = (value: string) =>
 
 interface StateProps {
   disks: ExtendedDisk[];
-  volumes: ExtendedVolume[];
   config?: Config;
   initrdFromConfig: string;
 }
@@ -1090,8 +1118,7 @@ const enhanced = compose<CombinedProps, Props>(
   ),
 
   connect((state: ApplicationState, ownProps: LinodeContextProps & Props) => {
-    const { linodeConfigId, linodeId, linodeRegion } = ownProps;
-    const { itemsById } = state.__resources.volumes;
+    const { linodeConfigId, linodeId } = ownProps;
 
     const config = linodeConfigId
       ? state.__resources.linodeConfigs[linodeId].itemsById[linodeConfigId]
@@ -1099,27 +1126,7 @@ const enhanced = compose<CombinedProps, Props>(
 
     const initrdFromConfig = config?.initrd ? String(config.initrd) : '';
 
-    const volumes = Object.values(itemsById).reduce(
-      (result: Volume[], volume: Volume) => {
-        /**
-         * This is a combination of filter and map. Filter out irrelevant volumes, and update
-         * volumes with the special _id property.
-         */
-        const isAttachedToLinode = volume.linode_id === linodeId;
-        const isUnattached = volume.linode_id === null;
-        const isInRegion = volume.region === linodeRegion;
-
-        if (isAttachedToLinode || (isUnattached && isInRegion)) {
-          const extendedVolume = { ...volume, _id: `volume-${volume.id}` };
-
-          return [...result, extendedVolume];
-        }
-
-        return result;
-      },
-      []
-    );
-    return { config, initrdFromConfig, volumes };
+    return { config, initrdFromConfig };
   })
 );
 
