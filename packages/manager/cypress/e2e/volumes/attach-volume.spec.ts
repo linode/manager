@@ -88,8 +88,9 @@ describe('volume attach and detach flows', () => {
           cy.findByText('Select a Linode')
             .click()
             .type(`${linode.label}{enter}`);
+          cy.findByTestId('input-loading').should('not.exist');
           cy.get('[data-qa-buttons="true"]').within(() => {
-            cy.findByText('Save').should('be.visible').click();
+            cy.findByText('Attach').should('be.visible').click();
           });
         });
 

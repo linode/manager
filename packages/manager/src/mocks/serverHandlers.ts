@@ -78,8 +78,8 @@ import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
 
-export const makeResourcePage = (
-  e: any[],
+export const makeResourcePage = <T>(
+  e: T[],
   override: { page: number; pages: number; results?: number } = {
     page: 1,
     pages: 1,
@@ -695,7 +695,7 @@ export const handlers = [
   rest.get('*/account', (req, res, ctx) => {
     const account = accountFactory.build({
       balance: 50,
-      active_since: '2019-11-05',
+      active_since: '2022-11-30',
       active_promotions: promoFactory.buildList(2),
     });
     return res(ctx.json(account));
