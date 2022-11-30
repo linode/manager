@@ -6,7 +6,7 @@ import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { OrderByProps } from 'src/components/OrderBy';
 // eslint-disable-next-line
-export type Handlers = Record<string, Function>;
+export type Handlers = any;
 export type Entity = Linode | Domain | Firewall | Image | Volume; // @todo add more here
 
 export interface HeaderCell {

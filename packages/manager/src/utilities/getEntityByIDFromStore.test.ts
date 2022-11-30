@@ -1,19 +1,10 @@
 import { linode1 as mockLinode } from 'src/__data__/linodes';
-import { volumes as mockVolumes } from 'src/__data__/volumes';
-
-const volume = mockVolumes[0];
 
 const mockState = {
   __resources: {
     linodes: {
       results: 1,
       itemsById: { [mockLinode.id]: mockLinode },
-    },
-    volumes: {
-      items: [volume.id],
-      itemsById: {
-        [volume.id]: volume,
-      },
     },
   },
 };
@@ -41,7 +32,7 @@ describe('getEntityByIDFromStore utility function', () => {
   });
 
   it('should work as a curried function', () => {
-    const getVolume = getEntityByIDFromStore('volume');
-    expect(getVolume(volume.id)).toEqual(volume);
+    const getLinode = getEntityByIDFromStore('linode');
+    expect(getLinode(mockLinode.id)).toEqual(mockLinode);
   });
 });
