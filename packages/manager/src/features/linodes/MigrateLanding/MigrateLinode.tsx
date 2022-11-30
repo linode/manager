@@ -226,7 +226,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         notifications={notifications}
       /> */}
       <CautionNotice
-        linodeVolumes={linode._volumes}
+        linodeId={linodeID}
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
         error={acceptError}

@@ -16,9 +16,6 @@ import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
@@ -28,6 +25,7 @@ import {
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
@@ -117,14 +115,16 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & VolumesRequests & StateProps;
+type CombinedProps = Props & StateProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { onSuccess, createVolume, origin, history, regions } = props;
+  const { onSuccess, origin, history, regions } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+
+  const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
   const [linodeId, setLinodeId] = React.useState<number>(initialValueDefaultId);
 
@@ -446,9 +446,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  withVolumesRequests,
-  connected
-)(CreateVolumeForm);
+const enhanced = compose<CombinedProps, Props>(connected)(CreateVolumeForm);
 
 export default enhanced;

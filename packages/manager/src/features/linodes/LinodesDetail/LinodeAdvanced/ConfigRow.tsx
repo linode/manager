@@ -1,10 +1,11 @@
 import { Config, Disk, Interface } from '@linode/api-v4/lib/linodes';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { API_MAX_PAGE_SIZE } from 'src/constants';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -32,7 +33,6 @@ interface Props {
   linodeMemory: number;
   readOnly: boolean;
   linodeDisks: Disk[];
-  linodeVolumes: Volume[];
   linodeKernel: string;
 }
 
@@ -50,12 +50,17 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
     linodeId,
     linodeDisks,
     linodeKernel,
-    linodeVolumes,
     onBoot,
     onEdit,
     onDelete,
     readOnly,
   } = props;
+
+  const { data: volumes } = useLinodeVolumesQuery(linodeId, {
+    // This is not great, but lets us get all of the volumes for a Linode while keeping the store paginated.
+    // We can safely do this because linodes can't have more than 64 volumes.
+    page_size: API_MAX_PAGE_SIZE,
+  });
 
   const classes = useStyles();
   const interfaces = config?.interfaces ?? [];
@@ -73,7 +78,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
               )?.label ?? `disk-${device.disk_id}`;
           } else if (device?.volume_id) {
             label =
-              linodeVolumes.find(
+              volumes?.data.find(
                 (thisVolume) =>
                   thisVolume.id === config.devices[thisDevice]?.volume_id
               )?.label ?? `volume-${device.volume_id}`;
@@ -89,7 +94,7 @@ export const ConfigRow: React.FC<CombinedProps> = (props) => {
           );
         })
         .filter(Boolean),
-    [linodeVolumes, linodeDisks, classes.interfaceListItem, config.devices]
+    [volumes, linodeDisks, classes.interfaceListItem, config.devices]
   );
 
   const deviceLabels = React.useMemo(

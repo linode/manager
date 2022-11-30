@@ -35,7 +35,10 @@ export const actionMenuItem = {
    */
   findByTitle: (menuItemTitle: string): Cypress.Chainable => {
     return cy
-      .get(`[data-qa-action-menu-item="${menuItemTitle}"]`)
+      .get(`[data-reach-popover][data-reach-menu][data-reach-menu-popover]`)
+      .not('[hidden]')
+      .eq(0)
+      .find(`[data-qa-action-menu-item="${menuItemTitle}"]`)
       .should('be.visible');
   },
 };

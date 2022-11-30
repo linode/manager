@@ -25,11 +25,10 @@ const component = shallow(
 describe('IPAddress', () => {
   it('should render without error and display one IP address if showAll is false', () => {
     component.setProps({ showMore: true, showAll: false });
-    const rendered = component.find('[data-qa-ip-main]');
-    const ipText = rendered.text();
+    const rendered = component.find('[data-qa-copy-ip-text]');
 
     expect(rendered).toHaveLength(1);
-    expect(ipText).toContain('8.8.8.8');
+    expect(rendered.prop('text')).toEqual('8.8.8.8');
   });
 
   it('should not display ShowMore button unless the showMore prop is true', () => {

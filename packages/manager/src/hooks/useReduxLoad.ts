@@ -15,7 +15,6 @@ import { getAllLongviewClients } from 'src/store/longview/longview.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { getAllVlans } from 'src/store/vlans/vlans.requests';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -23,7 +22,6 @@ interface UseReduxPreload {
 
 export type ReduxEntity =
   | 'linodes'
-  | 'volumes'
   | 'images'
   | 'kubernetes'
   | 'nodeBalancers'
@@ -38,7 +36,6 @@ type RequestMap = Record<ReduxEntity, any>;
 
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
-  volumes: getAllVolumes,
   nodeBalancers: getAllNodeBalancers,
   images: requestImages,
   events: getEvents,

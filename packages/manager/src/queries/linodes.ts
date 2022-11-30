@@ -14,6 +14,8 @@ import {
   getLinodeStats,
   getLinode,
   getLinodeLishToken,
+  getLinodeConfigs,
+  Config,
 } from '@linode/api-v4/lib/linodes';
 
 export const STATS_NOT_READY_API_MESSAGE =
@@ -123,8 +125,18 @@ export const useLinodeTransferByDate = (
   );
 };
 
-export const useLinodeQuery = (id: number) => {
-  return useQuery<Linode, APIError[]>([queryKey, id], () => getLinode(id));
+export const useLinodeQuery = (id: number, enabled = true) => {
+  return useQuery<Linode, APIError[]>([queryKey, id], () => getLinode(id), {
+    enabled,
+  });
+};
+
+export const useAllLinodeConfigsQuery = (id: number, enabled = true) => {
+  return useQuery<Config[], APIError[]>(
+    [queryKey, 'configs', id],
+    () => getAllLinodeConfigs(id),
+    { enabled }
+  );
 };
 
 export const useLinodeLishTokenQuery = (id: number) => {
@@ -146,3 +158,8 @@ const getLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
     linodes: listToItemsByID(data.data),
     results: data.results,
   }));
+
+const getAllLinodeConfigs = (id: number) =>
+  getAll<Config>((params, filter) =>
+    getLinodeConfigs(id, params, filter)
+  )().then((data) => data.data);

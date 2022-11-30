@@ -5,7 +5,6 @@ import { MockData, mockDataController } from 'src/dev-tools/mockDataController';
 import store, { ApplicationState } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
 import { handlers, mockDataHandlers } from './serverHandlers';
 
 let worker: SetupWorkerApi;
@@ -36,9 +35,6 @@ const requestEntities = (mockData: MockData, reduxState: ApplicationState) => {
   }
   if (mockData.nodeBalancer && !reduxState.__resources.nodeBalancers.loading) {
     store.dispatch(getAllNodeBalancers() as any);
-  }
-  if (mockData.volume && !reduxState.__resources.volumes.loading) {
-    store.dispatch(getAllVolumes() as any);
   }
 };
 
