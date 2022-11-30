@@ -1,3 +1,8 @@
+## [2022-11-30] - v0.83.0
+
+### Changed:
+- Updated Volume interface to include linode_label; updated VolumeStatus type to include ‘migrating’
+
 ## [2022-11-14] - v0.82.0
 
 ### Added:
