@@ -334,3 +334,8 @@ export const HIGH_AVAILABILITY_PRICE =
     : Number(process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
 
 export const DB_ROOT_USERNAME = 'linroot';
+
+// "In an effort to fight spam, Linode restricts outbound connections on ports 25, 465, and 587 on all Linodes for new accounts created after November 5th, 2019."
+// https://www.linode.com/docs/email/best-practices/running-a-mail-server/
+export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
+  '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.

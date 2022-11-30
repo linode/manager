@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { accountCreatedAfterRestrictions } from './SMTPRestrictionText';
 import SMTPRestrictionText, { Props } from './SMTPRestrictionText';
+import { MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED } from 'src/constants';
 import { accountFactory } from 'src/factories/account';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 const defaultChildren = (props: { text: React.ReactNode }) => (
   <span>{props.text}</span>
 );
-const MAGIC_IMPLEMENTATION_DATE = '2022-11-29 00:00:00Z';
 
-let mockActiveSince = MAGIC_IMPLEMENTATION_DATE;
+let mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
 jest.mock('../../queries/account', () => {
   return {
@@ -34,17 +34,19 @@ describe('accountCreatedAfterRestrictions', () => {
 
   it('only returns true when the account was created after the magic date', () => {
     expect(accountCreatedAfterRestrictions('2022-11-27 00:00:00Z')).toBe(false);
-    expect(accountCreatedAfterRestrictions('2022-11-28 23:59:59Z')).toBe(false);
-    expect(accountCreatedAfterRestrictions(MAGIC_IMPLEMENTATION_DATE)).toBe(
-      true
-    );
-    expect(accountCreatedAfterRestrictions('2022-11-29 00:00:01Z')).toBe(true);
+    expect(accountCreatedAfterRestrictions('2022-11-29 23:59:59Z')).toBe(false);
+    expect(
+      accountCreatedAfterRestrictions(
+        MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED
+      )
+    ).toBe(true);
+    expect(accountCreatedAfterRestrictions('2022-11-30 00:00:01Z')).toBe(true);
   });
 });
 
 describe('SMTPRestrictionText component', () => {
   it('should render when user account is created on or after the magic date', () => {
-    mockActiveSince = MAGIC_IMPLEMENTATION_DATE;
+    mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText supportLink {...props} />
@@ -72,7 +74,7 @@ describe('SMTPRestrictionText component', () => {
   });
 
   it('should default to not including a link to open a support ticket', () => {
-    mockActiveSince = MAGIC_IMPLEMENTATION_DATE;
+    mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
     const { getByText } = renderWithTheme(<SMTPRestrictionText {...props} />);
 
@@ -82,7 +84,7 @@ describe('SMTPRestrictionText component', () => {
   });
 
   it('should include a link to open a support ticket when the prop is provided', () => {
-    mockActiveSince = MAGIC_IMPLEMENTATION_DATE;
+    mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
     const { getByText } = renderWithTheme(
       <SMTPRestrictionText supportLink {...props} />

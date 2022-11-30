@@ -695,7 +695,7 @@ export const handlers = [
   rest.get('*/account', (req, res, ctx) => {
     const account = accountFactory.build({
       balance: 50,
-      active_since: '2022-11-28',
+      active_since: '2022-11-30',
       active_promotions: promoFactory.buildList(2),
     });
     return res(ctx.json(account));
