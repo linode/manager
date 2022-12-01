@@ -1,4 +1,5 @@
-import { defineConfig } from 'cypress'
+/* eslint-disable no-console */
+import { defineConfig } from 'cypress';
 import { resolve } from 'path';
 import * as dotenv from 'dotenv';
 
@@ -17,13 +18,17 @@ const loadConfiguration = () => {
   });
 
   if (conf.error) {
-    console.warn(`Error loading environment variables from .env file: ${conf.error}`);
-    console.warn('.env file will be ignored, but Cypress will use system environment variables that are defined');
+    console.warn(
+      `Error loading environment variables from .env file: ${conf.error}`
+    );
+    console.warn(
+      '.env file will be ignored, but Cypress will use system environment variables that are defined'
+    );
   }
 
   return {
     env: {
-      ...conf.parsed ?? [],
+      ...(conf.parsed ?? []),
       ...process.env,
     },
   };
@@ -40,7 +45,9 @@ const nodeVersionCheck = () => {
     .map((versionComponentString) => parseInt(versionComponentString, 10));
 
   if (!recommendedVersions.includes(currentVersion[0])) {
-    console.warn(`You are running Node v${versionString}. We recommend the following versions of Node for these tests:`);
+    console.warn(
+      `You are running Node v${versionString}. We recommend the following versions of Node for these tests:`
+    );
     recommendedVersions.forEach((recommendedVersion) => {
       console.warn(`  - v${recommendedVersion}.x`);
     });

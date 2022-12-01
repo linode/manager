@@ -14,19 +14,16 @@ import Dialog from 'src/components/Dialog';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
-import withVolumes from 'src/containers/volumes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import usePrevious from 'src/hooks/usePrevious';
+import { useAllVolumesQuery } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings,
 } from 'src/utilities/createDevicesFromStrings';
 import LinodePermissionsError from '../LinodePermissionsError';
-import DeviceSelection, {
-  ExtendedDisk,
-  ExtendedVolume,
-} from './DeviceSelection';
+import DeviceSelection, { ExtendedDisk } from './DeviceSelection';
 import RescueDescription from './RescueDescription';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,19 +43,13 @@ interface StateProps {
   diskError?: APIError[];
 }
 
-interface VolumesProps {
-  volumesData: ExtendedVolume[];
-  volumesError?: string;
-  volumesLastUpdated: number;
-}
-
 interface Props {
   linodeId: number;
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props & VolumesProps & StateProps & RouteComponentProps;
+type CombinedProps = Props & StateProps & RouteComponentProps;
 interface DeviceMap {
   sda?: string;
   sdb?: string;
@@ -100,14 +91,7 @@ export const getDefaultDeviceMapAndCounter = (
 };
 
 const LinodeRescue: React.FC<CombinedProps> = (props) => {
-  const {
-    diskError,
-    volumesData,
-    volumesError,
-    open,
-    onClose,
-    linodeId,
-  } = props;
+  const { diskError, open, onClose, linodeId } = props;
 
   const classes = useStyles();
 
@@ -117,22 +101,34 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
   const linodeDisks = linode?._disks.map((disk) =>
     assoc('_id', `disk-${disk.id}`, disk)
   );
-  const filteredVolumes = React.useMemo(() => {
-    return volumesData
-      ? volumesData.filter((volume) => {
-          // whether volume is not attached to any Linode
-          const volumeIsUnattached = volume.linode_id === null;
-          // whether volume is attached to the current Linode we're viewing
-          const volumeIsAttachedToCurrentLinode = volume.linode_id === linodeId;
-          // whether volume is in the same region as the current Linode we're viewing
-          const volumeAndLinodeRegionMatch = linodeRegion === volume.region;
-          return (
-            (volumeIsAttachedToCurrentLinode || volumeIsUnattached) &&
-            volumeAndLinodeRegionMatch
-          );
-        })
-      : [];
-  }, [volumesData, linodeId, linodeRegion]);
+
+  // We need the API to allow us to filter on `linode_id`
+  // const { data: volumes } = useAllVolumesQuery(
+  //   {},
+  //   {
+  //     '+or': [
+  //       { linode_id: props.linodeId },
+  //       { linode_id: null, region: linodeRegion },
+  //     ],
+  //   },
+  //   open
+  // );
+
+  const { data: volumes, error: volumesError } = useAllVolumesQuery(
+    {},
+    { region: linodeRegion },
+    open
+  );
+
+  const filteredVolumes =
+    volumes?.filter((volume) => {
+      // whether volume is not attached to any Linode
+      const volumeIsUnattached = volume.linode_id === null;
+      // whether volume is attached to the current Linode we're viewing
+      const volumeIsAttachedToCurrentLinode = volume.linode_id === linodeId;
+
+      return volumeIsAttachedToCurrentLinode || volumeIsUnattached;
+    }) ?? [];
 
   const [deviceMap, initialCounter] = getDefaultDeviceMapAndCounter(
     linodeDisks ?? []
@@ -159,7 +155,11 @@ const LinodeRescue: React.FC<CombinedProps> = (props) => {
 
   const devices = {
     disks: linodeDisks ?? [],
-    volumes: filteredVolumes ?? [],
+    volumes:
+      filteredVolumes.map((volume) => ({
+        ...volume,
+        _id: `volume-${volume.id}`,
+      })) ?? [],
   };
 
   const unauthorized = linode?._permissions === 'read_only';
@@ -263,29 +263,5 @@ const connected = connect(mapStateToProps);
 export default compose<CombinedProps, Props>(
   React.memo,
   SectionErrorBoundary,
-  withVolumes(
-    (
-      ownProps,
-      volumesData,
-      volumesLoading,
-      volumesLastUpdated,
-      volumesResults,
-      volumesError
-    ) => {
-      const mappedData = volumesData.map((volume) => ({
-        ...volume,
-        _id: `volume-${volume.id}`,
-      }));
-      const _error = volumesError?.read
-        ? volumesError.read[0]?.reason
-        : undefined;
-      return {
-        ...ownProps,
-        volumesData: mappedData,
-        volumesError: _error,
-        volumesLastUpdated,
-      };
-    }
-  ),
   connected
 )(LinodeRescue);
