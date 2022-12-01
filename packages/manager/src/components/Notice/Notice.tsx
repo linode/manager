@@ -137,7 +137,7 @@ interface Props extends GridProps {
   className?: string;
   flag?: boolean;
   notificationList?: boolean;
-  spacingTop?: 0 | 4 | 8 | 12 | 16 | 24;
+  spacingTop?: 0 | 4 | 8 | 12 | 16 | 24 | 32;
   spacingBottom?: 0 | 4 | 8 | 12 | 16 | 20 | 24 | 32;
   spacingLeft?: number;
   breakWords?: boolean;

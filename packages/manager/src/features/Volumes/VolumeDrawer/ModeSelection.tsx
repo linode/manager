@@ -2,38 +2,23 @@ import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles } from 'src/components/core/styles';
 
-type ClassNames = 'root' | 'label';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    label: {
-      '& span': {
-        fontSize: '1rem',
-      },
+const useStyles = makeStyles({
+  label: {
+    '& span': {
+      fontSize: '1rem',
     },
-  });
+  },
+});
 
 interface Props {
   mode: string;
   onChange: () => void;
-  classes: any;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const DrawerModeSelection: React.FC<CombinedProps> = ({
-  mode,
-  onChange,
-  classes,
-}) => {
+export const ModeSelection = ({ mode, onChange }: Props) => {
+  const classes = useStyles();
   return (
     <RadioGroup
       aria-label="mode"
@@ -59,7 +44,3 @@ const DrawerModeSelection: React.FC<CombinedProps> = ({
     </RadioGroup>
   );
 };
-
-const styled = withStyles(styles);
-
-export default styled(DrawerModeSelection);

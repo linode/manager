@@ -3,7 +3,6 @@ import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Button, { ButtonProps } from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,6 +22,26 @@ const useStyles = makeStyles((theme: Theme) => ({
       opacity: 1,
     },
   },
+  container: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
+    gridTemplateRows:
+      'max-content 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
+    gridTemplateAreas: `
+      ". . . . . icon icon . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . title title . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . subtitle subtitle . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . copy copy . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . button button . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . links links links links links links . . ."
+    `,
+    justifyItems: 'center',
+  },
   root: {
     padding: `${theme.spacing(2)} 0`,
     [theme.breakpoints.up('md')]: {
@@ -31,16 +50,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     textAlign: 'center',
-    maxWidth: '85%',
-    marginTop: `-${theme.spacing(3)}`,
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 800,
+    gridArea: 'copy',
+    minWidth: 'min-content',
+    maxWidth: '75%',
+    [theme.breakpoints.down('md')]: {
+      maxWidth: 'none',
     },
   },
   icon: {
-    padding: theme.spacing(2),
     width: '160px',
     height: '160px',
+    padding: theme.spacing(2),
     '& .outerCircle': {
       fill: theme.name === 'lightTheme' ? '#fff' : '#000',
       stroke: theme.bg.offWhite,
@@ -66,7 +86,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   title: {
     textAlign: 'center',
-    marginBottom: theme.spacing(2),
+    gridArea: 'title',
+  },
+  subtitle: {
+    gridArea: 'subtitle',
+    textAlign: 'center',
+    color: theme.palette.text.primary,
   },
   '& .insidePath path': {
     opacity: 0,
@@ -76,15 +101,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   '& .bucket.insidePath path': {
     fill: theme.palette.primary.main,
   },
-  titleWithSubtitle: {
-    textAlign: 'center',
-    '& + h2': {
-      marginBottom: theme.spacing(2),
-      color: theme.palette.text.primary,
+  button: {
+    gridArea: 'button',
+    display: 'flex',
+    gap: theme.spacing(2),
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
     },
   },
-  button: {
-    marginBottom: theme.spacing(4),
+  linksSection: {
+    gridArea: 'links',
+    borderTop: `1px solid ${
+      theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'
+    }`,
+    paddingTop: '38px',
+  },
+  iconWrapper: {
+    gridArea: 'icon',
+    padding: theme.spacing(2),
   },
 }));
 
@@ -116,60 +150,49 @@ const Placeholder: React.FC<Props> = (props) => {
   } = props;
   const classes = useStyles();
   const hasSubtitle = subtitle !== undefined;
-  const titleClassName = hasSubtitle
-    ? classes.titleWithSubtitle
-    : classes.title;
   return (
-    <Grid
-      container
-      spacing={3}
-      alignItems="center"
-      direction="column"
-      justifyContent="center"
-      className={`${classes.root} ${props.className}`}
-    >
-      <Grid item xs={12} className={isEntity ? classes.entity : ''}>
+    <div className={`${classes.container} ${classes.root} ${props.className}`}>
+      <div
+        className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}
+      >
         {Icon && <Icon className={classes.icon} />}
-      </Grid>
-      <Grid item xs={12}>
-        <H1Header
-          title={title}
-          className={titleClassName}
-          renderAsSecondary={renderAsSecondary}
-          data-qa-placeholder-title
-        />
-        {hasSubtitle ? <Typography variant="h2">{subtitle}</Typography> : null}
-      </Grid>
-      <Grid item xs={12} lg={10} className={classes.copy}>
+      </div>
+
+      <H1Header
+        title={title}
+        className={classes.title}
+        renderAsSecondary={renderAsSecondary}
+        data-qa-placeholder-title
+      />
+      {hasSubtitle ? (
+        <Typography variant="h2" className={classes.subtitle}>
+          {subtitle}
+        </Typography>
+      ) : null}
+
+      <div className={classes.copy}>
         {typeof props.children === 'string' ? (
           <Typography variant="subtitle1">{props.children}</Typography>
         ) : (
           props.children
         )}
-      </Grid>
-      {buttonProps && (
-        <Grid
-          container
-          item
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {buttonProps.map((thisButton, index) => (
-            <Grid item key={`placeholder-button-${index}`}>
-              <Button
-                buttonType="primary"
-                className={classes.button}
-                {...thisButton}
-                data-qa-placeholder-button
-                data-testid="placeholder-button"
-              />
-            </Grid>
+      </div>
+      <div className={classes.button}>
+        {buttonProps &&
+          buttonProps.map((thisButton, index) => (
+            <Button
+              buttonType="primary"
+              {...thisButton}
+              data-qa-placeholder-button
+              data-testid="placeholder-button"
+              key={index}
+            />
           ))}
-        </Grid>
-      )}
-      {linksSection !== undefined ? linksSection : null}
-    </Grid>
+      </div>
+      <div className={classes.linksSection}>
+        {linksSection !== undefined ? linksSection : null}
+      </div>
+    </div>
   );
 };
 

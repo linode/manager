@@ -1,4 +1,3 @@
-import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { ExtendedVolume } from './types';
 import VolumeTableRow from './VolumeTableRow';
@@ -27,7 +26,7 @@ export interface RenderVolumeDataProps {
     volumeId: number,
     volumeLabel: string,
     linodeLabel: string,
-    poweredOff: boolean
+    linodeId: number
   ) => void;
   handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
@@ -39,7 +38,6 @@ const RenderData: React.FC<
 > = (props) => {
   const {
     data,
-    isVolumesLanding,
     handleAttach,
     handleDelete,
     handleDetach,
@@ -55,7 +53,6 @@ const RenderData: React.FC<
       {data.map((volume, idx: number) => (
         <VolumeTableRow
           key={`volume-table-row-${idx}`}
-          volume={volume}
           id={volume.id}
           label={volume.label}
           region={volume.region}
@@ -67,8 +64,7 @@ const RenderData: React.FC<
           filesystem_path={volume.filesystem_path}
           hardware_type={volume.hardware_type}
           linode_id={volume.linode_id}
-          isVolumesLanding={isVolumesLanding}
-          isUpdating={isVolumeUpdating(volume.recentEvent)}
+          linode_label={volume.linode_label}
           handleAttach={handleAttach}
           handleDelete={handleDelete}
           handleDetach={handleDetach}
@@ -81,17 +77,4 @@ const RenderData: React.FC<
     </>
   );
 };
-
-export const isVolumeUpdating = (e?: Event) => {
-  // Make Typescript happy, since this function can otherwise technically return undefined
-  if (!e) {
-    return false;
-  }
-  return (
-    e &&
-    ['volume_attach', 'volume_detach', 'volume_create'].includes(e.action) &&
-    ['scheduled', 'started'].includes(e.status)
-  );
-};
-
 export default RenderData;

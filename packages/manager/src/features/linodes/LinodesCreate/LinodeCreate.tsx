@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
 import * as React from 'react';
@@ -66,6 +67,7 @@ import {
   WithTypesRegionsAndImages,
 } from './types';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
@@ -77,7 +79,8 @@ type ClassNames =
   | 'stackScriptWrapper'
   | 'imageSelect'
   | 'buttonGroup'
-  | 'agreement'
+  | 'messageGroup'
+  | 'messageGroupMaxWidth'
   | 'createButton';
 
 const styles = (theme: Theme) =>
@@ -102,7 +105,16 @@ const styles = (theme: Theme) =>
         justifyContent: 'flex-end',
       },
     },
-    agreement: {
+    messageGroup: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(2),
+      flexGrow: 1,
+      [theme.breakpoints.down('sm')]: {
+        margin: theme.spacing(1),
+      },
+    },
+    messageGroupMaxWidth: {
       maxWidth: '70%',
       [theme.breakpoints.down('sm')]: {
         maxWidth: 'unset',
@@ -699,14 +711,27 @@ export class LinodeCreate extends React.PureComponent<
             flexWrap="wrap"
             className={classes.buttonGroup}
           >
-            {showAgreement ? (
-              <EUAgreementCheckbox
-                checked={signedAgreement}
-                onChange={handleAgreementChange}
-                className={classes.agreement}
-                centerCheckbox
-              />
-            ) : null}
+            <div
+              className={classNames({
+                [classes.messageGroup]: true,
+                [classes.messageGroupMaxWidth]: !!showAgreement,
+              })}
+            >
+              <SMTPRestrictionText>
+                {({ text }) => (
+                  <Grid item xs={12}>
+                    {text}
+                  </Grid>
+                )}
+              </SMTPRestrictionText>
+              {showAgreement ? (
+                <EUAgreementCheckbox
+                  checked={signedAgreement}
+                  onChange={handleAgreementChange}
+                  centerCheckbox
+                />
+              ) : null}
+            </div>
             <Button
               data-qa-deploy-linode
               buttonType="primary"

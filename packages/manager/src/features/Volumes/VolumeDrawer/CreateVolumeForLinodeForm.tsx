@@ -8,21 +8,14 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import Form from 'src/components/core/Form';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-import withVolumesRequests, {
-  VolumesRequests,
-} from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { useGrants, useProfile } from 'src/queries/profile';
+import { useCreateVolumeMutation } from 'src/queries/volumes';
 import { MapState } from 'src/store/types';
 import {
   openForAttaching,
@@ -39,20 +32,17 @@ import { array, object, string } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
-import ModeSelection from './ModeSelection';
+import { ModeSelection } from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
-type ClassNames = 'root' | 'textWrapper';
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    textWrapper: {
-      marginBottom: theme.spacing(1.25),
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  textWrapper: {
+    marginBottom: theme.spacing(1.25),
+  },
+}));
 
 interface Props {
   onClose: () => void;
@@ -66,13 +56,10 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props &
-  StateProps &
-  VolumesRequests &
-  DispatchProps &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & DispatchProps;
 
 const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
+  const classes = useStyles();
   const {
     onClose,
     onSuccess,
@@ -80,12 +67,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
     linodeLabel,
     linodeRegion,
     actions,
-    createVolume,
     origin,
   } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+  const { mutateAsync: createVolume } = useCreateVolumeMutation();
 
   const disabled = profile?.restricted && !hasGrant('add_volumes', grants);
 
@@ -188,14 +175,12 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
             )}
             <ModeSelection
               mode={modes.CREATING_FOR_LINODE}
-              onChange={() => {
-                actions.switchToAttaching();
-              }}
+              onChange={actions.switchToAttaching}
             />
 
             <Typography
               variant="body1"
-              className={props.classes.textWrapper}
+              className={classes.textWrapper}
               data-qa-volume-attach-help
               style={{ marginTop: 24 }}
             >
@@ -204,7 +189,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
 
             <Typography
               variant="body1"
-              className={props.classes.textWrapper}
+              className={classes.textWrapper}
               data-qa-volume-size-help
             >
               A single Volume can range from 10 to {MAX_VOLUME_SIZE} gigabytes
@@ -295,8 +280,6 @@ const initialValues: FormState = {
   tags: [],
 };
 
-const styled = withStyles(styles);
-
 interface DispatchProps {
   actions: {
     switchToAttaching: () => void;
@@ -329,10 +312,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (state) => ({
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  connected,
-  withVolumesRequests
-)(CreateVolumeForm);
+const enhanced = compose<CombinedProps, Props>(connected)(CreateVolumeForm);
 
 export default enhanced;

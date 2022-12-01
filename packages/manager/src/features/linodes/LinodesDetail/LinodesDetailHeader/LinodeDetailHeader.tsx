@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
@@ -18,10 +17,8 @@ import { DialogType } from 'src/features/linodes/types';
 import { notificationContext as _notificationContext } from 'src/features/NotificationCenter/NotificationContext';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useNotifications from 'src/hooks/useNotifications';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import useVolumes from 'src/hooks/useVolumes';
 import { useProfile } from 'src/queries/profile';
-import { getVolumesForLinode } from 'src/store/volume/volume.selector';
+import { useLinodeVolumesQuery } from 'src/queries/volumes';
 import { parseQueryParams } from 'src/utilities/queryParams';
 import DeleteDialog from '../../LinodesLanding/DeleteDialog';
 import MigrateLinode from '../../MigrateLanding/MigrateLinode';
@@ -268,20 +265,12 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
     });
   };
+
   const { data: profile } = useProfile();
-  const { _loading } = useReduxLoad(['volumes']);
-  const { volumes } = useVolumes();
+  const { data: volumesData } = useLinodeVolumesQuery(matchedLinodeId);
 
-  if (!profile?.username) {
-    return null;
-  }
-
-  if (_loading) {
-    return <CircleProgress />;
-  }
-
-  const volumesForLinode = getVolumesForLinode(volumes.itemsById, linode.id);
-  const numAttachedVolumes = volumesForLinode.length;
+  const volumesForLinode = volumesData?.data ?? [];
+  const numAttachedVolumes = volumesData?.results ?? 0;
 
   const handleDeleteLinode = (linodeId: number) => {
     history.push('/linodes');
@@ -301,114 +290,116 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
 
   const numUpgradeableVolumes = upgradeableVolumeIds.length;
 
-  return <>
-    <HostMaintenance linodeStatus={linodeStatus} />
-    <MutationNotification disks={linodeDisks} />
-    <Notifications />
-    {numUpgradeableVolumes > 0 ? (
-      <DismissibleBanner
-        preferenceKey="upgradable-volumes-attached"
-        productInformationIndicator
-      >
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
+  return (
+    <>
+      <HostMaintenance linodeStatus={linodeStatus} />
+      <MutationNotification disks={linodeDisks} />
+      <Notifications />
+      {numUpgradeableVolumes > 0 ? (
+        <DismissibleBanner
+          preferenceKey="upgradable-volumes-attached"
+          productInformationIndicator
         >
-          <Grid item>
-            <Typography>
-              {numUpgradeableVolumes === 1
-                ? 'A Volume attached to this Linode is '
-                : 'Volumes attached to this Linode are '}
-              eligible for a <b>free upgrade</b> to Linode&rsquo;s
-              high-performance NVMe Block Storage.{' '}
-              <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
-                Learn more
-              </Link>
-              .
-            </Typography>
+          <Grid
+            container
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Grid item>
+              <Typography>
+                {numUpgradeableVolumes === 1
+                  ? 'A Volume attached to this Linode is '
+                  : 'Volumes attached to this Linode are '}
+                eligible for a <b>free upgrade</b> to Linode&rsquo;s
+                high-performance NVMe Block Storage.{' '}
+                <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
+                  Learn more
+                </Link>
+                .
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                buttonType="primary"
+                onClick={() => openDialog('upgrade_volumes', linode.id)}
+              >
+                Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              buttonType="primary"
-              onClick={() => openDialog('upgrade_volumes', linode.id)}
-            >
-              Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
-            </Button>
-          </Grid>
-        </Grid>
-      </DismissibleBanner>
-    ) : null}
-    <LinodeDetailsBreadcrumb />
-    <LinodeEntityDetail
-      variant="details"
-      id={linode.id}
-      linode={linode}
-      numVolumes={numAttachedVolumes}
-      username={profile?.username}
-      linodeConfigs={linodeConfigs}
-      backups={linode.backups}
-      openTagDrawer={openTagDrawer}
-      openDialog={openDialog}
-      openPowerActionDialog={openPowerActionDialog}
-      openNotificationMenu={notificationContext.openMenu}
-    />
-    <PowerDialogOrDrawer
-      isOpen={powerDialog.open}
-      action={powerDialog.bootAction}
-      linodeID={powerDialog.linodeID}
-      linodeLabel={powerDialog.linodeLabel}
-      close={closeDialogs}
-      linodeConfigs={powerDialog.linodeConfigs}
-    />
-    <DeleteDialog
-      open={deleteDialog.open}
-      onClose={closeDialogs}
-      linodeID={deleteDialog.linodeID}
-      linodeLabel={deleteDialog.linodeLabel}
-      handleDelete={handleDeleteLinode}
-    />
-    <LinodeResize
-      open={resizeDialog.open}
-      onClose={closeDialogs}
-      linodeId={resizeDialog.linodeID}
-    />
-    <LinodeRebuildDialog
-      open={rebuildDialog.open}
-      onClose={closeDialogs}
-      linodeId={rebuildDialog.linodeID}
-    />
-    <RescueDialog
-      open={rescueDialog.open}
-      onClose={closeDialogs}
-      linodeId={rescueDialog.linodeID}
-    />
-    <MigrateLinode
-      open={migrateDialog.open}
-      onClose={closeDialogs}
-      linodeID={migrateDialog.linodeID}
-    />
-    <TagDrawer
-      entityLabel={linode.label}
-      open={tagDrawer.open}
-      tags={tagDrawer.tags}
-      addTag={(newTag: string) => addTag(linode.id, newTag)}
-      deleteTag={(tag: string) => deleteTag(linode.id, tag)}
-      onClose={closeTagDrawer}
-    />
-    <EnableBackupDialog
-      linodeId={backupsDialog.linodeID}
-      open={backupsDialog.open}
-      onClose={closeDialogs}
-    />
-    <UpgradeVolumesDialog
-      open={upgradeVolumesDialog.open}
-      linode={linode}
-      upgradeableVolumeIds={upgradeableVolumeIds}
-      onClose={closeDialogs}
-    />
-  </>;
+        </DismissibleBanner>
+      ) : null}
+      <LinodeDetailsBreadcrumb />
+      <LinodeEntityDetail
+        variant="details"
+        id={linode.id}
+        linode={linode}
+        numVolumes={numAttachedVolumes}
+        username={profile?.username}
+        linodeConfigs={linodeConfigs}
+        backups={linode.backups}
+        openTagDrawer={openTagDrawer}
+        openDialog={openDialog}
+        openPowerActionDialog={openPowerActionDialog}
+        openNotificationMenu={notificationContext.openMenu}
+      />
+      <PowerDialogOrDrawer
+        isOpen={powerDialog.open}
+        action={powerDialog.bootAction}
+        linodeID={powerDialog.linodeID}
+        linodeLabel={powerDialog.linodeLabel}
+        close={closeDialogs}
+        linodeConfigs={powerDialog.linodeConfigs}
+      />
+      <DeleteDialog
+        open={deleteDialog.open}
+        onClose={closeDialogs}
+        linodeID={deleteDialog.linodeID}
+        linodeLabel={deleteDialog.linodeLabel}
+        handleDelete={handleDeleteLinode}
+      />
+      <LinodeResize
+        open={resizeDialog.open}
+        onClose={closeDialogs}
+        linodeId={resizeDialog.linodeID}
+      />
+      <LinodeRebuildDialog
+        open={rebuildDialog.open}
+        onClose={closeDialogs}
+        linodeId={rebuildDialog.linodeID}
+      />
+      <RescueDialog
+        open={rescueDialog.open}
+        onClose={closeDialogs}
+        linodeId={rescueDialog.linodeID}
+      />
+      <MigrateLinode
+        open={migrateDialog.open}
+        onClose={closeDialogs}
+        linodeID={migrateDialog.linodeID}
+      />
+      <TagDrawer
+        entityLabel={linode.label}
+        open={tagDrawer.open}
+        tags={tagDrawer.tags}
+        addTag={(newTag: string) => addTag(linode.id, newTag)}
+        deleteTag={(tag: string) => deleteTag(linode.id, tag)}
+        onClose={closeTagDrawer}
+      />
+      <EnableBackupDialog
+        linodeId={backupsDialog.linodeID}
+        open={backupsDialog.open}
+        onClose={closeDialogs}
+      />
+      <UpgradeVolumesDialog
+        open={upgradeVolumesDialog.open}
+        linode={linode}
+        upgradeableVolumeIds={upgradeableVolumeIds}
+        onClose={closeDialogs}
+      />
+    </>
+  );
 };
 
 interface LinodeContext {

@@ -6,7 +6,6 @@ import {
   linodeReboot,
 } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -490,7 +489,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                               onEdit={this.openForEditing}
                               onDelete={this.confirmDelete}
                               readOnly={readOnly}
-                              linodeVolumes={this.props.linodeVolumes}
                             />
                           );
                         })}
@@ -530,7 +528,6 @@ interface LinodeContext {
   configs: Config[];
   getLinodeConfigs: () => void;
   linodeDisks: Disk[];
-  linodeVolumes: Volume[];
 }
 
 const linodeContext = withLinodeDetailContext<LinodeContext>(
@@ -547,7 +544,6 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     configs: linode._configs,
     getLinodeConfigs,
     linodeDisks: linode._disks,
-    linodeVolumes: linode._volumes,
   })
 );
 

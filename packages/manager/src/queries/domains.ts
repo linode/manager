@@ -1,6 +1,6 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
-import { queryClient } from './base';
+import { doesItemExistInPaginatedStore, queryClient } from './base';
 import { EntityEvent } from '@linode/api-v4';
 import {
   cloneDomain,
@@ -117,22 +117,6 @@ const updatePaginatedDomainsStore = (id: number, newData: Partial<Domain>) => {
 };
 
 // @TODO: make this generic
-const doesDomainExistInPaginatedStore = (id: number) => {
-  const stores = queryClient.getQueriesData<ResourcePage<Domain> | undefined>(
-    `${queryKey}-list`
-  );
-
-  for (const store of stores) {
-    const data = store[1]?.data;
-    if (data?.some((domain) => domain.id === id)) {
-      return true;
-    }
-  }
-
-  return false;
-};
-
-// @TODO: make this generic
 const doesDomainExistInStore = (id: number) => {
   const data = queryClient.getQueryData<Domain | undefined>([queryKey, id]);
 
@@ -147,12 +131,15 @@ export const domainEventsHandler = (event: EntityEvent) => {
   const { action, entity } = event;
   const { id } = entity;
 
-  if (action === 'domain_create' && !doesDomainExistInPaginatedStore(id)) {
+  if (
+    action === 'domain_create' &&
+    !doesItemExistInPaginatedStore(`${queryKey}-list`, id)
+  ) {
     invalidatePaginatedStore();
   }
 
   if (action === 'domain_delete') {
-    if (doesDomainExistInPaginatedStore(id)) {
+    if (doesItemExistInPaginatedStore(`${queryKey}-list`, id)) {
       invalidatePaginatedStore();
     }
     if (doesDomainExistInStore(id)) {
