@@ -64,6 +64,7 @@ export default defineConfig({
   responseTimeout: 80000,
   retries: 2,
   e2e: {
+    experimentalRunAllSpecs: true,
     baseUrl: 'http://localhost:3000',
     specPattern: 'cypress/e2e/**/*.spec.{ts,tsx}',
     setupNodeEvents(on, config) {
