@@ -5,6 +5,11 @@ import {
   randomPhrase,
   randomItem,
 } from 'support/util/random';
+import {
+  interceptCreateStackScript,
+  interceptGetStackScripts,
+} from 'support/intercepts/stackscripts';
+import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 
 /*
@@ -114,9 +119,7 @@ const fillOutLinodeForm = (label: string, region: string) => {
     .type(label);
 
   cy.findByText('Dedicated CPU').should('be.visible').click();
-
   cy.get('[id="g6-dedicated-2"]').click();
-
   cy.findByLabelText('Root Password').should('be.visible').type(password);
 };
 
@@ -138,6 +141,10 @@ describe('stackscripts', () => {
     const linodeLabel = randomLabel();
     const linodeRegion = randomItem(regionsFriendly);
 
+    interceptCreateStackScript().as('createStackScript');
+    interceptGetStackScripts().as('getStackScripts');
+    interceptCreateLinode().as('createLinode');
+
     cy.visitWithLogin('/stackscripts/create');
 
     // Submit StackScript creation form with invalid contents, confirm error messages.
@@ -154,6 +161,7 @@ describe('stackscripts', () => {
       .should('be.enabled')
       .click();
 
+    cy.wait('@createStackScript');
     cy.findByText(stackScriptErrorNoShebang).should('be.visible');
 
     cy.get('[data-qa-textfield-label="Script"]')
@@ -168,6 +176,7 @@ describe('stackscripts', () => {
       .should('be.enabled')
       .click();
 
+    cy.wait('@createStackScript');
     cy.findByText(stackScriptErrorUdfAlphanumeric).should('be.visible');
 
     // Insert a script with valid UDF data and submit StackScript create form.
@@ -184,7 +193,9 @@ describe('stackscripts', () => {
       .click();
 
     // Confirm the user is redirected to landing page and StackScript is shown.
+    cy.wait('@createStackScript');
     cy.url().should('endWith', '/stackscripts/account');
+    cy.wait('@getStackScripts');
 
     cy.findByText(stackscriptLabel)
       .should('be.visible')
@@ -223,6 +234,7 @@ describe('stackscripts', () => {
       .should('be.enabled')
       .click();
 
+    cy.wait('@createLinode');
     cy.findByText(linodeLabel).should('be.visible');
     cy.findByText('PROVISIONING').should('be.visible');
     cy.findByText('BOOTING').should('be.visible');
