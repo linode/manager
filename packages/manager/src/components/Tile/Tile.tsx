@@ -1,32 +1,13 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, Theme, makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 
-type ClassNames =
-  | 'root'
-  | 'card'
-  | 'clickableTile'
-  | 'icon'
-  | 'tileTitle'
-  | 'buttonTitle';
-
-const styles = (theme: Theme) =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    '@keyframes dash': {
-      to: {
-        'stroke-dashoffset': 0,
-      },
-    },
-    root: {},
     card: {
       display: 'flex',
       flexDirection: 'column',
@@ -96,7 +77,8 @@ const styles = (theme: Theme) =>
         textDecoration: 'underline',
       },
     },
-  });
+  })
+);
 
 type onClickFn = (
   e: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>
@@ -111,12 +93,11 @@ interface Props {
   errorText?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+const Tile = (props: Props) => {
+  const { className, title, description, link, icon, errorText } = props;
+  const classes = useStyles();
 
-class Tile extends React.Component<CombinedProps> {
-  renderLink = () => {
-    const { link, title, classes } = this.props;
-
+  const renderLink = () => {
     if (typeof link === 'function') {
       return (
         <Button
@@ -139,53 +120,37 @@ class Tile extends React.Component<CombinedProps> {
     }
   };
 
-  render() {
-    const {
-      classes,
-      className,
-      title,
-      description,
-      link,
-      icon,
-      errorText,
-    } = this.props;
-
-    return (
-      <div
-        className={classNames(
-          {
-            [classes.card]: true,
-            [classes.clickableTile]: link !== undefined,
-          },
-          className
-        )}
-        data-qa-tile={title}
-        onClick={typeof link === 'function' ? link : undefined}
-        onKeyDown={typeof link === 'function' ? link : undefined}
-        role="link"
-        tabIndex={0}
-      >
-        {icon && (
-          <span className={classes.icon} data-qa-tile-icon>
-            {icon}
-          </span>
-        )}
-        {errorText && <Notice error={true} text={errorText} />}
-        <Typography
-          variant="h3"
-          className={classes.tileTitle}
-          data-qa-tile-title
-        >
-          {link ? this.renderLink() : title}
+  return (
+    <div
+      className={classNames(
+        {
+          [classes.card]: true,
+          [classes.clickableTile]: link !== undefined,
+        },
+        className
+      )}
+      data-qa-tile={title}
+      onClick={typeof link === 'function' ? link : undefined}
+      onKeyDown={typeof link === 'function' ? link : undefined}
+      role="link"
+      tabIndex={0}
+    >
+      {icon && (
+        <span className={classes.icon} data-qa-tile-icon>
+          {icon}
+        </span>
+      )}
+      {errorText && <Notice error={true} text={errorText} />}
+      <Typography variant="h3" className={classes.tileTitle} data-qa-tile-title>
+        {link ? renderLink() : title}
+      </Typography>
+      {description && (
+        <Typography variant="body1" align="center" data-qa-tile-desc>
+          {description}
         </Typography>
-        {description && (
-          <Typography variant="body1" align="center" data-qa-tile-desc>
-            {description}
-          </Typography>
-        )}
-      </div>
-    );
-  }
-}
+      )}
+    </div>
+  );
+};
 
-export default withStyles(styles)(Tile);
+export default Tile;
