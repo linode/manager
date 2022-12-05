@@ -233,7 +233,7 @@ describe('stackscripts', () => {
    * - Creates a StackScript with "Any/All" image.
    * - Confirms that any image can be selected when deploying with "Any/All" StackScript.
    */
-  it('creates a stackscript with Any/All target image', () => {
+  it('creates a StackScript with Any/All target image', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Any/All';
