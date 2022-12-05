@@ -1,4 +1,3 @@
-import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
 import { regionsFriendly } from 'support/constants/regions';
 import {
   randomLabel,
@@ -8,15 +7,12 @@ import {
 } from 'support/util/random';
 import { ui } from 'support/ui';
 
-const createLinode = () => {
-  const password = randomString(32);
-  fbtClick('Select a Region');
-  fbtClick('Newark, NJ');
-  fbtClick('Shared CPU');
-  getClick('[id="g6-nanode-1"]');
-  getClick('[id="root-password"]').type(password);
-  getClick('[data-qa-deploy-linode]');
-};
+/*
+ * Basic StackScript contents.
+ */
+const stackScriptSimple = `#!/bin/bash
+echo "Hello, world!"
+`;
 
 /*
  * StackScript contents that are missing a shebang.
@@ -233,38 +229,78 @@ describe('stackscripts', () => {
     cy.findByText('RUNNING').should('be.visible');
   });
 
-  it.skip('creates a stackscript with Any/All target image', () => {});
+  /*
+   * - Creates a StackScript with "Any/All" image.
+   * - Confirms that any image can be selected when deploying with "Any/All" StackScript.
+   */
+  it('creates a stackscript with Any/All target image', () => {
+    const stackscriptLabel = randomLabel();
+    const stackscriptDesc = randomPhrase();
+    const stackscriptImage = 'Any/All';
 
-  it.skip('create stackscript, use it to deploy linode', () => {
-    const disk = 'Alpine 3.15';
-    cy.intercept('POST', `*/linode/instances`).as('createLinode');
-    const ssLabel = randomLabel();
-    cy.visitWithLogin('/stackscripts');
-    cy.url().should('endWith', '/account');
-    fbtVisible('Create StackScript').click();
-    getClick('[id="stackscript-label"]').type(ssLabel);
-    getClick('[data-qa-multi-select="Select an Image"]').type(
-      `${disk} {enter}`
+    /*
+     * Arbitrarily-chosen images to check in order to confirm that "Any/All"
+     * image selection works as expected.
+     */
+    const imageSamples = [
+      { label: 'AlmaLinux 9', sel: 'linode/almalinux9' },
+      { label: 'Alpine 3.17', sel: 'linode/alpine3.17' },
+      { label: 'Arch Linux', sel: 'linode/arch' },
+      { label: 'CentOS Stream 9', sel: 'linode/centos-stream9' },
+      { label: 'Debian 11', sel: 'linode/debian11' },
+      { label: 'Fedora 37', sel: 'linode/fedora37' },
+      { label: 'Rocky Linux 9', sel: 'linode/rocky9' },
+      { label: 'Ubuntu 22.10', sel: 'linode/ubuntu22.10' },
+    ];
+
+    cy.visitWithLogin('/stackscripts/create');
+
+    // Submit StackScript creation form with invalid UDF, confirm error message appears.
+    fillOutStackscriptForm(
+      stackscriptLabel,
+      stackscriptDesc,
+      stackscriptImage,
+      stackScriptSimple
     );
-    getClick('[data-qa-stackscript-script="true"]').type('#!/bin/bash');
-    getClick('[data-qa-save="true"]');
-    fbtVisible(ssLabel);
-    getVisible(`[data-qa-table-row="${ssLabel}"]`);
-    cy.get(`[aria-label="Action menu for StackScript ${ssLabel}"]`)
-      .invoke('attr', 'aria-controls')
-      .then(($id) => {
-        if ($id) {
-          getClick(`[aria-label="Action menu for StackScript ${ssLabel}"]`);
-        }
-        getClick(
-          `[id="option-1--${$id}"][data-qa-action-menu-item="Deploy New Linode"]`
-        );
+
+    ui.buttonGroup
+      .findButtonByTitle('Create StackScript')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.url().should('endWith', '/stackscripts/account');
+
+    cy.findByText(stackscriptLabel)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(stackscriptDesc).should('be.visible');
+        cy.findByText(stackscriptImage).should('be.visible');
       });
 
-    createLinode();
-    cy.wait('@createLinode', { timeout: 300000 }).then((linode) => {
-      cy.visit(`/linodes/${linode.response?.body.id}/storage`);
-      fbtVisible(linode.response?.body.label);
+    // Navigate to StackScript details page and click deploy Linode button.
+    cy.findByText(stackscriptLabel).should('be.visible').click();
+
+    ui.button
+      .findByTitle('Deploy New Linode')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    // Confirm that expected images are present in "Choose an image" drop-down.
+    cy.findByText('Choose an image').should('be.visible').click();
+
+    imageSamples.forEach((imageSample) => {
+      const imageLabel = imageSample.label;
+      const imageSelector = imageSample.sel;
+
+      cy.get(`[data-qa-image-select-item="${imageSelector}"]`)
+        .scrollIntoView()
+        .should('be.visible')
+        .within(() => {
+          cy.findByText(imageLabel).should('be.visible');
+        });
     });
   });
 });
