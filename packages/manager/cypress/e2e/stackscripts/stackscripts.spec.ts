@@ -19,6 +19,11 @@ const createLinode = () => {
 };
 
 /*
+ * StackScript contents that are missing a shebang.
+ */
+const stackScriptWithNoShebang = 'echo "Hello, world!';
+
+/*
  * StackScript contents which includes an invalid user-defined-field.
  */
 const stackScriptWithInvalidUdf = `#!/bin/bash
@@ -38,6 +43,10 @@ const stackScriptWithUdf = `#!/bin/bash
 
 echo "Hello, world!"
 `;
+
+// StackScript error that is expected to appear when script is missing a shebang.
+const stackScriptErrorNoShebang =
+  "Script must begin with a shebang (example: '#!/bin/bash').";
 
 // StackScript error that is expected to appear when UDFs with non-alphanumeric names are supplied.
 const stackScriptErrorUdfAlphanumeric =
@@ -118,6 +127,7 @@ const fillOutLinodeForm = (label: string, region: string) => {
 describe('stackscripts', () => {
   /*
    * - Creates a StackScript with user-defined fields.
+   * - Confirms that an error message appears upon submitting script without a shebang.
    * - Confirms that an error message appears upon submitting invalid user-defined fields.
    * - Deploys a new Linode using the StackScript.
    * - Confirms that user-defined fields are displayed as expected during Linode creation.
@@ -134,13 +144,27 @@ describe('stackscripts', () => {
 
     cy.visitWithLogin('/stackscripts/create');
 
-    // Submit StackScript creation form with invalid UDF, confirm error message appears.
+    // Submit StackScript creation form with invalid contents, confirm error messages.
     fillOutStackscriptForm(
       stackscriptLabel,
       stackscriptDesc,
       stackscriptImage,
-      stackScriptWithInvalidUdf
+      stackScriptWithNoShebang
     );
+
+    ui.buttonGroup
+      .findButtonByTitle('Create StackScript')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText(stackScriptErrorNoShebang).should('be.visible');
+
+    cy.get('[data-qa-textfield-label="Script"]')
+      .should('be.visible')
+      .click()
+      .type('{selectall}{backspace}')
+      .type(stackScriptWithInvalidUdf);
 
     ui.buttonGroup
       .findButtonByTitle('Create StackScript')
