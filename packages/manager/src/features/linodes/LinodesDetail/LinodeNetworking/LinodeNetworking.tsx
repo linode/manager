@@ -252,6 +252,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         const sharedRanges: IPRange[] = [];
         const staticRanges: IPRange[] = [];
         const availableRanges: IPRangeInformation[] = [];
+        const linodeIPs = await getLinodeIPs(this.props.linode.id);
         const rangeConstruction = await ranges.reduce(async (acc, range) => {
           await acc;
           // filter user ranges outside dc
@@ -262,12 +263,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           // get info on an IPv6 range; if its shared check if its shared to our Linode
           // if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
           const resp = await getIPv6RangeInfo(range.range);
-          let slaac;
-          if (!resp.is_bgp) {
-            await getLinodeIPs(this.props.linode.id).then((ips) => {
-              slaac = ips?.ipv6?.slaac.address;
-            });
-          }
 
           if (
             this.props.flags.ipv6Sharing &&
@@ -276,7 +271,10 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           ) {
             // any range that is shared to this linode
             sharedRanges.push(range);
-          } else if (!resp.is_bgp && range.route_target === slaac) {
+          } else if (
+            !resp.is_bgp &&
+            range.route_target === linodeIPs?.ipv6?.slaac.address
+          ) {
             // any range that is statically routed to this linode
             staticRanges.push(range);
           } else if (this.props.flags.ipv6Sharing) {
