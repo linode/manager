@@ -13,6 +13,7 @@ interface Props {
   ticketType?: TicketType;
   onClick?: LinkProps['onClick'];
 }
+
 export interface EntityForTicketDetails {
   id: number;
   type: EntityType;
@@ -20,7 +21,6 @@ export interface EntityForTicketDetails {
 
 const SupportLink = (props: Props) => {
   const { description, text, title, entity, ticketType, onClick } = props;
-
   return (
     <Link
       to={{
