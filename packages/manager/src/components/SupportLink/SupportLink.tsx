@@ -10,13 +10,12 @@ interface Props {
   description?: string;
   text: string;
   entity?: EntityForTicketDetails;
-  ticketType?: TicketType; // Attempt to pass the ticketType as prop outside of entity
+  ticketType?: TicketType;
   onClick?: LinkProps['onClick'];
 }
 export interface EntityForTicketDetails {
   id: number;
   type: EntityType;
-  ticketType?: TicketType; // TODO: move this elsewhere, but ensure the value gets passed to SupportTicketDrawer
 }
 
 const SupportLink = (props: Props) => {
@@ -31,7 +30,7 @@ const SupportLink = (props: Props) => {
           title,
           description,
           entity,
-          ticketType, // Does not show up in SupportTicketDrawer
+          ticketType,
         },
       }}
       onClick={onClick}

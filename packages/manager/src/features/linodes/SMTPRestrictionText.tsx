@@ -33,8 +33,7 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
         <SupportLink
           text="open a support ticket"
           title={`SMTP Restriction Removal on ${supportLink.label}`}
-          entity={{ type: 'linode_id', id: -1, ticketType: 'smtp' }} // TODO: Fix this, this is hacky in order to send in the ticketType.
-          // type="smtp" // Is not getting passed to SupportTicketDrawer correctly.
+          ticketType="smtp"
         />
       ) : (
         'open a support ticket'

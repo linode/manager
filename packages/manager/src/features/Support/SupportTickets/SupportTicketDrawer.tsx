@@ -145,7 +145,13 @@ export const getInitialValue = (
 };
 
 export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, prefilledDescription, prefilledTitle, prefilledEntity } = props;
+  const {
+    open,
+    prefilledDescription,
+    prefilledTitle,
+    prefilledEntity,
+    prefilledTicketType,
+  } = props;
 
   const valuesFromStorage = storage.supportText.get();
 
@@ -162,9 +168,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const [entityID, setEntityID] = React.useState<string>(
     prefilledEntity ? String(prefilledEntity.id) : ''
   );
-  // const [ticketType, setTicketType] = React.useState<TicketType>(
-  //   prefilledTicketType ?? 'general'
-  // );
+  const [ticketType, setTicketType] = React.useState<TicketType>(
+    prefilledTicketType ?? 'general'
+  );
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
@@ -290,7 +296,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setDescription(_description);
     setEntityID('');
     setEntityType('general');
-    // setTicketType('general');
+    setTicketType('general');
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -568,7 +574,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
             errorText={summaryError}
             data-qa-ticket-summary
           />
-          {prefilledEntity?.ticketType === 'smtp' ? (
+          {ticketType === 'smtp' ? (
             <SupportTicketSMTPRestrictionsForm />
           ) : (
             <React.Fragment>
