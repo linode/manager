@@ -91,7 +91,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
               const { deprecated, eol } = thisImage;
               if (deprecated) {
                 const diff = DateTime.now().diff(
-                  DateTime.fromISO(eol),
+                  DateTime.fromISO(eol!),
                   'months'
                 ).months;
                 return Number.isNaN(diff) || diff <= maxEOLFilter;
