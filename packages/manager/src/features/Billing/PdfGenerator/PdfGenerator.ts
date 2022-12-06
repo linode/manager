@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
+import { ADDRESSES, AKAMAI_DATE } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
@@ -27,6 +28,8 @@ const addLeftHeader = (
   pages: number,
   date: string | null,
   type: string,
+  account: Account,
+  invoice: Invoice | Payment,
   countryTax: TaxDetail | undefined,
   provincialTax?: TaxDetail | undefined
 ) => {
@@ -49,10 +52,18 @@ const addLeftHeader = (
   addLine('Remit to:');
   doc.setFont(baseFont, 'normal');
 
-  addLine(`Linode`);
-  addLine('249 Arch St.');
-  addLine('Philadelphia, PA 19106');
-  addLine('USA');
+  const isAkamaiBilling =
+    new Date(invoice.date).getMilliseconds() < AKAMAI_DATE.getMilliseconds();
+
+  const address = isAkamaiBilling
+    ? ['US', 'CA'].includes(account.country)
+      ? ADDRESSES.akamai.us
+      : ADDRESSES.akamai.international
+    : ADDRESSES.linode;
+
+  for (const addressLine of Object.values(address)) {
+    addLine(addressLine);
+  }
 
   doc.setFont(baseFont, 'bold');
   addLine('Tax ID(s):');
@@ -195,6 +206,8 @@ export const printInvoice = (
         itemsChunks.length,
         date,
         'Invoice',
+        account,
+        invoice,
         countryTax,
         provincialTax
       );
@@ -246,6 +259,8 @@ export const printPayment = (
       1,
       date,
       'Payment',
+      account,
+      payment,
       countryTax
     );
     const rightHeaderYPosition = addRightHeader(doc, account);

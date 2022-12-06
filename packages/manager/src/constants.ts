@@ -339,3 +339,35 @@ export const DB_ROOT_USERNAME = 'linroot';
 // https://www.linode.com/docs/email/best-practices/running-a-mail-server/
 export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
   '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
+
+// The date Linode switching to Akamai (for purposes of billing)
+export const AKAMAI_DATE = new Date('2022-12-15 00:00:00');
+
+export const ADDRESSES = {
+  linode: {
+    entity: 'Linode',
+    address1: '249 Arch St.',
+    city: 'Philadelphia',
+    state: 'PA',
+    zip: '19106',
+    country: 'USA',
+  },
+  akamai: {
+    us: {
+      entity: 'Akamai Technologies, Inc.',
+      address1: '145 Broadway',
+      city: 'Cambridge',
+      state: 'MA',
+      zip: '02142',
+      country: 'USA',
+    },
+    international: {
+      entity: 'Akamai Technologies International AG',
+      address1: 'Chemin des Aulx 18',
+      city: 'Plan-les-Ouates',
+      state: 'Geneva',
+      zip: '1228',
+      country: 'Switzerland',
+    },
+  },
+} as const;
