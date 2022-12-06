@@ -88,21 +88,19 @@ export const imagesToGroupedItems = (images: Image[]) => {
           label: thisGroup,
           options: group
             .filter((thisImage) => {
-              const { deprecated, eol } = thisImage;
-              if (deprecated) {
-                const diff = DateTime.now().diff(
-                  DateTime.fromISO(eol!),
-                  'months'
-                ).months;
-                return Number.isNaN(diff) || diff <= maxEOLFilter;
-              } else {
-                return true;
-              }
+              const { eol } = thisImage;
+              const diff = DateTime.now().diff(DateTime.fromISO(eol!), 'months')
+                .months;
+              return diff > maxEOLFilter && eol !== null ? false : true;
             })
             .map((thisImage) => {
-              const isDeprecated = thisImage.deprecated;
-              const fullLabel =
-                thisImage.label + (isDeprecated ? ' (Deprecated)' : '');
+              const { eol } = thisImage;
+              const diff = DateTime.fromISO(eol!).diff(DateTime.now(), 'months')
+                .months;
+              let fullLabel = thisImage.label;
+              if (diff <= maxEOLFilter) {
+                fullLabel += ' (Deprecated)';
+              }
               return {
                 created: thisImage.created,
                 label: fullLabel,

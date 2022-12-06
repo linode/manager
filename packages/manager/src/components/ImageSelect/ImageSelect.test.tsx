@@ -11,6 +11,12 @@ describe('imagesToGroupedItems', () => {
         eol: '2022-01-01T14:05:30',
       }),
       ...imageFactory.buildList(2, {
+        label: 'Debian 10',
+        deprecated: false,
+        created: '2017-06-16T20:02:29',
+        eol: '1970-01-01T14:05:30',
+      }),
+      ...imageFactory.buildList(2, {
         label: 'Slackware 14.1',
         deprecated: true,
         created: '2022-10-20T14:05:30',
@@ -23,14 +29,14 @@ describe('imagesToGroupedItems', () => {
         options: [
           {
             created: '2022-10-20T14:05:30',
-            label: 'Slackware 14.1 (Deprecated)',
-            value: 'private/2',
+            label: 'Slackware 14.1',
+            value: 'private/4',
             className: 'fl-tux',
           },
           {
             created: '2022-10-20T14:05:30',
-            label: 'Slackware 14.1 (Deprecated)',
-            value: 'private/3',
+            label: 'Slackware 14.1',
+            value: 'private/5',
             className: 'fl-tux',
           },
         ],
