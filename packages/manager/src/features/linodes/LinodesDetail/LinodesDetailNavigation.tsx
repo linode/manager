@@ -106,7 +106,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
         segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
       {tabs[getIndex()]?.title === 'Network' ? (
-        <SMTPRestrictionText supportLink={true}>
+        <SMTPRestrictionText supportLink={{ label: linodeLabel }}>
           {({ text }) =>
             !hasDismissedBanner && text !== null ? (
               <Notice

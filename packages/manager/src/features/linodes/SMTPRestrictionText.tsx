@@ -7,7 +7,7 @@ import { useAccount } from 'src/queries/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 export interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
-  supportLink?: boolean;
+  supportLink?: { label: string };
 }
 
 const SMTPRestrictionText: React.FC<Props> = (props) => {
@@ -32,7 +32,9 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
       {supportLink ? (
         <SupportLink
           text="open a support ticket"
-          title="Re: SMTP Restrictions"
+          title={`SMTP Restriction Removal on ${supportLink.label}`}
+          entity={{ type: 'linode_id', id: -1, ticketType: 'smtp' }} // TODO: Fix this, this is hacky in order to send in the ticketType.
+          // type="smtp" // Is not getting passed to SupportTicketDrawer correctly.
         />
       ) : (
         'open a support ticket'

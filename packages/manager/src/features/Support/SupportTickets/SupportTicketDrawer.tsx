@@ -37,6 +37,7 @@ import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
+import SupportTicketSMTPRestrictionsForm from './SupportTicketSMTPRestrictionsForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -79,11 +80,14 @@ export type EntityType =
   | 'none'
   | 'general';
 
+export type TicketType = 'smtp' | 'general';
+
 export interface Props {
   open: boolean;
   prefilledTitle?: string;
   prefilledDescription?: string;
   prefilledEntity?: EntityForTicketDetails;
+  prefilledTicketType?: TicketType;
   onClose: () => void;
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
   keepOpenOnSuccess?: boolean;
@@ -158,6 +162,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const [entityID, setEntityID] = React.useState<string>(
     prefilledEntity ? String(prefilledEntity.id) : ''
   );
+  // const [ticketType, setTicketType] = React.useState<TicketType>(
+  //   prefilledTicketType ?? 'general'
+  // );
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
@@ -283,6 +290,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setDescription(_description);
     setEntityID('');
     setEntityType('general');
+    // setTicketType('general');
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -560,58 +568,64 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
             errorText={summaryError}
             data-qa-ticket-summary
           />
-          {props.hideProductSelection ? null : (
+          {prefilledEntity?.ticketType === 'smtp' ? (
+            <SupportTicketSMTPRestrictionsForm />
+          ) : (
             <React.Fragment>
-              <Select
-                options={topicOptions}
-                label="What is this regarding?"
-                value={selectedTopic}
-                onChange={handleEntityTypeChange}
-                data-qa-ticket-entity-type
-                isClearable={false}
-              />
-              {!['none', 'general'].includes(entityType) && (
-                <>
+              {props.hideProductSelection ? null : (
+                <React.Fragment>
                   <Select
-                    options={entityOptions}
-                    value={selectedEntity}
-                    disabled={entityOptions.length === 0}
-                    errorText={entityError || inputError}
-                    placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                    label={entityIdToNameMap[entityType] ?? 'Entity Select'}
-                    onChange={handleEntityIDChange}
-                    data-qa-ticket-entity-id
-                    isLoading={areEntitiesLoading}
+                    options={topicOptions}
+                    label="What is this regarding?"
+                    value={selectedTopic}
+                    onChange={handleEntityTypeChange}
+                    data-qa-ticket-entity-type
                     isClearable={false}
                   />
-                  {!areEntitiesLoading && entityOptions.length === 0 ? (
-                    <FormHelperText>
-                      You don&rsquo;t have any {entityIdToNameMap[entityType]}s
-                      on your account.
-                    </FormHelperText>
-                  ) : null}
-                </>
+                  {!['none', 'general'].includes(entityType) && (
+                    <>
+                      <Select
+                        options={entityOptions}
+                        value={selectedEntity}
+                        disabled={entityOptions.length === 0}
+                        errorText={entityError || inputError}
+                        placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
+                        onChange={handleEntityIDChange}
+                        data-qa-ticket-entity-id
+                        isLoading={areEntitiesLoading}
+                        isClearable={false}
+                      />
+                      {!areEntitiesLoading && entityOptions.length === 0 ? (
+                        <FormHelperText>
+                          You don&rsquo;t have any{' '}
+                          {entityIdToNameMap[entityType]}s on your account.
+                        </FormHelperText>
+                      ) : null}
+                    </>
+                  )}
+                </React.Fragment>
               )}
+              <TabbedReply
+                required
+                error={descriptionError}
+                handleChange={handleDescriptionInputChange}
+                value={description}
+                innerClass={classes.innerReply}
+                rootClass={classes.rootReply}
+                placeholder={
+                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                }
+              />
+              <Accordion
+                heading="Formatting Tips"
+                detailProps={{ className: classes.expPanelSummary }}
+              >
+                <Reference />
+              </Accordion>
+              <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
           )}
-          <TabbedReply
-            required
-            error={descriptionError}
-            handleChange={handleDescriptionInputChange}
-            value={description}
-            innerClass={classes.innerReply}
-            rootClass={classes.rootReply}
-            placeholder={
-              "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-            }
-          />
-          <Accordion
-            heading="Formatting Tips"
-            detailProps={{ className: classes.expPanelSummary }}
-          >
-            <Reference />
-          </Accordion>
-          <AttachFileForm files={files} updateFiles={updateFiles} />
           <ActionsPanel>
             <Button
               buttonType="secondary"
