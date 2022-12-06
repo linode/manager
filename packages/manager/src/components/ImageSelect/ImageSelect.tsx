@@ -97,10 +97,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
             })
             .map((thisImage) => {
               const { eol } = thisImage;
-              const diff = DateTime.fromISO(eol!).diff(DateTime.now(), 'months')
+              const diff = DateTime.now().diff(DateTime.fromISO(eol!), 'months')
                 .months;
               let fullLabel = thisImage.label;
-              if (diff <= MAX_MONTHS_EOL_FILTER) {
+              // Add suffix 'depricated' to the image if end of life is past
+              if (diff > 0) {
                 fullLabel += ' (Deprecated)';
               }
               return {
