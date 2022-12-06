@@ -3,6 +3,7 @@ import produce from 'immer';
 import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
+import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
@@ -17,7 +18,6 @@ import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOption
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 
-const maxEOLFilter = 6;
 export type Variant = 'public' | 'private' | 'all';
 
 interface ImageItem extends Item<string> {
@@ -91,14 +91,16 @@ export const imagesToGroupedItems = (images: Image[]) => {
               const { eol } = thisImage;
               const diff = DateTime.now().diff(DateTime.fromISO(eol!), 'months')
                 .months;
-              return diff > maxEOLFilter && eol !== null ? false : true;
+              return diff > MAX_MONTHS_EOL_FILTER && eol !== null
+                ? false
+                : true;
             })
             .map((thisImage) => {
               const { eol } = thisImage;
               const diff = DateTime.fromISO(eol!).diff(DateTime.now(), 'months')
                 .months;
               let fullLabel = thisImage.label;
-              if (diff <= maxEOLFilter) {
+              if (diff <= MAX_MONTHS_EOL_FILTER) {
                 fullLabel += ' (Deprecated)';
               }
               return {
