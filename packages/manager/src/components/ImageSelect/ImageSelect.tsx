@@ -89,11 +89,15 @@ export const imagesToGroupedItems = (images: Image[]) => {
           options: group
             .filter((thisImage) => {
               const { eol } = thisImage;
-              const diff = DateTime.now().diff(DateTime.fromISO(eol!), 'months')
+              if (!eol) {
+                // no end of life is known so show Image to be safe
+                return true;
+              }
+              const diff = DateTime.now().diff(DateTime.fromISO(eol), 'months')
                 .months;
-              return diff > MAX_MONTHS_EOL_FILTER && eol !== null
-                ? false
-                : true;
+
+              // if image is past its end of life, hide it, otherwise show it
+              return diff > MAX_MONTHS_EOL_FILTER ? false : true;
             })
             .map((thisImage) => {
               const { eol } = thisImage;
