@@ -278,12 +278,12 @@ export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
  */
-export const MBpsIntraDC = 75;
+export const MBpsIntraDC = 200;
 
 /**
  * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
  */
-export const MBpsInterDC = 1.5;
+export const MBpsInterDC = 7.5;
 
 /**
  * The incoming network rate (in Gbps) that is standard for all Linodes
