@@ -341,7 +341,7 @@ export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
   '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
 
 // The date Linode switching to Akamai (for purposes of billing)
-export const AKAMAI_DATE = new Date('2022-12-15 00:00:00');
+export const AKAMAI_DATE = '2022-12-15 00:00:00';
 
 export const ADDRESSES = {
   linode: {
@@ -370,4 +370,4 @@ export const ADDRESSES = {
       country: 'Switzerland',
     },
   },
-} as const;
+};

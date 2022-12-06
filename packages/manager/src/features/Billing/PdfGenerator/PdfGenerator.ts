@@ -6,10 +6,11 @@ import {
 } from '@linode/api-v4/lib/account';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
-import { ADDRESSES, AKAMAI_DATE } from 'src/constants';
+import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
+import { getShouldUseAkamaiBilling } from '../billingUtils';
 import LinodeLogo from './LinodeLogo.png';
 import {
   createFooter,
@@ -17,7 +18,9 @@ import {
   createInvoiceTotalsTable,
   createPaymentsTable,
   createPaymentsTotalsTable,
+  dateConversion,
   pageMargin,
+  PdfResult,
 } from './utils';
 
 const baseFont = 'helvetica';
@@ -28,8 +31,7 @@ const addLeftHeader = (
   pages: number,
   date: string | null,
   type: string,
-  account: Account,
-  invoice: Invoice | Payment,
+  remitAddress: typeof ADDRESSES['linode'],
   countryTax: TaxDetail | undefined,
   provincialTax?: TaxDetail | undefined
 ) => {
@@ -52,18 +54,10 @@ const addLeftHeader = (
   addLine('Remit to:');
   doc.setFont(baseFont, 'normal');
 
-  const isAkamaiBilling =
-    new Date(invoice.date).getMilliseconds() < AKAMAI_DATE.getMilliseconds();
-
-  const address = isAkamaiBilling
-    ? ['US', 'CA'].includes(account.country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
-
-  for (const addressLine of Object.values(address)) {
-    addLine(addressLine);
-  }
+  addLine(remitAddress.entity);
+  addLine(remitAddress.address1);
+  addLine(`${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}`);
+  addLine(remitAddress.country);
 
   doc.setFont(baseFont, 'bold');
   addLine('Tax ID(s):');
@@ -141,13 +135,6 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFont(baseFont, 'normal');
 };
 
-interface PdfResult {
-  status: 'success' | 'error';
-  error?: Error;
-}
-
-const dateConversion = (str: string): number => Date.parse(str);
-
 export const printInvoice = (
   account: Account,
   invoice: Invoice,
@@ -196,6 +183,14 @@ export const printInvoice = (
       ? taxBanner?.provincial_tax_ids?.[account.state]
       : undefined;
 
+    const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
+
+    const remitAddress = isAkamaiBilling
+      ? ['US', 'CA'].includes(account.country)
+        ? ADDRESSES.akamai.us
+        : ADDRESSES.akamai.international
+      : ADDRESSES.linode;
+
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
@@ -206,8 +201,7 @@ export const printInvoice = (
         itemsChunks.length,
         date,
         'Invoice',
-        account,
-        invoice,
+        remitAddress,
         countryTax,
         provincialTax
       );
@@ -218,14 +212,14 @@ export const printInvoice = (
       });
 
       createInvoiceItemsTable(doc, itemsChunk);
-      createFooter(doc, baseFont);
+      createFooter(doc, baseFont, remitAddress);
       if (index < itemsChunks.length - 1) {
         doc.addPage();
       }
     });
 
     createInvoiceTotalsTable(doc, invoice);
-    createFooter(doc, baseFont);
+    createFooter(doc, baseFont, remitAddress);
 
     doc.save(`invoice-${date}.pdf`);
     return {
@@ -253,14 +247,22 @@ export const printPayment = (
     doc.setFontSize(10);
 
     doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
+
+    const isAkamaiBilling = getShouldUseAkamaiBilling(payment.date);
+
+    const remitAddress = isAkamaiBilling
+      ? ['US', 'CA'].includes(account.country)
+        ? ADDRESSES.akamai.us
+        : ADDRESSES.akamai.international
+      : ADDRESSES.linode;
+
     const leftHeaderYPosition = addLeftHeader(
       doc,
       1,
       1,
       date,
       'Payment',
-      account,
-      payment,
+      remitAddress,
       countryTax
     );
     const rightHeaderYPosition = addRightHeader(doc, account);
@@ -269,7 +271,7 @@ export const printPayment = (
     });
 
     createPaymentsTable(doc, payment);
-    createFooter(doc, baseFont);
+    createFooter(doc, baseFont, remitAddress);
     createPaymentsTotalsTable(doc, payment);
 
     doc.save(`payment-${date}.pdf`);
