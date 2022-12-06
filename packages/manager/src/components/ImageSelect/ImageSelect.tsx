@@ -1,5 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images';
 import produce from 'immer';
+import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -16,6 +17,7 @@ import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOption
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 
+const maxEOLFilter = 6;
 export type Variant = 'public' | 'private' | 'all';
 
 interface ImageItem extends Item<string> {
@@ -85,6 +87,18 @@ export const imagesToGroupedItems = (images: Image[]) => {
         draft.push({
           label: thisGroup,
           options: group
+            .filter((thisImage) => {
+              const { deprecated, eol } = thisImage;
+              if (deprecated) {
+                const diff = DateTime.now().diff(
+                  DateTime.fromISO(eol),
+                  'months'
+                ).months;
+                return Number.isNaN(diff) || diff <= maxEOLFilter;
+              } else {
+                return true;
+              }
+            })
             .map((thisImage) => {
               const isDeprecated = thisImage.deprecated;
               const fullLabel =
