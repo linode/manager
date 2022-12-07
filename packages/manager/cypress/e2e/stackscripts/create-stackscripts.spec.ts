@@ -119,8 +119,7 @@ const createLinodeAndImage = async () => {
   );
 
   await pollLinodeStatus(linode.id, 'running', {
-    maxAttempts: 1,
-    initialDelay: 1,
+    initialDelay: 15000,
   });
 
   const diskId = (await getLinodeDisks(linode.id)).data[0].id;
@@ -144,7 +143,7 @@ describe('stackscripts', () => {
    * - Confirms that user-defined fields are displayed as expected during Linode creation.
    * - Confirms that Linode created using StackScript boots.
    */
-  it.skip('creates a StackScript and deploys a Linode with it', () => {
+  it('creates a StackScript and deploys a Linode with it', () => {
     const stackscriptLabel = randomLabel();
     const stackscriptDesc = randomPhrase();
     const stackscriptImage = 'Alpine 3.17';
