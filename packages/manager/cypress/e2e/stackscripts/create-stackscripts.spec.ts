@@ -253,11 +253,9 @@ describe('stackscripts', () => {
 
     cy.wait('@createLinode');
 
-    // Wait for Linode boot.
+    // Confirm that Linode has been created and is provisioning.
     cy.findByText(linodeLabel).should('be.visible');
     cy.findByText('PROVISIONING').should('be.visible');
-    cy.findByText('BOOTING').should('be.visible');
-    cy.findByText('RUNNING').should('be.visible');
   });
 
   /*
@@ -361,8 +359,6 @@ describe('stackscripts', () => {
 
       cy.wait('@createLinode');
       cy.findByText(linodeLabel).should('be.visible');
-      // Don't wait for the Linode to boot, because creating a Linode using an
-      // image takes a long time.
       cy.findByText('PROVISIONING').should('be.visible');
     });
   });
