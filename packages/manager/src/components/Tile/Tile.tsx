@@ -140,7 +140,7 @@ const Tile = (props: Props) => {
           {icon}
         </span>
       )}
-      {errorText && <Notice error={true} text={errorText} />}
+      {errorText ? <Notice error={true} text={errorText} /> : null}
       <Typography variant="h3" className={classes.tileTitle} data-qa-tile-title>
         {link ? renderLink() : title}
       </Typography>
