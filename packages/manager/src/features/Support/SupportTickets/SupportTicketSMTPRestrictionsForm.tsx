@@ -3,6 +3,9 @@ import * as React from 'react';
 import TextField from 'src/components/TextField';
 // import { getErrorMap } from 'src/utilities/errorUtils';
 
+export const helperTextSMTP =
+  'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you in 72-96 hours.';
+
 const SupportTicketSMTPRestrictionsForm: React.FC = () => {
   // const [errors, setErrors] = React.useState<APIError[] | undefined>();
   // const hasErrorFor = getErrorMap(['input'], errors);

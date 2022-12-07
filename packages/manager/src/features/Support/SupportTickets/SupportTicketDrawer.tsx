@@ -37,7 +37,9 @@ import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
-import SupportTicketSMTPRestrictionsForm from './SupportTicketSMTPRestrictionsForm';
+import SupportTicketSMTPRestrictionsForm, {
+  helperTextSMTP,
+} from './SupportTicketSMTPRestrictionsForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -461,6 +463,39 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     });
   };
 
+  const renderHelperText = () => {
+    const general = (
+      <>
+        {`We love our customers, and we\u{2019}re here to help if you need us.
+        Please keep in mind that not all topics are within the scope of our support.
+        For overall system status, please see `}
+        <a
+          href="https://status.linode.com"
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+        >
+          status.linode.com
+        </a>
+        .
+      </>
+    );
+    let helperText: string | React.ReactFragment;
+
+    switch (ticketType) {
+      case 'smtp':
+        helperText = helperTextSMTP;
+        break;
+      case 'general':
+      default:
+        helperText = general;
+    }
+
+    return (
+      <Typography data-qa-support-ticket-helper-text>{helperText}</Typography>
+    );
+  };
+
   const requirementsMet = description.length > 0 && summary.length > 0;
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
@@ -550,7 +585,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         <React.Fragment>
           {generalError && <Notice error text={generalError} data-qa-notice />}
 
-          <Typography data-qa-support-ticket-helper-text>
+          {/* <Typography data-qa-support-ticket-helper-text>
             {`We love our customers, and we\u{2019}re here to help if you need us.
           Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see `}
@@ -563,7 +598,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
               status.linode.com
             </a>
             .
-          </Typography>
+          </Typography> */}
+          {renderHelperText()}
           <TextField
             label="Title"
             placeholder="Enter a title for your ticket."
