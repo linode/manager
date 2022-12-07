@@ -59,15 +59,17 @@ const addLeftHeader = (
   addLine(`${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}`);
   addLine(remitAddress.country);
 
-  doc.setFont(baseFont, 'bold');
-  addLine('Tax ID(s):');
-  doc.setFont(baseFont, 'normal');
+  if (countryTax || provincialTax) {
+    doc.setFont(baseFont, 'bold');
+    addLine('Tax ID(s):');
+    doc.setFont(baseFont, 'normal');
 
-  if (countryTax) {
-    addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
-  }
-  if (provincialTax) {
-    addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
+    if (countryTax) {
+      addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+    }
+    if (provincialTax) {
+      addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
+    }
   }
 
   return currentLine;
