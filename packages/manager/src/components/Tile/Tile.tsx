@@ -135,20 +135,20 @@ const Tile = (props: Props) => {
       role="link"
       tabIndex={0}
     >
-      {icon && (
+      {icon ? (
         <span className={classes.icon} data-qa-tile-icon>
           {icon}
         </span>
-      )}
+      ) : null}
       {errorText ? <Notice error={true} text={errorText} /> : null}
       <Typography variant="h3" className={classes.tileTitle} data-qa-tile-title>
         {link ? renderLink() : title}
       </Typography>
-      {description && (
+      {description ? (
         <Typography variant="body1" align="center" data-qa-tile-desc>
           {description}
         </Typography>
-      )}
+      ) : null}
     </div>
   );
 };
