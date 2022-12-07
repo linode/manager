@@ -7,6 +7,9 @@ import { getLinode } from '@linode/api-v4/lib/linodes';
  */
 
 export interface PollingOptions {
+  // Poll label. Used for logging and error troubleshooting.
+  label?: string;
+
   // Initial delay (in MS) before executing callback. Useful for operations
   // that are known to fail immediately.
   initialDelay: number;
@@ -19,6 +22,7 @@ export interface PollingOptions {
 }
 
 const defaultPollingOptions = {
+  label: undefined,
   initialDelay: 0,
   maxAttempts: 10,
   fibonacciOffset: 0,
@@ -55,7 +59,7 @@ export const poll = async <T>(
   evaluator: (T) => boolean,
   options?: Partial<PollingOptions>
 ): Promise<T> => {
-  const { maxAttempts, initialDelay, fibonacciOffset } = {
+  const { label, maxAttempts, initialDelay, fibonacciOffset } = {
     ...defaultPollingOptions,
     ...options,
   };
@@ -80,7 +84,11 @@ export const poll = async <T>(
     await new Promise((resolve) => setTimeout(resolve, fibonacciMs));
   }
 
-  throw new Error('Polling failed');
+  const errorMessage = label
+    ? `Poll '${label}' failed after ${maxAttempts} attempt(s)`
+    : `Poll failed after ${maxAttempts} attempt(s)`;
+
+  throw new Error(errorMessage);
 };
 
 /**
@@ -97,6 +105,11 @@ export const pollLinodeStatus = async (
   desiredStatus: LinodeStatus,
   options?: Partial<PollingOptions>
 ) => {
+  const resolvedOptions = {
+    label: 'Linode Status',
+    ...options,
+  };
+
   const getLinodeStatus = async () => {
     const linode = await getLinode(linodeId);
     return linode.status;
@@ -105,7 +118,7 @@ export const pollLinodeStatus = async (
   const checkLinodeStatus = (status: LinodeStatus): boolean =>
     status === desiredStatus;
 
-  return poll(getLinodeStatus, checkLinodeStatus, options);
+  return poll(getLinodeStatus, checkLinodeStatus, resolvedOptions);
 };
 
 /**
@@ -122,6 +135,11 @@ export const pollImageStatus = async (
   desiredStatus: ImageStatus,
   options?: Partial<PollingOptions>
 ) => {
+  const resolvedOptions = {
+    label: 'Image Status',
+    ...options,
+  };
+
   const getImageStatus = async () => {
     const image = await getImage(imageId);
     return image.status;
@@ -130,5 +148,5 @@ export const pollImageStatus = async (
   const checkImageStatus = (status: ImageStatus): boolean =>
     status === desiredStatus;
 
-  return poll(getImageStatus, checkImageStatus, options);
+  return poll(getImageStatus, checkImageStatus, resolvedOptions);
 };
