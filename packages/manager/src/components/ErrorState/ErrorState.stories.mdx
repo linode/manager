@@ -2,7 +2,7 @@ import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import ErrorState from './ErrorState';
 
 <Meta
-  title="Features/Entity Landing Page/Error Display"
+  title="Features/Entity Landing Page/Error State"
   component={ErrorState}
   args={{
     errorText: 'An error has occured.',
@@ -12,7 +12,7 @@ import ErrorState from './ErrorState';
   argTypes={{
     CustomIcon: {
       control: false,
-      description: 'A SVG to display in place of the error icon.',
+      description: 'An SVG to display in place of the error icon.',
     },
     CustomIconStyles: {
       control: false,
@@ -29,15 +29,15 @@ import ErrorState from './ErrorState';
 
 export const ErrorStateTemplate = (args, context) => <ErrorState {...args} />;
 
-# Error Display
+# Error State
 
 ### Usage
 Shown when a page or component fails to load.
 
 <Canvas>
-  <Story name="Error Display">
+  <Story name="Error State">
     { ErrorStateTemplate.bind({}) }
   </Story>
 </Canvas>
 
-<ArgsTable story="Error Display" sort="requiredFirst" exclude={['className']}/>
+<ArgsTable story="Error State" sort="requiredFirst" exclude={['className']}/>
