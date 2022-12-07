@@ -12,44 +12,15 @@ import {
 } from 'support/intercepts/stackscripts';
 import { interceptCreateLinode } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
-
 import { createLinodeRequestFactory } from 'src/factories';
-
 import { createLinode, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { createImage } from '@linode/api-v4/lib/images';
 
-/*
- * Basic StackScript contents.
- */
-const stackScriptSimple = `#!/bin/bash
-echo "Hello, world!"
-`;
-
-/*
- * StackScript contents that are missing a shebang.
- */
-const stackScriptWithNoShebang = 'echo "Hello, world!';
-
-/*
- * StackScript contents which includes an invalid user-defined-field.
- */
-const stackScriptWithInvalidUdf = `#!/bin/bash
-
-# <UDF name="invalid-field-name" label="This is invalid" default="" example="" />
-
-echo "Hello, world!"
-`;
-
-/*
- * StackScript contents which includes several user-defined-fields.
- */
-const stackScriptWithUdf = `#!/bin/bash
-
-# <UDF name="example_password" label="Example Password" default="" example="" />
-# <UDF name="example_title" label="Example Title" default="Hello, world!" example="Give it a title!" />
-
-echo "Hello, world!"
-`;
+// StackScript fixture paths.
+const stackscriptBasicPath = 'stackscripts/stackscript-basic.sh';
+const stackscriptNoShebangPath = 'stackscripts/stackscript-no-shebang.sh';
+const stackscriptUdfPath = 'stackscripts/stackscript-udf.sh';
+const stackscriptUdfInvalidPath = 'stackscripts/stackscript-udf-invalid.sh';
 
 // StackScript error that is expected to appear when script is missing a shebang.
 const stackScriptErrorNoShebang =
@@ -170,12 +141,14 @@ describe('stackscripts', () => {
     cy.visitWithLogin('/stackscripts/create');
 
     // Submit StackScript creation form with invalid contents, confirm error messages.
-    fillOutStackscriptForm(
-      stackscriptLabel,
-      stackscriptDesc,
-      stackscriptImage,
-      stackScriptWithNoShebang
-    );
+    cy.fixture(stackscriptNoShebangPath).then((stackscriptWithNoShebang) => {
+      fillOutStackscriptForm(
+        stackscriptLabel,
+        stackscriptDesc,
+        stackscriptImage,
+        stackscriptWithNoShebang
+      );
+    });
 
     ui.buttonGroup
       .findButtonByTitle('Create StackScript')
@@ -186,11 +159,13 @@ describe('stackscripts', () => {
     cy.wait('@createStackScript');
     cy.findByText(stackScriptErrorNoShebang).should('be.visible');
 
-    cy.get('[data-qa-textfield-label="Script"]')
-      .should('be.visible')
-      .click()
-      .type('{selectall}{backspace}')
-      .type(stackScriptWithInvalidUdf);
+    cy.fixture(stackscriptUdfInvalidPath).then((stackScriptUdfInvalid) => {
+      cy.get('[data-qa-textfield-label="Script"]')
+        .should('be.visible')
+        .click()
+        .type('{selectall}{backspace}')
+        .type(stackScriptUdfInvalid);
+    });
 
     ui.buttonGroup
       .findButtonByTitle('Create StackScript')
@@ -202,11 +177,13 @@ describe('stackscripts', () => {
     cy.findByText(stackScriptErrorUdfAlphanumeric).should('be.visible');
 
     // Insert a script with valid UDF data and submit StackScript create form.
-    cy.get('[data-qa-textfield-label="Script"]')
-      .should('be.visible')
-      .click()
-      .type('{selectall}{backspace}')
-      .type(stackScriptWithUdf);
+    cy.fixture(stackscriptUdfPath).then((stackScriptUdf) => {
+      cy.get('[data-qa-textfield-label="Script"]')
+        .should('be.visible')
+        .click()
+        .type('{selectall}{backspace}')
+        .type(stackScriptUdf);
+    });
 
     ui.buttonGroup
       .findButtonByTitle('Create StackScript')
