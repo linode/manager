@@ -139,7 +139,7 @@ export const printInvoice = (
   account: Account,
   invoice: Invoice,
   items: InvoiceItem[],
-  taxBanner: FlagSet['taxBanner']
+  taxes: FlagSet['taxBanner'] | FlagSet['taxes']
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
@@ -156,18 +156,18 @@ export const printInvoice = (
     });
 
     const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
-    const TaxStartDate = taxBanner ? dateConversion(taxBanner.date) : Infinity;
+    const TaxStartDate = taxes ? dateConversion(taxes.date) : Infinity;
 
     /**
      * Users who have identified their country as one of the ones targeted by
-     * one of our tax policies will have a taxBanner with at least a .date.
+     * one of our tax policies will have a `taxes` with at least a .date.
      * Customers with no country, or from a country we don't have a tax policy
-     * for, will have a taxBanner of {}, and the following logic will skip them.
+     * for, will have a `taxes` of {}, and the following logic will skip them.
      *
-     * If taxBanner.date is defined, and the invoice we're about to print is after
+     * If taxes.date is defined, and the invoice we're about to print is after
      * that date, we want to add the customer's tax ID to the invoice.
      *
-     * If in addition to the above, taxBanner.linode_tax_id is defined, it means
+     * If in addition to the above, taxes is defined, it means
      * we have a corporate tax ID for the country and should display that in the left
      * side of the header.
      *
@@ -178,9 +178,9 @@ export const printInvoice = (
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
     const hasTax = convertedInvoiceDate > TaxStartDate;
-    const countryTax = hasTax ? taxBanner?.country_tax : undefined;
+    const countryTax = hasTax ? taxes?.country_tax : undefined;
     const provincialTax = hasTax
-      ? taxBanner?.provincial_tax_ids?.[account.state]
+      ? taxes?.provincial_tax_ids?.[account.state]
       : undefined;
 
     const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);

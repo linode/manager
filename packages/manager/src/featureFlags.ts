@@ -7,6 +7,15 @@ export interface TaxDetail {
   tax_name: string;
 }
 
+interface Taxes {
+  date: string;
+  country_tax?: TaxDetail;
+  provincial_tax_ids?: Record<string, TaxDetail>;
+}
+
+/**
+ * @deprecated deprecated in favor of `Taxes` for Akamai Tax information
+ */
 interface TaxBanner {
   tax_name: string;
   date: string;
@@ -31,6 +40,7 @@ type OneClickApp = Record<string, string>;
 export interface Flags {
   promos: boolean;
   taxBanner: TaxBanner;
+  taxes: Taxes;
   oneClickApps: OneClickApp;
   oneClickAppsDocsOverride: Record<string, Doc[]>;
   promotionalOffers: PromotionalOffer[];
