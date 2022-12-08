@@ -67,13 +67,13 @@ describe('imagesToGroupedItems', () => {
         options: [
           {
             created: '2017-06-16T20:02:29',
-            label: 'Debian 9 (Deprecated)',
+            label: 'Debian 9 (deprecated)',
             value: 'private/6',
             className: 'fl-tux',
           },
           {
             created: '2017-06-16T20:02:29',
-            label: 'Debian 9 (Deprecated)',
+            label: 'Debian 9 (deprecated)',
             value: 'private/7',
             className: 'fl-tux',
           },
