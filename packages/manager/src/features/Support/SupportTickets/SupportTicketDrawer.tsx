@@ -20,6 +20,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import TextField from 'src/components/TextField';
 import useEntities, { Entity } from 'src/hooks/useEntities';
+import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -37,9 +38,11 @@ import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
-import SupportTicketSMTPRestrictionsForm, {
-  helperTextSMTP,
-} from './SupportTicketSMTPRestrictionsForm';
+import SupportTicketSMTPFields, {
+  smtpDialogTitle,
+  fieldNameToLabelMap,
+  smtpHelperText,
+} from './SupportTicketSMTPFields';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -155,6 +158,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     prefilledTicketType,
   } = props;
 
+  const { data: account } = useAccount();
+
   const valuesFromStorage = storage.supportText.get();
 
   // Ticket information
@@ -173,6 +178,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const [ticketType, setTicketType] = React.useState<TicketType>(
     prefilledTicketType ?? 'general'
   );
+
+  // SMTP ticket information
+  const [smtpFields, setSMTPFields] = React.useState({
+    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
+    companyName: '',
+    useCase: '',
+    emailDomains: '',
+    publicInfo: '',
+  });
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
@@ -337,6 +351,32 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setEntityID(String(selected?.value) ?? '');
   };
 
+  const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSMTPFields((smtpFields) => {
+      return { ...smtpFields, [name]: value };
+    });
+    setDescription(formatDescription(smtpFields));
+  };
+
+  /**
+   * When variant ticketTypes include additional fields, those field labels and values must be formatted to a string for the description field.
+   * For readability, format the description string with field labels as headings in Markdown.
+   */
+  const formatDescription = (fields: Record<string, string>) => {
+    // Replace field names with field labels for human readability
+    const labeledFields = Object.entries(fields).reduce(
+      (accum, [key, value]) => ({
+        ...accum,
+        ...{ [fieldNameToLabelMap[key]]: value },
+      }),
+      {}
+    );
+    return Object.entries(labeledFields)
+      .map(([key, value]) => `## ${key}\n${value}`)
+      .join('\n\n');
+  };
+
   const close = () => {
     props.onClose();
   };
@@ -463,6 +503,21 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     });
   };
 
+  const renderDialogTitle = () => {
+    const general = 'Open a Support Ticket';
+    let dialogTitle: string;
+
+    switch (ticketType) {
+      case 'smtp':
+        dialogTitle = smtpDialogTitle;
+        break;
+      case 'general':
+      default:
+        dialogTitle = general;
+    }
+    return dialogTitle;
+  };
+
   const renderHelperText = () => {
     const general = (
       <>
@@ -484,7 +539,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
     switch (ticketType) {
       case 'smtp':
-        helperText = helperTextSMTP;
+        helperText = smtpHelperText;
         break;
       case 'general':
       default:
@@ -496,7 +551,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  const requirementsMet = description.length > 0 && summary.length > 0;
+  const smtpRequirementsMet =
+    smtpFields.customerName.length > 0 &&
+    smtpFields.useCase.length > 0 &&
+    smtpFields.emailDomains.length > 0 &&
+    smtpFields.publicInfo.length > 0;
+  const requirementsMet =
+    description.length > 0 &&
+    summary.length > 0 &&
+    (ticketType === 'smtp' ? smtpRequirementsMet : null);
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;
@@ -579,7 +642,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       onClose={close}
       fullHeight
       fullWidth
-      title="Open a Support Ticket"
+      title={renderDialogTitle()}
     >
       {props.children || (
         <React.Fragment>
@@ -597,7 +660,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
             data-qa-ticket-summary
           />
           {ticketType === 'smtp' ? (
-            <SupportTicketSMTPRestrictionsForm />
+            <SupportTicketSMTPFields
+              handleChange={handleSMTPFieldChange}
+              formState={smtpFields}
+            />
           ) : (
             <React.Fragment>
               {props.hideProductSelection ? null : (
