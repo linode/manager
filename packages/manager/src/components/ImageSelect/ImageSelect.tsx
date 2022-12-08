@@ -87,37 +87,29 @@ export const imagesToGroupedItems = (images: Image[]) => {
         draft.push({
           label: thisGroup,
           options: group
-            .filter((thisImage) => {
-              const { eol } = thisImage;
-              if (!eol) {
-                // no end of life is known so show Image to be safe
-                return true;
-              }
-              const diff = DateTime.now().diff(DateTime.fromISO(eol), 'months')
-                .months;
-
+            .reduce((acc: ImageItem[], thisImage) => {
+              const { created, eol, id, label, vendor } = thisImage;
+              const differenceInMonths = DateTime.now().diff(
+                DateTime.fromISO(eol!),
+                'months'
+              ).months;
               // if image is past its end of life, hide it, otherwise show it
-              return diff > MAX_MONTHS_EOL_FILTER ? false : true;
-            })
-            .map((thisImage) => {
-              const { eol } = thisImage;
-              const diff = DateTime.now().diff(DateTime.fromISO(eol!), 'months')
-                .months;
-              let fullLabel = thisImage.label;
-              // Add suffix 'depricated' to the image if end of life is past
-              if (diff > 0) {
-                fullLabel += ' (Deprecated)';
+              if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
+                acc.push({
+                  created,
+                  // Add suffix 'depricated' to the image at end of life.
+                  label:
+                    differenceInMonths > 0 ? `${label} (Deprecated)` : label,
+                  value: id,
+                  className: vendor
+                    ? // Use Tux as a fallback.
+                      `fl-${distroIcons[vendor] ?? 'tux'}`
+                    : `fl-tux`,
+                });
               }
-              return {
-                created: thisImage.created,
-                label: fullLabel,
-                value: thisImage.id,
-                className: thisImage.vendor
-                  ? // Use Tux as a fallback.
-                    `fl-${distroIcons[thisImage.vendor] ?? 'tux'}`
-                  : `fl-tux`,
-              };
-            })
+
+              return acc;
+            }, [])
             .sort(sortByImageVersion),
         });
       });
