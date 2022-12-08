@@ -99,7 +99,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
                   created,
                   // Add suffix 'depricated' to the image at end of life.
                   label:
-                    differenceInMonths > 0 ? `${label} (Deprecated)` : label,
+                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
                   value: id,
                   className: vendor
                     ? // Use Tux as a fallback.
