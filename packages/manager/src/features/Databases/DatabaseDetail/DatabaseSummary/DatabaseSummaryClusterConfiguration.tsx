@@ -5,6 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
+import { dcDisplayNames } from 'src/constants';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import {
   databaseEngineMap,
@@ -74,9 +75,13 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
           <Typography className={classes.label}>Version</Typography>
           {databaseEngineMap[database.engine]} v{database.version}
         </Box>
-        <Box display="flex" style={{ marginBottom: 12 }}>
+        <Box display="flex">
           <Typography className={classes.label}>Nodes</Typography>
           {configuration}
+        </Box>
+        <Box display="flex" style={{ marginBottom: 12 }}>
+          <Typography className={classes.label}>Region</Typography>
+          {dcDisplayNames[database.region]}
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Plan</Typography>
