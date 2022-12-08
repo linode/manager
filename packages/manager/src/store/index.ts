@@ -36,6 +36,7 @@ import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
 } from 'src/store/globalErrors';
+// Remove
 import images, {
   defaultState as defaultImagesState,
   State as ImagesState,
@@ -142,7 +143,7 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  images: defaultImagesState,
+  images: defaultImagesState, // Remove
   kubernetes: defaultKubernetesState,
   nodePools: defaultNodePoolsState,
   linodes: defaultLinodesState,
@@ -157,7 +158,7 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  images: ImagesState;
+  images: ImagesState; // Remove
   kubernetes: KubernetesState;
   nodePools: KubeNodePoolsState;
   linodes: LinodesState;
@@ -221,7 +222,7 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  images,
+  images, // Remove
   kubernetes,
   nodePools,
   linodes,
