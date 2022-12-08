@@ -5,6 +5,7 @@ export type ImageStatus =
   | 'pending_upload';
 
 export interface Image {
+  eol: string | null;
   id: string;
   label: string;
   description: string | null;

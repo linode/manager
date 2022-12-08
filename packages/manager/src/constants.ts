@@ -89,6 +89,13 @@ export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 export const MAX_VOLUME_SIZE = 10240;
 
 /**
+ * As per the current support polocy
+ * timeline for depricated distro is 6 months beyond eol date from image endpoints.
+ * refere M3-5753 for more info.
+ */
+export const MAX_MONTHS_EOL_FILTER = 6;
+
+/**
  * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
  * to get the actual interval.
  */
