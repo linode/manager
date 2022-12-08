@@ -210,6 +210,10 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
   }, [open]);
 
+  React.useEffect(() => {
+    setDescription(formatDescription(smtpFields));
+  }, [smtpFields]);
+
   // React Query entities
   const { data: databases, isLoading: databasesLoading } = useAllDatabasesQuery(
     entityType === 'database_id'
@@ -356,24 +360,18 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setSMTPFields((smtpFields) => {
       return { ...smtpFields, [name]: value };
     });
-    setDescription(formatDescription(smtpFields));
   };
 
   /**
    * When variant ticketTypes include additional fields, those field labels and values must be formatted to a string for the description field.
-   * For readability, format the description string with field labels as headings in Markdown.
+   * For readability, replace field names with field labels for human readability and format the description in Markdown.
    */
   const formatDescription = (fields: Record<string, string>) => {
-    // Replace field names with field labels for human readability
-    const labeledFields = Object.entries(fields).reduce(
-      (accum, [key, value]) => ({
-        ...accum,
-        ...{ [fieldNameToLabelMap[key]]: value },
-      }),
-      {}
-    );
-    return Object.entries(labeledFields)
-      .map(([key, value]) => `**${key}**\n${value ? value : 'No response'}`)
+    return Object.entries(fields)
+      .map(
+        ([key, value]) =>
+          `**${fieldNameToLabelMap[key]}**\n${value ? value : 'No response'}`
+      )
       .join('\n\n');
   };
 
