@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   text: {
     fontSize: '0.875rem',
-    lineHeight: '1rem',
+    lineHeight: '1.25rem',
   },
   header: {
     fontSize: '1rem',
