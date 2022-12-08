@@ -373,7 +373,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       {}
     );
     return Object.entries(labeledFields)
-      .map(([key, value]) => `## ${key}\n${value}`)
+      .map(([key, value]) => `**${key}**\n${value ? value : 'No response'}`)
       .join('\n\n');
   };
 
