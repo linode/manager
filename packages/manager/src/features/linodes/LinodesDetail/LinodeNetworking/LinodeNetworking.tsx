@@ -259,7 +259,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           }
 
           // get info on an IPv6 range; if its shared check if its shared to our Linode
-          // if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
           const resp = await getIPv6RangeInfo(range.range);
 
           if (
@@ -914,7 +913,7 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  // IPv6 ranges and pools (/116s) to display in the networking table
+  // IPv6 ranges and pools to display in the networking table
   ipDisplay.push(
     ...[...(ipv6 ? ipv6.global : [])].map((thisIP) => {
       /* If you want to surface rdns info in the future you have two options:
