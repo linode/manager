@@ -87,6 +87,11 @@ export type EntityType =
 
 export type TicketType = 'smtp' | 'general';
 
+interface TicketTypeData {
+  dialogTitle: string;
+  helperText: string | JSX.Element;
+}
+
 export interface Props {
   open: boolean;
   prefilledTitle?: string;
@@ -100,6 +105,32 @@ export interface Props {
 }
 
 export type CombinedProps = Props;
+
+const ticketTypeMap: Record<TicketType, TicketTypeData> = {
+  smtp: {
+    dialogTitle: smtpDialogTitle,
+    helperText: smtpHelperText,
+  },
+  general: {
+    dialogTitle: 'Open a Support Ticket',
+    helperText: (
+      <>
+        {`We love our customers, and we\u{2019}re here to help if you need us.
+        Please keep in mind that not all topics are within the scope of our support.
+        For overall system status, please see `}
+        <a
+          href="https://status.linode.com"
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+        >
+          status.linode.com
+        </a>
+        .
+      </>
+    ),
+  },
+};
 
 const entityMap: Record<string, EntityType> = {
   Linodes: 'linode_id',
@@ -357,9 +388,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setSMTPFields((smtpFields) => {
-      return { ...smtpFields, [name]: value };
-    });
+    setSMTPFields((smtpFields) => ({ ...smtpFields, [name]: value }));
   };
 
   /**
@@ -501,54 +530,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const renderDialogTitle = () => {
-    const general = 'Open a Support Ticket';
-    let dialogTitle: string;
-
-    switch (ticketType) {
-      case 'smtp':
-        dialogTitle = smtpDialogTitle;
-        break;
-      case 'general':
-      default:
-        dialogTitle = general;
-    }
-    return dialogTitle;
-  };
-
-  const renderHelperText = () => {
-    const general = (
-      <>
-        {`We love our customers, and we\u{2019}re here to help if you need us.
-        Please keep in mind that not all topics are within the scope of our support.
-        For overall system status, please see `}
-        <a
-          href="https://status.linode.com"
-          target="_blank"
-          aria-describedby="external-site"
-          rel="noopener noreferrer"
-        >
-          status.linode.com
-        </a>
-        .
-      </>
-    );
-    let helperText: string | React.ReactFragment;
-
-    switch (ticketType) {
-      case 'smtp':
-        helperText = smtpHelperText;
-        break;
-      case 'general':
-      default:
-        helperText = general;
-    }
-
-    return (
-      <Typography data-qa-support-ticket-helper-text>{helperText}</Typography>
-    );
-  };
-
   const smtpRequirementsMet =
     smtpFields.customerName.length > 0 &&
     smtpFields.useCase.length > 0 &&
@@ -640,13 +621,15 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       onClose={close}
       fullHeight
       fullWidth
-      title={renderDialogTitle()}
+      title={ticketTypeMap[ticketType].dialogTitle}
     >
       {props.children || (
         <React.Fragment>
           {generalError && <Notice error text={generalError} data-qa-notice />}
 
-          {renderHelperText()}
+          <Typography data-qa-support-ticket-helper-text>
+            {ticketTypeMap[ticketType].helperText}
+          </Typography>
           <TextField
             label="Title"
             placeholder="Enter a title for your ticket."
