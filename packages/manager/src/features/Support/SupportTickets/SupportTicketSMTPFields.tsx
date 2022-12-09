@@ -14,7 +14,7 @@ export interface Props {
 
 export const smtpDialogTitle = 'Contact Support: SMTP Restriction Removal';
 export const smtpHelperText =
-  'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you in 72-96 hours.';
+  'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you as soon as possible.';
 
 export const fieldNameToLabelMap: Record<string, string> = {
   customerName: 'First and last name',
