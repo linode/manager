@@ -704,6 +704,12 @@ export class LinodeCreate extends React.PureComponent<
               <DocsSidebar docs={this.props.documentation} />
             ) : null}
           </CheckoutSummary>
+          <Typography variant="body1">
+            A temporary hold for $1.00, which will be released, may be used to
+            authorize your card. After that, you will only be charged for the
+            services you use.
+          </Typography>
+          <br />
           <Box
             display="flex"
             justifyContent={showAgreement ? 'space-between' : 'flex-end'}
