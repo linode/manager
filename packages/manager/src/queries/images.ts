@@ -1,17 +1,22 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
-import { queryClient, updateInPaginatedStore } from './base';
 import {
-  Image,
-  getImage,
-  getImages,
-  CreateImagePayload,
   // ImageUploadPayload,
   createImage,
-  updateImage,
+  CreateImagePayload,
   deleteImage,
   // uploadImage,
-} from '@linode/api-v4/lib/images';
+  Event,
+  getImage,
+  getImages,
+  Image,
+  updateImage,
+} from '@linode/api-v4';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { useMutation, useQuery } from 'react-query';
+import {
+  doesItemExistInPaginatedStore,
+  queryClient,
+  updateInPaginatedStore,
+} from './base';
 
 export const queryKey = 'images';
 
@@ -74,3 +79,46 @@ export const useDeleteImageMutation = () =>
 // Remove Image from cache
 export const removeImageFromCache = (imageId: number | string) =>
   updateInPaginatedStore<Image>(`${queryKey}-list`, Number(imageId), {});
+
+export const imageEventsHandler = (event: Event) => {
+  const { action, status, entity } = event;
+
+  switch (action) {
+    case 'image_delete':
+      if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
+        queryClient.invalidateQueries(`${queryKey}-list`);
+      }
+      return;
+
+    /**
+     * Not ideal, but we don't have a choice: disk_imagize entity is the Linode
+     * where the disk resides, not the image (as one would expect).
+     */
+    case 'disk_imagize':
+      if (status === 'failed' && event.secondary_entity) {
+        updateInPaginatedStore<Image>(
+          `${queryKey}-list`,
+          event.secondary_entity.id,
+          {}
+        );
+        return;
+      }
+
+      if (
+        ['finished', 'notification'].includes(status) &&
+        event.secondary_entity
+      ) {
+        updateInPaginatedStore<Image>(
+          `${queryKey}-list`,
+          `private/${event.secondary_entity.id}`,
+          {
+            status: 'available',
+          }
+        );
+        return;
+      }
+
+    default:
+      return;
+  }
+};
