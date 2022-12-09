@@ -538,7 +538,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const requirementsMet =
     description.length > 0 &&
     summary.length > 0 &&
-    (ticketType === 'smtp' ? smtpRequirementsMet : null);
+    (ticketType === 'smtp' ? smtpRequirementsMet : ticketType === 'general');
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;

@@ -49,7 +49,10 @@ describe('SMTPRestrictionText component', () => {
     mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
     const { getByText } = renderWithTheme(
-      <SMTPRestrictionText supportLink={{ label: 'Test Linode' }} {...props} />
+      <SMTPRestrictionText
+        supportLink={{ label: 'Test Linode', id: 0 }}
+        {...props}
+      />
     );
 
     expect(
@@ -63,7 +66,10 @@ describe('SMTPRestrictionText component', () => {
     mockActiveSince = '2022-11-27 00:00:00Z';
 
     const { queryByText } = renderWithTheme(
-      <SMTPRestrictionText supportLink={{ label: 'Test Linode' }} {...props} />
+      <SMTPRestrictionText
+        supportLink={{ label: 'Test Linode', id: 0 }}
+        {...props}
+      />
     );
 
     expect(
@@ -87,7 +93,10 @@ describe('SMTPRestrictionText component', () => {
     mockActiveSince = MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED;
 
     const { getByText } = renderWithTheme(
-      <SMTPRestrictionText supportLink={{ label: 'Test Linode' }} {...props} />
+      <SMTPRestrictionText
+        supportLink={{ label: 'Test Linode', id: 0 }}
+        {...props}
+      />
     );
 
     expect(getByText('open a support ticket')).toHaveAttribute(

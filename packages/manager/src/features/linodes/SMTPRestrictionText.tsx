@@ -7,7 +7,10 @@ import { useAccount } from 'src/queries/account';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 export interface Props {
   children: (props: { text: React.ReactNode }) => React.ReactNode;
-  supportLink?: { label: string };
+  supportLink?: {
+    label: string;
+    id: number;
+  };
 }
 
 const SMTPRestrictionText: React.FC<Props> = (props) => {
@@ -33,6 +36,7 @@ const SMTPRestrictionText: React.FC<Props> = (props) => {
         <SupportLink
           text="open a support ticket"
           title={`SMTP Restriction Removal on ${supportLink.label}`}
+          entity={{ type: 'linode_id', id: supportLink.id }}
           ticketType="smtp"
         />
       ) : (
