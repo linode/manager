@@ -363,8 +363,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   };
 
   /**
-   * When variant ticketTypes include additional fields, those field labels and values must be formatted to a string for the description field.
-   * For readability, replace field names with field labels for human readability and format the description in Markdown.
+   * When variant ticketTypes include additional fields, fields must concat to one description string.
+   * For readability, replace field names with field labels and format the description in Markdown.
    */
   const formatDescription = (fields: Record<string, string>) => {
     return Object.entries(fields)

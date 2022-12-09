@@ -1,7 +1,5 @@
 import * as React from 'react';
-// import { APIError } from '@linode/api-v4/lib/types';
 import TextField from 'src/components/TextField';
-// import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Props {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -15,7 +13,6 @@ export interface Props {
 }
 
 export const smtpDialogTitle = 'Contact Support: SMTP Restriction Removal';
-
 export const smtpHelperText =
   'In an effort to fight spam, outbound connections are restricted on ports 25, 465, and 587. To have these restrictions removed, please provide us with the following information. A member of the Support team will review your request and follow up with you in 72-96 hours.';
 
@@ -30,10 +27,6 @@ export const fieldNameToLabelMap: Record<string, string> = {
 };
 
 const SupportTicketSMTPFields: React.FC<Props> = (props) => {
-  // const [errors] = React.useState<APIError[] | undefined>();
-  // const hasErrorFor = getErrorMap(['input'], errors);
-  // const inputError = hasErrorFor.input;
-
   const { handleChange, formState } = props;
 
   return (
@@ -44,7 +37,6 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
         name="customerName"
         value={formState.customerName}
         onChange={handleChange}
-        // errorText={inputError}
         data-qa-ticket-customer-name
       />
       <TextField
@@ -52,7 +44,6 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
         name="companyName"
         value={formState.companyName}
         onChange={handleChange}
-        // errorText={inputError}
         data-qa-ticket-company-name
       />
       <TextField
@@ -63,7 +54,6 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
         name="useCase"
         value={formState.useCase}
         onChange={handleChange}
-        // errorText={inputError}
         data-qa-ticket-use-case
       />
       <TextField
@@ -74,7 +64,6 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
         name="emailDomains"
         value={formState.emailDomains}
         onChange={handleChange}
-        // errorText={inputError}
         data-qa-ticket-email-domains
       />
       <TextField
@@ -85,7 +74,6 @@ const SupportTicketSMTPFields: React.FC<Props> = (props) => {
         name="publicInfo"
         value={formState.publicInfo}
         onChange={handleChange}
-        // errorText={inputError}
         data-qa-ticket-public-info
       />
     </React.Fragment>
