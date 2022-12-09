@@ -2,7 +2,7 @@ import * as Factory from 'factory.ts';
 import { Image } from '@linode/api-v4/lib/images/types';
 
 export const imageFactory = Factory.Sync.makeFactory<Image>({
-  eol: null,
+  eol: new Date().toISOString(),
   id: Factory.each((id) => `private/${id}`),
   label: Factory.each((i) => `image-${i}`),
   description: 'An image',
