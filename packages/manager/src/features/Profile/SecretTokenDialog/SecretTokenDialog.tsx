@@ -29,7 +29,10 @@ const useStyles = makeStyles(() => ({
 
 type CombinedProps = Props;
 
-const renderActions = (onClose: () => void) => (
+const renderActions = (
+  onClose: () => void,
+  modalConfirmationButtonText: string
+) => (
   <ActionsPanel>
     <Button
       buttonType="primary"
@@ -37,7 +40,7 @@ const renderActions = (onClose: () => void) => (
       data-qa-confirm
       data-testid="dialog-confirm"
     >
-      I Have Saved My Keys
+      {modalConfirmationButtonText}
     </Button>
   </ActionsPanel>
 );
@@ -46,7 +49,11 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { title, value, objectStorageKey, open, onClose } = props;
 
-  const actions = renderActions(onClose);
+  const modalConfirmationButtonText = objectStorageKey
+    ? `I Have Saved My Secret Key`
+    : `I Have Saved My ${title}`;
+
+  const actions = renderActions(onClose, modalConfirmationButtonText);
 
   return (
     <ConfirmationDialog
