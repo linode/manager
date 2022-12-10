@@ -406,6 +406,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const close = () => {
     props.onClose();
+    if (ticketType === 'smtp') {
+      window.setTimeout(() => resetDrawer(true), 500);
+    }
   };
 
   const onCancel = () => {
