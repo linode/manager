@@ -708,8 +708,15 @@ export const handlers = [
     return res(ctx.delay(5000), ctx.json(transfer));
   }),
   rest.get('*/account/invoices', (req, res, ctx) => {
-    const invoices = invoiceFactory.buildList(10);
-    return res(ctx.json(makeResourcePage(invoices)));
+    const linodeInvoice = invoiceFactory.build({
+      date: '2022-12-01T18:04:01',
+      label: 'LinodeInvoice',
+    });
+    const akamaiInvoice = invoiceFactory.build({
+      date: '2022-12-16T18:04:01',
+      label: 'AkamaiInvoice',
+    });
+    return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
   }),
   rest.get('*/account/maintenance', (req, res, ctx) => {
     accountMaintenanceFactory.resetSequenceNumber();
