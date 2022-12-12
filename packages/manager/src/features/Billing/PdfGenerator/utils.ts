@@ -8,6 +8,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
+import { ADDRESSES } from 'src/constants';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -208,7 +209,11 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
   });
 };
 
-export const createFooter = (doc: JSPDF, font: string) => {
+export const createFooter = (
+  doc: JSPDF,
+  font: string,
+  address: typeof ADDRESSES['linode']
+) => {
   const fontSize = 10;
   const left = 215;
   const top = 600;
@@ -217,8 +222,8 @@ export const createFooter = (doc: JSPDF, font: string) => {
   doc.setFont(font);
 
   const footerText =
-    `249 Arch St. - Philadelphia, PA 19106\r\n` +
-    `USA\r\n` +
+    `${address.address1}, ${address.city}, ${address.state} ${address.zip}\r\n` +
+    `${address.country}\r\n` +
     'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com\r\n';
 
   doc.text(footerText, left, top, {
@@ -289,3 +294,10 @@ const formatDescription = (desc?: string) => {
   const cleanedType = descChunks[0].replace(/\(pending upgrade\)/, '');
   return `${cleanedType}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
 };
+
+export interface PdfResult {
+  status: 'success' | 'error';
+  error?: Error;
+}
+
+export const dateConversion = (str: string): number => Date.parse(str);

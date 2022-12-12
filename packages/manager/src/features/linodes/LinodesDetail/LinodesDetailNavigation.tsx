@@ -36,6 +36,7 @@ type CombinedProps = ContextProps &
 
 const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
   const {
+    linodeId,
     linodeLabel,
     linodeType,
     linodeCreated,
@@ -106,7 +107,7 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
         segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
       {tabs[getIndex()]?.title === 'Network' ? (
-        <SMTPRestrictionText supportLink={true}>
+        <SMTPRestrictionText supportLink={{ label: linodeLabel, id: linodeId }}>
           {({ text }) =>
             !hasDismissedBanner && text !== null ? (
               <Notice

@@ -843,6 +843,25 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Mastodon',
+    categories: ['Media and Entertainment'],
+    description: `Mastodon is an open-source and decentralized micro-blogging platform, supporting federation and public access to the server.`,
+    summary:
+      'Mastodon is an open-source and decentralized micro-blogging platform.',
+    related_guides: [
+      {
+        title: 'Deploying Mastodon through the Linode Marketplace',
+        href: 'https://www.linode.com/docs/guides/mastodon-marketplace-app/',
+      },
+    ],
+    website: 'https://docs.joinmastodon.org/',
+    logo_url: 'mastodon.svg',
+    colors: {
+      start: '6364FF',
+      end: '563ACC',
+    },
+  },
+  {
     name: 'MEAN',
     categories: ['Development'],
     description: `MEAN is a full-stack JavaScript-based framework which accelerates web application development much faster than other frameworks.  All involved technologies are well-established, offer robust feature sets, and are well-supported by their maintaining organizations. These characteristics make them a great choice for your applications.`,

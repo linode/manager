@@ -1,7 +1,9 @@
 import { Image } from '@linode/api-v4/lib/images';
 import produce from 'immer';
+import { DateTime } from 'luxon';
 import { equals, groupBy } from 'ramda';
 import * as React from 'react';
+import { MAX_MONTHS_EOL_FILTER } from 'src/constants';
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
@@ -85,20 +87,29 @@ export const imagesToGroupedItems = (images: Image[]) => {
         draft.push({
           label: thisGroup,
           options: group
-            .map((thisImage) => {
-              const isDeprecated = thisImage.deprecated;
-              const fullLabel =
-                thisImage.label + (isDeprecated ? ' (Deprecated)' : '');
-              return {
-                created: thisImage.created,
-                label: fullLabel,
-                value: thisImage.id,
-                className: thisImage.vendor
-                  ? // Use Tux as a fallback.
-                    `fl-${distroIcons[thisImage.vendor] ?? 'tux'}`
-                  : `fl-tux`,
-              };
-            })
+            .reduce((acc: ImageItem[], thisImage) => {
+              const { created, eol, id, label, vendor } = thisImage;
+              const differenceInMonths = DateTime.now().diff(
+                DateTime.fromISO(eol!),
+                'months'
+              ).months;
+              // if image is past its end of life, hide it, otherwise show it
+              if (!eol || differenceInMonths < MAX_MONTHS_EOL_FILTER) {
+                acc.push({
+                  created,
+                  // Add suffix 'depricated' to the image at end of life.
+                  label:
+                    differenceInMonths > 0 ? `${label} (deprecated)` : label,
+                  value: id,
+                  className: vendor
+                    ? // Use Tux as a fallback.
+                      `fl-${distroIcons[vendor] ?? 'tux'}`
+                    : `fl-tux`,
+                });
+              }
+
+              return acc;
+            }, [])
             .sort(sortByImageVersion),
         });
       });

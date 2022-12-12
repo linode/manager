@@ -89,6 +89,13 @@ export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 export const MAX_VOLUME_SIZE = 10240;
 
 /**
+ * As per the current support polocy
+ * timeline for depricated distro is 6 months beyond eol date from image endpoints.
+ * refere M3-5753 for more info.
+ */
+export const MAX_MONTHS_EOL_FILTER = 6;
+
+/**
  * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
  * to get the actual interval.
  */
@@ -278,12 +285,12 @@ export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
  */
-export const MBpsIntraDC = 75;
+export const MBpsIntraDC = 200;
 
 /**
  * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
  */
-export const MBpsInterDC = 1.5;
+export const MBpsInterDC = 7.5;
 
 /**
  * The incoming network rate (in Gbps) that is standard for all Linodes
@@ -339,3 +346,35 @@ export const DB_ROOT_USERNAME = 'linroot';
 // https://www.linode.com/docs/email/best-practices/running-a-mail-server/
 export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
   '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
+
+// The date Linode switching to Akamai (for purposes of billing)
+export const AKAMAI_DATE = '2022-12-15 00:00:00';
+
+export const ADDRESSES = {
+  linode: {
+    entity: 'Linode',
+    address1: '249 Arch St.',
+    city: 'Philadelphia',
+    state: 'PA',
+    zip: '19106',
+    country: 'USA',
+  },
+  akamai: {
+    us: {
+      entity: 'Akamai Technologies, Inc.',
+      address1: '145 Broadway',
+      city: 'Cambridge',
+      state: 'MA',
+      zip: '02142',
+      country: 'USA',
+    },
+    international: {
+      entity: 'Akamai Technologies International AG',
+      address1: 'Chemin des Aulx 18',
+      city: 'Plan-les-Ouates',
+      state: 'Geneva',
+      zip: '1228',
+      country: 'Switzerland',
+    },
+  },
+};
