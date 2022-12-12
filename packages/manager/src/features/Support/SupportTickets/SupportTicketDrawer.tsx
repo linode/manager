@@ -241,10 +241,6 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
   }, [open]);
 
-  React.useEffect(() => {
-    setDescription(formatDescription(smtpFields));
-  }, [smtpFields]);
-
   // React Query entities
   const { data: databases, isLoading: databasesLoading } = useAllDatabasesQuery(
     entityType === 'database_id'
@@ -486,6 +482,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const onSubmit = () => {
     const { onSuccess } = props;
+    const _description =
+      ticketType === 'smtp' ? formatDescription(smtpFields) : description;
     if (!['none', 'general'].includes(entityType) && !entityID) {
       setErrors([
         {
@@ -499,7 +497,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setSubmitting(true);
 
     createSupportTicket({
-      description,
+      description: _description,
       summary,
       [entityType]: Number(entityID),
     })
@@ -539,9 +537,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     smtpFields.emailDomains.length > 0 &&
     smtpFields.publicInfo.length > 0;
   const requirementsMet =
-    description.length > 0 &&
     summary.length > 0 &&
-    (ticketType === 'smtp' ? smtpRequirementsMet : ticketType === 'general');
+    (ticketType === 'smtp' ? smtpRequirementsMet : description.length > 0);
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;
