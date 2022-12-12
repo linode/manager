@@ -1,12 +1,16 @@
 import * as React from 'react';
 import { Link, LinkProps } from 'react-router-dom';
-import { EntityType } from 'src/features/Support/SupportTickets/SupportTicketDrawer';
+import {
+  EntityType,
+  TicketType,
+} from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
 interface Props {
   title?: string;
   description?: string;
   text: string;
   entity?: EntityForTicketDetails;
+  ticketType?: TicketType;
   onClick?: LinkProps['onClick'];
 }
 
@@ -16,7 +20,7 @@ export interface EntityForTicketDetails {
 }
 
 const SupportLink = (props: Props) => {
-  const { description, text, title, entity, onClick } = props;
+  const { description, text, title, entity, ticketType, onClick } = props;
   return (
     <Link
       to={{
@@ -26,6 +30,7 @@ const SupportLink = (props: Props) => {
           title,
           description,
           entity,
+          ticketType,
         },
       }}
       onClick={onClick}

@@ -20,6 +20,7 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import { EntityForTicketDetails } from 'src/components/SupportLink/SupportLink';
 import TextField from 'src/components/TextField';
 import useEntities, { Entity } from 'src/hooks/useEntities';
+import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
@@ -37,6 +38,11 @@ import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
+import SupportTicketSMTPFields, {
+  smtpDialogTitle,
+  fieldNameToLabelMap,
+  smtpHelperText,
+} from './SupportTicketSMTPFields';
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
@@ -79,11 +85,19 @@ export type EntityType =
   | 'none'
   | 'general';
 
+export type TicketType = 'smtp' | 'general';
+
+interface TicketTypeData {
+  dialogTitle: string;
+  helperText: string | JSX.Element;
+}
+
 export interface Props {
   open: boolean;
   prefilledTitle?: string;
   prefilledDescription?: string;
   prefilledEntity?: EntityForTicketDetails;
+  prefilledTicketType?: TicketType;
   onClose: () => void;
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
   keepOpenOnSuccess?: boolean;
@@ -91,6 +105,32 @@ export interface Props {
 }
 
 export type CombinedProps = Props;
+
+const ticketTypeMap: Record<TicketType, TicketTypeData> = {
+  smtp: {
+    dialogTitle: smtpDialogTitle,
+    helperText: smtpHelperText,
+  },
+  general: {
+    dialogTitle: 'Open a Support Ticket',
+    helperText: (
+      <>
+        {`We love our customers, and we\u{2019}re here to help if you need us.
+        Please keep in mind that not all topics are within the scope of our support.
+        For overall system status, please see `}
+        <a
+          href="https://status.linode.com"
+          target="_blank"
+          aria-describedby="external-site"
+          rel="noopener noreferrer"
+        >
+          status.linode.com
+        </a>
+        .
+      </>
+    ),
+  },
+};
 
 const entityMap: Record<string, EntityType> = {
   Linodes: 'linode_id',
@@ -141,7 +181,15 @@ export const getInitialValue = (
 };
 
 export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
-  const { open, prefilledDescription, prefilledTitle, prefilledEntity } = props;
+  const {
+    open,
+    prefilledDescription,
+    prefilledTitle,
+    prefilledEntity,
+    prefilledTicketType,
+  } = props;
+
+  const { data: account } = useAccount();
 
   const valuesFromStorage = storage.supportText.get();
 
@@ -158,6 +206,18 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
   const [entityID, setEntityID] = React.useState<string>(
     prefilledEntity ? String(prefilledEntity.id) : ''
   );
+  const [ticketType, setTicketType] = React.useState<TicketType>(
+    prefilledTicketType ?? 'general'
+  );
+
+  // SMTP ticket information
+  const [smtpFields, setSMTPFields] = React.useState({
+    customerName: account ? `${account?.first_name} ${account?.last_name}` : '',
+    companyName: '',
+    useCase: '',
+    emailDomains: '',
+    publicInfo: '',
+  });
 
   // Entities for populating dropdown
   const [data, setData] = React.useState<Item<any>[]>([]);
@@ -283,6 +343,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setDescription(_description);
     setEntityID('');
     setEntityType('general');
+    setTicketType('general');
   };
 
   const resetDrawer = (clearValues: boolean = false) => {
@@ -321,8 +382,29 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setEntityID(String(selected?.value) ?? '');
   };
 
+  const handleSMTPFieldChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setSMTPFields((smtpFields) => ({ ...smtpFields, [name]: value }));
+  };
+
+  /**
+   * When variant ticketTypes include additional fields, fields must concat to one description string.
+   * For readability, replace field names with field labels and format the description in Markdown.
+   */
+  const formatDescription = (fields: Record<string, string>) => {
+    return Object.entries(fields)
+      .map(
+        ([key, value]) =>
+          `**${fieldNameToLabelMap[key]}**\n${value ? value : 'No response'}`
+      )
+      .join('\n\n');
+  };
+
   const close = () => {
     props.onClose();
+    if (ticketType === 'smtp') {
+      window.setTimeout(() => resetDrawer(true), 500);
+    }
   };
 
   const onCancel = () => {
@@ -400,6 +482,8 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
 
   const onSubmit = () => {
     const { onSuccess } = props;
+    const _description =
+      ticketType === 'smtp' ? formatDescription(smtpFields) : description;
     if (!['none', 'general'].includes(entityType) && !entityID) {
       setErrors([
         {
@@ -413,7 +497,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     setSubmitting(true);
 
     createSupportTicket({
-      description,
+      description: _description,
       summary,
       [entityType]: Number(entityID),
     })
@@ -447,7 +531,14 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const requirementsMet = description.length > 0 && summary.length > 0;
+  const smtpRequirementsMet =
+    smtpFields.customerName.length > 0 &&
+    smtpFields.useCase.length > 0 &&
+    smtpFields.emailDomains.length > 0 &&
+    smtpFields.publicInfo.length > 0;
+  const requirementsMet =
+    summary.length > 0 &&
+    (ticketType === 'smtp' ? smtpRequirementsMet : description.length > 0);
 
   const hasErrorFor = getErrorMap(['summary', 'description', 'input'], errors);
   const summaryError = hasErrorFor.summary;
@@ -530,25 +621,14 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       onClose={close}
       fullHeight
       fullWidth
-      title="Open a Support Ticket"
+      title={ticketTypeMap[ticketType].dialogTitle}
     >
       {props.children || (
         <React.Fragment>
           {generalError && <Notice error text={generalError} data-qa-notice />}
 
           <Typography data-qa-support-ticket-helper-text>
-            {`We love our customers, and we\u{2019}re here to help if you need us.
-          Please keep in mind that not all topics are within the scope of our support.
-          For overall system status, please see `}
-            <a
-              href="https://status.linode.com"
-              target="_blank"
-              aria-describedby="external-site"
-              rel="noopener noreferrer"
-            >
-              status.linode.com
-            </a>
-            .
+            {ticketTypeMap[ticketType].helperText}
           </Typography>
           <TextField
             label="Title"
@@ -560,58 +640,67 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
             errorText={summaryError}
             data-qa-ticket-summary
           />
-          {props.hideProductSelection ? null : (
+          {ticketType === 'smtp' ? (
+            <SupportTicketSMTPFields
+              handleChange={handleSMTPFieldChange}
+              formState={smtpFields}
+            />
+          ) : (
             <React.Fragment>
-              <Select
-                options={topicOptions}
-                label="What is this regarding?"
-                value={selectedTopic}
-                onChange={handleEntityTypeChange}
-                data-qa-ticket-entity-type
-                isClearable={false}
-              />
-              {!['none', 'general'].includes(entityType) && (
-                <>
+              {props.hideProductSelection ? null : (
+                <React.Fragment>
                   <Select
-                    options={entityOptions}
-                    value={selectedEntity}
-                    disabled={entityOptions.length === 0}
-                    errorText={entityError || inputError}
-                    placeholder={`Select a ${entityIdToNameMap[entityType]}`}
-                    label={entityIdToNameMap[entityType] ?? 'Entity Select'}
-                    onChange={handleEntityIDChange}
-                    data-qa-ticket-entity-id
-                    isLoading={areEntitiesLoading}
+                    options={topicOptions}
+                    label="What is this regarding?"
+                    value={selectedTopic}
+                    onChange={handleEntityTypeChange}
+                    data-qa-ticket-entity-type
                     isClearable={false}
                   />
-                  {!areEntitiesLoading && entityOptions.length === 0 ? (
-                    <FormHelperText>
-                      You don&rsquo;t have any {entityIdToNameMap[entityType]}s
-                      on your account.
-                    </FormHelperText>
-                  ) : null}
-                </>
+                  {!['none', 'general'].includes(entityType) && (
+                    <>
+                      <Select
+                        options={entityOptions}
+                        value={selectedEntity}
+                        disabled={entityOptions.length === 0}
+                        errorText={entityError || inputError}
+                        placeholder={`Select a ${entityIdToNameMap[entityType]}`}
+                        label={entityIdToNameMap[entityType] ?? 'Entity Select'}
+                        onChange={handleEntityIDChange}
+                        data-qa-ticket-entity-id
+                        isLoading={areEntitiesLoading}
+                        isClearable={false}
+                      />
+                      {!areEntitiesLoading && entityOptions.length === 0 ? (
+                        <FormHelperText>
+                          You don&rsquo;t have any{' '}
+                          {entityIdToNameMap[entityType]}s on your account.
+                        </FormHelperText>
+                      ) : null}
+                    </>
+                  )}
+                </React.Fragment>
               )}
+              <TabbedReply
+                required
+                error={descriptionError}
+                handleChange={handleDescriptionInputChange}
+                value={description}
+                innerClass={classes.innerReply}
+                rootClass={classes.rootReply}
+                placeholder={
+                  "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+                }
+              />
+              <Accordion
+                heading="Formatting Tips"
+                detailProps={{ className: classes.expPanelSummary }}
+              >
+                <Reference />
+              </Accordion>
+              <AttachFileForm files={files} updateFiles={updateFiles} />
             </React.Fragment>
           )}
-          <TabbedReply
-            required
-            error={descriptionError}
-            handleChange={handleDescriptionInputChange}
-            value={description}
-            innerClass={classes.innerReply}
-            rootClass={classes.rootReply}
-            placeholder={
-              "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-            }
-          />
-          <Accordion
-            heading="Formatting Tips"
-            detailProps={{ className: classes.expPanelSummary }}
-          >
-            <Reference />
-          </Accordion>
-          <AttachFileForm files={files} updateFiles={updateFiles} />
           <ActionsPanel>
             <Button
               buttonType="secondary"
