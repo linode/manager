@@ -1559,7 +1559,7 @@ export const oneClickApps: OCA[] = [
       'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_guides: [
       {
-        title: 'Deploying Splunk through the Linode Marketplace',
+        title: 'Deploying Shadowsocks through the Linode Marketplace',
         href: 'https://www.linode.com/docs/guides/shadowsocks-marketplace-app/',
       },
     ],
