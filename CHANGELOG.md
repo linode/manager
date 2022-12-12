@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2022-12-12] - v1.82.0
+
+### Added:
+- SMTP restriction support ticket form
+- Region to Database summary view
+- Mastodon Marketplace App
+
+### Changed:
+- Updated secrets modal button text
+- Improved Linode migration time estimates
+- Made help banner text more readable
+- Switched to Akamai billing information and tax identification numbers
+- Filter deprecated Linux images
+
+### Fixed:
+- Delayed loading of /56 ranges in Linode Network tab
+
+
 ## [2022-11-30] - v1.81.0
 
 ### Added:
