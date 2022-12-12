@@ -50,7 +50,7 @@ export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
   const { title, value, objectStorageKey, open, onClose } = props;
 
   const modalConfirmationButtonText = objectStorageKey
-    ? `I Have Saved My Secret Key`
+    ? 'I Have Saved My Secret Key'
     : `I Have Saved My ${title}`;
 
   const actions = renderActions(onClose, modalConfirmationButtonText);
