@@ -714,7 +714,7 @@ export const handlers = [
     });
     const akamaiInvoice = invoiceFactory.build({
       date: '2022-12-16T18:04:01',
-      label: 'AkamaiIncoice',
+      label: 'AkamaiInvoice',
     });
     return res(ctx.json(makeResourcePage([linodeInvoice, akamaiInvoice])));
   }),
