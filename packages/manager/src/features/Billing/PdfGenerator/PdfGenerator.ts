@@ -158,7 +158,8 @@ export const printInvoice = (
     });
 
     const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
-    const TaxStartDate = taxes ? dateConversion(taxes.date) : Infinity;
+    const TaxStartDate =
+      taxes && taxes?.date ? dateConversion(taxes.date) : Infinity;
 
     /**
      * Users who have identified their country as one of the ones targeted by
@@ -179,7 +180,7 @@ export const printInvoice = (
      * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
-    const hasTax = convertedInvoiceDate > TaxStartDate;
+    const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
     const countryTax = hasTax ? taxes?.country_tax : undefined;
     const provincialTax = hasTax
       ? taxes?.provincial_tax_ids?.[account.state]

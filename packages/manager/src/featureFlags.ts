@@ -8,7 +8,8 @@ export interface TaxDetail {
 }
 
 interface Taxes {
-  date: string;
+  // If there is no date, assume the tax should be applied
+  date?: string;
   country_tax?: TaxDetail;
   provincial_tax_ids?: Record<string, TaxDetail>;
 }
