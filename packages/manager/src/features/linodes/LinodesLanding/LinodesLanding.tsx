@@ -309,8 +309,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           <MaintenanceBanner />
         )}
         <Grid container className={classes.root}>
-          <Grid item xs={12}>
+          <Grid item xs={12} style={{ padding: 0 }}>
             <DocumentTitleSegment segment="Linodes" />
+            <LandingHeader
+              title="Linodes"
+              entity="Linode"
+              onAddNew={() => this.props.history.push('/linodes/create')}
+              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+            />
             <PreferenceToggle<boolean>
               localStorageKey="GROUP_LINODES"
               preferenceOptions={[false, true]}
