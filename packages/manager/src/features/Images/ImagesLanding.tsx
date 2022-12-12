@@ -402,7 +402,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         description={drawer.description}
         selectedDisk={drawer.selectedDisk}
         selectedLinode={drawer.selectedLinode || null}
-        imageID={drawer.imageID}
+        imageId={drawer.imageID}
         changeDisk={changeSelectedDisk}
         changeLinode={changeSelectedLinode}
         changeLabel={setLabel}
