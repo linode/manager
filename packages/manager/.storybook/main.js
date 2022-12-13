@@ -11,6 +11,7 @@ module.exports = {
   },
   stories: [componentsPath, featuresPath],
   addons: [
+    'storybook-addon-swc',
     '@storybook/addon-docs',
     '@storybook/addon-knobs',
     '@storybook/addon-controls',
