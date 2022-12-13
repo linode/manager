@@ -947,8 +947,8 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Mastodon',
-    alt_name: '',
-    alt_description: '',
+    alt_name: 'Open source social media',
+    alt_description: 'Open source Twitter alternative.',
     categories: ['Media and Entertainment'],
     description: `Mastodon is an open-source and decentralized micro-blogging platform, supporting federation and public access to the server.`,
     summary:
