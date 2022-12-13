@@ -201,7 +201,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       ipv6Error: undefined,
     });
 
-    const refreshIPv4 = getLinodeIPs(this.props.linode.id)
+    const linodeIPs = getLinodeIPs(this.props.linode.id)
       .then((ips) => {
         const hasIPv6Range = ips.ipv6 && ips.ipv6.global.length > 0;
 
@@ -245,12 +245,11 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         });
       });
 
-    const refreshIPv6 = getAllIPv6Ranges()
+    const IPv6Sharing = getAllIPv6Ranges()
       .then(async (resp) => {
         const ranges = resp.data;
 
         const sharedRanges: IPRange[] = [];
-        const staticRanges: IPRange[] = [];
         const availableRanges: IPRangeInformation[] = [];
         const rangeConstruction = await ranges.reduce(async (acc, range) => {
           await acc;
@@ -260,14 +259,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           }
 
           // get info on an IPv6 range; if its shared check if its shared to our Linode
-          // if its not shared (!is_bgp) figure out if its a slaac address or a statically routed range
           const resp = await getIPv6RangeInfo(range.range);
-          let slaac;
-          if (!resp.is_bgp) {
-            await getLinodeIPs(this.props.linode.id).then((ips) => {
-              slaac = ips?.ipv6?.slaac.address;
-            });
-          }
 
           if (
             this.props.flags.ipv6Sharing &&
@@ -276,9 +268,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           ) {
             // any range that is shared to this linode
             sharedRanges.push(range);
-          } else if (!resp.is_bgp && range.route_target === slaac) {
-            // any range that is statically routed to this linode
-            staticRanges.push(range);
           } else if (this.props.flags.ipv6Sharing) {
             // any range that is not shared to this linode or static on this linode
             availableRanges.push(resp);
@@ -291,7 +280,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           this.setState({
             sharedRanges,
             availableRanges,
-            staticRanges,
             ipv6Loading: false,
           });
         });
@@ -307,7 +295,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
         });
       });
 
-    return [refreshIPv4, refreshIPv6];
+    return [linodeIPs, IPv6Sharing];
   };
 
   handleRemoveIPSuccess = (linode?: Linode) => {
@@ -720,10 +708,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
   }
 
   renderIPTable = () => {
-    const ipDisplay = ipResponseToDisplayRows(
-      [...this.state.staticRanges, ...this.state.sharedRanges],
-      this.state.linodeIPs
-    );
+    const ipDisplay = ipResponseToDisplayRows(this.state.linodeIPs);
 
     return (
       <div style={{ marginTop: 20 }}>
@@ -905,7 +890,6 @@ interface IPDisplay {
 
 // Takes an IP Response object and returns high-level IP display rows.
 export const ipResponseToDisplayRows = (
-  routedRanges: IPRange[],
   ipResponse?: LinodeIPsResponse
 ): IPDisplay[] => {
   if (!ipResponse) {
@@ -929,14 +913,9 @@ export const ipResponseToDisplayRows = (
     ipDisplay.push(ipToDisplay(ipv6?.link_local, 'Link Local'));
   }
 
-  // IPv6 pools (/116s) and routed ranges to display in the networking table
+  // IPv6 ranges and pools to display in the networking table
   ipDisplay.push(
-    ...[
-      ...(ipv6
-        ? ipv6.global.filter((ip) => (ip.prefix === 116 ? ip : null))
-        : []),
-      ...routedRanges,
-    ].map((thisIP) => {
+    ...[...(ipv6 ? ipv6.global : [])].map((thisIP) => {
       /* If you want to surface rdns info in the future you have two options:
         1. Use the info we already have:
           We get info on our routed ranges from /networking/ipv6/ranges and /networking/ipv6/ranges/<id>, because the API

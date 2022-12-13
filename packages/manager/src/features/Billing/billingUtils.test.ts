@@ -1,4 +1,9 @@
-import { cleanCVV, renderUnitPrice } from './billingUtils';
+import { AKAMAI_DATE } from 'src/constants';
+import {
+  cleanCVV,
+  getShouldUseAkamaiBilling,
+  renderUnitPrice,
+} from './billingUtils';
 
 describe('Billing helper methods', () => {
   describe('cleanCVV function', () => {
@@ -26,6 +31,16 @@ describe('Billing helper methods', () => {
     it('should return the formatted value if the value can be parsed into a Number', () => {
       expect(renderUnitPrice('0')).toBe('$0');
       expect(renderUnitPrice('0.015')).toBe('$0.015');
+    });
+  });
+
+  describe('getShouldUseAkamaiBilling', () => {
+    it(`should return true if date is past ${AKAMAI_DATE}`, () => {
+      expect(getShouldUseAkamaiBilling('2022-12-16T18:04:01')).toBe(true);
+    });
+
+    it(`should return false if date is before ${AKAMAI_DATE}`, () => {
+      expect(getShouldUseAkamaiBilling('2022-12-01T18:04:01')).toBe(false);
     });
   });
 });
