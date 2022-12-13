@@ -10,7 +10,7 @@ import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import sanitize from 'sanitize-html';
 // Register all languages we intend to use
 // This is not great. Require doesn't work in the broswer and modern TS/JS tooling
-// gets very unhappy.
+// gets very upset.
 hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
 hljs.registerLanguage(
