@@ -296,7 +296,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     imageLabel: string,
     imageDescription: string
   ) => {
-    removeImageFromCache(imageId);
+    removeImageFromCache();
     props.history.push('/images/create/upload', {
       imageLabel,
       imageDescription,
@@ -304,7 +304,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCancelFailedClick = (imageId: string) => {
-    removeImageFromCache(imageId);
+    removeImageFromCache();
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {

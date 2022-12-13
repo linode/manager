@@ -77,8 +77,8 @@ export const useDeleteImageMutation = () =>
   );
 
 // Remove Image from cache
-export const removeImageFromCache = (imageId: number | string) =>
-  updateInPaginatedStore<Image>(`${queryKey}-list`, Number(imageId), {});
+export const removeImageFromCache = () =>
+  queryClient.invalidateQueries(`${queryKey}-list`);
 
 export const imageEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
