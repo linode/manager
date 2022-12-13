@@ -209,15 +209,39 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
   };
 
   onSearch = (query: string) => {
-    if (query === '') {
+    if (query === '' || query.trim().length === 0) {
       this.setState({ isSearching: false });
     } else {
-      const appsMatchingQuery = this.props.appInstances?.filter((app) =>
-        app.label.toLowerCase().includes(query.toLowerCase())
+      /**
+       * Enable ability to search OCA's by category, name, alternative name and
+       * alternative description keywords.
+       * */
+      const matchingOCALabels = oneClickApps.reduce(
+        (acc: string[], { categories, name, alt_name, alt_description }) => {
+          const hasMatchingOCA = JSON.stringify(
+            `${categories.join(
+              ' '
+            )} ${name} ${alt_name} ${alt_description}`.replace(/,/g, '')
+          )
+            .toLocaleLowerCase()
+            .includes(query.toLocaleLowerCase());
+          if (hasMatchingOCA) {
+            acc.push(name.trim());
+          }
+          return acc;
+        },
+        []
       );
+
+      const filteredAppInstances = this.props.appInstances?.filter(
+        (instance) => {
+          return matchingOCALabels.includes(instance.label.trim());
+        }
+      );
+
       this.setState({
         isFiltering: false,
-        filteredApps: appsMatchingQuery,
+        filteredApps: filteredAppInstances,
         isSearching: true,
         categoryFilter: null,
         query: query,
