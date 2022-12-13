@@ -56,11 +56,7 @@ export const useUpdateImageMutation = () =>
       updateImage(imageId, label, description),
     {
       onSuccess(image) {
-        updateInPaginatedStore<Image>(
-          `${queryKey}-list`,
-          Number(image.id),
-          image
-        );
+        updateInPaginatedStore<Image>(`${queryKey}-list`, image.id, image);
       },
     }
   );

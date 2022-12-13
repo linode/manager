@@ -412,7 +412,14 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
 
       <ActionsPanel
         style={{ marginTop: 16 }}
-        updateFor={[requirementsMet, classes, submitting, mode]}
+        updateFor={[
+          requirementsMet,
+          classes,
+          submitting,
+          mode,
+          label,
+          description,
+        ]}
       >
         <Button
           onClick={close}
