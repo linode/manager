@@ -90,6 +90,10 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
     enqueueSnackbar,
     changeLabel,
     changeDescription,
+    changeLinode,
+    changeDisk,
+    open,
+    onClose,
   } = props;
 
   // console.log(label);
@@ -143,12 +147,12 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   }, [props.disks]);
 
   React.useEffect(() => {
-    if (!props.selectedLinode) {
+    if (!selectedLinode) {
       setDisks([]);
     }
 
-    if (props.selectedLinode) {
-      getLinodeDisks(props.selectedLinode)
+    if (selectedLinode) {
+      getLinodeDisks(selectedLinode)
         .then((response) => {
           if (!mounted) {
             return;
@@ -176,22 +180,22 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
           }
         });
     }
-  }, [props.selectedLinode]);
+  }, [selectedLinode]);
 
   const handleLinodeChange = (linodeID: number) => {
     // Clear any errors
     setErrors(undefined);
-    props.changeLinode(linodeID);
+    changeLinode(linodeID);
   };
 
   const handleDiskChange = (diskID: string | null) => {
     // Clear any errors
     setErrors(undefined);
-    props.changeDisk(diskID);
+    changeDisk(diskID);
   };
 
   const close = () => {
-    props.onClose();
+    onClose();
     if (mounted) {
       setErrors(undefined);
       setNotice(undefined);
@@ -204,7 +208,7 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   const onSubmit = () => {
     setErrors(undefined);
     setNotice(undefined);
-    setSubmitting(false);
+    setSubmitting(true);
 
     switch (mode) {
       case 'edit':
@@ -290,8 +294,6 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
     // When creating an image, disable the submit button until a Linode and
     // disk are selected. When restoring to an existing Linode, the Linode select is the only field.
     // When imagizing, the Linode is selected already so only check for a disk selection.
-    const { mode, selectedDisk, selectedLinode } = props;
-
     const isDiskSelected = Boolean(selectedDisk);
 
     switch (mode) {
@@ -325,7 +327,7 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   const diskError = hasErrorFor('disk_id');
 
   return (
-    <Drawer open={props.open} onClose={props.onClose} title={titleMap[mode]}>
+    <Drawer open={open} onClose={onClose} title={titleMap[mode]}>
       {!canCreateImage ? (
         <Notice
           error
