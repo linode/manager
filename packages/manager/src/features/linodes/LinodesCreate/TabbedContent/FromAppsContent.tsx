@@ -241,18 +241,16 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         []
       );
 
-      const filteredAppInstances = this.props.appInstances?.filter(
-        (instance) => {
-          return matchingOCALabels.includes(instance.label.trim());
-        }
-      );
+      const appsMatchingQuery = this.props.appInstances?.filter((instance) => {
+        return matchingOCALabels.includes(instance.label.trim());
+      });
 
       this.setState({
         isFiltering: false,
-        filteredApps: filteredAppInstances,
+        filteredApps: appsMatchingQuery,
         isSearching: true,
         categoryFilter: null,
-        query: query,
+        query,
       });
     }
   };
