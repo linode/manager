@@ -10,7 +10,7 @@ export interface Volume {
   updated: string;
   filesystem_path: string;
   tags: string[];
-  hardware_type: VolumeHardwareType;
+  // hardware_type: VolumeHardwareType;
 }
 
 export type VolumeStatus =
@@ -22,7 +22,7 @@ export type VolumeStatus =
   | 'migrating'
   | 'contact_support';
 
-type VolumeHardwareType = 'hdd' | 'nvme';
+// type VolumeHardwareType = 'hdd' | 'nvme';
 
 export interface VolumeRequestPayload {
   label: string;

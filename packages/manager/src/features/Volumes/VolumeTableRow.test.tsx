@@ -27,7 +27,6 @@ const props: CombinedProps = {
   created: '',
   updated: '',
   filesystem_path: '',
-  hardware_type: 'hdd',
   linode_id: 0,
   linode_label: 'linode-0',
   openForEdit: jest.fn(),
