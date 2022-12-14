@@ -1,4 +1,6 @@
 import {
+  CreateKubeClusterPayload,
+  createKubernetesCluster,
   deleteKubernetesCluster,
   getKubernetesClusters,
   getNodePools,
@@ -39,6 +41,17 @@ const getAllNodePoolsForCluster = (clusterId: number) =>
 export const useDeleteKubernetesClusterMutation = () => {
   return useMutation<{}, APIError[], { id: number }>(
     ({ id }) => deleteKubernetesCluster(id),
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([`${queryKey}-list`]);
+      },
+    }
+  );
+};
+
+export const useCreateKubernetesClusterMutation = () => {
+  return useMutation<KubernetesCluster, APIError[], CreateKubeClusterPayload>(
+    createKubernetesCluster,
     {
       onSuccess() {
         queryClient.invalidateQueries([`${queryKey}-list`]);

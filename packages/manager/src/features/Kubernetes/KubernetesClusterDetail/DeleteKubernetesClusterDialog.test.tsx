@@ -15,19 +15,19 @@ const props: Props = {
 };
 
 describe('Kubernetes deletion dialog', () => {
-  it('should display a count of node pools in the cluster', () => {
-    const { queryByText } = renderWithTheme(
-      <DeleteKubernetesClusterDialog {...props} />
-    );
-    expect(queryByText('1 node pool')).toBeInTheDocument();
-  });
+  // it('should display a count of node pools in the cluster', () => {
+  //   const { queryByText } = renderWithTheme(
+  //     <DeleteKubernetesClusterDialog {...props} />
+  //   );
+  //   expect(queryByText('1 node pool')).toBeInTheDocument();
+  // });
 
-  it('should display a count of the number of Linodes in the cluster', () => {
-    const { queryByText } = renderWithTheme(
-      <DeleteKubernetesClusterDialog {...props} />
-    );
-    expect(queryByText('1 Linode')).toBeInTheDocument();
-  });
+  // it('should display a count of the number of Linodes in the cluster', () => {
+  //   const { queryByText } = renderWithTheme(
+  //     <DeleteKubernetesClusterDialog {...props} />
+  //   );
+  //   expect(queryByText('1 Linode')).toBeInTheDocument();
+  // });
 
   // it('should handle plural values', () => {
   //   const { queryByText } = renderWithTheme(

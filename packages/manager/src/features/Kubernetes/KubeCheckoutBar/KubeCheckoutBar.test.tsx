@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { notReallyANodePoolFactory } from 'src/factories/kubernetesCluster';
 import { typeFactory } from 'src/factories/types';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 
-const pools = nodePoolFactory.buildList(5, { count: 3 });
+const pools = notReallyANodePoolFactory.buildList(5, { count: 3 });
 const types = typeFactory.buildList(5);
 
 const props: Props = {
@@ -37,7 +37,10 @@ describe('KubeCheckoutBar', () => {
   });
 
   it('should show a warning if any pool has fewer than 3 nodes', () => {
-    const poolsWithSmallNode = [...pools, nodePoolFactory.build({ count: 2 })];
+    const poolsWithSmallNode = [
+      ...pools,
+      notReallyANodePoolFactory.build({ count: 2 }),
+    ];
     const { getByText } = renderComponent({
       ...props,
       pools: poolsWithSmallNode,

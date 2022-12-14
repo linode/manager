@@ -1,6 +1,10 @@
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import {
+  kubeLinodeFactory,
+  linodeTypeFactory,
+  nodePoolFactory,
+} from 'src/factories';
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import { nodePoolRequests } from 'src/__data__/nodePools';
 
 import {
   getMonthlyPrice,
@@ -22,21 +26,11 @@ const mockNodePool = {
   },
 };
 
-const badNodePool = {
-  id: 7,
-  clusterID: 2,
-  linodes: [],
-  type: 'not-a-real-type',
-  count: 1,
-  totalMonthlyPrice: 0,
-  autoscaler: {
-    enabled: false,
-    min: 1,
-    max: 1,
-  },
-};
-
 describe('helper functions', () => {
+  const badPool = nodePoolFactory.build({
+    type: 'not-a-real-type',
+  });
+
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {
       const expectedPrice =
@@ -47,9 +41,9 @@ describe('helper functions', () => {
     });
 
     it('should return zero for bad input', () => {
-      expect(
-        getMonthlyPrice(badNodePool.type, badNodePool.count, extendedTypes)
-      ).toBe(0);
+      expect(getMonthlyPrice(badPool.type, badPool.count, extendedTypes)).toBe(
+        0
+      );
     });
   });
 
@@ -68,28 +62,41 @@ describe('helper functions', () => {
   });
 
   describe('Get total cluster memory/CPUs', () => {
+    const pools = nodePoolFactory.buildList(3, {
+      type: 'g6-fake-1',
+      nodes: kubeLinodeFactory.buildList(3),
+    });
+
+    const types = linodeTypeFactory.buildList(1, {
+      id: 'g6-fake-1',
+      memory: 1024,
+      disk: 1048576,
+      vcpus: 2,
+    });
+
     it('should sum up the total CPU cores of all nodes', () => {
-      expect(
-        getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
-      ).toHaveProperty('CPU', 13);
+      expect(getTotalClusterMemoryCPUAndStorage(pools, types)).toHaveProperty(
+        'CPU',
+        2 * 9
+      );
     });
 
     it('should sum up the total RAM of all pools', () => {
-      expect(
-        getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
-      ).toHaveProperty('RAM', 26624);
+      expect(getTotalClusterMemoryCPUAndStorage(pools, types)).toHaveProperty(
+        'RAM',
+        1024 * 9
+      );
     });
 
     it('should sum up the total storage of all nodes', () => {
-      expect(
-        getTotalClusterMemoryCPUAndStorage(nodePoolRequests, extendedTypes)
-      ).toHaveProperty('Storage', 563200);
+      expect(getTotalClusterMemoryCPUAndStorage(pools, types)).toHaveProperty(
+        'Storage',
+        1048576 * 9
+      );
     });
 
     it("should return 0 if it can't match the data", () => {
-      expect(
-        getTotalClusterMemoryCPUAndStorage([badNodePool], extendedTypes)
-      ).toEqual({
+      expect(getTotalClusterMemoryCPUAndStorage([badPool], types)).toEqual({
         CPU: 0,
         RAM: 0,
         Storage: 0,

@@ -1,7 +1,6 @@
 import { Account } from '@linode/api-v4/lib/account';
 import {
   KubeNodePoolResponse,
-  KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
@@ -45,35 +44,6 @@ export const addPriceToNodePool = (
   ...pool,
   totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData),
 });
-
-/**
- * Usually when displaying or editing clusters, we need access
- * to pricing information as well as statistics, which aren't
- * returned from the API and must be computed.
- */
-export const extendCluster = (
-  cluster: KubernetesCluster,
-  pools: ExtendedPoolNode[],
-  types: LinodeType[]
-): ExtendedCluster => {
-  // Identify which pools belong to this cluster and add pricing information.
-  const _pools = pools.reduce((accum, thisPool) => {
-    return thisPool.clusterID === cluster.id
-      ? [...accum, addPriceToNodePool(thisPool, types)]
-      : accum;
-  }, []);
-  const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
-    _pools,
-    types
-  );
-  return {
-    ...cluster,
-    node_pools: _pools,
-    totalMemory: RAM,
-    totalCPU: CPU,
-    totalStorage: Storage,
-  };
-};
 
 interface ClusterData {
   CPU: number;

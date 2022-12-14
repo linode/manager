@@ -4,15 +4,7 @@ import { kubernetesClusterFactory } from 'src/factories';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
 import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
 
-const extendedClusters = kubernetesClusterFactory.buildList(3);
-
-const cluster = {
-  ...extendedClusters[0],
-  node_pools: extendedClusters[0].node_pools.map((pool) => ({
-    ...pool,
-    totalMonthlyPrice: 10,
-  })),
-};
+const cluster = kubernetesClusterFactory.build();
 
 const props: Props = {
   cluster,
@@ -39,14 +31,29 @@ describe('ClusterRow component', () => {
   });
 
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {
-    const haProps = { ...props, isClusterHighlyAvailable: true };
     const { getByTestId, queryByTestId, rerender } = render(
-      wrapWithTableBody(<KubernetesClusterRow {...haProps} />)
+      wrapWithTableBody(
+        <KubernetesClusterRow
+          {...props}
+          cluster={kubernetesClusterFactory.build({
+            control_plane: { high_availability: true },
+          })}
+        />
+      )
     );
 
     getByTestId('ha-chip');
 
-    rerender(wrapWithTableBody(<KubernetesClusterRow {...props} />));
+    rerender(
+      wrapWithTableBody(
+        <KubernetesClusterRow
+          {...props}
+          cluster={kubernetesClusterFactory.build({
+            control_plane: { high_availability: false },
+          })}
+        />
+      )
+    );
     expect(queryByTestId('ha-chip')).toBeNull();
   });
 });

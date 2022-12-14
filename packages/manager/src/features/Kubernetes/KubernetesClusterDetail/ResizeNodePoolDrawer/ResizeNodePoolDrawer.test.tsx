@@ -1,13 +1,13 @@
 import { fireEvent } from '@testing-library/react';
 import * as React from 'react';
 import types from 'src/utilities/types.json';
-import { nodePoolFactory } from 'src/factories/kubernetesCluster';
+import { notReallyANodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 import ResizeNodePoolDrawer, { Props } from './ResizeNodePoolDrawer';
 
-const pool = nodePoolFactory.build({ type: 'g6-standard-1' });
-const smallPool = nodePoolFactory.build({ count: 2 });
+const pool = notReallyANodePoolFactory.build({ type: 'g6-standard-1' });
+const smallPool = notReallyANodePoolFactory.build({ count: 2 });
 
 const props: Props = {
   open: true,

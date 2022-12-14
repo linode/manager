@@ -1,6 +1,5 @@
 import {
   CreateKubeClusterPayload,
-  createKubernetesCluster,
   PoolNodeRequest,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -25,6 +24,7 @@ import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { useCreateKubernetesClusterMutation } from 'src/queries/kubernetes';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
@@ -109,6 +109,10 @@ type CombinedProps = RouteComponentProps<{}> & WithTypesProps;
 export const CreateCluster: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { typesData: allTypes, typesLoading, typesError } = props;
+
+  const {
+    mutateAsync: createKubernetesCluster,
+  } = useCreateKubernetesClusterMutation();
 
   const { data, error: regionsError } = useRegionsQuery();
   const regionsData = data ?? [];
