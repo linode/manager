@@ -644,11 +644,11 @@ export const handlers = [
     });
     const nvmeVolumeUpgrading = volumeFactory.build({
       id: 2,
-      hardware_type: 'nvme',
+      // hardware_type: 'nvme',
     });
     const newNVMeVolume = volumeFactory.build({
       id: 1,
-      hardware_type: 'nvme',
+      // hardware_type: 'nvme',
     });
 
     const volumes = [
