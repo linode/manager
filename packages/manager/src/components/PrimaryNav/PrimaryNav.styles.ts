@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   logoItem: {
     display: 'flex',
     alignItems: 'center',
-    padding: '12px 12px 0 14px',
+    // padding: '12px 12px 0 14px',
     position: 'relative',
     '& svg': {
       maxWidth: theme.spacing(3) + 91,

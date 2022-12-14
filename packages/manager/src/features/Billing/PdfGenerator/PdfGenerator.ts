@@ -9,7 +9,9 @@ import { splitEvery } from 'ramda';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
-import LinodeLogo from './LinodeLogo';
+// import LinodeLogo from './LinodeLogo';
+import CompasLogo from './CompasLogo';
+
 import {
   createFooter,
   createInvoiceItemsTable,
@@ -45,31 +47,31 @@ const addLeftHeader = (
   }
 
   doc.setFont(baseFont, 'bold');
-  addLine('Remit to:');
-  doc.setFont(baseFont, 'normal');
+  // addLine('Remit to:');
+  // doc.setFont(baseFont, 'normal');
 
-  addLine(`Linode`);
-  addLine('249 Arch St.');
-  addLine('Philadelphia, PA 19106');
-  addLine('USA');
-  if (taxID) {
-    addLine(`Linode Tax ID: ${taxID}`);
-  }
+  // addLine(`Linode`);
+  // addLine('249 Arch St.');
+  // addLine('Philadelphia, PA 19106');
+  // addLine('USA');
+  // if (taxID) {
+  //   addLine(`Linode Tax ID: ${taxID}`);
+  // }
 
   return currentLine;
 };
 
 const addRightHeader = (doc: jsPDF, account: Account) => {
   const {
-    address_1,
-    address_2,
-    city,
-    company,
-    country,
+    // address_1,
+    // address_2,
+    // city,
+    // company,
+    // country,
     first_name,
     last_name,
-    state,
-    zip,
+    // state,
+    // zip,
   } = account;
 
   const RightHeaderPadding = 300;
@@ -89,16 +91,16 @@ const addRightHeader = (doc: jsPDF, account: Account) => {
   doc.setFont(baseFont, 'normal');
 
   addLine(`${first_name} ${last_name}`);
-  addLine(`${company}`);
-  addLine(`${address_1}`);
-  if (address_2) {
-    addLine(`${address_2}`);
-  }
-  addLine(`${city}, ${state}, ${zip}`);
-  addLine(`${country}`);
-  if (account.tax_id) {
-    addLine(`Tax ID: ${account.tax_id}`);
-  }
+  // addLine(`${company}`);
+  // addLine(`${address_1}`);
+  // if (address_2) {
+  //   addLine(`${address_2}`);
+  // }
+  // addLine(`${city}, ${state}, ${zip}`);
+  // addLine(`${country}`);
+  // if (account.tax_id) {
+  //   addLine(`Tax ID: ${account.tax_id}`);
+  // }
 
   return currentLine;
 };
@@ -175,7 +177,7 @@ export const printInvoice = (
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
+      doc.addImage(CompasLogo, 'JPEG', 150, 5, 120, 50);
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -226,7 +228,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
+    doc.addImage(CompasLogo, 'JPEG', 150, 5, 120, 50);
     const leftHeaderYPosition = addLeftHeader(
       doc,
       1,

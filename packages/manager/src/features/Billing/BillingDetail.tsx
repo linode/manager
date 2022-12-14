@@ -13,7 +13,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import BillingActivityPanel from './BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import BillingSummary from './BillingPanels/BillingSummary';
 import ContactInfo from './BillingPanels/ContactInfoPanel';
-import PaymentInformation from './BillingPanels/PaymentInfoPanel';
+// import PaymentInformation from './BillingPanels/PaymentInfoPanel';
 import { useAllPaymentMethodsQuery } from 'src/queries/accountPayment';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import { PAYPAL_CLIENT_ID } from 'src/constants';
@@ -35,8 +35,8 @@ type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 export const BillingDetail: React.FC<CombinedProps> = (props) => {
   const {
     data: paymentMethods,
-    isLoading: paymentMethodsLoading,
-    error: paymentMethodsError,
+    // isLoading: paymentMethodsLoading,
+    // error: paymentMethodsError,
   } = useAllPaymentMethodsQuery();
 
   const {
@@ -91,12 +91,12 @@ export const BillingDetail: React.FC<CombinedProps> = (props) => {
                 taxId={account.tax_id}
                 history={props.history}
               />
-              <PaymentInformation
+              {/* <PaymentInformation
                 loading={paymentMethodsLoading}
                 error={paymentMethodsError}
                 paymentMethods={paymentMethods}
                 isAkamaiCustomer={account?.billing_source === 'akamai'}
-              />
+              /> */}
             </Grid>
             <BillingActivityPanel accountActiveSince={account?.active_since} />
           </Grid>

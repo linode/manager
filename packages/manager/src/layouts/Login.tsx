@@ -21,6 +21,8 @@ import classNames from 'classnames';
 import Grid from 'src/components/Grid';
 import Hidden from 'src/components/core/Hidden';
 import Divider from 'src/components/core/Divider';
+import { compose } from 'recompose';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -96,9 +98,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = RouteComponentProps;
+type CombinedProps = RouteComponentProps & WithSnackbarProps;
 
 const Login: React.FC<CombinedProps> = (props) => {
+  const { enqueueSnackbar } = props;
   const classes = useStyles();
   const location = useLocation();
   const history = useHistory();
@@ -115,41 +118,47 @@ const Login: React.FC<CombinedProps> = (props) => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams(location.search);
-    const res = await axios.post(
-      `${API_ROOT}/auth-callback`,
-      JSON.stringify({
-        username,
-        password,
-      }),
-      {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+    try {
+      const params = new URLSearchParams(location.search);
+      const res = await axios.post(
+        `${API_ROOT}/auth-callback`,
+        JSON.stringify({
+          username,
+          password,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      let url = new URL(`${APP_ROOT}/oauth/callback?returnTo=/`);
+      const redirectUri = params.get('redirect_uri');
+      if (redirectUri) {
+        url = new URL(redirectUri);
       }
-    );
-    let url = new URL(`${APP_ROOT}/oauth/callback?returnTo=/`);
-    const redirectUri = params.get('redirect_uri');
-    if (redirectUri) {
-      url = new URL(redirectUri);
+      url.searchParams.append('access_token', res.data.access_token);
+      url.searchParams.append('expires_in', res.data.expires_in);
+      url.searchParams.append('state', params.get('state') ?? '');
+      url.hash = url.searchParams.toString();
+      const keys: string[] = [];
+      url.searchParams.forEach((_, key) => {
+        keys.push(key);
+      });
+      keys.forEach((key) => url.searchParams.delete(key));
+      history.replace(`${url.pathname}${url.hash}`);
+    } catch (err) {
+      enqueueSnackbar('Failed to login', { variant: 'error' });
     }
-    url.searchParams.append('access_token', res.data.access_token);
-    url.searchParams.append('expires_in', res.data.expires_in);
-    url.searchParams.append('state', params.get('state') ?? '');
-    url.hash = url.searchParams.toString();
-    const keys: string[] = [];
-    url.searchParams.forEach((_, key) => {
-      keys.push(key);
-    });
-    keys.forEach((key) => url.searchParams.delete(key));
-    history.replace(`${url.pathname}${url.hash}`);
   };
 
   const handleLoginWithGoogle = async () => {
     try {
       const res = await axios.get(`${API_ROOT}/oauthclient${location.search}`);
       window.location.replace(res.data.authUrl);
-    } catch (err) {}
+    } catch (err) {
+      enqueueSnackbar('Failed to login with Google', { variant: 'error' });
+    }
   };
 
   return (
@@ -233,4 +242,8 @@ const Login: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default Login;
+const enhanced = compose<CombinedProps, {}>(
+  withSnackbar
+)(Login);
+
+export default enhanced;

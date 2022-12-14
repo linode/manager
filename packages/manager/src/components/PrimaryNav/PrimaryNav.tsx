@@ -241,7 +241,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             aria-label="Dashboard"
             title="Dashboard"
           >
-            <img src={CompasLogo} width={115} height={43} alt="COMPS Logo" />
+            <img src={CompasLogo} width={"100%"} alt="COMPAS Logo" style={{ backgroundColor: 'white' }} />
             {/* <Logo width={115} height={43} /> */}
           </Link>
         </div>

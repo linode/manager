@@ -88,7 +88,7 @@ const renderAuthentication = () => (
     <Switch>
       <Route path="/login" component={LoginPage} />
       {/* Route that makes GET request to server /oauth/callback */}
-      <Route exact path="/oauth" component={OAuthPage} />
+      <Route exact path="/oauth/authorize" component={OAuthPage} />
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
       {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
