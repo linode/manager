@@ -224,9 +224,9 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
       const matchingOCALabels = oneClickApps.reduce(
         (acc: string[], { categories, name, alt_name, alt_description }) => {
-          const ocaAppString = JSON.stringify(
-            `${name} ${alt_name} ${categories.join(' ')} ${alt_description}`
-          ).toLocaleLowerCase();
+          const ocaAppString = `${name} ${alt_name} ${categories.join(
+            ' '
+          )} ${alt_description}`.toLocaleLowerCase();
 
           const hasMatchingOCA = queryWords.every(
             (queryWord) => ocaAppString.indexOf(queryWord) >= 0
