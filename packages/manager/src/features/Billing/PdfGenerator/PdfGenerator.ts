@@ -6,9 +6,11 @@ import {
 } from '@linode/api-v4/lib/account';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
+import { ADDRESSES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
+import { getShouldUseAkamaiBilling } from '../billingUtils';
 import LinodeLogo from './LinodeLogo.png';
 import {
   createFooter,
@@ -16,7 +18,9 @@ import {
   createInvoiceTotalsTable,
   createPaymentsTable,
   createPaymentsTotalsTable,
+  dateConversion,
   pageMargin,
+  PdfResult,
 } from './utils';
 
 const baseFont = 'helvetica';
@@ -27,6 +31,7 @@ const addLeftHeader = (
   pages: number,
   date: string | null,
   type: string,
+  remitAddress: typeof ADDRESSES['linode'],
   countryTax: TaxDetail | undefined,
   provincialTax?: TaxDetail | undefined
 ) => {
@@ -49,20 +54,22 @@ const addLeftHeader = (
   addLine('Remit to:');
   doc.setFont(baseFont, 'normal');
 
-  addLine(`Linode`);
-  addLine('249 Arch St.');
-  addLine('Philadelphia, PA 19106');
-  addLine('USA');
+  addLine(remitAddress.entity);
+  addLine(remitAddress.address1);
+  addLine(`${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}`);
+  addLine(remitAddress.country);
 
-  doc.setFont(baseFont, 'bold');
-  addLine('Tax ID(s):');
-  doc.setFont(baseFont, 'normal');
+  if (countryTax || provincialTax) {
+    doc.setFont(baseFont, 'bold');
+    addLine('Tax ID(s):');
+    doc.setFont(baseFont, 'normal');
 
-  if (countryTax) {
-    addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
-  }
-  if (provincialTax) {
-    addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
+    if (countryTax) {
+      addLine(`${countryTax.tax_name}: ${countryTax.tax_id}`);
+    }
+    if (provincialTax) {
+      addLine(`${provincialTax.tax_name}: ${provincialTax.tax_id}`);
+    }
   }
 
   return currentLine;
@@ -130,18 +137,11 @@ const addTitle = (doc: jsPDF, y: number, ...textStrings: Title[]) => {
   doc.setFont(baseFont, 'normal');
 };
 
-interface PdfResult {
-  status: 'success' | 'error';
-  error?: Error;
-}
-
-const dateConversion = (str: string): number => Date.parse(str);
-
 export const printInvoice = (
   account: Account,
   invoice: Invoice,
   items: InvoiceItem[],
-  taxBanner: FlagSet['taxBanner']
+  taxes: FlagSet['taxBanner'] | FlagSet['taxes']
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
@@ -158,18 +158,19 @@ export const printInvoice = (
     });
 
     const convertedInvoiceDate = invoice.date && dateConversion(invoice.date);
-    const TaxStartDate = taxBanner ? dateConversion(taxBanner.date) : Infinity;
+    const TaxStartDate =
+      taxes && taxes?.date ? dateConversion(taxes.date) : Infinity;
 
     /**
      * Users who have identified their country as one of the ones targeted by
-     * one of our tax policies will have a taxBanner with at least a .date.
+     * one of our tax policies will have a `taxes` with at least a .date.
      * Customers with no country, or from a country we don't have a tax policy
-     * for, will have a taxBanner of {}, and the following logic will skip them.
+     * for, will have a `taxes` of {}, and the following logic will skip them.
      *
-     * If taxBanner.date is defined, and the invoice we're about to print is after
+     * If taxes.date is defined, and the invoice we're about to print is after
      * that date, we want to add the customer's tax ID to the invoice.
      *
-     * If in addition to the above, taxBanner.linode_tax_id is defined, it means
+     * If in addition to the above, taxes is defined, it means
      * we have a corporate tax ID for the country and should display that in the left
      * side of the header.
      *
@@ -179,11 +180,19 @@ export const printInvoice = (
      * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
-    const hasTax = convertedInvoiceDate > TaxStartDate;
-    const countryTax = hasTax ? taxBanner?.country_tax : undefined;
+    const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
+    const countryTax = hasTax ? taxes?.country_tax : undefined;
     const provincialTax = hasTax
-      ? taxBanner?.provincial_tax_ids?.[account.state]
+      ? taxes?.provincial_tax_ids?.[account.state]
       : undefined;
+
+    const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
+
+    const remitAddress = isAkamaiBilling
+      ? ['US', 'CA'].includes(account.country)
+        ? ADDRESSES.akamai.us
+        : ADDRESSES.akamai.international
+      : ADDRESSES.linode;
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
@@ -195,6 +204,7 @@ export const printInvoice = (
         itemsChunks.length,
         date,
         'Invoice',
+        remitAddress,
         countryTax,
         provincialTax
       );
@@ -205,14 +215,14 @@ export const printInvoice = (
       });
 
       createInvoiceItemsTable(doc, itemsChunk);
-      createFooter(doc, baseFont);
+      createFooter(doc, baseFont, remitAddress);
       if (index < itemsChunks.length - 1) {
         doc.addPage();
       }
     });
 
     createInvoiceTotalsTable(doc, invoice);
-    createFooter(doc, baseFont);
+    createFooter(doc, baseFont, remitAddress);
 
     doc.save(`invoice-${date}.pdf`);
     return {
@@ -240,12 +250,22 @@ export const printPayment = (
     doc.setFontSize(10);
 
     doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
+
+    const isAkamaiBilling = getShouldUseAkamaiBilling(payment.date);
+
+    const remitAddress = isAkamaiBilling
+      ? ['US', 'CA'].includes(account.country)
+        ? ADDRESSES.akamai.us
+        : ADDRESSES.akamai.international
+      : ADDRESSES.linode;
+
     const leftHeaderYPosition = addLeftHeader(
       doc,
       1,
       1,
       date,
       'Payment',
+      remitAddress,
       countryTax
     );
     const rightHeaderYPosition = addRightHeader(doc, account);
@@ -254,7 +274,7 @@ export const printPayment = (
     });
 
     createPaymentsTable(doc, payment);
-    createFooter(doc, baseFont);
+    createFooter(doc, baseFont, remitAddress);
     createPaymentsTotalsTable(doc, payment);
 
     doc.save(`payment-${date}.pdf`);

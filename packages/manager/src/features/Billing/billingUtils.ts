@@ -1,4 +1,7 @@
+import { DateTime } from 'luxon';
+import { AKAMAI_DATE } from 'src/constants';
 import { TaxDetail } from 'src/featureFlags';
+import { parseAPIDate } from 'src/utilities/date';
 
 export const cleanCVV = (input: string): string => {
   // All characters except numbers
@@ -29,3 +32,9 @@ export const renderUnitPrice = (v: null | string) => {
 
 export const akamaiBillingInvoiceText =
   'Linode products and services will appear on your Akamai Technologies invoice.';
+
+export const getShouldUseAkamaiBilling = (date: string) => {
+  const invoiceDate = parseAPIDate(date);
+  const akamaiDate = DateTime.fromSQL(AKAMAI_DATE);
+  return invoiceDate > akamaiDate;
+};
