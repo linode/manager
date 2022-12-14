@@ -74,6 +74,9 @@ function getClientEnvironment(publicUrl) {
         // images into the `src` and `import` them in code to get their paths.
         PUBLIC_URL: publicUrl,
         VERSION: paths.appVersion,
+        // Allow New Relic to be disabled when building Cloud Manager for
+        // environments where it is unneeded.
+        DISABLE_NEW_RELIC: process.env.DISABLE_NEW_RELIC,
       }
     );
   // Stringify all values so we can feed into Webpack DefinePlugin
