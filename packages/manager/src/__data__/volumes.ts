@@ -13,7 +13,6 @@ export const volumes: Volume[] = [
     status: 'active',
     tags: ['tag1', 'tag2'],
     updated: '2018-06-06T13:16:02',
-    // hardware_type: 'hdd',
   },
   {
     created: '2018-06-06T13:16:54',
@@ -27,7 +26,6 @@ export const volumes: Volume[] = [
     status: 'active',
     tags: ['tag1'],
     updated: '2018-06-06T13:16:54',
-    // hardware_type: 'hdd',
   },
   {
     created: '2018-06-27T12:38:51',
@@ -41,7 +39,6 @@ export const volumes: Volume[] = [
     status: 'active',
     tags: ['tag1', 'tag2', 'tag3', 'tag4'],
     updated: '2018-06-27T12:38:51',
-    // hardware_type: 'nvme',
   },
   {
     created: '2018-06-27T12:39:30',
@@ -56,6 +53,5 @@ export const volumes: Volume[] = [
     status: 'active',
     tags: ['tag1', 'tag2', 'tag3'],
     updated: '2018-06-27T12:39:30',
-    // hardware_type: 'hdd',
   },
 ];
