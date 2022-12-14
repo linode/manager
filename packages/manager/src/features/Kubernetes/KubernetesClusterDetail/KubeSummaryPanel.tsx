@@ -31,7 +31,7 @@ import {
 } from 'src/utilities/errorUtils';
 import KubeConfigDisplay from './KubeConfigDisplay';
 import KubeConfigDrawer from './KubeConfigDrawer';
-import KubernetesDialog from './KubernetesDialog';
+import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -150,9 +150,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       push('/kubernetes/clusters')
     );
 
-  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
-    _deleteCluster
-  );
+  const { dialog, closeDialog, openDialog } = useDialog(_deleteCluster);
 
   const [
     resetKubeConfigDialogOpen,
@@ -309,14 +307,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         error={drawerError}
         loading={drawerLoading}
       />
-      <KubernetesDialog
+      <DeleteKubernetesClusterDialog
         open={dialog.isOpen}
-        loading={dialog.isLoading}
-        error={dialog.error}
         clusterLabel={cluster.label}
-        clusterPools={cluster.node_pools}
+        clusterId={cluster.id}
         onClose={closeDialog}
-        onDelete={() => submitDialog(cluster.id)}
       />
       <ConfirmationDialog
         open={resetKubeConfigDialogOpen}

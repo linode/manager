@@ -52,7 +52,6 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
         clusterID={clusterID}
         clusterLabel={clusterLabel}
         currentVersion={currentVersion}
-        nextVersion={nextVersion ?? ''}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
       />

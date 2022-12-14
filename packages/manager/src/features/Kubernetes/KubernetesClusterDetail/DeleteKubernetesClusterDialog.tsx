@@ -13,7 +13,7 @@ import {
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-interface Props {
+export interface Props {
   open: boolean;
   clusterLabel: string;
   clusterId: number;

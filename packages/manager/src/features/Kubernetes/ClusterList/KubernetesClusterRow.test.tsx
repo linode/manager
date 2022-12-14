@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import * as React from 'react';
 import { kubernetesClusterFactory } from 'src/factories';
 import { wrapWithTableBody, wrapWithTheme } from 'src/utilities/testHelpers';
-import { ClusterRow, Props } from './ClusterRow';
+import { KubernetesClusterRow, Props } from './KubernetesClusterRow';
 
 const extendedClusters = kubernetesClusterFactory.buildList(3);
 
@@ -16,8 +16,6 @@ const cluster = {
 
 const props: Props = {
   cluster,
-  hasUpgrade: false,
-  isClusterHighlyAvailable: false,
   openUpgradeDialog: jest.fn(),
   openDeleteDialog: jest.fn(),
 };
@@ -25,14 +23,16 @@ const props: Props = {
 describe('ClusterRow component', () => {
   it('should render', () => {
     const { getByTestId } = render(
-      wrapWithTheme(wrapWithTableBody(<ClusterRow {...props} />))
+      wrapWithTheme(wrapWithTableBody(<KubernetesClusterRow {...props} />))
     );
 
     getByTestId('cluster-row');
   });
 
   it('renders a TableRow with label, and region', () => {
-    const { getByText } = render(wrapWithTableBody(<ClusterRow {...props} />));
+    const { getByText } = render(
+      wrapWithTableBody(<KubernetesClusterRow {...props} />)
+    );
 
     getByText('cluster-0');
     getByText('Dallas, TX');
@@ -41,12 +41,12 @@ describe('ClusterRow component', () => {
   it('renders HA chip for highly available clusters and hides chip for non-ha clusters', () => {
     const haProps = { ...props, isClusterHighlyAvailable: true };
     const { getByTestId, queryByTestId, rerender } = render(
-      wrapWithTableBody(<ClusterRow {...haProps} />)
+      wrapWithTableBody(<KubernetesClusterRow {...haProps} />)
     );
 
     getByTestId('ha-chip');
 
-    rerender(wrapWithTableBody(<ClusterRow {...props} />));
+    rerender(wrapWithTableBody(<KubernetesClusterRow {...props} />));
     expect(queryByTestId('ha-chip')).toBeNull();
   });
 });
