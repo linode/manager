@@ -12,6 +12,7 @@ import {
 } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import CircleProgress from 'src/components/CircleProgress';
 
 export interface Props {
   open: boolean;
@@ -29,11 +30,14 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
 export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterLabel, clusterId, open, onClose } = props;
 
-  const { data: pools } = useAllKubernetesNodePoolQuery(clusterId, open);
+  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(
+    clusterId,
+    open
+  );
 
   const {
     mutateAsync: deleteCluster,
-    isLoading,
+    isLoading: isDeleting,
     error,
   } = useDeleteKubernetesClusterMutation();
 
@@ -58,7 +62,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         buttonType="primary"
         onClick={() => deleteCluster({ id: clusterId })}
         disabled={disabled}
-        loading={isLoading}
+        loading={isDeleting}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
@@ -82,37 +86,43 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
           : undefined
       }
     >
-      <Notice warning>
-        <Typography style={{ fontSize: '0.875rem' }}>
-          <strong>Warning:</strong> This cluster contains {` `}
-          <strong>
-            {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
-          </strong>
-          with a total of {` `}
-          <strong>
-            {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
-          </strong>
-          that will be deleted along with the cluster. Deleting a cluster is
-          permanent and can&rsquo;t be undone.
-        </Typography>
-      </Notice>
-      <TypeToConfirm
-        label="Cluster Name"
-        confirmationText={
-          <span>
-            To confirm deletion, type the name of the cluster (
-            <b>{clusterLabel}</b>) in the field below:
-          </span>
-        }
-        value={confirmText}
-        typographyStyle={{ marginTop: '10px' }}
-        data-testid={'dialog-confirm-text-input'}
-        expand
-        onChange={(input) => {
-          setConfirmText(input);
-        }}
-        visible={preferences?.type_to_confirm}
-      />
+      {isLoading ? (
+        <CircleProgress />
+      ) : (
+        <>
+          <Notice warning>
+            <Typography style={{ fontSize: '0.875rem' }}>
+              <strong>Warning:</strong> This cluster contains {` `}
+              <strong>
+                {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
+              </strong>
+              with a total of {` `}
+              <strong>
+                {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
+              </strong>
+              that will be deleted along with the cluster. Deleting a cluster is
+              permanent and can&rsquo;t be undone.
+            </Typography>
+          </Notice>
+          <TypeToConfirm
+            label="Cluster Name"
+            confirmationText={
+              <span>
+                To confirm deletion, type the name of the cluster (
+                <b>{clusterLabel}</b>) in the field below:
+              </span>
+            }
+            value={confirmText}
+            typographyStyle={{ marginTop: '10px' }}
+            data-testid={'dialog-confirm-text-input'}
+            expand
+            onChange={(input) => {
+              setConfirmText(input);
+            }}
+            visible={preferences?.type_to_confirm}
+          />
+        </>
+      )}
     </ConfirmationDialog>
   );
 };
