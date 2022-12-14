@@ -5,29 +5,30 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getNextVersion,
+  localStorageWarning,
+} from 'src/features/Kubernetes/kubeUtils';
 import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+
 interface DialogProps {
   clusterID: number;
   clusterLabel: string;
   isOpen: boolean;
   currentVersion: string;
-  nextVersion: string | null;
   onClose: () => void;
 }
 
 export const UpgradeDialog: React.FC<DialogProps> = (props) => {
-  const {
-    clusterID,
-    clusterLabel,
-    currentVersion,
-    nextVersion,
-    isOpen,
-    onClose,
-  } = props;
+  const { clusterID, clusterLabel, currentVersion, isOpen, onClose } = props;
+
+  const { data: versions } = useKubernetesVersionQuery();
   const { enqueueSnackbar } = useSnackbar();
 
   const { updateKubernetesCluster } = useKubernetesClusters();
+
+  const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
   const [hasUpdatedSuccessfully, setHasUpdatedSuccessfully] = React.useState(
     false

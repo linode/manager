@@ -1,35 +1,50 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
-import { PoolNodeWithPrice } from 'src/features/Kubernetes/types';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
+import usePreferences from 'src/hooks/usePreferences';
+import {
+  useAllKubernetesNodePoolQuery,
+  useDeleteKubernetesClusterMutation,
+} from 'src/queries/kubernetes';
+import { KubeNodePoolResponse } from '@linode/api-v4';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   open: boolean;
-  loading: boolean;
   clusterLabel: string;
-  clusterPools: PoolNodeWithPrice[];
-  error?: string;
+  clusterId: number;
   onClose: () => void;
-  onDelete: () => void;
 }
 
-export type CombinedProps = Props & PreferencesProps;
+export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
+  return pools.reduce((accum, thisPool) => {
+    return accum + thisPool.count;
+  }, 0);
+};
 
-const renderActions = (
-  disabled: boolean,
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
+export const DeleteKubernetesClusterDialog = (props: Props) => {
+  const { clusterLabel, clusterId, open, onClose } = props;
+
+  const { data: pools } = useAllKubernetesNodePoolQuery(clusterId, open);
+
+  const {
+    mutateAsync: deleteCluster,
+    isLoading,
+    error,
+  } = useDeleteKubernetesClusterMutation();
+
+  const { preferences } = usePreferences();
+  const [confirmText, setConfirmText] = React.useState<string>('');
+  const disabled =
+    preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
+  const poolCount = pools?.length;
+  const linodeCount = getTotalLinodes(pools ?? []);
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -41,9 +56,9 @@ const renderActions = (
       </Button>
       <Button
         buttonType="primary"
-        onClick={onDelete}
+        onClick={() => deleteCluster({ id: clusterId })}
         disabled={disabled}
-        loading={loading}
+        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
@@ -51,39 +66,22 @@ const renderActions = (
       </Button>
     </ActionsPanel>
   );
-};
-
-export const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
-  return pools.reduce((accum, thisPool) => {
-    return accum + thisPool.count;
-  }, 0);
-};
-
-export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
-  const {
-    clusterLabel,
-    clusterPools,
-    error,
-    loading,
-    open,
-    onClose,
-    onDelete,
-    preferences,
-  } = props;
-  const [confirmText, setConfirmText] = React.useState<string>('');
-  const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
-  const poolCount = clusterPools.length;
-  const linodeCount = getTotalLinodes(clusterPools);
 
   return (
     <ConfirmationDialog
       open={open}
       title={`Delete Cluster ${clusterLabel}`}
       onClose={onClose}
-      actions={() => renderActions(disabled, loading, onClose, onDelete)}
+      actions={actions}
+      error={
+        error
+          ? getAPIErrorOrDefault(
+              error,
+              'Unable to delete Kubernetes Cluster'
+            )[0].reason
+          : undefined
+      }
     >
-      {error && <Notice error text={error} />}
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> This cluster contains {` `}
@@ -118,7 +116,3 @@ export const KubernetesDialog: React.FC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default compose<CombinedProps, Props>(withPreferences())(
-  KubernetesDialog
-);

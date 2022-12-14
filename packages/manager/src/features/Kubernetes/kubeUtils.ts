@@ -1,5 +1,6 @@
 import { Account } from '@linode/api-v4/lib/account';
 import {
+  KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
@@ -81,7 +82,7 @@ interface ClusterData {
 }
 
 export const getTotalClusterMemoryCPUAndStorage = (
-  pools: ExtendedPoolNode[],
+  pools: KubeNodePoolResponse[],
   types: LinodeType[]
 ) => {
   if (!types || !pools) {
@@ -89,7 +90,7 @@ export const getTotalClusterMemoryCPUAndStorage = (
   }
 
   return pools.reduce(
-    (accumulator: ClusterData, thisPool: ExtendedPoolNode) => {
+    (accumulator: ClusterData, thisPool: KubeNodePoolResponse) => {
       const thisType = types.find(
         (type: LinodeType) => type.id === thisPool.type
       );
