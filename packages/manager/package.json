@@ -232,8 +232,6 @@
     "reselect-tools": "^0.0.7",
     "serve": "^14.0.1",
     "source-map-loader": "^4.0.1",
-    "storybook-addon-swc": "^1.1.9",
-    "storybook-react-router": "~1.0.8",
     "style-loader": "^3.3.1",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "url-loader": "^4.1.1",
