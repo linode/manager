@@ -24,7 +24,6 @@ mockLinodes.data.forEach(
   (linode, index) => (linode.region = Object.keys(regions)[index])
 );
 
-const appRoot = Cypress.env('REACT_APP_APP_ROOT');
 const linodeLabel = (number) => {
   return mockLinodes.data[number - 1].label;
 };
@@ -63,7 +62,7 @@ describe('linode landing checks', () => {
     cy.visitWithLogin('/', { preferenceOverrides });
     cy.wait('@getAccountSettings');
     cy.wait('@getLinodes');
-    cy.url().should('eq', `${appRoot}${routes.linodeLanding}`);
+    cy.url().should('endWith', routes.linodeLanding);
   });
 
   it('checks the landing page side menu items', () => {
