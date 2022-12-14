@@ -216,16 +216,26 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
        * Enable ability to search OCA's by category, name, alternative name and
        * alternative description keywords.
        * */
+      const queryWords = query
+        .replace(/[,.-]/g, '')
+        .trim()
+        .toLocaleLowerCase()
+        .split(' ');
+
       const matchingOCALabels = oneClickApps.reduce(
         (acc: string[], { categories, name, alt_name, alt_description }) => {
-          const hasMatchingOCA = JSON.stringify(
-            `${categories.join(' ')} ${name} ${alt_name} ${alt_description}`
-          )
-            .toLocaleLowerCase()
-            .includes(query.toLocaleLowerCase().trim());
+          const ocaAppString = JSON.stringify(
+            `${name} ${alt_name} ${categories.join(' ')} ${alt_description}`
+          ).toLocaleLowerCase();
+
+          const hasMatchingOCA = queryWords.every(
+            (queryWord) => ocaAppString.indexOf(queryWord) >= 0
+          );
+
           if (hasMatchingOCA) {
             acc.push(name.trim());
           }
+
           return acc;
         },
         []
