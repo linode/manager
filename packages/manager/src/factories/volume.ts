@@ -13,7 +13,6 @@ export const volumeFactory = Factory.Sync.makeFactory<Volume>({
   filesystem_path: '/mnt',
   linode_id: null,
   linode_label: null,
-  // hardware_type: 'hdd',
 });
 
 export const volumeRequestPayloadFactory = Factory.Sync.makeFactory<VolumeRequestPayload>(

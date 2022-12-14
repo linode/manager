@@ -62,7 +62,6 @@ const RenderData: React.FC<
           created={volume.created}
           updated={volume.updated}
           filesystem_path={volume.filesystem_path}
-          // hardware_type={volume.hardware_type}
           linode_id={volume.linode_id}
           linode_label={volume.linode_label}
           handleAttach={handleAttach}
