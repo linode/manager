@@ -34,6 +34,7 @@ const isNotificationEventObj = (
 
 /**
  * Filter notifications based on a list of filtered events.
+ * NotificationItems may have a body containing a string or an event object.
  */
 const filterNotifications = (eventNotifications: NotificationItem[]) => {
   // Extract events from notification items.
@@ -67,7 +68,7 @@ export const NotificationMenu: React.FC<Props> = (props) => {
 
   const wasOpen = usePrevious(open);
 
-  const filteredNotifications = filterNotifications(eventNotifications);
+  const filteredEventNotifications = filterNotifications(eventNotifications);
 
   React.useEffect(() => {
     if (wasOpen && !open) {
@@ -82,7 +83,7 @@ export const NotificationMenu: React.FC<Props> = (props) => {
       {open ? (
         <>
           <Notifications notificationsList={formattedNotifications} />
-          <Events events={filteredNotifications} />
+          <Events events={filteredEventNotifications} />
         </>
       ) : null}
     </Paper>
