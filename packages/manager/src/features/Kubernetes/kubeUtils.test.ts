@@ -4,7 +4,6 @@ import {
   linodeTypeFactory,
   nodePoolFactory,
 } from 'src/factories';
-import { extendedTypes } from 'src/__data__/ExtendedType';
 
 import {
   getMonthlyPrice,
@@ -12,19 +11,17 @@ import {
   getTotalClusterPrice,
 } from './kubeUtils';
 
-const mockNodePool = {
-  id: 6,
-  clusterID: 1,
-  linodes: [],
-  type: extendedTypes[0].id,
-  count: 4,
-  totalMonthlyPrice: 10,
-  autoscaler: {
-    enabled: false,
-    min: 1,
-    max: 1,
+const mockNodePool = nodePoolFactory.build({
+  type: 'g1-fake-1',
+  count: 2,
+});
+
+const types = linodeTypeFactory.buildList(2, {
+  id: 'g1-fake-1',
+  price: {
+    monthly: 5,
   },
-};
+});
 
 describe('helper functions', () => {
   const badPool = nodePoolFactory.build({
@@ -33,31 +30,28 @@ describe('helper functions', () => {
 
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {
-      const expectedPrice =
-        (extendedTypes[0].price.monthly ?? 0) * mockNodePool.count;
+      const expectedPrice = (types[0].price.monthly ?? 0) * mockNodePool.count;
       expect(
-        getMonthlyPrice(mockNodePool.type, mockNodePool.count, extendedTypes)
+        getMonthlyPrice(mockNodePool.type, mockNodePool.count, types)
       ).toBe(expectedPrice);
     });
 
     it('should return zero for bad input', () => {
-      expect(getMonthlyPrice(badPool.type, badPool.count, extendedTypes)).toBe(
-        0
-      );
+      expect(getMonthlyPrice(badPool.type, badPool.count, types)).toBe(0);
     });
   });
 
   describe('getTotalClusterPrice', () => {
     it('should calculate the total cluster price', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool], false)).toBe(
-        20
-      );
+      expect(
+        getTotalClusterPrice([mockNodePool, mockNodePool], types, false)
+      ).toBe(20);
     });
 
     it('should calculate the total cluster price with HA enabled', () => {
-      expect(getTotalClusterPrice([mockNodePool, mockNodePool], true)).toBe(
-        20 + (HIGH_AVAILABILITY_PRICE || 0)
-      );
+      expect(
+        getTotalClusterPrice([mockNodePool, mockNodePool], types, true)
+      ).toBe(20 + (HIGH_AVAILABILITY_PRICE || 0));
     });
   });
 
@@ -104,7 +98,7 @@ describe('helper functions', () => {
     });
 
     it('should return 0 if no pools are given', () => {
-      expect(getTotalClusterMemoryCPUAndStorage([], extendedTypes)).toEqual({
+      expect(getTotalClusterMemoryCPUAndStorage([], types)).toEqual({
         CPU: 0,
         RAM: 0,
         Storage: 0,

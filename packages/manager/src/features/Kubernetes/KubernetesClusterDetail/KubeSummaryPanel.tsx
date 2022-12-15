@@ -18,7 +18,6 @@ import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
 import { reportException } from 'src/exceptionReporting';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { useDialog } from 'src/hooks/useDialog';
 import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
 import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
@@ -99,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  cluster: ExtendedCluster;
+  cluster: KubernetesCluster;
   endpoint: string | null;
   endpointError?: string;
   endpointLoading: boolean;

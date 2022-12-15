@@ -93,7 +93,7 @@ export const KubernetesLanding = () => {
   const openUpgradeDialog = (
     clusterID: number,
     clusterLabel: string,
-    currentVersion: string,
+    currentVersion: string
   ) => {
     setUpgradeDialogState({
       open: true,
@@ -167,15 +167,15 @@ export const KubernetesLanding = () => {
               Cluster Label
             </TableSortCell>
             <Hidden smDown>
-              <TableSortCell
-                active={orderBy === 'k8s_version'}
-                label={'k8s_version'}
-                direction={order}
-                handleClick={handleOrderChange}
+              <TableCell
+                // active={orderBy === 'k8s_version'}
+                // label={'k8s_version'}
+                // direction={order}
+                // handleClick={handleOrderChange}
                 data-qa-kubernetes-clusters-version-header
               >
                 Version
-              </TableSortCell>
+              </TableCell>
               <TableSortCell
                 active={orderBy === 'created'}
                 label={'created'}
@@ -186,34 +186,34 @@ export const KubernetesLanding = () => {
                 Created
               </TableSortCell>
             </Hidden>
-            <TableSortCell
-              active={orderBy === 'region'}
-              label={'region'}
-              direction={order}
-              handleClick={handleOrderChange}
+            <TableCell
+              // active={orderBy === 'region'}
+              // label={'region'}
+              // direction={order}
+              // handleClick={handleOrderChange}
               data-qa-kubernetes-clusters-region-header
             >
               Region
-            </TableSortCell>
+            </TableCell>
             <Hidden xsDown>
-              <TableSortCell
-                active={orderBy === 'totalMemory'}
-                label={'totalMemory'}
-                direction={order}
-                handleClick={handleOrderChange}
+              <TableCell
+                // active={orderBy === 'totalMemory'}
+                // label={'totalMemory'}
+                // direction={order}
+                // handleClick={handleOrderChange}
                 data-qa-kubernetes-clusters-memory-header
               >
                 Total Memory
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'totalCPU'}
-                label={'totalCPU'}
-                direction={order}
-                handleClick={handleOrderChange}
+              </TableCell>
+              <TableCell
+                // active={orderBy === 'totalCPU'}
+                // label={'totalCPU'}
+                // direction={order}
+                // handleClick={handleOrderChange}
                 data-qa-kubernetes-clusters-cpu-header
               >
                 Total CPUs
-              </TableSortCell>
+              </TableCell>
             </Hidden>
             <TableCell />
           </TableRow>

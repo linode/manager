@@ -1,6 +1,7 @@
 import { Account } from '@linode/api-v4/lib/account';
 import {
   KubeNodePoolResponse,
+  KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
@@ -25,13 +26,12 @@ export const getMonthlyPrice = (
 };
 
 export const getTotalClusterPrice = (
-  pools: PoolNodeWithPrice[],
+  pools: KubeNodePoolResponse[],
+  types: LinodeType[],
   highAvailability: boolean = false
 ) => {
   const price = pools.reduce((accumulator, node) => {
-    return node.queuedForDeletion
-      ? accumulator // If we're going to delete it, don't include it in the cost
-      : accumulator + node.totalMonthlyPrice;
+    return accumulator + getMonthlyPrice(node.type, node.count, types);
   }, 0);
 
   return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
@@ -125,7 +125,7 @@ export const getNextVersion = (
 
 export const getKubeHighAvailability = (
   account: Account | undefined,
-  cluster?: ExtendedCluster | null
+  cluster?: ExtendedCluster | KubernetesCluster | null
 ) => {
   const showHighAvailability = account?.capabilities.includes(
     'LKE HA Control Planes'

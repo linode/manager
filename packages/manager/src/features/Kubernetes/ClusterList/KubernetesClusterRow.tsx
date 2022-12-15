@@ -11,7 +11,7 @@ import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
-import { useAllLinodeTypes } from 'src/queries/linodes';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import {
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
@@ -62,7 +62,7 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
-  const { data: types } = useAllLinodeTypes();
+  const { data: types } = useAllLinodeTypesQuery();
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 

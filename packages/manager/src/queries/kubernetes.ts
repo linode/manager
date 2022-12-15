@@ -2,6 +2,7 @@ import {
   CreateKubeClusterPayload,
   createKubernetesCluster,
   deleteKubernetesCluster,
+  getKubernetesCluster,
   getKubernetesClusters,
   getNodePools,
   KubeNodePoolResponse,
@@ -19,6 +20,13 @@ export const useKubernetesClustersQuery = (params: any, filter: any) => {
     [`${queryKey}-list`, params, filter],
     () => getKubernetesClusters(params, filter),
     { keepPreviousData: true }
+  );
+};
+
+export const useKubernetesClusterQuery = (id: number) => {
+  return useQuery<KubernetesCluster, APIError[]>(
+    [queryKey, 'cluster', id],
+    () => getKubernetesCluster(id)
   );
 };
 

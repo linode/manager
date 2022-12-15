@@ -1,5 +1,6 @@
 import {
   CreateKubeClusterPayload,
+  KubeNodePoolResponse,
   PoolNodeRequest,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -30,8 +31,6 @@ import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { getMonthlyPrice } from '.././kubeUtils';
-import { PoolNodeWithPrice } from '.././types';
 import KubeCheckoutBar from '../KubeCheckoutBar';
 import NodePoolPanel from './NodePoolPanel';
 
@@ -130,7 +129,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   }, [regionsData]);
 
   const [selectedRegion, setSelectedRegion] = React.useState<string>('');
-  const [nodePools, setNodePools] = React.useState<PoolNodeWithPrice[]>([]);
+  const [nodePools, setNodePools] = React.useState<KubeNodePoolResponse[]>([]);
   const [label, setLabel] = React.useState<string | undefined>();
   const [highAvailability, setHighAvailability] = React.useState<boolean>(
     false
@@ -200,18 +199,13 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
 
   const toggleHasAgreed = () => setAgreed((prevHasAgreed) => !prevHasAgreed);
 
-  const addPool = (pool: PoolNodeWithPrice) => {
+  const addPool = (pool: KubeNodePoolResponse) => {
     setNodePools([...nodePools, pool]);
   };
 
-  const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
+  const updatePool = (poolIdx: number, updatedPool: KubeNodePoolResponse) => {
     const updatedPoolWithPrice = {
       ...updatedPool,
-      totalMonthlyPrice: getMonthlyPrice(
-        updatedPool.type,
-        updatedPool.count,
-        props.typesData || []
-      ),
     };
     setNodePools(update(poolIdx, updatedPoolWithPrice, nodePools));
   };
@@ -323,7 +317,7 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
                     )[0].reason
                   : undefined
               }
-              addNodePool={(pool: PoolNodeWithPrice) => addPool(pool)}
+              addNodePool={(pool: KubeNodePoolResponse) => addPool(pool)}
               updateFor={[
                 nodePools,
                 typesData,
@@ -347,7 +341,6 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
           submitting={submitting}
           updatePool={updatePool}
           removePool={removePool}
-          typesData={typesData || []}
           highAvailability={highAvailability}
           setHighAvailability={setHighAvailability}
           region={selectedRegion}

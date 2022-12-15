@@ -149,7 +149,7 @@ export const useLinodeLishTokenQuery = (id: number) => {
   );
 };
 
-export const useAllLinodeTypes = () => {
+export const useAllLinodeTypesQuery = () => {
   return useQuery<LinodeType[], APIError[]>(
     [queryKey, 'types'],
     getAllLinodeTypes,
