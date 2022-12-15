@@ -14,7 +14,7 @@ import { routes } from 'cypress/support/ui/constants';
 import { ui } from 'support/ui';
 import { regions, regionsMap } from 'support/constants/regions';
 
-const mockLinodes = new Array(5).fill(null).map(
+const mockLinodes = new Array(regions.length).fill(null).map(
   (item: null, index: number): Linode => {
     return linodeFactory.build({
       label: `Linode ${index}`,
@@ -26,11 +26,13 @@ const mockLinodes = new Array(5).fill(null).map(
 const mockLinodesData = makeResourcePage(mockLinodes);
 
 const sortByRegion = (a: Linode, b: Linode) => {
-  return a.region.localeCompare(b.region);
+  const labelA = regionsMap[a.region];
+  const labelB = regionsMap[b.region];
+  return labelA.localeCompare(labelB, 'en', { numeric: true });
 };
 
 const sortByLabel = (a: Linode, b: Linode) => {
-  return a.label.localeCompare(b.label);
+  return a.label.localeCompare(b.label, 'en', { numeric: true });
 };
 
 const linodeLabel = (number) => {
