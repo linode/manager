@@ -5,9 +5,11 @@ import { Order } from 'src/components/Pagey';
 import usePreferences from 'src/hooks/usePreferences';
 import usePrevious from 'src/hooks/usePrevious';
 import { UserPreferences } from 'src/store/preferences/preferences.actions';
+import { dcDisplayNames } from 'src/constants';
 import {
   sortByArrayLength,
   sortByNumber,
+  sortByRegionLabel,
   sortByString,
   sortByUTFDate,
 } from 'src/utilities/sort-by';
@@ -34,6 +36,21 @@ interface Props {
 }
 
 export type CombinedProps = Props;
+
+/**
+ * Determines if the given string is a datacenter region code.
+ *
+ * @example
+ * isStringRegionCode('abcdefg'); // `false`.
+ * isStringRegionCode('us-east-1'); // `true`.
+ *
+ * @param value String value to check.
+ *
+ * @returns `true` if `value` is a region code, `false` otherwise.
+ */
+const isStringRegionCode = (value: string): boolean => {
+  return Object.keys(dcDisplayNames).includes(value);
+};
 
 /**
  * Given a set of UserPreferences (returned from the API),
@@ -142,6 +159,14 @@ export const sortData = (orderBy: string, order: Order) => {
     }
 
     if (typeof aValue === 'string' && typeof bValue === 'string') {
+      // If sorting by region and given two region strings, sort according to their labels.
+      if (
+        orderBy.includes('region') &&
+        isStringRegionCode(aValue) &&
+        isStringRegionCode(bValue)
+      ) {
+        return sortByRegionLabel(aValue, bValue, order);
+      }
       return sortByString(aValue, bValue, order);
     }
     return sortByNumber(aValue, bValue, order);
