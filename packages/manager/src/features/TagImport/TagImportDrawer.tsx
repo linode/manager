@@ -31,7 +31,7 @@ import {
 } from 'src/store/tagImportDrawer';
 import { ThunkDispatch } from 'src/store/types';
 import { sendImportDisplayGroupSubmitEvent } from 'src/utilities/ga';
-import { sortAlphabetically } from 'src/utilities/sort-by';
+import { sortByString, toComparator } from 'src/utilities/sort-by';
 import DisplayGroupList from './DisplayGroupList';
 
 interface StateProps {
@@ -53,7 +53,7 @@ type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
 
 export const getGroupImportList = (entities: GroupImportProps[]) => {
   const importList: any = _compose(
-    sort(sortAlphabetically),
+    sort(toComparator(sortByString)),
     uniq, // Only return each group once
     reject(isNil), // No undefined/null results
     map((entity: GroupImportProps) => entity.group) // Extract group from GIP object
