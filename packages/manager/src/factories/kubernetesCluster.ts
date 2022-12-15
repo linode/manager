@@ -4,6 +4,7 @@ import {
   KubernetesEndpointResponse,
   KubeNodePoolResponse,
   PoolNodeResponse,
+  KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes/types';
 import { PoolNodeWithPrice } from 'src/features/Kubernetes/types';
 import { v4 } from 'uuid';
@@ -84,5 +85,11 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     k8s_version: '1.21',
     tags: [],
     control_plane: { high_availability: true },
+  }
+);
+
+export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
+  {
+    id: '1.24',
   }
 );
