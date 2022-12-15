@@ -1,9 +1,9 @@
 import { Disk, getLinodeDisks } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -17,13 +17,13 @@ import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { getGrantData, getProfileData } from 'src/queries/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
 } from 'src/queries/images';
+import { getGrantData, getProfileData } from 'src/queries/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
@@ -56,7 +56,7 @@ export interface Props {
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
+type CombinedProps = Props;
 
 export type DrawerMode = 'closed' | 'create' | 'imagize' | 'restore' | 'edit';
 
@@ -84,10 +84,8 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
     imageId,
     label,
     description,
-    history,
     selectedDisk,
     selectedLinode,
-    enqueueSnackbar,
     changeLabel,
     changeDescription,
     changeLinode,
@@ -96,10 +94,9 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
     onClose,
   } = props;
 
-  // console.log(label);
-  // console.log(description);
-
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+  const history = useHistory();
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);
@@ -444,8 +441,4 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  withRouter,
-  withSnackbar,
-  SectionErrorBoundary
-)(ImageDrawer);
+export default compose<CombinedProps, Props>(SectionErrorBoundary)(ImageDrawer);
