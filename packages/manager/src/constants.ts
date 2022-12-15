@@ -25,7 +25,7 @@ export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
 export const DOCS_SEARCH_URL =
-  'https://linode.com/docs/search/?sections=guides&q=';
+  'https://www.linode.com/docs/topresults/?docType=products%2Cguides%2Capi%2Creference-architecture&lndq=';
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
