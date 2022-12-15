@@ -17,11 +17,11 @@ import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { useImageAndLinodeGrantCheck } from 'src/hooks/useImages';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
 } from 'src/queries/images';
-import { getGrantData, getProfileData } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
@@ -97,6 +97,10 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const history = useHistory();
+  const {
+    canCreateImage,
+    permissionedLinodes: availableLinodes,
+  } = useImageAndLinodeGrantCheck();
 
   const [mounted, setMounted] = React.useState<boolean>(false);
   const [notice, setNotice] = React.useState(undefined);
@@ -104,34 +108,12 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
   const [disks, setDisks] = React.useState<Disk[]>([]);
-  const [availableImages, setAvailableImages] = React.useState<number[] | null>(
-    null
-  );
-  const [canCreateImage, setCanCreateImage] = React.useState<boolean>(false);
 
   const { mutateAsync: updateImage } = useUpdateImageMutation();
   const { mutateAsync: createImage } = useCreateImageMutation();
 
   React.useEffect(() => {
     setMounted(true);
-
-    const profile = getProfileData();
-    const grants = getGrantData();
-
-    setCanCreateImage(
-      Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images)
-    );
-
-    // Unrestricted users can create Images from any disk;
-    // Restricted users need read_write on the Linode they're trying to Imagize
-    // (in addition to the global add_images grant).
-    const images = profile?.restricted
-      ? grants?.linode
-          .filter((thisGrant) => thisGrant.permissions === 'read_write')
-          .map((thisGrant) => thisGrant.id) ?? []
-      : null;
-
-    setAvailableImages(images);
 
     if (props.disks) {
       // for the 'imagizing' mode
@@ -346,14 +328,14 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
             }
           }}
           filterCondition={(linode) =>
-            availableImages ? availableImages.includes(linode.id) : true
+            availableLinodes ? availableLinodes.includes(linode.id) : true
           }
           updateFor={[
             selectedLinode,
             linodeError,
             classes,
             canCreateImage,
-            availableImages,
+            availableLinodes,
           ]}
           isClearable={false}
         />
