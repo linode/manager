@@ -48,6 +48,12 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const poolCount = pools?.length;
   const linodeCount = getTotalLinodes(pools ?? []);
 
+  const onDelete = () => {
+    deleteCluster({ id: clusterId }).then(() => {
+      onClose();
+    });
+  };
+
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
@@ -60,7 +66,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={() => deleteCluster({ id: clusterId })}
+        onClick={onDelete}
         disabled={disabled}
         loading={isDeleting}
         data-qa-confirm
