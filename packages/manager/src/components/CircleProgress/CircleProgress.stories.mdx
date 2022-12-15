@@ -36,13 +36,10 @@ export const Template = (args) => <CircleProgress {...args}></CircleProgress>;
         description:
           'To be primarily used with tags and must be used with the `mini` prop. The spinner will not be visible in Storybook since the stroke is white.',
       },
-      ref: {
-        table: { disable: true },
-      },
     }}
   >
     {Template.bind()}
   </Story>
 </Canvas>
 
-<ArgsTable story="Circle Progress" sort="requiredFirst" />
+<ArgsTable story="Circle Progress" sort="requiredFirst" exclude={['ref']}/>
