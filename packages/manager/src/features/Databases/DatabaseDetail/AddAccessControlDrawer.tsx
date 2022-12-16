@@ -81,15 +81,6 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
 
       return [...acc, ipString];
     }, []);
-      .map(extendedIPToString)
-      .filter((ip) => ip !== '')
-      .map((ip) => {
-        let curr_ip = ip;
-        if (curr_ip.indexOf('/32') === -1) {
-          curr_ip = `${curr_ip}/32`;
-        }
-        return curr_ip;
-      });
 
     updateDatabase({ allow_list: [...allowListRetracted] })
       .then(() => {
