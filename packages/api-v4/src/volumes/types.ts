@@ -10,7 +10,10 @@ export interface Volume {
   updated: string;
   filesystem_path: string;
   tags: string[];
+  hardware_type: VolumeHardwareType;
 }
+
+type VolumeHardwareType = 'hdd' | 'nvme';
 
 export type VolumeStatus =
   | 'creating'

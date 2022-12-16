@@ -29,6 +29,7 @@ const props: CombinedProps = {
   filesystem_path: '',
   linode_id: 0,
   linode_label: 'linode-0',
+  hardware_type: 'nvme',
   openForEdit: jest.fn(),
   openForResize: jest.fn(),
   openForClone: jest.fn(),
