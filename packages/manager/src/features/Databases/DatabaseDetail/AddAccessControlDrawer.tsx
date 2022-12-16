@@ -69,7 +69,18 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
   ) => {
     // Get the IP address strings out of the objects and filter empty strings out.
     // Ensure we append /32 to all IPs if not already present.
-    const allowListRetracted = _allowList
+    const allowListRetracted = _allowList.reduce((acc, currentIP) => {
+      let ipString = extendedIPToString(currentIP);
+      if (ipString === '') {
+        return acc;
+      }
+
+      if (ipString.indexOf('/32') === -1) {
+        ipString += '/32';
+      }
+
+      return [...acc, ipString];
+    }, []);
       .map(extendedIPToString)
       .filter((ip) => ip !== '')
       .map((ip) => {
