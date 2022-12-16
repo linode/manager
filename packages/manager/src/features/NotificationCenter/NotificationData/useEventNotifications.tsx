@@ -4,6 +4,7 @@ import * as React from 'react';
 import useEvents from 'src/hooks/useEvents';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.types';
+import { removeBlocklistedEvents } from 'src/utilities/eventUtils';
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
 import RenderEvent from './RenderEvent';
@@ -19,7 +20,7 @@ const unwantedEvents: EventAction[] = [
 ];
 
 export const useEventNotifications = (givenEvents?: ExtendedEvent[]) => {
-  const events = givenEvents ?? useEvents().events;
+  const events = removeBlocklistedEvents(givenEvents ?? useEvents().events);
   const notificationContext = React.useContext(_notificationContext);
 
   const _events = events.filter(
