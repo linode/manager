@@ -13,6 +13,8 @@ export interface Volume {
   hardware_type: VolumeHardwareType;
 }
 
+type VolumeHardwareType = 'hdd' | 'nvme';
+
 export type VolumeStatus =
   | 'creating'
   | 'active'
@@ -21,8 +23,6 @@ export type VolumeStatus =
   | 'deleted'
   | 'migrating'
   | 'contact_support';
-
-type VolumeHardwareType = 'hdd' | 'nvme';
 
 export interface VolumeRequestPayload {
   label: string;
