@@ -15,6 +15,7 @@ import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 import SupportLink from 'src/components/SupportLink';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
+// import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
   volumePath: {
@@ -85,6 +86,13 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
 
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
   const formattedRegion = formatRegion(region);
+  // const { events } = useEvents();
+
+  // const recentEvent = events.find((event) => event.entity?.id === id);
+
+  // Use this to show a progress bar
+  // const isUpdating = isVolumeUpdating(recentEvent);
+  // const progress = progressFromEvent(recentEvent);
 
   const volumeStatusMap: Record<
     ExtendedVolume['status'],
