@@ -182,7 +182,7 @@ export const ImageDrawer: React.FC<CombinedProps> = (props) => {
     }
   };
 
-  const safeDescription = description ?? ' ';
+  const safeDescription = description ? description : ' ';
 
   const onSubmit = () => {
     setErrors(undefined);
