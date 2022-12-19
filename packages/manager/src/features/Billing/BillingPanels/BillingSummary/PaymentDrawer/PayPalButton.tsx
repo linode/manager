@@ -19,6 +19,8 @@ import { queryClient } from 'src/queries/base';
 import { SetSuccess } from './types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useAccount } from 'src/queries/account';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -59,6 +61,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     error: clientTokenError,
   } = useClientToken();
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const { data: account } = useAccount();
 
   const {
     usd,
@@ -69,7 +72,9 @@ export const PayPalButton: React.FC<Props> = (props) => {
     renderError,
   } = props;
 
-  const disabledDueToPrice = +usd < 5 || +usd > 10000;
+  const { min, max } = getPaymentLimits(account?.balance);
+
+  const disabledDueToPrice = +usd < min || +usd > max;
 
   React.useEffect(() => {
     /**
@@ -228,7 +233,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     <div className={classes.root}>
       {disabledDueToPrice && (
         <Tooltip
-          title="Payment amount must be between $5 and $10000"
+          title={`Payment amount must be between $${min} and $${max}`}
           data-qa-help-tooltip
           enterTouchDelay={0}
           leaveTouchDelay={5000}
