@@ -17,6 +17,8 @@ import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { SetSuccess } from './types';
+import { APIError } from '@linode/api-v4/lib/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -152,35 +154,47 @@ export const PayPalButton: React.FC<Props> = (props) => {
   ) => {
     setProcessing(true);
 
-    try {
-      const payload = await actions.braintree.tokenizePayment(data);
-      // send nonce to server
-      const response = await makePayment({
-        nonce: payload.nonce,
-        usd: stateRef!.current!.amount,
-      });
-      queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+    actions.braintree
+      .tokenizePayment(data)
+      .then((payload) => {
+        // send nonce to the Linode API
+        makePayment({
+          nonce: payload.nonce,
+          usd: stateRef!.current!.amount,
+        })
+          .then(({ warnings, usd }) => {
+            queryClient.invalidateQueries(`${accountBillingKey}-payments`);
 
-      setSuccess(
-        `Payment for $${
-          stateRef!.current!.amount
-        } successfully submitted with PayPal`,
-        true,
-        response.warnings
-      );
-    } catch (error) {
-      if (error.statusCode === 'CANCELED') {
-        return;
-      }
+            setSuccess(
+              `Payment for $${usd} successfully submitted with PayPal`,
+              true,
+              warnings
+            );
+          })
+          .catch((error: APIError[]) => {
+            // Process and surface any Linode API errors during payment
+            const errorText = getAPIErrorOrDefault(
+              error,
+              'Unable to complete PayPal payment.'
+            )[0].reason;
+            setError(errorText);
+            setProcessing(false);
+          });
+      })
+      .catch((error) => {
+        // Process, surface, and log any Braintree errors during payment
+        if (error.statusCode === 'CANCELED') {
+          return;
+        }
 
-      const errorMsg = 'Unable to complete PayPal payment.';
-      reportException(error, {
-        message: errorMsg,
+        const errorMsg = 'Unable to tokenize PayPal payment.';
+        reportException(
+          'Braintree was unable to tokenize PayPal one time payment.',
+          { error }
+        );
+        setError(errorMsg);
+        setProcessing(false);
       });
-      setError(errorMsg);
-    } finally {
-      setProcessing(false);
-    }
   };
 
   const onError = (error: any) => {
