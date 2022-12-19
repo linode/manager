@@ -228,8 +228,8 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
             ' '
           )} ${alt_description}`.toLocaleLowerCase();
 
-          const hasMatchingOCA = queryWords.every(
-            (queryWord) => ocaAppString.indexOf(queryWord) >= 0
+          const hasMatchingOCA = queryWords.every((queryWord) =>
+            ocaAppString.includes(queryWord)
           );
 
           if (hasMatchingOCA) {
