@@ -18,7 +18,6 @@ import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
 import { reportException } from 'src/exceptionReporting';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { useDialog } from 'src/hooks/useDialog';
 import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
 import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
@@ -31,7 +30,7 @@ import {
 } from 'src/utilities/errorUtils';
 import KubeConfigDisplay from './KubeConfigDisplay';
 import KubeConfigDrawer from './KubeConfigDrawer';
-import KubernetesDialog from './KubernetesDialog';
+import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -99,7 +98,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  cluster: ExtendedCluster;
+  cluster: KubernetesCluster;
   endpoint: string | null;
   endpointError?: string;
   endpointLoading: boolean;
@@ -150,9 +149,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       push('/kubernetes/clusters')
     );
 
-  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
-    _deleteCluster
-  );
+  const { dialog, closeDialog, openDialog } = useDialog(_deleteCluster);
 
   const [
     resetKubeConfigDialogOpen,
@@ -309,14 +306,11 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
         error={drawerError}
         loading={drawerLoading}
       />
-      <KubernetesDialog
+      <DeleteKubernetesClusterDialog
         open={dialog.isOpen}
-        loading={dialog.isLoading}
-        error={dialog.error}
         clusterLabel={cluster.label}
-        clusterPools={cluster.node_pools}
+        clusterId={cluster.id}
         onClose={closeDialog}
-        onDelete={() => submitDialog(cluster.id)}
       />
       <ConfirmationDialog
         open={resetKubeConfigDialogOpen}

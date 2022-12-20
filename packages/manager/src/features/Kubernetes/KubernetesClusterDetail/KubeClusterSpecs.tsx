@@ -1,14 +1,19 @@
+import { KubernetesCluster } from '@linode/api-v4';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { dcDisplayNames } from 'src/constants';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
+import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { pluralize } from 'src/utilities/pluralize';
-import { getTotalClusterPrice } from '../kubeUtils';
+import {
+  getTotalClusterMemoryCPUAndStorage,
+  getTotalClusterPrice,
+} from '../kubeUtils';
 
 interface Props {
-  cluster: ExtendedCluster;
+  cluster: KubernetesCluster;
   isClusterHighlyAvailable: boolean;
 }
 
@@ -44,6 +49,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const KubeClusterSpecs: React.FC<Props> = (props) => {
   const { cluster, isClusterHighlyAvailable } = props;
   const classes = useStyles();
+  const { data: types } = useAllLinodeTypesQuery();
+
+  const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
+
+  const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
+    pools ?? [],
+    types ?? []
+  );
 
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
 
@@ -51,15 +64,16 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
     `Version ${cluster.k8s_version}`,
     region,
     `$${getTotalClusterPrice(
-      cluster.node_pools,
+      pools ?? [],
+      types ?? [],
       isClusterHighlyAvailable
     ).toFixed(2)}/month`,
   ];
 
   const kubeSpecsRight = [
-    pluralize('CPU Core', 'CPU Cores', cluster.totalCPU),
-    `${cluster.totalMemory / 1024} GB RAM`,
-    `${Math.floor(cluster.totalStorage / 1024)} GB Storage`,
+    pluralize('CPU Core', 'CPU Cores', CPU),
+    `${RAM / 1024} GB RAM`,
+    `${Math.floor(Storage / 1024)} GB Storage`,
   ];
 
   const kubeSpecItem = (spec: string) => {

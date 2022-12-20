@@ -1,3 +1,4 @@
+import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Chip from 'src/components/core/Chip';
@@ -8,7 +9,13 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { dcDisplayNames } from 'src/constants';
-import { ExtendedCluster, PoolNodeWithPrice } from './../types';
+import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import {
+  getNextVersion,
+  getTotalClusterMemoryCPUAndStorage,
+} from '../kubeUtils';
 import ActionMenu from './ClusterActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -40,29 +47,31 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  cluster: ExtendedCluster;
-  hasUpgrade: boolean;
-  isClusterHighlyAvailable: boolean;
+  cluster: KubernetesCluster;
   openDeleteDialog: (
     clusterID: number,
     clusterLabel: string,
-    clusterNodePools: PoolNodeWithPrice[]
+    clusterNodePools: KubeNodePoolResponse[]
   ) => void;
   openUpgradeDialog: () => void;
 }
 
-type CombinedProps = Props;
-
-export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
+export const KubernetesClusterRow = (props: Props) => {
+  const { cluster, openDeleteDialog, openUpgradeDialog } = props;
   const classes = useStyles();
 
-  const {
-    cluster,
-    hasUpgrade,
-    isClusterHighlyAvailable,
-    openDeleteDialog,
-    openUpgradeDialog,
-  } = props;
+  const { data: versions } = useKubernetesVersionQuery();
+  const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
+  const { data: types } = useAllLinodeTypesQuery();
+
+  const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
+
+  const hasUpgrade = nextVersion !== null;
+
+  const { RAM, CPU } = getTotalClusterMemoryCPUAndStorage(
+    pools ?? [],
+    types ?? []
+  );
 
   return (
     <TableRow
@@ -90,7 +99,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
               </Link>
             </div>
           </Grid>
-          {isClusterHighlyAvailable ? (
+          {cluster.control_plane.high_availability ? (
             <Grid item>
               <Chip
                 label="HA"
@@ -129,13 +138,11 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
         {dcDisplayNames[cluster.region] ?? cluster.region}
       </TableCell>
       <Hidden xsDown>
-        <TableCell data-qa-cluster-memory>
-          {`${cluster.totalMemory / 1024} GB`}
-        </TableCell>
+        <TableCell data-qa-cluster-memory>{`${RAM / 1024} GB`}</TableCell>
       </Hidden>
       <Hidden xsDown>
         <TableCell data-qa-cluster-cpu>
-          {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
+          {`${CPU} ${CPU === 1 ? 'CPU' : 'CPUs'}`}
         </TableCell>
       </Hidden>
       <TableCell actionCell>
@@ -143,12 +150,10 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
           clusterId={cluster.id}
           clusterLabel={cluster.label}
           openDialog={() =>
-            openDeleteDialog(cluster.id, cluster.label, cluster.node_pools)
+            openDeleteDialog(cluster.id, cluster.label, pools ?? [])
           }
         />
       </TableCell>
     </TableRow>
   );
 };
-
-export default ClusterRow;

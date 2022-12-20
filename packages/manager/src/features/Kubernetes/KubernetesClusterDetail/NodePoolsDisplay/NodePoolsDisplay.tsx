@@ -3,6 +3,7 @@ import {
   PoolNodeResponse,
   autoscaleNodePool,
   AutoscaleNodePool as AutoscaleNodePoolValues,
+  KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
@@ -13,11 +14,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { useDialog } from 'src/hooks/useDialog';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { PoolNodeWithPrice } from '../../types';
 import RecycleNodesDialog from '../RecycleNodesDialog';
 import AddNodePoolDrawer from '../AddNodePoolDrawer';
 import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
@@ -26,6 +25,9 @@ import NodePool from './NodePool';
 import NodePoolDialog from './NodePoolDialog';
 import AutoscalePoolDialog from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
+import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import CircleProgress from 'src/components/CircleProgress';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -66,12 +68,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   clusterID: number;
   clusterLabel: string;
-  pools: PoolNodeWithPrice[];
-  types: ExtendedType[];
   updatePool: (
     poolID: number,
-    updatedPool: PoolNodeWithPrice
-  ) => Promise<PoolNodeWithPrice>;
+    updatedPool: KubeNodePoolResponse
+  ) => Promise<KubeNodePoolResponse>;
   deletePool: (poolID: number) => Promise<any>;
   addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
   recycleAllClusterNodes: () => Promise<{}>;
@@ -84,8 +84,6 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   const {
     clusterID,
     clusterLabel,
-    pools,
-    types,
     addNodePool,
     updatePool,
     deletePool,
@@ -97,6 +95,8 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterID);
+  const { data: types } = useAllLinodeTypesQuery();
 
   const deletePoolDialog = useDialog<number>(deletePool);
   const recycleAllPoolNodesDialog = useDialog<number>(recycleAllPoolNodes);
@@ -105,9 +105,12 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   const autoscalePoolDialog = useDialog<any>(autoscaleNodePool);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
+
   const handleShowMore = () => {
-    if (numPoolsToDisplay < pools.length) {
-      setNumPoolsToDisplay(Math.min(numPoolsToDisplay + 25, pools.length));
+    if (numPoolsToDisplay < (pools?.length ?? 0)) {
+      setNumPoolsToDisplay(
+        Math.min(numPoolsToDisplay + 25, pools?.length ?? 0)
+      );
     }
   };
 
@@ -120,7 +123,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   );
   const [drawerError, setDrawerError] = React.useState<string | undefined>();
   const [poolForEdit, setPoolForEdit] = React.useState<
-    PoolNodeWithPrice | undefined
+    KubeNodePoolResponse | undefined
   >();
 
   const handleOpenAddDrawer = () => {
@@ -129,7 +132,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   };
 
   const handleOpenResizeDrawer = (poolID: number) => {
-    setPoolForEdit(pools.find((thisPool) => thisPool.id === poolID));
+    setPoolForEdit(pools?.find((thisPool) => thisPool.id === poolID));
     setResizeDrawerOpen(true);
     setDrawerError(undefined);
   };
@@ -248,10 +251,10 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
       );
   };
 
-  const _pools = pools.slice(0, numPoolsToDisplay);
+  const _pools = pools?.slice(0, numPoolsToDisplay);
 
   const getAutoscaler = () =>
-    pools.find((pool) => pool.id === autoscalePoolDialog.dialog.entityID)
+    pools?.find((pool) => pool.id === autoscalePoolDialog.dialog.entityID)
       ?.autoscaler;
 
   /**
@@ -272,6 +275,10 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
     }
     return undefined;
   });
+
+  if (isLoading || pools === undefined) {
+    return <CircleProgress />;
+  }
 
   return (
     <>
@@ -312,10 +319,10 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
         ) : (
           <Grid container direction="column">
             <Grid item xs={12} className={classes.displayTable}>
-              {_pools.map((thisPool) => {
+              {_pools?.map((thisPool) => {
                 const { id, nodes } = thisPool;
 
-                const thisPoolType = types.find(
+                const thisPoolType = types?.find(
                   (thisType) => thisType.id === thisPool.type
                 );
 
@@ -335,12 +342,12 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
                       }
                       openRecycleNodeDialog={recycleNodeDialog.openDialog}
                       openAutoscalePoolDialog={autoscalePoolDialog.openDialog}
-                      isOnlyNodePool={pools.length === 1}
+                      isOnlyNodePool={pools?.length === 1}
                     />
                   </div>
                 );
               })}
-              {pools.length > numPoolsToDisplay && (
+              {pools?.length > numPoolsToDisplay && (
                 <Waypoint onEnter={handleShowMore} scrollableAncestor="window">
                   <div style={{ minHeight: 50 }} />
                 </Waypoint>

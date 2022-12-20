@@ -7,8 +7,6 @@ import {
 } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-
-import { extendCluster } from 'src/features/Kubernetes/kubeUtils';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { ApplicationState } from 'src/store';
 import {
@@ -107,13 +105,11 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
   mapKubernetesToProps?: MapProps<ReduxState, OwnProps>
 ) =>
   connect((state: ApplicationState, ownProps: OwnProps) => {
-    const _clusters = Object.values(state.__resources.kubernetes.itemsById);
+    // const _clusters = Object.values(state.__resources.kubernetes.itemsById);
     // Add node pool and pricing data to clusters
-    const nodePools = state.__resources.nodePools.entities;
-    const types = state.__resources.types.entities;
-    const clusters = _clusters.map((thisCluster) =>
-      extendCluster(thisCluster, nodePools, types)
-    );
+    // const nodePools = state.__resources.nodePools.entities;
+    // const types = state.__resources.types.entities;
+    const clusters: ExtendedCluster[] = [];
 
     const clustersLoading = state.__resources.kubernetes.loading;
     const clustersError = state.__resources.kubernetes.error || {};
