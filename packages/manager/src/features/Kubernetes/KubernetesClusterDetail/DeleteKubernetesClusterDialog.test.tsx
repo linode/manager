@@ -103,25 +103,27 @@ describe('Kubernetes deletion dialog', () => {
     expect(props.onClose).toHaveBeenCalledTimes(1);
   });
 
-  // it('should not submit the form before the user fills out confirmation text', () => {
-  //   const { getByTestId } = renderWithTheme(
-  //     <DeleteKubernetesClusterDialog {...props} />
-  //   );
-  //   const button = getByTestId('dialog-confirm');
-  //   fireEvent.click(button);
-  //   expect(props.onDelete).not.toHaveBeenCalled();
-  // });
+  it('should not be able to submit form before the user fills out confirmation text', () => {
+    server.use(
+      rest.get(`*/profile/preference`, (req, res, ctx) => {
+        return res(
+          ctx.json({
+            type_to_confirm: true,
+          })
+        );
+      })
+    );
 
-  // it('should submit the form and call the onDelete handler if the user has confirmed the cluster label', () => {
-  //   const { getByTestId } = renderWithTheme(
-  //     <DeleteKubernetesClusterDialog {...props} />
-  //   );
-  //   // Fill in the "are you sure" text
-  //   const input = getByTestId('textfield-input');
-  //   fireEvent.change(input, { target: { value: 'this-cluster' } });
-  //   const button = getByTestId('dialog-confirm');
-  //   // Now this should work.
-  //   fireEvent.click(button);
-  //   expect(props.onDelete).toHaveBeenCalledTimes(1);
-  // });
+    const { getByTestId } = renderWithTheme(
+      <DeleteKubernetesClusterDialog {...props} />
+    );
+    const button = getByTestId('dialog-confirm');
+
+    expect(button).toBeDisabled();
+
+    const input = getByTestId('textfield-input');
+    fireEvent.change(input, { target: { value: 'this-cluster' } });
+
+    expect(button).toBeEnabled();
+  });
 });
