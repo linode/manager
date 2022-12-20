@@ -70,7 +70,6 @@ describe('Billing Contact', () => {
     cy.intercept('GET', '*/account', accountData).as('getAccount');
 
     cy.visitWithLogin('/account/billing', { mockRequests: false });
-    cy.findByText('This string does not exist.');
     checkAccountContactDisplay(accountData);
   });
   it('Edit Contact Info', () => {
