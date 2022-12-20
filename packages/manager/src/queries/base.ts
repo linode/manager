@@ -214,7 +214,7 @@ export const itemInListDeletionHandler = <
  */
 export const updateInPaginatedStore = <T extends { id: number | string }>(
   queryKey: string,
-  id: number,
+  id: number | string,
   newData: Partial<T>
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(

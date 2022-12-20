@@ -4,11 +4,9 @@ import produce from 'immer';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { partition } from 'ramda';
 import * as React from 'react';
-import { connect, MapDispatchToProps, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { AnyAction } from 'redux';
-import { ThunkDispatch } from 'redux-thunk';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -28,13 +26,15 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
-import useReduxLoad from 'src/hooks/useReduxLoad';
-import { ApplicationState } from 'src/store';
-import { DeleteImagePayload, removeImage } from 'src/store/image/image.actions';
+import { useOrder } from 'src/hooks/useOrder';
+import { usePagination } from 'src/hooks/usePagination';
+import { listToItemsByID } from 'src/queries/base';
 import {
-  deleteImage as _deleteImage,
-  requestImages as _requestImages,
-} from 'src/store/image/image.requests';
+  useDeleteImageMutation,
+  useImagesQuery,
+  removeImageFromCache,
+} from 'src/queries/images';
+import { ApplicationState } from 'src/store';
 import imageEvents from 'src/store/selectors/imageEvents';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow, { ImageWithEvent } from './ImageRow';
@@ -120,11 +120,9 @@ interface ImageDialogState {
   status?: ImageStatus;
 }
 
-type CombinedProps = ImageDispatch &
-  ImageDrawerState &
+type CombinedProps = ImageDrawerState &
   ImageDialogState &
   RouteComponentProps<{}> &
-  WithPrivateImages &
   WithSnackbarProps;
 
 const defaultDrawerState = {
@@ -143,11 +141,65 @@ const defaultDialogState = {
   error: undefined,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = (props) => {
-  useReduxLoad(['images']);
+const preferenceKey = 'images';
 
+export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-  const { imagesData, imagesLoading, imagesError, deleteImage } = props;
+
+  const pagination = usePagination(1, preferenceKey);
+
+  const { order, orderBy } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'desc',
+    },
+    `${preferenceKey}-order`
+  );
+
+  const filter = {
+    ['+order_by']: orderBy,
+    ['+order']: order,
+  };
+
+  const {
+    data: images,
+    isLoading: imagesLoading,
+    error: imagesError,
+  } = useImagesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    filter
+  );
+
+  const { mutateAsync: deleteImage } = useDeleteImageMutation();
+
+  const eventState = useSelector((state: ApplicationState) => state.events);
+  const events = imageEvents(eventState);
+
+  // We want private images and also want the associated events tied in.
+  const imagesItemsById = listToItemsByID(images?.data ?? []);
+  const imagesData = Object.values(imagesItemsById).reduce(
+    (accum, thisImage: Image) =>
+      produce(accum, (draft: any) => {
+        if (!thisImage.is_public) {
+          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
+          const matchingEvent = events.find(
+            (thisEvent) =>
+              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
+              (`private/${thisEvent.entity?.id}` === thisImage.id &&
+                thisEvent.status === 'failed')
+          );
+          if (matchingEvent) {
+            draft.push({ ...thisImage, event: matchingEvent });
+          } else {
+            draft.push(thisImage);
+          }
+        }
+      }),
+    []
+  ) as ImageWithEvent[];
 
   /**
    * Separate manual Images (created by the user, either from disk or from uploaded file)
@@ -170,8 +222,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const [dialog, setDialogState] = React.useState<ImageDialogState>(
     defaultDialogState
   );
-
-  const dispatch = useDispatch();
 
   const dialogAction = dialog.status === 'pending_upload' ? 'cancel' : 'delete';
   const dialogMessage =
@@ -207,7 +257,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
       error: undefined,
     }));
 
-    deleteImage({ imageID: dialog.imageID! })
+    deleteImage({ imageId: dialog.imageID! })
       .then(() => {
         closeDialog();
         /**
@@ -246,7 +296,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     imageLabel: string,
     imageDescription: string
   ) => {
-    dispatch(removeImage(imageId));
+    removeImageFromCache();
     props.history.push('/images/create/upload', {
       imageLabel,
       imageDescription,
@@ -254,7 +304,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCancelFailedClick = (imageId: string) => {
-    dispatch(removeImage(imageId));
+    removeImageFromCache();
   };
 
   const openForEdit = (label: string, description: string, imageID: string) => {
@@ -352,7 +402,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
         description={drawer.description}
         selectedDisk={drawer.selectedDisk}
         selectedLinode={drawer.selectedLinode || null}
-        imageID={drawer.imageID}
+        imageId={drawer.imageID}
         changeDisk={changeSelectedDisk}
         changeLinode={changeSelectedLinode}
         changeLabel={setLabel}
@@ -512,61 +562,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     </React.Fragment>
   );
 };
-interface WithPrivateImages {
-  imagesData: ImageWithEvent[];
-  imagesLoading: boolean;
-  imagesError?: APIError[];
-  imagesLastUpdated: number;
-}
-
-interface ImageDispatch {
-  deleteImage: (imageID: DeleteImagePayload) => Promise<{}>;
-  requestImages: () => Promise<Image[]>;
-}
-
-const mapDispatchToProps: MapDispatchToProps<ImageDispatch, {}> = (
-  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
-) => ({
-  deleteImage: (imageID: DeleteImagePayload) => dispatch(_deleteImage(imageID)),
-  requestImages: () => dispatch(_requestImages()),
-});
-
-const withPrivateImages = connect(
-  (state: ApplicationState): WithPrivateImages => {
-    const { error, itemsById, lastUpdated, loading } = state.__resources.images;
-    const events = imageEvents(state.events);
-    const privateImagesWithEvents = Object.values(itemsById).reduce(
-      (accum, thisImage) =>
-        produce(accum, (draft) => {
-          if (!thisImage.is_public) {
-            // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-            const matchingEvent = events.find(
-              (thisEvent) =>
-                `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
-                (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                  thisEvent.status === 'failed')
-            );
-            if (matchingEvent) {
-              draft.push({ ...thisImage, event: matchingEvent });
-            } else {
-              draft.push(thisImage);
-            }
-          }
-        }),
-      [] as ImageWithEvent[]
-    );
-    return {
-      imagesData: privateImagesWithEvents,
-      imagesLoading: loading,
-      imagesError: error?.read,
-      imagesLastUpdated: lastUpdated,
-    };
-  },
-  mapDispatchToProps
-);
 
 export default compose<CombinedProps, {}>(
-  withPrivateImages,
   withRouter,
   withSnackbar
 )(ImagesLanding);

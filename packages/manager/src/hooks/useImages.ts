@@ -1,5 +1,6 @@
 import { Image } from '@linode/api-v4/lib/images/types';
 import { useDispatch, useSelector } from 'react-redux';
+import { getGrantData, getProfileData } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/image/image.reducer';
 import { requestImages as _request } from 'src/store/image/image.requests';
@@ -60,6 +61,25 @@ export const filterImages = (
       ? { ...accum, [thisImage.id]: thisImage }
       : accum;
   }, {});
+};
+
+export const useImageAndLinodeGrantCheck = () => {
+  const profile = getProfileData();
+  const grants = getGrantData();
+
+  const canCreateImage =
+    Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);
+
+  // Unrestricted users can create Images from any disk;
+  // Restricted users need read_write on the Linode they're trying to Imagize
+  // (in addition to the global add_images grant).
+  const permissionedLinodes = profile?.restricted
+    ? grants?.linode
+        .filter((thisGrant) => thisGrant.permissions === 'read_write')
+        .map((thisGrant) => thisGrant.id) ?? []
+    : null;
+
+  return { canCreateImage, permissionedLinodes };
 };
 
 export default useImages;
