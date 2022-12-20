@@ -1,18 +1,18 @@
-import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
+import { useSnackbar } from 'notistack';
+import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import {
   getNextVersion,
   localStorageWarning,
 } from 'src/features/Kubernetes/kubeUtils';
-import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 
-interface DialogProps {
+interface Props {
   clusterID: number;
   clusterLabel: string;
   isOpen: boolean;
@@ -20,13 +20,15 @@ interface DialogProps {
   onClose: () => void;
 }
 
-export const UpgradeDialog: React.FC<DialogProps> = (props) => {
+export const UpgradeDialog = (props: Props) => {
   const { clusterID, clusterLabel, currentVersion, isOpen, onClose } = props;
 
   const { data: versions } = useKubernetesVersionQuery();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { updateKubernetesCluster } = useKubernetesClusters();
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    clusterID
+  );
 
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
 
@@ -52,7 +54,7 @@ export const UpgradeDialog: React.FC<DialogProps> = (props) => {
   const onSubmitUpgradeDialog = () => {
     setSubmitting(true);
     setError(undefined);
-    updateKubernetesCluster(clusterID, {
+    updateKubernetesCluster({
       k8s_version: nextVersion,
     })
       .then((_) => {

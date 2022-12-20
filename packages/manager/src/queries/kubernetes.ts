@@ -7,11 +7,12 @@ import {
   getNodePools,
   KubeNodePoolResponse,
   KubernetesCluster,
+  updateKubernetesCluster,
 } from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient } from './base';
+import { queryClient, updateInPaginatedStore } from './base';
 
 const queryKey = `kubernetes`;
 
@@ -27,6 +28,18 @@ export const useKubernetesClusterQuery = (id: number) => {
   return useQuery<KubernetesCluster, APIError[]>(
     [queryKey, 'cluster', id],
     () => getKubernetesCluster(id)
+  );
+};
+
+export const useKubernetesClusterMutation = (id: number) => {
+  return useMutation<KubernetesCluster, APIError[], Partial<KubernetesCluster>>(
+    (data) => updateKubernetesCluster(id, data),
+    {
+      onSuccess(data) {
+        updateInPaginatedStore<KubernetesCluster>(`${queryKey}-list`, id, data);
+        queryClient.setQueryData([queryKey, 'cluster', id], data);
+      },
+    }
   );
 };
 
