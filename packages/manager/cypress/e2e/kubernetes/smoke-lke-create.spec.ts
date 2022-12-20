@@ -49,9 +49,8 @@ describe('LKE Create Cluster', () => {
 
     // wait for change to reflect on Checkout bar
 
-    fbtVisible('Linode 2 GB Plan');
     cy.get('[data-testid="kube-checkout-bar"]').within((_bar) => {
-      fbtVisible('Linode 2 GB Plan');
+      fbtVisible('Linode 2GB Plan');
       getVisible('[data-testid="remove-pool-button"]');
       cy.get('[data-qa-notice="true"]').within((_notice) => {
         fbtVisible(

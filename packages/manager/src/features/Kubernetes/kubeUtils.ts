@@ -1,5 +1,6 @@
 import { Account } from '@linode/api-v4/lib/account';
 import {
+  KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
@@ -25,13 +26,12 @@ export const getMonthlyPrice = (
 };
 
 export const getTotalClusterPrice = (
-  pools: PoolNodeWithPrice[],
+  pools: KubeNodePoolResponse[],
+  types: LinodeType[],
   highAvailability: boolean = false
 ) => {
   const price = pools.reduce((accumulator, node) => {
-    return node.queuedForDeletion
-      ? accumulator // If we're going to delete it, don't include it in the cost
-      : accumulator + node.totalMonthlyPrice;
+    return accumulator + getMonthlyPrice(node.type, node.count, types);
   }, 0);
 
   return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
@@ -45,35 +45,6 @@ export const addPriceToNodePool = (
   totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData),
 });
 
-/**
- * Usually when displaying or editing clusters, we need access
- * to pricing information as well as statistics, which aren't
- * returned from the API and must be computed.
- */
-export const extendCluster = (
-  cluster: KubernetesCluster,
-  pools: ExtendedPoolNode[],
-  types: LinodeType[]
-): ExtendedCluster => {
-  // Identify which pools belong to this cluster and add pricing information.
-  const _pools = pools.reduce((accum, thisPool) => {
-    return thisPool.clusterID === cluster.id
-      ? [...accum, addPriceToNodePool(thisPool, types)]
-      : accum;
-  }, []);
-  const { CPU, RAM, Storage } = getTotalClusterMemoryCPUAndStorage(
-    _pools,
-    types
-  );
-  return {
-    ...cluster,
-    node_pools: _pools,
-    totalMemory: RAM,
-    totalCPU: CPU,
-    totalStorage: Storage,
-  };
-};
-
 interface ClusterData {
   CPU: number;
   RAM: number;
@@ -81,7 +52,7 @@ interface ClusterData {
 }
 
 export const getTotalClusterMemoryCPUAndStorage = (
-  pools: ExtendedPoolNode[],
+  pools: KubeNodePoolResponse[],
   types: LinodeType[]
 ) => {
   if (!types || !pools) {
@@ -89,7 +60,7 @@ export const getTotalClusterMemoryCPUAndStorage = (
   }
 
   return pools.reduce(
-    (accumulator: ClusterData, thisPool: ExtendedPoolNode) => {
+    (accumulator: ClusterData, thisPool: KubeNodePoolResponse) => {
       const thisType = types.find(
         (type: LinodeType) => type.id === thisPool.type
       );
@@ -154,7 +125,7 @@ export const getNextVersion = (
 
 export const getKubeHighAvailability = (
   account: Account | undefined,
-  cluster?: ExtendedCluster | null
+  cluster?: ExtendedCluster | KubernetesCluster | null
 ) => {
   const showHighAvailability = account?.capabilities.includes(
     'LKE HA Control Planes'

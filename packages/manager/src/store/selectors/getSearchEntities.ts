@@ -6,10 +6,7 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
-import {
-  extendCluster,
-  getDescriptionForCluster,
-} from 'src/features/Kubernetes/kubeUtils';
+import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
@@ -201,14 +198,9 @@ export default createSelector<
     );
     const searchableImages = arrOfImages.reduce(imageReducer, []);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
-    const searchableKubernetesClusters = kubernetesClusters
-      .map((thisCluster) => {
-        const pools = nodePools.filter(
-          (thisPool) => thisPool.clusterID === thisCluster.id
-        );
-        return extendCluster(thisCluster, pools, types);
-      })
-      .map(kubernetesClusterToSearchableItem);
+    const searchableKubernetesClusters = [].map(
+      kubernetesClusterToSearchableItem
+    );
 
     return [
       ...searchableLinodes,

@@ -1,12 +1,16 @@
-import { fireEvent } from '@testing-library/react';
+import { fireEvent, waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import types from 'src/utilities/types.json';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-
 import ResizeNodePoolDrawer, { Props } from './ResizeNodePoolDrawer';
+import { rest, server } from 'src/mocks/testServer';
+import { linodeTypeFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { QueryClient } from 'react-query';
 
-const pool = nodePoolFactory.build({ type: 'g6-standard-1' });
+const pool = nodePoolFactory.build({
+  type: 'g6-standard-1',
+});
 const smallPool = nodePoolFactory.build({ count: 2 });
 
 const props: Props = {
@@ -17,15 +21,32 @@ const props: Props = {
   isSubmitting: false,
 };
 
-const useTypes = jest.fn().mockReturnValue({ types: { entities: types.data } });
-
-jest.mock('src/hooks/useTypes', () => ({
-  useTypes: () => useTypes(),
-}));
+const queryClient = new QueryClient();
 
 describe('ResizeNodePoolDrawer', () => {
-  it("should render the pool's type and size", () => {
-    const { getByText } = renderWithTheme(<ResizeNodePoolDrawer {...props} />);
+  it("should render the pool's type and size", async () => {
+    server.use(
+      rest.get('*/linode/types', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            makeResourcePage(
+              linodeTypeFactory.buildList(1, {
+                label: 'linode 2GB',
+                id: 'g6-standard-1',
+              })
+            )
+          )
+        );
+      })
+    );
+
+    const { getByText, getByTestId } = renderWithTheme(
+      <ResizeNodePoolDrawer {...props} />,
+      { queryClient }
+    );
+
+    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+
     getByText(/linode 2GB/i);
   });
 

@@ -1,16 +1,15 @@
 import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
+  KubeNodePoolResponse,
   KubernetesEndpointResponse,
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
   updateKubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useLocation, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -19,18 +18,15 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import KubeContainer, {
-  DispatchProps,
-} from 'src/containers/kubernetes.container';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { DispatchProps } from 'src/containers/kubernetes.container';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
 import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
-import usePolling from 'src/hooks/usePolling';
 import { useAccount } from 'src/queries/account';
+import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
-import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
+import { PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 import UpgradeClusterDialog from './UpgradeClusterDialog';
@@ -54,19 +50,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 24,
   },
 }));
-interface KubernetesContainerProps {
-  cluster: ExtendedCluster | null;
-  clustersLoading: boolean;
-  clustersLoadError?: APIError[];
-  clusterDeleteError?: APIError[];
-  lastUpdated: number;
-  nodePoolsLoading: boolean;
-}
 
-type CombinedProps = WithTypesProps &
-  RouteComponentProps<{ clusterID: string }> &
-  KubernetesContainerProps &
-  DispatchProps;
+type CombinedProps = DispatchProps;
 
 const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
   getKubernetesClusterEndpoints
@@ -78,14 +63,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   const classes = useStyles();
   const flags = useFlags();
   const { data: account } = useAccount();
+  const { clusterID } = useParams<{ clusterID: string }>();
+  const location = useLocation();
 
-  const {
-    cluster,
-    clustersLoadError,
-    clustersLoading,
-    lastUpdated,
-    location,
-  } = props;
+  const { data: cluster, isLoading, error } = useKubernetesClusterQuery(
+    Number(clusterID)
+  );
 
   const [endpoint, setEndpoint] = React.useState<string | null>(null);
   const [endpointError, setEndpointError] = React.useState<string | undefined>(
@@ -106,7 +89,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   const endpointAvailabilityInterval = React.useRef<number>();
   const kubeconfigAvailabilityInterval = React.useRef<number>();
 
-  usePolling([() => props.requestNodePools(+props.match.params.clusterID)]);
+  // @todo: Poll with React Query
+  // usePolling([() => props.requestNodePools(+props.match.params.clusterID)]);
 
   const getEndpointToDisplay = (endpoints: string[]) => {
     // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
@@ -158,7 +142,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   };
 
   React.useEffect(() => {
-    const clusterID = +props.match.params.clusterID;
     if (clusterID) {
       // A function to check if the endpoint is available.
       const endpointAvailabilityCheck = () => {
@@ -173,11 +156,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           });
       };
 
-      props.requestClusterForStore(clusterID).catch((_) => null); // Handle in Redux
+      // props.requestClusterForStore(Number(clusterID)).catch((_) => null); // Handle in Redux
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
       setEndpointLoading(true);
-      getAllEndpoints([clusterID])
+      getAllEndpoints([Number(clusterID)])
         .then((response) => {
           successfulClusterEndpointResponse(
             response.data.map((thisEndpoint) => thisEndpoint.endpoint)
@@ -199,14 +182,14 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           }
         });
 
-      kubeconfigAvailabilityCheck(clusterID, true);
+      kubeconfigAvailabilityCheck(Number(clusterID), true);
     }
 
     return () => {
       clearInterval(endpointAvailabilityInterval.current);
       clearInterval(kubeconfigAvailabilityInterval.current);
     };
-  }, []);
+  }, [clusterID]);
 
   const _updateCluster = (clusterId: number) =>
     updateKubernetesCluster(clusterId, {
@@ -224,24 +207,18 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     isClusterHighlyAvailable,
   } = getKubeHighAvailability(account, cluster);
 
-  if (clustersLoadError) {
-    const error = getAPIErrorOrDefault(
-      clustersLoadError,
-      'Unable to load cluster data.'
-    )[0].reason;
-    return <ErrorState errorText={error} />;
+  if (error) {
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Unable to load cluster data.')[0].reason
+        }
+      />
+    );
   }
 
-  if (
-    (clustersLoading && lastUpdated === 0) ||
-    props.nodePoolsLoading ||
-    props.typesLoading
-  ) {
+  if (isLoading || !cluster) {
     return <CircleProgress />;
-  }
-
-  if (cluster === null) {
-    return null;
   }
 
   const handleLabelChange = (newLabel: string) => {
@@ -257,40 +234,40 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
 
   const resetEditableLabel = () => {
     setUpdateError(undefined);
-    return cluster.label;
+    return cluster?.label;
   };
 
   const handleRecycleAllPoolNodes = (nodePoolID: number) => {
-    return recycleAllNodes(cluster.id, nodePoolID).then((response) => {
+    return recycleAllNodes(cluster?.id, nodePoolID).then((response) => {
       // Recycling nodes is an asynchronous process, and it probably won't make a difference to
       // request Node Pools here (it could be several seconds before statuses change). I thought
       // it was a good idea anyway, though.
-      props.requestNodePools(cluster.id);
+      props.requestNodePools(cluster?.id);
       return response;
     });
   };
 
   const handleRecycleNode = (nodeID: string) => {
-    return recycleNode(cluster.id, nodeID);
+    return recycleNode(cluster?.id, nodeID);
   };
 
-  const handleRecycleAllClusterNodes = () => recycleClusterNodes(cluster.id);
+  const handleRecycleAllClusterNodes = () => recycleClusterNodes(cluster?.id);
 
   return (
     <>
-      <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
+      <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
       <Grid item>
         <UpgradeKubernetesVersionBanner
-          clusterID={cluster.id}
-          clusterLabel={cluster.label}
-          currentVersion={cluster.k8s_version}
+          clusterID={cluster?.id}
+          clusterLabel={cluster?.label}
+          currentVersion={cluster?.k8s_version}
         />
       </Grid>
       <Grid container className={classes.root} justifyContent="space-between">
         <Grid item className="p0">
           <Breadcrumb
             onEditHandlers={{
-              editableTextTitle: cluster.label,
+              editableTextTitle: cluster?.label,
               onEdit: handleLabelChange,
               onCancel: resetEditableLabel,
               errorText: updateError,
@@ -310,7 +287,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
             <Button
               className={classes.upgradeToHAButton}
               buttonType="primary"
-              onClick={() => openUpgradeDialog(cluster.id)}
+              onClick={() => openUpgradeDialog(cluster?.id)}
             >
               Upgrade to HA
             </Button>
@@ -341,8 +318,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
         <NodePoolsDisplay
           clusterID={cluster.id}
           clusterLabel={cluster.label}
-          pools={cluster.node_pools}
-          types={props.typesData || []}
           addNodePool={(pool: PoolNodeWithPrice) =>
             props.createNodePool({
               clusterID: cluster.id,
@@ -350,7 +325,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
               count: pool.count,
             })
           }
-          updatePool={(id: number, updatedPool: PoolNodeWithPrice) =>
+          updatePool={(id: number, updatedPool: KubeNodePoolResponse) =>
             props.updateNodePool({
               clusterID: cluster.id,
               nodePoolID: id,
@@ -369,9 +344,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           }
           recycleNode={handleRecycleNode}
           recycleAllClusterNodes={handleRecycleAllClusterNodes}
-          getNodePools={() =>
-            props.requestNodePools(+props.match.params.clusterID)
-          }
+          getNodePools={() => props.requestNodePools(Number(clusterID))}
         />
       </Grid>
       <UpgradeClusterDialog
@@ -383,36 +356,4 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   );
 };
 
-const withCluster = KubeContainer<
-  {},
-  WithTypesProps & RouteComponentProps<{ clusterID: string }>
->(
-  (
-    ownProps,
-    clustersLoading,
-    lastUpdated,
-    clustersError,
-    clustersData,
-    nodePoolsLoading
-  ) => {
-    const cluster =
-      clustersData.find((c) => +c.id === +ownProps.match.params.clusterID) ||
-      null;
-    return {
-      ...ownProps,
-      cluster,
-      lastUpdated,
-      clustersLoading,
-      clustersLoadError: clustersError.read,
-      clusterDeleteError: clustersError.delete,
-      nodePoolsLoading,
-    };
-  }
-);
-
-const enhanced = compose<CombinedProps, RouteComponentProps>(
-  withTypes,
-  withCluster
-);
-
-export default enhanced(KubernetesClusterDetail);
+export default KubernetesClusterDetail;

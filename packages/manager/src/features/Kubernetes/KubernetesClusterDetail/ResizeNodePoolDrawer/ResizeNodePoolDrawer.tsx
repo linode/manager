@@ -1,15 +1,16 @@
+import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
-import { useTypes } from 'src/hooks/useTypes';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { pluralize } from 'src/utilities/pluralize';
-import { nodeWarning } from '../../kubeUtils';
-import { PoolNodeWithPrice } from '../../types';
+import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   summary: {
@@ -31,7 +32,7 @@ export interface Props {
   isSubmitting: boolean;
   onClose: () => void;
   onSubmit: (updatedValue: number) => void;
-  nodePool?: PoolNodeWithPrice;
+  nodePool?: KubeNodePoolResponse;
 }
 
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
@@ -39,8 +40,8 @@ the pool.`;
 
 export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
   const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
-  const { types } = useTypes();
   const classes = useStyles();
+  const { data: types, isLoading: isLoadingTypes } = useAllLinodeTypesQuery();
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -63,9 +64,7 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
     onSubmit(updatedCount);
   };
 
-  const planType = types.entities.find(
-    (thisType) => thisType.id === nodePool?.type
-  );
+  const planType = types?.find((thisType) => thisType.id === nodePool?.type);
 
   const pricePerNode = planType?.price.monthly ?? 0;
 
@@ -75,12 +74,19 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
     return null;
   }
 
+  const totalMonthlyPrice = getMonthlyPrice(
+    nodePool.type,
+    nodePool.count,
+    types || []
+  );
+
   return (
     <Drawer
       title={`Resize Pool: ${planType?.label ?? 'Unknown'} Plan`}
       open={open}
       onClose={onClose}
     >
+      {isLoadingTypes && <CircleProgress />}
       <form
         onSubmit={(e: React.ChangeEvent<HTMLFormElement>) => {
           e.preventDefault();
@@ -89,7 +95,7 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
       >
         <div className={classes.section}>
           <Typography className={classes.summary}>
-            Current pool: ${nodePool.totalMonthlyPrice}/month (
+            Current pool: ${totalMonthlyPrice}/month (
             {pluralize('node', 'nodes', nodePool.count)} at ${pricePerNode}
             /month)
           </Typography>
