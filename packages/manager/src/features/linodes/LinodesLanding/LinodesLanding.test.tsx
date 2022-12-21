@@ -18,7 +18,6 @@ describe('ListLinodes', () => {
       wrapWithTheme(
         <ListLinodes
           imagesLoading={false}
-          imagesError={{}}
           imagesData={{}}
           imagesLastUpdated={100}
           someLinodesHaveScheduledMaintenance={true}

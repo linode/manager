@@ -20,8 +20,10 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
@@ -84,7 +86,7 @@ export interface Props {
 }
 
 type CombinedProps = Props &
-  WithImages &
+  ImagesProps &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -230,7 +232,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       openDialog: this.openDialog,
     };
 
-    if (imagesError.read || linodesRequestError) {
+    if (imagesError || linodesRequestError) {
       let errorText: string | JSX.Element =
         linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
 
@@ -560,7 +562,7 @@ export const enhanced = compose<CombinedProps, Props>(
   setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
-  withImages(),
+  withImages,
   styled,
   withFeatureFlagConsumer
 );
