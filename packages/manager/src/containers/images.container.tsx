@@ -1,15 +1,14 @@
-import * as React from 'react';
-import { APIError } from '@linode/api-v4/lib/types';
-import { useImagesQuery } from 'src/queries/images';
-import { listToItemsByID } from 'src/queries/base';
 import { Image } from '@linode/api-v4';
+import { APIError } from '@linode/api-v4/lib/types';
+import * as React from 'react';
+import { listToItemsByID } from 'src/queries/base';
+import { useImagesQuery } from 'src/queries/images';
 
 export interface DefaultProps {
   imagesData: Record<string, Image>;
   imagesError?: APIError[];
   imagesLoading: boolean;
   imagesLastUpdated: number;
-  //   requestImages: () => Promise<Image[]>;
 }
 
 /**
@@ -21,9 +20,9 @@ export interface DefaultProps {
  * or problematic to refactor.
  *
  * @todo: This file can be deleted once the existing class components have been removed or converted
- * to FCs (current list is: SelectPlanPanel/SelectPlanQuantityPanel; NodeBalancerCreate; LinodeSelect;
- * LinodeCreate/LinodeCreateContainer). Please do NOT use this wrapper for any future components; if a class
- * component is needed, best practice is to include an FC container above it (the routing level often works well)
+ * to FCs (these include: LinodeCreateContainer/LinodeCreate, StackScriptCreate, LinodesLanding).
+ * Please do NOT use this wrapper for any future components; if a class component is needed,
+ * best practice is to include an FC container above it (the routing level often works well)
  * and pass regions through there.
  */
 type Wrapper = (
