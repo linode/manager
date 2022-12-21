@@ -11,7 +11,6 @@ import {
   useDeleteKubernetesClusterMutation,
 } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import CircleProgress from 'src/components/CircleProgress';
 
 export interface Props {
@@ -51,6 +50,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
+      // @TODO: redirect user to kubenetes landing page
     });
   };
 
@@ -83,14 +83,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       title={`Delete Cluster ${clusterLabel}`}
       onClose={onClose}
       actions={actions}
-      error={
-        error
-          ? getAPIErrorOrDefault(
-              error,
-              'Unable to delete Kubernetes Cluster'
-            )[0].reason
-          : undefined
-      }
+      error={error?.[0].reason}
     >
       {isLoading ? (
         <CircleProgress />

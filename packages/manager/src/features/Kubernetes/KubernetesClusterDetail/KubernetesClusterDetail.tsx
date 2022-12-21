@@ -14,7 +14,6 @@ import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import {
   useKubernetesClusterMutation,
@@ -52,7 +51,6 @@ const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
 
 export const KubernetesClusterDetail = () => {
   const classes = useStyles();
-  const flags = useFlags();
   const { data: account } = useAccount();
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
@@ -269,15 +267,6 @@ export const KubernetesClusterDetail = () => {
           endpointLoading={endpointLoading}
           kubeconfigAvailable={kubeconfigAvailable}
           kubeconfigError={kubeconfigError}
-          handleUpdateTags={(newTags: string[]) =>
-            updateKubernetesCluster({
-              tags: newTags,
-            })
-          }
-          isClusterHighlyAvailable={isClusterHighlyAvailable}
-          isKubeDashboardFeatureEnabled={Boolean(
-            flags.kubernetesDashboardAvailability
-          )}
         />
       </Grid>
       <Grid item>

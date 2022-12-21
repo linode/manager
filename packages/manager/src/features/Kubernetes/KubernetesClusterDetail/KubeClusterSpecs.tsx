@@ -14,7 +14,6 @@ import {
 
 interface Props {
   cluster: KubernetesCluster;
-  isClusterHighlyAvailable: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const KubeClusterSpecs: React.FC<Props> = (props) => {
-  const { cluster, isClusterHighlyAvailable } = props;
+export const KubeClusterSpecs = (props: Props) => {
+  const { cluster } = props;
   const classes = useStyles();
   const { data: types } = useAllLinodeTypesQuery();
 
@@ -66,7 +65,7 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
     `$${getTotalClusterPrice(
       pools ?? [],
       types ?? [],
-      isClusterHighlyAvailable
+      cluster.control_plane.high_availability
     ).toFixed(2)}/month`,
   ];
 
