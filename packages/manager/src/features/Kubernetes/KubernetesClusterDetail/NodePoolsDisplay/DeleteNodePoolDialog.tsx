@@ -17,11 +17,16 @@ interface Props {
 export const DeleteNodePoolDialog = (props: Props) => {
   const { open, onClose, kubernetesClusterId, nodePool } = props;
 
-  const {
-    mutateAsync: deleteNodePool,
-    isLoading,
-    error,
-  } = useDeleteNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
+  const { mutateAsync, isLoading, error } = useDeleteNodePoolMutation(
+    kubernetesClusterId,
+    nodePool?.id ?? -1
+  );
+
+  const onDelete = () => {
+    mutateAsync().then(() => {
+      onClose();
+    });
+  };
 
   const nodeCount = nodePool?.count ?? 0;
 
@@ -37,7 +42,7 @@ export const DeleteNodePoolDialog = (props: Props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={() => deleteNodePool()}
+        onClick={onDelete}
         loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
