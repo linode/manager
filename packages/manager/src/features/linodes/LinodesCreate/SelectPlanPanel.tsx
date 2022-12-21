@@ -190,7 +190,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
-    const isSamePlan = type.heading === currentPlanHeading;
+    const isSamePlan =
+      type.heading === currentPlanHeading || type.id === selectedID;
     const isGPU = type.class === 'gpu';
     const isDisabledClass = getDisabledClass(type.class);
     const shouldShowTransfer = showTransfer && type.transfer;
