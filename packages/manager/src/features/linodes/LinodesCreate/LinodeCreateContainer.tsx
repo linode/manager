@@ -1,5 +1,5 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
+import { getImages, Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
   CreateLinodeRequest,
@@ -22,15 +22,14 @@ import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { REFRESH_INTERVAL } from 'src/constants';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, {
-  ImagesDispatch,
-  WithImages,
-} from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
@@ -51,6 +50,7 @@ import {
 } from 'src/queries/accountAgreements';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { queryKey as imagesListQueryKey } from 'src/queries/images';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -112,8 +112,7 @@ interface State {
 type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
-  WithImages &
-  ImagesDispatch &
+  ImagesProps &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -260,10 +259,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     // If we haven't requested images yet (or in a while), request them
     if (
-      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL &&
-      !this.props.imagesLoading
+      (!this.props.imagesLastUpdated && !this.props.imagesLoading) ||
+      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL
     ) {
-      this.props.requestImages();
+      queryClient.fetchQuery(imagesListQueryKey, () => getImages(), {
+        staleTime: REFRESH_INTERVAL,
+      });
     }
   }
 
@@ -817,7 +818,7 @@ export default recompose<CombinedProps, {}>(
       oldProps.location.search !== newProps.location.search,
     true
   ),
-  withImages(),
+  withImages,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,
