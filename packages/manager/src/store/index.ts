@@ -40,14 +40,6 @@ import images, {
   defaultState as defaultImagesState,
   State as ImagesState,
 } from 'src/store/image/image.reducer';
-import kubernetes, {
-  defaultState as defaultKubernetesState,
-  State as KubernetesState,
-} from 'src/store/kubernetes/kubernetes.reducer';
-import nodePools, {
-  defaultState as defaultNodePoolsState,
-  State as KubeNodePoolsState,
-} from 'src/store/kubernetes/nodePools.reducer';
 import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState,
@@ -143,8 +135,6 @@ initReselectDevtools();
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
   images: defaultImagesState,
-  kubernetes: defaultKubernetesState,
-  nodePools: defaultNodePoolsState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
@@ -158,8 +148,6 @@ const __resourcesDefaultState = {
 export interface ResourcesState {
   accountManagement: AccountManagementState;
   images: ImagesState;
-  kubernetes: KubernetesState;
-  nodePools: KubeNodePoolsState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
@@ -222,8 +210,6 @@ export const defaultState: ApplicationState = {
 const __resources = combineReducers({
   accountManagement,
   images,
-  kubernetes,
-  nodePools,
   linodes,
   linodeConfigs,
   linodeDisks,

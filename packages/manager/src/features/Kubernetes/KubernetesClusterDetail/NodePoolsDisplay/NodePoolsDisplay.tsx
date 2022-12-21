@@ -4,7 +4,6 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -12,7 +11,6 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { useDialog } from 'src/hooks/useDialog';
-import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
@@ -78,7 +76,13 @@ export const NodePoolsDisplay = (props: Props) => {
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
-  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterID);
+
+  const {
+    data: pools,
+    isLoading,
+    error: poolsError,
+  } = useAllKubernetesNodePoolQuery(clusterID);
+
   const { data: types } = useAllLinodeTypesQuery();
 
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
@@ -155,25 +159,6 @@ export const NodePoolsDisplay = (props: Props) => {
     pools?.find((pool) => pool.id === autoscalePoolDialog.dialog.entityID)
       ?.autoscaler;
 
-  /**
-   * If the API returns an error when fetching node pools,
-   * we want to display this error to the user from the
-   * NodePoolDisplayTable.
-   *
-   * Only do this if we haven't yet successfully retrieved this
-   * data, so a random error in our subsequent polling doesn't
-   * break the view.
-   */
-  const poolsError = useSelector((state: ApplicationState) => {
-    const error = state.__resources.nodePools?.error?.read;
-    const lastUpdated = state.__resources.nodePools.lastUpdated;
-    if (error && lastUpdated === 0) {
-      return getAPIErrorOrDefault(error, 'Unable to load Node Pools.')[0]
-        .reason;
-    }
-    return undefined;
-  });
-
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
   }
@@ -216,7 +201,7 @@ export const NodePoolsDisplay = (props: Props) => {
       </Grid>
       <Paper className={classes.root}>
         {poolsError ? (
-          <ErrorState errorText={poolsError} />
+          <ErrorState errorText={poolsError?.[0].reason} />
         ) : (
           <Grid container direction="column">
             <Grid item xs={12} className={classes.displayTable}>
