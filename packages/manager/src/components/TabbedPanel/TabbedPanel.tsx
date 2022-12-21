@@ -83,7 +83,7 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
     ...rest
   } = props;
 
-  const [tabIndex, setTabIndex] = useState(initTab);
+const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
 
   const classes = useStyles();
 
