@@ -89,7 +89,9 @@ const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
 
   const tabChangeHandler = (index: number) => {
     setTabIndex(index);
-    handleTabChange?.();
+    if (handleTabChange) {
+      handleTabChange();
+    }
   };
 
   useEffect(() => {
