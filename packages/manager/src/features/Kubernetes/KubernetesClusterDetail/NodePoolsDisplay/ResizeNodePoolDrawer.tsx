@@ -77,7 +77,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
   }
 
   const handleSubmit = () => {
-    updateNodePool({ ...nodePool, count: updatedCount }).then((_) => {
+    updateNodePool({ count: updatedCount }).then((_) => {
       onClose();
     });
   };

@@ -1,4 +1,3 @@
-import { AutoscaleNodePool } from '@linode/api-v4/lib/kubernetes';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -14,17 +13,18 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+import { AutoscaleSettings } from '@linode/api-v4';
 
 interface Props {
   poolID: number;
   open: boolean;
   loading: boolean;
   error?: string;
-  getAutoscaler: () => AutoscaleNodePool | undefined;
+  getAutoscaler: () => AutoscaleSettings | undefined;
   handleOpenResizeDrawer: (poolId: number) => void;
   onClose: () => void;
   onSubmit: (
-    values: AutoscaleNodePool,
+    values: AutoscaleSettings,
     setSubmitting: (isSubmitting: boolean) => void,
     setWarningMessage: (warning: string) => void
   ) => void;

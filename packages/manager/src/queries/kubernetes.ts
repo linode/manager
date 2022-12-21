@@ -2,6 +2,7 @@ import {
   CreateKubeClusterPayload,
   createKubernetesCluster,
   createNodePool,
+  CreateNodePoolData,
   deleteKubernetesCluster,
   deleteNodePool,
   getKubeConfig,
@@ -16,13 +17,13 @@ import {
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
   KubernetesVersion,
-  PoolNodeRequest,
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
   resetKubeConfig,
   updateKubernetesCluster,
   updateNodePool,
+  UpdateNodePoolData,
 } from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -121,11 +122,16 @@ export const useCreateKubernetesClusterMutation = () => {
 };
 
 export const useCreateNodePoolMutation = (clusterId: number) => {
-  return useMutation<KubeNodePoolResponse, APIError[], PoolNodeRequest>(
+  return useMutation<KubeNodePoolResponse, APIError[], CreateNodePoolData>(
     (data) => createNodePool(clusterId, data),
     {
       onSuccess() {
-        queryClient.invalidateQueries([queryKey, 'pools', clusterId]);
+        queryClient.invalidateQueries([
+          queryKey,
+          'cluster',
+          clusterId,
+          'pools',
+        ]);
       },
     }
   );
@@ -138,10 +144,10 @@ export const useUpdateNodePoolMutation = (
   return useMutation<
     KubeNodePoolResponse,
     APIError[],
-    PoolNodeRequest & { id: number }
+    Partial<UpdateNodePoolData>
   >((data) => updateNodePool(clusterId, poolId, data), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'pools', clusterId]);
+      queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
     },
   });
 };
@@ -152,7 +158,7 @@ export const useDeleteNodePoolMutation = (
 ) => {
   return useMutation<{}, APIError[]>(() => deleteNodePool(clusterId, poolId), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'pools', clusterId]);
+      queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
     },
   });
 };
@@ -163,7 +169,7 @@ export const useRecycleNodePoolMutation = (
 ) => {
   return useMutation<{}, APIError[]>(() => recycleAllNodes(clusterId, poolId), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'pools', clusterId]);
+      queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
     },
   });
 };
@@ -171,7 +177,7 @@ export const useRecycleNodePoolMutation = (
 export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
   return useMutation<{}, APIError[]>(() => recycleNode(clusterId, nodeId), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'pools', clusterId]);
+      queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
     },
   });
 };
@@ -179,7 +185,7 @@ export const useRecycleNodeMutation = (clusterId: number, nodeId: string) => {
 export const useRecycleClusterMutation = (clusterId: number) => {
   return useMutation<{}, APIError[]>(() => recycleClusterNodes(clusterId), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'pools', clusterId]);
+      queryClient.invalidateQueries([queryKey, 'cluster', clusterId, 'pools']);
     },
   });
 };

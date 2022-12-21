@@ -1,6 +1,6 @@
 import {
   autoscaleNodePool,
-  AutoscaleNodePool as AutoscaleNodePoolValues,
+  AutoscaleSettings,
 } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
@@ -122,7 +122,7 @@ export const NodePoolsDisplay = (props: Props) => {
   };
 
   const handleAutoscalePool = (
-    values: AutoscaleNodePoolValues,
+    values: AutoscaleSettings,
     setSubmitting: (isSubmitting: boolean) => void,
     setWarningMessage: (warning: string) => void
   ) => {
@@ -269,7 +269,7 @@ export const NodePoolsDisplay = (props: Props) => {
               getAutoscaler={getAutoscaler}
               handleOpenResizeDrawer={handleOpenResizeDrawer}
               onSubmit={(
-                values: AutoscaleNodePoolValues,
+                values: AutoscaleSettings,
                 setSubmitting: (isSubmitting: boolean) => void,
                 setWarningMessage: (warning: string) => void
               ) =>

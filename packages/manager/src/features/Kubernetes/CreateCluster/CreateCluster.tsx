@@ -1,7 +1,7 @@
 import {
   CreateKubeClusterPayload,
+  CreateNodePoolData,
   KubeNodePoolResponse,
-  PoolNodeRequest,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
@@ -167,12 +167,11 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     const k8s_version = version ? version.value : undefined;
 
     /**
-     * We need to remove the monthly price, which is used for client-side
-     * calculations, and send only type and count to the API.
+     * Only type and count to the API.
      */
     const node_pools = nodePools.map(
       pick(['type', 'count'])
-    ) as PoolNodeRequest[];
+    ) as CreateNodePoolData[];
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability },
