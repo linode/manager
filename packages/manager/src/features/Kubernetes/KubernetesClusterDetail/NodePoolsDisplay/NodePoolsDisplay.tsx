@@ -1,12 +1,9 @@
 import {
-  PoolNodeRequest,
-  PoolNodeResponse,
   autoscaleNodePool,
   AutoscaleNodePool as AutoscaleNodePoolValues,
-  KubeNodePoolResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Waypoint } from 'react-waypoint';
 import Paper from 'src/components/core/Paper';
@@ -17,17 +14,23 @@ import Grid from 'src/components/Grid';
 import { useDialog } from 'src/hooks/useDialog';
 import { ApplicationState } from 'src/store';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import RecycleNodesDialog from '../RecycleNodesDialog';
-import AddNodePoolDrawer from '../AddNodePoolDrawer';
-import ResizeNodePoolDrawer from '../ResizeNodePoolDrawer';
-import NodeDialog from './NodeDialog';
+import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
+import { AddNodePoolDrawer } from './AddNodePoolDrawer';
+import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
+import { RecycleNodeDialog } from './RecycleNodeDialog';
 import NodePool from './NodePool';
-import NodePoolDialog from './NodePoolDialog';
+import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import AutoscalePoolDialog from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import {
+  queryKey,
+  useAllKubernetesNodePoolQuery,
+} from 'src/queries/kubernetes';
 import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import CircleProgress from 'src/components/CircleProgress';
+import { queryClient } from 'src/queries/base';
+import { RecycleClusterDialog } from '../RecycleClusterDialog';
+import classNames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -68,40 +71,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   clusterID: number;
   clusterLabel: string;
-  updatePool: (
-    poolID: number,
-    updatedPool: KubeNodePoolResponse
-  ) => Promise<KubeNodePoolResponse>;
-  deletePool: (poolID: number) => Promise<any>;
-  addNodePool: (newPool: PoolNodeRequest) => Promise<PoolNodeResponse>;
-  recycleAllClusterNodes: () => Promise<{}>;
-  recycleAllPoolNodes: (poolID: number) => Promise<{}>;
-  recycleNode: (nodeID: string) => Promise<{}>;
-  getNodePools: () => Promise<any>;
 }
 
-export const NodePoolsDisplay: React.FC<Props> = (props) => {
-  const {
-    clusterID,
-    clusterLabel,
-    addNodePool,
-    updatePool,
-    deletePool,
-    recycleAllClusterNodes,
-    recycleAllPoolNodes,
-    recycleNode,
-    getNodePools,
-  } = props;
+export const NodePoolsDisplay = (props: Props) => {
+  const { clusterID, clusterLabel } = props;
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterID);
   const { data: types } = useAllLinodeTypesQuery();
 
-  const deletePoolDialog = useDialog<number>(deletePool);
-  const recycleAllPoolNodesDialog = useDialog<number>(recycleAllPoolNodes);
-  const recycleAllClusterNodesDialog = useDialog(recycleAllClusterNodes);
-  const recycleNodeDialog = useDialog<string>(recycleNode);
+  const [selectedNodeId, setSelectedNodeId] = useState<string>('');
+
+  const [selectedPoolId, setSelectedPoolId] = useState(-1);
+  const selectedPool = pools?.find((pool) => pool.id === selectedPoolId);
+
+  const [isDeleteNodePoolOpen, setIsDeleteNodePoolOpen] = useState(false);
+  const [isResizeDrawerOpen, setIsResizeDrawerOpen] = useState(false);
+  const [isRecycleAllPoolNodesOpen, setIsRecycleAllPoolNodesOpen] = useState(
+    false
+  );
+  const [isRecycleNodeOpen, setIsRecycleNodeOpen] = useState(false);
+  const [isRecycleClusterOpen, setIsRecycleClusterOpen] = useState(false);
+
   const autoscalePoolDialog = useDialog<any>(autoscaleNodePool);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
@@ -115,90 +107,14 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
   };
 
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
-  const [resizeDrawerOpen, setResizeDrawerOpen] = React.useState<boolean>(
-    false
-  );
-  const [drawerSubmitting, setDrawerSubmitting] = React.useState<boolean>(
-    false
-  );
-  const [drawerError, setDrawerError] = React.useState<string | undefined>();
-  const [poolForEdit, setPoolForEdit] = React.useState<
-    KubeNodePoolResponse | undefined
-  >();
 
   const handleOpenAddDrawer = () => {
     setAddDrawerOpen(true);
-    setDrawerError(undefined);
   };
 
-  const handleOpenResizeDrawer = (poolID: number) => {
-    setPoolForEdit(pools?.find((thisPool) => thisPool.id === poolID));
-    setResizeDrawerOpen(true);
-    setDrawerError(undefined);
-  };
-
-  const handleAdd = (type: string, count: number) => {
-    setDrawerSubmitting(true);
-    setDrawerError(undefined);
-    return addNodePool({ type, count })
-      .then((_) => {
-        setDrawerSubmitting(false);
-        setAddDrawerOpen(false);
-      })
-      .catch((error) => {
-        setDrawerSubmitting(false);
-        setDrawerError(
-          getAPIErrorOrDefault(error, 'Error adding Node Pool')[0].reason
-        );
-      });
-  };
-
-  const handleResize = (updatedCount: number) => {
-    // Should never happen, just a safety check
-    if (!poolForEdit) {
-      return;
-    }
-    setDrawerSubmitting(true);
-    setDrawerError(undefined);
-    updatePool(poolForEdit.id, { ...poolForEdit, count: updatedCount })
-      .then((_) => {
-        setDrawerSubmitting(false);
-        setResizeDrawerOpen(false);
-      })
-      .catch((error) => {
-        setDrawerSubmitting(false);
-        setDrawerError(
-          getAPIErrorOrDefault(error, 'Error resizing Node Pool')[0].reason
-        );
-      });
-  };
-
-  const handleDeletePool = () => {
-    const { dialog, submitDialog, handleError } = deletePoolDialog;
-    if (!dialog.entityID) {
-      return;
-    }
-    submitDialog(dialog.entityID).catch((err) => {
-      handleError(
-        getAPIErrorOrDefault(err, 'Error deleting this Node Pool.')[0].reason
-      );
-    });
-  };
-
-  const handleRecycleNode = () => {
-    const { dialog, submitDialog, handleError } = recycleNodeDialog;
-    if (!dialog.entityID) {
-      return;
-    }
-    submitDialog(dialog.entityID)
-      .then((_) => {
-        enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
-      })
-      .catch((err) => {
-        handleError(
-          getAPIErrorOrDefault(err, 'Error recycling this node.')[0].reason
-        );
-      });
+  const handleOpenResizeDrawer = (poolId: number) => {
+    setSelectedPoolId(poolId);
+    setIsResizeDrawerOpen(true);
   };
 
   const handleAutoscalePool = (
@@ -217,7 +133,7 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
           `Autoscaling updated for Node Pool ${dialog.entityID}.`,
           { variant: 'success' }
         );
-        getNodePools();
+        queryClient.invalidateQueries([queryKey, 'pools', clusterID]);
       })
       .catch((err) => {
         handleError(
@@ -231,24 +147,6 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
         setSubmitting(false);
         setWarningMessage('');
       });
-  };
-
-  const handleRecycleAllPoolNodes = () => {
-    const { dialog, submitDialog, handleError } = recycleAllPoolNodesDialog;
-    if (!dialog.entityID) {
-      return;
-    }
-    return submitDialog(dialog.entityID).catch((err) => {
-      handleError(getAPIErrorOrDefault(err, 'Error recycling nodes')[0].reason);
-    });
-  };
-
-  const handleRecycleAllClusterNodes = () => {
-    recycleAllClusterNodesDialog
-      .submitDialog(undefined)
-      .then((_) =>
-        enqueueSnackbar('Nodes queued for recycling', { variant: 'success' })
-      );
   };
 
   const _pools = pools?.slice(0, numPoolsToDisplay);
@@ -291,7 +189,10 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
         <Grid item>
           <Typography
             variant="h2"
-            className={`${classes.nodePoolHeader} ${classes.mobileSpacing}`}
+            className={classNames(
+              classes.nodePoolHeader,
+              classes.mobileSpacing
+            )}
           >
             Node Pools
           </Typography>
@@ -299,14 +200,14 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
         <Grid item>
           <Button
             buttonType="secondary"
-            className={`${classes.button} ${classes.mobileSpacing}`}
-            onClick={() => recycleAllClusterNodesDialog.openDialog(undefined)}
+            className={classNames(classes.button, classes.mobileSpacing)}
+            onClick={() => setIsRecycleClusterOpen(true)}
           >
             Recycle All Nodes
           </Button>
           <Button
             buttonType="primary"
-            className={`${classes.button} ${classes.mobileSpacing}`}
+            className={classNames(classes.button, classes.mobileSpacing)}
             onClick={handleOpenAddDrawer}
           >
             Add a Node Pool
@@ -336,11 +237,18 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
                       nodes={nodes ?? []}
                       autoscaler={thisPool.autoscaler}
                       handleClickResize={handleOpenResizeDrawer}
-                      openDeletePoolDialog={deletePoolDialog.openDialog}
-                      openRecycleAllNodesDialog={
-                        recycleAllPoolNodesDialog.openDialog
-                      }
-                      openRecycleNodeDialog={recycleNodeDialog.openDialog}
+                      openDeletePoolDialog={(id) => {
+                        setSelectedPoolId(id);
+                        setIsDeleteNodePoolOpen(true);
+                      }}
+                      openRecycleAllNodesDialog={(id) => {
+                        setSelectedPoolId(id);
+                        setIsRecycleAllPoolNodesOpen(true);
+                      }}
+                      openRecycleNodeDialog={(nodeId, linodeLabel) => {
+                        setSelectedNodeId(nodeId);
+                        setIsRecycleNodeOpen(true);
+                      }}
                       openAutoscalePoolDialog={autoscalePoolDialog.openDialog}
                       isOnlyNodePool={pools?.length === 1}
                     />
@@ -355,40 +263,22 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
             </Grid>
 
             <AddNodePoolDrawer
+              clusterId={clusterID}
               clusterLabel={clusterLabel}
               open={addDrawerOpen}
               onClose={() => setAddDrawerOpen(false)}
-              onSubmit={handleAdd}
-              isSubmitting={drawerSubmitting}
-              error={drawerError}
             />
             <ResizeNodePoolDrawer
-              open={resizeDrawerOpen}
-              onClose={() => setResizeDrawerOpen(false)}
-              onSubmit={(updatedCount: number) => handleResize(updatedCount)}
-              nodePool={poolForEdit}
-              isSubmitting={drawerSubmitting}
-              error={drawerError}
+              open={isResizeDrawerOpen}
+              kubernetesClusterId={clusterID}
+              onClose={() => setIsResizeDrawerOpen(false)}
+              nodePool={selectedPool}
             />
-            <NodePoolDialog
-              nodeCount={
-                pools.find(
-                  (thisPool) => thisPool.id === deletePoolDialog.dialog.entityID
-                )?.count ?? 0
-              }
-              onDelete={handleDeletePool}
-              onClose={deletePoolDialog.closeDialog}
-              open={deletePoolDialog.dialog.isOpen}
-              error={deletePoolDialog.dialog.error}
-              loading={deletePoolDialog.dialog.isLoading}
-            />
-            <NodeDialog
-              onDelete={handleRecycleNode}
-              onClose={recycleNodeDialog.closeDialog}
-              open={recycleNodeDialog.dialog.isOpen}
-              error={recycleNodeDialog.dialog.error}
-              loading={recycleNodeDialog.dialog.isLoading}
-              label={recycleNodeDialog.dialog.entityLabel}
+            <DeleteNodePoolDialog
+              kubernetesClusterId={clusterID}
+              nodePool={selectedPool}
+              onClose={() => setIsDeleteNodePoolOpen(false)}
+              open={isDeleteNodePoolOpen}
             />
             <AutoscalePoolDialog
               getAutoscaler={getAutoscaler}
@@ -406,23 +296,22 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
               loading={autoscalePoolDialog.dialog.isLoading}
               poolID={autoscalePoolDialog.dialog.entityID}
             />
-            <RecycleNodesDialog
-              title="Recycle node pool?"
-              submitBtnText="Recycle Pool Nodes"
-              open={recycleAllPoolNodesDialog.dialog.isOpen}
-              loading={recycleAllPoolNodesDialog.dialog.isLoading}
-              error={recycleAllPoolNodesDialog.dialog.error}
-              onClose={recycleAllPoolNodesDialog.closeDialog}
-              onSubmit={handleRecycleAllPoolNodes}
+            <RecycleNodeDialog
+              onClose={() => setIsRecycleNodeOpen(false)}
+              open={isRecycleNodeOpen}
+              nodeId={selectedNodeId}
+              clusterId={clusterID}
             />
-            <RecycleNodesDialog
-              title="Recycle all nodes in cluster?"
-              submitBtnText="Recycle All Nodes"
-              open={recycleAllClusterNodesDialog.dialog.isOpen}
-              loading={recycleAllClusterNodesDialog.dialog.isLoading}
-              error={recycleAllClusterNodesDialog.dialog.error}
-              onClose={recycleAllClusterNodesDialog.closeDialog}
-              onSubmit={handleRecycleAllClusterNodes}
+            <RecycleNodePoolDialog
+              open={isRecycleAllPoolNodesOpen}
+              onClose={() => setIsRecycleAllPoolNodesOpen(false)}
+              clusterId={clusterID}
+              nodePoolId={selectedPoolId}
+            />
+            <RecycleClusterDialog
+              open={isRecycleClusterOpen}
+              onClose={() => setIsRecycleClusterOpen(false)}
+              clusterId={clusterID}
             />
           </Grid>
         )}
@@ -430,5 +319,3 @@ export const NodePoolsDisplay: React.FC<Props> = (props) => {
     </>
   );
 };
-
-export default React.memo(NodePoolsDisplay);

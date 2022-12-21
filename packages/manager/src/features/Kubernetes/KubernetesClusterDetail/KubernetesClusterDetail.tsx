@@ -1,12 +1,7 @@
 import {
   getKubeConfig,
   getKubernetesClusterEndpoints,
-  KubeNodePoolResponse,
   KubernetesEndpointResponse,
-  recycleAllNodes,
-  recycleClusterNodes,
-  recycleNode,
-  updateKubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
@@ -18,18 +13,18 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import { DispatchProps } from 'src/containers/kubernetes.container';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
-import { useDialog } from 'src/hooks/useDialog';
 import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { useKubernetesClusterQuery } from 'src/queries/kubernetes';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesClusterQuery,
+} from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAllWithArguments } from 'src/utilities/getAll';
-import { PoolNodeWithPrice } from '.././types';
 import KubeSummaryPanel from './KubeSummaryPanel';
-import NodePoolsDisplay from './NodePoolsDisplay';
-import UpgradeClusterDialog from './UpgradeClusterDialog';
+import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
+import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -51,23 +46,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = DispatchProps;
-
 const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
   getKubernetesClusterEndpoints
 );
 
-export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
-  props
-) => {
+export const KubernetesClusterDetail = () => {
   const classes = useStyles();
   const flags = useFlags();
   const { data: account } = useAccount();
   const { clusterID } = useParams<{ clusterID: string }>();
+  const id = Number(clusterID);
   const location = useLocation();
 
-  const { data: cluster, isLoading, error } = useKubernetesClusterQuery(
-    Number(clusterID)
+  const { data: cluster, isLoading, error } = useKubernetesClusterQuery(id);
+
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    id
   );
 
   const [endpoint, setEndpoint] = React.useState<string | null>(null);
@@ -191,16 +185,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
     };
   }, [clusterID]);
 
-  const _updateCluster = (clusterId: number) =>
-    updateKubernetesCluster(clusterId, {
-      control_plane: { high_availability: true },
-    });
-
-  const {
-    dialog: upgradeDialog,
-    closeDialog: closeUpgradeDialog,
-    openDialog: openUpgradeDialog,
-  } = useDialog(_updateCluster);
+  const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
 
   const {
     showHighAvailability,
@@ -224,34 +209,16 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
   const handleLabelChange = (newLabel: string) => {
     setUpdateError(undefined);
 
-    return props
-      .updateCluster({ clusterID: cluster.id, label: newLabel })
-      .catch((e) => {
-        setUpdateError(e[0].reason);
-        return Promise.reject(e);
-      });
+    return updateKubernetesCluster({ label: newLabel }).catch((e) => {
+      setUpdateError(e[0].reason);
+      return Promise.reject(e);
+    });
   };
 
   const resetEditableLabel = () => {
     setUpdateError(undefined);
     return cluster?.label;
   };
-
-  const handleRecycleAllPoolNodes = (nodePoolID: number) => {
-    return recycleAllNodes(cluster?.id, nodePoolID).then((response) => {
-      // Recycling nodes is an asynchronous process, and it probably won't make a difference to
-      // request Node Pools here (it could be several seconds before statuses change). I thought
-      // it was a good idea anyway, though.
-      props.requestNodePools(cluster?.id);
-      return response;
-    });
-  };
-
-  const handleRecycleNode = (nodeID: string) => {
-    return recycleNode(cluster?.id, nodeID);
-  };
-
-  const handleRecycleAllClusterNodes = () => recycleClusterNodes(cluster?.id);
 
   return (
     <>
@@ -287,7 +254,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
             <Button
               className={classes.upgradeToHAButton}
               buttonType="primary"
-              onClick={() => openUpgradeDialog(cluster?.id)}
+              onClick={() => setIsUpgradeToHAOpen(true)}
             >
               Upgrade to HA
             </Button>
@@ -303,8 +270,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
           kubeconfigAvailable={kubeconfigAvailable}
           kubeconfigError={kubeconfigError}
           handleUpdateTags={(newTags: string[]) =>
-            props.updateCluster({
-              clusterID: cluster.id,
+            updateKubernetesCluster({
               tags: newTags,
             })
           }
@@ -315,41 +281,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<CombinedProps> = (
         />
       </Grid>
       <Grid item>
-        <NodePoolsDisplay
-          clusterID={cluster.id}
-          clusterLabel={cluster.label}
-          addNodePool={(pool: PoolNodeWithPrice) =>
-            props.createNodePool({
-              clusterID: cluster.id,
-              type: pool.type,
-              count: pool.count,
-            })
-          }
-          updatePool={(id: number, updatedPool: KubeNodePoolResponse) =>
-            props.updateNodePool({
-              clusterID: cluster.id,
-              nodePoolID: id,
-              type: updatedPool.type,
-              count: updatedPool.count,
-            })
-          }
-          deletePool={(poolID: number) =>
-            props.deleteNodePool({
-              clusterID: cluster.id,
-              nodePoolID: poolID,
-            })
-          }
-          recycleAllPoolNodes={(poolID: number) =>
-            handleRecycleAllPoolNodes(poolID)
-          }
-          recycleNode={handleRecycleNode}
-          recycleAllClusterNodes={handleRecycleAllClusterNodes}
-          getNodePools={() => props.requestNodePools(Number(clusterID))}
-        />
+        <NodePoolsDisplay clusterID={cluster.id} clusterLabel={cluster.label} />
       </Grid>
-      <UpgradeClusterDialog
-        open={upgradeDialog.isOpen}
-        onClose={closeUpgradeDialog}
+      <UpgradeKubernetesClusterToHADialog
+        open={isUpgradeToHAOpen}
+        onClose={() => setIsUpgradeToHAOpen(false)}
         clusterID={cluster.id}
       />
     </>

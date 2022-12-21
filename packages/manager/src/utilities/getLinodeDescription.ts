@@ -2,7 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { typeLabelLong } from 'src/features/linodes/presentation';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 
-export const linodeDescription = (
+export const getLinodeDescription = (
   typeLabel: string,
   memory: number,
   disk: number,
@@ -20,5 +20,3 @@ export const linodeDescription = (
     return `${imageDesc}, ${typeDesc}`;
   }
 };
-
-export default linodeDescription;

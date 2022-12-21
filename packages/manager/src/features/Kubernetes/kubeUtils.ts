@@ -6,8 +6,7 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { pluralize } from 'src/utilities/pluralize';
-import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
+import { ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
@@ -82,16 +81,17 @@ export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
     return accum + thisPool.count;
   }, 0);
 
-export const getDescriptionForCluster = (cluster: ExtendedCluster) => {
-  if (!cluster.node_pools) {
-    return '';
-  }
-  const nodes = getTotalNodesInCluster(cluster.node_pools);
-  return `${pluralize('node', 'nodes', nodes)}, ${pluralize(
-    'CPU core',
-    'CPU cores',
-    cluster.totalCPU
-  )}, ${cluster.totalMemory / 1024} GB RAM`;
+export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
+  return cluster.label;
+  // if (!cluster.node_pools) {
+  //   return '';
+  // }
+  // const nodes = getTotalNodesInCluster(cluster.node_pools);
+  // return `${pluralize('node', 'nodes', nodes)}, ${pluralize(
+  //   'CPU core',
+  //   'CPU cores',
+  //   cluster.totalCPU
+  // )}, ${cluster.totalMemory / 1024} GB RAM`;
 };
 
 export const getNextVersion = (
@@ -125,7 +125,7 @@ export const getNextVersion = (
 
 export const getKubeHighAvailability = (
   account: Account | undefined,
-  cluster?: ExtendedCluster | KubernetesCluster | null
+  cluster?: KubernetesCluster | null
 ) => {
   const showHighAvailability = account?.capabilities.includes(
     'LKE HA Control Planes'

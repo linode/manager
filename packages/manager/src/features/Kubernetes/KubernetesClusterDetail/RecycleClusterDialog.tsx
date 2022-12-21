@@ -1,31 +1,38 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useRecycleClusterMutation } from 'src/queries/kubernetes';
 
 interface Props {
-  title: string;
-  submitBtnText: string;
   open: boolean;
-  loading: boolean;
-  error?: string;
   onClose: () => void;
-  onSubmit: () => void;
+  clusterId: number;
 }
 
-const renderActions = (
-  loading: boolean,
-  submitBtnText: string,
-  onClose: () => void,
-  onSubmit: () => void
-) => {
-  return (
+export const RecycleClusterDialog = (props: Props) => {
+  const { open, onClose, clusterId } = props;
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { mutateAsync, isLoading, error } = useRecycleClusterMutation(
+    clusterId
+  );
+
+  const onSubmit = () => {
+    mutateAsync().then(() => {
+      enqueueSnackbar('All cluster nodes queued for recycling', {
+        variant: 'success',
+      });
+    });
+  };
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -38,35 +45,23 @@ const renderActions = (
       <Button
         buttonType="primary"
         onClick={onSubmit}
-        loading={loading}
+        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        {submitBtnText}
+        Recycle All Cluster Nodes
       </Button>
     </ActionsPanel>
   );
-};
-
-const RecycleNodesDialog: React.FC<Props> = (props) => {
-  const {
-    title,
-    submitBtnText,
-    error,
-    loading,
-    open,
-    onClose,
-    onSubmit,
-  } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title={title}
+      title="Recycle all nodes in cluster?"
       onClose={onClose}
-      actions={() => renderActions(loading, submitBtnText, onClose, onSubmit)}
+      actions={actions}
+      error={error?.[0].reason}
     >
-      {error && <Notice error text={error} />}
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several
         minutes, as nodes will be replaced on a rolling basis.
@@ -74,5 +69,3 @@ const RecycleNodesDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default React.memo(RecycleNodesDialog);

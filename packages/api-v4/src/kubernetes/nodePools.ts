@@ -80,7 +80,7 @@ export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
 /**
  * recycleAllNodes
  *
- * Recycles all nodes from the specified Cluster.
+ * Recycles all nodes from the specified Node Pool.
  */
 export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
   Request<{}>(

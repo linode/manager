@@ -8,6 +8,7 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
+import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { pluralize } from 'src/utilities/pluralize';
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
@@ -28,20 +29,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   open: boolean;
-  error?: string;
-  isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (updatedValue: number) => void;
-  nodePool?: KubeNodePoolResponse;
+  nodePool: KubeNodePoolResponse | undefined;
+  kubernetesClusterId: number;
 }
 
 const resizeWarning = `Resizing to fewer nodes will delete random nodes from
 the pool.`;
 
-export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
-  const { error, isSubmitting, nodePool, onClose, onSubmit, open } = props;
+export const ResizeNodePoolDrawer = (props: Props) => {
+  const { nodePool, onClose, open, kubernetesClusterId } = props;
   const classes = useStyles();
+
   const { data: types, isLoading: isLoadingTypes } = useAllLinodeTypesQuery();
+
+  const {
+    mutateAsync: updateNodePool,
+    isLoading,
+    error,
+  } = useUpdateNodePoolMutation(kubernetesClusterId, nodePool?.id ?? -1);
 
   const [updatedCount, setUpdatedCount] = React.useState<number>(
     nodePool?.count ?? 0
@@ -60,10 +66,6 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
     setUpdatedCount(Math.min(100, Math.floor(value)));
   };
 
-  const handleSubmit = () => {
-    onSubmit(updatedCount);
-  };
-
   const planType = types?.find((thisType) => thisType.id === nodePool?.type);
 
   const pricePerNode = planType?.price.monthly ?? 0;
@@ -73,6 +75,12 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
     // are unable to load the specified pool.
     return null;
   }
+
+  const handleSubmit = () => {
+    updateNodePool({ ...nodePool, count: updatedCount }).then((_) => {
+      onClose();
+    });
+  };
 
   const totalMonthlyPrice = getMonthlyPrice(
     nodePool.type,
@@ -101,7 +109,7 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
           </Typography>
         </div>
 
-        {error && <Notice error text={error} />}
+        {error && <Notice error text={error?.[0].reason} />}
 
         <div className={classes.section}>
           <Typography className={classes.helperText}>
@@ -133,7 +141,7 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
             disabled={updatedCount === nodePool.count}
             onClick={handleSubmit}
             data-qa-submit
-            loading={isSubmitting}
+            loading={isLoading}
           >
             Save Changes
           </Button>
@@ -142,5 +150,3 @@ export const ResizeNodePoolDrawer: React.FC<Props> = (props) => {
     </Drawer>
   );
 };
-
-export default ResizeNodePoolDrawer;
