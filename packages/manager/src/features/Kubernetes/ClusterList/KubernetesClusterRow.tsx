@@ -1,22 +1,24 @@
-import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import ActionMenu from './ClusterActionMenu';
+import { Link } from 'react-router-dom';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { dcDisplayNames } from 'src/constants';
-import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
 import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import {
   getNextVersion,
   getTotalClusterMemoryCPUAndStorage,
 } from '../kubeUtils';
-import ActionMenu from './ClusterActionMenu';
+import {
+  useAllKubernetesNodePoolQuery,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {

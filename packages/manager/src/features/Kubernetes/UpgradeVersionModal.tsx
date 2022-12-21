@@ -5,8 +5,10 @@ import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import { recycleClusterNodes } from '@linode/api-v4/lib/kubernetes';
 import { useSnackbar } from 'notistack';
-import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import {
+  useKubernetesClusterMutation,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 import {
   getNextVersion,
   localStorageWarning,

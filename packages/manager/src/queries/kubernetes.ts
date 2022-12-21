@@ -9,11 +9,13 @@ import {
   getKubernetesClusterDashboard,
   getKubernetesClusterEndpoints,
   getKubernetesClusters,
+  getKubernetesVersions,
   getNodePools,
   KubeNodePoolResponse,
   KubernetesCluster,
   KubernetesDashboardResponse,
   KubernetesEndpointResponse,
+  KubernetesVersion,
   PoolNodeRequest,
   recycleAllNodes,
   recycleClusterNodes,
@@ -25,7 +27,7 @@ import {
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient, updateInPaginatedStore } from './base';
+import { queryClient, queryPresets, updateInPaginatedStore } from './base';
 
 export const queryKey = `kubernetes`;
 
@@ -213,6 +215,18 @@ const getAllKubernetesClusters = () =>
   getAll<KubernetesCluster>((params, filters) =>
     getKubernetesClusters(params, filters)
   )().then((data) => data.data);
+
+const getAllKubernetesVersions = () =>
+  getAll<KubernetesVersion>((params, filters) =>
+    getKubernetesVersions(params, filters)
+  )().then((data) => data.data);
+
+export const useKubernetesVersionQuery = () =>
+  useQuery<KubernetesVersion[], APIError[]>(
+    [queryKey, 'versions'],
+    getAllKubernetesVersions,
+    queryPresets.oneTimeFetch
+  );
 
 /**
  * Please avoid using thie fetch-all query

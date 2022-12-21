@@ -25,8 +25,10 @@ import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useCreateKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import {
+  useCreateKubernetesClusterMutation,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
