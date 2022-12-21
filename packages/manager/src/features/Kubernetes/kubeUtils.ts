@@ -6,7 +6,6 @@ import {
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
@@ -35,14 +34,6 @@ export const getTotalClusterPrice = (
 
   return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
 };
-
-export const addPriceToNodePool = (
-  pool: ExtendedPoolNode,
-  typesData: LinodeType[]
-) => ({
-  ...pool,
-  totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData),
-});
 
 interface ClusterData {
   CPU: number;
@@ -76,10 +67,10 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
-  pools.reduce((accum, thisPool) => {
-    return accum + thisPool.count;
-  }, 0);
+// export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
+//   pools.reduce((accum, thisPool) => {
+//     return accum + thisPool.count;
+//   }, 0);
 
 export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
   return cluster.label;
