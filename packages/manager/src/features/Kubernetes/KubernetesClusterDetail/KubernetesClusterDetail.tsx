@@ -1,8 +1,3 @@
-import {
-  getKubeConfig,
-  getKubernetesClusterEndpoints,
-  KubernetesEndpointResponse,
-} from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -20,7 +15,6 @@ import {
   useKubernetesClusterQuery,
 } from 'src/queries/kubernetes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getAllWithArguments } from 'src/utilities/getAll';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
@@ -45,10 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const getAllEndpoints = getAllWithArguments<KubernetesEndpointResponse>(
-  getKubernetesClusterEndpoints
-);
-
 export const KubernetesClusterDetail = () => {
   const classes = useStyles();
   const { data: account } = useAccount();
@@ -62,126 +52,7 @@ export const KubernetesClusterDetail = () => {
     id
   );
 
-  const [endpoint, setEndpoint] = React.useState<string | null>(null);
-  const [endpointError, setEndpointError] = React.useState<string | undefined>(
-    undefined
-  );
-  const [endpointLoading, setEndpointLoading] = React.useState<boolean>(false);
-
   const [updateError, setUpdateError] = React.useState<string | undefined>();
-
-  const [
-    kubeconfigAvailable,
-    setKubeconfigAvailability,
-  ] = React.useState<boolean>(false);
-  const [kubeconfigError, setKubeconfigError] = React.useState<
-    string | undefined
-  >(undefined);
-
-  const endpointAvailabilityInterval = React.useRef<number>();
-  const kubeconfigAvailabilityInterval = React.useRef<number>();
-
-  // @todo: Poll with React Query
-  // usePolling([() => props.requestNodePools(+props.match.params.clusterID)]);
-
-  const getEndpointToDisplay = (endpoints: string[]) => {
-    // Per discussions with the API team and UX, we should display only the endpoint with port 443, so we are matching on that.
-    return endpoints.find((thisResponse) =>
-      thisResponse.match(/linodelke\.net:443$/i)
-    );
-  };
-
-  const successfulClusterEndpointResponse = (endpoints: string[]) => {
-    setEndpointError(undefined);
-
-    const endpointToDisplay = getEndpointToDisplay(endpoints);
-
-    setEndpoint(endpointToDisplay ?? null);
-    setEndpointLoading(false);
-    clearInterval(endpointAvailabilityInterval.current);
-  };
-
-  // Create a function to check if the Kubeconfig is available.
-  const kubeconfigAvailabilityCheck = (
-    clusterID: number,
-    startInterval: boolean = false
-  ) => {
-    getKubeConfig(clusterID)
-      .then(() => {
-        kubeconfigAvailableEndInterval();
-      })
-      .catch((error) => {
-        if (startInterval) {
-          setKubeconfigAvailability(false);
-
-          if (error?.[0]?.reason.match(/not yet available/i)) {
-            // If it is not yet available, set kubeconfigAvailabilityInterval equal to function that continues polling the endpoint every 30 seconds to grab it when it is
-            kubeconfigAvailabilityInterval.current = window.setInterval(() => {
-              kubeconfigAvailabilityCheck(clusterID);
-            }, 30 * 1000);
-          } else {
-            setKubeconfigError(
-              getAPIErrorOrDefault(error, 'Kubeconfig not available.')[0].reason
-            );
-          }
-        }
-      });
-  };
-
-  const kubeconfigAvailableEndInterval = () => {
-    setKubeconfigAvailability(true);
-    clearInterval(kubeconfigAvailabilityInterval.current);
-  };
-
-  React.useEffect(() => {
-    if (clusterID) {
-      // A function to check if the endpoint is available.
-      const endpointAvailabilityCheck = () => {
-        getAllEndpoints([clusterID])
-          .then((response) => {
-            successfulClusterEndpointResponse(
-              response.data.map((thisEndpoint) => thisEndpoint.endpoint)
-            );
-          })
-          .catch((_error) => {
-            // Do nothing since endpoint is null by default, and in the instances where this function is called, endpointAvailabilityInterval has been set in motion already.
-          });
-      };
-
-      // props.requestClusterForStore(Number(clusterID)).catch((_) => null); // Handle in Redux
-      // The cluster endpoint has its own API...uh, endpoint, so we need
-      // to request it separately.
-      setEndpointLoading(true);
-      getAllEndpoints([Number(clusterID)])
-        .then((response) => {
-          successfulClusterEndpointResponse(
-            response.data.map((thisEndpoint) => thisEndpoint.endpoint)
-          );
-        })
-        .catch((error) => {
-          setEndpointLoading(false);
-
-          // If the error is that the endpoint is not yet available, set endpointAvailabilityInterval equal to function that continues polling the endpoint every 5 seconds to grab it when it is.
-          if (error?.[0]?.reason.match(/endpoints are not yet available/i)) {
-            endpointAvailabilityInterval.current = window.setInterval(() => {
-              endpointAvailabilityCheck();
-            }, 5000);
-          } else {
-            setEndpointError(
-              getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
-                .reason
-            );
-          }
-        });
-
-      kubeconfigAvailabilityCheck(Number(clusterID), true);
-    }
-
-    return () => {
-      clearInterval(endpointAvailabilityInterval.current);
-      clearInterval(kubeconfigAvailabilityInterval.current);
-    };
-  }, [clusterID]);
 
   const [isUpgradeToHAOpen, setIsUpgradeToHAOpen] = React.useState(false);
 
@@ -260,14 +131,7 @@ export const KubernetesClusterDetail = () => {
         </Grid>
       </Grid>
       <Grid item>
-        <KubeSummaryPanel
-          cluster={cluster}
-          endpoint={endpoint}
-          endpointError={endpointError}
-          endpointLoading={endpointLoading}
-          kubeconfigAvailable={kubeconfigAvailable}
-          kubeconfigError={kubeconfigError}
-        />
+        <KubeSummaryPanel cluster={cluster} />
       </Grid>
       <Grid item>
         <NodePoolsDisplay clusterID={cluster.id} clusterLabel={cluster.label} />

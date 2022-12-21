@@ -4,15 +4,21 @@ import {
   createNodePool,
   deleteKubernetesCluster,
   deleteNodePool,
+  getKubeConfig,
   getKubernetesCluster,
+  getKubernetesClusterDashboard,
+  getKubernetesClusterEndpoints,
   getKubernetesClusters,
   getNodePools,
   KubeNodePoolResponse,
   KubernetesCluster,
+  KubernetesDashboardResponse,
+  KubernetesEndpointResponse,
   PoolNodeRequest,
   recycleAllNodes,
   recycleClusterNodes,
   recycleNode,
+  resetKubeConfig,
   updateKubernetesCluster,
   updateNodePool,
 } from '@linode/api-v4';
@@ -49,6 +55,46 @@ export const useKubernetesClusterMutation = (id: number) => {
     }
   );
 };
+
+export const useAllKubernetesClusterAPIEndpointsQuery = (id: number) => {
+  return useQuery<KubernetesEndpointResponse[], APIError[]>(
+    [queryKey, 'cluster', id, 'endpoints'],
+    () => getAllAPIEndpointsForCluster(id),
+    {
+      retry: true,
+      retryDelay: 5000,
+      refetchOnMount: true,
+      keepPreviousData: true,
+    }
+  );
+};
+
+const getAllAPIEndpointsForCluster = (clusterId: number) =>
+  getAll<KubernetesEndpointResponse>((params, filters) =>
+    getKubernetesClusterEndpoints(clusterId, params, filters)
+  )().then((data) => data.data);
+
+export const useKubenetesKubeConfigQuery = (
+  clusterId: number,
+  enabled = false
+) =>
+  useQuery<string, APIError[]>(
+    [queryKey, 'cluster', clusterId, 'kubeconfig'],
+    async () => {
+      const result = await getKubeConfig(clusterId);
+      return window.atob(result.kubeconfig);
+    },
+    {
+      enabled,
+      retry: true,
+      retryDelay: 5000,
+      refetchOnMount: true,
+      keepPreviousData: true,
+    }
+  );
+
+export const useResetKubeConfigMutation = () =>
+  useMutation<{}, APIError[], { id: number }>(({ id }) => resetKubeConfig(id));
 
 export const useDeleteKubernetesClusterMutation = () => {
   return useMutation<{}, APIError[], { id: number }>(
@@ -141,8 +187,19 @@ export const useAllKubernetesNodePoolQuery = (
   enabled = true
 ) => {
   return useQuery<KubeNodePoolResponse[], APIError[]>(
-    [queryKey, 'pools', clusterId],
+    [queryKey, 'cluster', clusterId, 'pools'],
     () => getAllNodePoolsForCluster(clusterId),
+    { enabled }
+  );
+};
+
+export const useKubernetesDashboardQuery = (
+  clusterID: number,
+  enabled: boolean = false
+) => {
+  return useQuery<KubernetesDashboardResponse, APIError[]>(
+    [queryKey, 'cluster', clusterID, 'dashboard'],
+    () => getKubernetesClusterDashboard(clusterID),
     { enabled }
   );
 };
