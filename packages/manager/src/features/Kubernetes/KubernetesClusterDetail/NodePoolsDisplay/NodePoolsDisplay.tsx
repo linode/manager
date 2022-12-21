@@ -69,7 +69,7 @@ export const NodePoolsDisplay = (props: Props) => {
     data: pools,
     isLoading,
     error: poolsError,
-  } = useAllKubernetesNodePoolQuery(clusterID);
+  } = useAllKubernetesNodePoolQuery(clusterID, { refetchInterval: 15000 });
 
   const { data: types } = useAllLinodeTypesQuery();
 

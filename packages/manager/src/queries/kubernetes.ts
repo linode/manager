@@ -192,12 +192,12 @@ export const useRecycleClusterMutation = (clusterId: number) => {
 
 export const useAllKubernetesNodePoolQuery = (
   clusterId: number,
-  enabled = true
+  options?: { enabled?: boolean; refetchInterval?: number }
 ) => {
   return useQuery<KubeNodePoolResponse[], APIError[]>(
     [queryKey, 'cluster', clusterId, 'pools'],
     () => getAllNodePoolsForCluster(clusterId),
-    { enabled }
+    options
   );
 };
 

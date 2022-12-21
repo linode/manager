@@ -30,10 +30,9 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
 export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterLabel, clusterId, open, onClose } = props;
 
-  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(
-    clusterId,
-    open
-  );
+  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterId, {
+    enabled: open,
+  });
 
   const {
     mutateAsync: deleteCluster,
