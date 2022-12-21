@@ -29,6 +29,7 @@ export const RecycleClusterDialog = (props: Props) => {
       enqueueSnackbar('All cluster nodes queued for recycling', {
         variant: 'success',
       });
+      onClose();
     });
   };
 

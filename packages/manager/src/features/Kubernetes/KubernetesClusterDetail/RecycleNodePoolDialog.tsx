@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -19,10 +20,21 @@ interface Props {
 export const RecycleNodePoolDialog = (props: Props) => {
   const { open, onClose, clusterId, nodePoolId } = props;
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const { mutateAsync, isLoading, error } = useRecycleNodePoolMutation(
     clusterId,
     nodePoolId
   );
+
+  const onRecycle = () => {
+    mutateAsync().then(() => {
+      enqueueSnackbar(`Recycled all nodes in node pool ${nodePoolId}`, {
+        variant: 'success',
+      });
+      onClose();
+    });
+  };
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -36,7 +48,7 @@ export const RecycleNodePoolDialog = (props: Props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={() => mutateAsync()}
+        onClick={onRecycle}
         loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
