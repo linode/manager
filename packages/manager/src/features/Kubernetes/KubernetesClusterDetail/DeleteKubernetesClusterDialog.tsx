@@ -12,6 +12,7 @@ import {
 } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';
 import CircleProgress from 'src/components/CircleProgress';
+import { useHistory } from 'react-router-dom';
 
 export interface Props {
   open: boolean;
@@ -40,6 +41,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
     error,
   } = useDeleteKubernetesClusterMutation();
 
+  const history = useHistory();
   const { preferences } = usePreferences();
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
@@ -50,7 +52,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
-      // @TODO: redirect user to kubenetes landing page
+      history.replace('/kubernetes/clusters');
     });
   };
 
