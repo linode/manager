@@ -1,8 +1,3 @@
-import {
-  autoscaleNodePool,
-  AutoscaleSettings,
-} from '@linode/api-v4/lib/kubernetes';
-import { useSnackbar } from 'notistack';
 import React, { useState } from 'react';
 import { Waypoint } from 'react-waypoint';
 import Paper from 'src/components/core/Paper';
@@ -10,23 +5,17 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import { useDialog } from 'src/hooks/useDialog';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { RecycleNodePoolDialog } from '../RecycleNodePoolDialog';
 import { AddNodePoolDrawer } from './AddNodePoolDrawer';
 import { ResizeNodePoolDrawer } from './ResizeNodePoolDrawer';
 import { RecycleNodeDialog } from './RecycleNodeDialog';
 import NodePool from './NodePool';
 import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
-import AutoscalePoolDialog from './AutoscalePoolDialog';
+import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
-import {
-  queryKey,
-  useAllKubernetesNodePoolQuery,
-} from 'src/queries/kubernetes';
+import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import CircleProgress from 'src/components/CircleProgress';
-import { queryClient } from 'src/queries/base';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 
@@ -75,7 +64,6 @@ export const NodePoolsDisplay = (props: Props) => {
   const { clusterID, clusterLabel } = props;
 
   const classes = useStyles();
-  const { enqueueSnackbar } = useSnackbar();
 
   const {
     data: pools,
@@ -98,7 +86,7 @@ export const NodePoolsDisplay = (props: Props) => {
   const [isRecycleNodeOpen, setIsRecycleNodeOpen] = useState(false);
   const [isRecycleClusterOpen, setIsRecycleClusterOpen] = useState(false);
 
-  const autoscalePoolDialog = useDialog<any>(autoscaleNodePool);
+  const [isAutoscaleDialogOpen, setIsAutoscaleDialogOpen] = useState(false);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
 
@@ -121,43 +109,7 @@ export const NodePoolsDisplay = (props: Props) => {
     setIsResizeDrawerOpen(true);
   };
 
-  const handleAutoscalePool = (
-    values: AutoscaleSettings,
-    setSubmitting: (isSubmitting: boolean) => void,
-    setWarningMessage: (warning: string) => void
-  ) => {
-    const { dialog, submitDialog, handleError } = autoscalePoolDialog;
-    if (!dialog.entityID) {
-      return;
-    }
-
-    submitDialog({ clusterID, nodePoolID: dialog.entityID, autoscaler: values })
-      .then(() => {
-        enqueueSnackbar(
-          `Autoscaling updated for Node Pool ${dialog.entityID}.`,
-          { variant: 'success' }
-        );
-        queryClient.invalidateQueries([queryKey, 'pools', clusterID]);
-      })
-      .catch((err) => {
-        handleError(
-          getAPIErrorOrDefault(
-            err,
-            `Error updating autoscaling for Node Pool ${dialog.entityID}.`
-          )[0].reason
-        );
-      })
-      .finally(() => {
-        setSubmitting(false);
-        setWarningMessage('');
-      });
-  };
-
   const _pools = pools?.slice(0, numPoolsToDisplay);
-
-  const getAutoscaler = () =>
-    pools?.find((pool) => pool.id === autoscalePoolDialog.dialog.entityID)
-      ?.autoscaler;
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;
@@ -234,7 +186,10 @@ export const NodePoolsDisplay = (props: Props) => {
                         setSelectedNodeId(nodeId);
                         setIsRecycleNodeOpen(true);
                       }}
-                      openAutoscalePoolDialog={autoscalePoolDialog.openDialog}
+                      openAutoscalePoolDialog={(poolId) => {
+                        setSelectedPoolId(poolId);
+                        setIsAutoscaleDialogOpen(true);
+                      }}
                       isOnlyNodePool={pools?.length === 1}
                     />
                   </div>
@@ -266,20 +221,11 @@ export const NodePoolsDisplay = (props: Props) => {
               open={isDeleteNodePoolOpen}
             />
             <AutoscalePoolDialog
-              getAutoscaler={getAutoscaler}
               handleOpenResizeDrawer={handleOpenResizeDrawer}
-              onSubmit={(
-                values: AutoscaleSettings,
-                setSubmitting: (isSubmitting: boolean) => void,
-                setWarningMessage: (warning: string) => void
-              ) =>
-                handleAutoscalePool(values, setSubmitting, setWarningMessage)
-              }
-              onClose={autoscalePoolDialog.closeDialog}
-              open={autoscalePoolDialog.dialog.isOpen}
-              error={autoscalePoolDialog.dialog.error}
-              loading={autoscalePoolDialog.dialog.isLoading}
-              poolID={autoscalePoolDialog.dialog.entityID}
+              onClose={() => setIsAutoscaleDialogOpen(false)}
+              open={isAutoscaleDialogOpen}
+              nodePool={selectedPool}
+              clusterId={clusterID}
             />
             <RecycleNodeDialog
               onClose={() => setIsRecycleNodeOpen(false)}

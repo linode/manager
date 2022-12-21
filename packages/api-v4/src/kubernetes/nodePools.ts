@@ -10,7 +10,6 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 import {
   KubeNodePoolResponse,
-  AutoscaleNodePoolRequest,
   CreateNodePoolData,
   UpdateNodePoolData,
 } from './types';
@@ -98,17 +97,4 @@ export const recycleNode = (clusterID: number, nodeID: string) =>
   Request<{}>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/nodes/${nodeID}/recycle`)
-  );
-
-export const autoscaleNodePool = ({
-  clusterID,
-  nodePoolID,
-  autoscaler,
-}: AutoscaleNodePoolRequest) =>
-  Request<{}>(
-    setMethod('PUT'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
-    setData({
-      autoscaler,
-    })
   );

@@ -40,12 +40,6 @@ export interface AutoscaleSettings {
   max: number;
 }
 
-export interface AutoscaleNodePoolRequest {
-  clusterID: number;
-  nodePoolID: number;
-  autoscaler: AutoscaleSettings;
-}
-
 export interface KubeConfigResponse {
   kubeconfig: string;
 }
