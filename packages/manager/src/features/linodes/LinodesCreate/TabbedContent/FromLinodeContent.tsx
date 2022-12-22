@@ -42,6 +42,8 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     selectedLinodeID,
     typesData,
     userCannotCreateLinode,
+    updateLinodeID,
+    updateTypeID,
   } = props;
 
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
@@ -53,7 +55,8 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
     );
 
     if (linode) {
-      props.updateLinodeID(linode.id, linode.specs.disk);
+      updateLinodeID(linode.id, linode.specs.disk);
+      updateTypeID(linode.type);
     }
   };
 
