@@ -609,6 +609,7 @@ export class LinodeCreate extends React.PureComponent<
             types={this.filterTypes()}
             onSelect={this.props.updateTypeID}
             selectedID={this.props.selectedTypeID}
+            linodeID={this.props.selectedLinodeID}
             updateFor={[
               this.props.selectedTypeID,
               this.props.disabledClasses,
