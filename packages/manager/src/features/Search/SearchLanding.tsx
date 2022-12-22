@@ -15,6 +15,7 @@ import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllImagesQuery } from 'src/queries/images';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -92,6 +93,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const { _isLargeAccount } = useAccountManagement();
+  // const _isLargeAccount = true;
 
   const {
     data: objectStorageClusters,
@@ -116,6 +118,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     error: volumesError,
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
+  const {
+    data: images,
+    isLoading: areImagesLoading,
+    error: imagesError,
+  } = useAllImagesQuery({}, {}, !_isLargeAccount);
+
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
@@ -129,7 +137,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images', 'kubernetes'],
+    ['linodes', 'nodeBalancers', 'kubernetes'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
@@ -163,7 +171,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         query,
         objectStorageBuckets?.buckets ?? [],
         domains ?? [],
-        volumes ?? []
+        volumes ?? [],
+        images ?? []
       );
     }
   }, [
@@ -175,6 +184,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
+    images,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -188,11 +198,11 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (volumesError) {
       errorString.push('Volumes');
     }
+    if (imagesError) {
+      errorString.push('Images');
+    }
     if (errors.nodebalancers) {
       errorString.push('NodeBalancers');
-    }
-    if (errors.images) {
-      errorString.push('Images');
     }
     if (errors.kubernetes) {
       errorString.push('Kubernetes');
@@ -220,7 +230,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areBucketsLoading ||
     areClustersLoading ||
     areDomainsLoading ||
-    areVolumesLoading;
+    areVolumesLoading ||
+    areImagesLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

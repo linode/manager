@@ -19,6 +19,7 @@ import {
   // queryPresets,
   updateInPaginatedStore,
 } from './base';
+import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'images';
 // export const pendingUploadQueryKey = 'image-pending-upload';
@@ -78,6 +79,25 @@ export const useDeleteImageMutation = () =>
 // Remove Image from cache
 export const removeImageFromCache = () =>
   queryClient.invalidateQueries(`${queryKey}-list`);
+
+// Get all Images
+const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
+  getAll<Image>((params, filter) =>
+    getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => data.data);
+
+export const useAllImagesQuery = (
+  params: any = {},
+  filters: any = {},
+  enabled = true
+) =>
+  useQuery<Image[], APIError[]>(
+    [`${queryKey}-all`, params, filters],
+    () => getAllImages(params, filters),
+    {
+      enabled,
+    }
+  );
 
 export const imageEventsHandler = (event: Event) => {
   const { action, status, entity } = event;

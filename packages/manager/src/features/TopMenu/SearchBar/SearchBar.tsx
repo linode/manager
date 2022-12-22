@@ -9,7 +9,9 @@ import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
@@ -27,9 +29,10 @@ import {
 } from 'src/queries/objectStorage';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllImagesQuery } from 'src/queries/images';
 
 type CombinedProps = WithTypesProps &
-  WithImages &
+  ImagesProps &
   SearchProps &
   StyleProps &
   RouteComponentProps<{}>;
@@ -68,12 +71,7 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = [
-  'linodes',
-  'nodeBalancers',
-  'images',
-  'kubernetes',
-];
+const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers', 'kubernetes'];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
@@ -103,6 +101,12 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
 
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
+
+  const { data: images, isLoading: imagesLoading } = useAllImagesQuery(
+    {},
+    {},
+    shouldMakeRequests
+  );
 
   const { _loading } = useReduxLoad(
     searchDeps,
@@ -139,10 +143,11 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, buckets, domains ?? [], volumes ?? []);
+      search(searchText, buckets, domains ?? [], volumes ?? [], images ?? []);
     }
   }, [
     _loading,
+    imagesLoading,
     search,
     searchText,
     _searchAPI,
@@ -305,7 +310,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 export default compose<CombinedProps, {}>(
   withTypes,
   withRouter,
-  withImages(),
+  withImages,
   withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;
