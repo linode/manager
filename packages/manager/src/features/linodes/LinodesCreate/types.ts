@@ -139,6 +139,7 @@ export interface CloneFormStateHandlers extends BasicFromContentProps {
   updateDiskSize: (id: number) => void;
   selectedLinodeID?: number;
   updateLinodeID: (id: number, diskSize?: number) => void;
+  updateTypeID: (id: string | null) => void;
 }
 
 /**
