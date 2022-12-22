@@ -122,7 +122,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     data: images,
     isLoading: areImagesLoading,
     error: imagesError,
-  } = useAllImagesQuery({}, {}, !_isLargeAccount);
+  } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);

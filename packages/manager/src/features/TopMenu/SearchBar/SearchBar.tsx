@@ -102,9 +102,9 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
-  const { data: images, isLoading: imagesLoading } = useAllImagesQuery(
+  const { data: _images, isLoading: imagesLoading } = useAllImagesQuery(
     {},
-    {},
+    { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
     shouldMakeRequests
   );
 
@@ -143,7 +143,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, buckets, domains ?? [], volumes ?? [], images ?? []);
+      search(searchText, buckets, domains ?? [], volumes ?? [], _images ?? []);
     }
   }, [
     _loading,
@@ -155,6 +155,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
+    _images,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
