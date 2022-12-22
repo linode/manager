@@ -51,9 +51,8 @@ export function getPaymentLimits(
     return { min: PAYMENT_MIN, max: PAYMENT_HARD_MAX };
   }
 
-  const min = balance < 5 && balance > 0 ? balance : PAYMENT_MIN;
-
-  const max = balance <= PAYMENT_SOFT_MAX ? PAYMENT_SOFT_MAX : PAYMENT_HARD_MAX;
-
-  return { min, max };
+  return {
+    min: balance < PAYMENT_MIN && balance > 0 ? balance : PAYMENT_MIN,
+    max: balance <= PAYMENT_SOFT_MAX ? PAYMENT_SOFT_MAX : PAYMENT_HARD_MAX,
+  };
 }
