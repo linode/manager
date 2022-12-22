@@ -5,7 +5,7 @@ import {
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { dcDisplayNames, HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
@@ -67,22 +67,17 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-// export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
-//   pools.reduce((accum, thisPool) => {
-//     return accum + thisPool.count;
-//   }, 0);
-
 export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
-  return cluster.label;
-  // if (!cluster.node_pools) {
-  //   return '';
-  // }
-  // const nodes = getTotalNodesInCluster(cluster.node_pools);
-  // return `${pluralize('node', 'nodes', nodes)}, ${pluralize(
-  //   'CPU core',
-  //   'CPU cores',
-  //   cluster.totalCPU
-  // )}, ${cluster.totalMemory / 1024} GB RAM`;
+  const description: string[] = [
+    `Kubernetes ${cluster.k8s_version}`,
+    dcDisplayNames[cluster.region] ?? 'Unknown Region',
+  ];
+
+  if (cluster.control_plane.high_availability) {
+    description.push(`High Availability`);
+  }
+
+  return description.join(', ');
 };
 
 export const getNextVersion = (
