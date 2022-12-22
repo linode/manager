@@ -55,7 +55,7 @@ services:
         condition: service_healthy
     environment:
       <<: *default-env
-      MANAGER_OAUTH: ${MANAGER_OAUTH}
+      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
     env_file: ./packages/manager/.env
     entrypoint: yarn cy:ci
     volumes: *default-volumes
