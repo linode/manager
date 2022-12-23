@@ -17,6 +17,10 @@ import {
   validateIPs,
 } from 'src/utilities/ipUtils';
 
+let autocompletedIPsList: string[] = [];
+let activeIPElement: HTMLInputElement | null;
+let tempAllowList: ExtendedIP[];
+
 const useStyles = makeStyles((theme: Theme) => ({
   instructions: {
     marginBottom: '2rem',
@@ -138,6 +142,35 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     validateOnBlur: false,
     validate: (values: Values) => onValidate(values),
   });
+  // Takes in a string of integers and returns an array of possible IP Addresses from it.
+  const autocompleteIP = function (ipString: string | any[]) {
+    const possibleIPsList: string[] = [];
+    const autocompleteIPHelper = (currentIP: any[], currentPos: number) => {
+      // Stop when currentPos hits the end of ipString, and if the currentIP has 4 octets
+      if (currentPos === ipString.length && currentIP.length === 4) {
+        const currentIPJoined = currentIP.join('.');
+        return possibleIPsList.push(currentIPJoined);
+      }
+      // Compute possible IPs if currentPos isn't at the end of ipString, and currentIP has less than 4 octets
+      if (currentPos < ipString.length && currentIP.length < 4) {
+        let currentChar = '';
+        if (ipString[currentPos] === '0') {
+          autocompleteIPHelper([...currentIP, 0], currentPos + 1);
+          return;
+        }
+        for (let i = 0; i < 3; i++) {
+          if (Number(currentChar + ipString[currentPos + i]) > 255) {
+            return;
+          }
+          currentChar += ipString[currentPos + i];
+          autocompleteIPHelper([...currentIP, currentChar], currentPos + i + 1);
+        }
+      }
+      return true;
+    };
+    autocompleteIPHelper([], 0);
+    return possibleIPsList;
+  };
 
   const handleIPChange = React.useCallback(
     (_ips: ExtendedIP[]) => {
@@ -145,7 +178,24 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
         setFormTouched(true);
       }
 
+      activeIPElement = document.activeElement as HTMLInputElement;
+
+      if (activeIPElement?.id?.indexOf('domain-transfer-ip') !== -1) {
+        const ip = activeIPElement?.value;
+
+        // Autocomplete the IP when "/" or "/" are not present, and when the string only contains numbers.
+        if (
+          ip &&
+          (ip.indexOf('/') === -1 || ip.indexOf('.') === -1) &&
+          /^[0-9]*$/.test(ip)
+        ) {
+          autocompletedIPsList = autocompleteIP(ip);
+        }
+      }
+
       setValues({ _allowList: _ips });
+      // todo: get rid of tempAllowList once we figure out how to cleanly access _allowList from applyIP()
+      tempAllowList = _ips;
     },
     [formTouched, setValues]
   );
@@ -157,6 +207,21 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
       resetForm();
     }
   }, [open, resetForm]);
+
+  // Fills in the active IP field with a new one.  This function is intended to be called when a possible IP is clicked.
+  const applyIP = (ip: string) => {
+    // Update the list with the new IP
+    const pos = Number(
+      activeIPElement?.id?.substring(
+        activeIPElement?.id.length - 1,
+        activeIPElement?.id.length
+      )
+    );
+    // todo: get rid of tempAllowList when we figure out how to cleanly access _allowList from this function
+    tempAllowList[pos].address = `${ip}/32`;
+    setValues({ _allowList: tempAllowList });
+    return ip;
+  };
 
   return (
     <Drawer open={open} onClose={onClose} title="Manage Access Controls">
@@ -175,6 +240,22 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
           Add, edit, or remove IPv4 addresses and ranges that should be
           authorized to access your cluster.
         </Typography>
+        <div className="ips-popup-section">
+          <ol className="ip-popup-text">
+            {autocompletedIPsList
+              ? autocompletedIPsList.map((ip) => (
+                  // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+                  <li
+                    onClick={() => applyIP(ip)}
+                    onKeyDown={() => applyIP(ip)}
+                    key={ip}
+                  >
+                    {ip}
+                  </li>
+                ))
+              : null}
+          </ol>
+        </div>
         <form onSubmit={handleSubmit}>
           <MultipleIPInput
             title="Allowed IP Address(es) or Range(s)"
