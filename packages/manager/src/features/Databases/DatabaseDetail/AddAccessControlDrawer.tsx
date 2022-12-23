@@ -210,14 +210,13 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
 
   // Fills in the active IP field with a new one.  This function is intended to be called when a possible IP is clicked.
   const applyIP = (ip: string) => {
-    // Update the list with the new IP
+    // Find the position in the IP list that needs updating
+    const dashPos = activeIPElement?.id.lastIndexOf('-');
     const pos = Number(
-      activeIPElement?.id?.substring(
-        activeIPElement?.id.length - 1,
-        activeIPElement?.id.length
-      )
+      activeIPElement?.id?.substring(dashPos! + 1, activeIPElement?.id.length)
     );
     // todo: get rid of tempAllowList when we figure out how to cleanly access _allowList from this function
+    // Update the list with the new IP
     tempAllowList[pos].address = `${ip}/32`;
     setValues({ _allowList: tempAllowList });
     return ip;
