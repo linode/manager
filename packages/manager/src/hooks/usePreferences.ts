@@ -5,10 +5,13 @@ import {
   getUserPreferences,
   updateUserPreferences,
 } from 'src/store/preferences/preferences.requests';
+import { EntityError } from 'src/store/types';
 import { Dispatch } from './types';
 
 export interface Preferences {
   preferences: UserPreferences;
+  preferencesLoading: boolean;
+  preferencesError: EntityError;
   updateUserPreferences: (
     preferences: UserPreferences
   ) => Promise<UserPreferences>;
@@ -17,7 +20,7 @@ export interface Preferences {
 export const usePreferences = () => {
   const dispatch: Dispatch = useDispatch();
   const preferences = useSelector(
-    (state: ApplicationState) => state.preferences.data
+    (state: ApplicationState) => state.preferences
   );
 
   const updatePreferences = (newPreferences: UserPreferences) =>
@@ -28,8 +31,10 @@ export const usePreferences = () => {
     });
 
   return {
-    preferences,
+    preferences: preferences.data,
     updatePreferences,
+    preferencesLoading: preferences.loading,
+    preferencesError: preferences.error,
   };
 };
 

@@ -35,6 +35,7 @@ export interface UserPreferences {
   backups_cta_dismissed?: boolean;
   type_to_confirm?: boolean;
   dismissed_notifications?: Record<string, DismissedNotification>;
+  idle_session_timeout?: number;
 }
 
 export const handleGetPreferences = actionCreator.async<

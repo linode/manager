@@ -38,6 +38,7 @@ import usePreferences from 'src/hooks/usePreferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
+import IdleSessionTimer from './IdleSessionTimer';
 import { UserPreferences } from './store/preferences/preferences.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -317,6 +318,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                   >
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={`${classes.switchWrapper} p0`}>
+                        <IdleSessionTimer />
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>

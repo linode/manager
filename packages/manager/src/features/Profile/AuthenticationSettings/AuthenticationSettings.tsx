@@ -6,17 +6,18 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import ResetPassword from './ResetPassword';
+import SecurityQuestions from './SecurityQuestions';
 import SecuritySettings from './SecuritySettings';
+import SessionTimeoutSettings from './SessionTimeoutSettings';
 import { SMSMessaging } from './SMSMessaging';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
 import TwoFactor from './TwoFactor';
-import SecurityQuestions from './SecurityQuestions';
-import Link from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -113,6 +114,13 @@ export const AuthenticationSettings: React.FC = () => {
         <Divider spacingTop={22} spacingBottom={16} />
         <Typography variant="h3">SMS Messaging</Typography>
         <SMSMessaging />
+        <Divider spacingTop={22} spacingBottom={16} />
+        <Typography variant="h3">Idle Session Timeout</Typography>
+        <Typography variant="body1" className={classes.copy}>
+          Choose the length of time before Cloud Manager sessions time out due
+          to inactivity.{' '}
+        </Typography>
+        <SessionTimeoutSettings />
         {!isThirdPartyAuthEnabled ? (
           <>
             <Divider spacingTop={22} spacingBottom={16} />
