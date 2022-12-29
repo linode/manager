@@ -146,7 +146,16 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         currentPage: page,
       });
 
-      return request({ page, page_size: 500 }, filter)
+      // const currentStackScriptsTab = window.location.pathname;
+
+      return request(
+        {
+          page,
+          page_size:
+            window.location.pathname === '/stackscripts/community' ? 25 : 500,
+        },
+        filter
+      )
         .then((response: ResourcePage<StackScript>) => {
           if (!this.mounted) {
             return;
