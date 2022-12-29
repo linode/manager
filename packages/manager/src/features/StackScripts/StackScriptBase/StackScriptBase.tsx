@@ -146,8 +146,6 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         currentPage: page,
       });
 
-      // const currentStackScriptsTab = window.location.pathname;
-
       return request(
         {
           page,
