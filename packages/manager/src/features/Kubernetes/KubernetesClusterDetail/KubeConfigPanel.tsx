@@ -67,20 +67,21 @@ export const KubeConfigPanel = (props: Props) => {
     setDrawerOpen(true);
   };
 
-  const downloadKubeConfig = () => {
-    refetch()
-      .then(({ data }) => {
-        if (data) {
-          downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
-        }
-      })
-      .catch((errorResponse) => {
-        const error = getAPIErrorOrDefault(
-          errorResponse,
-          'Unable to download your kubeconfig'
-        )[0].reason;
-        enqueueSnackbar(error, { variant: 'error' });
-      });
+  const downloadKubeConfig = async () => {
+    try {
+      const { data } = await refetch();
+
+      if (data) {
+        downloadFile(`${clusterLabel}-kubeconfig.yaml`, data);
+      }
+    } catch (error) {
+      const errorText = getAPIErrorOrDefault(
+        error,
+        'Unable to download your kubeconfig'
+      )[0].reason;
+
+      enqueueSnackbar(errorText, { variant: 'error' });
+    }
   };
 
   return (
