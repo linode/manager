@@ -26,11 +26,13 @@ const validateBasicVolume = (
   containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
   getClick('[data-qa-close-drawer="true"]');
-  cy.get('[aria-label="View Details"]').within(() => {
-    getVisible(`[data-qa-volume-cell-label="${volLabel}"]`);
-    containsVisible(region);
-    containsVisible(attached);
-  });
+
+  cy.findByText(volLabel)
+    .closest('tr')
+    .within(() => {
+      cy.findByText(region).should('be.visible');
+      cy.findByText(attached).should('be.visible');
+    });
 };
 
 const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
