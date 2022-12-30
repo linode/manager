@@ -1,6 +1,6 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { clickLinodeActionMenu, createLinode } from '../../support/api/linodes';
-import { deleteFirewallByLabel } from '../../support/api/firewalls';
+import { createLinode } from 'support/api/linodes';
+import { deleteFirewallByLabel } from 'support/api/firewalls';
 import {
   getClick,
   containsClick,
@@ -8,8 +8,9 @@ import {
   getVisible,
   fbtVisible,
   containsVisible,
-} from '../../support/helpers';
-import { selectRegionString } from '../../support/ui/constants';
+} from 'support/helpers';
+import { ui } from 'support/ui';
+import { selectRegionString } from 'support/ui/constants';
 import { randomString } from 'support/util/random';
 
 const fakeRegionsData = {
@@ -214,8 +215,13 @@ describe('Migrate Linode With Firewall', () => {
         cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
         cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
       ) {
-        clickLinodeActionMenu(linode.label);
-        fbtClick('Migrate');
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode ${linode.label}`)
+          .should('be.visible')
+          .click();
+
+        ui.actionMenuItem.findByTitle('Migrate').should('be.visible').click();
+
         containsVisible(`Migrate Linode ${linode.label}`);
         getClick('[data-qa-checked="false"]');
         fbtClick(selectRegionString);
