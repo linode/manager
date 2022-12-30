@@ -452,3 +452,11 @@ export interface MakePaymentData {
   nonce?: string;
   payment_method_id?: number;
 }
+
+export interface AccountLogin {
+  datetime: string;
+  id: number;
+  ip: string;
+  restricted: boolean;
+  username: string;
+}
