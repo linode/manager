@@ -149,8 +149,7 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
       return request(
         {
           page,
-          page_size:
-            window.location.pathname === '/stackscripts/community' ? 25 : 500,
+          page_size: category === 'community' ? 25 : 500,
         },
         filter
       )
