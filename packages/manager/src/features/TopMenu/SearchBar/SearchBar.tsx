@@ -235,7 +235,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const finalOptions = createFinalOptions(
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading || apiSearchLoading,
+    _loading || imagesLoading || apiSearchLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
