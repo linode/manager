@@ -4,8 +4,9 @@ export interface User {
   username: string;
   email: string;
   restricted: boolean;
-  gravatarUrl?: string;
   ssh_keys: string[];
+  tfa_enabled: boolean;
+  verified_phone_number: string | null;
 }
 
 export interface Account {

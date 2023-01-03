@@ -7,7 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import { Link } from 'src/components/Link';
-import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
+import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { parseAPIDate } from 'src/utilities/date';
 import useEventInfo from './useEventInfo';
 
@@ -82,7 +82,10 @@ export const RenderEvent: React.FC<Props> = (props) => {
         display="flex"
         data-test-id={event.action}
       >
-        <GravatarIcon username={event.username} className={classes.icon} />
+        <GravatarByUsername
+          username={event.username}
+          className={classes.icon}
+        />
         <div className={classes.eventMessage}>
           {linkTarget ? (
             <Link to={linkTarget} onClick={onClose}>

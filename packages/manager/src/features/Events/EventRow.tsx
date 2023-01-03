@@ -14,7 +14,7 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
-import GravatarIcon from '../Profile/DisplaySettings/GravatarIcon';
+import { GravatarByUsername } from '../../components/GravatarByUsername';
 import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -78,7 +78,7 @@ export interface RowProps {
     | 'volume'
     | 'database';
   created: string;
-  username: string | null;
+  username: string;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
@@ -104,7 +104,7 @@ export const Row: React.FC<RowProps> = (props) => {
     >
       <Hidden xsDown>
         <TableCell data-qa-event-icon-cell>
-          <GravatarIcon username={username} className={classes.icon} />
+          <GravatarByUsername username={username} className={classes.icon} />
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>

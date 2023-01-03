@@ -451,6 +451,12 @@ const themeDefaults: ThemeDefaults = () => {
           backgroundColor: 'inherit',
         },
       },
+      MuiAvatar: {
+        colorDefault: {
+          color: '#c9c7c7',
+          backgroundColor: 'unset',
+        },
+      },
       MuiBackdrop: {
         root: {
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
