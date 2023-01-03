@@ -1,42 +1,56 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "outDir": "build/dist",
-    "module": "esnext",
-    "target": "es5",
-    "lib": ["es2017", "dom"],
-    "downlevelIteration": true,
-    "sourceMap": true,
-    "allowJs": false,
+    /* Language and Environment */
     "jsx": "react",
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "resolveJsonModule": true,
-    "rootDir": "src",
-    "skipLibCheck": true,
+    "lib": ["dom", "es2017"],
+    "target": "es5",
+
+    /* Modules */
     "baseUrl": ".",
+    "moduleResolution": "node",
     "paths": {
       "src/*": ["src/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "rootDir": "src",
+
+    /* JavaScript Support */
+    "allowJs": false,
+
+    /* Emit */
+    "downlevelIteration": true,
+    "outDir": "build/dist",
+    "sourceMap": true,
+
+    /* Interop Constraints */
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "allowUnreachableCode": false,
+    "module": "esnext",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "strictNullChecks": true,
+    "suppressImplicitAnyIndexErrors": true,
+
+    /* Completeness */
+    "skipLibCheck": true
   },
   "exclude": [
-    "cypress.config.ts",
-    "node_modules",
-    "cypress",
-    "config",
-    "build",
-    "e2e",
-    "scripts",
     "acceptance-tests",
-    "webpack",
+    "build",
+    "config",
+    "cypress.config.ts",
+    "cypress",
+    "e2e",
     "jest",
+    "node_modules",
+    "scripts",
+    "src/components/Storyshots.test.tsx",
     "src/setupTests.ts",
-    "src/components/Storyshots.test.tsx"
+    "webpack"
   ]
 }
