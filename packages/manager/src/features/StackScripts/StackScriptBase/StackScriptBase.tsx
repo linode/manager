@@ -146,7 +146,13 @@ const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
         currentPage: page,
       });
 
-      return request({ page, page_size: 25 }, filter)
+      return request(
+        {
+          page,
+          page_size: category === 'community' ? 25 : 500,
+        },
+        filter
+      )
         .then((response: ResourcePage<StackScript>) => {
           if (!this.mounted) {
             return;
