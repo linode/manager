@@ -28,7 +28,7 @@ it('Displays formatted expiration date for cards with expiration', () => {
     <CreditCard creditCard={creditCardData} />
   );
 
-  expect(getByText('Expires 12/22')).toBeVisible();
+  expect(getByText('Expires 12/23')).toBeVisible();
 });
 
 it('Displays "expired" notice for cards that are expired', () => {
