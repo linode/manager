@@ -9,9 +9,6 @@ import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
@@ -32,7 +29,6 @@ import { useAllVolumesQuery } from 'src/queries/volumes';
 import { useAllImagesQuery } from 'src/queries/images';
 
 type CombinedProps = WithTypesProps &
-  ImagesProps &
   SearchProps &
   StyleProps &
   RouteComponentProps<{}>;
@@ -311,7 +307,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 export default compose<CombinedProps, {}>(
   withTypes,
   withRouter,
-  withImages,
   withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;
