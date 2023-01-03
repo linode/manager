@@ -1,10 +1,6 @@
-import {
-  createLinode,
-  deleteLinodeById,
-  clickLinodeActionMenu,
-} from '../../support/api/linodes';
-import { fbtClick, fbtVisible, getClick } from '../../support/helpers';
-import { assertToast } from '../../support/ui/events';
+import { createLinode } from 'support/api/linodes';
+import { fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { ui } from 'support/ui';
 
 const rebootInRescueMode = () => {
   fbtClick('Reboot into Rescue Mode');
@@ -20,14 +16,20 @@ describe('rescue linode', () => {
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}`;
       cy.visit(rescueUrl);
-      clickLinodeActionMenu(linode.label);
-      getClick('[data-qa-action-menu-item="Rescue"]:visible');
+      ui.actionMenu
+        .findByTitle(`Action menu for Linode ${linode.label}`)
+        .should('be.visible')
+        .click();
+
+      ui.actionMenuItem.findByTitle('Rescue').should('be.visible').click();
+
       rebootInRescueMode();
       // check mocked response and make sure UI responded correctly
       cy.wait('@postRebootInRescueMode')
         .its('response.statusCode')
         .should('eq', 200);
-      assertToast('Linode rescue started.');
+
+      ui.toast.assertMessage('Linode rescue started.');
     });
   });
 
