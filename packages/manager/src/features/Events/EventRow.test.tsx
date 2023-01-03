@@ -8,7 +8,7 @@ const props: RowProps = {
   message,
   type: 'linode',
   created: '2018-01-01',
-  username: 'Linode',
+  username: null,
 };
 
 describe('EventRow component', () => {

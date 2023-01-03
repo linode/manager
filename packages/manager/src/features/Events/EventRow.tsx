@@ -78,7 +78,7 @@ export interface RowProps {
     | 'volume'
     | 'database';
   created: string;
-  username: string;
+  username: string | null;
 }
 
 export const Row: React.FC<RowProps> = (props) => {
@@ -104,7 +104,10 @@ export const Row: React.FC<RowProps> = (props) => {
     >
       <Hidden xsDown>
         <TableCell data-qa-event-icon-cell>
-          <GravatarByUsername username={username} className={classes.icon} />
+          <GravatarByUsername
+            username={username ?? ''}
+            className={classes.icon}
+          />
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>

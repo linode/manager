@@ -30,5 +30,11 @@ function getIsBacklistedUser(username: string) {
   if (username.startsWith('lke-service-account-')) {
     return true;
   }
+  if (username === 'Linode') {
+    return true;
+  }
+  if (username === '') {
+    return true;
+  }
   return false;
 }
