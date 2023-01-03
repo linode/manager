@@ -21,7 +21,7 @@ it('Displays formatted expiration date for cards with expiration', () => {
   const creditCardData: CreditCardData = {
     last_four: '1111',
     card_type: 'Visa',
-    expiry: '12/2022',
+    expiry: '12/2023',
   };
 
   const { getByText } = renderWithTheme(
