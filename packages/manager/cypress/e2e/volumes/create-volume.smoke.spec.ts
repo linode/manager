@@ -1,19 +1,18 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { volumeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { interceptOnce } from 'cypress/support/ui/common';
-import { createMockLinodeList } from '../../support/api/linodes';
-import { clickVolumeActionMenu } from '../../support/api/volumes';
+import { interceptOnce } from 'support/ui/common';
+import { createMockLinodeList } from 'support/api/linodes';
 import {
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
-import { randomLabel } from 'cypress/support/util/random';
-import { selectRegionString } from '../../support/ui/constants';
-import { assertToast } from '../../support/ui/events';
+} from 'support/helpers';
+import { randomLabel } from 'support/util/random';
+import { selectRegionString } from 'support/ui/constants';
+import { ui } from 'support/ui';
 
 const region = 'Newark, NJ';
 
@@ -106,8 +105,13 @@ describe('volumes', () => {
     fbtClick('Create Volume');
     cy.wait('@createVolume');
     validateBasicVolume(volumeLabel, volumeId);
-    clickVolumeActionMenu(volumeLabel);
-    getVisible('[data-qa-action-menu-item="Delete"]');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Volume ${volumeLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible');
   });
 
   it('creates volume from linode details', () => {
@@ -178,13 +182,26 @@ describe('volumes', () => {
     }).as('volumeDetached');
     containsVisible(attachedVolume.linode_label);
     containsVisible(attachedVolumeLabel);
-    clickVolumeActionMenu(attachedVolumeLabel);
-    // getVisible('[data-qa-action-menu-item="Detach"]')
-    fbtClick('Detach');
-    fbtClick('Detach Volume');
-    cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
-    getClick('[data-qa-confirm="true"]');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Volume ${attachedVolumeLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Detach').click();
+
+    ui.dialog
+      .findByTitle(`Detach Volume ${attachedVolumeLabel}?`)
+      .should('be.visible')
+      .within(() => {
+        ui.button
+          .findByTitle('Detach Volume')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
-    assertToast('Volume detachment started');
+    ui.toast.assertMessage('Volume detachment started');
   });
 });
