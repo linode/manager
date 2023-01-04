@@ -92,7 +92,6 @@ export const useKubenetesKubeConfigQuery = (
       retry: true,
       retryDelay: 5000,
       refetchOnMount: true,
-      keepPreviousData: true,
     }
   );
 
