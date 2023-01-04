@@ -75,9 +75,15 @@ export const KubeClusterSpecs = (props: Props) => {
     `${Math.floor(Storage / 1024)} GB Storage`,
   ];
 
-  const kubeSpecItem = (spec: string) => {
+  const kubeSpecItem = (spec: string, idx: number) => {
     return (
-      <Grid item wrap="nowrap" alignItems="center" className={classes.item}>
+      <Grid
+        key={`spec-${idx}`}
+        item
+        wrap="nowrap"
+        alignItems="center"
+        className={classes.item}
+      >
         <Grid item className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
         </Grid>
@@ -88,10 +94,10 @@ export const KubeClusterSpecs = (props: Props) => {
   return (
     <Grid item container direction="row" xs={12} lg={3}>
       <Grid item lg={6}>
-        {kubeSpecsLeft.map((spec) => kubeSpecItem(spec))}
+        {kubeSpecsLeft.map(kubeSpecItem)}
       </Grid>
       <Grid item lg={6}>
-        {kubeSpecsRight.map((spec) => kubeSpecItem(spec))}
+        {kubeSpecsRight.map(kubeSpecItem)}
       </Grid>
     </Grid>
   );
