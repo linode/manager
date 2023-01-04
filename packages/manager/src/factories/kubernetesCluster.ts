@@ -6,7 +6,6 @@ import {
   PoolNodeResponse,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes/types';
-import { PoolNodeWithPrice } from 'src/features/Kubernetes/types';
 import { v4 } from 'uuid';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
@@ -26,33 +25,6 @@ export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
     max: 1,
   },
 });
-
-export const notReallyANodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>(
-  {
-    id: Factory.each((id) => id),
-    count: 3,
-    type: 'g6-standard-1',
-    totalMonthlyPrice: 1000,
-    autoscaler: {
-      enabled: false,
-      min: 1,
-      max: 1,
-    },
-  }
-);
-
-export const notReallyANodePoolFactory2 = notReallyANodePoolFactory.withDerivation1(
-  ['count'],
-  'nodes',
-  (count: number) => {
-    const linodes = [];
-    let i = 0;
-    for (i; i < count; i++) {
-      linodes.push(kubeLinodeFactory.build());
-    }
-    return linodes;
-  }
-);
 
 export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesCluster>(
   {

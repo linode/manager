@@ -14,7 +14,6 @@ import {
 
 interface Props {
   cluster: KubernetesCluster;
-  isClusterHighlyAvailable: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const KubeClusterSpecs: React.FC<Props> = (props) => {
-  const { cluster, isClusterHighlyAvailable } = props;
+export const KubeClusterSpecs = (props: Props) => {
+  const { cluster } = props;
   const classes = useStyles();
   const { data: types } = useAllLinodeTypesQuery();
 
@@ -66,7 +65,7 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
     `$${getTotalClusterPrice(
       pools ?? [],
       types ?? [],
-      isClusterHighlyAvailable
+      cluster.control_plane.high_availability
     ).toFixed(2)}/month`,
   ];
 
@@ -76,9 +75,15 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
     `${Math.floor(Storage / 1024)} GB Storage`,
   ];
 
-  const kubeSpecItem = (spec: string) => {
+  const kubeSpecItem = (spec: string, idx: number) => {
     return (
-      <Grid item wrap="nowrap" alignItems="center" className={classes.item}>
+      <Grid
+        key={`spec-${idx}`}
+        item
+        wrap="nowrap"
+        alignItems="center"
+        className={classes.item}
+      >
         <Grid item className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
         </Grid>
@@ -89,10 +94,10 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
   return (
     <Grid item container direction="row" xs={12} lg={3}>
       <Grid item lg={6}>
-        {kubeSpecsLeft.map((spec) => kubeSpecItem(spec))}
+        {kubeSpecsLeft.map(kubeSpecItem)}
       </Grid>
       <Grid item lg={6}>
-        {kubeSpecsRight.map((spec) => kubeSpecItem(spec))}
+        {kubeSpecsRight.map(kubeSpecItem)}
       </Grid>
     </Grid>
   );

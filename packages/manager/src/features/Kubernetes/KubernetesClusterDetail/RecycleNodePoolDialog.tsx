@@ -1,31 +1,42 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
+import { useRecycleNodePoolMutation } from 'src/queries/kubernetes';
 
 interface Props {
-  title: string;
-  submitBtnText: string;
   open: boolean;
-  loading: boolean;
-  error?: string;
   onClose: () => void;
-  onSubmit: () => void;
+  clusterId: number;
+  nodePoolId: number;
 }
 
-const renderActions = (
-  loading: boolean,
-  submitBtnText: string,
-  onClose: () => void,
-  onSubmit: () => void
-) => {
-  return (
+export const RecycleNodePoolDialog = (props: Props) => {
+  const { open, onClose, clusterId, nodePoolId } = props;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { mutateAsync, isLoading, error } = useRecycleNodePoolMutation(
+    clusterId,
+    nodePoolId
+  );
+
+  const onRecycle = () => {
+    mutateAsync().then(() => {
+      enqueueSnackbar(`Recycled all nodes in node pool ${nodePoolId}`, {
+        variant: 'success',
+      });
+      onClose();
+    });
+  };
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -37,36 +48,24 @@ const renderActions = (
       </Button>
       <Button
         buttonType="primary"
-        onClick={onSubmit}
-        loading={loading}
+        onClick={onRecycle}
+        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
-        {submitBtnText}
+        Recycle Pool Nodes
       </Button>
     </ActionsPanel>
   );
-};
-
-const RecycleNodesDialog: React.FC<Props> = (props) => {
-  const {
-    title,
-    submitBtnText,
-    error,
-    loading,
-    open,
-    onClose,
-    onSubmit,
-  } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title={title}
+      title="Recycle node pool?"
       onClose={onClose}
-      actions={() => renderActions(loading, submitBtnText, onClose, onSubmit)}
+      actions={actions}
+      error={error?.[0].reason}
     >
-      {error && <Notice error text={error} />}
       <Typography>
         {nodesDeletionWarning} {localStorageWarning} This may take several
         minutes, as nodes will be replaced on a rolling basis.
@@ -74,5 +73,3 @@ const RecycleNodesDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default React.memo(RecycleNodesDialog);

@@ -11,8 +11,8 @@ import {
   useDeleteKubernetesClusterMutation,
 } from 'src/queries/kubernetes';
 import { KubeNodePoolResponse } from '@linode/api-v4';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import CircleProgress from 'src/components/CircleProgress';
+import { useHistory } from 'react-router-dom';
 
 export interface Props {
   open: boolean;
@@ -30,10 +30,9 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
 export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterLabel, clusterId, open, onClose } = props;
 
-  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(
-    clusterId,
-    open
-  );
+  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterId, {
+    enabled: open,
+  });
 
   const {
     mutateAsync: deleteCluster,
@@ -41,6 +40,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
     error,
   } = useDeleteKubernetesClusterMutation();
 
+  const history = useHistory();
   const { preferences } = usePreferences();
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
@@ -51,6 +51,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
       onClose();
+      history.replace('/kubernetes/clusters');
     });
   };
 
@@ -83,14 +84,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
       title={`Delete Cluster ${clusterLabel}`}
       onClose={onClose}
       actions={actions}
-      error={
-        error
-          ? getAPIErrorOrDefault(
-              error,
-              'Unable to delete Kubernetes Cluster'
-            )[0].reason
-          : undefined
-      }
+      error={error?.[0].reason}
     >
       {isLoading ? (
         <CircleProgress />

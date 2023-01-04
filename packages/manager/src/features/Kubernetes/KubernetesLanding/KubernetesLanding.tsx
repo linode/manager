@@ -167,15 +167,15 @@ export const KubernetesLanding = () => {
               Cluster Label
             </TableSortCell>
             <Hidden smDown>
-              <TableCell
-                // active={orderBy === 'k8s_version'}
-                // label={'k8s_version'}
-                // direction={order}
-                // handleClick={handleOrderChange}
+              <TableSortCell
+                active={orderBy === 'k8s_version'}
+                label={'k8s_version'}
+                direction={order}
+                handleClick={handleOrderChange}
                 data-qa-kubernetes-clusters-version-header
               >
                 Version
-              </TableCell>
+              </TableSortCell>
               <TableSortCell
                 active={orderBy === 'created'}
                 label={'created'}
@@ -186,32 +186,20 @@ export const KubernetesLanding = () => {
                 Created
               </TableSortCell>
             </Hidden>
-            <TableCell
-              // active={orderBy === 'region'}
-              // label={'region'}
-              // direction={order}
-              // handleClick={handleOrderChange}
+            <TableSortCell
+              active={orderBy === 'region'}
+              label={'region'}
+              direction={order}
+              handleClick={handleOrderChange}
               data-qa-kubernetes-clusters-region-header
             >
               Region
-            </TableCell>
+            </TableSortCell>
             <Hidden xsDown>
-              <TableCell
-                // active={orderBy === 'totalMemory'}
-                // label={'totalMemory'}
-                // direction={order}
-                // handleClick={handleOrderChange}
-                data-qa-kubernetes-clusters-memory-header
-              >
+              <TableCell data-qa-kubernetes-clusters-memory-header>
                 Total Memory
               </TableCell>
-              <TableCell
-                // active={orderBy === 'totalCPU'}
-                // label={'totalCPU'}
-                // direction={order}
-                // handleClick={handleOrderChange}
-                data-qa-kubernetes-clusters-cpu-header
-              >
+              <TableCell data-qa-kubernetes-clusters-cpu-header>
                 Total CPUs
               </TableCell>
             </Hidden>

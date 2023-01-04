@@ -5,9 +5,7 @@ import {
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
-import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
-import { pluralize } from 'src/utilities/pluralize';
-import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
+import { dcDisplayNames, HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
@@ -36,14 +34,6 @@ export const getTotalClusterPrice = (
 
   return highAvailability ? price + (HIGH_AVAILABILITY_PRICE || 0) : price;
 };
-
-export const addPriceToNodePool = (
-  pool: ExtendedPoolNode,
-  typesData: LinodeType[]
-) => ({
-  ...pool,
-  totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, typesData),
-});
 
 interface ClusterData {
   CPU: number;
@@ -77,27 +67,27 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-export const getTotalNodesInCluster = (pools: PoolNodeWithPrice[]): number =>
-  pools.reduce((accum, thisPool) => {
-    return accum + thisPool.count;
-  }, 0);
+export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
+  const description: string[] = [
+    `Kubernetes ${cluster.k8s_version}`,
+    dcDisplayNames[cluster.region] ?? 'Unknown Region',
+  ];
 
-export const getDescriptionForCluster = (cluster: ExtendedCluster) => {
-  if (!cluster.node_pools) {
-    return '';
+  if (cluster.control_plane.high_availability) {
+    description.push(`High Availability`);
   }
-  const nodes = getTotalNodesInCluster(cluster.node_pools);
-  return `${pluralize('node', 'nodes', nodes)}, ${pluralize(
-    'CPU core',
-    'CPU cores',
-    cluster.totalCPU
-  )}, ${cluster.totalMemory / 1024} GB RAM`;
+
+  return description.join(', ');
 };
 
 export const getNextVersion = (
   currentVersion: string,
   versions: KubernetesVersion[]
 ) => {
+  if (versions.length === 0) {
+    return null;
+  }
+
   const versionStrings = versions.map((v) => v.id).sort();
   const currentIdx = versionStrings.findIndex(
     (thisVersion) => currentVersion === thisVersion
@@ -125,7 +115,7 @@ export const getNextVersion = (
 
 export const getKubeHighAvailability = (
   account: Account | undefined,
-  cluster?: ExtendedCluster | KubernetesCluster | null
+  cluster?: KubernetesCluster | null
 ) => {
   const showHighAvailability = account?.capabilities.includes(
     'LKE HA Control Planes'

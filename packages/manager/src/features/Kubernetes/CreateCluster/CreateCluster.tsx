@@ -1,7 +1,7 @@
 import {
   CreateKubeClusterPayload,
+  CreateNodePoolData,
   KubeNodePoolResponse,
-  PoolNodeRequest,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
@@ -25,8 +25,10 @@ import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
-import { useCreateKubernetesClusterMutation } from 'src/queries/kubernetes';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import {
+  useCreateKubernetesClusterMutation,
+  useKubernetesVersionQuery,
+} from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
@@ -165,12 +167,11 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
     const k8s_version = version ? version.value : undefined;
 
     /**
-     * We need to remove the monthly price, which is used for client-side
-     * calculations, and send only type and count to the API.
+     * Only type and count to the API.
      */
     const node_pools = nodePools.map(
       pick(['type', 'count'])
-    ) as PoolNodeRequest[];
+    ) as CreateNodePoolData[];
 
     const payload: CreateKubeClusterPayload = {
       control_plane: { high_availability: highAvailability },

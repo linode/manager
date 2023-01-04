@@ -3,26 +3,34 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { pluralize } from 'src/utilities/pluralize';
+import { useDeleteNodePoolMutation } from 'src/queries/kubernetes';
+import { KubeNodePoolResponse } from '@linode/api-v4';
 
 interface Props {
+  kubernetesClusterId: number;
+  nodePool: KubeNodePoolResponse | undefined;
   open: boolean;
-  nodeCount: number;
-  loading: boolean;
-  error?: string;
   onClose: () => void;
-  onDelete: () => void;
 }
 
-type CombinedProps = Props;
+export const DeleteNodePoolDialog = (props: Props) => {
+  const { open, onClose, kubernetesClusterId, nodePool } = props;
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
+  const { mutateAsync, isLoading, error } = useDeleteNodePoolMutation(
+    kubernetesClusterId,
+    nodePool?.id ?? -1
+  );
+
+  const onDelete = () => {
+    mutateAsync().then(() => {
+      onClose();
+    });
+  };
+
+  const nodeCount = nodePool?.count ?? 0;
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -35,7 +43,7 @@ const renderActions = (
       <Button
         buttonType="primary"
         onClick={onDelete}
-        loading={loading}
+        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
@@ -43,19 +51,15 @@ const renderActions = (
       </Button>
     </ActionsPanel>
   );
-};
-
-const NodePoolDialog: React.FC<CombinedProps> = (props) => {
-  const { error, loading, nodeCount, open, onClose, onDelete } = props;
 
   return (
     <ConfirmationDialog
       open={open}
       title={'Delete Node Pool?'}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onDelete)}
+      actions={actions}
+      error={error?.[0].reason}
     >
-      {error && <Notice error text={error} />}
       <Typography>
         Are you sure you want to delete this Node Pool?{' '}
         {nodeCount > 0 &&
@@ -64,5 +68,3 @@ const NodePoolDialog: React.FC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default React.memo(NodePoolDialog);
