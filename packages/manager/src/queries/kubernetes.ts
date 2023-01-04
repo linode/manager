@@ -96,7 +96,11 @@ export const useKubenetesKubeConfigQuery = (
   );
 
 export const useResetKubeConfigMutation = () =>
-  useMutation<{}, APIError[], { id: number }>(({ id }) => resetKubeConfig(id));
+  useMutation<{}, APIError[], { id: number }>(({ id }) => resetKubeConfig(id), {
+    onSuccess(_, { id }) {
+      queryClient.removeQueries([queryKey, 'cluster', id, 'kubeconfig']);
+    },
+  });
 
 export const useDeleteKubernetesClusterMutation = () => {
   return useMutation<{}, APIError[], { id: number }>(

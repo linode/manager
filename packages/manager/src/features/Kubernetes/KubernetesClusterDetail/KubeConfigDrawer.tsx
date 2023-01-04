@@ -40,10 +40,21 @@ export const KubeConfigDrawer = (props: Props) => {
   const classes = useStyles();
   const { clusterLabel, clusterId, closeDrawer, open } = props;
 
-  const { data, error, isLoading } = useKubenetesKubeConfigQuery(
-    clusterId,
-    open
-  );
+  const {
+    data,
+    error,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useKubenetesKubeConfigQuery(clusterId, open);
+
+  // refetchOnMount isnt good enough for this query because
+  // it is already mounted in the rendered Drawer
+  React.useEffect(() => {
+    if (open && !isLoading && !isFetching) {
+      refetch();
+    }
+  }, [open]);
 
   return (
     <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} wide>
