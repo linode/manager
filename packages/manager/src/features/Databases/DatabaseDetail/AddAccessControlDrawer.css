@@ -1,0 +1,16 @@
+#iptooltip {
+  position: absolute;
+  z-index: 1;
+  border-bottom: 1px dotted black;
+}
+
+#iptooltip #iptooltiptext {
+  background-color: black;
+  color: #fff;
+  visibility: hidden;
+  text-align: center;
+  width: 110px;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+}

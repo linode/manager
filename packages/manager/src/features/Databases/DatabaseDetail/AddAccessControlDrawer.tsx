@@ -21,6 +21,8 @@ let autocompletedIPsList: string[] = [];
 let activeIPElement: HTMLInputElement | null;
 let tempAllowList: ExtendedIP[];
 
+require('./AddAccessControlDrawer.css');
+
 const useStyles = makeStyles((theme: Theme) => ({
   instructions: {
     marginBottom: '2rem',
@@ -172,12 +174,30 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     return possibleIPsList;
   };
 
+  const toggleIPToolTip = function (
+    typing: boolean,
+    autocompletedIPsList: string[]
+  ) {
+    const ipToolTip = document.getElementById('iptooltiptext');
+    // If there are no IPs to display, then hide the tooltip.
+    if (ipToolTip && autocompletedIPsList.length == 0) {
+      ipToolTip.style.visibility = 'hidden';
+      return;
+    }
+    // Otherwise, toggle the tooltip.
+    // This function is called in handleIPChange to show while typing, and applyIP to hide when clicking.
+    if (ipToolTip && typing && ipToolTip.style.visibility != 'visible') {
+      ipToolTip.style.visibility = 'visible';
+    } else if (ipToolTip && !typing && ipToolTip.style.visibility != 'hidden') {
+      ipToolTip.style.visibility = 'hidden';
+    }
+  };
+
   const handleIPChange = React.useCallback(
     (_ips: ExtendedIP[]) => {
       if (!formTouched) {
         setFormTouched(true);
       }
-
       activeIPElement = document.activeElement as HTMLInputElement;
 
       if (activeIPElement?.id?.indexOf('domain-transfer-ip') !== -1) {
@@ -192,6 +212,8 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
           autocompletedIPsList = autocompleteIP(ip);
         }
       }
+      // Make the tooltip visible on typing
+      toggleIPToolTip(true, autocompletedIPsList);
 
       setValues({ _allowList: _ips });
       // todo: get rid of tempAllowList once we figure out how to cleanly access _allowList from applyIP()
@@ -219,6 +241,9 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
     // Update the list with the new IP
     tempAllowList[pos].address = `${ip}/32`;
     setValues({ _allowList: tempAllowList });
+    // Make the list hidden on click
+    toggleIPToolTip(false, autocompletedIPsList);
+
     return ip;
   };
 
@@ -239,18 +264,19 @@ const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
           Add, edit, or remove IPv4 addresses and ranges that should be
           authorized to access your cluster.
         </Typography>
-        <div className="ips-popup-section">
-          <ol className="ip-popup-text">
+        <div id="iptooltip">
+          <ol id="iptooltiptext">
             {autocompletedIPsList
               ? autocompletedIPsList.map((ip) => (
-                  // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
-                  <li
+                  // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+                  <div
+                    className="ip"
                     onClick={() => applyIP(ip)}
                     onKeyDown={() => applyIP(ip)}
                     key={ip}
                   >
                     {ip}
-                  </li>
+                  </div>
                 ))
               : null}
           </ol>
