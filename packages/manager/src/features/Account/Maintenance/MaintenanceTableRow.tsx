@@ -15,6 +15,9 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
 
   return (
     <TableRow key={entity.id}>
+      <TableCell style={{ textTransform: 'capitalize' }}>
+        {entity.type}
+      </TableCell>
       <TableCell>
         <Link
           to={

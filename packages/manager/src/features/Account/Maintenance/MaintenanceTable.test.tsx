@@ -6,7 +6,7 @@ import {
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 import MaintenanceTableRow from './MaintenanceTableRow';
-import MaintenanceTable from './MaintenanceTable';
+import { MaintenanceTable } from './MaintenanceTable';
 import {
   screen,
   waitForElementToBeRemoved,
@@ -63,14 +63,7 @@ describe('Maintenance Table', () => {
         return res(ctx.json(makeResourcePage(accountMaintenance)));
       })
     );
-    renderWithTheme(
-      <MaintenanceTable
-        type="Linode"
-        expanded={true}
-        toggleExpanded={() => null}
-        addTopMargin={false}
-      />
-    );
+    renderWithTheme(<MaintenanceTable type="pending" />);
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -78,7 +71,7 @@ describe('Maintenance Table', () => {
     await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
 
     // Static text and table column headers
-    screen.getAllByText('Linodes');
+    screen.getAllByText('pending');
     screen.getAllByText('Label');
     screen.getAllByText('Date');
 
@@ -87,14 +80,7 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    renderWithTheme(
-      <MaintenanceTable
-        type="Linode"
-        expanded={true}
-        toggleExpanded={() => null}
-        addTopMargin={false}
-      />
-    );
+    renderWithTheme(<MaintenanceTable type="pending" />);
 
     screen.getByText('Download CSV');
   });
@@ -106,15 +92,7 @@ describe('Maintenance Table', () => {
       })
     );
 
-    renderWithTheme(
-      <MaintenanceTable
-        type="Linode"
-        expanded={true}
-        toggleExpanded={() => null}
-        addTopMargin={false}
-      />,
-      { queryClient }
-    );
+    renderWithTheme(<MaintenanceTable type="pending" />, { queryClient });
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 
