@@ -7,5 +7,8 @@ export const queryKey = 'account-login';
 export const useAccountLoginsQuery = (params?: any, filter?: any) =>
   useQuery<ResourcePage<AccountLogin>, APIError[]>(
     [`${queryKey}-list`, params, filter],
-    () => getAccountLogins(params, filter)
+    () => getAccountLogins(params, filter),
+    {
+      keepPreviousData: true,
+    }
   );

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const AccountLogins: React.FC<{}> = () => {
+const AccountLogins = () => {
   const classes = useStyles();
   const pagination = usePagination(1, preferenceKey);
 
