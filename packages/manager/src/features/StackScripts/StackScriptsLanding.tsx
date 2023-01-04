@@ -6,7 +6,7 @@ import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import { listToItemsByID } from 'src/queries/base';
-import { useImagesQuery } from 'src/queries/images';
+import { useAllImagesQuery } from 'src/queries/images';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel';
 
@@ -15,9 +15,9 @@ export const StackScriptsLanding: React.FC<{}> = () => {
     successMessage?: string;
   }>();
 
-  const { data: _imagesData, isLoading: _loading } = useImagesQuery({}, {});
+  const { data: _imagesData, isLoading: _loading } = useAllImagesQuery();
 
-  const _imagesDataById = listToItemsByID(_imagesData?.data ?? []);
+  const _imagesDataById = listToItemsByID(_imagesData ?? []);
   const imagesData = filterImagesByType(_imagesDataById, 'public');
 
   const goToCreateStackScript = () => {

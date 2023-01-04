@@ -1,5 +1,4 @@
 import { Account, Grant } from '@linode/api-v4/lib/account';
-import { Image } from '@linode/api-v4/lib/images';
 import {
   createStackScript,
   getStackScript,
@@ -30,7 +29,9 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import withImages from 'src/containers/withImages.container';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import { StackScripts } from 'src/documentation';
 import {
   getGrants,
@@ -83,8 +84,8 @@ interface Props {
 }
 
 type CombinedProps = Props &
+  ImagesProps &
   ProfileProps &
-  WithImagesProps &
   SetDocsProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{ stackScriptID: string }>;
@@ -454,12 +455,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       // apiResponse
     } = this.state;
 
+    const _imagesData = filterImagesByType(imagesData, 'public');
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
     const hasUnsavedChanges = this.hasUnsavedChanges();
 
-    const availableImages = Object.values(imagesData).filter(
+    const availableImages = Object.values(_imagesData).filter(
       (thisImage) =>
         !this.state.images.includes(thisImage.id) &&
         !thisImage.label.match(/kube/i)
@@ -563,20 +566,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-  imagesLoading: boolean;
-  imagesError?: APIError[];
-}
-
 const enhanced = compose<CombinedProps, Props>(
   setDocs(StackScriptCreate.docs),
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesData: filterImagesByType(imagesData, 'public'),
-    imagesLoading,
-    imagesError,
-  })),
+  withImages,
   styled,
   withRouter,
   withProfile
