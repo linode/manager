@@ -84,6 +84,10 @@ export const getNextVersion = (
   currentVersion: string,
   versions: KubernetesVersion[]
 ) => {
+  if (versions.length === 0) {
+    return null;
+  }
+
   const versionStrings = versions.map((v) => v.id).sort();
   const currentIdx = versionStrings.findIndex(
     (thisVersion) => currentVersion === thisVersion
