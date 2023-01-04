@@ -16,11 +16,11 @@ export const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 12,
     paddingBottom: 12,
     width: '100%',
+    gap: 16,
   },
   icon: {
     height: 40,
     minWidth: 40,
-    marginRight: 20,
   },
   event: {
     color: theme.textColors.tableHeader,
