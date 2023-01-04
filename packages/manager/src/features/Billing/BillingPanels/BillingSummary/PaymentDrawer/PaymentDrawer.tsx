@@ -358,7 +358,6 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
                   countryCode: 'US',
                   totalPrice: usd,
                 }}
-                balance={account?.balance ?? false}
                 disabled={isProcessing}
                 setSuccess={setSuccess}
                 setError={setErrorMessage}
