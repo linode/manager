@@ -193,7 +193,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     ticketResponse: SupportTicket,
     replyResponse: SupportReply[]
   ) => {
-    /** Send a request for the gravatar for each unique ID. */
     if (this.mounted) {
       this.setState({
         replies: replyResponse,

@@ -26,6 +26,12 @@ export const useAccountUser = (username: string) => {
   });
 };
 
+/**
+ * Returns true if a user is "blacklisted". We do this because service accounts will
+ * 404 when we hit the account eventpoint.
+ * @param username a user's username
+ * @returns true if account should not be fetched
+ */
 function getIsBacklistedUser(username: string) {
   if (username.startsWith('lke-service-account-')) {
     return true;

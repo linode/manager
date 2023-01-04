@@ -34,10 +34,7 @@ export const GravatarByUsername = (props: Props) => {
       src={url}
       alt={`Avatar for user ${username}`}
     >
-      <UserIcon
-        className={classNames(classes.avatar, className)}
-        alt={`Avatar for user ${username}`}
-      />
+      <UserIcon className={classNames(classes.avatar, className)} />
     </Avatar>
   );
 };
