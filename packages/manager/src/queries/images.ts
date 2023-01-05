@@ -102,6 +102,9 @@ export const useAllImagesQuery = (
 export const imageEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
 
+  // Keep the getAll query up to date so that when we have to use it, it contains accurate data
+  queryClient.invalidateQueries(`${queryKey}-all`);
+
   switch (action) {
     case 'image_delete':
       if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
