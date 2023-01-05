@@ -1,9 +1,8 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import {
-  akamaiInvoiceRow,
-  akamaiRowEmptyState,
-} from 'src/features/Billing/BillingPanels/BillingActivityPanel/BillingActivityPanel';
+import // akamaiInvoiceRow,
+// akamaiRowEmptyState,
+'src/features/Billing/BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import TableContentWrapper from './TableContentWrapper';
@@ -99,7 +98,7 @@ describe('TableContentWrapper component', () => {
     const emptyProps = {
       loading: false,
       length: 0,
-      rowEmptyState: akamaiRowEmptyState,
+      // rowEmptyState: akamaiRowEmptyState,
       children,
     };
 
@@ -113,7 +112,7 @@ describe('TableContentWrapper component', () => {
     const rowProps = {
       loading: false,
       length: 2,
-      customFirstRow: akamaiInvoiceRow,
+      // customFirstRow: akamaiInvoiceRow,
       children,
     };
 
