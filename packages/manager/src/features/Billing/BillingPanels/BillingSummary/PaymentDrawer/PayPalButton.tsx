@@ -17,6 +17,10 @@ import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { SetSuccess } from './types';
+import { APIError } from '@linode/api-v4/lib/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { useAccount } from 'src/queries/account';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -57,6 +61,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     error: clientTokenError,
   } = useClientToken();
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+  const { data: account } = useAccount();
 
   const {
     usd,
@@ -67,7 +72,9 @@ export const PayPalButton: React.FC<Props> = (props) => {
     renderError,
   } = props;
 
-  const disabledDueToPrice = +usd < 5 || +usd > 10000;
+  const { min, max } = getPaymentLimits(account?.balance);
+
+  const disabledDueToPrice = +usd < min || +usd > max;
 
   React.useEffect(() => {
     /**
@@ -154,31 +161,41 @@ export const PayPalButton: React.FC<Props> = (props) => {
 
     try {
       const payload = await actions.braintree.tokenizePayment(data);
-      // send nonce to server
+
+      // send nonce to the Linode API
       const response = await makePayment({
         nonce: payload.nonce,
         usd: stateRef!.current!.amount,
+      }).catch((error: APIError[]) => {
+        // Process and surface any Linode API errors during payment
+        const errorText = getAPIErrorOrDefault(
+          error,
+          'Unable to complete PayPal payment.'
+        )[0].reason;
+        setError(errorText);
+        setProcessing(false);
       });
-      queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+      if (response) {
+        queryClient.invalidateQueries(`${accountBillingKey}-payments`);
 
-      setSuccess(
-        `Payment for $${
-          stateRef!.current!.amount
-        } successfully submitted with PayPal`,
-        true,
-        response.warnings
-      );
+        setSuccess(
+          `Payment for $${response.usd} successfully submitted with PayPal`,
+          true,
+          response.warnings
+        );
+      }
     } catch (error) {
+      // Process, surface, and log any Braintree errors during payment
       if (error.statusCode === 'CANCELED') {
         return;
       }
 
-      const errorMsg = 'Unable to complete PayPal payment.';
-      reportException(error, {
-        message: errorMsg,
-      });
+      const errorMsg = 'Unable to tokenize PayPal payment.';
+      reportException(
+        'Braintree was unable to tokenize PayPal one time payment.',
+        { error }
+      );
       setError(errorMsg);
-    } finally {
       setProcessing(false);
     }
   };
@@ -214,7 +231,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
     <div className={classes.root}>
       {disabledDueToPrice && (
         <Tooltip
-          title="Payment amount must be between $5 and $10000"
+          title={`Payment amount must be between $${min} and $${max}`}
           data-qa-help-tooltip
           enterTouchDelay={0}
           leaveTouchDelay={5000}
