@@ -76,6 +76,7 @@ const youtubeLinks = (
       <ListItem key={linkData.to}>
         <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
           {linkData.text}
+          <ExternalLinkIcon />
         </Link>
       </ListItem>
     ))}
