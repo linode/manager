@@ -75,6 +75,7 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
+    container_name: cloud-e2e-1
     depends_on:
       web:
         condition: service_healthy
@@ -89,6 +90,7 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
+    container_name: cloud-e2e-2
     depends_on:
       web:
         condition: service_healthy
@@ -103,6 +105,7 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
+    container_name: cloud-e2e-3
     depends_on:
       web:
         condition: service_healthy
@@ -117,6 +120,7 @@ services:
       context: .
       dockerfile: ./packages/manager/Dockerfile
       target: e2e
+    container_name: cloud-e2e-4
     depends_on:
       web:
         condition: service_healthy
