@@ -1,18 +1,20 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import TypeToConfirm from 'src/components/TypeToConfirm';
+import { resetEventsPolling } from 'src/eventsPolling';
+import useLinodes from 'src/hooks/useLinodes';
+import usePreferences from 'src/hooks/usePreferences';
 import {
   useDeleteVolumeMutation,
   useDetachVolumeMutation,
 } from 'src/queries/volumes';
-import { useSnackbar } from 'notistack';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import useLinodes from 'src/hooks/useLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -44,12 +46,17 @@ export const DestructiveVolumeDialog = (props: Props) => {
     onClose,
   } = props;
 
-  const { enqueueSnackbar } = useSnackbar();
+  const [confirmText, setConfirmText] = React.useState('');
 
+  const { preferences } = usePreferences();
+  const { enqueueSnackbar } = useSnackbar();
   const linodes = useLinodes();
 
   const linode =
     linodeId !== undefined ? linodes.linodes.itemsById[linodeId] : undefined;
+
+  const disabled =
+    preferences?.type_to_confirm !== false && confirmText !== label;
 
   const {
     mutateAsync: detachVolume,
@@ -88,8 +95,14 @@ export const DestructiveVolumeDialog = (props: Props) => {
   }[props.mode];
 
   const action = {
-    detach: 'Detach',
-    delete: 'Delete',
+    detach: {
+      verb: 'Detach',
+      noun: 'detachment',
+    },
+    delete: {
+      verb: 'Delete',
+      noun: 'deletion',
+    },
   }[props.mode];
 
   const loading = {
@@ -115,9 +128,10 @@ export const DestructiveVolumeDialog = (props: Props) => {
         buttonType="primary"
         onClick={method}
         loading={loading}
+        disabled={disabled}
         data-qa-confirm
       >
-        {action} Volume
+        {action.verb} Volume
       </Button>
     </ActionsPanel>
   );
@@ -148,6 +162,23 @@ export const DestructiveVolumeDialog = (props: Props) => {
         Are you sure you want to {mode} this Volume
         {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
       </Typography>
+      <TypeToConfirm
+        label="Volume Label"
+        confirmationText={
+          <span>
+            To confirm {action.noun}, type the name of the Volume (
+            <b>{label}</b>) in the field below:
+          </span>
+        }
+        value={confirmText}
+        typographyStyle={{ marginTop: '20px' }}
+        data-testid={'dialog-confirm-text-input'}
+        expand
+        onChange={(input) => {
+          setConfirmText(input);
+        }}
+        visible={preferences?.type_to_confirm}
+      />
     </ConfirmationDialog>
   );
 };
