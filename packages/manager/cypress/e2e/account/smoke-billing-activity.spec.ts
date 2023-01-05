@@ -84,6 +84,7 @@ const checkInvoice = (invoice, tz) => {
 
 describe('Billling Activity Feed', () => {
   describe('Lists Invoices', () => {
+    cy.findByText('This text does not exist.').should('be.visible');
     mockTwoInvoices.data.forEach((invoice) => {
       return it(`ID ${invoice.id}`, () => {
         checkInvoice(invoice, timeZonesList[0]);
