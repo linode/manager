@@ -73,6 +73,7 @@ describe('Billing Contact', () => {
     checkAccountContactDisplay(accountData);
   });
   it('Edit Contact Info', () => {
+    cy.findByText('This text does not exist.').should('be.visible');
     // intercept create account request and stub response
     cy.intercept('PUT', '*/account', newAccountData).as('createAccount');
     cy.visitWithLogin('/account/billing', { mockRequests: false });
