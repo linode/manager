@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { accountMaintenanceFactory } from 'src/factories';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  wrapWithTableBody,
-} from 'src/utilities/testHelpers';
-import MaintenanceTableRow from './MaintenanceTableRow';
+import { MaintenanceTableRow } from './MaintenanceTableRow';
 import { MaintenanceTable } from './MaintenanceTable';
-import {
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
 import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { queryPresets } from 'src/queries/base';
 import { QueryClient } from 'react-query';
 import { parseAPIDate } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
+import {
+  mockMatchMedia,
+  renderWithTheme,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
+import {
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: queryPresets.oneTimeFetch },

@@ -16,7 +16,7 @@ import { CSVLink } from 'react-csv';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
-import MaintenanceTableRow from './MaintenanceTableRow';
+import { MaintenanceTableRow } from './MaintenanceTableRow';
 import sync from 'css-animation-sync';
 import {
   useAccountMaintenanceQuery,
