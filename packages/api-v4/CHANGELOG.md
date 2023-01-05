@@ -1,3 +1,9 @@
+## [2022-12-12] - v0.84.0
+
+### Added:
+- `eol` field on `Image` type
+
+
 ## [2022-11-30] - v0.83.0
 
 ### Changed:

@@ -24,7 +24,10 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
+import {
+  akamaiBillingInvoiceText,
+  getShouldUseAkamaiBilling,
+} from 'src/features/Billing/billingUtils';
 import {
   printInvoice,
   printPayment,
@@ -232,6 +235,9 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         return;
       }
 
+      const taxes =
+        flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
+
       pdfErrors.delete(id);
       pdfLoading.add(id);
 
@@ -240,12 +246,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           pdfLoading.delete(id);
 
           const invoiceItems = response.data;
-          const result = printInvoice(
-            account!,
-            invoice,
-            invoiceItems,
-            flags.taxBanner
-          );
+          const result = printInvoice(account!, invoice, invoiceItems, taxes);
 
           if (result.status === 'error') {
             pdfErrors.add(id);
@@ -256,7 +257,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           pdfErrors.add(id);
         });
     },
-    [account, flags.taxBanner, invoices, pdfErrors, pdfLoading]
+    [account, flags, invoices, pdfErrors, pdfLoading]
   );
 
   const downloadPaymentPDF = React.useCallback(
@@ -273,13 +274,15 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         return;
       }
 
+      const taxes =
+        flags[getShouldUseAkamaiBilling(payment.date) ? 'taxes' : 'taxBanner'];
+
       pdfErrors.delete(id);
 
-      const taxBanner = flags.taxBanner;
       const countryTax = getTaxID(
         payment.date,
-        taxBanner?.date,
-        taxBanner?.country_tax
+        taxes?.date,
+        taxes?.country_tax
       );
       const result = printPayment(account, payment, countryTax);
 
@@ -287,7 +290,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         pdfErrors.add(id);
       }
     },
-    [payments, flags.taxBanner, account, pdfErrors]
+    [payments, flags, account, pdfErrors]
   );
 
   // Handlers for <Select /> components.

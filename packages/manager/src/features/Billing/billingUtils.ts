@@ -1,4 +1,12 @@
+import { DateTime } from 'luxon';
+import {
+  AKAMAI_DATE,
+  PAYMENT_HARD_MAX,
+  PAYMENT_MIN,
+  PAYMENT_SOFT_MAX,
+} from 'src/constants';
 import { TaxDetail } from 'src/featureFlags';
+import { parseAPIDate } from 'src/utilities/date';
 
 export const cleanCVV = (input: string): string => {
   // All characters except numbers
@@ -29,3 +37,22 @@ export const renderUnitPrice = (v: null | string) => {
 
 export const akamaiBillingInvoiceText =
   'Linode products and services will appear on your Akamai Technologies invoice.';
+
+export const getShouldUseAkamaiBilling = (date: string) => {
+  const invoiceDate = parseAPIDate(date);
+  const akamaiDate = DateTime.fromSQL(AKAMAI_DATE);
+  return invoiceDate > akamaiDate;
+};
+
+export function getPaymentLimits(
+  balance: number | undefined
+): { min: number; max: number } {
+  if (balance === undefined) {
+    return { min: PAYMENT_MIN, max: PAYMENT_HARD_MAX };
+  }
+
+  return {
+    min: balance < PAYMENT_MIN && balance > 0 ? balance : PAYMENT_MIN,
+    max: balance <= PAYMENT_SOFT_MAX ? PAYMENT_SOFT_MAX : PAYMENT_HARD_MAX,
+  };
+}
