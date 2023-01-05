@@ -75,7 +75,7 @@ const AccountLogins = () => {
       return <TableRowEmptyState message="No account logins" colSpan={6} />;
     } else if (data) {
       return data.data.map((item: AccountLogin) => (
-        <AccountLoginsTableRow key={`${item.id}`} {...item} />
+        <AccountLoginsTableRow key={item.id} {...item} />
       ));
     }
 
