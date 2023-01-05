@@ -4,10 +4,6 @@ import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { StackScriptsLanding } from './StackScriptsLanding';
 
-jest.mock('src/queries/images', () => ({
-  useImagesQuery: jest.fn().mockReturnValue({ isLoading: false }),
-}));
-
 jest.mock('@linode/api-v4/lib/account', () => ({
   getUsers: jest.fn().mockResolvedValue({}),
 }));
