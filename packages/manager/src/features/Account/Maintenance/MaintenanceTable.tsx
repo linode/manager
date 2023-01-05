@@ -1,5 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
+import sync from 'css-animation-sync';
+import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -8,23 +10,21 @@ import TableCell from 'src/components/TableCell/TableCell';
 import TableRow from 'src/components/TableRow/TableRow';
 import PaginationFooter from 'src/components/PaginationFooter';
 import TableRowError from 'src/components/TableRowError';
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import usePagination from 'src/hooks/usePagination';
 import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import Typography from 'src/components/core/Typography';
+import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { CSVLink } from 'react-csv';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { cleanCSVData } from 'src/components/DownloadCSV/DownloadCSV';
 import { useOrder } from 'src/hooks/useOrder';
 import { MaintenanceTableRow } from './MaintenanceTableRow';
-import sync from 'css-animation-sync';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import {
   useAccountMaintenanceQuery,
   useAllAccountMaintenanceQuery,
 } from 'src/queries/accountMaintenance';
-import Box from 'src/components/core/Box';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
-import Typography from 'src/components/core/Typography';
 
 const preferenceKey = 'account-maintenance';
 
@@ -58,15 +58,15 @@ interface Props {
 export const MaintenanceTable = ({ type }: Props) => {
   const csvRef = React.useRef<any>();
   const classes = useStyles();
-  const pagination = usePagination(1, `${preferenceKey}-${type.toLowerCase()}`);
+  const pagination = usePagination(1, `${preferenceKey}-${type}`);
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'status',
       order: 'desc',
     },
-    `${preferenceKey}-order-${type.toLowerCase()}`,
-    type.toLowerCase()
+    `${preferenceKey}-order-${type}`,
+    type
   );
 
   const filters: Record<'pending' | 'completed', any> = {
@@ -111,13 +111,19 @@ export const MaintenanceTable = ({ type }: Props) => {
           }}
         />
       );
-    } else if (error) {
+    }
+
+    if (error) {
       return <TableRowError colSpan={7} message={error[0].reason} />;
-    } else if (data?.results == 0) {
+    }
+
+    if (data?.results === 0) {
       return (
         <TableRowEmptyState message={`No ${type} maintenance.`} colSpan={7} />
       );
-    } else if (data) {
+    }
+
+    if (data) {
       return data.data.map((item: AccountMaintenance) => (
         <MaintenanceTableRow key={`${item.entity.id}-${item.type}`} {...item} />
       ));
