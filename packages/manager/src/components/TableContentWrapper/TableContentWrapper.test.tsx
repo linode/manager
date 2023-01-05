@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import 'src/features/Billing/BillingPanels/BillingActivityPanel/BillingActivityPanel';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import TableContentWrapper from './TableContentWrapper';
 

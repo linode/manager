@@ -12,13 +12,10 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'relative',
-    padding: `4 4 0 4`,
-    backgroundColor: 'transparent',
-    transition: theme.transitions.create(['background-color']),
+    padding: 4,
     borderRadius: 4,
-    border: 'none',
     cursor: 'pointer',
-    borderBottom: `1px dotted ${theme.palette.primary.main}`,
+    textDecoration: `underline dotted ${theme.palette.primary.main}`,
     color: theme.palette.primary.main,
   },
   flex: {
