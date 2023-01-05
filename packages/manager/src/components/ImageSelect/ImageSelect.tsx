@@ -10,7 +10,7 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import { useImagesQuery } from 'src/queries/images';
+import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
@@ -128,7 +128,7 @@ export const ImageSelect: React.FC<Props> = (props) => {
   } = props;
 
   // Check for loading status and request errors in React Query
-  const { isLoading: _loading, error } = useImagesQuery({}, {});
+  const { isLoading: _loading, error } = useAllImagesQuery();
 
   const imageError = error
     ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].reason
