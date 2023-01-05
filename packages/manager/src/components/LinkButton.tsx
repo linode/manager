@@ -23,7 +23,7 @@ interface Props {
   isLoading?: boolean;
   className?: string;
   children: React.ReactNode | string;
-  onClick: () => void;
+  onClick?: () => void;
   style?: React.CSSProperties;
 }
 

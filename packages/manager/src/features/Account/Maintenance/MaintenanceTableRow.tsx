@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
+import Tooltip from 'src/components/core/Tooltip';
 import Link from 'src/components/Link';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -9,7 +10,7 @@ import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
-import { makeStyles } from 'src/components/core/styles';
+import { truncate } from 'src/utilities/truncate';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
   started: 'In Progress',
@@ -23,21 +24,12 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   completed: 'inactive',
 };
 
-const useStyles = makeStyles({
-  reason: {
-    '& > p': {
-      lineClamp: 2,
-      textOverflow: 'ellipsis',
-      overflow: 'hidden',
-      visibility: 'visible',
-      wordWrap: 'break-word',
-    },
-  },
-});
-
 export const MaintenanceTableRow = (props: AccountMaintenance) => {
   const { entity, when, type, status, reason } = props;
-  const classes = useStyles();
+
+  const truncatedReason = truncate(reason, 93);
+
+  const isTruncated = reason !== truncatedReason;
 
   return (
     <TableRow key={entity.id}>
@@ -71,10 +63,15 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
       </TableCell>
       <Hidden mdDown>
         <TableCell>
-          <HighlightedMarkdown
-            textOrMarkdown={reason}
-            className={classes.reason}
-          />
+          {isTruncated ? (
+            <Tooltip title={reason} interactive>
+              <div>
+                <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+              </div>
+            </Tooltip>
+          ) : (
+            <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+          )}
         </TableCell>
       </Hidden>
     </TableRow>
