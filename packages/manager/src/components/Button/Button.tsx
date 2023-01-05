@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   reg: {
     display: 'flex',
     alignItems: 'center',
+    textTransform: 'capitalize',
   },
   '@supports (-moz-appearance: none)': {
     /* Fix text alignment for Firefox */
