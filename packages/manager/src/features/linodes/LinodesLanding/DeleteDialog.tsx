@@ -5,42 +5,51 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
+import TypeToConfirm from 'src/components/TypeToConfirm';
+import usePreferences from 'src/hooks/usePreferences';
 
 interface Props {
   linodeID?: number;
   linodeLabel?: string;
-  onClose: () => void;
   open: boolean;
+  onClose: () => void;
   handleDelete: (linodeID: number) => Promise<{}>;
 }
 
 type CombinedProps = Props;
 
 const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
+  const { linodeID, linodeLabel, open, onClose, handleDelete } = props;
+
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [confirmText, setConfirmText] = React.useState('');
+
+  const { preferences } = usePreferences();
+  const disabled =
+    preferences?.type_to_confirm !== false && confirmText !== linodeLabel;
 
   React.useEffect(() => {
-    if (props.open) {
+    if (open) {
       /**
        * reset error and loading states
        */
       setErrors(undefined);
       setDeleting(false);
     }
-  }, [props.open]);
+  }, [open]);
 
   const handleSubmit = () => {
-    if (!props.linodeID) {
+    if (!linodeID) {
       return setErrors([{ reason: 'Something went wrong.' }]);
     }
 
     setDeleting(true);
 
-    props
-      .handleDelete(props.linodeID)
+    handleDelete(linodeID)
       .then(() => {
-        props.onClose();
+        onClose();
       })
       .catch((e) => {
         setErrors(e);
@@ -48,48 +57,54 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  return (
-    <Dialog
-      open={props.open}
-      title={`Delete Linode ${props.linodeLabel}?`}
-      onClose={props.onClose}
-      error={errors ? errors[0].reason : ''}
-      actions={
-        <Actions
-          onClose={props.onClose}
-          loading={isDeleting}
-          onSubmit={handleSubmit}
-        />
-      }
-    >
-      <Typography>
-        Are you sure you want to delete this Linode? This will result in
-        permanent data loss.
-      </Typography>
-    </Dialog>
-  );
-};
-
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  loading: boolean;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
+  const confirmationActions = (
     <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="secondary">
+      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-delete>
         Cancel
       </Button>
       <Button
         buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.loading}
+        loading={isDeleting}
+        disabled={disabled}
+        onClick={handleSubmit}
+        data-qa-confirm-delete
       >
-        Delete Linode
+        Delete
       </Button>
     </ActionsPanel>
+  );
+
+  return (
+    <Dialog
+      open={open}
+      title={`Delete Linode ${linodeLabel}?`}
+      onClose={onClose}
+      error={errors ? errors[0].reason : ''}
+      actions={confirmationActions}
+    >
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> Deleting your Linode will result in
+          permanent data loss.
+        </Typography>
+      </Notice>
+      <TypeToConfirm
+        label="Linode Label"
+        confirmationText={
+          <span>
+            To confirm deletion, type the name of the Linode (
+            <b>{linodeLabel}</b>) in the field below:
+          </span>
+        }
+        value={confirmText}
+        data-testid={'dialog-confirm-text-input'}
+        expand
+        onChange={(input) => {
+          setConfirmText(input);
+        }}
+        visible={preferences?.type_to_confirm}
+      />
+    </Dialog>
   );
 };
 
