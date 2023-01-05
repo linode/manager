@@ -17,7 +17,7 @@ import { IMAGE_DEFAULT_LIMIT } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { useImageAndLinodeGrantCheck } from 'src/hooks/useImages';
+import { useImageAndLinodeGrantCheck } from './utils';
 import {
   useCreateImageMutation,
   useUpdateImageMutation,
