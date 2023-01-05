@@ -64,7 +64,10 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
       <Hidden mdDown>
         <TableCell>
           {isTruncated ? (
-            <Tooltip title={reason} interactive>
+            <Tooltip
+              title={<HighlightedMarkdown textOrMarkdown={reason} />}
+              interactive
+            >
               <div>
                 <HighlightedMarkdown textOrMarkdown={truncatedReason} />
               </div>
