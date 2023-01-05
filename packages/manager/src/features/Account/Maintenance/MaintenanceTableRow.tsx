@@ -9,6 +9,7 @@ import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
 import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
+import { makeStyles } from 'src/components/core/styles';
 
 const statusTextMap: Record<AccountMaintenance['status'], string> = {
   started: 'In Progress',
@@ -22,8 +23,21 @@ const statusIconMap: Record<AccountMaintenance['status'], Status> = {
   completed: 'inactive',
 };
 
+const useStyles = makeStyles({
+  reason: {
+    '& > p': {
+      lineClamp: 2,
+      textOverflow: 'ellipsis',
+      overflow: 'hidden',
+      visibility: 'visible',
+      wordWrap: 'break-word',
+    },
+  },
+});
+
 export const MaintenanceTableRow = (props: AccountMaintenance) => {
   const { entity, when, type, status, reason } = props;
+  const classes = useStyles();
 
   return (
     <TableRow key={entity.id}>
@@ -57,7 +71,10 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
       </TableCell>
       <Hidden mdDown>
         <TableCell>
-          <HighlightedMarkdown textOrMarkdown={reason} />
+          <HighlightedMarkdown
+            textOrMarkdown={reason}
+            className={classes.reason}
+          />
         </TableCell>
       </Hidden>
     </TableRow>
