@@ -159,7 +159,7 @@ export const MaintenanceTable = ({ type }: Props) => {
           <CSVLink
             ref={csvRef}
             headers={headersForCSVDownload}
-            filename={`maintenance-${Date.now()}.csv`}
+            filename={`${type}-maintenance-${Date.now()}.csv`}
             data={cleanCSVData(csv || [])}
           />
           <a
