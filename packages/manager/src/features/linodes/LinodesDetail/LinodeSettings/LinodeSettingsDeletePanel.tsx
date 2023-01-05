@@ -8,9 +8,12 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
+import usePreferences from 'src/hooks/usePreferences';
 import {
   LinodeActionsProps,
   withLinodeActions,
@@ -38,6 +41,11 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
+  const [confirmText, setConfirmText] = React.useState('');
+
+  const { preferences } = usePreferences();
+  const disabled =
+    preferences?.type_to_confirm !== false && confirmText !== linodeLabel;
 
   const _deleteLinode = () => {
     setSubmitting(true);
@@ -65,6 +73,7 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
       <Button
         buttonType="primary"
         loading={submitting}
+        disabled={disabled}
         onClick={_deleteLinode}
         data-qa-confirm-delete
       >
@@ -96,10 +105,28 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
         onClose={() => setOpen(false)}
         error={errors ? errors[0].reason : undefined}
       >
-        <Typography>
-          Are you sure you want to delete this Linode? This will result in
-          permanent data loss.
-        </Typography>
+        <Notice warning>
+          <Typography style={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Deleting your Linode will result in
+            permanent data loss.
+          </Typography>
+        </Notice>
+        <TypeToConfirm
+          label="Linode Label"
+          confirmationText={
+            <span>
+              To confirm deletion, type the name of the Linode (
+              <b>{linodeLabel}</b>) in the field below:
+            </span>
+          }
+          value={confirmText}
+          data-testid={'dialog-confirm-text-input'}
+          expand
+          onChange={(input) => {
+            setConfirmText(input);
+          }}
+          visible={preferences?.type_to_confirm}
+        />
       </ConfirmationDialog>
     </React.Fragment>
   );
