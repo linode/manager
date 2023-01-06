@@ -12,7 +12,7 @@ import {
   eventLabelGenerator,
   eventMessageGenerator,
 } from 'src/eventMessageGenerator_CMR';
-import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
+import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
 import { useStyles as useEventStyles } from './RenderEvent';
@@ -72,7 +72,10 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
         display="flex"
         data-test-id={event.action}
       >
-        <GravatarIcon username={event.username} className={eventClasses.icon} />
+        <GravatarByUsername
+          username={event.username}
+          className={eventClasses.icon}
+        />
         <div className={eventClasses.eventMessage} data-test-id={event.action}>
           {linkTarget ? (
             <Link to={linkTarget} onClick={onClose}>

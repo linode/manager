@@ -16,7 +16,6 @@ import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
-import { ExtendedReply } from '../../types';
 import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
@@ -58,7 +57,7 @@ interface Props {
   reloadAttachments: () => void;
   ticketId: number;
   closeTicketSuccess: () => void;
-  lastReply?: ExtendedReply;
+  lastReply?: SupportReply;
 }
 
 type CombinedProps = Props;
