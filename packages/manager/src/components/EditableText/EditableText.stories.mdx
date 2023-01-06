@@ -1,0 +1,27 @@
+import EditableText from './EditableText';
+import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+
+export const decorators = [
+  (Story) => {
+    const [text, setText] = React.useState('Edit me!');
+    return Story({ text, setText });
+  }
+];
+
+<Meta title="Components/Editable Text" component={EditableText} />
+
+# Editable Text
+
+export const Template = (args, context) => {
+  return <EditableText text={context.text} onEdit={context.setText} onCancel={() => {}}/>
+}
+
+<Canvas>
+  <Story 
+    name="Headline & Title"
+    decorators={decorators}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Headline & Title" include={['onEdit', 'onCancel', 'text']} sort="requiredFirst"/>

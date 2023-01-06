@@ -15,17 +15,7 @@ export const Template = (args) => <CircleProgress {...args}></CircleProgress>;
 <Canvas>
   <Story
     name="Circle Progress"
-    args={{ children: '25%' }}
     argTypes={{
-      children: {
-        description: 'Content that shows up inside of the cirle progress',
-        table: {
-          type: { summary: 'JSX.element | string' },
-        },
-      },
-      className: {
-        table: { disable: true },
-      },
       mini: {
         description: 'Displays a smaller version of the circle progress.',
       },
@@ -42,4 +32,4 @@ export const Template = (args) => <CircleProgress {...args}></CircleProgress>;
   </Story>
 </Canvas>
 
-<ArgsTable story="Circle Progress" sort="requiredFirst" exclude={['ref']}/>
+<ArgsTable story="Circle Progress" sort="requiredFirst" exclude={['ref', 'className']}/>
