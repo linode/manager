@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
