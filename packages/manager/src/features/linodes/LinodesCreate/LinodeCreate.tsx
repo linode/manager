@@ -196,7 +196,7 @@ interface State {
   selectedTab: number;
   stackScriptSelectedTab: number;
   planKey: string;
-  showApiAwarenessModal: boolean;
+  isApiAwarenessModalOpen: boolean;
 }
 
 interface CreateTab extends Tab {
@@ -241,7 +241,7 @@ export class LinodeCreate extends React.PureComponent<
           ? 1
           : 0,
       planKey: v4(),
-      showApiAwarenessModal: false,
+      isApiAwarenessModalOpen: false,
     };
   }
 
@@ -377,8 +377,8 @@ export class LinodeCreate extends React.PureComponent<
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
   };
 
-  toggleApiAwarenessModal = (value: boolean) => {
-    this.setState({ ...this.state, showApiAwarenessModal: value });
+  setIsApiAwarenessModalOpen = (value: boolean) => {
+    this.setState({ ...this.state, isApiAwarenessModalOpen: value });
   };
 
   render() {
@@ -745,7 +745,7 @@ export class LinodeCreate extends React.PureComponent<
               <Button
                 data-qa-api-cli-linode
                 buttonType="outlined"
-                onClick={() => this.toggleApiAwarenessModal(true)}
+                onClick={() => this.setIsApiAwarenessModalOpen(true)}
                 className={classes.createButton}
                 disabled={
                   formIsSubmitting ||
@@ -769,10 +769,10 @@ export class LinodeCreate extends React.PureComponent<
               >
                 Create Linode
               </Button>
-              {this.state.showApiAwarenessModal ? (
+              {this.state.isApiAwarenessModalOpen ? (
                 <ApiAwarenessModal
-                  isOpen={this.state.showApiAwarenessModal}
-                  onClose={this.toggleApiAwarenessModal.bind(null, false)}
+                  isOpen={this.state.isApiAwarenessModalOpen}
+                  onClose={() => this.setIsApiAwarenessModalOpen(false)}
                 />
               ) : null}
             </div>
