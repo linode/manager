@@ -42,6 +42,7 @@ export const BillingTooltip: React.FC<Props> = (props) => {
 
   return (
     <ToolTip
+      interactive
       title={akamaiBillingInvoiceText}
       placement="bottom"
       className={classes.root}
