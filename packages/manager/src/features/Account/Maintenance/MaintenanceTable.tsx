@@ -49,6 +49,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   cell: {
     width: '12%',
   },
+  headingContainer: {
+    marginTop: theme.spacing(1.5),
+    marginBottom: theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: theme.spacing(),
+      paddingRight: theme.spacing(),
+    },
+  },
 }));
 
 interface Props {
@@ -142,7 +150,7 @@ export const MaintenanceTable = ({ type }: Props) => {
       <Box
         display="flex"
         justifyContent="space-between"
-        style={{ marginTop: 12, marginBottom: 8 }}
+        className={classes.headingContainer}
       >
         <Typography variant="h3" style={{ textTransform: 'capitalize' }}>
           {type}
