@@ -18,21 +18,21 @@ export const useAccountUsers = (params?: any) => {
 };
 
 export const useAccountUser = (username: string) => {
-  return useQuery<User, APIError[]>([queryKey, username], () => {
-    if (getIsBacklistedUser(username)) {
-      throw new Error(JSON.stringify([{ reason: 'User not found' }]));
-    }
-    return getUser(username);
-  });
+  return useQuery<User, APIError[]>(
+    [queryKey, username],
+    () => getUser(username),
+    // Enable the query if the user is not on the blocklist
+    { enabled: !getIsBlocklistedUser(username) }
+  );
 };
 
 /**
- * Returns true if a user is "blacklisted". We do this because service accounts will
- * 404 when we hit the account eventpoint.
+ * Returns true if a user is "blocklisted". We do this because some accounts
+ * such as service accounts will 404 when we hit the account endpoint.
  * @param username a user's username
- * @returns true if account should not be fetched
+ * @returns true if account is blocklisted (should *not* be fetched)
  */
-function getIsBacklistedUser(username: string) {
+function getIsBlocklistedUser(username: string) {
   if (username.startsWith('lke-service-account-')) {
     return true;
   }
