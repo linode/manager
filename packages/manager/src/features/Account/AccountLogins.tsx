@@ -17,7 +17,6 @@ import { useOrder } from 'src/hooks/useOrder';
 import usePagination from 'src/hooks/usePagination';
 import { useAccountLoginsQuery } from 'src/queries/accountLogins';
 import AccountLoginsTableRow from './AccountLoginsTableRow';
-import Paper from 'src/components/core/Paper';
 
 const preferenceKey = 'account-logins';
 
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     lineHeight: '20px',
-    marginTop: theme.spacing(),
+    marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
 }));
@@ -69,11 +68,14 @@ const AccountLogins = () => {
           }}
         />
       );
-    } else if (error) {
+    }
+    if (error) {
       return <TableRowError colSpan={5} message={error[0].reason} />;
-    } else if (data?.results == 0) {
+    }
+    if (data?.results == 0) {
       return <TableRowEmptyState message="No account logins" colSpan={6} />;
-    } else if (data) {
+    }
+    if (data) {
       return data.data.map((item: AccountLogin) => (
         <AccountLoginsTableRow key={item.id} {...item} />
       ));
@@ -83,8 +85,7 @@ const AccountLogins = () => {
   };
 
   return (
-    <Paper>
-      <Typography variant="h3">Logins</Typography>
+    <>
       <Typography variant="body1" className={classes.copy}>
         Logins across all users on your account over the last 90 days.
       </Typography>
@@ -135,7 +136,7 @@ const AccountLogins = () => {
         pageSize={pagination.pageSize}
         eventCategory="Account Logins Table"
       />
-    </Paper>
+    </>
   );
 };
 

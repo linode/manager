@@ -47,8 +47,8 @@ const AccountLanding: React.FC = () => {
       routeName: '/account/users',
     },
     {
-      title: 'Logins',
-      routeName: '/account/logins',
+      title: 'Login History',
+      routeName: '/account/login-history',
     },
     {
       title: 'Service Transfers',
