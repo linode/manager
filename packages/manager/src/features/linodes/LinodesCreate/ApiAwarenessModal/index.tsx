@@ -10,7 +10,7 @@ export interface Props {
 const ApiAwarenessModal = ({ isOpen, onClose }: Props) => {
   return (
     <Dialog
-      title="Create using commandline"
+      title="Create using command line"
       open={isOpen}
       onClose={onClose}
       maxWidth={'sm'}
