@@ -6,7 +6,6 @@ import Link from 'src/components/Link';
 
 interface Props {
   text: string;
-  className?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -21,6 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   flex: {
     display: 'flex',
     width: 'auto !important',
+  },
+  popper: {
+    '& .MuiTooltip-tooltip': {
+      minWidth: 375,
+    },
   },
 }));
 
@@ -46,6 +50,7 @@ export const BillingTooltip: React.FC<Props> = (props) => {
       title={akamaiBillingInvoiceText}
       placement="bottom"
       className={classes.root}
+      classes={{ popper: classes.popper }}
     >
       <Typography>{text}</Typography>
     </ToolTip>
