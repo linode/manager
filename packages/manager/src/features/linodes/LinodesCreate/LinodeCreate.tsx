@@ -773,7 +773,6 @@ export class LinodeCreate extends React.PureComponent<
                 <ApiAwarenessModal
                   isOpen={this.state.showApiAwarenessModal}
                   onClose={this.toggleApiAwarenessModal.bind(null, false)}
-                  command={''}
                 />
               ) : null}
             </div>
