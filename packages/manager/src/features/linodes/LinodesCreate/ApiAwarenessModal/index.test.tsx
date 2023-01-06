@@ -11,7 +11,7 @@ const defaultProps: Props = {
   onClose: jest.fn(),
 };
 
-const renderComponent = (overrideProps?: Pick<Props, 'isOpen'>) => {
+const renderComponent = (overrideProps?: Partial<Props>) => {
   const props = {
     ...defaultProps,
     ...overrideProps,
