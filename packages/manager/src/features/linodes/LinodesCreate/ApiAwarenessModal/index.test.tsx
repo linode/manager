@@ -23,14 +23,14 @@ describe('ApiAwarenessModal', () => {
   it('Should not render ApiAwarenessModal componet', () => {
     renderComponent();
     expect(
-      screen.queryByText('Create using commandline')
+      screen.queryByText('Create using command line')
     ).not.toBeInTheDocument();
   });
   it('Should render ApiAwarenessModal componet when enabled', () => {
     renderComponent({ isOpen: true });
-    screen.getByText('Create using commandline');
+    screen.getByText('Create using command line');
   });
-  it('Should invoke onClose handler upon cliking close button', async () => {
+  it('Should invoke onClose handler upon cliking close button', () => {
     renderComponent({ isOpen: true });
     userEvent.click(screen.getByTestId('close-button'));
     expect(defaultProps.onClose).toHaveBeenCalledTimes(1);
