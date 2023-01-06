@@ -2,8 +2,6 @@ import * as React from 'react';
 import { matchPath, useHistory, useLocation } from 'react-router-dom';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader, {
   LandingHeaderProps,
@@ -11,7 +9,6 @@ import LandingHeader, {
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
-import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { useAccount } from 'src/queries/account';
 import { getGrantData, useProfile } from 'src/queries/profile';
 
@@ -114,14 +111,6 @@ const AccountLanding: React.FC = () => {
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Account Settings" />
-      {isAkamaiAccount ? (
-        <DismissibleBanner
-          preferenceKey="akamai-account-billing"
-          productInformationIndicator
-        >
-          <Typography>{akamaiBillingInvoiceText}</Typography>
-        </DismissibleBanner>
-      ) : null}
       <LandingHeader {...landingHeaderProps} data-qa-profile-header />
 
       <Tabs index={getDefaultTabIndex()} onChange={handleTabChange}>
