@@ -745,7 +745,7 @@ export class LinodeCreate extends React.PureComponent<
               <Button
                 data-qa-api-cli-linode
                 buttonType="outlined"
-                onClick={this.toggleApiAwarenessModal.bind(null, true)}
+                onClick={() => this.toggleApiAwarenessModal(true)}
                 className={classes.createButton}
                 disabled={
                   formIsSubmitting ||
