@@ -59,8 +59,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   headerLeft: {
     display: 'flex',
     marginLeft: 10,
-    padding: 5,
+    paddingLeft: 20,
     flexGrow: 2,
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: 0,
+    },
   },
   headerRight: {
     display: 'flex',
@@ -324,7 +327,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         </Typography>
         {isAkamaiCustomer ? (
           <div className={classes.headerLeft}>
-            <BillingTooltip text="Usage History may not reflect finalized invoice"></BillingTooltip>
+            <BillingTooltip text="Usage History may not reflect finalized invoice" />
           </div>
         ) : null}
         <div className={classes.headerRight}>

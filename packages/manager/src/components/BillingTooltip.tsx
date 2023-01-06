@@ -1,4 +1,5 @@
 import * as React from 'react';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ToolTip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
@@ -28,21 +29,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+const akamaiBillingInvoiceText = (
+  <Typography>
+    Charges in the final Akamai invoice should be considered the final source
+    truth. Linode invoice will not reflect discounting, currency adjustment, or
+    any negotiated terms and conditions. Condensed and finalized invoice is
+    available within{' '}
+    <Link to="https://control.akamai.com/apps/billing">
+      Akamai Control Center &gt; Billing <ExternalLinkIcon />
+    </Link>
+    .
+  </Typography>
+);
+
 export const BillingTooltip: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { text } = props;
-  const akamaiBillingInvoiceText = (
-    <Typography>
-      Charges in the final Akamai invoice should be considered the final source
-      of truth. Linode invoice will not reflect discounting, currency
-      adjustment, or any negotiated terms and conditions. Condensed and
-      finalized invoice is available within{' '}
-      <Link to="https://control.akamai.com/apps/billing">
-        Akamai Control Center &gt; Billing
-      </Link>
-      .
-    </Typography>
-  );
 
   return (
     <ToolTip
