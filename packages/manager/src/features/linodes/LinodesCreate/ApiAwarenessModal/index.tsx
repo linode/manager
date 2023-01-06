@@ -19,7 +19,7 @@ const ApiAwarenessModal = ({ isOpen, onClose }: Props) => {
       <Typography variant="body1">
         You&#39;ll first need to{' '}
         <ExternalLink
-          link="https://cloud.linode.com/profile/tokens"
+          link="/profile/tokens"
           text="create an API access token"
           hideIcon
         />{' '}
