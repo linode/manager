@@ -465,7 +465,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             accountInvoicesLoading,
             accountPaymentsError,
             accountInvoicesError,
-            isAkamaiCustomer,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,
