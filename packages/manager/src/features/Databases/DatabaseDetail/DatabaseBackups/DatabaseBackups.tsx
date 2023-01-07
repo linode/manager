@@ -13,12 +13,14 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
+import BackupDialog from './BackupDialog';
 import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
+import Button from 'src/components/Button';
 
 export const DatabaseBackups: React.FC = () => {
   const { databaseId, engine } = useParams<{
@@ -26,6 +28,7 @@ export const DatabaseBackups: React.FC = () => {
     engine: Engine;
   }>();
 
+  const [isBackupDialogOpen, setIsBackupDialogOpen] = React.useState(false);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
   const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<
     number | undefined
@@ -53,6 +56,9 @@ export const DatabaseBackups: React.FC = () => {
   const onRestore = (id: number) => {
     setIdOfBackupToRestore(id);
     setIsRestoreDialogOpen(true);
+  };
+  const onBackup = () => {
+    setIsBackupDialogOpen(true);
   };
 
   const backupToRestore = backups?.data.find(
@@ -116,6 +122,20 @@ export const DatabaseBackups: React.FC = () => {
         <TableBody>{renderTableBody()}</TableBody>
       </Table>
       <Paper style={{ marginTop: 16 }}>
+        <Typography variant="h3">Manual Backup</Typography>
+        <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
+          Trigger a manual backup outside of the usual schedule.<br></br>
+        </Typography>
+        <Button
+          buttonType="primary"
+          onClick={() => onBackup()}
+          style={{ marginLeft: 12, marginTop: 12 }}
+          data-qa-deploy-linode
+        >
+          Start Backup
+        </Button>
+      </Paper>
+      <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Backup Schedule</Typography>
         <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
           A backup of this database is created every 24 hours and each backup is
@@ -128,6 +148,13 @@ export const DatabaseBackups: React.FC = () => {
           database={database}
           backup={backupToRestore}
           onClose={() => setIsRestoreDialogOpen(false)}
+        />
+      ) : null}
+      {database ? (
+        <BackupDialog
+          open={isBackupDialogOpen}
+          database={database}
+          onClose={() => setIsBackupDialogOpen(false)}
         />
       ) : null}
     </>

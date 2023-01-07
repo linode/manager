@@ -221,6 +221,17 @@ export const restoreWithBackup = (
   );
 
 /**
+ * manualDatabaseBackup
+ *
+ * Manually backup a database
+ */
+export const manualDatabaseBackup = (engine: Engine, databaseID: number) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/`),
+    setMethod('POST')
+  );
+
+/**
  * getDatabaseCredentials
  *
  * Return credentials (root username and password) for a database
