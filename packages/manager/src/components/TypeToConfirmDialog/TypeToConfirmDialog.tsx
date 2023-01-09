@@ -10,7 +10,7 @@ import { TypeToConfirmProps } from 'src/components/TypeToConfirm';
 import { APIError } from '@linode/api-v4/lib/types';
 
 interface EntityInfo {
-  type: 'Linode' | 'Volume' | 'NodeBalancer';
+  type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket';
   label: string | undefined;
 }
 
@@ -82,7 +82,7 @@ const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
     >
       {children}
       <TypeToConfirm
-        label={`${entity.type} Label`}
+        label={`${entity.type} ${entity.type !== 'Bucket' ? 'Label' : 'Name'}`}
         confirmationText={
           confirmationText ? (
             confirmationText
