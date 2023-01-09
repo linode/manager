@@ -21,9 +21,14 @@ import EntityTable, {
 } from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
+import Notice from 'src/components/Notice';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TransferDisplay from 'src/components/TransferDisplay';
+import TypeToConfirm from 'src/components/TypeToConfirm';
+import withPreferences, {
+  Props as PreferencesProps,
+} from 'src/containers/preferences.container';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference,
@@ -44,6 +49,7 @@ interface DeleteConfirmDialogState {
   open: boolean;
   submitting: boolean;
   errors?: APIError[];
+  confirmText?: string;
 }
 
 interface State {
@@ -55,7 +61,8 @@ interface State {
 type CombinedProps = WithNodeBalancerActions &
   WithNodeBalancers &
   RouteComponentProps<{}> &
-  SetDocsProps;
+  SetDocsProps &
+  PreferencesProps;
 
 export const headers: HeaderCell[] = [
   {
@@ -110,6 +117,7 @@ export class NodeBalancersLanding extends React.Component<
     submitting: false,
     open: false,
     errors: undefined,
+    confirmText: '',
   };
 
   state: State = {
@@ -281,15 +289,49 @@ export class NodeBalancersLanding extends React.Component<
           actions={this.renderConfirmationDialogActions}
           open={deleteConfirmAlertOpen}
         >
-          <Typography>
-            Are you sure you want to delete this NodeBalancer?
+          <Notice warning>
+            <Typography style={{ fontSize: '0.875rem' }}>
+              Deleting this NodeBalancer is permanent and can’t be undone.
+            </Typography>
+          </Notice>
+          <Typography variant="body1">
+            Traffic will no longer be routed through this NodeBalancer. Please
+            check your DNS settings and either provide the IP address of another
+            active NodeBalancer, or route traffic directly to your Linode.
           </Typography>
+          <TypeToConfirm
+            label="NodeBalancer Label"
+            confirmationText={
+              <span>
+                To confirm deletion, type the name of the Nodebalancer (
+                <b>{this.state.selectedNodeBalancerLabel}</b>) in the field
+                below:
+              </span>
+            }
+            value={this.state.deleteConfirmDialog.confirmText}
+            typographyStyle={{ marginTop: '20px' }}
+            data-testid={'dialog-confirm-text-input'}
+            expand
+            onChange={(input) => {
+              this.setState({
+                deleteConfirmDialog: {
+                  ...this.state.deleteConfirmDialog,
+                  confirmText: input,
+                },
+              });
+            }}
+            visible={this.props.preferences.type_to_confirm}
+          />
         </ConfirmationDialog>
       </>
     );
   }
 
   renderConfirmationDialogActions = () => {
+    const disabled =
+      this.props.preferences?.type_to_confirm !== false &&
+      this.state.deleteConfirmDialog.confirmText !==
+        this.state.selectedNodeBalancerLabel;
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
@@ -303,6 +345,7 @@ export class NodeBalancersLanding extends React.Component<
           buttonType="primary"
           onClick={this.onSubmitDelete}
           loading={this.state.deleteConfirmDialog.submitting}
+          disabled={disabled}
           data-qa-confirm-cancel
         >
           Delete NodeBalancer
@@ -357,7 +400,8 @@ export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
-  setDocs(NodeBalancersLanding.docs)
+  setDocs(NodeBalancersLanding.docs),
+  withPreferences()
 );
 
 export default enhanced(NodeBalancersLanding);

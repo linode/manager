@@ -27,6 +27,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
   const [confirmText, setConfirmText] = React.useState('');
 
   const { preferences } = usePreferences();
+
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== linodeLabel;
 
