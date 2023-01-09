@@ -17,14 +17,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   card: {
     display: 'flex',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },
   },
   cardInfo: {
     fontFamily: theme.font.bold,
     marginRight: 10,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginRight: 0,
     },
   },

@@ -18,7 +18,7 @@ import LongviewServiceRow from './LongviewServiceRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
   },

@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -9,7 +9,7 @@ import { truncate } from 'src/utilities/truncate';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(1),
-    padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(1)}`,
     position: 'relative',
     '& pre': {
       backgroundColor: theme.bg.tableHeader,
@@ -57,7 +57,7 @@ const TicketDetailText: React.FC<Props> = (props) => {
           className={classes.expButton}
           aria-label="Expand full answer"
           onClick={() => togglePanel(!panelOpen)}
-        >
+          size="large">
           {panelOpen ? (
             <KeyboardArrowDown className={classes.toggle} />
           ) : (

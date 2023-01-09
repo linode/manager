@@ -1,13 +1,13 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Linode } from '../../../../api-v4/lib/linodes/types';
-import { createLinode, deleteAllTestLinodes } from '../../support/api/linodes';
+import { createLinode } from 'support/api/linodes';
 import {
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 
 const deleteDisk = (diskName, inUse = false) => {
   cy.get(`[aria-label="Action menu for Disk ${diskName}"]`)
@@ -31,10 +31,12 @@ const deleteDisk = (diskName, inUse = false) => {
             cy.get(
               `[id="option-2--${$id}"][data-qa-action-menu-item="Delete"][aria-disabled="true"]`
             ).within(() => {
-              cy.get(
-                '[title="Your Linode must be fully powered down in order to perform this action"]'
-              );
+              cy.get('[data-qa-help-tooltip]').click();
             });
+
+            cy.findByText(
+              'Your Linode must be fully powered down in order to perform this action'
+            ).should('be.visible');
           }
         }
       }

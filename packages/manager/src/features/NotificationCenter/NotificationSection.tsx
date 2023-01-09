@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import { MenuLink } from '@reach/menu-button';
 import classNames from 'classnames';
 import * as React from 'react';
@@ -124,7 +124,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
     <>
       {isActualNotificationContainer && content.length === 0 ? null : (
         <>
-          <Hidden xsDown>
+          <Hidden smDown>
             <div
               className={classNames({
                 [classes.root]: true,

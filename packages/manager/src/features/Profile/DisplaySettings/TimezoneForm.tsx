@@ -13,7 +13,7 @@ import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
     },
   },

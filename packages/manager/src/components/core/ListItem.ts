@@ -1,6 +1,6 @@
 import ListItem, {
   ListItemProps as _ListItemProps,
-} from '@material-ui/core/ListItem';
+} from '@mui/material/ListItem';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface ListItemProps extends _ListItemProps {}

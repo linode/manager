@@ -39,19 +39,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'flex-start',
     flexFlow: 'row wrap',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       justifyContent: 'flex-start',
     },
   },
   certWrapper: {
     paddingRight: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       padding: 0,
     },
   },
   keyWrapper: {
     paddingLeft: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       padding: 0,
     },
   },

@@ -49,7 +49,7 @@ const FolderTableRow: React.FC<Props> = (props) => {
       </TableCell>
       {/* Three empty TableCells corresponding to the Size, Last Modified, and Action Menu (for ObjectTableRow) columns for formatting purposes. */}
       <TableCell />
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell />
       </Hidden>
       <TableCell />

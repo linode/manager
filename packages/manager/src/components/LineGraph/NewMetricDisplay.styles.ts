@@ -50,26 +50,26 @@ const newMetricDisplayStyles = (theme: Theme) =>
         tableLayout: 'fixed',
       },
       '& th, td': {
-        padding: `${theme.spacing(0.5)}px !important`,
+        padding: `${theme.spacing(0.5)} !important`,
       },
       '& td:first-child': {
         backgroundColor: 'transparent !important',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           marginLeft: -45,
         },
       },
       '& .data': {
         minWidth: 100,
       },
-      [theme.breakpoints.down('lg')]: {
+      [theme.breakpoints.down('xl')]: {
         '& th, & td': {
           padding: '4px !important',
         },
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         width: '100%',
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
         '& table': {
           display: 'flex',
@@ -95,7 +95,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       '& tr > th': {
         backgroundColor: theme.bg.offWhite,
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         display: 'block !important',
         '& tr': {
           display: 'flex',
@@ -114,7 +114,7 @@ const newMetricDisplayStyles = (theme: Theme) =>
       '& p': {
         color: theme.textColors.tableHeader,
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         width: '20%',
       },
     },

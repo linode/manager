@@ -2,7 +2,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import Button from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 50,
   },
   wrapLogo: {
-    marginLeft: -theme.spacing(3),
+    marginLeft: `-${theme.spacing(3)}`,
   },
   wrapAppName: {
     maxWidth: 'fit-content',

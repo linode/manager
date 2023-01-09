@@ -19,12 +19,17 @@ import {
   sumRelatedProcessesAcrossAllUsers,
 } from '../../shared/utilities';
 
-const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: `${theme.spacing(3.25)} ${theme.spacing(3.25)} ${theme.spacing(
+      5.5
+    )}`,
+  },
   smallGraph: {
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3) + 2,
+    [theme.breakpoints.down('md')]: {
+      marginTop: theme.spacing(3.25),
     },
-    marginTop: theme.spacing(6) + 3,
+    marginTop: `calc(${theme.spacing(6)} + 3px)`,
   },
 }));
 
