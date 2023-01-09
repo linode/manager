@@ -49,7 +49,7 @@ const fillOutStackscriptForm = (
   script: string
 ) => {
   // Fill out "StackScript Label", "Description", "Target Images", and "Script" fields.
-  cy.findByLabelText('StackScript Label', { exact: false })
+  cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
     .click()
     .type(label);
