@@ -909,7 +909,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
                         Interfaces. For more information, see our{' '}
                         <ExternalLink
                           text="Network Interfaces guide"
-                          link="https://linode.com/docs/products/networking/vlans/guides/linode-network-interfaces/"
+                          link="https://www.linode.com/docs/products/networking/vlans/guides/attach-to-compute-instance/#attaching-a-vlan-to-an-existing-compute-instance"
                           hideIcon
                         />
                         .
