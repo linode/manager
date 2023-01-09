@@ -760,6 +760,7 @@ const themeDefaults: ThemeDefaults = () => {
       MuiFormLabel: {
         root: {
           color: '#555',
+          lineHeight: 1,
           fontFamily: primaryFonts.bold,
           fontSize: '.875rem',
           marginBottom: 8,
