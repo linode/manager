@@ -126,6 +126,7 @@ export const ZONES: Record<string, ZoneName> = {
   'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'mumbai1',
   'ap-southeast': 'sydney1',
+  'us-iad': 'ida3',
 };
 
 export const dcDisplayNames = {
@@ -151,6 +152,7 @@ export const dcDisplayNames = {
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'Mumbai, IN',
   'ap-southeast': 'Sydney, AU',
+  'us-iad': 'Washington DC',
 };
 
 // @todo no longer in use; remove if current design is approved.
