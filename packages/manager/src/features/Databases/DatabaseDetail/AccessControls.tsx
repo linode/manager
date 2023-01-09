@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
     },
   },
@@ -36,13 +36,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: '1rem',
     width: '65%',
     marginRight: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
   addAccessControlBtn: {
     minWidth: 214,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       alignSelf: 'flex-start',
       marginBottom: '1rem',
     },
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   table: {
     width: '50%',
     border: `solid 1px ${theme.borderColors.borderTable}`,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },

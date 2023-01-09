@@ -10,7 +10,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
   },
   header: {
-    padding: `0px ${theme.spacing()}px 0px ${theme.spacing()}px`,
+    padding: `0px ${theme.spacing()} 0px ${theme.spacing()}`,
     alignItems: 'center',
     justifyContent: 'space-between',
     flexWrap: 'nowrap',

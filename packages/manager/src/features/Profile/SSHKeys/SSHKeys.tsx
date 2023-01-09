@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingRight: 0,
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(),
       },
     },
@@ -103,57 +103,55 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   render() {
     const { classes } = this.props;
 
-    return (
-      <>
-        <DocumentTitleSegment segment="SSH Keys" />
-        <Grid
-          container
-          alignItems="flex-end"
-          justifyContent="flex-end"
-          className={classes.sshKeysHeader}
-        >
-          <Grid className={classes.addNewWrapper} item>
-            <AddNewLink
-              label="Add an SSH Key"
-              onClick={this.openCreationDrawer}
-            />
-          </Grid>
+    return <>
+      <DocumentTitleSegment segment="SSH Keys" />
+      <Grid
+        container
+        alignItems="flex-end"
+        justifyContent="flex-end"
+        className={classes.sshKeysHeader}
+      >
+        <Grid className={classes.addNewWrapper} item>
+          <AddNewLink
+            label="Add an SSH Key"
+            onClick={this.openCreationDrawer}
+          />
         </Grid>
-        <Table>
-          <TableHead data-qa-table-head>
-            <TableRow>
-              <TableCell data-qa-label-column>Label</TableCell>
-              <TableCell data-qa-key-column>Key</TableCell>
-              <Hidden xsDown>
-                <TableCell data-qa-created-column>Created</TableCell>
-              </Hidden>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{this.renderContent()}</TableBody>
-        </Table>
-        <PaginationFooter
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          count={this.props.count}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="ssh keys"
-        />
-        <DeleteSSHKeyDialog
-          id={this.state.confirmDelete.id}
-          label={this.state.confirmDelete.label}
-          open={this.state.confirmDelete.open}
-          onSuccess={this.handleSuccessfulDeletion}
-          closeDialog={this.handleCancelDeletion}
-        />
-        <SSHKeyCreationDrawer
-          open={this.state.creationDrawer.open}
-          onSuccess={this.handleSuccessfulCreation}
-          onCancel={this.closeCreationDrawer}
-        />
-      </>
-    );
+      </Grid>
+      <Table>
+        <TableHead data-qa-table-head>
+          <TableRow>
+            <TableCell data-qa-label-column>Label</TableCell>
+            <TableCell data-qa-key-column>Key</TableCell>
+            <Hidden smDown>
+              <TableCell data-qa-created-column>Created</TableCell>
+            </Hidden>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{this.renderContent()}</TableBody>
+      </Table>
+      <PaginationFooter
+        page={this.props.page}
+        pageSize={this.props.pageSize}
+        count={this.props.count}
+        handlePageChange={this.props.handlePageChange}
+        handleSizeChange={this.props.handlePageSizeChange}
+        eventCategory="ssh keys"
+      />
+      <DeleteSSHKeyDialog
+        id={this.state.confirmDelete.id}
+        label={this.state.confirmDelete.label}
+        open={this.state.confirmDelete.open}
+        onSuccess={this.handleSuccessfulDeletion}
+        closeDialog={this.handleCancelDeletion}
+      />
+      <SSHKeyCreationDrawer
+        open={this.state.creationDrawer.open}
+        onSuccess={this.handleSuccessfulCreation}
+        onCancel={this.closeCreationDrawer}
+      />
+    </>;
   }
 
   renderContent = () => {
@@ -202,7 +200,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
             Fingerprint: {key.fingerprint}
           </Typography>
         </TableCell>
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell data-qa-key-created className={classes.createdCell}>
             {key.created}
           </TableCell>

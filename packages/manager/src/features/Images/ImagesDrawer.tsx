@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
     },
     helperText: {
-      paddingTop: theme.spacing(1) / 2,
+      paddingTop: theme.spacing(0.5),
     },
   });
 

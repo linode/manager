@@ -30,7 +30,7 @@ type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(),
     },
   },

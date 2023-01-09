@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   section: {},
   divider: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
-    width: `calc(100% - ${theme.spacing(2)}px)`,
+    margin: `${theme.spacing(2)} ${theme.spacing(1)} 0 `,
+    width: `calc(100% - ${theme.spacing(2)})`,
   },
 }));
 

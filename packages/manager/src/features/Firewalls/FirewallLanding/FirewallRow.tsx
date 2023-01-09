@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -22,12 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       textDecoration: 'underline',
     },
-  },
-  labelWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    whiteSpace: 'nowrap',
   },
 }));
 
@@ -59,25 +52,15 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
       ariaLabel={`Firewall ${label}`}
     >
       <TableCell>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <div className={classes.labelWrapper}>
-              <Link
-                className={classes.link}
-                to={`/firewalls/${id}`}
-                tabIndex={0}
-              >
-                {label}
-              </Link>
-            </div>
-          </Grid>
-        </Grid>
+        <Link className={classes.link} to={`/firewalls/${id}`} tabIndex={0}>
+          {label}
+        </Link>
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={status === 'enabled' ? 'active' : 'inactive'} />
         {capitalize(status)}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
           {getLinodesCellString(devices, loading, error.read)}

@@ -17,8 +17,8 @@ export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: `0`,
     textAlign: 'center',
-    [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing(2)}px 0 0`,
+    [theme.breakpoints.down('lg')]: {
+      padding: `${theme.spacing(2)} 0 0`,
     },
   },
   icon: {
@@ -31,7 +31,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   error: {
     position: 'relative',
     color: theme.color.headline,
-    marginBottom: theme.spacing(2) - 3,
+    marginBottom: `calc(${theme.spacing(2)} - 3)`,
     textAlign: 'left',
     '&:before': {
       content: '""',

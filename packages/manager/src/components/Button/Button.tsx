@@ -28,8 +28,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       animation: '$rotate 2s linear infinite',
       margin: '0 auto',
-      height: `${theme.spacing(2)}px !important`,
-      width: `${theme.spacing(2)}px !important`,
+      height: `${theme.spacing(2)} !important`,
+      width: `${theme.spacing(2)} !important`,
     },
   },
   compactX: {
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   helpIcon: {
-    marginLeft: -theme.spacing(),
+    marginLeft: `-${theme.spacing()}`,
   },
 }));
 

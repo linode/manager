@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       flexDirection: 'row',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
     },
   },
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   answer: {
     paddingLeft: theme.spacing(5.75),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingLeft: 0,
     },
   },

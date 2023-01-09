@@ -29,7 +29,7 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
       top: '50px !important',
       left: 'auto !important',
       right: 8,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         right: 0,
         width: '100%',
       },

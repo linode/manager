@@ -1,6 +1,4 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4';
-// eslint-disable-next-line no-restricted-imports
-import { Avatar } from '@material-ui/core';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -11,6 +9,7 @@ import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
 import UserIcon from 'src/assets/icons/account.svg';
+import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   userWrapper: {
-    marginTop: theme.spacing(1) / 2,
+    marginTop: theme.spacing(0.5),
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     position: 'relative',
     top: -2,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
     [theme.breakpoints.up('sm')]: {
@@ -62,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   header: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
     minHeight: 40,
     backgroundColor: theme.color.grey2,
     borderTopLeftRadius: theme.shape.borderRadius,

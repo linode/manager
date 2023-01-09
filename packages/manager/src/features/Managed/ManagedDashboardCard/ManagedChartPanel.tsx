@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       height: 'calc(100% - 102px);',
       width: 1,
       backgroundColor: theme.palette.divider,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         display: 'none',
       },
     },
@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       top: 0,
       zIndex: 2,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(3),
       marginBottom: theme.spacing(3),
     },

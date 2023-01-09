@@ -4,8 +4,7 @@ import UserIcon from 'src/assets/icons/account.svg';
 import { makeStyles } from 'src/components/core/styles';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { getGravatarUrl } from 'src/utilities/gravatar';
-// eslint-disable-next-line no-restricted-imports
-import { Avatar } from '@material-ui/core';
+import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles({
   avatar: {

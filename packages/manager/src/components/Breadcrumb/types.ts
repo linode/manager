@@ -1,4 +1,4 @@
-import { CSSProperties } from 'src/components/core/styles';
+import { CSSProperties } from 'react';
 
 export interface LabelProps {
   linkTo?: string;

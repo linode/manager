@@ -1,6 +1,6 @@
 import { Profile } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { equals, lensPath, remove, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
   },
   sshWrap: {
-    margin: `${theme.spacing(1)}px 0`,
+    margin: `${theme.spacing(1)} 0`,
   },
   keyTextarea: {
     [theme.breakpoints.up('md')]: {
@@ -183,7 +183,7 @@ const LishSettings: React.FC = () => {
                   onChange={onPublicKeyChange(idx)}
                   value={authorizedKeys[idx] || ''}
                   multiline
-                  rows="4"
+                  rows={1.75}
                   className={classes.keyTextarea}
                   data-qa-public-key
                 />

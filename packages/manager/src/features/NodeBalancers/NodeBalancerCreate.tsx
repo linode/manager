@@ -77,7 +77,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         marginTop: '60px !important',
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         '&.MuiGrid-item': {
           paddingLeft: 0,
           paddingRight: 0,

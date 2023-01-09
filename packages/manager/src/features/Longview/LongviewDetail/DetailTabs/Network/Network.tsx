@@ -15,7 +15,7 @@ import NetworkGraphs from './NetworkGraphs';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(),
     },
   },

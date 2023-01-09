@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   actionBtnsCtn: {
     display: 'flex',
     justifyContent: 'flex-end',
-    padding: `${theme.spacing(1)}px 0`,
+    padding: `${theme.spacing(1)} 0`,
   },
   actionBtn: {
     cursor: 'pointer',

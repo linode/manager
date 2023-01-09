@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonContainer: {
     marginTop: theme.spacing(2),
     gap: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(2),
     },
   },

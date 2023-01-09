@@ -3,7 +3,7 @@ import {
   KubernetesCluster,
 } from '@linode/api-v4/lib/kubernetes';
 import { APIError } from '@linode/api-v4/lib/types';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
@@ -36,9 +36,7 @@ import KubernetesDialog from './KubernetesDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2) + 4}px ${
-      theme.spacing(2) + 4
-    }px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
   mainGridContainer: {
     position: 'relative',
@@ -76,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         justifyContent: 'flex-end',
       },
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '100%',
     },
   },

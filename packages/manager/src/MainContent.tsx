@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   wrapper: {
     padding: theme.spacing(3),
     transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingTop: theme.spacing(2),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
@@ -60,15 +60,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cmrWrapper: {
     maxWidth: `${theme.breakpoints.values.lg}px !important`,
-    padding: `${theme.spacing(3)}px 0`,
+    padding: `${theme.spacing(3)} 0`,
     paddingTop: 20,
     transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingTop: theme.spacing(2),
       paddingLeft: 0,
       paddingRight: 0,
     },
-    [theme.breakpoints.between('md', 'lg')]: {
+    [theme.breakpoints.between('md', 'xl')]: {
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },

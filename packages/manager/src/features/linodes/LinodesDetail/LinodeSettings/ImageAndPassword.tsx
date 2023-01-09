@@ -11,7 +11,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    margin: `${theme.spacing(3)}px 0 ${theme.spacing(3)}px 0`,
+    margin: `${theme.spacing(3)} 0 ${theme.spacing(3)} 0`,
     padding: 0,
   },
 }));

@@ -29,11 +29,7 @@ describe('SSHKeys', () => {
     );
 
     it('should have table header with SSH Keys title', () => {
-      expect(
-        wrapper
-          .find('WithStyles(ForwardRef(TableHead))[data-qa-table-head]')
-          .exists()
-      ).toBeTruthy();
+      expect(wrapper.find('[data-qa-table-head]').exists()).toBeTruthy();
     });
 
     it('should have a table', () => {

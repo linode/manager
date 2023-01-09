@@ -1,6 +1,6 @@
-import Check from '@material-ui/icons/Check';
-import Close from '@material-ui/icons/Close';
-import Edit from '@material-ui/icons/Edit';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
+import Edit from '@mui/icons-material/Edit';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 6,
     '&:first-of-type': {
       marginLeft: theme.spacing(2),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(2),
       },
     },

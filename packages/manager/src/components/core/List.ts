@@ -1,4 +1,4 @@
-import List, { ListProps as _ListProps } from '@material-ui/core/List';
+import List, { ListProps as _ListProps } from '@mui/material/List';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface ListProps extends _ListProps {}

@@ -22,17 +22,17 @@ import { useUpdateLinodeSettingsMutation } from 'src/queries/managed/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ip: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingBottom: '0px !important',
     },
   },
   port: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingTop: '0px !important',
     },
   },
   helperText: {
-    marginBottom: theme.spacing(1) + 2,
+    marginBottom: theme.spacing(1.25),
   },
 }));
 

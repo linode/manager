@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: theme.spacing(1),
   },
   bottomLegend: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(1)}px`,
+    margin: `${theme.spacing(2)} ${theme.spacing(1)} ${theme.spacing(1)}`,
     padding: 10,
     color: '#777',
     backgroundColor: theme.bg.offWhite,
@@ -40,11 +40,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     [theme.breakpoints.up('md')]: {
-      margin: `${theme.spacing(2)}px 0`,
+      margin: `${theme.spacing(2)} 0`,
     },
   },
   title: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
   },

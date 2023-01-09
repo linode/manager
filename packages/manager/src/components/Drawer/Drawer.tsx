@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/core/Drawer';

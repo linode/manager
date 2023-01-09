@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
     },
     NBsummarySection: {
       [theme.breakpoints.up('md')]: {
-        marginTop: theme.spacing(3) + 24,
+        marginTop: theme.spacing(6),
       },
     },
     IPgrouping: {

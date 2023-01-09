@@ -23,7 +23,7 @@ export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
   props
 ) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { clusterId, clusterLabel, enqueueSnackbar, openDialog } = props;
 

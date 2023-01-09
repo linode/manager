@@ -43,7 +43,7 @@ export const styles = (theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         wordBreak: 'break-all',
       },
     },
@@ -53,7 +53,7 @@ export const styles = (theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap',
-      [theme.breakpoints.between('sm', 'lg')]: {
+      [theme.breakpoints.between('sm', 'xl')]: {
         wordBreak: 'break-word',
       },
     },
@@ -62,13 +62,13 @@ export const styles = (theme: Theme) =>
       flexWrap: 'nowrap',
       alignItems: 'center',
       justifyContent: 'space-between',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
         alignItems: 'flex-start',
       },
     },
     selectionGridDetails: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         '&.MuiGrid-item': {
           marginTop: 4,
           paddingBottom: 0,
@@ -76,7 +76,7 @@ export const styles = (theme: Theme) =>
       },
     },
     selectionGridButton: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         '&.MuiGrid-item': {
           paddingTop: 0,
           paddingLeft: 0,
@@ -101,7 +101,7 @@ export const styles = (theme: Theme) =>
       '&:hover, &:focus': {
         backgroundColor: 'transparent',
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginBottom: 4,
         marginLeft: 0,
         paddingTop: 4,
