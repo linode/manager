@@ -1,4 +1,4 @@
-import Search from '@material-ui/icons/Search';
+import Search from '@mui/icons-material/Search';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';

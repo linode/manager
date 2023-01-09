@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: 'center',
   },
   openTicketButton: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingLeft: 12,
       paddingRight: 12,
     },

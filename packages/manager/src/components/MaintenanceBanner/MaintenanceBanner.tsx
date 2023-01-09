@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
     },
     dateTime: {
       fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(2.5)}px`,
+      lineHeight: theme.spacing(2.5),
     },
   });
 

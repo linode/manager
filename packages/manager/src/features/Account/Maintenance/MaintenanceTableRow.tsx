@@ -49,25 +49,22 @@ export const MaintenanceTableRow = (props: AccountMaintenance) => {
         </Link>
       </TableCell>
       <TableCell noWrap>{formatDate(when)}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-testid="relative-date">
           {parseAPIDate(when).toRelative()}
         </TableCell>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell noWrap>{capitalize(type.replace('_', ' '))}</TableCell>
       </Hidden>
       <TableCell statusCell>
         <StatusIcon status={statusIconMap[status] ?? 'other'} />
         {statusTextMap[status] ?? capitalize(status)}
       </TableCell>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell>
           {isTruncated ? (
-            <Tooltip
-              title={<HighlightedMarkdown textOrMarkdown={reason} />}
-              interactive
-            >
+            <Tooltip title={<HighlightedMarkdown textOrMarkdown={reason} />}>
               <div>
                 <HighlightedMarkdown textOrMarkdown={truncatedReason} />
               </div>

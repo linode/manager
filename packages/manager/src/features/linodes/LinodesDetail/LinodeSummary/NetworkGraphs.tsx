@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(),
     [theme.breakpoints.down(1100)]: {
       flexWrap: 'wrap',
-      marginTop: -theme.spacing(2),
+      marginTop: `-${theme.spacing(2)}`,
     },
   },
   grid: {

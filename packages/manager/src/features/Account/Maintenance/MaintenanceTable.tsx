@@ -40,7 +40,7 @@ const headersForCSVDownload = [
 
 const useStyles = makeStyles((theme: Theme) => ({
   csvLink: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
     color: theme.textColors.tableHeader,
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   headingContainer: {
     marginTop: theme.spacing(1.5),
     marginBottom: theme.spacing(1),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(),
       paddingRight: theme.spacing(),
     },
@@ -193,7 +193,7 @@ export const MaintenanceTable = ({ type }: Props) => {
             >
               Date
             </TableSortCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableSortCell
                 active={orderBy === 'when'}
                 direction={order}
@@ -204,7 +204,7 @@ export const MaintenanceTable = ({ type }: Props) => {
                 When
               </TableSortCell>
             </Hidden>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'type'}
                 direction={order}
@@ -224,7 +224,7 @@ export const MaintenanceTable = ({ type }: Props) => {
             >
               Status
             </TableSortCell>
-            <Hidden mdDown>
+            <Hidden lgDown>
               <TableCell style={{ width: '40%' }}>Reason</TableCell>
             </Hidden>
           </TableRow>

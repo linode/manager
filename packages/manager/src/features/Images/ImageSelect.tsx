@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   selectContainer: {
     width: 415 + theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },

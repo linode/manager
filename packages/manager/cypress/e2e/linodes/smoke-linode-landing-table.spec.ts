@@ -108,10 +108,16 @@ describe('linode landing checks', () => {
       fbtVisible(
         'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
       );
-      getVisible('[aria-label="Link to Linode Support"][href="/support"]');
-      getVisible('[href="https://linode.com/community"]').within(() => {
-        getVisible('[title="Linode Cloud Community"]');
-      });
+
+      cy.findByLabelText('Link to Linode Support')
+        .should('be.visible')
+        .should('have.attr', 'href', '/support');
+
+      cy.findByLabelText('Linode Cloud Community')
+        .should('be.visible')
+        .parent()
+        .should('have.attr', 'href', 'https://linode.com/community');
+
       getVisible('[aria-label="Notifications"]');
       getVisible('[data-testid="nav-group-profile"]').within(() => {
         fbtVisible(username);
@@ -209,12 +215,10 @@ describe('linode landing checks', () => {
     getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
       fbtVisible('IP Address');
     });
-    getVisible(
-      '[aria-label="Toggle display"][aria-describedby="displayViewDescription"][title="Summary view"]'
-    );
-    getVisible(
-      '[aria-label="Toggle group by tag"][aria-describedby="groupByDescription"][title="Group by tag"]'
-    );
+
+    cy.findByLabelText('Toggle display').should('be.visible');
+
+    cy.findByLabelText('Toggle group by tag').should('be.visible');
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
       ui.button

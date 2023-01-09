@@ -15,8 +15,8 @@ import { GraphProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   paperSection: {
-    padding: theme.spacing(3) + 1,
-    marginBottom: theme.spacing(1) + 3,
+    padding: `calc(${theme.spacing(3)} + 1px)`,
+    marginBottom: `calc(${theme.spacing(1)} + 3px)`,
   },
   selectTimeRange: {
     width: 150,
@@ -26,10 +26,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: theme.spacing(1) + 2,
+    marginBottom: theme.spacing(1.25),
   },
   spacing: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },

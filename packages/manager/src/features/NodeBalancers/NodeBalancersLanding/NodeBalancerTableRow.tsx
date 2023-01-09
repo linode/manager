@@ -91,12 +91,12 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
         </div>
       </TableCell>
 
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-node-status className={classes.statusWrapper}>
           <span>{nodesUp} up</span> - <span>{nodesDown} down</span>
         </TableCell>
       </Hidden>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-transferred>
           {convertMegabytesTo(transfer.total)}
         </TableCell>
@@ -122,7 +122,7 @@ const NodeBalancerTableRow: React.FC<CombinedProps> = (props) => {
           <IPAddress ips={[ipv4]} showMore />
         </div>
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-region>
           <RegionIndicator region={region} />
         </TableCell>

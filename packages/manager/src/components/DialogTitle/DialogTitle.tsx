@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import DialogTitle from 'src/components/core/DialogTitle';
 import { makeStyles, Theme } from 'src/components/core/styles';

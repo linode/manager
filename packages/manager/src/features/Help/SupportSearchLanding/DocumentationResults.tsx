@@ -1,4 +1,4 @@
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
@@ -8,7 +8,7 @@ import ExternalLink from 'src/components/ExternalLink';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noResultsContainer: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
   },
   icon: {
     color: '#3683DC',

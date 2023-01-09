@@ -86,7 +86,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   } = props;
 
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { types } = useTypes();
   const history = useHistory();

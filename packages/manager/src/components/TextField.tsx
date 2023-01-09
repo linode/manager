@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import classNames from 'classnames';
 import { clamp } from 'ramda';
 import * as React from 'react';
@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   helpWrapperTextField: {
     width: 415,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -268,6 +268,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
         <TextField
           {...textFieldProps}
           {...dataAttrs}
+          variant="standard"
           error={!!error || !!errorText}
           /**
            * Set _helperText_ and _label_ to no value because we want to
@@ -312,7 +313,6 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             disableUnderline: true,
             IconComponent: KeyboardArrowDown,
             MenuProps: {
-              getContentAnchorEl: undefined,
               anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
               transformOrigin: { vertical: 'top', horizontal: 'left' },
               MenuListProps: { className: 'selectMenuList' },

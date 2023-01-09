@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: 120,
       },
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'center',
     },
@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       color: theme.name === 'lightTheme' ? '#ededf4' : '#83868c',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginBottom: theme.spacing(2),
     },
   },
