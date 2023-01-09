@@ -80,15 +80,14 @@ const fillOutStackscriptForm = (
  * function does not attempt to submit the filled out form.
  *
  * @param label - Linode label.
- * @param region - Linode region.
+ * @param region - Linode region name.
  */
 const fillOutLinodeForm = (label: string, region: string) => {
   const password = randomString(32);
 
-  cy.findByText('Select a Region')
-    .should('be.visible')
-    .click()
-    .type(`${region}{enter}`);
+  cy.findByText('Select a Region').should('be.visible').click();
+
+  ui.regionSelect.findItemByRegionName(region).click();
 
   cy.findByText('Linode Label')
     .should('be.visible')
