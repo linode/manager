@@ -22,11 +22,21 @@ export const accountMaintenanceFactory = Factory.Sync.makeFactory<AccountMainten
       ])
     ),
     when: Factory.each(() => randomDate().toISOString()),
-    entity: Factory.each((id) => ({
-      label: `my-linode-${id}`,
-      id,
-      type: 'linode',
-      url: `/v4/linode/instances/${id}`,
-    })),
+    entity: Factory.each((id) =>
+      pickRandom([
+        {
+          id,
+          label: `linode-${id}`,
+          type: 'linode',
+          url: `/v4/linode/instances/${id}`,
+        },
+        {
+          id,
+          label: `volume-${id}`,
+          type: 'volume',
+          url: `/v4/volume/${id}`,
+        },
+      ])
+    ),
   }
 );

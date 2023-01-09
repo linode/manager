@@ -400,7 +400,7 @@ export interface SaveCreditCardData {
 
 export interface AccountMaintenance {
   reason: string;
-  status: 'pending' | 'started';
+  status: 'pending' | 'started' | 'completed';
   type: 'reboot' | 'cold_migration' | 'live_migration' | 'volume_migration';
   when: string;
   entity: {
