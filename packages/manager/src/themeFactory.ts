@@ -466,7 +466,7 @@ const themeDefaults: ThemeDefaults = () => {
           minHeight: 34,
           minWidth: 105,
           lineHeight: 1,
-          textTransform: 'inherit',
+          textTransform: 'capitalize',
           transition: 'none',
         },
         containedPrimary: {

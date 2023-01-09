@@ -52,6 +52,7 @@ import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
+import ApiAwarenessModal from './ApiAwarenessModal';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -110,7 +111,7 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       gap: theme.spacing(2),
       flexGrow: 1,
-      [theme.breakpoints.down('sm')]: {
+      [(theme.breakpoints.down('sm'), theme.breakpoints.down('md'))]: {
         margin: theme.spacing(1),
       },
     },
@@ -124,6 +125,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         marginRight: theme.spacing(1),
       },
+      marginLeft: theme.spacing(1),
     },
   });
 interface Props {
@@ -194,6 +196,7 @@ interface State {
   selectedTab: number;
   stackScriptSelectedTab: number;
   planKey: string;
+  isApiAwarenessModalOpen: boolean;
 }
 
 interface CreateTab extends Tab {
@@ -238,6 +241,7 @@ export class LinodeCreate extends React.PureComponent<
           ? 1
           : 0,
       planKey: v4(),
+      isApiAwarenessModalOpen: false,
     };
   }
 
@@ -371,6 +375,10 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
+  };
+
+  setIsApiAwarenessModalOpen = (value: boolean) => {
+    this.setState({ ...this.state, isApiAwarenessModalOpen: value });
   };
 
   render() {
@@ -733,20 +741,39 @@ export class LinodeCreate extends React.PureComponent<
                 />
               ) : null}
             </div>
-            <Button
-              data-qa-deploy-linode
-              buttonType="primary"
-              onClick={this.createLinode}
-              loading={formIsSubmitting}
-              className={classes.createButton}
-              disabled={
-                formIsSubmitting ||
-                userCannotCreateLinode ||
-                (showAgreement && !signedAgreement)
-              }
-            >
-              Create Linode
-            </Button>
+            <div>
+              <Button
+                data-qa-api-cli-linode
+                buttonType="outlined"
+                onClick={() => this.setIsApiAwarenessModalOpen(true)}
+                className={classes.createButton}
+                disabled={
+                  formIsSubmitting ||
+                  userCannotCreateLinode ||
+                  (showAgreement && !signedAgreement)
+                }
+              >
+                Create using command line
+              </Button>
+              <Button
+                data-qa-deploy-linode
+                buttonType="primary"
+                onClick={this.createLinode}
+                loading={formIsSubmitting}
+                className={classes.createButton}
+                disabled={
+                  formIsSubmitting ||
+                  userCannotCreateLinode ||
+                  (showAgreement && !signedAgreement)
+                }
+              >
+                Create Linode
+              </Button>
+              <ApiAwarenessModal
+                isOpen={this.state.isApiAwarenessModalOpen}
+                onClose={() => this.setIsApiAwarenessModalOpen(false)}
+              />
+            </div>
           </Box>
         </Grid>
       </form>
