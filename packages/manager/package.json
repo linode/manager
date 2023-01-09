@@ -57,7 +57,7 @@
     "launchdarkly-react-client-sdk": "^2.29.1",
     "libphonenumber-js": "^1.10.6",
     "logic-query-parser": "^0.0.5",
-    "luxon": "^1.24.1",
+    "luxon": "^2.5.2",
     "markdown-it": "^12.3.2",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
