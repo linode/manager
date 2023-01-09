@@ -142,9 +142,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['microweber', 'unifi network application'].includes(
-        app.label.toLowerCase().trim()
-      );
+      return ['mastodon'].includes(app.label.toLowerCase().trim());
     });
 
     const popularApps = appInstances.slice(0, 10);

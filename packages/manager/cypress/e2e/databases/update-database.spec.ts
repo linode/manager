@@ -2,7 +2,7 @@
  * @file DBaaS integration tests for update operations.
  */
 
-import { regions } from 'support/constants/regions';
+import { regions, regionsMap } from 'support/constants/regions';
 import {
   randomLabel,
   randomItem,
@@ -175,6 +175,10 @@ describe('Update database clusters', () => {
 
     cy.visitWithLogin(`/databases/${database.engine}/${database.id}`);
     cy.wait('@getDatabase');
+
+    cy.get('[data-qa-cluster-config]').within(() => {
+      cy.findByText(regionsMap[database.region]).should('be.visible');
+    });
 
     cy.get('[data-qa-connection-details]').within(() => {
       // "Show" button should be enabled to reveal password when DB is active.

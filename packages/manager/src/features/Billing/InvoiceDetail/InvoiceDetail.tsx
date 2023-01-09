@@ -25,6 +25,7 @@ import useFlags from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
+import { getShouldUseAkamaiBilling } from '../billingUtils';
 import InvoiceTable from './InvoiceTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -114,8 +115,9 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
     invoice: Invoice,
     items: InvoiceItem[]
   ) => {
-    const taxBanner = flags.taxBanner;
-    const result = printInvoice(account, invoice, items, taxBanner);
+    const taxes =
+      flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
+    const result = printInvoice(account, invoice, items, taxes);
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };
@@ -127,7 +129,11 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
           <Grid container justifyContent="space-between">
             <Grid item className={classes.titleWrapper} style={{ flex: 1 }}>
               <Link to={`/account/billing`}>
-                <IconButton className={classes.backButton} data-qa-back-to-billing size="large">
+                <IconButton
+                  className={classes.backButton}
+                  data-qa-back-to-billing
+                  size="large"
+                >
                   <KeyboardArrowLeft />
                 </IconButton>
               </Link>

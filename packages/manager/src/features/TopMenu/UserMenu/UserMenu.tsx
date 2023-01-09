@@ -14,7 +14,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
 
@@ -315,7 +315,10 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            <GravatarIcon username={userName} className={classes.userWrapper} />
+            <GravatarByEmail
+              email={profile?.email ?? ''}
+              className={classes.userWrapper}
+            />
             <Hidden mdDown>
               <Typography className={classes.inlineUserName}>
                 {userName}

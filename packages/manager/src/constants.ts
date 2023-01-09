@@ -25,7 +25,7 @@ export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
 export const DOCS_SEARCH_URL =
-  'https://linode.com/docs/search/?sections=guides&q=';
+  'https://www.linode.com/docs/topresults/?docType=products%2Cguides%2Capi%2Creference-architecture&lndq=';
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
@@ -87,6 +87,13 @@ export const ISO_DATE_FORMAT = 'yyyy-MM-dd';
 export const ISO_DATETIME_NO_TZ_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 export const MAX_VOLUME_SIZE = 10240;
+
+/**
+ * As per the current support polocy
+ * timeline for depricated distro is 6 months beyond eol date from image endpoints.
+ * refere M3-5753 for more info.
+ */
+export const MAX_MONTHS_EOL_FILTER = 6;
 
 /**
  * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
@@ -278,12 +285,12 @@ export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
  */
-export const MBpsIntraDC = 75;
+export const MBpsIntraDC = 200;
 
 /**
  * MBps rate for inter DC migrations (AKA Cross-Datacenter migrations )
  */
-export const MBpsInterDC = 1.5;
+export const MBpsInterDC = 7.5;
 
 /**
  * The incoming network rate (in Gbps) that is standard for all Linodes
@@ -327,6 +334,11 @@ export const MOCK_SERVICE_WORKER =
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
 
+// Default payment limits of Braintree payments in USD ($)
+export const PAYMENT_MIN = 5;
+export const PAYMENT_SOFT_MAX = 2_000;
+export const PAYMENT_HARD_MAX = 50_000;
+
 // Price of LKE's High Availability offering in USD
 export const HIGH_AVAILABILITY_PRICE =
   process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
@@ -339,3 +351,35 @@ export const DB_ROOT_USERNAME = 'linroot';
 // https://www.linode.com/docs/email/best-practices/running-a-mail-server/
 export const MAGIC_DATE_THAT_EMAIL_RESTRICTIONS_WERE_IMPLEMENTED =
   '2022-11-30T00:00:00.000Z'; // Date of release for Manager v1.81.0.
+
+// The date Linode switching to Akamai (for purposes of billing)
+export const AKAMAI_DATE = '2022-12-15 00:00:00';
+
+export const ADDRESSES = {
+  linode: {
+    entity: 'Linode',
+    address1: '249 Arch St.',
+    city: 'Philadelphia',
+    state: 'PA',
+    zip: '19106',
+    country: 'USA',
+  },
+  akamai: {
+    us: {
+      entity: 'Akamai Technologies, Inc.',
+      address1: '145 Broadway',
+      city: 'Cambridge',
+      state: 'MA',
+      zip: '02142',
+      country: 'USA',
+    },
+    international: {
+      entity: 'Akamai Technologies International AG',
+      address1: 'Chemin des Aulx 18',
+      city: 'Plan-les-Ouates',
+      state: 'Geneva',
+      zip: '1228',
+      country: 'Switzerland',
+    },
+  },
+};

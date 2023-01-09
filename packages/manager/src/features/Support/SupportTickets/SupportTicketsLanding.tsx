@@ -25,7 +25,7 @@ import withGlobalErrors, {
 } from 'src/containers/globalErrors.container';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import SupportTicketDrawer from './SupportTicketDrawer';
+import SupportTicketDrawer, { TicketType } from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
 type ClassNames = 'title' | 'openTicketButton';
@@ -61,6 +61,7 @@ interface State {
   prefilledTitle?: string;
   prefilledDescription?: string;
   prefilledEntity?: EntityForTicketDetails;
+  prefilledTicketType?: TicketType;
 }
 
 const tabs = ['open', 'closed'];
@@ -100,6 +101,7 @@ export class SupportTicketsLanding extends React.PureComponent<
       prefilledDescription: stateParams ? stateParams.description : undefined,
       prefilledTitle: stateParams ? stateParams.title : undefined,
       prefilledEntity: stateParams ? stateParams.entity : undefined,
+      prefilledTicketType: stateParams ? stateParams.ticketType : undefined,
     };
   }
 
@@ -163,6 +165,7 @@ export class SupportTicketsLanding extends React.PureComponent<
       prefilledDescription,
       prefilledTitle,
       prefilledEntity,
+      prefilledTicketType,
     } = this.state;
 
     return (
@@ -173,6 +176,7 @@ export class SupportTicketsLanding extends React.PureComponent<
         prefilledDescription={prefilledDescription}
         prefilledTitle={prefilledTitle}
         prefilledEntity={prefilledEntity}
+        prefilledTicketType={prefilledTicketType}
       />
     );
   };

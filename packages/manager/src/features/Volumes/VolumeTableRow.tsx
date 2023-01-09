@@ -1,23 +1,21 @@
 import { Event } from '@linode/api-v4/lib/account';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import * as React from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Grid from 'src/components/Grid';
 import StatusIcon from 'src/components/StatusIcon';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities';
 import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 import SupportLink from 'src/components/SupportLink';
-import useNotifications from 'src/hooks/useNotifications';
-import useEvents from 'src/hooks/useEvents';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
+// import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
   volumePath: {
@@ -75,45 +73,20 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     handleAttach,
     handleDelete,
     handleDetach,
-    handleUpgrade,
     id,
     label,
     status,
     tags,
     size,
     region,
-    hardware_type: hardwareType,
     filesystem_path: filesystemPath,
     linode_label,
     linode_id: linodeId,
   } = props;
 
-  const history = useHistory();
-  const location = useLocation();
   const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
-  const notifications = useNotifications();
-  const { events } = useEvents();
-
   const formattedRegion = formatRegion(region);
-
-  const eligibleForUpgradeToNVMe = notifications.some(
-    (notification) =>
-      notification.type === 'volume_migration_scheduled' &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserImminent = notifications.some(
-    (notification) =>
-      notification.type === 'volume_migration_imminent' &&
-      notification.entity?.id === id
-  );
-
-  const nvmeUpgradeScheduledByUserInProgress = events.some(
-    (event) =>
-      event.action === 'volume_migrate' &&
-      event.entity?.id === id &&
-      event.status === 'started'
-  );
+  // const { events } = useEvents();
 
   // const recentEvent = events.find((event) => event.entity?.id === id);
 
@@ -136,8 +109,6 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     migrating: 'Migrating',
   };
 
-  const isNVMe = hardwareType === 'nvme';
-
   return (
     <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
       <TableCell data-qa-volume-cell-label={label}>
@@ -147,55 +118,9 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
           justifyContent="space-between"
           alignItems="center"
         >
-          {isVolumesLanding ? (
-            <>
-              <Grid item>
-                <div>{label}</div>
-                {/* {isUpdating && <LinearProgress value={progress} />} */}
-              </Grid>
-              {isNVMe ? (
-                <Grid item className={classes.chipWrapper}>
-                  <Chip
-                    variant="outlined"
-                    outlineColor="green"
-                    label="NVMe"
-                    data-testid="nvme-chip"
-                    size="small"
-                  />
-                </Grid>
-              ) : eligibleForUpgradeToNVMe &&
-                !nvmeUpgradeScheduledByUserImminent ? (
-                <Grid item className={classes.chipWrapper}>
-                  <Chip
-                    label="UPGRADE TO NVMe"
-                    onClick={
-                      linodeId
-                        ? () => history.push(`/linodes/${linodeId}/upgrade`)
-                        : () => handleUpgrade?.(id, label)
-                    }
-                    data-testid="upgrade-chip"
-                    size="small"
-                    clickable
-                  />
-                </Grid>
-              ) : nvmeUpgradeScheduledByUserImminent ||
-                nvmeUpgradeScheduledByUserInProgress ? (
-                <Grid item className={classes.chipWrapper}>
-                  <Chip
-                    variant="outlined"
-                    outlineColor="gray"
-                    label="UPGRADE PENDING"
-                    data-testid="upgrading-chip"
-                    size="small"
-                  />
-                </Grid>
-              ) : null}
-            </>
-          ) : (
-            <Grid item>
-              <div>{label}</div>
-            </Grid>
-          )}
+          <Grid item>
+            <div>{label}</div>
+          </Grid>
         </Grid>
       </TableCell>
       <TableCell statusCell>
