@@ -176,7 +176,7 @@ export const dcDisplayCountry = {
   'ca-east': 'CA',
   'ap-west': 'IN',
   'ap-southeast': 'AU',
-  'us-ida': 'US',
+  'us-iad': 'US',
 };
 
 // Map OBJ Cluster IDs to their display country.
