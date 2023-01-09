@@ -14,7 +14,7 @@ interface EntityInfo {
   label: string | undefined;
 }
 
-export interface Props {
+interface Props {
   entity: EntityInfo;
   children: React.ReactNode;
   loading: boolean;
@@ -25,7 +25,7 @@ export interface Props {
 
 type CombinedProps = Props &
   ConfirmationDialogProps &
-  Pick<TypeToConfirmProps, 'typographyStyle'>;
+  Partial<TypeToConfirmProps>;
 
 const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
   const {
