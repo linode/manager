@@ -8,10 +8,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -25,10 +22,7 @@ import Notice from 'src/components/Notice';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TransferDisplay from 'src/components/TransferDisplay';
-import TypeToConfirm from 'src/components/TypeToConfirm';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference,
@@ -49,7 +43,6 @@ interface DeleteConfirmDialogState {
   open: boolean;
   submitting: boolean;
   errors?: APIError[];
-  confirmText?: string;
 }
 
 interface State {
@@ -61,8 +54,7 @@ interface State {
 type CombinedProps = WithNodeBalancerActions &
   WithNodeBalancers &
   RouteComponentProps<{}> &
-  SetDocsProps &
-  PreferencesProps;
+  SetDocsProps;
 
 export const headers: HeaderCell[] = [
   {
@@ -117,7 +109,6 @@ export class NodeBalancersLanding extends React.Component<
     submitting: false,
     open: false,
     errors: undefined,
-    confirmText: '',
   };
 
   state: State = {
@@ -280,14 +271,18 @@ export class NodeBalancersLanding extends React.Component<
           }}
         </PreferenceToggle>
         <TransferDisplay spacingTop={18} />
-        <ConfirmationDialog
-          onClose={this.closeConfirmationDialog}
-          title={`Delete NodeBalancer ${this.state.selectedNodeBalancerLabel}?`}
-          error={(this.state.deleteConfirmDialog.errors || [])
-            .map((e) => e.reason)
-            .join(',')}
-          actions={this.renderConfirmationDialogActions}
+        <TypeToConfirmDialog
+          title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
+          entity={{
+            type: 'NodeBalancer',
+            label: this.state.selectedNodeBalancerLabel,
+          }}
           open={deleteConfirmAlertOpen}
+          loading={this.state.deleteConfirmDialog.submitting}
+          errors={this.state.deleteConfirmDialog.errors}
+          onClose={this.closeConfirmationDialog}
+          onClick={this.onSubmitDelete}
+          typographyStyle={{ marginTop: '20px' }}
         >
           <Notice warning>
             <Typography style={{ fontSize: '0.875rem' }}>
@@ -299,60 +294,10 @@ export class NodeBalancersLanding extends React.Component<
             check your DNS settings and either provide the IP address of another
             active NodeBalancer, or route traffic directly to your Linode.
           </Typography>
-          <TypeToConfirm
-            label="NodeBalancer Label"
-            confirmationText={
-              <span>
-                To confirm deletion, type the name of the Nodebalancer (
-                <b>{this.state.selectedNodeBalancerLabel}</b>) in the field
-                below:
-              </span>
-            }
-            value={this.state.deleteConfirmDialog.confirmText}
-            typographyStyle={{ marginTop: '20px' }}
-            data-testid={'dialog-confirm-text-input'}
-            expand
-            onChange={(input) => {
-              this.setState({
-                deleteConfirmDialog: {
-                  ...this.state.deleteConfirmDialog,
-                  confirmText: input,
-                },
-              });
-            }}
-            visible={this.props.preferences.type_to_confirm}
-          />
-        </ConfirmationDialog>
+        </TypeToConfirmDialog>
       </>
     );
   }
-
-  renderConfirmationDialogActions = () => {
-    const disabled =
-      this.props.preferences?.type_to_confirm !== false &&
-      this.state.deleteConfirmDialog.confirmText !==
-        this.state.selectedNodeBalancerLabel;
-    return (
-      <ActionsPanel style={{ padding: 0 }}>
-        <Button
-          buttonType="secondary"
-          onClick={this.closeConfirmationDialog}
-          data-qa-cancel-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.onSubmitDelete}
-          loading={this.state.deleteConfirmDialog.submitting}
-          disabled={disabled}
-          data-qa-confirm-cancel
-        >
-          Delete NodeBalancer
-        </Button>
-      </ActionsPanel>
-    );
-  };
 
   closeConfirmationDialog = () =>
     this.setState({
@@ -400,8 +345,7 @@ export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
-  setDocs(NodeBalancersLanding.docs),
-  withPreferences()
+  setDocs(NodeBalancersLanding.docs)
 );
 
 export default enhanced(NodeBalancersLanding);

@@ -4,16 +4,13 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
-import TypeToConfirm from 'src/components/TypeToConfirm';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import usePreferences from 'src/hooks/usePreferences';
 import {
   LinodeActionsProps,
   withLinodeActions,
@@ -41,11 +38,6 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
   const [open, setOpen] = React.useState<boolean>(false);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  const [confirmText, setConfirmText] = React.useState('');
-
-  const { preferences } = usePreferences();
-  const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== linodeLabel;
 
   const _deleteLinode = () => {
     setSubmitting(true);
@@ -60,27 +52,6 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
         scrollErrorIntoView();
       });
   };
-
-  const renderConfirmationActions = () => (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={() => setOpen(false)}
-        data-qa-cancel-delete
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        loading={submitting}
-        disabled={disabled}
-        onClick={_deleteLinode}
-        data-qa-confirm-delete
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
-  );
 
   return (
     <React.Fragment>
@@ -98,12 +69,14 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
           Deleting a Linode will result in permanent data loss.
         </Typography>
       </Accordion>
-      <ConfirmationDialog
+      <TypeToConfirmDialog
         title={`Delete ${linodeLabel}?`}
-        actions={renderConfirmationActions}
+        entity={{ type: 'Linode', label: linodeLabel }}
         open={open}
+        loading={submitting}
+        errors={errors}
         onClose={() => setOpen(false)}
-        error={errors ? errors[0].reason : undefined}
+        onClick={_deleteLinode}
       >
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
@@ -111,23 +84,7 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
             permanent data loss.
           </Typography>
         </Notice>
-        <TypeToConfirm
-          label="Linode Label"
-          confirmationText={
-            <span>
-              To confirm deletion, type the name of the Linode (
-              <b>{linodeLabel}</b>) in the field below:
-            </span>
-          }
-          value={confirmText}
-          data-testid={'dialog-confirm-text-input'}
-          expand
-          onChange={(input) => {
-            setConfirmText(input);
-          }}
-          visible={preferences?.type_to_confirm}
-        />
-      </ConfirmationDialog>
+      </TypeToConfirmDialog>
     </React.Fragment>
   );
 };

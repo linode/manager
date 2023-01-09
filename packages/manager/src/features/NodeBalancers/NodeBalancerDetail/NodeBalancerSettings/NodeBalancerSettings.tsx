@@ -5,9 +5,7 @@ import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { compose as composeC } from 'recompose';
 import Accordion from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -15,17 +13,13 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import TypeToConfirm from 'src/components/TypeToConfirm';
-import usePreferences from 'src/hooks/usePreferences';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import defaultNumeric from 'src/utilities/defaultNumeric';
-import {
-  getAPIErrorOrDefault,
-  getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   spacing: {
@@ -78,12 +72,6 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
   const [connectionThrottleError, setConnectionThrottleError] = React.useState<
     string | undefined
   >(undefined);
-
-  const [confirmText, setConfirmText] = React.useState('');
-
-  const { preferences } = usePreferences();
-  const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== nodeBalancerLabel;
 
   React.useEffect(() => {
     if (label !== props.nodeBalancerLabel) {
@@ -152,25 +140,6 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const actions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={() => setIsDeleteDialogOpen(false)}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleDelete}
-        loading={isDeleting}
-        disabled={disabled}
-      >
-        Delete NodeBalancer
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
     <div>
       <DocumentTitleSegment segment={`${nodeBalancerLabel} - Settings`} />
@@ -235,19 +204,15 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
           Delete
         </Button>
       </Accordion>
-      <ConfirmationDialog
-        title={`Delete NodeBalancer ${label}?`}
+      <TypeToConfirmDialog
+        title={`Delete ${label}?`}
+        entity={{ type: 'NodeBalancer', label }}
         open={isDeleteDialogOpen}
-        error={
-          deleteError && deleteError.length > 0
-            ? getErrorStringOrDefault(
-                deleteError,
-                'Unable to delete this NodeBalancer.'
-              )
-            : undefined
-        }
+        loading={isDeleting}
+        errors={deleteError}
         onClose={() => setIsDeleteDialogOpen(false)}
-        actions={actions}
+        onClick={handleDelete}
+        typographyStyle={{ marginTop: '20px' }}
       >
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
@@ -259,24 +224,7 @@ export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
           check your DNS settings and either provide the IP address of another
           active NodeBalancer, or route traffic directly to your Linode.
         </Typography>
-        <TypeToConfirm
-          label="NodeBalancer Label"
-          confirmationText={
-            <span>
-              To confirm deletion, type the name of the Nodebalancer (
-              <b>{nodeBalancerLabel}</b>) in the field below:
-            </span>
-          }
-          value={confirmText}
-          typographyStyle={{ marginTop: '20px' }}
-          data-testid={'dialog-confirm-text-input'}
-          expand
-          onChange={(input) => {
-            setConfirmText(input);
-          }}
-          visible={preferences?.type_to_confirm}
-        />
-      </ConfirmationDialog>
+      </TypeToConfirmDialog>
     </div>
   );
 };

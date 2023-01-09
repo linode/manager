@@ -30,9 +30,6 @@ describe.skip('NodeBalancers', () => {
             }}
             setDocs={jest.fn()}
             clearDocs={jest.fn()}
-            getUserPreferences={jest.fn()}
-            updateUserPreferences={jest.fn()}
-            preferences={{}}
           />
         </LinodeThemeWrapper>
       </Provider>

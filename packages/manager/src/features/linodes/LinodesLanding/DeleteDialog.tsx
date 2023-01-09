@@ -1,13 +1,9 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import TypeToConfirm from 'src/components/TypeToConfirm';
-import usePreferences from 'src/hooks/usePreferences';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 
 interface Props {
   linodeID?: number;
@@ -24,12 +20,6 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
 
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
-  const [confirmText, setConfirmText] = React.useState('');
-
-  const { preferences } = usePreferences();
-
-  const disabled =
-    preferences?.type_to_confirm !== false && confirmText !== linodeLabel;
 
   React.useEffect(() => {
     if (open) {
@@ -58,30 +48,15 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const confirmationActions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel-delete>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        loading={isDeleting}
-        disabled={disabled}
-        onClick={handleSubmit}
-        data-qa-confirm-delete
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
-    <Dialog
+    <TypeToConfirmDialog
+      title={`Delete ${linodeLabel}?`}
+      entity={{ type: 'Linode', label: linodeLabel }}
       open={open}
-      title={`Delete Linode ${linodeLabel}?`}
+      loading={isDeleting}
+      errors={errors}
       onClose={onClose}
-      error={errors ? errors[0].reason : ''}
-      actions={confirmationActions}
+      onClick={handleSubmit}
     >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
@@ -89,23 +64,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
           permanent data loss.
         </Typography>
       </Notice>
-      <TypeToConfirm
-        label="Linode Label"
-        confirmationText={
-          <span>
-            To confirm deletion, type the name of the Linode (
-            <b>{linodeLabel}</b>) in the field below:
-          </span>
-        }
-        value={confirmText}
-        data-testid={'dialog-confirm-text-input'}
-        expand
-        onChange={(input) => {
-          setConfirmText(input);
-        }}
-        visible={preferences?.type_to_confirm}
-      />
-    </Dialog>
+    </TypeToConfirmDialog>
   );
 };
 
