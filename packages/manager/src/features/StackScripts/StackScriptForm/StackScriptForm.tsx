@@ -45,10 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   scriptTextarea: {
     maxWidth: '100%',
-    height: 400,
-    '& textarea': {
-      height: '100%',
-    },
   },
   revisionTextarea: {
     maxWidth: '100%',
@@ -186,7 +182,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
       </Grid>
       <TextField
         multiline
-        rows={1}
+        rows={3}
         label="Script"
         placeholder={`#!/bin/bash \n\n# Your script goes here`}
         onChange={script.handler}
