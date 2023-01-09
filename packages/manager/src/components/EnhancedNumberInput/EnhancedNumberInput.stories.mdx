@@ -19,7 +19,7 @@ User-interface element for inputting numeric information.
 
 - Steppers are not suitable for large number adjustments
 
-<br />
+---
 
 ### Guidelines
 
@@ -56,10 +56,10 @@ export const Template = (args, context) => {
     args={{
       value: 0,
       setValue: undefined,
-      max: undefined,
-      min: undefined,
-      disabled: undefined,
+      max: 100,
+      min: 0,
       inputLabel: undefined,
+      disabled: false,
     }}
     argTypes={{
       value: {

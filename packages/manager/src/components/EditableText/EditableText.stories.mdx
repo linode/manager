@@ -1,25 +1,25 @@
 import EditableText from './EditableText';
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
-
-export const decorators = [
-  (Story) => {
-    const [text, setText] = React.useState('Edit me!');
-    return Story({ text, setText });
-  }
-];
+import { useArgs } from '@storybook/client-api';
 
 <Meta title="Components/Editable Text" component={EditableText} />
 
 # Editable Text
 
 export const Template = (args, context) => {
-  return <EditableText text={context.text} onEdit={context.setText} onCancel={() => {}}/>
+  const [localArgs, setLocalArgs] = useArgs();
+  const onEdit = (updatedText) => {
+    return Promise.resolve(setLocalArgs({text: updatedText}));
+  }
+  return <EditableText text={localArgs.text} onEdit={onEdit} onCancel={() => {}}/>
 }
 
 <Canvas>
   <Story 
     name="Headline & Title"
-    decorators={decorators}>
+    args={{
+      text: 'Edit Me!',
+    }}>
     {Template.bind({})}
   </Story>
 </Canvas>
