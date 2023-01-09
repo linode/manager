@@ -26,6 +26,60 @@ We use [Storybook](https://storybook.js.org/) to document our UI component libra
 
 `yarn storybook`: starts the local dev server at `localhost:6006`
 
+#### Adding Stories
+
+To make a new story for a component create a new file in the same directory as the `.tsx` file the component is defined in. This new file should follow the nameing convention of `<Component Name>.stories.mdx`.
+For example the story for `EnhancedNumberInput.tsx` is defined in the `EnhancedNumberInput.stories.mdx` file. New entries should be categorized as one of the following:
+
+##### Core Style
+A color, font, svg icon, or other simple styling convention.
+##### Element
+A basic HTML element wrapped in a react component, or a small component that is not normally used on its own.
+##### Component
+A composition of Core Styles and Elements. Normally with some code that defines behavior. An example of a Component is a Dialog which is a composition of Typography and Buttons.
+##### Feature
+A Composition of Core Styles, Elements, and Components that defines a verticle slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
+
+The `Meta` tag's `title` prop is used to define how a story is categorized within these categories. For example the `Meta` tag for the Payment Method Row is defined like this
+```ts
+<Meta title="Features/Payment Method Row" component={PaymentMethodRow} />
+```
+
+A story might also be grouped within a single entry in one of these categories. In this case define a single story that combines examples of each. The Dialogs Component can be used as a template here. The story file imports all the types of Dialogs from their `.tsx` files. 
+
+```ts
+import Dialog from './Dialog';
+import DeletionDialog from 'src/components/DeletionDialog';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
+```
+
+then you can use the `name` feild on the `Story` tags to display the different types of Dialogs. For example within the `Dialog.stories.mdx` file there are multiple `Story` tags:
+
+```ts
+<Story
+    name="Dialog"
+    args={{
+      open: true,
+      fullHeight: false,
+      fullWidth: false,...>
+```
+```ts
+<Story
+    name="Confirmation Dialog"
+    args={{
+      open: true,
+      title: 'Enable this feature?',
+      children: 'This confirmation modal is making sure you really want to do this.',...>
+```
+```ts
+<Story
+    name="Deletion Dialog"
+    args={{
+      open: true,
+      typeToConfirm: true,
+      entity: 'Linode',
+      label: 'my-linode-0',...>
+```
 #### Best Practices
 
 - Write new stories in [MDX](https://storybook.js.org/docs/react/api/mdx) format with a `.mdx` file extension. Older stories might follow the [Component Story Format (CSF)](https://storybook.js.org/docs/react/api/csf), an ES6 module-based standard for writing stories, with a `.tsx` file extension.
