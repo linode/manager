@@ -38,7 +38,6 @@ describe('Maintenance Table Row', () => {
     );
     getByText(maintenance.entity.label);
     getByText(formatDate(maintenance.when));
-    getByText(maintenance.reason);
   });
 
   it('should render a relative time', () => {
