@@ -12,7 +12,8 @@ export interface Props {
   onClose: () => void;
 }
 
-const ApiAwarenessModal = ({ isOpen, onClose }: Props) => {
+const ApiAwarenessModal = (props: Props) => {
+  const { isOpen, onClose } = props;
   return (
     <Dialog
       title="Create using command line"
