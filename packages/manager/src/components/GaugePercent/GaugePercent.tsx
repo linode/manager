@@ -22,7 +22,7 @@ const useStyles = (options: Options) =>
     },
     innerText: {
       position: 'absolute',
-      top: `calc(${options.height}px + ${theme.spacing(2.875)})`,
+      top: `calc(${options.height + 30}px / 2)`,
       width: options.width,
       textAlign: 'center',
       fontSize: '1rem',
