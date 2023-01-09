@@ -1,6 +1,11 @@
 import React from 'react';
-import { ActionsPanel, Button, Dialog, ExternalLink } from 'src/components';
-import { Typography } from 'src/components/core';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import Dialog from 'src/components/Dialog';
+import ExternalLink from 'src/components/ExternalLink';
+
+import Typography from 'src/components/core/Typography';
 
 export interface Props {
   isOpen: boolean;
