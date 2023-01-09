@@ -33,7 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',
-    minHeight: 48,
   },
   editablePreContainer: {
     alignItems: 'center',
