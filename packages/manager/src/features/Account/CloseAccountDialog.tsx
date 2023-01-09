@@ -144,7 +144,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
         onChange={(e) => setComments(e.target.value)}
         optional
         placeholder="Provide Feedback"
-        rows={2}
+        rows={1}
         value={comments}
         aria-label="Optional comments field"
       />

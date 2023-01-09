@@ -207,7 +207,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
           <TextField
             label="Description"
             multiline
-            rows={4}
+            rows={1}
             value={description}
             onChange={changeDescription}
             errorText={errorMap.description}

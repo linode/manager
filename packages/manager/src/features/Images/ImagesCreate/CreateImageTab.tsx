@@ -278,7 +278,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         <TextField
           label="Description"
           multiline
-          rows={4}
+          rows={1}
           value={description}
           onChange={changeDescription}
           error={Boolean(descriptionError)}
