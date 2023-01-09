@@ -769,12 +769,10 @@ export class LinodeCreate extends React.PureComponent<
               >
                 Create Linode
               </Button>
-              {this.state.isApiAwarenessModalOpen ? (
-                <ApiAwarenessModal
-                  isOpen={this.state.isApiAwarenessModalOpen}
-                  onClose={() => this.setIsApiAwarenessModalOpen(false)}
-                />
-              ) : null}
+              <ApiAwarenessModal
+                isOpen={this.state.isApiAwarenessModalOpen}
+                onClose={() => this.setIsApiAwarenessModalOpen(false)}
+              />
             </div>
           </Box>
         </Grid>
