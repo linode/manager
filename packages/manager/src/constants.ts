@@ -152,7 +152,7 @@ export const dcDisplayNames = {
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'Mumbai, IN',
   'ap-southeast': 'Sydney, AU',
-  'us-iad': 'Washington DC',
+  'us-iad': 'Washington, DC',
 };
 
 // @todo no longer in use; remove if current design is approved.
