@@ -32,15 +32,7 @@ interface Props {
 export const DestructiveVolumeDialog = (props: Props) => {
   const classes = useStyles();
 
-  const {
-    volumeLabel: label,
-    volumeId,
-    linodeId,
-    linodeLabel,
-    mode,
-    open,
-    onClose,
-  } = props;
+  const { volumeLabel: label, volumeId, linodeId, mode, open, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
   const linodes = useLinodes();
@@ -128,7 +120,7 @@ export const DestructiveVolumeDialog = (props: Props) => {
           in the field below:
         </span>
       }
-      typographyStyle={{ marginTop: '20px' }}
+      typographyStyle={{ marginTop: '10px' }}
     >
       {error && <Notice error text={error} />}
       {mode === 'detach' && !poweredOff && linode !== undefined && (
@@ -139,10 +131,6 @@ export const DestructiveVolumeDialog = (props: Props) => {
           mounted, detaching it could cause your Linode to restart.
         </Typography>
       )}
-      <Typography>
-        Are you sure you want to {mode} this Volume
-        {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
-      </Typography>
     </TypeToConfirmDialog>
   );
 };
