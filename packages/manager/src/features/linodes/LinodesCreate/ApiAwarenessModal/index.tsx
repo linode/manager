@@ -24,6 +24,7 @@ const useStyles = makeStyles(() => ({
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
+  label: string;
   route: string;
 }
 
@@ -35,7 +36,7 @@ const fireGAEvent = (action: string) => {
 };
 
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, onClose, route } = props;
+  const { isOpen, label, onClose, route } = props;
 
   const classes = useStyles();
 
@@ -61,7 +62,7 @@ const ApiAwarenessModal = (props: Props) => {
 
   return (
     <Dialog
-      title="Create using command line"
+      title={`Create using command line ${label}`}
       open={isOpen}
       onClose={onClose}
       maxWidth={'sm'}
