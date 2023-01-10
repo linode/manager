@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '16px',
   },
   helperText: {
-    paddingBottom: theme.spacing(2) + 1,
+    paddingBottom: `calc(${theme.spacing(2)} + 1px)`,
   },
   section: {
     paddingBottom: theme.spacing(3),

@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
   createStyles({
     ...summaryPanelStyles(theme),
     region: {
-      [theme.breakpoints.between('sm', 'md')]: {
+      [theme.breakpoints.between('sm', 'lg')]: {
         flexBasis: '100%',
         maxWidth: '100%',
         display: 'flex',
@@ -37,16 +37,16 @@ const styles = (theme: Theme) =>
     },
     regionInner: {
       [theme.breakpoints.only('xs')]: {
-        padding: `0 ${theme.spacing(1)}px !important`,
+        padding: `0 ${theme.spacing(1)} !important`,
       },
       [theme.breakpoints.up('lg')]: {
         '&:first-of-type': {
-          padding: `${theme.spacing(1)}px ${theme.spacing(
+          padding: `${theme.spacing(1)} ${theme.spacing(1)} 0 ${theme.spacing(
             1
-          )}px 0 ${theme.spacing(1)}px !important`,
+          )} !important`,
         },
         '&:last-of-type': {
-          padding: `0 ${theme.spacing(1)}px !important`,
+          padding: `0 ${theme.spacing(1)} !important`,
         },
       },
     },

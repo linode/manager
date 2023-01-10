@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 import _Accordion, { AccordionProps } from 'src/components/core/Accordion';
 import AccordionDetails, {

@@ -22,7 +22,7 @@ type CombinedProps = Props;
 
 const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
 

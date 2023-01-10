@@ -66,7 +66,7 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingRight: 0,
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(),
       },
     },

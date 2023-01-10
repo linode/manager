@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(1),
       marginLeft: theme.spacing(1),
       transition: theme.transitions.create(['opacity']),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         backgroundColor: theme.bg.white,
         position: 'absolute',
         width: 'calc(100% - 100px)',
@@ -44,7 +44,7 @@ const styles = (theme: Theme) =>
           zIndex: 3,
         },
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         width: '100%',
       },
       '& .react-select__menu-list': {
@@ -109,7 +109,7 @@ const styles = (theme: Theme) =>
     },
     textfieldContainer: {
       width: '100%',
-      [theme.breakpoints.down('sm')]: {},
+      [theme.breakpoints.down('md')]: {},
     },
     textfield: {
       margin: 0,
@@ -126,7 +126,7 @@ const styles = (theme: Theme) =>
       '& input': {
         transition: theme.transitions.create(['opacity']),
         fontSize: '1.0em',
-        [theme.breakpoints.down('sm')]: {},
+        [theme.breakpoints.down('md')]: {},
       },
     },
   });

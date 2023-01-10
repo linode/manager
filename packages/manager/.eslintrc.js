@@ -70,8 +70,8 @@ module.exports = {
     'no-restricted-imports': [
       'error',
       'rxjs',
-      '@material-ui/core',
-      '@material-ui/icons',
+      '@mui/core',
+      '@mui/icons-material',
     ],
     'no-console': 'error',
     // allowing to init vars to undefined

@@ -1,6 +1,6 @@
 import FormControl, {
   FormControlProps as _FormControlProps,
-} from '@material-ui/core/FormControl';
+} from '@mui/material/FormControl';
 import RenderGuard from 'src/components/RenderGuard';
 
 /* tslint:disable-next-line:no-empty-interface */

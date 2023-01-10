@@ -9,6 +9,8 @@ import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import sanitize from 'sanitize-html';
 // Register all languages we intend to use
+// This is not great. Require doesn't work in the broswer and modern TS/JS tooling
+// gets very upset.
 hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
 hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
 hljs.registerLanguage(
@@ -38,13 +40,12 @@ export interface HighlightedMarkdownProps {
   textOrMarkdown: string;
   language?: SupportedLanguage;
   sanitizeOptions?: sanitize.IOptions;
+  className?: string;
 }
 
-export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
-  props
-) => {
+export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const classes = useStyles();
-  const { language, textOrMarkdown, sanitizeOptions } = props;
+  const { language, textOrMarkdown, sanitizeOptions, className } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   /**
@@ -82,10 +83,7 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
 
   return (
     <Typography
-      className={classNames({
-        [classes.root]: true,
-        'formatted-text': true,
-      })}
+      className={classNames(classes.root, 'formatted-text', className)}
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml,

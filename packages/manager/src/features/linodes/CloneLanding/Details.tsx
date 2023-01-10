@@ -1,5 +1,5 @@
 import { Disk, Linode } from '@linode/api-v4/lib/linodes';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   clearButton: {
-    top: -(theme.spacing(1) / 2),
+    top: `-${theme.spacing(0.5)}`,
   },
   list: {
     flexWrap: 'wrap',

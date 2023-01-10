@@ -36,10 +36,10 @@ type CombinedProps = RouteProps & SetDocsProps;
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     margin: 0,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingRight: theme.spacing(),
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
       paddingLeft: theme.spacing(),

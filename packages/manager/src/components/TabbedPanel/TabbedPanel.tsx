@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Paper from 'src/components/core/Paper';
 import Tab from 'src/components/core/ReachTab';
 import TabList from 'src/components/core/ReachTabList';
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   panelBody: {
-    padding: `${theme.spacing(2)}px 0 0`,
+    padding: `${theme.spacing(2)} 0 0`,
   },
   tabsWrapper: {
     position: 'relative',
@@ -62,7 +62,7 @@ interface Props {
   initTab?: number;
   bodyClass?: string;
   noPadding?: boolean;
-  handleTabChange?: (index: number) => void;
+  handleTabChange?: () => void;
   value?: number;
   docsLink?: JSX.Element;
 }
@@ -79,10 +79,26 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
     tabs,
     handleTabChange,
     docsLink,
+    initTab,
     ...rest
   } = props;
 
+  const [tabIndex, setTabIndex] = useState<number | undefined>(initTab);
+
   const classes = useStyles();
+
+  const tabChangeHandler = (index: number) => {
+    setTabIndex(index);
+    if (handleTabChange) {
+      handleTabChange();
+    }
+  };
+
+  useEffect(() => {
+    if (tabIndex !== initTab) {
+      setTabIndex(initTab);
+    }
+  }, [initTab]);
 
   return (
     <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
@@ -112,7 +128,11 @@ export const TabbedPanel: React.FC<CombinedProps> = (props) => {
           </Typography>
         )}
 
-        <Tabs className={classes.tabsWrapper} onChange={handleTabChange}>
+        <Tabs
+          className={classes.tabsWrapper}
+          onChange={tabChangeHandler}
+          index={tabIndex}
+        >
           <TabList className={classes.tabList}>
             {tabs.map((tab, idx) => (
               <Tab className={classes.tab} key={`tabs-${tab.title}-${idx}`}>
