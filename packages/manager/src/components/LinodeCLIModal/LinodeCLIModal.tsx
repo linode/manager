@@ -7,7 +7,7 @@ import { sendCLIClickEvent } from 'src/utilities/ga';
 const useStyles = makeStyles((theme: Theme) => ({
   dialog: {
     width: '100%',
-    padding: `${theme.spacing()}px ${theme.spacing(2)}px`,
+    padding: `${theme.spacing()} ${theme.spacing(2)}`,
     '& [data-qa-copied]': {
       zIndex: 2,
     },

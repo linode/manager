@@ -1,35 +1,47 @@
-import { getUsers, User } from '@linode/api-v4/lib/account';
+import { getUser, getUsers, User } from '@linode/api-v4/lib/account';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { map as mapPromise } from 'bluebird';
-import { default as memoize } from 'memoizee';
 import { useQuery } from 'react-query';
 import { useProfile } from 'src/queries/profile';
-import { getGravatarUrl } from 'src/utilities/gravatar';
-import { queryPresets } from './base';
 
 export const queryKey = 'account-users';
 
-export const useAccountUsers = (params: any, withGravatar: boolean = false) => {
+export const useAccountUsers = (params?: any) => {
   const { data: profile } = useProfile();
 
   return useQuery<ResourcePage<User>, APIError[]>(
     [queryKey, params.page, params.page_size],
-    withGravatar ? () => getUsersWithGravatar(params) : () => getUsers(params),
+    () => getUsers(params),
     {
-      ...queryPresets.oneTimeFetch,
       enabled: !profile?.restricted,
     }
   );
 };
 
-const memoizedGetGravatarURL = memoize(getGravatarUrl);
-
-const getUsersWithGravatar = (params?: any, filters?: any) =>
-  getUsers(params, filters).then(({ data, page, pages, results }) =>
-    mapPromise(data, (user) =>
-      memoizedGetGravatarURL(user.email).then((gravatarUrl: string) => ({
-        ...user,
-        gravatarUrl,
-      }))
-    ).then((updatedUsers) => ({ page, pages, results, data: updatedUsers }))
+export const useAccountUser = (username: string) => {
+  return useQuery<User, APIError[]>(
+    [queryKey, username],
+    () => getUser(username),
+    // Enable the query if the user is not on the blocklist
+    { enabled: !getIsBlocklistedUser(username) }
   );
+};
+
+/**
+ * Returns true if a user is "blocklisted". We do this because some accounts
+ * such as service accounts will 404 when we hit the account endpoint.
+ * @param username a user's username
+ * @returns true if account is blocklisted (should *not* be fetched)
+ */
+function getIsBlocklistedUser(username: string) {
+  if (!username) {
+    // "Block" empty, null, or undefined usernames so a query does not run
+    return true;
+  }
+  if (username.startsWith('lke-service-account-')) {
+    return true;
+  }
+  if (username === 'Linode') {
+    return true;
+  }
+  return false;
+}

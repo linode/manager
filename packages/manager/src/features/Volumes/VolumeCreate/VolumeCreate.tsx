@@ -11,7 +11,7 @@ import CreateVolumeForm from './CreateVolumeForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginLeft: theme.spacing(),
     },
   },

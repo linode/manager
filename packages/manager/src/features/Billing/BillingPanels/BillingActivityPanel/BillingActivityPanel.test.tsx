@@ -155,12 +155,14 @@ describe('paymentToActivityFeedItem', () => {
 
   describe('getCutoffFromDateRange', () => {
     it('returns the datetime of the range relative to given date', () => {
-      const testDate = DateTime.fromObject({
-        year: 2020,
-        month: 1,
-        day: 1,
-        zone: 'utc',
-      });
+      const testDate = DateTime.fromObject(
+        {
+          year: 2020,
+          month: 1,
+          day: 1,
+        },
+        { zone: 'utc' }
+      );
       const testDateISO = testDate.toISO();
       expect(getCutoffFromDateRange('30 Days', testDateISO)).toBe(
         testDate.minus({ days: 30 }).toISO()

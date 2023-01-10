@@ -51,9 +51,13 @@ describe('object storage end-to-end tests', () => {
 
     cy.wait(['@createBucket', '@getBuckets']);
 
-    cy.findByText(bucketLabel).should('be.visible');
-    cy.findByText(bucketRegion).should('be.visible');
-    cy.findByText(bucketHostname).should('be.visible');
+    cy.findByText(bucketLabel)
+      .should('be.visible')
+      .closest('tr')
+      .within(() => {
+        cy.findByText(bucketRegion).should('be.visible');
+        cy.findByText(bucketHostname).should('be.visible');
+      });
   });
 
   /*

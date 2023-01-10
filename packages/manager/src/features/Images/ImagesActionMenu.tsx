@@ -29,7 +29,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     description,

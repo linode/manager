@@ -28,10 +28,10 @@ import RescueDescription from './RescueDescription';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
+    padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
     '& .iconTextLink': {
       display: 'inline-flex',
-      margin: `${theme.spacing(3)}px 0 0 0`,
+      margin: `${theme.spacing(3)} 0 0 0`,
     },
   },
   button: {

@@ -11,12 +11,12 @@ import ConfirmTransferDialog from './ConfirmTransferDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    margin: `${theme.spacing(2)}px 0`,
+    margin: `${theme.spacing(2)} 0`,
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       alignItems: 'flex-end',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       marginTop: theme.spacing(),
       marginLeft: theme.spacing(2),
@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelWrapper: {
     margin: 0,
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       flexWrap: 'wrap',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
       marginLeft: theme.spacing(),
@@ -43,13 +43,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     marginRight: theme.spacing(),
     whiteSpace: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginBottom: 4,
       marginLeft: 0,
     },
   },
   transferInputWrapper: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 'calc(100% - 16px)',
       '& > div': {
         flexGrow: 1,
@@ -58,13 +58,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transferInput: {
     width: 360,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: 240,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 200,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingRight: 0,
       },
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       margin: 0,
       width: '100%',
       '&.MuiGrid-item': {
@@ -85,13 +85,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   makeTransferButton: {
     minWidth: 152,
     whiteSpace: 'nowrap',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginBottom: theme.spacing(),
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: 0,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       margin: 0,
       marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
@@ -118,70 +118,68 @@ export const TransferControls: React.FC<{}> = (_) => {
   };
 
   const handleCreateTransfer = () => push('/account/service-transfers/create');
-  return (
-    <>
+  return <>
+    <Grid
+      container
+      className={classes.root}
+      alignItems="center"
+      justifyContent="space-between"
+      wrap="nowrap"
+    >
       <Grid
         container
-        className={classes.root}
+        item
+        className={`px0 ${classes.labelWrapper}`}
         alignItems="center"
-        justifyContent="space-between"
         wrap="nowrap"
       >
+        <Typography className={classes.label}>
+          <strong>Receive a Service Transfer</strong>
+        </Typography>
         <Grid
           container
           item
-          className={`px0 ${classes.labelWrapper}`}
+          className={classes.transferInputWrapper}
+          direction="row"
           alignItems="center"
-          wrap="nowrap"
         >
-          <Typography className={classes.label}>
-            <strong>Receive a Service Transfer</strong>
-          </Typography>
-          <Grid
-            container
-            item
-            className={classes.transferInputWrapper}
-            direction="row"
-            alignItems="center"
-          >
-            <TextField
-              className={classes.transferInput}
-              hideLabel
-              value={token}
-              label="Receive a Service Transfer"
-              placeholder="Enter a token"
-              onChange={handleInputChange}
-            />
-            <Button
-              className={classes.reviewDetails}
-              buttonType="primary"
-              disabled={token === ''}
-              onClick={() => setConfirmDialogOpen(true)}
-            >
-              Review Details
-            </Button>
-            <Hidden smDown>
-              <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
-            </Hidden>
-          </Grid>
-        </Grid>
-        <Grid item className={classes.makeTransfer}>
+          <TextField
+            className={classes.transferInput}
+            hideLabel
+            value={token}
+            label="Receive a Service Transfer"
+            placeholder="Enter a token"
+            onChange={handleInputChange}
+          />
           <Button
+            className={classes.reviewDetails}
             buttonType="primary"
-            className={classes.makeTransferButton}
-            onClick={handleCreateTransfer}
+            disabled={token === ''}
+            onClick={() => setConfirmDialogOpen(true)}
           >
-            Make a Service Transfer
+            Review Details
           </Button>
+          <Hidden mdDown>
+            <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
+          </Hidden>
         </Grid>
       </Grid>
-      <ConfirmTransferDialog
-        open={confirmDialogOpen}
-        token={token}
-        onClose={handleCloseDialog}
-      />
-    </>
-  );
+      <Grid item className={classes.makeTransfer}>
+        <Button
+          buttonType="primary"
+          className={classes.makeTransferButton}
+          onClick={handleCreateTransfer}
+        >
+          Make a Service Transfer
+        </Button>
+      </Grid>
+    </Grid>
+    <ConfirmTransferDialog
+      open={confirmDialogOpen}
+      token={token}
+      onClose={handleCloseDialog}
+    />
+  </>;
 };
 
 export default React.memo(TransferControls);

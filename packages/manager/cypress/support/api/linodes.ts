@@ -7,7 +7,7 @@ import {
 } from './common';
 import { randomLabel, randomString } from 'support/util/random';
 
-import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes/types';
+import { CreateLinodeRequest } from '@linode/api-v4/types';
 import { linodeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 
@@ -84,8 +84,4 @@ export const deleteAllTestLinodes = () => {
       });
     }
   });
-};
-
-export const clickLinodeActionMenu = (title) => {
-  cy.get(`[aria-label="Action menu for Linode ${title}"]`).click();
 };

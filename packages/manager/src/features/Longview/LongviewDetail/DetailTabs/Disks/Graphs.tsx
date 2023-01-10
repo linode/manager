@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > div': {
       flexGrow: 1,
       width: '33%',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginTop: theme.spacing(),
         width: '60%',
       },
@@ -73,6 +73,15 @@ const Graphs: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
+  const isToday = _isToday(startTime, endTime);
+  const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
+
+  const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
+  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
+    iFree,
+    iTotal,
+  ]);
+
   if (childOf) {
     /** @todo document the why here. This comes from old Longview.JS */
     return (
@@ -85,15 +94,6 @@ const Graphs: React.FC<CombinedProps> = (props) => {
       </Typography>
     );
   }
-
-  const isToday = _isToday(startTime, endTime);
-  const labelHelperText = generateHelperText(sysInfoType, isSwap, isMounted);
-
-  const _free = React.useMemo(() => formatSpace(free, total), [free, total]);
-  const _inodes = React.useMemo(() => formatINodes(iFree, iTotal), [
-    iFree,
-    iTotal,
-  ]);
 
   return (
     <GraphCard title={diskLabel} helperText={labelHelperText}>

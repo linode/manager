@@ -78,7 +78,7 @@ const styles = (theme: Theme) =>
     enhancedInputOuter: {
       display: 'flex',
       justifyContent: 'flex-end',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         justifyContent: 'flex-start',
       },
       alignItems: 'center',
@@ -88,7 +88,7 @@ const styles = (theme: Theme) =>
       minWidth: 85,
       paddingTop: 7,
       paddingBottom: 7,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         minWidth: 80,
         paddingTop: 12,
         paddingBottom: 12,
@@ -178,7 +178,7 @@ export class SelectPlanPanel extends React.Component<
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        <Hidden smDown>
+        <Hidden mdDown>
           <TableRow
             data-qa-plan-row={type.label}
             key={type.id}
@@ -272,7 +272,7 @@ export class SelectPlanPanel extends React.Component<
     return (
       <Grid container>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid item xs={12} lg={12}>
             <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}

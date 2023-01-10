@@ -71,7 +71,7 @@ describe('object storage access key end-to-end tests', () => {
             .should('have.value', secretKey);
 
           ui.buttonGroup
-            .findButtonByTitle('I Have Saved My Keys')
+            .findButtonByTitle('I Have Saved My Secret Key')
             .should('be.visible')
             .should('be.enabled')
             .click();
@@ -159,7 +159,7 @@ describe('object storage access key end-to-end tests', () => {
               .should('have.value', secretKey);
 
             ui.buttonGroup
-              .findButtonByTitle('I Have Saved My Keys')
+              .findButtonByTitle('I Have Saved My Secret Key')
               .should('be.visible')
               .should('be.enabled')
               .click();

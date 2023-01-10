@@ -15,7 +15,7 @@ type CombinedProps = Props;
 const UsersActionMenu: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { onDelete, username } = props;
   const { data: profile } = useProfile();

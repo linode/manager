@@ -106,24 +106,17 @@ const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
       <DocumentTitleSegment
         segment={`${linodeLabel} - ${tabs[getIndex()]?.title ?? 'Detail View'}`}
       />
-      {tabs[getIndex()]?.title === 'Network' ? (
-        <SMTPRestrictionText supportLink={{ label: linodeLabel, id: linodeId }}>
-          {({ text }) =>
-            !hasDismissedBanner && text !== null ? (
-              <Notice
-                warning
-                dismissible
-                onClose={handleDismiss}
-                spacingTop={32}
-              >
-                <Grid item xs={12}>
-                  {text}
-                </Grid>
-              </Notice>
-            ) : null
-          }
-        </SMTPRestrictionText>
-      ) : null}
+      <SMTPRestrictionText supportLink={{ label: linodeLabel, id: linodeId }}>
+        {({ text }) =>
+          !hasDismissedBanner && text !== null ? (
+            <Notice warning dismissible onClose={handleDismiss} spacingTop={32}>
+              <Grid item xs={12}>
+                {text}
+              </Grid>
+            </Notice>
+          ) : null
+        }
+      </SMTPRestrictionText>
       <div style={{ marginTop: 8 }}>
         <Tabs index={getIndex()} onChange={navToURL}>
           <TabLinkList tabs={tabs} />

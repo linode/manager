@@ -16,7 +16,6 @@ import { storage } from 'src/utilities/storage';
 import { debounce } from 'throttle-debounce';
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
-import { ExtendedReply } from '../../types';
 import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
@@ -24,7 +23,7 @@ import TabbedReply from './TabbedReply';
 const useStyles = makeStyles((theme: Theme) => ({
   replyContainer: {
     paddingLeft: theme.spacing(8),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(6),
     },
   },
@@ -46,8 +45,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: 4,
       padding: `0 !important`,
     },
-    [theme.breakpoints.down('xs')]: {
-      padding: `${theme.spacing(2)}px !important`,
+    [theme.breakpoints.down('sm')]: {
+      padding: `${theme.spacing(2)} !important`,
     },
   },
 }));
@@ -58,7 +57,7 @@ interface Props {
   reloadAttachments: () => void;
   ticketId: number;
   closeTicketSuccess: () => void;
-  lastReply?: ExtendedReply;
+  lastReply?: SupportReply;
 }
 
 type CombinedProps = Props;

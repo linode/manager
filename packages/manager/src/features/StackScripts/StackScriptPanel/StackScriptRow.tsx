@@ -89,18 +89,18 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
       <TableCell>
         <Typography data-qa-stackscript-deploys>{deploymentsTotal}</Typography>
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell>
           <Typography data-qa-stackscript-revision>{updated}</Typography>
         </TableCell>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell data-qa-stackscript-images className={classes.images}>
           {images.includes('any/all') ? 'Any/All' : images.join(',  ')}
         </TableCell>
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.
-        <Hidden mdDown>
+        <Hidden lgDown>
           <TableCell data-qa-stackscript-status>
             {isPublic ? 'Public' : 'Private'}
           </TableCell>

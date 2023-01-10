@@ -25,14 +25,14 @@ import { Process } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(1) + 2,
+    marginTop: theme.spacing(1.25),
     padding: theme.spacing(3),
   },
   graphWrap: {
     marginTop: theme.spacing(3),
   },
   title: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
   },

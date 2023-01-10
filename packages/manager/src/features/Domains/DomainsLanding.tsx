@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   importButton: {
-    marginLeft: -theme.spacing(),
+    marginLeft: `-${theme.spacing()}`,
     whiteSpace: 'nowrap',
   },
 }));
@@ -301,7 +301,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
             >
               Status
             </TableSortCell>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'type'}
                 direction={order}

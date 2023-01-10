@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 18,
     position: 'relative',
     '& + .notice': {
-      marginTop: `${theme.spacing()}px !important`,
+      marginTop: `${theme.spacing()} !important`,
     },
     '& $important': {
       backgroundColor: theme.bg.bgPaper,

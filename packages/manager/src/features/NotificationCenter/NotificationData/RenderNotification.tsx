@@ -1,6 +1,6 @@
 import { NotificationType } from '@linode/api-v4/lib/account';
-import ErrorIcon from '@material-ui/icons/Error';
-import WarningIcon from '@material-ui/icons/Warning';
+import ErrorIcon from '@mui/icons-material/Error';
+import WarningIcon from '@mui/icons-material/Warning';
 import classNames from 'classnames';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';

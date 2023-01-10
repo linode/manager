@@ -251,7 +251,7 @@ describe('Update database clusters', () => {
    * - Confirms that users cannot reset root passwords for provisioning DBs.
    * - Confirms that users cannot change maintenance schedules for provisioning DBs.
    */
-  it.skip('Cannot update database clusters while they are provisioning', () => {
+  it('Cannot update database clusters while they are provisioning', () => {
     const initialLabel = randomLabel();
     const updateAttemptLabel = randomLabel();
     const allowedIp = randomIp();

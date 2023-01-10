@@ -6,7 +6,7 @@ import {
   InvoiceItem,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -30,7 +30,7 @@ import InvoiceTable from './InvoiceTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
   },
   totals: {
     display: 'flex',
@@ -132,6 +132,7 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
                 <IconButton
                   className={classes.backButton}
                   data-qa-back-to-billing
+                  size="large"
                 >
                   <KeyboardArrowLeft />
                 </IconButton>

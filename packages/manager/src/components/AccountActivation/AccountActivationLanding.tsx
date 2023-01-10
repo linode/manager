@@ -1,4 +1,4 @@
-import Warning from '@material-ui/icons/CheckCircle';
+import Warning from '@mui/icons-material/CheckCircle';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';

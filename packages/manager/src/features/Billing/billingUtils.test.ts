@@ -1,6 +1,12 @@
-import { AKAMAI_DATE } from 'src/constants';
+import {
+  AKAMAI_DATE,
+  PAYMENT_HARD_MAX,
+  PAYMENT_MIN,
+  PAYMENT_SOFT_MAX,
+} from 'src/constants';
 import {
   cleanCVV,
+  getPaymentLimits,
   getShouldUseAkamaiBilling,
   renderUnitPrice,
 } from './billingUtils';
@@ -41,6 +47,45 @@ describe('Billing helper methods', () => {
 
     it(`should return false if date is before ${AKAMAI_DATE}`, () => {
       expect(getShouldUseAkamaiBilling('2022-12-01T18:04:01')).toBe(false);
+    });
+  });
+
+  describe('getPaymentLimits', () => {
+    describe('max', () => {
+      it(`If account is not loaded (balance is undefined), payment max should be ${PAYMENT_HARD_MAX}`, () => {
+        expect(getPaymentLimits(undefined).max).toBe(PAYMENT_HARD_MAX);
+      });
+      it(`If account has credit, the per payment limit is $${PAYMENT_SOFT_MAX}`, () => {
+        expect(getPaymentLimits(-50).max).toBe(PAYMENT_SOFT_MAX);
+      });
+      it(`For balance due of under $${PAYMENT_SOFT_MAX}, the per payment limit is $${PAYMENT_SOFT_MAX}`, () => {
+        expect(getPaymentLimits(PAYMENT_SOFT_MAX - 0.01).max).toBe(
+          PAYMENT_SOFT_MAX
+        );
+      });
+      it(`For balance due of over $${PAYMENT_SOFT_MAX} but under the hard max of $${PAYMENT_HARD_MAX}, the user may pay up to $${PAYMENT_HARD_MAX}`, () => {
+        expect(getPaymentLimits(PAYMENT_SOFT_MAX + 0.01).max).toBe(
+          PAYMENT_HARD_MAX
+        );
+      });
+    });
+
+    describe('min', () => {
+      it(`If account is not loaded (balance is undefined), minimum payment should be ${PAYMENT_MIN}`, () => {
+        expect(getPaymentLimits(undefined).min).toBe(PAYMENT_MIN);
+      });
+      it(`If the account balance is $0 (or if there's a positive credit on the account), the minimum payment is $${PAYMENT_MIN}.`, () => {
+        expect(getPaymentLimits(-50).min).toBe(5);
+        expect(getPaymentLimits(0).min).toBe(5);
+      });
+      it(`If the account has a past due balance less than $${PAYMENT_MIN}, the minimum payment equals the customer's past due balance.`, () => {
+        expect(getPaymentLimits(PAYMENT_MIN - 0.01).min).toBe(
+          PAYMENT_MIN - 0.01
+        );
+      });
+      it(`If the account has a past due balance of greater than $${PAYMENT_MIN}, the minimum payment is $${PAYMENT_MIN}`, () => {
+        expect(getPaymentLimits(10).min).toBe(5);
+      });
     });
   });
 });

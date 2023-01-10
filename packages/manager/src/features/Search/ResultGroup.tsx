@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   entityHeading: {
     marginBottom: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
@@ -69,7 +69,7 @@ export const ResultGroup: React.FC<CombinedProps> = (props) => {
           <TableRow>
             <TableCell>Label</TableCell>
             <TableCell>Region</TableCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableCell>Created</TableCell>
               <TableCell>Tags</TableCell>
             </Hidden>

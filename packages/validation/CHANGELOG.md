@@ -1,3 +1,8 @@
+## [2023-01-09] - v0.17.0
+
+### Changed:
+- Updated ESLint rules to not include Material UI
+
 ## [2022-11-01] - v0.16.0
 ### Changed:
 - Linode max label length from 32 to 64 characters

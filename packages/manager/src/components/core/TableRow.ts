@@ -1,6 +1,6 @@
 import TableRow, {
   TableRowProps as _TableRowProps,
-} from '@material-ui/core/TableRow';
+} from '@mui/material/TableRow';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface TableRowProps extends _TableRowProps {}

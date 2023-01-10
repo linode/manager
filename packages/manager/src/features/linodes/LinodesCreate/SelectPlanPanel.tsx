@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import {
   LinodeTypeClass,
   BaseType,
@@ -37,6 +38,7 @@ import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -115,6 +117,7 @@ interface Props {
   error?: string;
   onSelect: (key: string) => void;
   selectedID?: string;
+  linodeID?: number | undefined;
   selectedDiskSize?: number;
   currentPlanHeading?: string;
   disabled?: boolean;
@@ -159,6 +162,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     disabled,
     isCreate,
     header,
+    linodeID,
     showTransfer,
     types,
     className,
@@ -166,6 +170,13 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     error,
     docsLink,
   } = props;
+
+  const selectedLinodePlanType = useSelector((state: ApplicationState) => {
+    if (linodeID) {
+      return state?.__resources.linodes.itemsById[linodeID]?.type;
+    }
+    return linodeID;
+  });
 
   const classes = useStyles();
 
@@ -190,7 +201,8 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
-    const isSamePlan = type.heading === currentPlanHeading;
+    const isSamePlan =
+      type.heading === currentPlanHeading || type.id === selectedLinodePlanType;
     const isGPU = type.class === 'gpu';
     const isDisabledClass = getDisabledClass(type.class);
     const shouldShowTransfer = showTransfer && type.transfer;
@@ -210,7 +222,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        <Hidden mdDown={isCreate} smDown={!isCreate}>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <TableRow
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
@@ -323,7 +335,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
           {plans.map(renderSelection)}
         </Hidden>
-        <Hidden mdDown={isCreate} smDown={!isCreate}>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <Grid item xs={12}>
             <Table
               aria-label="List of Linode Plans"

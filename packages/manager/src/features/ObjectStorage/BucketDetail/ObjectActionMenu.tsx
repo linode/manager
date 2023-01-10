@@ -14,7 +14,7 @@ export interface Props extends Handlers {
 
 export const ObjectActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { handleClickDownload, handleClickDelete, objectName } = props;
 

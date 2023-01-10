@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     overflow: 'auto',
     padding: theme.spacing(),
     transition: theme.transitions.create(['border-color', 'background-color']),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
       marginLeft: theme.spacing(),
     },
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: theme.spacing(1.5),
     padding: 0,
     position: 'absolute',
-    width: `calc(100% - ${theme.spacing(4)}px)`,
+    width: `calc(100% - ${theme.spacing(4)})`,
     zIndex: 10,
     '& $uploadButton': {
       marginTop: 0,

@@ -1,5 +1,5 @@
-import Close from '@material-ui/icons/Close';
-import CloudUpload from '@material-ui/icons/CloudUpload';
+import Close from '@mui/icons-material/Close';
+import CloudUpload from '@mui/icons-material/CloudUpload';
 import * as React from 'react';
 import { compose, withHandlers } from 'recompose';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   attachmentField: {
     marginTop: 0,
     width: 415,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 165,
     },
     '& > div ': {

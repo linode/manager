@@ -26,7 +26,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
       <TableCell data-qa-managed-ssh-access>
         {isAccessEnabled ? 'Enabled' : 'Disabled'}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-managed-user>{linodeSetting.ssh.user}</TableCell>
         <TableCell data-qa-managed-ip>
           {linodeSetting.ssh.ip === 'any' ? 'Any' : linodeSetting.ssh.ip}

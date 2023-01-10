@@ -12,7 +12,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   root: {
     minHeight: '24px',
     minWidth: '24px',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       background: theme.color.white,
       padding: theme.spacing(2),
       position: 'relative !important' as 'relative',
@@ -29,12 +29,12 @@ export const useStyles = makeStyles((theme: Theme) => ({
     animation: '$fadeIn 225ms linear forwards',
     opacity: 0,
     padding: '12px 0',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       '& button': {
         marginLeft: 0,
       },
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       paddingBottom: `0px !important`,
     },
   },

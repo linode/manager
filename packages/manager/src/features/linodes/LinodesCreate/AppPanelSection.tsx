@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   flatImagePanelSelections: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(),
-    padding: `${theme.spacing(1)}px 0`,
+    padding: `${theme.spacing(1)} 0`,
   },
 }));
 

@@ -1,4 +1,4 @@
-import AttachFile from '@material-ui/icons/AttachFile';
+import AttachFile from '@mui/icons-material/AttachFile';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

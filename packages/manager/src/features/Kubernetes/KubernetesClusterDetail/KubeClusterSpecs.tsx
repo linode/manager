@@ -15,9 +15,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2) + 4}px ${
-      theme.spacing(2) + 4
-    }px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
   mainGridContainer: {
     position: 'relative',

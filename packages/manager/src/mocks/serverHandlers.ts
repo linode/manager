@@ -639,11 +639,11 @@ export const handlers = [
     });
     const nvmeVolumeUpgrading = volumeFactory.build({
       id: 2,
-      hardware_type: 'nvme',
+      // hardware_type: 'nvme',
     });
     const newNVMeVolume = volumeFactory.build({
       id: 1,
-      hardware_type: 'nvme',
+      // hardware_type: 'nvme',
     });
 
     const volumes = [
@@ -725,18 +725,11 @@ export const handlers = [
     const headers = JSON.parse(req.headers.get('x-filter') || '{}');
 
     const accountMaintenance =
-      headers.type === 'volume_migration'
-        ? [
-            accountMaintenanceFactory.build({
-              entity: { type: 'volume', label: 'my-volume-0', id: 0 },
-              status: 'pending',
-              reason: 'Free upgrade to faster NVMe hardware',
-              type: 'volume_migration',
-            }),
-          ]
+      headers.status === 'completed'
+        ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(40, { status: 'started' }),
+            ...accountMaintenanceFactory.buildList(2, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
           ];
 
     if (req.headers.get('x-filter')) {

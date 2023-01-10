@@ -24,9 +24,9 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
-      [theme.breakpoints.down('xs')]: {
-        maxWidth: `calc(100% + ${theme.spacing(1)}px)`,
+      maxWidth: `calc(415px + ${theme.spacing(1)})`,
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: `calc(100% + ${theme.spacing(1)})`,
       },
     },
     block: {
@@ -41,12 +41,12 @@ const styles = (theme: Theme) =>
       position: 'relative',
       fontSize: '.85rem',
       textAlign: 'right',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         textAlign: 'center',
       },
     },
     strengthLabel: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         display: 'none',
       },
     },

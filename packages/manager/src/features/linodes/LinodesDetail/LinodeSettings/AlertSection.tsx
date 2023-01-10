@@ -48,14 +48,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 40,
     marginLeft: -160,
     width: 600,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: -28,
       marginLeft: 70,
       width: '100%',
     },
   },
   usageWrapper: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: 70,
       width: '100%',
     },

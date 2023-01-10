@@ -50,13 +50,13 @@ const TicketRow: React.FC<Props> = ({ ticket }) => {
       <TableCell data-qa-support-subject>
         <Link to={`/support/tickets/${ticket.id}`}>{ticket.summary}</Link>
       </TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-support-id>{ticket.id}</TableCell>
       </Hidden>
       <TableCell data-qa-support-entity className={classes.regarding}>
         {renderEntityLink(ticket)}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-support-date>
           <DateTimeDisplay value={ticket.opened} />
         </TableCell>
@@ -64,7 +64,7 @@ const TicketRow: React.FC<Props> = ({ ticket }) => {
       <TableCell data-qa-support-updated>
         <DateTimeDisplay value={ticket.updated} />
       </TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-support-updated-by>{ticket.updated_by}</TableCell>
       </Hidden>
     </TableRow>

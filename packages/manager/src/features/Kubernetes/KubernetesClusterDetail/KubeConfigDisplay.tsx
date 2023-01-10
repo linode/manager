@@ -23,7 +23,7 @@ interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   label: {
     fontWeight: 'bold',
-    marginBottom: `${theme.spacing(1) - 3}px`,
+    marginBottom: `calc(${theme.spacing(1)} - 3px)`,
   },
   kubeconfigElements: {
     display: 'flex',
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   kubeconfigIcons: {
     height: 16,
     width: 16,
-    margin: `0 ${theme.spacing(1)}px`,
+    margin: `0 ${theme.spacing(1)}`,
     objectFit: 'contain',
   },
   disabled: {

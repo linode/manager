@@ -1,4 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
+import { Linode } from '@linode/api-v4/types';
 import { createLinode } from '../../support/api/linodes';
 import {
   containsVisible,
@@ -11,22 +12,29 @@ import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'cypress/support/ui/constants';
 import { ui } from 'support/ui';
+import { regions, regionsMap } from 'support/constants/regions';
 
-const regions = {
-  'us-west': 'Fremont, CA',
-  'us-southeast': 'Atlanta, GA',
-  'us-east': 'Newark, NJ',
-  'us-central': 'Dallas, TX',
-  'ca-east': 'Toronto, ON',
-};
-const mockLinodes = makeResourcePage(linodeFactory.buildList(5));
-mockLinodes.data.forEach(
-  (linode, index) => (linode.region = Object.keys(regions)[index])
+const mockLinodes = new Array(5).fill(null).map(
+  (item: null, index: number): Linode => {
+    return linodeFactory.build({
+      label: `Linode ${index}`,
+      region: regions[index],
+    });
+  }
 );
 
-const appRoot = Cypress.env('REACT_APP_APP_ROOT');
+const mockLinodesData = makeResourcePage(mockLinodes);
+
+const sortByRegion = (a: Linode, b: Linode) => {
+  return a.region.localeCompare(b.region);
+};
+
+const sortByLabel = (a: Linode, b: Linode) => {
+  return a.label.localeCompare(b.label);
+};
+
 const linodeLabel = (number) => {
-  return mockLinodes.data[number - 1].label;
+  return mockLinodes[number - 1].label;
 };
 
 const deleteLinodeFromActionMenu = (linodeLabel) => {
@@ -58,12 +66,12 @@ describe('linode landing checks', () => {
     }).as('getAccountSettings');
     cy.intercept('GET', '*/profile').as('getProfile');
     cy.intercept('GET', '*/linode/instances/*', (req) => {
-      req.reply(mockLinodes);
+      req.reply(mockLinodesData);
     }).as('getLinodes');
     cy.visitWithLogin('/', { preferenceOverrides });
     cy.wait('@getAccountSettings');
     cy.wait('@getLinodes');
-    cy.url().should('eq', `${appRoot}${routes.linodeLanding}`);
+    cy.url().should('endWith', routes.linodeLanding);
   });
 
   it('checks the landing page side menu items', () => {
@@ -100,10 +108,16 @@ describe('linode landing checks', () => {
       fbtVisible(
         'Search for Linodes, Volumes, NodeBalancers, Domains, Buckets, Tags...'
       );
-      getVisible('[aria-label="Link to Linode Support"][href="/support"]');
-      getVisible('[href="https://linode.com/community"]').within(() => {
-        getVisible('[title="Linode Cloud Community"]');
-      });
+
+      cy.findByLabelText('Link to Linode Support')
+        .should('be.visible')
+        .should('have.attr', 'href', '/support');
+
+      cy.findByLabelText('Linode Cloud Community')
+        .should('be.visible')
+        .parent()
+        .should('have.attr', 'href', 'https://linode.com/community');
+
       getVisible('[aria-label="Notifications"]');
       getVisible('[data-testid="nav-group-profile"]').within(() => {
         fbtVisible(username);
@@ -118,23 +132,29 @@ describe('linode landing checks', () => {
   });
 
   it('checks label and region sorting behavior for linode table', () => {
-    const firstLinodeLabel = mockLinodes.data[0].label;
-    const lastLinodeLabel = mockLinodes.data[4].label;
-    const firstRegionLabel = Object.values(regions)[0];
-    const lastRegionLabel = Object.values(regions)[4];
+    const linodesByLabel = [...mockLinodes.sort(sortByLabel)];
+    const linodesByRegion = [...mockLinodes.sort(sortByRegion)];
+    const linodesLastIndex = mockLinodes.length - 1;
 
-    const checkFirstRow = (linodeLabel) => {
+    const firstLinodeLabel = linodesByLabel[0].label;
+    const lastLinodeLabel = linodesByLabel[linodesLastIndex].label;
+
+    const firstRegionLabel = regionsMap[linodesByRegion[0].region];
+    const lastRegionLabel =
+      regionsMap[linodesByRegion[linodesLastIndex].region];
+
+    const checkFirstRow = (label: string) => {
       getVisible('tr[data-qa-loading="true"]')
         .first()
         .within(() => {
-          containsVisible(linodeLabel);
+          containsVisible(label);
         });
     };
-    const checkLastRow = (linodeLabel) => {
+    const checkLastRow = (label: string) => {
       getVisible('tr[data-qa-loading="true"]')
         .last()
         .within(() => {
-          containsVisible(linodeLabel);
+          containsVisible(label);
         });
     };
 
@@ -144,11 +164,12 @@ describe('linode landing checks', () => {
     checkFirstRow(lastLinodeLabel);
     checkLastRow(firstLinodeLabel);
 
-    checkFirstRow(lastRegionLabel);
-    checkLastRow(firstRegionLabel);
-    getClick('[aria-label="Sort by region"]').click();
+    getClick('[aria-label="Sort by region"]');
     checkFirstRow(firstRegionLabel);
     checkLastRow(lastRegionLabel);
+    getClick('[aria-label="Sort by region"]');
+    checkFirstRow(lastRegionLabel);
+    checkLastRow(firstRegionLabel);
   });
 
   it('checks the create menu dropdown items', () => {
@@ -181,7 +202,7 @@ describe('linode landing checks', () => {
 
   it('checks the table and action menu buttons/labels', () => {
     const label = linodeLabel(1);
-    const ip = mockLinodes.data[0].ipv4[0];
+    const ip = mockLinodes[0].ipv4[0];
     getVisible('[aria-label="Sort by label"]').within(() => {
       fbtVisible('Label');
     });
@@ -194,12 +215,10 @@ describe('linode landing checks', () => {
     getVisible('[aria-label="Sort by ipv4[0]"]').within(() => {
       fbtVisible('IP Address');
     });
-    getVisible(
-      '[aria-label="Toggle display"][aria-describedby="displayViewDescription"][title="Summary view"]'
-    );
-    getVisible(
-      '[aria-label="Toggle group by tag"][aria-describedby="groupByDescription"][title="Group by tag"]'
-    );
+
+    cy.findByLabelText('Toggle display').should('be.visible');
+
+    cy.findByLabelText('Toggle group by tag').should('be.visible');
 
     getVisible(`tr[data-qa-linode="${label}"]`).within(() => {
       ui.button
