@@ -60,6 +60,7 @@ import {
   Info,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
+  LinodeCreateValidation,
   StackScriptFormStateHandlers,
   WithDisplayData,
   WithLinodesProps,
@@ -148,6 +149,7 @@ interface Props {
   togglePrivateIPEnabled: () => void;
   updateTags: (tags: Tag[]) => void;
   handleSubmitForm: HandleSubmit;
+  runValidation: LinodeCreateValidation;
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
@@ -378,8 +380,34 @@ export class LinodeCreate extends React.PureComponent<
   };
 
   setIsApiAwarenessModalOpen = (value: boolean) => {
-    this.setState({ ...this.state, isApiAwarenessModalOpen: value });
+    const payload = {
+      image: this.props.selectedImageID,
+      region: this.props.selectedRegionID,
+      type: this.props.selectedTypeID,
+      label: this.props.label,
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      root_pass: this.props.password,
+      authorized_users: this.props.userSSHKeys
+        .filter((u) => u.selected)
+        .map((u) => u.username),
+      booted: true,
+      backups_enabled: this.props.backupsEnabled,
+      backup_id: this.props.selectedBackupID,
+      private_ip: this.props.privateIPEnabled,
+
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      stackscript_data: this.props.selectedUDFs,
+    };
+    this.props.runValidation(payload);
+    if (!this.props.errors) {
+      this.setState({ ...this.state, isApiAwarenessModalOpen: false });
+    }
   };
+
+  //Run validation
 
   render() {
     const { selectedTab, stackScriptSelectedTab } = this.state;
@@ -772,6 +800,7 @@ export class LinodeCreate extends React.PureComponent<
               <ApiAwarenessModal
                 isOpen={this.state.isApiAwarenessModalOpen}
                 onClose={() => this.setIsApiAwarenessModalOpen(false)}
+                route={this.props.match.url}
               />
             </div>
           </Box>

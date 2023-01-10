@@ -9,6 +9,7 @@ import ApiAwarenessModal, { Props } from '.';
 const defaultProps: Props = {
   isOpen: false,
   onClose: jest.fn(),
+  route: '',
 };
 
 const renderComponent = (overrideProps?: Partial<Props>) => {
