@@ -62,7 +62,7 @@ const ApiAwarenessModal = (props: Props) => {
 
   return (
     <Dialog
-      title={`Create using command line ${label}`}
+      title={`Create Linode ${label} using command line`}
       open={isOpen}
       onClose={onClose}
       maxWidth={'sm'}
