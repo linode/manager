@@ -11,6 +11,7 @@ import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { useAccount } from 'src/queries/account';
 import { getGrantData, useProfile } from 'src/queries/profile';
+import AccountLogins from './AccountLogins';
 
 const Billing = React.lazy(() => import('src/features/Billing'));
 const EntityTransfersLanding = React.lazy(
@@ -41,6 +42,10 @@ const AccountLanding: React.FC = () => {
     {
       title: 'Users & Grants',
       routeName: '/account/users',
+    },
+    {
+      title: 'Login History',
+      routeName: '/account/login-history',
     },
     {
       title: 'Service Transfers',
@@ -123,6 +128,9 @@ const AccountLanding: React.FC = () => {
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
               <Users isRestrictedUser={profile?.restricted || false} />
+            </SafeTabPanel>
+            <SafeTabPanel index={++idx}>
+              <AccountLogins />
             </SafeTabPanel>
             <SafeTabPanel index={++idx}>
               <EntityTransfersLanding />
