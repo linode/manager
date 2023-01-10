@@ -95,9 +95,9 @@ const ApiAwarenessModal = (props: Props) => {
       <Tabs defaultIndex={0} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <TabPanels>
-          <SafeTabPanel index={0}>cRUL Pannel</SafeTabPanel>
+          <SafeTabPanel index={0}>Code block API component WIP...</SafeTabPanel>
           <SafeTabPanel index={1}>
-            Linode CLI Pannel
+            Code block CLI component WIP...
             <Typography className={classes.guides} variant="h2">
               Guides
             </Typography>
