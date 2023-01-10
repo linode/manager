@@ -15,7 +15,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  username: string;
+  username: string | null;
   className?: string;
 }
 
@@ -23,7 +23,7 @@ export const GravatarByUsername = (props: Props) => {
   const { username, className } = props;
   const classes = useStyles();
 
-  const { data: user } = useAccountUser(username);
+  const { data: user } = useAccountUser(username ?? '');
 
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
 
