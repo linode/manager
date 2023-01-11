@@ -1,7 +1,9 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Button from 'src/components/Button';
+import DismissibleBanner from './DismissibleBanner';
+import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from './DismissibleBanner';
 // import StatusBanners from 'src/features/Help/StatusBanners';
 
 <Meta
@@ -39,6 +41,33 @@ export const DismissibleBannerTemplate = (args) => {
   );
 };
 
+export const CallToActionBanner = () => {
+  return (
+    <DismissibleBanner
+      preferenceKey="cluster-v1"
+      success
+    >
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Grid item>
+          <Typography>
+            A new version of Kubernetes is available.
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button onClick={() => null} buttonType="primary">
+            Upgrade Version
+          </Button>
+        </Grid>
+      </Grid>
+    </DismissibleBanner>
+  )
+}
+
 export const StatusBannersTemplate = (args) => {
   const { message, title, status, impact, href } = args;
   return <StatusBanners {...args} />;
@@ -46,7 +75,7 @@ export const StatusBannersTemplate = (args) => {
 
 export const ExampleBetaBanner = () => {
     return (
-      <DismissibleBanner success>
+      <DismissibleBanner preferenceKey="example-beta-banner" success>
         <Typography>
           Managed Database for MySQL is available in a free, open beta period
           until May 2nd, 2022. This is a beta environment and should not be
@@ -65,6 +94,14 @@ export const ExampleBetaBanner = () => {
 <Canvas>
   <Story name="Example Beta Banner">
     {ExampleBetaBanner.bind({})}
+  </Story>
+</Canvas>
+
+#### Example Call to Action Banner
+
+<Canvas>
+  <Story name="Example Call to Action Banner">
+    {CallToActionBanner.bind({})}
   </Story>
 </Canvas>
 
