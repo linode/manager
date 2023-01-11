@@ -1,18 +1,16 @@
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
+import { resetEventsPolling } from 'src/eventsPolling';
+import useLinodes from 'src/hooks/useLinodes';
 import {
   useDeleteVolumeMutation,
   useDetachVolumeMutation,
 } from 'src/queries/volumes';
-import { useSnackbar } from 'notistack';
-import { resetEventsPolling } from 'src/eventsPolling';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import useLinodes from 'src/hooks/useLinodes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   warningCopy: {
@@ -34,18 +32,9 @@ interface Props {
 export const DestructiveVolumeDialog = (props: Props) => {
   const classes = useStyles();
 
-  const {
-    volumeLabel: label,
-    volumeId,
-    linodeId,
-    linodeLabel,
-    mode,
-    open,
-    onClose,
-  } = props;
+  const { volumeLabel: label, volumeId, linodeId, mode, open, onClose } = props;
 
   const { enqueueSnackbar } = useSnackbar();
-
   const linodes = useLinodes();
 
   const linode =
@@ -88,8 +77,14 @@ export const DestructiveVolumeDialog = (props: Props) => {
   }[props.mode];
 
   const action = {
-    detach: 'Detach',
-    delete: 'Delete',
+    detach: {
+      verb: 'Detach',
+      noun: 'detachment',
+    },
+    delete: {
+      verb: 'Delete',
+      noun: 'deletion',
+    },
   }[props.mode];
 
   const loading = {
@@ -106,48 +101,36 @@ export const DestructiveVolumeDialog = (props: Props) => {
     ? getAPIErrorOrDefault(selectedError, `Unable to ${mode} volume.`)[0].reason
     : undefined;
 
-  const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={method}
-        loading={loading}
-        data-qa-confirm
-      >
-        {action} Volume
-      </Button>
-    </ActionsPanel>
-  );
-
   const title = {
     detach: `Detach ${label ? `Volume ${label}` : 'Volume'}?`,
     delete: `Delete ${label ? `Volume ${label}` : 'Volume'}?`,
   }[props.mode];
 
   return (
-    <ConfirmationDialog
-      open={open}
+    <TypeToConfirmDialog
       title={title}
+      entity={{ type: 'Volume', label }}
+      open={open}
+      loading={loading}
       onClose={onClose}
-      actions={actions}
+      onClick={method}
+      confirmationText={
+        <span>
+          To confirm {action.noun}, type the name of the Volume (<b>{label}</b>)
+          in the field below:
+        </span>
+      }
+      typographyStyle={{ marginTop: '10px' }}
     >
       {error && <Notice error text={error} />}
-      {/* In 'detach' mode, show a warning if the Linode is powered on. */}
       {mode === 'detach' && !poweredOff && linode !== undefined && (
         <Typography className={classes.warningCopy}>
           <strong>Warning:</strong> This operation could cause data loss. Please
-          power off the Linode first or make sure it isn't currently writing to
-          the volume before continuing. If this volume is currently mounted,
-          detaching it could cause your Linode to restart.
+          power off the Linode first or make sure it isn&rsquo;t currently
+          writing to the volume before continuing. If this volume is currently
+          mounted, detaching it could cause your Linode to restart.
         </Typography>
       )}
-      <Typography>
-        Are you sure you want to {mode} this Volume
-        {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
-      </Typography>
-    </ConfirmationDialog>
+    </TypeToConfirmDialog>
   );
 };
