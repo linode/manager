@@ -115,7 +115,7 @@ const DatabaseEmptyState: React.FC = () => {
       {flags.databaseBeta ? (
         <DismissibleBanner
           preferenceKey="dbaas-open-beta-notice"
-          productInformationIndicator
+          success
         >
           <Typography>
             Managed Database for MySQL is available in a free, open beta period

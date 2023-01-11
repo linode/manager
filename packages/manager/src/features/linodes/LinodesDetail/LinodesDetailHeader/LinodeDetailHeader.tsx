@@ -296,10 +296,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <MutationNotification disks={linodeDisks} />
       <Notifications />
       {numUpgradeableVolumes > 0 ? (
-        <DismissibleBanner
-          preferenceKey="upgradable-volumes-attached"
-          productInformationIndicator
-        >
+        <DismissibleBanner preferenceKey="upgradable-volumes-attached" success>
           <Grid
             container
             direction="row"
