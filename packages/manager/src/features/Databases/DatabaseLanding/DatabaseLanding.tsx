@@ -67,11 +67,7 @@ const DatabaseLanding: React.FC = () => {
 
   return (
     <React.Fragment>
-      <ProductInformationBanner
-        bannerLocation="Databases"
-        productInformationIndicator={false}
-        productInformationWarning
-      />
+      <ProductInformationBanner bannerLocation="Databases" warning important />
       <LandingHeader
         title="Database Clusters"
         createButtonText="Create Database Cluster"

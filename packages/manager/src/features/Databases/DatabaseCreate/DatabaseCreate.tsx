@@ -455,11 +455,7 @@ const DatabaseCreate: React.FC<{}> = () => {
           </Typography>
         </DismissibleBanner>
       ) : null}
-      <ProductInformationBanner
-        bannerLocation="Databases"
-        productInformationIndicator={false}
-        productInformationWarning
-      />
+      <ProductInformationBanner bannerLocation="Databases" warning important />
       <BreadCrumb
         labelTitle="Create"
         pathname={location.pathname}

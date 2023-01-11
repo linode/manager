@@ -113,10 +113,7 @@ const DatabaseEmptyState: React.FC = () => {
   return (
     <>
       {flags.databaseBeta ? (
-        <DismissibleBanner
-          preferenceKey="dbaas-open-beta-notice"
-          success
-        >
+        <DismissibleBanner preferenceKey="dbaas-open-beta-notice" success>
           <Typography>
             Managed Database for MySQL is available in a free, open beta period
             until May 2nd, 2022. This is a beta environment and should not be
@@ -128,11 +125,7 @@ const DatabaseEmptyState: React.FC = () => {
           </Typography>
         </DismissibleBanner>
       ) : null}
-      <ProductInformationBanner
-        bannerLocation="Databases"
-        productInformationIndicator={false}
-        productInformationWarning
-      />
+      <ProductInformationBanner bannerLocation="Databases" warning important />
       <Placeholder
         title="Databases"
         subtitle="Fully managed cloud database clusters"
