@@ -33,13 +33,14 @@ export const useAccountUser = (username: string) => {
  * @returns true if account is blocklisted (should *not* be fetched)
  */
 function getIsBlocklistedUser(username: string) {
+  if (!username) {
+    // "Block" empty, null, or undefined usernames so a query does not run
+    return true;
+  }
   if (username.startsWith('lke-service-account-')) {
     return true;
   }
   if (username === 'Linode') {
-    return true;
-  }
-  if (username === '') {
     return true;
   }
   return false;
