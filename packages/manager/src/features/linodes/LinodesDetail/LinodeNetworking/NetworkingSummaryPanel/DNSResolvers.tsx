@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     overflowX: 'auto',
     overflowY: 'hidden',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 2,
     marginRight: 0,
     width: '100%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'space-between',
     },
   },

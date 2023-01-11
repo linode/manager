@@ -47,23 +47,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   vlanHelperText: {
-    marginTop: theme.spacing() / 2,
+    marginTop: theme.spacing(0.5),
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       justifyContent: 'flex-end',
       flexWrap: 'wrap',
     },
   },
   agreement: {
     maxWidth: '70%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       maxWidth: 'unset',
     },
   },
   button: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(2),
     },
   },

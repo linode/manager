@@ -10,8 +10,8 @@ import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   divider: {
-    margin: `${theme.spacing(2)}px ${theme.spacing()}px 0 `,
-    width: `calc(100% - ${theme.spacing(2)}px)`,
+    margin: `${theme.spacing(2)} ${theme.spacing()} 0 `,
+    width: `calc(100% - ${theme.spacing(2)})`,
   },
   vlanGrid: {
     minWidth: 450,
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingLeft: theme.spacing(),
       },
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       minWidth: 'auto',
     },
@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: 202,
     height: 35,
     marginRight: theme.spacing(),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -38,16 +38,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& label': {
       whiteSpace: 'nowrap',
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: 200,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
   configsWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      marginTop: -theme.spacing(2),
+    [theme.breakpoints.down('sm')]: {
+      marginTop: `-${theme.spacing(2)}`,
     },
   },
 }));

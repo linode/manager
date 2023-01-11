@@ -35,9 +35,6 @@ export const renderUnitPrice = (v: null | string) => {
   return Number.isNaN(parsedValue) ? null : `$${parsedValue}`;
 };
 
-export const akamaiBillingInvoiceText =
-  'Linode products and services will appear on your Akamai Technologies invoice.';
-
 export const getShouldUseAkamaiBilling = (date: string) => {
   const invoiceDate = parseAPIDate(date);
   const akamaiDate = DateTime.fromSQL(AKAMAI_DATE);

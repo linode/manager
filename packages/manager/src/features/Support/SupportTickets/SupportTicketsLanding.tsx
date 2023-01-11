@@ -33,13 +33,13 @@ type ClassNames = 'title' | 'openTicketButton';
 const styles = (theme: Theme) =>
   createStyles({
     title: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(),
       },
     },
     openTicketButton: {
       minWidth: 150,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(),
       },
     },

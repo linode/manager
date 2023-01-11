@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import ErrorOutline from '@material-ui/icons/ErrorOutline';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 
 import Placeholder from 'src/components/Placeholder';
 

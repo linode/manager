@@ -9,7 +9,7 @@ import ActionMenu from './CredentialActionMenu';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     credentialDescription: {
-      paddingTop: theme.spacing(1) / 2,
+      paddingTop: theme.spacing(0.5),
     },
     credentialRow: {
       '&:before': {

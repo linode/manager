@@ -1,5 +1,5 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -86,6 +86,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
             className={classes.button}
             onClick={onRemove}
             data-testid="remove-pool-button"
+            size="large"
           >
             <Close />
           </IconButton>

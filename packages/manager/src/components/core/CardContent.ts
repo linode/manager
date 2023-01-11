@@ -1,6 +1,6 @@
 import CardContent, {
   CardContentProps as _CardContentProps,
-} from '@material-ui/core/CardContent';
+} from '@mui/material/CardContent';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface CardContentProps extends _CardContentProps {}
