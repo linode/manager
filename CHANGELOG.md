@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-01-11] - v1.83.1
+
+### Fixed:
+- Showing past completed maintenance on Linodes
+
 ## [2023-01-09] - v1.83.0
 
 ### Added:
