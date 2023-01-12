@@ -38,7 +38,7 @@ A basic HTML element wrapped in a React component or a small component that is n
 ##### Component
 A composition of Core Styles and Elements. Normally with some code that defines behavior. An example of a Component is a Dialog which is a composition of Typography and Buttons.
 ##### Feature
-A Composition of Core Styles, Elements, and Components that defines a verticle slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
+A Composition of Core Styles, Elements, and Components that defines a vertical slice of functionality. An example of a Feature is the Payment Method Row: it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
 
 The `Meta` tag's `title` prop is used to define how a story is categorized within these categories. For example the `Meta` tag for the Payment Method Row is defined like this
 ```ts
