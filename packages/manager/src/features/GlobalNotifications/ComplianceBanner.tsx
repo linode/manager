@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner/DismissibleBanner';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import useNotifications from 'src/hooks/useNotifications';
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';

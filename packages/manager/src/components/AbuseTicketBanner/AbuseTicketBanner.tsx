@@ -3,7 +3,7 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner/DismissibleBanner';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
 import { ApplicationState } from 'src/store';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';

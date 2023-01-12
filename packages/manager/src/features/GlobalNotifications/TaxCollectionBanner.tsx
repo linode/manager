@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner/DismissibleBanner';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';

@@ -4,7 +4,7 @@ import { matchPath, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import DismissibleBanner from 'src/components/DismissibleBanner/DismissibleBanner';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import SafeTabPanel from 'src/components/SafeTabPanel';

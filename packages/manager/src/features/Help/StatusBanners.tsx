@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner/DismissibleBanner';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
 import {
   IncidentImpact,
