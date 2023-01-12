@@ -45,7 +45,7 @@ The `Meta` tag's `title` prop is used to define how a story is categorized withi
 <Meta title="Features/Payment Method Row" component={PaymentMethodRow} />
 ```
 
-A story might also be grouped within a single entry in one of these categories. In this case define a single story that combines examples of each. The Dialogs Component can be used as a template here. The story file imports all the types of Dialogs from their `.tsx` files. 
+A story might also be grouped within a single entry in one of these categories. In this case, define a single story that combines examples of each. For example, `Dialogs.stories.mdx` imports all the types of Dialogs from their `.tsx` files. 
 
 ```ts
 import Dialog from './Dialog';
