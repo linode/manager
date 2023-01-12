@@ -29,7 +29,7 @@ We use [Storybook](https://storybook.js.org/) to document our UI component libra
 #### Adding Stories
 
 To make a new story for a component, create a new file in the same directory as the `.tsx` file the component is defined in. This new file should follow the naming convention of `<Component Name>.stories.mdx`.
-For example the story for `EnhancedNumberInput.tsx` is defined in the `EnhancedNumberInput.stories.mdx` file. New entries should be categorized as one of the following:
+For example, the story for `EnhancedNumberInput.tsx` is defined in the `EnhancedNumberInput.stories.mdx` file. New entries should be categorized as one of the following:
 
 ##### Core Style
 A color, font, svg icon, or other simple styling convention.
