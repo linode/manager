@@ -27,7 +27,6 @@ import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
@@ -442,19 +441,6 @@ const DatabaseCreate: React.FC<{}> = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      {flags.databaseBeta ? (
-        <DismissibleBanner preferenceKey="dbaas-open-beta-notice" success>
-          <Typography>
-            Managed Database for MySQL is available in a free, open beta period
-            until May 2nd, 2022. This is a beta environment and should not be
-            used to support production workloads. Review the{' '}
-            <Link to="https://www.linode.com/legal-eatp">
-              Early Adopter Program SLA
-            </Link>
-            .
-          </Typography>
-        </DismissibleBanner>
-      ) : null}
       <ProductInformationBanner bannerLocation="Databases" warning important />
       <BreadCrumb
         labelTitle="Create"
