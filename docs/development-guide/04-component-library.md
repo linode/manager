@@ -97,3 +97,5 @@ Use the `name` field on the `Story` tags to display the different types of Dialo
 - Mocking data/API calls can be tricky, and the solution may be component-dependent.
 - MDX is unforgiving. Check the browser console for Storybook errors with syntax, imports, etc.
 - Use the recommended Markdown and MDX VSCode plugins outlined in our [Coding Standards](./13-coding-standards.md).
+- Avoid using the `useArgs` hook. It should only be used when there needs to be a two way binding between component state and the values shown in the `ArgsTable`.
+- When defining an `ArgsTable` always set the `sort` prop to `requiredFirst`.
