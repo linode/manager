@@ -1402,7 +1402,7 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/peppermint/',
       },
     ],
-    website: 'https://pmint.dev/',
+    website: 'https://peppermint.sh/',
     logo_url: 'peppermint.svg',
     colors: {
       start: '4cff4c',
