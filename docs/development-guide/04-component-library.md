@@ -53,7 +53,7 @@ import DeletionDialog from 'src/components/DeletionDialog';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 ```
 
-then you can use the `name` feild on the `Story` tags to display the different types of Dialogs. For example within the `Dialog.stories.mdx` file there are multiple `Story` tags:
+Use the `name` field on the `Story` tags to display the different types of Dialogs. For example, within the `Dialog.stories.mdx` file there are multiple `Story` tags:
 
 ```ts
 <Story
