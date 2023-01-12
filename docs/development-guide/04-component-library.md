@@ -32,20 +32,27 @@ To make a new story for a component, create a new file in the same directory as 
 For example, the story for `EnhancedNumberInput.tsx` is defined in the `EnhancedNumberInput.stories.mdx` file. New entries should be categorized as one of the following:
 
 ##### Core Style
+
 A color, font, svg icon, or other simple styling convention.
+
 ##### Element
-A basic HTML element wrapped in a React component or a small component that is not normally used on its own.
+
+A basic HTML element wrapped in a react component, or a small component that is not normally used on its own.
+
 ##### Component
+
 A composition of Core Styles and Elements. Normally with some code that defines behavior. An example of a Component is a Dialog which is a composition of Typography and Buttons.
+
 ##### Feature
-A Composition of Core Styles, Elements, and Components that defines a vertical slice of functionality. An example of a Feature is the Payment Method Row: it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
+
+A Composition of Core Styles, Elements, and Components that defines a verticle slice of functionality. An example of a Feature is the Payment Method Row it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
 
 The `Meta` tag's `title` prop is used to define how a story is categorized within these categories. For example, the `Meta` tag for the Payment Method Row is defined like this:
 ```ts
 <Meta title="Features/Payment Method Row" component={PaymentMethodRow} />
 ```
 
-A story might also be grouped within a single entry in one of these categories. In this case, define a single story that combines examples of each. For example, `Dialogs.stories.mdx` imports all the types of Dialogs from their `.tsx` files. 
+A story might also be grouped within a single entry in one of these categories. In this case define a single story that combines examples of each. The Dialogs Component can be used as a template here. The story file imports all the types of Dialogs from their `.tsx` files.
 
 ```ts
 import Dialog from './Dialog';
@@ -80,6 +87,7 @@ Use the `name` field on the `Story` tags to display the different types of Dialo
       entity: 'Linode',
       label: 'my-linode-0',...>
 ```
+
 #### Best Practices
 
 - Write new stories in [MDX](https://storybook.js.org/docs/react/api/mdx) format with a `.mdx` file extension. Older stories might follow the [Component Story Format (CSF)](https://storybook.js.org/docs/react/api/csf), an ES6 module-based standard for writing stories, with a `.tsx` file extension.
