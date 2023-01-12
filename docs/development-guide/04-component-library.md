@@ -40,7 +40,7 @@ A composition of Core Styles and Elements. Normally with some code that defines 
 ##### Feature
 A Composition of Core Styles, Elements, and Components that defines a vertical slice of functionality. An example of a Feature is the Payment Method Row: it combines Components, Elements, and Core Styles like Buttons, Action Menus, Icons, Typography, etc.
 
-The `Meta` tag's `title` prop is used to define how a story is categorized within these categories. For example the `Meta` tag for the Payment Method Row is defined like this
+The `Meta` tag's `title` prop is used to define how a story is categorized within these categories. For example, the `Meta` tag for the Payment Method Row is defined like this:
 ```ts
 <Meta title="Features/Payment Method Row" component={PaymentMethodRow} />
 ```
