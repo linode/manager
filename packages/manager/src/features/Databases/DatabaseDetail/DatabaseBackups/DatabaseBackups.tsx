@@ -14,6 +14,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import BackupDialog from './BackupDialog';
+import DatabaseDeleteDialog from './DatabaseDeleteDialog';
 import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,
@@ -30,7 +31,8 @@ export const DatabaseBackups: React.FC = () => {
 
   const [isBackupDialogOpen, setIsBackupDialogOpen] = React.useState(false);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = React.useState(false);
-  const [idOfBackupToRestore, setIdOfBackupToRestore] = React.useState<
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+  const [idOfSelectedBackup, setIdOfSelectedBackup] = React.useState<
     number | undefined
   >();
 
@@ -53,16 +55,23 @@ export const DatabaseBackups: React.FC = () => {
     order: 'desc',
   });
 
-  const onRestore = (id: number) => {
-    setIdOfBackupToRestore(id);
-    setIsRestoreDialogOpen(true);
-  };
   const onBackup = () => {
     setIsBackupDialogOpen(true);
   };
+  const onRestore = (id: number) => {
+    setIdOfSelectedBackup(id);
+    setIsRestoreDialogOpen(true);
+  };
+  const onDelete = (id: number) => {
+    setIdOfSelectedBackup(id);
+    setIsDeleteDialogOpen(true);
+  };
 
   const backupToRestore = backups?.data.find(
-    (backup) => backup.id === idOfBackupToRestore
+    (backup) => backup.id === idOfSelectedBackup
+  );
+  const backupToDelete = backups?.data.find(
+    (backup) => backup.id === idOfSelectedBackup
   );
 
   const sorter = (a: DatabaseBackup, b: DatabaseBackup) => {
@@ -80,7 +89,7 @@ export const DatabaseBackups: React.FC = () => {
       return <TableRowError message={backupsError[0].reason} colSpan={3} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
-      return <TableRowLoading columns={3} />;
+      return <TableRowLoading columns={4} />;
     }
     if (backups?.results === 0) {
       return (
@@ -95,6 +104,7 @@ export const DatabaseBackups: React.FC = () => {
             key={backup.id}
             backup={backup}
             onRestore={onRestore}
+            onDelete={onDelete}
           />
         ));
     }
@@ -106,6 +116,15 @@ export const DatabaseBackups: React.FC = () => {
       <Table>
         <TableHead>
           <TableRow>
+            <TableSortCell
+              active={orderBy === 'backupLabel'}
+              direction={order}
+              label="backupLabel"
+              handleClick={handleOrderChange}
+              style={{ width: 155 }}
+            >
+              Label
+            </TableSortCell>
             <TableSortCell
               active={orderBy === 'created'}
               direction={order}
@@ -142,6 +161,14 @@ export const DatabaseBackups: React.FC = () => {
           retained for 7 days.
         </Typography>
       </Paper>
+      {database && backupToDelete ? (
+        <DatabaseDeleteDialog
+          open={isDeleteDialogOpen}
+          database={database}
+          backup={backupToDelete}
+          onClose={() => setIsDeleteDialogOpen(false)}
+        />
+      ) : null}
       {database && backupToRestore ? (
         <RestoreFromBackupDialog
           open={isRestoreDialogOpen}

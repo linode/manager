@@ -13,19 +13,14 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   backup: DatabaseBackup;
-  onRestore: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
 const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
   const classes = useStyles();
-  const { backup, onRestore, onDelete } = props;
+  const { backup, onDelete } = props;
 
   const actions = [
-    {
-      title: 'Restore',
-      onClick: () => onRestore(backup.id),
-    },
     {
       title: 'Delete',
       onClick: () => onDelete(backup.id),

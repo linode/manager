@@ -10,6 +10,7 @@ import {
   getEngineDatabase,
   restoreWithBackup,
   manualDatabaseBackup,
+  manualDatabaseBackupDelete,
   updateDatabase,
   resetDatabaseCredentials,
 } from '@linode/api-v4/lib/databases';
@@ -174,14 +175,30 @@ export const useRestoreFromBackupMutation = (
     }
   );
 
+export const useDeleteBackupMutation = (
+  engine: Engine,
+  databaseId: number,
+  backupId: number
+) =>
+  useMutation<{}, APIError[]>(
+    () => manualDatabaseBackupDelete(engine, databaseId, backupId),
+    {
+      onSuccess: () => updateStoreForDatabase(databaseId, {}),
+    }
+  );
+
 export const useBackupMutation = (
   engine: Engine,
   databaseId: number,
   backupLabel: string
 ) =>
-  useMutation<{}, APIError[]>(() => manualDatabaseBackup(engine, databaseId), {
-    onSuccess: () => updateStoreForDatabase(databaseId, { label: backupLabel }),
-  });
+  useMutation<{}, APIError[]>(
+    () => manualDatabaseBackup(engine, databaseId, backupLabel),
+    {
+      // todo: onSuccess: () => updateStoreForDatabase(databaseId, { status: 'backing_up' }),
+      onSuccess: () => updateStoreForDatabase(databaseId, {}),
+    }
+  );
 
 export const databaseEventsHandler = (event: Event) => {
   const { action, status, entity } = event;

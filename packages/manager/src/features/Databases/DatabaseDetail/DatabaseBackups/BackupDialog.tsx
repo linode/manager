@@ -83,7 +83,7 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
         <Notice
           error
           text={
-            getAPIErrorOrDefault(error, 'Unable to restore this backup.')[0]
+            getAPIErrorOrDefault(error, 'Unable to create this backup.')[0]
               .reason
           }
         />

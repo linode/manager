@@ -221,12 +221,34 @@ export const restoreWithBackup = (
   );
 
 /**
+ * manualDatabaseDelete
+ *
+ * Manually delete a database
+ */
+export const manualDatabaseBackupDelete = (
+  engine: Engine,
+  databaseID: number,
+  backupID: number
+) =>
+  Request<{}>(
+    setURL(
+      `${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/${backupID}`
+    ),
+    setMethod('DELETE')
+  );
+
+/**
  * manualDatabaseBackup
  *
  * Manually backup a database
  */
-export const manualDatabaseBackup = (engine: Engine, databaseID: number) =>
+export const manualDatabaseBackup = (
+  engine: Engine,
+  databaseID: number,
+  backupLabel: string
+) =>
   Request<{}>(
+    setData({ label: backupLabel }),
     setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups/`),
     setMethod('POST')
   );
