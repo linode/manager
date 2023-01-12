@@ -34,7 +34,7 @@ For example, the story for `EnhancedNumberInput.tsx` is defined in the `Enhanced
 ##### Core Style
 A color, font, svg icon, or other simple styling convention.
 ##### Element
-A basic HTML element wrapped in a react component, or a small component that is not normally used on its own.
+A basic HTML element wrapped in a React component or a small component that is not normally used on its own.
 ##### Component
 A composition of Core Styles and Elements. Normally with some code that defines behavior. An example of a Component is a Dialog which is a composition of Typography and Buttons.
 ##### Feature
