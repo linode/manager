@@ -71,7 +71,7 @@ const ApiAwarenessModal = (props: Props) => {
       <Typography variant="body1">
         You&#39;ll first need to{' '}
         <ExternalLink
-          onClick={() => fireGAEvent('Click: Creatre API Access Token Link')}
+          onClick={() => fireGAEvent('Click: Create API Access Token Link')}
           link="/profile/tokens"
           text="create an API access token"
           hideIcon
