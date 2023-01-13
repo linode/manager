@@ -26,29 +26,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   gridWithTips: {
     maxWidth: '50%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       maxWidth: '100%',
       width: '100%',
     },
   },
   tips: {
     marginLeft: theme.spacing(4),
-    marginTop: `${theme.spacing(4)}px !important`,
+    marginTop: `${theme.spacing(4)} !important`,
     padding: theme.spacing(4),
     backgroundColor: theme.palette.divider,
-    [theme.breakpoints.down('lg')]: {
+    [theme.breakpoints.down('xl')]: {
       marginLeft: 0,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       paddingLeft: theme.spacing(2),
     },
   },
   scriptTextarea: {
     maxWidth: '100%',
-    height: 400,
-    '& textarea': {
-      height: '100%',
-    },
   },
   revisionTextarea: {
     maxWidth: '100%',
@@ -186,7 +182,7 @@ export const StackScriptForm: React.FC<CombinedProps> = (props) => {
       </Grid>
       <TextField
         multiline
-        rows={1}
+        rows={3}
         label="Script"
         placeholder={`#!/bin/bash \n\n# Your script goes here`}
         onChange={script.handler}

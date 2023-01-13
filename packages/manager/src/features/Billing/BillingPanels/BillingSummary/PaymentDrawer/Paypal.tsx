@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 0.3,
   },
   text: {
-    marginBottom: theme.spacing(2) - 1,
+    marginBottom: `calc(${theme.spacing(2)} - 1)`,
   },
 }));
 

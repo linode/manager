@@ -43,9 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyItems: 'center',
   },
   root: {
-    padding: `${theme.spacing(2)}px 0`,
+    padding: `${theme.spacing(2)} 0`,
     [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(10)}px 0`,
+      padding: `${theme.spacing(10)} 0`,
     },
   },
   copy: {
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     gridArea: 'copy',
     minWidth: 'min-content',
     maxWidth: '75%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       maxWidth: 'none',
     },
   },

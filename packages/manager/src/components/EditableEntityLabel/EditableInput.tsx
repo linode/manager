@@ -1,6 +1,6 @@
-import Check from '@material-ui/icons/Check';
-import Close from '@material-ui/icons/Close';
-import Edit from '@material-ui/icons/Edit';
+import Check from '@mui/icons-material/Check';
+import Close from '@mui/icons-material/Close';
+import Edit from '@mui/icons-material/Edit';
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';

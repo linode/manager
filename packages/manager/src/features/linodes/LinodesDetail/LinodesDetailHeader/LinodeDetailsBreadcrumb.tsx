@@ -18,10 +18,10 @@ import {
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     textDecoration: 'none',
-    [theme.breakpoints.down('sm')]: {
-      paddingRight: `${theme.spacing()}px !important`,
+    [theme.breakpoints.down('md')]: {
+      paddingRight: `${theme.spacing()} !important`,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(),
     },
   },

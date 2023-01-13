@@ -90,14 +90,14 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
           </Grid>
         </Grid>
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell className={classes.bucketRegion}>
           <Typography variant="body1" data-qa-region>
             {formatObjectStorageCluster(cluster) || cluster}
           </Typography>
         </TableCell>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell>
           <DateTimeDisplay value={created} data-qa-created />
         </TableCell>
@@ -108,7 +108,7 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
         </Typography>
       </TableCell>
 
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell className={classes.bucketObjects}>
           <Typography variant="body1" data-qa-size>
             {objects}

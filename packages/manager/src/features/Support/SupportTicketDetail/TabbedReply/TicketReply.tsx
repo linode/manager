@@ -35,7 +35,7 @@ class TicketReply extends React.Component<CombinedProps> {
       <TextField
         className={classes.replyField}
         multiline
-        rows={12}
+        rows={1.8}
         value={value}
         placeholder={placeholder || 'Enter your reply'}
         data-qa-ticket-description

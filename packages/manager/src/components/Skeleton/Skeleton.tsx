@@ -124,7 +124,7 @@ const _Skeleton: React.FC<combinedProps> = (props) => {
       >
         {hasEntityIcon && (
           <Grid item className={classes.skeletonIconContainer}>
-            <Skeleton variant="circle" className={classes.skeletonIcon} />
+            <Skeleton variant="circular" className={classes.skeletonIcon} />
           </Grid>
         )}
         {columns}

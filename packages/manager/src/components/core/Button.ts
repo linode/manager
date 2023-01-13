@@ -1,4 +1,4 @@
-import Button, { ButtonProps as _ButtonProps } from '@material-ui/core/Button';
+import Button, { ButtonProps as _ButtonProps } from '@mui/material/Button';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface ButtonProps extends _ButtonProps {}

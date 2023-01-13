@@ -1,4 +1,4 @@
-import Box, { BoxProps as _BoxProps } from '@material-ui/core/Box';
+import Box, { BoxProps as _BoxProps } from '@mui/material/Box';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface BoxProps extends _BoxProps {}

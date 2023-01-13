@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
     },
     helperText: {
-      paddingTop: theme.spacing(1) / 2,
+      paddingTop: theme.spacing(0.5),
     },
   });
 
@@ -436,7 +436,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             <TextField
               label="Description"
               multiline
-              rows={4}
+              rows={1}
               value={description}
               onChange={changeDescription}
               error={Boolean(descriptionError)}

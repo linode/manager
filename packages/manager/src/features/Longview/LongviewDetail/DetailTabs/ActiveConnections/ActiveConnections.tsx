@@ -18,12 +18,12 @@ import ConnectionRow from './ConnectionRow';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(3),
     },
   },
   title: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },

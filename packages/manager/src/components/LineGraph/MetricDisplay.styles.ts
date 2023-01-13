@@ -37,12 +37,12 @@ const styles = (theme: Theme) =>
       '& .data': {
         minWidth: 100,
       },
-      [theme.breakpoints.down('lg')]: {
+      [theme.breakpoints.down('xl')]: {
         '& th, & td': {
           padding: '4px !important',
         },
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         maxWidth: '100%',
         '& td': {
           justifyContent: 'normal',

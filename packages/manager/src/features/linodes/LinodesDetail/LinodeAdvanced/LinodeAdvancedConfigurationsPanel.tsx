@@ -24,9 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
   sidebar: {
-    marginTop: -theme.spacing(2),
+    marginTop: `-${theme.spacing(2)}`,
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(2) + 24,
+      marginTop: theme.spacing(5),
     },
   },
 }));

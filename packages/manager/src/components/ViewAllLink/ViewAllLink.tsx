@@ -31,7 +31,7 @@ const styles = (theme: Theme) =>
       marginLeft: theme.spacing(1),
     },
     count: {
-      marginRight: theme.spacing(1) / 2,
+      marginRight: theme.spacing(0.5),
     },
     countNumber: {
       fontFamily: theme.font.bold,

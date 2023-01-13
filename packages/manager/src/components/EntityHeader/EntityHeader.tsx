@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   landing: {
     marginBottom: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       padding: 0,
     },
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   details: {
     backgroundColor: theme.bg.bgPaper,
     margin: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexWrap: 'wrap',
     },
   },
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.bgPaper,
     padding: '4px 16px',
     paddingRight: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     },
   },
@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.only('sm')]: {
       marginRight: 0,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginBottom: 0,
     },
   },

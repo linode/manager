@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   radio: {
-    marginLeft: -theme.spacing(0.5),
+    marginLeft: `-${theme.spacing(0.5)}`,
     marginRight: theme.spacing(2),
     padding: 2,
   },
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     marginLeft: 2,
     paddingRight: theme.spacing(3),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       paddingRight: 0,
     },
   },

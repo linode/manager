@@ -39,7 +39,7 @@ export const BucketActionMenu: React.FC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Hidden smDown>
+      <Hidden mdDown>
         <InlineMenuAction
           actionText="Details"
           onClick={() => {

@@ -93,7 +93,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                             >
                               SSH Access
                             </TableSortCell>
-                            <Hidden xsDown>
+                            <Hidden smDown>
                               <TableSortCell
                                 active={orderBy === 'ssh:user'}
                                 label={'ssh:user'}

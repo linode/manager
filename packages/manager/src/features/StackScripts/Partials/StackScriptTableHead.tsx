@@ -38,25 +38,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   stackscriptTitles: {
     width: '36%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '48%',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '50%',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '60%',
     },
   },
   stackscriptTitlesAccount: {
     width: '26%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '38%',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '50%',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '60%',
     },
   },
@@ -66,23 +66,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   deploys: {
     width: '10%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '15%',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '17%',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '28%',
     },
   },
   revisions: {
     whiteSpace: 'nowrap',
     width: '13%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '17%',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '23%',
     },
   },
@@ -167,7 +167,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           </Cell>
         )}
         {!isSelecting && (
-          <Hidden xsDown>
+          <Hidden smDown>
             <Cell
               className={`${classes.tableHead} ${classes.revisions}`}
               data-qa-stackscript-revision-header
@@ -178,7 +178,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           </Hidden>
         )}
         {!isSelecting && (
-          <Hidden mdDown>
+          <Hidden lgDown>
             <TableCell
               className={classNames({
                 [classes.tableHead]: true,
@@ -193,7 +193,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
           </Hidden>
         )}
         {!isSelecting && !communityStackScripts ? (
-          <Hidden mdDown>
+          <Hidden lgDown>
             <TableCell
               className={`${classes.tableHead} ${classes.status} ${classes.noHover}`}
               data-qa-stackscript-status-header

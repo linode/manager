@@ -69,11 +69,11 @@ const styles = (theme: Theme) =>
     },
     landing: {
       backgroundColor: `${theme.bg.app} !important`,
-      marginTop: -theme.spacing(),
+      marginTop: `-${theme.spacing()}`,
     },
     // Styles to override base placeholder styles for StackScript null state
     stackscriptPlaceholder: {
-      padding: `${theme.spacing(1)}px 0`,
+      padding: `${theme.spacing(1)} 0`,
       margin: 0,
       width: '100%',
       '& svg': {

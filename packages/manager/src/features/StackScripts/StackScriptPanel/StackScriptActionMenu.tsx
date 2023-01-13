@@ -29,7 +29,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
 
   const {
@@ -112,7 +112,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
           ariaLabel={`Action menu for StackScript ${props.stackScriptLabel}`}
         />
       ) : (
-        <Hidden smDown>
+        <Hidden mdDown>
           {actions.map((action) => {
             return (
               <InlineMenuAction

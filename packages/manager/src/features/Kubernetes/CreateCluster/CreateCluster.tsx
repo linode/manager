@@ -61,13 +61,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: '0px !important',
     paddingTop: '0px !important',
     background: 'none',
-    [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing(3)}px !important`,
-      marginTop: `${theme.spacing(3)}px !important`,
+    [theme.breakpoints.down('lg')]: {
+      padding: `${theme.spacing(3)} !important`,
+      marginTop: `${theme.spacing(3)} !important`,
       background: theme.color.white,
     },
-    [theme.breakpoints.down('sm')]: {
-      padding: `${theme.spacing()}px !important`,
+    [theme.breakpoints.down('md')]: {
+      padding: `${theme.spacing()} !important`,
     },
   },
   inner: {

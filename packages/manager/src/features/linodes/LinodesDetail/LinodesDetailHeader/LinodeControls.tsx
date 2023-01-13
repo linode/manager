@@ -29,14 +29,14 @@ const styles = (theme: Theme) =>
     breadCrumbs: {
       position: 'relative',
       top: -2,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         top: 10,
       },
     },
     controls: {
       position: 'relative',
-      marginTop: 9 - theme.spacing(1) / 2, // 4
-      [theme.breakpoints.down('sm')]: {
+      marginTop: `calc(9 - (${theme.spacing(1)} / 2))`, // 4
+      [theme.breakpoints.down('md')]: {
         margin: 0,
         left: -8,
         display: 'flex',

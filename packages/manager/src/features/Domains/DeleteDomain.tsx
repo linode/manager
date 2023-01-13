@@ -16,7 +16,7 @@ export interface Props {
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
     float: 'right',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(),
     },
   },

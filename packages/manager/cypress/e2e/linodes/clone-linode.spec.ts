@@ -1,15 +1,12 @@
-import {
-  createLinode,
-  deleteLinodeById,
-  deleteLinodeByLabel,
-} from '../../support/api/linodes';
+import { createLinode } from 'support/api/linodes';
 import {
   containsClick,
   containsVisible,
   fbtClick,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
+import { ui } from 'support/ui';
 import { assertToast } from '../../support/ui/events';
 
 describe('clone linode', () => {
@@ -24,8 +21,13 @@ describe('clone linode', () => {
         cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
         cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
       ) {
-        getClick(`[aria-label="Action menu for Linode ${linode.label}"]`);
-        containsClick('Clone');
+        ui.actionMenu
+          .findByTitle(`Action menu for Linode ${linode.label}`)
+          .should('be.visible')
+          .click();
+
+        ui.actionMenuItem.findByTitle('Clone').should('be.visible').click();
+
         containsClick('Select a Region');
         containsClick('Newark, NJ');
         getVisible('[data-qa-summary]').within(() => {
@@ -36,7 +38,6 @@ describe('clone linode', () => {
         getClick('[data-qa-deploy-linode="true"]');
         cy.wait('@cloneLinode').then((xhr) => {
           const newLinodeLabel = xhr.response?.body?.label;
-          const newLinodeId = xhr.response?.body?.id;
           assert.equal(xhr.response?.statusCode, 200);
           assertToast(`Your Linode ${newLinodeLabel} is being created.`);
           containsVisible(newLinodeLabel);

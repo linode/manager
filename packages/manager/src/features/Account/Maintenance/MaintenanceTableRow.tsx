@@ -1,20 +1,41 @@
 import * as React from 'react';
-import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
 import Hidden from 'src/components/core/Hidden';
+import Tooltip from 'src/components/core/Tooltip';
 import Link from 'src/components/Link';
-import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import capitalize from 'src/utilities/capitalize';
-import { parseAPIDate } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
+import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
+import { AccountMaintenance } from '@linode/api-v4/lib/account/types';
+import { parseAPIDate } from 'src/utilities/date';
+import { formatDate } from 'src/utilities/formatDate';
+import { truncate } from 'src/utilities/truncate';
 
-const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
+const statusTextMap: Record<AccountMaintenance['status'], string> = {
+  started: 'In Progress',
+  pending: 'Scheduled',
+  completed: 'Completed',
+};
+
+const statusIconMap: Record<AccountMaintenance['status'], Status> = {
+  started: 'other',
+  pending: 'active',
+  completed: 'inactive',
+};
+
+export const MaintenanceTableRow = (props: AccountMaintenance) => {
   const { entity, when, type, status, reason } = props;
+
+  const truncatedReason = truncate(reason, 93);
+
+  const isTruncated = reason !== truncatedReason;
 
   return (
     <TableRow key={entity.id}>
+      <TableCell style={{ textTransform: 'capitalize' }}>
+        {entity.type}
+      </TableCell>
       <TableCell>
         <Link
           to={
@@ -28,32 +49,31 @@ const MaintenanceTableRow: React.FC<AccountMaintenance> = (props) => {
         </Link>
       </TableCell>
       <TableCell noWrap>{formatDate(when)}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-testid="relative-date">
           {parseAPIDate(when).toRelative()}
         </TableCell>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell noWrap>{capitalize(type.replace('_', ' '))}</TableCell>
       </Hidden>
       <TableCell statusCell>
-        <StatusIcon status={status == 'started' ? 'other' : 'inactive'} />
-        {
-          // @ts-expect-error api will change pending -> scheduled
-          status === 'pending' || status === 'scheduled'
-            ? 'Scheduled'
-            : status === 'started'
-            ? 'In Progress'
-            : capitalize(status)
-        }
+        <StatusIcon status={statusIconMap[status] ?? 'other'} />
+        {statusTextMap[status] ?? capitalize(status)}
       </TableCell>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <TableCell>
-          <HighlightedMarkdown textOrMarkdown={reason} />
+          {isTruncated ? (
+            <Tooltip title={<HighlightedMarkdown textOrMarkdown={reason} />}>
+              <div>
+                <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+              </div>
+            </Tooltip>
+          ) : (
+            <HighlightedMarkdown textOrMarkdown={truncatedReason} />
+          )}
         </TableCell>
       </Hidden>
     </TableRow>
   );
 };
-
-export default MaintenanceTableRow;

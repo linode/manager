@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   status: {
     position: 'relative',
     [theme.breakpoints.up('sm')]: {
-      margin: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`,
+      margin: `${theme.spacing(3)} ${theme.spacing(1)} !important`,
     },
   },
   outerContainer: {
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   monitorStatusOuter: {
     marginBottom: theme.spacing(1),
     [theme.breakpoints.up('lg')]: {
-      marginBottom: theme.spacing(3) + 2,
+      marginBottom: `calc(${theme.spacing(3)} + 2px)`,
     },
   },
 }));

@@ -51,7 +51,7 @@ const IconButtonWrapper: React.FC<CombinedProps> = (props) => {
       )}
       style={style}
       {...rest}
-    >
+      size="large">
       {props.children}
     </IconButton>
   );

@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       order: 5,
-      marginRight: -theme.spacing(2),
+      marginRight: `-${theme.spacing(2)}`,
       position: 'relative',
       '&.active $icon': {
         backgroundColor: theme.palette.text.primary,
@@ -83,6 +83,7 @@ const userNotificationButton: React.FC<CombinedProps> = ({
       onClick={onClick}
       className={`${classes.root} ${className}`}
       aria-label="User Notifications"
+      size="large"
     >
       <div
         className={classNames({

@@ -39,7 +39,7 @@ const styles = (theme: Theme) =>
     },
     emptyImagePanelText: {
       marginTop: theme.spacing(1),
-      padding: `${theme.spacing(1)}px 0`,
+      padding: `${theme.spacing(1)} 0`,
     },
   });
 

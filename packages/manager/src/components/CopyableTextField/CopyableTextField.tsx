@@ -5,9 +5,17 @@ import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   removeDisabledStyles: {
-    '&.Mui-disabled': {
+    '& .MuiInput-input': {
       borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
-      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      color:
+        theme.name === 'lightTheme'
+          ? `${theme.palette.text.primary} !important`
+          : '#fff !important',
+      opacity: 1,
+      '-webkit-text-fill-color': 'unset !important',
+    },
+    '& .MuiInput-root': {
+      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
       opacity: 1,
     },
   },

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(0.5),
     minWidth: 28,
     padding: 6,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       height: 30,
       minHeight: 30,
       minWidth: 27,
@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& svg': {
       fontSize: 22,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         fontSize: 20,
       },
     },

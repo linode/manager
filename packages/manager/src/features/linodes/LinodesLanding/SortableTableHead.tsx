@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelCell: {
     ...theme.applyTableHeaderStyles,
     width: '24%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '20%',
     },
   },
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.only('md')]: {
       width: '27%',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '25%',
     },
   },
@@ -53,14 +53,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   regionCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '18%',
     },
   },
   lastBackupCell: {
     ...theme.applyTableHeaderStyles,
     width: '14%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '18%',
     },
   },
@@ -128,7 +128,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
         ) : null}
         {isVLAN ? null : (
           <>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableSortCell
                 label="type"
                 active={isActive('type')}
@@ -146,7 +146,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
               >
                 IP Address
               </TableSortCell>
-              <Hidden mdDown>
+              <Hidden lgDown>
                 <TableSortCell
                   label="region"
                   direction={order}
@@ -159,7 +159,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
                 </TableSortCell>
               </Hidden>
             </Hidden>
-            <Hidden mdDown>
+            <Hidden lgDown>
               <TableSortCell
                 noWrap
                 label="backups:last_successful"
@@ -185,7 +185,7 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
                 onClick={toggleLinodeView}
                 disableRipple
                 className={classes.toggleButton}
-              >
+                size="large">
                 <GridView />
               </IconButton>
             </Tooltip>

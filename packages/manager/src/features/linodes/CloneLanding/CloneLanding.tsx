@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(1),
   },
   paper: {
-    padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0`,
+    padding: `${theme.spacing(3)} ${theme.spacing(3)} 0`,
   },
   appBar: {
     '& > div': {

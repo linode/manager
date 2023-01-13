@@ -3,18 +3,16 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
-import UserIcon from 'src/assets/icons/account.svg';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import { SingleTextFieldForm } from 'src/components/SingleTextFieldForm/SingleTextFieldForm';
-import { useAccountGravatar } from 'src/queries/account';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { ApplicationState } from 'src/store';
 import withNotifications, {
@@ -36,17 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     maxWidth: 360,
   },
-  avatar: {
-    borderRadius: '50%',
-    marginRight: 28,
-    '& svg': {
-      color: '#c9c7c7',
-      height: 88,
-      width: 88,
-    },
-  },
   gravatar: {
-    borderRadius: '50%',
     height: 88,
     width: 88,
   },
@@ -78,15 +66,6 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
 
   const { mutateAsync: updateProfile } = useMutateProfile();
   const { data: profile, refetch: requestProfile } = useProfile();
-
-  const {
-    data: gravatarURL,
-    error: gravatarError,
-    isLoading: gravatarLoading,
-  } = useAccountGravatar(profile?.email ?? '');
-
-  const noGravatar =
-    gravatarLoading || gravatarError || gravatarURL === 'not found';
 
   const loggedInAsCustomer = useSelector(
     (state: ApplicationState) => state.authentication.loggedInAsCustomer
@@ -130,44 +109,29 @@ export const DisplaySettings: React.FC<WithNotifications> = (props) => {
 
   return (
     <Paper>
-      {gravatarError ? (
-        <Notice warning text={'Error retrieving Gravatar'} />
-      ) : null}
-      <Box className={classes.profile} display="flex">
-        {noGravatar ? (
-          <div className={classes.avatar}>
-            <UserIcon />
-          </div>
-        ) : (
-          <div className={classes.avatar}>
-            <img
-              className={classes.gravatar}
-              src={gravatarURL}
-              alt="Gravatar"
-            />
-          </div>
-        )}
+      <Box className={classes.profile} display="flex" style={{ gap: 16 }}>
+        <GravatarByEmail
+          email={profile?.email ?? ''}
+          className={classes.gravatar}
+        />
         <div>
           <Typography className={classes.profileTitle} variant="h2">
             Profile photo
-            {noGravatar ? (
-              <HelpIcon
-                classes={{ popper: classes.tooltip }}
-                className={classes.helpIcon}
-                interactive
-                text={helpIconText}
-              />
-            ) : null}
+            <HelpIcon
+              classes={{ popper: classes.tooltip }}
+              className={classes.helpIcon}
+              interactive
+              text={helpIconText}
+            />
           </Typography>
           <Typography className={classes.profileCopy} variant="body1">
-            {noGravatar
-              ? 'Create, upload, and manage your globally recognized avatar from a single place with Gravatar.'
-              : 'Edit your profile photo using Gravatar.'}
+            Create, upload, and manage your globally recognized avatar from a
+            single place with Gravatar.
           </Typography>
           <ExternalLink
             className={classes.addImageLink}
             link="https://en.gravatar.com/"
-            text={noGravatar ? 'Add photo' : 'Edit photo'}
+            text={'Manage photo'}
             fixedIcon
           />
         </div>

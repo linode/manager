@@ -40,13 +40,12 @@ export interface HighlightedMarkdownProps {
   textOrMarkdown: string;
   language?: SupportedLanguage;
   sanitizeOptions?: sanitize.IOptions;
+  className?: string;
 }
 
-export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
-  props
-) => {
+export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const classes = useStyles();
-  const { language, textOrMarkdown, sanitizeOptions } = props;
+  const { language, textOrMarkdown, sanitizeOptions, className } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   /**
@@ -84,10 +83,7 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
 
   return (
     <Typography
-      className={classNames({
-        [classes.root]: true,
-        'formatted-text': true,
-      })}
+      className={classNames(classes.root, 'formatted-text', className)}
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml,

@@ -6,11 +6,11 @@ import {
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import BillingTooltip from 'src/components/BillingTooltip';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -24,10 +24,7 @@ import TableCell from 'src/components/TableCell';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import TableRow from 'src/components/TableRow';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
-import {
-  akamaiBillingInvoiceText,
-  getShouldUseAkamaiBilling,
-} from 'src/features/Billing/billingUtils';
+import { getShouldUseAkamaiBilling } from 'src/features/Billing/billingUtils';
 import {
   printInvoice,
   printPayment,
@@ -54,9 +51,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
+    },
+  },
+  headerLeft: {
+    display: 'flex',
+    marginLeft: 10,
+    paddingLeft: 20,
+    flexGrow: 2,
+    [theme.breakpoints.down('xs')]: {
+      paddingLeft: 0,
     },
   },
   headerRight: {
@@ -65,7 +71,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 5,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
       marginLeft: 15,
@@ -85,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.5rem',
   },
   activeSince: {
-    marginRight: theme.spacing() + 2,
+    marginRight: theme.spacing(1.25),
   },
   transactionType: {
     marginRight: theme.spacing(),
@@ -147,30 +153,6 @@ const transactionDateOptions: Item<DateRange>[] = [
   { label: '12 Months', value: '12 Months' },
   { label: 'All Time', value: 'All Time' },
 ];
-
-export const akamaiRowEmptyState = (
-  <TableRow>
-    <TableCell colSpan={4}>
-      <Box
-        style={{ width: '100%', padding: 80 }}
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Typography style={{ textAlign: 'center' }}>
-          <strong>{akamaiBillingInvoiceText}</strong>
-        </Typography>
-      </Box>
-    </TableCell>
-  </TableRow>
-);
-
-export const akamaiInvoiceRow = (
-  <TableRow>
-    <TableCell colSpan={6} style={{ textAlign: 'center' }}>
-      <strong>Future {akamaiBillingInvoiceText}</strong>
-    </TableCell>
-  </TableRow>
-);
 
 const defaultDateRange: DateRange = '6 Months';
 
@@ -341,8 +323,13 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     <div className={classes.root}>
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.headline}>
-          Billing &amp; Payment History
+          {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
         </Typography>
+        {isAkamaiCustomer ? (
+          <div className={classes.headerLeft}>
+            <BillingTooltip text="Usage History may not reflect finalized invoice" />
+          </div>
+        ) : null}
         <div className={classes.headerRight}>
           {accountActiveSince && (
             <div className={classes.flexContainer}>
@@ -437,12 +424,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
                               ]
                             : undefined
                         }
-                        rowEmptyState={
-                          isAkamaiCustomer ? akamaiRowEmptyState : undefined
-                        }
-                        customFirstRow={
-                          isAkamaiCustomer ? akamaiInvoiceRow : undefined
-                        }
                       >
                         {paginatedAndOrderedData.map((thisItem) => {
                           return (
@@ -487,7 +468,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             accountInvoicesLoading,
             accountPaymentsError,
             accountInvoicesError,
-            isAkamaiCustomer,
             downloadInvoicePDF,
             downloadPaymentPDF,
             pdfErrors,

@@ -27,13 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& a:hover': {
       color: theme.palette.primary.main,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       flexDirection: 'row',
       alignItems: 'center',
     },
   },
   updates: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(2),
     },
   },

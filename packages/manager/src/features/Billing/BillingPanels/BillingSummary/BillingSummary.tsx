@@ -3,8 +3,8 @@ import {
   ActivePromotion,
   PromotionServiceType,
 } from '@linode/api-v4/lib/account/types';
-import { GridSize } from '@material-ui/core/Grid';
-import { Breakpoint } from '@material-ui/core/styles/createBreakpoints';
+import { GridSize } from '@mui/material/Grid';
+import { Breakpoint } from '@mui/material/styles';
 import classNames from 'classnames';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';

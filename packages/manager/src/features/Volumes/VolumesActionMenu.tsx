@@ -51,7 +51,7 @@ export const VolumesActionMenu = (props: Props) => {
   const { attached, isVolumesLanding } = props;
 
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleShowConfig = () => {
     const { openForConfig, label, filesystemPath } = props;

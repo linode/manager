@@ -23,7 +23,7 @@ export interface Props {
 
 export const MonitorActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();
 
   const {

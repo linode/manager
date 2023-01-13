@@ -719,7 +719,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           body={
             <Hidden mdUp>
               <div style={{ padding: 5 }}>
-                <Hidden xsDown>
+                <Hidden smDown>
                   <Button
                     onClick={this.openTransferDialog}
                     buttonType="secondary"
@@ -742,7 +742,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
             </Hidden>
           }
           actions={
-            <Hidden smDown>
+            <Hidden mdDown>
               <div style={{ padding: 5 }}>
                 <Button
                   onClick={this.openTransferDialog}
