@@ -7,5 +7,3 @@ export const formatBackupLabel = (backup: any): string => {
   // The backup type is unknown, so return an empty string.
   return '';
 };
-
-export default formatBackupLabel;

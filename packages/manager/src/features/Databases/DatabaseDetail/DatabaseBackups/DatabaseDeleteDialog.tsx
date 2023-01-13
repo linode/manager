@@ -2,7 +2,6 @@ import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -28,8 +27,6 @@ export type CombinedProps = Props & PreferencesProps;
 
 export const DatabaseDeleteDialog: React.FC<CombinedProps> = (props) => {
   const { database, backup, preferences, onClose, open, ...rest } = props;
-
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -42,7 +39,6 @@ export const DatabaseDeleteDialog: React.FC<CombinedProps> = (props) => {
 
   const handleDeleteBackup = () => {
     manualDelete().then(() => {
-      history.push('summary');
       enqueueSnackbar('Your backup is being deleted.', {
         variant: 'success',
       });

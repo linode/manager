@@ -4,7 +4,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 import formatDate from 'src/utilities/formatDate';
-import formatBackupLabel from 'src/utilities/formatBackupLabel';
+import { formatBackupLabel } from 'src/features/Databases/databaseUtils';
 import { parseAPIDate } from 'src/utilities/date';
 
 interface Props {

@@ -83,17 +83,17 @@ export const DatabaseBackups: React.FC = () => {
 
   const renderTableBody = () => {
     if (databaseError) {
-      return <TableRowError message={databaseError[0].reason} colSpan={3} />;
+      return <TableRowError message={databaseError[0].reason} colSpan={4} />;
     }
     if (backupsError) {
-      return <TableRowError message={backupsError[0].reason} colSpan={3} />;
+      return <TableRowError message={backupsError[0].reason} colSpan={4} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
       return <TableRowLoading columns={4} />;
     }
     if (backups?.results === 0) {
       return (
-        <TableRowEmptyState message="No backups to display." colSpan={3} />
+        <TableRowEmptyState message="No backups to display." colSpan={4} />
       );
     }
     if (backups) {
@@ -148,7 +148,7 @@ export const DatabaseBackups: React.FC = () => {
         <Button
           buttonType="primary"
           onClick={() => onBackup()}
-          style={{ marginLeft: 12, marginTop: 12 }}
+          style={{ marginTop: 15 }}
           data-qa-deploy-linode
         >
           Start Backup
