@@ -154,10 +154,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     }
   }
 
-  handleLinodeSelect = (linodeId: number, diskSize?: number) => {
+  handleLinodeSelect = (
+    linodeId: number,
+    type: null | string,
+    diskSize?: number
+  ) => {
     this.props.updateLinodeID(linodeId, diskSize);
     this.updateRegion(linodeId);
     this.getBackupsForLinode(linodeId);
+    this.props.updateTypeID(type);
   };
 
   render() {

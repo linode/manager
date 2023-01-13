@@ -71,7 +71,10 @@ export interface Props {
   onNodeLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeAddressChange: (nodeIdx: number, value: string) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNodeModeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNodeModeChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    nodeId: number
+  ) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removeNode: (e: React.MouseEvent<HTMLElement>) => void;
 }
@@ -218,7 +221,9 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
                 value={node.mode}
                 select
                 inputProps={{ 'data-node-idx': idx }}
-                onChange={onNodeModeChange}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onNodeModeChange(e, idx)
+                }
                 errorText={nodesErrorMap.mode}
                 data-qa-backend-ip-mode
                 noMarginTop
