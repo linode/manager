@@ -401,7 +401,7 @@ export class SelectPlanPanel extends React.Component<
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
     let selectedTypeClass: LinodeTypeClass = pathOr(
-      'standard', // Use `standard` by default
+      'dedicated', // Use `dedicated` by default
       ['class'],
       types.find(
         (type) => type.id === selectedID || type.heading === currentPlanHeading

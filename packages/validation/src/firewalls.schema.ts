@@ -1,4 +1,6 @@
-import { parse as parseIP, parseCIDR } from 'ipaddr.js';
+// We must use a default export for ipaddr.js so our packages node compatability
+// Refer to https://github.com/linode/manager/issues/8675
+import ipaddr from 'ipaddr.js';
 import { array, mixed, number, object, string } from 'yup';
 
 export const IP_ERROR_MESSAGE =
@@ -13,9 +15,9 @@ export const validateIP = (ipAddress?: string | null): boolean => {
   const [, mask] = ipAddress.split('/');
   try {
     if (mask) {
-      parseCIDR(ipAddress);
+      ipaddr.parseCIDR(ipAddress);
     } else {
-      parseIP(ipAddress);
+      ipaddr.parse(ipAddress);
     }
   } catch (err) {
     // Empty addresses are OK for the sake of validating the form.
