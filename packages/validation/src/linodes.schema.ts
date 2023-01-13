@@ -1,5 +1,7 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
-import { parseCIDR } from 'ipaddr.js';
+// We must use a default export for ipaddr.js so our packages node compatability
+// Refer to https://github.com/linode/manager/issues/8675
+import ipaddr from 'ipaddr.js';
 
 const validateIP = (ipAddress?: string | null) => {
   if (!ipAddress) {
@@ -8,7 +10,7 @@ const validateIP = (ipAddress?: string | null) => {
 
   // We accept IP ranges (i.e., CIDR notation).
   try {
-    parseCIDR(ipAddress);
+    ipaddr.parseCIDR(ipAddress);
   } catch (err) {
     return false;
   }
