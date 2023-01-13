@@ -139,7 +139,7 @@ const renderLoadingErrorData = (
     return <TableRowError colSpan={12} message={error} />;
   }
   if (loading) {
-    return <TableRowLoading columns={3} />;
+    return <TableRowLoading columns={4} />;
   }
   if (data.length === 0) {
     return (

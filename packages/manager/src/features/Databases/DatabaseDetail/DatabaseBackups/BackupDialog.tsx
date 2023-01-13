@@ -98,8 +98,9 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
         onChange={(input) => setBackupLabel(input)}
         value={backupLabel}
         label="Backup Label"
-        visible={preferences?.type_to_confirm}
+        visible={true}
         placeholder={'My backup label'}
+        hideInstructions={true}
       />
     </ConfirmationDialog>
   );
