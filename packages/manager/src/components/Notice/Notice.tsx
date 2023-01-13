@@ -124,7 +124,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   informationalList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
   },
-  marketing: { borderLeft: `5px solid ${theme.palette.status.marketingDark}` },
 }));
 
 interface Props extends GridProps {
@@ -133,7 +132,6 @@ interface Props extends GridProps {
   errorGroup?: string;
   important?: boolean;
   warning?: boolean;
-  marketing?: boolean;
   success?: boolean;
   typeProps?: TypographyProps;
   className?: string;
@@ -163,7 +161,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
     errorGroup,
     warning,
     success,
-    marketing,
     typeProps,
     children,
     flag,
@@ -226,7 +223,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.important]: important,
         [errorScrollClassName]: error,
         [classes.breakWords]: breakWords,
-        [classes.marketing]: marketing && !notificationList,
         [classes.error]: error && !notificationList,
         [classes.errorList]: error && notificationList,
         [classes.success]: success && !notificationList,

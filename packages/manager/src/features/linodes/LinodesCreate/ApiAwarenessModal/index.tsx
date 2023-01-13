@@ -1,5 +1,4 @@
 import React from 'react';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/Dialog';
@@ -8,11 +7,9 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
 import { makeStyles } from 'src/components/core/styles';
 import Tabs from 'src/components/core/ReachTabs';
 import TabPanels from 'src/components/core/ReachTabPanels';
-
 import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
@@ -66,9 +63,8 @@ const ApiAwarenessModal = (props: Props) => {
       open={isOpen}
       onClose={onClose}
       maxWidth={'sm'}
-      fullHeight
     >
-      <Typography variant="body1">
+      <Typography variant="body1" style={{ paddingTop: '16px' }}>
         You&#39;ll first need to{' '}
         <ExternalLink
           onClick={() => fireGAEvent('Click: Create API Access Token Link')}
@@ -93,9 +89,13 @@ const ApiAwarenessModal = (props: Props) => {
         />
         .
       </Typography>
-      <Tabs defaultIndex={0} onChange={handleTabChange}>
+      <Tabs
+        defaultIndex={0}
+        onChange={handleTabChange}
+        style={{ marginTop: '14px' }}
+      >
         <TabLinkList tabs={tabs} />
-        <TabPanels>
+        <TabPanels style={{ paddingBottom: '24px', paddingTop: '16px' }}>
           <SafeTabPanel index={0}>Code block API component WIP...</SafeTabPanel>
           <SafeTabPanel index={1}>
             Code block CLI component WIP...
@@ -125,7 +125,7 @@ const ApiAwarenessModal = (props: Props) => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      <Notice marketing spacingTop={16} spacingBottom={16}>
+      <Notice success spacingBottom={16}>
         <Typography>
           Check out our{' '}
           <ExternalLink
@@ -142,7 +142,7 @@ const ApiAwarenessModal = (props: Props) => {
         </Typography>
       </Notice>
 
-      <ActionsPanel>
+      <ActionsPanel style={{ marginTop: '0px', paddingTop: '4px' }}>
         <Button
           buttonType="secondary"
           onClick={onClose}
