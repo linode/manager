@@ -4,3 +4,4 @@ declare module 'highlight.js/lib/languages/javascript';
 declare module 'highlight.js/lib/languages/yaml';
 declare module 'highlight.js/lib/languages/bash';
 declare module 'highlight.js/lib/languages/nginx';
+declare module 'highlightjs-curl';

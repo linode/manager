@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import classNames from 'classnames';
 import * as hljs from 'highlight.js/lib/core';
+import * as hljsCurl from 'highlightjs-curl';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -19,6 +20,9 @@ hljs.registerLanguage(
 );
 hljs.registerLanguage('nginx', require('highlight.js/lib/languages/nginx'));
 hljs.registerLanguage('yaml', require('highlight.js/lib/languages/yaml'));
+hljs.registerLanguage('shell', require('highlight.js/lib/languages/shell'));
+
+hljs.registerLanguage('curl', hljsCurl);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -34,7 +38,9 @@ export type SupportedLanguage =
   | 'bash'
   | 'javascript'
   | 'nginx'
-  | 'yaml';
+  | 'yaml'
+  | 'curl'
+  | 'shell';
 
 export interface HighlightedMarkdownProps {
   textOrMarkdown: string;

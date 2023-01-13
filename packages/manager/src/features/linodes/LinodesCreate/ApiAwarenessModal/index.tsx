@@ -15,6 +15,8 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 
 import { sendEvent } from 'src/utilities/ga';
 
+import CodeBlock from '../CodeBlock';
+
 const useStyles = makeStyles(() => ({
   guides: {
     marginTop: 16,
@@ -96,7 +98,9 @@ const ApiAwarenessModal = (props: Props) => {
       <Tabs defaultIndex={0} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <TabPanels>
-          <SafeTabPanel index={0}>Code block API component WIP...</SafeTabPanel>
+          <SafeTabPanel index={0}>
+            <CodeBlock />
+          </SafeTabPanel>
           <SafeTabPanel index={1}>
             Code block CLI component WIP...
             <Typography className={classes.guides} variant="h2">
