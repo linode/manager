@@ -19,7 +19,7 @@ type ClassNames = 'root' | 'radioGroupLabel';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: `${theme.spacing(3)}px 0 0`,
+      margin: `${theme.spacing(3)} 0 0`,
     },
     radioGroupLabel: {
       display: 'block',

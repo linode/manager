@@ -205,7 +205,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
         )}
       </TableCell>
 
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell className={classes.planCell} data-qa-ips>
           <div className={classes.planCell}>{type?.label}</div>
         </TableCell>
@@ -214,13 +214,13 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
             <IPAddress ips={ipv4} />
           </div>
         </TableCell>
-        <Hidden mdDown>
+        <Hidden lgDown>
           <TableCell className={classes.regionCell} data-qa-region>
             <RegionIndicator region={region} />
           </TableCell>
         </Hidden>
       </Hidden>
-      <Hidden mdDown>
+      <Hidden lgDown>
         <LinodeRowBackupCell
           linodeId={id}
           backupsEnabled={backups.enabled || false}

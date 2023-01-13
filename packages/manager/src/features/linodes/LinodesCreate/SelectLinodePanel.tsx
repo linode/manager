@@ -31,7 +31,7 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.color.white,
     },
     panelBody: {
-      padding: `${theme.spacing(2)}px 0 0`,
+      padding: `${theme.spacing(2)} 0 0`,
     },
   });
 

@@ -213,11 +213,6 @@ a.black:visited {
   color: #32363c;
 }
 
-a.black:not(.nu):hover {
-  color: #32363c;
-  text-decoration: underline;
-}
-
 a.black:not(.nu):active {
   text-decoration: underline;
 }

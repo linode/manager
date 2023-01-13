@@ -39,9 +39,8 @@ import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   textWrapper: {
-    marginBottom: theme.spacing(1) + 2,
+    marginBottom: theme.spacing(1.25),
   },
 }));
 

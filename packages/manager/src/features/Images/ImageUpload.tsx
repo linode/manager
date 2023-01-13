@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   helperText: {
     marginTop: theme.spacing(2),
     width: '80%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -207,7 +207,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
           <TextField
             label="Description"
             multiline
-            rows={4}
+            rows={1}
             value={description}
             onChange={changeDescription}
             errorText={errorMap.description}

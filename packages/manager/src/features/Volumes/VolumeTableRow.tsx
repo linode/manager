@@ -134,7 +134,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       ) : null}
       <TableCell data-qa-volume-size>{size} GB</TableCell>
       {!isVolumesLanding ? (
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell className={classes.volumePath} data-qa-fs-path>
             {filesystemPath}
           </TableCell>

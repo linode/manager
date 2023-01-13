@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
   },
   mobileSpacing: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },

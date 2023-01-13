@@ -6,7 +6,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 const useStyles = makeStyles((theme: Theme) => ({
   linksSubSection: {
     display: 'grid',
-    gridTemplateRows: `22px  minmax(${theme.spacing(3)}px, 100%) 1.125rem`,
+    gridTemplateRows: `22px  minmax(${theme.spacing(3)}, 100%) 1.125rem`,
     rowGap: theme.spacing(2),
     width: '100%',
     '& > h2': {

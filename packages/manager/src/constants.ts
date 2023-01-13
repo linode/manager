@@ -133,6 +133,7 @@ export const ZONES: Record<string, ZoneName> = {
   'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'mumbai1',
   'ap-southeast': 'sydney1',
+  'us-iad': 'washington3',
 };
 
 export const dcDisplayNames = {
@@ -158,30 +159,7 @@ export const dcDisplayNames = {
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'Mumbai, IN',
   'ap-southeast': 'Sydney, AU',
-};
-
-// @todo no longer in use; remove if current design is approved.
-export const extendedDCDisplayNames = {
-  'us-east-1a': 'US East: Newark, NJ',
-  'us-south-1a': 'US Central: Dallas, TX',
-  'us-west-1a': 'US West: Fremont, CA',
-  'us-southeast-1a': 'US South: Atlanta, GA',
-  'eu-central-1a': 'EU East: Frankfurt, DE',
-  'eu-west-1a': 'EU West: London, UK',
-  'ap-northeast-1a': 'Asia-Pacific Northeast: Tokyo, JP',
-  'ap-northeast-1b': 'Asia-Pacific Northeast: Tokyo, JP',
-  'us-central': 'US Central: Dallas, TX',
-  'us-west': 'US West: Fremont, CA',
-  'us-southeast': 'US South: Atlanta, GA',
-  'us-east': 'US East: Newark, NJ',
-  'eu-west': 'EU West: London, UK',
-  'ap-south': 'Asia-Pacific South: Singapore, SG',
-  'eu-central': 'EU East: Frankfurt, DE',
-  'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
-  'ca-central': 'Canada: Toronto, ON',
-  'ca-east': 'Canada: Toronto, ON',
-  'ap-west': 'Asia-Pacific West: Mumbai, IN',
-  'ap-southeast': 'Asia-Pacific Southeast: Sydney, AU',
+  'us-iad': 'Washington, DC',
 };
 
 export const dcDisplayCountry = {
@@ -205,6 +183,7 @@ export const dcDisplayCountry = {
   'ca-east': 'CA',
   'ap-west': 'IN',
   'ap-southeast': 'AU',
+  'us-iad': 'US',
 };
 
 // Map OBJ Cluster IDs to their display country.
@@ -216,29 +195,6 @@ export const objectStorageClusterDisplay: Record<
   'eu-central-1': 'Frankfurt, DE',
   'ap-south-1': 'Singapore, SG',
   'us-southeast-1': 'Atlanta, GA',
-};
-
-export type ContinentKey = 'NA' | 'EU' | 'AS';
-export const dcContinent: Record<string, ContinentKey> = {
-  'us-east-1a': 'NA',
-  'us-south-1a': 'NA',
-  'us-west-1a': 'NA',
-  'us-southeast-1a': 'NA',
-  'eu-central-1a': 'EU',
-  'eu-west-1a': 'EU',
-  'ap-northeast-1a': 'AS',
-  'ap-northeast-1b': 'AS',
-  'us-central': 'NA',
-  'us-west': 'NA',
-  'us-southeast': 'NA',
-  'us-east': 'NA',
-  'eu-west': 'EU',
-  'ap-south': 'AS',
-  'eu-central': 'EU',
-  'ap-northeast': 'AS',
-  'ca-central': 'NA',
-  'ca-east': 'NA',
-  'ap-west': 'AS',
 };
 
 // Default error message for non-API errors
@@ -334,6 +290,11 @@ export const MOCK_SERVICE_WORKER =
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
 
+// Default payment limits of Braintree payments in USD ($)
+export const PAYMENT_MIN = 5;
+export const PAYMENT_SOFT_MAX = 2_000;
+export const PAYMENT_HARD_MAX = 50_000;
+
 // Price of LKE's High Availability offering in USD
 export const HIGH_AVAILABILITY_PRICE =
   process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
@@ -370,10 +331,10 @@ export const ADDRESSES = {
     },
     international: {
       entity: 'Akamai Technologies International AG',
-      address1: 'Chemin des Aulx 18',
-      city: 'Plan-les-Ouates',
-      state: 'Geneva',
-      zip: '1228',
+      address1: 'Grafenauweg 8',
+      city: 'Zug',
+      state: 'Zug',
+      zip: 'CH-6300',
       country: 'Switzerland',
     },
   },

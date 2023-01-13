@@ -1,5 +1,5 @@
 import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
     backgroundColor: 'inherit',
     color: '#979797',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       visibility: 'visible',
     },
   },

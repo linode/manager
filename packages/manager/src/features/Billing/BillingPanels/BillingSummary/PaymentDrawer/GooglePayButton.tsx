@@ -7,11 +7,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
+import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 import {
   gPay,
   initGooglePaymentInstance,
 } from 'src/features/Billing/GooglePayProvider';
 import { useScript } from 'src/hooks/useScript';
+import { useAccount } from 'src/queries/account';
 import { useClientToken } from 'src/queries/accountPayment';
 import { SetSuccess } from './types';
 
@@ -38,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.name === 'lightTheme' ? '#fff' : '#616161',
       height: 16,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: 0,
       width: '101.5%',
     },
@@ -61,7 +63,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   transactionInfo: google.payments.api.TransactionInfo;
-  balance: false | number;
   setSuccess: SetSuccess;
   setError: (error: string) => void;
   setProcessing: (processing: boolean) => void;
@@ -76,10 +77,10 @@ export const GooglePayButton: React.FC<Props> = (props) => {
   const [initializationError, setInitializationError] = React.useState<boolean>(
     false
   );
+  const { data: account } = useAccount();
 
   const {
     transactionInfo,
-    balance,
     disabled: disabledDueToProcessing,
     setSuccess,
     setError,
@@ -87,16 +88,10 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     renderError,
   } = props;
 
-  /**
-   * We're following API's validation logic:
-   *
-   * GPay min is $5, max of $2000.
-   * If the customer has a balance over $2000, then the max is $50000
-   */
+  const { min, max } = getPaymentLimits(account?.balance);
+
   const disabledDueToPrice =
-    +transactionInfo.totalPrice < 5 ||
-    (+transactionInfo.totalPrice > 2000 && balance < 2000) ||
-    +transactionInfo.totalPrice > 50000;
+    +transactionInfo.totalPrice < min || +transactionInfo.totalPrice > max;
 
   React.useEffect(() => {
     const init = async () => {
@@ -149,9 +144,7 @@ export const GooglePayButton: React.FC<Props> = (props) => {
     <div className={classes.root}>
       {disabledDueToPrice && (
         <Tooltip
-          title={`Payment amount must be between $5 and ${
-            balance > 2000 ? '$50000' : '$2000'
-          }`}
+          title={`Payment amount must be between $${min} and $${max}`}
           data-qa-help-tooltip
           enterTouchDelay={0}
           leaveTouchDelay={5000}

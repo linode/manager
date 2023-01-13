@@ -26,7 +26,7 @@ export const NodeActionMenu: React.FC<Props> = (props) => {
   const { nodeId, instanceLabel, openRecycleNodeDialog } = props;
   const theme = useTheme<Theme>();
   const classes = useStyles();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
     {

@@ -186,7 +186,8 @@ describe('Managed Monitors tab', () => {
           .click()
           .type(monitorLabel);
 
-        cy.findByLabelText('URL', { exact: false })
+        // Can't `findByLabelText` because multiple elements with "URL" label exist.
+        cy.get('input[name="address"]')
           .should('be.visible')
           .click()
           .type(monitorUrl);

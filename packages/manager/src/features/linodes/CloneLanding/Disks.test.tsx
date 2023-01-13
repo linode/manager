@@ -47,7 +47,7 @@ describe('Disks', () => {
     const { getByTestId } = render(
       wrapWithTheme(<Disks {...props} selectedConfigIds={[9859511]} />)
     );
-    const checkbox: any = getByTestId(`checkbox-19040624`).lastElementChild;
-    expect(checkbox.children[0]).toHaveAttribute('checked');
+    const checkbox: any = getByTestId('checkbox-19040624').firstElementChild;
+    expect(checkbox).toHaveAttribute('checked');
   });
 });
