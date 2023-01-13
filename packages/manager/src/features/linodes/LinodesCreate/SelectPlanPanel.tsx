@@ -201,8 +201,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
-    const isSamePlan =
-      type.heading === currentPlanHeading || type.id === selectedLinodePlanType;
+    const isSamePlan = type.heading === currentPlanHeading;
     const isGPU = type.class === 'gpu';
     const isDisabledClass = getDisabledClass(type.class);
     const shouldShowTransfer = showTransfer && type.transfer;
@@ -256,7 +255,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
                 {type.heading}{' '}
-                {isSamePlan && (
+                {(isSamePlan || type.id === selectedLinodePlanType) && (
                   <Chip
                     data-qa-current-plan
                     label="Current Plan"
