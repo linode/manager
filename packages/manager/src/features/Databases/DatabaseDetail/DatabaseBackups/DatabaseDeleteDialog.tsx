@@ -1,7 +1,6 @@
 import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -9,9 +8,7 @@ import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
+import usePreferences from 'src/hooks/usePreferences';
 import { useDeleteBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -23,10 +20,9 @@ interface Props extends Omit<DialogProps, 'title'> {
   backup: DatabaseBackup;
 }
 
-export type CombinedProps = Props & PreferencesProps;
-
-export const DatabaseDeleteDialog: React.FC<CombinedProps> = (props) => {
-  const { database, backup, preferences, onClose, open, ...rest } = props;
+export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
+  const { preferences } = usePreferences();
+  const { database, backup, onClose, open, ...rest } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -132,6 +128,4 @@ export const DatabaseDeleteDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences());
-
-export default enhanced(DatabaseDeleteDialog);
+export default DatabaseDeleteDialog;
