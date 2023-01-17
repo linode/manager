@@ -101,7 +101,7 @@ const styles = (theme: Theme) =>
     },
     buttonGroup: {
       marginTop: theme.spacing(3),
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         justifyContent: 'flex-end',
       },
     },
@@ -116,12 +116,12 @@ const styles = (theme: Theme) =>
     },
     messageGroupMaxWidth: {
       maxWidth: '70%',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         maxWidth: 'unset',
       },
     },
     createButton: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(1),
       },
     },

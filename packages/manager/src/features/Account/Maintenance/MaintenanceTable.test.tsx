@@ -1,23 +1,23 @@
 import * as React from 'react';
 import { accountMaintenanceFactory } from 'src/factories';
-import {
-  mockMatchMedia,
-  renderWithTheme,
-  wrapWithTableBody,
-} from 'src/utilities/testHelpers';
-import MaintenanceTableRow from './MaintenanceTableRow';
-import MaintenanceTable from './MaintenanceTable';
-import {
-  screen,
-  waitForElementToBeRemoved,
-  within,
-} from '@testing-library/react';
+import { MaintenanceTableRow } from './MaintenanceTableRow';
+import { MaintenanceTable } from './MaintenanceTable';
 import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { queryPresets } from 'src/queries/base';
 import { QueryClient } from 'react-query';
 import { parseAPIDate } from 'src/utilities/date';
-import formatDate from 'src/utilities/formatDate';
+import { formatDate } from 'src/utilities/formatDate';
+import {
+  mockMatchMedia,
+  renderWithTheme,
+  wrapWithTableBody,
+} from 'src/utilities/testHelpers';
+import {
+  screen,
+  waitForElementToBeRemoved,
+  within,
+} from '@testing-library/react';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: queryPresets.oneTimeFetch },
@@ -38,7 +38,6 @@ describe('Maintenance Table Row', () => {
     );
     getByText(maintenance.entity.label);
     getByText(formatDate(maintenance.when));
-    getByText(maintenance.reason);
   });
 
   it('should render a relative time', () => {
@@ -63,14 +62,7 @@ describe('Maintenance Table', () => {
         return res(ctx.json(makeResourcePage(accountMaintenance)));
       })
     );
-    renderWithTheme(
-      <MaintenanceTable
-        type="Linode"
-        expanded={true}
-        toggleExpanded={() => null}
-        addTopMargin={false}
-      />
-    );
+    renderWithTheme(<MaintenanceTable type="pending" />);
 
     // Loading state should render
     expect(screen.getByTestId(loadingTestId)).toBeInTheDocument();
@@ -78,7 +70,7 @@ describe('Maintenance Table', () => {
     await waitForElementToBeRemoved(screen.getByTestId(loadingTestId));
 
     // Static text and table column headers
-    screen.getAllByText('Linodes');
+    screen.getAllByText('pending');
     screen.getAllByText('Label');
     screen.getAllByText('Date');
 
@@ -87,14 +79,7 @@ describe('Maintenance Table', () => {
   });
 
   it('should render the CSV download button if there are items', async () => {
-    renderWithTheme(
-      <MaintenanceTable
-        type="Linode"
-        expanded={true}
-        toggleExpanded={() => null}
-        addTopMargin={false}
-      />
-    );
+    renderWithTheme(<MaintenanceTable type="pending" />);
 
     screen.getByText('Download CSV');
   });
@@ -106,15 +91,7 @@ describe('Maintenance Table', () => {
       })
     );
 
-    renderWithTheme(
-      <MaintenanceTable
-        type="Linode"
-        expanded={true}
-        toggleExpanded={() => null}
-        addTopMargin={false}
-      />,
-      { queryClient }
-    );
+    renderWithTheme(<MaintenanceTable type="pending" />, { queryClient });
 
     expect(await screen.findByTestId('table-row-empty')).toBeInTheDocument();
 

@@ -4,11 +4,11 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Accordion from 'src/components/Accordion';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
@@ -53,26 +53,6 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
       });
   };
 
-  const renderConfirmationActions = () => (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={() => setOpen(false)}
-        data-qa-cancel-delete
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        loading={submitting}
-        onClick={_deleteLinode}
-        data-qa-confirm-delete
-      >
-        Delete
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
     <React.Fragment>
       <Accordion heading="Delete Linode" defaultExpanded>
@@ -89,18 +69,22 @@ export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
           Deleting a Linode will result in permanent data loss.
         </Typography>
       </Accordion>
-      <ConfirmationDialog
+      <TypeToConfirmDialog
         title={`Delete ${linodeLabel}?`}
-        actions={renderConfirmationActions}
+        entity={{ type: 'Linode', label: linodeLabel }}
         open={open}
+        loading={submitting}
+        errors={errors}
         onClose={() => setOpen(false)}
-        error={errors ? errors[0].reason : undefined}
+        onClick={_deleteLinode}
       >
-        <Typography>
-          Are you sure you want to delete this Linode? This will result in
-          permanent data loss.
-        </Typography>
-      </ConfirmationDialog>
+        <Notice warning>
+          <Typography style={{ fontSize: '0.875rem' }}>
+            <strong>Warning:</strong> Deleting your Linode will result in
+            permanent data loss.
+          </Typography>
+        </Notice>
+      </TypeToConfirmDialog>
     </React.Fragment>
   );
 };

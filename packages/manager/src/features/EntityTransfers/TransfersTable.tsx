@@ -119,7 +119,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
                   Token
                 </TableCell>
                 {transferTypeIsPending || transferTypeIsSent ? (
-                  <Hidden smDown>
+                  <Hidden mdDown>
                     <TableCell key="transfer-token-table-header-created">
                       Created
                     </TableCell>
@@ -131,7 +131,7 @@ export const TransfersTable: React.FC<CombinedProps> = (props) => {
                 )}
                 {transferTypeIsPending ? (
                   <>
-                    <Hidden xsDown>
+                    <Hidden smDown>
                       <TableCell key="transfer-token-table-header-entities">
                         Services
                       </TableCell>

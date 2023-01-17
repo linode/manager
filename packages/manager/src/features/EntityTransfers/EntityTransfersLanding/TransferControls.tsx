@@ -11,12 +11,12 @@ import ConfirmTransferDialog from './ConfirmTransferDialog';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    margin: `${theme.spacing(2)}px 0`,
+    margin: `${theme.spacing(2)} 0`,
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       alignItems: 'flex-end',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       marginTop: theme.spacing(),
       marginLeft: theme.spacing(2),
@@ -29,10 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelWrapper: {
     margin: 0,
     width: '100%',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       flexWrap: 'wrap',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
       marginLeft: theme.spacing(),
@@ -43,13 +43,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '1rem',
     marginRight: theme.spacing(),
     whiteSpace: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginBottom: 4,
       marginLeft: 0,
     },
   },
   transferInputWrapper: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: 'calc(100% - 16px)',
       '& > div': {
         flexGrow: 1,
@@ -58,13 +58,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   transferInput: {
     width: 360,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: 240,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: 200,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingRight: 0,
       },
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       margin: 0,
       width: '100%',
       '&.MuiGrid-item': {
@@ -85,13 +85,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   makeTransferButton: {
     minWidth: 152,
     whiteSpace: 'nowrap',
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginBottom: theme.spacing(),
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       margin: 0,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       margin: 0,
       marginTop: theme.spacing(),
       marginBottom: theme.spacing(),
@@ -160,7 +160,7 @@ export const TransferControls: React.FC<{}> = (_) => {
             >
               Review Details
             </Button>
-            <Hidden smDown>
+            <Hidden mdDown>
               <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
             </Hidden>
           </Grid>

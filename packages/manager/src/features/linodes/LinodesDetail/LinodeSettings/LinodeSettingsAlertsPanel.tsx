@@ -92,7 +92,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         'alerts.network_in': 'Incoming traffic',
         'alerts.network_out': 'Outbound traffic',
         'alerts.transfer_quota': 'Transfer quota',
-        'alerts.io': 'Disk IO rate',
+        'alerts.io': 'Disk I/O rate',
       },
       this.state.errors
     );
@@ -125,10 +125,10 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
       {
         radioInputLabel: 'disk_io_state',
         textInputLabel: 'disk_io_threshold',
-        textTitle: 'IO Threshold',
-        title: 'Disk IO Rate',
+        textTitle: 'I/O Threshold',
+        title: 'Disk I/O Rate',
         copy:
-          'Average Disk IO ops/sec over 2 hours exceeding this value triggers this alert.',
+          'Average Disk I/O ops/sec over 2 hours exceeding this value triggers this alert.',
         state: this.state.diskio.state,
         value: this.state.diskio.value,
         onStateChange: (

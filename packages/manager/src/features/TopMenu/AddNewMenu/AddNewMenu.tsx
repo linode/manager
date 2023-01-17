@@ -1,5 +1,5 @@
 import { Account, AccountCapability } from '@linode/api-v4/lib/account';
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import {
   Menu,
   MenuButton,
@@ -47,7 +47,7 @@ const styles = (theme: Theme) =>
     wrapper: {
       position: 'relative',
       marginRight: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flex: 1,
       },
     },
@@ -59,7 +59,8 @@ const styles = (theme: Theme) =>
         borderRadius: 1,
         fontSize: '1rem',
         lineHeight: 1,
-        fontFamily: theme.spacing() === 4 ? theme.font.normal : theme.font.bold,
+        fontFamily:
+          Number(theme.spacing()) === 4 ? theme.font.normal : theme.font.bold,
         backgroundColor: theme.palette.primary.main,
         color: '#fff',
         padding: `2px 20px`,
@@ -69,7 +70,7 @@ const styles = (theme: Theme) =>
         minHeight: `34px`,
         cursor: 'pointer',
         border: 'none',
-        [theme.breakpoints.down('sm')]: {
+        [theme.breakpoints.down('md')]: {
           maxHeight: 34,
           minWidth: 100,
         },

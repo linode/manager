@@ -1,5 +1,5 @@
-import Close from '@material-ui/icons/Close';
-import Search from '@material-ui/icons/Search';
+import Close from '@mui/icons-material/Close';
+import Search from '@mui/icons-material/Search';
 import { take } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -247,6 +247,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
         aria-label="open menu"
         onClick={toggleSearch}
         className={classes.navIconHide}
+        size="large"
       >
         <Search />
       </IconButton>
@@ -292,6 +293,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
           aria-label="close menu"
           onClick={toggleSearch}
           className={classes.navIconHide}
+          size="large"
         >
           <Close className={classes.close} />
         </IconButton>

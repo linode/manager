@@ -4,8 +4,9 @@ export interface User {
   username: string;
   email: string;
   restricted: boolean;
-  gravatarUrl?: string;
   ssh_keys: string[];
+  tfa_enabled: boolean;
+  verified_phone_number: string | null;
 }
 
 export interface Account {
@@ -351,7 +352,7 @@ export interface Event {
   seen: boolean;
   status: EventStatus;
   time_remaining: null | string;
-  username: string;
+  username: string | null;
   secondary_entity: Entity | null;
   _initial?: boolean;
   message: string | null;
@@ -399,7 +400,7 @@ export interface SaveCreditCardData {
 
 export interface AccountMaintenance {
   reason: string;
-  status: 'pending' | 'started';
+  status: 'pending' | 'started' | 'completed';
   type: 'reboot' | 'cold_migration' | 'live_migration' | 'volume_migration';
   when: string;
   entity: {
@@ -451,4 +452,12 @@ export interface MakePaymentData {
   cvv?: string;
   nonce?: string;
   payment_method_id?: number;
+}
+
+export interface AccountLogin {
+  datetime: string;
+  id: number;
+  ip: string;
+  restricted: boolean;
+  username: string;
 }
