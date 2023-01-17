@@ -49,7 +49,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
   const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
   /** Set the Linode ID and the disk size and reset the plan selection */
-  const handleSelectLinode = (linodeID: number) => {
+  const handleSelectLinode = (linodeID: number, type: null | string) => {
     const linode = props.linodesData.find(
       (eachLinode) => eachLinode.id === linodeID
     );
