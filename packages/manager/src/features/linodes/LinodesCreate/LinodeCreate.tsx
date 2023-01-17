@@ -159,7 +159,7 @@ interface Props {
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
-  handleShowApiAwarenessModal: () => void;
+  handleToggleApiAwarenessModal: () => void;
   signedAgreement: boolean;
 }
 
@@ -441,7 +441,7 @@ export class LinodeCreate extends React.PureComponent<
       showAgreement,
       showApiAwarenessModal,
       handleAgreementChange,
-      handleShowApiAwarenessModal,
+      handleToggleApiAwarenessModal,
       signedAgreement,
       ...rest
     } = this.props;
@@ -796,7 +796,7 @@ export class LinodeCreate extends React.PureComponent<
               </Button>
               <ApiAwarenessModal
                 isOpen={showApiAwarenessModal}
-                onClose={handleShowApiAwarenessModal}
+                onClose={handleToggleApiAwarenessModal}
                 route={this.props.match.url}
                 label={this.props.label}
               />

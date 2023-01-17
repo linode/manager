@@ -410,7 +410,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
-  handleShowApiAwarenessModal = () => {
+  handleToggleApiAwarenessModal = () => {
     this.setState((prevState) => ({
       showApiAwarenessModal: !prevState.showApiAwarenessModal,
     }));
@@ -815,7 +815,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
             handleAgreementChange={this.handleAgreementChange}
-            handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
+            handleToggleApiAwarenessModal={this.handleToggleApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
             {...restOfProps}
