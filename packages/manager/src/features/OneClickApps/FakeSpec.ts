@@ -700,7 +700,7 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
-    name: 'Haltdos WAF Community Edition',
+    name: 'HaltDOS Community WAF',
     alt_name: 'Community WAF',
     alt_description: 'Web Application Firewall.',
     categories: ['Security'],
