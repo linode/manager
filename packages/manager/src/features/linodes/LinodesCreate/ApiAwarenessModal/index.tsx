@@ -16,6 +16,20 @@ const useStyles = makeStyles(() => ({
   guides: {
     marginTop: 16,
   },
+  modalIntroTypoClass: {
+    paddingTop: '16px',
+  },
+  tabsStyles: {
+    marginTop: '14px',
+  },
+  tabPanelStyles: {
+    paddingBottom: '24px',
+    paddingTop: '16px',
+  },
+  actionPanelStyles: {
+    marginTop: '0px',
+    paddingTop: '4px',
+  },
 }));
 
 export interface Props {
@@ -64,7 +78,7 @@ const ApiAwarenessModal = (props: Props) => {
       onClose={onClose}
       maxWidth={'sm'}
     >
-      <Typography variant="body1" style={{ paddingTop: '16px' }}>
+      <Typography variant="body1" className={classes.modalIntroTypoClass}>
         You&#39;ll first need to{' '}
         <ExternalLink
           onClick={() => fireGAEvent('Click: Create API Access Token Link')}
@@ -92,10 +106,10 @@ const ApiAwarenessModal = (props: Props) => {
       <Tabs
         defaultIndex={0}
         onChange={handleTabChange}
-        style={{ marginTop: '14px' }}
+        className={classes.tabsStyles}
       >
         <TabLinkList tabs={tabs} />
-        <TabPanels style={{ paddingBottom: '24px', paddingTop: '16px' }}>
+        <TabPanels className={classes.tabPanelStyles}>
           <SafeTabPanel index={0}>Code block API component WIP...</SafeTabPanel>
           <SafeTabPanel index={1}>
             Code block CLI component WIP...
@@ -142,7 +156,7 @@ const ApiAwarenessModal = (props: Props) => {
         </Typography>
       </Notice>
 
-      <ActionsPanel style={{ marginTop: '0px', paddingTop: '4px' }}>
+      <ActionsPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
           onClick={onClose}
