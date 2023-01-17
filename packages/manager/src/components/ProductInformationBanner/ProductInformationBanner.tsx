@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props & Partial<NoticeProps>;
 
-const ProductInformationBanner: React.FC<CombinedProps> = (props) => {
+const ProductInformationBanner = (props: CombinedProps) => {
   const { bannerLocation, ...rest } = props;
   const { productInformationBanners } = useFlags();
 
@@ -51,7 +51,10 @@ const ProductInformationBanner: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <DismissibleBanner preferenceKey={thisBanner.key} {...rest}>
+    <DismissibleBanner
+      preferenceKey={`${bannerLocation}-${thisBanner.expirationDate}`}
+      {...rest}
+    >
       <div className={classes.content}>
         <HighlightedMarkdown textOrMarkdown={thisBanner.message} />
       </div>

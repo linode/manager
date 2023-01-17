@@ -73,9 +73,9 @@ export const StatusBannersTemplate = (args) => {
   return <StatusBanners {...args} />;
 };
 
-export const ExampleBetaBanner = () => {
+export const BetaBanner = () => {
     return (
-      <DismissibleBanner preferenceKey="example-beta-banner" success>
+      <DismissibleBanner preferenceKey="beta-banner" success>
         <Typography>
           Managed Database for MySQL is available in a free, open beta period
           until May 2nd, 2022. This is a beta environment and should not be
@@ -89,18 +89,20 @@ export const ExampleBetaBanner = () => {
   );
 }
 
-#### Example Beta Banner
+#### Beta Banner
+
+Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
 
 <Canvas>
-  <Story name="Example Beta Banner">
-    {ExampleBetaBanner.bind({})}
+  <Story name="Beta Banner">
+    {BetaBanner.bind({})}
   </Story>
 </Canvas>
 
-#### Example Call to Action Banner
+#### Call to Action Banner
 
 <Canvas>
-  <Story name="Example Call to Action Banner">
+  <Story name="Call to Action Banner">
     {CallToActionBanner.bind({})}
   </Story>
 </Canvas>

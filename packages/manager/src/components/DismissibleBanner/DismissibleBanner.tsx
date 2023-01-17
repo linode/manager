@@ -36,7 +36,7 @@ interface Props {
 
 type CombinedProps = Props & Partial<NoticeProps>;
 
-export const DismissibleBanner: React.FC<CombinedProps> = (props) => {
+export const DismissibleBanner = (props: CombinedProps) => {
   const { className, preferenceKey, options, children, ...rest } = props;
   const classes = useStyles();
 
@@ -50,15 +50,15 @@ export const DismissibleBanner: React.FC<CombinedProps> = (props) => {
   }
 
   const dismissibleButton = (
-    <Grid item className={classes.closeIcon}>
-      <Close
-        style={{
-          cursor: 'pointer',
-        }}
+    <Grid item>
+      <button
+        className={classes.closeIcon}
+        aria-label={`Dismiss ${preferenceKey} banner`}
         onClick={handleDismiss}
         data-testid="notice-dismiss"
-        aria-label={`Dismiss ${preferenceKey} banner`}
-      />
+      >
+        <Close />
+      </button>
     </Grid>
   );
 
