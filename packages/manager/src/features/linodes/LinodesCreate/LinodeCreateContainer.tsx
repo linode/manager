@@ -646,7 +646,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     try {
       CreateLinodeSchema.validateSync(payload, { abortEarly: false });
       //reset errors to default state
-      this.setState({ errors: undefined, showApiAwarenessModal: true });
+      this.setState({ errors: undefined });
     } catch (error) {
       const processedErrors = convertYupToLinodeErrors(error);
       this.setState(
