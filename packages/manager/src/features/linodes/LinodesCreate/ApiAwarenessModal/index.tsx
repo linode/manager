@@ -13,6 +13,10 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
+  cancelButtonStyles: {
+    justifyContent: 'right',
+    paddingRight: '4px',
+  },
   guides: {
     marginTop: 16,
   },
@@ -159,6 +163,7 @@ const ApiAwarenessModal = (props: Props) => {
       <ActionsPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
+          className={classes.cancelButtonStyles}
           onClick={onClose}
           data-testid="close-button"
         >
