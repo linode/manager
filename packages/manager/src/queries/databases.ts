@@ -9,10 +9,10 @@ import {
   getDatabaseEngines,
   getEngineDatabase,
   restoreWithBackup,
-  manualDatabaseBackup,
-  manualDatabaseBackupDelete,
   updateDatabase,
   resetDatabaseCredentials,
+  deleteDatabaseBackup,
+  captureDatabaseBackup,
 } from '@linode/api-v4/lib/databases';
 import {
   CreateDatabasePayload,
@@ -187,7 +187,7 @@ export const useDeleteBackupMutation = (
   backupId: number
 ) =>
   useMutation<{}, APIError[]>(
-    () => manualDatabaseBackupDelete(engine, databaseId, backupId),
+    () => deleteDatabaseBackup(engine, databaseId, backupId),
     {
       onSuccess: () =>
         queryClient.invalidateQueries([`${queryKey}-backups`, databaseId]),
@@ -200,7 +200,7 @@ export const useBackupMutation = (
   backupLabel: string
 ) =>
   useMutation<{}, APIError[]>(
-    () => manualDatabaseBackup(engine, databaseId, backupLabel),
+    () => captureDatabaseBackup(engine, databaseId, backupLabel),
     {
       onSuccess: () =>
         updateStoreForDatabase(databaseId, { status: 'backing_up' }),
