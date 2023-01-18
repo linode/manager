@@ -14,7 +14,7 @@ import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
 import { BackupDialog } from './BackupDialog';
-import DatabaseDeleteDialog from './DatabaseDeleteDialog';
+import { DeleteBackupDialog } from './DeleteBackupDialog';
 import { Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,
@@ -166,7 +166,7 @@ export const DatabaseBackups = () => {
         </Typography>
       </Paper>
       {database && selectedBackup ? (
-        <DatabaseDeleteDialog
+        <DeleteBackupDialog
           open={isDeleteDialogOpen}
           database={database}
           backup={selectedBackup}

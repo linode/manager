@@ -6,21 +6,20 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
-import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import usePreferences from 'src/hooks/usePreferences';
 import { useDeleteBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 
-interface Props extends Omit<DialogProps, 'title'> {
+interface Props {
   open: boolean;
   onClose: () => void;
   database: Database;
   backup: DatabaseBackup;
 }
 
-export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
+export const DeleteBackupDialog = (props: Props) => {
   const { preferences } = usePreferences();
   const { database, backup, onClose, open, ...rest } = props;
   const { enqueueSnackbar } = useSnackbar();
@@ -127,5 +126,3 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default DatabaseDeleteDialog;
