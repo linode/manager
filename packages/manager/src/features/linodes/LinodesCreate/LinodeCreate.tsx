@@ -328,15 +328,8 @@ export class LinodeCreate extends React.PureComponent<
     this.mounted = false;
   }
 
-  createLinode = () => {
-    const selectedRegion = this.props.selectedRegionID || '';
-    const regionSupportsVLANs = doesRegionSupportFeature(
-      selectedRegion,
-      this.props.regionsData,
-      'Vlans'
-    );
-
-    const payload = {
+  getPayload = () => {
+    return {
       image: this.props.selectedImageID,
       region: this.props.selectedRegionID,
       type: this.props.selectedTypeID,
@@ -357,6 +350,17 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
+  };
+
+  createLinode = () => {
+    const selectedRegion = this.props.selectedRegionID || '';
+    const regionSupportsVLANs = doesRegionSupportFeature(
+      selectedRegion,
+      this.props.regionsData,
+      'Vlans'
+    );
+
+    const payload = this.getPayload();
 
     if (
       regionSupportsVLANs &&
@@ -799,6 +803,7 @@ export class LinodeCreate extends React.PureComponent<
                 onClose={handleShowApiAwarenessModal}
                 route={this.props.match.url}
                 label={this.props.label}
+                builtPayload={this.getPayload}
               />
             </div>
           </Box>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -28,6 +29,7 @@ export interface Props {
   onClose: () => void;
   label: string;
   route: string;
+  builtPayload: () => Object;
 }
 
 const fireGAEvent = (action: string) => {
@@ -38,7 +40,7 @@ const fireGAEvent = (action: string) => {
 };
 
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, label, onClose, route } = props;
+  const { isOpen, label, onClose, route, builtPayload } = props;
 
   const classes = useStyles();
 
@@ -99,7 +101,7 @@ const ApiAwarenessModal = (props: Props) => {
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
-            <CodeBlock />
+            <CodeBlock builtPayload={builtPayload} />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             Code block CLI component WIP...

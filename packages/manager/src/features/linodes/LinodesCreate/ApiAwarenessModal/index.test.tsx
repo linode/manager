@@ -11,6 +11,7 @@ const defaultProps: Props = {
   onClose: jest.fn(),
   label: 'debian-us-central',
   route: '',
+  // builtPayload: () => Object;
 };
 
 const renderComponent = (overrideProps?: Partial<Props>) => {
