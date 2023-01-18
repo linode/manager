@@ -63,7 +63,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - run: yarn workspace @linode/api-v4 run test
 
   build-sdk:
@@ -79,7 +79,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/api-v4 run build
       - uses: actions/upload-artifact@v3
@@ -100,11 +100,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run test
 
@@ -123,11 +123,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build
       - uses: actions/upload-artifact@v3
@@ -148,7 +148,7 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
@@ -203,11 +203,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: packages-validation-lib
-          path: packages/validation
+          path: packages/validation/lib
       - uses: actions/download-artifact@v3
         with:
           name: packages-api-v4-lib
-          path: packages/api-v4
+          path: packages/api-v4/lib
       - run: yarn --frozen-lockfile
       - run: yarn workspace linode-manager run build-storybook
       - uses: actions/upload-artifact@v3
