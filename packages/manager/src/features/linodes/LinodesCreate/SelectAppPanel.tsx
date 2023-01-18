@@ -142,7 +142,14 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
     }
 
     const newApps = appInstances.filter((app) => {
-      return ['mastodon'].includes(app.label.toLowerCase().trim());
+      return [
+        'apache airflow',
+        'haltdos community waf',
+        'superinsight',
+        'gopaddle',
+        'passky',
+        'onlyoffice docs',
+      ].includes(app.label.toLowerCase().trim());
     });
 
     const popularApps = appInstances.slice(0, 10);
