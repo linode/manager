@@ -112,13 +112,10 @@ Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-s
 <Canvas>
   <Story
     name="Dismissible Banners"
-    args={{
-      productInformationIndicator: true,
-    }}
     argTypes={{
-      productInformationIndicator: {
+      preferenceKey: {
         description:
-          'Indicates whether the banner communicates information about a product, typically a new feature or improved service. If true, the left border is set to green.',
+          'String used to check if the banner has already been dismissed.',
       },
     }}
   >
