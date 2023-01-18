@@ -170,13 +170,17 @@ describe('object storage smoke tests', () => {
         cy.findByText('Delete').should('be.visible').click();
       });
 
-    ui.dialog.findByTitle(`Delete Bucket ${bucketLabel}`).should('be.visible');
-    cy.findByLabelText('Bucket Name').click().type(bucketLabel);
-    ui.buttonGroup
-      .findButtonByTitle('Delete Bucket')
-      .should('be.enabled')
+    ui.dialog
+      .findByTitle(`Delete Bucket ${bucketLabel}`)
       .should('be.visible')
-      .click();
+      .within(() => {
+        cy.findByLabelText('Bucket Name').click().type(bucketLabel);
+        ui.buttonGroup
+          .findButtonByTitle('Delete')
+          .should('be.enabled')
+          .should('be.visible')
+          .click();
+      });
 
     cy.wait('@deleteBucket');
     cy.findByText('Need help getting started?').should('be.visible');
