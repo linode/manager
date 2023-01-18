@@ -38,4 +38,9 @@ export * from './databases';
 
 export * from './entity-transfers';
 
-export { baseRequest, setToken, isEmpty } from './request';
+export {
+  baseRequest,
+  setToken,
+  isEmpty,
+  convertYupToLinodeErrors,
+} from './request';

@@ -60,6 +60,7 @@ import {
   Info,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
+  LinodeCreateValidation,
   StackScriptFormStateHandlers,
   WithDisplayData,
   WithLinodesProps,
@@ -148,6 +149,7 @@ interface Props {
   togglePrivateIPEnabled: () => void;
   updateTags: (tags: Tag[]) => void;
   handleSubmitForm: HandleSubmit;
+  checkValidation: LinodeCreateValidation;
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
@@ -155,7 +157,9 @@ interface Props {
   ipamAddress: string | null;
   handleVLANChange: (updatedInterface: Interface) => void;
   showAgreement: boolean;
+  showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
+  handleToggleApiAwarenessModal: () => void;
   signedAgreement: boolean;
 }
 
@@ -196,7 +200,6 @@ interface State {
   selectedTab: number;
   stackScriptSelectedTab: number;
   planKey: string;
-  isApiAwarenessModalOpen: boolean;
 }
 
 interface CreateTab extends Tab {
@@ -241,7 +244,6 @@ export class LinodeCreate extends React.PureComponent<
           ? 1
           : 0,
       planKey: v4(),
-      isApiAwarenessModalOpen: false,
     };
   }
 
@@ -377,8 +379,29 @@ export class LinodeCreate extends React.PureComponent<
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
   };
 
-  setIsApiAwarenessModalOpen = (value: boolean) => {
-    this.setState({ ...this.state, isApiAwarenessModalOpen: value });
+  handleClickCreateUsingCommandLine = () => {
+    const payload = {
+      image: this.props.selectedImageID,
+      region: this.props.selectedRegionID,
+      type: this.props.selectedTypeID,
+      label: this.props.label,
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      root_pass: this.props.password,
+      authorized_users: this.props.userSSHKeys
+        .filter((u) => u.selected)
+        .map((u) => u.username),
+      booted: true,
+      backups_enabled: this.props.backupsEnabled,
+      backup_id: this.props.selectedBackupID,
+      private_ip: this.props.privateIPEnabled,
+
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      stackscript_data: this.props.selectedUDFs,
+    };
+    this.props.checkValidation(payload);
   };
 
   render() {
@@ -416,7 +439,9 @@ export class LinodeCreate extends React.PureComponent<
       accountBackupsEnabled,
       showGeneralError,
       showAgreement,
+      showApiAwarenessModal,
       handleAgreementChange,
+      handleToggleApiAwarenessModal,
       signedAgreement,
       ...rest
     } = this.props;
@@ -745,7 +770,7 @@ export class LinodeCreate extends React.PureComponent<
               <Button
                 data-qa-api-cli-linode
                 buttonType="outlined"
-                onClick={() => this.setIsApiAwarenessModalOpen(true)}
+                onClick={this.handleClickCreateUsingCommandLine}
                 className={classes.createButton}
                 disabled={
                   formIsSubmitting ||
@@ -770,8 +795,10 @@ export class LinodeCreate extends React.PureComponent<
                 Create Linode
               </Button>
               <ApiAwarenessModal
-                isOpen={this.state.isApiAwarenessModalOpen}
-                onClose={() => this.setIsApiAwarenessModalOpen(false)}
+                isOpen={showApiAwarenessModal}
+                onClose={handleToggleApiAwarenessModal}
+                route={this.props.match.url}
+                label={this.props.label}
               />
             </div>
           </Box>
