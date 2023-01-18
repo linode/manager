@@ -15,15 +15,16 @@ import { useParams } from 'react-router-dom';
 import RestoreFromBackupDialog from './RestoreFromBackupDialog';
 import BackupDialog from './BackupDialog';
 import DatabaseDeleteDialog from './DatabaseDeleteDialog';
-import { DatabaseBackup, Engine } from '@linode/api-v4/lib/databases';
+import { Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,
   useDatabaseQuery,
 } from 'src/queries/databases';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
 
-export const DatabaseBackups: React.FC = () => {
+export const DatabaseBackups = () => {
   const { databaseId, engine } = useParams<{
     databaseId: string;
     engine: Engine;
@@ -44,42 +45,34 @@ export const DatabaseBackups: React.FC = () => {
     error: databaseError,
   } = useDatabaseQuery(engine, id);
 
-  const {
-    data: backups,
-    isLoading: isBackupsLoading,
-    error: backupsError,
-  } = useDatabaseBackupsQuery(engine, id);
-
   const { order, orderBy, handleOrderChange } = useOrder({
     orderBy: 'created',
     order: 'desc',
   });
 
+  const {
+    data: backups,
+    isLoading: isBackupsLoading,
+    error: backupsError,
+  } = useDatabaseBackupsQuery(engine, id, {}, { order, order_by: orderBy });
+
   const onBackup = () => {
     setIsBackupDialogOpen(true);
   };
+
   const onRestore = (id: number) => {
     setIdOfSelectedBackup(id);
     setIsRestoreDialogOpen(true);
   };
+
   const onDelete = (id: number) => {
     setIdOfSelectedBackup(id);
     setIsDeleteDialogOpen(true);
   };
 
-  const backupToRestore = backups?.data.find(
+  const selectedBackup = backups?.data.find(
     (backup) => backup.id === idOfSelectedBackup
   );
-  const backupToDelete = backups?.data.find(
-    (backup) => backup.id === idOfSelectedBackup
-  );
-
-  const sorter = (a: DatabaseBackup, b: DatabaseBackup) => {
-    if (order === 'asc') {
-      return new Date(b.created).getTime() - new Date(a.created).getTime();
-    }
-    return new Date(a.created).getTime() - new Date(b.created).getTime();
-  };
 
   const renderTableBody = () => {
     if (databaseError) {
@@ -89,7 +82,13 @@ export const DatabaseBackups: React.FC = () => {
       return <TableRowError message={backupsError[0].reason} colSpan={4} />;
     }
     if (isDatabaseLoading || isBackupsLoading) {
-      return <TableRowLoading columns={4} />;
+      return (
+        <TableRowLoading
+          responsive={{ 2: { mdDown: true } }}
+          columns={4}
+          rows={backups?.results ?? 7}
+        />
+      );
     }
     if (backups?.results === 0) {
       return (
@@ -97,16 +96,14 @@ export const DatabaseBackups: React.FC = () => {
       );
     }
     if (backups) {
-      return backups.data
-        .sort(sorter)
-        .map((backup) => (
-          <DatabaseBackupTableRow
-            key={backup.id}
-            backup={backup}
-            onRestore={onRestore}
-            onDelete={onDelete}
-          />
-        ));
+      return backups.data.map((backup) => (
+        <DatabaseBackupTableRow
+          key={backup.id}
+          backup={backup}
+          onRestore={onRestore}
+          onDelete={onDelete}
+        />
+      ));
     }
     return null;
   };
@@ -117,9 +114,9 @@ export const DatabaseBackups: React.FC = () => {
         <TableHead>
           <TableRow>
             <TableSortCell
-              active={orderBy === 'backupLabel'}
+              active={orderBy === 'label'}
               direction={order}
-              label="backupLabel"
+              label="label"
               handleClick={handleOrderChange}
               style={{ width: 155 }}
             >
@@ -134,7 +131,9 @@ export const DatabaseBackups: React.FC = () => {
             >
               Date Created
             </TableSortCell>
-            <TableCell></TableCell>
+            <Hidden mdDown>
+              <TableCell></TableCell>
+            </Hidden>
             <TableCell style={{ width: 100 }}></TableCell>
           </TableRow>
         </TableHead>
@@ -161,19 +160,19 @@ export const DatabaseBackups: React.FC = () => {
           retained for 7 days.
         </Typography>
       </Paper>
-      {database && backupToDelete ? (
+      {database && selectedBackup ? (
         <DatabaseDeleteDialog
           open={isDeleteDialogOpen}
           database={database}
-          backup={backupToDelete}
+          backup={selectedBackup}
           onClose={() => setIsDeleteDialogOpen(false)}
         />
       ) : null}
-      {database && backupToRestore ? (
+      {database && selectedBackup ? (
         <RestoreFromBackupDialog
           open={isRestoreDialogOpen}
           database={database}
-          backup={backupToRestore}
+          backup={selectedBackup}
           onClose={() => setIsRestoreDialogOpen(false)}
         />
       ) : null}

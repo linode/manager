@@ -6,6 +6,7 @@ import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
 import formatDate from 'src/utilities/formatDate';
 import { formatBackupLabel } from 'src/features/Databases/databaseUtils';
 import { parseAPIDate } from 'src/utilities/date';
+import Hidden from 'src/components/core/Hidden';
 
 interface Props {
   backup: DatabaseBackup;
@@ -20,7 +21,9 @@ const BackupTableRow: React.FC<Props> = ({ backup, onRestore, onDelete }) => {
     <TableRow key={id}>
       <TableCell>{formatBackupLabel(backup)}</TableCell>
       <TableCell>{formatDate(created)}</TableCell>
-      <TableCell>{parseAPIDate(created).toRelative()}</TableCell>
+      <Hidden mdDown>
+        <TableCell>{parseAPIDate(created).toRelative()}</TableCell>
+      </Hidden>
       <TableCell>
         <DatabaseBackupActionMenu
           backup={backup}

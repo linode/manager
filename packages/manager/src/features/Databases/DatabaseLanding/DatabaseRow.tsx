@@ -25,6 +25,8 @@ export const databaseStatusMap: Record<DatabaseStatus, Status> = {
   restoring: 'other',
   failed: 'error',
   degraded: 'inactive',
+  updating: 'other',
+  backing_up: 'other',
 };
 
 export const databaseEngineMap: Record<Engine, string> = {
@@ -77,7 +79,7 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={databaseStatusMap[status]} />
-        {capitalize(status)}
+        {capitalize(status.replace('_', ' '))}
       </TableCell>
       <Hidden xsDown>
         <TableCell>{configuration}</TableCell>

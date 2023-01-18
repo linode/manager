@@ -68,7 +68,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
           <Typography className={classes.label}>Status</Typography>
           <span className={classes.status}>
             <StatusIcon status={databaseStatusMap[database.status]} />
-            {database.status}
+            {database.status.replace('_', ' ')}
           </span>
         </Box>
         <Box display="flex">

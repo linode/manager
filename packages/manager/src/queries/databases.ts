@@ -110,10 +110,16 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) =>
     },
   });
 
-export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
+export const useDatabaseBackupsQuery = (
+  engine: Engine,
+  id: number,
+  params?: any,
+  filter?: any
+) =>
   useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
-    [`${queryKey}-backups`, id],
-    () => getDatabaseBackups(engine, id)
+    [`${queryKey}-backups`, id, params, filter],
+    () => getDatabaseBackups(engine, id, params, filter),
+    { keepPreviousData: true }
   );
 
 export const getAllDatabases = () =>
@@ -183,7 +189,8 @@ export const useDeleteBackupMutation = (
   useMutation<{}, APIError[]>(
     () => manualDatabaseBackupDelete(engine, databaseId, backupId),
     {
-      onSuccess: () => updateStoreForDatabase(databaseId, {}),
+      onSuccess: () =>
+        queryClient.invalidateQueries([`${queryKey}-backups`, databaseId]),
     }
   );
 
@@ -195,8 +202,8 @@ export const useBackupMutation = (
   useMutation<{}, APIError[]>(
     () => manualDatabaseBackup(engine, databaseId, backupLabel),
     {
-      // todo: onSuccess: () => updateStoreForDatabase(databaseId, { status: 'backing_up' }),
-      onSuccess: () => updateStoreForDatabase(databaseId, {}),
+      onSuccess: () =>
+        updateStoreForDatabase(databaseId, { status: 'backing_up' }),
     }
   );
 
