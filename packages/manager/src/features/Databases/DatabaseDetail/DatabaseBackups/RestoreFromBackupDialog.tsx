@@ -1,33 +1,29 @@
 import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
-import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import usePreferences from 'src/hooks/usePreferences';
 
-interface Props extends Omit<DialogProps, 'title'> {
+interface Props {
   open: boolean;
   onClose: () => void;
   database: Database;
   backup: DatabaseBackup;
 }
 
-export type CombinedProps = Props & PreferencesProps;
+export const RestoreFromBackupDialog = (props: Props) => {
+  const { database, backup, onClose, open } = props;
 
-export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
-  const { database, backup, preferences, onClose, open, ...rest } = props;
+  const { preferences } = usePreferences();
 
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -49,6 +45,12 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
       onClose();
     });
   };
+
+  React.useEffect(() => {
+    if (open) {
+      setConfirmationText('');
+    }
+  }, [open]);
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -72,15 +74,8 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
     </ActionsPanel>
   );
 
-  React.useEffect(() => {
-    if (open) {
-      setConfirmationText('');
-    }
-  }, [open]);
-
   return (
     <ConfirmationDialog
-      {...rest}
       title={`Restore from Backup ${formatDate(backup.created)}`}
       open={open}
       onClose={onClose}
@@ -132,7 +127,3 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withPreferences());
-
-export default enhanced(RestoreFromBackupDialog);
