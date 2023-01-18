@@ -14,11 +14,11 @@ interface Props {
   onDelete: (id: number) => void;
 }
 
-export const DatabaseBackupTableRow: React.FC<Props> = ({
+export const DatabaseBackupTableRow = ({
   backup,
   onRestore,
   onDelete,
-}) => {
+}: Props) => {
   const { id, created } = backup;
 
   return (

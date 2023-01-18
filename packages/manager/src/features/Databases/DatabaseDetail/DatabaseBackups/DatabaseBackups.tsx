@@ -13,7 +13,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
-import BackupDialog from './BackupDialog';
+import { BackupDialog } from './BackupDialog';
 import DatabaseDeleteDialog from './DatabaseDeleteDialog';
 import { Engine } from '@linode/api-v4/lib/databases';
 import {
