@@ -1,9 +1,12 @@
 import Close from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import * as React from 'react';
-import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import Grid from 'src/components/Grid';
+import Notice, { NoticeProps } from 'src/components/Notice';
+import useDismissibleNotifications, {
+  DismissibleNotificationOptions,
+} from 'src/hooks/useDismissibleNotifications';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -13,20 +16,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     borderRadius: 1,
     marginBottom: theme.spacing(),
-    padding: '12px 18px',
-    '& p': {
-      fontSize: '1rem',
-      marginLeft: theme.spacing(),
-    },
+    padding: theme.spacing(2),
+    background: theme.bg.bgPaper,
   },
-  button: {
+  closeIcon: {
     ...theme.applyLinkStyles,
     display: 'flex',
     color: theme.textColors.tableStatic,
     marginLeft: 20,
-  },
-  productInformationIndicator: {
-    borderLeft: `solid 6px ${theme.palette.primary.main}`,
   },
 }));
 
@@ -34,40 +31,50 @@ interface Props {
   preferenceKey: string;
   children: JSX.Element;
   className?: string;
-  productInformationIndicator?: boolean;
+  options?: DismissibleNotificationOptions;
 }
 
-export const DismissibleBanner: React.FC<Props> = (props) => {
-  const { className, preferenceKey, productInformationIndicator } = props;
+type CombinedProps = Props & Partial<NoticeProps>;
+
+export const DismissibleBanner = (props: CombinedProps) => {
+  const { className, preferenceKey, options, children, ...rest } = props;
   const classes = useStyles();
 
   const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
-    preferenceKey
+    preferenceKey,
+    options
   );
 
   if (hasDismissedBanner) {
     return null;
   }
 
-  return (
-    <Paper
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.productInformationIndicator]: productInformationIndicator,
-        },
-        className
-      )}
-    >
-      {props.children}
+  const dismissibleButton = (
+    <Grid item>
       <button
+        className={classes.closeIcon}
         aria-label={`Dismiss ${preferenceKey} banner`}
-        className={classes.button}
         onClick={handleDismiss}
+        data-testid="notice-dismiss"
       >
         <Close />
       </button>
-    </Paper>
+    </Grid>
+  );
+
+  return (
+    <Notice
+      className={classNames(
+        {
+          [classes.root]: true,
+        },
+        className
+      )}
+      dismissibleButton={dismissibleButton}
+      {...rest}
+    >
+      {children}
+    </Notice>
   );
 };
 
@@ -75,7 +82,10 @@ export default DismissibleBanner;
 
 // Hook that contains the nuts-and-bolts of the DismissibleBanner component.
 // Extracted out as its own hook so other components can use it.
-export const useDismissibleBanner = (preferenceKey: string) => {
+export const useDismissibleBanner = (
+  preferenceKey: string,
+  options?: DismissibleNotificationOptions
+) => {
   const {
     dismissNotifications,
     hasDismissedNotifications,
@@ -84,7 +94,7 @@ export const useDismissibleBanner = (preferenceKey: string) => {
   const hasDismissedBanner = hasDismissedNotifications([preferenceKey]);
 
   const handleDismiss = () => {
-    dismissNotifications([preferenceKey]);
+    dismissNotifications([preferenceKey], options);
   };
 
   return { hasDismissedBanner, handleDismiss };

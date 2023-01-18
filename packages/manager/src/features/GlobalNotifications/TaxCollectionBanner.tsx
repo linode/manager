@@ -1,15 +1,14 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import { useFlags } from 'src/hooks/useFlags';
 import { useAccount } from 'src/queries/account';
-import { DateTime } from 'luxon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   button: {
@@ -25,9 +24,6 @@ const TaxCollectionBanner: React.FC<{}> = () => {
   const flags = useFlags();
 
   const { data: account } = useAccount();
-  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
-    'tax-collection-banner'
-  );
 
   const countryDateString = flags.taxCollectionBanner?.date ?? '';
   const bannerHasAction = flags.taxCollectionBanner?.action ?? false;
@@ -39,7 +35,7 @@ const TaxCollectionBanner: React.FC<{}> = () => {
       return region.name;
     }) ?? [];
 
-  if (!account || hasDismissedBanner || !countryDateString) {
+  if (!account || !countryDateString) {
     return null;
   }
 
@@ -67,7 +63,7 @@ const TaxCollectionBanner: React.FC<{}> = () => {
 
   return (isEntireCountryTaxable || isUserInTaxableRegion) &&
     !isBannerDateWithinFiveWeeksPrior ? (
-    <Notice warning important dismissible onClose={handleDismiss}>
+    <DismissibleBanner warning important preferenceKey="tax-collection-banner">
       <Box
         display="flex"
         flexDirection="row"
@@ -92,7 +88,7 @@ const TaxCollectionBanner: React.FC<{}> = () => {
           </Button>
         ) : null}
       </Box>
-    </Notice>
+    </DismissibleBanner>
   ) : null;
 };
 
