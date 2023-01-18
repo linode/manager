@@ -7,14 +7,14 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import DatabaseBackupTableRow from './DatabaseBackupTableRow';
+import { DatabaseBackupTableRow } from './DatabaseBackupTableRow';
 import TableRowError from 'src/components/TableRowError';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
-import RestoreFromBackupDialog from './RestoreFromBackupDialog';
-import BackupDialog from './BackupDialog';
-import DatabaseDeleteDialog from './DatabaseDeleteDialog';
+import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
+import { CreateBackupDialog } from './CreateBackupDialog';
+import { DeleteBackupDialog } from './DeleteBackupDialog';
 import { Engine } from '@linode/api-v4/lib/databases';
 import {
   useDatabaseBackupsQuery,
@@ -169,7 +169,7 @@ export const DatabaseBackups = () => {
         </Typography>
       </Paper>
       {database && selectedBackup ? (
-        <DatabaseDeleteDialog
+        <DeleteBackupDialog
           open={isDeleteDialogOpen}
           database={database}
           backup={selectedBackup}
@@ -185,7 +185,7 @@ export const DatabaseBackups = () => {
         />
       ) : null}
       {database ? (
-        <BackupDialog
+        <CreateBackupDialog
           open={isBackupDialogOpen}
           database={database}
           onClose={() => setIsBackupDialogOpen(false)}

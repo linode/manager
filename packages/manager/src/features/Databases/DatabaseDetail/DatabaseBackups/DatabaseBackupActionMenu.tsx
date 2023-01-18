@@ -3,13 +3,13 @@ import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { makeStyles } from 'src/components/core/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles({
   inlineActions: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
   },
-}));
+});
 
 interface Props {
   backup: DatabaseBackup;
@@ -17,7 +17,7 @@ interface Props {
   onDelete: (id: number) => void;
 }
 
-const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
+export const DatabaseBackupActionMenu = (props: Props) => {
   const classes = useStyles();
   const { backup, onRestore, onDelete } = props;
 
@@ -48,5 +48,3 @@ const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
     </div>
   );
 };
-
-export default DatabaseBackupActionMenu;

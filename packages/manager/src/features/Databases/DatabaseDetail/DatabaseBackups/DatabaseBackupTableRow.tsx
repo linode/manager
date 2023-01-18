@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import DatabaseBackupActionMenu from './DatabaseBackupActionMenu';
+import { DatabaseBackupActionMenu } from './DatabaseBackupActionMenu';
 import formatDate from 'src/utilities/formatDate';
 import { formatBackupLabel } from 'src/features/Databases/databaseUtils';
 import { parseAPIDate } from 'src/utilities/date';
@@ -14,7 +14,11 @@ interface Props {
   onDelete: (id: number) => void;
 }
 
-const BackupTableRow: React.FC<Props> = ({ backup, onRestore, onDelete }) => {
+export const DatabaseBackupTableRow = ({
+  backup,
+  onRestore,
+  onDelete,
+}: Props) => {
   const { id, created } = backup;
 
   return (
@@ -34,5 +38,3 @@ const BackupTableRow: React.FC<Props> = ({ backup, onRestore, onDelete }) => {
     </TableRow>
   );
 };
-
-export default BackupTableRow;

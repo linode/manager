@@ -6,23 +6,22 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
-import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import usePreferences from 'src/hooks/usePreferences';
 import { useDeleteBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 
-interface Props extends Omit<DialogProps, 'title'> {
+interface Props {
   open: boolean;
   onClose: () => void;
   database: Database;
   backup: DatabaseBackup;
 }
 
-export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
+export const DeleteBackupDialog = (props: Props) => {
   const { preferences } = usePreferences();
-  const { database, backup, onClose, open, ...rest } = props;
+  const { database, backup, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -41,6 +40,12 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
       onClose();
     });
   };
+
+  React.useEffect(() => {
+    if (open) {
+      setConfirmationText('');
+    }
+  }, [open]);
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -61,29 +66,19 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
     </ActionsPanel>
   );
 
-  React.useEffect(() => {
-    if (open) {
-      setConfirmationText('');
-    }
-  }, [open]);
-
   return (
     <ConfirmationDialog
-      {...rest}
       title={`Delete Manual Backup ${formatDate(backup.created)}`}
       open={open}
       onClose={onClose}
       actions={actions}
-    >
-      {error ? (
-        <Notice
-          error
-          text={
-            getAPIErrorOrDefault(error, 'Unable to delete this backup.')[0]
+      error={
+        error
+          ? getAPIErrorOrDefault(error, 'Unable to delete this backup.')[0]
               .reason
-          }
-        />
-      ) : null}
+          : undefined
+      }
+    >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting a backup is irreversible. You are
@@ -94,7 +89,8 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
       <TypeToConfirm
         confirmationText={
           <span>
-            To confirm deletion, type the date/time of the manual backup from (
+            To confirm deletion, type the date/time of the manual backup (
+            <strong>{formatDate(backup.created)}</strong>) from (
             <strong>{database.label}</strong>) in the field below.
           </span>
         }
@@ -107,5 +103,3 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default DatabaseDeleteDialog;

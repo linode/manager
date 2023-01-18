@@ -1,43 +1,32 @@
-import { Database } from '@linode/api-v4/lib/databases';
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
-import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { DialogProps } from 'src/components/Dialog';
-import Notice from 'src/components/Notice';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
+import { useSnackbar } from 'notistack';
 import { useBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { Database } from '@linode/api-v4/lib/databases';
 import Typography from 'src/components/core/Typography';
 import { generateManualBackupLabel } from 'src/features/Databases/databaseUtils';
 
-interface Props extends Omit<DialogProps, 'title'> {
+interface Props {
   open: boolean;
   onClose: () => void;
   database: Database;
 }
 
-export type CombinedProps = Props & PreferencesProps;
-
-export const BackupDialog: React.FC<CombinedProps> = (props) => {
-  const { database, preferences, onClose, open, ...rest } = props;
-
-  const history = useHistory();
+export const CreateBackupDialog = (props: Props) => {
+  const { database, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const backupLabel = generateManualBackupLabel();
 
   const { mutateAsync: backup, isLoading, error } = useBackupMutation(
     database.engine,
     database.id,
-    generateManualBackupLabel()
+    backupLabel
   );
   const handleBackupDatabase = () => {
     backup().then(() => {
-      history.push('summary');
       enqueueSnackbar(`${database.label} is being manually backed up`, {
         variant: 'success',
       });
@@ -62,21 +51,17 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
 
   return (
     <ConfirmationDialog
-      {...rest}
       title={`Backup ${database.label}`}
       open={open}
       onClose={onClose}
       actions={actions}
-    >
-      {error ? (
-        <Notice
-          error
-          text={
-            getAPIErrorOrDefault(error, 'Unable to create this backup.')[0]
+      error={
+        error
+          ? getAPIErrorOrDefault(error, 'Unable to create this backup.')[0]
               .reason
-          }
-        />
-      ) : null}
+          : undefined
+      }
+    >
       <Typography>
         Would you like to perform a manual backup of this database? When you
         reach 3 manual backups, please delete an existing one before adding
@@ -85,7 +70,3 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withPreferences());
-
-export default enhanced(BackupDialog);
