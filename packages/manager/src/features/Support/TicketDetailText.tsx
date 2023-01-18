@@ -57,7 +57,8 @@ const TicketDetailText: React.FC<Props> = (props) => {
           className={classes.expButton}
           aria-label="Expand full answer"
           onClick={() => togglePanel(!panelOpen)}
-          size="large">
+          size="large"
+        >
           {panelOpen ? (
             <KeyboardArrowDown className={classes.toggle} />
           ) : (

@@ -162,9 +162,12 @@ describe('Migrate Linode With Firewall', () => {
   // create linode w/ firewall region then add firewall to it then attempt to migrate linode to non firewall region, should fail
   it('migrates linode with firewall - real data', () => {
     const validateMigration = () => {
-      getVisible('[type="button"]').within(() => {
-        containsClick('Enter Migration Queue');
-      });
+      ui.button
+        .findByTitle('Enter Migration Queue')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
       cy.wait('@migrateLinode').its('response.statusCode').should('eq', 200);
     };
 
@@ -213,32 +216,26 @@ describe('Migrate Linode With Firewall', () => {
         fbtVisible('linodes');
       });
 
-      if (
-        cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
-        cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
-      ) {
-        ui.actionMenu
-          .findByTitle(`Action menu for Linode ${linode.label}`)
-          .should('be.visible')
-          .click();
+      // Make sure Linode is running before attempting to migrate.
+      cy.get('[data-qa-linode-status]').within(() => {
+        cy.findByText('RUNNING');
+      });
 
-        ui.actionMenuItem.findByTitle('Migrate').should('be.visible').click();
+      ui.actionMenu
+        .findByTitle(`Action menu for Linode ${linode.label}`)
+        .should('be.visible')
+        .click();
 
-        containsVisible(`Migrate Linode ${linode.label}`);
-        getClick('[data-qa-checked="false"]');
-        fbtClick(selectRegionString);
+      ui.actionMenuItem.findByTitle('Migrate').should('be.visible').click();
 
-        ui.regionSelect.findItemByRegionName('Toronto, ON').click();
-        validateMigration();
+      containsVisible(`Migrate Linode ${linode.label}`);
+      getClick('[data-qa-checked="false"]');
+      fbtClick(selectRegionString);
 
-        if (
-          !cy.findByText('Linode busy.').should('not.exist', { timeout: 1000 })
-        ) {
-          validateMigration();
-        }
+      ui.regionSelect.findItemByRegionName('Toronto, ON').click();
+      validateMigration();
 
-        deleteFirewallByLabel(firewallLabel);
-      }
+      deleteFirewallByLabel(firewallLabel);
     });
   });
 
