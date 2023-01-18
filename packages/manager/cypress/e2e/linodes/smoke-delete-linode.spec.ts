@@ -16,12 +16,23 @@ describe('delete linode', () => {
         .should('be.visible')
         .click();
 
-      ui.actionMenuItem.findByTitle('Delete').should('be.visible').click();
+      ui.actionMenuItem
+        .findByTitle('Delete')
+        .as('deleteButton')
+        .should('be.visible');
 
-      fbtVisible(linode.label);
-      getVisible('[type="button"]').within(() => {
-        containsClick('Delete Linode');
-      });
+      cy.get('@deleteButton').click();
+
+      ui.dialog
+        .findByTitle(`Delete Linode ${linode.label}?`)
+        .should('be.visible')
+        .within(() => {
+          ui.button
+            .findByTitle('Delete Linode')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
+        });
 
       // confirm delete
       cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);

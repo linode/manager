@@ -321,127 +321,129 @@ export const BucketDetail: React.FC = () => {
     return null;
   }
 
-  return <>
-    <BucketBreadcrumb
-      prefix={prefix}
-      history={history}
-      bucketName={bucketName}
-    />
-    <Grid container>
-      <Grid item xs={12}>
-        <ObjectUploader
-          clusterId={clusterId}
-          bucketName={bucketName}
-          prefix={prefix}
-          maybeAddObjectToTable={maybeAddObjectToTable}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <>
-          <div className={classes.objectTable}>
-            <Table aria-label="List of Bucket Objects">
-              <TableHead>
-                <TableRow>
-                  <TableCell className={classes.nameColumn}>Object</TableCell>
-                  <TableCell className={classes.sizeColumn}>Size</TableCell>
-                  <Hidden mdDown>
-                    <TableCell>Last Modified</TableCell>
-                  </Hidden>
-                  {/* Empty TableCell for Action Menu */}
-                  <TableCell />
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <ObjectTableContent
-                  data={data?.pages || []}
-                  isFetching={isFetching}
-                  isFetchingNextPage={isFetchingNextPage}
-                  error={error ? error : undefined}
-                  handleClickDownload={handleDownload}
-                  handleClickDelete={handleClickDelete}
-                  handleClickDetails={handleClickDetails}
-                  numOfDisplayedObjects={numOfDisplayedObjects}
-                  prefix={prefix}
-                />
-              </TableBody>
-            </Table>
-            {/* We shouldn't allow infinite scrolling if we're still loading,
+  return (
+    <>
+      <BucketBreadcrumb
+        prefix={prefix}
+        history={history}
+        bucketName={bucketName}
+      />
+      <Grid container>
+        <Grid item xs={12}>
+          <ObjectUploader
+            clusterId={clusterId}
+            bucketName={bucketName}
+            prefix={prefix}
+            maybeAddObjectToTable={maybeAddObjectToTable}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <>
+            <div className={classes.objectTable}>
+              <Table aria-label="List of Bucket Objects">
+                <TableHead>
+                  <TableRow>
+                    <TableCell className={classes.nameColumn}>Object</TableCell>
+                    <TableCell className={classes.sizeColumn}>Size</TableCell>
+                    <Hidden mdDown>
+                      <TableCell>Last Modified</TableCell>
+                    </Hidden>
+                    {/* Empty TableCell for Action Menu */}
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <ObjectTableContent
+                    data={data?.pages || []}
+                    isFetching={isFetching}
+                    isFetchingNextPage={isFetchingNextPage}
+                    error={error ? error : undefined}
+                    handleClickDownload={handleDownload}
+                    handleClickDelete={handleClickDelete}
+                    handleClickDetails={handleClickDetails}
+                    numOfDisplayedObjects={numOfDisplayedObjects}
+                    prefix={prefix}
+                  />
+                </TableBody>
+              </Table>
+              {/* We shouldn't allow infinite scrolling if we're still loading,
               if we've gotten all objects in the bucket (or folder), or if there
               are errors. */}
-            {!isLoading && !isFetchingNextPage && !error && hasNextPage && (
-              <Waypoint onEnter={() => fetchNextPage()}>
-                <div />
-              </Waypoint>
+              {!isLoading && !isFetchingNextPage && !error && hasNextPage && (
+                <Waypoint onEnter={() => fetchNextPage()}>
+                  <div />
+                </Waypoint>
+              )}
+            </div>
+            {error && (
+              <Typography variant="subtitle2" className={classes.footer}>
+                The next objects in the list failed to load.{' '}
+                <button
+                  className={classes.tryAgainText}
+                  onClick={() => fetchNextPage()}
+                >
+                  Click here to try again.
+                </button>
+              </Typography>
             )}
-          </div>
-          {error && (
-            <Typography variant="subtitle2" className={classes.footer}>
-              The next objects in the list failed to load.{' '}
-              <button
-                className={classes.tryAgainText}
-                onClick={() => fetchNextPage()}
-              >
-                Click here to try again.
-              </button>
-            </Typography>
-          )}
 
-          {!hasNextPage && numOfDisplayedObjects >= 100 && (
-            <Typography variant="subtitle2" className={classes.footer}>
-              Showing all {numOfDisplayedObjects} items
-            </Typography>
-          )}
-          <ConfirmationDialog
-            open={deleteObjectDialogOpen}
-            onClose={closeDeleteObjectDialog}
-            title={
-              objectToDelete
-                ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
-                : 'Delete object'
-            }
-            actions={() => (
-              <ActionsPanel>
-                <Button
-                  buttonType="secondary"
-                  onClick={closeDeleteObjectDialog}
-                  data-qa-cancel
-                >
-                  Cancel
-                </Button>
-                <Button
-                  buttonType="primary"
-                  onClick={deleteObject}
-                  loading={deleteObjectLoading}
-                  data-qa-submit-rebuild
-                >
-                  Delete
-                </Button>
-              </ActionsPanel>
+            {!hasNextPage && numOfDisplayedObjects >= 100 && (
+              <Typography variant="subtitle2" className={classes.footer}>
+                Showing all {numOfDisplayedObjects} items
+              </Typography>
             )}
-            error={deleteObjectError}
-          >
-            Are you sure you want to delete this object?
-          </ConfirmationDialog>
-        </>
+            <ConfirmationDialog
+              open={deleteObjectDialogOpen}
+              onClose={closeDeleteObjectDialog}
+              title={
+                objectToDelete
+                  ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
+                  : 'Delete object'
+              }
+              actions={() => (
+                <ActionsPanel>
+                  <Button
+                    buttonType="secondary"
+                    onClick={closeDeleteObjectDialog}
+                    data-qa-cancel
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    buttonType="primary"
+                    onClick={deleteObject}
+                    loading={deleteObjectLoading}
+                    data-qa-submit-rebuild
+                  >
+                    Delete
+                  </Button>
+                </ActionsPanel>
+              )}
+              error={deleteObjectError}
+            >
+              Are you sure you want to delete this object?
+            </ConfirmationDialog>
+          </>
+        </Grid>
       </Grid>
-    </Grid>
-    <ObjectDetailDrawer
-      open={objectDetailDrawerOpen}
-      onClose={closeObjectDetailsDrawer}
-      bucketName={bucketName}
-      clusterId={clusterId}
-      displayName={selectedObject?.name}
-      name={selectedObject?.name}
-      lastModified={selectedObject?.last_modified}
-      size={selectedObject?.size}
-      url={
-        selectedObject
-          ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
-              .absolute
-          : undefined
-      }
-    />
-  </>;
+      <ObjectDetailDrawer
+        open={objectDetailDrawerOpen}
+        onClose={closeObjectDetailsDrawer}
+        bucketName={bucketName}
+        clusterId={clusterId}
+        displayName={selectedObject?.name}
+        name={selectedObject?.name}
+        lastModified={selectedObject?.last_modified}
+        size={selectedObject?.size}
+        url={
+          selectedObject
+            ? generateObjectUrl(clusterId, bucketName, selectedObject.name)
+                .absolute
+            : undefined
+        }
+      />
+    </>
+  );
 };
 
 export default BucketDetail;

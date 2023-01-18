@@ -161,7 +161,8 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                         onClick={toggleLinodeView}
                         disableRipple
                         className={classes.toggleButton}
-                        size="large">
+                        size="large"
+                      >
                         <TableView />
                       </IconButton>
                     </Tooltip>
@@ -178,7 +179,8 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                         onClick={toggleGroupLinodes}
                         disableRipple
                         className={classes.toggleButton}
-                        size="large">
+                        size="large"
+                      >
                         <GroupByTag />
                       </IconButton>
                     </Tooltip>

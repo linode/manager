@@ -81,7 +81,6 @@ const eventActions: RecPartial<EventAction>[] = [
   'volume_update',
   'volume_detach',
   'volume_resize',
-  'linode_create',
   'account_update',
   'account_settings_update',
   'credit_card_updated',

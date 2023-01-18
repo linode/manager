@@ -86,7 +86,3 @@ export const deleteAllTestVolumes = () => {
     });
   });
 };
-
-export const clickVolumeActionMenu = (title) => {
-  cy.get(`[aria-label="Action menu for Volume ${title}"]`).click();
-};
