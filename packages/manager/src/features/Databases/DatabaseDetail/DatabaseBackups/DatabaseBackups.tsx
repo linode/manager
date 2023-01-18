@@ -54,7 +54,12 @@ export const DatabaseBackups = () => {
     data: backups,
     isLoading: isBackupsLoading,
     error: backupsError,
-  } = useDatabaseBackupsQuery(engine, id, {}, { order, order_by: orderBy });
+  } = useDatabaseBackupsQuery(
+    engine,
+    id,
+    {},
+    { '+order': order, '+order_by': orderBy }
+  );
 
   const onBackup = () => {
     setIsBackupDialogOpen(true);

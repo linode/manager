@@ -18,12 +18,12 @@ const loadingTestId = 'table-row-loading';
 
 describe('Database Backups', () => {
   it('should render a loading state', async () => {
-    const { getByTestId } = renderWithTheme(<DatabaseBackups />, {
+    const { getAllByTestId } = renderWithTheme(<DatabaseBackups />, {
       queryClient,
     });
 
     // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
+    expect(getAllByTestId(loadingTestId)).toHaveLength(7);
   });
 
   it('should render a list of backups after loading', async () => {
@@ -43,15 +43,12 @@ describe('Database Backups', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
+    const { getAllByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
       queryClient,
     });
 
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
     // Wait for loading to finish before test continues
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
 
     for (const backup of backups) {
       // Check to see if all 7 backups are rendered
@@ -74,15 +71,12 @@ describe('Database Backups', () => {
       })
     );
 
-    const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
+    const { getAllByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
       queryClient,
     });
 
-    // Should render a loading state
-    expect(getByTestId(loadingTestId)).toBeInTheDocument();
-
     // Wait for loading to finish before test continues
-    await waitForElementToBeRemoved(getByTestId(loadingTestId));
+    await waitForElementToBeRemoved(getAllByTestId(loadingTestId));
 
     expect(getByText('No backups to display.')).toBeInTheDocument();
   });
