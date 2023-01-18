@@ -13,7 +13,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { useOrder } from 'src/hooks/useOrder';
 import { useParams } from 'react-router-dom';
 import { RestoreFromBackupDialog } from './RestoreFromBackupDialog';
-import { BackupDialog } from './BackupDialog';
+import { CreateBackupDialog } from './CreateBackupDialog';
 import { DeleteBackupDialog } from './DeleteBackupDialog';
 import { Engine } from '@linode/api-v4/lib/databases';
 import {
@@ -182,7 +182,7 @@ export const DatabaseBackups = () => {
         />
       ) : null}
       {database ? (
-        <BackupDialog
+        <CreateBackupDialog
           open={isBackupDialogOpen}
           database={database}
           onClose={() => setIsBackupDialogOpen(false)}

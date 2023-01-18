@@ -21,7 +21,7 @@ interface Props {
 
 export const DeleteBackupDialog = (props: Props) => {
   const { preferences } = usePreferences();
-  const { database, backup, onClose, open, ...rest } = props;
+  const { database, backup, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
@@ -40,6 +40,12 @@ export const DeleteBackupDialog = (props: Props) => {
       onClose();
     });
   };
+
+  React.useEffect(() => {
+    if (open) {
+      setConfirmationText('');
+    }
+  }, [open]);
 
   const actions = (
     <ActionsPanel style={{ padding: 0 }}>
@@ -63,31 +69,21 @@ export const DeleteBackupDialog = (props: Props) => {
     </ActionsPanel>
   );
 
-  React.useEffect(() => {
-    if (open) {
-      setConfirmationText('');
-    }
-  }, [open]);
-
   return (
     <ConfirmationDialog
-      {...rest}
       title={`Delete Backup ${
         backup.type === 'snapshot' ? backup.label : formatDate(backup.created)
       }`}
       open={open}
       onClose={onClose}
       actions={actions}
-    >
-      {error ? (
-        <Notice
-          error
-          text={
-            getAPIErrorOrDefault(error, 'Unable to delete this backup.')[0]
+      error={
+        error
+          ? getAPIErrorOrDefault(error, 'Unable to delete this backup.')[0]
               .reason
-          }
-        />
-      ) : null}
+          : undefined
+      }
+    >
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting a backup is irreversible. You are

@@ -14,7 +14,7 @@ interface Props {
   database: Database;
 }
 
-export const BackupDialog = (props: Props) => {
+export const CreateBackupDialog = (props: Props) => {
   const { database, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
 
