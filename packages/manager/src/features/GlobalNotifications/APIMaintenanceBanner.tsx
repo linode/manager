@@ -64,6 +64,7 @@ export const APIMaintenanceBanner: React.FC<Props> = (props) => {
         important
         warning
         preferenceKey={scheduledAPIMaintenance.id}
+        key={scheduledAPIMaintenance.id}
       >
         <>
           <Typography data-testid="scheduled-maintenance-banner">
