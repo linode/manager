@@ -194,8 +194,13 @@ describe('volumes', () => {
       .findByTitle(`Detach Volume ${attachedVolumeLabel}?`)
       .should('be.visible')
       .within(() => {
+        cy.findByLabelText('Volume Label')
+          .should('be.visible')
+          .click()
+          .type(attachedVolumeLabel);
+
         ui.button
-          .findByTitle('Detach Volume')
+          .findByTitle('Detach')
           .should('be.visible')
           .should('be.enabled')
           .click();
