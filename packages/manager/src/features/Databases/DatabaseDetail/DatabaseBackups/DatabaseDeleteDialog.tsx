@@ -51,11 +51,8 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
         buttonType="primary"
         onClick={handleDeleteBackup}
         disabled={
-          preferences?.type_to_confirm !== false
-            ? backup.type === 'snapshot'
-              ? confirmationText !== backup.label
-              : confirmationText !== formatDate(backup.created)
-            : false
+          preferences?.type_to_confirm !== false &&
+          confirmationText !== formatDate(backup.created)
         }
         loading={isLoading}
       >
@@ -73,9 +70,7 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
   return (
     <ConfirmationDialog
       {...rest}
-      title={`Delete Backup ${
-        backup.type === 'snapshot' ? backup.label : formatDate(backup.created)
-      }`}
+      title={`Delete Manual Backup ${formatDate(backup.created)}`}
       open={open}
       onClose={onClose}
       actions={actions}
@@ -92,37 +87,22 @@ export const DatabaseDeleteDialog: React.FC<Props> = (props) => {
       <Notice warning>
         <Typography style={{ fontSize: '0.875rem' }}>
           <strong>Warning:</strong> Deleting a backup is irreversible. You are
-          not deleting the database cluster itself with this action. Deleting an
-          automatic backup does not count toward the manual backup limit.
+          not deleting the database cluster itself with this action. Deleting a
+          manual backup frees up space that counts toward the limit of 3.
         </Typography>
       </Notice>
       <TypeToConfirm
         confirmationText={
-          backup.type === 'snapshot' ? (
-            <span>
-              To confirm deletion, type the name of the manual backup (
-              <strong>{backup.label}</strong>) from the{' '}
-              <strong>{database.label}</strong> database in the field below.
-            </span>
-          ) : (
-            <span>
-              To confirm deletion, type the date of the automatic backup (
-              <strong>{formatDate(backup.created)}</strong>) from the{' '}
-              <strong>{database.label}</strong> database in the field below.
-            </span>
-          )
+          <span>
+            To confirm deletion, type the date/time of the manual backup from (
+            <strong>{database.label}</strong>) in the field below.
+          </span>
         }
         onChange={(input) => setConfirmationText(input)}
         value={confirmationText}
-        label={
-          backup.type === 'snapshot'
-            ? `Backup name from ${database.label}`
-            : `Backup date from ${database.label}`
-        }
+        label={`Manual backup date from ${database.label}`}
         visible={preferences?.type_to_confirm}
-        placeholder={
-          backup.type === 'snapshot' ? backup.label : formatDate(backup.created)
-        }
+        placeholder={formatDate(backup.created)}
       />
     </ConfirmationDialog>
   );

@@ -23,6 +23,7 @@ import {
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
+import './DatabaseBackups.css';
 
 export const DatabaseBackups = () => {
   const { databaseId, engine } = useParams<{
@@ -125,7 +126,7 @@ export const DatabaseBackups = () => {
               handleClick={handleOrderChange}
               style={{ width: 155 }}
             >
-              Label
+              Backup Type
             </TableSortCell>
             <TableSortCell
               active={orderBy === 'created'}
@@ -146,17 +147,19 @@ export const DatabaseBackups = () => {
       </Table>
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Manual Backup</Typography>
-        <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
-          Trigger a manual backup outside of the usual schedule.<br></br>
-        </Typography>
-        <Button
-          buttonType="primary"
-          onClick={() => onBackup()}
-          style={{ marginTop: 15 }}
-          data-qa-deploy-linode
-        >
-          Start Backup
-        </Button>
+        <div className="backups_section">
+          <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
+            Trigger a manual backup outside of the usual schedule.<br></br>
+          </Typography>
+          <Button
+            className="backups_button"
+            buttonType="primary"
+            onClick={() => onBackup()}
+            data-qa-deploy-linode
+          >
+            Start Backup
+          </Button>
+        </div>
       </Paper>
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Backup Schedule</Typography>

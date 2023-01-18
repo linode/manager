@@ -26,11 +26,15 @@ const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
       title: 'Restore',
       onClick: () => onRestore(backup.id),
     },
-    {
+  ];
+
+  // Prepend the Delete button only for manual backups
+  if (backup.type === 'snapshot') {
+    actions.unshift({
       title: 'Delete',
       onClick: () => onDelete(backup.id),
-    },
-  ];
+    });
+  }
 
   return (
     <div className={classes.inlineActions}>

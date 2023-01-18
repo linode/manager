@@ -59,11 +59,8 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
         buttonType="primary"
         onClick={handleRestoreDatabase}
         disabled={
-          preferences?.type_to_confirm !== false
-            ? backup.type === 'snapshot'
-              ? confirmationText !== backup.label
-              : confirmationText !== formatDate(backup.created)
-            : false
+          preferences?.type_to_confirm !== false &&
+          confirmationText !== formatDate(backup.created)
         }
         loading={isLoading}
       >
@@ -81,7 +78,11 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
   return (
     <ConfirmationDialog
       {...rest}
-      title={`Restore from Backup ${formatDate(backup.created)}`}
+      title={
+        backup.type === 'snapshot'
+          ? `Restore Manual Backup ${formatDate(backup.created)}`
+          : `Restore Automatic Backup ${formatDate(backup.created)}`
+      }
       open={open}
       onClose={onClose}
       actions={actions}
@@ -105,15 +106,16 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
         confirmationText={
           backup.type === 'snapshot' ? (
             <span>
-              To confirm restoration, type the name of the manual backup (
-              <strong>{backup.label}</strong>) from the{' '}
-              <strong>{database.label}</strong> database in the field below.
+              To confirm manual backup restoration, type the date/time of the
+              manual backup (<strong>{formatDate(backup.created)}</strong>) from
+              the <strong>{database.label}</strong> database in the field below.
             </span>
           ) : (
             <span>
-              To confirm restoration, type the date of the automatic backup (
-              <strong>{formatDate(backup.created)}</strong>) from the{' '}
-              <strong>{database.label}</strong> database in the field below.
+              To confirm automatic backup restoration, type the date/time of the
+              automatic backup (<strong>{formatDate(backup.created)}</strong>)
+              from the <strong>{database.label}</strong> database in the field
+              below.
             </span>
           )
         }
@@ -121,13 +123,11 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
         value={confirmationText}
         label={
           backup.type === 'snapshot'
-            ? `Backup name from ${database.label}`
-            : `Backup date from ${database.label}`
+            ? `Manual backup date from  ${database.label}`
+            : `Automatic backup date from  ${database.label}`
         }
         visible={preferences?.type_to_confirm}
-        placeholder={
-          backup.type === 'snapshot' ? backup.label : formatDate(backup.created)
-        }
+        placeholder={formatDate(backup.created)}
       />
     </ConfirmationDialog>
   );

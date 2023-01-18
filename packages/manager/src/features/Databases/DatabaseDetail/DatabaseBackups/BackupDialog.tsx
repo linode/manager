@@ -6,7 +6,6 @@ import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import TypeToConfirm from 'src/components/TypeToConfirm';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
 import withPreferences, {
@@ -14,6 +13,8 @@ import withPreferences, {
 } from 'src/containers/preferences.container';
 import { useBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import Typography from 'src/components/core/Typography';
+import { generateManualBackupLabel } from 'src/features/Databases/databaseUtils';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -29,22 +30,17 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const [backupLabel, setBackupLabel] = React.useState('');
-
   const { mutateAsync: backup, isLoading, error } = useBackupMutation(
     database.engine,
     database.id,
-    backupLabel
+    generateManualBackupLabel()
   );
-  const handleBackupDatabase = (backupLabel: string) => {
+  const handleBackupDatabase = () => {
     backup().then(() => {
       history.push('summary');
-      enqueueSnackbar(
-        `${database.label} is being backed up with label ${backupLabel}`,
-        {
-          variant: 'success',
-        }
-      );
+      enqueueSnackbar(`${database.label} is being manually backed up`, {
+        variant: 'success',
+      });
       onClose();
     });
   };
@@ -56,20 +52,13 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
       </Button>
       <Button
         buttonType="primary"
-        onClick={() => handleBackupDatabase(backupLabel)}
-        disabled={preferences?.type_to_confirm !== false && backupLabel === ''}
+        onClick={() => handleBackupDatabase()}
         loading={isLoading}
       >
         Backup Database
       </Button>
     </ActionsPanel>
   );
-
-  React.useEffect(() => {
-    if (open) {
-      setBackupLabel('');
-    }
-  }, [open]);
 
   return (
     <ConfirmationDialog
@@ -88,20 +77,11 @@ export const BackupDialog: React.FC<CombinedProps> = (props) => {
           }
         />
       ) : null}
-      <TypeToConfirm
-        backupLabel={
-          <span>
-            To backup <strong>{database.label}</strong>, give your backup a name
-            in the field below.
-          </span>
-        }
-        onChange={(input) => setBackupLabel(input)}
-        value={backupLabel}
-        label="Backup Label"
-        visible={true}
-        placeholder={'My backup label'}
-        hideInstructions={true}
-      />
+      <Typography>
+        Would you like to perform a manual backup of this database? When you
+        reach 3 manual backups, please delete an existing one before adding
+        another.
+      </Typography>
     </ConfirmationDialog>
   );
 };
