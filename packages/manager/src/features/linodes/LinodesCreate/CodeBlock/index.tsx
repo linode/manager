@@ -10,7 +10,7 @@ import { useCodeBlockStyles } from './styles';
 
 const generateCommand = (payload) =>
   `curl -X POST https://api.linode.com/v4/linode/instances \\ \n
-  -H "Authorization: Bearer 6f455d47ae8a5769022efa3435cfc1e49132069e08e6c8cc496b2fe0ab40ac18" -H "Content-Type: application/json"  \\ \n
+  -H "Authorization: Bearer TOKEN" -H "Content-Type: application/json"  \\ \n
   -d
     '{
       "authorized_users": ${payload.authorized_users},
