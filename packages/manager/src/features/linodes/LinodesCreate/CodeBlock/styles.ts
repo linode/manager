@@ -12,7 +12,7 @@ export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
     paddingBottom: theme.spacing(4),
   },
   commandDisplay: {
-    alignItems: 'center',
+    // alignItems: 'center',
     backgroundColor: 'black',
     border: `1px solid ${theme.color.border2}`,
     display: 'flex',
@@ -47,8 +47,10 @@ export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
   copyIcon: {
     display: 'flex',
     '& svg': {
-      height: '1em',
-      width: '1em',
+      height: '1.5em',
+      width: '1.5em',
+      color: '#17CF73',
+      // color: '#02b159',
     },
   },
   text: {
