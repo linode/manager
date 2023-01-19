@@ -23,7 +23,6 @@ import {
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
-import './DatabaseBackups.css';
 
 export const DatabaseBackups = () => {
   const { databaseId, engine } = useParams<{
@@ -147,16 +146,19 @@ export const DatabaseBackups = () => {
       </Table>
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Manual Backup</Typography>
-        <div className="backups_section">
+        <div
+          className="backups_section"
+          style={{
+            clear: 'both',
+            display: 'flex',
+            verticalAlign: 'top',
+            justifyContent: 'space-between',
+          }}
+        >
           <Typography style={{ lineHeight: '20px', marginTop: 4 }}>
             Trigger a manual backup outside of the usual schedule.<br></br>
           </Typography>
-          <Button
-            className="backups_button"
-            buttonType="primary"
-            onClick={() => onBackup()}
-            data-qa-deploy-linode
-          >
+          <Button buttonType="primary" onClick={() => onBackup()}>
             Start Backup
           </Button>
         </div>
