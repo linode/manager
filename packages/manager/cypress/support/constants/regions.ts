@@ -7,7 +7,7 @@
  */
 export const regionsMap = {
   'us-central': 'Dallas, TX',
-  'us-west': 'Fremont, CA',
+  'us-west': 'Santa Clara, CA',
   'us-southeast': 'Atlanta, GA',
   'us-east': 'Newark, NJ',
   'eu-west': 'London, UK',
