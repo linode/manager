@@ -147,7 +147,6 @@ export const DatabaseBackups = () => {
       <Paper style={{ marginTop: 16 }}>
         <Typography variant="h3">Manual Backup</Typography>
         <div
-          className="backups_section"
           style={{
             clear: 'both',
             display: 'flex',
