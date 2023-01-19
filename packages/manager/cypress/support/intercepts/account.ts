@@ -16,6 +16,15 @@ export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
 };
 
 /**
+ * Intercepts POST request to generate entity transfer token.
+ *
+ * @returns Cypress chainable.
+ */
+export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/account/entity-transfers');
+};
+
+/**
  * Intercepts GET request to fetch account settings and mocks response.
  *
  * @param settings - Account settings mock data with which to respond.
