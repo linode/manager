@@ -111,7 +111,7 @@ describe('Account service transfers', () => {
    * - Confirms that users cannot generate a new token for a Linode with a pending transfer
    * - Confirms that users can cancel a service transfer
    */
-  it('can initiate and cancel a linode transfer', () => {
+  it('can initiate and cancel a Linode transfer', () => {
     // Create a Linode to transfer and wait for it to boot.
     const setupLinode = async (): Promise<Linode> => {
       const payload = createLinodeRequestFactory.build({
@@ -234,8 +234,7 @@ describe('Account service transfers', () => {
               .click();
           });
 
-        // Confirm that service transfer is removed from pending list.
-        cy.contains('token').should('not.exist');
+        ui.toast.assertMessage('Service transfer canceled successfully.');
       });
     });
   });
