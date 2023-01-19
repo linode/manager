@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import {
   createStyles,
@@ -29,7 +29,12 @@ const CloseSnackbar: React.FC<CombinedProps> = (props) => {
   const { classes, text, onClick } = props;
 
   return (
-    <IconButton onClick={onClick} title={text} className={classes.icon}>
+    <IconButton
+      onClick={onClick}
+      title={text}
+      className={classes.icon}
+      size="large"
+    >
       <Close />
     </IconButton>
   );

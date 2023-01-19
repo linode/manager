@@ -38,15 +38,15 @@ import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingRight: theme.spacing(),
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(),
     },
   },
   error: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingBottom: 20,
     },
   },

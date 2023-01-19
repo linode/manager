@@ -12,14 +12,13 @@ import Notice from './Notice';
 - Appear within the page or modal
 - Might be triggered by user action
 - Typically used to alert the user to a new service, limited availability, or a potential consequence of the action being taken
-- Considering making the notice dismissible if it&rsquo;s not critical information
+- Consider using a [Dismissible Banner](/docs/components-notifications-dismissible-banners--beta-banner) if it&rsquo;s not critical information
 
 Types of Notices:
 
-- Success (blue line)
+- Success/Marketing (blue line)
 - Error/critical (red line)
 - Warning (yellow line)
-- Marketing (green line)
 
 <Canvas>
   <Story name="Success">
@@ -54,16 +53,5 @@ Types of Notices:
 <Canvas>
   <Story name="Important Warning">
     <Notice warning important text="This is an important warning notice" />
-  </Story>
-</Canvas>
-
-<Canvas>
-  <Story name="Dismissible">
-    <Notice
-      warning
-      text="This is a dismissible notice"
-      dismissible
-      onClose={() => null}
-    />
   </Story>
 </Canvas>

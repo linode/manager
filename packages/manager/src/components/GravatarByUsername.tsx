@@ -4,8 +4,7 @@ import UserIcon from 'src/assets/icons/account.svg';
 import { makeStyles } from 'src/components/core/styles';
 import { useAccountUser } from 'src/queries/accountUsers';
 import { getGravatarUrl } from 'src/utilities/gravatar';
-// eslint-disable-next-line no-restricted-imports
-import { Avatar } from '@material-ui/core';
+import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles({
   avatar: {
@@ -16,7 +15,7 @@ const useStyles = makeStyles({
 });
 
 interface Props {
-  username: string;
+  username: string | null;
   className?: string;
 }
 
@@ -24,7 +23,7 @@ export const GravatarByUsername = (props: Props) => {
   const { username, className } = props;
   const classes = useStyles();
 
-  const { data: user } = useAccountUser(username);
+  const { data: user } = useAccountUser(username ?? '');
 
   const url = user?.email ? getGravatarUrl(user.email) : undefined;
 

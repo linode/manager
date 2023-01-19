@@ -18,7 +18,7 @@ type ClassNames = 'emptyText';
 const styles = (theme: Theme) =>
   createStyles({
     emptyText: {
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
       fontFamily: theme.font.bold,
     },
   });

@@ -16,7 +16,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       [theme.breakpoints.up('lg')]: {
-        padding: `${theme.spacing(2)}px ${theme.spacing(14)}px`,
+        padding: `${theme.spacing(2)} ${theme.spacing(14)}`,
       },
     },
   });

@@ -96,7 +96,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     bottom: theme.spacing(1.5),
     padding: 0,
     position: 'absolute',
-    width: `calc(100% - ${theme.spacing(4)}px)`,
+    width: `calc(100% - ${theme.spacing(4)})`,
     zIndex: 10,
     '& $uploadButton': {
       marginTop: 0,

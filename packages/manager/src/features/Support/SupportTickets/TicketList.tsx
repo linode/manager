@@ -103,7 +103,7 @@ export const TicketList = (props: Props) => {
             >
               Subject
             </TableSortCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableSortCell
                 label="id"
                 direction={order}
@@ -116,7 +116,7 @@ export const TicketList = (props: Props) => {
               </TableSortCell>
             </Hidden>
             <TableCell data-qa-support-regarding-header>Regarding</TableCell>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableSortCell
                 label="opened"
                 direction={order}
@@ -138,7 +138,7 @@ export const TicketList = (props: Props) => {
             >
               Last Updated
             </TableSortCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableSortCell
                 label="updated_by"
                 direction={order}

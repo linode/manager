@@ -345,7 +345,7 @@ export const BucketDetail: React.FC = () => {
                   <TableRow>
                     <TableCell className={classes.nameColumn}>Object</TableCell>
                     <TableCell className={classes.sizeColumn}>Size</TableCell>
-                    <Hidden smDown>
+                    <Hidden mdDown>
                       <TableCell>Last Modified</TableCell>
                     </Hidden>
                     {/* Empty TableCell for Action Menu */}
@@ -367,8 +367,8 @@ export const BucketDetail: React.FC = () => {
                 </TableBody>
               </Table>
               {/* We shouldn't allow infinite scrolling if we're still loading,
-                if we've gotten all objects in the bucket (or folder), or if there
-                are errors. */}
+              if we've gotten all objects in the bucket (or folder), or if there
+              are errors. */}
               {!isLoading && !isFetchingNextPage && !error && hasNextPage && (
                 <Waypoint onEnter={() => fetchNextPage()}>
                   <div />

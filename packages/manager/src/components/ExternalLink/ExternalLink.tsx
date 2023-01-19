@@ -1,6 +1,6 @@
 import * as React from 'react';
 import classNames from 'classnames';
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 

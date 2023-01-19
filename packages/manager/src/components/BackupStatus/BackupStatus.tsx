@@ -1,4 +1,4 @@
-import Backup from '@material-ui/icons/Backup';
+import Backup from '@mui/icons-material/Backup';
 import * as React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';

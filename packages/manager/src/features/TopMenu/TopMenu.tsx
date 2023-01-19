@@ -1,4 +1,4 @@
-import MenuIcon from '@material-ui/icons/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Hidden from 'src/components/core/Hidden';
@@ -79,11 +79,12 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
       )}
       <AppBar className={classes.appBar}>
         <Toolbar className={classes.toolbar} variant="dense">
-          <Hidden smDown>
+          <Hidden mdDown>
             <IconButton
               color="inherit"
               aria-label="open menu"
               onClick={desktopMenuToggle}
+              size="large"
               data-testid="open-nav-menu"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
@@ -96,6 +97,7 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               color="inherit"
               aria-label="open menu"
               onClick={openSideMenu}
+              size="large"
             >
               <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon style={{ marginTop: 6 }} />
