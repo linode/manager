@@ -9,7 +9,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import { useCodeBlockStyles } from './styles';
 
 const generateCommand = (payload) => {
-  const partA = `curl -H "Content-Type: application/json" -H "Authorization: Bearer 6f455d47ae8a5769022efa3435cfc1e49132069e08e6c8cc496b2fe0ab40ac18" -X POST -d '`;
+  const partA = `curl -H "Content-Type: application/json" -H "Authorization: Bearer TOKEN" -X POST -d '`;
 
   const partB = JSON.stringify({
     // authorized_users: payload.authorized_users,
