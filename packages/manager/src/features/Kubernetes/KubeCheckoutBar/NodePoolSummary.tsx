@@ -63,44 +63,47 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
     return null;
   }
 
-  return <>
-    <Divider dark spacingTop={24} spacingBottom={12} />
-    <Box
-      display="flex"
-      flexDirection="column"
-      data-testid="node-pool-summary"
-      className={classes.root}
-    >
-      <Box display="flex" justifyContent="space-between">
-        <div>
-          <Typography className={classes.typeHeader}>
-            {poolType.label} Plan
-          </Typography>
-          <Typography className={classes.typeSubheader}>
-            {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
-            GB Storage
-          </Typography>
+  return (
+    <>
+      <Divider dark spacingTop={24} spacingBottom={12} />
+      <Box
+        display="flex"
+        flexDirection="column"
+        data-testid="node-pool-summary"
+        className={classes.root}
+      >
+        <Box display="flex" justifyContent="space-between">
+          <div>
+            <Typography className={classes.typeHeader}>
+              {poolType.label} Plan
+            </Typography>
+            <Typography className={classes.typeSubheader}>
+              {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
+              GB Storage
+            </Typography>
+          </div>
+          <IconButton
+            className={classes.button}
+            onClick={onRemove}
+            data-testid="remove-pool-button"
+            size="large"
+          >
+            <Close />
+          </IconButton>
+        </Box>
+        <div className={classes.numberInput}>
+          <EnhancedNumberInput
+            value={nodeCount}
+            setValue={updateNodeCount}
+            min={1}
+          />
         </div>
-        <IconButton
-          className={classes.button}
-          onClick={onRemove}
-          data-testid="remove-pool-button"
-          size="large">
-          <Close />
-        </IconButton>
+        <div className={classes.price}>
+          <DisplayPrice price={price} fontSize="14px" interval="month" />
+        </div>
       </Box>
-      <div className={classes.numberInput}>
-        <EnhancedNumberInput
-          value={nodeCount}
-          setValue={updateNodeCount}
-          min={1}
-        />
-      </div>
-      <div className={classes.price}>
-        <DisplayPrice price={price} fontSize="14px" interval="month" />
-      </div>
-    </Box>
-  </>;
+    </>
+  );
 };
 
 export default React.memo(NodePoolSummary);

@@ -117,8 +117,13 @@ describe('Google Pay', () => {
     cy.intercept('GET', getPaymentURL, (req) => {
       req.reply(getPaymentMethodDataWithGpayExpired);
     }).as('getPaymentMethod');
-    getVisible('[data-qa-contact-cc-exp-date="true"]').within(() => {
-      containsVisible(pastDueExpiry);
+
+    cy.get('[data-qa-payment-row="google_pay"]').within(() => {
+      cy.get('[data-qa-contact-cc-exp-date="true"]')
+        .should('be.visible')
+        .within(() => {
+          cy.contains(pastDueExpiry).should('be.visible');
+        });
     });
   });
 

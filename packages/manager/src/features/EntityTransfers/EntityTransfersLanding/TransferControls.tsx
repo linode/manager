@@ -118,68 +118,70 @@ export const TransferControls: React.FC<{}> = (_) => {
   };
 
   const handleCreateTransfer = () => push('/account/service-transfers/create');
-  return <>
-    <Grid
-      container
-      className={classes.root}
-      alignItems="center"
-      justifyContent="space-between"
-      wrap="nowrap"
-    >
+  return (
+    <>
       <Grid
         container
-        item
-        className={`px0 ${classes.labelWrapper}`}
+        className={classes.root}
         alignItems="center"
+        justifyContent="space-between"
         wrap="nowrap"
       >
-        <Typography className={classes.label}>
-          <strong>Receive a Service Transfer</strong>
-        </Typography>
         <Grid
           container
           item
-          className={classes.transferInputWrapper}
-          direction="row"
+          className={`px0 ${classes.labelWrapper}`}
           alignItems="center"
+          wrap="nowrap"
         >
-          <TextField
-            className={classes.transferInput}
-            hideLabel
-            value={token}
-            label="Receive a Service Transfer"
-            placeholder="Enter a token"
-            onChange={handleInputChange}
-          />
-          <Button
-            className={classes.reviewDetails}
-            buttonType="primary"
-            disabled={token === ''}
-            onClick={() => setConfirmDialogOpen(true)}
+          <Typography className={classes.label}>
+            <strong>Receive a Service Transfer</strong>
+          </Typography>
+          <Grid
+            container
+            item
+            className={classes.transferInputWrapper}
+            direction="row"
+            alignItems="center"
           >
-            Review Details
+            <TextField
+              className={classes.transferInput}
+              hideLabel
+              value={token}
+              label="Receive a Service Transfer"
+              placeholder="Enter a token"
+              onChange={handleInputChange}
+            />
+            <Button
+              className={classes.reviewDetails}
+              buttonType="primary"
+              disabled={token === ''}
+              onClick={() => setConfirmDialogOpen(true)}
+            >
+              Review Details
+            </Button>
+            <Hidden mdDown>
+              <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
+            </Hidden>
+          </Grid>
+        </Grid>
+        <Grid item className={classes.makeTransfer}>
+          <Button
+            buttonType="primary"
+            className={classes.makeTransferButton}
+            onClick={handleCreateTransfer}
+          >
+            Make a Service Transfer
           </Button>
-          <Hidden mdDown>
-            <HelpIcon text="Enter a service transfer token to review the details and accept the transfer." />
-          </Hidden>
         </Grid>
       </Grid>
-      <Grid item className={classes.makeTransfer}>
-        <Button
-          buttonType="primary"
-          className={classes.makeTransferButton}
-          onClick={handleCreateTransfer}
-        >
-          Make a Service Transfer
-        </Button>
-      </Grid>
-    </Grid>
-    <ConfirmTransferDialog
-      open={confirmDialogOpen}
-      token={token}
-      onClose={handleCloseDialog}
-    />
-  </>;
+      <ConfirmTransferDialog
+        open={confirmDialogOpen}
+        token={token}
+        onClose={handleCloseDialog}
+      />
+    </>
+  );
 };
 
 export default React.memo(TransferControls);

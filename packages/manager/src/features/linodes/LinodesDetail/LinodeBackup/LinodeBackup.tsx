@@ -465,10 +465,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleDeploy = (backup: LinodeBackup) => {
-    const { history, linodeID } = this.props;
+    const { history, linodeID, linodeType } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}&typeID=${linodeType}`
     );
   };
 

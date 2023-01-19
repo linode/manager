@@ -1,46 +1,46 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 
 interface Props {
   linodeID?: number;
   linodeLabel?: string;
-  onClose: () => void;
   open: boolean;
+  onClose: () => void;
   handleDelete: (linodeID: number) => Promise<{}>;
 }
 
 type CombinedProps = Props;
 
 const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
+  const { linodeID, linodeLabel, open, onClose, handleDelete } = props;
+
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
   React.useEffect(() => {
-    if (props.open) {
+    if (open) {
       /**
        * reset error and loading states
        */
       setErrors(undefined);
       setDeleting(false);
     }
-  }, [props.open]);
+  }, [open]);
 
   const handleSubmit = () => {
-    if (!props.linodeID) {
+    if (!linodeID) {
       return setErrors([{ reason: 'Something went wrong.' }]);
     }
 
     setDeleting(true);
 
-    props
-      .handleDelete(props.linodeID)
+    handleDelete(linodeID)
       .then(() => {
-        props.onClose();
+        onClose();
       })
       .catch((e) => {
         setErrors(e);
@@ -49,47 +49,22 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Dialog
-      open={props.open}
-      title={`Delete Linode ${props.linodeLabel}?`}
-      onClose={props.onClose}
-      error={errors ? errors[0].reason : ''}
-      actions={
-        <Actions
-          onClose={props.onClose}
-          loading={isDeleting}
-          onSubmit={handleSubmit}
-        />
-      }
+    <TypeToConfirmDialog
+      title={`Delete ${linodeLabel}?`}
+      entity={{ type: 'Linode', label: linodeLabel }}
+      open={open}
+      loading={isDeleting}
+      errors={errors}
+      onClose={onClose}
+      onClick={handleSubmit}
     >
-      <Typography>
-        Are you sure you want to delete this Linode? This will result in
-        permanent data loss.
-      </Typography>
-    </Dialog>
-  );
-};
-
-interface ActionsProps {
-  onClose: () => void;
-  onSubmit: () => void;
-  loading: boolean;
-}
-
-const Actions: React.FC<ActionsProps> = (props) => {
-  return (
-    <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="secondary">
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={props.onSubmit}
-        loading={props.loading}
-      >
-        Delete Linode
-      </Button>
-    </ActionsPanel>
+      <Notice warning>
+        <Typography style={{ fontSize: '0.875rem' }}>
+          <strong>Warning:</strong> Deleting your Linode will result in
+          permanent data loss.
+        </Typography>
+      </Notice>
+    </TypeToConfirmDialog>
   );
 };
 
