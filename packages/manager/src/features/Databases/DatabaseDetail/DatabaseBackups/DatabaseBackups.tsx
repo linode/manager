@@ -119,9 +119,9 @@ export const DatabaseBackups = () => {
         <TableHead>
           <TableRow>
             <TableSortCell
-              active={orderBy === 'label'}
+              active={orderBy === 'type'}
               direction={order}
-              label="label"
+              label="type"
               handleClick={handleOrderChange}
               style={{ width: 155 }}
             >
