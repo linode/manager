@@ -18,15 +18,16 @@ interface Props {
 export const CreateBackupDialog = (props: Props) => {
   const { database, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-  const backupLabel = generateManualBackupLabel();
 
   const { mutateAsync: backup, isLoading, error } = useBackupMutation(
     database.engine,
-    database.id,
-    backupLabel
+    database.id
   );
+
   const handleBackupDatabase = () => {
-    backup().then(() => {
+    const label = generateManualBackupLabel();
+
+    backup({ label }).then(() => {
       enqueueSnackbar(`${database.label} is being manually backed up`, {
         variant: 'success',
       });

@@ -194,13 +194,9 @@ export const useDeleteBackupMutation = (
     }
   );
 
-export const useBackupMutation = (
-  engine: Engine,
-  databaseId: number,
-  backupLabel: string
-) =>
-  useMutation<{}, APIError[]>(
-    () => captureDatabaseBackup(engine, databaseId, backupLabel),
+export const useBackupMutation = (engine: Engine, databaseId: number) =>
+  useMutation<{}, APIError[], { label: string }>(
+    ({ label }) => captureDatabaseBackup(engine, databaseId, label),
     {
       onSuccess: () =>
         updateStoreForDatabase(databaseId, { status: 'backing_up' }),

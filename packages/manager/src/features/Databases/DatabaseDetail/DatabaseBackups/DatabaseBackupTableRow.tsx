@@ -4,7 +4,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { DatabaseBackupActionMenu } from './DatabaseBackupActionMenu';
 import formatDate from 'src/utilities/formatDate';
-import { formatBackupLabel } from 'src/features/Databases/databaseUtils';
+import { backupTypeMap } from 'src/features/Databases/databaseUtils';
 import { parseAPIDate } from 'src/utilities/date';
 import Hidden from 'src/components/core/Hidden';
 
@@ -19,11 +19,11 @@ export const DatabaseBackupTableRow = ({
   onRestore,
   onDelete,
 }: Props) => {
-  const { id, created } = backup;
+  const { id, created, type } = backup;
 
   return (
     <TableRow key={id}>
-      <TableCell>{formatBackupLabel(backup)}</TableCell>
+      <TableCell>{backupTypeMap[type] ?? 'Backup'}</TableCell>
       <TableCell>{formatDate(created)}</TableCell>
       <Hidden mdDown>
         <TableCell>{parseAPIDate(created).toRelative()}</TableCell>

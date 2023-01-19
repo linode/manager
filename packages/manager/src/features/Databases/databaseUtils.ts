@@ -1,11 +1,8 @@
-export const formatBackupLabel = (backup: any): string => {
-  if (backup.type === 'auto') {
-    return 'Automatic';
-  } else if (backup.type === 'snapshot') {
-    return 'Manual';
-  }
-  // The backup type is unknown, so return an empty string.
-  return '';
+import { DatabaseBackup } from '@linode/api-v4';
+
+export const backupTypeMap: Record<DatabaseBackup['type'], string> = {
+  auto: 'Automatic',
+  snapshot: 'Manual',
 };
 
 export const generateManualBackupLabel = (): string => {
