@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
 
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   caret: {
     color: theme.palette.primary.main,
-    marginRight: theme.spacing(1) / 2,
+    marginRight: theme.spacing(0.5),
     fontSize: 28,
     transition: 'transform .1s ease-in-out',
     '&.rotate': {

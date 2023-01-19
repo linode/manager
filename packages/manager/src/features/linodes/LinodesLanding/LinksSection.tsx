@@ -23,9 +23,7 @@ interface Props {
 
 const LinksSection = (props: Props) => {
   const classes = useStyles();
-  return (
-    <div className={classes.categoryWrapper}>{props.children}</div>
-  );
+  return <div className={classes.categoryWrapper}>{props.children}</div>;
 };
 
 export default LinksSection;

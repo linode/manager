@@ -49,7 +49,7 @@ const fillOutStackscriptForm = (
   script: string
 ) => {
   // Fill out "StackScript Label", "Description", "Target Images", and "Script" fields.
-  cy.findByLabelText('StackScript Label', { exact: false })
+  cy.findByLabelText(/^StackScript Label.*/)
     .should('be.visible')
     .click()
     .type(label);
@@ -80,15 +80,14 @@ const fillOutStackscriptForm = (
  * function does not attempt to submit the filled out form.
  *
  * @param label - Linode label.
- * @param region - Linode region.
+ * @param region - Linode region name.
  */
 const fillOutLinodeForm = (label: string, region: string) => {
   const password = randomString(32);
 
-  cy.findByText('Select a Region')
-    .should('be.visible')
-    .click()
-    .type(`${region}{enter}`);
+  cy.findByText('Select a Region').should('be.visible').click();
+
+  ui.regionSelect.findItemByRegionName(region).click();
 
   cy.findByText('Linode Label')
     .should('be.visible')

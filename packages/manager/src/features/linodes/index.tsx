@@ -33,7 +33,10 @@ export default LinodesRoutes;
 // I needed a Function Component. It seemed safer to do it this way instead of
 // refactoring LinodesLanding.
 const LinodesLandingWrapper: React.FC = React.memo(() => {
-  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery();
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    { status: { '+or': ['pending, started'] } }
+  );
   const { linodes } = useLinodes();
   const { typesMap } = useTypes();
 

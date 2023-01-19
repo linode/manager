@@ -2,8 +2,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import { useDismissibleBanner } from 'src/components/DismissibleBanner/DismissibleBanner';
-import Notice from 'src/components/Notice';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import useNotifications from 'src/hooks/useNotifications';
 import { isEUModelContractNotification } from '../NotificationCenter/NotificationData/useFormattedNotifications';
@@ -16,16 +15,12 @@ const ComplianceBanner: React.FC<{}> = () => {
     isEUModelContractNotification(thisNotification)
   );
 
-  const { hasDismissedBanner, handleDismiss } = useDismissibleBanner(
-    'gdpr-compliance'
-  );
-
-  if (!hasComplianceNotification || hasDismissedBanner) {
+  if (!hasComplianceNotification) {
     return null;
   }
 
   return (
-    <Notice important warning dismissible onClose={handleDismiss}>
+    <DismissibleBanner important warning preferenceKey="gdpr-compliance">
       <Box
         display="flex"
         flexDirection="row"
@@ -46,7 +41,7 @@ const ComplianceBanner: React.FC<{}> = () => {
           Review Update
         </Button>
       </Box>
-    </Notice>
+    </DismissibleBanner>
   );
 };
 

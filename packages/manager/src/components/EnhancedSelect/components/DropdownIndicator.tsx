@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 import { IndicatorProps } from 'react-select';
 import {

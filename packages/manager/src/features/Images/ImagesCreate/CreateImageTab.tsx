@@ -1,6 +1,6 @@
 import { Disk, getLinodeDisks, Linode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonGroup: {
     marginTop: theme.spacing(3),
     marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'flex-end',
     },
   },
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
     marginTop: theme.spacing(2),
     width: '80%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -271,7 +271,7 @@ export const CreateImageTab: React.FC<Props> = (props) => {
         <TextField
           label="Description"
           multiline
-          rows={4}
+          rows={1}
           value={description}
           onChange={changeDescription}
           error={Boolean(descriptionError)}

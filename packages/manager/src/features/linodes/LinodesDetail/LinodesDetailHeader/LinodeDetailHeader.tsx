@@ -3,11 +3,6 @@ import { Volume } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
 import { useHistory, useLocation, useRouteMatch } from 'react-router-dom';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
-import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
-import Grid from 'src/components/Grid';
-import Link from 'src/components/Link';
 import TagDrawer from 'src/components/TagCell/TagDrawer';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import PowerDialogOrDrawer, {
@@ -288,48 +283,11 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
     .map((notification) => notification.entity!.id);
 
-  const numUpgradeableVolumes = upgradeableVolumeIds.length;
-
   return (
     <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      {numUpgradeableVolumes > 0 ? (
-        <DismissibleBanner
-          preferenceKey="upgradable-volumes-attached"
-          productInformationIndicator
-        >
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justify="space-between"
-          >
-            <Grid item>
-              <Typography>
-                {numUpgradeableVolumes === 1
-                  ? 'A Volume attached to this Linode is '
-                  : 'Volumes attached to this Linode are '}
-                eligible for a <b>free upgrade</b> to Linode&rsquo;s
-                high-performance NVMe Block Storage.{' '}
-                <Link to="https://www.linode.com/blog/cloud-storage/nvme-block-storage-global-rollout/">
-                  Learn more
-                </Link>
-                .
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                buttonType="primary"
-                onClick={() => openDialog('upgrade_volumes', linode.id)}
-              >
-                Upgrade {numUpgradeableVolumes > 1 ? 'Volumes' : 'Volume'}
-              </Button>
-            </Grid>
-          </Grid>
-        </DismissibleBanner>
-      ) : null}
       <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"

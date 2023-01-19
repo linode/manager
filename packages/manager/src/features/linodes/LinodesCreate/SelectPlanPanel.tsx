@@ -201,8 +201,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
-    const isSamePlan =
-      type.heading === currentPlanHeading || type.id === selectedLinodePlanType;
+    const isSamePlan = type.heading === currentPlanHeading;
     const isGPU = type.class === 'gpu';
     const isDisabledClass = getDisabledClass(type.class);
     const shouldShowTransfer = showTransfer && type.transfer;
@@ -222,7 +221,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        <Hidden mdDown={isCreate} smDown={!isCreate}>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <TableRow
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
@@ -256,7 +255,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
             <TableCell data-qa-plan-name>
               <div className={classes.headingCellContainer}>
                 {type.heading}{' '}
-                {isSamePlan && (
+                {(isSamePlan || type.id === selectedLinodePlanType) && (
                   <Chip
                     data-qa-current-plan
                     label="Current Plan"
@@ -335,7 +334,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
           {plans.map(renderSelection)}
         </Hidden>
-        <Hidden mdDown={isCreate} smDown={!isCreate}>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <Grid item xs={12}>
             <Table
               aria-label="List of Linode Plans"
@@ -571,7 +570,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
   // Determine initial plan category tab based on current plan selection
   // (if there is one).
   let selectedTypeClass: LinodeTypeClass = pathOr(
-    'standard', // Use `standard` by default
+    'dedicated', // Use `dedicated` by default
     ['class'],
     types.find(
       (type) => type.id === selectedID || type.heading === currentPlanHeading

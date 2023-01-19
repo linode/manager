@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingRight: 0,
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(),
       },
     },
@@ -318,13 +318,13 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     return data.map(({ id, label, redirect_uri, public: isPublic }) => (
       <TableRow ariaLabel={label} key={id} data-qa-table-row={label}>
         <TableCell data-qa-oauth-label>{label}</TableCell>
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell data-qa-oauth-access>
             {isPublic ? 'Public' : 'Private'}
           </TableCell>
         </Hidden>
         <TableCell data-qa-oauth-id>{id}</TableCell>
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell data-qa-oauth-callback>{redirect_uri}</TableCell>
         </Hidden>
         <TableCell actionCell>
@@ -388,17 +388,17 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
               >
                 Label
               </TableSortCell>
-              <Hidden xsDown>
+              <Hidden smDown>
                 <TableCell>Access</TableCell>
               </Hidden>
               <TableCell style={{ width: '20%' }}>ID</TableCell>
-              <Hidden xsDown>
+              <Hidden smDown>
                 <TableCell style={{ width: '20%' }}>Callback URL</TableCell>
               </Hidden>
               <TableCell />
             </TableRow>
           </TableHead>
-          <TableBody>{this.renderContent()}</TableBody>
+          <TableBody data-qa-table-body>{this.renderContent()}</TableBody>
         </Table>
 
         <Modals

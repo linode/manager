@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.main,
     flexDirection: 'column',
     alignItems: 'center',
-    padding: `${theme.spacing(4)}px ${theme.spacing(2)}px 0px`,
+    padding: `${theme.spacing(4)} ${theme.spacing(2)} 0px`,
     '& h1': {
       marginTop: theme.spacing(4),
       marginBottom: theme.spacing(4),
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& p': {
       marginTop: theme.spacing(2),
       fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(3)}px`,
+      lineHeight: theme.spacing(3),
     },
     '& button': {
       marginTop: theme.spacing(8),

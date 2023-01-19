@@ -69,11 +69,11 @@ const styles = (theme: Theme) =>
         paddingRight: 0,
       },
       '& .domain-btn': {
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('lg')]: {
           marginRight: theme.spacing(),
         },
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },
@@ -96,7 +96,7 @@ const styles = (theme: Theme) =>
       },
     },
     linkContainer: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },

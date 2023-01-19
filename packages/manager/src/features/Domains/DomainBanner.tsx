@@ -1,10 +1,9 @@
 import { DateTime } from 'luxon';
 import * as React from 'react';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
+import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
+import Link from 'src/components/Link';
 
 const useStyles = makeStyles((theme: Theme) => ({
   banner: {
@@ -27,39 +26,32 @@ export const DomainBanner: React.FC<Props> = (props) => {
   const { hidden } = props;
   const classes = useStyles();
 
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
-
-  const handleClose = () => {
-    dismissNotifications([KEY], {
-      expiry: DateTime.utc().plus({ days: 30 }).toISO(),
-      label: KEY,
-    });
-  };
-
-  if (hidden || hasDismissedNotifications([KEY])) {
+  if (hidden) {
     return null;
   }
 
   return (
-    <Notice
+    <DismissibleBanner
       warning
       important
       className={classes.dnsWarning}
-      dismissible
-      onClose={handleClose}
+      preferenceKey={KEY}
+      options={{
+        expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+        label: KEY,
+      }}
     >
-      <Typography className={classes.banner}>
-        <strong>Your DNS zones are not being served.</strong>
-      </Typography>
-      <Typography>
-        Your domains will not be served by Linode&rsquo;s nameservers unless you
-        have at least one active Linode on your account.{` `}
-        <Link to="/linodes/create">You can create one here.</Link>
-      </Typography>
-    </Notice>
+      <>
+        <Typography className={classes.banner}>
+          <strong>Your DNS zones are not being served.</strong>
+        </Typography>
+        <Typography>
+          Your domains will not be served by Linode&rsquo;s nameservers unless
+          you have at least one active Linode on your account.{` `}
+          <Link to="/linodes/create">You can create one here.</Link>
+        </Typography>
+      </>
+    </DismissibleBanner>
   );
 };
 

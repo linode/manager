@@ -8,7 +8,7 @@ import Grid from 'src/components/Grid';
 const useStyles = makeStyles((theme: Theme) => ({
   copyContainer: {
     backgroundColor: theme.color.grey5,
-    margin: `${theme.spacing(1)}px 0`,
+    margin: `${theme.spacing(1)} 0`,
     borderRadius: theme.shape.borderRadius,
     maxWidth: '100%',
   },
@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         '&:before': {
           content: "'|'",
           position: 'absolute',
-          top: theme.spacing(1) - 3,
-          left: -theme.spacing(1) + 2,
+          top: `calc(${theme.spacing(1)} - 3px)`,
+          left: `calc(-${theme.spacing(1)} + 2px)`,
         },
       },
     },
