@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-01-18] - v1.84.0
+
+### Added:
+
+- Jan 2023 Marketplace Apps
+- Type-to-confirm to more destructive actions
+
+### Changed:
+
+- Standardized usage of dismissible banners and notices
+- Aligned left modal title
+- Standardized `Disk IO` -> `Disk I/O` formatting across app
+
+### Fixed:
+
+- Linodes Landing Extra Padding
+- Broken URL for Peppermint Marketplace App
+
 ## [2023-01-13] - v1.83.2
 
 ### Fixed:
@@ -13,21 +31,23 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Inability to save changes to NodeBalancer Mode selection
 - Deploying a Linode Backup to a new Linode forces a different plan size to be chosen
 
-
 ## [2023-01-11] - v1.83.1
 
 ### Fixed:
+
 - Showing past completed maintenance on Linodes
 
 ## [2023-01-09] - v1.83.0
 
 ### Added:
+
 - Support for new Washington, DC datacenter
 - Account Login History
 - `completed` Account Maintenance Events
 - External link icons to YouTube links on Database landing page
 
 ### Changed:
+
 - Relocate SMTP restriction notice for better visibility
 - Update text for Akamai-billed customers
 - Update and improve PayPal payment limits and logic
@@ -39,19 +59,21 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Remove NVMe chip from Volumes
 
 ### Fixed:
+
 - /32 IP address Access Controls for DBaaS
 - Show correct plan tab when cloning a Linode
 - Stackscripts loading for large accounts
 
-
 ## [2022-12-12] - v1.82.0
 
 ### Added:
+
 - SMTP restriction support ticket form
 - Region to Database summary view
 - Mastodon Marketplace App
 
 ### Changed:
+
 - Updated secrets modal button text
 - Improved Linode migration time estimates
 - Made help banner text more readable
@@ -59,12 +81,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Filter deprecated Linux images
 
 ### Fixed:
-- Delayed loading of /56 ranges in Linode Network tab
 
+- Delayed loading of /56 ranges in Linode Network tab
 
 ## [2022-11-30] - v1.81.0
 
 ### Added:
+
 - SMTP restriction notice helper text
 - Object Storage type to confirm
 - Copyable Linode IP Address text
@@ -72,36 +95,44 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - React Query for Volumes
 
 ### Fixed:
+
 - Landing page empty state 2-column layout
 
 ## [2022-11-14] - v1.80.0
 
 ### Added:
+
 - Paste functionality restored for Glish
 - Support for user-defined headers in stackscripts
 
 ### Changed:
+
 - LKE UI refinements
 
 ## [2022-11-07] - v1.79.1
+
 ### Fixed:
+
 - Bug when managing user permissions for large accounts
 
 ## [2022-11-01] - v1.79.0
+
 ### Added:
+
 - Set custom UserAgent header for api-v4 when run in node
 
 ### Changed:
+
 - Linode label max characters increased to 64 chars
 - Update Configuration Profile doc link
 - Marketplace app info button can be focused via keyboard
 - Notices that suggest opening a support ticket now include a link to do so
 
 ### Fixed:
+
 - Error when swapping Linode IPs after having already done so
 - Issue preventing more than 100 Marketplace apps from appearing
 - Error when updating billing contact info without a company name in certain circumstances
-
 
 ## [2022-10-17] - v1.78.0
 
