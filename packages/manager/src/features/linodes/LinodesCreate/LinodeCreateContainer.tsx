@@ -1,5 +1,5 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
-import { getImages, Image } from '@linode/api-v4/lib/images';
+import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
   CreateLinodeRequest,
@@ -21,7 +21,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { REFRESH_INTERVAL } from 'src/constants';
 import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
@@ -50,7 +49,6 @@ import {
 } from 'src/queries/accountAgreements';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import { queryKey as imagesListQueryKey } from 'src/queries/images';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -256,16 +254,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           appInstancesError: 'There was an error loading Marketplace Apps.',
         });
       });
-
-    // If we haven't requested images yet (or in a while), request them
-    if (
-      (!this.props.imagesLastUpdated && !this.props.imagesLoading) ||
-      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL
-    ) {
-      queryClient.fetchQuery(imagesListQueryKey, () => getImages(), {
-        staleTime: REFRESH_INTERVAL,
-      });
-    }
   }
 
   clearCreationState = () => {
@@ -700,8 +688,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const {
       profile,
       grants,
-      enqueueSnackbar,
-      closeSnackbar,
       regionsData,
       typesData,
       ...restOfProps

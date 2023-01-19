@@ -1,8 +1,8 @@
-import { getGrantData, getProfileData } from 'src/queries/profile';
+import { useGrants, useProfile } from 'src/queries/profile';
 
 export const useImageAndLinodeGrantCheck = () => {
-  const profile = getProfileData();
-  const grants = getGrantData();
+  const { data: profile } = useProfile();
+  const { data: grants } = useGrants();
 
   const canCreateImage =
     Boolean(!profile?.restricted) || Boolean(grants?.global?.add_images);

@@ -10,7 +10,7 @@ import { useAllImagesQuery } from 'src/queries/images';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel';
 
-export const StackScriptsLanding: React.FC<{}> = () => {
+export const StackScriptsLanding = () => {
   const history = useHistory<{
     successMessage?: string;
   }>();
