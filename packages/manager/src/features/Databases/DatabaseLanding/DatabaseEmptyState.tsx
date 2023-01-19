@@ -70,6 +70,12 @@ const guideLinks = (
   </List>
 );
 
+const guidesMoreLinkText = 'Check out all our Docs';
+const youtubeMoreLinkText = 'View our YouTube channel';
+
+// retaining the old label for tracking
+const youtubeMoreLinkLabel = 'View the complete playlist';
+
 const youtubeLinks = (
   <List>
     {youtubeLinkData.map((linkData) => (
@@ -96,13 +102,6 @@ const gaCategory = 'Managed Databases landing page empty';
 const linkGAEventTemplate = {
   category: gaCategory,
   action: 'Click:link',
-};
-
-const onLinkClick = (
-  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-) => {
-  const label = event.currentTarget.textContent ?? '';
-  sendEvent({ ...linkGAEventTemplate, label });
 };
 
 const DatabaseEmptyState: React.FC = () => {
@@ -159,11 +158,11 @@ const DatabaseEmptyState: React.FC = () => {
               icon={<DocsIcon />}
               MoreLink={(props) => (
                 <Link
-                  onClick={onLinkClick}
+                  onClick={getLinkOnClick(guidesMoreLinkText)}
                   to="https://www.linode.com/docs/"
                   {...props}
                 >
-                  Check out all our Docs
+                  {guidesMoreLinkText}
                   <PointerIcon />
                 </Link>
               )}
@@ -171,16 +170,16 @@ const DatabaseEmptyState: React.FC = () => {
               {guideLinks}
             </LinkSubSection>
             <LinkSubSection
-              title="Getting Started Playlist"
+              title="Video Playlist"
               icon={<YoutubeIcon />}
               external
               MoreLink={(props) => (
                 <Link
-                  onClick={onLinkClick}
+                  onClick={getLinkOnClick(youtubeMoreLinkLabel)}
                   to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
                   {...props}
                 >
-                  View the complete playlist
+                  {youtubeMoreLinkText}
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               )}
