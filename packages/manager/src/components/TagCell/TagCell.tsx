@@ -190,7 +190,8 @@ export const TagCell: React.FC<Props> = (props) => {
                 className={classes.button}
                 disableRipple
                 aria-label="Display all tags"
-                size="large">
+                size="large"
+              >
                 <MoreHoriz />
               </IconButton>
             )}
@@ -243,7 +244,8 @@ export const TagCell: React.FC<Props> = (props) => {
                 className={classes.button}
                 disableRipple
                 aria-label="Display all tags"
-                size="large">
+                size="large"
+              >
                 <MoreHoriz />
               </IconButton>
             </Grid>

@@ -173,29 +173,32 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
 
     const { toggleGroupByTag, isGroupedByTag, isLargeAccount } = props;
 
-    return <>
-      <div id="groupByDescription" className="visually-hidden">
-        {isGroupedByTag
-          ? 'group by tag is currently enabled'
-          : 'group by tag is currently disabled'}
-      </div>
-      <Tooltip
-        placement="top-end"
-        title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
-      >
-        <IconButton
-          aria-label={`Toggle group by tag`}
-          aria-describedby={'groupByDescription'}
-          onClick={toggleGroupByTag}
-          disableRipple
-          className={classes.toggleButton}
-          // Group by Tag is not available if you have a large account.
-          // See https://github.com/linode/manager/pull/6653 for more details
-          disabled={isLargeAccount}
-          size="large">
-          <GroupByTag />
-        </IconButton>
-      </Tooltip>
-    </>;
+    return (
+      <>
+        <div id="groupByDescription" className="visually-hidden">
+          {isGroupedByTag
+            ? 'group by tag is currently enabled'
+            : 'group by tag is currently disabled'}
+        </div>
+        <Tooltip
+          placement="top-end"
+          title={`${isGroupedByTag ? 'Ungroup' : 'Group'} by tag`}
+        >
+          <IconButton
+            aria-label={`Toggle group by tag`}
+            aria-describedby={'groupByDescription'}
+            onClick={toggleGroupByTag}
+            disableRipple
+            className={classes.toggleButton}
+            // Group by Tag is not available if you have a large account.
+            // See https://github.com/linode/manager/pull/6653 for more details
+            disabled={isLargeAccount}
+            size="large"
+          >
+            <GroupByTag />
+          </IconButton>
+        </Tooltip>
+      </>
+    );
   }
 );

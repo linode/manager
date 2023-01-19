@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-01-13] - v1.83.2
+
+### Fixed:
+
+- Linodes Detail Showing Past Maintenance Events
+- Incorrect Linode Plan tab selection on Linode Create
+- Inability to save changes to NodeBalancer Mode selection
+- Deploying a Linode Backup to a new Linode forces a different plan size to be chosen
+
+
+## [2023-01-11] - v1.83.1
+
+### Fixed:
+- Showing past completed maintenance on Linodes
+
 ## [2023-01-09] - v1.83.0
 
 ### Added:
