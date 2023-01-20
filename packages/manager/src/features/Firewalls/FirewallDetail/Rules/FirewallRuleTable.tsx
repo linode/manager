@@ -82,9 +82,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   table: {
     backgroundColor: theme.color.border3,
   },
-  ruleList: {
-    listStyle: 'none',
-  },
   addLabelButton: {
     ...theme.applyLinkStyles,
   },
@@ -209,26 +206,36 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           Add an {capitalize(category)} Rule
         </Button>
       </div>
-      <Table style={{ tableLayout: 'auto' }}>
-        <TableHead>
+      <Table style={{ tableLayout: 'auto' }} aria-label={`${category} Rules`}>
+        <TableHead tabIndex={0}>
           <TableRow>
             <TableCell
               style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
+              id="Label"
+              tabIndex={0}
             >
               Label
             </TableCell>
             <Hidden lgDown>
-              <TableCell style={{ width: '10%' }}>Protocol</TableCell>
+              <TableCell style={{ width: '10%' }} id="Protocol" tabIndex={0}>
+                Protocol
+              </TableCell>
             </Hidden>
             <Hidden smDown>
-              <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
+              <TableCell
+                style={{ whiteSpace: 'nowrap', width: '10%' }}
+                id="Port Range"
+                tabIndex={0}
+              >
                 Port Range
               </TableCell>
-              <TableCell style={{ width: '15%' }}>
+              <TableCell style={{ width: '15%' }} id="Sources" tabIndex={0}>
                 {capitalize(addressColumnLabel)}
               </TableCell>
             </Hidden>
-            <TableCell style={{ width: '5%' }}>Action</TableCell>
+            <TableCell style={{ width: '5%' }} id="Action" tabIndex={0}>
+              Action
+            </TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -244,42 +251,34 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                   <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
                 ) : (
                   rowData.map((thisRuleRow: RuleRow, index) => (
-                    <ul
+                    <Draggable
                       key={thisRuleRow.id}
-                      role="listbox"
-                      className={classes.ruleList}
+                      draggableId={String(thisRuleRow.id)}
+                      index={index}
                     >
-                      <Draggable
-                        key={thisRuleRow.id}
-                        draggableId={String(thisRuleRow.id)}
-                        index={index}
-                      >
-                        {(provided, snapshot) => {
-                          return (
-                            <FirewallRuleTableRow
-                              isDragging={snapshot.isDragging}
-                              disabled={disabled}
-                              key={thisRuleRow.id}
-                              {...thisRuleRow}
-                              triggerCloneFirewallRule={
-                                triggerCloneFirewallRule
-                              }
-                              triggerDeleteFirewallRule={
-                                triggerDeleteFirewallRule
-                              }
-                              triggerOpenRuleDrawerForEditing={
-                                triggerOpenRuleDrawerForEditing
-                              }
-                              triggerUndo={triggerUndo}
-                              innerRef={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              aria-roledescription="Press space bar to lift the firewall"
-                            />
-                          );
-                        }}
-                      </Draggable>
-                    </ul>
+                      {(provided, snapshot) => {
+                        return (
+                          <FirewallRuleTableRow
+                            isDragging={snapshot.isDragging}
+                            disabled={disabled}
+                            key={thisRuleRow.id}
+                            {...thisRuleRow}
+                            triggerCloneFirewallRule={triggerCloneFirewallRule}
+                            triggerDeleteFirewallRule={
+                              triggerDeleteFirewallRule
+                            }
+                            triggerOpenRuleDrawerForEditing={
+                              triggerOpenRuleDrawerForEditing
+                            }
+                            triggerUndo={triggerUndo}
+                            innerRef={provided.innerRef}
+                            aria-roledescription="Press space bar to lift the firewall"
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          />
+                        );
+                      }}
+                    </Draggable>
                   ))
                 )}
                 {provided.placeholder}
@@ -346,74 +345,75 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     };
 
     return (
-      <li aria-selected="false" role="option" draggable>
-        <TableRow
-          key={id}
-          highlight={
-            // Highlight the row if it's been modified or reordered. ID is the
-            // current index, so if it doesn't match the original index we know
-            // that the rule has been moved.
-            status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
-          }
-          disabled={status === 'PENDING_DELETION' || disabled}
-          domRef={innerRef}
-          className={isDragging ? classes.dragging : ''}
-          ariaLabel={label}
-          {...rest}
-        >
-          <TableCell className={classes.labelCol}>
-            <DragIndicator className={classes.dragIcon} />
-            {label || (
+      <TableRow
+        key={id}
+        highlight={
+          // Highlight the row if it's been modified or reordered. ID is the
+          // current index, so if it doesn't match the original index we know
+          // that the rule has been moved.
+          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
+        }
+        disabled={status === 'PENDING_DELETION' || disabled}
+        domRef={innerRef}
+        className={isDragging ? classes.dragging : ''}
+        ariaLabel={label}
+        // role="rowgroup"
+        {...rest}
+      >
+        <TableCell className={classes.labelCol} scope="col">
+          <DragIndicator className={classes.dragIcon} />
+          {label || (
+            <button
+              className={classes.addLabelButton}
+              style={{ color: disabled ? 'inherit' : '' }}
+              onClick={() => triggerOpenRuleDrawerForEditing(id)}
+              disabled={disabled}
+            >
+              Add a label
+            </button>
+          )}
+        </TableCell>
+        <Hidden lgDown>
+          <TableCell scope="col">
+            {protocol}
+            <ConditionalError errors={errors} formField="protocol" />
+          </TableCell>
+        </Hidden>
+        <Hidden smDown>
+          <TableCell scope="col">
+            {ports === '1-65535' ? 'All Ports' : ports}
+            <ConditionalError errors={errors} formField="ports" />
+          </TableCell>
+          <TableCell style={{ whiteSpace: 'nowrap' }} scope="col">
+            {addresses}{' '}
+            <ConditionalError errors={errors} formField="addresses" />
+          </TableCell>
+        </Hidden>
+
+        <TableCell scope="col">
+          {capitalize(action?.toLocaleLowerCase() ?? '')}
+        </TableCell>
+        <TableCell actionCell>
+          {status !== 'NOT_MODIFIED' ? (
+            <div className={classes.undoButtonContainer}>
               <button
-                className={classes.addLabelButton}
-                style={{ color: disabled ? 'inherit' : '' }}
-                onClick={() => triggerOpenRuleDrawerForEditing(id)}
+                className={classNames({
+                  [classes.undoButton]: true,
+                  [classes.highlight]: status !== 'PENDING_DELETION',
+                })}
+                onClick={() => triggerUndo(id)}
+                aria-label="Undo change to Firewall Rule"
                 disabled={disabled}
               >
-                Add a label
+                <Undo />
               </button>
-            )}
-          </TableCell>
-          <Hidden lgDown>
-            <TableCell>
-              {protocol}
-              <ConditionalError errors={errors} formField="protocol" />
-            </TableCell>
-          </Hidden>
-          <Hidden smDown>
-            <TableCell>
-              {ports === '1-65535' ? 'All Ports' : ports}
-              <ConditionalError errors={errors} formField="ports" />
-            </TableCell>
-            <TableCell style={{ whiteSpace: 'nowrap' }}>
-              {addresses}{' '}
-              <ConditionalError errors={errors} formField="addresses" />
-            </TableCell>
-          </Hidden>
-
-          <TableCell>{capitalize(action?.toLocaleLowerCase() ?? '')}</TableCell>
-          <TableCell actionCell>
-            {status !== 'NOT_MODIFIED' ? (
-              <div className={classes.undoButtonContainer}>
-                <button
-                  className={classNames({
-                    [classes.undoButton]: true,
-                    [classes.highlight]: status !== 'PENDING_DELETION',
-                  })}
-                  onClick={() => triggerUndo(id)}
-                  aria-label="Undo change to Firewall Rule"
-                  disabled={disabled}
-                >
-                  <Undo />
-                </button>
-                <FirewallRuleActionMenu {...actionMenuProps} />
-              </div>
-            ) : (
               <FirewallRuleActionMenu {...actionMenuProps} />
-            )}
-          </TableCell>
-        </TableRow>
-      </li>
+            </div>
+          ) : (
+            <FirewallRuleActionMenu {...actionMenuProps} />
+          )}
+        </TableCell>
+      </TableRow>
     );
   }
 );
