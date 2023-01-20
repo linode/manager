@@ -125,11 +125,13 @@ const ApiAwarenessModal = (props: Props) => {
           <SafeTabPanel index={1}>
             <Typography variant="body1">
               Before running the command below, the Linode CLI needs to be
-              installed and configured on your system. See the Install and{' '}
+              installed and configured on your system. See the{' '}
               <ExternalLink
-                text="Configure the Linode CLI"
+                text="Install and Configure the Linode CLI"
                 link="https://www.linode.com/docs/products/tools/cli/guides/install/"
-                onClick={() => fireGAEvent('Click: Configure the Linode CLI')}
+                onClick={() =>
+                  fireGAEvent('Click: Install and Configure the Linode CLI')
+                }
                 hideIcon
               />{' '}
               guide for instructions. To learn more and to use the Linode CLI
