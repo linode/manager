@@ -58,7 +58,9 @@ export const DatabaseBackups = () => {
     engine,
     id,
     {},
-    { '+order': order, '+order_by': orderBy }
+    { '+order': order, '+order_by': orderBy },
+    // Enable the query if the database is done provisioning
+    database?.status !== 'provisioning'
   );
 
   const onBackup = () => {
@@ -80,6 +82,13 @@ export const DatabaseBackups = () => {
   );
 
   const renderTableBody = () => {
+    // Intentionally put this before the loading and error check so we can quickly render
+    // and empty state while the database is provisioning
+    if (backups?.results === 0 || database?.status === 'provisioning') {
+      return (
+        <TableRowEmptyState message="No backups to display." colSpan={4} />
+      );
+    }
     if (databaseError) {
       return <TableRowError message={databaseError[0].reason} colSpan={4} />;
     }
@@ -93,11 +102,6 @@ export const DatabaseBackups = () => {
           columns={4}
           rows={backups?.results ?? 7}
         />
-      );
-    }
-    if (backups?.results === 0) {
-      return (
-        <TableRowEmptyState message="No backups to display." colSpan={4} />
       );
     }
     if (backups) {

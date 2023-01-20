@@ -114,12 +114,13 @@ export const useDatabaseBackupsQuery = (
   engine: Engine,
   id: number,
   params?: any,
-  filter?: any
+  filter?: any,
+  enabled = true
 ) =>
   useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
     [`${queryKey}-backups`, id, params, filter],
     () => getDatabaseBackups(engine, id, params, filter),
-    { keepPreviousData: true }
+    { enabled, keepPreviousData: true }
   );
 
 export const getAllDatabases = () =>
