@@ -130,8 +130,8 @@ jobs:
 
       # Verify @linode/api-v4 as CommonJS
       - run: mkdir test-sdk-cjs && cd test-sdk-cjs && npm init -y && npm install ../$(ls ../ | grep "linode-api-v4-.*\.tgz")
-      - run: cp scripts/validatePackages/sdk-commonjs.js test-sdk-cjs/
-      - run: cd test-sdk-cjs && node ./sdk-commonjs.js
+      - run: cp scripts/validatePackages/sdk-commonjs.cjs test-sdk-cjs/
+      - run: cd test-sdk-cjs && node ./sdk-commonjs.cjs
 
   test-manager:
     runs-on: ubuntu-latest
