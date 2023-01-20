@@ -23,6 +23,7 @@ import {
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
@@ -142,7 +143,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     !_isLargeAccount
   );
 
-  const { searchAPI } = useAPISearch();
+  const { searchAPI } = useAPISearch(!isNilOrEmpty(query));
 
   const _searchAPI = React.useRef(
     debounce(500, false, (_searchText: string) => {

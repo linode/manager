@@ -87,7 +87,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
 
-  const { data: imagesData } = useAllImagesQuery();
+  const { data: imagesData } = useAllImagesQuery({}, {}, open);
   const images = listToItemsByID(imagesData ?? []);
 
   const { data: profile } = useProfile();

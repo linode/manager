@@ -27,9 +27,9 @@ interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
 }
 
-export const useAPISearch = (): Search => {
+export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
-  const { data: _images } = useAllImagesQuery({}, {});
+  const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
 
   const images = listToItemsByID(_images ?? []);
 

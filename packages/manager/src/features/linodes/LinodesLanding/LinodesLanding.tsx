@@ -20,9 +20,6 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
-import withImages, {
-  DefaultProps as ImagesProps,
-} from 'src/containers/images.container';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
@@ -86,7 +83,6 @@ export interface Props {
 }
 
 type CombinedProps = Props &
-  ImagesProps &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -201,8 +197,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      imagesError,
-      imagesLoading,
       linodesRequestError,
       linodesRequestLoading,
       linodesCount,
@@ -232,7 +226,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       openDialog: this.openDialog,
     };
 
-    if (imagesError || linodesRequestError) {
+    if (linodesRequestError) {
       let errorText: string | JSX.Element =
         linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
 
@@ -257,7 +251,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (linodesRequestLoading || imagesLoading) {
+    if (linodesRequestLoading) {
       return <CircleProgress />;
     }
 
@@ -562,7 +556,6 @@ export const enhanced = compose<CombinedProps, Props>(
   setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
-  withImages,
   styled,
   withFeatureFlagConsumer
 );

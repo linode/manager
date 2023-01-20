@@ -9,24 +9,25 @@ import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
-import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendSearchBarUsedEvent } from 'src/utilities/ga';
-import { debounce } from 'throttle-debounce';
-import styled, { StyleProps } from './SearchBar.styles';
-import SearchSuggestion from './SearchSuggestion';
+import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllImagesQuery } from 'src/queries/images';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllVolumesQuery } from 'src/queries/volumes';
-import { useAllImagesQuery } from 'src/queries/images';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendSearchBarUsedEvent } from 'src/utilities/ga';
+import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
+import { debounce } from 'throttle-debounce';
+import styled, { StyleProps } from './SearchBar.styles';
+import SearchSuggestion from './SearchSuggestion';
 
 type CombinedProps = WithTypesProps &
   SearchProps &
@@ -110,7 +111,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     shouldMakeRequests
   );
 
-  const { searchAPI } = useAPISearch();
+  const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
 
   const _searchAPI = React.useRef(
     debounce(500, false, (_searchText: string) => {
