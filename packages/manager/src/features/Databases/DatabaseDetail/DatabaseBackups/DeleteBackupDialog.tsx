@@ -1,16 +1,12 @@
 import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import usePreferences from 'src/hooks/usePreferences';
 import { useDeleteBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 
 interface Props {
   open: boolean;
@@ -20,11 +16,8 @@ interface Props {
 }
 
 export const DeleteBackupDialog = (props: Props) => {
-  const { preferences } = usePreferences();
   const { database, backup, onClose, open } = props;
   const { enqueueSnackbar } = useSnackbar();
-
-  const [confirmationText, setConfirmationText] = React.useState('');
 
   const {
     mutateAsync: manualDelete,
@@ -41,37 +34,21 @@ export const DeleteBackupDialog = (props: Props) => {
     });
   };
 
-  React.useEffect(() => {
-    if (open) {
-      setConfirmationText('');
-    }
-  }, [open]);
-
-  const actions = (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={handleDeleteBackup}
-        disabled={
-          preferences?.type_to_confirm !== false &&
-          confirmationText !== formatDate(backup.created)
-        }
-        loading={isLoading}
-      >
-        Delete Backup
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
-    <ConfirmationDialog
+    <TypeToConfirmDialog
       title={`Delete Manual Backup ${formatDate(backup.created)}`}
+      entity={{ type: 'Database Backup', label: formatDate(backup.created) }}
+      confirmationText={
+        <span>
+          To confirm manual backup deletion, type the date of the manual backup
+          (<strong>{formatDate(backup.created)}</strong>) from the{' '}
+          <strong>{database.label}</strong> database in the field below.
+        </span>
+      }
       open={open}
+      loading={isLoading}
       onClose={onClose}
-      actions={actions}
+      onClick={handleDeleteBackup}
       error={
         error
           ? getAPIErrorOrDefault(error, 'Unable to delete this backup.')[0]
@@ -86,20 +63,6 @@ export const DeleteBackupDialog = (props: Props) => {
           manual backup frees up space that counts toward the limit of 3.
         </Typography>
       </Notice>
-      <TypeToConfirm
-        confirmationText={
-          <span>
-            To confirm deletion, type the date/time of the manual backup (
-            <strong>{formatDate(backup.created)}</strong>) from (
-            <strong>{database.label}</strong>) in the field below.
-          </span>
-        }
-        onChange={(input) => setConfirmationText(input)}
-        value={confirmationText}
-        label={`Manual backup date from ${database.label}`}
-        visible={preferences?.type_to_confirm}
-        placeholder={formatDate(backup.created)}
-      />
-    </ConfirmationDialog>
+    </TypeToConfirmDialog>
   );
 };

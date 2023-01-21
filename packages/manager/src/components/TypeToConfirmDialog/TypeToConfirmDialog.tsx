@@ -10,7 +10,7 @@ import { TypeToConfirmProps } from 'src/components/TypeToConfirm';
 import { APIError } from '@linode/api-v4/lib/types';
 
 interface EntityInfo {
-  type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket';
+  type: 'Linode' | 'Volume' | 'NodeBalancer' | 'Bucket' | 'Database Backup';
   label: string | undefined;
 }
 
@@ -21,6 +21,10 @@ interface Props {
   confirmationText?: string | JSX.Element;
   errors?: APIError[] | undefined;
   onClick: () => void;
+}
+
+interface TypeToConfirmDialogData {
+  labelPrefix: string;
 }
 
 type CombinedProps = Props &
@@ -40,6 +44,27 @@ const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
     errors,
     typographyStyle,
   } = props;
+
+  const TypeToConfirmDialogMap: Record<
+    EntityInfo['type'],
+    TypeToConfirmDialogData
+  > = {
+    Linode: {
+      labelPrefix: 'Name',
+    },
+    Volume: {
+      labelPrefix: 'Name',
+    },
+    NodeBalancer: {
+      labelPrefix: 'Name',
+    },
+    Bucket: {
+      labelPrefix: 'Label',
+    },
+    'Database Backup': {
+      labelPrefix: 'Date',
+    },
+  };
 
   const [confirmText, setConfirmText] = React.useState('');
 
@@ -82,14 +107,17 @@ const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
     >
       {children}
       <TypeToConfirm
-        label={`${entity.type} ${entity.type !== 'Bucket' ? 'Label' : 'Name'}`}
+        label={`${entity.type} ${
+          TypeToConfirmDialogMap[entity.type].labelPrefix
+        }`}
         confirmationText={
           confirmationText ? (
             confirmationText
           ) : (
             <span>
-              To confirm deletion, type the name of the {entity.type} (
-              <b>{entity.label}</b>) in the field below:
+              To confirm deletion, type the{' '}
+              {TypeToConfirmDialogMap[entity.type].labelPrefix.toLowerCase()} of
+              the {entity.type} (<b>{entity.label}</b>) in the field below:
             </span>
           )
         }

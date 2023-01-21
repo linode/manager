@@ -7,16 +7,8 @@ export const backupTypeMap: Record<DatabaseBackup['type'], string> = {
 
 export const generateManualBackupLabel = (): string => {
   const currDate = new Date();
-  return (
-    'Manual' +
-    currDate.getFullYear() +
-    +(currDate.getMonth() + 1) +
-    +currDate.getDate() +
-    'H' +
-    currDate.getHours() +
-    'M' +
-    +currDate.getMinutes() +
-    'S' +
-    +currDate.getSeconds()
-  );
+
+  return `Manual${currDate.getFullYear()}${
+    currDate.getMonth() + 1
+  }${currDate.getDate()}H${currDate.getHours()}M${currDate.getMinutes()}S${currDate.getSeconds()}`;
 };
