@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -8,24 +9,39 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
 import { makeStyles } from 'src/components/core/styles';
 import Tabs from 'src/components/core/ReachTabs';
 import TabPanels from 'src/components/core/ReachTabPanels';
-
 import { sendEvent } from 'src/utilities/ga';
 
 import CodeBlock from '../CodeBlock';
 
 const useStyles = makeStyles(() => ({
+  cancelButtonStyles: {
+    justifyContent: 'right',
+    paddingRight: '4px',
+  },
   guides: {
     marginTop: 16,
+  },
+  modalIntroTypoClass: {
+    paddingTop: '16px',
   },
   modalContent: {
     overflowX: 'hidden',
   },
+  tabsStyles: {
+    marginTop: '14px',
+  },
+  tabPanelStyles: {
+    paddingBottom: '24px',
+    paddingTop: '16px',
+  },
+  actionPanelStyles: {
+    marginTop: '0px',
+    paddingTop: '4px',
+  },
 }));
-
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -40,7 +56,6 @@ const fireGAEvent = (action: string) => {
     category: 'API CLI Awareness Contextual Help',
   });
 };
-
 const ApiAwarenessModal = (props: Props) => {
   const { isOpen, label, onClose, route } = props;
 
@@ -101,9 +116,8 @@ const ApiAwarenessModal = (props: Props) => {
       open={isOpen}
       onClose={onClose}
       maxWidth={'sm'}
-      fullHeight
     >
-      <Typography variant="body1">
+      <Typography variant="body1" className={classes.modalIntroTypoClass}>
         You&#39;ll first need to{' '}
         <ExternalLink
           onClick={() => fireGAEvent('Click: Creatre API Access Token Link')}
@@ -179,9 +193,10 @@ const ApiAwarenessModal = (props: Props) => {
         </Typography>
       </Notice>
 
-      <ActionsPanel>
+      <ActionsPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
+          className={classes.cancelButtonStyles}
           onClick={onClose}
           data-testid="close-button"
         >
