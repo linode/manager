@@ -803,7 +803,7 @@ export class LinodeCreate extends React.PureComponent<
                 onClose={handleShowApiAwarenessModal}
                 route={this.props.match.url}
                 label={this.props.label}
-                builtPayload={this.getPayload}
+                payLoad={this.getPayload()}
               />
             </div>
           </Box>

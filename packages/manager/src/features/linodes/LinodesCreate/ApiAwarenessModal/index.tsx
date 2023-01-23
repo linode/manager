@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/ban-types */
 import React from 'react';
-
+import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/Dialog';
@@ -22,6 +21,9 @@ const useStyles = makeStyles(() => ({
   guides: {
     marginTop: 16,
   },
+  modalContent: {
+    overflowX: 'hidden',
+  },
 }));
 
 export interface Props {
@@ -29,7 +31,7 @@ export interface Props {
   onClose: () => void;
   label: string;
   route: string;
-  builtPayload: () => Object;
+  payLoad: CreateLinodeRequest;
 }
 
 const fireGAEvent = (action: string) => {
@@ -40,9 +42,37 @@ const fireGAEvent = (action: string) => {
 };
 
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, label, onClose, route, builtPayload } = props;
+  const { isOpen, label, onClose, route } = props;
 
   const classes = useStyles();
+
+  const curlCommand = `curl -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -X POST -d '{
+    "image": "linode/debian11",
+    "region": "us-southeast",
+    "type": "g6-nanode-1",
+    "label": "debian-us-southeast-001",
+    "tags": [],
+    "root_pass": "asdfasdfasdfasdf",
+    "authorized_users": [],
+    "booted": true,
+    "backups_enabled": false,
+    "private_ip": false
+  }' https://api.linode.com/v4/linode/instances`;
+
+  const cliCommand = `linode-cli linodes create 
+  --image linode/debian11 
+  --region us-central 
+  --type g6-nanode-1 
+  --label debian-us-central 
+  --tags 
+  --root_pass asd 
+  --authorized_users 
+  --booted true 
+  --backups_enabled false 
+  --backup_id undefined 
+  --private_ip false 
+  --stackscript_id undefined 
+  --stackscript_data undefined`;
 
   const tabs = [
     {
@@ -66,6 +96,7 @@ const ApiAwarenessModal = (props: Props) => {
 
   return (
     <Dialog
+      className={classes.modalContent}
       title={`Create Linode ${label} using command line`}
       open={isOpen}
       onClose={onClose}
@@ -101,10 +132,10 @@ const ApiAwarenessModal = (props: Props) => {
         <TabLinkList tabs={tabs} />
         <TabPanels>
           <SafeTabPanel index={0}>
-            <CodeBlock builtPayload={builtPayload} />
+            <CodeBlock command={curlCommand} language={'curl'} />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            Code block CLI component WIP...
+            <CodeBlock command={cliCommand} language={'bash'} />
             <Typography className={classes.guides} variant="h2">
               Guides
             </Typography>

@@ -7,11 +7,11 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import ApiAwarenessModal, { Props } from '.';
 
 const defaultProps: Props = {
+  payLoad: {},
   isOpen: false,
   onClose: jest.fn(),
   label: 'debian-us-central',
   route: '',
-  // builtPayload: () => Object;
 };
 
 const renderComponent = (overrideProps?: Partial<Props>) => {
