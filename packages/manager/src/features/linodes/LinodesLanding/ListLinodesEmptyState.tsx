@@ -84,7 +84,10 @@ const guideLinks = (
 
 const guidesMoreLinkText = 'Check out all our Docs';
 const appsMoreLinkText = 'See all Marketplace apps';
-const youtubeMoreLinkText = 'View the complete playlist';
+const youtubeMoreLinkText = 'View our YouTube channel';
+
+// retaining the old label for tracking
+const youtubeMoreLinkLabel = 'View the complete playlist';
 
 const youtubeLinks = (
   <List>
@@ -156,12 +159,12 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             <AppsSection />
           </LinksSubSection>
           <LinksSubSection
-            title="Getting Started Playlist"
+            title="Video Playlist"
             icon={<YoutubeIcon />}
             external
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(youtubeMoreLinkText)}
+                onClick={getLinkOnClick(youtubeMoreLinkLabel)}
                 to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
                 {...props}
               >
