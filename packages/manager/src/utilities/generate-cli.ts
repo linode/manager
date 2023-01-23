@@ -1,7 +1,11 @@
 type JSONFieldToArray = [string, unknown];
 
 const convertJSONFieldToCLIArg = ([key, value]: JSONFieldToArray) => {
-  return `--${key} ${value}`;
+  let valueAsString = value;
+  if (typeof value === 'object') {
+    valueAsString = `'${JSON.stringify(value).replace(':', ': ')}'`;
+  }
+  return `--${key} ${valueAsString}`;
 };
 
 export const generateCLICommand = (data: {}) => {
