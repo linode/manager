@@ -11,6 +11,7 @@ import {
 import DragIndicator from 'src/assets/icons/drag-indicator.svg';
 import Undo from 'src/assets/icons/undo.svg';
 import Button from 'src/components/Button';
+import Grid from 'src/components/Grid';
 import Hidden from 'src/components/core/Hidden';
 import {
   makeStyles,
@@ -18,15 +19,8 @@ import {
   useMediaQuery,
   useTheme,
 } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableFooter from 'src/components/core/TableFooter';
-import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import {
   generateAddressesLabel,
   generateRuleLabel,
@@ -79,8 +73,32 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 6,
     whiteSpace: 'nowrap',
   },
-  table: {
+  ruleList: {
     backgroundColor: theme.color.border3,
+    whiteSpace: 'nowrap',
+    listStyle: 'none',
+    paddingLeft: 0,
+    width: '100%',
+  },
+  ruleHeaderRow: {
+    marginTop: '5px',
+    background: '#F9FAFA',
+    color: '#878F91',
+    fontWeight: 'bold',
+    height: '40px',
+  },
+  // ruleHeaderCell: {
+  //   border: '1px solid #F4F5F6',
+  // },
+  ruleRow: {
+    margin: 0,
+    background: '#FFFFFF',
+    borderBottom: '1px solid #F4F5F6',
+    alignItems: 'center',
+    rowSpacing: 0.5,
+  },
+  ruleCell: {
+    margin: 0,
   },
   addLabelButton: {
     ...theme.applyLinkStyles,
@@ -123,6 +141,7 @@ interface RuleRow {
   ports: string;
   addresses: string;
   id: number;
+  role?: string;
   status: RuleStatus;
   errors?: FirewallRuleError[];
   originalIndex: number;
@@ -206,95 +225,120 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
           Add an {capitalize(category)} Rule
         </Button>
       </div>
-      <Table style={{ tableLayout: 'auto' }} aria-label={`${category} Rules`}>
-        <TableHead tabIndex={0}>
-          <TableRow>
-            <TableCell
-              style={{ paddingLeft: 27, width: xsDown ? '50%' : '30%' }}
-              id="Label"
-              tabIndex={0}
+      <Grid
+        container
+        aria-label={`${category} Rules List`}
+        tabIndex={0}
+        style={{ margin: 0 }}
+      >
+        <Grid
+          container
+          className={classes.ruleHeaderRow}
+          aria-label={`${category} Rules List Headers`}
+          tabIndex={0}
+        >
+          <Grid
+            item
+            style={{
+              paddingLeft: 27,
+              width: xsDown ? '50%' : '30%',
+              border: '1px solid #F4F5F6',
+            }}
+          >
+            Label
+          </Grid>
+          <Hidden lgDown>
+            <Grid item style={{ width: '10%', border: '1px solid #F4F5F6' }}>
+              Protocol
+            </Grid>
+          </Hidden>
+          <Hidden smDown>
+            <Grid
+              item
+              style={{
+                whiteSpace: 'nowrap',
+                width: '10%',
+                border: '1px solid #F4F5F6',
+              }}
             >
-              Label
-            </TableCell>
-            <Hidden lgDown>
-              <TableCell style={{ width: '10%' }} id="Protocol" tabIndex={0}>
-                Protocol
-              </TableCell>
-            </Hidden>
-            <Hidden smDown>
-              <TableCell
-                style={{ whiteSpace: 'nowrap', width: '10%' }}
-                id="Port Range"
-                tabIndex={0}
-              >
-                Port Range
-              </TableCell>
-              <TableCell style={{ width: '15%' }} id="Sources" tabIndex={0}>
-                {capitalize(addressColumnLabel)}
-              </TableCell>
-            </Hidden>
-            <TableCell style={{ width: '5%' }} id="Action" tabIndex={0}>
-              Action
-            </TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable" isDropDisabled={disabled}>
-            {(provided) => (
-              <TableBody
-                {...provided.droppableProps}
-                className={classes.table}
-                ref={provided.innerRef}
-              >
-                {rowData.length === 0 ? (
-                  <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
-                ) : (
-                  rowData.map((thisRuleRow: RuleRow, index) => (
-                    <Draggable
-                      key={thisRuleRow.id}
-                      draggableId={String(thisRuleRow.id)}
-                      index={index}
-                    >
-                      {(provided, snapshot) => {
-                        return (
-                          <FirewallRuleTableRow
-                            isDragging={snapshot.isDragging}
-                            disabled={disabled}
+              Port Range
+            </Grid>
+            <Grid item style={{ width: '15%', border: '1px solid #F4F5F6' }}>
+              {capitalize(addressColumnLabel)}
+            </Grid>
+          </Hidden>
+          <Grid item style={{ width: '5%', border: '1px solid #F4F5F6' }}>
+            Action
+          </Grid>
+        </Grid>
+        <Grid container>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable" isDropDisabled={disabled}>
+              {(provided) => (
+                <ul
+                  className={classes.ruleList}
+                  ref={provided.innerRef}
+                  {...provided.droppableProps}
+                >
+                  {rowData.length === 0 ? (
+                    <Grid container data-testid={'table-row-empty'}>
+                      <Grid item>{zeroRulesMessage}</Grid>
+                    </Grid>
+                  ) : (
+                    rowData.map((thisRuleRow: RuleRow, index) => (
+                      <Draggable
+                        key={thisRuleRow.id}
+                        draggableId={String(thisRuleRow.id)}
+                        index={index}
+                      >
+                        {(provided, snapshot) => (
+                          <li
                             key={thisRuleRow.id}
-                            {...thisRuleRow}
-                            triggerCloneFirewallRule={triggerCloneFirewallRule}
-                            triggerDeleteFirewallRule={
-                              triggerDeleteFirewallRule
-                            }
-                            triggerOpenRuleDrawerForEditing={
-                              triggerOpenRuleDrawerForEditing
-                            }
-                            triggerUndo={triggerUndo}
-                            innerRef={provided.innerRef}
-                            aria-roledescription="Press space bar to lift the firewall"
+                            role="option"
+                            ref={provided.innerRef}
+                            aria-label={thisRuleRow.label}
+                            aria-selected={false}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                          />
-                        );
-                      }}
-                    </Draggable>
-                  ))
-                )}
-                {provided.placeholder}
-              </TableBody>
-            )}
-          </Droppable>
-        </DragDropContext>
-        <TableFooter className={classes.footer}>
-          <PolicyRow
-            category={category}
-            policy={policy}
-            disabled={disabled}
-            handlePolicyChange={onPolicyChange}
-          />
-        </TableFooter>
-      </Table>
+                          >
+                            <FirewallRuleTableRow
+                              isDragging={snapshot.isDragging}
+                              disabled={disabled}
+                              triggerCloneFirewallRule={
+                                triggerCloneFirewallRule
+                              }
+                              triggerDeleteFirewallRule={
+                                triggerDeleteFirewallRule
+                              }
+                              triggerOpenRuleDrawerForEditing={
+                                triggerOpenRuleDrawerForEditing
+                              }
+                              triggerUndo={triggerUndo}
+                              innerRef={provided.innerRef}
+                              {...thisRuleRow}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            />
+                          </li>
+                        )}
+                      </Draggable>
+                    ))
+                  )}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </DragDropContext>
+          <Grid container>
+            <PolicyRow
+              category={category}
+              policy={policy}
+              disabled={disabled}
+              handlePolicyChange={onPolicyChange}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
     </>
   );
 };
@@ -309,6 +353,7 @@ type FirewallRuleTableRowProps = RuleRow &
     innerRef: any;
     isDragging: boolean;
     disabled: boolean;
+    highlight?: boolean | undefined;
   };
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
@@ -319,7 +364,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       id,
       action,
       label,
-      description,
+      // description,
       protocol,
       ports,
       addresses,
@@ -329,11 +374,11 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
       errors,
-      innerRef,
-      isDragging,
+      // innerRef,
+      // isDragging,
       disabled,
-      originalIndex,
-      ...rest
+      // originalIndex,
+      // ...rest
     } = props;
 
     const actionMenuProps = {
@@ -345,55 +390,83 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
     };
 
     return (
-      <TableRow
+      <Grid
+        container
         key={id}
-        highlight={
-          // Highlight the row if it's been modified or reordered. ID is the
-          // current index, so if it doesn't match the original index we know
-          // that the rule has been moved.
-          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
-        }
-        disabled={status === 'PENDING_DELETION' || disabled}
-        domRef={innerRef}
-        className={isDragging ? classes.dragging : ''}
-        ariaLabel={label}
-        // role="rowgroup"
-        {...rest}
+        // highlight={
+        //   // Highlight the row if it's been modified or reordered. ID is the
+        //   // current index, so if it doesn't match the original index we know
+        //   // that the rule has been moved.
+        //   status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
+        // }
+        // disabled={status === 'PENDING_DELETION' || disabled}
+        // domRef={innerRef}
+        className={classes.ruleRow}
+        aria-label={label}
+        role="option"
       >
-        <TableCell className={classes.labelCol} scope="col">
-          <DragIndicator className={classes.dragIcon} />
+        <Grid
+          item
+          style={{ paddingLeft: 27, width: 'xsDown' ? '20%' : '15%' }}
+          aria-label={`Label: ${label}`}
+        >
+          <DragIndicator
+            className={classes.dragIcon}
+            aria-label="Drag indicator icon"
+          />
           {label || (
             <button
               className={classes.addLabelButton}
-              style={{ color: disabled ? 'inherit' : '' }}
+              style={{
+                color: disabled ? 'inherit' : '',
+              }}
               onClick={() => triggerOpenRuleDrawerForEditing(id)}
               disabled={disabled}
             >
               Add a label
             </button>
-          )}
-        </TableCell>
+          )}{' '}
+        </Grid>
         <Hidden lgDown>
-          <TableCell scope="col">
+          <Grid
+            item
+            style={{ width: '10%' }}
+            tabIndex={0}
+            aria-label={`Protocol: ${protocol}`}
+          >
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
-          </TableCell>
+          </Grid>
         </Hidden>
         <Hidden smDown>
-          <TableCell scope="col">
+          <Grid
+            item
+            style={{ whiteSpace: 'nowrap', width: '10%' }}
+            tabIndex={0}
+            aria-label={`Ports: ${ports}`}
+          >
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
-          </TableCell>
-          <TableCell style={{ whiteSpace: 'nowrap' }} scope="col">
+          </Grid>
+          <Grid
+            item
+            style={{ whiteSpace: 'nowrap', width: '15%' }}
+            tabIndex={0}
+            aria-label={`Addresses: ${addresses}`}
+          >
             {addresses}{' '}
             <ConditionalError errors={errors} formField="addresses" />
-          </TableCell>
+          </Grid>
         </Hidden>
-
-        <TableCell scope="col">
+        <Grid
+          item
+          style={{ width: '5%' }}
+          tabIndex={0}
+          aria-label={`Action: ${action}`}
+        >
           {capitalize(action?.toLocaleLowerCase() ?? '')}
-        </TableCell>
-        <TableCell actionCell>
+        </Grid>
+        <Grid item>
           {status !== 'NOT_MODIFIED' ? (
             <div className={classes.undoButtonContainer}>
               <button
@@ -412,8 +485,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           ) : (
             <FirewallRuleActionMenu {...actionMenuProps} />
           )}
-        </TableCell>
-      </TableRow>
+        </Grid>
+      </Grid>
     );
   }
 );
@@ -437,9 +510,9 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   // Calculate how many cells the text should span so that the Select lines up
   // with the Action column
   const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  // const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
-  const colSpan = xsDown ? 1 : mdDown ? 3 : 4;
+  // const colSpan = xsDown ? 1 : mdDown ? 3 : 4;
 
   const helperText = mdDown ? (
     <strong>{capitalize(category)} policy:</strong>
@@ -451,11 +524,11 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   );
 
   return (
-    <TableRow className={classes.policyRow}>
-      <TableCell colSpan={colSpan} className={classes.policyText}>
+    <Grid container className={classes.policyRow}>
+      <Grid item className={classes.policyText}>
         {helperText}
-      </TableCell>
-      <TableCell colSpan={1} className={classes.policySelect}>
+      </Grid>
+      <Grid item className={classes.policySelect}>
         <Select
           className={classes.policySelectInner}
           label={`${category} policy`}
@@ -471,9 +544,8 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
             handlePolicyChange(selected.value)
           }
         />
-      </TableCell>
-      <TableCell />
-    </TableRow>
+      </Grid>
+    </Grid>
   );
 });
 
