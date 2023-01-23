@@ -9,6 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import Notice from 'src/components/Notice';
+import classNames from 'classnames';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
@@ -146,7 +147,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
         <Grid container>
-          <div className={className ? className : classes.dialogContent}>
+          <div className={classNames(classes.dialogContent, className)}>
             {error && <Notice text={error} error />}
             {children}
           </div>

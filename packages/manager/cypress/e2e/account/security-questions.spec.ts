@@ -52,9 +52,11 @@ const editQuestion = (questionNumber: number) => {
   getSecurityQuestion(questionNumber).within(() => {
     ui.button
       .findByTitle('Edit')
+      .as('editbtn')
       .should('be.visible')
-      .should('be.enabled')
-      .click({ scrollBehavior: 'center' });
+      .should('be.enabled');
+
+    cy.get('@editbtn').click({ scrollBehavior: 'center' });
   });
 };
 

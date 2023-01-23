@@ -1,19 +1,18 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { volumeFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { interceptOnce } from 'cypress/support/ui/common';
-import { createMockLinodeList } from '../../support/api/linodes';
-import { clickVolumeActionMenu } from '../../support/api/volumes';
+import { interceptOnce } from 'support/ui/common';
+import { createMockLinodeList } from 'support/api/linodes';
 import {
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
-import { randomLabel } from 'cypress/support/util/random';
-import { selectRegionString } from '../../support/ui/constants';
-import { assertToast } from '../../support/ui/events';
+} from 'support/helpers';
+import { randomLabel } from 'support/util/random';
+import { selectRegionString } from 'support/ui/constants';
+import { ui } from 'support/ui';
 
 const region = 'Newark, NJ';
 
@@ -26,11 +25,13 @@ const validateBasicVolume = (
   containsVisible('Volume Configuration');
   cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
   getClick('[data-qa-close-drawer="true"]');
-  cy.get('[aria-label="View Details"]').within(() => {
-    getVisible(`[data-qa-volume-cell-label="${volLabel}"]`);
-    containsVisible(region);
-    containsVisible(attached);
-  });
+
+  cy.findByText(volLabel)
+    .closest('tr')
+    .within(() => {
+      cy.findByText(region).should('be.visible');
+      cy.findByText(attached).should('be.visible');
+    });
 };
 
 const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
@@ -104,8 +105,13 @@ describe('volumes', () => {
     fbtClick('Create Volume');
     cy.wait('@createVolume');
     validateBasicVolume(volumeLabel, volumeId);
-    clickVolumeActionMenu(volumeLabel);
-    getVisible('[data-qa-action-menu-item="Delete"]');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Volume ${volumeLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Delete').should('be.visible');
   });
 
   it('creates volume from linode details', () => {
@@ -176,13 +182,31 @@ describe('volumes', () => {
     }).as('volumeDetached');
     containsVisible(attachedVolume.linode_label);
     containsVisible(attachedVolumeLabel);
-    clickVolumeActionMenu(attachedVolumeLabel);
-    // getVisible('[data-qa-action-menu-item="Detach"]')
-    fbtClick('Detach');
-    fbtClick('Detach Volume');
-    cy.contains(`Detach Volume ${attachedVolumeLabel}?`);
-    getClick('[data-qa-confirm="true"]');
+
+    ui.actionMenu
+      .findByTitle(`Action menu for Volume ${attachedVolumeLabel}`)
+      .should('be.visible')
+      .click();
+
+    ui.actionMenuItem.findByTitle('Detach').click();
+
+    ui.dialog
+      .findByTitle(`Detach Volume ${attachedVolumeLabel}?`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByLabelText('Volume Label')
+          .should('be.visible')
+          .click()
+          .type(attachedVolumeLabel);
+
+        ui.button
+          .findByTitle('Detach')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
     cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
-    assertToast('Volume detachment started');
+    ui.toast.assertMessage('Volume detachment started');
   });
 });

@@ -40,7 +40,21 @@ const linodeLabel = (number) => {
 const deleteLinodeFromActionMenu = (linodeLabel) => {
   getClick(`[aria-label="Action menu for Linode ${linodeLabel}"]`);
   cy.get(`[data-qa-action-menu-item="Delete"]`).filter(`:visible`).click();
-  cy.findAllByRole('button').filter(':contains("Delete")').click();
+  ui.dialog
+    .findByTitle(`Delete ${linodeLabel}?`)
+    .should('be.visible')
+    .within(() => {
+      cy.findByLabelText('Linode Label')
+        .should('be.visible')
+        .click()
+        .type(linodeLabel);
+
+      ui.buttonGroup
+        .findButtonByTitle('Delete')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+    });
   cy.wait('@deleteLinode').its('response.statusCode').should('eq', 200);
 };
 

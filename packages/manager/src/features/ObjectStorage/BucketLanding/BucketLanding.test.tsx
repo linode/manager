@@ -5,7 +5,6 @@ import {
   objectStorageBucketFactory,
   objectStorageClusterFactory,
 } from 'src/factories/objectStorage';
-import { preferencesFactory } from 'src/factories/preferences';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { queryPresets } from 'src/queries/base';
@@ -19,9 +18,6 @@ const props: CombinedProps = {
   isRestrictedUser: false,
   openBucketDrawer: mockOpenBucketDrawer,
   closeBucketDrawer: mockCloseBucketDrawer,
-  getUserPreferences: jest.fn(),
-  updateUserPreferences: jest.fn(),
-  preferences: preferencesFactory.build(),
 };
 
 const queryClient = new QueryClient({

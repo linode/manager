@@ -8,10 +8,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -21,9 +18,11 @@ import EntityTable, {
 } from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
+import Notice from 'src/components/Notice';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TransferDisplay from 'src/components/TransferDisplay';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference,
@@ -272,44 +271,33 @@ export class NodeBalancersLanding extends React.Component<
           }}
         </PreferenceToggle>
         <TransferDisplay spacingTop={18} />
-        <ConfirmationDialog
-          onClose={this.closeConfirmationDialog}
-          title={`Delete NodeBalancer ${this.state.selectedNodeBalancerLabel}?`}
-          error={(this.state.deleteConfirmDialog.errors || [])
-            .map((e) => e.reason)
-            .join(',')}
-          actions={this.renderConfirmationDialogActions}
+        <TypeToConfirmDialog
+          title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
+          entity={{
+            type: 'NodeBalancer',
+            label: this.state.selectedNodeBalancerLabel,
+          }}
           open={deleteConfirmAlertOpen}
+          loading={this.state.deleteConfirmDialog.submitting}
+          errors={this.state.deleteConfirmDialog.errors}
+          onClose={this.closeConfirmationDialog}
+          onClick={this.onSubmitDelete}
+          typographyStyle={{ marginTop: '20px' }}
         >
-          <Typography>
-            Are you sure you want to delete this NodeBalancer?
+          <Notice warning>
+            <Typography style={{ fontSize: '0.875rem' }}>
+              Deleting this NodeBalancer is permanent and can’t be undone.
+            </Typography>
+          </Notice>
+          <Typography variant="body1">
+            Traffic will no longer be routed through this NodeBalancer. Please
+            check your DNS settings and either provide the IP address of another
+            active NodeBalancer, or route traffic directly to your Linode.
           </Typography>
-        </ConfirmationDialog>
+        </TypeToConfirmDialog>
       </>
     );
   }
-
-  renderConfirmationDialogActions = () => {
-    return (
-      <ActionsPanel style={{ padding: 0 }}>
-        <Button
-          buttonType="secondary"
-          onClick={this.closeConfirmationDialog}
-          data-qa-cancel-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.onSubmitDelete}
-          loading={this.state.deleteConfirmDialog.submitting}
-          data-qa-confirm-cancel
-        >
-          Delete NodeBalancer
-        </Button>
-      </ActionsPanel>
-    );
-  };
 
   closeConfirmationDialog = () =>
     this.setState({
