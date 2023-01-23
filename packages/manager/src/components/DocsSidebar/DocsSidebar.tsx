@@ -117,7 +117,11 @@ class DocsSidebar extends React.Component<CombinedProps, State> {
           ))}
         </Grid>
         <Hidden mdUp>
-          <IconButton onClick={this.toggleHelp} className={classes.toggleButton} size="large">
+          <IconButton
+            onClick={this.toggleHelp}
+            className={classes.toggleButton}
+            size="large"
+          >
             <HelpOutline />
           </IconButton>
         </Hidden>

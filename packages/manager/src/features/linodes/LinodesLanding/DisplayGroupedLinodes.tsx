@@ -130,120 +130,124 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
   }, 0);
 
   if (display === 'grid') {
-    return <>
-      <Grid item xs={12} className={'px0'}>
-        <div className={classes.controlHeader}>
-          <div id="displayViewDescription" className="visually-hidden">
-            Currently in {linodeViewPreference} view
-          </div>
-          <Tooltip placement="top" title="List view">
-            <IconButton
-              aria-label="Toggle display"
-              aria-describedby={'displayViewDescription'}
-              onClick={toggleLinodeView}
-              disableRipple
-              className={classes.toggleButton}
-              size="large">
-              <TableView />
-            </IconButton>
-          </Tooltip>
+    return (
+      <>
+        <Grid item xs={12} className={'px0'}>
+          <div className={classes.controlHeader}>
+            <div id="displayViewDescription" className="visually-hidden">
+              Currently in {linodeViewPreference} view
+            </div>
+            <Tooltip placement="top" title="List view">
+              <IconButton
+                aria-label="Toggle display"
+                aria-describedby={'displayViewDescription'}
+                onClick={toggleLinodeView}
+                disableRipple
+                className={classes.toggleButton}
+                size="large"
+              >
+                <TableView />
+              </IconButton>
+            </Tooltip>
 
-          <div id="groupByDescription" className="visually-hidden">
-            {linodesAreGrouped
-              ? 'group by tag is currently enabled'
-              : 'group by tag is currently disabled'}
+            <div id="groupByDescription" className="visually-hidden">
+              {linodesAreGrouped
+                ? 'group by tag is currently enabled'
+                : 'group by tag is currently disabled'}
+            </div>
+            <Tooltip placement="top-end" title="Ungroup by tag">
+              <IconButton
+                aria-label={`Toggle group by tag`}
+                aria-describedby={'groupByDescription'}
+                onClick={toggleGroupLinodes}
+                disableRipple
+                className={classes.toggleButton}
+                size="large"
+              >
+                <GroupByTag />
+              </IconButton>
+            </Tooltip>
           </div>
-          <Tooltip placement="top-end" title="Ungroup by tag">
-            <IconButton
-              aria-label={`Toggle group by tag`}
-              aria-describedby={'groupByDescription'}
-              onClick={toggleGroupLinodes}
-              disableRipple
-              className={classes.toggleButton}
-              size="large">
-              <GroupByTag />
-            </IconButton>
-          </Tooltip>
-        </div>
-      </Grid>
-      {orderedGroupedLinodes.length === 0 ? (
-        <Typography style={{ textAlign: 'center' }}>
-          No items to display.
-        </Typography>
-      ) : null}
-      {orderedGroupedLinodes.map(([tag, linodes]) => {
-        return (
-          <div
-            key={tag}
-            className={classes.tagGridRow}
-            data-qa-tag-header={tag}
-          >
-            <Grid container>
-              <Grid item xs={12}>
-                <Typography
-                  variant="h2"
-                  component="h3"
-                  className={classes.tagHeader}
-                >
-                  {tag}
-                </Typography>
-              </Grid>
-            </Grid>
-            <Paginate
-              data={linodes}
-              // If there are more Linodes with maintenance than the current page size, show the minimum
-              // page size needed to show ALL Linodes with maintenance.
-              pageSize={
-                numberOfLinodesWithMaintenance > infinitePageSize
-                  ? getMinimumPageSizeForNumberOfItems(
-                      numberOfLinodesWithMaintenance
-                    )
-                  : infinitePageSize
-              }
-              pageSizeSetter={setInfinitePageSize}
+        </Grid>
+        {orderedGroupedLinodes.length === 0 ? (
+          <Typography style={{ textAlign: 'center' }}>
+            No items to display.
+          </Typography>
+        ) : null}
+        {orderedGroupedLinodes.map(([tag, linodes]) => {
+          return (
+            <div
+              key={tag}
+              className={classes.tagGridRow}
+              data-qa-tag-header={tag}
             >
-              {({
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize,
-                count,
-              }) => {
-                const finalProps = {
-                  ...rest,
+              <Grid container>
+                <Grid item xs={12}>
+                  <Typography
+                    variant="h2"
+                    component="h3"
+                    className={classes.tagHeader}
+                  >
+                    {tag}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Paginate
+                data={linodes}
+                // If there are more Linodes with maintenance than the current page size, show the minimum
+                // page size needed to show ALL Linodes with maintenance.
+                pageSize={
+                  numberOfLinodesWithMaintenance > infinitePageSize
+                    ? getMinimumPageSizeForNumberOfItems(
+                        numberOfLinodesWithMaintenance
+                      )
+                    : infinitePageSize
+                }
+                pageSizeSetter={setInfinitePageSize}
+              >
+                {({
                   data: paginatedData,
-                  pageSize,
-                  page,
-                  handlePageSizeChange,
                   handlePageChange,
-                  handleOrderChange,
-                  order,
-                  orderBy,
-                  isVLAN,
-                };
-                return (
-                  <React.Fragment>
-                    <Component {...finalProps} />
-                    <Grid item xs={12}>
-                      <PaginationFooter
-                        count={count}
-                        handlePageChange={handlePageChange}
-                        handleSizeChange={handlePageSizeChange}
-                        pageSize={pageSize}
-                        page={page}
-                        eventCategory={'linodes landing'}
-                        showAll
-                      />
-                    </Grid>
-                  </React.Fragment>
-                );
-              }}
-            </Paginate>
-          </div>
-        );
-      })}
-    </>;
+                  handlePageSizeChange,
+                  page,
+                  pageSize,
+                  count,
+                }) => {
+                  const finalProps = {
+                    ...rest,
+                    data: paginatedData,
+                    pageSize,
+                    page,
+                    handlePageSizeChange,
+                    handlePageChange,
+                    handleOrderChange,
+                    order,
+                    orderBy,
+                    isVLAN,
+                  };
+                  return (
+                    <React.Fragment>
+                      <Component {...finalProps} />
+                      <Grid item xs={12}>
+                        <PaginationFooter
+                          count={count}
+                          handlePageChange={handlePageChange}
+                          handleSizeChange={handlePageSizeChange}
+                          pageSize={pageSize}
+                          page={page}
+                          eventCategory={'linodes landing'}
+                          showAll
+                        />
+                      </Grid>
+                    </React.Fragment>
+                  );
+                }}
+              </Paginate>
+            </div>
+          );
+        })}
+      </>
+    );
   }
 
   if (display === 'list') {

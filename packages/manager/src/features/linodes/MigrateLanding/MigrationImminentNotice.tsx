@@ -15,9 +15,11 @@ type CombinedProps = Props;
 const MigrationImminentNotice: React.FC<CombinedProps> = (props) => {
   const migrationScheduledForThisLinode = !!props.notifications.find(
     (eachNotification) => {
-      return eachNotification.label.match(/migrat/i) &&
-      eachNotification.entity &&
-      eachNotification.entity.id === props.linodeID;
+      return (
+        eachNotification.label.match(/migrat/i) &&
+        eachNotification.entity &&
+        eachNotification.entity.id === props.linodeID
+      );
     }
   );
 

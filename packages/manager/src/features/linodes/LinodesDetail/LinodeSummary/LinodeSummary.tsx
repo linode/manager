@@ -193,7 +193,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
 
     return (
       <LineGraph
-        ariaLabel="Disk IO Graph"
+        ariaLabel="Disk I/O Graph"
         timezone={timezone}
         chartHeight={chartHeight}
         showToday={rangeSelection === '24'}
@@ -300,7 +300,7 @@ const LinodeSummary: React.FC<Props> = (props) => {
             </Grid>
             <Grid item className={classes.grid} xs={12}>
               <StatsPanel
-                title="Disk IO (blocks/s)"
+                title="Disk I/O (blocks/s)"
                 renderBody={renderDiskIOChart}
                 {...chartProps}
               />

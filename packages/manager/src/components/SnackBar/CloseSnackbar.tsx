@@ -29,7 +29,12 @@ const CloseSnackbar: React.FC<CombinedProps> = (props) => {
   const { classes, text, onClick } = props;
 
   return (
-    <IconButton onClick={onClick} title={text} className={classes.icon} size="large">
+    <IconButton
+      onClick={onClick}
+      title={text}
+      className={classes.icon}
+      size="large"
+    >
       <Close />
     </IconButton>
   );
