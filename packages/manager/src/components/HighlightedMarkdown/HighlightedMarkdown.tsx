@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import classNames from 'classnames';
 import * as hljs from 'highlight.js/lib/core';
 import * as hljsCurl from 'highlightjs-curl';
@@ -9,20 +8,18 @@ import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import sanitize from 'sanitize-html';
-// Register all languages we intend to use
-// This is not great. Require doesn't work in the broswer and modern TS/JS tooling
-// gets very upset.
-hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
-hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
-hljs.registerLanguage(
-  'javascript',
-  require('highlight.js/lib/languages/javascript')
-);
-hljs.registerLanguage('nginx', require('highlight.js/lib/languages/nginx'));
-hljs.registerLanguage('yaml', require('highlight.js/lib/languages/yaml'));
-hljs.registerLanguage('shell', require('highlight.js/lib/languages/shell'));
+import apache from 'highlight.js/lib/languages/apache';
+import bash from 'highlight.js/lib/languages/bash';
+import javascript from 'highlight.js/lib/languages/javascript';
+import nginx from 'highlight.js/lib/languages/nginx';
+import yaml from 'highlight.js/lib/languages/yaml';
 
+hljs.registerLanguage('apache', apache);
+hljs.registerLanguage('bash', bash);
 hljs.registerLanguage('curl', hljsCurl);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('nginx', nginx);
+hljs.registerLanguage('yaml', yaml);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

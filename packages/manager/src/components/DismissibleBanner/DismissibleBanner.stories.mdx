@@ -1,7 +1,9 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
+import Button from 'src/components/Button';
+import DismissibleBanner from './DismissibleBanner';
+import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from './DismissibleBanner';
 // import StatusBanners from 'src/features/Help/StatusBanners';
 
 <Meta
@@ -23,30 +25,57 @@ Banners appear between the top nav and page content and are a visual interruptio
 
 ### Variants
 
-- Beta: Informs users of a feature in beta and includes the [Early Adopter SLA](https://www.linode.com/legal-eatp/).
-- Marketing: Informs users of a new feature or improved service.
+Under the hood, banners use the [Notice](/docs/components-notifications-notices--success) component so they have the same variants such as:
+
+- Success: Informs users of a new feature or improved service.
 - Warning: Informs users of an impending change that will have an impact on their service(s).
 - Call to action: Primary Button or text link allows a user to take action directly from the banner.
 
 export const DismissibleBannerTemplate = (args) => {
-  const { productInformationIndicator } = args;
   return (
     <DismissibleBanner
-      productInformationIndicator={productInformationIndicator}
+      {...args}
     >
       <Typography>This is an example of a dismissible banner.</Typography>
     </DismissibleBanner>
   );
 };
 
+export const CallToActionBanner = () => {
+  return (
+    <DismissibleBanner
+      preferenceKey="cluster-v1"
+      success
+    >
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Grid item>
+          <Typography>
+            A new version of Kubernetes is available.
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button onClick={() => null} buttonType="primary">
+            Upgrade Version
+          </Button>
+        </Grid>
+      </Grid>
+    </DismissibleBanner>
+  )
+}
+
 export const StatusBannersTemplate = (args) => {
   const { message, title, status, impact, href } = args;
   return <StatusBanners {...args} />;
 };
 
-export const BetaBannerTemplate = () => {
+export const BetaBanner = () => {
     return (
-      <DismissibleBanner productInformationIndicator>
+      <DismissibleBanner preferenceKey="beta-banner" success>
         <Typography>
           Managed Database for MySQL is available in a free, open beta period
           until May 2nd, 2022. This is a beta environment and should not be
@@ -60,16 +89,33 @@ export const BetaBannerTemplate = () => {
   );
 }
 
+#### Beta Banner
+
+Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
+
+<Canvas>
+  <Story name="Beta Banner">
+    {BetaBanner.bind({})}
+  </Story>
+</Canvas>
+
+#### Call to Action Banner
+
+<Canvas>
+  <Story name="Call to Action Banner">
+    {CallToActionBanner.bind({})}
+  </Story>
+</Canvas>
+
+### Component API
+
 <Canvas>
   <Story
     name="Dismissible Banners"
-    args={{
-      productInformationIndicator: true,
-    }}
     argTypes={{
-      productInformationIndicator: {
+      preferenceKey: {
         description:
-          'Indicates whether the banner communicates information about a product, typically a new feature or improved service. If true, the left border is set to green.',
+          'String used to check if the banner has already been dismissed.',
       },
     }}
   >
@@ -77,17 +123,7 @@ export const BetaBannerTemplate = () => {
   </Story>
 </Canvas>
 
-#### Beta
-
-Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
-
-<Canvas>
-  <Story name="Beta Banners">
-    {BetaBannerTemplate.bind({})}
-  </Story>
-</Canvas>
-
-<ArgsTable story="Dismissible Banners" exclude={['className']} />
+<ArgsTable story="Dismissible Banners" include={['preferenceKey', 'children', 'options', 'text', 'success', 'error', 'warning', 'important', ]} />
 
 <!-- The Status Banners story below can be restored once the MSW works in production builds of Storybook. --!>
 <!-- Status Banners appear on our `/support` pages and communicate information about data center connectivity and service issues. The information populating these banners is sourced from Statuspage and corresponds to incidents detailed at [status.linode.com](https://status.linode.com).

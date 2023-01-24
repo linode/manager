@@ -1,4 +1,3 @@
-import Close from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
@@ -56,12 +55,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     left: -25, // This value must be static regardless of theme selection
   },
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    display: 'flex',
-    color: theme.textColors.tableStatic,
-    marginLeft: 20,
-  },
   inner: {
     width: '100%',
     '& p': {
@@ -117,19 +110,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
   flag: {
     marginRight: theme.spacing(2),
   },
-  informational: {
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.primary.main}`,
-    '&$important': {
-      borderLeftWidth: 32,
-    },
-  },
-  informationalList: {
-    borderLeft: `5px solid ${theme.palette.primary.main}`,
-  },
 }));
 
-interface Props extends GridProps {
+export interface Props extends GridProps {
   text?: string;
   error?: boolean;
   errorGroup?: string;
@@ -146,10 +129,7 @@ interface Props extends GridProps {
   spacingLeft?: number;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  // Dismissible Props
-  dismissible?: boolean;
-  onClose?: () => void;
-  informational?: boolean;
+  dismissibleButton?: JSX.Element;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -159,7 +139,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
     className,
     important,
     text,
-    dismissible,
     error,
     breakWords,
     errorGroup,
@@ -171,11 +150,10 @@ const Notice: React.FC<CombinedProps> = (props) => {
     flag,
     notificationList,
     onClick,
-    onClose,
     spacingTop,
     spacingBottom,
     spacingLeft,
-    informational,
+    dismissibleButton,
   } = props;
 
   const classes = useStyles();
@@ -236,8 +214,6 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.warning]: warning && !notificationList,
         [classes.marketing]: marketing,
         [classes.warningList]: warning && notificationList,
-        [classes.informational]: informational && !notificationList,
-        [classes.informationalList]: informational && notificationList,
         notice: true,
         ...(className && { [className]: true }),
       })}
@@ -261,17 +237,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
       <div className={classes.inner}>{innerText || _children}</div>
-      {dismissible && (
-        <Grid item className={classes.closeIcon}>
-          <Close
-            style={{
-              cursor: 'pointer',
-            }}
-            onClick={onClose}
-            data-testid="notice-dismiss"
-          />
-        </Grid>
-      )}
+      {dismissibleButton}
     </Grid>
   );
 };

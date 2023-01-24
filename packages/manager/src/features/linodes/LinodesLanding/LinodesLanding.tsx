@@ -34,7 +34,7 @@ import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent,
 } from 'src/utilities/ga';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import EnableBackupsDialog from '../LinodesDetail/LinodeBackup/EnableBackupsDialog';
 import LinodeRebuildDialog from '../LinodesDetail/LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodesDetail/LinodeRescue';
@@ -304,213 +304,198 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           onClose={this.closeDialogs}
           linodeId={this.state.selectedLinodeID ?? -1}
         />
-
         {this.props.someLinodesHaveScheduledMaintenance && (
           <MaintenanceBanner />
         )}
-        <Grid container className={classes.root}>
-          <Grid item xs={12}>
-            <DocumentTitleSegment segment="Linodes" />
-            <PreferenceToggle<boolean>
-              localStorageKey="GROUP_LINODES"
-              preferenceOptions={[false, true]}
-              preferenceKey="linodes_group_by_tag"
-              toggleCallbackFnDebounced={sendGroupByAnalytic}
-            >
-              {({
-                preference: linodesAreGrouped,
-                togglePreference: toggleGroupLinodes,
-              }: ToggleProps<boolean>) => {
-                return (
-                  <PreferenceToggle<'grid' | 'list'>
-                    preferenceKey="linodes_view_style"
-                    localStorageKey="LINODE_VIEW"
-                    preferenceOptions={['list', 'grid']}
-                    toggleCallbackFnDebounced={this.changeViewDelayed}
-                    toggleCallbackFn={this.changeViewInstant}
-                    /**
-                     * we want the URL query param to take priority here, but if it's
-                     * undefined, just use the user preference
-                     */
-                    value={
-                      params.view === 'grid' || params.view === 'list'
-                        ? params.view
-                        : undefined
-                    }
-                  >
-                    {({
-                      preference: linodeViewPreference,
-                      togglePreference: toggleLinodeView,
-                    }: ToggleProps<'list' | 'grid'>) => {
-                      return (
-                        <React.Fragment>
-                          <React.Fragment>
-                            <BackupsCTA />
-                            {this.props.LandingHeader ? (
-                              this.props.LandingHeader
-                            ) : (
-                              <div>
-                                <LandingHeader
-                                  title="Linodes"
-                                  entity="Linode"
-                                  onAddNew={() =>
-                                    this.props.history.push('/linodes/create')
-                                  }
-                                  docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-                                />
-                              </div>
-                            )}
-                          </React.Fragment>
-
-                          <Grid item xs={12}>
-                            <OrderBy
-                              preferenceKey={'linodes-landing'}
-                              data={extendedLinodes.map((linode) => {
-                                // Determine the priority of this Linode's status.
-                                // We have to check for "Maintenance" and "Busy" since these are
-                                // not actual Linode statuses (we derive them client-side).
-                                let _status: ExtendedStatus = linode.status;
-                                if (linode.maintenance) {
-                                  _status = 'maintenance';
-                                } else if (linodesInTransition.has(linode.id)) {
-                                  _status = 'busy';
-                                }
-
-                                return {
-                                  ...linode,
-                                  displayStatus: linode.maintenance
-                                    ? 'maintenance'
-                                    : linode.status,
-                                  _statusPriority: statusToPriority(_status),
-                                };
-                              })}
-                              // If there are Linodes with scheduled maintenance, default to
-                              // sorting by status priority so they are more visible.
-                              order="asc"
-                              orderBy={
-                                this.props.someLinodesHaveScheduledMaintenance
-                                  ? '_statusPriority'
-                                  : 'label'
+        <DocumentTitleSegment segment="Linodes" />
+        <PreferenceToggle<boolean>
+          localStorageKey="GROUP_LINODES"
+          preferenceOptions={[false, true]}
+          preferenceKey="linodes_group_by_tag"
+          toggleCallbackFnDebounced={sendGroupByAnalytic}
+        >
+          {({
+            preference: linodesAreGrouped,
+            togglePreference: toggleGroupLinodes,
+          }: ToggleProps<boolean>) => {
+            return (
+              <PreferenceToggle<'grid' | 'list'>
+                preferenceKey="linodes_view_style"
+                localStorageKey="LINODE_VIEW"
+                preferenceOptions={['list', 'grid']}
+                toggleCallbackFnDebounced={this.changeViewDelayed}
+                toggleCallbackFn={this.changeViewInstant}
+                /**
+                 * we want the URL query param to take priority here, but if it's
+                 * undefined, just use the user preference
+                 */
+                value={
+                  params.view === 'grid' || params.view === 'list'
+                    ? params.view
+                    : undefined
+                }
+              >
+                {({
+                  preference: linodeViewPreference,
+                  togglePreference: toggleLinodeView,
+                }: ToggleProps<'list' | 'grid'>) => {
+                  return (
+                    <React.Fragment>
+                      <React.Fragment>
+                        <BackupsCTA />
+                        {this.props.LandingHeader ? (
+                          this.props.LandingHeader
+                        ) : (
+                          <div>
+                            <LandingHeader
+                              title="Linodes"
+                              entity="Linode"
+                              onAddNew={() =>
+                                this.props.history.push('/linodes/create')
                               }
-                            >
-                              {({
-                                data,
-                                handleOrderChange,
-                                order,
-                                orderBy,
-                              }) => {
-                                const finalProps = {
-                                  ...componentProps,
-                                  data,
-                                  handleOrderChange,
-                                  order,
-                                  orderBy,
-                                };
+                              docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+                            />
+                          </div>
+                        )}
+                      </React.Fragment>
 
-                                return linodesAreGrouped ? (
-                                  <DisplayGroupedLinodes
-                                    {...finalProps}
-                                    display={linodeViewPreference}
-                                    toggleLinodeView={toggleLinodeView}
-                                    toggleGroupLinodes={toggleGroupLinodes}
-                                    linodesAreGrouped={true}
-                                    linodeViewPreference={linodeViewPreference}
-                                    component={
-                                      linodeViewPreference === 'grid'
-                                        ? CardView
-                                        : ListView
-                                    }
-                                  />
-                                ) : (
-                                  <DisplayLinodes
-                                    {...finalProps}
-                                    display={linodeViewPreference}
-                                    toggleLinodeView={toggleLinodeView}
-                                    toggleGroupLinodes={toggleGroupLinodes}
-                                    updatePageUrl={this.updatePageUrl}
-                                    linodesAreGrouped={false}
-                                    linodeViewPreference={linodeViewPreference}
-                                    component={
-                                      linodeViewPreference === 'grid'
-                                        ? CardView
-                                        : ListView
-                                    }
-                                  />
-                                );
-                              }}
-                            </OrderBy>
+                      <OrderBy
+                        preferenceKey={'linodes-landing'}
+                        data={extendedLinodes.map((linode) => {
+                          // Determine the priority of this Linode's status.
+                          // We have to check for "Maintenance" and "Busy" since these are
+                          // not actual Linode statuses (we derive them client-side).
+                          let _status: ExtendedStatus = linode.status;
+                          if (linode.maintenance) {
+                            _status = 'maintenance';
+                          } else if (linodesInTransition.has(linode.id)) {
+                            _status = 'busy';
+                          }
 
-                            <Grid
-                              container
-                              className={classes.CSVwrapper}
-                              justifyContent="flex-end"
-                            >
-                              <Grid item className={classes.CSVlinkContainer}>
-                                <CSVLink
-                                  data={linodesData.map((e) => {
-                                    const maintenance = e.maintenance?.when
-                                      ? {
-                                          ...e.maintenance,
-                                          when: formatDateISO(
-                                            e.maintenance?.when
-                                          ),
-                                        }
-                                      : { when: null };
+                          return {
+                            ...linode,
+                            displayStatus: linode.maintenance
+                              ? 'maintenance'
+                              : linode.status,
+                            _statusPriority: statusToPriority(_status),
+                          };
+                        })}
+                        // If there are Linodes with scheduled maintenance, default to
+                        // sorting by status priority so they are more visible.
+                        order="asc"
+                        orderBy={
+                          this.props.someLinodesHaveScheduledMaintenance
+                            ? '_statusPriority'
+                            : 'label'
+                        }
+                      >
+                        {({ data, handleOrderChange, order, orderBy }) => {
+                          const finalProps = {
+                            ...componentProps,
+                            data,
+                            handleOrderChange,
+                            order,
+                            orderBy,
+                          };
 
-                                    const lastBackup =
-                                      e.backups.last_successful === null
-                                        ? e.backups.enabled
-                                          ? 'Scheduled'
-                                          : 'Never'
-                                        : e.backups.last_successful;
-
-                                    return {
-                                      ...e,
-                                      lastBackup,
-                                      maintenance,
-                                      linodeDescription: getLinodeDescription(
-                                        e.label,
-                                        e.specs.memory,
-                                        e.specs.disk,
-                                        e.specs.vcpus,
-                                        '',
-                                        {}
-                                      ),
-                                    };
-                                  })}
-                                  headers={
-                                    this.props
-                                      .someLinodesHaveScheduledMaintenance
-                                      ? [
-                                          ...headers,
-                                          /** only add maintenance window to CSV if one Linode has a window */
-                                          {
-                                            label: 'Maintenance Status',
-                                            key: 'maintenance.when',
-                                          },
-                                        ]
-                                      : headers
+                          return linodesAreGrouped ? (
+                            <DisplayGroupedLinodes
+                              {...finalProps}
+                              display={linodeViewPreference}
+                              toggleLinodeView={toggleLinodeView}
+                              toggleGroupLinodes={toggleGroupLinodes}
+                              linodesAreGrouped={true}
+                              linodeViewPreference={linodeViewPreference}
+                              component={
+                                linodeViewPreference === 'grid'
+                                  ? CardView
+                                  : ListView
+                              }
+                            />
+                          ) : (
+                            <DisplayLinodes
+                              {...finalProps}
+                              display={linodeViewPreference}
+                              toggleLinodeView={toggleLinodeView}
+                              toggleGroupLinodes={toggleGroupLinodes}
+                              updatePageUrl={this.updatePageUrl}
+                              linodesAreGrouped={false}
+                              linodeViewPreference={linodeViewPreference}
+                              component={
+                                linodeViewPreference === 'grid'
+                                  ? CardView
+                                  : ListView
+                              }
+                            />
+                          );
+                        }}
+                      </OrderBy>
+                      <Grid
+                        container
+                        className={classes.CSVwrapper}
+                        justifyContent="flex-end"
+                      >
+                        <Grid item className={classes.CSVlinkContainer}>
+                          <CSVLink
+                            data={linodesData.map((e) => {
+                              const maintenance = e.maintenance?.when
+                                ? {
+                                    ...e.maintenance,
+                                    when: formatDateISO(e.maintenance?.when),
                                   }
-                                  filename={`linodes-${formatDate(
-                                    DateTime.local().toISO()
-                                  )}.csv`}
-                                  className={classes.CSVlink}
-                                >
-                                  Download CSV
-                                </CSVLink>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        </React.Fragment>
-                      );
-                    }}
-                  </PreferenceToggle>
-                );
-              }}
-            </PreferenceToggle>
-            <TransferDisplay />
-          </Grid>
-        </Grid>
+                                : { when: null };
+
+                              const lastBackup =
+                                e.backups.last_successful === null
+                                  ? e.backups.enabled
+                                    ? 'Scheduled'
+                                    : 'Never'
+                                  : e.backups.last_successful;
+
+                              return {
+                                ...e,
+                                lastBackup,
+                                maintenance,
+                                linodeDescription: getLinodeDescription(
+                                  e.label,
+                                  e.specs.memory,
+                                  e.specs.disk,
+                                  e.specs.vcpus,
+                                  '',
+                                  {}
+                                ),
+                              };
+                            })}
+                            headers={
+                              this.props.someLinodesHaveScheduledMaintenance
+                                ? [
+                                    ...headers,
+                                    /** only add maintenance window to CSV if one Linode has a window */
+                                    {
+                                      label: 'Maintenance Status',
+                                      key: 'maintenance.when',
+                                    },
+                                  ]
+                                : headers
+                            }
+                            filename={`linodes-${formatDate(
+                              DateTime.local().toISO()
+                            )}.csv`}
+                            className={classes.CSVlink}
+                          >
+                            Download CSV
+                          </CSVLink>
+                        </Grid>
+                      </Grid>
+                    </React.Fragment>
+                  );
+                }}
+              </PreferenceToggle>
+            );
+          }}
+        </PreferenceToggle>
+        <TransferDisplay />
+
         {!!this.state.selectedLinodeID && !!this.state.selectedLinodeLabel && (
           <React.Fragment>
             <PowerDialogOrDrawer

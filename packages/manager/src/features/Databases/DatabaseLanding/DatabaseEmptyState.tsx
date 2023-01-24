@@ -3,11 +3,9 @@ import { useHistory } from 'react-router-dom';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import useFlags from 'src/hooks/useFlags';
 import { sendEvent } from 'src/utilities/ga';
 import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
 import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
@@ -70,6 +68,12 @@ const guideLinks = (
   </List>
 );
 
+const guidesMoreLinkText = 'Check out all our Docs';
+const youtubeMoreLinkText = 'View our YouTube channel';
+
+// retaining the old label for tracking
+const youtubeMoreLinkLabel = 'View the complete playlist';
+
 const youtubeLinks = (
   <List>
     {youtubeLinkData.map((linkData) => (
@@ -98,41 +102,13 @@ const linkGAEventTemplate = {
   action: 'Click:link',
 };
 
-const onLinkClick = (
-  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-) => {
-  const label = event.currentTarget.textContent ?? '';
-  sendEvent({ ...linkGAEventTemplate, label });
-};
-
 const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
   const history = useHistory();
-  const flags = useFlags();
 
   return (
     <>
-      {flags.databaseBeta ? (
-        <DismissibleBanner
-          preferenceKey="dbaas-open-beta-notice"
-          productInformationIndicator
-        >
-          <Typography>
-            Managed Database for MySQL is available in a free, open beta period
-            until May 2nd, 2022. This is a beta environment and should not be
-            used to support production workloads. Review the{' '}
-            <Link to="https://www.linode.com/legal-eatp">
-              Early Adopter Program SLA
-            </Link>
-            .
-          </Typography>
-        </DismissibleBanner>
-      ) : null}
-      <ProductInformationBanner
-        bannerLocation="Databases"
-        productInformationIndicator={false}
-        productInformationWarning
-      />
+      <ProductInformationBanner bannerLocation="Databases" warning important />
       <Placeholder
         title="Databases"
         subtitle="Fully managed cloud database clusters"
@@ -159,11 +135,11 @@ const DatabaseEmptyState: React.FC = () => {
               icon={<DocsIcon />}
               MoreLink={(props) => (
                 <Link
-                  onClick={onLinkClick}
+                  onClick={getLinkOnClick(guidesMoreLinkText)}
                   to="https://www.linode.com/docs/"
                   {...props}
                 >
-                  Check out all our Docs
+                  {guidesMoreLinkText}
                   <PointerIcon />
                 </Link>
               )}
@@ -171,16 +147,16 @@ const DatabaseEmptyState: React.FC = () => {
               {guideLinks}
             </LinkSubSection>
             <LinkSubSection
-              title="Getting Started Playlist"
+              title="Video Playlist"
               icon={<YoutubeIcon />}
               external
               MoreLink={(props) => (
                 <Link
-                  onClick={onLinkClick}
+                  onClick={getLinkOnClick(youtubeMoreLinkLabel)}
                   to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
                   {...props}
                 >
-                  View the complete playlist
+                  {youtubeMoreLinkText}
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               )}

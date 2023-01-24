@@ -3,24 +3,34 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import { localStorageWarning } from 'src/features/Kubernetes/kubeUtils';
+import { useRecycleNodeMutation } from 'src/queries/kubernetes';
+import { useSnackbar } from 'notistack';
 
 interface Props {
   open: boolean;
-  loading: boolean;
-  error?: string;
   onClose: () => void;
-  onDelete: () => void;
-  label?: string;
+  nodeId: string;
+  clusterId: number;
 }
 
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
+export const RecycleNodeDialog = (props: Props) => {
+  const { open, onClose, nodeId, clusterId } = props;
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { mutateAsync, isLoading, error } = useRecycleNodeMutation(
+    clusterId,
+    nodeId
+  );
+
+  const onSubmit = () => {
+    mutateAsync().then(() => {
+      enqueueSnackbar('Node queued for recycling.', { variant: 'success' });
+    });
+  };
+
+  const actions = (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         buttonType="secondary"
@@ -32,8 +42,8 @@ const renderActions = (
       </Button>
       <Button
         buttonType="primary"
-        onClick={onDelete}
-        loading={loading}
+        onClick={onSubmit}
+        loading={isLoading}
         data-qa-confirm
         data-testid={'dialog-confirm'}
       >
@@ -41,19 +51,15 @@ const renderActions = (
       </Button>
     </ActionsPanel>
   );
-};
-
-const NodeDialog: React.FC<Props> = (props) => {
-  const { error, loading, open, onClose, onDelete, label } = props;
 
   return (
     <ConfirmationDialog
       open={open}
-      title={`Recycle ${label ? label : 'this Node'}?`}
+      title={`Recycle ${nodeId}?`}
       onClose={onClose}
-      actions={() => renderActions(loading, onClose, onDelete)}
+      actions={actions}
+      error={error?.[0].reason}
     >
-      {error && <Notice error text={error} />}
       <Typography>
         This node will be deleted and a new node will be created to replace it.{' '}
         {localStorageWarning} This may take several minutes.
@@ -61,5 +67,3 @@ const NodeDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default React.memo(NodeDialog);

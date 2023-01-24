@@ -128,6 +128,29 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Apache Airflow',
+    alt_name: 'Workflow management platform',
+    alt_description:
+      'Open-source workflow management platform for data engineering pipelines.',
+    categories: ['Development'],
+    description: `Programmatically author, schedule, and monitor workflows with a Python-based tool. Airflow provides full insight into the status and logs of your tasks, all in a modern web application.`,
+    summary:
+      'Open source workflow management platform for data engineering pipelines.',
+    related_guides: [
+      {
+        title: 'Deploy Apache Airflow through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/apache-airflow/',
+      },
+    ],
+    website: 'https://airflow.apache.org/',
+    logo_url: 'apacheairflow.svg',
+    colors: {
+      start: '00C7D4',
+      end: 'E43921',
+    },
+  },
+  {
     name: 'Ark',
     alt_name: 'Survival game',
     alt_description: 'Prehistoric, open world survival crafting game.',
@@ -591,6 +614,29 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Gopaddle',
+    alt_name: 'Go Paddle',
+    alt_description:
+      'No-code platform for Kubernetes developers and operators.',
+    categories: ['Development'],
+    description: `Provision multicloud clusters, containerize applications, and build DevOps pipelines. Gopaddle’s suite of templates and integrations helps eliminate manual errors and automate Kubernetes application releases.`,
+    summary:
+      'Simple low-code platform for Kubernetes developers and operators.',
+    related_guides: [
+      {
+        title: 'Deploy Gopaddle through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/gopaddle/',
+      },
+    ],
+    website: 'https://gopaddle.io/',
+    logo_url: 'gopaddle.svg',
+    colors: {
+      start: '3a5bfd',
+      end: '252930',
+    },
+  },
+  {
     name: 'Grafana',
     alt_name: 'Monitoring vizualization dashboards',
     alt_description: 'Monitoring server.',
@@ -651,6 +697,27 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: '304730',
       end: '213121',
+    },
+  },
+  {
+    name: 'HaltDOS Community WAF',
+    alt_name: 'Community WAF',
+    alt_description: 'Web Application Firewall.',
+    categories: ['Security'],
+    description: `Harden your web applications and APIs against OWASP Top 10 attacks. Haltdos makes it easy to manage WAF settings and review logs in an intuitive web-based GUI.`,
+    summary: 'User-friendly web application firewall.',
+    related_guides: [
+      {
+        title: 'Deploy Haltdos Community WAF through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/haltdos-community-waf/',
+      },
+    ],
+    website: 'https://www.haltdos.com/',
+    logo_url: 'haltdos.svg',
+    colors: {
+      start: '22324F',
+      end: '00C1A9',
     },
   },
   {
@@ -1261,6 +1328,27 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'ONLYOFFICE Docs',
+    alt_name: 'Office Docs',
+    alt_description: 'Office Suite',
+    categories: ['Productivity'],
+    description: `Create and collaborate on text documents, spreadsheets, and presentations compatible with popular file types including .docx, .xlsx, and more. Additional features include real-time editing, paragraph locking while co-editing, and version history.`,
+    summary: 'Open source comprehensive office suite.',
+    related_guides: [
+      {
+        title: 'Deploy ONLYOFFICE Docs through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/onlyoffice/',
+      },
+    ],
+    website: 'https://www.onlyoffice.com/',
+    logo_url: 'onlyoffice.svg',
+    colors: {
+      start: 'ffa85b',
+      end: 'ff6f3d',
+    },
+  },
+  {
     name: 'OpenLiteSpeed Django',
     alt_name: 'Python framework',
     alt_description: 'Fast Python development with best practices.',
@@ -1386,6 +1474,27 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: '7871ff',
       end: '2086e1',
+    },
+  },
+  {
+    name: 'Passky',
+    alt_name: 'Pass Key',
+    alt_description: 'Password Manager',
+    categories: ['Security'],
+    description: `Self-host a password manager designed to simplify and secure your digital life. Passky is a streamlined version of paid password managers designed for everyone to use.`,
+    summary: 'Simple open source password manager.',
+    related_guides: [
+      {
+        title: 'Deploy Passky through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/passky/',
+      },
+    ],
+    website: 'https://passky.org/',
+    logo_url: 'passky.svg',
+    colors: {
+      start: '709cff',
+      end: '3A5EFF',
     },
   },
   {
@@ -1838,6 +1947,28 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: 'f89f24',
       end: 'ed0181',
+    },
+  },
+  {
+    name: 'Superinsight',
+    alt_name: 'SuperinsightDB',
+    alt_description:
+      'A simple SQL interface to store and search unstructured data.',
+    categories: ['Databases'],
+    description: `Superinsight provides a simple SQL interface to store and search unstructured data. Superinsight is built on top of PostgreSQL to take advantage of powerful extensions and features, plus the ability to run machine learning operations using SQL statements.`,
+    summary: 'Relational database for unstructured data.',
+    related_guides: [
+      {
+        title: 'Deploy Superinsight through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/superinsight/',
+      },
+    ],
+    website: 'https://www.superinsight.ai/',
+    logo_url: 'superinsight.svg',
+    colors: {
+      start: 'E6645F',
+      end: 'C54349',
     },
   },
   {
