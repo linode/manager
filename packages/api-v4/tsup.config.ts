@@ -5,7 +5,6 @@ export default defineConfig({
   format: ['esm', 'cjs', 'iife'],
   target: 'es6',
   outDir: 'lib',
-  legacyOutput: true,
   splitting: false,
   dts: false,
 });
