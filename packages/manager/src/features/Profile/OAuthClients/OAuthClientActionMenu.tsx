@@ -22,7 +22,7 @@ type CombinedProps = Props;
 
 export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { label, redirectUri, isPublic, clientID } = props;
 

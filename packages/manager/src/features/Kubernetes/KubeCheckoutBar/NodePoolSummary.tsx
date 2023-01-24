@@ -1,5 +1,5 @@
 import { LinodeType } from '@linode/api-v4/lib/linodes/types';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -63,46 +63,44 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
     return null;
   }
 
-  return (
-    <>
-      <Divider dark spacingTop={24} spacingBottom={12} />
-      <Box
-        display="flex"
-        flexDirection="column"
-        data-testid="node-pool-summary"
-        className={classes.root}
-      >
-        <Box display="flex" justifyContent="space-between">
-          <div>
-            <Typography className={classes.typeHeader}>
-              {poolType.label} Plan
-            </Typography>
-            <Typography className={classes.typeSubheader}>
-              {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
-              GB Storage
-            </Typography>
-          </div>
-          <IconButton
-            className={classes.button}
-            onClick={onRemove}
-            data-testid="remove-pool-button"
-          >
-            <Close />
-          </IconButton>
-        </Box>
-        <div className={classes.numberInput}>
-          <EnhancedNumberInput
-            value={nodeCount}
-            setValue={updateNodeCount}
-            min={1}
-          />
+  return <>
+    <Divider dark spacingTop={24} spacingBottom={12} />
+    <Box
+      display="flex"
+      flexDirection="column"
+      data-testid="node-pool-summary"
+      className={classes.root}
+    >
+      <Box display="flex" justifyContent="space-between">
+        <div>
+          <Typography className={classes.typeHeader}>
+            {poolType.label} Plan
+          </Typography>
+          <Typography className={classes.typeSubheader}>
+            {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}
+            GB Storage
+          </Typography>
         </div>
-        <div className={classes.price}>
-          <DisplayPrice price={price} fontSize="14px" interval="month" />
-        </div>
+        <IconButton
+          className={classes.button}
+          onClick={onRemove}
+          data-testid="remove-pool-button"
+          size="large">
+          <Close />
+        </IconButton>
       </Box>
-    </>
-  );
+      <div className={classes.numberInput}>
+        <EnhancedNumberInput
+          value={nodeCount}
+          setValue={updateNodeCount}
+          min={1}
+        />
+      </div>
+      <div className={classes.price}>
+        <DisplayPrice price={price} fontSize="14px" interval="month" />
+      </div>
+    </Box>
+  </>;
 };
 
 export default React.memo(NodePoolSummary);

@@ -1,5 +1,5 @@
-import ViewList from '@material-ui/icons/ViewList';
-import ViewModule from '@material-ui/icons/ViewModule';
+import ViewList from '@mui/icons-material/ViewList';
+import ViewModule from '@mui/icons-material/ViewModule';
 import * as React from 'react';
 import { compose } from 'redux';
 import Button from 'src/components/Button';

@@ -1,6 +1,6 @@
+import { SupportReply, SupportTicket } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
-import UserIcon from 'src/assets/icons/user.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -8,7 +8,8 @@ import Grid from 'src/components/Grid';
 import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 import { OFFICIAL_USERNAMES } from './ticketUtils';
-import { ExtendedReply, ExtendedTicket } from './types';
+import UserIcon from 'src/assets/icons/account.svg';
+import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   userWrapper: {
-    marginTop: theme.spacing(1) / 2,
+    marginTop: theme.spacing(0.5),
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 32,
     position: 'relative',
     top: -2,
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
     [theme.breakpoints.up('sm')]: {
@@ -60,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: theme.shape.borderRadius,
   },
   header: {
-    padding: `0 ${theme.spacing(1)}px`,
+    padding: `0 ${theme.spacing(1)}`,
     minHeight: 40,
     backgroundColor: theme.color.grey2,
     borderTopLeftRadius: theme.shape.borderRadius,
@@ -84,8 +85,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  reply?: ExtendedReply;
-  ticket?: ExtendedTicket;
+  reply?: SupportReply;
+  ticket?: SupportTicket;
   open?: boolean;
   isCurrentUser: boolean;
   parentTicket?: number;
@@ -96,7 +97,6 @@ type CombinedProps = Props;
 
 interface Data {
   gravatar_id: string;
-  gravatarUrl: string;
   date: string;
   description: string;
   username: string;
@@ -110,14 +110,7 @@ interface Data {
 export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const {
-    // isCurrentUser,
-    parentTicket,
-    ticket,
-    open,
-    reply,
-    ticketUpdated,
-  } = props;
+  const { parentTicket, ticket, open, reply, ticketUpdated } = props;
 
   const [data, setData] = React.useState<Data | undefined>(undefined);
 
@@ -130,7 +123,6 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
         ticket_id: String(ticket.id),
         reply_id: '',
         gravatar_id: ticket.gravatar_id,
-        gravatarUrl: ticket.gravatarUrl ?? 'not found',
         date: ticket.opened,
         description: ticket.description,
         username: ticket.opened_by,
@@ -143,7 +135,6 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
         ticket_id: parentTicket ? String(parentTicket) : '',
         reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
-        gravatarUrl: reply.gravatarUrl ?? 'not found',
         date: reply.created,
         description: reply.description,
         username: reply.created_by,
@@ -154,14 +145,16 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
     }
   }, [parentTicket, reply, ticket, ticketUpdated]);
 
-  const renderAvatar = (url: string) => {
-    return url !== 'not found' ? (
+  const renderAvatar = (id: string) => {
+    return (
       <div className={classes.userWrapper}>
-        <img src={url} className={classes.leftIcon} alt="Gravatar" />
-      </div>
-    ) : (
-      <div className={classes.userWrapper}>
-        <UserIcon className={classes.leftIcon} />
+        <Avatar
+          src={`https://gravatar.com/avatar/${id}?d=404`}
+          className={classes.leftIcon}
+          alt="Gravatar"
+        >
+          <UserIcon />
+        </Avatar>
       </div>
     );
   };
@@ -184,7 +177,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
       >
         <Grid item xs={12}>
           <Grid container wrap="nowrap">
-            <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
+            <Grid item>{renderAvatar(data.gravatar_id)}</Grid>
             <Grid item className={`${classes.content}`}>
               <Grid container className={classes.header}>
                 <Grid item className={classes.headerInner}>

@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
     },
     actionsPanel: {
       paddingBottom: 0,
-      paddingRight: `${theme.spacing()}px !important`,
+      paddingRight: `${theme.spacing()} !important`,
     },
   });
 

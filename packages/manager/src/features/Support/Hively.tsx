@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    margin: `${theme.spacing(3)}px ${theme.spacing(1)}px 0`,
+    margin: `${theme.spacing(3)} ${theme.spacing(1)} 0`,
     paddingTop: theme.spacing(1),
     borderTop: `1px solid ${theme.color.grey2}`,
   },

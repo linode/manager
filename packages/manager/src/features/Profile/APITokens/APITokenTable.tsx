@@ -72,7 +72,7 @@ const styles = (theme: Theme) =>
     labelCell: {
       ...theme.applyTableHeaderStyles,
       width: '40%',
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         width: '25%',
       },
     },

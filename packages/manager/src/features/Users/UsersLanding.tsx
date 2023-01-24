@@ -1,7 +1,6 @@
 import { deleteUser, User } from '@linode/api-v4/lib/account';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   makeStyles,
@@ -24,6 +23,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import usePagination from 'src/hooks/usePagination';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { GravatarByEmail } from '../../components/GravatarByEmail';
 import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingTop: 0,
       paddingRight: 0,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginRight: theme.spacing(),
     },
   },
@@ -84,13 +84,10 @@ interface Props {
 
 const UsersLanding: React.FC<Props> = (props) => {
   const pagination = usePagination(1, 'account-users');
-  const { data: users, isLoading, error, refetch } = useAccountUsers(
-    {
-      page: pagination.page,
-      page_size: pagination.pageSize,
-    },
-    true
-  );
+  const { data: users, isLoading, error, refetch } = useAccountUsers({
+    page: pagination.page,
+    page_size: pagination.pageSize,
+  });
   const { enqueueSnackbar } = useSnackbar();
   const [createDrawerOpen, setCreateDrawerOpen] = React.useState<boolean>(
     false
@@ -111,7 +108,7 @@ const UsersLanding: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const openForCreate = () => {
     setCreateDrawerOpen(true);
@@ -160,17 +157,7 @@ const UsersLanding: React.FC<Props> = (props) => {
         <TableCell data-qa-username>
           <Grid container alignItems="center">
             <Grid item style={{ display: 'flex' }}>
-              {user.gravatarUrl === undefined ? (
-                <div className={classes.emptyImage} />
-              ) : user.gravatarUrl === 'not found' ? (
-                <UserIcon className={classes.avatar} />
-              ) : (
-                <img
-                  alt={`user ${user.username}\u{2019}s avatar`}
-                  src={user.gravatarUrl}
-                  className={classes.avatar}
-                />
-              )}
+              <GravatarByEmail email={user.email} />
             </Grid>
             <Grid item className="px0">
               {user.username}

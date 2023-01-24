@@ -1,4 +1,4 @@
-import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import MoreHoriz from '@mui/icons-material/MoreHoriz';
 import classNames from 'classnames';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
@@ -190,7 +190,7 @@ export const TagCell: React.FC<Props> = (props) => {
                 className={classes.button}
                 disableRipple
                 aria-label="Display all tags"
-              >
+                size="large">
                 <MoreHoriz />
               </IconButton>
             )}
@@ -243,7 +243,7 @@ export const TagCell: React.FC<Props> = (props) => {
                 className={classes.button}
                 disableRipple
                 aria-label="Display all tags"
-              >
+                size="large">
                 <MoreHoriz />
               </IconButton>
             </Grid>

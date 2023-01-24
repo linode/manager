@@ -18,7 +18,7 @@ const user = 'Linode';
 const reply = supportReplyFactory.build();
 
 const props: Props = {
-  reply: { ...reply, gravatarUrl: '' },
+  reply,
   isCurrentUser: false,
 };
 

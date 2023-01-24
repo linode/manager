@@ -43,7 +43,7 @@ const AccessKeyLanding = React.lazy(
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {
-    marginBottom: theme.spacing() / 2,
+    marginBottom: theme.spacing(0.5),
   },
 }));
 

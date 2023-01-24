@@ -55,7 +55,7 @@ const DomainTableRow: React.FC<CombinedProps> = (props) => {
         <StatusIcon status={domainStatusToIconStatus(domain.status)} />
         {humanizeDomainStatus(domain.status)}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-domain-type>
           {getDomainDisplayType(domain.type)}
         </TableCell>

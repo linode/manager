@@ -385,7 +385,5 @@ const ComplianceNotification: React.FC<{}> = () => {
 };
 
 export const isEUModelContractNotification = (notification: Notification) => {
-  return (
-    notification.type === 'notice' && /eu-model/gi.test(notification.message)
-  );
+  return notification.type === 'notice' && /eu-model/gi.test(notification.message);
 };

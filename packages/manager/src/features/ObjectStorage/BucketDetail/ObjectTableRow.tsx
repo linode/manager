@@ -82,7 +82,7 @@ const ObjectTableRow: React.FC<Props> = (props) => {
         </Grid>
       </TableCell>
       <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell noWrap>
           <DateTimeDisplay value={objectLastModified} />
         </TableCell>

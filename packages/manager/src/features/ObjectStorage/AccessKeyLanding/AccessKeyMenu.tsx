@@ -73,7 +73,7 @@ const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.inlineActions}>
-      <Hidden smDown>
+      <Hidden mdDown>
         {actions.map((thisAction) => (
           <InlineAction
             key={thisAction.title}

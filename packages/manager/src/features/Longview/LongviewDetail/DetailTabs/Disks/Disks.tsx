@@ -14,7 +14,7 @@ import DiskGraph from './DiskGraph';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(),
     },
   },

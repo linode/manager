@@ -222,7 +222,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        <Hidden mdDown={isCreate} smDown={!isCreate}>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <TableRow
             data-qa-plan-row={type.label}
             aria-label={rowAriaLabel}
@@ -335,7 +335,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
         <Hidden lgUp={isCreate} mdUp={!isCreate}>
           {plans.map(renderSelection)}
         </Hidden>
-        <Hidden mdDown={isCreate} smDown={!isCreate}>
+        <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <Grid item xs={12}>
             <Table
               aria-label="List of Linode Plans"

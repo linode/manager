@@ -113,13 +113,13 @@ const styles = (theme: Theme) =>
     },
     cancelButton: {
       marginBottom: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },
     },
     cancelCopy: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },

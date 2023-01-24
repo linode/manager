@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.name === 'lightTheme' ? '#fff' : '#616161',
       height: 16,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: 0,
       width: '101.5%',
     },

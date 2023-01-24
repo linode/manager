@@ -1,4 +1,4 @@
-import FileCopy from '@material-ui/icons/FileCopy';
+import FileCopy from '@mui/icons-material/FileCopy';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';

@@ -80,7 +80,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
           value={this.state.sshKey}
           data-qa-ssh-key-field
           multiline
-          rows={10}
+          rows={1.75}
         />
 
         <ActionsPanel>

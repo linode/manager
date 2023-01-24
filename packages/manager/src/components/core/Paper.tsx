@@ -1,4 +1,4 @@
-import _Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
+import _Paper, { PaperProps as _PaperProps } from '@mui/material/Paper';
 import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';

@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },
@@ -170,7 +170,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
   const addressColumnLabel =
     category === 'inbound' ? 'sources' : 'destinations';
@@ -214,10 +214,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             >
               Label
             </TableCell>
-            <Hidden mdDown>
+            <Hidden lgDown>
               <TableCell style={{ width: '10%' }}>Protocol</TableCell>
             </Hidden>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableCell style={{ whiteSpace: 'nowrap', width: '10%' }}>
                 Port Range
               </TableCell>
@@ -235,7 +235,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
               <TableBody
                 {...provided.droppableProps}
                 className={classes.table}
-                innerRef={provided.innerRef}
+                ref={provided.innerRef}
               >
                 {rowData.length === 0 ? (
                   <TableRowEmptyState colSpan={6} message={zeroRulesMessage} />
@@ -360,13 +360,13 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
             </button>
           )}
         </TableCell>
-        <Hidden mdDown>
+        <Hidden lgDown>
           <TableCell>
             {protocol}
             <ConditionalError errors={errors} formField="protocol" />
           </TableCell>
         </Hidden>
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
@@ -422,8 +422,8 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   // Calculate how many cells the text should span so that the Select lines up
   // with the Action column
   const theme: Theme = useTheme();
-  const xsDown = useMediaQuery(theme.breakpoints.down('xs'));
-  const mdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
   const colSpan = xsDown ? 1 : mdDown ? 3 : 4;
 
   const helperText = mdDown ? (

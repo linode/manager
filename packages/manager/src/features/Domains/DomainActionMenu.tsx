@@ -40,7 +40,7 @@ export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
   const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;
 
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const actions = [
     {

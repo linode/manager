@@ -1,3 +1,12 @@
+## [2023-01-09] - v0.85.0
+
+### Added:
+- Account login history endpoints
+- `completed` status to `AccountMaintenance` type
+
+### Changed:
+- Updated ESLint rules to not include Material UI
+
 ## [2022-12-12] - v0.84.0
 
 ### Added:

@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Tag, { TagProps } from 'src/components/Tag';

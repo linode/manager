@@ -1,5 +1,5 @@
-import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
-import InsertPhoto from '@material-ui/icons/InsertPhoto';
+import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
+import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
@@ -21,7 +21,7 @@ const styles = (theme: Theme) =>
     root: {
       marginLeft: theme.spacing(7),
       maxWidth: 600,
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         marginLeft: theme.spacing(5),
         width: 'calc(100% - 32px)',
       },

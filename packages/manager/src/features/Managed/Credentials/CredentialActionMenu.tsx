@@ -12,7 +12,7 @@ interface Props {
 
 const CredentialActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const { label, credentialID, openDialog, openForEdit } = props;
 

@@ -2,13 +2,11 @@ import {
   ObjectStorageBucket,
   ObjectStorageCluster,
 } from '@linode/api-v4/lib/object-storage';
+import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -17,15 +15,12 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
-import TypeToConfirm from 'src/components/TypeToConfirm';
 import TransferDisplay from 'src/components/TransferDisplay';
+import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
 import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
   BucketError,
@@ -33,7 +28,6 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -60,10 +54,10 @@ interface Props {
   isRestrictedUser: boolean;
 }
 
-export type CombinedProps = Props & DispatchProps & PreferencesProps;
+export type CombinedProps = Props & DispatchProps;
 
 export const BucketLanding: React.FC<CombinedProps> = (props) => {
-  const { isRestrictedUser, openBucketDrawer, preferences } = props;
+  const { isRestrictedUser, openBucketDrawer } = props;
 
   const {
     data: objectStorageClusters,
@@ -86,8 +80,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
     ObjectStorageBucket | undefined
   >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string>('');
-  const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
+  const [error, setError] = React.useState<APIError[] | undefined>(undefined);
   const [
     bucketDetailDrawerOpen,
     setBucketDetailDrawerOpen,
@@ -107,7 +100,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
 
   const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setBucketToRemove(bucket);
-    setError('');
+    setError(undefined);
     removeBucketConfirmationDialog.open();
   };
 
@@ -117,7 +110,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
       return;
     }
 
-    setError('');
+    setError(undefined);
     setIsLoading(true);
 
     const { cluster, label } = bucketToRemove;
@@ -135,44 +128,13 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         sendDeleteBucketFailedEvent(cluster);
 
         setIsLoading(false);
-        const errorText = getErrorStringOrDefault(e, 'Error removing bucket.');
-        setError(errorText);
+        setError(e);
       });
   };
 
   const closeRemoveBucketConfirmationDialog = React.useCallback(() => {
     removeBucketConfirmationDialog.close();
   }, [removeBucketConfirmationDialog]);
-
-  const setConfirmBucketNameToInput = React.useCallback((input: string) => {
-    setConfirmBucketName(input);
-  }, []);
-
-  const actions = () => (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={closeRemoveBucketConfirmationDialog}
-        data-qa-cancel
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={removeBucket}
-        disabled={
-          bucketToRemove
-            ? preferences?.type_to_confirm !== false &&
-              confirmBucketName !== bucketToRemove.label
-            : true
-        }
-        loading={isLoading}
-        data-qa-submit-rebuild
-      >
-        Delete Bucket
-      </Button>
-    </ActionsPanel>
-  );
 
   const unavailableClusters =
     objectStorageBucketsResponse?.errors.map(
@@ -209,6 +171,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const totalUsage = sumBucketUsage(objectStorageBucketsResponse.buckets);
+  const bucketLabel = bucketToRemove ? bucketToRemove.label : '';
 
   return (
     <React.Fragment>
@@ -248,12 +211,18 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
           spacingTop={objectStorageBucketsResponse.buckets.length > 1 ? 8 : 18}
         />
       </Grid>
-      <ConfirmationDialog
+      <TypeToConfirmDialog
+        title={`Delete Bucket ${bucketLabel}`}
+        entity={{
+          type: 'Bucket',
+          label: bucketLabel,
+        }}
         open={removeBucketConfirmationDialog.isOpen}
+        loading={isLoading}
+        errors={error}
         onClose={closeRemoveBucketConfirmationDialog}
-        title={`Delete Bucket ${bucketToRemove ? bucketToRemove.label : ''}`}
-        actions={actions}
-        error={error}
+        onClick={removeBucket}
+        typographyStyle={{ marginTop: '20px' }}
       >
         <Notice warning>
           <Typography style={{ fontSize: '0.875rem' }}>
@@ -288,20 +257,7 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
         {objectStorageBucketsResponse?.buckets.length === 1 && (
           <CancelNotice className={classes.copy} />
         )}
-        <TypeToConfirm
-          confirmationText={
-            <Typography component={'span'} className={classes.copy}>
-              To confirm deletion, type the name of the bucket (
-              <b>{bucketToRemove?.label}</b>) in the field below:
-            </Typography>
-          }
-          onChange={(input) => setConfirmBucketNameToInput(input)}
-          value={confirmBucketName}
-          label="Bucket Name"
-          visible={preferences?.type_to_confirm}
-          expand
-        />
-      </ConfirmationDialog>
+      </TypeToConfirmDialog>
       <BucketDetailsDrawer
         open={bucketDetailDrawerOpen}
         onClose={closeBucketDetailDrawer}
@@ -368,8 +324,7 @@ const RenderEmpty: React.FC<{
 
 const enhanced = compose<CombinedProps, Props>(
   React.memo,
-  bucketDrawerContainer,
-  withPreferences()
+  bucketDrawerContainer
 );
 
 export default enhanced(BucketLanding);

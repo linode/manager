@@ -1,6 +1,6 @@
 import { deleteUser } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
@@ -22,7 +22,7 @@ import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
     marginTop: theme.spacing(2),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },

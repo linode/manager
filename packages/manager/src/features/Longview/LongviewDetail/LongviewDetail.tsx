@@ -40,7 +40,7 @@ import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
-    marginBottom: theme.spacing(3) + 6,
+    marginBottom: `calc(${theme.spacing(3)} + 6px)`,
   },
 }));
 

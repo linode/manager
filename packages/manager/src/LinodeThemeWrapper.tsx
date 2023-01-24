@@ -1,12 +1,18 @@
+import { StyledEngineProvider } from '@mui/material/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { ThemeProvider } from 'src/components/core/styles';
+import { ThemeProvider, Theme } from 'src/components/core/styles';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import withPreferences, {
   PreferencesActionsProps,
 } from 'src/containers/preferences.container';
 import { dark, light } from 'src/themes';
 import { isProductionBuild } from './constants';
+
+declare module '@mui/styles/defaultTheme' {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface DefaultTheme extends Theme {}
+}
 
 export type ThemeChoice = 'light' | 'dark';
 
@@ -136,11 +142,13 @@ const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = (props) => {
   }, [themeChoice]);
 
   return (
-    <ThemeProvider theme={theme}>
-      {typeof children === 'function'
-        ? (children as RenderChildren)(toggleTheme)
-        : children}
-    </ThemeProvider>
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>
+        {typeof children === 'function'
+          ? (children as RenderChildren)(toggleTheme)
+          : children}
+      </ThemeProvider>
+    </StyledEngineProvider>
   );
 };
 

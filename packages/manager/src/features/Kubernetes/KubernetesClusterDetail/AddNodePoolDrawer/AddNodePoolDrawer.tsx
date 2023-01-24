@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   boxOuter: {
     width: '100%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       alignItems: 'flex-start',
       flexDirection: 'column',
     },

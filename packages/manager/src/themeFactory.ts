@@ -1,15 +1,16 @@
 import { mergeDeepRight } from 'ramda';
-import createBreakpoints from 'src/components/core/styles/createBreakpoints';
+import { adaptV4Theme } from '@mui/material/styles';
 import createMuiTheme, {
-  ThemeOptions,
+  DeprecatedThemeOptions,
 } from 'src/components/core/styles/createMuiTheme';
+import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
 
 /**
  * Augmenting Palette and Palette Options
  * @todo Move status out of the palette and add it as a custom ThemeOption.
  */
 
-declare module '@material-ui/core/styles/createPalette' {
+declare module '@mui/material/styles/createPalette' {
   interface Palette {
     status: {
       success: string;
@@ -35,9 +36,9 @@ declare module '@material-ui/core/styles/createPalette' {
 }
 
 /**
- * Augmenting the Theme and ThemeOptions.
+ * Augmenting the Theme and DeprecatedThemeOptions.
  */
-declare module '@material-ui/core/styles/createTheme' {
+declare module '@mui/material/styles/createTheme' {
   interface Theme {
     name: string;
     '@keyframes rotate': any;
@@ -59,7 +60,7 @@ declare module '@material-ui/core/styles/createTheme' {
     status: any;
   }
 
-  interface ThemeOptions {
+  interface DeprecatedThemeOptions {
     name?: string;
     '@keyframes rotate'?: any;
     '@keyframes dash'?: any;
@@ -75,7 +76,15 @@ declare module '@material-ui/core/styles/createTheme' {
   }
 }
 
-const breakpoints = createBreakpoints({});
+export const breakpoints = createBreakpoints({
+  values: {
+    xs: 0,
+    sm: 600,
+    md: 960,
+    lg: 1280,
+    xl: 1920,
+  },
+});
 
 const textColors = {
   linkActiveLight: '#2575d0',
@@ -196,7 +205,9 @@ const visuallyHidden = {
 
 const graphTransparency = '0.7';
 
-type ThemeDefaults = () => ThemeOptions;
+const spacing = 8;
+
+type ThemeDefaults = () => DeprecatedThemeOptions;
 
 const themeDefaults: ThemeDefaults = () => {
   return {
@@ -228,7 +239,7 @@ const themeDefaults: ThemeDefaults = () => {
       'none',
       'none',
     ],
-    spacing: 8,
+    spacing,
     '@keyframes rotate': {
       from: {
         transform: 'rotate(0deg)',
@@ -453,6 +464,12 @@ const themeDefaults: ThemeDefaults = () => {
           backgroundColor: 'inherit',
         },
       },
+      MuiAvatar: {
+        colorDefault: {
+          color: '#c9c7c7',
+          backgroundColor: 'unset',
+        },
+      },
       MuiBackdrop: {
         root: {
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -481,7 +498,7 @@ const themeDefaults: ThemeDefaults = () => {
           '&:active': {
             backgroundColor: primaryColors.dark,
           },
-          '&$disabled': {
+          '&:disabled': {
             color: 'white',
           },
           '&.loading': {
@@ -500,7 +517,7 @@ const themeDefaults: ThemeDefaults = () => {
             borderColor: primaryColors.dark,
             color: primaryColors.dark,
           },
-          '&$disabled': {
+          '&:disabled': {
             backgroundColor: 'transparent',
             borderColor: '#c9cacb',
             color: '#c9cacb',
@@ -552,15 +569,6 @@ const themeDefaults: ThemeDefaults = () => {
           '&:last-child': {
             marginRight: 0,
           },
-          '&:hover': {
-            '& $deleteIcon': {
-              color: primaryColors.white,
-              '&:hover': {
-                color: primaryColors.main,
-                backgroundColor: primaryColors.white,
-              },
-            },
-          },
           '&:focus': {
             outline: '1px dotted #999',
           },
@@ -596,18 +604,9 @@ const themeDefaults: ThemeDefaults = () => {
           height: 'inherit',
         },
         deleteIcon: {
+          margin: 0,
           padding: 2,
-          marginLeft: 4,
-          marginRight: 2,
           color: primaryColors.text,
-          borderRadius: '50%',
-          width: 18,
-          height: 18,
-          '& svg': {
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-          },
         },
       },
       MuiCircularProgress: {
@@ -653,8 +652,8 @@ const themeDefaults: ThemeDefaults = () => {
           borderBottom: '1px solid #eee',
           marginBottom: 20,
           padding: '16px 24px',
+          color: primaryColors.headline,
           '& h2': {
-            color: primaryColors.headline,
             lineHeight: 1.2,
           },
         },
@@ -684,18 +683,18 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           justifyContent: 'space-between',
           backgroundColor: 'transparent',
-          paddingRight: 2,
+          paddingRight: 12,
           paddingLeft: 16,
+          '& svg': {
+            fill: '#2575d0',
+            stroke: '#2575d0',
+          },
           '&:hover': {
             '& h3': {
               color: primaryColors.light,
             },
-            '& svg': {
-              fill: '#2575d0',
-              stroke: '#2575d0',
-            },
           },
-          '&$expanded': {
+          '&.Mui-expanded': {
             margin: 0,
             minHeight: 48,
             '& .caret': {
@@ -707,7 +706,7 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
         content: {
-          '&$expanded': {
+          '&.Mui-expanded': {
             margin: '12px 0',
           },
         },
@@ -791,7 +790,6 @@ const themeDefaults: ThemeDefaults = () => {
       MuiIconButton: {
         root: {
           padding: 12,
-          color: textColors.linkActiveLight,
           '&:hover': {
             color: primaryColors.main,
             backgroundColor: 'transparent',
@@ -817,14 +815,14 @@ const themeDefaults: ThemeDefaults = () => {
             color: 'rgba(0, 0, 0, 0.75)',
             opacity: 0.5,
           },
-          '&$focused': {
+          '&.Mui-focused': {
             borderColor: primaryColors.main,
             boxShadow: '0 0 2px 1px #e1edfa',
             '& .select-option-icon': {
               paddingLeft: `30px !important`,
             },
           },
-          '&$error': {
+          '&.Mui-error': {
             borderColor: '#ca0813',
           },
           [breakpoints.down('xs')]: {
@@ -867,6 +865,13 @@ const themeDefaults: ThemeDefaults = () => {
       MuiInputBase: {
         input: {
           height: 'auto',
+        },
+      },
+      MuiDivider: {
+        root: {
+          borderColor: 'rgba(0, 0, 0, 0.12)',
+          marginTop: spacing,
+          marginBottom: spacing,
         },
       },
       MuiInputAdornment: {
@@ -1109,6 +1114,9 @@ const themeDefaults: ThemeDefaults = () => {
         root: {
           width: 68,
           height: 48,
+          '.MuiSwitch-track': {
+            opacity: '1 !important',
+          },
           '& $checked': {
             // color: `${primaryColors.main} !important`,
             '& input': {
@@ -1174,6 +1182,12 @@ const themeDefaults: ThemeDefaults = () => {
           padding: 16,
           '&$checked': {
             transform: 'translateX(20px)',
+          },
+          '&.Mui-disabled': {
+            '& +.MuiSwitch-track': {
+              backgroundColor: '#ddd',
+              borderColor: '#ccc',
+            },
           },
         },
       },
@@ -1327,7 +1341,7 @@ const themeDefaults: ThemeDefaults = () => {
           fontSize: '.9rem',
           lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
-          '&.MuiTableSortLabel-active': {
+          '&.Mui-active': {
             color: textColors.tableHeader,
           },
           '&:hover': {
@@ -1410,18 +1424,11 @@ const themeDefaults: ThemeDefaults = () => {
   };
 };
 
-export default (options: ThemeOptions) =>
+export default (options: DeprecatedThemeOptions) =>
   createMuiTheme(
-    mergeDeepRight(themeDefaults(), {
-      breakpoints: {
-        values: {
-          xs: 0,
-          sm: 600,
-          md: 960,
-          lg: 1280,
-          xl: 1920,
-        },
-      },
-      ...options,
-    })
+    adaptV4Theme(
+      mergeDeepRight(themeDefaults(), {
+        ...options,
+      })
+    )
   );

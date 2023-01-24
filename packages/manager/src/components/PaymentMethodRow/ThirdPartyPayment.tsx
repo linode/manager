@@ -73,7 +73,7 @@ export const TPP: React.FC<Props> = (props) => {
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const Icon = getIcon(paymentMethod.type as ThirdPartyPayment);
 
