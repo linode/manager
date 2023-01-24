@@ -9,7 +9,6 @@ import ApiAwarenessModal, { Props } from '.';
 const defaultProps: Props = {
   isOpen: false,
   onClose: jest.fn(),
-  label: 'debian-us-central',
   route: '',
 };
 
@@ -24,13 +23,11 @@ const renderComponent = (overrideProps?: Partial<Props>) => {
 describe('ApiAwarenessModal', () => {
   it('Should not render ApiAwarenessModal componet', () => {
     renderComponent();
-    expect(
-      screen.queryByText('Create Linode debian-us-central using command line')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('Create Linode')).not.toBeInTheDocument();
   });
   it('Should render ApiAwarenessModal componet when enabled', () => {
     renderComponent({ isOpen: true });
-    screen.getByText('Create Linode debian-us-central using command line');
+    screen.getByText('Create Linode');
   });
   it('Should invoke onClose handler upon cliking close button', () => {
     renderComponent({ isOpen: true });

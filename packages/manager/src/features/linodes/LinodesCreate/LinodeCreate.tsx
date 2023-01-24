@@ -798,7 +798,6 @@ export class LinodeCreate extends React.PureComponent<
                 isOpen={showApiAwarenessModal}
                 onClose={handleToggleApiAwarenessModal}
                 route={this.props.match.url}
-                label={this.props.label}
               />
             </div>
           </Box>

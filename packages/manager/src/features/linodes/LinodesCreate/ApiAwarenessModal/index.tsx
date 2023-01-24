@@ -7,18 +7,15 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tabs from 'src/components/core/ReachTabs';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendEvent } from 'src/utilities/ga';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   cancelButtonStyles: {
     justifyContent: 'right',
     paddingRight: '4px',
-  },
-  guides: {
-    marginTop: 16,
   },
   modalIntroTypoClass: {
     paddingTop: '16px',
@@ -34,24 +31,28 @@ const useStyles = makeStyles(() => ({
     marginTop: '0px',
     paddingTop: '4px',
   },
+  otherTools: {
+    fontFamily: theme.font.bold,
+    fontWeight: 400,
+    fontSize: '14px !important',
+  },
 }));
 
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
-  label: string;
   route: string;
 }
 
 const fireGAEvent = (action: string) => {
   sendEvent({
-    action: action,
+    action,
     category: 'API CLI Awareness Contextual Help',
   });
 };
 
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, label, onClose, route } = props;
+  const { isOpen, onClose, route } = props;
 
   const classes = useStyles();
 
@@ -76,36 +77,13 @@ const ApiAwarenessModal = (props: Props) => {
   };
 
   return (
-    <Dialog
-      title={`Create Linode ${label} using command line`}
-      open={isOpen}
-      onClose={onClose}
-      maxWidth={'sm'}
-    >
+    <Dialog title="Create Linode" open={isOpen} onClose={onClose} maxWidth="sm">
       <Typography variant="body1" className={classes.modalIntroTypoClass}>
-        You&#39;ll first need to{' '}
-        <ExternalLink
-          onClick={() => fireGAEvent('Click: Create API Access Token Link')}
-          link="/profile/tokens"
-          text="create an API access token"
-          hideIcon
-        />{' '}
-        then save your existing token to an environment variable or substitue it
-        into the command. Read our guides to learn about creating{' '}
-        <ExternalLink
-          onClick={() => fireGAEvent('Click: API Access Token Link')}
-          link="https://www.linode.com/docs/api/profile/#personal-access-token-create"
-          text=" API access tokens"
-          hideIcon
-        />{' '}
-        and Linodes using the{' '}
-        <ExternalLink
-          onClick={() => fireGAEvent('Click: Linode API Link')}
-          link="https://www.linode.com/docs/api/"
-          text="Linode API"
-          hideIcon
-        />
-        .
+        Create a Linode in the command line using either cURL or the Linode CLI
+        — both of which are powered by the Linode API. Select one of the methods
+        below and paste the corresponding command into your local terminal. The
+        values for each command have been populated with the selections made in
+        the Cloud Manager create form.
       </Typography>
       <Tabs
         defaultIndex={0}
@@ -114,49 +92,85 @@ const ApiAwarenessModal = (props: Props) => {
       >
         <TabLinkList tabs={tabs} />
         <TabPanels className={classes.tabPanelStyles}>
-          <SafeTabPanel index={0}>Code block API component WIP...</SafeTabPanel>
-          <SafeTabPanel index={1}>
-            Code block CLI component WIP...
-            <Typography className={classes.guides} variant="h2">
-              Guides
-            </Typography>
-            <Typography>
+          <SafeTabPanel index={0}>
+            <Typography variant="body1">
+              Most Linode API requests need to be authenticated with a valid{' '}
               <ExternalLink
+                text="personal access token"
+                link="https://cloud.linode.com/profile/tokens"
+                onClick={() => fireGAEvent('Click: personal access token')}
+                hideIcon
+              />
+              . The command below assumes that your personal access token has
+              been stored within the TOKEN shell variable. For more information,
+              see{' '}
+              <ExternalLink
+                text="Get Started with the Linode API"
+                link="https://www.linode.com/docs/products/tools/api/get-started/"
                 onClick={() =>
-                  fireGAEvent(
-                    'Click: Install and Configure the Linode CLI Link'
-                  )
+                  fireGAEvent('Click: Get Started with the Linode API')
                 }
-                link="https://www.linode.com/docs/products/tools/cli/get-started/#installing-the-linode-cli"
-                text="Install and Configure the Linode CLI"
                 hideIcon
-              />
-            </Typography>
-            <Typography>
+              />{' '}
+              and{' '}
               <ExternalLink
-                onClick={() => fireGAEvent('Click: Using The Linode CLI Link')}
-                link="https://www.linode.com/docs/products/tools/cli/get-started/#basic-usage"
-                text="Using the Linode CLI"
+                text="Linode API Guides"
+                link="https://www.linode.com/docs/products/tools/api/guides/"
+                onClick={() => fireGAEvent('Click: Linode API Guides')}
                 hideIcon
               />
+              .
+            </Typography>
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <Typography variant="body1">
+              Before running the command below, the Linode CLI needs to be
+              installed and configured on your system. See the{' '}
+              <ExternalLink
+                text="Install and Configure the Linode CLI"
+                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
+                onClick={() =>
+                  fireGAEvent('Click: Install and Configure the Linode CLI')
+                }
+                hideIcon
+              />{' '}
+              guide for instructions. To learn more and to use the Linode CLI
+              for tasks, review additional{' '}
+              <ExternalLink
+                text="Linode CLI Guides"
+                link="https://www.linode.com/docs/products/tools/cli/guides/"
+                onClick={() => fireGAEvent('Click: Linode CLI Guides')}
+                hideIcon
+              />
+              .
             </Typography>
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      <Notice success spacingBottom={16}>
-        <Typography>
-          Check out our{' '}
+      <Notice marketing spacingBottom={16}>
+        <Typography className={classes.otherTools}>
+          Deploy and manage your infrastructure with the{' '}
           <ExternalLink
-            onClick={() =>
-              fireGAEvent('Click: Collection Of Integrations Link')
-            }
-            link="https://www.linode.com/docs/products/tools/api/developers/#linode-developedsupported-tools"
-            text="collection of integrations"
+            text="Linode Terraform Provider"
+            link="https://www.linode.com/products/linode-terraform-provider/"
+            onClick={() => fireGAEvent('Click: Linode Terraform Provider')}
             hideIcon
           />{' '}
-          such as Terraform and Ansible that allow you to connect infrastructure
-          and dev tools to the Linode platform. Manage your Linode resources
-          using the tools you know and love.
+          and{' '}
+          <ExternalLink
+            text="Ansible Collection"
+            link="https://www.linode.com/products/linode-ansible-collection/"
+            onClick={() => fireGAEvent('Click: Ansible Collection')}
+            hideIcon
+          />
+          .{' '}
+          <ExternalLink
+            text="View all tools"
+            link="https://www.linode.com/docs/products/tools/api/developers/"
+            onClick={() => fireGAEvent('Click: View all tools')}
+            hideIcon
+          />{' '}
+          with programmatic access to the Linode platform.
         </Typography>
       </Notice>
 
