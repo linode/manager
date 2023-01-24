@@ -8,8 +8,11 @@ import {
   updateProfile,
   verifyPhoneNumberCode,
   VerifyVerificationCodePayload,
+  getAppTokens,
+  Token,
+  getPersonalAccessTokens,
 } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
@@ -21,6 +24,20 @@ export const useProfile = (givenProfile?: Profile) =>
     ...queryPresets.oneTimeFetch,
     initialData: givenProfile,
   });
+
+export const useAppTokensQuery = (params?: any, filter?: any) => {
+  return useQuery<ResourcePage<Token>, APIError[]>({
+    queryKey: [queryKey, 'apps', params, filter],
+    queryFn: () => getAppTokens(params, filter),
+  });
+};
+
+export const usePersonalAccessTokensQuery = (params?: any, filter?: any) => {
+  return useQuery<ResourcePage<Token>, APIError[]>({
+    queryKey: [queryKey, 'personal-access-tokens', params, filter],
+    queryFn: () => getPersonalAccessTokens(params, filter),
+  });
+};
 
 export const useMutateProfile = () => {
   return useMutation<Profile, APIError[], Partial<Profile>>(
