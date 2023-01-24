@@ -27,6 +27,7 @@ import {
 } from 'src/queries/objectStorage';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 type CombinedProps = WithTypesProps &
   WithImages &
@@ -68,12 +69,7 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = [
-  'linodes',
-  'nodeBalancers',
-  'images',
-  'kubernetes',
-];
+const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers', 'images'];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
@@ -101,6 +97,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
 
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
+
+  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
 
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
@@ -139,7 +137,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, buckets, domains ?? [], volumes ?? []);
+      search(searchText, buckets, domains ?? [], volumes ?? [], clusters ?? []);
     }
   }, [
     _loading,

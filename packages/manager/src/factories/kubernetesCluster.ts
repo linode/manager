@@ -4,11 +4,8 @@ import {
   KubernetesEndpointResponse,
   KubeNodePoolResponse,
   PoolNodeResponse,
+  KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes/types';
-import {
-  ExtendedCluster,
-  PoolNodeWithPrice,
-} from 'src/features/Kubernetes/types';
 import { v4 } from 'uuid';
 
 export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
@@ -17,25 +14,11 @@ export const kubeLinodeFactory = Factory.Sync.makeFactory<PoolNodeResponse>({
   status: 'ready',
 });
 
-export const nodePoolAPIFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>(
-  {
-    id: Factory.each((id) => id),
-    count: 3,
-    type: 'g6-standard-1',
-    nodes: kubeLinodeFactory.buildList(3),
-    autoscaler: {
-      enabled: false,
-      min: 1,
-      max: 1,
-    },
-  }
-);
-
-export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
+export const nodePoolFactory = Factory.Sync.makeFactory<KubeNodePoolResponse>({
   id: Factory.each((id) => id),
   count: 3,
   type: 'g6-standard-1',
-  totalMonthlyPrice: 1000,
+  nodes: kubeLinodeFactory.buildList(3),
   autoscaler: {
     enabled: false,
     min: 1,
@@ -43,20 +26,7 @@ export const _nodePoolFactory = Factory.Sync.makeFactory<PoolNodeWithPrice>({
   },
 });
 
-export const nodePoolFactory = _nodePoolFactory.withDerivation1(
-  ['count'],
-  'nodes',
-  (count: number) => {
-    const linodes = [];
-    let i = 0;
-    for (i; i < count; i++) {
-      linodes.push(kubeLinodeFactory.build());
-    }
-    return linodes;
-  }
-);
-
-export const kubernetesClusterFactory = Factory.Sync.makeFactory<ExtendedCluster>(
+export const kubernetesClusterFactory = Factory.Sync.makeFactory<KubernetesCluster>(
   {
     id: Factory.each((id) => id),
     created: '2020-04-08T16:58:21',
@@ -65,10 +35,6 @@ export const kubernetesClusterFactory = Factory.Sync.makeFactory<ExtendedCluster
     status: 'ready',
     label: Factory.each((i) => `cluster-${i}`),
     k8s_version: '1.21',
-    node_pools: nodePoolFactory.buildList(2),
-    totalMemory: 1000,
-    totalCPU: 4,
-    totalStorage: 1000,
     tags: [],
     control_plane: { high_availability: true },
   }
@@ -91,5 +57,11 @@ export const kubernetesAPIResponse = Factory.Sync.makeFactory<KubernetesCluster>
     k8s_version: '1.21',
     tags: [],
     control_plane: { high_availability: true },
+  }
+);
+
+export const kubernetesVersionFactory = Factory.Sync.makeFactory<KubernetesVersion>(
+  {
+    id: '1.24',
   }
 );

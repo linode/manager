@@ -10,8 +10,8 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 import {
   KubeNodePoolResponse,
-  PoolNodeRequest,
-  AutoscaleNodePoolRequest,
+  CreateNodePoolData,
+  UpdateNodePoolData,
 } from './types';
 
 /**
@@ -43,7 +43,7 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
  *
  * Adds a node pool to the specified cluster.
  */
-export const createNodePool = (clusterID: number, data: PoolNodeRequest) =>
+export const createNodePool = (clusterID: number, data: CreateNodePoolData) =>
   Request<KubeNodePoolResponse>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`),
@@ -58,7 +58,7 @@ export const createNodePool = (clusterID: number, data: PoolNodeRequest) =>
 export const updateNodePool = (
   clusterID: number,
   nodePoolID: number,
-  data: PoolNodeRequest
+  data: Partial<UpdateNodePoolData>
 ) =>
   Request<KubeNodePoolResponse>(
     setMethod('PUT'),
@@ -80,7 +80,7 @@ export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
 /**
  * recycleAllNodes
  *
- * Recycles all nodes from the specified Cluster.
+ * Recycles all nodes from the specified Node Pool.
  */
 export const recycleAllNodes = (clusterID: number, nodePoolID: number) =>
   Request<{}>(
@@ -97,17 +97,4 @@ export const recycleNode = (clusterID: number, nodeID: string) =>
   Request<{}>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/nodes/${nodeID}/recycle`)
-  );
-
-export const autoscaleNodePool = ({
-  clusterID,
-  nodePoolID,
-  autoscaler,
-}: AutoscaleNodePoolRequest) =>
-  Request<{}>(
-    setMethod('PUT'),
-    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
-    setData({
-      autoscaler,
-    })
   );

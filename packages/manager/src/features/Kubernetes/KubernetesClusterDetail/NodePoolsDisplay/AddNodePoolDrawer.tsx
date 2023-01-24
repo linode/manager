@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
@@ -7,11 +6,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { addCountToTypes } from 'src/features/Kubernetes/CreateCluster/NodePoolPanel';
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
+import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
+import { extendType } from 'src/store/linodeType/linodeType.reducer';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -65,30 +66,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
+  clusterId: number;
   clusterLabel: string;
   open: boolean;
-  error?: string;
-  isSubmitting: boolean;
   onClose: () => void;
-  onSubmit: (type: string, count: number) => void;
 }
 
-type CombinedProps = Props & WithTypesProps;
-
-export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
-  const {
-    clusterLabel,
-    error,
-    isSubmitting,
-    onClose,
-    onSubmit,
-    open,
-    typesData: allTypes,
-  } = props;
+export const AddNodePoolDrawer = (props: Props) => {
+  const { clusterId, clusterLabel, onClose, open } = props;
   const classes = useStyles();
+  const { data: types } = useAllLinodeTypesQuery();
+  const {
+    mutateAsync: createPool,
+    isLoading,
+    error,
+  } = useCreateNodePoolMutation(clusterId);
 
   // Only want to use current types here.
-  const typesData = filterCurrentTypes(allTypes);
+  const typesData = filterCurrentTypes(types?.map(extendType));
 
   const [selectedType, setSelectedType] = React.useState<string | undefined>(
     undefined
@@ -145,7 +140,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
     if (!type || !selectedType) {
       return;
     }
-    onSubmit(type.id, type.count);
+    return createPool({ type: type.id, count: type.count }).then(() => {
+      onClose();
+    });
   };
 
   return (
@@ -155,7 +152,9 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
       open={open}
       onClose={onClose}
     >
-      {error && <Notice className={classes.error} error text={error} />}
+      {error && (
+        <Notice className={classes.error} error text={error?.[0].reason} />
+      )}
       <form className={classes.plans}>
         <SelectPlanQuantityPanel
           // No nanodes or GPUs in clusters
@@ -166,7 +165,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
           onSelect={(newType: string) => setSelectedType(newType)}
           updatePlanCount={updatePlanCount}
           addPool={handleAdd}
-          isSubmitting={isSubmitting}
+          isSubmitting={isLoading}
           resetValues={resetDrawer}
         />
         {currentCount > 0 && currentCount < 3 && (
@@ -201,7 +200,7 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
               buttonType="primary"
               onClick={() => handleAdd()}
               disabled={currentCount === 0}
-              loading={isSubmitting}
+              loading={isLoading}
             >
               Add pool
             </Button>
@@ -211,7 +210,3 @@ export const AddNodePoolDrawer: React.FC<CombinedProps> = (props) => {
     </Drawer>
   );
 };
-
-const enhanced = compose<CombinedProps, Props>(withTypes);
-
-export default enhanced(AddNodePoolDrawer);
