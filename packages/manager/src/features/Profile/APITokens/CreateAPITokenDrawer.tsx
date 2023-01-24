@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -9,7 +8,6 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -103,43 +101,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export type DrawerMode = 'view' | 'edit' | 'create';
-
 interface RadioButton extends HTMLInputElement {
   name: string;
 }
 
 interface Props {
-  label?: string;
-  scopes?: string;
-  expiry?: string | null;
-  submitting?: boolean;
-  errors?: APIError[];
-  id?: number;
   open: boolean;
-  mode: string;
-  closeDrawer: () => void;
-  onChange: (key: string, value: string) => void;
-  /* Due to the amount of transformation that needs to be done here, scopes is
-     an uncontrolled input that's sent back in the submit handler */
-  onEdit: () => void;
+  onClose: () => void;
+  showSecret: (token: string) => void;
 }
 
-export const APITokenDrawer = (props: Props) => {
+export const CreateAPITokenDrawer = (props: Props) => {
+  const expiryTups = genExpiryTups();
   const classes = useStyles();
-  const {
-    label,
-    expiry,
-    errors,
-    open,
-    mode,
-    closeDrawer,
-    onEdit,
-    submitting,
-  } = props;
+  const { open, onClose, showSecret } = props;
 
   const {
     mutateAsync: createPersonalAccessToken,
+    isLoading,
+    error,
   } = useCreatePersonalAccessTokenMutation();
 
   const form = useFormik<{
@@ -150,20 +130,19 @@ export const APITokenDrawer = (props: Props) => {
     initialValues: {
       scopes: scopeStringToPermTuples('*'),
       label: '',
-      expiry: '',
+      expiry: expiryTups[0][1],
     },
     onSubmit(values) {
       createPersonalAccessToken({
         label: values.label,
         scopes: permTuplesToScopeString(values.scopes),
         expiry: values.expiry,
-      }).then(() => {
-        alert('success');
+      }).then(({ token }) => {
+        onClose();
+        showSecret(token ?? 'Secret not available');
       });
     },
   });
-
-  const expiryTups = genExpiryTups();
 
   const handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const newScopes = form.values.scopes;
@@ -221,68 +200,66 @@ export const APITokenDrawer = (props: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mode === 'create' && (
-            <TableRow data-qa-row="Select All">
-              <TableCell
-                parentColumn="Access"
-                padding="checkbox"
-                className={classes.selectCell}
-              >
-                Select All
-              </TableCell>
-              <TableCell
-                parentColumn="None"
-                padding="checkbox"
-                className={classes.noneCell}
-              >
-                <Radio
-                  name="Select All"
-                  checked={indexOfColumnWhereAllAreSelected === 0}
-                  data-testid="set-all-none"
-                  value="0"
-                  onChange={handleSelectAllScopes}
-                  data-qa-perm-none-radio
-                  inputProps={{
-                    'aria-label': 'Select none for all',
-                  }}
-                />
-              </TableCell>
-              <TableCell
-                parentColumn="Read Only"
-                padding="checkbox"
-                className={classes.readOnlyCell}
-              >
-                <Radio
-                  name="Select All"
-                  checked={indexOfColumnWhereAllAreSelected === 1}
-                  value="1"
-                  data-testid="set-all-read"
-                  onChange={handleSelectAllScopes}
-                  data-qa-perm-read-radio
-                  inputProps={{
-                    'aria-label': 'Select read-only for all',
-                  }}
-                />
-              </TableCell>
-              <TableCell
-                parentColumn="Read/Write"
-                padding="checkbox"
-                className={classes.readWritecell}
-              >
-                <Radio
-                  name="Select All"
-                  checked={indexOfColumnWhereAllAreSelected === 2}
-                  data-testid="set-all-write"
-                  value="2"
-                  onChange={handleSelectAllScopes}
-                  data-qa-perm-rw-radio
-                  inputProps={{
-                    'aria-label': 'Select read/write for all',
-                  }}
-                />
-              </TableCell>
-            </TableRow>
-          )}
+          <TableRow data-qa-row="Select All">
+            <TableCell
+              parentColumn="Access"
+              padding="checkbox"
+              className={classes.selectCell}
+            >
+              Select All
+            </TableCell>
+            <TableCell
+              parentColumn="None"
+              padding="checkbox"
+              className={classes.noneCell}
+            >
+              <Radio
+                name="Select All"
+                checked={indexOfColumnWhereAllAreSelected === 0}
+                data-testid="set-all-none"
+                value="0"
+                onChange={handleSelectAllScopes}
+                data-qa-perm-none-radio
+                inputProps={{
+                  'aria-label': 'Select none for all',
+                }}
+              />
+            </TableCell>
+            <TableCell
+              parentColumn="Read Only"
+              padding="checkbox"
+              className={classes.readOnlyCell}
+            >
+              <Radio
+                name="Select All"
+                checked={indexOfColumnWhereAllAreSelected === 1}
+                value="1"
+                data-testid="set-all-read"
+                onChange={handleSelectAllScopes}
+                data-qa-perm-read-radio
+                inputProps={{
+                  'aria-label': 'Select read-only for all',
+                }}
+              />
+            </TableCell>
+            <TableCell
+              parentColumn="Read/Write"
+              padding="checkbox"
+              className={classes.readWritecell}
+            >
+              <Radio
+                name="Select All"
+                checked={indexOfColumnWhereAllAreSelected === 2}
+                data-testid="set-all-write"
+                value="2"
+                onChange={handleSelectAllScopes}
+                data-qa-perm-rw-radio
+                inputProps={{
+                  'aria-label': 'Select read/write for all',
+                }}
+              />
+            </TableCell>
+          </TableRow>
           {form.values.scopes.map((scopeTup) => {
             if (!basePermNameMap[scopeTup[0]]) {
               return null;
@@ -308,7 +285,7 @@ export const APITokenDrawer = (props: Props) => {
                     active={scopeTup[1] === 0}
                     scope="0"
                     scopeDisplay={scopeTup[0]}
-                    viewOnly={mode === 'view'}
+                    viewOnly={false}
                     disabled={false}
                     onChange={handleScopeChange}
                   />
@@ -322,7 +299,7 @@ export const APITokenDrawer = (props: Props) => {
                     active={scopeTup[1] === 1}
                     scope="1"
                     scopeDisplay={scopeTup[0]}
-                    viewOnly={mode === 'view'}
+                    viewOnly={false}
                     disabled={false}
                     onChange={handleScopeChange}
                   />
@@ -336,7 +313,7 @@ export const APITokenDrawer = (props: Props) => {
                     active={scopeTup[1] === 2}
                     scope="2"
                     scopeDisplay={scopeTup[0]}
-                    viewOnly={mode === 'view'}
+                    viewOnly={false}
                     disabled={false}
                     onChange={handleScopeChange}
                   />
@@ -349,80 +326,55 @@ export const APITokenDrawer = (props: Props) => {
     );
   };
 
-  const errorMap = getErrorMap(['label', 'scopes'], errors);
+  const errorMap = getErrorMap(['label', 'scopes'], error);
 
   const expiryList = expiryTups.map((expiryTup: Expiry) => {
     return { label: expiryTup[0], value: expiryTup[1] };
   });
 
-  const defaultExpiry = expiryList.find((eachOption) => {
-    return eachOption.value === expiry;
-  });
-
   return (
-    <Drawer
-      title={
-        (mode === 'view' && label) ||
-        (mode === 'create' && 'Add Personal Access Token') ||
-        (mode === 'edit' && 'Edit Personal Access Token') ||
-        ''
-      }
-      open={open}
-      onClose={closeDrawer}
-    >
+    <Drawer title="Add Personal Access Token" open={open} onClose={onClose}>
       {errorMap.none && <Notice error text={errorMap.none} />}
-      {(mode === 'create' || mode === 'edit') && (
-        <TextField
-          errorText={errorMap.label}
-          value={label || ''}
-          label="Label"
-          onChange={handleLabelChange}
-          data-qa-add-label
+      <TextField
+        errorText={errorMap.label}
+        value={form.values.label}
+        label="Label"
+        onChange={handleLabelChange}
+        data-qa-add-label
+      />
+      <FormControl data-testid="expiry-select">
+        <Select
+          options={expiryList}
+          onChange={handleExpiryChange}
+          value={expiryList.find((item) => item.value === form.values.expiry)}
+          name="expiry"
+          labelId="expiry"
+          label="Expiry"
+          isClearable={false}
         />
-      )}
-
-      {mode === 'create' && (
-        <FormControl data-testid="expiry-select">
-          <Select
-            options={expiryList}
-            defaultValue={defaultExpiry || expiryTups[0][1]}
-            onChange={handleExpiryChange}
-            name="expiry"
-            labelId="expiry"
-            label="Expiry"
-            isClearable={false}
-          />
-        </FormControl>
-      )}
-      {mode === 'view' && (
-        <Typography>This application has access to your:</Typography>
-      )}
-      {(mode === 'view' || mode === 'create') && renderPermsTable()}
+      </FormControl>
+      {renderPermsTable()}
       {errorMap.scopes && (
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}
       <ActionsPanel>
-        {(mode === 'create' || mode === 'edit') && [
-          <Button
-            buttonType="secondary"
-            key="cancel"
-            onClick={closeDrawer}
-            data-qa-cancel
-          >
-            Cancel
-          </Button>,
-          <Button
-            key="create"
-            buttonType="primary"
-            loading={submitting}
-            onClick={
-              mode === 'create' ? () => form.handleSubmit() : () => onEdit()
-            }
-            data-qa-submit
-          >
-            {mode === 'create' ? 'Create Token' : 'Save Token'}
-          </Button>,
-        ]}
+        <Button
+          buttonType="secondary"
+          key="cancel"
+          onClick={onClose}
+          data-qa-cancel
+        >
+          Cancel
+        </Button>
+        <Button
+          key="create"
+          buttonType="primary"
+          loading={isLoading}
+          onClick={() => form.handleSubmit()}
+          data-qa-submit
+        >
+          Create Token
+        </Button>
       </ActionsPanel>
     </Drawer>
   );

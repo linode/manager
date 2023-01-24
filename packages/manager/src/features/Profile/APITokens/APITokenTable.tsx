@@ -1,15 +1,5 @@
-import {
-  createPersonalAccessToken,
-  deleteAppToken,
-  Token,
-} from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -21,19 +11,23 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
+import APITokenMenu from './APITokenMenu';
+import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
+import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
+import { Token } from '@linode/api-v4/lib/profile';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { isWayInTheFuture } from './utils';
+import { RevokeTokenDialog } from './RevokeTokenDialog';
+import { ViewAPITokenDrawer } from './ViewAPITokenDrawer';
+import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
-  useRevokeAPITokenMutation,
 } from 'src/queries/profile';
-import { APITokenDrawer, DrawerMode, genExpiryTups } from './APITokenDrawer';
-import APITokenMenu from './APITokenMenu';
-import { isWayInTheFuture } from './utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -61,6 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
+
 export type APITokenTitle =
   | 'Third Party Access Tokens'
   | 'Personal Access Tokens';
@@ -70,43 +65,11 @@ interface Props {
   title: APITokenTitle;
 }
 
-interface FormState {
-  mode: DrawerMode;
-  open: boolean;
-  errors?: APIError[];
-  id?: number;
-  values: {
-    scopes?: string;
-    expiry?: string;
-    label: string;
-  };
-}
-
-interface DialogState {
-  open: boolean;
-  id?: number;
-  label?: string;
-  errors?: APIError[];
-  type: string;
-  submittingDialog: boolean;
-}
-
-interface TokenState {
-  open: boolean;
-  value?: string;
-}
-
 const preferenceKey = 'api-tokens';
 
 export const APITokenTable = (props: Props) => {
   const classes = useStyles();
   const { type, title } = props;
-
-  const {
-    mutateAsync: deletePersonalAccessToken,
-    isLoading: isRevoking,
-    error: revokingError,
-  } = useRevokeAPITokenMutation();
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -133,148 +96,45 @@ export const APITokenTable = (props: Props) => {
     { '+order': order, '+order_by': orderBy }
   );
 
-  const [form, setForm] = React.useState<FormState>({
-    mode: 'view',
+  const [isCreateOpen, setIsCreateOpen] = React.useState<boolean>(false);
+  const [isRevokeOpen, setIsRevokeOpen] = React.useState<boolean>(false);
+  const [isViewOpen, setIsViewOpen] = React.useState<boolean>(false);
+  const [isEditOpen, setIsEditOpen] = React.useState<boolean>(false);
+
+  const [selectedTokenId, setSelectedTokenId] = React.useState<number>();
+  const selectedToken = data?.data.find(
+    (token) => token.id === selectedTokenId
+  );
+
+  const [secretTokenDialogData, setSecretTokenDialogData] = React.useState<{
+    open: boolean;
+    token: string | undefined;
+  }>({
     open: false,
-    errors: undefined,
-    id: undefined,
-    values: {
-      scopes: '*',
-      expiry: genExpiryTups()[3][1],
-      label: '',
-    },
+    token: undefined,
   });
 
-  const [dialog, setDialog] = React.useState<DialogState>({
-    open: false,
-    id: 0,
-    label: undefined,
-    errors: undefined,
-    type: '',
-    submittingDialog: false,
-  });
+  const closeSecretDialog = () => {
+    setSecretTokenDialogData({ open: false, token: '' });
+  };
 
-  const [token, setToken] = React.useState<TokenState>({
-    open: false,
-    value: undefined,
-  });
-
-  const openCreateDrawer = () => {
-    setForm({
-      mode: 'create',
-      open: true,
-      id: undefined,
-      values: {
-        label: '',
-        expiry: genExpiryTups()[0][1],
-        scopes: '*',
-      },
-    });
+  const showSecret = (token: string) => {
+    setSecretTokenDialogData({ open: true, token });
   };
 
   const openViewDrawer = (token: Token) => {
-    setForm({
-      mode: 'view',
-      open: true,
-      id: token.id,
-      values: {
-        scopes: token.scopes,
-        expiry: token.expiry ?? '',
-        label: token.label,
-      },
-    });
+    setIsViewOpen(true);
+    setSelectedTokenId(token.id);
   };
 
   const openEditDrawer = (token: Token) => {
-    setForm({
-      mode: 'edit',
-      open: true,
-      id: token.id,
-      values: {
-        scopes: token.scopes,
-        expiry: token.expiry ?? '',
-        label: token.label,
-      },
-    });
-  };
-
-  const closeDrawer = () => {
-    /* Only set { open: false } to avoid flicker of drawer appearance while closing */
-    setForm((prev) => ({
-      ...prev,
-      open: false,
-    }));
+    setIsEditOpen(true);
+    setSelectedTokenId(token.id);
   };
 
   const openRevokeDialog = (token: Token, type: string) => {
-    const { label, id } = token;
-    setDialog((prev) => ({
-      ...prev,
-      open: true,
-      label,
-      id,
-      type,
-      errors: undefined,
-    }));
-  };
-
-  const closeRevokeDialog = () => {
-    setDialog((prev) => ({
-      ...prev,
-      id: undefined,
-      open: false,
-      submittingDialog: false,
-    }));
-  };
-
-  const openTokenDialog = (token: string) => {
-    setDialog((prev) => ({
-      ...prev,
-      errors: undefined,
-    }));
-
-    setForm((prev) => ({
-      ...prev,
-      errors: undefined,
-    }));
-
-    setToken({
-      open: true,
-      value: token,
-    });
-  };
-
-  const closeTokenDialog = () => {
-    setToken({ open: false, value: undefined });
-  };
-
-  const revokePersonalAccessToken = () => {
-    deletePersonalAccessToken({ id: dialog.id ?? -1 }).then(() =>
-      closeRevokeDialog()
-    );
-  };
-
-  const revokeAppToken = () => {
-    deleteAppToken(dialog.id ?? -1).then(() => {
-      closeRevokeDialog();
-    });
-  };
-
-  const handleDrawerChange = (key: string, value: string) => {
-    setForm((prev) => ({ ...prev, values: { ...form.values, [key]: value } }));
-  };
-
-  const createToken = (scopes: string) => {
-    createPersonalAccessToken({ ...form.values, scopes }).then(({ token }) => {
-      closeDrawer();
-      openTokenDialog(token ?? '');
-    });
-  };
-
-  const editToken = () => {
-    // updatePersonalAccessToken(id, { label }).then(() => {
-    //   closeDrawer();
-    // });
+    setIsRevokeOpen(true);
+    setSelectedTokenId(token.id);
   };
 
   const renderContent = () => {
@@ -339,32 +199,6 @@ export const APITokenTable = (props: Props) => {
     ));
   };
 
-  const revokeAction = () => {
-    return dialog.type === 'OAuth Client Token'
-      ? revokeAppToken()
-      : revokePersonalAccessToken();
-  };
-
-  const revokeDialogActions = (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={closeRevokeDialog}
-        data-qa-button-cancel
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={revokeAction}
-        loading={isRevoking}
-        data-qa-button-confirm
-      >
-        Revoke
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
     <React.Fragment>
       <Grid
@@ -385,7 +219,7 @@ export const APITokenTable = (props: Props) => {
         <Grid item className={classes.addNewWrapper}>
           {type === 'Personal Access Token' && (
             <AddNewLink
-              onClick={openCreateDrawer}
+              onClick={() => setIsCreateOpen(true)}
               label="Create a Personal Access Token"
             />
           )}
@@ -434,35 +268,32 @@ export const APITokenTable = (props: Props) => {
         handleSizeChange={pagination.handlePageSizeChange}
         eventCategory="api tokens table"
       />
-
-      <APITokenDrawer
-        open={form.open}
-        mode={form.mode}
-        errors={form.errors}
-        id={form.id}
-        label={form.values.label}
-        scopes={form.values.scopes}
-        expiry={form.values.expiry}
-        closeDrawer={closeDrawer}
-        onChange={handleDrawerChange}
-        onEdit={editToken}
+      <CreateAPITokenDrawer
+        open={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        showSecret={showSecret}
       />
-
-      <ConfirmationDialog
-        title={`Revoking ${dialog.label}`}
-        open={dialog.open}
-        actions={revokeDialogActions}
-        onClose={closeRevokeDialog}
-        error={revokingError?.[0].reason}
-      >
-        <Typography>Are you sure you want to revoke this API Token?</Typography>
-      </ConfirmationDialog>
-
+      <ViewAPITokenDrawer
+        open={isViewOpen}
+        onClose={() => setIsViewOpen(false)}
+        token={selectedToken}
+      />
+      <EditAPITokenDrawer
+        open={isEditOpen}
+        onClose={() => setIsEditOpen(false)}
+        token={selectedToken}
+      />
+      <RevokeTokenDialog
+        open={isRevokeOpen}
+        onClose={() => setIsRevokeOpen(false)}
+        token={selectedToken}
+        type={type}
+      />
       <SecretTokenDialog
         title="Personal Access Token"
-        open={token.open}
-        onClose={closeTokenDialog}
-        value={token.value}
+        open={secretTokenDialogData.open}
+        onClose={closeSecretDialog}
+        value={secretTokenDialogData.token}
       />
     </React.Fragment>
   );

@@ -14,6 +14,8 @@ import {
   deletePersonalAccessToken,
   TokenRequest,
   createPersonalAccessToken,
+  updatePersonalAccessToken,
+  deleteAppToken,
 } from '@linode/api-v4/lib/profile';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -30,8 +32,9 @@ export const useProfile = (givenProfile?: Profile) =>
 
 export const useAppTokensQuery = (params?: any, filter?: any) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
-    queryKey: [queryKey, 'apps', params, filter],
+    queryKey: [queryKey, 'app-tokens', params, filter],
     queryFn: () => getAppTokens(params, filter),
+    keepPreviousData: true,
   });
 };
 
@@ -39,26 +42,41 @@ export const usePersonalAccessTokensQuery = (params?: any, filter?: any) => {
   return useQuery<ResourcePage<Token>, APIError[]>({
     queryKey: [queryKey, 'personal-access-tokens', params, filter],
     queryFn: () => getPersonalAccessTokens(params, filter),
+    keepPreviousData: true,
   });
 };
 
-export const useMutateProfile = () => {
-  return useMutation<Profile, APIError[], Partial<Profile>>(
-    (data) => {
-      return updateProfile(data);
-    },
-    { onSuccess: updateProfileData }
-  );
-};
-
-export const useRevokeAPITokenMutation = () => {
-  return useMutation<{}, APIError[], { id: number }>(
-    ({ id }) => deletePersonalAccessToken(id),
+export const useUpdatePersonalAccessTokenMutation = (id: number) => {
+  return useMutation<Token, APIError[], Partial<TokenRequest>>(
+    (data) => updatePersonalAccessToken(id, data),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
       },
     }
+  );
+};
+
+export const useRevokePersonalAccessTokenMutation = (id: number) => {
+  return useMutation<{}, APIError[]>(() => deletePersonalAccessToken(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+    },
+  });
+};
+
+export const useRevokeAppAccessTokenMutation = (id: number) => {
+  return useMutation<{}, APIError[]>(() => deleteAppToken(id), {
+    onSuccess() {
+      queryClient.invalidateQueries([queryKey, 'app-tokens']);
+    },
+  });
+};
+
+export const useMutateProfile = () => {
+  return useMutation<Profile, APIError[], Partial<Profile>>(
+    (data) => updateProfile(data),
+    { onSuccess: updateProfileData }
   );
 };
 
