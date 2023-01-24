@@ -54,8 +54,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     border: 'none',
   },
+  unmodified: {
+    backgroundColor: '#FFFFFF',
+  },
   highlight: {
     backgroundColor: theme.bg.lightBlue1,
+  },
+  disabled: {
+    backgroundColor: 'rgba(247, 247, 247, 0.25)',
+    '& td': {
+      color: '#D2D3D4',
+    },
   },
   error: {
     '& p': { color: theme.color.red },
@@ -72,6 +81,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   labelCol: {
     paddingLeft: 6,
     whiteSpace: 'nowrap',
+  },
+  ruleGrid: {
+    spacing: 0,
   },
   ruleList: {
     backgroundColor: theme.color.border3,
@@ -92,7 +104,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   // },
   ruleRow: {
     margin: 0,
-    background: '#FFFFFF',
     borderBottom: '1px solid #F4F5F6',
     alignItems: 'center',
     rowSpacing: 0.5,
@@ -228,7 +239,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <Grid
         container
         aria-label={`${category} Rules List`}
-        tabIndex={0}
+        // tabIndex={0}
         style={{ margin: 0 }}
       >
         <Grid
@@ -353,7 +364,6 @@ type FirewallRuleTableRowProps = RuleRow &
     innerRef: any;
     isDragging: boolean;
     disabled: boolean;
-    highlight?: boolean | undefined;
   };
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
@@ -364,7 +374,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       id,
       action,
       label,
-      // description,
       protocol,
       ports,
       addresses,
@@ -374,10 +383,10 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
       errors,
-      // innerRef,
+      innerRef,
       // isDragging,
       disabled,
-      // originalIndex,
+      originalIndex,
       // ...rest
     } = props;
 
@@ -393,17 +402,19 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       <Grid
         container
         key={id}
-        // highlight={
-        //   // Highlight the row if it's been modified or reordered. ID is the
-        //   // current index, so if it doesn't match the original index we know
-        //   // that the rule has been moved.
-        //   status === 'MODIFIED' || status === 'NEW' || originalIndex !== id
-        // }
-        // disabled={status === 'PENDING_DELETION' || disabled}
-        // domRef={innerRef}
-        className={classes.ruleRow}
+        ref={innerRef}
         aria-label={label}
         role="option"
+        className={classNames({
+          [classes.ruleRow]: true,
+          // Highlight the row if it's been modified or reordered. ID is the
+          // current index, so if it doesn't match the original index we know
+          // that the rule has been moved.
+          [classes.unmodified]: status === 'NOT_MODIFIED',
+          [classes.highlight]:
+            status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
+          [classes.disabled]: status === 'PENDING_DELETION' || disabled,
+        })}
       >
         <Grid
           item
