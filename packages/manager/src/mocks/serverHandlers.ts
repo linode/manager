@@ -73,6 +73,7 @@ import {
   linodeTypeFactory,
   dedicatedTypeFactory,
   proDedicatedTypeFactory,
+  kubernetesVersionFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -453,6 +454,10 @@ export const handlers = [
   rest.get('*/lke/clusters', async (req, res, ctx) => {
     const clusters = kubernetesAPIResponse.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
+  }),
+  rest.get('*/lke/versions', async (req, res, ctx) => {
+    const versions = kubernetesVersionFactory.buildList(1);
+    return res(ctx.json(makeResourcePage(versions)));
   }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
