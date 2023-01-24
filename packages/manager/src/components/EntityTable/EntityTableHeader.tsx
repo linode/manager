@@ -87,7 +87,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
         {headers.map((thisCell) =>
           thisCell.sortable ? (
             thisCell.hideOnTablet ? (
-              <Hidden smDown key={thisCell.dataColumn}>
+              <Hidden mdDown key={thisCell.dataColumn}>
                 <SortCell
                   thisCell={thisCell}
                   order={order}
@@ -96,7 +96,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
                 />
               </Hidden>
             ) : thisCell.hideOnMobile ? (
-              <Hidden xsDown key={thisCell.dataColumn}>
+              <Hidden smDown key={thisCell.dataColumn}>
                 <SortCell
                   thisCell={thisCell}
                   order={order}
@@ -116,11 +116,11 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
           ) : (
             [
               thisCell.hideOnTablet ? (
-                <Hidden smDown key={thisCell.dataColumn}>
+                <Hidden mdDown key={thisCell.dataColumn}>
                   <_NormalCell thisCell={thisCell} />
                 </Hidden>
               ) : thisCell.hideOnMobile ? (
-                <Hidden xsDown key={thisCell.dataColumn}>
+                <Hidden smDown key={thisCell.dataColumn}>
                   <_NormalCell thisCell={thisCell} />
                 </Hidden>
               ) : (
@@ -193,6 +193,7 @@ export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
             // Group by Tag is not available if you have a large account.
             // See https://github.com/linode/manager/pull/6653 for more details
             disabled={isLargeAccount}
+            size="large"
           >
             <GroupByTag />
           </IconButton>

@@ -49,9 +49,7 @@ export interface HighlightedMarkdownProps {
   sanitizeOptions?: sanitize.IOptions;
 }
 
-export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
-  props
-) => {
+export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const classes = useStyles();
   const { className, language, textOrMarkdown, sanitizeOptions } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);

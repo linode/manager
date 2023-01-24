@@ -21,11 +21,7 @@ const styles = (theme: Theme) =>
     root: {},
     attachmentPaper: {
       marginTop: 4,
-      padding: `
-      ${theme.spacing(1) + theme.spacing(1) / 2}px
-      ${theme.spacing(3)}px
-      0
-    `,
+      padding: `${theme.spacing(1.5)} ${theme.spacing(3)} 0`,
       overflowX: 'auto',
       border: `1px solid ${theme.color.grey2}`,
     },

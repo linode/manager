@@ -5,7 +5,7 @@ import Typography from 'src/components/core/Typography';
 import Box from 'src/components/core/Box';
 import Logo from 'src/assets/logo/logo.svg';
 import ErrorState from 'src/components/ErrorState';
-import BuildIcon from '@material-ui/icons/Build';
+import BuildIcon from '@mui/icons-material/Build';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bgStyling: {

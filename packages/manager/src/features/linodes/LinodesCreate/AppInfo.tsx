@@ -18,7 +18,7 @@ const AppInfo = (props: Props) => {
   const { onClick } = props;
   const onClickHandler = getOnClickHandler(onClick);
   return (
-    <IconButton onClick={onClickHandler}>
+    <IconButton onClick={onClickHandler} size="large">
       <Info />
     </IconButton>
   );

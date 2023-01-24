@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.main,
     margin: 0,
     padding: '4px 0px',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       alignItems: 'flex-start',
     },
@@ -33,12 +33,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&.MuiGrid-item': {
       paddingLeft: 0,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
   linkContainer: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       padding: '0 8px !important',
     },
   },
@@ -50,12 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       color: theme.color.black,
       textDecoration: 'underline',
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginRight: theme.spacing(1),
     },
   },
   feedbackLink: {
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginBottom: theme.spacing(1),
     },
     [theme.breakpoints.up('xs')]: {

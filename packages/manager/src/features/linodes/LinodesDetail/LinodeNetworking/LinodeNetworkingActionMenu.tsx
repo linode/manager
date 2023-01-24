@@ -32,7 +32,7 @@ export const LinodeNetworkingActionMenu: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
   const theme = useTheme<Theme>();
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const { onEdit, onRemove, ipType, ipAddress, readOnly } = props;
 

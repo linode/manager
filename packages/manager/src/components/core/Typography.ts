@@ -1,6 +1,6 @@
 import Typography, {
   TypographyProps as _TypographyProps,
-} from '@material-ui/core/Typography';
+} from '@mui/material/Typography';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface TypographyProps extends _TypographyProps {}

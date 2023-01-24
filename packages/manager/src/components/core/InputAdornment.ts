@@ -1,6 +1,6 @@
 import InputAdornment, {
   InputAdornmentProps as _InputAdornmentProps,
-} from '@material-ui/core/InputAdornment';
+} from '@mui/material/InputAdornment';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface InputAdornmentProps extends _InputAdornmentProps {}

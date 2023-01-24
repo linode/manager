@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
@@ -34,7 +34,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 18,
     position: 'relative',
     '& + .notice': {
-      marginTop: `${theme.spacing()}px !important`,
+      marginTop: `${theme.spacing()} !important`,
     },
     '& $important': {
       backgroundColor: theme.bg.bgPaper,
@@ -111,6 +111,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
   successList: {
     borderLeft: `5px solid ${theme.palette.status.successDark}`,
   },
+  marketing: {
+    borderLeft: `5px solid ${theme.color.green}`,
+  },
   flag: {
     marginRight: theme.spacing(2),
   },
@@ -124,7 +127,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
   informationalList: {
     borderLeft: `5px solid ${theme.palette.primary.main}`,
   },
-  marketing: { borderLeft: `5px solid ${theme.palette.status.marketingDark}` },
 }));
 
 interface Props extends GridProps {
@@ -133,8 +135,8 @@ interface Props extends GridProps {
   errorGroup?: string;
   important?: boolean;
   warning?: boolean;
-  marketing?: boolean;
   success?: boolean;
+  marketing?: boolean;
   typeProps?: TypographyProps;
   className?: string;
   flag?: boolean;
@@ -232,6 +234,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.success]: success && !notificationList,
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
+        [classes.marketing]: marketing,
         [classes.warningList]: warning && notificationList,
         [classes.informational]: informational && !notificationList,
         [classes.informationalList]: informational && notificationList,

@@ -33,10 +33,8 @@ import withProfile, { ProfileProps } from 'src/components/withProfile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
-import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
-import { ExtendedReply, ExtendedTicket } from '../types';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
 
@@ -59,16 +57,16 @@ const styles = (theme: Theme) =>
     breadcrumbs: {
       marginBottom: theme.spacing(2),
       marginTop: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
       },
     },
     label: {
       marginLeft: 32,
-      width: `calc(100% - (32px + ${theme.spacing(7)}px))`,
+      width: `calc(100% - (32px + ${theme.spacing(7)}))`,
       [theme.breakpoints.up('sm')]: {
-        marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
-        width: `calc(100% - (40px + ${theme.spacing(7)}px))`,
+        marginLeft: `calc(40px + ${theme.spacing(1)})`,
+        width: `calc(100% - (40px + ${theme.spacing(7)}))`,
       },
     },
     ticketLabel: {
@@ -113,8 +111,8 @@ interface State {
   loading: boolean;
   errors?: APIError[];
   attachmentErrors: AttachmentError[];
-  replies?: ExtendedReply[];
-  ticket?: ExtendedTicket;
+  replies?: SupportReply[];
+  ticket?: SupportTicket;
   ticketCloseSuccess: boolean;
 }
 
@@ -195,29 +193,13 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     ticketResponse: SupportTicket,
     replyResponse: SupportReply[]
   ) => {
-    /** Gets a unique list of gravatar IDs */
-    const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [
-      ticketResponse.gravatar_id,
-    ]);
-
-    /** Send a request for the gravatar for each unique ID. */
-    return Bluebird.reduce(uniqueGravatarIDs, requestAndMapGravatar, {}).then(
-      (gravatarMap) => {
-        /** We now have the gravatar map from the reducer above, and the replies from further up,
-         * so we can merge them together.
-         */
-        if (this.mounted) {
-          this.setState({
-            replies: replyResponse.map(matchGravatarURLToReply(gravatarMap)),
-            ticket: {
-              ...ticketResponse,
-              gravatarUrl: gravatarMap[ticketResponse.gravatar_id],
-            },
-            loading: false,
-          });
-        }
-      }
-    );
+    if (this.mounted) {
+      this.setState({
+        replies: replyResponse,
+        ticket: ticketResponse,
+        loading: false,
+      });
+    }
   };
 
   loadTicketAndReplies = () => {
@@ -235,17 +217,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
   onCreateReplySuccess = (newReply: SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
-    getGravatarUrlFromHash(newReply.gravatar_id).then((url) => {
-      const replyWithGravatar: ExtendedReply = {
-        ...newReply,
-        gravatarUrl: url,
-      };
-      const updatedReplies = [...replies, ...[replyWithGravatar]];
-      this.setState({
-        replies: updatedReplies,
-        ticketCloseSuccess: false,
-        attachmentErrors: [],
-      });
+    const updatedReplies = [...replies, ...[newReply]];
+    this.setState({
+      replies: updatedReplies,
+      ticketCloseSuccess: false,
+      attachmentErrors: [],
     });
   };
 
@@ -300,11 +276,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderReplies = (replies: ExtendedReply[]) => {
+  renderReplies = (replies: SupportReply[]) => {
     const { ticket } = this.state;
     return replies
       .filter((reply) => reply.description.trim() !== '')
-      .map((reply: ExtendedReply, idx: number) => {
+      .map((reply: SupportReply, idx: number) => {
         return (
           <ExpandableTicketPanel
             key={idx}
@@ -450,29 +426,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const reduceToUniqueGravatarIDs = (acc: string[], reply: SupportReply) => {
-  const { gravatar_id } = reply;
-
-  return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
-};
-
-const requestAndMapGravatar = (acc: any, id: string) => {
-  return (
-    getGravatarUrlFromHash(id)
-      /* Map the response to a dict of { id: url }*/
-      .then((result) => ({ ...acc, [id]: result }))
-  );
-};
-
 const styled = withStyles(styles);
-
-const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
-  reply: SupportReply
-): ExtendedReply => ({
-  ...reply,
-  gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap),
-});
 
 export default compose<any, any, any, any>(
   setDocs(SupportTicketDetail.docs),

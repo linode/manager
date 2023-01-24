@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-01-11] - v1.83.1
+
+### Fixed:
+- Showing past completed maintenance on Linodes
+
+## [2023-01-09] - v1.83.0
+
+### Added:
+- Support for new Washington, DC datacenter
+- Account Login History
+- `completed` Account Maintenance Events
+- External link icons to YouTube links on Database landing page
+
+### Changed:
+- Relocate SMTP restriction notice for better visibility
+- Update text for Akamai-billed customers
+- Update and improve PayPal payment limits and logic
+- Update links to the Marketplace app guides
+- Update Docs Search URL regarding VLANs
+- Update to Material UI v5
+- Re-worked Gravatar loading and fallback logic
+- Filter blocklisted events from Notification Menu
+- Remove NVMe chip from Volumes
+
+### Fixed:
+- /32 IP address Access Controls for DBaaS
+- Show correct plan tab when cloning a Linode
+- Stackscripts loading for large accounts
+
+
 ## [2022-12-12] - v1.82.0
 
 ### Added:

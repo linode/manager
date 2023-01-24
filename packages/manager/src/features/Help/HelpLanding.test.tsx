@@ -16,7 +16,7 @@ describe('Help Landing', () => {
   });
 
   it('should render popular posts panel', () => {
-    expect(component.find('WithStyles(PopularPosts)')).toHaveLength(1);
+    expect(component.find('PopularPosts')).toHaveLength(1);
   });
 
   it('should render other ways panel', () => {

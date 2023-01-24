@@ -78,7 +78,7 @@ const styles = (theme: Theme) =>
       },
     },
     button: {
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         marginLeft: theme.spacing(),
       },
     },

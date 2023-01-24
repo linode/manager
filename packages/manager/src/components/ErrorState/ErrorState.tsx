@@ -1,5 +1,5 @@
 import * as React from 'react';
-import ErrorOutline from '@material-ui/icons/ErrorOutline';
+import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import classNames from 'classnames';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';

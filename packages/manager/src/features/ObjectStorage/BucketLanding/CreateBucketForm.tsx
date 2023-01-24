@@ -33,7 +33,7 @@ import {
 
 const useStyles = makeStyles((theme: Theme) => ({
   textWrapper: {
-    marginBottom: theme.spacing(1) + 2,
+    marginBottom: theme.spacing(1.25),
   },
   agreement: {
     marginTop: theme.spacing(3),

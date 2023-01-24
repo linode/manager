@@ -38,24 +38,24 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   headline: {
     marginBottom: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
   emptyResultWrapper: {
-    padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
   },
   emptyResult: {
-    padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(10)} ${theme.spacing(4)}`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       padding: theme.spacing(4),
     },
   },

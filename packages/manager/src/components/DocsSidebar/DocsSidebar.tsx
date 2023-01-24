@@ -1,4 +1,4 @@
-import HelpOutline from '@material-ui/icons/HelpOutline';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 import classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         marginTop: theme.spacing(3),
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         position: 'fixed !important' as 'fixed',
         right: 0,
         width: '90%',
@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
       fontSize: '1.2rem',
     },
     gridItem: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         position: 'relative',
         right: 56,
         backgroundColor: theme.bg.white,
@@ -120,6 +120,7 @@ class DocsSidebar extends React.Component<CombinedProps, State> {
           <IconButton
             onClick={this.toggleHelp}
             className={classes.toggleButton}
+            size="large"
           >
             <HelpOutline />
           </IconButton>

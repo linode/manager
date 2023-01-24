@@ -71,7 +71,7 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         paddingLeft: theme.spacing(),
       },
     },

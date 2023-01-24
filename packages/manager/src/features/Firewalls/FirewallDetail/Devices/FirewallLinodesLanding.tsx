@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   copy: {
     fontSize: '0.875rem',
     marginTop: theme.spacing(),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
       marginRight: theme.spacing(),
     },

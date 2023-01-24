@@ -103,7 +103,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
           ) : null}
         </Grid>
       </TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-cluster-version>
           <div className={classes.version}>
             {cluster.k8s_version}
@@ -120,7 +120,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
 
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-cluster-date>
           <DateTimeDisplay value={cluster.created} />
         </TableCell>
@@ -128,12 +128,12 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
       <TableCell data-qa-cluster-region>
         {dcDisplayNames[cluster.region] ?? cluster.region}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-cluster-memory>
           {`${cluster.totalMemory / 1024} GB`}
         </TableCell>
       </Hidden>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell data-qa-cluster-cpu>
           {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
         </TableCell>

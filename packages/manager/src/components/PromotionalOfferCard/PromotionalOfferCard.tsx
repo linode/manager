@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-start',
     '& svg': {
       marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(1) - 2,
+      marginBottom: `calc(${theme.spacing(1)} - 2)`,
     },
     '& p:last-child': {
       marginTop: theme.spacing(1),

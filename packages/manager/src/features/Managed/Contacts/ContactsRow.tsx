@@ -17,11 +17,11 @@ export const ContactsRow: React.FunctionComponent<Props> = (props) => {
   return (
     <TableRow ariaLabel={`Contact ${contact.id}`} key={contact.id}>
       <TableCell>{contact.name}</TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell>{contact.group}</TableCell>
       </Hidden>
       <TableCell>{contact.email}</TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell>{contact.phone.primary}</TableCell>
         <TableCell>{contact.phone.secondary}</TableCell>
       </Hidden>

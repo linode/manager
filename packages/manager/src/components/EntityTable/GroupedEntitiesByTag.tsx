@@ -22,9 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'auto',
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: `${theme.spacing(2) + theme.spacing(1) / 2}px 0 ${
-        theme.spacing(1) + 2
-      }px`,
+      padding: `${theme.spacing(2.5)} 0 ${theme.spacing(1.25)}`,
       borderBottom: 'none',
       borderTop: 'none',
     },
@@ -33,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       '& $tagHeaderRow > td': {
         borderTop: 'none',
-        padding: `${theme.spacing(1) + 2}px 0`,
+        padding: `${theme.spacing(1.25)} 0`,
       },
     },
   },

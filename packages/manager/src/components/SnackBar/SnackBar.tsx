@@ -1,34 +1,27 @@
-import {
-  SnackbarProvider,
-  SnackbarProviderProps,
-  WithSnackbarProps,
-} from 'notistack';
+import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import CloseSnackbar from './CloseSnackbar';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    '& span': {
+    '& div': {
+      backgroundColor: `${theme.bg.white} !important`,
       color: theme.palette.text.primary,
       fontSize: '0.875rem',
     },
   },
   info: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main,
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   success: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main,
+    borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   error: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.errorDark,
+    borderLeft: `6px solid ${theme.palette.status.errorDark}`,
   },
   warning: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.warningDark,
+    borderLeft: `6px solid ${theme.palette.status.warningDark}`,
   },
 }));
 
@@ -40,9 +33,11 @@ const SnackBar: React.FC<CombinedProps> = (props) => {
    * This pattern is taken from the Notistack docs:
    * https://iamhosseindhv.com/notistack/demos#action-for-all-snackbars
    */
-  const notistackRef: React.Ref<WithSnackbarProps> = React.createRef();
+  const notistackRef: React.Ref<SnackbarProvider> = React.createRef();
   const onClickDismiss = (key: string | number | undefined) => () => {
-    notistackRef?.current?.closeSnackbar(key);
+    if (notistackRef.current) {
+      notistackRef.current.closeSnackbar(key);
+    }
   };
 
   const { children, ...rest } = props;

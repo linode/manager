@@ -1,10 +1,5 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
-import {
-  akamaiInvoiceRow,
-  akamaiRowEmptyState,
-} from 'src/features/Billing/BillingPanels/BillingActivityPanel/BillingActivityPanel';
-import { akamaiBillingInvoiceText } from 'src/features/Billing/billingUtils';
 import { wrapWithTableBody } from 'src/utilities/testHelpers';
 import TableContentWrapper from './TableContentWrapper';
 
@@ -16,6 +11,20 @@ const children = [
     <td>Another row!</td>
   </tr>,
 ];
+
+const customEmptyRow = (
+  <tr>
+    <td colSpan={4}>
+      <div> A custom empty row </div>
+    </td>
+  </tr>
+);
+
+const customRow = (
+  <tr>
+    <td> A custom row </td>
+  </tr>
+);
 
 describe('TableContentWrapper component', () => {
   it('should render its children if everything is kosher', () => {
@@ -99,27 +108,27 @@ describe('TableContentWrapper component', () => {
     const emptyProps = {
       loading: false,
       length: 0,
-      rowEmptyState: akamaiRowEmptyState,
+      rowEmptyState: customEmptyRow,
       children,
     };
 
     const { getByText } = render(
       wrapWithTableBody(<TableContentWrapper {...emptyProps} />)
     );
-    getByText(akamaiBillingInvoiceText);
+    getByText('A custom empty row');
   });
 
   it('should render custom row if it is provided', () => {
     const rowProps = {
       loading: false,
       length: 2,
-      customFirstRow: akamaiInvoiceRow,
+      customFirstRow: customRow,
       children,
     };
 
     const { getByText } = render(
       wrapWithTableBody(<TableContentWrapper {...rowProps} />)
     );
-    getByText(`Future ${akamaiBillingInvoiceText}`);
+    getByText('A custom row');
   });
 });

@@ -1,11 +1,6 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { withTheme, WithTheme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
@@ -14,21 +9,7 @@ import {
 } from 'src/features/Longview/shared/utilities';
 import { LongviewProcesses, MySQLResponse } from '../../../request.types';
 import { convertData } from '../../../shared/formatters';
-import ProcessGraphs from '../ProcessGraphs';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    padding: `${theme.spacing(3) + 2}px ${theme.spacing(3) + 2}px ${
-      theme.spacing(5) + 4
-    }px`,
-  },
-  smallGraph: {
-    [theme.breakpoints.down('sm')]: {
-      marginTop: theme.spacing(3) + 2,
-    },
-    marginTop: theme.spacing(6) + 3,
-  },
-}));
+import ProcessGraphs, { useStyles } from '../ProcessGraphs';
 
 interface Props {
   data?: MySQLResponse;

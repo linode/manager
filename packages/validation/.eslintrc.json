@@ -40,9 +40,7 @@
     "no-new-wrappers": "error",
     "no-restricted-imports": [
       "error",
-      "rxjs",
-      "@material-ui/core",
-      "@material-ui/icons"
+      "rxjs"
     ],
     "no-console": "error",
     "no-undef-init": "off",
