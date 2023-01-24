@@ -10,7 +10,7 @@ export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
       backgroundColor: '#32363b',
       padding: `${theme.spacing(4)}px ${theme.spacing(2)}px`,
 
-      '& .hljs-literal': {
+      '& .hljs-literal, .hljs-built_in': {
         color: '#f8f8f2',
       },
       '& .hljs-string': {
