@@ -83,7 +83,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     whiteSpace: 'nowrap',
   },
   ruleGrid: {
-    spacing: 0,
+    margin: 0,
+    width: '100%',
   },
   ruleList: {
     backgroundColor: theme.color.border3,
@@ -91,6 +92,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     listStyle: 'none',
     paddingLeft: 0,
     width: '100%',
+    margin: 0,
   },
   ruleHeaderRow: {
     marginTop: '5px',
@@ -99,18 +101,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 'bold',
     height: '40px',
   },
-  // ruleHeaderCell: {
-  //   border: '1px solid #F4F5F6',
-  // },
   ruleRow: {
-    margin: 0,
     borderBottom: '1px solid #F4F5F6',
     alignItems: 'center',
-    rowSpacing: 0.5,
   },
-  ruleCell: {
-    margin: 0,
-  },
+  // ruleCell: {
+  //   backgroundColor: '#FFFFFF',
+  //   padding: 10,
+  // },
   addLabelButton: {
     ...theme.applyLinkStyles,
   },
@@ -152,7 +150,6 @@ interface RuleRow {
   ports: string;
   addresses: string;
   id: number;
-  role?: string;
   status: RuleStatus;
   errors?: FirewallRuleError[];
   originalIndex: number;
@@ -240,11 +237,11 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
         container
         aria-label={`${category} Rules List`}
         // tabIndex={0}
-        style={{ margin: 0 }}
+        className={classes.ruleGrid}
       >
         <Grid
           container
-          className={classes.ruleHeaderRow}
+          className={classNames(classes.ruleHeaderRow, classes.ruleGrid)}
           aria-label={`${category} Rules List Headers`}
           tabIndex={0}
         >
@@ -278,11 +275,15 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
               {capitalize(addressColumnLabel)}
             </Grid>
           </Hidden>
-          <Grid item style={{ width: '5%', border: '1px solid #F4F5F6' }}>
+          <Grid
+            item
+            className={classes.ruleGrid}
+            style={{ width: '5%', border: '1px solid #F4F5F6' }}
+          >
             Action
           </Grid>
         </Grid>
-        <Grid container>
+        <Grid container className={classes.ruleGrid}>
           <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" isDropDisabled={disabled}>
               {(provided) => (
@@ -384,10 +385,8 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerUndo,
       errors,
       innerRef,
-      // isDragging,
       disabled,
       originalIndex,
-      // ...rest
     } = props;
 
     const actionMenuProps = {
@@ -406,6 +405,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         aria-label={label}
         role="option"
         className={classNames({
+          [classes.ruleGrid]: true,
           [classes.ruleRow]: true,
           // Highlight the row if it's been modified or reordered. ID is the
           // current index, so if it doesn't match the original index we know
@@ -535,7 +535,12 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   );
 
   return (
-    <Grid container className={classes.policyRow}>
+    <Grid
+      container
+      className={classNames(classes.policyRow, classes.ruleGrid)}
+      tabIndex={0}
+      justifyContent="center"
+    >
       <Grid item className={classes.policyText}>
         {helperText}
       </Grid>
