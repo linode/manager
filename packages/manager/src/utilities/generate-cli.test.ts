@@ -2,6 +2,7 @@ import generateCLICommand from './generate-cli';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 
 const linodeRequest = createLinodeRequestFactory.build();
+
 const linodeData = {
   ...linodeRequest,
   stackscript_id: 10079,
@@ -11,10 +12,12 @@ const linodeData = {
 };
 
 const linodeDataForCLI = `
---label linode-1
---root_pass aComplex@Password
---region us-east
---type g6-standard-2
+--label ${linodeRequest.label}
+--root_pass ${linodeRequest.root_pass}
+--image ${linodeRequest.image}
+--type ${linodeRequest.type}
+--region ${linodeRequest.region}
+--booted ${linodeRequest.booted}
 --stackscript_id 10079
 --stackscript_data '{"gh_username": "linode"}'
 `
