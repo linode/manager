@@ -1,3 +1,6 @@
+import { DateTime } from 'luxon';
+import isPast from 'src/utilities/isPast';
+
 export type Permission = [string, number];
 
 export const basePerms = [
@@ -75,12 +78,9 @@ const defaultScopeMap = (perms: string[]): Record<string, 0> =>
  * Each permission level gives a user access to all lower permission levels.
  */
 const permRegex = new RegExp(/[, ]/);
-export const scopeStringToPermTuples = (
-  scopes: string,
-  perms: string[]
-): Permission[] => {
+export const scopeStringToPermTuples = (scopes: string): Permission[] => {
   if (scopes === '*') {
-    return perms.map((perm) => [perm, 2] as Permission);
+    return basePerms.map((perm) => [perm, 2] as Permission);
   }
 
   const scopeMap = scopes.split(permRegex).reduce((map, scopeStr) => {
@@ -89,7 +89,7 @@ export const scopeStringToPermTuples = (
       ...map,
       [perm]: levelMap[level],
     };
-  }, defaultScopeMap(perms));
+  }, defaultScopeMap(basePerms));
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -127,10 +127,13 @@ export const scopeStringToPermTuples = (
     scopeMap
   );
 
-  return perms.reduce((tups: Permission[], permName: string): Permission[] => {
-    const tup = [permName, combinedScopeMap[permName]] as Permission;
-    return [...tups, tup];
-  }, []);
+  return basePerms.reduce(
+    (tups: Permission[], permName: string): Permission[] => {
+      const tup = [permName, combinedScopeMap[permName]] as Permission;
+      return [...tups, tup];
+    },
+    []
+  );
 };
 
 export const allMaxPerm = (
@@ -148,11 +151,8 @@ export const allMaxPerm = (
   );
 };
 
-export const permTuplesToScopeString = (
-  scopeTups: Permission[],
-  perms: string[]
-): string => {
-  if (allMaxPerm(scopeTups, perms)) {
+export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
+  if (allMaxPerm(scopeTups, basePerms)) {
     return '*';
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {
@@ -179,4 +179,12 @@ export const allScopesAreTheSame = (scopes: Permission[]) => {
   const sample = scopes[0];
   const scopeMatches = (scope: Permission) => scope[1] === sample[1];
   return scopes.slice(1).every(scopeMatches) ? sample[1] : null;
+};
+
+/**
+ * return true if the given time is past 100 year in the future
+ */
+export const isWayInTheFuture = (time: string) => {
+  const wayInTheFuture = DateTime.local().plus({ years: 100 }).toISO();
+  return isPast(wayInTheFuture)(time);
 };

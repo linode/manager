@@ -1,4 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
+import { useFormik } from 'formik';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -19,12 +20,14 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ISO_DATETIME_NO_TZ_FORMAT } from 'src/constants';
 import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
+import { useCreatePersonalAccessTokenMutation } from 'src/queries/profile';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import {
   Permission,
   permTuplesToScopeString,
   scopeStringToPermTuples,
   allScopesAreTheSame,
+  basePermNameMap,
 } from './utils';
 
 type Expiry = [string, string];
@@ -111,8 +114,6 @@ interface Props {
   scopes?: string;
   expiry?: string | null;
   submitting?: boolean;
-  perms: string[];
-  permNameMap: Record<string, string>;
   errors?: APIError[];
   id?: number;
   open: boolean;
@@ -121,7 +122,6 @@ interface Props {
   onChange: (key: string, value: string) => void;
   /* Due to the amount of transformation that needs to be done here, scopes is
      an uncontrolled input that's sent back in the submit handler */
-  onCreate: (scopes: string) => void;
   onEdit: () => void;
 }
 
@@ -134,57 +134,69 @@ export const APITokenDrawer = (props: Props) => {
     open,
     mode,
     closeDrawer,
-    onCreate,
     onEdit,
     submitting,
-    permNameMap,
   } = props;
 
-  const [scopes, setScopes] = React.useState<Permission[]>(
-    scopeStringToPermTuples(props.scopes || '', props.perms)
-  );
+  const {
+    mutateAsync: createPersonalAccessToken,
+  } = useCreatePersonalAccessTokenMutation();
+
+  const form = useFormik<{
+    scopes: Permission[];
+    label: string;
+    expiry: string;
+  }>({
+    initialValues: {
+      scopes: scopeStringToPermTuples('*'),
+      label: '',
+      expiry: '',
+    },
+    onSubmit(values) {
+      createPersonalAccessToken({
+        label: values.label,
+        scopes: permTuplesToScopeString(values.scopes),
+        expiry: values.expiry,
+      }).then(() => {
+        alert('success');
+      });
+    },
+  });
 
   const expiryTups = genExpiryTups();
 
-  const [selectAllSelectedScope, setSelectAllSelectedScope] = React.useState<
-    number | null
-  >(
-    allScopesAreTheSame(
-      scopeStringToPermTuples(props.scopes || '', props.perms)
-    )
-  );
-
   const handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
-    const scopeTups = scopes;
-    const targetIndex = scopeTups.findIndex(
+    const newScopes = form.values.scopes;
+    const targetIndex = newScopes.findIndex(
       (scopeTup: Permission) => scopeTup[0] === e.currentTarget.name
     );
     if (targetIndex !== undefined) {
-      scopeTups[targetIndex][1] = +e.currentTarget.value;
+      newScopes[targetIndex][1] = +e.currentTarget.value;
     }
-    setScopes(scopeTups);
+    form.setFieldValue('scopes', newScopes);
   };
 
   const handleSelectAllScopes = (
     e: React.SyntheticEvent<RadioButton>
   ): void => {
     const value = +e.currentTarget.value;
-    setScopes((prev) => prev.map((scope): Permission => [scope[0], value]));
-    setSelectAllSelectedScope(value);
+    const newScopes = form.values.scopes.map(
+      (scope): Permission => [scope[0], value]
+    );
+    form.setFieldValue('scopes', newScopes);
   };
 
   const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    props.onChange('label', e.target.value);
+    form.setFieldValue('label', e.target.value);
   };
 
   const handleExpiryChange = (e: Item<string>) => {
-    props.onChange('expiry', e.value);
+    form.setFieldValue('expiry', e.value);
   };
 
-  // return whether all scopes selected in the create token flow are the same
-  const allScopesIdentical = () => {
-    return scopes.every((scope) => scope[1] === selectAllSelectedScope);
-  };
+  const indexOfColumnWhereAllAreSelected = allScopesAreTheSame(
+    form.values.scopes
+  );
 
   const renderPermsTable = () => {
     return (
@@ -225,7 +237,7 @@ export const APITokenDrawer = (props: Props) => {
               >
                 <Radio
                   name="Select All"
-                  checked={selectAllSelectedScope === 0 && allScopesIdentical()}
+                  checked={indexOfColumnWhereAllAreSelected === 0}
                   data-testid="set-all-none"
                   value="0"
                   onChange={handleSelectAllScopes}
@@ -242,7 +254,7 @@ export const APITokenDrawer = (props: Props) => {
               >
                 <Radio
                   name="Select All"
-                  checked={selectAllSelectedScope === 1 && allScopesIdentical()}
+                  checked={indexOfColumnWhereAllAreSelected === 1}
                   value="1"
                   data-testid="set-all-read"
                   onChange={handleSelectAllScopes}
@@ -259,7 +271,7 @@ export const APITokenDrawer = (props: Props) => {
               >
                 <Radio
                   name="Select All"
-                  checked={selectAllSelectedScope === 2 && allScopesIdentical()}
+                  checked={indexOfColumnWhereAllAreSelected === 2}
                   data-testid="set-all-write"
                   value="2"
                   onChange={handleSelectAllScopes}
@@ -271,21 +283,21 @@ export const APITokenDrawer = (props: Props) => {
               </TableCell>
             </TableRow>
           )}
-          {scopes.map((scopeTup) => {
-            if (!permNameMap[scopeTup[0]]) {
+          {form.values.scopes.map((scopeTup) => {
+            if (!basePermNameMap[scopeTup[0]]) {
               return null;
             }
             return (
               <TableRow
                 key={scopeTup[0]}
-                data-qa-row={permNameMap[scopeTup[0]]}
+                data-qa-row={basePermNameMap[scopeTup[0]]}
               >
                 <TableCell
                   parentColumn="Access"
                   padding="checkbox"
                   className={classes.accessCell}
                 >
-                  {permNameMap[scopeTup[0]]}
+                  {basePermNameMap[scopeTup[0]]}
                 </TableCell>
                 <TableCell
                   parentColumn="None"
@@ -404,13 +416,11 @@ export const APITokenDrawer = (props: Props) => {
             buttonType="primary"
             loading={submitting}
             onClick={
-              (mode as string) === 'create'
-                ? () => onCreate(permTuplesToScopeString(scopes, props.perms))
-                : () => onEdit()
+              mode === 'create' ? () => form.handleSubmit() : () => onEdit()
             }
             data-qa-submit
           >
-            {(mode as string) === 'create' ? 'Create Token' : 'Save Token'}
+            {mode === 'create' ? 'Create Token' : 'Save Token'}
           </Button>,
         ]}
       </ActionsPanel>

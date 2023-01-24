@@ -1,11 +1,9 @@
 import {
   createPersonalAccessToken,
   deleteAppToken,
-  deletePersonalAccessToken,
   Token,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { DateTime } from 'luxon';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -31,11 +29,11 @@ import { usePagination } from 'src/hooks/usePagination';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
+  useRevokeAPITokenMutation,
 } from 'src/queries/profile';
-import isPast from 'src/utilities/isPast';
 import { APITokenDrawer, DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
-import { basePermNameMap, basePerms } from './utils';
+import { isWayInTheFuture } from './utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -103,6 +101,12 @@ const preferenceKey = 'api-tokens';
 export const APITokenTable = (props: Props) => {
   const classes = useStyles();
   const { type, title } = props;
+
+  const {
+    mutateAsync: deletePersonalAccessToken,
+    isLoading: isRevoking,
+    error: revokingError,
+  } = useRevokeAPITokenMutation();
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
@@ -245,7 +249,9 @@ export const APITokenTable = (props: Props) => {
   };
 
   const revokePersonalAccessToken = () => {
-    deletePersonalAccessToken(dialog.id ?? -1).then(() => closeRevokeDialog());
+    deletePersonalAccessToken({ id: dialog.id ?? -1 }).then(() =>
+      closeRevokeDialog()
+    );
   };
 
   const revokeAppToken = () => {
@@ -339,26 +345,25 @@ export const APITokenTable = (props: Props) => {
       : revokePersonalAccessToken();
   };
 
-  const renderRevokeConfirmationActions = () => {
-    return (
-      <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          onClick={closeRevokeDialog}
-          data-qa-button-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={revokeAction}
-          data-qa-button-confirm
-        >
-          Revoke
-        </Button>
-      </ActionsPanel>
-    );
-  };
+  const revokeDialogActions = (
+    <ActionsPanel>
+      <Button
+        buttonType="secondary"
+        onClick={closeRevokeDialog}
+        data-qa-button-cancel
+      >
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={revokeAction}
+        loading={isRevoking}
+        data-qa-button-confirm
+      >
+        Revoke
+      </Button>
+    </ActionsPanel>
+  );
 
   return (
     <React.Fragment>
@@ -438,19 +443,17 @@ export const APITokenTable = (props: Props) => {
         label={form.values.label}
         scopes={form.values.scopes}
         expiry={form.values.expiry}
-        perms={basePerms}
-        permNameMap={basePermNameMap}
         closeDrawer={closeDrawer}
         onChange={handleDrawerChange}
-        onCreate={createToken}
         onEdit={editToken}
       />
 
       <ConfirmationDialog
         title={`Revoking ${dialog.label}`}
         open={dialog.open}
-        actions={renderRevokeConfirmationActions}
+        actions={revokeDialogActions}
         onClose={closeRevokeDialog}
+        error={revokingError?.[0].reason}
       >
         <Typography>Are you sure you want to revoke this API Token?</Typography>
       </ConfirmationDialog>
@@ -463,14 +466,6 @@ export const APITokenTable = (props: Props) => {
       />
     </React.Fragment>
   );
-};
-
-/**
- * return true if the given time is past 100 year in the future
- */
-export const isWayInTheFuture = (time: string) => {
-  const wayInTheFuture = DateTime.local().plus({ years: 100 }).toISO();
-  return isPast(wayInTheFuture)(time);
 };
 
 export default APITokenTable;

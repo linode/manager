@@ -11,6 +11,9 @@ import {
   getAppTokens,
   Token,
   getPersonalAccessTokens,
+  deletePersonalAccessToken,
+  TokenRequest,
+  createPersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -45,6 +48,28 @@ export const useMutateProfile = () => {
       return updateProfile(data);
     },
     { onSuccess: updateProfileData }
+  );
+};
+
+export const useRevokeAPITokenMutation = () => {
+  return useMutation<{}, APIError[], { id: number }>(
+    ({ id }) => deletePersonalAccessToken(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+      },
+    }
+  );
+};
+
+export const useCreatePersonalAccessTokenMutation = () => {
+  return useMutation<Token, APIError[], TokenRequest>(
+    createPersonalAccessToken,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+      },
+    }
   );
 };
 
