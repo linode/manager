@@ -17,7 +17,7 @@ $ yarn add @linode/api-v4
 or with a CDN:
 
 ```js
-<script src="https://unpkg.com/@linode/api-v4/lib/iife/index.js"></script>
+<script src="https://unpkg.com/@linode/api-v4/lib/index.global.js"></script>
 ```
 
 ## Usage
