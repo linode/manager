@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 import classNames from 'classnames';
 import * as hljs from 'highlight.js/lib/core';
-import * as hljsCurl from 'highlightjs-curl';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -16,7 +16,7 @@ import yaml from 'highlight.js/lib/languages/yaml';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
-hljs.registerLanguage('curl', hljsCurl);
+hljs.registerLanguage('curl', require('highlightjs-curl'));
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('nginx', nginx);
 hljs.registerLanguage('yaml', yaml);
