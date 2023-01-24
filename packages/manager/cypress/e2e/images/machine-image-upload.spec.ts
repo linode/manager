@@ -4,7 +4,7 @@ import { makeResourcePage } from '@src/mocks/serverHandlers';
 import 'cypress-file-upload';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
-import { regionsFriendly } from 'support/constants/regions';
+import { regions } from 'support/constants/regions';
 import { fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
@@ -135,13 +135,15 @@ const assertProcessing = (label: string, id: string) => {
  * @param label - Label to apply to uploaded image.
  */
 const uploadImage = (label: string) => {
-  const regionSelect = randomItem(regionsFriendly);
+  const regionId = randomItem(regions);
   const upload = 'testImage.gz';
   cy.visitWithLogin('/images/create/upload');
   getClick('[id="label"][data-testid="textfield-input"]').type(label);
   getClick('[id="description"]').type('This is a machine image upload test');
   fbtClick('Select a Region');
-  fbtClick(regionSelect);
+
+  ui.regionSelect.findItemByRegionId(regionId).click();
+
   // Pass `null` to `cy.fixture()` to ensure file is encoded as a Cypress buffer object.
   cy.fixture(upload, null).then((fileContent) => {
     cy.get('input[type="file"]').attachFile({

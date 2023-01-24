@@ -43,7 +43,7 @@ interface Notice {
 interface Props {
   linodes: ExtendedLinode[];
   selectedLinodeID?: number;
-  handleSelection: (id: number, diskSize?: number) => void;
+  handleSelection: (id: number, type: null | string, diskSize?: number) => void;
   error?: string;
   header?: string;
   disabled?: boolean;
@@ -61,7 +61,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
       <SelectionCard
         key={`selection-card-${linode.id}`}
         onClick={(e) => {
-          handleSelection(linode.id, linode.specs.disk);
+          handleSelection(linode.id, linode.type, linode.specs.disk);
         }}
         checked={linode.id === Number(selectedLinodeID)}
         heading={linode.heading}

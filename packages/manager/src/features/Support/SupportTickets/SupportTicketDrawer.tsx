@@ -24,6 +24,7 @@ import { useAccount } from 'src/queries/account';
 import { useAllDatabasesQuery } from 'src/queries/databases';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllFirewallsQuery } from 'src/queries/firewalls';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import {
   getAPIErrorOrDefault,
@@ -254,6 +255,11 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     entityType === 'domain_id'
   );
 
+  const {
+    data: clusters,
+    isLoading: clustersLoading,
+  } = useAllKubernetesClustersQuery(entityType === 'lkecluster_id');
+
   const { data: volumes, isLoading: volumesLoading } = useAllVolumesQuery(
     {},
     {},
@@ -310,10 +316,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
         handleSetOrRequestEntities(entities.nodeBalancers, _entityType);
         return;
       }
-      case 'lkecluster_id': {
-        handleSetOrRequestEntities(entities.kubernetesClusters, _entityType);
-        return;
-      }
+      case 'lkecluster_id':
       case 'volume_id':
       case 'firewall_id':
       case 'domain_id':
@@ -565,6 +568,7 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
       firewall_id: firewalls,
       domain_id: domains,
       volume_id: volumes,
+      lkecluster_id: clusters,
     };
 
     if (!reactQueryEntityDataMap[entityType]) {
@@ -604,6 +608,9 @@ export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
     }
     if (entityType === 'volume_id') {
       return volumesLoading;
+    }
+    if (entityType === 'lkecluster_id') {
+      return clustersLoading;
     }
     return entitiesLoading;
   };

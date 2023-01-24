@@ -3,7 +3,7 @@ import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import Grid from 'src/components/Grid';
-import { useKubernetesVersionQuery } from 'src/queries/kubernetesVersion';
+import { useKubernetesVersionQuery } from 'src/queries/kubernetes';
 import { getNextVersion } from '../kubeUtils';
 import UpgradeVersionModal from '../UpgradeVersionModal';
 
@@ -13,9 +13,7 @@ interface Props {
   currentVersion: string;
 }
 
-export type CombinedProps = Props;
-
-export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
+export const UpgradeKubernetesVersionBanner = (props: Props) => {
   const { clusterID, clusterLabel, currentVersion } = props;
   const { data: versions } = useKubernetesVersionQuery();
   const nextVersion = getNextVersion(currentVersion, versions ?? []);
@@ -27,7 +25,7 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
       {nextVersion ? (
         <DismissibleBanner
           preferenceKey={`${clusterID}-${currentVersion}`}
-          productInformationIndicator
+          success
         >
           <Grid
             container
@@ -52,7 +50,6 @@ export const UpgradeKubernetesVersionBanner: React.FC<Props> = (props) => {
         clusterID={clusterID}
         clusterLabel={clusterLabel}
         currentVersion={currentVersion}
-        nextVersion={nextVersion ?? ''}
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
       />

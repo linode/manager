@@ -97,7 +97,7 @@ describe('object storage end-to-end tests', () => {
         .within(() => {
           cy.findByLabelText('Bucket Name').click().type(bucketLabel);
           ui.buttonGroup
-            .findButtonByTitle('Delete Bucket')
+            .findButtonByTitle('Delete')
             .should('be.visible')
             .should('be.enabled')
             .click();

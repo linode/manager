@@ -1,3 +1,9 @@
+
+## [2023-01-13] - v0.17.1
+
+### Fixed:
+- Node.js CommonJS Module Error
+
 ## [2023-01-09] - v0.17.0
 
 ### Changed:

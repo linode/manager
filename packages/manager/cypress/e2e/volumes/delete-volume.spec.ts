@@ -1,8 +1,10 @@
-import { createVolume, Volume } from '@linode/api-v4/lib/volumes';
+import { createVolume } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { assertToast } from 'support/ui/events';
 import { randomLabel } from 'support/util/random';
+import { ui } from 'support/ui';
 
 // Local storage override to force volume table to list up to 100 items.
 // This is a workaround while we wait to get stuck volumes removed.
@@ -39,11 +41,15 @@ describe('volume delete flow', () => {
         .click();
 
       // Cancel deletion when prompted to confirm.
-      cy.findByText(`Delete Volume ${volume.label}?`)
+      ui.dialog
+        .findByTitle(`Delete Volume ${volume.label}?`)
         .should('be.visible')
-        .closest('div[role="dialog"]')
         .within(() => {
-          cy.findByText('Cancel').click();
+          ui.buttonGroup
+            .findButtonByTitle('Cancel')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
       // Confirm that volume is still listed and initiate deletion again.
@@ -54,11 +60,20 @@ describe('volume delete flow', () => {
         .click();
 
       // Confirm deletion.
-      cy.findByText(`Delete Volume ${volume.label}?`)
+      ui.dialog
+        .findByTitle(`Delete Volume ${volume.label}?`)
         .should('be.visible')
-        .closest('div[role="dialog"]')
         .within(() => {
-          cy.findByText('Delete Volume').click();
+          cy.findByLabelText('Volume Label')
+            .should('be.visible')
+            .click()
+            .type(volume.label);
+
+          ui.buttonGroup
+            .findButtonByTitle('Delete')
+            .should('be.visible')
+            .should('be.enabled')
+            .click();
         });
 
       // Confirm that volume is deleted.

@@ -185,7 +185,8 @@ const SortableTableHead: React.FC<CombinedProps> = (props) => {
                 onClick={toggleLinodeView}
                 disableRipple
                 className={classes.toggleButton}
-                size="large">
+                size="large"
+              >
                 <GridView />
               </IconButton>
             </Tooltip>
