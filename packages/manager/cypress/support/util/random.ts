@@ -7,7 +7,7 @@ import { entityPrefix } from 'support/constants/cypress';
 /**
  * Describes options for generating a random string.
  */
-interface randomStringOptions {
+interface RandomStringOptions {
   /// Whether random string should include lowercase alphabetical characters.
   lowercase: boolean;
 
@@ -71,7 +71,7 @@ export const randomItem = (array: Array<any>): any => {
  */
 export const randomString = (
   length: number = 8,
-  options?: randomStringOptions
+  options?: RandomStringOptions
 ): string => {
   const stringOptions = options ? options : defaultRandomStringOptions;
 
