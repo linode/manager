@@ -12,17 +12,15 @@ const linodeData = {
 };
 
 const linodeDataForCLI = `
---label ${linodeRequest.label}
---root_pass ${linodeRequest.root_pass}
---image ${linodeRequest.image}
---type ${linodeRequest.type}
---region ${linodeRequest.region}
---booted ${linodeRequest.booted}
---stackscript_id 10079
+--label ${linodeRequest.label} \\
+--root_pass ${linodeRequest.root_pass} \\
+--image ${linodeRequest.image} \\
+--type ${linodeRequest.type} \\
+--region ${linodeRequest.region} \\
+--booted ${linodeRequest.booted} \\
+--stackscript_id 10079 \\
 --stackscript_data '{"gh_username": "linode"}'
-`
-  .trimStart()
-  .trimEnd();
+`.trim();
 
 const generatedCommand = generateCLICommand(linodeData);
 

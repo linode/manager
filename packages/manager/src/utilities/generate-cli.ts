@@ -10,10 +10,7 @@ const convertJSONFieldToCLIArg = ([key, value]: JSONFieldToArray) => {
 
 export const generateCLICommand = (data: {}) => {
   const dataForCLI = Object.entries(data).map(convertJSONFieldToCLIArg);
-  return `
-linode-cli linodes create
-${dataForCLI.join('\n')}
-  `.trim();
+  return `linode-cli linodes create \\\n${dataForCLI.join(' \\\n')}`;
 };
 
 export default generateCLICommand;
