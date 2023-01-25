@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const KubernetesEmptyState = () => {
-  const history = useHistory();
+export const KubernetesEmptyState = () => {
+  const { push } = useHistory();
   const classes = useStyles();
 
   return (
@@ -26,7 +26,7 @@ const KubernetesEmptyState = () => {
       className={classes.placeholderAdjustment}
       buttonProps={[
         {
-          onClick: () => history.push('/kubernetes/create'),
+          onClick: () => push('/kubernetes/create'),
           children: 'Create Cluster',
         },
       ]}
@@ -47,5 +47,3 @@ const KubernetesEmptyState = () => {
     </Placeholder>
   );
 };
-
-export default KubernetesEmptyState;
