@@ -13,7 +13,7 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableSortCell from 'src/components/TableSortCell';
 import SecretTokenDialog from 'src/features/Profile/SecretTokenDialog';
-import APITokenMenu from './APITokenMenu';
+import { APITokenMenu } from './APITokenMenu';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
