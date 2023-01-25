@@ -9,6 +9,7 @@ import {
   useRevokeAppAccessTokenMutation,
   useRevokePersonalAccessTokenMutation,
 } from 'src/queries/profile';
+import { useSnackbar } from 'notistack';
 
 export interface Props {
   open: boolean;
@@ -26,10 +27,14 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
   const useRevokeQuery = queryMap[type];
 
   const { mutateAsync, isLoading, error } = useRevokeQuery(token?.id ?? -1);
+  const { enqueueSnackbar } = useSnackbar();
 
   const onRevoke = () => {
     mutateAsync().then(() => {
       onClose();
+      enqueueSnackbar(`Sucessfully revoked ${token?.label}`, {
+        variant: 'success',
+      });
     });
   };
 
