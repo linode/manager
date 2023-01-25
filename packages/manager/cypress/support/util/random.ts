@@ -199,3 +199,30 @@ export const randomPhrase = (count: number = 5): string => {
     })
     .join(' ');
 };
+
+/**
+ * Generates a random string which resembles a v4 UUID.
+ *
+ * This does generate a valid UUID, nor does it offer the same guarantees as a
+ * UUID. Instead, it is intended to be used when generating values for mocks or
+ * when filling in fields which expect UUID values.
+ *
+ * @returns Random string which resembles a v4 UUID.
+ */
+export const randomUuid = (): string => {
+  const randomStringOptions = {
+    lowercase: false,
+    uppercase: true,
+    numbers: true,
+    symbols: false,
+    spaces: false,
+  };
+
+  return [
+    randomString(8, randomStringOptions),
+    randomString(4, randomStringOptions),
+    randomString(4, randomStringOptions),
+    randomString(4, randomStringOptions),
+    randomString(12, randomStringOptions),
+  ].join('-');
+};
