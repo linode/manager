@@ -73,7 +73,7 @@ export const APITokenTable = (props: Props) => {
 
   const { order, orderBy, handleOrderChange } = useOrder(
     {
-      orderBy: 'expiry',
+      orderBy: 'created',
       order: 'desc',
     },
     `${preferenceKey}-order}`,

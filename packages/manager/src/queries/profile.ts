@@ -60,7 +60,12 @@ export const useUpdatePersonalAccessTokenMutation = (id: number) => {
 export const useRevokePersonalAccessTokenMutation = (id: number) => {
   return useMutation<{}, APIError[]>(() => deletePersonalAccessToken(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+      // Wait 1 second to invalidate cache after deletion because API needs time
+      setTimeout(
+        () =>
+          queryClient.invalidateQueries([queryKey, 'personal-access-tokens']),
+        1000
+      );
     },
   });
 };
@@ -68,7 +73,11 @@ export const useRevokePersonalAccessTokenMutation = (id: number) => {
 export const useRevokeAppAccessTokenMutation = (id: number) => {
   return useMutation<{}, APIError[]>(() => deleteAppToken(id), {
     onSuccess() {
-      queryClient.invalidateQueries([queryKey, 'app-tokens']);
+      // Wait 1 second to invalidate cache after deletion because API needs time
+      setTimeout(
+        () => queryClient.invalidateQueries([queryKey, 'app-tokens']),
+        1000
+      );
     },
   });
 };
