@@ -83,6 +83,34 @@ export const mockGetEntityTransfers = (
 };
 
 /**
+ * Intercepts GET request to receive entity transfer and mocks response.
+ *
+ * @param token - Token for entity transfer request to mock.
+ * @param transfer - Entity transfer data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockReceiveEntityTransfer = (
+  token: string,
+  transfer: EntityTransfer
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', `*/account/entity-transfers/${token}`, transfer);
+};
+
+/**
+ * Intercepts POST request to accept entity transfer and mocks response.
+ *
+ * @param token - Token for entity transfer request to mock.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockAcceptEntityTransfer = (
+  token: string
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', `*/account/entity-transfers/${token}/accept`, {});
+};
+
+/**
  * Intercepts GET request to fetch account settings and mocks response.
  *
  * @param settings - Account settings mock data with which to respond.
