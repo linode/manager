@@ -54,9 +54,9 @@ export interface Props {
   payLoad: CreateLinodeRequest;
 }
 
-const fireGAEvent = (action: string, label: string) => {
+const fireGAEvent = (label: string) => {
   sendEvent({
-    action: `Click:${action}`,
+    action: 'Click:Link',
     category: 'Linode Create API CLI Awareness Modal',
     label,
   });
@@ -140,9 +140,7 @@ const ApiAwarenessModal = (props: Props) => {
               <ExternalLink
                 text="personal access token"
                 link="/profile/tokens"
-                onClick={() =>
-                  fireGAEvent('/profile/tokens', 'personal access token')
-                }
+                onClick={() => fireGAEvent('personal access token')}
                 hideIcon
               />
               . The command below assumes that your personal access token has
@@ -151,24 +149,14 @@ const ApiAwarenessModal = (props: Props) => {
               <ExternalLink
                 text="Get Started with the Linode API"
                 link="https://www.linode.com/docs/products/tools/api/get-started/"
-                onClick={() =>
-                  fireGAEvent(
-                    'https://www.linode.com/docs/products/tools/api/get-started/',
-                    'Get Started with the Linode API'
-                  )
-                }
+                onClick={() => fireGAEvent('Get Started with the Linode API')}
                 hideIcon
               />{' '}
               and{' '}
               <ExternalLink
                 text="Linode API Guides"
                 link="https://www.linode.com/docs/products/tools/api/guides/"
-                onClick={() =>
-                  fireGAEvent(
-                    'https://www.linode.com/docs/products/tools/api/guides/',
-                    'Linode API Guides'
-                  )
-                }
+                onClick={() => fireGAEvent('Linode API Guides')}
                 hideIcon
               />
               .
@@ -184,24 +172,14 @@ const ApiAwarenessModal = (props: Props) => {
               <ExternalLink
                 text="Get Started with the Linode API"
                 link="https://www.linode.com/docs/products/tools/api/get-started/"
-                onClick={() =>
-                  fireGAEvent(
-                    'https://www.linode.com/docs/products/tools/api/get-started/',
-                    'Get Started with the Linode API'
-                  )
-                }
+                onClick={() => fireGAEvent('Get Started with the Linode API')}
                 hideIcon
               />{' '}
               and{' '}
               <ExternalLink
                 text="Linode API Guides"
                 link="https://www.linode.com/docs/products/tools/api/guides/"
-                onClick={() =>
-                  fireGAEvent(
-                    'https://www.linode.com/docs/products/tools/api/guides/',
-                    'Linode API Guides'
-                  )
-                }
+                onClick={() => fireGAEvent('Linode API Guides')}
                 hideIcon
               />
               .
@@ -215,10 +193,7 @@ const ApiAwarenessModal = (props: Props) => {
                 text="Install and Configure the Linode CLI"
                 link="https://www.linode.com/docs/products/tools/cli/guides/install/"
                 onClick={() =>
-                  fireGAEvent(
-                    'https://www.linode.com/docs/products/tools/cli/guides/install/',
-                    'Install and Configure the Linode CLI'
-                  )
+                  fireGAEvent('Install and Configure the Linode CLI')
                 }
                 hideIcon
               />{' '}
@@ -227,12 +202,7 @@ const ApiAwarenessModal = (props: Props) => {
               <ExternalLink
                 text="Linode CLI Guides"
                 link="https://www.linode.com/docs/products/tools/cli/guides/"
-                onClick={() =>
-                  fireGAEvent(
-                    'https://www.linode.com/docs/products/tools/cli/guides/',
-                    'Linode CLI Guides'
-                  )
-                }
+                onClick={() => fireGAEvent('Linode CLI Guides')}
                 hideIcon
               />
               .
@@ -246,36 +216,21 @@ const ApiAwarenessModal = (props: Props) => {
           <ExternalLink
             text="Linode Terraform Provider"
             link="https://www.linode.com/products/linode-terraform-provider/"
-            onClick={() =>
-              fireGAEvent(
-                'https://www.linode.com/products/linode-terraform-provider/',
-                'Linode Terraform Provider'
-              )
-            }
+            onClick={() => fireGAEvent('Linode Terraform Provider')}
             hideIcon
           />{' '}
           and{' '}
           <ExternalLink
             text="Ansible Collection"
             link="https://www.linode.com/products/linode-ansible-collection/"
-            onClick={() =>
-              fireGAEvent(
-                'https://www.linode.com/products/linode-ansible-collection/',
-                'Ansible Collection'
-              )
-            }
+            onClick={() => fireGAEvent('Ansible Collection')}
             hideIcon
           />
           .{' '}
           <ExternalLink
             text="View all tools"
             link="https://www.linode.com/docs/products/tools/api/developers/"
-            onClick={() =>
-              fireGAEvent(
-                'https://www.linode.com/docs/products/tools/api/developers/',
-                'View all tools'
-              )
-            }
+            onClick={() => fireGAEvent('View all tools')}
             hideIcon
           />{' '}
           with programmatic access to the Linode platform.
