@@ -84,13 +84,7 @@ export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
 
   return (
     <Typography
-      className={classNames(
-        {
-          [classes.root]: true,
-          'formatted-text': true,
-        },
-        className
-      )}
+      className={classNames(classes.root, 'formatted-text', className)}
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml,
