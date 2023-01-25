@@ -56,7 +56,7 @@ export interface Props {
 
 const fireGAEvent = (label: string) => {
   sendEvent({
-    action: 'Click:Link',
+    action: 'Click:link',
     category: 'Linode Create API CLI Awareness Modal',
     label,
   });
