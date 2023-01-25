@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   unmodified: {
     backgroundColor: '#FFFFFF',
+    color: '#606469',
   },
   highlight: {
     backgroundColor: theme.bg.lightBlue1,
@@ -430,7 +431,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       >
         <Grid
           item
-          style={{ paddingLeft: 27, width: 'xsDown' ? '30%' : '15%' }}
+          style={{ paddingLeft: 8, width: 'xsDown' ? '30%' : '15%' }}
           aria-label={`Label: ${label}`}
         >
           <DragIndicator
@@ -454,7 +455,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ width: '10%' }}
-            tabIndex={0}
+            tabIndex={-1}
             aria-label={`Protocol: ${protocol}`}
           >
             {protocol}
@@ -465,7 +466,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ whiteSpace: 'nowrap', width: '10%' }}
-            tabIndex={0}
+            tabIndex={-1}
             aria-label={`Ports: ${ports}`}
           >
             {ports === '1-65535' ? 'All Ports' : ports}
@@ -474,7 +475,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ whiteSpace: 'nowrap', width: '15%' }}
-            tabIndex={0}
+            tabIndex={-1}
             aria-label={`Addresses: ${addresses}`}
           >
             {addresses}{' '}
@@ -484,7 +485,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <Grid
           item
           style={{ width: '5%' }}
-          tabIndex={0}
+          tabIndex={-1}
           aria-label={`Action: ${action}`}
         >
           {capitalize(action?.toLocaleLowerCase() ?? '')}
