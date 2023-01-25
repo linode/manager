@@ -70,7 +70,7 @@ describe('Create API Token Drawer', () => {
     );
     expect(selectAllReadWriteRadioButton).toBeChecked();
   });
-  it('Should default to never for expiration', () => {
+  it('Should default to 6 months for expiration', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     getByText('In 6 months');
   });
