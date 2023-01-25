@@ -12,7 +12,7 @@ const props = {
   showSecret: jest.fn(),
 };
 
-describe('API Token Drawer', () => {
+describe('Create API Token Drawer', () => {
   it('checks API Token Drawer rendering', () => {
     const { getByText, getByTestId } = renderWithTheme(
       <CreateAPITokenDrawer {...props} />
@@ -28,7 +28,7 @@ describe('API Token Drawer', () => {
     const expiry = getByText(/Expiry/);
     expect(expiry).toBeVisible();
 
-    const submitBtn = getByText(/Create Token/);
+    const submitBtn = getByTestId('create-button');
     expect(submitBtn).toBeVisible();
     expect(submitBtn).toBeEnabled();
 

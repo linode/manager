@@ -56,6 +56,7 @@ export const EditAPITokenDrawer = (props: Props) => {
           loading={isLoading}
           disabled={!form.dirty}
           onClick={() => form.handleSubmit()}
+          data-testid="save-button"
         >
           Save
         </Button>

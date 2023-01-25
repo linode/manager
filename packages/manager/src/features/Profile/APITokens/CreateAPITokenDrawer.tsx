@@ -361,6 +361,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
           buttonType="primary"
           loading={isLoading}
           onClick={() => form.handleSubmit()}
+          data-testid="create-button"
         >
           Create Token
         </Button>
