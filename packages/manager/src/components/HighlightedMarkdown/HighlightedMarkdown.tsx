@@ -16,7 +16,6 @@ import yaml from 'highlight.js/lib/languages/yaml';
 
 hljs.registerLanguage('apache', apache);
 hljs.registerLanguage('bash', bash);
-hljs.registerLanguage('curl', require('highlightjs-curl'));
 hljs.registerLanguage('javascript', javascript);
 hljs.registerLanguage('nginx', nginx);
 hljs.registerLanguage('yaml', yaml);
@@ -36,7 +35,6 @@ export type SupportedLanguage =
   | 'javascript'
   | 'nginx'
   | 'yaml'
-  | 'curl'
   | 'shell';
 
 export interface HighlightedMarkdownProps {

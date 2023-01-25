@@ -4,7 +4,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import { useCodeBlockStyles } from './styles';
 export interface Props {
   command: string;
-  language: 'curl' | 'bash';
+  language: 'bash';
 }
 
 const CodeBlock = (props: Props) => {
