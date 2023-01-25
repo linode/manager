@@ -105,7 +105,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleHeaderRow: {
     marginTop: '5px',
-    background: '#F9FAFA',
+    backgroundColor: '#F9FAFA',
+    color: '#888F91',
     fontWeight: 'bold',
     height: '40px',
     alignContent: 'center',
@@ -137,7 +138,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   policyText: {
     textAlign: 'right',
-    padding: '8px !important',
+    padding: '10px !important',
   },
   policySelect: {
     paddingLeft: 4,
@@ -431,7 +432,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           item
           style={{ paddingLeft: 27, width: 'xsDown' ? '30%' : '15%' }}
           aria-label={`Label: ${label}`}
-          tabIndex={0}
         >
           <DragIndicator
             className={classes.dragIcon}
@@ -547,7 +547,11 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   );
 
   return (
-    <Grid container className={classes.policyRow} tabIndex={0}>
+    <Grid
+      container
+      className={classNames(classes.policyRow, classes.unmodified)}
+      tabIndex={0}
+    >
       <Grid item /*xs={colSpan}*/ className={classes.policyText}>
         {helperText}
       </Grid>
