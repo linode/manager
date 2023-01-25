@@ -3,20 +3,37 @@
  */
 
 import { createLinode } from '@linode/api-v4/lib/linodes';
-import { Linode } from '@linode/api-v4/types';
+import { EntityTransfer, Linode } from '@linode/api-v4/types';
+import { entityTransferFactory } from 'src/factories/entityTransfers';
+import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';
 import { regions } from 'support/constants/regions';
-import { interceptInitiateEntityTransfer } from 'support/intercepts/account';
+import {
+  interceptInitiateEntityTransfer,
+  mockAcceptEntityTransfer,
+  mockGetEntityTransfers,
+  mockReceiveEntityTransfer,
+} from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
-import { randomLabel, randomItem, randomString } from 'support/util/random';
-import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { randomItem, randomLabel, randomUuid } from 'support/util/random';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
 
 // Service transfer initiation page URL.
 const serviceTransferCreateUrl = '/account/service-transfers/create';
+
+// Possible status responses for service transfers.
+const serviceTransferStatuses = [
+  'pending',
+  'complete',
+  'failed',
+  'accepted',
+  'stale',
+  'cancelled',
+];
 
 /**
  * Initiates a service transfer for the Linode with the given label.
@@ -87,7 +104,7 @@ describe('Account service transfers', () => {
   /*
    * - Confirms user can navigate to service transfer page via user menu.
    */
-  it('can navigate to service transfers page', () => {
+  it('can navigate to service transfers landing page', () => {
     cy.visitWithLogin('/');
     cy.findByLabelText('Profile & Account').should('be.visible').click();
 
@@ -103,6 +120,103 @@ describe('Account service transfers', () => {
   });
 
   /*
+   * - Confirms that pending, received, and sent transfers are shown on landing page.
+   */
+  it('lists service transfers on landing page', () => {
+    const pendingTransfers = entityTransferFactory.buildList(3, {
+      status: 'pending',
+      entities: {
+        linodes: [0, 1, 2, 3, 4],
+      },
+    });
+
+    const receivedTransfers = entityTransferFactory.buildList(4, {
+      is_sender: false,
+      entities: {
+        linodes: [0],
+      },
+    });
+
+    const sentTransfers = serviceTransferStatuses.map((status: string) => {
+      return entityTransferFactory.build({
+        is_sender: true,
+        entities: {
+          linodes: [0, 1],
+        },
+        status,
+      });
+    });
+
+    mockGetEntityTransfers(
+      pendingTransfers,
+      receivedTransfers,
+      sentTransfers
+    ).as('getTransfers');
+
+    cy.visitWithLogin(serviceTransferLandingUrl);
+
+    // Wait for 3 requests to transfers endpoint -- each section loads transfers separately.
+    cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
+
+    // Confirm that pending transfers are displayed in "Pending Service Transfers" panel.
+    cy.get('[data-qa-panel][heading="Pending Service Transfers"]')
+      .should('be.visible')
+      .within(() => {
+        pendingTransfers.forEach((pendingTransfer: EntityTransfer) => {
+          cy.findByText(pendingTransfer.token)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText('5 Linodes').should('be.visible');
+              cy.findByText(formatDate(pendingTransfer.created)).should(
+                'be.visible'
+              );
+              cy.findByText(formatDate(pendingTransfer.expiry)).should(
+                'be.visible'
+              );
+            });
+        });
+      });
+
+    cy.get('[data-qa-panel][heading="Received Service Transfers"]')
+      .should('be.visible')
+      .within(() => {
+        receivedTransfers.forEach((receivedTransfer: EntityTransfer) => {
+          cy.findByText(receivedTransfer.token)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText('1 Linode').should('be.visible');
+              cy.findByText(formatDate(receivedTransfer.created)).should(
+                'be.visible'
+              );
+            });
+        });
+      });
+
+    cy.get('[data-qa-panel][heading="Sent Service Transfers"]')
+      .should('be.visible')
+      .within(() => {
+        sentTransfers.forEach((sentTransfer: EntityTransfer) => {
+          cy.findByText(sentTransfer.token)
+            .should('be.visible')
+            .closest('tr')
+            .within(() => {
+              cy.findByText('2 Linodes').should('be.visible');
+              cy.findByText(sentTransfer.token).should('be.visible');
+              cy.findByText(formatDate(sentTransfer.created)).should(
+                'be.visible'
+              );
+              cy.findByText(
+                sentTransfer.status.replace('cancelled', 'canceled'),
+                { exact: false }
+              ).should('be.visible');
+            });
+        });
+      });
+  });
+
+  /*
    * - Confirms that users can initiate a transfer of 1 Linode by generating a transfer token
    * - Confirms that users are shown the generated token
    * - Confirms that pending transfers are listed in the landing page table
@@ -111,7 +225,7 @@ describe('Account service transfers', () => {
    * - Confirms that users cannot generate a new token for a Linode with a pending transfer
    * - Confirms that users can cancel a service transfer
    */
-  it('can initiate and cancel a Linode transfer', () => {
+  it('can initiate and cancel a service transfer', () => {
     // Create a Linode to transfer and wait for it to boot.
     const setupLinode = async (): Promise<Linode> => {
       const payload = createLinodeRequestFactory.build({
@@ -155,7 +269,7 @@ describe('Account service transfers', () => {
           .should('be.visible')
           .within(() => {
             // Confirm that user is advised to transfer token using a secure means,
-            // and that they are informed that transfer may take up to an hour.
+            // and that they are informed that the transfer may take up to an hour.
             cy.findByText('secure delivery method', { exact: false }).should(
               'be.visible'
             );
@@ -188,7 +302,7 @@ describe('Account service transfers', () => {
           });
 
         // Attempt to receive the an invalid token.
-        redeemToken(randomString());
+        redeemToken(randomUuid());
         assertReceiptError('Not found');
 
         // Attempt to receive previously generated token.
@@ -237,5 +351,71 @@ describe('Account service transfers', () => {
         ui.toast.assertMessage('Service transfer canceled successfully.');
       });
     });
+  });
+
+  /*
+   * - Confirms UI flow when accepting an entity transfer using mocked API data.
+   * - Confirms that entity transfer is listed under "Received Service Transfers" after accepting.
+   */
+  it('can receive a service transfer', () => {
+    const token = randomUuid();
+    const transfer = entityTransferFactory.build({
+      token,
+      entities: {
+        linodes: [0],
+      },
+      status: 'pending',
+      is_sender: false,
+    });
+
+    mockGetEntityTransfers([], [], []).as('getTransfers');
+    mockReceiveEntityTransfer(token, transfer).as('receiveEntityTransfer');
+    mockAcceptEntityTransfer(token).as('acceptEntityTransfer');
+
+    cy.visitWithLogin(serviceTransferLandingUrl);
+    cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
+
+    cy.get('[data-qa-panel][heading="Pending Service Transfers"]').should(
+      'not.exist'
+    );
+
+    redeemToken(token);
+    cy.wait('@receiveEntityTransfer');
+
+    mockGetEntityTransfers([], [transfer], []).as('getTransfers');
+    ui.dialog
+      .findByTitle('Receive a Service Transfer')
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('1 Linode').should('be.visible');
+
+        // Confirm that dialog button is disabled before clicking checkbox.
+        ui.buttonGroup
+          .findButtonByTitle('Accept Transfer')
+          .should('be.visible')
+          .should('be.disabled');
+
+        cy.findByText(
+          'I accept responsibility for the billing of services listed above.'
+        )
+          .should('be.visible')
+          .closest('label')
+          .click();
+
+        ui.buttonGroup
+          .findButtonByTitle('Accept Transfer')
+          .should('be.visible')
+          .should('be.enabled')
+          .click();
+      });
+
+    cy.wait(['@acceptEntityTransfer', '@getTransfers']);
+    ui.toast.assertMessage('Transfer accepted successfully.');
+    cy.get('[data-qa-panel][heading="Received Service Transfers"]')
+      .should('be.visible')
+      .click()
+      .within(() => {
+        cy.findByText(token).should('be.visible');
+      });
   });
 });
