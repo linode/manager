@@ -220,6 +220,9 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
 
   const zeroRulesMessage = `No ${category} rules have been added.`;
 
+  const screenReaderMessage =
+    'Screen reading with NVDA requires users to activate focus mode using Insert + Space to interact with this list item. After entering focus mode, press spacebar to begin a drag or tab to access item actions.';
+
   const onDragEnd = (result: DropResult) => {
     if (result.destination) {
       triggerReorder(result.source.index, result.destination?.index);
@@ -322,6 +325,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                             ref={provided.innerRef}
                             aria-label={thisRuleRow.label}
                             aria-selected={false}
+                            aria-roledescription={screenReaderMessage}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
                           >
