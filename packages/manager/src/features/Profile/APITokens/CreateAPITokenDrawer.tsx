@@ -165,10 +165,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
     form.setFieldValue('scopes', newScopes);
   };
 
-  const handleLabelChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    form.setFieldValue('label', e.target.value);
-  };
-
   const handleExpiryChange = (e: Item<string>) => {
     form.setFieldValue('expiry', e.value);
   };
@@ -339,8 +335,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
         errorText={errorMap.label}
         value={form.values.label}
         label="Label"
-        onChange={handleLabelChange}
-        data-qa-add-label
+        name="label"
+        onChange={form.handleChange}
       />
       <FormControl data-testid="expiry-select">
         <Select
