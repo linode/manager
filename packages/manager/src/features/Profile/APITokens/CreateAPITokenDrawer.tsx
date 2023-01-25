@@ -132,15 +132,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
       label: '',
       expiry: expiryTups[0][1],
     },
-    onSubmit(values) {
-      createPersonalAccessToken({
+    async onSubmit(values) {
+      const { token } = await createPersonalAccessToken({
         label: values.label,
         scopes: permTuplesToScopeString(values.scopes),
         expiry: values.expiry,
-      }).then(({ token }) => {
-        onClose();
-        showSecret(token ?? 'Secret not available');
       });
+
+      onClose();
+      showSecret(token ?? 'Secret not available');
     },
   });
 

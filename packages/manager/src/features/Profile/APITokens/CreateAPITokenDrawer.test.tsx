@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { CreateAPITokenDrawer } from './CreateAPITokenDrawer';
-import { act, waitFor, within } from '@testing-library/react';
+import { act, waitFor } from '@testing-library/react';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { rest, server } from 'src/mocks/testServer';
 import { appTokenFactory } from 'src/factories';
-import { makeResourcePage } from 'src/mocks/serverHandlers';
 import userEvent from '@testing-library/user-event';
 
 const props = {
@@ -37,10 +36,10 @@ describe('API Token Drawer', () => {
     expect(cancelBtn).toBeEnabled();
     expect(cancelBtn).toBeVisible();
   });
-  it('changes scope permissions to read/write', async () => {
+  it('Should see secret modal with secret when you type a label and submit the form successfully', async () => {
     server.use(
       rest.post('*/profile/tokens', (req, res, ctx) => {
-        return res(ctx.json(makeResourcePage(appTokenFactory.buildList(1))));
+        return res(ctx.json(appTokenFactory.build({ token: 'secret-value' })));
       })
     );
 
@@ -49,21 +48,17 @@ describe('API Token Drawer', () => {
     );
 
     await act(async () => {
-      const selectAllBtn = within(getByTestId('set-all-write')).getByRole(
-        'radio'
-      );
-
-      userEvent.click(selectAllBtn);
-
       const labelField = getByTestId('textfield-input');
 
-      userEvent.type(labelField, 'test-token');
+      userEvent.type(labelField, 'my-test-token');
 
       const submit = getByText('Create Token');
 
       userEvent.click(submit);
 
-      await waitFor(() => expect(props.showSecret).toBeCalled());
+      await waitFor(() =>
+        expect(props.showSecret).toBeCalledWith('secret-value')
+      );
     });
   });
   it('Should default to read/write for all scopes', () => {
@@ -78,5 +73,11 @@ describe('API Token Drawer', () => {
   it('Should default to never for expiration', () => {
     const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
     getByText('In 6 months');
+  });
+  it('Should close when Cancel is pressed', () => {
+    const { getByText } = renderWithTheme(<CreateAPITokenDrawer {...props} />);
+    const cancelButton = getByText(/Cancel/);
+    userEvent.click(cancelButton);
+    expect(props.onClose).toBeCalled();
   });
 });
