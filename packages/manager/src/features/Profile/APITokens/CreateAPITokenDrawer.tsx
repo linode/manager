@@ -173,8 +173,33 @@ export const CreateAPITokenDrawer = (props: Props) => {
     form.values.scopes
   );
 
-  const renderPermsTable = () => {
-    return (
+  const errorMap = getErrorMap(['label', 'scopes'], error);
+
+  const expiryList = expiryTups.map((expiryTup: Expiry) => {
+    return { label: expiryTup[0], value: expiryTup[1] };
+  });
+
+  return (
+    <Drawer title="Add Personal Access Token" open={open} onClose={onClose}>
+      {errorMap.none && <Notice error text={errorMap.none} />}
+      <TextField
+        errorText={errorMap.label}
+        value={form.values.label}
+        label="Label"
+        name="label"
+        onChange={form.handleChange}
+      />
+      <FormControl data-testid="expiry-select">
+        <Select
+          options={expiryList}
+          onChange={handleExpiryChange}
+          value={expiryList.find((item) => item.value === form.values.expiry)}
+          name="expiry"
+          labelId="expiry"
+          label="Expiry"
+          isClearable={false}
+        />
+      </FormControl>
       <Table
         aria-label="Personal Access Token Permissions"
         className={classes.permsTable}
@@ -319,37 +344,6 @@ export const CreateAPITokenDrawer = (props: Props) => {
           })}
         </TableBody>
       </Table>
-    );
-  };
-
-  const errorMap = getErrorMap(['label', 'scopes'], error);
-
-  const expiryList = expiryTups.map((expiryTup: Expiry) => {
-    return { label: expiryTup[0], value: expiryTup[1] };
-  });
-
-  return (
-    <Drawer title="Add Personal Access Token" open={open} onClose={onClose}>
-      {errorMap.none && <Notice error text={errorMap.none} />}
-      <TextField
-        errorText={errorMap.label}
-        value={form.values.label}
-        label="Label"
-        name="label"
-        onChange={form.handleChange}
-      />
-      <FormControl data-testid="expiry-select">
-        <Select
-          options={expiryList}
-          onChange={handleExpiryChange}
-          value={expiryList.find((item) => item.value === form.values.expiry)}
-          name="expiry"
-          labelId="expiry"
-          label="Expiry"
-          isClearable={false}
-        />
-      </FormControl>
-      {renderPermsTable()}
       {errorMap.scopes && (
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}

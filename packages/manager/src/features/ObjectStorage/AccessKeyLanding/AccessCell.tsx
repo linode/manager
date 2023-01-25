@@ -41,6 +41,7 @@ export const AccessCell: React.FC<AccessCellProps> = (props) => {
       <span
         className={classes.checkIcon}
         aria-label={`This token has ${scope} access for ${scopeDisplay}`}
+        data-testid={`perm-${scopeDisplay}`}
         tabIndex={0}
       >
         <Check />

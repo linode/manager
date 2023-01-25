@@ -18,7 +18,7 @@ export const basePerms = [
   'object_storage',
   'stackscripts',
   'volumes',
-];
+] as const;
 
 export const basePermNameMap: Record<string, string> = {
   account: 'Account',
@@ -49,7 +49,7 @@ export const levelMap = {
   delete: 2,
 };
 
-const defaultScopeMap = (perms: string[]): Record<string, 0> =>
+const defaultScopeMap = (perms: typeof basePerms): Record<string, 0> =>
   perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
 
 /**
@@ -138,7 +138,7 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
 
 export const allMaxPerm = (
   scopeTups: Permission[],
-  perms: string[]
+  perms: typeof basePerms
 ): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;

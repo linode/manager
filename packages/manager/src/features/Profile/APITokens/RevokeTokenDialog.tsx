@@ -10,7 +10,7 @@ import {
   useRevokePersonalAccessTokenMutation,
 } from 'src/queries/profile';
 
-interface Props {
+export interface Props {
   open: boolean;
   onClose: () => void;
   token: Token | undefined;
@@ -33,22 +33,29 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
     });
   };
 
-  const revokeDialogActions = (
-    <ActionsPanel>
-      <Button buttonType="secondary" onClick={onClose}>
-        Cancel
-      </Button>
-      <Button buttonType="primary" onClick={onRevoke} loading={isLoading}>
-        Revoke
-      </Button>
-    </ActionsPanel>
-  );
-
   return (
     <ConfirmationDialog
       title={`Revoke ${token?.label}?`}
       open={open}
-      actions={revokeDialogActions}
+      actions={
+        <ActionsPanel>
+          <Button
+            buttonType="secondary"
+            onClick={onClose}
+            data-testid="cancel-button"
+          >
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={onRevoke}
+            loading={isLoading}
+            data-testid="revoke-button"
+          >
+            Revoke
+          </Button>
+        </ActionsPanel>
+      }
       onClose={onClose}
       error={error?.[0].reason}
     >

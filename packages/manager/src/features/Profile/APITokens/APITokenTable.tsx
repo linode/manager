@@ -132,7 +132,7 @@ export const APITokenTable = (props: Props) => {
     setSelectedTokenId(token.id);
   };
 
-  const openRevokeDialog = (token: Token, type: string) => {
+  const openRevokeDialog = (token: Token) => {
     setIsRevokeOpen(true);
     setSelectedTokenId(token.id);
   };

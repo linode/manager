@@ -1229,6 +1229,9 @@ export const handlers = [
       ctx.json(appTokenFactory.build({ id: Number(req.params.id), ...data }))
     );
   }),
+  rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,
