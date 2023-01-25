@@ -3,6 +3,7 @@ import {
   ObjectStorageCluster,
 } from '@linode/api-v4/lib/object-storage';
 import { APIError } from '@linode/api-v4/lib/types';
+import classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -46,6 +47,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& svg': {
       marginTop: theme.spacing(1.5),
       transform: 'scale(0.8)',
+    },
+  },
+  placeholderAdjustment: {
+    padding: `${theme.spacing(2)} 0 0 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing(10)} 0 0 0`,
     },
   },
 }));
@@ -292,7 +299,10 @@ const RenderEmpty: React.FC<{
       <DocumentTitleSegment segment="Buckets" />
       <Placeholder
         title="Object Storage"
-        className={classes.empty}
+        className={classNames({
+          [classes.empty]: true,
+          [classes.placeholderAdjustment]: true,
+        })}
         isEntity
         icon={BucketIcon}
         renderAsSecondary
@@ -302,6 +312,7 @@ const RenderEmpty: React.FC<{
             children: 'Create Bucket',
           },
         ]}
+        showTransferDisplay
       >
         <Typography variant="subtitle1">Need help getting started?</Typography>
         <Typography variant="subtitle1">

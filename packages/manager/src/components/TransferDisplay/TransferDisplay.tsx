@@ -92,7 +92,7 @@ export const TransferDisplay: React.FC<Props> = (props) => {
     <>
       <Typography
         className={classes.root}
-        style={{ marginTop: spacingTop || 8 }}
+        style={{ marginTop: spacingTop ?? 8 }}
       >
         {isLoading ? (
           'Loading transfer data...'
