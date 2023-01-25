@@ -13,9 +13,7 @@ export const generateCLICommand = (data: {}) => {
   return `
 linode-cli linodes create
 ${dataForCLI.join('\n')}
-  `
-    .trimStart()
-    .trimEnd();
+  `.trim();
 };
 
 export default generateCLICommand;
