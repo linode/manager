@@ -2,7 +2,7 @@ import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import APITokenTable from './APITokenTable';
 
-export const APITokens: React.FC = () => {
+const APITokens = () => {
   return (
     <>
       <DocumentTitleSegment segment="API Tokens" />

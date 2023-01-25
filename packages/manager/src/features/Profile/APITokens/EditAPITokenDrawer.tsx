@@ -29,10 +29,9 @@ export const EditAPITokenDrawer = (props: Props) => {
       label: token?.label,
     },
     enableReinitialize: true,
-    onSubmit(values) {
-      updatePersonalAccessToken(values).then(() => {
-        onClose();
-      });
+    async onSubmit(values) {
+      await updatePersonalAccessToken(values);
+      onClose();
     },
   });
 
@@ -47,24 +46,16 @@ export const EditAPITokenDrawer = (props: Props) => {
         label="Label"
         name="label"
         onChange={form.handleChange}
-        data-qa-add-label
       />
       <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          key="cancel"
-          onClick={onClose}
-          data-qa-cancel
-        >
+        <Button buttonType="secondary" onClick={onClose}>
           Cancel
         </Button>
         <Button
-          key="create"
           buttonType="primary"
           loading={isLoading}
           disabled={!form.dirty}
           onClick={() => form.handleSubmit()}
-          data-qa-submit
         >
           Save
         </Button>

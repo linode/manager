@@ -354,20 +354,13 @@ export const CreateAPITokenDrawer = (props: Props) => {
         <FormHelperText error>{errorMap.scopes}</FormHelperText>
       )}
       <ActionsPanel>
-        <Button
-          buttonType="secondary"
-          key="cancel"
-          onClick={onClose}
-          data-qa-cancel
-        >
+        <Button buttonType="secondary" onClick={onClose}>
           Cancel
         </Button>
         <Button
-          key="create"
           buttonType="primary"
           loading={isLoading}
           onClick={() => form.handleSubmit()}
-          data-qa-submit
         >
           Create Token
         </Button>
