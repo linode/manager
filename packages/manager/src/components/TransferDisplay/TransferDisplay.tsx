@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: 'auto',
     textAlign: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '85%',
+    },
   },
   barLabels: {
     display: 'flex',
