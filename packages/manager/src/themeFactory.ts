@@ -9,7 +9,9 @@ import {
 
 type ThemeName = 'lightTheme' | 'darkTheme';
 
-type MergeTypes<A, B> = Omit<A, keyof B> & B;
+type MergeTypes<A, B> = Omit<A, keyof B> &
+  Omit<B, keyof A> &
+  { [K in keyof A & keyof B]: A[K] | B[K] };
 
 type LightModeColors = typeof color;
 type DarkModeColors = typeof darkColors;
