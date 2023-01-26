@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, { useEffect, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -15,6 +15,8 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendEvent } from 'src/utilities/ga';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
+
+import useEvents from 'src/hooks/useEvents';
 
 import CodeBlock from '../CodeBlock';
 
@@ -68,11 +70,26 @@ const ApiAwarenessModal = (props: Props) => {
   const { isOpen, onClose, route, payLoad } = props;
 
   const classes = useStyles();
+  const history = useHistory();
+  const { events } = useEvents();
+
+  const isLinodeCreated = useMemo(
+    () =>
+      events.filter(
+        (event) =>
+          event.action === 'linode_create' &&
+          event.entity?.label === payLoad.label
+      ).length === 1,
+    [events]
+  );
 
   // This harcoded values will be removed as part of following story that generated dynamic CURL and CLI commands.
-  const curlCommand = generateCurlCommand(payLoad, '/linode/instances');
+  const curlCommand = useMemo(
+    () => generateCurlCommand(payLoad, '/linode/instances'),
+    [payLoad]
+  );
 
-  const cliCommand = generateCLICommand(payLoad);
+  const cliCommand = useMemo(() => generateCLICommand(payLoad), [payLoad]);
 
   const tabs = [
     {
@@ -94,6 +111,13 @@ const ApiAwarenessModal = (props: Props) => {
       label: tabs[index].type,
     });
   };
+
+  useEffect(() => {
+    if (isLinodeCreated) {
+      onClose();
+      history.replace('/linodes');
+    }
+  }, [isLinodeCreated]);
 
   return (
     <Dialog
