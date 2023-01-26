@@ -73,17 +73,13 @@ const ApiAwarenessModal = (props: Props) => {
   const history = useHistory();
   const { events } = useEvents();
 
-  const isLinodeCreated = useMemo(
-    () =>
-      events.filter(
-        (event) =>
-          event.action === 'linode_create' &&
-          event.entity?.label === payLoad.label
-      ).length === 1,
-    [events]
-  );
+  const isLinodeCreated =
+    events.filter(
+      (event) =>
+        event.action === 'linode_create' &&
+        event.entity?.label === payLoad.label
+    ).length === 1;
 
-  // This harcoded values will be removed as part of following story that generated dynamic CURL and CLI commands.
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
     [payLoad]
@@ -114,6 +110,7 @@ const ApiAwarenessModal = (props: Props) => {
 
   useEffect(() => {
     if (isLinodeCreated) {
+      debugger;
       onClose();
       history.replace('/linodes');
     }
