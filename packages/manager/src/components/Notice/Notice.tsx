@@ -206,6 +206,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.important]: important,
         [errorScrollClassName]: error,
         [classes.breakWords]: breakWords,
+        [classes.marketing]: marketing && !notificationList,
         [classes.error]: error && !notificationList,
         [classes.errorList]: error && notificationList,
         [classes.success]: success && !notificationList,

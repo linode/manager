@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/Dialog';
@@ -12,13 +14,21 @@ import Tabs from 'src/components/core/ReachTabs';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendEvent } from 'src/utilities/ga';
 
+import CodeBlock from '../CodeBlock';
+
 const useStyles = makeStyles((theme: Theme) => ({
   cancelButtonStyles: {
     justifyContent: 'right',
     paddingRight: '4px',
   },
+  guides: {
+    marginTop: 16,
+  },
   modalIntroTypoClass: {
     paddingTop: '16px',
+  },
+  modalContent: {
+    overflowX: 'hidden',
   },
   tabsStyles: {
     marginTop: '14px',
@@ -37,24 +47,53 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px !important',
   },
 }));
-
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
   route: string;
+  payLoad: CreateLinodeRequest;
 }
 
-const fireGAEvent = (action: string) => {
+const fireGAEvent = (label: string) => {
   sendEvent({
-    action,
-    category: 'API CLI Awareness Contextual Help',
+    action: 'Click:link',
+    category: 'Linode Create API CLI Awareness Modal',
+    label,
   });
 };
-
 const ApiAwarenessModal = (props: Props) => {
   const { isOpen, onClose, route } = props;
 
   const classes = useStyles();
+
+  // This harcoded values will be removed as part of following story that generated dynamic CURL and CLI commands.
+  const curlCommand = `curl -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -X POST -d '{
+    "image": "linode/debian11",
+    "region": "us-southeast",
+    "type": "g6-nanode-1",
+    "label": "debian-us-southeast-001",
+    "tags": [],
+    "root_pass": "asdfasdfasdfasdf",
+    "authorized_users": [],
+    "booted": true,
+    "backups_enabled": false,
+    "private_ip": false
+  }' https://api.linode.com/v4/linode/instances`;
+
+  const cliCommand = `linode-cli linodes create 
+  --image linode/debian11 
+  --region us-central 
+  --type g6-nanode-1 
+  --label debian-us-central 
+  --tags 
+  --root_pass asd 
+  --authorized_users 
+  --booted true 
+  --backups_enabled false 
+  --backup_id undefined 
+  --private_ip false 
+  --stackscript_id undefined 
+  --stackscript_data undefined`;
 
   const tabs = [
     {
@@ -71,13 +110,20 @@ const ApiAwarenessModal = (props: Props) => {
 
   const handleTabChange = (index: number) => {
     sendEvent({
-      category: 'API CLI Awareness',
+      category: 'Linode Create API CLI Awareness Modal',
       action: `Click: ${tabs[index].type} Tab`,
+      label: tabs[index].type,
     });
   };
 
   return (
-    <Dialog title="Create Linode" open={isOpen} onClose={onClose} maxWidth="sm">
+    <Dialog
+      className={classes.modalContent}
+      title="Create Linode"
+      open={isOpen}
+      onClose={onClose}
+      maxWidth="sm"
+    >
       <Typography variant="body1" className={classes.modalIntroTypoClass}>
         Create a Linode in the command line using either cURL or the Linode CLI
         — both of which are powered by the Linode API. Select one of the methods
@@ -85,11 +131,7 @@ const ApiAwarenessModal = (props: Props) => {
         values for each command have been populated with the selections made in
         the Cloud Manager create form.
       </Typography>
-      <Tabs
-        defaultIndex={0}
-        onChange={handleTabChange}
-        className={classes.tabsStyles}
-      >
+      <Tabs defaultIndex={0} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />
         <TabPanels className={classes.tabPanelStyles}>
           <SafeTabPanel index={0}>
@@ -97,8 +139,8 @@ const ApiAwarenessModal = (props: Props) => {
               Most Linode API requests need to be authenticated with a valid{' '}
               <ExternalLink
                 text="personal access token"
-                link="https://cloud.linode.com/profile/tokens"
-                onClick={() => fireGAEvent('Click: personal access token')}
+                link="/profile/tokens"
+                onClick={() => fireGAEvent('personal access token')}
                 hideIcon
               />
               . The command below assumes that your personal access token has
@@ -107,16 +149,37 @@ const ApiAwarenessModal = (props: Props) => {
               <ExternalLink
                 text="Get Started with the Linode API"
                 link="https://www.linode.com/docs/products/tools/api/get-started/"
-                onClick={() =>
-                  fireGAEvent('Click: Get Started with the Linode API')
-                }
+                onClick={() => fireGAEvent('Get Started with the Linode API')}
                 hideIcon
               />{' '}
               and{' '}
               <ExternalLink
                 text="Linode API Guides"
                 link="https://www.linode.com/docs/products/tools/api/guides/"
-                onClick={() => fireGAEvent('Click: Linode API Guides')}
+                onClick={() => fireGAEvent('Linode API Guides')}
+                hideIcon
+              />
+              .
+            </Typography>
+            <CodeBlock command={curlCommand} language={'bash'} />
+          </SafeTabPanel>
+          <SafeTabPanel index={1}>
+            <CodeBlock command={cliCommand} language={'bash'} />
+            <Typography className={classes.guides} variant="h2">
+              Guides
+            </Typography>
+            <Typography>
+              <ExternalLink
+                text="Get Started with the Linode API"
+                link="https://www.linode.com/docs/products/tools/api/get-started/"
+                onClick={() => fireGAEvent('Get Started with the Linode API')}
+                hideIcon
+              />{' '}
+              and{' '}
+              <ExternalLink
+                text="Linode API Guides"
+                link="https://www.linode.com/docs/products/tools/api/guides/"
+                onClick={() => fireGAEvent('Linode API Guides')}
                 hideIcon
               />
               .
@@ -130,7 +193,7 @@ const ApiAwarenessModal = (props: Props) => {
                 text="Install and Configure the Linode CLI"
                 link="https://www.linode.com/docs/products/tools/cli/guides/install/"
                 onClick={() =>
-                  fireGAEvent('Click: Install and Configure the Linode CLI')
+                  fireGAEvent('Install and Configure the Linode CLI')
                 }
                 hideIcon
               />{' '}
@@ -139,7 +202,7 @@ const ApiAwarenessModal = (props: Props) => {
               <ExternalLink
                 text="Linode CLI Guides"
                 link="https://www.linode.com/docs/products/tools/cli/guides/"
-                onClick={() => fireGAEvent('Click: Linode CLI Guides')}
+                onClick={() => fireGAEvent('Linode CLI Guides')}
                 hideIcon
               />
               .
@@ -153,21 +216,21 @@ const ApiAwarenessModal = (props: Props) => {
           <ExternalLink
             text="Linode Terraform Provider"
             link="https://www.linode.com/products/linode-terraform-provider/"
-            onClick={() => fireGAEvent('Click: Linode Terraform Provider')}
+            onClick={() => fireGAEvent('Linode Terraform Provider')}
             hideIcon
           />{' '}
           and{' '}
           <ExternalLink
             text="Ansible Collection"
             link="https://www.linode.com/products/linode-ansible-collection/"
-            onClick={() => fireGAEvent('Click: Ansible Collection')}
+            onClick={() => fireGAEvent('Ansible Collection')}
             hideIcon
           />
           .{' '}
           <ExternalLink
             text="View all tools"
             link="https://www.linode.com/docs/products/tools/api/developers/"
-            onClick={() => fireGAEvent('Click: View all tools')}
+            onClick={() => fireGAEvent('View all tools')}
             hideIcon
           />{' '}
           with programmatic access to the Linode platform.

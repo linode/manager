@@ -159,7 +159,7 @@ interface Props {
   showAgreement: boolean;
   showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
-  handleToggleApiAwarenessModal: () => void;
+  handleShowApiAwarenessModal: () => void;
   signedAgreement: boolean;
 }
 
@@ -328,15 +328,8 @@ export class LinodeCreate extends React.PureComponent<
     this.mounted = false;
   }
 
-  createLinode = () => {
-    const selectedRegion = this.props.selectedRegionID || '';
-    const regionSupportsVLANs = doesRegionSupportFeature(
-      selectedRegion,
-      this.props.regionsData,
-      'Vlans'
-    );
-
-    const payload = {
+  getPayload = () => {
+    return {
       image: this.props.selectedImageID,
       region: this.props.selectedRegionID,
       type: this.props.selectedTypeID,
@@ -357,6 +350,17 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
+  };
+
+  createLinode = () => {
+    const selectedRegion = this.props.selectedRegionID || '';
+    const regionSupportsVLANs = doesRegionSupportFeature(
+      selectedRegion,
+      this.props.regionsData,
+      'Vlans'
+    );
+
+    const payload = this.getPayload();
 
     if (
       regionSupportsVLANs &&
@@ -441,7 +445,7 @@ export class LinodeCreate extends React.PureComponent<
       showAgreement,
       showApiAwarenessModal,
       handleAgreementChange,
-      handleToggleApiAwarenessModal,
+      handleShowApiAwarenessModal,
       signedAgreement,
       ...rest
     } = this.props;
@@ -796,8 +800,9 @@ export class LinodeCreate extends React.PureComponent<
               </Button>
               <ApiAwarenessModal
                 isOpen={showApiAwarenessModal}
-                onClose={handleToggleApiAwarenessModal}
+                onClose={handleShowApiAwarenessModal}
                 route={this.props.match.url}
+                payLoad={this.getPayload()}
               />
             </div>
           </Box>
