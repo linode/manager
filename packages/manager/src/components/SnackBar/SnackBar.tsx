@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderLeft: `6px solid ${theme.palette.primary.main}`,
   },
   error: {
-    borderLeft: `6px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `6px solid ${theme.palette.error.dark}`,
   },
   warning: {
-    borderLeft: `6px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `6px solid ${theme.palette.warning.dark}`,
   },
 }));
 

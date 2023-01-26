@@ -4,19 +4,19 @@ import { base, breakpoints } from './themeFactory';
 
 export const light = createTheme(base);
 
-const textColors = {
+export const darkModeTextColors = {
   linkActiveLight: '#74aae6',
   headlineStatic: '#e6e6e6',
   tableHeader: '#888F91',
   tableStatic: '#e6e6e6',
   textAccessTable: '#acb0b4',
-};
+} as const;
 
-const borderColors = {
+export const darkModeBorderColors = {
   borderTypography: '#454b54',
   borderTable: '#3a3f46',
   divider: '#222',
-};
+} as const;
 
 const primaryColors = {
   main: '#3683dc',
@@ -27,6 +27,46 @@ const primaryColors = {
   divider: '#222222',
   white: '#222',
 };
+
+export const darkColors = {
+  headline: primaryColors.headline,
+  red: '#fb6d6d',
+  border2: '#111',
+  border3: '#222',
+  grey1: '#abadaf',
+  grey2: 'rgba(0, 0, 0, 0.2)',
+  grey3: '#999',
+  grey5: 'rgba(0, 0, 0, 0.2)',
+  grey6: '#606469',
+  grey7: '#2e3238',
+  grey9: primaryColors.divider,
+  white: '#32363c',
+  black: '#fff',
+  offBlack: '#fff',
+  boxShadow: '#222',
+  boxShadowDark: '#000',
+  blueDTwhite: '#fff',
+  tableHeaderText: '#fff',
+  drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
+  label: '#c9cacb',
+  tagButton: '#364863',
+  tagIcon: '#9caec9',
+} as const;
+
+export const darkBgColors = {
+  app: '#3a3f46',
+  main: '#2f3236',
+  offWhite: '#444',
+  lightBlue1: '#222',
+  lightBlue2: '#364863',
+  white: '#32363c',
+  tableHeader: '#33373e',
+  primaryNavPaper: '#2e3238',
+  mainContentBanner: '#23272b',
+  bgPaper: '#2e3238',
+  bgAccessRow: '#454b54',
+  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+} as const;
 
 const iconCircleAnimation = {
   '& .circle': {
@@ -48,7 +88,7 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: textColors.linkActiveLight,
+  color: darkModeTextColors.linkActiveLight,
   border: 'none',
   font: 'inherit',
   padding: 0,
@@ -62,7 +102,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: textColors.tableStatic,
+  color: darkModeTextColors.tableStatic,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -83,7 +123,7 @@ const genericTableHeaderStyle = {
   '&:hover': {
     cursor: 'pointer',
     '& span': {
-      color: textColors.linkActiveLight,
+      color: darkModeTextColors.linkActiveLight,
     },
   },
 };
@@ -91,59 +131,10 @@ const genericTableHeaderStyle = {
 const darkThemeOptions: ThemeOptions = {
   name: 'darkTheme',
   breakpoints,
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)',
-    },
-    to: {
-      transform: 'rotate(360deg)',
-    },
-  },
-  '@keyframes dash': {
-    to: {
-      'stroke-dashoffset': 0,
-    },
-  },
-  bg: {
-    app: '#3a3f46',
-    main: '#2f3236',
-    offWhite: '#444',
-    lightBlue1: '#222',
-    lightBlue2: '#364863',
-    white: '#32363c',
-    tableHeader: '#33373e',
-    primaryNavPaper: '#2e3238',
-    mainContentBanner: '#23272b',
-    bgPaper: '#2e3238',
-    bgAccessRow: '#454b54',
-    bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
-  },
-  color: {
-    headline: primaryColors.headline,
-    red: '#fb6d6d',
-    border2: '#111',
-    border3: '#222',
-    grey1: '#abadaf',
-    grey2: 'rgba(0, 0, 0, 0.2)',
-    grey3: '#999',
-    grey5: 'rgba(0, 0, 0, 0.2)',
-    grey6: '#606469',
-    grey7: '#2e3238',
-    grey9: primaryColors.divider,
-    white: '#32363c',
-    black: '#fff',
-    offBlack: '#fff',
-    boxShadow: '#222',
-    boxShadowDark: '#000',
-    blueDTwhite: '#fff',
-    tableHeaderText: '#fff',
-    drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
-    label: '#c9cacb',
-    tagButton: '#364863',
-    tagIcon: '#9caec9',
-  },
-  borderColors,
-  textColors,
+  bg: darkBgColors,
+  color: darkColors,
+  borderColors: darkModeBorderColors,
+  textColors: darkModeTextColors,
   graphs: {
     network: {
       outbound: `rgb(49, 206, 62)`,
@@ -266,7 +257,7 @@ const darkThemeOptions: ThemeOptions = {
           },
         },
         outlined: {
-          color: textColors.linkActiveLight,
+          color: darkModeTextColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
             border: '1px solid #fff',
@@ -523,7 +514,7 @@ const darkThemeOptions: ThemeOptions = {
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
           '& a': {
-            color: textColors.linkActiveLight,
+            color: darkModeTextColors.linkActiveLight,
           },
           '& a:hover': {
             color: primaryColors.main,
@@ -589,7 +580,7 @@ const darkThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           '& a': {
-            color: textColors.linkActiveLight,
+            color: darkModeTextColors.linkActiveLight,
           },
           '& a:hover': {
             color: primaryColors.main,

@@ -1,47 +1,47 @@
 import { ThemeOptions } from '@mui/material/styles';
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
+import {
+  darkBgColors,
+  darkColors,
+  darkModeBorderColors,
+  darkModeTextColors,
+} from './themes';
+
+type ThemeName = 'lightTheme' | 'darkTheme';
+
+type MergeTypes<A, B> = Omit<A, keyof B> & B;
+
+type LightModeColors = typeof color;
+type DarkModeColors = typeof darkColors;
+
+type Colors = MergeTypes<LightModeColors, DarkModeColors>;
+
+type LightModeBgColors = typeof bg;
+type DarkModeBgColors = typeof darkBgColors;
+
+type BgColors = MergeTypes<LightModeBgColors, DarkModeColors>;
+
+type LightModeTextColors = typeof textColors;
+type DarkModeTextColors = typeof darkModeTextColors;
+type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
+
+type LightModeBorderColors = typeof borderColors;
+type DarkModeBorderColors = typeof darkModeBorderColors;
+
+type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
 
 /**
- * Augmenting Palette and Palette Options
- * @todo Move status out of the palette and add it as a custom ThemeOption.
- */
-
-declare module '@mui/material/styles/createPalette' {
-  interface Palette {
-    status: {
-      success: string;
-      successDark: string;
-      warning: string;
-      warningDark: string;
-      error: string;
-      errorDark: string;
-    };
-  }
-
-  interface PaletteOptions {
-    status?: {
-      success?: string;
-      successDark?: string;
-      warning?: string;
-      warningDark?: string;
-      error?: string;
-      errorDark?: string;
-    };
-  }
-}
-
-/**
- * Augmenting the Theme and DeprecatedThemeOptions.
+ * Augmenting the Theme and ThemeOptions.
+ * This allows us to add cutom fields to the theme.
+ * Avoid doing this unless you have a good reason.
  */
 declare module '@mui/material/styles/createTheme' {
   interface Theme {
-    name: string;
-    '@keyframes rotate': any;
-    '@keyframes dash': any;
-    bg: any;
-    textColors: any;
-    borderColors: any;
-    color: any;
+    name: ThemeName;
+    bg: BgColors;
+    color: Colors;
+    textColors: TextColors;
+    borderColors: BorderColors;
     graphs: any;
     visually: any;
     font?: any;
@@ -50,26 +50,21 @@ declare module '@mui/material/styles/createTheme' {
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-
     notificationList: any;
-    status: any;
   }
 
   interface ThemeOptions {
-    name: string;
-    '@keyframes rotate'?: any;
-    '@keyframes dash'?: any;
-    bg?: any;
-    color?: any;
+    name: ThemeName;
+    bg?: LightModeBgColors | DarkModeBgColors;
+    color?: LightModeColors | DarkModeColors;
+    textColors?: LightModeTextColors | DarkModeTextColors;
+    borderColors?: LightModeBorderColors | DarkModeBorderColors;
     graphs?: any;
     visually?: any;
     font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
     notificationList?: any;
-    status?: any;
-    textColors: any;
-    borderColors: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
@@ -86,19 +81,20 @@ export const breakpoints = createBreakpoints({
   },
 });
 
-const textColors = {
-  linkActiveLight: '#2575d0',
-  headlineStatic: '#32363c',
-  tableHeader: '#888f91',
-  tableStatic: '#606469',
-  textAccessTable: '#606469',
-};
-
-const borderColors = {
-  borderTypography: '#e3e5e8',
-  borderTable: '#f4f5f6',
-  divider: '#e3e5e8',
-};
+const bg = {
+  app: '#f4f5f6',
+  main: '#f4f4f4',
+  offWhite: '#fbfbfb',
+  lightBlue1: '#f0f7ff',
+  lightBlue2: '#e5f1ff',
+  white: '#fff',
+  tableHeader: '#f9fafa',
+  primaryNavPaper: '#3a3f46',
+  mainContentBanner: '#33373d',
+  bgPaper: '#ffffff',
+  bgAccessRow: '#fafafa',
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
+} as const;
 
 const primaryColors = {
   main: '#3683dc',
@@ -109,6 +105,52 @@ const primaryColors = {
   divider: '#f4f4f4',
   white: '#fff',
 };
+
+const color = {
+  headline: primaryColors.headline,
+  red: '#ca0813',
+  orange: '#ffb31a',
+  yellow: '#fecf2f',
+  green: '#00b159',
+  teal: '#17cf73',
+  border2: '#c5c6c8',
+  border3: '#eee',
+  grey1: '#abadaf',
+  grey2: '#e7e7e7',
+  grey3: '#ccc',
+  grey4: '#8C929D',
+  grey5: '#f5f5f5',
+  grey6: '#e3e5e8',
+  grey7: '#e9eaef',
+  grey8: '#dbdde1',
+  grey9: '#f4f5f6',
+  white: '#fff',
+  black: '#222',
+  offBlack: '#444',
+  boxShadow: '#ddd',
+  boxShadowDark: '#aaa',
+  blueDTwhite: '#3683dc',
+  tableHeaderText: 'rgba(0, 0, 0, 0.54)',
+  drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
+  label: '#555',
+  disabledText: '#c9cacb',
+  tagButton: '#f1f7fd',
+  tagIcon: '#7daee8',
+} as const;
+
+const textColors = {
+  linkActiveLight: '#2575d0',
+  headlineStatic: '#32363c',
+  tableHeader: '#888f91',
+  tableStatic: '#606469',
+  textAccessTable: '#606469',
+} as const;
+
+const borderColors = {
+  borderTypography: '#e3e5e8',
+  borderTable: '#f4f5f6',
+  divider: '#e3e5e8',
+} as const;
 
 const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
@@ -238,64 +280,8 @@ export const base: ThemeOptions = {
     'none',
   ],
   spacing,
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)',
-    },
-    to: {
-      transform: 'rotate(360deg)',
-    },
-  },
-  '@keyframes dash': {
-    to: {
-      'stroke-dashoffset': 0,
-    },
-  },
-  bg: {
-    app: '#f4f5f6',
-    main: '#f4f4f4',
-    offWhite: '#fbfbfb',
-    lightBlue1: '#f0f7ff',
-    lightBlue2: '#e5f1ff',
-    white: '#fff',
-    tableHeader: '#f9fafa',
-    primaryNavPaper: '#3a3f46',
-    mainContentBanner: '#33373d',
-    bgPaper: '#ffffff',
-    bgAccessRow: '#fafafa',
-    bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
-  },
-  color: {
-    headline: primaryColors.headline,
-    red: '#ca0813',
-    orange: '#ffb31a',
-    yellow: '#fecf2f',
-    green: '#00b159',
-    teal: '#17cf73',
-    border2: '#c5c6c8',
-    border3: '#eee',
-    grey1: '#abadaf',
-    grey2: '#e7e7e7',
-    grey3: '#ccc',
-    grey4: '#8C929D',
-    grey5: '#f5f5f5',
-    grey6: '#e3e5e8',
-    grey7: '#e9eaef',
-    grey8: '#dbdde1',
-    grey9: '#f4f5f6',
-    white: '#fff',
-    black: '#222',
-    offBlack: '#444',
-    boxShadow: '#ddd',
-    boxShadowDark: '#aaa',
-    blueDTwhite: '#3683dc',
-    tableHeaderText: 'rgba(0, 0, 0, 0.54)',
-    drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
-    label: '#555',
-    disabledText: '#c9cacb',
-    tagButton: '#f1f7fd',
-    tagIcon: '#7daee8',
-  },
+  bg,
+  color,
   textColors,
   borderColors,
   graphs: {
@@ -395,13 +381,20 @@ export const base: ThemeOptions = {
     text: {
       primary: primaryColors.text,
     },
-    status: {
-      success: '#d7e3ef',
-      successDark: '#3682dd',
-      warning: '#fdf4da',
-      warningDark: '#ffd002',
-      error: '#f8dedf',
-      errorDark: '#cd2227',
+    success: {
+      light: '#d7e3ef',
+      main: '#d7e3ef',
+      dark: '#f8dedf',
+    },
+    warning: {
+      light: '#fdf4da',
+      main: '#fdf4da',
+      dark: '#ffd002',
+    },
+    error: {
+      light: '#f8dedf',
+      main: '#f8dedf',
+      dark: '#cd2227',
     },
   },
   typography: {

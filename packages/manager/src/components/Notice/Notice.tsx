@@ -73,17 +73,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
   },
   errorList: {
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   warning: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -92,17 +92,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   warningList: {
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
   success: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
   },
   successList: {
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
   },
   flag: {
     marginRight: theme.spacing(2),
