@@ -6,6 +6,7 @@ import { createLinode } from '@linode/api-v4/lib/linodes';
 import { EntityTransfer, Linode } from '@linode/api-v4/types';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
+import { profileFactory } from 'src/factories/profile';
 import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';
 import { regions } from 'support/constants/regions';
@@ -15,6 +16,7 @@ import {
   mockGetEntityTransfers,
   mockReceiveEntityTransfer,
 } from 'support/intercepts/account';
+import { mockGetProfile } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomItem, randomLabel, randomUuid } from 'support/util/random';
@@ -147,6 +149,17 @@ describe('Account service transfers', () => {
       });
     });
 
+    // Mock the user profile for this test to ensure that timezone is set to
+    // America/New_York. Without this mock, calls to `formatDate()` will work
+    // unreliably. Long term, `formatDate()` in this test should be replaced
+    // with something that can account for user timezone, and this mock should
+    // be removed.
+    mockGetProfile(
+      profileFactory.build({
+        timezone: 'America/New_York',
+      })
+    ).as('getProfile');
+
     mockGetEntityTransfers(
       pendingTransfers,
       receivedTransfers,
@@ -156,7 +169,7 @@ describe('Account service transfers', () => {
     cy.visitWithLogin(serviceTransferLandingUrl);
 
     // Wait for 3 requests to transfers endpoint -- each section loads transfers separately.
-    cy.wait(['@getTransfers', '@getTransfers', '@getTransfers']);
+    cy.wait(['@getProfile', '@getTransfers', '@getTransfers', '@getTransfers']);
 
     // Confirm that pending transfers are displayed in "Pending Service Transfers" panel.
     cy.get('[data-qa-panel][heading="Pending Service Transfers"]')
@@ -168,6 +181,11 @@ describe('Account service transfers', () => {
             .closest('tr')
             .within(() => {
               cy.findByText('5 Linodes').should('be.visible');
+
+              // TODO Replace `formatDate` with a more robust util specifically for Cypress tests.
+              // `formatDate()` is fragile when called from Cypress; it does not take user timezone
+              // into account, and can therefore result in test failures if running with an account
+              // whose timezone is not set to America/New_York.
               cy.findByText(formatDate(pendingTransfer.created)).should(
                 'be.visible'
               );
