@@ -386,7 +386,7 @@ export const base: ThemeOptions = {
     success: {
       light: '#d7e3ef',
       main: '#d7e3ef',
-      dark: '#f8dedf',
+      dark: '#3682dd',
     },
     warning: {
       light: '#fdf4da',
