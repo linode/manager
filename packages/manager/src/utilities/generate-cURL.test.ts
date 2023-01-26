@@ -12,7 +12,7 @@ const linodeData = {
 
 const createLinodePath = '/linode/instance';
 
-const linodeDataString = JSON.stringify(linodeData);
+const linodeDataString = JSON.stringify(linodeData, null, 4);
 
 const generatedCommand = generateCurlCommand(linodeData, createLinodePath);
 
@@ -42,6 +42,6 @@ describe('generateCurlCommand', () => {
   });
 
   it('should return a curl command that has a data option set to the argument passed to it', () => {
-    expect(generatedCommand).toMatch(`-d ${linodeDataString}`);
+    expect(generatedCommand).toMatch(`-d '${linodeDataString}'`);
   });
 });

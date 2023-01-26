@@ -13,6 +13,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tabs from 'src/components/core/ReachTabs';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import { sendEvent } from 'src/utilities/ga';
+import generateCurlCommand from 'src/utilities/generate-cURL';
+import generateCLICommand from 'src/utilities/generate-cli';
 
 import CodeBlock from '../CodeBlock';
 
@@ -47,6 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px !important',
   },
 }));
+
 export interface Props {
   isOpen: boolean;
   onClose: () => void;
@@ -62,38 +65,14 @@ const fireGAEvent = (label: string) => {
   });
 };
 const ApiAwarenessModal = (props: Props) => {
-  const { isOpen, onClose, route } = props;
+  const { isOpen, onClose, route, payLoad } = props;
 
   const classes = useStyles();
 
   // This harcoded values will be removed as part of following story that generated dynamic CURL and CLI commands.
-  const curlCommand = `curl -H "Content-Type: application/json" -H "Authorization: Bearer $TOKEN" -X POST -d '{
-    "image": "linode/debian11",
-    "region": "us-southeast",
-    "type": "g6-nanode-1",
-    "label": "debian-us-southeast-001",
-    "tags": [],
-    "root_pass": "asdfasdfasdfasdf",
-    "authorized_users": [],
-    "booted": true,
-    "backups_enabled": false,
-    "private_ip": false
-  }' https://api.linode.com/v4/linode/instances`;
+  const curlCommand = generateCurlCommand(payLoad, '/linode/instances');
 
-  const cliCommand = `linode-cli linodes create 
-  --image linode/debian11 
-  --region us-central 
-  --type g6-nanode-1 
-  --label debian-us-central 
-  --tags 
-  --root_pass asd 
-  --authorized_users 
-  --booted true 
-  --backups_enabled false 
-  --backup_id undefined 
-  --private_ip false 
-  --stackscript_id undefined 
-  --stackscript_data undefined`;
+  const cliCommand = generateCLICommand(payLoad);
 
   const tabs = [
     {
