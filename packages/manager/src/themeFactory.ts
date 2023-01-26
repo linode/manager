@@ -1,11 +1,6 @@
 import { ThemeOptions } from '@mui/material/styles';
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
-import {
-  darkBgColors,
-  darkColors,
-  darkModeBorderColors,
-  darkModeTextColors,
-} from './themes';
+import { customDarkModeOptions } from './themes';
 
 type ThemeName = 'lightTheme' | 'darkTheme';
 
@@ -14,21 +9,21 @@ type MergeTypes<A, B> = Omit<A, keyof B> &
   { [K in keyof A & keyof B]: A[K] | B[K] };
 
 type LightModeColors = typeof color;
-type DarkModeColors = typeof darkColors;
+type DarkModeColors = typeof customDarkModeOptions.color;
 
 type Colors = MergeTypes<LightModeColors, DarkModeColors>;
 
 type LightModeBgColors = typeof bg;
-type DarkModeBgColors = typeof darkBgColors;
+type DarkModeBgColors = typeof customDarkModeOptions.bg;
 
 type BgColors = MergeTypes<LightModeBgColors, DarkModeColors>;
 
 type LightModeTextColors = typeof textColors;
-type DarkModeTextColors = typeof darkModeTextColors;
+type DarkModeTextColors = typeof customDarkModeOptions.textColors;
 type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
 
 type LightModeBorderColors = typeof borderColors;
-type DarkModeBorderColors = typeof darkModeBorderColors;
+type DarkModeBorderColors = typeof customDarkModeOptions.borderColors;
 
 type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
 
@@ -52,7 +47,6 @@ declare module '@mui/material/styles/createTheme' {
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-    notificationList: any;
   }
 
   interface ThemeOptions {
@@ -66,7 +60,6 @@ declare module '@mui/material/styles/createTheme' {
     font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
-    notificationList?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
@@ -368,14 +361,6 @@ export const base: ThemeOptions = {
   },
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
-  },
-  notificationList: {
-    padding: '16px 32px 16px 23px',
-    borderBottom: '1px solid #fbfbfb',
-    transition: 'background-color 225ms ease-in-out',
-    '&:hover': {
-      backgroundColor: '#f4f4f4',
-    },
   },
   palette: {
     divider: primaryColors.divider,

@@ -4,20 +4,6 @@ import { base, breakpoints } from './themeFactory';
 
 export const light = createTheme(base);
 
-export const darkModeTextColors = {
-  linkActiveLight: '#74aae6',
-  headlineStatic: '#e6e6e6',
-  tableHeader: '#888F91',
-  tableStatic: '#e6e6e6',
-  textAccessTable: '#acb0b4',
-} as const;
-
-export const darkModeBorderColors = {
-  borderTypography: '#454b54',
-  borderTable: '#3a3f46',
-  divider: '#222',
-} as const;
-
 const primaryColors = {
   main: '#3683dc',
   light: '#4d99f1',
@@ -28,44 +14,57 @@ const primaryColors = {
   white: '#222',
 };
 
-export const darkColors = {
-  headline: primaryColors.headline,
-  red: '#fb6d6d',
-  border2: '#111',
-  border3: '#222',
-  grey1: '#abadaf',
-  grey2: 'rgba(0, 0, 0, 0.2)',
-  grey3: '#999',
-  grey5: 'rgba(0, 0, 0, 0.2)',
-  grey6: '#606469',
-  grey7: '#2e3238',
-  grey9: primaryColors.divider,
-  white: '#32363c',
-  black: '#fff',
-  offBlack: '#fff',
-  boxShadow: '#222',
-  boxShadowDark: '#000',
-  blueDTwhite: '#fff',
-  tableHeaderText: '#fff',
-  drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
-  label: '#c9cacb',
-  tagButton: '#364863',
-  tagIcon: '#9caec9',
-} as const;
-
-export const darkBgColors = {
-  app: '#3a3f46',
-  main: '#2f3236',
-  offWhite: '#444',
-  lightBlue1: '#222',
-  lightBlue2: '#364863',
-  white: '#32363c',
-  tableHeader: '#33373e',
-  primaryNavPaper: '#2e3238',
-  mainContentBanner: '#23272b',
-  bgPaper: '#2e3238',
-  bgAccessRow: '#454b54',
-  bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+export const customDarkModeOptions = {
+  bg: {
+    app: '#3a3f46',
+    main: '#2f3236',
+    offWhite: '#444',
+    lightBlue1: '#222',
+    lightBlue2: '#364863',
+    white: '#32363c',
+    tableHeader: '#33373e',
+    primaryNavPaper: '#2e3238',
+    mainContentBanner: '#23272b',
+    bgPaper: '#2e3238',
+    bgAccessRow: '#454b54',
+    bgAccessRowTransparentGradient: 'rgb(69, 75, 84, .001)',
+  },
+  color: {
+    headline: primaryColors.headline,
+    red: '#fb6d6d',
+    border2: '#111',
+    border3: '#222',
+    grey1: '#abadaf',
+    grey2: 'rgba(0, 0, 0, 0.2)',
+    grey3: '#999',
+    grey5: 'rgba(0, 0, 0, 0.2)',
+    grey6: '#606469',
+    grey7: '#2e3238',
+    grey9: primaryColors.divider,
+    white: '#32363c',
+    black: '#fff',
+    offBlack: '#fff',
+    boxShadow: '#222',
+    boxShadowDark: '#000',
+    blueDTwhite: '#fff',
+    tableHeaderText: '#fff',
+    drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
+    label: '#c9cacb',
+    tagButton: '#364863',
+    tagIcon: '#9caec9',
+  },
+  textColors: {
+    linkActiveLight: '#74aae6',
+    headlineStatic: '#e6e6e6',
+    tableHeader: '#888F91',
+    tableStatic: '#e6e6e6',
+    textAccessTable: '#acb0b4',
+  },
+  borderColors: {
+    borderTypography: '#454b54',
+    borderTable: '#3a3f46',
+    divider: '#222',
+  },
 } as const;
 
 const iconCircleAnimation = {
@@ -88,7 +87,7 @@ const iconCircleAnimation = {
 // Used for styling html buttons to look like our generic links
 const genericLinkStyle = {
   background: 'none',
-  color: darkModeTextColors.linkActiveLight,
+  color: customDarkModeOptions.textColors.linkActiveLight,
   border: 'none',
   font: 'inherit',
   padding: 0,
@@ -102,7 +101,7 @@ const genericLinkStyle = {
 // Used for styling status pills as seen on Linodes
 const genericStatusPillStyle = {
   backgroundColor: 'transparent',
-  color: darkModeTextColors.tableStatic,
+  color: customDarkModeOptions.textColors.tableStatic,
   fontSize: '1rem',
   padding: 0,
   '&:before': {
@@ -123,7 +122,7 @@ const genericTableHeaderStyle = {
   '&:hover': {
     cursor: 'pointer',
     '& span': {
-      color: darkModeTextColors.linkActiveLight,
+      color: customDarkModeOptions.textColors.linkActiveLight,
     },
   },
 };
@@ -131,10 +130,10 @@ const genericTableHeaderStyle = {
 const darkThemeOptions: ThemeOptions = {
   name: 'darkTheme',
   breakpoints,
-  bg: darkBgColors,
-  color: darkColors,
-  borderColors: darkModeBorderColors,
-  textColors: darkModeTextColors,
+  bg: customDarkModeOptions.bg,
+  color: customDarkModeOptions.color,
+  borderColors: customDarkModeOptions.borderColors,
+  textColors: customDarkModeOptions.textColors,
   graphs: {
     network: {
       outbound: `rgb(49, 206, 62)`,
@@ -157,12 +156,6 @@ const darkThemeOptions: ThemeOptions = {
   },
   animateCircleIcon: {
     ...iconCircleAnimation,
-  },
-  notificationList: {
-    borderBottom: '1px solid #f4f4f4',
-    '&:hover': {
-      backgroundColor: '#111111',
-    },
   },
   palette: {
     // We really should be using this...
@@ -257,7 +250,7 @@ const darkThemeOptions: ThemeOptions = {
           },
         },
         outlined: {
-          color: darkModeTextColors.linkActiveLight,
+          color: customDarkModeOptions.textColors.linkActiveLight,
           '&:hover, &:focus': {
             backgroundColor: 'transparent !important',
             border: '1px solid #fff',
@@ -514,7 +507,7 @@ const darkThemeOptions: ThemeOptions = {
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
           '& a': {
-            color: darkModeTextColors.linkActiveLight,
+            color: customDarkModeOptions.textColors.linkActiveLight,
           },
           '& a:hover': {
             color: primaryColors.main,
@@ -580,7 +573,7 @@ const darkThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           '& a': {
-            color: darkModeTextColors.linkActiveLight,
+            color: customDarkModeOptions.textColors.linkActiveLight,
           },
           '& a:hover': {
             color: primaryColors.main,
