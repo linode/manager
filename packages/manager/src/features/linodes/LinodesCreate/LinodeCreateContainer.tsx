@@ -1,7 +1,6 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
 import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
-
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -410,12 +409,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
-  handleToggleApiAwarenessModal = () => {
+  handleShowApiAwarenessModal = () => {
     this.setState((prevState) => ({
       showApiAwarenessModal: !prevState.showApiAwarenessModal,
     }));
   };
-
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
@@ -658,7 +656,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
   };
-
   getBackupsMonthlyPrice = (): number | undefined | null => {
     const type = this.getTypeInfo();
 
@@ -815,7 +812,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
             handleAgreementChange={this.handleAgreementChange}
-            handleToggleApiAwarenessModal={this.handleToggleApiAwarenessModal}
+            handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
             {...restOfProps}
