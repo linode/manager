@@ -4,6 +4,8 @@ import { customDarkModeOptions } from './themes';
 
 type ThemeName = 'lightTheme' | 'darkTheme';
 
+type Fonts = typeof primaryFonts;
+
 type MergeTypes<A, B> = Omit<A, keyof B> &
   Omit<B, keyof A> &
   { [K in keyof A & keyof B]: A[K] | B[K] };
@@ -39,9 +41,9 @@ declare module '@mui/material/styles/createTheme' {
     color: Colors;
     textColors: TextColors;
     borderColors: BorderColors;
+    font: Fonts;
     graphs: any;
     visually: any;
-    font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
@@ -55,9 +57,9 @@ declare module '@mui/material/styles/createTheme' {
     color?: LightModeColors | DarkModeColors;
     textColors?: LightModeTextColors | DarkModeTextColors;
     borderColors?: LightModeBorderColors | DarkModeBorderColors;
+    font?: Fonts;
     graphs?: any;
     visually?: any;
-    font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
@@ -151,7 +153,7 @@ const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
   semiBold: '"LatoWebSemibold", sans-serif',
   bold: '"LatoWebBold", sans-serif',
-};
+} as const;
 
 const iconCircleAnimation = {
   '& .circle': {
