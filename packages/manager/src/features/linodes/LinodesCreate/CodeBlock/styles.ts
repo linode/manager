@@ -19,6 +19,9 @@ export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
       '& .hljs-symbol': {
         color: '#f8f8f2',
       },
+      '& .hljs-variable': {
+        color: 'teal',
+      },
     },
   },
   copyIcon: {
