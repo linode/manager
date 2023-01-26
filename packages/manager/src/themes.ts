@@ -1,16 +1,8 @@
-import createTheme, { breakpoints } from './themeFactory';
+import { createTheme, ThemeOptions } from '@mui/material/styles';
+import { mergeDeepRight } from 'ramda';
+import { base, breakpoints } from './themeFactory';
 
-export const light = () => {
-  const options: any = { name: 'lightTheme' };
-
-  return createTheme(options);
-};
-
-export const dark = () => {
-  const options: any = { ...darkThemeOptions };
-
-  return createTheme(options);
-};
+export const light = createTheme(base);
 
 const textColors = {
   linkActiveLight: '#74aae6',
@@ -96,7 +88,7 @@ const genericTableHeaderStyle = {
   },
 };
 
-const darkThemeOptions = {
+const darkThemeOptions: ThemeOptions = {
   name: 'darkTheme',
   breakpoints,
   '@keyframes rotate': {
@@ -182,6 +174,8 @@ const darkThemeOptions = {
     },
   },
   palette: {
+    // We really should be using this...
+    // mode: 'dark',
     divider: primaryColors.divider,
     primary: primaryColors,
     text: {
@@ -220,339 +214,399 @@ const darkThemeOptions = {
   applyTableHeaderStyles: {
     ...genericTableHeaderStyle,
   },
-  overrides: {
+  components: {
     MuiAppBar: {
-      colorDefault: {
-        backgroundColor: 'transparent',
+      styleOverrides: {
+        colorDefault: {
+          backgroundColor: 'transparent',
+        },
       },
     },
     MuiBackdrop: {
-      root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
       },
     },
     MuiButton: {
-      label: {
-        position: 'relative',
-      },
-      root: {
-        color: primaryColors.main,
-        '&:hover': {
-          backgroundColor: '#000',
+      styleOverrides: {
+        // label: {
+        //   position: 'relative',
+        // },
+        root: {
+          color: primaryColors.main,
+          '&:hover': {
+            backgroundColor: '#000',
+          },
+          '&[aria-expanded="true"]': {
+            backgroundColor: primaryColors.dark,
+          },
+          '&:disabled': {
+            backgroundColor: '#454b54',
+            color: '#5c6470',
+          },
+          '&.loading': {
+            color: primaryColors.text,
+          },
         },
-        '&[aria-expanded="true"]': {
-          backgroundColor: primaryColors.dark,
+        containedPrimary: {
+          '&:hover, &:focus': {
+            backgroundColor: '#226dc3',
+          },
+          '&:active': {
+            backgroundColor: primaryColors.dark,
+          },
+          '&:disabled': {
+            backgroundColor: '#454b54',
+            color: '#5c6470',
+          },
+          '&.loading': {
+            color: primaryColors.text,
+          },
         },
-        '&:disabled': {
-          backgroundColor: '#454b54',
-          color: '#5c6470',
-        },
-        '&.loading': {
-          color: primaryColors.text,
-        },
-      },
-      containedPrimary: {
-        '&:hover, &:focus': {
-          backgroundColor: '#226dc3',
-        },
-        '&:active': {
-          backgroundColor: primaryColors.dark,
-        },
-        '&:disabled': {
-          backgroundColor: '#454b54',
-          color: '#5c6470',
-        },
-        '&.loading': {
-          color: primaryColors.text,
-        },
-      },
-      outlined: {
-        color: textColors.linkActiveLight,
-        '&:hover, &:focus': {
-          backgroundColor: 'transparent !important',
-          border: '1px solid #fff',
-          color: '#fff',
+        outlined: {
+          color: textColors.linkActiveLight,
+          '&:hover, &:focus': {
+            backgroundColor: 'transparent !important',
+            border: '1px solid #fff',
+            color: '#fff',
+          },
         },
       },
     },
     MuiButtonBase: {
-      root: {
-        fontSize: '1rem',
+      styleOverrides: {
+        root: {
+          fontSize: '1rem',
+        },
       },
     },
     MuiCardHeader: {
-      root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        },
       },
     },
     MuiChip: {
-      root: {
-        color: primaryColors.text,
-        backgroundColor: primaryColors.main,
-      },
-      clickable: {
-        backgroundColor: '#415d81',
-        '&:hover': {
-          backgroundColor: '#374863',
+      styleOverrides: {
+        root: {
+          color: primaryColors.text,
+          backgroundColor: primaryColors.main,
         },
-        '&:focus': {
-          backgroundColor: '#374863',
+        clickable: {
+          backgroundColor: '#415d81',
+          '&:hover': {
+            backgroundColor: '#374863',
+          },
+          '&:focus': {
+            backgroundColor: '#374863',
+          },
         },
-      },
-      outlined: {
-        borderRadius: 1,
-        backgroundColor: 'transparent',
+        outlined: {
+          borderRadius: 1,
+          backgroundColor: 'transparent',
+        },
       },
     },
     MuiCardActions: {
-      root: {
-        backgroundColor: 'rgba(0, 0, 0, 0.2) !important',
+      styleOverrides: {
+        root: {
+          backgroundColor: 'rgba(0, 0, 0, 0.2) !important',
+        },
       },
     },
     MuiDialog: {
-      paper: {
-        boxShadow: '0 0 5px #222',
+      styleOverrides: {
+        paper: {
+          boxShadow: '0 0 5px #222',
+        },
       },
     },
     MuiDialogTitle: {
-      root: {
-        borderBottom: '1px solid #222',
-        color: primaryColors.headline,
+      styleOverrides: {
+        root: {
+          borderBottom: '1px solid #222',
+          color: primaryColors.headline,
+        },
       },
     },
     MuiDrawer: {
-      paper: {
-        boxShadow: '0 0 5px #222',
+      styleOverrides: {
+        paper: {
+          boxShadow: '0 0 5px #222',
+        },
       },
     },
     MuiFormControl: {
-      root: {
-        '&.copy > div': {
-          backgroundColor: '#2f3236',
+      styleOverrides: {
+        root: {
+          '&.copy > div': {
+            backgroundColor: '#2f3236',
+          },
         },
       },
     },
     MuiFormControlLabel: {
-      root: {},
-      label: {
-        color: primaryColors.text,
-        '&.Mui-disabled': {
-          color: '#aaa !important',
+      styleOverrides: {
+        root: {},
+        label: {
+          color: primaryColors.text,
+          '&.Mui-disabled': {
+            color: '#aaa !important',
+          },
         },
+        disabled: {},
       },
-      disabled: {},
     },
     MuiFormLabel: {
-      root: {
-        color: '#c9cacb',
-        '&$focused': {
+      styleOverrides: {
+        root: {
           color: '#c9cacb',
-        },
-        '&$error': {
-          color: '#c9cacb',
-        },
-        '&$disabled': {
-          color: '#c9cacb',
+          '&$focused': {
+            color: '#c9cacb',
+          },
+          '&$error': {
+            color: '#c9cacb',
+          },
+          '&$disabled': {
+            color: '#c9cacb',
+          },
         },
       },
     },
     MuiFormHelperText: {
-      root: {
-        color: '#c9cacb',
-        lineHeight: 1.25,
-        '&$error': {
-          color: '#fb6d6d',
+      styleOverrides: {
+        root: {
+          color: '#c9cacb',
+          lineHeight: 1.25,
+          '&$error': {
+            color: '#fb6d6d',
+          },
         },
       },
     },
     MuiIconButton: {
-      root: {
-        '&:hover': {
-          color: primaryColors.light,
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            color: primaryColors.light,
+          },
         },
       },
     },
     MuiInput: {
-      input: {
-        '&.Mui-disabled': {
-          borderColor: '#606469',
-          color: '#ccc !important',
-          opacity: 0.5,
-          '-webkit-text-fill-color': 'unset !important',
+      styleOverrides: {
+        input: {
+          '&.Mui-disabled': {
+            borderColor: '#606469',
+            color: '#ccc !important',
+            opacity: 0.5,
+            '-webkit-text-fill-color': 'unset !important',
+          },
         },
+        root: {
+          backgroundColor: '#444',
+          border: '1px solid #222',
+          color: primaryColors.text,
+          '&.Mui-disabled': {
+            borderColor: '#606469',
+            opacity: 0.5,
+            color: '#ccc !important',
+          },
+          '&.Mui-focused': {
+            borderColor: primaryColors.main,
+            boxShadow: '0 0 2px 1px #222',
+          },
+          '&.Mui-error': {
+            borderColor: '#fb6d6d',
+          },
+          '& svg': {
+            color: primaryColors.main,
+          },
+        },
+        focused: {},
+        disabled: {},
       },
-      root: {
-        backgroundColor: '#444',
-        border: '1px solid #222',
-        color: primaryColors.text,
-        '&.Mui-disabled': {
-          borderColor: '#606469',
-          opacity: 0.5,
-          color: '#ccc !important',
-        },
-        '&.Mui-focused': {
-          borderColor: primaryColors.main,
-          boxShadow: '0 0 2px 1px #222',
-        },
-        '&.Mui-error': {
-          borderColor: '#fb6d6d',
-        },
-        '& svg': {
-          color: primaryColors.main,
-        },
-      },
-      focused: {},
-      disabled: {},
     },
     MuiInputAdornment: {
-      root: {
-        color: '#eee',
-        '& p': {
+      styleOverrides: {
+        root: {
           color: '#eee',
+          '& p': {
+            color: '#eee',
+          },
         },
       },
     },
     MuiListItem: {
-      root: {
-        color: primaryColors.text,
-        '&.selectHeader': {
+      styleOverrides: {
+        root: {
           color: primaryColors.text,
+          '&.selectHeader': {
+            color: primaryColors.text,
+          },
         },
       },
     },
     MuiMenuItem: {
-      root: {
-        color: primaryColors.text,
-        '&$selected, &$selected:hover': {
-          backgroundColor: 'transparent',
-          color: primaryColors.main,
-          opacity: 1,
+      styleOverrides: {
+        root: {
+          color: primaryColors.text,
+          '&$selected, &$selected:hover': {
+            backgroundColor: 'transparent',
+            color: primaryColors.main,
+            opacity: 1,
+          },
         },
+        selected: {},
       },
-      selected: {},
     },
     MuiPaper: {
-      root: {
-        backgroundColor: '#2e3238',
-      },
-      outlined: {
-        border: '1px solid rgba(0, 0, 0, 0.2)',
+      styleOverrides: {
+        root: {
+          backgroundColor: '#2e3238',
+        },
+        outlined: {
+          border: '1px solid rgba(0, 0, 0, 0.2)',
+        },
       },
     },
     MuiPopover: {
-      paper: {
-        boxShadow: '0 0 5px #222',
+      styleOverrides: {
+        paper: {
+          boxShadow: '0 0 5px #222',
+        },
       },
     },
     MuiSelect: {
-      selectMenu: {
-        color: primaryColors.text,
-        backgroundColor: '#444',
-        '&:focus': {
-          backgroundColor: '#444',
-        },
+      styleOverrides: {
+        // selectMenu: {
+        //   color: primaryColors.text,
+        //   backgroundColor: '#444',
+        //   '&:focus': {
+        //     backgroundColor: '#444',
+        //   },
+        // },
       },
     },
     MuiSnackbarContent: {
-      root: {
-        backgroundColor: '#32363c',
-        color: primaryColors.text,
-        boxShadow: '0 0 5px #222',
+      styleOverrides: {
+        root: {
+          backgroundColor: '#32363c',
+          color: primaryColors.text,
+          boxShadow: '0 0 5px #222',
+        },
       },
     },
     MuiTab: {
-      root: {
-        color: '#fff',
-        '&$selected, &$selected:hover': {
+      styleOverrides: {
+        root: {
           color: '#fff',
+          '&$selected, &$selected:hover': {
+            color: '#fff',
+          },
         },
-      },
-      textColorPrimary: {
-        color: '#fff',
-        '&$selected, &$selected:hover': {
+        textColorPrimary: {
           color: '#fff',
+          '&$selected, &$selected:hover': {
+            color: '#fff',
+          },
         },
+        selected: {},
       },
-      selected: {},
     },
     MuiTableCell: {
-      root: {
-        borderTop: `1px solid ${primaryColors.divider}`,
-        borderBottom: `1px solid ${primaryColors.divider}`,
-        '& a': {
-          color: textColors.linkActiveLight,
+      styleOverrides: {
+        root: {
+          borderTop: `1px solid ${primaryColors.divider}`,
+          borderBottom: `1px solid ${primaryColors.divider}`,
+          '& a': {
+            color: textColors.linkActiveLight,
+          },
+          '& a:hover': {
+            color: primaryColors.main,
+          },
         },
-        '& a:hover': {
-          color: primaryColors.main,
+        head: {
+          color: primaryColors.text,
+          backgroundColor: 'rgba(0, 0, 0, 0.15)',
         },
-      },
-      head: {
-        color: primaryColors.text,
-        backgroundColor: 'rgba(0, 0, 0, 0.15)',
       },
     },
     MuiTabs: {
-      root: {
-        boxShadow: 'inset 0 -1px 0 #222',
-      },
-      flexContainer: {
-        '& $scrollButtons:first-child': {
-          color: '#222',
+      styleOverrides: {
+        root: {
+          boxShadow: 'inset 0 -1px 0 #222',
         },
-      },
-      scrollButtons: {
-        color: '#fff',
+        flexContainer: {
+          '& $scrollButtons:first-child': {
+            color: '#222',
+          },
+        },
+        scrollButtons: {
+          color: '#fff',
+        },
       },
     },
     MuiTableRow: {
-      root: {
-        backgroundColor: '#32363c',
-        '&:before': {
-          borderLeftColor: '#32363c',
-        },
-        '&:hover, &:focus': {
-          '&$hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      styleOverrides: {
+        root: {
+          backgroundColor: '#32363c',
+          '&:before': {
+            borderLeftColor: '#32363c',
+          },
+          '&:hover, &:focus': {
+            '&$hover': {
+              backgroundColor: 'rgba(0, 0, 0, 0.1)',
+            },
           },
         },
-      },
-      head: {
-        backgroundColor: '#32363c',
-        '&:before': {
-          backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
+        head: {
+          backgroundColor: '#32363c',
+          '&:before': {
+            backgroundColor: 'rgba(0, 0, 0, 0.15) !important',
+          },
         },
-      },
-      hover: {
-        '& a': {
-          color: primaryColors.text,
+        hover: {
+          '& a': {
+            color: primaryColors.text,
+          },
         },
       },
     },
     MuiTooltip: {
-      tooltip: {
-        backgroundColor: '#444',
-        boxShadow: '0 0 5px #222',
-        color: '#fff',
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: '#444',
+          boxShadow: '0 0 5px #222',
+          color: '#fff',
+        },
       },
     },
     MuiTypography: {
-      root: {
-        '& a': {
-          color: textColors.linkActiveLight,
-        },
-        '& a:hover': {
-          color: primaryColors.main,
-        },
-        '& a.black': {
-          color: primaryColors.text,
-        },
-        '& a.black:visited': {
-          color: primaryColors.text,
-        },
-        '& a.black:hover': {
-          color: primaryColors.text,
+      styleOverrides: {
+        root: {
+          '& a': {
+            color: textColors.linkActiveLight,
+          },
+          '& a:hover': {
+            color: primaryColors.main,
+          },
+          '& a.black': {
+            color: primaryColors.text,
+          },
+          '& a.black:visited': {
+            color: primaryColors.text,
+          },
+          '& a.black:hover': {
+            color: primaryColors.text,
+          },
         },
       },
     },
   },
 };
+
+export const dark = createTheme(mergeDeepRight(base, darkThemeOptions));
