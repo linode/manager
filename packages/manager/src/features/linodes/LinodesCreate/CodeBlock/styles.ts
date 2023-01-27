@@ -3,6 +3,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
   commandDisplay: {
     position: 'relative',
+    '& pre': {
+      marginTop: '24px',
+      marginBottom: 0,
+    },
   },
   commandWrapper: {
     '& .hljs': {
@@ -30,6 +34,9 @@ export const useCodeBlockStyles = makeStyles((theme: Theme) => ({
     right: '12px',
     '& svg': {
       color: '#17CF73',
+    },
+    '& svg:hover': {
+      color: '#00B159',
     },
   },
 }));

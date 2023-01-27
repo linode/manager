@@ -747,7 +747,6 @@ export class LinodeCreate extends React.PureComponent<
             justifyContent={showAgreement ? 'space-between' : 'flex-end'}
             alignItems="center"
             flexWrap="wrap"
-            className={classes.buttonGroup}
           >
             <div
               className={classNames({
@@ -770,41 +769,46 @@ export class LinodeCreate extends React.PureComponent<
                 />
               ) : null}
             </div>
-            <div>
-              <Button
-                data-qa-api-cli-linode
-                buttonType="outlined"
-                onClick={this.handleClickCreateUsingCommandLine}
-                className={classes.createButton}
-                disabled={
-                  formIsSubmitting ||
-                  userCannotCreateLinode ||
-                  (showAgreement && !signedAgreement)
-                }
-              >
-                Create using command line
-              </Button>
-              <Button
-                data-qa-deploy-linode
-                buttonType="primary"
-                onClick={this.createLinode}
-                loading={formIsSubmitting}
-                className={classes.createButton}
-                disabled={
-                  formIsSubmitting ||
-                  userCannotCreateLinode ||
-                  (showAgreement && !signedAgreement)
-                }
-              >
-                Create Linode
-              </Button>
-              <ApiAwarenessModal
-                isOpen={showApiAwarenessModal}
-                onClose={handleShowApiAwarenessModal}
-                route={this.props.match.url}
-                payLoad={this.getPayload()}
-              />
-            </div>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            alignItems="center"
+            className={classes.buttonGroup}
+          >
+            <Button
+              data-qa-api-cli-linode
+              buttonType="outlined"
+              onClick={this.handleClickCreateUsingCommandLine}
+              className={classes.createButton}
+              disabled={
+                formIsSubmitting ||
+                userCannotCreateLinode ||
+                (showAgreement && !signedAgreement)
+              }
+            >
+              Create using command line
+            </Button>
+            <Button
+              data-qa-deploy-linode
+              buttonType="primary"
+              onClick={this.createLinode}
+              loading={formIsSubmitting}
+              className={classes.createButton}
+              disabled={
+                formIsSubmitting ||
+                userCannotCreateLinode ||
+                (showAgreement && !signedAgreement)
+              }
+            >
+              Create Linode
+            </Button>
+            <ApiAwarenessModal
+              isOpen={showApiAwarenessModal}
+              onClose={handleShowApiAwarenessModal}
+              route={this.props.match.url}
+              payLoad={this.getPayload()}
+            />
           </Box>
         </Grid>
       </form>

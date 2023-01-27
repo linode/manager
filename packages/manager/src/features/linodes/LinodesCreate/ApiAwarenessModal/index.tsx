@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -29,10 +29,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 16,
   },
   modalIntroTypoClass: {
-    paddingTop: '16px',
+    paddingBottom: '14px',
   },
   modalContent: {
     overflowX: 'hidden',
+    paddingBottom: '0px',
   },
   tabsStyles: {
     marginTop: '14px',
@@ -42,8 +43,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: '16px',
   },
   actionPanelStyles: {
-    marginTop: '0px',
-    paddingTop: '4px',
+    marginTop: '0px !important',
+    paddingTop: '0px',
+    paddingBottom: 'Opx',
   },
   otherTools: {
     fontFamily: theme.font.bold,
@@ -76,8 +78,9 @@ const ApiAwarenessModal = (props: Props) => {
   const isLinodeCreated =
     events.filter(
       (event) =>
-        event.action === 'linode_create' &&
-        event.entity?.label === payLoad.label
+        (event.action === 'linode_create' || event.action === 'linode_clone') &&
+        event.entity?.label === payLoad.label &&
+        event.status === 'scheduled'
     ).length === 1;
 
   const curlCommand = useMemo(
@@ -109,8 +112,7 @@ const ApiAwarenessModal = (props: Props) => {
   };
 
   useEffect(() => {
-    if (isLinodeCreated) {
-      debugger;
+    if (isLinodeCreated && isOpen) {
       onClose();
       history.replace('/linodes');
     }
@@ -164,28 +166,6 @@ const ApiAwarenessModal = (props: Props) => {
             <CodeBlock command={curlCommand} language={'bash'} />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <CodeBlock command={cliCommand} language={'bash'} />
-            <Typography className={classes.guides} variant="h2">
-              Guides
-            </Typography>
-            <Typography>
-              <ExternalLink
-                text="Get Started with the Linode API"
-                link="https://www.linode.com/docs/products/tools/api/get-started/"
-                onClick={() => fireGAEvent('Get Started with the Linode API')}
-                hideIcon
-              />{' '}
-              and{' '}
-              <ExternalLink
-                text="Linode API Guides"
-                link="https://www.linode.com/docs/products/tools/api/guides/"
-                onClick={() => fireGAEvent('Linode API Guides')}
-                hideIcon
-              />
-              .
-            </Typography>
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
             <Typography variant="body1">
               Before running the command below, the Linode CLI needs to be
               installed and configured on your system. See the{' '}
@@ -207,10 +187,11 @@ const ApiAwarenessModal = (props: Props) => {
               />
               .
             </Typography>
+            <CodeBlock command={cliCommand} language={'bash'} />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      <Notice marketing spacingBottom={16}>
+      <Notice marketing spacingBottom={0}>
         <Typography className={classes.otherTools}>
           Deploy and manage your infrastructure with the{' '}
           <ExternalLink
