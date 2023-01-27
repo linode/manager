@@ -9,16 +9,20 @@ import {
   getImages,
   Image,
   updateImage,
+  // UploadImageResponse,
 } from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import {
   doesItemExistInPaginatedStore,
   queryClient,
+  // queryPresets,
   updateInPaginatedStore,
 } from './base';
+import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'images';
+// export const pendingUploadQueryKey = 'image-pending-upload';
 
 export const useImagesQuery = (params: any, filters: any) =>
   useQuery<ResourcePage<Image>, APIError[]>(
@@ -28,7 +32,7 @@ export const useImagesQuery = (params: any, filters: any) =>
   );
 
 // Get specific Image
-export const useSingleImageQuery = (imageID: string) =>
+export const useImageQuery = (imageID: string) =>
   useQuery<Image, APIError[]>([queryKey, imageID], () => getImage(imageID));
 
 // Create Image
@@ -76,8 +80,30 @@ export const useDeleteImageMutation = () =>
 export const removeImageFromCache = () =>
   queryClient.invalidateQueries(`${queryKey}-list`);
 
+// Get all Images
+const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
+  getAll<Image>((params, filter) =>
+    getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
+  )().then((data) => data.data);
+
+export const useAllImagesQuery = (
+  params: any = {},
+  filters: any = {},
+  enabled = true
+) =>
+  useQuery<Image[], APIError[]>(
+    [`${queryKey}-all`, params, filters],
+    () => getAllImages(params, filters),
+    {
+      enabled,
+    }
+  );
+
 export const imageEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
+
+  // Keep the getAll query up to date so that when we have to use it, it contains accurate data
+  queryClient.invalidateQueries(`${queryKey}-all`);
 
   switch (action) {
     case 'image_delete':

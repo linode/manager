@@ -15,6 +15,7 @@ import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllImagesQuery } from 'src/queries/images';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -22,6 +23,7 @@ import {
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
@@ -116,6 +118,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     error: volumesError,
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
+  const {
+    data: images,
+    isLoading: areImagesLoading,
+    error: imagesError,
+  } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
@@ -129,12 +137,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images', 'kubernetes'],
+    ['linodes', 'nodeBalancers', 'kubernetes'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
 
-  const { searchAPI } = useAPISearch();
+  const { searchAPI } = useAPISearch(!isNilOrEmpty(query));
 
   const _searchAPI = React.useRef(
     debounce(500, false, (_searchText: string) => {
@@ -163,7 +171,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         query,
         objectStorageBuckets?.buckets ?? [],
         domains ?? [],
-        volumes ?? []
+        volumes ?? [],
+        images ?? []
       );
     }
   }, [
@@ -175,6 +184,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
+    images,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -188,11 +198,11 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (volumesError) {
       errorString.push('Volumes');
     }
+    if (imagesError) {
+      errorString.push('Images');
+    }
     if (errors.nodebalancers) {
       errorString.push('NodeBalancers');
-    }
-    if (errors.images) {
-      errorString.push('Images');
     }
     if (errors.kubernetes) {
       errorString.push('Kubernetes');
@@ -220,7 +230,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areBucketsLoading ||
     areClustersLoading ||
     areDomainsLoading ||
-    areVolumesLoading;
+    areVolumesLoading ||
+    areImagesLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

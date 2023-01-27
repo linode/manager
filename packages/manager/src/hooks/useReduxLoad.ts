@@ -7,7 +7,6 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ApplicationState } from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
-import { requestImages } from 'src/store/image/image.requests';
 import { requestKubernetesClusters } from 'src/store/kubernetes/kubernetes.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -22,7 +21,6 @@ interface UseReduxPreload {
 
 export type ReduxEntity =
   | 'linodes'
-  | 'images'
   | 'kubernetes'
   | 'nodeBalancers'
   | 'notifications'
@@ -37,7 +35,6 @@ type RequestMap = Record<ReduxEntity, any>;
 const requestMap: RequestMap = {
   linodes: () => requestLinodes({}),
   nodeBalancers: getAllNodeBalancers,
-  images: requestImages,
   events: getEvents,
   types: requestTypes,
   notifications: requestNotifications,

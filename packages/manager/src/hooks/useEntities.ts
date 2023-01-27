@@ -1,5 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import useImages from './useImages';
 import useKubernetesClusters from './useKubernetesClusters';
 import useLinodeActions from './useLinodeActions';
 import useLinodes from './useLinodes';
@@ -25,7 +24,6 @@ export interface Entity<T> {
 export const useEntities = () => {
   const { linodes: _linodes } = useLinodes();
   const { requestLinodes } = useLinodeActions();
-  const { images: _images, requestImages } = useImages();
   const {
     nodeBalancers: _nodeBalancers,
     requestNodeBalancers,
@@ -45,19 +43,10 @@ export const useEntities = () => {
    */
 
   const linodes = Object.values(_linodes.itemsById);
-  const images = (Object.values(_images.itemsById) ?? []).filter(
-    (thisImage) => !thisImage.is_public
-  );
   const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
   const nodeBalancers = Object.values(_nodeBalancers.itemsById);
 
   return {
-    images: {
-      data: images,
-      request: requestImages,
-      lastUpdated: _images.lastUpdated,
-      error: _images.error.read,
-    },
     kubernetesClusters: {
       data: kubernetesClusters,
       request: () => requestKubernetesClusters(),
