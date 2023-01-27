@@ -94,7 +94,6 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const { _isLargeAccount } = useAccountManagement();
-  // const _isLargeAccount = true;
 
   const {
     data: objectStorageClusters,
