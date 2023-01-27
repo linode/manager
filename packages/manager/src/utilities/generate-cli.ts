@@ -13,7 +13,7 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
     const valueAsString = convertObjectToCLIArg(value);
     acc.push(`  --${key} ${valueAsString}`);
   } else {
-    acc.push(`  --${key} ${value}`);
+    acc.push(`  --${key} '${value}'`);
   }
   return acc;
 };
