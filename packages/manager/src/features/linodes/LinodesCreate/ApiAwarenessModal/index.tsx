@@ -19,10 +19,6 @@ import generateCLICommand from 'src/utilities/generate-cli';
 import CodeBlock from '../CodeBlock';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  cancelButtonStyles: {
-    justifyContent: 'right',
-    paddingRight: '4px',
-  },
   guides: {
     marginTop: 16,
   },
@@ -35,18 +31,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabsStyles: {
     marginTop: '14px',
   },
-  tabPanelStyles: {
-    paddingBottom: '24px',
-    paddingTop: '16px',
+  tabsContainer: {
+    paddingTop: theme.spacing(),
   },
   actionPanelStyles: {
-    marginTop: '0px',
-    paddingTop: '4px',
+    marginTop: '0 !important',
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   otherTools: {
     fontFamily: theme.font.bold,
     fontWeight: 400,
     fontSize: '14px !important',
+  },
+  tabDescription: {
+    marginTop: theme.spacing(1.5),
   },
 }));
 
@@ -110,11 +109,15 @@ const ApiAwarenessModal = (props: Props) => {
         values for each command have been populated with the selections made in
         the Cloud Manager create form.
       </Typography>
-      <Tabs defaultIndex={0} onChange={handleTabChange}>
+      <Tabs
+        defaultIndex={0}
+        onChange={handleTabChange}
+        className={classes.tabsContainer}
+      >
         <TabLinkList tabs={tabs} />
-        <TabPanels className={classes.tabPanelStyles}>
+        <TabPanels>
           <SafeTabPanel index={0}>
-            <Typography variant="body1">
+            <Typography variant="body1" className={classes.tabDescription}>
               Most Linode API requests need to be authenticated with a valid{' '}
               <ExternalLink
                 text="personal access token"
@@ -140,29 +143,31 @@ const ApiAwarenessModal = (props: Props) => {
               />
               .
             </Typography>
-            <CodeBlock command={curlCommand} language={'bash'} />
+            <CodeBlock command={curlCommand} language="bash" />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
-            <CodeBlock command={cliCommand} language={'bash'} />
-            <Typography className={classes.guides} variant="h2">
-              Guides
-            </Typography>
-            <Typography>
+            <Typography variant="body1" className={classes.tabDescription}>
+              Before running the command below, the Linode CLI needs to be
+              installed and configured on your system. See the{' '}
               <ExternalLink
-                text="Get Started with the Linode API"
-                link="https://www.linode.com/docs/products/tools/api/get-started/"
-                onClick={() => fireGAEvent('Get Started with the Linode API')}
+                text="Install and Configure the Linode CLI"
+                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
+                onClick={() =>
+                  fireGAEvent('Install and Configure the Linode CLI')
+                }
                 hideIcon
               />{' '}
-              and{' '}
+              guide for instructions. To learn more and to use the Linode CLI
+              for tasks, review additional{' '}
               <ExternalLink
-                text="Linode API Guides"
-                link="https://www.linode.com/docs/products/tools/api/guides/"
-                onClick={() => fireGAEvent('Linode API Guides')}
+                text="Linode CLI Guides"
+                link="https://www.linode.com/docs/products/tools/cli/guides/"
+                onClick={() => fireGAEvent('Linode CLI Guides')}
                 hideIcon
               />
               .
             </Typography>
+            <CodeBlock command={cliCommand} language="bash" />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <Typography variant="body1">
@@ -189,7 +194,7 @@ const ApiAwarenessModal = (props: Props) => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      <Notice marketing spacingBottom={16}>
+      <Notice marketing spacingBottom={0} spacingTop={24}>
         <Typography className={classes.otherTools}>
           Deploy and manage your infrastructure with the{' '}
           <ExternalLink
@@ -215,13 +220,12 @@ const ApiAwarenessModal = (props: Props) => {
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>
-
       <ActionsPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
-          className={classes.cancelButtonStyles}
           onClick={onClose}
           data-testid="close-button"
+          compactX
         >
           Close
         </Button>
