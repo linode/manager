@@ -170,14 +170,7 @@ const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 const typesSelector = (state: State) => state.types.entities;
 
-export default createSelector<
-  State,
-  Linode[],
-  { [key: string]: Image },
-  NodeBalancer[],
-  LinodeType[],
-  SearchableItem[]
->(
+export default createSelector(
   linodeSelector,
   imageSelector,
   nodebalSelector,

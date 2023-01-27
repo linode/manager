@@ -21,7 +21,7 @@ export const imagesErrorSelector = (state: State) =>
 export const typesErrorSelector = (state: State) =>
   Boolean(state.types.error && state.types.error.length > 0);
 
-export default createSelector<State, boolean, boolean, boolean, ErrorObject>(
+export default createSelector(
   linodesErrorSelector,
   nodeBalsErrorSelector,
   imagesErrorSelector,

@@ -15833,7 +15833,7 @@ reselect@4.0.0:
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.0.0.tgz#f2529830e5d3d0e021408b246a206ef4ea4437f7"
   integrity sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==
 
-reselect@^4.0.0:
+reselect@^4.1.7:
   version "4.1.7"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.1.7.tgz#56480d9ff3d3188970ee2b76527bd94a95567a42"
   integrity sha512-Zu1xbUt3/OPwsXL46hvOOoQrap2azE7ZQbokq61BQfiXvhewsKDwhMeZjTX9sX0nvw1t/U5Audyn1I9P/m9z0A==
@@ -17698,10 +17698,10 @@ typescript-fsa@^3.0.0:
   resolved "https://registry.yarnpkg.com/typescript-fsa/-/typescript-fsa-3.0.0.tgz#3ad1cb915a67338e013fc21f67c9b3e0e110c912"
   integrity sha512-xiXAib35i0QHl/+wMobzPibjAH5TJLDj+qGq5jwVLG9qR4FUswZURBw2qihBm0m06tHoyb3FzpnJs1GRhRwVag==
 
-typescript@~4.1.5:
-  version "4.1.6"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.1.6.tgz#1becd85d77567c3c741172339e93ce2e69932138"
-  integrity sha512-pxnwLxeb/Z5SP80JDRzVjh58KsM6jZHRAOtTpS7sXLS4ogXNKC9ANxHHZqLLeVHZN35jCtI4JdmLLbLiC1kBow==
+typescript@^5.0.0-beta:
+  version "5.0.0-beta"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.0-beta.tgz#791fa95411d6ff64ee77d677ed1e6f32a2eaabaf"
+  integrity sha512-+SSabbSXG5mtF+QGdV9uXXt9Saq1cSyI6hSG7znhaLoquleJpnmfkwSxFngK9c2fWWi1W/263TuzXQOsIcdjjA==
 
 ua-parser-js@^0.7.23, ua-parser-js@^0.7.30:
   version "0.7.32"
