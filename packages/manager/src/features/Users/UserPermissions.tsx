@@ -247,6 +247,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.setState(
             compose(
               set(lensPath(['grants', 'global']), grantsResponse.global),
+              // @ts-expect-error this code is so unreadable, i dont even blame tsc
               set(lensPath(['originalGrants', 'global']), grantsResponse.global)
             )
           );

@@ -196,7 +196,9 @@ export const printInvoice = (
      * VAT: Applies only to EU countries; started from 6/1/2019 and we have an EU tax id
      * GMT: Applies to both Australia and India, but we only have a tax ID for Australia.
      */
-    const hasTax = !taxes?.date ? true : convertedInvoiceDate > TaxStartDate;
+    const hasTax = !taxes?.date
+      ? true
+      : Number(convertedInvoiceDate) > TaxStartDate;
     const countryTax = hasTax ? taxes?.country_tax : undefined;
     const provincialTax = hasTax
       ? taxes?.provincial_tax_ids?.[account.state]

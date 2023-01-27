@@ -867,6 +867,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
+      // @ts-expect-error this code is so unreadable, i dont even blame tsc
       compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };
@@ -878,6 +879,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           L.checkBodyLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_body
         ),
+        // @ts-expect-error this code is so unreadable, i dont even blame tsc
         set(
           L.healthCheckAttemptsLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]

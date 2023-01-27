@@ -261,6 +261,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
               lensPath(['success']),
               `Linode alert thresholds changed successfully.`
             ),
+            // @ts-expect-error this code is so unreadable, i dont even blame tsc
             set(lensPath(['submitting']), false)
           )
         );

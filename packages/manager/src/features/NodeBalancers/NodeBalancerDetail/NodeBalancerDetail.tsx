@@ -33,7 +33,6 @@ import withLoadingAndError, {
 import withFeatureFlagConsumerContainer, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   withNodeBalancerActions,
   WithNodeBalancerActions,
@@ -376,19 +375,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const reloaded = reloadableWithRouter<
-  CombinedProps,
-  { nodeBalancerId?: number }
->((routePropsOld, routePropsNew) => {
-  return (
-    routePropsOld.match.params.nodeBalancerId !==
-    routePropsNew.match.params.nodeBalancerId
-  );
-});
-
 export default compose(
   setDocs(NodeBalancerDetail.docs),
-  reloaded,
   withFeatureFlagConsumerContainer,
   withSnackbar,
   withNodeBalancerActions,

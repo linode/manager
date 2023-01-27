@@ -206,6 +206,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
+      // @ts-expect-error this code is so unreadable, i dont even blame tsc
       compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
     );
   };

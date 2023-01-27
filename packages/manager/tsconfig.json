@@ -38,6 +38,8 @@
 
     "ignoreDeprecations": "5.0",
 
+    "incremental": true,
+
     /* Completeness */
     "skipLibCheck": true
   },

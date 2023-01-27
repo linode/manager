@@ -74,6 +74,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     this.setState(
       compose(
         set(lensPath(['submitting']), true),
+        // @ts-expect-error this code is so unreadable, i dont even blame tsc
         set(lensPath(['success']), undefined),
         set(lensPath(['errors']), undefined) as () => APIError[]
       )
@@ -83,6 +84,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       this.setState(
         compose(
           set(lensPath(['success']), `Linode password changed successfully.`),
+          // @ts-expect-error this code is so unreadable, i dont even blame tsc
           set(lensPath(['submitting']), false),
           set(lensPath(['value']), '') as () => string
         )
@@ -93,6 +95,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       this.setState(
         compose(
           set(lensPath(['errors']), errors),
+          // @ts-expect-error this code is so unreadable, i dont even blame tsc
           set(lensPath(['submitting']), false)
         ),
         () => {
