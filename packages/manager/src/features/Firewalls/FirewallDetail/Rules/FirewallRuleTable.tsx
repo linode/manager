@@ -41,6 +41,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     '& .MuiGrid-spacing-xs-2 > .MuiGrid-item': {
       padding: 0,
+      [theme.breakpoints.down('md')]: {
+        marginLeft: theme.spacing(),
+        marginRight: theme.spacing(),
+      },
     },
   },
   header: {
@@ -95,6 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleGrid: {
     width: '100%',
+    margin: 0,
   },
   ruleList: {
     backgroundColor: theme.color.border3,
@@ -109,15 +114,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: '#F9FAFA',
     color: '#888F91',
     fontWeight: 'bold',
-    height: '40px',
-    alignContent: 'center',
-  },
-  ruleHeaderItem: {
-    border: '1px solid #F4F5F6',
-    padding: 8,
+    height: '46px',
   },
   ruleRow: {
     borderBottom: '1px solid #F4F5F6',
+    height: '40px',
   },
   addLabelButton: {
     ...theme.applyLinkStyles,
@@ -139,7 +140,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   policyText: {
     textAlign: 'right',
-    padding: '10px !important',
+    padding: '0px 15px 0px 15px !important',
   },
   policySelect: {
     paddingLeft: 4,
@@ -150,6 +151,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   policyRow: {
     marginTop: '10px !important',
     justifyContent: 'center',
+    height: '40px',
   },
 }));
 
@@ -251,7 +253,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
       <Grid
         container
         aria-label={`${category} Rules List`}
-        className={classes.root}
+        className={classNames(classes.root, classes.ruleGrid)}
       >
         <Grid
           container
@@ -343,7 +345,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                                 triggerOpenRuleDrawerForEditing
                               }
                               triggerUndo={triggerUndo}
-                              innerRef={provided.innerRef}
                               {...thisRuleRow}
                             />
                           </li>
@@ -377,13 +378,14 @@ export default React.memo(FirewallRuleTable);
 // =============================================================================
 type FirewallRuleTableRowProps = RuleRow &
   Omit<RowActionHandlers, 'triggerReorder'> & {
-    innerRef: any;
     disabled: boolean;
   };
 
 const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
   (props) => {
     const classes = useStyles();
+    const theme: Theme = useTheme();
+    const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
     const {
       id,
@@ -398,7 +400,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       triggerOpenRuleDrawerForEditing,
       triggerUndo,
       errors,
-      innerRef,
       disabled,
       originalIndex,
     } = props;
@@ -415,7 +416,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       <Grid
         container
         key={id}
-        ref={innerRef}
         aria-label={label}
         className={classNames({
           [classes.ruleGrid]: true,
@@ -431,7 +431,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       >
         <Grid
           item
-          style={{ paddingLeft: 8, width: 'xsDown' ? '30%' : '15%' }}
+          style={{ paddingLeft: 8, width: xsDown ? '50%' : '30%' }}
           aria-label={`Label: ${label}`}
         >
           <DragIndicator
@@ -455,7 +455,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ width: '10%' }}
-            tabIndex={-1}
+            tabIndex={0}
             aria-label={`Protocol: ${protocol}`}
           >
             {protocol}
@@ -466,7 +466,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ whiteSpace: 'nowrap', width: '10%' }}
-            tabIndex={-1}
+            tabIndex={0}
             aria-label={`Ports: ${ports}`}
           >
             {ports === '1-65535' ? 'All Ports' : ports}
@@ -475,7 +475,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ whiteSpace: 'nowrap', width: '15%' }}
-            tabIndex={-1}
+            tabIndex={0}
             aria-label={`Addresses: ${addresses}`}
           >
             {addresses}{' '}
@@ -485,7 +485,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <Grid
           item
           style={{ width: '5%' }}
-          tabIndex={-1}
+          tabIndex={0}
           aria-label={`Action: ${action}`}
         >
           {capitalize(action?.toLocaleLowerCase() ?? '')}
@@ -534,9 +534,9 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   // Calculate how many cells the text should span so that the Select lines up
   // with the Action column
   const theme: Theme = useTheme();
-  // const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
   const mdDown = useMediaQuery(theme.breakpoints.down('lg'));
-  // const colSpan = xsDown ? 1 : mdDown ? 3 : 4;
+  const colSpan = xsDown ? 3 : mdDown ? 5 : 7;
 
   const helperText = mdDown ? (
     <strong>{capitalize(category)} policy:</strong>
@@ -553,10 +553,10 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
       className={classNames(classes.policyRow, classes.unmodified)}
       tabIndex={0}
     >
-      <Grid item /*xs={colSpan}*/ className={classes.policyText}>
+      <Grid item xs={colSpan} className={classes.policyText}>
         {helperText}
       </Grid>
-      <Grid item xs={1} className={classes.policySelect}>
+      <Grid item xs={4} className={classes.policySelect}>
         <Select
           className={classes.policySelectInner}
           label={`${category} policy`}
