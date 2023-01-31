@@ -1,4 +1,3 @@
-import { getTags } from '@linode/api-v4/lib/tags';
 import classNames from 'classnames';
 import { clone } from 'ramda';
 import * as React from 'react';
@@ -11,6 +10,7 @@ import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import { useSnackbar } from 'notistack';
+import { updateTagsData, useTags } from 'src/queries/tags';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -136,42 +136,33 @@ const TagsPanel: React.FC<Props> = (props) => {
   const { tags, disabled, updateTags } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const [tagsToSuggest, setTagsToSuggest] = React.useState<Item[]>([]);
-  const [tagError, setTagError] = React.useState('');
+  const [tagError, setTagError] = React.useState<string | undefined>();
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [tagInputValue, setTagInputValue] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
+  const [tagLoading, setTagsLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    if (!isRestrictedUser()) {
-      getTags()
-        .then((response) => {
-          /*
-           * The end goal is to display to the user a list of auto-suggestions
-           * when they start typing in a new tag, but we don't want to display
-           * tags that are already applied because there cannot
-           * be duplicates.
-           */
-          const filteredTags = response.data.filter((thisTag: Tag) => {
-            return !tags.some((alreadyAppliedTag: string) => {
-              return alreadyAppliedTag === thisTag.label;
-            });
-          });
-          /*
-           * reshaping them for the purposes of being passed to the Select component
-           */
-          const reshapedTags = filteredTags.map((thisTag: Tag) => {
-            return {
-              label: thisTag.label,
-              value: thisTag.label,
-            };
-          });
-          setTagsToSuggest(reshapedTags);
-        })
-        .catch((e) => e);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const {
+    data: userTags,
+    isLoading: userTagsLoading,
+    error: userTagsError,
+  } = useTags(!isRestrictedUser);
+
+  const tagsToSuggest = React.useMemo<Item[] | undefined>(
+    () =>
+      userTags
+        ?.filter((tag) => !tags.some((appliedTag) => appliedTag === tag.label))
+        .map((tag) => ({
+          label: tag.label,
+          value: tag.label,
+        })),
+    [userTags, tags]
+  );
+
+  const loading = tagLoading || userTagsLoading;
+  const error =
+    tagError ?? userTagsError !== null
+      ? 'There was an error retrieving your tags.'
+      : '';
 
   const toggleTagInput = () => {
     if (!disabled) {
@@ -183,7 +174,7 @@ const TagsPanel: React.FC<Props> = (props) => {
   };
 
   const handleDeleteTag = (label: string) => {
-    setLoading(true);
+    setTagsLoading(true);
 
     const tagsWithoutDeletedTag = tags.filter(
       (thisTag: string) => thisTag !== label
@@ -195,21 +186,22 @@ const TagsPanel: React.FC<Props> = (props) => {
          * Remove this tag from the current list of tags that are queued for deletion
          */
         const cloneTagSuggestions = clone(tagsToSuggest) || [];
-        setTagsToSuggest([
+        updateTagsData([
           {
             value: label,
             label,
           },
           ...cloneTagSuggestions,
         ]);
-        setLoading(false);
         setTagError('');
       })
       .catch((_) => {
         enqueueSnackbar(`Could not delete Tag: ${label}`, {
           variant: 'error',
         });
-        setLoading(false);
+      })
+      .finally(() => {
+        setTagsLoading(false);
       });
   };
 
@@ -241,29 +233,21 @@ const TagsPanel: React.FC<Props> = (props) => {
     } else if (tagExists(inputValue)) {
       setTagError(`Tag "${inputValue}" is a duplicate`);
     } else {
-      setLoading(true);
+      setTagsLoading(true);
       updateTags([...tags, value.label])
         .then(() => {
           // set the input value to blank on submit
           setTagInputValue('');
-          /*
-           * Filter out the new tag out of the auto-suggestion list
-           * since we can't attach this tag anymore
-           */
-          const cloneTagSuggestions = clone(tagsToSuggest) || [];
-          const filteredTags = cloneTagSuggestions.filter((thisTag: Item) => {
-            return thisTag.label !== value.label;
-          });
-          setTagsToSuggest(filteredTags);
-          setLoading(false);
         })
         .catch((e) => {
           const tagError = getErrorStringOrDefault(
             e,
             'Error while creating tag'
           );
-          setLoading(false);
           setTagError(tagError);
+        })
+        .finally(() => {
+          setTagsLoading(false);
         });
     }
   };
@@ -291,7 +275,7 @@ const TagsPanel: React.FC<Props> = (props) => {
         <div
           className={classNames({
             [classes.addButtonWrapper]: true,
-            [classes.hasError]: tagError,
+            [classes.hasError]: error,
           })}
         >
           <button
@@ -304,7 +288,6 @@ const TagsPanel: React.FC<Props> = (props) => {
           </button>
         </div>
       )}
-
       <div className={classes.tagsPanelItemWrapper}>
         {loading && (
           <div className={classes.progress}>
@@ -326,8 +309,8 @@ const TagsPanel: React.FC<Props> = (props) => {
             />
           );
         })}
-        {tagError && (
-          <Typography className={classes.errorNotice}>{tagError}</Typography>
+        {error && (
+          <Typography className={classes.errorNotice}>{error}</Typography>
         )}
       </div>
     </>
