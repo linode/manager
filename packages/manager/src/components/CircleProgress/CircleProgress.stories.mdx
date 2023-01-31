@@ -15,17 +15,7 @@ export const Template = (args) => <CircleProgress {...args}></CircleProgress>;
 <Canvas>
   <Story
     name="Circle Progress"
-    args={{ children: '25%' }}
     argTypes={{
-      children: {
-        description: 'Content that shows up inside of the cirle progress',
-        table: {
-          type: { summary: 'JSX.element | string' },
-        },
-      },
-      className: {
-        table: { disable: true },
-      },
       mini: {
         description: 'Displays a smaller version of the circle progress.',
       },
@@ -36,13 +26,10 @@ export const Template = (args) => <CircleProgress {...args}></CircleProgress>;
         description:
           'To be primarily used with tags and must be used with the `mini` prop. The spinner will not be visible in Storybook since the stroke is white.',
       },
-      ref: {
-        table: { disable: true },
-      },
     }}
   >
     {Template.bind()}
   </Story>
 </Canvas>
 
-<ArgsTable story="Circle Progress" sort="requiredFirst" />
+<ArgsTable story="Circle Progress" sort="requiredFirst" exclude={['ref', 'className']}/>
