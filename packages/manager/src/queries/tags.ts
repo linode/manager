@@ -6,9 +6,10 @@ import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'tags';
 
-export const useTags = () =>
+export const useTags = (enabled = true) =>
   useQuery<Tag[], APIError[]>(queryKey, getAllTags, {
-    ...queryPresets.oneTimeFetch,
+    ...queryPresets.shortLived,
+    enabled,
   });
 
 const getAllTags = (passedParams: any = {}, passedFilter: any = {}) =>
