@@ -1,4 +1,3 @@
-import { getTags } from '@linode/api-v4/lib/tags';
 import { APIError } from '@linode/api-v4/lib/types';
 import { concat } from 'ramda';
 import * as React from 'react';
@@ -7,6 +6,7 @@ import Select, {
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useTags } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
@@ -37,29 +37,18 @@ const TagsInput: React.FC<Props> = (props) => {
     menuPlacement,
   } = props;
 
-  const [accountTags, setAccountTags] = React.useState<Tag[]>([]);
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
   const { _isRestrictedUser } = useAccountManagement();
+  const { data: accountTags, error: accountTagsError } = useTags(
+    !_isRestrictedUser
+  );
 
-  React.useEffect(() => {
-    if (!_isRestrictedUser) {
-      getTags()
-        .then((response) => {
-          const accountTags = response.data.map((tag: Tag) => {
-            return { label: tag.label, value: tag.label };
-          });
-          setAccountTags(accountTags);
-        })
-        .catch((e) => {
-          const defaultError = [
-            { reason: 'There was an error retrieving your tags.' },
-          ];
-
-          setErrors(defaultError);
-        });
-    }
-  }, [_isRestrictedUser]);
+  const accountTagItems: Item[] =
+    accountTags?.map((tag) => ({
+      label: tag.label,
+      value: tag.label,
+    })) ?? [];
 
   const createTag = (inputValue: string) => {
     const newTag = { value: inputValue, label: inputValue };
@@ -91,7 +80,12 @@ const TagsInput: React.FC<Props> = (props) => {
   const labelError = errorMap.label;
   const generalError = errorMap.none;
 
-  const error = disabled ? undefined : labelError || tagError || generalError;
+  const error = disabled
+    ? undefined
+    : labelError ||
+      tagError ||
+      generalError ||
+      (accountTagsError !== null && 'There was an error retrieving your tags.');
 
   return (
     <Select
@@ -100,7 +94,7 @@ const TagsInput: React.FC<Props> = (props) => {
       isMulti={true}
       label={label || 'Add Tags'}
       hideLabel={hideLabel}
-      options={accountTags}
+      options={accountTagItems}
       placeholder={'Type to choose or create a tag.'}
       errorText={error}
       value={value}

@@ -1,9 +1,9 @@
-import { getTags } from '@linode/api-v4/lib/tags';
 import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useTags } from 'src/queries/tags';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
@@ -37,30 +37,20 @@ export type CombinedProps = Props;
 export const AddTag: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
-  const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
 
   const { _isRestrictedUser } = useAccountManagement();
-
-  React.useEffect(() => {
-    if (!_isRestrictedUser) {
-      getTags()
-        .then((response) =>
-          response.data.map((thisTag) => ({
-            value: thisTag.label,
-            label: thisTag.label,
-          }))
-        )
-        .then((tags) => setAccountTags(tags))
-        // @todo should we toast for this? If we swallow the error the only
-        // thing we lose is preexisting tabs as options; the add tag flow
-        // should still work.
-        .catch((_) => null);
-    }
-  }, [_isRestrictedUser]);
-
-  const tagOptions = accountTags.filter(
-    (thisTag) => !tags.includes(thisTag.value)
+  const { data: accountTags, isLoading: accountTagsLoading } = useTags(
+    !_isRestrictedUser
   );
+  // @todo should we toast for this? If we swallow the error the only
+  // thing we lose is preexisting tabs as options; the add tag flow
+  // should still work.
+
+  const tagOptions = accountTags
+    ?.filter((tag) => !tags.includes(tag.label))
+    .map((tag) => ({ value: tag.label, label: tag.label }));
+
+  const loading = accountTagsLoading;
 
   const handleAddTag = (newTag: Item<string>) => {
     if (newTag?.value) {
@@ -94,6 +84,7 @@ export const AddTag: React.FC<Props> = (props) => {
       createOptionPosition="first"
       blurInputOnSelect={true}
       menuPosition={fixedMenu ? 'fixed' : 'absolute'}
+      isLoading={loading}
     />
   );
 };
