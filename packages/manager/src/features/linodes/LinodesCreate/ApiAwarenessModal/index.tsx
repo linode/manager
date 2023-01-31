@@ -80,7 +80,7 @@ const ApiAwarenessModal = (props: Props) => {
       (event) =>
         (event.action === 'linode_create' || event.action === 'linode_clone') &&
         event.entity?.label === payLoad.label &&
-        event.status === 'scheduled'
+        (event.status === 'scheduled' || event.status === 'started')
     ).length === 1;
 
   const curlCommand = useMemo(
