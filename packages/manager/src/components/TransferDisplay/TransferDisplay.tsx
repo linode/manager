@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: 'auto',
     textAlign: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '85%',
+    },
   },
   barLabels: {
     display: 'flex',
@@ -92,7 +95,7 @@ export const TransferDisplay: React.FC<Props> = (props) => {
     <>
       <Typography
         className={classes.root}
-        style={{ marginTop: spacingTop || 8 }}
+        style={{ marginTop: spacingTop ?? 8 }}
       >
         {isLoading ? (
           'Loading transfer data...'
