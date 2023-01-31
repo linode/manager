@@ -136,7 +136,7 @@ const TagsPanel: React.FC<Props> = (props) => {
   const { tags, disabled, updateTags } = props;
   const { enqueueSnackbar } = useSnackbar();
 
-  const [tagError, setTagError] = React.useState<string | undefined>();
+  const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [tagInputValue, setTagInputValue] = React.useState('');
   const [tagLoading, setTagsLoading] = React.useState(false);
@@ -158,17 +158,20 @@ const TagsPanel: React.FC<Props> = (props) => {
     [userTags, tags]
   );
 
+  React.useEffect(() => {
+    setTagError('');
+  }, [isCreatingTag]);
+
+  React.useEffect(() => {
+    if (userTagsError !== null) {
+      setTagError('There was an error retrieving your tags.');
+    }
+  }, [userTagsError]);
+
   const loading = tagLoading || userTagsLoading;
-  const error =
-    tagError ?? userTagsError !== null
-      ? 'There was an error retrieving your tags.'
-      : '';
 
   const toggleTagInput = () => {
     if (!disabled) {
-      if (tagError) {
-        setTagError('');
-      }
       setIsCreatingTag((prev) => !prev);
     }
   };
@@ -233,6 +236,7 @@ const TagsPanel: React.FC<Props> = (props) => {
     } else if (tagExists(inputValue)) {
       setTagError(`Tag "${inputValue}" is a duplicate`);
     } else {
+      setTagError('');
       setTagsLoading(true);
       updateTags([...tags, value.label])
         .then(() => {
@@ -275,7 +279,7 @@ const TagsPanel: React.FC<Props> = (props) => {
         <div
           className={classNames({
             [classes.addButtonWrapper]: true,
-            [classes.hasError]: error,
+            [classes.hasError]: tagError,
           })}
         >
           <button
@@ -309,8 +313,8 @@ const TagsPanel: React.FC<Props> = (props) => {
             />
           );
         })}
-        {error && (
-          <Typography className={classes.errorNotice}>{error}</Typography>
+        {tagError && (
+          <Typography className={classes.errorNotice}>{tagError}</Typography>
         )}
       </div>
     </>
