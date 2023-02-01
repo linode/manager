@@ -138,8 +138,8 @@ export const CreateAPITokenDrawer = (props: Props) => {
         scopes: permTuplesToScopeString(values.scopes),
         expiry: values.expiry,
       });
-
       onClose();
+      form.resetForm();
       showSecret(token ?? 'Secret not available');
     },
   });
