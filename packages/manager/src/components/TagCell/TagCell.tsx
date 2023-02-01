@@ -7,6 +7,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import Tag from 'src/components/Tag';
+import CircleProgress from '../CircleProgress';
 import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -87,6 +88,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 10,
     },
   },
+  progress: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    zIndex: 2,
+  },
+  loading: {
+    opacity: 0.4,
+  },
 }));
 
 interface Props {
@@ -123,6 +136,7 @@ export const TagCell: React.FC<Props> = (props) => {
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const overflowRef = React.useCallback(
     (node) => {
       if (node !== null) {
@@ -140,8 +154,11 @@ export const TagCell: React.FC<Props> = (props) => {
     await updateTags([...tags, tag]);
   };
 
-  const handleDeleteTag = async (tagToDelete: string) => {
-    await updateTags(tags.filter((tag) => tag !== tagToDelete));
+  const handleDeleteTag = (tagToDelete: string) => {
+    setLoading(true);
+    updateTags(tags.filter((tag) => tag !== tagToDelete)).finally(() =>
+      setLoading(false)
+    );
   };
 
   return inTableContext ? (
@@ -217,6 +234,11 @@ export const TagCell: React.FC<Props> = (props) => {
       alignItems="center"
       wrap="nowrap"
     >
+      {loading && (
+        <div className={classes.progress}>
+          <CircleProgress mini />
+        </div>
+      )}
       {addingTag ? (
         <AddTag
           tags={tags}
@@ -238,6 +260,7 @@ export const TagCell: React.FC<Props> = (props) => {
                 key={`tag-item-${thisTag}`}
                 colorVariant="lightBlue"
                 label={thisTag}
+                className={classNames({ [classes.loading]: loading })}
                 onDelete={() => handleDeleteTag(thisTag)}
               />
             ))}
