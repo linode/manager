@@ -847,31 +847,18 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
-  const addTag = React.useCallback(
-    (tag: string) => {
-      const newTags = [...linodeTags, tag];
-      updateLinode({ linodeId, tags: newTags }).catch((e) =>
-        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error',
-        })
-      );
-    },
-    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
-  );
-
-  const deleteTag = React.useCallback(
-    (tag: string) => {
-      const newTags = linodeTags.filter((thisTag) => thisTag !== tag);
-      updateLinode({ linodeId, tags: newTags }).catch((e) =>
+  const updateTags = React.useCallback(
+    (tags: string[]) => {
+      return updateLinode({ linodeId, tags }).catch((e) =>
         enqueueSnackbar(
-          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
           {
             variant: 'error',
           }
         )
       );
     },
-    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+    [linodeId, updateLinode, enqueueSnackbar]
   );
 
   return (
@@ -920,8 +907,7 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
         <TagCell
           width={500}
           tags={linodeTags}
-          addTag={addTag}
-          deleteTag={deleteTag}
+          updateTags={updateTags}
           listAllTags={openTagDrawer}
         />
       </Grid>
