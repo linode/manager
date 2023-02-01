@@ -10,6 +10,7 @@ const linodeData = {
     gh_username: 'linode',
   },
   backup_id: undefined,
+  authorized_users: ['Linny', 'Gritty'],
 };
 
 const linodeDataForCLI = `
@@ -20,7 +21,9 @@ const linodeDataForCLI = `
   --region '${linodeRequest.region}' \\
   --booted '${linodeRequest.booted}' \\
   --stackscript_id '10079' \\
-  --stackscript_data '{"gh_username": "linode"}'
+  --stackscript_data '{"gh_username": "linode"}' \\
+  --authorized_users Linny \\
+  --authorized_users Gritty
 `.trim();
 
 const generatedCommand = generateCLICommand(linodeData);
@@ -38,5 +41,10 @@ describe('generateCLICommand', () => {
 
   it('should not return a linode-cli command with undefined fields', () => {
     expect(generatedCommand).not.toMatch('undefined');
+  });
+
+  it('should parse array fields as multiple command args with the same key but diffeerent values', () => {
+    expect(generatedCommand).toMatch('--authorized_users Linny');
+    expect(generatedCommand).toMatch('--authorized_users Gritty');
   });
 });

@@ -7,7 +7,10 @@ const convertObjectToCLIArg = (data: {} | null) => {
 const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   if (value === undefined || value === null) {
     return acc;
-  } else if (Array.isArray(value) && value.length === 0) {
+  } else if (Array.isArray(value)) {
+    value.forEach((item) => {
+      acc.push(`  --${key} ${item}`);
+    });
     return acc;
   } else if (typeof value === 'object') {
     const valueAsString = convertObjectToCLIArg(value);
