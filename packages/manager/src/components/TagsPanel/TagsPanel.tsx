@@ -9,7 +9,6 @@ import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Theme, makeStyles } from 'src/components/core/styles';
-import { useSnackbar } from 'notistack';
 import { updateTagsData, useTags } from 'src/queries/tags';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -134,7 +133,6 @@ export interface Props {
 const TagsPanel: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { tags, disabled, updateTags } = props;
-  const { enqueueSnackbar } = useSnackbar();
 
   const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
@@ -198,10 +196,9 @@ const TagsPanel: React.FC<Props> = (props) => {
         ]);
         setTagError('');
       })
-      .catch((_) => {
-        enqueueSnackbar(`Could not delete Tag: ${label}`, {
-          variant: 'error',
-        });
+      .catch((e) => {
+        const tagError = getErrorStringOrDefault(e, 'Error while deleting tag');
+        setTagError(tagError);
       })
       .finally(() => {
         setTagsLoading(false);
