@@ -5,7 +5,6 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
 import Tag from 'src/components/Tag';
 import CircleProgress from '../CircleProgress';
 import AddTag from './AddTag';
@@ -103,13 +102,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  className?: string;
-  breakpoint?: number;
   tags: string[];
-  width: number; // Required so we can fade out after a certain point
   updateTags: (tags: string[]) => Promise<any>;
   listAllTags: (tags: string[]) => void;
-  inTableContext?: boolean;
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
@@ -132,7 +127,7 @@ export type CombinedProps = Props;
 export const TagCell: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { updateTags, className, tags, width, inTableContext } = props;
+  const { updateTags, tags } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -161,69 +156,7 @@ export const TagCell: React.FC<Props> = (props) => {
     );
   };
 
-  return inTableContext ? (
-    <TableCell
-      className={`${classes.root} ${className}`}
-      style={{
-        overflow: addingTag ? 'visible' : 'hidden',
-        minWidth: width,
-      }}
-    >
-      <Grid container direction="row" alignItems="center" wrap="nowrap">
-        {addingTag ? (
-          <AddTag
-            tags={tags}
-            onClose={() => setAddingTag(false)}
-            addTag={handleAddTag}
-            fixedMenu
-          />
-        ) : (
-          <>
-            <Grid
-              item
-              className={classNames({
-                [classes.addTag]: true,
-                [classes.menuItem]: true,
-              })}
-              onClick={() => setAddingTag(true)}
-            >
-              <Plus />
-            </Grid>
-            <div
-              ref={overflowRef}
-              style={{ width: `${width - 100}px` }}
-              className={classNames({
-                [classes.tagList]: true,
-                [classes.tagListOverflow]: hasOverflow,
-              })}
-            >
-              {tags.map((thisTag) => (
-                <Tag
-                  key={`tag-item-${thisTag}`}
-                  colorVariant="lightBlue"
-                  label={thisTag}
-                  onDelete={() => handleDeleteTag(thisTag)}
-                />
-              ))}
-            </div>
-
-            {hasOverflow && (
-              <IconButton
-                onKeyPress={() => props.listAllTags(tags)}
-                onClick={() => props.listAllTags(tags)}
-                className={classes.button}
-                disableRipple
-                aria-label="Display all tags"
-                size="large"
-              >
-                <MoreHoriz />
-              </IconButton>
-            )}
-          </>
-        )}
-      </Grid>
-    </TableCell>
-  ) : (
+  return (
     <Grid
       className={classNames({
         [classes.root]: true,
