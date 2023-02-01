@@ -70,7 +70,7 @@ describe('Volume table row - for linodes detail page', () => {
     // Because we are on a Linode details page, we don't need to show the Linode label
     expect(queryByText(attachedVolume.linode_label!)).toBeNull();
 
-    // Make sure there is a detch button
+    // Make sure there is a detach button
     expect(getByText('Detach'));
   });
 });
