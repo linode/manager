@@ -1,5 +1,5 @@
-import React from 'react';
-
+import React, { useMemo, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { CreateLinodeRequest } from '@linode/api-v4/lib/linodes';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -16,6 +16,8 @@ import { sendEvent } from 'src/utilities/ga';
 import generateCurlCommand from 'src/utilities/generate-cURL';
 import generateCLICommand from 'src/utilities/generate-cli';
 
+import useEvents from 'src/hooks/useEvents';
+
 import CodeBlock from '../CodeBlock';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,10 +25,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 16,
   },
   modalIntroTypoClass: {
-    paddingTop: '16px',
+    paddingBottom: '6px',
   },
   modalContent: {
     overflowX: 'hidden',
+    paddingBottom: '0px',
   },
   tabsStyles: {
     marginTop: '14px',
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(),
   },
   actionPanelStyles: {
-    marginTop: '0 !important',
+    marginTop: '18px !important',
     paddingBottom: 0,
     paddingTop: 0,
   },
@@ -45,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px !important',
   },
   tabDescription: {
-    marginTop: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -67,11 +70,24 @@ const ApiAwarenessModal = (props: Props) => {
   const { isOpen, onClose, route, payLoad } = props;
 
   const classes = useStyles();
+  const history = useHistory();
+  const { events } = useEvents();
 
-  // This harcoded values will be removed as part of following story that generated dynamic CURL and CLI commands.
-  const curlCommand = generateCurlCommand(payLoad, '/linode/instances');
+  const createdLinode = events.filter(
+    (event) =>
+      (event.action === 'linode_create' || event.action === 'linode_clone') &&
+      event.entity?.label === payLoad.label &&
+      (event.status === 'scheduled' || event.status === 'started')
+  );
 
-  const cliCommand = generateCLICommand(payLoad);
+  const isLinodeCreated = createdLinode.length === 1;
+
+  const curlCommand = useMemo(
+    () => generateCurlCommand(payLoad, '/linode/instances'),
+    [payLoad]
+  );
+
+  const cliCommand = useMemo(() => generateCLICommand(payLoad), [payLoad]);
 
   const tabs = [
     {
@@ -93,6 +109,13 @@ const ApiAwarenessModal = (props: Props) => {
       label: tabs[index].type,
     });
   };
+
+  useEffect(() => {
+    if (isLinodeCreated && isOpen) {
+      onClose();
+      history.replace(`/linodes/${createdLinode[0].entity?.id}`);
+    }
+  }, [isLinodeCreated]);
 
   return (
     <Dialog
@@ -143,31 +166,11 @@ const ApiAwarenessModal = (props: Props) => {
               />
               .
             </Typography>
-            <CodeBlock command={curlCommand} language="bash" />
-          </SafeTabPanel>
-          <SafeTabPanel index={1}>
-            <Typography variant="body1" className={classes.tabDescription}>
-              Before running the command below, the Linode CLI needs to be
-              installed and configured on your system. See the{' '}
-              <ExternalLink
-                text="Install and Configure the Linode CLI"
-                link="https://www.linode.com/docs/products/tools/cli/guides/install/"
-                onClick={() =>
-                  fireGAEvent('Install and Configure the Linode CLI')
-                }
-                hideIcon
-              />{' '}
-              guide for instructions. To learn more and to use the Linode CLI
-              for tasks, review additional{' '}
-              <ExternalLink
-                text="Linode CLI Guides"
-                link="https://www.linode.com/docs/products/tools/cli/guides/"
-                onClick={() => fireGAEvent('Linode CLI Guides')}
-                hideIcon
-              />
-              .
-            </Typography>
-            <CodeBlock command={cliCommand} language="bash" />
+            <CodeBlock
+              command={curlCommand}
+              language={'bash'}
+              commandType={tabs[0].title}
+            />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <Typography variant="body1">
@@ -191,6 +194,11 @@ const ApiAwarenessModal = (props: Props) => {
               />
               .
             </Typography>
+            <CodeBlock
+              command={cliCommand}
+              language={'bash'}
+              commandType={tabs[1].title}
+            />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
