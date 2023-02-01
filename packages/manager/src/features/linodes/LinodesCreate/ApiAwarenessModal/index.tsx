@@ -21,10 +21,6 @@ import useEvents from 'src/hooks/useEvents';
 import CodeBlock from '../CodeBlock';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  cancelButtonStyles: {
-    justifyContent: 'right',
-    paddingRight: '4px',
-  },
   guides: {
     marginTop: 16,
   },
@@ -38,19 +34,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   tabsStyles: {
     marginTop: '14px',
   },
-  tabPanelStyles: {
-    paddingBottom: '24px',
-    paddingTop: '16px',
+  tabsContainer: {
+    paddingTop: theme.spacing(),
   },
   actionPanelStyles: {
-    marginTop: '0px !important',
-    paddingTop: '0px',
-    paddingBottom: 'Opx',
+    marginTop: '0 !important',
+    paddingBottom: 0,
+    paddingTop: 0,
   },
   otherTools: {
     fontFamily: theme.font.bold,
     fontWeight: 400,
     fontSize: '14px !important',
+  },
+  tabDescription: {
+    marginTop: theme.spacing(1.5),
   },
 }));
 
@@ -134,11 +132,15 @@ const ApiAwarenessModal = (props: Props) => {
         values for each command have been populated with the selections made in
         the Cloud Manager create form.
       </Typography>
-      <Tabs defaultIndex={0} onChange={handleTabChange}>
+      <Tabs
+        defaultIndex={0}
+        onChange={handleTabChange}
+        className={classes.tabsContainer}
+      >
         <TabLinkList tabs={tabs} />
-        <TabPanels className={classes.tabPanelStyles}>
+        <TabPanels>
           <SafeTabPanel index={0}>
-            <Typography variant="body1">
+            <Typography variant="body1" className={classes.tabDescription}>
               Most Linode API requests need to be authenticated with a valid{' '}
               <ExternalLink
                 text="personal access token"
@@ -200,7 +202,7 @@ const ApiAwarenessModal = (props: Props) => {
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
-      <Notice marketing spacingBottom={0}>
+      <Notice marketing spacingBottom={0} spacingTop={24}>
         <Typography className={classes.otherTools}>
           Deploy and manage your infrastructure with the{' '}
           <ExternalLink
@@ -226,13 +228,12 @@ const ApiAwarenessModal = (props: Props) => {
           with programmatic access to the Linode platform.
         </Typography>
       </Notice>
-
       <ActionsPanel className={classes.actionPanelStyles}>
         <Button
           buttonType="secondary"
-          className={classes.cancelButtonStyles}
           onClick={onClose}
           data-testid="close-button"
+          compactX
         >
           Close
         </Button>
