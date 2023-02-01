@@ -455,7 +455,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ width: '10%' }}
-            tabIndex={0}
             aria-label={`Protocol: ${protocol}`}
           >
             {protocol}
@@ -466,7 +465,6 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ whiteSpace: 'nowrap', width: '10%' }}
-            tabIndex={0}
             aria-label={`Ports: ${ports}`}
           >
             {ports === '1-65535' ? 'All Ports' : ports}
@@ -475,19 +473,13 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           <Grid
             item
             style={{ whiteSpace: 'nowrap', width: '15%' }}
-            tabIndex={0}
             aria-label={`Addresses: ${addresses}`}
           >
             {addresses}{' '}
             <ConditionalError errors={errors} formField="addresses" />
           </Grid>
         </Hidden>
-        <Grid
-          item
-          style={{ width: '5%' }}
-          tabIndex={0}
-          aria-label={`Action: ${action}`}
-        >
+        <Grid item style={{ width: '5%' }} aria-label={`Action: ${action}`}>
           {capitalize(action?.toLocaleLowerCase() ?? '')}
         </Grid>
         <Grid item style={{ marginLeft: 'auto' }}>
