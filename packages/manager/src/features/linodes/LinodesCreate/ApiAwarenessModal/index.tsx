@@ -75,13 +75,14 @@ const ApiAwarenessModal = (props: Props) => {
   const history = useHistory();
   const { events } = useEvents();
 
-  const isLinodeCreated =
-    events.filter(
-      (event) =>
-        (event.action === 'linode_create' || event.action === 'linode_clone') &&
-        event.entity?.label === payLoad.label &&
-        (event.status === 'scheduled' || event.status === 'started')
-    ).length === 1;
+  const createdLinode = events.filter(
+    (event) =>
+      (event.action === 'linode_create' || event.action === 'linode_clone') &&
+      event.entity?.label === payLoad.label &&
+      (event.status === 'scheduled' || event.status === 'started')
+  );
+
+  const isLinodeCreated = createdLinode.length === 1;
 
   const curlCommand = useMemo(
     () => generateCurlCommand(payLoad, '/linode/instances'),
@@ -114,7 +115,7 @@ const ApiAwarenessModal = (props: Props) => {
   useEffect(() => {
     if (isLinodeCreated && isOpen) {
       onClose();
-      history.replace('/linodes');
+      history.replace(`/linodes/${createdLinode[0].entity?.id}`);
     }
   }, [isLinodeCreated]);
 
