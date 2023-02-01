@@ -905,7 +905,6 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
       </Grid>
       <Grid item className={classes.tags} md={12}>
         <TagCell
-          width={500}
           tags={linodeTags}
           updateTags={updateTags}
           listAllTags={openTagDrawer}
