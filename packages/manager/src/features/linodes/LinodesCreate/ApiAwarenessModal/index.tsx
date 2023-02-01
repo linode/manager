@@ -164,7 +164,11 @@ const ApiAwarenessModal = (props: Props) => {
               />
               .
             </Typography>
-            <CodeBlock command={curlCommand} language={'bash'} />
+            <CodeBlock
+              command={curlCommand}
+              language={'bash'}
+              commandType={tabs[0].title}
+            />
           </SafeTabPanel>
           <SafeTabPanel index={1}>
             <Typography variant="body1">
@@ -188,7 +192,11 @@ const ApiAwarenessModal = (props: Props) => {
               />
               .
             </Typography>
-            <CodeBlock command={cliCommand} language={'bash'} />
+            <CodeBlock
+              command={cliCommand}
+              language={'bash'}
+              commandType={tabs[1].title}
+            />
           </SafeTabPanel>
         </TabPanels>
       </Tabs>
