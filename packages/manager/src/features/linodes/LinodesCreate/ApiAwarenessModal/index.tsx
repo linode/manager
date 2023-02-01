@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: 16,
   },
   modalIntroTypoClass: {
-    paddingBottom: '14px',
+    paddingBottom: '6px',
   },
   modalContent: {
     overflowX: 'hidden',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(),
   },
   actionPanelStyles: {
-    marginTop: '0 !important',
+    marginTop: '18px !important',
     paddingBottom: 0,
     paddingTop: 0,
   },
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '14px !important',
   },
   tabDescription: {
-    marginTop: theme.spacing(1.5),
+    marginTop: theme.spacing(2),
   },
 }));
 
