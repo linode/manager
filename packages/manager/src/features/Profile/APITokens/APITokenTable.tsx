@@ -28,6 +28,7 @@ import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
 } from 'src/queries/profile';
+import Box from 'src/components/core/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,9 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   headline: {
     marginLeft: 7,
-  },
-  tokens: {
-    marginBottom: theme.spacing(2),
   },
   addNewWrapper: {
     '&.MuiGrid-item': {
@@ -200,7 +198,7 @@ export const APITokenTable = (props: Props) => {
   };
 
   return (
-    <React.Fragment>
+    <Box>
       <Grid
         className={`${classes.root} m0`}
         container
@@ -225,41 +223,39 @@ export const APITokenTable = (props: Props) => {
           )}
         </Grid>
       </Grid>
-      <div className={classes.tokens}>
-        <Table aria-label="List of Personal Access Tokens">
-          <TableHead>
-            <TableRow data-qa-table-head>
-              <TableSortCell
-                className={classes.labelCell}
-                active={orderBy === 'label'}
-                label="label"
-                direction={order}
-                handleClick={handleOrderChange}
-              >
-                Label
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'created'}
-                label="created"
-                direction={order}
-                handleClick={handleOrderChange}
-              >
-                Created
-              </TableSortCell>
-              <TableSortCell
-                active={orderBy === 'expiry'}
-                label="expiry"
-                direction={order}
-                handleClick={handleOrderChange}
-              >
-                Expires
-              </TableSortCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>{renderContent()}</TableBody>
-        </Table>
-      </div>
+      <Table aria-label="List of Personal Access Tokens">
+        <TableHead>
+          <TableRow data-qa-table-head>
+            <TableSortCell
+              className={classes.labelCell}
+              active={orderBy === 'label'}
+              label="label"
+              direction={order}
+              handleClick={handleOrderChange}
+            >
+              Label
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'created'}
+              label="created"
+              direction={order}
+              handleClick={handleOrderChange}
+            >
+              Created
+            </TableSortCell>
+            <TableSortCell
+              active={orderBy === 'expiry'}
+              label="expiry"
+              direction={order}
+              handleClick={handleOrderChange}
+            >
+              Expires
+            </TableSortCell>
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>{renderContent()}</TableBody>
+      </Table>
       <PaginationFooter
         page={pagination.page}
         pageSize={pagination.pageSize}
@@ -295,7 +291,7 @@ export const APITokenTable = (props: Props) => {
         onClose={closeSecretDialog}
         value={secretTokenDialogData.token}
       />
-    </React.Fragment>
+    </Box>
   );
 };
 

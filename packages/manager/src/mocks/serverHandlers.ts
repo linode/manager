@@ -1219,6 +1219,9 @@ export const handlers = [
   //   const databases = [online, initializing, error, unknown];
   //   return res(ctx.json(makeResourcePage(databases)));
   // }),
+  rest.get('*/profile/tokens', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
+  }),
   rest.post('*/profile/tokens', (req, res, ctx) => {
     const data = req.body as TokenRequest;
     return res(ctx.json(appTokenFactory.build(data)));
