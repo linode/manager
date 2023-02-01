@@ -60,9 +60,6 @@ export const AddTag: React.FC<Props> = (props) => {
             onClose();
           }
         })
-        .catch((e) => {
-          /* @todo add error handling to this component? */
-        })
         .finally(() => setIsLoading(false));
     }
   };
