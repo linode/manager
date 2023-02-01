@@ -27,7 +27,7 @@ interface Props {
   label?: string;
   tags: string[];
   onClose?: () => void;
-  addTag: (tag: string) => void;
+  addTag: (tag: string) => Promise<void>;
   fixedMenu?: boolean;
   inDetailsContext?: boolean;
 }
@@ -38,6 +38,7 @@ export const AddTag: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
 
+  const [isLoading, setIsLoading] = React.useState(false);
   const { _isRestrictedUser } = useAccountManagement();
   const { data: accountTags, isLoading: accountTagsLoading } = useTags(
     !_isRestrictedUser
@@ -50,17 +51,23 @@ export const AddTag: React.FC<Props> = (props) => {
     ?.filter((tag) => !tags.includes(tag.label))
     .map((tag) => ({ value: tag.label, label: tag.label }));
 
-  const loading = accountTagsLoading;
-
   const handleAddTag = (newTag: Item<string>) => {
     if (newTag?.value) {
-      addTag(newTag.value);
-    }
-
-    if (onClose) {
-      onClose();
+      setIsLoading(true);
+      addTag(newTag.value)
+        .then(() => {
+          if (onClose) {
+            onClose();
+          }
+        })
+        .catch((e) => {
+          /* @todo add error handling to this component? */
+        })
+        .finally(() => setIsLoading(false));
     }
   };
+
+  const loading = accountTagsLoading || isLoading;
 
   return (
     <Select
@@ -74,7 +81,6 @@ export const AddTag: React.FC<Props> = (props) => {
       onChange={handleAddTag}
       options={tagOptions}
       creatable
-      value={null}
       onBlur={onClose}
       placeholder="Create or Select a Tag"
       label={label ?? 'Add a tag'}
@@ -82,9 +88,9 @@ export const AddTag: React.FC<Props> = (props) => {
       // eslint-disable-next-line
       autoFocus
       createOptionPosition="first"
-      blurInputOnSelect={true}
       menuPosition={fixedMenu ? 'fixed' : 'absolute'}
       isLoading={loading}
+      disabled={loading}
     />
   );
 };

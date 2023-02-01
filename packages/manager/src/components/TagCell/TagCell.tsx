@@ -94,8 +94,7 @@ interface Props {
   breakpoint?: number;
   tags: string[];
   width: number; // Required so we can fade out after a certain point
-  addTag: (newTag: string) => void;
-  deleteTag: (tagToDelete: string) => void;
+  updateTags: (tags: string[]) => Promise<any>;
   listAllTags: (tags: string[]) => void;
   inTableContext?: boolean;
 }
@@ -120,7 +119,7 @@ export type CombinedProps = Props;
 export const TagCell: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { addTag, className, tags, width, inTableContext } = props;
+  const { updateTags, className, tags, width, inTableContext } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
@@ -137,6 +136,14 @@ export const TagCell: React.FC<Props> = (props) => {
     [tags]
   );
 
+  const handleAddTag = async (tag: string) => {
+    await updateTags([...tags, tag]);
+  };
+
+  const handleDeleteTag = async (tagToDelete: string) => {
+    await updateTags(tags.filter((tag) => tag !== tagToDelete));
+  };
+
   return inTableContext ? (
     <TableCell
       className={`${classes.root} ${className}`}
@@ -150,7 +157,7 @@ export const TagCell: React.FC<Props> = (props) => {
           <AddTag
             tags={tags}
             onClose={() => setAddingTag(false)}
-            addTag={addTag}
+            addTag={handleAddTag}
             fixedMenu
           />
         ) : (
@@ -178,7 +185,7 @@ export const TagCell: React.FC<Props> = (props) => {
                   key={`tag-item-${thisTag}`}
                   colorVariant="lightBlue"
                   label={thisTag}
-                  onDelete={() => props.deleteTag(thisTag)}
+                  onDelete={() => handleDeleteTag(thisTag)}
                 />
               ))}
             </div>
@@ -214,7 +221,7 @@ export const TagCell: React.FC<Props> = (props) => {
         <AddTag
           tags={tags}
           onClose={() => setAddingTag(false)}
-          addTag={addTag}
+          addTag={handleAddTag}
           inDetailsContext
         />
       ) : (
@@ -231,7 +238,7 @@ export const TagCell: React.FC<Props> = (props) => {
                 key={`tag-item-${thisTag}`}
                 colorVariant="lightBlue"
                 label={thisTag}
-                onDelete={() => props.deleteTag(thisTag)}
+                onDelete={() => handleDeleteTag(thisTag)}
               />
             ))}
           </div>
