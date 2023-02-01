@@ -6,7 +6,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
 import { useFormik } from 'formik';
-import { useUpdatePersonalAccessTokenMutation } from 'src/queries/profile';
+import { useUpdatePersonalAccessTokenMutation } from 'src/queries/tokens';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props {

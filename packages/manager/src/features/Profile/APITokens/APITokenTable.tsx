@@ -27,7 +27,7 @@ import { EditAPITokenDrawer } from './EditAPITokenDrawer';
 import {
   useAppTokensQuery,
   usePersonalAccessTokensQuery,
-} from 'src/queries/profile';
+} from 'src/queries/tokens';
 import Box from 'src/components/core/Box';
 
 const useStyles = makeStyles((theme: Theme) => ({

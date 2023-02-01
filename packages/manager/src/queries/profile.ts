@@ -8,16 +8,11 @@ import {
   updateProfile,
   verifyPhoneNumberCode,
   VerifyVerificationCodePayload,
-  getAppTokens,
   Token,
-  getPersonalAccessTokens,
-  deletePersonalAccessToken,
   TokenRequest,
   createPersonalAccessToken,
-  updatePersonalAccessToken,
-  deleteAppToken,
 } from '@linode/api-v4/lib/profile';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
@@ -29,58 +24,6 @@ export const useProfile = (givenProfile?: Profile) =>
     ...queryPresets.oneTimeFetch,
     initialData: givenProfile,
   });
-
-export const useAppTokensQuery = (params?: any, filter?: any) => {
-  return useQuery<ResourcePage<Token>, APIError[]>({
-    queryKey: [queryKey, 'app-tokens', params, filter],
-    queryFn: () => getAppTokens(params, filter),
-    keepPreviousData: true,
-  });
-};
-
-export const usePersonalAccessTokensQuery = (params?: any, filter?: any) => {
-  return useQuery<ResourcePage<Token>, APIError[]>({
-    queryKey: [queryKey, 'personal-access-tokens', params, filter],
-    queryFn: () => getPersonalAccessTokens(params, filter),
-    keepPreviousData: true,
-  });
-};
-
-export const useUpdatePersonalAccessTokenMutation = (id: number) => {
-  return useMutation<Token, APIError[], Partial<TokenRequest>>(
-    (data) => updatePersonalAccessToken(id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
-      },
-    }
-  );
-};
-
-export const useRevokePersonalAccessTokenMutation = (id: number) => {
-  return useMutation<{}, APIError[]>(() => deletePersonalAccessToken(id), {
-    onSuccess() {
-      // Wait 1 second to invalidate cache after deletion because API needs time
-      setTimeout(
-        () =>
-          queryClient.invalidateQueries([queryKey, 'personal-access-tokens']),
-        1000
-      );
-    },
-  });
-};
-
-export const useRevokeAppAccessTokenMutation = (id: number) => {
-  return useMutation<{}, APIError[]>(() => deleteAppToken(id), {
-    onSuccess() {
-      // Wait 1 second to invalidate cache after deletion because API needs time
-      setTimeout(
-        () => queryClient.invalidateQueries([queryKey, 'app-tokens']),
-        1000
-      );
-    },
-  });
-};
 
 export const useMutateProfile = () => {
   return useMutation<Profile, APIError[], Partial<Profile>>(

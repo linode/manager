@@ -8,7 +8,7 @@ import { APITokenType } from './APITokenTable';
 import {
   useRevokeAppAccessTokenMutation,
   useRevokePersonalAccessTokenMutation,
-} from 'src/queries/profile';
+} from 'src/queries/tokens';
 import { useSnackbar } from 'notistack';
 
 export interface Props {
