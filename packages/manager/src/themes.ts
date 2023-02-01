@@ -215,9 +215,6 @@ const darkThemeOptions: ThemeOptions = {
     },
     MuiButton: {
       styleOverrides: {
-        // label: {
-        //   position: 'relative',
-        // },
         root: {
           color: primaryColors.main,
           '&:hover': {
@@ -465,15 +462,7 @@ const darkThemeOptions: ThemeOptions = {
       },
     },
     MuiSelect: {
-      styleOverrides: {
-        // selectMenu: {
-        //   color: primaryColors.text,
-        //   backgroundColor: '#444',
-        //   '&:focus': {
-        //     backgroundColor: '#444',
-        //   },
-        // },
-      },
+      styleOverrides: {},
     },
     MuiSnackbarContent: {
       styleOverrides: {

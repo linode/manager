@@ -721,19 +721,6 @@ export const base: ThemeOptions = {
             margin: '12px 0',
           },
         },
-        // expandIcon: {
-        //   '&$expanded': {
-        //     transform: 'rotate(180deg)',
-        //   },
-        //   '& svg': {
-        //     fill: '#2575d0',
-        //     stroke: '#2575d0',
-        //     height: 22,
-        //     width: 22,
-        //     transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-        //     ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
-        //   },
-        // },
       },
     },
     MuiAccordionDetails: {
@@ -1107,25 +1094,6 @@ export const base: ThemeOptions = {
     },
     MuiSelect: {
       styleOverrides: {
-        // selectMenu: {
-        //   '&$disabled': {
-        //     '&+ input + $icon': {
-        //       opacity: 0.5,
-        //     },
-        //   },
-        //   padding: '16px 32px 16px 12px',
-        //   color: primaryColors.text,
-        //   backgroundColor: '#fff',
-        //   lineHeight: 1,
-        //   minHeight: 46,
-        //   minWidth: 150,
-        //   '&:focus': {
-        //     backgroundColor: '#fff',
-        //   },
-        //   '& em': {
-        //     fontStyle: 'normal',
-        //   },
-        // },
         select: {
           '&:focus': {
             backgroundColor: 'transparent',
@@ -1288,17 +1256,6 @@ export const base: ThemeOptions = {
             color: primaryColors.main,
           },
         },
-        // label: {
-        //   [breakpoints.up('md')]: {
-        //     fontSize: '1rem'
-        //   }
-        // },
-        // wrapper: {
-        //   padding: '6px 0',
-        //   [breakpoints.up('md')]: {
-        //     padding: '6px 0',
-        //   },
-        // },
         textColorPrimary: {
           '&$selected': {
             color: '#32363c',

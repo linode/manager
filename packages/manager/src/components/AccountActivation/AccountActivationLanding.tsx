@@ -50,12 +50,6 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   return (
     <ErrorState
       CustomIcon={Warning}
-      CustomIconStyles={
-        {
-          // props.theme.color.blue is not a thing. It is undefined.
-          // color: props.theme.color.blue,
-        }
-      }
       errorText={
         <React.Fragment>
           <Typography variant="h2" className={classes.errorHeading}>
