@@ -3,6 +3,7 @@ import {
   EventAction,
   NotificationType,
   SecurityQuestionsPayload,
+  TokenRequest,
 } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
@@ -1218,6 +1219,22 @@ export const handlers = [
   //   const databases = [online, initializing, error, unknown];
   //   return res(ctx.json(makeResourcePage(databases)));
   // }),
+  rest.get('*/profile/tokens', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
+  }),
+  rest.post('*/profile/tokens', (req, res, ctx) => {
+    const data = req.body as TokenRequest;
+    return res(ctx.json(appTokenFactory.build(data)));
+  }),
+  rest.put('*/profile/tokens/:id', (req, res, ctx) => {
+    const data = req.body as Partial<TokenRequest>;
+    return res(
+      ctx.json(appTokenFactory.build({ id: Number(req.params.id), ...data }))
+    );
+  }),
+  rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,

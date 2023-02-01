@@ -328,7 +328,10 @@ export type EventAction =
   | 'database_update'
   | 'database_update_failed'
   | 'database_backup_restore'
-  | 'database_credentials_reset';
+  | 'database_credentials_reset'
+  | 'token_create'
+  | 'token_update'
+  | 'token_delete';
 
 export type EventStatus =
   | 'scheduled'
