@@ -37,7 +37,7 @@ describe('Volume table row', () => {
     expect(getByText(dcDisplayNames[attachedVolume.region]));
     expect(getByText(attachedVolume.linode_label!));
 
-    // Make sure there is a detch button
+    // Make sure there is a detach button
     expect(getByText('Detach'));
   });
 
