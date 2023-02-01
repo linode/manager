@@ -116,6 +116,12 @@ export const CreateAPITokenDrawer = (props: Props) => {
   const classes = useStyles();
   const { open, onClose, showSecret } = props;
 
+  const initialValues = {
+    scopes: scopeStringToPermTuples('*'),
+    label: '',
+    expiry: expiryTups[0][1],
+  };
+
   const {
     mutateAsync: createPersonalAccessToken,
     isLoading,
@@ -127,11 +133,7 @@ export const CreateAPITokenDrawer = (props: Props) => {
     label: string;
     expiry: string;
   }>({
-    initialValues: {
-      scopes: scopeStringToPermTuples('*'),
-      label: '',
-      expiry: expiryTups[0][1],
-    },
+    initialValues,
     async onSubmit(values) {
       const { token } = await createPersonalAccessToken({
         label: values.label,
@@ -139,10 +141,15 @@ export const CreateAPITokenDrawer = (props: Props) => {
         expiry: values.expiry,
       });
       onClose();
-      form.resetForm();
       showSecret(token ?? 'Secret not available');
     },
   });
+
+  React.useEffect(() => {
+    if (open) {
+      form.resetForm({ values: initialValues });
+    }
+  }, [open]);
 
   const handleScopeChange = (e: React.SyntheticEvent<RadioButton>): void => {
     const newScopes = form.values.scopes;
