@@ -225,7 +225,7 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
   const zeroRulesMessage = `No ${category} rules have been added.`;
 
   const screenReaderMessage =
-    'Screen reading with NVDA requires users to activate focus mode using Insert + Space to interact with this list item. After entering focus mode, press spacebar to begin a drag or tab to access item actions.';
+    'Some screen readers may require you to enter focus mode to interact with firewall rule list items. In focus mode, press spacebar to begin a drag or tab to access item actions.';
 
   const onDragEnd = (result: DropResult) => {
     if (result.destination) {
