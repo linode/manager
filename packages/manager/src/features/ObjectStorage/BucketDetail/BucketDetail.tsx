@@ -1,4 +1,5 @@
 import {
+  getObjectList,
   getObjectURL,
   ObjectStorageClusterID,
   ObjectStorageObject,
@@ -43,6 +44,7 @@ import produce from 'immer';
 import { debounce } from 'throttle-debounce';
 import Box from 'src/components/core/Box';
 import { CreateFolderDrawer } from './CreateFolderDrawer';
+import { OBJECT_STORAGE_DELIMITER } from 'src/constants';
 
 const useStyles = makeStyles((theme: Theme) => ({
   objectTable: {
@@ -163,6 +165,19 @@ export const BucketDetail: React.FC = () => {
 
     setDeleteObjectLoading(true);
     setDeleteObjectError(undefined);
+
+    if (objectToDelete.endsWith('/')) {
+      const itemsInFolder = await getObjectList(clusterId, bucketName, {
+        prefix: objectToDelete,
+        delimiter: OBJECT_STORAGE_DELIMITER,
+      });
+
+      if (itemsInFolder.data.length > 1) {
+        setDeleteObjectLoading(false);
+        setDeleteObjectError('The folder must be empty to delete it');
+        return;
+      }
+    }
 
     try {
       const { url } = await getObjectURL(
@@ -450,6 +465,7 @@ export const BucketDetail: React.FC = () => {
         clusterId={clusterId}
         open={isCreateFolderDrawerOpen}
         onClose={() => setIsCreateFolderDrawerOpen(false)}
+        maybeAddObjectToTable={maybeAddObjectToTable}
       />
     </>
   );

@@ -92,6 +92,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
                   maxNameWidth
                 )}
                 manuallyCreated={false}
+                handleClickDelete={handleClickDelete}
               />
             );
           }

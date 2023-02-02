@@ -12,10 +12,11 @@ interface Props {
   bucketName: string;
   clusterId: string;
   onClose: () => void;
+  maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
 }
 
 export const CreateFolderDrawer = (props: Props) => {
-  const { open, onClose, bucketName, clusterId } = props;
+  const { open, onClose, bucketName, clusterId, maybeAddObjectToTable } = props;
 
   const { mutateAsync, isLoading, error } = useCreateObjectUrlMutation(
     clusterId,
@@ -28,19 +29,22 @@ export const CreateFolderDrawer = (props: Props) => {
     },
     async onSubmit({ name }) {
       const { url } = await mutateAsync({
-        name,
+        name: `${name}/`,
         method: 'PUT',
         options: {
           content_type: 'application/octet-stream',
         },
       });
 
-      fetch(url, {
+      await fetch(url, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/octet-stream',
         },
       });
+
+      maybeAddObjectToTable(`${name}/`, 0);
+      onClose();
     },
   });
 
