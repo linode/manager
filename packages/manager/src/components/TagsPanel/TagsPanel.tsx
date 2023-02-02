@@ -143,7 +143,7 @@ const TagsPanel: React.FC<Props> = (props) => {
     data: userTags,
     isLoading: userTagsLoading,
     error: userTagsError,
-  } = useTags(!isRestrictedUser);
+  } = useTags(!isRestrictedUser());
 
   const tagsToSuggest = React.useMemo<Item[] | undefined>(
     () =>
