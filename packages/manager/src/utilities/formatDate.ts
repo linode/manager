@@ -37,6 +37,7 @@ interface FormatDateOptions {
   humanizeCutoff?: TimeInterval;
   format?: string;
   displayTime?: boolean;
+  timezone?: string;
 }
 /**
  *
@@ -48,7 +49,7 @@ export const formatDate = (
   options: FormatDateOptions = {}
 ): string => {
   // Get the timezone from React Query and use it as the timezone
-  const userTimezone = getUserTimezone();
+  const userTimezone = options.timezone ?? getUserTimezone();
   const time = parseAPIDate(date).setZone(userTimezone);
   // Default to including time in the output. Hide the time if options.displayTime === false
   const defaultFormat =
