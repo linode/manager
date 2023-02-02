@@ -329,7 +329,13 @@ export class LinodeCreate extends React.PureComponent<
   }
 
   getPayload = () => {
-    return {
+    const selectedRegion = this.props.selectedRegionID || '';
+    const regionSupportsVLANs = doesRegionSupportFeature(
+      selectedRegion,
+      this.props.regionsData,
+      'Vlans'
+    );
+    const payload = {
       image: this.props.selectedImageID,
       region: this.props.selectedRegionID,
       type: this.props.selectedTypeID,
@@ -350,17 +356,6 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
-  };
-
-  createLinode = () => {
-    const selectedRegion = this.props.selectedRegionID || '';
-    const regionSupportsVLANs = doesRegionSupportFeature(
-      selectedRegion,
-      this.props.regionsData,
-      'Vlans'
-    );
-
-    const payload = this.getPayload();
 
     if (
       regionSupportsVLANs &&
@@ -379,7 +374,11 @@ export class LinodeCreate extends React.PureComponent<
       }
       payload['interfaces'] = interfaces;
     }
+    return payload;
+  };
 
+  createLinode = () => {
+    const payload = this.getPayload();
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
   };
 
