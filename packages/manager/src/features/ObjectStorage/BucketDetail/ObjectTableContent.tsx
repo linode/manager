@@ -69,6 +69,19 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     <>
       {data.map((page) => {
         return page.data.map((object) => {
+          if (object.name.endsWith('/') && object.size === 0) {
+            if (numOfDisplayedObjects === 1) {
+              return (
+                <TableRowEmptyState
+                  key={`empty-${object.name}`}
+                  colSpan={6}
+                  message="This folder is empty."
+                />
+              );
+            }
+            return null;
+          }
+
           if (isFolder(object)) {
             return (
               <FolderTableRow

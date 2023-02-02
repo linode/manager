@@ -11,7 +11,6 @@ import { Waypoint } from 'react-waypoint';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
@@ -42,6 +41,8 @@ import { deleteObject as _deleteObject } from '../requests';
 import { queryClient } from 'src/queries/base';
 import produce from 'immer';
 import { debounce } from 'throttle-debounce';
+import Box from 'src/components/core/Box';
+import { CreateFolderDrawer } from './CreateFolderDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   objectTable: {
@@ -94,6 +95,10 @@ export const BucketDetail: React.FC = () => {
     isFetchingNextPage,
   } = useObjectBucketDetailsInfiniteQuery(clusterId, bucketName, prefix);
 
+  const [
+    isCreateFolderDrawerOpen,
+    setIsCreateFolderDrawerOpen,
+  ] = React.useState(false);
   const [objectToDelete, setObjectToDelete] = React.useState<string>();
   const [deleteObjectError, setDeleteObjectError] = React.useState<string>();
   const [
@@ -328,104 +333,102 @@ export const BucketDetail: React.FC = () => {
         history={history}
         bucketName={bucketName}
       />
-      <Grid container>
-        <Grid item xs={12}>
-          <ObjectUploader
-            clusterId={clusterId}
-            bucketName={bucketName}
+      <ObjectUploader
+        clusterId={clusterId}
+        bucketName={bucketName}
+        prefix={prefix}
+        maybeAddObjectToTable={maybeAddObjectToTable}
+      />
+      <Box display="flex" justifyContent="flex-end" mt={1.5} mb={0.5}>
+        <Button
+          buttonType="outlined"
+          onClick={() => setIsCreateFolderDrawerOpen(true)}
+        >
+          Create Folder
+        </Button>
+      </Box>
+      <Table aria-label="List of Bucket Objects">
+        <TableHead>
+          <TableRow>
+            <TableCell className={classes.nameColumn}>Object</TableCell>
+            <TableCell className={classes.sizeColumn}>Size</TableCell>
+            <Hidden mdDown>
+              <TableCell>Last Modified</TableCell>
+            </Hidden>
+            {/* Empty TableCell for Action Menu */}
+            <TableCell />
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          <ObjectTableContent
+            data={data?.pages || []}
+            isFetching={isFetching}
+            isFetchingNextPage={isFetchingNextPage}
+            error={error ? error : undefined}
+            handleClickDownload={handleDownload}
+            handleClickDelete={handleClickDelete}
+            handleClickDetails={handleClickDetails}
+            numOfDisplayedObjects={numOfDisplayedObjects}
             prefix={prefix}
-            maybeAddObjectToTable={maybeAddObjectToTable}
           />
-        </Grid>
-        <Grid item xs={12}>
-          <>
-            <div className={classes.objectTable}>
-              <Table aria-label="List of Bucket Objects">
-                <TableHead>
-                  <TableRow>
-                    <TableCell className={classes.nameColumn}>Object</TableCell>
-                    <TableCell className={classes.sizeColumn}>Size</TableCell>
-                    <Hidden mdDown>
-                      <TableCell>Last Modified</TableCell>
-                    </Hidden>
-                    {/* Empty TableCell for Action Menu */}
-                    <TableCell />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <ObjectTableContent
-                    data={data?.pages || []}
-                    isFetching={isFetching}
-                    isFetchingNextPage={isFetchingNextPage}
-                    error={error ? error : undefined}
-                    handleClickDownload={handleDownload}
-                    handleClickDelete={handleClickDelete}
-                    handleClickDetails={handleClickDetails}
-                    numOfDisplayedObjects={numOfDisplayedObjects}
-                    prefix={prefix}
-                  />
-                </TableBody>
-              </Table>
-              {/* We shouldn't allow infinite scrolling if we're still loading,
+        </TableBody>
+      </Table>
+      {/* We shouldn't allow infinite scrolling if we're still loading,
               if we've gotten all objects in the bucket (or folder), or if there
               are errors. */}
-              {!isLoading && !isFetchingNextPage && !error && hasNextPage && (
-                <Waypoint onEnter={() => fetchNextPage()}>
-                  <div />
-                </Waypoint>
-              )}
-            </div>
-            {error && (
-              <Typography variant="subtitle2" className={classes.footer}>
-                The next objects in the list failed to load.{' '}
-                <button
-                  className={classes.tryAgainText}
-                  onClick={() => fetchNextPage()}
-                >
-                  Click here to try again.
-                </button>
-              </Typography>
-            )}
+      {!isLoading && !isFetchingNextPage && !error && hasNextPage && (
+        <Waypoint onEnter={() => fetchNextPage()}>
+          <div />
+        </Waypoint>
+      )}
+      {error && (
+        <Typography variant="subtitle2" className={classes.footer}>
+          The next objects in the list failed to load.{' '}
+          <button
+            className={classes.tryAgainText}
+            onClick={() => fetchNextPage()}
+          >
+            Click here to try again.
+          </button>
+        </Typography>
+      )}
 
-            {!hasNextPage && numOfDisplayedObjects >= 100 && (
-              <Typography variant="subtitle2" className={classes.footer}>
-                Showing all {numOfDisplayedObjects} items
-              </Typography>
-            )}
-            <ConfirmationDialog
-              open={deleteObjectDialogOpen}
-              onClose={closeDeleteObjectDialog}
-              title={
-                objectToDelete
-                  ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
-                  : 'Delete object'
-              }
-              actions={() => (
-                <ActionsPanel>
-                  <Button
-                    buttonType="secondary"
-                    onClick={closeDeleteObjectDialog}
-                    data-qa-cancel
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    buttonType="primary"
-                    onClick={deleteObject}
-                    loading={deleteObjectLoading}
-                    data-qa-submit-rebuild
-                  >
-                    Delete
-                  </Button>
-                </ActionsPanel>
-              )}
-              error={deleteObjectError}
+      {!hasNextPage && numOfDisplayedObjects >= 100 && (
+        <Typography variant="subtitle2" className={classes.footer}>
+          Showing all {numOfDisplayedObjects} items
+        </Typography>
+      )}
+      <ConfirmationDialog
+        open={deleteObjectDialogOpen}
+        onClose={closeDeleteObjectDialog}
+        title={
+          objectToDelete
+            ? `Delete ${truncateMiddle(displayName(objectToDelete))}`
+            : 'Delete object'
+        }
+        actions={() => (
+          <ActionsPanel>
+            <Button
+              buttonType="secondary"
+              onClick={closeDeleteObjectDialog}
+              data-qa-cancel
             >
-              Are you sure you want to delete this object?
-            </ConfirmationDialog>
-          </>
-        </Grid>
-      </Grid>
+              Cancel
+            </Button>
+            <Button
+              buttonType="primary"
+              onClick={deleteObject}
+              loading={deleteObjectLoading}
+              data-qa-submit-rebuild
+            >
+              Delete
+            </Button>
+          </ActionsPanel>
+        )}
+        error={deleteObjectError}
+      >
+        Are you sure you want to delete this object?
+      </ConfirmationDialog>
       <ObjectDetailDrawer
         open={objectDetailDrawerOpen}
         onClose={closeObjectDetailsDrawer}
@@ -441,6 +444,12 @@ export const BucketDetail: React.FC = () => {
                 .absolute
             : undefined
         }
+      />
+      <CreateFolderDrawer
+        bucketName={bucketName}
+        clusterId={clusterId}
+        open={isCreateFolderDrawerOpen}
+        onClose={() => setIsCreateFolderDrawerOpen(false)}
       />
     </>
   );
