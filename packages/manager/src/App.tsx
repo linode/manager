@@ -1,6 +1,5 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -181,7 +180,6 @@ export class App extends React.Component<CombinedProps, State> {
       toggleTheme,
       linodesError,
       typesError,
-      imagesError,
       notificationsError,
       volumesError,
       bucketsError,
@@ -201,7 +199,6 @@ export class App extends React.Component<CombinedProps, State> {
       hasOauthError(
         linodesError,
         typesError,
-        imagesError,
         notificationsError,
         volumesError,
         bucketsError,
@@ -244,7 +241,6 @@ export class App extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   linodes: Linode[];
-  images?: Image[];
   types?: string[];
   regions?: Region[];
   documentation: Linode.Doc[];
@@ -253,7 +249,6 @@ interface StateProps {
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
-  imagesError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
@@ -266,7 +261,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
   typesError: state.__resources.types.error,
   documentation: state.documentation,

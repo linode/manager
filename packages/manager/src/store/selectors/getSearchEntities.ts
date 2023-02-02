@@ -82,11 +82,6 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   },
 });
 
-const imageReducer = (accumulator: SearchableItem[], image: Image) =>
-  image.is_public
-    ? accumulator
-    : [...accumulator, imageToSearchableItem(image)];
-
 export const imageToSearchableItem = (image: Image): SearchableItem => ({
   label: image.label,
   value: image.id,
@@ -169,8 +164,7 @@ export const bucketToSearchableItem = (
   },
 });
 
-const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
-const imageSelector = (state: State) => state.images.itemsById || {};
+// const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 const typesSelector = (state: State) => state.types.entities;
@@ -180,26 +174,23 @@ const kubePoolSelector = (state: State) => state.nodePools.entities;
 
 export default createSelector<
   State,
-  Linode[],
-  { [key: string]: Image },
+  // Linode[],
   NodeBalancer[],
   LinodeType[],
   KubernetesCluster[],
   ExtendedNodePool[],
   SearchableItem[]
 >(
-  linodeSelector,
-  imageSelector,
+  // linodeSelector,
   nodebalSelector,
   typesSelector,
   kubernetesClusterSelector,
   kubePoolSelector,
-  (linodes, images, nodebalancers, types, kubernetesClusters, nodePools) => {
-    const arrOfImages = Object.values(images);
-    const searchableLinodes = linodes.map((linode) =>
-      formatLinode(linode, types, images)
-    );
-    const searchableImages = arrOfImages.reduce(imageReducer, []);
+  (nodebalancers, types, kubernetesClusters, nodePools) => {
+    // const searchableLinodes = linodes.map((linode) =>
+    //   formatLinode(linode, types, images)
+    // );
+
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
     const searchableKubernetesClusters = kubernetesClusters
       .map((thisCluster) => {
@@ -210,11 +201,6 @@ export default createSelector<
       })
       .map(kubernetesClusterToSearchableItem);
 
-    return [
-      ...searchableLinodes,
-      ...searchableImages,
-      ...searchableNodebalancers,
-      ...searchableKubernetesClusters,
-    ];
+    return [...searchableNodebalancers, ...searchableKubernetesClusters];
   }
 );

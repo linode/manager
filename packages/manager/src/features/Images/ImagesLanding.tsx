@@ -30,9 +30,10 @@ import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
 import {
+  queryKey,
+  removeImageFromCache,
   useDeleteImageMutation,
   useImagesQuery,
-  removeImageFromCache,
 } from 'src/queries/images';
 import { ApplicationState } from 'src/store';
 import imageEvents from 'src/store/selectors/imageEvents';
@@ -141,19 +142,17 @@ const defaultDialogState = {
   error: undefined,
 };
 
-const preferenceKey = 'images';
-
 export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
 
-  const pagination = usePagination(1, preferenceKey);
+  const pagination = usePagination(1, queryKey);
 
   const { order, orderBy } = useOrder(
     {
       orderBy: 'label',
       order: 'desc',
     },
-    `${preferenceKey}-order`
+    `${queryKey}-order`
   );
 
   const filter = {

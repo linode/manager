@@ -24,6 +24,8 @@ import { MBpsInterDC } from 'src/constants';
 import { resetEventsPolling } from 'src/eventsPolling';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
@@ -47,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = LinodeContextProps & WithTypesAndImages;
+type CombinedProps = LinodeContextProps & WithTypes;
 
 const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -71,6 +73,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   } = useRegionsQuery();
   const regionsData = data ?? [];
 
+  const { data: _images } = useAllImagesQuery();
+  const images = listToItemsByID(_images ?? []);
+
   const {
     label,
     linodeId,
@@ -81,7 +86,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     types,
     type,
     image,
-    images,
     notifications,
   } = props;
 
@@ -259,19 +263,15 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeDisks: linode._disks,
 }));
 
-interface WithTypesAndImages {
+interface WithTypes {
   types: LinodeType[];
   notifications: Notification[];
-  images: Record<string, Image>;
 }
 
-const mapStateToProps: MapStateToProps<
-  WithTypesAndImages,
-  {},
-  ApplicationState
-> = (state) => ({
+const mapStateToProps: MapStateToProps<WithTypes, {}, ApplicationState> = (
+  state
+) => ({
   types: state.__resources.types.entities,
-  images: state.__resources.images.itemsById,
   notifications: state.__resources.notifications.data || [],
 });
 

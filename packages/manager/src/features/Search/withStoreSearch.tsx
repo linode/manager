@@ -2,9 +2,12 @@ import { Image, Volume } from '@linode/api-v4';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { compose, withStateHandlers } from 'recompose';
+import { listToItemsByID } from 'src/queries/base';
 import { ApplicationState } from 'src/store';
+import { LinodeWithMaintenanceAndDisplayStatus } from 'src/store/linodes/types';
+import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import entitiesErrors, {
   ErrorObject,
 } from 'src/store/selectors/entitiesErrors';
@@ -12,6 +15,7 @@ import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   bucketToSearchableItem,
   domainToSearchableItem,
+  formatLinode,
   imageToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
@@ -65,6 +69,12 @@ export default () => (Component: React.ComponentType<any>) => {
 
   const connected = connect((state: ApplicationState) => {
     return {
+      linodes: useSelector((state: ApplicationState) =>
+        Object.values(state.__resources.linodes.itemsById)
+      ),
+      types: useSelector(
+        (state: ApplicationState) => state.__resources.types.entities
+      ),
       entities: getSearchEntities(state.__resources),
       entitiesLoading: entitiesLoading(state.__resources),
       errors: entitiesErrors(state.__resources),
@@ -78,6 +88,8 @@ export default () => (Component: React.ComponentType<any>) => {
       {
         search: (_, props: SearchProps) => (
           query: string,
+          linodes: LinodeWithMaintenanceAndDisplayStatus[],
+          types: ExtendedType[],
           objectStorageBuckets: ObjectStorageBucket[],
           domains: Domain[],
           volumes: Volume[],
@@ -95,9 +107,15 @@ export default () => (Component: React.ComponentType<any>) => {
           const searchableImages = images.map((image) =>
             imageToSearchableItem(image)
           );
+
+          const searchableLinodes = linodes.map((linode) =>
+            formatLinode(linode, types, listToItemsByID(images))
+          );
+
           const results = search(
             [
               ...props.entities,
+              ...searchableLinodes,
               ...searchableBuckets,
               ...searchableDomains,
               ...searchableVolumes,

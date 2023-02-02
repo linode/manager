@@ -36,11 +36,6 @@ import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
 } from 'src/store/globalErrors';
-// Remove
-import images, {
-  defaultState as defaultImagesState,
-  State as ImagesState,
-} from 'src/store/image/image.reducer';
 import kubernetes, {
   defaultState as defaultKubernetesState,
   State as KubernetesState,
@@ -110,7 +105,6 @@ import initialLoad, {
 } from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
-import imageEvents from './middleware/imageEvents';
 import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
@@ -143,7 +137,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  images: defaultImagesState, // Remove
   kubernetes: defaultKubernetesState,
   nodePools: defaultNodePoolsState,
   linodes: defaultLinodesState,
@@ -158,7 +151,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  images: ImagesState; // Remove
   kubernetes: KubernetesState;
   nodePools: KubeNodePoolsState;
   linodes: LinodesState;
@@ -222,7 +214,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  images, // Remove
   kubernetes,
   nodePools,
   linodes,
@@ -264,7 +255,6 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       longviewEvents,
-      imageEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       diskEvents,
