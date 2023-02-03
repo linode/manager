@@ -164,6 +164,7 @@ export type GrantType =
   | 'longview'
   | 'stackscript'
   | 'volume'
+  | 'database'
   | 'firewall';
 
 export type Grants = GlobalGrants & Record<GrantType, Grant[]>;
