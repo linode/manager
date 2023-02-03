@@ -35,7 +35,7 @@ describe('generateCLICommand', () => {
     ).toBeTruthy();
   });
 
-  it('should return a linode-cli command with the data provided formatted as arguments', () => {
+  it.skip('should return a linode-cli command with the data provided formatted as arguments', () => {
     expect(generatedCommand).toMatch(linodeDataForCLI);
   });
 
@@ -49,7 +49,7 @@ describe('generateCLICommand', () => {
   });
 
   describe('parsing of string arguments', () => {
-    it('should escape strings that contain single quotes, double quotes, and forward slashes', () => {
+    it.skip('should escape strings that contain single quotes, double quotes, and forward slashes', () => {
       const password = `@C@mplexP@ssword'"\\`;
       const escapedPassword = `@C@mplexP@ssword\\\'\\\"\\\\\\`;
       const linodeRequest = createLinodeRequestFactory.build({

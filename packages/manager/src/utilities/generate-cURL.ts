@@ -1,4 +1,5 @@
 // type HTTPMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+import escapeStringForCLI from './escapeStringForCLI';
 
 const headers = [
   '-H "Content-Type: application/json" \\',
@@ -6,10 +7,8 @@ const headers = [
 ].join('\n');
 
 const generateCurlCommand = (data: {}, path: string) => {
-  const command = `curl ${headers}\n-X POST -d '${JSON.stringify(
-    data,
-    null,
-    4
+  const command = `curl ${headers}\n-X POST -d $'${escapeStringForCLI(
+    JSON.stringify(data, null, 4)
   )}' https://api.linode.com/v4${path}`;
   return command.trim();
 };
