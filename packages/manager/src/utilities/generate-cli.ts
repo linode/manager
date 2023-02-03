@@ -25,10 +25,20 @@ const parseArray = (key: string, value: any[]) => {
     );
   } else {
     value.forEach((item) => {
-      results.push(`  --${key} ${JSON.stringify(item)}`);
+      results.push(`  --${key} ${item}`);
     });
   }
-  return results.join('\\\n');
+  return results.join(' \\\n');
+};
+
+const parseString = (key: string, value: string) => {
+  const doesContainEscapableChars = value.includes("'") || value.includes('"');
+  let parsedValue = value;
+  if (doesContainEscapableChars) {
+    parsedValue = value.replace("'", "\\'").replace('"', '\\"');
+    parsedValue = `$'${parsedValue}'`;
+  }
+  return `  --${key} ${parsedValue}`;
 };
 
 const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
@@ -44,10 +54,10 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
     const valueAsString = convertObjectToCLIArg(value);
     acc.push(`  --${key} ${valueAsString}`);
   } else if (typeof value === 'string') {
-    const cleanedValue = value.replace('"', '\\"').replace("'", "\\'");
-    acc.push(`  --${key} $'${cleanedValue}'`);
+    const parsedValue = parseString(key, value);
+    acc.push(parsedValue);
   } else {
-    acc.push(`  --${key} '${value}'`);
+    acc.push(`  --${key} ${value}`);
   }
   return acc;
 };
