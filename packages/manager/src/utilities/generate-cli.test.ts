@@ -49,9 +49,9 @@ describe('generateCLICommand', () => {
   });
 
   describe('parsing of string arguments', () => {
-    it('should escape strings that contain single and double quotes', () => {
-      const password = `@C@mplexP@ssword'"`;
-      const escapedPassword = `@C@mplexP@ssword\\\'\\\"`;
+    it('should escape strings that contain single quotes, double quotes, and forward slashes', () => {
+      const password = `@C@mplexP@ssword'"\\`;
+      const escapedPassword = `@C@mplexP@ssword\\\'\\\"\\\\\\`;
       const linodeRequest = createLinodeRequestFactory.build({
         root_pass: password,
       });

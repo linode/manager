@@ -32,10 +32,14 @@ const parseArray = (key: string, value: any[]) => {
 };
 
 const parseString = (key: string, value: string) => {
-  const doesContainEscapableChars = value.includes("'") || value.includes('"');
+  const doesContainEscapableChars =
+    value.includes("'") || value.includes('"') || value.includes('\\');
   let parsedValue = value;
   if (doesContainEscapableChars) {
-    parsedValue = value.replace("'", "\\'").replace('"', '\\"');
+    parsedValue = value
+      .replace('\\', '\\\\\\')
+      .replace("'", "\\'")
+      .replace('"', '\\"');
     parsedValue = `$'${parsedValue}'`;
   }
   return `  --${key} ${parsedValue}`;
