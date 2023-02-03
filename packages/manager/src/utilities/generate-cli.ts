@@ -43,6 +43,9 @@ const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
   } else if (typeof value === 'object') {
     const valueAsString = convertObjectToCLIArg(value);
     acc.push(`  --${key} ${valueAsString}`);
+  } else if (typeof value === 'string') {
+    const cleanedValue = value.replace('"', '\\"').replace("'", "\\'");
+    acc.push(`  --${key} $'${cleanedValue}'`);
   } else {
     acc.push(`  --${key} '${value}'`);
   }
