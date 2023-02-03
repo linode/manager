@@ -57,26 +57,24 @@ const renderSplashScreen = () => (
 );
 
 const renderApp = (props: RouteComponentProps) => (
-  <>
-    {renderSplashScreen()}
-    <LinodeThemeWrapper>
-      {(toggle) => (
-        <SnackBar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          maxSnack={3}
-          autoHideDuration={4000}
-          data-qa-toast
-          hideIconVariant={true}
-        >
-          <App
-            toggleTheme={toggle}
-            location={props.location}
-            history={props.history}
-          />
-        </SnackBar>
-      )}
-    </LinodeThemeWrapper>
-  </>
+  <LinodeThemeWrapper>
+    <SplashScreen />
+    {(toggle) => (
+      <SnackBar
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        maxSnack={3}
+        autoHideDuration={4000}
+        data-qa-toast
+        hideIconVariant={true}
+      >
+        <App
+          toggleTheme={toggle}
+          location={props.location}
+          history={props.history}
+        />
+      </SnackBar>
+    )}
+  </LinodeThemeWrapper>
 );
 
 const renderCancel = () => (
