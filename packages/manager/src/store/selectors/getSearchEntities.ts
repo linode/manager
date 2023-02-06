@@ -18,8 +18,6 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
-// import { queryClient, listToItemsByID } from 'src/queries/base';
-// import { queryKey } from 'src/queries/images';
 
 export type State = ApplicationState['__resources'];
 
@@ -171,10 +169,6 @@ export const bucketToSearchableItem = (
   },
 });
 
-// const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
-// const imageSelector =
-// const imageSelector = () =>
-//   listToItemsByID(queryClient.getQueryData(`${queryKey}-all`)); // (state: State) => state.images.itemsById || {};
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 const typesSelector = (state: State) => state.types.entities;
@@ -184,24 +178,17 @@ const kubePoolSelector = (state: State) => state.nodePools.entities;
 
 export default createSelector<
   State,
-  // Linode[],
-  // { [key: string]: Image },
   NodeBalancer[],
   LinodeType[],
   KubernetesCluster[],
   ExtendedNodePool[],
   SearchableItem[]
 >(
-  // linodeSelector,
-  // imageSelector,
   nodebalSelector,
   typesSelector,
   kubernetesClusterSelector,
   kubePoolSelector,
   (nodebalancers, types, kubernetesClusters, nodePools) => {
-    // const arrOfImages = Object.values(images);
-
-    // const searchableImages = arrOfImages.reduce(imageReducer, []);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
     const searchableKubernetesClusters = kubernetesClusters
       .map((thisCluster) => {

@@ -206,7 +206,6 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     domains,
     volumes,
     images,
-    // searchableLinodes,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {

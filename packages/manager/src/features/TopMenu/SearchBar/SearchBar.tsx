@@ -180,7 +180,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     domains,
     volumes,
     _privateImages,
-    // searchableLinodes,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
