@@ -123,7 +123,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
   const {
-    data: images,
+    data: _privateImages,
     isLoading: areImagesLoading,
     error: imagesError,
   } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
@@ -192,7 +192,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         objectStorageBuckets?.buckets ?? [],
         domains ?? [],
         volumes ?? [],
-        images ?? [],
+        _privateImages ?? [],
         searchableLinodes ?? []
       );
     }
@@ -205,7 +205,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
-    images,
+    _privateImages,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
