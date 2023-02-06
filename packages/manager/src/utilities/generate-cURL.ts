@@ -22,7 +22,7 @@ const generateCurlCommand = (data: {}, path: string) => {
     cleanData,
     null,
     4
-  )}' https://api.linode.com/v4${path}`;
+  ).replace(/'/g, `'\\''`)}' https://api.linode.com/v4${path}`;
   return command.trim();
 };
 
