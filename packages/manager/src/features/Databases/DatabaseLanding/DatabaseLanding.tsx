@@ -11,7 +11,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import PaginationFooter from 'src/components/PaginationFooter';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
@@ -104,9 +103,23 @@ const DatabaseLanding: React.FC = () => {
                 Configuration
               </TableSortCell>
             </Hidden>
-            <TableCell>Engine</TableCell>
+            <TableSortCell
+              active={orderBy === 'engine'}
+              direction={order}
+              label="engine"
+              handleClick={handleOrderChange}
+            >
+              Engine
+            </TableSortCell>
             <Hidden mdDown>
-              <TableCell>Region</TableCell>
+              <TableSortCell
+                active={orderBy === 'region'}
+                direction={order}
+                label="region"
+                handleClick={handleOrderChange}
+              >
+                Region
+              </TableSortCell>
             </Hidden>
             <Hidden lgDown>
               <TableSortCell
