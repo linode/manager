@@ -195,7 +195,7 @@ export const KubernetesLanding = () => {
             >
               Region
             </TableSortCell>
-            <Hidden xsDown>
+            <Hidden mdDown>
               <TableCell data-qa-kubernetes-clusters-memory-header>
                 Total Memory
               </TableCell>
