@@ -7,8 +7,21 @@ const headers = [
 ].join('\n');
 
 const generateCurlCommand = (data: {}, path: string) => {
-  const command = `curl ${headers}\n-X POST -d $'${escapeStringForCLI(
-    JSON.stringify(data, null, 4)
+  const keys = Object.keys(data);
+
+  const cleanData = {};
+
+  for (const key of keys) {
+    if (typeof data[key] === 'string') {
+      cleanData[key] = escapeStringForCLI(data[key] ?? '');
+    }
+    cleanData[key] = data[key];
+  }
+
+  const command = `curl ${headers}\n-X POST -d '${JSON.stringify(
+    cleanData,
+    null,
+    4
   )}' https://api.linode.com/v4${path}`;
   return command.trim();
 };
