@@ -114,7 +114,7 @@ export const KubernetesClusterRow = (props: Props) => {
           ) : null}
         </Grid>
       </TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell data-qa-cluster-version>
           <div className={classes.version}>
             {cluster.k8s_version}
@@ -136,7 +136,7 @@ export const KubernetesClusterRow = (props: Props) => {
       <TableCell data-qa-cluster-region>
         {dcDisplayNames[cluster.region] ?? cluster.region}
       </TableCell>
-      <Hidden mdDown>
+      <Hidden smDown>
         <TableCell data-qa-cluster-memory>{`${RAM / 1024} GB`}</TableCell>
         <TableCell data-qa-cluster-cpu>
           {`${CPU} ${CPU === 1 ? 'CPU' : 'CPUs'}`}
