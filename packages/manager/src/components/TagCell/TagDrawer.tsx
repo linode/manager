@@ -26,7 +26,7 @@ export const TagDrawer: React.FC<Props> = (props) => {
 
   return (
     <Drawer open={open} title={`Tags (${entityLabel})`} onClose={onClose}>
-      <TagsPanel tags={tags} updateTags={updateTags}></TagsPanel>
+      <TagsPanel tags={tags} updateTags={updateTags} />
     </Drawer>
   );
 };
