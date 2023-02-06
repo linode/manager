@@ -199,7 +199,7 @@ export const TagCell: React.FC<Props> = (props) => {
             ))}
           </div>
 
-          {hasOverflow && (
+          {hasOverflow ? (
             <Grid item className="py0">
               <IconButton
                 onKeyPress={() => props.listAllTags(tags)}
@@ -212,7 +212,7 @@ export const TagCell: React.FC<Props> = (props) => {
                 <MoreHoriz />
               </IconButton>
             </Grid>
-          )}
+          ) : null}
           <button
             className={classes.addTagButton}
             title="Add a tag"
