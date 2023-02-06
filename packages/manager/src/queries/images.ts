@@ -79,7 +79,7 @@ export const removeImageFromCache = () =>
   queryClient.invalidateQueries(`${queryKey}-list`);
 
 // Get all Images
-const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
+export const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
   getAll<Image>((params, filter) =>
     getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);

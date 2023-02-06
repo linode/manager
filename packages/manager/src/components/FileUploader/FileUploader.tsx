@@ -15,7 +15,6 @@ import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
-// import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { sendImageUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
