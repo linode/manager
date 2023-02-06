@@ -145,13 +145,12 @@ export const imageEventsHandler = (event: Event) => {
       if (event.status === 'finished') {
         // eslint-disable-next-line no-unused-expressions
         (async () =>
-          await getImage(`private/${event.entity?.id}`).then((image) => {
+          await getImage(`private/${event.entity?.id}`).then(() => {
             updateInPaginatedStore<Image>(
               `${queryKey}-list`,
               `private/${event.entity?.id}`,
               {
                 status: 'available',
-                size: image.size,
               }
             );
           }))();
