@@ -184,17 +184,6 @@ const TagsPanel: React.FC<Props> = (props) => {
 
     updateTags(tagsWithoutDeletedTag)
       .then(() => {
-        /*
-         * Remove this tag from the current list of tags that are queued for deletion
-         */
-        const cloneTagSuggestions = clone(tagsToSuggest) || [];
-        updateTagsData([
-          {
-            value: label,
-            label,
-          },
-          ...cloneTagSuggestions,
-        ]);
         setTagError('');
       })
       .catch((e) => {
@@ -236,7 +225,7 @@ const TagsPanel: React.FC<Props> = (props) => {
     } else {
       setTagError('');
       setTagsLoading(true);
-      updateTags([...tags, value.label])
+      updateTags([...tags, value.label].sort())
         .then(() => {
           // set the input value to blank on submit
           setTagInputValue('');
