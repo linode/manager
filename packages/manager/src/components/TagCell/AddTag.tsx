@@ -2,7 +2,7 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useProfile } from 'src/queries/profile';
 import { useTags } from 'src/queries/tags';
 
 const useStyles = makeStyles((_: Theme) => ({
@@ -39,9 +39,9 @@ export const AddTag: React.FC<Props> = (props) => {
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
 
   const [isLoading, setIsLoading] = React.useState(false);
-  const { _isRestrictedUser } = useAccountManagement();
+  const { data: profile } = useProfile();
   const { data: accountTags, isLoading: accountTagsLoading } = useTags(
-    !_isRestrictedUser
+    !profile?.restricted
   );
   // @todo should we toast for this? If we swallow the error the only
   // thing we lose is preexisting tabs as options; the add tag flow

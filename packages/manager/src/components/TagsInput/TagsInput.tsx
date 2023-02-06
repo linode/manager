@@ -5,7 +5,7 @@ import Select, {
   Item,
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useProfile } from 'src/queries/profile';
 import { useTags } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
@@ -39,9 +39,9 @@ const TagsInput: React.FC<Props> = (props) => {
 
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
-  const { _isRestrictedUser } = useAccountManagement();
+  const { data: profile } = useProfile();
   const { data: accountTags, error: accountTagsError } = useTags(
-    !_isRestrictedUser
+    !profile?.restricted
   );
 
   const accountTagItems: Item[] =

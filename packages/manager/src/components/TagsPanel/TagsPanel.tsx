@@ -1,15 +1,14 @@
 import classNames from 'classnames';
-import { clone } from 'ramda';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Theme, makeStyles } from 'src/components/core/styles';
-import { updateTagsData, useTags } from 'src/queries/tags';
+import { useTags } from 'src/queries/tags';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -139,11 +138,13 @@ const TagsPanel: React.FC<Props> = (props) => {
   const [tagInputValue, setTagInputValue] = React.useState('');
   const [tagLoading, setTagsLoading] = React.useState(false);
 
+  const { data: profile } = useProfile();
+
   const {
     data: userTags,
     isLoading: userTagsLoading,
     error: userTagsError,
-  } = useTags(!isRestrictedUser());
+  } = useTags(!profile?.restricted);
 
   const tagsToSuggest = React.useMemo<Item[] | undefined>(
     () =>
