@@ -1,3 +1,5 @@
+import escapeStringForCLI from './escapeStringForCLI';
+
 type JSONFieldToArray = [string, unknown];
 
 const convertObjectToCLIArg = (data: {} | null) => {
@@ -25,21 +27,14 @@ const parseArray = (key: string, value: any[]) => {
     );
   } else {
     value.forEach((item) => {
-      results.push(`  --${key} ${item}`);
+      results.push(`  --${key} ${escapeStringForCLI(item)}`);
     });
   }
   return results.join(' \\\n');
 };
 
 const parseString = (key: string, value: string) => {
-  const doesContainEscapableChars = value.match(/[^\w\s]/gi);
-  let parsedValue = value;
-  if (doesContainEscapableChars) {
-    parsedValue = value.replace(/[^\w\s]/gi, function (char) {
-      return '\\' + char;
-    });
-    parsedValue = `$'${parsedValue}'`;
-  }
+  const parsedValue = escapeStringForCLI(value);
   return `  --${key} ${parsedValue}`;
 };
 
