@@ -100,12 +100,12 @@ export default () => (Component: React.ComponentType<any>) => {
 
           const results = search(
             [
+              ...searchableLinodes,
+              ...searchableImages,
               ...props.entities,
               ...searchableBuckets,
               ...searchableDomains,
               ...searchableVolumes,
-              ...searchableImages,
-              ...searchableLinodes,
             ],
             query
           );
