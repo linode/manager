@@ -129,7 +129,12 @@ const Dialog: React.FC<DialogProps> = (props) => {
       >
         <div className={classes.sticky}>
           <Grid item>
-            <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
+            <Typography
+              variant="h2"
+              id={titleID}
+              data-qa-drawer-title={title}
+              data-qa-dialog-title={title}
+            >
               {title}
             </Typography>
           </Grid>
