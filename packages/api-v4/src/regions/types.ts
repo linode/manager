@@ -18,6 +18,7 @@ export type RegionStatus = 'ok' | 'outage';
 
 export interface Region {
   id: string;
+  label: string;
   country: string;
   capabilities: Capabilities[];
   status: RegionStatus;
