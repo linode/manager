@@ -4,20 +4,6 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2023-02-07] - v1.85.0
-
-### Added:
-- Databases as a User Permissions Option
-- Monthly Network Transfer Pool to select empty state landing pages
-- API/CLI usage information to Linode Create
-
-### Changed:
-- Improve firewall rule list screen reader support
-- UX copy for “Getting Started” playlists
-
-### Fixed:
-- API Tokens revocation
-
 ## [2023-01-18] - v1.84.0
 
 ### Added:
