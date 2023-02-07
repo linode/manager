@@ -2,12 +2,15 @@
  * @file Cypress intercepts and mocks for Cloud Manager profile requests.
  */
 
+import { makeResponse } from 'support/util/response';
+import { paginateResponse } from 'support/util/paginate';
 import { makeErrorResponse } from 'support/util/errors';
 import type {
   Profile,
   UserPreferences,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  Token,
 } from '@linode/api-v4/types';
 
 /**
@@ -152,4 +155,41 @@ export const mockConfirmTwoFactorAuth = (
   return cy.intercept('POST', '*/profile/tfa-enable-confirm', {
     scratch: scratchCode,
   });
+};
+
+/**
+ * Intercepts GET request to retrieve third party app tokens and mocks response.
+ *
+ * @param tokens - Array of third party app tokens with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAppTokens = (tokens: Token[]): Cypress.Chainable<null> => {
+  return cy.intercept('GET', '*/profile/apps*', paginateResponse(tokens));
+};
+
+/**
+ * Intercepts GET request to retrieve personal access tokens and mocks response.
+ *
+ * @param tokens - Array of personal access tokens with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPersonalAccessTokens = (
+  tokens: Token[]
+): Cypress.Chainable<null> => {
+  return cy.intercept('GET', '*/profile/tokens*', paginateResponse(tokens));
+};
+
+/**
+ * Intercepts POST request to create a personal access token and mocks response.
+ *
+ * @param token - Personal access token with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreatePersonalAccessToken = (
+  token: Token
+): Cypress.Chainable<null> => {
+  return cy.intercept('POST', '*/profile/tokens', makeResponse(token));
 };
