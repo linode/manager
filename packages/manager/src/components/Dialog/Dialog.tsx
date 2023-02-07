@@ -144,7 +144,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
               onClick={props.onClose as (e: any) => void}
               className={classes.button}
               data-qa-close-drawer
-              aria-label="Close drawer"
+              aria-label="Close"
             >
               <Close />
             </Button>

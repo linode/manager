@@ -82,6 +82,8 @@ export type HandleSubmit = (
   linodeID?: number
 ) => void;
 
+export type LinodeCreateValidation = (payload: CreateLinodeRequest) => void;
+
 export interface BasicFromContentProps {
   errors?: APIError[];
   selectedImageID?: string;
