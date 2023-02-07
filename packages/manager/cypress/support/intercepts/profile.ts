@@ -193,3 +193,35 @@ export const mockCreatePersonalAccessToken = (
 ): Cypress.Chainable<null> => {
   return cy.intercept('POST', '*/profile/tokens', makeResponse(token));
 };
+
+/**
+ * Intercepts PUT request to update a personal access token and mocks response.
+ *
+ * @param id - ID of token for intercepted update request.
+ * @param updatedToken - Token data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdatePersonalAccessToken = (
+  id: number,
+  updatedToken: Token
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    `*/profile/tokens/${id}`,
+    makeResponse(updatedToken)
+  );
+};
+
+/**
+ * Intercepts DELETE request to revoke a personal access token and mocks response.
+ *
+ * @param id - ID of token for intercepted revoke request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRevokePersonalAccessToken = (
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept('DELETE', `*/profile/tokens/${id}`, makeResponse({}));
+};
