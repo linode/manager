@@ -68,11 +68,11 @@ const LinodeThemeWrapper: React.FC<{
     toggleTheme(themeChoice);
   }, [themeChoice]);
 
+  const theme = React.useMemo(themeCreators[themeChoice], [themeChoice]);
+
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themeCreators[themeChoice]()}>
-        {children}
-      </ThemeProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
