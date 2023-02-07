@@ -13,7 +13,7 @@ const generateCurlCommand = (data: {}, path: string) => {
 
   for (const key of keys) {
     if (typeof data[key] === 'string') {
-      cleanData[key] = escapeStringForCLI(data[key] ?? '');
+      cleanData[key] = escapeStringForCLI(data[key]);
     }
     cleanData[key] = data[key];
   }
