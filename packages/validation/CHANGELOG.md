@@ -1,4 +1,9 @@
 
+## [2023-02-07] - v0.18.0
+
+### Fixed:
+- `validation` CommonJS not accepted by Node.js
+
 ## [2023-01-13] - v0.17.1
 
 ### Fixed:
