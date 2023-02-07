@@ -84,7 +84,14 @@ export const CreateLinodeSchema = object({
   stackscript_id: number().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
-  image: string().notRequired(),
+  image: string().when('stackscript_id', {
+    is: (value: unknown) =>
+      value !== null || value !== undefined || value !== '',
+    then: string().required(
+      'An image is required when deploying from a StackScript.'
+    ),
+    otherwise: string().notRequired(),
+  }),
   authorized_keys: array().of(string()).notRequired(),
   backups_enabled: boolean().notRequired(),
   stackscript_data,

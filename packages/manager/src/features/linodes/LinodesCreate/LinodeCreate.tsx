@@ -530,6 +530,7 @@ export class LinodeCreate extends React.PureComponent<
                           imagesData={imagesData!}
                           regionsData={regionsData!}
                           typesData={typesData!}
+                          errors={errors}
                           {...rest}
                         />
                       </SafeTabPanel>
@@ -543,6 +544,7 @@ export class LinodeCreate extends React.PureComponent<
                           imagesData={imagesData!}
                           regionsData={regionsData!}
                           typesData={typesData!}
+                          errors={errors}
                           {...rest}
                         />
                       </SafeTabPanel>
