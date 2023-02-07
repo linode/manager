@@ -45,6 +45,7 @@ const PreferenceToggle: React.FC<CombinedProps> = (props) => {
     toggleCallbackFn,
     children,
     preferences,
+    getUserPreferences,
   } = props;
 
   /** will be undefined and render-block children unless otherwise specified */
@@ -52,6 +53,10 @@ const PreferenceToggle: React.FC<CombinedProps> = (props) => {
     PreferenceValue | undefined
   >(value);
   const [lastUpdated, setLastUpdated] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    getUserPreferences();
+  }, []);
 
   React.useEffect(() => {
     /**
