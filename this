@@ -1,6 +1,0 @@
-using default values: {}, use --no-defaults flag to disable defaults
-(0lqqqqqqqqqqwqqqqqqqqqqqqqqqqqqqwqqqqqqqqqqqqwqqqqqqqqqqqqqwqqqqqqqqqqqqqqqqqwqqqqqqqqqqqqqqwqqqqqqqqqqqqqqk(B
-(0x(B id       (0x(B label             (0x(B region     (0x(B type        (0x(B image           (0x(B status       (0x(B ipv4         (0x(B
-(0tqqqqqqqqqqnqqqqqqqqqqqqqqqqqqqnqqqqqqqqqqqqnqqqqqqqqqqqqqnqqqqqqqqqqqqqqqqqnqqqqqqqqqqqqqqnqqqqqqqqqqqqqqu(B
-(0x(B 42429399 (0x(B debian-us-central (0x(B us-central (0x(B g6-nanode-1 (0x(B linode/debian11 (0x(B [33mprovisioning[0m (0x(B 45.79.18.166 (0x(B
-(0mqqqqqqqqqqvqqqqqqqqqqqqqqqqqqqvqqqqqqqqqqqqvqqqqqqqqqqqqqvqqqqqqqqqqqqqqqqqvqqqqqqqqqqqqqqvqqqqqqqqqqqqqqj(B
