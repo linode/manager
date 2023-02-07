@@ -135,7 +135,6 @@ interface Props {
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
   appIsLoading: boolean;
-  toggleTheme: () => void;
   isLoggedInAsCustomer: boolean;
 }
 
@@ -345,10 +344,7 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                             <Route
                               path="/profile"
                               render={(routeProps) => (
-                                <Profile
-                                  {...routeProps}
-                                  toggleTheme={props.toggleTheme}
-                                />
+                                <Profile {...routeProps} />
                               )}
                             />
                             <Route path="/support" component={Help} />
