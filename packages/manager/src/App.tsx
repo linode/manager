@@ -173,7 +173,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { hasError } = this.state;
     const {
-      toggleTheme,
       linodesError,
       typesError,
       imagesError,
@@ -227,7 +226,6 @@ export class App extends React.Component<CombinedProps, State> {
           <MainContent
             history={this.props.history}
             location={this.props.location}
-            toggleTheme={toggleTheme}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
           />

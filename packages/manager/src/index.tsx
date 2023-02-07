@@ -24,6 +24,7 @@ import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './queries/base';
+import PreferenceToggle from './components/PreferenceToggle';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
@@ -44,70 +45,61 @@ const renderNullAuth = () => <span>null auth route</span>;
 
 const renderNull = () => <span>null route</span>;
 
-const renderLish = () => (
-  <LinodeThemeWrapper>
-    <Lish />
-  </LinodeThemeWrapper>
-);
-
-const renderSplashScreen = () => (
-  <LinodeThemeWrapper>
-    <SplashScreen />
-  </LinodeThemeWrapper>
-);
-
 const renderApp = (props: RouteComponentProps) => (
   <>
-    {renderSplashScreen()}
-    <LinodeThemeWrapper>
-      {(toggle) => (
-        <SnackBar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          maxSnack={3}
-          autoHideDuration={4000}
-          data-qa-toast
-          hideIconVariant={true}
-        >
+    <SplashScreen />
+    <SnackBar
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      maxSnack={3}
+      autoHideDuration={4000}
+      data-qa-toast
+      hideIconVariant={true}
+    >
+      <PreferenceToggle<'light' | 'dark'>
+        preferenceKey="theme"
+        preferenceOptions={['light', 'dark']}
+      >
+        {({ togglePreference }) => (
           <App
-            toggleTheme={toggle}
             location={props.location}
             history={props.history}
+            toggleTheme={togglePreference}
           />
-        </SnackBar>
-      )}
-    </LinodeThemeWrapper>
+        )}
+      </PreferenceToggle>
+    </SnackBar>
   </>
 );
 
-const renderCancel = () => (
-  <LinodeThemeWrapper>
-    <Cancel />
-  </LinodeThemeWrapper>
-);
-
 const renderAuthentication = () => (
-  <React.Suspense fallback={renderSplashScreen}>
-    <Switch>
-      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-      <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
-      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-      <Route exact path="/nullauth" render={renderNullAuth} />
-      <Route exact path="/logout" component={Logout} />
-      <Route exact path="/cancel" render={renderCancel} />
-      <QueryClientProvider client={queryClient}>
-        <AuthenticationWrapper>
-          <Switch>
-            <Route path="/linodes/:linodeId/lish/:type" render={renderLish} />
-            <Route render={renderApp} />
-          </Switch>
-        </AuthenticationWrapper>
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          toggleButtonProps={{ style: { marginLeft: '3em' } }}
+  <LinodeThemeWrapper>
+    <React.Suspense fallback={<SplashScreen />}>
+      <Switch>
+        <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+        <Route
+          exact
+          path="/admin/callback"
+          component={LoginAsCustomerCallback}
         />
-      </QueryClientProvider>
-    </Switch>
-  </React.Suspense>
+        {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+        <Route exact path="/nullauth" render={renderNullAuth} />
+        <Route exact path="/logout" component={Logout} />
+        <Route exact path="/cancel" component={Cancel} />
+        <QueryClientProvider client={queryClient}>
+          <AuthenticationWrapper>
+            <Switch>
+              <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
+              <Route render={renderApp} />
+            </Switch>
+          </AuthenticationWrapper>
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            toggleButtonProps={{ style: { marginLeft: '3em' } }}
+          />
+        </QueryClientProvider>
+      </Switch>
+    </React.Suspense>
+  </LinodeThemeWrapper>
 );
 
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools

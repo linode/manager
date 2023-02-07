@@ -3,7 +3,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import NavTabs, { NavTab } from 'src/components/NavTabs/NavTabs';
-import Props from './OAuthClients';
 
 const SSHKeys = React.lazy(() => import('./SSHKeys'));
 const Settings = React.lazy(() => import('./Settings'));
@@ -16,16 +15,9 @@ const AuthenticationSettings = React.lazy(
 );
 const APITokens = React.lazy(() => import('./APITokens/APITokens'));
 
-interface Props {
-  toggleTheme: () => void;
-}
-
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-const Profile: React.FC<CombinedProps> = (props) => {
+const Profile = (props: RouteComponentProps) => {
   const {
     match: { url },
-    toggleTheme,
   } = props;
 
   const tabs: NavTab[] = [
@@ -67,7 +59,7 @@ const Profile: React.FC<CombinedProps> = (props) => {
     {
       title: 'My Settings',
       routeName: `${url}/settings`,
-      render: <Settings toggleTheme={toggleTheme} />,
+      render: <Settings />,
     },
   ];
 
