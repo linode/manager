@@ -1,4 +1,6 @@
-import escapeStringForCLI from './escapeStringForCLI';
+const escapeStringForCLI = (value: string) => {
+  return value.replace(/(["'$!`\\])/g, '\\$1');
+};
 
 type JSONFieldToArray = [string, unknown];
 
