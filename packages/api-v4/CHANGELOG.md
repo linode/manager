@@ -1,14 +1,3 @@
-
-## [2023-02-07] - v0.86.0
-
-### Added:
-- Databases as a User Permissions Option
-- `label` to Region type
-- Token related events
-
-### Fixed:
-- `api-v4` CommonJS not accepted by Node.js
-
 ## [2023-01-09] - v0.85.0
 
 ### Added:
