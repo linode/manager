@@ -250,6 +250,24 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       });
   }
 
+  // update backup status column from processing -> success/failure
+  componentDidUpdate() {
+    if (this.state.backups.snapshot.in_progress === null) {
+      return;
+    }
+    if (
+      this.state.backups.snapshot.in_progress.status === 'needsPostProcessing'
+    ) {
+      setTimeout(
+        () =>
+          getLinodeBackups(this.props.linodeID).then((data) => {
+            this.setState({ backups: data });
+          }),
+        15000
+      );
+    }
+  }
+
   componentWillUnmount() {
     this.mounted = false;
     this.eventSubscription.unsubscribe();
