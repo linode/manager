@@ -37,7 +37,7 @@ const parseArray = (key: string, value: any[]) => {
     );
   } else {
     value.forEach((item) => {
-      results.push(`  --${key} ${escapeStringForCLI(item)}`);
+      results.push(`  --${key} '${escapeStringForCLI(item)}'`);
     });
   }
   return results.join(' \\\n');
