@@ -1,12 +1,11 @@
 import { Image, ImageStatus } from '@linode/api-v4/lib/images';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { partition } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -78,10 +77,7 @@ interface ImageDialogState {
   status?: ImageStatus;
 }
 
-type CombinedProps = ImageDrawerState &
-  ImageDialogState &
-  RouteComponentProps<{}> &
-  WithSnackbarProps;
+type CombinedProps = ImageDrawerState & ImageDialogState;
 
 const defaultDrawerState = {
   open: false,
@@ -101,6 +97,8 @@ const defaultDialogState = {
 
 export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
   const pagination = usePagination(1, queryKey);
 
@@ -226,7 +224,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
          * from taking any action on the Image.
          */
         // this.props.onDelete();
-        props.enqueueSnackbar('Image has been scheduled for deletion.', {
+        enqueueSnackbar('Image has been scheduled for deletion.', {
           variant: 'info',
         });
       })
@@ -244,7 +242,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCreateButtonClick = () => {
-    props.history.push('/images/create');
+    history.push('/images/create');
   };
 
   const onRetryClick = (
@@ -253,7 +251,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     imageDescription: string
   ) => {
     removeImageFromCache();
-    props.history.push('/images/create/upload', {
+    history.push('/images/create/upload', {
       imageLabel,
       imageDescription,
     });
@@ -284,7 +282,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const deployNewLinode = (imageID: string) => {
-    const { history } = props;
     history.push({
       pathname: `/linodes/create/`,
       search: `?type=Images&imageID=${imageID}`,
@@ -575,7 +572,4 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  withRouter,
-  withSnackbar
-)(ImagesLanding);
+export default ImagesLanding;
