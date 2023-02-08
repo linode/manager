@@ -467,7 +467,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
               <TableSortCell
                 active={orderBy === 'label'}
                 direction={order}
-                label="Image"
+                label="label"
                 handleClick={handleOrderChange}
               >
                 Image
@@ -481,7 +481,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
               <TableSortCell
                 active={orderBy === 'size'}
                 direction={order}
-                label="Size"
+                label="size"
                 handleClick={handleOrderChange}
               >
                 Size
@@ -516,7 +516,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
               <TableSortCell
                 active={orderBy === 'label'}
                 direction={order}
-                label="Image"
+                label="label"
                 handleClick={handleOrderChange}
               >
                 Image
@@ -530,7 +530,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
               <TableSortCell
                 active={orderBy === 'size'}
                 direction={order}
-                label="Size"
+                label="size"
                 handleClick={handleOrderChange}
               >
                 Size
