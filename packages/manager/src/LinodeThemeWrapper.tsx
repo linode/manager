@@ -55,11 +55,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
-const LinodeThemeWrapper: React.FC<{
-  /* TODO: these are for tests only. delete? */
-  theme?: string;
-  shouldGetPreferences?: boolean;
-}> = ({ children }) => {
+const LinodeThemeWrapper: React.FC = ({ children }) => {
   const { preferences } = usePreferences();
 
   const themeChoice = preferences?.theme ?? 'light';
