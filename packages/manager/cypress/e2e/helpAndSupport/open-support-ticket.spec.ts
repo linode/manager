@@ -5,7 +5,7 @@ import {
   containsClick,
   getVisible,
   containsVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 import 'cypress-file-upload';
 
 describe('help & support', () => {
@@ -17,7 +17,7 @@ describe('help & support', () => {
     const ts = new Date();
 
     // intercept incoming response
-    cy.intercept('GET', '*/profile').as('getProfile');
+    cy.intercept('GET', '**/profile').as('getProfile');
 
     cy.visitWithLogin('/support/tickets');
     cy.wait('@getProfile').then((xhr) => {
@@ -37,23 +37,23 @@ describe('help & support', () => {
         updated_by: user,
       };
       // intercept create ticket request, stub response.
-      cy.intercept('POST', '*/support/tickets', mockTicketData).as(
+      cy.intercept('POST', '**/support/tickets', mockTicketData).as(
         'createTicket'
       );
       // stub incoming response
-      cy.intercept('GET', `*/support/tickets/${ticketId}`, mockTicketData).as(
+      cy.intercept('GET', `**/support/tickets/${ticketId}`, mockTicketData).as(
         'getTicket'
       );
       // intercept create support ticket request, stub response with 200
       cy.intercept(
         'POST',
-        `*/support/tickets/${ticketId}/attachments`,
+        `**/support/tickets/${ticketId}/attachments`,
         (req) => {
           req.reply(200);
         }
       ).as('attachmentPost');
       // stub incoming response
-      cy.intercept(`*/support/tickets/${ticketId}/replies`, {
+      cy.intercept(`**/support/tickets/${ticketId}/replies`, {
         data: [],
         page: 1,
         pages: 1,

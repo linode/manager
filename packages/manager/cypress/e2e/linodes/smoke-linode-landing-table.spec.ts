@@ -75,11 +75,11 @@ describe('linode landing checks', () => {
       managed: false,
     });
 
-    cy.intercept('GET', '*/account/settings', (req) => {
+    cy.intercept('GET', '**/account/settings', (req) => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
-    cy.intercept('GET', '*/profile').as('getProfile');
-    cy.intercept('GET', '*/linode/instances/*', (req) => {
+    cy.intercept('GET', '**/profile').as('getProfile');
+    cy.intercept('GET', '**/linode/instances/*', (req) => {
       req.reply(mockLinodesData);
     }).as('getLinodes');
     cy.visitWithLogin('/', { preferenceOverrides });
@@ -269,11 +269,11 @@ describe('linode landing actions', () => {
       managed: false,
     });
 
-    cy.intercept('GET', '*/account/settings', (req) => {
+    cy.intercept('GET', '**/account/settings', (req) => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
 
-    cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
+    cy.intercept('DELETE', '**/linode/instances/*').as('deleteLinode');
     createLinode().then((linodeA) => {
       createLinode().then((linodeB) => {
         cy.visitWithLogin('/linodes', { preferenceOverrides });

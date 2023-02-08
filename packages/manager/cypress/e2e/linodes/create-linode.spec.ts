@@ -16,7 +16,7 @@ describe('create linode', () => {
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
-    cy.intercept('POST', '*/linode/instances').as('linodeCreated');
+    cy.intercept('POST', '**/linode/instances').as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     containsClick(selectRegionString).type('new {enter}');
     fbtClick('Shared CPU');

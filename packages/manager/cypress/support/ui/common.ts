@@ -41,20 +41,22 @@ export const defensiveDo = (
 };
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
-  cy.intercept('GET', '*/linode/instances/*').as('getLinodes');
-  cy.intercept('GET', '*/account').as('getAccount');
-  cy.intercept('GET', '*/profile').as('getProfile');
-  cy.intercept('GET', '*/account/settings').as('getAccountSettings');
-  cy.intercept('GET', '*/profile/preferences').as('getProfilePreferences');
-  cy.intercept('GET', '*/account/notifications**').as('getNotifications');
+  cy.intercept('GET', '**/linode/instances/*').as('getLinodes');
+  cy.intercept('GET', '**/account').as('getAccount');
+  cy.intercept('GET', '**/profile').as('getProfile');
+  cy.intercept('GET', '**/account/settings').as('getAccountSettings');
+  cy.intercept('GET', '**/profile/preferences').as('getProfilePreferences');
+  cy.intercept('GET', '**/account/notifications**').as('getNotifications');
 
   withLogin ? cy.visitWithLogin(path) : cy.visit(path);
-  cy.wait('@getLinodes');
-  cy.wait('@getAccount');
-  cy.wait('@getAccountSettings');
-  cy.wait('@getProfilePreferences');
-  cy.wait('@getProfile');
-  cy.wait('@getNotifications');
+  cy.wait([
+    '@getLinodes',
+    '@getAccount',
+    '@getAccountSettings',
+    '@getProfilePreferences',
+    '@getProfile',
+    '@getNotifications',
+  ]);
 };
 
 // use this if the call happens multiple times but you only want to intercept it once

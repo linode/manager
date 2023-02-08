@@ -14,7 +14,7 @@ import { getFilters } from 'support/util/request';
  * @returns Cypress chainable.
  */
 export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `*/account/users/${username}`);
+  return cy.intercept('GET', `**/account/users/${username}`);
 };
 
 /**
@@ -23,7 +23,7 @@ export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/account/entity-transfers');
+  return cy.intercept('POST', '**/account/entity-transfers');
 };
 
 /**
@@ -48,7 +48,7 @@ export const mockGetEntityTransfers = (
   received: EntityTransfer[],
   sent: EntityTransfer[]
 ) => {
-  return cy.intercept('GET', '*/account/entity-transfers*', (req) => {
+  return cy.intercept('GET', '**/account/entity-transfers*', (req) => {
     const filters = getFilters(req);
 
     if (filters?.['status'] === 'pending') {
@@ -94,7 +94,7 @@ export const mockReceiveEntityTransfer = (
   token: string,
   transfer: EntityTransfer
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `*/account/entity-transfers/${token}`, transfer);
+  return cy.intercept('GET', `**/account/entity-transfers/${token}`, transfer);
 };
 
 /**
@@ -107,7 +107,11 @@ export const mockReceiveEntityTransfer = (
 export const mockAcceptEntityTransfer = (
   token: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', `*/account/entity-transfers/${token}/accept`, {});
+  return cy.intercept(
+    'POST',
+    `**/account/entity-transfers/${token}/accept`,
+    {}
+  );
 };
 
 /**
@@ -120,7 +124,7 @@ export const mockAcceptEntityTransfer = (
 export const mockGetAccountSettings = (
   settings: AccountSettings
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/account/settings', settings);
+  return cy.intercept('GET', '**/account/settings', settings);
 };
 
 /**
@@ -137,7 +141,7 @@ export const mockUpdateUsername = (
   newUsername: string,
   restricted: boolean = false
 ) => {
-  return cy.intercept('PUT', `*/account/users/${oldUsername}`, {
+  return cy.intercept('PUT', `**/account/users/${oldUsername}`, {
     username: newUsername,
     email: 'mockEmail@example.com',
     restricted,

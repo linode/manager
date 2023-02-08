@@ -60,7 +60,7 @@ describe('linode storage tab', () => {
   it('try to delete in use disk', () => {
     const diskName = 'Debian 10 Disk';
     createLinode().then((linode) => {
-      cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
+      cy.intercept('DELETE', `**/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
       // Wait for Linode to boot before navigating to `Storage` details tab.
@@ -83,10 +83,10 @@ describe('linode storage tab', () => {
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
     createLinode({ image: null }).then((linode: Linode) => {
-      cy.intercept('DELETE', `*/linode/instances/${linode.id}/disks/*`).as(
+      cy.intercept('DELETE', `**/linode/instances/${linode.id}/disks/*`).as(
         'deleteDisk'
       );
-      cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
+      cy.intercept('POST', `**/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
@@ -107,7 +107,7 @@ describe('linode storage tab', () => {
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
     createLinode({ image: null }).then((linode: Linode) => {
-      cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
+      cy.intercept('POST', `**/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
@@ -121,12 +121,13 @@ describe('linode storage tab', () => {
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
     createLinode({ image: null }).then((linode: Linode) => {
-      cy.intercept('POST', `*/linode/instances/${linode.id}/disks`).as(
+      cy.intercept('POST', `**/linode/instances/${linode.id}/disks`).as(
         'addDisk'
       );
-      cy.intercept('POST', `*/linode/instances/${linode.id}/disks/*/resize`).as(
-        'resizeDisk'
-      );
+      cy.intercept(
+        'POST',
+        `**/linode/instances/${linode.id}/disks/*/resize`
+      ).as('resizeDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);
       fbtVisible(diskName);

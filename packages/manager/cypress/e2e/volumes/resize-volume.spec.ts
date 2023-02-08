@@ -1,4 +1,5 @@
-import { createVolume, Volume } from '@linode/api-v4/lib/volumes';
+import { createVolume } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomNumber, randomLabel } from 'support/util/random';
@@ -27,7 +28,7 @@ describe('volume resize flow', () => {
     });
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      cy.intercept('POST', '*/volumes/*/resize').as('resizeVolume');
+      cy.intercept('POST', '**/volumes/*/resize').as('resizeVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });

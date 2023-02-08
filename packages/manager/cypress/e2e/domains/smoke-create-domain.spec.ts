@@ -9,7 +9,7 @@ import { randomDomainName } from 'support/util/random';
 describe('Create a Domain', () => {
   it('Creates first Domain', () => {
     // modify incoming response
-    cy.intercept('GET', 'v4/domains*', (req) => {
+    cy.intercept('GET', '**/v4/domains*', (req) => {
       req.reply((res) => {
         res.send({
           results: 0,
@@ -20,7 +20,7 @@ describe('Create a Domain', () => {
       });
     }).as('getDomains');
     // intercept create Domain request
-    cy.intercept('POST', '*/domains').as('createDomain');
+    cy.intercept('POST', '**/domains').as('createDomain');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
     fbtClick('Create Domain');

@@ -108,7 +108,7 @@ Cypress.Commands.add(
     }
 
     if (resolvedLinodeOptions.preferenceOverrides) {
-      cy.intercept('GET', '*/profile/preferences*', (request) => {
+      cy.intercept('GET', '**/profile/preferences*', (request) => {
         request.continue((response) => {
           response.body = {
             ...response?.body,

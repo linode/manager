@@ -69,7 +69,7 @@ export const deleteAllTestVolumes = () => {
   getVolumes().then((resp) => {
     resp.body.data.forEach((vol) => {
       // catch delete linode request
-      cy.intercept('DELETE', `linode/instances/${vol.linode_id}`).as(
+      cy.intercept('DELETE', `**/linode/instances/${vol.linode_id}`).as(
         'deleteLinode'
       );
       if (isTestEntity(vol) && vol.linode_id === null) {

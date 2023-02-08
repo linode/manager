@@ -11,7 +11,7 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then((linode) => {
       // mock 200 response
-      cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`, (req) => {
+      cy.intercept('POST', `**/linode/instances/${linode.id}/rescue`, (req) => {
         req.reply(200);
       }).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}`;
@@ -37,7 +37,7 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then((linode) => {
       // not mocking response here, intercepting post
-      cy.intercept('POST', `*/linode/instances/${linode.id}/rescue`).as(
+      cy.intercept('POST', `**/linode/instances/${linode.id}/rescue`).as(
         'postRebootInRescueMode'
       );
       const rescueUrl = `/linodes/${linode.id}/rescue`;

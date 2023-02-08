@@ -1,7 +1,7 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 const mockGetInvoices = (data) => {
   // modify incoming response
-  cy.intercept('*/account/invoices?*', (req) => {
+  cy.intercept('**/account/invoices?*', (req) => {
     req.reply((res) => {
       res.send(data);
     });
@@ -58,7 +58,7 @@ beforeEach(() => {
 
 const mockProfile = (timezone) => {
   // modify incoming response
-  cy.intercept('*/profile', (req) => {
+  cy.intercept('**/profile', (req) => {
     req.reply((res) => {
       res.send({ ...cachedGetProfile, timezone });
     });

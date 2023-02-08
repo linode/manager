@@ -26,17 +26,17 @@ const mockLinodeList = createMockLinodeList({
 const mockLinode = mockLinodeList.data[0];
 
 const createLinodeWithImageMock = (preselectedImage: boolean) => {
-  cy.intercept('*/images*', (req) => {
+  cy.intercept('**/images*', (req) => {
     req.reply(createMockImage());
   }).as('mockImage');
 
-  cy.intercept('POST', '*/linode/instances', (req) => {
+  cy.intercept('POST', '**/linode/instances', (req) => {
     req.reply({
       body: mockLinode,
       headers: { image: imageId },
     });
   }).as('mockLinodeRequest');
-  cy.intercept('GET', `*/linode/instances/${linodeId}`, (req) => {
+  cy.intercept('GET', `**/linode/instances/${linodeId}`, (req) => {
     req.reply(mockLinode);
   }).as('mockLinodeResponse');
 

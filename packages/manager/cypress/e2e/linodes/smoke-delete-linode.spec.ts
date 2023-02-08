@@ -7,7 +7,7 @@ describe('delete linode', () => {
   it('deletes linode from linode details page', () => {
     createLinode().then((linode) => {
       // catch delete request
-      cy.intercept('DELETE', '*/linode/instances/*').as('deleteLinode');
+      cy.intercept('DELETE', '**/linode/instances/*').as('deleteLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for content to load before performing actions via action menu.

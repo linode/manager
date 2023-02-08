@@ -49,7 +49,7 @@ const ccIdGpayDefault = gpayDefault.data[0].id;
 const gpayLastFourCcDefault = ccDefault.data[1].data.last_four;
 const ccLastFourGpayDefault = gpayDefault.data[0].data.last_four;
 
-const getPaymentURL = '*/account/payment-methods*';
+const getPaymentURL = '**/account/payment-methods*';
 
 describe('Default Payment Method', () => {
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe('Default Payment Method', () => {
     interceptOnce('GET', getPaymentURL, ccDefault).as('getPaymentMethod');
     cy.intercept(
       'POST',
-      `*/account/payment-methods/${gpayIdCcDefault}/make-default`,
+      `**/account/payment-methods/${gpayIdCcDefault}/make-default`,
       (req) => {
         req.reply({});
       }
@@ -94,7 +94,7 @@ describe('Default Payment Method', () => {
     interceptOnce('GET', getPaymentURL, gpayDefault).as('getPaymentMethod');
     cy.intercept(
       'POST',
-      `*/account/payment-methods/${ccIdGpayDefault}/make-default`,
+      `**/account/payment-methods/${ccIdGpayDefault}/make-default`,
       (req) => {
         req.reply({});
       }

@@ -23,7 +23,7 @@ import { paginateResponse } from 'support/util/paginate';
  * Intercepts all requests to Managed endpoints and mocks 403 HTTP errors.
  */
 export const mockUnauthorizedManagedRequests = (): Cypress.Chainable<null> => {
-  return cy.intercept('*/managed/*', makeErrorResponse('Unauthorized', 403));
+  return cy.intercept('**/managed/*', makeErrorResponse('Unauthorized', 403));
 };
 
 /**
@@ -38,7 +38,7 @@ export const mockGetServiceMonitors = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '*/managed/services*',
+    '**/managed/services*',
     paginateResponse(serviceMonitors)
   );
 };
@@ -55,7 +55,7 @@ export const mockCreateServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '*/managed/services',
+    '**/managed/services',
     makeResponse(serviceMonitor)
   );
 };
@@ -70,7 +70,7 @@ export const mockCreateServiceMonitor = (
 export const mockDeleteServiceMonitor = (
   serviceId: number
 ): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `*/managed/services/${serviceId}`, {});
+  return cy.intercept('DELETE', `**/managed/services/${serviceId}`, {});
 };
 
 /**
@@ -87,7 +87,7 @@ export const mockUpdateServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `*/managed/services/${serviceId}`,
+    `**/managed/services/${serviceId}`,
     makeResponse(serviceMonitor)
   );
 };
@@ -106,7 +106,7 @@ export const mockDisableServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `*/managed/services/${serviceId}/disable`,
+    `**/managed/services/${serviceId}/disable`,
     makeResponse({
       ...serviceMonitor,
       status: 'disabled',
@@ -130,7 +130,7 @@ export const mockEnableServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `*/managed/services/${serviceId}/enable`,
+    `**/managed/services/${serviceId}/enable`,
     makeResponse({
       ...serviceMonitor,
       status: serviceMonitorStatus,
@@ -148,7 +148,7 @@ export const mockEnableServiceMonitor = (
 export const mockGetIssues = (
   issues: ManagedIssue[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/managed/issues*', paginateResponse(issues));
+  return cy.intercept('GET', '**/managed/issues*', paginateResponse(issues));
 };
 
 /**
@@ -163,7 +163,7 @@ export const mockGetCredentials = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '*/managed/credentials*',
+    '**/managed/credentials*',
     paginateResponse(credentials)
   );
 };
@@ -180,7 +180,7 @@ export const mockCreateCredential = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '*/managed/credentials',
+    '**/managed/credentials',
     makeResponse(credential)
   );
 };
@@ -199,7 +199,7 @@ export const mockUpdateCredential = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `*/managed/credentials/${id}`,
+    `**/managed/credentials/${id}`,
     makeResponse(credential)
   );
 };
@@ -216,7 +216,7 @@ export const mockUpdateCredentialUsernamePassword = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `*/managed/credentials/${id}/update`,
+    `**/managed/credentials/${id}/update`,
     makeResponse({})
   );
 };
@@ -231,7 +231,7 @@ export const mockUpdateCredentialUsernamePassword = (
 export const mockDeleteCredential = (id: number): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `*/managed/credentials/${id}/revoke`,
+    `**/managed/credentials/${id}/revoke`,
     makeResponse({})
   );
 };
@@ -246,7 +246,11 @@ export const mockDeleteCredential = (id: number): Cypress.Chainable<null> => {
 export const mockGetContacts = (
   contacts: ManagedContact[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/managed/contacts*', paginateResponse(contacts));
+  return cy.intercept(
+    'GET',
+    '**/managed/contacts*',
+    paginateResponse(contacts)
+  );
 };
 
 /**
@@ -259,7 +263,7 @@ export const mockGetContacts = (
 export const mockCreateContact = (
   contact: ManagedContact
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/managed/contacts', makeResponse(contact));
+  return cy.intercept('POST', '**/managed/contacts', makeResponse(contact));
 };
 
 /**
@@ -274,7 +278,11 @@ export const mockUpdateContact = (
   id: number,
   contact: ManagedContact
 ): Cypress.Chainable<null> => {
-  return cy.intercept('PUT', `*/managed/contacts/${id}`, makeResponse(contact));
+  return cy.intercept(
+    'PUT',
+    `**/managed/contacts/${id}`,
+    makeResponse(contact)
+  );
 };
 
 /**
@@ -285,7 +293,7 @@ export const mockUpdateContact = (
  * @returns Cypress chainable.
  */
 export const mockDeleteContact = (id: number): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `*/managed/contacts/${id}`, makeResponse({}));
+  return cy.intercept('DELETE', `**/managed/contacts/${id}`, makeResponse({}));
 };
 
 /**
@@ -301,7 +309,7 @@ export const mockGetStats = (
   stats?: ManagedStats | undefined
 ): Cypress.Chainable<null> => {
   const mockStats = stats ? stats : managedStatsFactory.build();
-  return cy.intercept('GET', '*/managed/stats*', mockStats);
+  return cy.intercept('GET', '**/managed/stats*', mockStats);
 };
 
 /**
@@ -322,7 +330,7 @@ export const mockGetSshPublicKey = (
 
   return cy.intercept(
     'GET',
-    '*/managed/credentials/sshkey',
+    '**/managed/credentials/sshkey',
     makeResponse(publicKeyObject)
   );
 };
@@ -339,7 +347,7 @@ export const mockGetLinodeSettings = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '*/managed/linode-settings*',
+    '**/managed/linode-settings*',
     paginateResponse(linodeSettings)
   );
 };
@@ -358,7 +366,7 @@ export const mockUpdateLinodeSettings = (
 ) => {
   return cy.intercept(
     'PUT',
-    `*/managed/linode-settings/${id}`,
+    `**/managed/linode-settings/${id}`,
     makeResponse(linodeSettings)
   );
 };

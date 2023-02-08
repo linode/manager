@@ -59,7 +59,7 @@ const getPaymentMethodDataWithGpayExpired = {
 };
 
 const pastDueExpiry = 'Expired 07/20';
-const getPaymentURL = '*/account/payment-methods*';
+const getPaymentURL = '**/account/payment-methods*';
 const braintreeURL = 'https://client-analytics.braintreegateway.com/*';
 
 describe('Google Pay', () => {

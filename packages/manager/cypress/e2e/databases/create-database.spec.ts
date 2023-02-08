@@ -95,13 +95,13 @@ describe('create a database cluster, mocked data', () => {
 
         cy.intercept(
           'POST',
-          `*/databases/${configuration.dbType}/instances`,
+          `**/databases/${configuration.dbType}/instances`,
           databaseMock
         ).as('createDatabase');
 
         cy.intercept(
           'GET',
-          '*/databases/instances?page=1&page_size=25',
+          '**/databases/instances?page=1&page_size=25',
           sequentialStub([
             paginateResponse(databaseMock),
             paginateResponse({ ...databaseMock, status: 'active' }),
@@ -154,7 +154,7 @@ describe('create a database cluster, mocked data', () => {
         );
 
         // Begin intercepting and stubbing event to mock database creation completion.
-        cy.intercept('GET', '*/account/events?page_size=25', (req) => {
+        cy.intercept('GET', '**/account/events?page_size=25', (req) => {
           req.reply(paginateResponse(eventMock));
         }).as('getEvent');
 

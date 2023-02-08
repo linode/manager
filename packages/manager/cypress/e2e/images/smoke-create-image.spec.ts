@@ -13,18 +13,18 @@ describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
     const diskLabel = 'Debian 10 Disk';
     // stub incoming response
-    cy.intercept('/v4/images?page_size=100', {
+    cy.intercept('**/v4/images?page_size=100', {
       results: 0,
       data: [],
       page: 1,
       pages: 1,
     }).as('getImages');
-    cy.intercept('POST', '*/images', (req) => {
+    cy.intercept('POST', '**/images', (req) => {
       req.reply(200);
     }).as('postImages');
     createLinode().then((linode: Linode) => {
       // stub incoming disks response
-      cy.intercept(`*/linode/instances/${linode.id}/disks*`, {
+      cy.intercept(`**/linode/instances/${linode.id}/disks*`, {
         results: 2,
         data: [
           {

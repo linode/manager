@@ -33,7 +33,7 @@ describe('volume create flow', () => {
       regionLabel: regionsMap[regionId],
     };
 
-    cy.intercept('POST', '*/volumes').as('createVolume');
+    cy.intercept('POST', '**/volumes').as('createVolume');
     cy.visitWithLogin('/volumes/create', {
       localStorageOverrides: pageSizeOverride,
     });
@@ -83,7 +83,7 @@ describe('volume create flow', () => {
     };
 
     cy.defer(createLinode(linodeRequest)).then((linode) => {
-      cy.intercept('POST', '*/volumes').as('createVolume');
+      cy.intercept('POST', '**/volumes').as('createVolume');
       cy.visitWithLogin('/volumes/create', {
         localStorageOverrides: pageSizeOverride,
       });

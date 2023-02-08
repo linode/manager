@@ -54,7 +54,7 @@ const eventIntercept = (
   const numericId = numericImageIdFromString(id);
   interceptOnce(
     'GET',
-    '*/account/events*',
+    '**/account/events*',
     makeResourcePage(
       eventFactory.buildList(1, {
         created: created ? created : DateTime.local().toISO(),
@@ -83,7 +83,7 @@ const eventIntercept = (
  * @param status - Image status.
  */
 const imageIntercept = (label: string, id: string, status: ImageStatus) => {
-  cy.intercept('GET', `*/images/${id}*`, (req) => {
+  cy.intercept('GET', `**/images/${id}*`, (req) => {
     req.reply(
       imageFactory.build({
         label,
@@ -152,7 +152,7 @@ const uploadImage = (label: string) => {
       mimeType: 'application/x-gzip',
     });
   });
-  cy.intercept('POST', '*/images/upload').as('imageUpload');
+  cy.intercept('POST', '**/images/upload').as('imageUpload');
 };
 
 describe('machine image', () => {

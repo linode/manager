@@ -7,12 +7,12 @@ import {
   getVisible,
 } from 'support/helpers';
 import { ui } from 'support/ui';
-import { assertToast } from '../../support/ui/events';
+import { assertToast } from 'support/ui/events';
 
 describe('clone linode', () => {
   it('clone linode', () => {
     createLinode({ image: null }).then((linode) => {
-      cy.intercept('POST', `*/linode/instances/${linode.id}/clone`).as(
+      cy.intercept('POST', `**/linode/instances/${linode.id}/clone`).as(
         'cloneLinode'
       );
       cy.visitWithLogin(`/linodes/${linode.id}`);

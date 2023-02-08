@@ -28,7 +28,7 @@ describe('volume delete flow', () => {
     });
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      cy.intercept('DELETE', '*/volumes/*').as('deleteVolume');
+      cy.intercept('DELETE', '**/volumes/*').as('deleteVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });

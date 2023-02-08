@@ -8,5 +8,5 @@
  * @returns Cypress chainable.
  */
 export const interceptCreateLinode = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/linode/instances');
+  return cy.intercept('POST', '**/linode/instances');
 };

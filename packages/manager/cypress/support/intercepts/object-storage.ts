@@ -13,7 +13,7 @@ import { objectStorageBucketFactory } from 'src/factories/objectStorage';
  * @returns Cypress chainable.
  */
 export const interceptGetBuckets = (): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/object-storage/buckets/*');
+  return cy.intercept('GET', '**/object-storage/buckets/*');
 };
 
 /**
@@ -36,7 +36,7 @@ export const mockGetBuckets = (data: any): Cypress.Chainable<null> => {
    */
   return cy.intercept(
     'GET',
-    '*/object-storage/buckets/*',
+    '**/object-storage/buckets/*',
     sequentialStub([paginateResponse(data), paginateResponse([])])
   );
 };
@@ -47,7 +47,7 @@ export const mockGetBuckets = (data: any): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const interceptCreateBucket = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/object-storage/buckets');
+  return cy.intercept('POST', '**/object-storage/buckets');
 };
 
 /**
@@ -64,7 +64,7 @@ export const mockCreateBucket = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '*/object-storage/buckets',
+    '**/object-storage/buckets',
     objectStorageBucketFactory.build({
       label,
       cluster,
@@ -97,13 +97,13 @@ export const interceptDeleteBucket = (
   if (label && cluster) {
     return cy.intercept(
       'DELETE',
-      `*/object-storage/buckets/${cluster}/${label}`
+      `**/object-storage/buckets/${cluster}/${label}`
     );
   }
   if (cluster) {
-    return cy.intercept('DELETE', `*/object-storage/buckets/${cluster}/*`);
+    return cy.intercept('DELETE', `**/object-storage/buckets/${cluster}/*`);
   }
-  return cy.intercept('DELETE', '*/object-storage/buckets/*');
+  return cy.intercept('DELETE', '**/object-storage/buckets/*');
 };
 
 /**
@@ -121,7 +121,7 @@ export const mockDeleteBucket = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'DELETE',
-    `*/object-storage/buckets/${cluster}/${label}`,
+    `**/object-storage/buckets/${cluster}/${label}`,
     {
       statusCode,
       body: {},
@@ -147,7 +147,7 @@ export const mockGetBucketObjects = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    `*/object-storage/buckets/${cluster}/${label}/object-list?delimiter=%2F&prefix=`,
+    `**/object-storage/buckets/${cluster}/${label}/object-list?delimiter=%2F&prefix=`,
     {
       statusCode,
       body: {
@@ -190,7 +190,7 @@ export const mockUploadBucketObject = (
 
   return cy.intercept(
     'POST',
-    `*/object-storage/buckets/${cluster}/${label}/object-url`,
+    `**/object-storage/buckets/${cluster}/${label}/object-url`,
     mockResponse
   );
 };
@@ -232,7 +232,7 @@ export const mockDeleteBucketObject = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `*/object-storage/buckets/${cluster}/${label}/object-url`,
+    `**/object-storage/buckets/${cluster}/${label}/object-url`,
     {
       url: `https://${cluster}.linodeobjects.com:443/${label}/${filename}`,
       exists: true,
@@ -271,7 +271,7 @@ export const mockDeleteBucketObjectS3 = (
  * @returns Cypress chainable.
  */
 export const interceptGetAccessKeys = (): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/object-storage/keys*');
+  return cy.intercept('GET', '**/object-storage/keys*');
 };
 
 /**
@@ -284,7 +284,7 @@ export const interceptGetAccessKeys = (): Cypress.Chainable<null> => {
 export const mockGetAccessKeys = (
   response: Partial<Response>
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/object-storage/keys*', {
+  return cy.intercept('GET', '**/object-storage/keys*', {
     statusCode: 200,
     body: {},
     ...response,
@@ -297,7 +297,7 @@ export const mockGetAccessKeys = (
  * @returns Cypress chainable.
  */
 export const interceptCreateAccessKey = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/object-storage/keys');
+  return cy.intercept('POST', '**/object-storage/keys');
 };
 
 /**
@@ -310,7 +310,7 @@ export const interceptCreateAccessKey = (): Cypress.Chainable<null> => {
 export const mockCreateAccessKey = (
   response: Partial<Response>
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/object-storage/keys', {
+  return cy.intercept('POST', '**/object-storage/keys', {
     statusCode: 200,
     body: {},
     ...response,
@@ -325,7 +325,7 @@ export const mockCreateAccessKey = (
  * @returns Cypress chainable.
  */
 export const mockDeleteAccessKey = (keyId: number): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `*/object-storage/keys/${keyId}`, {
+  return cy.intercept('DELETE', `**/object-storage/keys/${keyId}`, {
     statusCode: 200,
     body: {},
   });

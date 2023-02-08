@@ -1,11 +1,4 @@
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
-import { selectRegionString } from 'support/ui/constants';
+import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
 import { randomLabel } from 'support/util/random';
 
 const multipleClick = (
@@ -36,13 +29,16 @@ describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
     const lkeId = Math.ceil(Math.random() * 9999);
     // intercept request to stub response
-    cy.intercept('POST', '*/lke/clusters', {
+    cy.intercept('POST', '**/lke/clusters', {
       id: lkeId,
     }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     fbtVisible('Add Node Pools');
     cy.contains('Cluster Label').next().children().click().type(randomLabel());
-    containsClick(selectRegionString).type('Newar{enter}');
+    cy.findByLabelText('Region')
+      .should('be.visible')
+      .focus()
+      .type('Dallas{enter}');
     cy.get('[id="kubernetes-version"]').type('{enter}');
     fbtClick('Shared CPU');
     addNodes('Linode 2 GB');

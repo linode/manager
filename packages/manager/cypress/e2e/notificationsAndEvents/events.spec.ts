@@ -1,12 +1,8 @@
-import { Event, EventAction } from '@linode/api-v4/lib/account';
+import { Event, EventAction } from '@linode/api-v4/types';
 import { eventFactory } from '@src/factories/events';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
-import {
-  containsClick,
-  containsVisible,
-  getClick,
-} from '../../support/helpers';
+import { containsClick, getClick } from 'support/helpers';
 
 const eventActions: RecPartial<EventAction>[] = [
   'backups_enable',
@@ -110,7 +106,7 @@ const events: Event[] = eventActions.map((action) => {
 
 describe('verify notification types and icons', () => {
   it(`notifications`, () => {
-    cy.intercept('*/account/events*', (req) => {
+    cy.intercept('**/account/events*', (req) => {
       req.reply(makeResourcePage(events));
     }).as('mockEvents');
     cy.visitWithLogin('/linodes');

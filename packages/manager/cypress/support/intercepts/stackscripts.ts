@@ -8,7 +8,7 @@
  * @returns Cypress chainable.
  */
 export const interceptGetStackScripts = (): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/linode/stackscripts*');
+  return cy.intercept('GET', '**/linode/stackscripts*');
 };
 
 /**
@@ -17,5 +17,5 @@ export const interceptGetStackScripts = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const interceptCreateStackScript = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/linode/stackscripts');
+  return cy.intercept('POST', '**/linode/stackscripts');
 };

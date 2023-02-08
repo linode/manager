@@ -1,4 +1,5 @@
-import { createVolume, Volume } from '@linode/api-v4/lib/volumes';
+import { createVolume } from '@linode/api-v4/lib/volumes';
+import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { randomLabel } from 'support/util/random';
@@ -24,7 +25,7 @@ describe('volume clone flow', () => {
     const cloneVolumeLabel = randomLabel();
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      cy.intercept('POST', `*/volumes/${volume.id}/clone`).as('cloneVolume');
+      cy.intercept('POST', `**/volumes/${volume.id}/clone`).as('cloneVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });

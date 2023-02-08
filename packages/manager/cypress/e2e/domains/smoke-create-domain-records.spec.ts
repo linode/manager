@@ -5,7 +5,7 @@ import {
   deleteAllTestDomains,
 } from 'support/api/domains';
 import { randomIp, randomLabel, randomDomainName } from 'support/util/random';
-import { fbtClick, getClick } from '../../support/helpers';
+import { fbtClick, getClick } from 'support/helpers';
 
 const createRecords = () => [
   {
@@ -96,9 +96,9 @@ describe('Creates Domains record with Form', () => {
     return it(rec.name, () => {
       createDomain().then((domain) => {
         // intercept create api record request
-        cy.intercept('POST', '/v4/domains/*/record*').as('apiCreateRecord');
+        cy.intercept('POST', '**/v4/domains/*/record*').as('apiCreateRecord');
         const url = `/domains/${domain.id}`;
-        cy.visitWithLogin(`/domains/${domain.id}`);
+        cy.visitWithLogin(url);
         cy.url().should('contain', url);
         fbtClick(rec.name);
         rec.fields.forEach((f) => {

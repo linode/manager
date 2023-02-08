@@ -44,7 +44,7 @@ export const mockCommonRequests = (
 
   if (resolvedOptions.account) {
     const mockedAccount = accountFactory.build();
-    cy.intercept('GET', `*/account`, mockedAccount).as('getAccount');
+    cy.intercept('GET', `**/account`, mockedAccount).as('getAccount');
     aliases.push('@getAccount');
   }
 

@@ -63,7 +63,7 @@ describe('volume attach and detach flows', () => {
     ]);
 
     cy.defer(entityPromise).then(([volume, linode]: [Volume, Linode]) => {
-      cy.intercept('POST', `*/volumes/${volume.id}/attach`).as('attachVolume');
+      cy.intercept('POST', `**/volumes/${volume.id}/attach`).as('attachVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });
@@ -114,7 +114,7 @@ describe('volume attach and detach flows', () => {
   it.skip('detaches a volume from a Linode', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
       ([linode, volume]: [Linode, Volume]) => {
-        cy.intercept('POST', `*/volumes/${volume.id}/detach`).as(
+        cy.intercept('POST', `**/volumes/${volume.id}/detach`).as(
           'detachVolume'
         );
 
