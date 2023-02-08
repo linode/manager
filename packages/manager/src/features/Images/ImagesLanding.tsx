@@ -12,20 +12,23 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell,
-} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { Order } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
+import Table from 'src/components/Table/Table';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
@@ -55,52 +58,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(),
   },
 }));
-
-export const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
-  [
-    {
-      label: 'Image',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 30,
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: true,
-      widthPercent: 15,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Created',
-      dataColumn: 'created',
-      sortable: false,
-      widthPercent: 20,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Size',
-      dataColumn: 'size',
-      sortable: true,
-      widthPercent: 15,
-    },
-    tableType === 'automatic'
-      ? {
-          label: 'Expires',
-          dataColumn: 'expires',
-          sortable: false,
-          widthPercent: 20,
-          hideOnMobile: true,
-        }
-      : null,
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 15,
-    },
-  ].filter(Boolean) as HeaderCell[];
 
 interface ImageDrawerState {
   open: boolean;
@@ -147,10 +104,10 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 
   const pagination = usePagination(1, queryKey);
 
-  const { order, orderBy } = useOrder(
+  const { order, orderBy, handleOrderChange } = useOrder(
     {
       orderBy: 'label',
-      order: 'desc',
+      order: 'asc',
     },
     `${queryKey}-order`
   );
@@ -420,30 +377,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onCancelFailed: onCancelFailedClick,
   };
 
-  const manualHeaders = getHeaders('manual');
-  const automaticHeaders = getHeaders('automatic');
-
-  const initialOrder = {
-    order: 'asc' as Order,
-    orderBy: 'label',
-  };
-
-  const manualImageRow: EntityTableRow<Image> = {
-    Component: ImageRow,
-    data: manualImages,
-    loading: false,
-    lastUpdated: 100,
-    handlers,
-  };
-
-  const autoImageRow: EntityTableRow<Image> = {
-    Component: ImageRow,
-    data: automaticImages,
-    loading: false,
-    lastUpdated: 100,
-    handlers,
-  };
-
   const renderError = (_: APIError[]) => {
     return (
       <React.Fragment>
@@ -498,10 +431,21 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     return renderError(imagesError);
   }
 
-  /** Empty State */
+  /** Empty States */
   if (!imagesData || imagesData.length === 0) {
     return renderEmpty();
   }
+
+  const noManualImages = (
+    <TableRowEmptyState message={`No Custom Images to display.`} colSpan={5} />
+  );
+
+  const noAutomaticImages = (
+    <TableRowEmptyState
+      message={`No Recovery Images to display.`}
+      colSpan={6}
+    />
+  );
 
   return (
     <React.Fragment>
@@ -520,13 +464,46 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             Linode disk.
           </Typography>
         </div>
-        <EntityTable
-          entity="image"
-          row={manualImageRow}
-          headers={manualHeaders}
-          emptyMessage={'No Custom Images to display.'}
-          initialOrder={initialOrder}
-        />
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                active={orderBy === 'label'}
+                direction={order}
+                label="Image"
+                handleClick={handleOrderChange}
+              >
+                Image
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Status</TableCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableCell>Created</TableCell>
+              </Hidden>
+              <TableSortCell
+                active={orderBy === 'size'}
+                direction={order}
+                label="Size"
+                handleClick={handleOrderChange}
+              >
+                Size
+              </TableSortCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {manualImages.length > 0
+              ? manualImages.map((manualImage) => (
+                  <ImageRow
+                    key={manualImage.id}
+                    {...manualImage}
+                    {...handlers}
+                  />
+                ))
+              : noManualImages}
+          </TableBody>
+        </Table>
       </Paper>
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -536,13 +513,49 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             deleted. They will be deleted after the indicated expiration date.
           </Typography>
         </div>
-        <EntityTable
-          entity="image"
-          row={autoImageRow}
-          headers={automaticHeaders}
-          emptyMessage={'No Recovery Images to display.'}
-          initialOrder={initialOrder}
-        />
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                active={orderBy === 'label'}
+                direction={order}
+                label="Image"
+                handleClick={handleOrderChange}
+              >
+                Image
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Status</TableCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableCell>Created</TableCell>
+              </Hidden>
+              <TableSortCell
+                active={orderBy === 'size'}
+                direction={order}
+                label="Size"
+                handleClick={handleOrderChange}
+              >
+                Size
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Expires</TableCell>
+              </Hidden>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {automaticImages.length > 0
+              ? automaticImages.map((automaticImage) => (
+                  <ImageRow
+                    key={automaticImage.id}
+                    {...automaticImage}
+                    {...handlers}
+                  />
+                ))
+              : noAutomaticImages}
+          </TableBody>
+        </Table>
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
