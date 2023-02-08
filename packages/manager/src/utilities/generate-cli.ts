@@ -37,7 +37,7 @@ const parseArray = (key: string, value: any[]) => {
     );
   } else {
     value.forEach((item) => {
-      results.push(`  --${key} ${escapeStringForCLI(item)}`);
+      results.push(`  --${key} $'${escapeStringForCLI(item)}'`);
     });
   }
   return results.join(' \\\n');
@@ -45,7 +45,7 @@ const parseArray = (key: string, value: any[]) => {
 
 const parseString = (key: string, value: string) => {
   const parsedValue = escapeStringForCLI(value);
-  return `  --${key} ${parsedValue}`;
+  return `  --${key} $'${parsedValue}'`;
 };
 
 const dataEntriesReduce = (acc: string[], [key, value]: JSONFieldToArray) => {
