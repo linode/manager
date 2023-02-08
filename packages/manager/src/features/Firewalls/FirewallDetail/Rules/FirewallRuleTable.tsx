@@ -69,8 +69,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
   },
   unmodified: {
-    backgroundColor: '#FFFFFF',
-    color: '#606469',
+    backgroundColor: theme.bg.bgPaper,
+    color: theme.textColors.tableStatic,
   },
   highlight: {
     backgroundColor: theme.bg.lightBlue1,
@@ -111,13 +111,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleHeaderRow: {
     marginTop: '5px',
-    backgroundColor: '#F9FAFA',
-    color: '#888F91',
+    backgroundColor: theme.bg.tableHeader,
+    color: theme.textColors.tableHeader,
     fontWeight: 'bold',
     height: '46px',
   },
   ruleRow: {
-    borderBottom: '1px solid #F4F5F6',
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     height: '40px',
   },
   addLabelButton: {
