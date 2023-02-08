@@ -7,16 +7,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## [2023-02-07] - v1.85.0
 
 ### Added:
-- API/CLI usage information to Linode Create
 - Databases as a User Permissions Option
 - Monthly Network Transfer Pool to select empty state landing pages
+- API/CLI usage information to Linode Create
 
 ### Changed:
 - Improve firewall rule list screen reader support
-- UX copy for "Getting Started" playlists
+- UX copy for “Getting Started” playlists
 
 ### Fixed:
-- API Tokens Refactors and Fixes
+- API Tokens revocation
 
 ## [2023-01-18] - v1.84.0
 

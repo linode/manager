@@ -6,7 +6,7 @@
 - Token related events
 
 ### Fixed:
-- Fix `api-v4` CommonJS not accepted by Node.js
+- `api-v4` CommonJS not accepted by Node.js
 
 ## [2023-01-09] - v0.85.0
 
