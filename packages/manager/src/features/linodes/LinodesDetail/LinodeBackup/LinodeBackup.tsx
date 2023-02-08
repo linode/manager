@@ -493,6 +493,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Date Created</TableCell>
               <TableCell>Duration</TableCell>
               <TableCell>Disks</TableCell>
