@@ -13,13 +13,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
     },
-    '&:hover': {
-      '& svg': {
-        '& path.st0': {
-          fill: '#f93',
-        },
-      },
-    },
   },
   fadeContainer: {
     display: 'flex',
@@ -33,15 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 12px 0 14px',
     position: 'relative',
   },
-  logoItemAkamai: {
-    paddingTop: 10,
-  },
-  logoItemAkamaiWave: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '54px 54px 0 58px',
-    position: 'relative',
-  },
   logoCollapsed: {
     background: theme.bg.primaryNavPaper,
     height: 48,
@@ -49,17 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 12,
     left: 48,
-  },
-  logoAkamaiCollapsed: {
-    background: theme.bg.primaryNavPaper,
-    height: 38,
-    width: 128,
-    position: 'absolute',
-    top: 12,
-    left: -8,
-    '& path.st0': {
-      fill: 'none',
-    },
   },
   listItem: {
     display: 'flex',

@@ -8,7 +8,9 @@ import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import Grid from 'src/components/core/Grid';
 
 const options: { label: string; flag: keyof Flags }[] = [
-  { label: 'Brand Update', flag: 'brandUpdate' },
+  { label: 'Databases', flag: 'databases' },
+  { label: 'IPv6 Sharing', flag: 'ipv6Sharing' },
+  { label: 'Database Beta', flag: 'databaseBeta' },
 ];
 
 const FeatureFlagTool: React.FC<{}> = () => {
