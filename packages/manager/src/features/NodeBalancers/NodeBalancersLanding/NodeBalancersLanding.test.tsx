@@ -11,7 +11,7 @@ describe.skip('NodeBalancers', () => {
   const component = mount(
     <StaticRouter context={{}}>
       <Provider store={store}>
-        <LinodeThemeWrapper theme="dark">
+        <LinodeThemeWrapper>
           <NodeBalancersLanding
             {...reactRouterProps}
             nodeBalancersLoading={false}
