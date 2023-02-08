@@ -129,7 +129,12 @@ const Dialog: React.FC<DialogProps> = (props) => {
       >
         <div className={classes.sticky}>
           <Grid item>
-            <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
+            <Typography
+              variant="h2"
+              id={titleID}
+              data-qa-drawer-title={title}
+              data-qa-dialog-title={title}
+            >
               {title}
             </Typography>
           </Grid>
@@ -139,7 +144,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
               onClick={props.onClose as (e: any) => void}
               className={classes.button}
               data-qa-close-drawer
-              aria-label="Close drawer"
+              aria-label="Close"
             >
               <Close />
             </Button>
