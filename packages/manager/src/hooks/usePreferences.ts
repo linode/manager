@@ -1,10 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { UserPreferences } from 'src/store/preferences/preferences.actions';
-import {
-  getUserPreferences,
-  updateUserPreferences,
-} from 'src/store/preferences/preferences.requests';
+import { updateUserPreferences } from 'src/store/preferences/preferences.requests';
 import { Dispatch } from './types';
 
 export interface Preferences {
@@ -21,11 +18,7 @@ export const usePreferences = () => {
   );
 
   const updatePreferences = (newPreferences: UserPreferences) =>
-    dispatch(getUserPreferences()).then((currentPreferences) => {
-      dispatch(
-        updateUserPreferences({ ...currentPreferences, ...newPreferences })
-      );
-    });
+    dispatch(updateUserPreferences({ ...preferences, ...newPreferences }));
 
   return {
     preferences,
