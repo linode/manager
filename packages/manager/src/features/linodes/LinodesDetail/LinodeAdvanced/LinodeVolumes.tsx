@@ -253,7 +253,12 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       );
     } else if (data) {
       return data.data.map((volume) => (
-        <VolumeTableRow key={volume.id} {...volume} {...handlers} />
+        <VolumeTableRow
+          key={volume.id}
+          {...volume}
+          {...handlers}
+          isDetailsPageRow
+        />
       ));
     }
 

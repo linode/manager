@@ -1,37 +1,26 @@
-import {
-  getKubeConfig,
-  KubernetesCluster,
-} from '@linode/api-v4/lib/kubernetes';
-import { APIError } from '@linode/api-v4/lib/types';
+import { KubernetesCluster } from '@linode/api-v4/lib/kubernetes';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Chip from 'src/components/core/Chip';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
-import { reportException } from 'src/exceptionReporting';
 import KubeClusterSpecs from 'src/features/Kubernetes/KubernetesClusterDetail/KubeClusterSpecs';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
-import { useDialog } from 'src/hooks/useDialog';
-import { useResetKubeConfigMutation } from 'src/queries/kubernetesConfig';
-import useKubernetesDashboardQuery from 'src/queries/kubernetesDashboard';
-import { deleteCluster } from 'src/store/kubernetes/kubernetes.requests';
-import { ThunkDispatch } from 'src/store/types';
-import { downloadFile } from 'src/utilities/downloadFile';
+import useFlags from 'src/hooks/useFlags';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { KubeConfigDisplay } from './KubeConfigDisplay';
+import { KubeConfigDrawer } from './KubeConfigDrawer';
+import { DeleteKubernetesClusterDialog } from './DeleteKubernetesClusterDialog';
 import {
-  getAPIErrorOrDefault,
-  getErrorStringOrDefault,
-} from 'src/utilities/errorUtils';
-import KubeConfigDisplay from './KubeConfigDisplay';
-import KubeConfigDrawer from './KubeConfigDrawer';
-import KubernetesDialog from './KubernetesDialog';
+  useKubernetesClusterMutation,
+  useKubernetesDashboardQuery,
+  useResetKubeConfigMutation,
+} from 'src/queries/kubernetes';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -97,35 +86,24 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  cluster: ExtendedCluster;
-  endpoint: string | null;
-  endpointError?: string;
-  endpointLoading: boolean;
-  kubeconfigAvailable: boolean;
-  kubeconfigError?: string;
-  handleUpdateTags: (updatedTags: string[]) => Promise<KubernetesCluster>;
-  isClusterHighlyAvailable: boolean;
-  isKubeDashboardFeatureEnabled: boolean;
+  cluster: KubernetesCluster;
 }
 
-export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
-  const {
-    cluster,
-    endpoint,
-    endpointError,
-    endpointLoading,
-    kubeconfigAvailable,
-    kubeconfigError,
-    handleUpdateTags,
-    isClusterHighlyAvailable,
-    isKubeDashboardFeatureEnabled,
-  } = props;
+export const KubeSummaryPanel = (props: Props) => {
+  const { cluster } = props;
   const classes = useStyles();
-  const { push } = useHistory();
+  const flags = useFlags();
   const { enqueueSnackbar } = useSnackbar();
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
-  const [drawerError, setDrawerError] = React.useState<string | null>(null);
-  const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    cluster.id
+  );
+
+  const isKubeDashboardFeatureEnabled = Boolean(
+    flags.kubernetesDashboardAvailability
+  );
 
   const {
     data: dashboard,
@@ -138,62 +116,10 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
     error: resetKubeConfigError,
   } = useResetKubeConfigMutation();
 
-  // Deletion handlers
-  // NB: this is using dispatch directly because I don't want to
-  // add re-render issues to our useKubernetesClusters hook, especially
-  // since we're going to switch to queries for all of these soon.
-  const dispatch: ThunkDispatch = useDispatch();
-  const _deleteCluster = () =>
-    dispatch(deleteCluster({ clusterID: cluster.id })).then(() =>
-      push('/kubernetes/clusters')
-    );
-
-  const { dialog, closeDialog, openDialog, submitDialog } = useDialog(
-    _deleteCluster
-  );
-
   const [
     resetKubeConfigDialogOpen,
     setResetKubeConfigDialogOpen,
   ] = React.useState(false);
-
-  const [kubeConfig, setKubeConfig] = React.useState<string>('');
-
-  const fetchKubeConfig = () => {
-    return getKubeConfig(cluster.id).then((response) => {
-      // Convert to utf-8 from base64
-      try {
-        return window.atob(response.kubeconfig);
-      } catch (e) {
-        reportException(e, {
-          'Encoded response': response.kubeconfig,
-        });
-        enqueueSnackbar('Error parsing your kubeconfig file', {
-          variant: 'error',
-        });
-        return;
-      }
-    });
-  };
-
-  const downloadKubeConfig = () => {
-    fetchKubeConfig()
-      .then((decodedFile) => {
-        if (decodedFile) {
-          downloadFile(`${cluster.label}-kubeconfig.yaml`, decodedFile);
-        } else {
-          // There was a parsing error, the user will see an error toast.
-          return;
-        }
-      })
-      .catch((errorResponse) => {
-        const error = getAPIErrorOrDefault(
-          errorResponse,
-          'Unable to download your kubeconfig'
-        )[0].reason;
-        enqueueSnackbar(error, { variant: 'error' });
-      });
-  };
 
   const handleResetKubeConfig = () => {
     return resetKubeConfig({ id: cluster.id }).then(() => {
@@ -205,32 +131,20 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
   };
 
   const handleOpenDrawer = () => {
-    setDrawerError(null);
-    setDrawerLoading(true);
     setDrawerOpen(true);
-    fetchKubeConfig()
-      .then((decodedFile) => {
-        setDrawerLoading(false);
-        if (decodedFile) {
-          setKubeConfig(decodedFile);
-        } else {
-          // There was a parsing error; the user will see an error toast.
-        }
-      })
-      .catch((error: APIError[]) => {
-        setDrawerError(error[0]?.reason || null);
-        setDrawerLoading(false);
-      });
+  };
+
+  const handleUpdateTags = (newTags: string[]) => {
+    return updateKubernetesCluster({
+      tags: newTags,
+    });
   };
 
   return (
     <>
       <Paper className={classes.root}>
         <Grid container className={classes.mainGridContainer}>
-          <KubeClusterSpecs
-            cluster={cluster}
-            isClusterHighlyAvailable={isClusterHighlyAvailable}
-          />
+          <KubeClusterSpecs cluster={cluster} />
           <Grid
             item
             container
@@ -240,14 +154,9 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             lg={4}
           >
             <KubeConfigDisplay
+              clusterId={cluster.id}
               clusterLabel={cluster.label}
-              endpoint={endpoint}
-              endpointError={endpointError}
-              endpointLoading={endpointLoading}
-              kubeconfigAvailable={kubeconfigAvailable}
-              kubeconfigError={kubeconfigError}
               isResettingKubeConfig={isResettingKubeConfig}
-              downloadKubeConfig={downloadKubeConfig}
               handleOpenDrawer={handleOpenDrawer}
               setResetKubeConfigDialogOpen={setResetKubeConfigDialogOpen}
             />
@@ -261,7 +170,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
             direction="column"
           >
             <Grid item className={classes.actionRow}>
-              {isClusterHighlyAvailable ? (
+              {cluster.control_plane.high_availability ? (
                 <Chip
                   label="HA CLUSTER"
                   variant="outlined"
@@ -271,7 +180,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               ) : null}
               {isKubeDashboardFeatureEnabled ? (
                 <Button
-                  className={`${classes.dashboard}`}
+                  className={classes.dashboard}
                   buttonType="secondary"
                   compactY
                   disabled={Boolean(dashboardError) || !dashboard}
@@ -286,7 +195,7 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
               <Button
                 buttonType="secondary"
                 compactY
-                onClick={() => openDialog(cluster.id)}
+                onClick={() => setIsDeleteDialogOpen(true)}
                 style={{ paddingRight: 0 }}
               >
                 Delete Cluster
@@ -300,21 +209,16 @@ export const KubeSummaryPanel: React.FunctionComponent<Props> = (props) => {
       </Paper>
 
       <KubeConfigDrawer
-        kubeConfig={kubeConfig}
+        clusterId={cluster.id}
         clusterLabel={cluster.label}
         open={drawerOpen}
         closeDrawer={() => setDrawerOpen(false)}
-        error={drawerError}
-        loading={drawerLoading}
       />
-      <KubernetesDialog
-        open={dialog.isOpen}
-        loading={dialog.isLoading}
-        error={dialog.error}
+      <DeleteKubernetesClusterDialog
+        open={isDeleteDialogOpen}
         clusterLabel={cluster.label}
-        clusterPools={cluster.node_pools}
-        onClose={closeDialog}
-        onDelete={() => submitDialog(cluster.id)}
+        clusterId={cluster.id}
+        onClose={() => setIsDeleteDialogOpen(false)}
       />
       <ConfirmationDialog
         open={resetKubeConfigDialogOpen}

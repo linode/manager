@@ -327,7 +327,11 @@ export const UserMenu: React.FC<{}> = () => {
             <KeyboardArrowDown className={classes.caret} />
           </MenuButton>
         </Tooltip>
-        <MenuPopover className={classes.menuPopover} position={positionRight}>
+        <MenuPopover
+          className={classes.menuPopover}
+          position={positionRight}
+          data-qa-user-menu
+        >
           <MenuItems className={classes.menuItemList}>
             <div className={classes.userName}>
               <strong>{userName}</strong>

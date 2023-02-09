@@ -1,26 +1,29 @@
+import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import CheckoutBar from 'src/components/CheckoutBar';
+import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Notice from 'src/components/Notice';
 import renderGuard from 'src/components/RenderGuard';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
+import {
+  getKubeHighAvailability,
+  getMonthlyPrice,
+} from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { useProfile } from 'src/queries/profile';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
-import { PoolNodeWithPrice } from '../types';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
 
 export interface Props {
-  pools: PoolNodeWithPrice[];
+  pools: KubeNodePoolResponse[];
   submitting: boolean;
-  typesData: ExtendedType[];
   createCluster: () => void;
-  updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
+  updatePool: (poolIdx: number, updatedPool: KubeNodePoolResponse) => void;
   removePool: (poolIdx: number) => void;
   highAvailability: boolean;
   setHighAvailability: (ha: boolean) => void;
@@ -35,7 +38,6 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
     submitting,
     createCluster,
     removePool,
-    typesData,
     updatePool,
     highAvailability,
     setHighAvailability,
@@ -50,6 +52,7 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: agreements } = useAccountAgreements();
+  const { data: types, isLoading } = useAllLinodeTypesQuery();
 
   const showGDPRCheckbox =
     isEURegion(region) &&
@@ -62,11 +65,19 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   );
   const { showHighAvailability } = getKubeHighAvailability(account);
 
+  if (isLoading) {
+    return <CircleProgress />;
+  }
+
   return (
     <CheckoutBar
       data-qa-checkout-bar
       heading="Cluster Summary"
-      calculatedPrice={getTotalClusterPrice(pools, highAvailability)}
+      calculatedPrice={getTotalClusterPrice(
+        pools,
+        types ?? [],
+        highAvailability
+      )}
       isMakingRequest={submitting}
       disabled={disableCheckout}
       onDeploy={createCluster}
@@ -86,10 +97,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
               updatePool(idx, { ...thisPool, count: updatedCount })
             }
             onRemove={() => removePool(idx)}
-            price={thisPool.totalMonthlyPrice}
+            price={getMonthlyPrice(thisPool.type, thisPool.count, types ?? [])}
             poolType={
-              typesData.find((thisType) => thisType.id === thisPool.type) ||
-              null
+              types?.find((thisType) => thisType.id === thisPool.type) || null
             }
           />
         ))}

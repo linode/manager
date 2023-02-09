@@ -1,35 +1,21 @@
-import { VolumeStatus } from '@linode/api-v4/lib/volumes';
 import * as React from 'react';
+import { volumeFactory } from 'src/factories';
+import { VolumeTableRow } from './VolumeTableRow';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
-import { volumes } from 'src/__data__/volumes';
-import { VolumeTableRow, CombinedProps } from './VolumeTableRow';
+import { dcDisplayNames } from 'src/constants';
 
-const volumeWithLinodeLabel = {
-  ...volumes[2],
-  linodeLabel: 'thisLinode',
-};
-
-const unattachedVolume = {
-  ...volumes[0],
-  linodeLabel: '',
-  linode_id: null,
-  linode_label: null,
-  linodeStatus: 'active',
-};
-
-const props: CombinedProps = {
-  id: 0,
-  label: volumeWithLinodeLabel.linodeLabel,
-  region: '',
-  size: 0,
-  status: 'active' as VolumeStatus,
-  tags: [],
-  created: '',
-  updated: '',
-  filesystem_path: '',
+const attachedVolume = volumeFactory.build({
+  region: 'us-east',
   linode_id: 0,
-  linode_label: 'linode-0',
-  hardware_type: 'nvme',
+  linode_label: 'thisLinode',
+});
+
+const unattachedVolume = volumeFactory.build({
+  linode_label: null,
+  linode_id: null,
+});
+
+const handlers = {
   openForEdit: jest.fn(),
   openForResize: jest.fn(),
   openForClone: jest.fn(),
@@ -42,16 +28,49 @@ const props: CombinedProps = {
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<VolumeTableRow {...props} />)
+      wrapWithTableBody(<VolumeTableRow {...handlers} {...attachedVolume} />)
     );
-    expect(getByText(volumeWithLinodeLabel.linodeLabel));
+
+    // Check row for basic values
+    expect(getByText(attachedVolume.label));
+    expect(getByText(attachedVolume.size, { exact: false }));
+    expect(getByText(dcDisplayNames[attachedVolume.region]));
+    expect(getByText(attachedVolume.linode_label!));
+
+    // Make sure there is a detach button
+    expect(getByText('Detach'));
   });
 
   it('should show Unattached if the Volume is not attached to a Linode', () => {
-    const unattachedProps = { ...props, volume: unattachedVolume };
     const { getByText } = renderWithTheme(
-      wrapWithTableBody(<VolumeTableRow {...unattachedProps} />)
+      wrapWithTableBody(<VolumeTableRow {...handlers} {...unattachedVolume} />)
     );
+    expect(getByText('Unattached'));
+    // Make sure there is an attach button
+    expect(getByText('Attach'));
+  });
+});
+
+describe('Volume table row - for linodes detail page', () => {
+  it("should show the attached Linode's label if present", () => {
+    const { getByText, queryByText } = renderWithTheme(
+      wrapWithTableBody(
+        <VolumeTableRow {...handlers} {...attachedVolume} isDetailsPageRow />
+      )
+    );
+
+    // Check row for basic values
+    expect(getByText(attachedVolume.label));
+    expect(getByText(attachedVolume.size, { exact: false }));
+
+    // Because we are on a Linode details page that has the region, we don't need to show
+    // the volume's region. A Volume attached to a Linode must be in the same region.
+    expect(queryByText(dcDisplayNames[attachedVolume.region])).toBeNull();
+
+    // Because we are on a Linode details page, we don't need to show the Linode label
+    expect(queryByText(attachedVolume.linode_label!)).toBeNull();
+
+    // Make sure there is a detach button
     expect(getByText('Detach'));
   });
 });

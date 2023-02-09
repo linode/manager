@@ -9,7 +9,10 @@ const sampleMarkdown =
 describe('HighlightedMarkdown component', () => {
   it('should highlight text consistently', () => {
     const { asFragment } = renderWithTheme(
-      <HighlightedMarkdown textOrMarkdown={sampleMarkdown} />
+      <HighlightedMarkdown
+        textOrMarkdown={sampleMarkdown}
+        language={'javascript'}
+      />
     );
     expect(asFragment()).toMatchSnapshot();
   });
