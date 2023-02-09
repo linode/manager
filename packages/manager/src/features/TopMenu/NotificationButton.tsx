@@ -67,7 +67,7 @@ export const NotificationButton: React.FC<{}> = (_) => {
     <Menu id={menuId}>
       {({ isExpanded }) => (
         <>
-          <TopMenuIcon title="Notifications" role="button">
+          <TopMenuIcon title="Notifications">
             <MenuButton
               aria-label="Notifications"
               className={`${iconClasses.icon} ${classes.menuButton} ${

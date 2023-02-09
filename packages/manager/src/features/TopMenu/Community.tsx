@@ -13,7 +13,7 @@ export const Help: React.FC<{ className?: string }> = ({ className }) => {
       className={classNames(className, { [classes.icon]: true })}
       to="https://linode.com/community"
     >
-      <TopMenuIcon title="Linode Cloud Community" role="link">
+      <TopMenuIcon title="Linode Cloud Community">
         <Community />
       </TopMenuIcon>
     </Link>
