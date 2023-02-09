@@ -7,7 +7,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
-import usePreferences from 'src/hooks/usePreferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { indicatePromise } from 'src/utilities/indicatePromise';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -34,7 +34,8 @@ const ProfileSettings = () => {
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
 
-  const { preferences, updatePreferences } = usePreferences();
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const toggleTheme = () => {
     const newTheme = preferences?.theme === 'dark' ? 'light' : 'dark';
