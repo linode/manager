@@ -70,7 +70,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   unmodified: {
     backgroundColor: theme.bg.bgPaper,
-    color: theme.textColors.tableStatic,
   },
   highlight: {
     backgroundColor: theme.bg.lightBlue1,
@@ -118,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleRow: {
     borderBottom: `1px solid ${theme.borderColors.borderTable}`,
-    height: '40px',
+    color: theme.textColors.tableStatic,
   },
   addLabelButton: {
     ...theme.applyLinkStyles,
@@ -306,7 +305,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                     <Grid
                       container
                       data-testid={'table-row-empty'}
-                      className={classNames(classes.unmodified)}
+                      className={classNames(
+                        classes.unmodified,
+                        classes.ruleRow
+                      )}
                       style={{
                         padding: 8,
                         width: '100%',
@@ -542,7 +544,11 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   return (
     <Grid
       container
-      className={classNames(classes.policyRow, classes.unmodified)}
+      className={classNames(
+        classes.policyRow,
+        classes.unmodified,
+        classes.ruleRow
+      )}
       tabIndex={0}
     >
       <Grid item xs={colSpan} className={classes.policyText}>
