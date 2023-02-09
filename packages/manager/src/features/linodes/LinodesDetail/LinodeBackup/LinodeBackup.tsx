@@ -150,6 +150,7 @@ interface PreloadedProps {
 
 interface State {
   backups: LinodeBackupsResponse;
+  getBackupsTimer: NodeJS.Timeout | null;
   snapshotForm: {
     label: string;
     errors?: APIError[];
@@ -200,6 +201,7 @@ export const aggregateBackups = (
 class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
+    getBackupsTimer: null,
     snapshotForm: {
       label: '',
     },
@@ -256,15 +258,20 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       return;
     }
     if (
-      this.state.backups.snapshot.in_progress.status === 'needsPostProcessing'
+      this.state.backups.snapshot.in_progress.status ===
+        'needsPostProcessing' &&
+      this.state.getBackupsTimer === null
     ) {
-      setTimeout(
-        () =>
-          getLinodeBackups(this.props.linodeID).then((data) => {
-            this.setState({ backups: data });
-          }),
-        15000
-      );
+      this.setState({
+        getBackupsTimer: setTimeout(
+          () =>
+            getLinodeBackups(this.props.linodeID).then((data) => {
+              this.setState({ backups: data });
+              this.setState({ getBackupsTimer: null });
+            }),
+          15000
+        ),
+      });
     }
   }
 
