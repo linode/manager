@@ -463,6 +463,7 @@ export const BucketDetail: React.FC = () => {
       <CreateFolderDrawer
         bucketName={bucketName}
         clusterId={clusterId}
+        prefix={prefix}
         open={isCreateFolderDrawerOpen}
         onClose={() => setIsCreateFolderDrawerOpen(false)}
         maybeAddObjectToTable={maybeAddObjectToTable}
