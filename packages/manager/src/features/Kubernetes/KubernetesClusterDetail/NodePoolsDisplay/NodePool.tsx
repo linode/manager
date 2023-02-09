@@ -1,5 +1,5 @@
 import {
-  AutoscaleNodePool,
+  AutoscaleSettings,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
@@ -14,7 +14,7 @@ interface Props {
   poolId: number;
   typeLabel: string;
   nodes: PoolNodeResponse[];
-  autoscaler: AutoscaleNodePool;
+  autoscaler: AutoscaleSettings;
   handleClickResize: (poolId: number) => void;
   openAutoscalePoolDialog: (poolId: number) => void;
   openDeletePoolDialog: (poolId: number) => void;

@@ -1,27 +1,27 @@
 {
   "name": "@linode/validation",
-  "version": "0.17.1",
+  "version": "0.18.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
-  "main": "lib/index.js",
-  "module": "lib/esm/index.js",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
   "exports": {
     ".": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./lib": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./lib/*": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     }
   },
   "types": "./lib/index.d.ts",
-  "browser": "./lib/iife/index.js",
-  "unpkg": "./lib/iife/index.js",
+  "browser": "./lib/index.global.js",
+  "unpkg": "./lib/index.global.js",
   "files": [
     "lib"
   ],
