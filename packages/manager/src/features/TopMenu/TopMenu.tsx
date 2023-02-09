@@ -87,11 +87,7 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               size="large"
               data-testid="open-nav-menu"
             >
-              <TopMenuIcon
-                title={navHoverText}
-                key={navHoverText}
-                role="button"
-              >
+              <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon style={{ marginTop: 6 }} />
               </TopMenuIcon>
             </IconButton>
@@ -103,11 +99,7 @@ const TopMenu: React.FC<PropsWithStyles> = (props) => {
               onClick={openSideMenu}
               size="large"
             >
-              <TopMenuIcon
-                title={navHoverText}
-                key={navHoverText}
-                role="button"
-              >
+              <TopMenuIcon title={navHoverText} key={navHoverText}>
                 <MenuIcon style={{ marginTop: 6 }} />
               </TopMenuIcon>
             </IconButton>

@@ -13,7 +13,7 @@ export const Help: React.FC<{}> = (_) => {
       className={classes.icon}
       to="/support"
     >
-      <TopMenuIcon title={'Help & Support'} role={'link'}>
+      <TopMenuIcon title={'Help & Support'}>
         <HelpIcon />
       </TopMenuIcon>
     </Link>

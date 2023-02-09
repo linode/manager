@@ -4,7 +4,6 @@ import Tooltip from 'src/components/core/Tooltip';
 interface Props {
   title: string;
   children: JSX.Element;
-  role: string;
 }
 
 export const TopMenuIcon: React.FC<Props> = (props) => {
@@ -15,7 +14,7 @@ export const TopMenuIcon: React.FC<Props> = (props) => {
       disableTouchListener
       enterDelay={500}
       leaveDelay={0}
-      role={'link' || 'button'}
+      describeChild={true}
     >
       <div>{props.children}</div>
     </Tooltip>
