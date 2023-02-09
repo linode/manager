@@ -3,7 +3,7 @@ import * as React from 'react';
 import { ThemeProvider, Theme } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
 import { isProductionBuild } from './constants';
-import usePreferences from './hooks/usePreferences';
+import { usePreferences } from './queries/preferences';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -56,9 +56,9 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
 };
 
 const LinodeThemeWrapper: React.FC = ({ children }) => {
-  const { preferences } = usePreferences();
+  const { data: preferences } = usePreferences();
 
-  const themeChoice = preferences?.theme ?? 'light';
+  const themeChoice: ThemeChoice = preferences?.theme ?? 'light';
 
   React.useEffect(() => {
     toggleTheme(themeChoice);
