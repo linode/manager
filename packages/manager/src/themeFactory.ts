@@ -18,7 +18,7 @@ type Colors = MergeTypes<LightModeColors, DarkModeColors>;
 type LightModeBgColors = typeof bg;
 type DarkModeBgColors = typeof customDarkModeOptions.bg;
 
-type BgColors = MergeTypes<LightModeBgColors, DarkModeColors>;
+type BgColors = MergeTypes<LightModeBgColors, DarkModeBgColors>;
 
 type LightModeTextColors = typeof textColors;
 type DarkModeTextColors = typeof customDarkModeOptions.textColors;
