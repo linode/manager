@@ -104,7 +104,6 @@ export interface Props {
   // as they don't have text (just an icon)
   ariaLabel: string;
   className?: string;
-  disabled?: boolean;
 }
 
 type CombinedProps = Props;

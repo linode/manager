@@ -10,7 +10,6 @@ export interface Tab {
 
 interface Props {
   tabs: Tab[];
-  [index: string]: any;
   noLink?: boolean; // @todo: remove this prop if we use NavTab widely.
 }
 

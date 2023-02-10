@@ -14,7 +14,7 @@ const DisplaySettings = React.lazy(() => import('./DisplaySettings'));
 const AuthenticationSettings = React.lazy(
   () => import('./AuthenticationSettings')
 );
-const APITokens = React.lazy(() => import('./APITokens'));
+const APITokens = React.lazy(() => import('./APITokens/APITokens'));
 
 interface Props {
   toggleTheme: () => void;

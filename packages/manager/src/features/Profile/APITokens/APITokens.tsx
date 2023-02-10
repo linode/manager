@@ -1,10 +1,11 @@
+import { Stack } from '@mui/material';
 import * as React from 'react';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import APITokenTable from './APITokenTable';
 
-export const APITokens: React.FC = () => {
+const APITokens = () => {
   return (
-    <>
+    <Stack spacing={2}>
       <DocumentTitleSegment segment="API Tokens" />
       <APITokenTable
         title="Personal Access Tokens"
@@ -14,7 +15,7 @@ export const APITokens: React.FC = () => {
         title="Third Party Access Tokens"
         type="OAuth Client Token"
       />
-    </>
+    </Stack>
   );
 };
 

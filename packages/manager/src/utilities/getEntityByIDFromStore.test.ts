@@ -22,7 +22,6 @@ describe('getEntityByIDFromStore utility function', () => {
 
   it('should return undefined if the entity does not exist in the store', () => {
     expect(getEntityByIDFromStore('linode', 234567)).toBeUndefined();
-    expect(getEntityByIDFromStore('volume', 23456)).toBeUndefined();
   });
 
   it('should return undefined if the type is wrong or undefined', () => {

@@ -1,17 +1,21 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import CopyTooltip from 'src/components/CopyTooltip/CopyTooltip';
 
-<Meta title="Elements/Tooltip/Copy Tooltip" component={CopyTooltip} />
+<Meta
+  title="Elements/Tooltip/Copy Tooltip"
+  component={CopyTooltip}
+  decorators={[
+    (Story) => (
+      <div style={{marginTop: '1.5em'}}>
+        <Story />
+      </div>
+    )
+  ]}
+/>
 
 export const Template = (args) => {
   return (
-    <div
-      style={{
-        marginTop: '1.5em',
-      }}
-    >
-      <CopyTooltip {...args} />
-    </div>
+    <CopyTooltip {...args} />
   );
 };
 
@@ -32,13 +36,10 @@ If horizontal space is limited, truncate the content.
       text: {
         description: 'Text to copy to the clipboard.',
       },
-      displayText: {
-        description: 'Text to display next to the copy icon.',
-      },
     }}
   >
     {Template.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable story="Copy Tooltip" exclude={['className']} />
+<ArgsTable story="Copy Tooltip" exclude={['className']} sort="requiredFirst"/>

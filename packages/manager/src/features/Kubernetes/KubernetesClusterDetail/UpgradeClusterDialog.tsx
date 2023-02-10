@@ -1,19 +1,19 @@
-import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { useKubernetesClusterMutation } from 'src/queries/kubernetes';
+import { HACopy } from '../KubeCheckoutBar/HACheckbox';
+import { useSnackbar } from 'notistack';
 import {
   localStorageWarning,
   nodesDeletionWarning,
 } from 'src/features/Kubernetes/kubeUtils';
-import useKubernetesClusters from 'src/hooks/useKubernetesClusters';
-import { HACopy } from '../KubeCheckoutBar/HACheckbox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   noticeHeader: {
@@ -35,41 +35,16 @@ interface Props {
   clusterID: number;
 }
 
-const renderActions = (
-  disabled: boolean,
-  onClose: () => void,
-  onUpgrade: () => void
-) => {
-  return (
-    <ActionsPanel>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onUpgrade}
-        disabled={disabled}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Upgrade to HA
-      </Button>
-    </ActionsPanel>
-  );
-};
-
-const UpgradeClusterDialog: React.FC<Props> = (props) => {
+export const UpgradeKubernetesClusterToHADialog = (props: Props) => {
   const { open, onClose, clusterID } = props;
   const { enqueueSnackbar } = useSnackbar();
   const [checked, setChecked] = React.useState(false);
+
   const toggleChecked = () => setChecked((isChecked) => !isChecked);
 
-  const { updateKubernetesCluster } = useKubernetesClusters();
+  const { mutateAsync: updateKubernetesCluster } = useKubernetesClusterMutation(
+    clusterID
+  );
   const [error, setError] = React.useState<string | undefined>();
   const [submitting, setSubmitting] = React.useState(false);
   const classes = useStyles();
@@ -77,7 +52,7 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
   const onUpgrade = () => {
     setSubmitting(true);
     setError(undefined);
-    updateKubernetesCluster(clusterID, {
+    updateKubernetesCluster({
       control_plane: { high_availability: true },
     })
       .then(() => {
@@ -91,12 +66,35 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
       });
   };
 
+  const actions = (
+    <ActionsPanel>
+      <Button
+        buttonType="secondary"
+        onClick={onClose}
+        data-qa-cancel
+        data-testid={'dialog-cancel'}
+      >
+        Cancel
+      </Button>
+      <Button
+        buttonType="primary"
+        onClick={onUpgrade}
+        disabled={!checked}
+        loading={submitting}
+        data-qa-confirm
+        data-testid={'dialog-confirm'}
+      >
+        Upgrade to HA
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
     <ConfirmationDialog
       open={open}
       title="Upgrade to High Availability"
       onClose={onClose}
-      actions={renderActions(!checked || submitting, onClose, onUpgrade)}
+      actions={actions}
       error={error}
     >
       <HACopy />
@@ -125,5 +123,3 @@ const UpgradeClusterDialog: React.FC<Props> = (props) => {
     </ConfirmationDialog>
   );
 };
-
-export default UpgradeClusterDialog;

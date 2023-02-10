@@ -1,3 +1,4 @@
+import { KubeNodePoolResponse } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -8,8 +9,6 @@ import SelectPlanQuantityPanel, {
   ExtendedType,
   ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
-import { getMonthlyPrice } from '.././kubeUtils';
-import { PoolNodeWithPrice } from '.././types';
 
 interface Props {
   types: ExtendedType[];
@@ -17,7 +16,7 @@ interface Props {
   typesError?: string;
   apiError?: string;
   isOnCreate?: boolean;
-  addNodePool: (pool: Partial<PoolNodeWithPrice>) => any; // Has to accept both extended and non-extended pools
+  addNodePool: (pool: Partial<KubeNodePoolResponse>) => any; // Has to accept both extended and non-extended pools
 }
 
 type CombinedProps = Props;
@@ -69,7 +68,6 @@ const Panel: React.FunctionComponent<CombinedProps> = (props) => {
       id: Math.random(),
       type: selectedPlanType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedPlanType, nodeCount, types),
     });
     updatePlanCount(selectedPlanType, 0);
     setSelectedType(undefined);
