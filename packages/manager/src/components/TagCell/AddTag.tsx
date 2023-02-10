@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
-import { useTags } from 'src/queries/tags';
+import { updateTagsData, useTags } from 'src/queries/tags';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
@@ -56,6 +56,9 @@ export const AddTag: React.FC<Props> = (props) => {
       setIsLoading(true);
       addTag(newTag.value)
         .then(() => {
+          if (accountTags) {
+            updateTagsData([...accountTags, newTag]);
+          }
           if (onClose) {
             onClose();
           }

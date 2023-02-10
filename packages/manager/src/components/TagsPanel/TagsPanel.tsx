@@ -7,7 +7,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Theme, makeStyles } from 'src/components/core/styles';
-import { useTags } from 'src/queries/tags';
+import { updateTagsData, useTags } from 'src/queries/tags';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -229,6 +229,9 @@ const TagsPanel: React.FC<Props> = (props) => {
         .then(() => {
           // set the input value to blank on submit
           setTagInputValue('');
+          if (userTags) {
+            updateTagsData([...userTags, value]);
+          }
         })
         .catch((e) => {
           const tagError = getErrorStringOrDefault(
