@@ -73,17 +73,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
   },
   errorList: {
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   warning: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -92,17 +92,20 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   warningList: {
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
   success: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
   },
   successList: {
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
+  },
+  marketing: {
+    borderLeft: `5px solid ${theme.color.green}`,
   },
   flag: {
     marginRight: theme.spacing(2),
@@ -116,6 +119,7 @@ export interface Props extends GridProps {
   important?: boolean;
   warning?: boolean;
   success?: boolean;
+  marketing?: boolean;
   typeProps?: TypographyProps;
   className?: string;
   flag?: boolean;
@@ -140,6 +144,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
     errorGroup,
     warning,
     success,
+    marketing,
     typeProps,
     children,
     flag,
@@ -201,11 +206,13 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.important]: important,
         [errorScrollClassName]: error,
         [classes.breakWords]: breakWords,
+        [classes.marketing]: marketing && !notificationList,
         [classes.error]: error && !notificationList,
         [classes.errorList]: error && notificationList,
         [classes.success]: success && !notificationList,
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
+        [classes.marketing]: marketing,
         [classes.warningList]: warning && notificationList,
         notice: true,
         ...(className && { [className]: true }),

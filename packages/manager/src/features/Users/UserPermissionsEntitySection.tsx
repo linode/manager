@@ -12,7 +12,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { createDisplayPage } from 'src/components/Paginate';
 import Typography from 'src/components/core/Typography';
 
-export const entityNameMap = {
+export const entityNameMap: Record<GrantType, string> = {
   linode: 'Linodes',
   stackscript: 'StackScripts',
   image: 'Images',
@@ -21,6 +21,7 @@ export const entityNameMap = {
   domain: 'Domains',
   longview: 'Longview Clients',
   firewall: 'Firewalls',
+  database: 'Databases',
 };
 
 interface Props {

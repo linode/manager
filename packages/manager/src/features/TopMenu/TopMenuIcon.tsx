@@ -9,7 +9,13 @@ interface Props {
 export const TopMenuIcon: React.FC<Props> = (props) => {
   const { title } = props;
   return (
-    <Tooltip title={title} disableTouchListener enterDelay={500} leaveDelay={0}>
+    <Tooltip
+      title={title}
+      disableTouchListener
+      enterDelay={500}
+      leaveDelay={0}
+      describeChild={true}
+    >
       <div>{props.children}</div>
     </Tooltip>
   );

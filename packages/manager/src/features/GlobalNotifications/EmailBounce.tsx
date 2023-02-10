@@ -4,10 +4,10 @@ import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import {
   makeStyles,
+  Theme,
   useMediaQuery,
   useTheme,
 } from 'src/components/core/styles';
-import { Theme } from 'src/components/core/styles/createMuiTheme';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';

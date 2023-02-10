@@ -1,77 +1,70 @@
-import { mergeDeepRight } from 'ramda';
-import { adaptV4Theme } from '@mui/material/styles';
-import createMuiTheme, {
-  DeprecatedThemeOptions,
-} from 'src/components/core/styles/createMuiTheme';
+import { ThemeOptions } from '@mui/material/styles';
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
+import { customDarkModeOptions } from './themes';
+
+type ThemeName = 'lightTheme' | 'darkTheme';
+
+type Fonts = typeof primaryFonts;
+
+type MergeTypes<A, B> = Omit<A, keyof B> &
+  Omit<B, keyof A> &
+  { [K in keyof A & keyof B]: A[K] | B[K] };
+
+type LightModeColors = typeof color;
+type DarkModeColors = typeof customDarkModeOptions.color;
+
+type Colors = MergeTypes<LightModeColors, DarkModeColors>;
+
+type LightModeBgColors = typeof bg;
+type DarkModeBgColors = typeof customDarkModeOptions.bg;
+
+type BgColors = MergeTypes<LightModeBgColors, DarkModeBgColors>;
+
+type LightModeTextColors = typeof textColors;
+type DarkModeTextColors = typeof customDarkModeOptions.textColors;
+type TextColors = MergeTypes<LightModeTextColors, DarkModeTextColors>;
+
+type LightModeBorderColors = typeof borderColors;
+type DarkModeBorderColors = typeof customDarkModeOptions.borderColors;
+
+type BorderColors = MergeTypes<LightModeBorderColors, DarkModeBorderColors>;
 
 /**
- * Augmenting Palette and Palette Options
- * @todo Move status out of the palette and add it as a custom ThemeOption.
- */
-
-declare module '@mui/material/styles/createPalette' {
-  interface Palette {
-    status: {
-      success: string;
-      successDark: string;
-      warning: string;
-      warningDark: string;
-      error: string;
-      errorDark: string;
-    };
-  }
-
-  interface PaletteOptions {
-    status?: {
-      success?: string;
-      successDark?: string;
-      warning?: string;
-      warningDark?: string;
-      error?: string;
-      errorDark?: string;
-    };
-  }
-}
-
-/**
- * Augmenting the Theme and DeprecatedThemeOptions.
+ * Augmenting the Theme and ThemeOptions.
+ * This allows us to add cutom fields to the theme.
+ * Avoid doing this unless you have a good reason.
  */
 declare module '@mui/material/styles/createTheme' {
   interface Theme {
-    name: string;
-    '@keyframes rotate': any;
-    '@keyframes dash': any;
-    bg: any;
-    textColors: any;
-    borderColors: any;
-    color: any;
+    name: ThemeName;
+    bg: BgColors;
+    color: Colors;
+    textColors: TextColors;
+    borderColors: BorderColors;
+    font: Fonts;
     graphs: any;
     visually: any;
-    font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
     applyLinkStyles?: any;
     applyStatusPillStyles?: any;
     applyTableHeaderStyles?: any;
-
-    notificationList: any;
-    status: any;
   }
 
-  interface DeprecatedThemeOptions {
-    name?: string;
-    '@keyframes rotate'?: any;
-    '@keyframes dash'?: any;
-    bg?: any;
-    color?: any;
+  interface ThemeOptions {
+    name: ThemeName;
+    bg?: LightModeBgColors | DarkModeBgColors;
+    color?: LightModeColors | DarkModeColors;
+    textColors?: LightModeTextColors | DarkModeTextColors;
+    borderColors?: LightModeBorderColors | DarkModeBorderColors;
+    font?: Fonts;
     graphs?: any;
     visually?: any;
-    font?: any;
     animateCircleIcon?: any;
     addCircleHoverEffect?: any;
-    notificationList?: any;
-    status?: any;
+    applyLinkStyles?: any;
+    applyStatusPillStyles?: any;
+    applyTableHeaderStyles?: any;
   }
 }
 
@@ -85,19 +78,20 @@ export const breakpoints = createBreakpoints({
   },
 });
 
-const textColors = {
-  linkActiveLight: '#2575d0',
-  headlineStatic: '#32363c',
-  tableHeader: '#888f91',
-  tableStatic: '#606469',
-  textAccessTable: '#606469',
-};
-
-const borderColors = {
-  borderTypography: '#e3e5e8',
-  borderTable: '#f4f5f6',
-  divider: '#e3e5e8',
-};
+const bg = {
+  app: '#f4f5f6',
+  main: '#f4f4f4',
+  offWhite: '#fbfbfb',
+  lightBlue1: '#f0f7ff',
+  lightBlue2: '#e5f1ff',
+  white: '#fff',
+  tableHeader: '#f9fafa',
+  primaryNavPaper: '#3a3f46',
+  mainContentBanner: '#33373d',
+  bgPaper: '#ffffff',
+  bgAccessRow: '#fafafa',
+  bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
+} as const;
 
 const primaryColors = {
   main: '#3683dc',
@@ -109,11 +103,57 @@ const primaryColors = {
   white: '#fff',
 };
 
+const color = {
+  headline: primaryColors.headline,
+  red: '#ca0813',
+  orange: '#ffb31a',
+  yellow: '#fecf2f',
+  green: '#00b159',
+  teal: '#17cf73',
+  border2: '#c5c6c8',
+  border3: '#eee',
+  grey1: '#abadaf',
+  grey2: '#e7e7e7',
+  grey3: '#ccc',
+  grey4: '#8C929D',
+  grey5: '#f5f5f5',
+  grey6: '#e3e5e8',
+  grey7: '#e9eaef',
+  grey8: '#dbdde1',
+  grey9: '#f4f5f6',
+  white: '#fff',
+  black: '#222',
+  offBlack: '#444',
+  boxShadow: '#ddd',
+  boxShadowDark: '#aaa',
+  blueDTwhite: '#3683dc',
+  tableHeaderText: 'rgba(0, 0, 0, 0.54)',
+  drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
+  label: '#555',
+  disabledText: '#c9cacb',
+  tagButton: '#f1f7fd',
+  tagIcon: '#7daee8',
+} as const;
+
+const textColors = {
+  linkActiveLight: '#2575d0',
+  headlineStatic: '#32363c',
+  tableHeader: '#888f91',
+  tableStatic: '#606469',
+  textAccessTable: '#606469',
+} as const;
+
+const borderColors = {
+  borderTypography: '#e3e5e8',
+  borderTable: '#f4f5f6',
+  divider: '#e3e5e8',
+} as const;
+
 const primaryFonts = {
   normal: '"LatoWeb", sans-serif',
   semiBold: '"LatoWebSemibold", sans-serif',
   bold: '"LatoWebBold", sans-serif',
-};
+} as const;
 
 const iconCircleAnimation = {
   '& .circle': {
@@ -206,274 +246,223 @@ const graphTransparency = '0.7';
 
 const spacing = 8;
 
-type ThemeDefaults = () => DeprecatedThemeOptions;
-
-const themeDefaults: ThemeDefaults = () => {
-  return {
-    breakpoints,
-    shadows: [
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-      'none',
-    ],
-    spacing,
-    '@keyframes rotate': {
-      from: {
-        transform: 'rotate(0deg)',
-      },
-      to: {
-        transform: 'rotate(360deg)',
+export const base: ThemeOptions = {
+  name: 'lightTheme', // we really should just leverage pallete.mode
+  breakpoints,
+  shadows: [
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+    'none',
+  ],
+  spacing,
+  bg,
+  color,
+  textColors,
+  borderColors,
+  graphs: {
+    load: `rgba(255, 220, 77, ${graphTransparency})`,
+    requests: `rgba(34, 206, 182, ${graphTransparency})`,
+    connections: {
+      accepted: `rgba(91, 105, 139, ${graphTransparency})`,
+      handled: `rgba(50, 59, 77, ${graphTransparency})`,
+    },
+    network: {
+      outbound: `rgba(49, 206, 62, ${graphTransparency})`,
+      inbound: `rgba(16, 162, 29, ${graphTransparency})`,
+    },
+    workers: {
+      waiting: `rgba(133, 180, 255, ${graphTransparency})`,
+      reading: `rgba(137, 161, 240, ${graphTransparency})`,
+      writing: `rgba(32, 131, 75, ${graphTransparency})`,
+      starting: `rgba(135, 170, 247, ${graphTransparency})`,
+      sending: `rgba(139, 152, 233, ${graphTransparency})`,
+      keepAlive: `rgba(141, 143, 225, ${graphTransparency})`,
+      DNSLookup: `rgba(143, 133, 218, ${graphTransparency})`,
+      closing: `rgba(145, 124, 211, ${graphTransparency})`,
+      logging: `rgba(147, 115, 203, ${graphTransparency})`,
+      finishing: `rgba(149, 106, 196, ${graphTransparency})`,
+      cleanup: `rgba(152, 97, 189, ${graphTransparency})`,
+    },
+    cpu: {
+      system: `rgba(2, 118, 253, ${graphTransparency})`,
+      user: `rgba(81, 166, 245, ${graphTransparency})`,
+      wait: `rgba(145, 199, 237, ${graphTransparency})`,
+      percent: `rgba(54, 131, 220, ${graphTransparency})`,
+    },
+    memory: {
+      swap: `rgba(238, 44, 44, ${graphTransparency})`,
+      buffers: `rgba(142, 56, 142, ${graphTransparency})`,
+      cache: `rgba(205, 150, 205, ${graphTransparency})`,
+      used: `rgba(236, 200, 236, ${graphTransparency})`,
+    },
+    diskIO: {
+      read: `rgba(255, 196, 105, ${graphTransparency})`,
+      write: `rgba(255, 179, 77, ${graphTransparency})`,
+      swap: `rgba(238, 44, 44, ${graphTransparency})`,
+    },
+    ram: `rgba(224, 131, 224, ${graphTransparency})`,
+    space: `rgba(255, 99, 61, ${graphTransparency})`,
+    inodes: `rgba(224, 138, 146, ${graphTransparency})`,
+    queries: {
+      select: `rgba(34, 192, 206, ${graphTransparency})`,
+      insert: `rgba(26, 151, 162, ${graphTransparency})`,
+      update: `rgba(19, 110, 118, ${graphTransparency})`,
+      delete: `rgba(2, 54, 59, ${graphTransparency})`,
+    },
+    slowQueries: `rgba(255, 61, 61, ${graphTransparency})`,
+    aborted: {
+      connections: `rgba(255, 10, 10, ${graphTransparency})`,
+      clients: `rgba(214, 0, 0, ${graphTransparency})`,
+    },
+    processCount: `rgba(113, 86, 245, ${graphTransparency})`,
+    blue: `rgba(100, 173, 246, ${graphTransparency})`,
+    green: `rgba(91, 215, 101, ${graphTransparency})`,
+    orange: `rgba(255, 179, 77, ${graphTransparency})`,
+    purple: `rgba(217, 176, 217, ${graphTransparency})`,
+    red: `rgba(255, 99, 60, ${graphTransparency})`,
+    yellow: `rgba(255, 220, 125, ${graphTransparency})`,
+  },
+  font: {
+    normal: primaryFonts.normal,
+    semiBold: primaryFonts.semiBold,
+    bold: primaryFonts.bold,
+  },
+  animateCircleIcon: {
+    ...iconCircleAnimation,
+  },
+  addCircleHoverEffect: {
+    ...iconCircleHoverEffect,
+  },
+  applyLinkStyles: {
+    ...genericLinkStyle,
+  },
+  applyStatusPillStyles: {
+    ...genericStatusPillStyle,
+  },
+  applyTableHeaderStyles: {
+    ...genericTableHeaderStyle,
+  },
+  palette: {
+    divider: primaryColors.divider,
+    primary: primaryColors,
+    text: {
+      primary: primaryColors.text,
+    },
+    success: {
+      light: '#d7e3ef',
+      main: '#d7e3ef',
+      dark: '#3682dd',
+    },
+    warning: {
+      light: '#fdf4da',
+      main: '#fdf4da',
+      dark: '#ffd002',
+    },
+    error: {
+      light: '#f8dedf',
+      main: '#f8dedf',
+      dark: '#cd2227',
+    },
+  },
+  typography: {
+    fontFamily: primaryFonts.normal,
+    fontSize: 16,
+    h1: {
+      color: primaryColors.headline,
+      fontSize: '1.25rem',
+      lineHeight: '1.75rem',
+      fontFamily: primaryFonts.bold,
+      [breakpoints.up('lg')]: {
+        fontSize: '1.5rem',
+        lineHeight: '1.875rem',
       },
     },
-    '@keyframes dash': {
-      to: {
-        'stroke-dashoffset': 0,
-      },
+    h2: {
+      color: primaryColors.headline,
+      fontSize: '1.125rem',
+      fontFamily: primaryFonts.bold,
+      lineHeight: '1.5rem',
     },
-    bg: {
-      app: '#f4f5f6',
-      main: '#f4f4f4',
-      offWhite: '#fbfbfb',
-      lightBlue1: '#f0f7ff',
-      lightBlue2: '#e5f1ff',
-      white: '#fff',
-      tableHeader: '#f9fafa',
-      primaryNavPaper: '#3a3f46',
-      mainContentBanner: '#33373d',
-      bgPaper: '#ffffff',
-      bgAccessRow: '#fafafa',
-      bgAccessRowTransparentGradient: 'rgb(255, 255, 255, .001)',
+    h3: {
+      color: primaryColors.headline,
+      fontSize: '1rem',
+      fontFamily: primaryFonts.bold,
+      lineHeight: '1.4rem',
     },
-    color: {
-      headline: primaryColors.headline,
-      red: '#ca0813',
-      orange: '#ffb31a',
-      yellow: '#fecf2f',
-      green: '#00b159',
-      teal: '#17cf73',
-      border2: '#c5c6c8',
-      border3: '#eee',
-      grey1: '#abadaf',
-      grey2: '#e7e7e7',
-      grey3: '#ccc',
-      grey4: '#8C929D',
-      grey5: '#f5f5f5',
-      grey6: '#e3e5e8',
-      grey7: '#e9eaef',
-      grey8: '#dbdde1',
-      grey9: '#f4f5f6',
-      white: '#fff',
-      black: '#222',
-      offBlack: '#444',
-      boxShadow: '#ddd',
-      boxShadowDark: '#aaa',
-      blueDTwhite: '#3683dc',
-      tableHeaderText: 'rgba(0, 0, 0, 0.54)',
-      drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
-      label: '#555',
-      disabledText: '#c9cacb',
-      tagButton: '#f1f7fd',
-      tagIcon: '#7daee8',
+    body1: {
+      fontSize: '0.875rem',
+      lineHeight: '1.125rem',
+      color: primaryColors.text,
     },
-    textColors,
-    borderColors,
-    graphs: {
-      load: `rgba(255, 220, 77, ${graphTransparency})`,
-      requests: `rgba(34, 206, 182, ${graphTransparency})`,
-      connections: {
-        accepted: `rgba(91, 105, 139, ${graphTransparency})`,
-        handled: `rgba(50, 59, 77, ${graphTransparency})`,
-      },
-      network: {
-        outbound: `rgba(49, 206, 62, ${graphTransparency})`,
-        inbound: `rgba(16, 162, 29, ${graphTransparency})`,
-      },
-      workers: {
-        waiting: `rgba(133, 180, 255, ${graphTransparency})`,
-        reading: `rgba(137, 161, 240, ${graphTransparency})`,
-        writing: `rgba(32, 131, 75, ${graphTransparency})`,
-        starting: `rgba(135, 170, 247, ${graphTransparency})`,
-        sending: `rgba(139, 152, 233, ${graphTransparency})`,
-        keepAlive: `rgba(141, 143, 225, ${graphTransparency})`,
-        DNSLookup: `rgba(143, 133, 218, ${graphTransparency})`,
-        closing: `rgba(145, 124, 211, ${graphTransparency})`,
-        logging: `rgba(147, 115, 203, ${graphTransparency})`,
-        finishing: `rgba(149, 106, 196, ${graphTransparency})`,
-        cleanup: `rgba(152, 97, 189, ${graphTransparency})`,
-      },
-      cpu: {
-        system: `rgba(2, 118, 253, ${graphTransparency})`,
-        user: `rgba(81, 166, 245, ${graphTransparency})`,
-        wait: `rgba(145, 199, 237, ${graphTransparency})`,
-        percent: `rgba(54, 131, 220, ${graphTransparency})`,
-      },
-      memory: {
-        swap: `rgba(238, 44, 44, ${graphTransparency})`,
-        buffers: `rgba(142, 56, 142, ${graphTransparency})`,
-        cache: `rgba(205, 150, 205, ${graphTransparency})`,
-        used: `rgba(236, 200, 236, ${graphTransparency})`,
-      },
-      diskIO: {
-        read: `rgba(255, 196, 105, ${graphTransparency})`,
-        write: `rgba(255, 179, 77, ${graphTransparency})`,
-        swap: `rgba(238, 44, 44, ${graphTransparency})`,
-      },
-      ram: `rgba(224, 131, 224, ${graphTransparency})`,
-      space: `rgba(255, 99, 61, ${graphTransparency})`,
-      inodes: `rgba(224, 138, 146, ${graphTransparency})`,
-      queries: {
-        select: `rgba(34, 192, 206, ${graphTransparency})`,
-        insert: `rgba(26, 151, 162, ${graphTransparency})`,
-        update: `rgba(19, 110, 118, ${graphTransparency})`,
-        delete: `rgba(2, 54, 59, ${graphTransparency})`,
-      },
-      slowQueries: `rgba(255, 61, 61, ${graphTransparency})`,
-      aborted: {
-        connections: `rgba(255, 10, 10, ${graphTransparency})`,
-        clients: `rgba(214, 0, 0, ${graphTransparency})`,
-      },
-      processCount: `rgba(113, 86, 245, ${graphTransparency})`,
-      blue: `rgba(100, 173, 246, ${graphTransparency})`,
-      green: `rgba(91, 215, 101, ${graphTransparency})`,
-      orange: `rgba(255, 179, 77, ${graphTransparency})`,
-      purple: `rgba(217, 176, 217, ${graphTransparency})`,
-      red: `rgba(255, 99, 60, ${graphTransparency})`,
-      yellow: `rgba(255, 220, 125, ${graphTransparency})`,
+    caption: {
+      fontSize: '0.625rem',
+      lineHeight: '0.625rem',
+      color: primaryColors.text,
     },
-    font: {
-      normal: primaryFonts.normal,
-      semiBold: primaryFonts.semiBold,
-      bold: primaryFonts.bold,
+    subtitle1: {
+      fontSize: '1.075rem',
+      lineHeight: '1.5rem',
+      color: primaryColors.text,
     },
-    animateCircleIcon: {
-      ...iconCircleAnimation,
-    },
-    addCircleHoverEffect: {
-      ...iconCircleHoverEffect,
-    },
-    applyLinkStyles: {
-      ...genericLinkStyle,
-    },
-    applyStatusPillStyles: {
-      ...genericStatusPillStyle,
-    },
-    applyTableHeaderStyles: {
-      ...genericTableHeaderStyle,
-    },
-    notificationList: {
-      padding: '16px 32px 16px 23px',
-      borderBottom: '1px solid #fbfbfb',
-      transition: 'background-color 225ms ease-in-out',
-      '&:hover': {
-        backgroundColor: '#f4f4f4',
-      },
-    },
-    palette: {
-      divider: primaryColors.divider,
-      primary: primaryColors,
-      text: {
-        primary: primaryColors.text,
-      },
-      status: {
-        success: '#d7e3ef',
-        successDark: '#3682dd',
-        warning: '#fdf4da',
-        warningDark: '#ffd002',
-        error: '#f8dedf',
-        errorDark: '#cd2227',
-      },
-    },
-    typography: {
-      useNextVariants: true,
-      fontFamily: primaryFonts.normal,
-      fontSize: 16,
-      h1: {
-        color: primaryColors.headline,
-        fontSize: '1.25rem',
-        lineHeight: '1.75rem',
-        fontFamily: primaryFonts.bold,
-        [breakpoints.up('lg')]: {
-          fontSize: '1.5rem',
-          lineHeight: '1.875rem',
-        },
-      },
-      h2: {
-        color: primaryColors.headline,
-        fontSize: '1.125rem',
-        fontFamily: primaryFonts.bold,
-        lineHeight: '1.5rem',
-      },
-      h3: {
-        color: primaryColors.headline,
-        fontSize: '1rem',
-        fontFamily: primaryFonts.bold,
-        lineHeight: '1.4rem',
-      },
-      body1: {
-        fontSize: '0.875rem',
-        lineHeight: '1.125rem',
-        color: primaryColors.text,
-      },
-      caption: {
-        fontSize: '0.625rem',
-        lineHeight: '0.625rem',
-        color: primaryColors.text,
-      },
-      subtitle1: {
-        fontSize: '1.075rem',
-        lineHeight: '1.5rem',
-        color: primaryColors.text,
-      },
-    },
-    visually: {
-      visible: visuallyVisible,
-      hidden: visuallyHidden,
-    },
-    overrides: {
-      MuiCheckbox: {
+  },
+  visually: {
+    visible: visuallyVisible,
+    hidden: visuallyHidden,
+  },
+  components: {
+    MuiCheckbox: {
+      styleOverrides: {
         root: {
           color: '#ccc',
         },
       },
-      MuiAppBar: {
+    },
+    MuiAppBar: {
+      styleOverrides: {
         colorDefault: {
           backgroundColor: 'inherit',
         },
       },
-      MuiAvatar: {
+    },
+    MuiAvatar: {
+      styleOverrides: {
         colorDefault: {
           color: '#c9c7c7',
           backgroundColor: 'unset',
         },
       },
-      MuiBackdrop: {
+    },
+    MuiBackdrop: {
+      styleOverrides: {
         root: {
           backgroundColor: 'rgba(255, 255, 255, 0.8)',
         },
       },
-      MuiButton: {
+    },
+    MuiButton: {
+      styleOverrides: {
         root: {
           border: 'none',
           borderRadius: 1,
@@ -483,7 +472,7 @@ const themeDefaults: ThemeDefaults = () => {
           minHeight: 34,
           minWidth: 105,
           lineHeight: 1,
-          textTransform: 'inherit',
+          textTransform: 'capitalize',
           transition: 'none',
         },
         containedPrimary: {
@@ -536,12 +525,16 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiButtonBase: {
+    },
+    MuiButtonBase: {
+      styleOverrides: {
         root: {
           fontSize: '1rem',
         },
       },
-      MuiCardHeader: {
+    },
+    MuiCardHeader: {
+      styleOverrides: {
         root: {
           backgroundColor: '#fbfbfb',
         },
@@ -550,7 +543,9 @@ const themeDefaults: ThemeDefaults = () => {
           minWidth: 0,
         },
       },
-      MuiChip: {
+    },
+    MuiChip: {
+      styleOverrides: {
         root: {
           backgroundColor: '#E7E7E7',
           height: 20,
@@ -607,17 +602,23 @@ const themeDefaults: ThemeDefaults = () => {
           color: primaryColors.text,
         },
       },
-      MuiCircularProgress: {
+    },
+    MuiCircularProgress: {
+      styleOverrides: {
         circle: {
           strokeLinecap: 'inherit',
         },
       },
-      MuiCollapse: {
+    },
+    MuiCollapse: {
+      styleOverrides: {
         root: {
           width: '100%',
         },
       },
-      MuiDialog: {
+    },
+    MuiDialog: {
+      styleOverrides: {
         paper: {
           boxShadow: '0 0 5px #bbb',
           [breakpoints.down('sm')]: {
@@ -630,7 +631,9 @@ const themeDefaults: ThemeDefaults = () => {
           maxHeight: 'calc(100% - 48px)',
         },
       },
-      MuiDialogActions: {
+    },
+    MuiDialogActions: {
+      styleOverrides: {
         root: {
           margin: 0,
           padding: 24,
@@ -640,12 +643,16 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiDialogContent: {
+    },
+    MuiDialogContent: {
+      styleOverrides: {
         root: {
           padding: '8px 24px',
         },
       },
-      MuiDialogTitle: {
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
         root: {
           borderBottom: '1px solid #eee',
           marginBottom: 20,
@@ -656,7 +663,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiDrawer: {
+    },
+    MuiDrawer: {
+      styleOverrides: {
         paper: {
           boxShadow: '0 0 5px #bbb',
           /** @todo This is breaking typing. */
@@ -667,7 +676,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiAccordion: {
+    },
+    MuiAccordion: {
+      styleOverrides: {
         root: {
           flexBasis: '100%',
           width: '100%',
@@ -677,7 +688,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiAccordionSummary: {
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
         root: {
           justifyContent: 'space-between',
           backgroundColor: 'transparent',
@@ -708,28 +721,19 @@ const themeDefaults: ThemeDefaults = () => {
             margin: '12px 0',
           },
         },
-        expandIcon: {
-          '&$expanded': {
-            transform: 'rotate(180deg)',
-          },
-          '& svg': {
-            fill: '#2575d0',
-            stroke: '#2575d0',
-            height: 22,
-            width: 22,
-            transition: `${'stroke 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
-            ${'fill 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}`,
-          },
-        },
       },
-      MuiAccordionDetails: {
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
         root: {
           backgroundColor: 'transparent',
           padding: 16,
           paddingTop: 0,
         },
       },
-      MuiFormControl: {
+    },
+    MuiFormControl: {
+      styleOverrides: {
         root: {
           marginTop: 16,
           minWidth: 120,
@@ -741,7 +745,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiFormControlLabel: {
+    },
+    MuiFormControlLabel: {
+      styleOverrides: {
         root: {
           marginLeft: -11,
         },
@@ -749,7 +755,9 @@ const themeDefaults: ThemeDefaults = () => {
           color: primaryColors.text,
         },
       },
-      MuiFormGroup: {
+    },
+    MuiFormGroup: {
+      styleOverrides: {
         root: {
           '&[role="radiogroup"]': {
             marginTop: 8,
@@ -757,7 +765,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiFormLabel: {
+    },
+    MuiFormLabel: {
+      styleOverrides: {
         root: {
           color: '#555',
           fontFamily: primaryFonts.bold,
@@ -775,7 +785,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiFormHelperText: {
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
         root: {
           maxWidth: 415,
           fontSize: '0.875rem',
@@ -785,7 +797,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiIconButton: {
+    },
+    MuiIconButton: {
+      styleOverrides: {
         root: {
           padding: 12,
           '&:hover': {
@@ -797,7 +811,9 @@ const themeDefaults: ThemeDefaults = () => {
           marginRight: 0,
         },
       },
-      MuiInput: {
+    },
+    MuiInput: {
+      styleOverrides: {
         root: {
           alignItems: 'center',
           backgroundColor: '#fff',
@@ -860,19 +876,25 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiInputBase: {
+    },
+    MuiInputBase: {
+      styleOverrides: {
         input: {
           height: 'auto',
         },
       },
-      MuiDivider: {
+    },
+    MuiDivider: {
+      styleOverrides: {
         root: {
           borderColor: 'rgba(0, 0, 0, 0.12)',
           marginTop: spacing,
           marginBottom: spacing,
         },
       },
-      MuiInputAdornment: {
+    },
+    MuiInputAdornment: {
+      styleOverrides: {
         root: {
           fontSize: '0.9rem',
           [breakpoints.only('xs')]: {
@@ -892,7 +914,9 @@ const themeDefaults: ThemeDefaults = () => {
           marginRight: 10,
         },
       },
-      MuiInputLabel: {
+    },
+    MuiInputLabel: {
+      styleOverrides: {
         formControl: {
           position: 'relative',
         },
@@ -900,12 +924,16 @@ const themeDefaults: ThemeDefaults = () => {
           transform: 'none',
         },
       },
-      MuiLinearProgress: {
+    },
+    MuiLinearProgress: {
+      styleOverrides: {
         colorPrimary: {
           backgroundColor: '#b7d6f9',
         },
       },
-      MuiList: {
+    },
+    MuiList: {
+      styleOverrides: {
         padding: {
           paddingTop: 0,
           paddingBottom: 0,
@@ -923,7 +951,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiListItem: {
+    },
+    MuiListItem: {
+      styleOverrides: {
         root: {
           color: primaryColors.text,
           '&$disabled': {
@@ -943,7 +973,9 @@ const themeDefaults: ThemeDefaults = () => {
         disabled: {},
         selected: {},
       },
-      MuiListItemText: {
+    },
+    MuiListItemText: {
+      styleOverrides: {
         root: {
           marginTop: 0,
           marginBottom: 0,
@@ -953,7 +985,9 @@ const themeDefaults: ThemeDefaults = () => {
           lineHeight: '1.2em',
         },
       },
-      MuiMenu: {
+    },
+    MuiMenu: {
+      styleOverrides: {
         paper: {
           maxWidth: 350,
           '&.selectMenuDropdown': {
@@ -981,7 +1015,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiMenuItem: {
+    },
+    MuiMenuItem: {
+      styleOverrides: {
         root: {
           height: 'auto',
           fontFamily: primaryFonts.normal,
@@ -1009,7 +1045,9 @@ const themeDefaults: ThemeDefaults = () => {
         },
         selected: {},
       },
-      MuiPaper: {
+    },
+    MuiPaper: {
+      styleOverrides: {
         root: {},
         rounded: {
           borderRadius: 0,
@@ -1018,7 +1056,9 @@ const themeDefaults: ThemeDefaults = () => {
           border: '1px solid #e7e7e7',
         },
       },
-      MuiPopover: {
+    },
+    MuiPopover: {
+      styleOverrides: {
         paper: {
           boxShadow: '0 0 5px #ddd',
           borderRadius: 0,
@@ -1028,7 +1068,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiRadio: {
+    },
+    MuiRadio: {
+      styleOverrides: {
         root: {
           '& $checked': {
             color: primaryColors.main,
@@ -1049,26 +1091,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiSelect: {
-        selectMenu: {
-          '&$disabled': {
-            '&+ input + $icon': {
-              opacity: 0.5,
-            },
-          },
-          padding: '16px 32px 16px 12px',
-          color: primaryColors.text,
-          backgroundColor: '#fff',
-          lineHeight: 1,
-          minHeight: 46,
-          minWidth: 150,
-          '&:focus': {
-            backgroundColor: '#fff',
-          },
-          '& em': {
-            fontStyle: 'normal',
-          },
-        },
+    },
+    MuiSelect: {
+      styleOverrides: {
         select: {
           '&:focus': {
             backgroundColor: 'transparent',
@@ -1085,16 +1110,22 @@ const themeDefaults: ThemeDefaults = () => {
         },
         disabled: {},
       },
-      MuiSkeleton: {
+    },
+    MuiSkeleton: {
+      styleOverrides: {
         text: {
           marginTop: 0,
           borderRadius: 0,
         },
       },
-      MuiSnackbar: {
+    },
+    MuiSnackbar: {
+      styleOverrides: {
         root: {},
       },
-      MuiSnackbarContent: {
+    },
+    MuiSnackbarContent: {
+      styleOverrides: {
         root: {
           boxShadow: '0 0 5px #ddd',
           color: '#606469',
@@ -1103,12 +1134,16 @@ const themeDefaults: ThemeDefaults = () => {
           borderRadius: 4,
         },
       },
-      MuiSvgIcon: {
+    },
+    MuiSvgIcon: {
+      styleOverrides: {
         root: {
           fontSize: 24,
         },
       },
-      MuiSwitch: {
+    },
+    MuiSwitch: {
+      styleOverrides: {
         root: {
           width: 68,
           height: 48,
@@ -1189,7 +1224,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiTab: {
+    },
+    MuiTab: {
+      styleOverrides: {
         root: {
           color: 'rgba(0, 0, 0, 0.54)',
           minWidth: 50,
@@ -1219,17 +1256,6 @@ const themeDefaults: ThemeDefaults = () => {
             color: primaryColors.main,
           },
         },
-        // label: {
-        //   [breakpoints.up('md')]: {
-        //     fontSize: '1rem'
-        //   }
-        // },
-        wrapper: {
-          padding: '6px 0',
-          [breakpoints.up('md')]: {
-            padding: '6px 0',
-          },
-        },
         textColorPrimary: {
           '&$selected': {
             color: '#32363c',
@@ -1237,12 +1263,16 @@ const themeDefaults: ThemeDefaults = () => {
         },
         selected: {},
       },
-      MuiTable: {
+    },
+    MuiTable: {
+      styleOverrides: {
         root: {
           borderCollapse: 'initial',
         },
       },
-      MuiTableCell: {
+    },
+    MuiTableCell: {
+      styleOverrides: {
         root: {
           borderTop: `1px solid ${primaryColors.divider}`,
           borderBottom: `1px solid ${primaryColors.divider}`,
@@ -1257,7 +1287,9 @@ const themeDefaults: ThemeDefaults = () => {
           fontSize: '.9rem',
         },
       },
-      MuiTabs: {
+    },
+    MuiTabs: {
+      styleOverrides: {
         root: {
           margin: '16px 0',
           boxShadow: 'inset 0 -1px 0 #c5c6c8',
@@ -1301,7 +1333,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiTableRow: {
+    },
+    MuiTableRow: {
+      styleOverrides: {
         root: {
           backgroundColor: primaryColors.white,
           backfaceVisibility: 'hidden',
@@ -1334,7 +1368,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiTableSortLabel: {
+    },
+    MuiTableSortLabel: {
+      styleOverrides: {
         root: {
           fontSize: '.9rem',
           lineHeight: '1.1rem',
@@ -1361,7 +1397,9 @@ const themeDefaults: ThemeDefaults = () => {
           transform: 'rotate(0deg)',
         },
       },
-      MuiTooltip: {
+    },
+    MuiTooltip: {
+      styleOverrides: {
         popper: {
           opacity: 1,
         },
@@ -1378,7 +1416,9 @@ const themeDefaults: ThemeDefaults = () => {
           },
         },
       },
-      MuiTypography: {
+    },
+    MuiTypography: {
+      styleOverrides: {
         button: {
           textTransform: 'inherit',
           borderRadius: '3px',
@@ -1419,14 +1459,5 @@ const themeDefaults: ThemeDefaults = () => {
         },
       },
     },
-  };
+  },
 };
-
-export default (options: DeprecatedThemeOptions) =>
-  createMuiTheme(
-    adaptV4Theme(
-      mergeDeepRight(themeDefaults(), {
-        ...options,
-      })
-    )
-  );
