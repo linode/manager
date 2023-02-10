@@ -511,6 +511,7 @@ export class LinodeCreate extends React.PureComponent<
                   // error={hasErrorFor.image}
                   accountBackupsEnabled={accountBackupsEnabled}
                   userCannotCreateLinode={userCannotCreateLinode}
+                  errors={errors}
                   {...rest}
                 />
               </SafeTabPanel>
