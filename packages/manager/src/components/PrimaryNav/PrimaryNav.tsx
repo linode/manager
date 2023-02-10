@@ -21,6 +21,7 @@ import LinodeLogo from 'src/assets/logo/logo.svg';
 import BetaChip from 'src/components/BetaChip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
+import { BRAND_UDPATE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
 import usePrefetch from 'src/hooks/usePreFetch';
@@ -262,9 +263,9 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       <Grid item>
         <div
           className={classNames({
-            [classes.logoItem]: !flags.brandUpdate,
-            [classes.logoItemAkamai]: flags.brandUpdate && !isCollapsed,
-            [classes.logoItemAkamaiWave]: flags.brandUpdate && isCollapsed,
+            [classes.logoItem]: !BRAND_UDPATE,
+            [classes.logoItemAkamai]: BRAND_UDPATE && !isCollapsed,
+            [classes.logoItemAkamaiWave]: BRAND_UDPATE && isCollapsed,
           })}
         >
           {isCollapsed && (
@@ -279,7 +280,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
               [classes.logoContainer]: isCollapsed,
             })}
           >
-            {flags.brandUpdate ? (
+            {BRAND_UDPATE ? (
               <AkamaiLogo
                 width={140}
                 height={45}
