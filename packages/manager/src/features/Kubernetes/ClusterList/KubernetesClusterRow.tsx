@@ -129,9 +129,6 @@ export const KubernetesClusterRow = (props: Props) => {
             ) : null}
           </div>
         </TableCell>
-      </Hidden>
-
-      <Hidden mdDown>
         <TableCell data-qa-cluster-date>
           <DateTimeDisplay value={cluster.created} />
         </TableCell>
@@ -141,8 +138,6 @@ export const KubernetesClusterRow = (props: Props) => {
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-cluster-memory>{`${RAM / 1024} GB`}</TableCell>
-      </Hidden>
-      <Hidden smDown>
         <TableCell data-qa-cluster-cpu>
           {`${CPU} ${CPU === 1 ? 'CPU' : 'CPUs'}`}
         </TableCell>
