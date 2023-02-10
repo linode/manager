@@ -318,6 +318,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         category,
         setPresetPorts,
         values.action,
+        values.type,
       ]
     );
 
