@@ -4,6 +4,7 @@
 
 import { Database, DatabaseCredentials } from '@linode/api-v4/types';
 import { makeErrorResponse } from 'support/util/errors';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomString } from 'support/util/random';
 
 /**
@@ -24,7 +25,7 @@ export const mockGetDatabase = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    `**/databases/${database.engine}/instances/${database.id}`,
+    apiMatcher(`databases/${database.engine}/instances/${database.id}`),
     database
   );
 };
@@ -61,7 +62,7 @@ export const mockGetDatabaseCredentials = (
 
   return cy.intercept(
     'GET',
-    `**/databases/${engine}/instances/${id}/credentials`,
+    apiMatcher(`databases/${engine}/instances/${id}/credentials`),
     credentials
   );
 };
@@ -81,7 +82,7 @@ export const mockUpdateDatabase = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `**/databases/${engine}/instances/${id}`,
+    apiMatcher(`databases/${engine}/instances/${id}`),
     responseData
   );
 };
@@ -103,7 +104,11 @@ export const mockUpdateProvisioningDatabase = (
   const error = makeErrorResponse(
     responseErrorMessage || defaultErrorMessageProvisioning
   );
-  return cy.intercept('PUT', `**/databases/${engine}/instances/${id}`, error);
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    error
+  );
 };
 
 /**
@@ -120,7 +125,7 @@ export const mockResetPassword = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/databases/${engine}/instances/${id}/credentials/reset`,
+    apiMatcher(`databases/${engine}/instances/${id}/credentials/reset`),
     {}
   );
 };
@@ -144,7 +149,7 @@ export const mockResetPasswordProvisioningDatabase = (
   );
   return cy.intercept(
     'POST',
-    `**/databases/${engine}/instances/${id}/credentials/reset`,
+    apiMatcher(`databases/${engine}/instances/${id}/credentials/reset`),
     error
   );
 };
@@ -161,7 +166,11 @@ export const mockDeleteDatabase = (
   id: number,
   engine: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `**/databases/${engine}/instances/${id}`, {});
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`databases/${engine}/instances/${id}`),
+    {}
+  );
 };
 
 /**
@@ -183,7 +192,7 @@ export const mockDeleteProvisioningDatabase = (
   );
   return cy.intercept(
     'DELETE',
-    `**/databases/${engine}/instances/${id}`,
+    apiMatcher(`databases/${engine}/instances/${id}`),
     error
   );
 };

@@ -3,6 +3,7 @@
  */
 
 import type { AccountSettings, EntityTransfer } from '@linode/api-v4/types';
+import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
 
@@ -14,7 +15,7 @@ import { getFilters } from 'support/util/request';
  * @returns Cypress chainable.
  */
 export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `**/account/users/${username}`);
+  return cy.intercept('GET', apiMatcher(`account/users/${username}`));
 };
 
 /**
@@ -23,7 +24,7 @@ export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '**/account/entity-transfers');
+  return cy.intercept('POST', apiMatcher('account/entity-transfers'));
 };
 
 /**
@@ -48,7 +49,7 @@ export const mockGetEntityTransfers = (
   received: EntityTransfer[],
   sent: EntityTransfer[]
 ) => {
-  return cy.intercept('GET', '**/account/entity-transfers*', (req) => {
+  return cy.intercept('GET', apiMatcher('account/entity-transfers*'), (req) => {
     const filters = getFilters(req);
 
     if (filters?.['status'] === 'pending') {
@@ -94,7 +95,11 @@ export const mockReceiveEntityTransfer = (
   token: string,
   transfer: EntityTransfer
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `**/account/entity-transfers/${token}`, transfer);
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/entity-transfers/${token}`),
+    transfer
+  );
 };
 
 /**
@@ -109,7 +114,7 @@ export const mockAcceptEntityTransfer = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/account/entity-transfers/${token}/accept`,
+    apiMatcher(`account/entity-transfers/${token}/accept`),
     {}
   );
 };
@@ -124,7 +129,7 @@ export const mockAcceptEntityTransfer = (
 export const mockGetAccountSettings = (
   settings: AccountSettings
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '**/account/settings', settings);
+  return cy.intercept('GET', apiMatcher('account/settings'), settings);
 };
 
 /**
@@ -141,7 +146,7 @@ export const mockUpdateUsername = (
   newUsername: string,
   restricted: boolean = false
 ) => {
-  return cy.intercept('PUT', `**/account/users/${oldUsername}`, {
+  return cy.intercept('PUT', apiMatcher(`account/users/${oldUsername}`), {
     username: newUsername,
     email: 'mockEmail@example.com',
     restricted,

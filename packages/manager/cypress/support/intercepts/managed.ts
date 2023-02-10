@@ -17,13 +17,17 @@ import {
 } from 'src/factories/managed';
 import { makeResponse } from 'support/util/response';
 import { makeErrorResponse } from 'support/util/errors';
+import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 
 /**
  * Intercepts all requests to Managed endpoints and mocks 403 HTTP errors.
  */
 export const mockUnauthorizedManagedRequests = (): Cypress.Chainable<null> => {
-  return cy.intercept('**/managed/*', makeErrorResponse('Unauthorized', 403));
+  return cy.intercept(
+    apiMatcher('managed/*'),
+    makeErrorResponse('Unauthorized', 403)
+  );
 };
 
 /**
@@ -38,7 +42,7 @@ export const mockGetServiceMonitors = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '**/managed/services*',
+    apiMatcher('managed/services*'),
     paginateResponse(serviceMonitors)
   );
 };
@@ -55,7 +59,7 @@ export const mockCreateServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '**/managed/services',
+    apiMatcher('managed/services'),
     makeResponse(serviceMonitor)
   );
 };
@@ -70,7 +74,11 @@ export const mockCreateServiceMonitor = (
 export const mockDeleteServiceMonitor = (
   serviceId: number
 ): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `**/managed/services/${serviceId}`, {});
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`managed/services/${serviceId}`),
+    {}
+  );
 };
 
 /**
@@ -87,7 +95,7 @@ export const mockUpdateServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `**/managed/services/${serviceId}`,
+    apiMatcher(`managed/services/${serviceId}`),
     makeResponse(serviceMonitor)
   );
 };
@@ -106,7 +114,7 @@ export const mockDisableServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/managed/services/${serviceId}/disable`,
+    apiMatcher(`managed/services/${serviceId}/disable`),
     makeResponse({
       ...serviceMonitor,
       status: 'disabled',
@@ -130,7 +138,7 @@ export const mockEnableServiceMonitor = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/managed/services/${serviceId}/enable`,
+    apiMatcher(`managed/services/${serviceId}/enable`),
     makeResponse({
       ...serviceMonitor,
       status: serviceMonitorStatus,
@@ -148,7 +156,11 @@ export const mockEnableServiceMonitor = (
 export const mockGetIssues = (
   issues: ManagedIssue[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '**/managed/issues*', paginateResponse(issues));
+  return cy.intercept(
+    'GET',
+    apiMatcher('managed/issues*'),
+    paginateResponse(issues)
+  );
 };
 
 /**
@@ -163,7 +175,7 @@ export const mockGetCredentials = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '**/managed/credentials*',
+    apiMatcher('managed/credentials*'),
     paginateResponse(credentials)
   );
 };
@@ -180,7 +192,7 @@ export const mockCreateCredential = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '**/managed/credentials',
+    apiMatcher('managed/credentials'),
     makeResponse(credential)
   );
 };
@@ -199,7 +211,7 @@ export const mockUpdateCredential = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `**/managed/credentials/${id}`,
+    apiMatcher(`managed/credentials/${id}`),
     makeResponse(credential)
   );
 };
@@ -216,7 +228,7 @@ export const mockUpdateCredentialUsernamePassword = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/managed/credentials/${id}/update`,
+    apiMatcher(`managed/credentials/${id}/update`),
     makeResponse({})
   );
 };
@@ -231,7 +243,7 @@ export const mockUpdateCredentialUsernamePassword = (
 export const mockDeleteCredential = (id: number): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    `**/managed/credentials/${id}/revoke`,
+    apiMatcher(`managed/credentials/${id}/revoke`),
     makeResponse({})
   );
 };
@@ -248,7 +260,7 @@ export const mockGetContacts = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '**/managed/contacts*',
+    apiMatcher('managed/contacts*'),
     paginateResponse(contacts)
   );
 };
@@ -263,7 +275,11 @@ export const mockGetContacts = (
 export const mockCreateContact = (
   contact: ManagedContact
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '**/managed/contacts', makeResponse(contact));
+  return cy.intercept(
+    'POST',
+    apiMatcher('managed/contacts'),
+    makeResponse(contact)
+  );
 };
 
 /**
@@ -280,7 +296,7 @@ export const mockUpdateContact = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `**/managed/contacts/${id}`,
+    apiMatcher(`managed/contacts/${id}`),
     makeResponse(contact)
   );
 };
@@ -293,7 +309,11 @@ export const mockUpdateContact = (
  * @returns Cypress chainable.
  */
 export const mockDeleteContact = (id: number): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `**/managed/contacts/${id}`, makeResponse({}));
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`managed/contacts/${id}`),
+    makeResponse({})
+  );
 };
 
 /**
@@ -309,7 +329,7 @@ export const mockGetStats = (
   stats?: ManagedStats | undefined
 ): Cypress.Chainable<null> => {
   const mockStats = stats ? stats : managedStatsFactory.build();
-  return cy.intercept('GET', '**/managed/stats*', mockStats);
+  return cy.intercept('GET', apiMatcher('**/managed/stats*'), mockStats);
 };
 
 /**
@@ -330,7 +350,7 @@ export const mockGetSshPublicKey = (
 
   return cy.intercept(
     'GET',
-    '**/managed/credentials/sshkey',
+    apiMatcher('managed/credentials/sshkey'),
     makeResponse(publicKeyObject)
   );
 };
@@ -347,7 +367,7 @@ export const mockGetLinodeSettings = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '**/managed/linode-settings*',
+    apiMatcher('managed/linode-settings*'),
     paginateResponse(linodeSettings)
   );
 };
@@ -366,7 +386,7 @@ export const mockUpdateLinodeSettings = (
 ) => {
   return cy.intercept(
     'PUT',
-    `**/managed/linode-settings/${id}`,
+    apiMatcher(`managed/linode-settings/${id}`),
     makeResponse(linodeSettings)
   );
 };
