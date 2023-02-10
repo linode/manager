@@ -266,8 +266,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         getBackupsTimer: setTimeout(
           () =>
             getLinodeBackups(this.props.linodeID).then((data) => {
-              this.setState({ backups: data });
-              this.setState({ getBackupsTimer: null });
+              this.setState({
+                ...this.state,
+                backups: data,
+                getBackupsTimer: null,
+              });
             }),
           15000
         ),
