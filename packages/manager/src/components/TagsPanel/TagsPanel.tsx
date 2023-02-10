@@ -7,7 +7,7 @@ import Select from 'src/components/EnhancedSelect/Select';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Theme, makeStyles } from 'src/components/core/styles';
-import { updateTagsData, useTags } from 'src/queries/tags';
+import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -144,7 +144,7 @@ const TagsPanel: React.FC<Props> = (props) => {
     data: userTags,
     isLoading: userTagsLoading,
     error: userTagsError,
-  } = useTags(!profile?.restricted);
+  } = useTagSuggestions(!profile?.restricted);
 
   const tagsToSuggest = React.useMemo<Item[] | undefined>(
     () =>
@@ -230,7 +230,7 @@ const TagsPanel: React.FC<Props> = (props) => {
           // set the input value to blank on submit
           setTagInputValue('');
           if (userTags) {
-            updateTagsData([...userTags, value]);
+            updateTagsSuggestionsData([...userTags, value]);
           }
         })
         .catch((e) => {
