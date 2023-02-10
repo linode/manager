@@ -6,7 +6,7 @@ import Select, {
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
-import { useTags } from 'src/queries/tags';
+import { updateTagsData, useTags } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
@@ -64,6 +64,9 @@ const TagsInput: React.FC<Props> = (props) => {
     } else {
       setErrors([]);
       onChange(updatedSelectedTags);
+      if (accountTags) {
+        updateTagsData([...accountTags, newTag]);
+      }
     }
   };
 
