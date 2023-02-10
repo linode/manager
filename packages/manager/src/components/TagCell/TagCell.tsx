@@ -167,11 +167,11 @@ export const TagCell: React.FC<Props> = (props) => {
       alignItems="center"
       wrap="nowrap"
     >
-      {loading && (
+      {loading ? (
         <div className={classes.progress}>
           <CircleProgress mini />
         </div>
-      )}
+      ) : null}
       {addingTag ? (
         <AddTag
           tags={tags}
