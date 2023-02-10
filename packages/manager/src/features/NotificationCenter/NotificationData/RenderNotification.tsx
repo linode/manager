@@ -19,7 +19,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fill: theme.color.red,
   },
   majorIcon: {
-    fill: theme.palette.status.warningDark,
+    fill: theme.palette.warning.dark,
   },
   itemsWithoutIcon: {
     marginLeft: '1.25rem',
