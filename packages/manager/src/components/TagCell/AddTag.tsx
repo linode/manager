@@ -91,7 +91,6 @@ export const AddTag: React.FC<Props> = (props) => {
       createOptionPosition="first"
       menuPosition={fixedMenu ? 'fixed' : 'absolute'}
       isLoading={loading}
-      disabled={loading}
     />
   );
 };
