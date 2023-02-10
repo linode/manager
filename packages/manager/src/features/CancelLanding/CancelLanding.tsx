@@ -1,9 +1,11 @@
-import { path } from 'ramda';
+// import { path } from 'ramda';
 import * as React from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
+import useFlags from 'src/hooks/useFlags';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -38,26 +40,31 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export const CancelLanding: React.FC<{}> = () => {
+  const flags = useFlags();
   const classes = useStyles();
-  const location = useLocation();
+  // const location = useLocation();
 
-  const survey_link = path<string>(['state', 'survey_link'], location);
+  // const survey_link = path<string>(['state', 'survey_link'], location);
 
-  if (!survey_link) {
-    return <Redirect to="/" />;
-  }
+  // if (!survey_link) {
+  //   return <Redirect to="/" />;
+  // }
 
   const goToSurvey = () => {
-    window.location.assign(survey_link);
+    // window.location.assign(survey_link);
   };
 
   return (
     <div className={classes.root} data-testid="body">
-      <Logo className={classes.logo} />
+      {flags.brandUpdate ? (
+        <AkamaiLogo className={classes.logo} />
+      ) : (
+        <Logo className={classes.logo} />
+      )}
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
-        Your account is closed. We hope you&rsquo;ll consider Linode for your
-        future cloud hosting needs.
+        Your account is closed. We hope you&rsquo;ll consider us for your future
+        cloud hosting needs.
       </Typography>
       <Typography>
         Would you mind taking a brief survey? It will help us understand why
