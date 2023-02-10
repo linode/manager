@@ -161,17 +161,15 @@ const TagsPanel: React.FC<Props> = (props) => {
     setTagError('');
   }, [isCreatingTag]);
 
-  React.useEffect(() => {
-    if (userTagsError !== null) {
-      setTagError('There was an error retrieving your tags.');
-    }
-  }, [userTagsError]);
-
   const toggleTagInput = () => {
     if (!disabled) {
       setIsCreatingTag((prev) => !prev);
     }
   };
+
+  const userTagsErrorDisplay = userTagsError
+    ? 'There was an error retrieving your tags.'
+    : '';
 
   const handleDeleteTag = (label: string) => {
     setTagsLoading(true);
@@ -302,8 +300,10 @@ const TagsPanel: React.FC<Props> = (props) => {
             />
           );
         })}
-        {tagError && (
-          <Typography className={classes.errorNotice}>{tagError}</Typography>
+        {(tagError.length > 0 || userTagsErrorDisplay.length > 0) && (
+          <Typography className={classes.errorNotice}>
+            {tagError.length > 0 ? tagError : userTagsErrorDisplay}
+          </Typography>
         )}
       </div>
     </>
