@@ -4,7 +4,7 @@ import CheckBox from './CheckBox';
 
 <Meta title="Elements/Checkbox" component={CheckBox} />
 
-export const CheckBoxTemplate = (args) => {
+export const Template = (args) => {
   const [localArgs, setLocalArgs] = useArgs();
   const onChange = () => {
     setLocalArgs({ checked: !localArgs.checked });
@@ -71,8 +71,8 @@ export const CheckBoxTemplate = (args) => {
       disabled: false,
     }}
   >
-    {CheckBoxTemplate.bind({})}
+    {Template.bind({})}
   </Story>
 </Canvas>
 
-<ArgsTable story="Checkbox" />
+<ArgsTable story="Checkbox" sort="requiredFirst"/>
