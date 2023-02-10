@@ -339,3 +339,5 @@ export const ADDRESSES = {
     },
   },
 };
+
+export const BRAND_UDPATE = true;
