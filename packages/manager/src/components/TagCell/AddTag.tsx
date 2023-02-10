@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
-import { updateTagsData, useTags } from 'src/queries/tags';
+import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
@@ -40,9 +40,10 @@ export const AddTag: React.FC<Props> = (props) => {
 
   const [isLoading, setIsLoading] = React.useState(false);
   const { data: profile } = useProfile();
-  const { data: accountTags, isLoading: accountTagsLoading } = useTags(
-    !profile?.restricted
-  );
+  const {
+    data: accountTags,
+    isLoading: accountTagsLoading,
+  } = useTagSuggestions(!profile?.restricted);
   // @todo should we toast for this? If we swallow the error the only
   // thing we lose is preexisting tabs as options; the add tag flow
   // should still work.
@@ -57,7 +58,7 @@ export const AddTag: React.FC<Props> = (props) => {
       addTag(newTag.value)
         .then(() => {
           if (accountTags) {
-            updateTagsData([...accountTags, newTag]);
+            updateTagsSuggestionsData([...accountTags, newTag]);
           }
           if (onClose) {
             onClose();

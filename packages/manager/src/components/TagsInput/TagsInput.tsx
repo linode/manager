@@ -6,7 +6,7 @@ import Select, {
   NoOptionsMessageProps,
 } from 'src/components/EnhancedSelect/Select';
 import { useProfile } from 'src/queries/profile';
-import { updateTagsData, useTags } from 'src/queries/tags';
+import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 export interface Tag {
@@ -40,7 +40,7 @@ const TagsInput: React.FC<Props> = (props) => {
   const [errors, setErrors] = React.useState<APIError[]>([]);
 
   const { data: profile } = useProfile();
-  const { data: accountTags, error: accountTagsError } = useTags(
+  const { data: accountTags, error: accountTagsError } = useTagSuggestions(
     !profile?.restricted
   );
 
@@ -65,7 +65,7 @@ const TagsInput: React.FC<Props> = (props) => {
       setErrors([]);
       onChange(updatedSelectedTags);
       if (accountTags) {
-        updateTagsData([...accountTags, newTag]);
+        updateTagsSuggestionsData([...accountTags, newTag]);
       }
     }
   };
