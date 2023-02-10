@@ -1,6 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from './TagsPanel';
+import { useArgs } from '@storybook/client-api';
 
 <Meta
   title="Features/Tags/Tags Panel"
@@ -23,29 +24,13 @@ import TagsPanel from './TagsPanel';
 export const _tags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
 export const Template = (args) => {
-  const [tags, setTags] = React.useState(_tags);
+  const [localArgs, setLocalArgs] = useArgs();
   const updateTags = (selected) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        if (tags.indexOf('selected') > -1) {
-          console.log('found');
-        } else {
-          console.log('not found');
-        }
-        setTags([selected]);
-        resolve();
-      }, 500);
-    });
+    return Promise.resolve(setLocalArgs({ tags: selected }));
   };
   return (
     <>
-      <TagsPanel tags={tags} updateTags={updateTags} {...args} />
-      <Typography style={{ marginTop: 12 }}>
-        <i>
-          Modifying the tags in this example does not currently work at the
-          moment.
-        </i>
-      </Typography>
+      <TagsPanel updateTags={updateTags} {...args} />
     </>
   );
 };

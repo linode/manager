@@ -15,7 +15,7 @@ export interface KubeNodePoolResponse {
   id: number;
   nodes: PoolNodeResponse[];
   type: string;
-  autoscaler: AutoscaleNodePool;
+  autoscaler: AutoscaleSettings;
 }
 
 export interface PoolNodeResponse {
@@ -24,21 +24,20 @@ export interface PoolNodeResponse {
   status: string;
 }
 
-export interface PoolNodeRequest {
+export interface CreateNodePoolData {
   type: string;
   count: number;
 }
 
-export interface AutoscaleNodePool {
+export interface UpdateNodePoolData {
+  autoscaler: AutoscaleSettings;
+  count: number;
+}
+
+export interface AutoscaleSettings {
   enabled: boolean;
   min: number;
   max: number;
-}
-
-export interface AutoscaleNodePoolRequest {
-  clusterID: number;
-  nodePoolID: number;
-  autoscaler: AutoscaleNodePool;
 }
 
 export interface KubeConfigResponse {
@@ -64,7 +63,7 @@ export interface ControlPlaneOptions {
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
-  node_pools: PoolNodeRequest[];
+  node_pools: CreateNodePoolData[];
   k8s_version?: string; // Will be caught by Yup if undefined
   control_plane?: ControlPlaneOptions;
 }

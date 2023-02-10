@@ -213,7 +213,7 @@ export const itemInListDeletionHandler = <
  * @param newData the new data for the entity
  */
 export const updateInPaginatedStore = <T extends { id: number | string }>(
-  queryKey: string,
+  queryKey: QueryKey,
   id: number,
   newData: Partial<T>
 ) => {

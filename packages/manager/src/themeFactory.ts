@@ -19,6 +19,7 @@ declare module '@mui/material/styles/createPalette' {
       warningDark: string;
       error: string;
       errorDark: string;
+      marketingDark?: boolean;
     };
   }
 
@@ -403,6 +404,7 @@ const themeDefaults: ThemeDefaults = () => {
         warningDark: '#ffd002',
         error: '#f8dedf',
         errorDark: '#cd2227',
+        marketingDark: '#00b159',
       },
     },
     typography: {
@@ -483,7 +485,7 @@ const themeDefaults: ThemeDefaults = () => {
           minHeight: 34,
           minWidth: 105,
           lineHeight: 1,
-          textTransform: 'inherit',
+          textTransform: 'capitalize',
           transition: 'none',
         },
         containedPrimary: {

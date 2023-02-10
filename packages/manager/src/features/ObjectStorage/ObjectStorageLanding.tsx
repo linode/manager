@@ -226,10 +226,15 @@ export const BillingNotice: React.FC<{}> = React.memo(() => {
   const openDrawer = () => dispatch(openBucketDrawer());
 
   return (
-    <DismissibleBanner warning important preferenceKey={NOTIFICATION_KEY} options={{
-      label: NOTIFICATION_KEY,
-      expiry: DateTime.utc().plus({ days: 30 }).toISO(),
-    }}>
+    <DismissibleBanner
+      warning
+      important
+      preferenceKey={NOTIFICATION_KEY}
+      options={{
+        label: NOTIFICATION_KEY,
+        expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+      }}
+    >
       <Typography>
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
