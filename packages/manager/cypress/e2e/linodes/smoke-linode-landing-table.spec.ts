@@ -127,7 +127,7 @@ describe('linode landing checks', () => {
         .should('be.visible')
         .should('have.attr', 'href', '/support');
 
-      cy.findByLabelText('Linode Cloud Community')
+      cy.findByTitle('Linode Cloud Community')
         .should('be.visible')
         .parent()
         .should('have.attr', 'href', 'https://linode.com/community');
