@@ -136,7 +136,7 @@ const TagsPanel: React.FC<Props> = (props) => {
   const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [tagInputValue, setTagInputValue] = React.useState('');
-  const [tagLoading, setTagsLoading] = React.useState(false);
+  const [tagsLoading, setTagsLoading] = React.useState(false);
 
   const { data: profile } = useProfile();
 
@@ -166,8 +166,6 @@ const TagsPanel: React.FC<Props> = (props) => {
       setTagError('There was an error retrieving your tags.');
     }
   }, [userTagsError]);
-
-  const loading = tagLoading || userTagsLoading;
 
   const toggleTagInput = () => {
     if (!disabled) {
@@ -264,6 +262,7 @@ const TagsPanel: React.FC<Props> = (props) => {
           blurInputOnSelect
           // eslint-disable-next-line
           autoFocus
+          isLoading={userTagsLoading}
         />
       ) : (
         <div
@@ -283,7 +282,7 @@ const TagsPanel: React.FC<Props> = (props) => {
         </div>
       )}
       <div className={classes.tagsPanelItemWrapper}>
-        {loading && (
+        {tagsLoading && (
           <div className={classes.progress}>
             <CircleProgress mini />
           </div>
@@ -294,7 +293,7 @@ const TagsPanel: React.FC<Props> = (props) => {
               key={`tag-item-${thisTag}`}
               className={classNames({
                 [classes.tag]: true,
-                [classes.loading]: loading,
+                [classes.loading]: tagsLoading,
               })}
               colorVariant="lightBlue"
               label={thisTag}
