@@ -284,7 +284,7 @@ describe('Account service transfers', () => {
             cy.findByDisplayValue(token).should('be.visible');
 
             // Close dialog.
-            cy.findByLabelText('Close drawer').should('be.visible').click();
+            cy.findByLabelText('Close').should('be.visible').click();
           });
 
         // Confirm token is listed on landing page and that correct information

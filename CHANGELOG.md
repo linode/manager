@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-02-13] - v1.86.0
+
+### Added:
+- “Status” column to Linode Backups table
+
+### Changed:
+- Migrate to Material UI v5 theme format
+- Accessibility improvements to TopMenu icons
+- Logo updates
+- Account Agreements Query Small Optimization
+
+### Fixed:
+- Uneven Breakpoints in Kubernetes Landing Table
+
 ## [2023-02-07] - v1.85.0
 
 ### Added:

@@ -228,7 +228,13 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           pdfLoading.delete(id);
 
           const invoiceItems = response.data;
-          const result = printInvoice(account!, invoice, invoiceItems, taxes);
+          const result = printInvoice(
+            account!,
+            invoice,
+            invoiceItems,
+            taxes,
+            flags.brandUpdate
+          );
 
           if (result.status === 'error') {
             pdfErrors.add(id);
@@ -266,7 +272,12 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         taxes?.date,
         taxes?.country_tax
       );
-      const result = printPayment(account, payment, countryTax);
+      const result = printPayment(
+        account,
+        payment,
+        countryTax,
+        flags.brandUpdate
+      );
 
       if (result.status === 'error') {
         pdfErrors.add(id);
