@@ -45,12 +45,20 @@ const renderNullAuth = () => <span>null auth route</span>;
 const renderNull = () => <span>null route</span>;
 
 const renderLish = () => (
-  <LinodeThemeWrapper>{() => <Lish />}</LinodeThemeWrapper>
+  <LinodeThemeWrapper>
+    <Lish />
+  </LinodeThemeWrapper>
+);
+
+const renderSplashScreen = () => (
+  <LinodeThemeWrapper>
+    <SplashScreen />
+  </LinodeThemeWrapper>
 );
 
 const renderApp = (props: RouteComponentProps) => (
   <>
-    <SplashScreen />
+    {renderSplashScreen()}
     <LinodeThemeWrapper>
       {(toggle) => (
         <SnackBar
@@ -78,7 +86,7 @@ const renderCancel = () => (
 );
 
 const renderAuthentication = () => (
-  <React.Suspense fallback={<SplashScreen />}>
+  <React.Suspense fallback={renderSplashScreen}>
     <Switch>
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
