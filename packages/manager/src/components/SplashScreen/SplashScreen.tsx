@@ -5,10 +5,8 @@ import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 import { srSpeak } from 'src/utilities/accessibility';
-
-import Logo from 'src/assets/logo/logo-animated.svg';
-import './keyframes.css';
 import useFeatureFlagsLoad from 'src/hooks/useFeatureFlagLoad';
+import CircleProgress from '../CircleProgress';
 
 const useStyles = makeStyles({
   root: {
@@ -51,14 +49,7 @@ const SplashScreen: React.FC<CombinedProps> = (props) => {
       })}
       aria-label="Loading Cloud Manager"
     >
-      <div className={classes.logo}>
-        <Logo />
-        <div className="la-ball-beat la-dark">
-          <div />
-          <div />
-          <div />
-        </div>
-      </div>
+      <CircleProgress />
     </div>
   ) : null;
 };

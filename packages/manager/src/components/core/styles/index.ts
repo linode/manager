@@ -29,27 +29,6 @@ export {
 
 export { createTheme, ThemeProvider } from '@mui/material/styles';
 
-interface Theme extends _Theme {
-  name: string;
-  '@keyframes rotate': any;
-  '@keyframes dash': any;
-  bg: any;
-  textColors: any;
-  borderColors: any;
-  color: any;
-  graphs: any;
-  visually: any;
-  font?: any;
-  animateCircleIcon?: any;
-  addCircleHoverEffect?: any;
-  applyLinkStyles?: any;
-  applyStatusPillStyles?: any;
-  applyTableHeaderStyles?: any;
-
-  notificationList: any;
-  status: any;
-}
-
-export { Theme };
+export type { Theme } from '@mui/material/styles/createTheme';
 
 export { default as useMediaQuery } from '@mui/material/useMediaQuery';

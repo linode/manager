@@ -166,7 +166,7 @@ export const KubernetesLanding = () => {
             >
               Cluster Label
             </TableSortCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableSortCell
                 active={orderBy === 'k8s_version'}
                 label={'k8s_version'}
@@ -195,7 +195,7 @@ export const KubernetesLanding = () => {
             >
               Region
             </TableSortCell>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableCell data-qa-kubernetes-clusters-memory-header>
                 Total Memory
               </TableCell>
