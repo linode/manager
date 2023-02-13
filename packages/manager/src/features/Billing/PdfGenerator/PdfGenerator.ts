@@ -6,7 +6,7 @@ import {
 } from '@linode/api-v4/lib/account';
 import jsPDF from 'jspdf';
 import { splitEvery } from 'ramda';
-import { ADDRESSES, BRAND_UDPATE } from 'src/constants';
+import { ADDRESSES, BRAND_UPDATE } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
@@ -206,7 +206,7 @@ export const printInvoice = (
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(
-        BRAND_UDPATE ? AkamaiLogo : LinodeLogo,
+        BRAND_UPDATE ? AkamaiLogo : LinodeLogo,
         'JPEG',
         160,
         10,
@@ -267,7 +267,7 @@ export const printPayment = (
     doc.setFontSize(10);
 
     doc.addImage(
-      BRAND_UDPATE ? AkamaiLogo : LinodeLogo,
+      BRAND_UPDATE ? AkamaiLogo : LinodeLogo,
       'JPEG',
       160,
       10,

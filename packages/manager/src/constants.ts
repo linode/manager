@@ -340,4 +340,4 @@ export const ADDRESSES = {
   },
 };
 
-export const BRAND_UDPATE = true;
+export const BRAND_UPDATE = true;
