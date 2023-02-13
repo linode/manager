@@ -1,8 +1,7 @@
-import { Image, ImageStatus } from '@linode/api-v4/lib/images';
+import { Event, Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
 import { useSnackbar } from 'notistack';
-import { partition } from 'ramda';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -95,7 +94,7 @@ const defaultDialogState = {
   error: undefined,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = (props) => {
+export const ImagesLanding: React.FC<CombinedProps> = () => {
   const classes = useStyles();
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -116,15 +115,35 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const {
-    data: images,
-    isLoading: imagesLoading,
-    error: imagesError,
+    data: manualImages,
+    isLoading: manualImagesLoading,
+    error: manualImagesError,
   } = useImagesQuery(
     {
       page: pagination.page,
       page_size: pagination.pageSize,
     },
-    filter
+    {
+      ...filter,
+      type: 'manual',
+      is_public: false,
+    }
+  );
+
+  const {
+    data: automaticImages,
+    isLoading: automaticImagesLoading,
+    error: automaticImagesError,
+  } = useImagesQuery(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    },
+    {
+      ...filter,
+      type: 'automatic',
+      is_public: false,
+    }
   );
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
@@ -132,41 +151,16 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const eventState = useSelector((state: ApplicationState) => state.events);
   const events = imageEvents(eventState);
 
-  // We want private images and also want the associated events tied in.
-  const imagesItemsById = listToItemsByID(images?.data ?? []);
-  const imagesData = Object.values(imagesItemsById).reduce(
-    (accum, thisImage: Image) =>
-      produce(accum, (draft: any) => {
-        if (!thisImage.is_public) {
-          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-          const matchingEvent = events.find(
-            (thisEvent) =>
-              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
-              (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                thisEvent.status === 'failed')
-          );
-          if (matchingEvent) {
-            draft.push({ ...thisImage, event: matchingEvent });
-          } else {
-            draft.push(thisImage);
-          }
-        }
-      }),
-    []
-  ) as ImageWithEvent[];
+  // Private images with the associated events tied in.
+  const manualImagesData = getImagesWithEvents(
+    manualImages?.data ?? [],
+    events
+  );
 
-  /**
-   * Separate manual Images (created by the user, either from disk or from uploaded file)
-   * from automatic Images (created by the backend when a Linode is deleted).
-   *
-   * This is temporary until the API filtering for machine images is complete. Eventually,
-   * we should retire this code and use a React query for `is_mine` && `manual` and a separate
-   * query for `is_mine` && `automatic`.
-   */
-
-  const [manualImages, automaticImages] = partition(
-    (thisImage) => thisImage.type === 'manual',
-    imagesData ?? []
+  // Automatic images with the associated events tied in.
+  const automaticImagesData = getImagesWithEvents(
+    automaticImages?.data ?? [],
+    events
   );
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(
@@ -419,17 +413,24 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  if (imagesLoading) {
+  if (manualImagesLoading || automaticImagesLoading) {
     return renderLoading();
   }
 
   /** Error State */
-  if (imagesError) {
-    return renderError(imagesError);
+  if (manualImagesError) {
+    return renderError(manualImagesError);
+  }
+
+  if (automaticImagesError) {
+    return renderError(automaticImagesError);
   }
 
   /** Empty States */
-  if (!imagesData || imagesData.length === 0) {
+  if (
+    (!manualImagesData || manualImagesData.length === 0) &&
+    (!automaticImagesData || automaticImagesData.length === 0)
+  ) {
     return renderEmpty();
   }
 
@@ -490,8 +491,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {manualImages.length > 0
-              ? manualImages.map((manualImage) => (
+            {manualImagesData.length > 0
+              ? manualImagesData.map((manualImage) => (
                   <ImageRow
                     key={manualImage.id}
                     {...manualImage}
@@ -542,8 +543,8 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {automaticImages.length > 0
-              ? automaticImages.map((automaticImage) => (
+            {automaticImagesData.length > 0
+              ? automaticImagesData.map((automaticImage) => (
                   <ImageRow
                     key={automaticImage.id}
                     {...automaticImage}
@@ -573,3 +574,27 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
 };
 
 export default ImagesLanding;
+
+const getImagesWithEvents = (images: Image[], events: Event[]) => {
+  const itemsById = listToItemsByID(images ?? []);
+  return Object.values(itemsById).reduce(
+    (accum, thisImage: Image) =>
+      produce(accum, (draft: any) => {
+        if (!thisImage.is_public) {
+          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
+          const matchingEvent = events.find(
+            (thisEvent) =>
+              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
+              (`private/${thisEvent.entity?.id}` === thisImage.id &&
+                thisEvent.status === 'failed')
+          );
+          if (matchingEvent) {
+            draft.push({ ...thisImage, event: matchingEvent });
+          } else {
+            draft.push(thisImage);
+          }
+        }
+      }),
+    []
+  ) as ImageWithEvent[];
+};
