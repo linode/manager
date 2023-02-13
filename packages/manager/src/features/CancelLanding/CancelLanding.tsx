@@ -1,6 +1,6 @@
-// import { path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
-// import { useLocation } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import useFlags from 'src/hooks/useFlags';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -10,6 +10,10 @@ import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -39,19 +43,21 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+type CombinedProps = FeatureFlagConsumerProps;
+
 export const CancelLanding: React.FC<{}> = () => {
   const flags = useFlags();
   const classes = useStyles();
-  // const location = useLocation();
+  const location = useLocation();
 
-  // const survey_link = path<string>(['state', 'survey_link'], location);
+  const survey_link = path<string>(['state', 'survey_link'], location);
 
-  // if (!survey_link) {
-  //   return <Redirect to="/" />;
-  // }
+  if (!survey_link) {
+    return <Redirect to="/" />;
+  }
 
   const goToSurvey = () => {
-    // window.location.assign(survey_link);
+    window.location.assign(survey_link);
   };
 
   return (
@@ -81,4 +87,8 @@ export const CancelLanding: React.FC<{}> = () => {
   );
 };
 
-export default compose<{}, {}>(React.memo)(CancelLanding);
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withFeatureFlagProvider,
+  withFeatureFlagConsumer
+)(CancelLanding);
