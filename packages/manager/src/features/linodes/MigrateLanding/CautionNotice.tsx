@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
     padding: '4px 16px',
     backgroundColor: theme.bg.bgPaper,
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
     '& ul:first-of-type': {
       fontFamily: theme.font.normal,
       '& li': {
