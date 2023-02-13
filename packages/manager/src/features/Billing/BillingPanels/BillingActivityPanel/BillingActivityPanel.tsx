@@ -6,11 +6,12 @@ import {
 } from '@linode/api-v4/lib/account';
 import { DateTime } from 'luxon';
 import * as React from 'react';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import BillingTooltip from 'src/components/BillingTooltip';
+import TextTooltip from 'src/components/TextTooltip/TextTooltip';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -61,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: 10,
     paddingLeft: 20,
     flexGrow: 2,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: 0,
     },
   },
@@ -203,6 +204,19 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     makeFilter(getCutoffFromDateRange(selectedTransactionDate))
   );
 
+  const akamaiBillingInvoiceText = (
+    <Typography>
+      Charges in the final Akamai invoice should be considered the final source
+      truth. Linode invoice will not reflect discounting, currency adjustment,
+      or any negotiated terms and conditions. Condensed and finalized invoice is
+      available within{' '}
+      <Link to="https://control.akamai.com/apps/billing">
+        Akamai Control Center &gt; Billing <ExternalLinkIcon />
+      </Link>
+      .
+    </Typography>
+  );
+
   const downloadInvoicePDF = React.useCallback(
     (invoiceId: number) => {
       const invoice = invoices?.find(
@@ -338,7 +352,10 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
         </Typography>
         {isAkamaiCustomer ? (
           <div className={classes.headerLeft}>
-            <BillingTooltip text="Usage History may not reflect finalized invoice" />
+            <TextTooltip
+              displayText="Usage History may not reflect finalized invoice"
+              tooltipText={akamaiBillingInvoiceText}
+            />
           </div>
         ) : null}
         <div className={classes.headerRight}>
