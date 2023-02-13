@@ -1,3 +1,7 @@
+## [2023-02-13] - v0.19.0
+
+### Changed:
+- `image` field required in CreateLinodeSchema when creating Linode via StackScript
 
 ## [2023-02-07] - v0.18.0
 
