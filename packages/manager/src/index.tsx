@@ -72,20 +72,20 @@ const renderApp = (props: RouteComponentProps) => (
 );
 
 const renderAuthentication = () => (
-  <LinodeThemeWrapper>
-    <React.Suspense fallback={<SplashScreen />}>
-      <Switch>
-        <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-        <Route
-          exact
-          path="/admin/callback"
-          component={LoginAsCustomerCallback}
-        />
-        {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-        <Route exact path="/nullauth" render={renderNullAuth} />
-        <Route exact path="/logout" component={Logout} />
-        <Route exact path="/cancel" component={Cancel} />
-        <QueryClientProvider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
+    <LinodeThemeWrapper>
+      <React.Suspense fallback={<SplashScreen />}>
+        <Switch>
+          <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+          <Route
+            exact
+            path="/admin/callback"
+            component={LoginAsCustomerCallback}
+          />
+          {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+          <Route exact path="/nullauth" render={renderNullAuth} />
+          <Route exact path="/logout" component={Logout} />
+          <Route exact path="/cancel" component={Cancel} />
           <AuthenticationWrapper>
             <Switch>
               <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
@@ -96,10 +96,10 @@ const renderAuthentication = () => (
             initialIsOpen={false}
             toggleButtonProps={{ style: { marginLeft: '3em' } }}
           />
-        </QueryClientProvider>
-      </Switch>
-    </React.Suspense>
-  </LinodeThemeWrapper>
+        </Switch>
+      </React.Suspense>
+    </LinodeThemeWrapper>
+  </QueryClientProvider>
 );
 
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
