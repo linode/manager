@@ -2,7 +2,6 @@ import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
-import useFlags from 'src/hooks/useFlags';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
@@ -10,10 +9,10 @@ import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type CombinedProps = FeatureFlagConsumerProps;
 
 export const CancelLanding: React.FC<CombinedProps> = (props) => {
-const { flags } = props;
+  const { flags } = props;
   const classes = useStyles();
   const location = useLocation();
 
