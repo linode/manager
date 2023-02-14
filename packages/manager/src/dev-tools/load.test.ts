@@ -1,15 +1,15 @@
 import { devToolsEnabled } from './load';
 
 describe('devToolsEnabled', () => {
-  const OLD_ENV = process.env;
+  const OLD_ENV = import.meta.env;
 
   beforeEach(() => {
     jest.resetModules();
-    process.env = { ...OLD_ENV };
+    import.meta.env = { ...OLD_ENV };
   });
 
   it('it defaults to FALSE in production builds, but can be enabled', () => {
-    process.env.NODE_ENV = 'production';
+    import.meta.env.NODE_ENV = 'production';
     expect(devToolsEnabled()).toBe(false);
 
     window.localStorage.setItem('dev-tools', 'true');
@@ -22,7 +22,7 @@ describe('devToolsEnabled', () => {
   });
 
   it('it defaults to TRUE in development mode, but can be disabled', () => {
-    process.env.NODE_ENV = 'development';
+    import.meta.env.NODE_ENV = 'development';
     expect(devToolsEnabled()).toBe(true);
 
     window.localStorage.setItem('dev-tools', 'false');

@@ -12,13 +12,12 @@
       "src/*": ["src/*"]
     },
     "resolveJsonModule": true,
-    "rootDir": "src",
+    "rootDir": ".",
 
     /* JavaScript Support */
     "allowJs": false,
 
     /* Emit */
-    "downlevelIteration": true,
     "outDir": "build/dist",
     "sourceMap": true,
 
@@ -39,18 +38,8 @@
     /* Completeness */
     "skipLibCheck": true
   },
-  "exclude": [
-    "acceptance-tests",
-    "build",
-    "config",
-    "cypress.config.ts",
-    "cypress",
-    "e2e",
-    "jest",
-    "node_modules",
-    "scripts",
-    "src/components/Storyshots.test.tsx",
-    "src/setupTests.ts",
-    "webpack"
-  ]
+  "include": [
+    "src",
+    "package.json"
+  ] 
 }

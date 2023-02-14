@@ -1,11 +1,11 @@
 import { getEnvLocalStorageOverrides, isDevToolsEnvValid } from './storage';
 
 describe('getLocalStorageOverrides', () => {
-  const OLD_ENV = process.env;
+  const OLD_ENV = import.meta.env;
 
   beforeEach(() => {
     jest.resetModules();
-    process.env = { ...OLD_ENV };
+    import.meta.env = { ...OLD_ENV };
   });
 
   const localStorage = {
@@ -17,7 +17,7 @@ describe('getLocalStorageOverrides', () => {
 
   it('it returns overrides if defined and if dev tools are enabled', () => {
     // Development mode
-    process.env.NODE_ENV = 'development';
+    import.meta.env.NODE_ENV = 'development';
 
     // Enable the dev tools.
     window.localStorage.setItem('dev-tools', 'true');
@@ -40,7 +40,7 @@ describe('getLocalStorageOverrides', () => {
 
   it('only returns overrides while in development mode', () => {
     // Production build
-    process.env.NODE_ENV = 'production';
+    import.meta.env.NODE_ENV = 'production';
 
     // Enable the dev tools.
     window.localStorage.setItem('dev-tools', 'true');

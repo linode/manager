@@ -7,8 +7,8 @@ export const initSentry = () => {
   if (SENTRY_URL) {
     init({
       dsn: SENTRY_URL,
-      release: process.env.VERSION,
-      environment: process.env.NODE_ENV,
+      release: import.meta.env.VERSION,
+      environment: import.meta.env.NODE_ENV,
       beforeSend,
       autoSessionTracking: false,
       ignoreErrors: [

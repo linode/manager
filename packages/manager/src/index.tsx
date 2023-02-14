@@ -131,7 +131,3 @@ loadDevTools(() => {
     document.getElementById('root') as HTMLElement
   );
 });
-
-if (module.hot && !isProductionBuild) {
-  module.hot.accept();
-}

@@ -35,6 +35,6 @@ export const devToolsEnabled = () => {
 
   return (
     !explicitlyDisabled &&
-    (process.env.NODE_ENV === 'development' || explicitlyEnabled)
+    (import.meta.env.NODE_ENV === 'development' || explicitlyEnabled)
   );
 };
