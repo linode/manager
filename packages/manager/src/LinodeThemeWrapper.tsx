@@ -13,7 +13,7 @@ declare module '@mui/styles/defaultTheme' {
 
 export type ThemeChoice = 'light' | 'dark';
 
-const themeCreators: Record<ThemeChoice, () => Theme> = { light, dark };
+const themes: Record<ThemeChoice, Theme> = { light, dark };
 
 const setActiveHighlightTheme = (value: ThemeChoice) => {
   /**
@@ -67,11 +67,9 @@ const LinodeThemeWrapper: React.FC = ({ children }) => {
     toggleTheme(themeChoice);
   }, [themeChoice]);
 
-  const theme = React.useMemo(themeCreators[themeChoice], [themeChoice]);
-
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <ThemeProvider theme={themes[themeChoice]}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
