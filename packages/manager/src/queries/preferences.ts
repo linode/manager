@@ -9,9 +9,10 @@ import { queryClient, queryPresets } from './base';
 
 export const queryKey = 'preferences';
 
-export const usePreferences = () =>
+export const usePreferences = (enabled = true) =>
   useQuery<UserPreferences, APIError[]>(queryKey, getUserPreferences, {
     ...queryPresets.oneTimeFetch,
+    enabled,
   });
 
 export const useMutatePreferences = () => {
