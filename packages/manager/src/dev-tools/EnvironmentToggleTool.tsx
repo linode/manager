@@ -19,7 +19,7 @@ interface EnvironmentOption {
 // Repeat for each desired environment, incrementing the "1" to "2", e.g.:
 //
 // REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
-export const getOptions = (env: ImportMetaEnv) => {
+export const getOptions = (env: Partial<ImportMetaEnv>) => {
   const envVariables = Object.keys(env);
 
   return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {

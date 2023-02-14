@@ -94,11 +94,8 @@ describe('Expiring Tokens', () => {
 });
 
 describe('getURL', () => {
-  const OLD_ENV = import.meta.env;
-
   beforeEach(() => {
     jest.resetModules();
-    import.meta.env = { ...OLD_ENV };
   });
 
   it('replaces the API baseURL with the one from the environment', () => {
@@ -106,7 +103,6 @@ describe('getURL', () => {
       baseURL: 'http://localhost:5000',
       url: 'http://localhost:5000/profile',
     };
-    import.meta.env.API_ROOT = 'https://api.linode.com/v4';
 
     expect(getURL(config)).toBe('https://api.linode.com/v4/profile');
   });

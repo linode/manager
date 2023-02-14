@@ -1,10 +1,10 @@
 import { ZoneName } from '@linode/api-v4/lib/networking';
 import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 
-const PRODUCTION = 'production';
+const PRODUCTION = import.meta.env.PROD;
 
 // native to webpack build
-export const isProductionBuild = import.meta.env.NODE_ENV === PRODUCTION;
+export const isProductionBuild = PRODUCTION;
 
 // allow us to explicity enable dev tools
 export const ENABLE_DEV_TOOLS = Boolean(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
