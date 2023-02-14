@@ -64,7 +64,7 @@ const StrengthIndicator: React.FC<CombinedProps> = (props: Props) => {
           <div
             className={classNames({
               [classes.block]: true,
-              [`strength-${strength}`]: !isNil(strength) && idx <= strength,
+              [`strength-${strength}`]: !isNil(strength) && idx < strength,
             })}
           />
         </Grid>
@@ -94,8 +94,9 @@ export const convertStrengthScore = (strength: StrengthValues) => {
     case 1:
       return ' Weak';
     case 2:
-      return ' Fair';
     case 3:
+      return ' Fair';
+    case 4:
       return ' Good';
     default:
       return ' Weak';

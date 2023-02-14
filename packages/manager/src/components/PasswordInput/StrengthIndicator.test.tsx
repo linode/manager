@@ -20,6 +20,7 @@ describe('convertStrengthScore', () => {
     expect(convertStrengthScore(0)).toBe(' Weak');
     expect(convertStrengthScore(1)).toBe(' Weak');
     expect(convertStrengthScore(2)).toBe(' Fair');
-    expect(convertStrengthScore(3)).toBe(' Good');
+    expect(convertStrengthScore(3)).toBe(' Fair');
+    expect(convertStrengthScore(4)).toBe(' Good');
   });
 });
