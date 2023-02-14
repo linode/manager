@@ -157,6 +157,19 @@ const transactionDateOptions: Item<DateRange>[] = [
 
 const defaultDateRange: DateRange = '6 Months';
 
+const AkamaiBillingInvoiceText = (
+  <Typography>
+    Charges in the final Akamai invoice should be considered the final source
+    truth. Linode invoice will not reflect discounting, currency adjustment, or
+    any negotiated terms and conditions. Condensed and finalized invoice is
+    available within{' '}
+    <Link to="https://control.akamai.com/apps/billing">
+      Akamai Control Center &gt; Billing <ExternalLinkIcon />
+    </Link>
+    .
+  </Typography>
+);
+
 // =============================================================================
 // <BillingActivityPanel />
 // =============================================================================
@@ -202,19 +215,6 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   } = useAllAccountInvoices(
     {},
     makeFilter(getCutoffFromDateRange(selectedTransactionDate))
-  );
-
-  const AkamaiBillingInvoiceText = (
-    <Typography>
-      Charges in the final Akamai invoice should be considered the final source
-      truth. Linode invoice will not reflect discounting, currency adjustment,
-      or any negotiated terms and conditions. Condensed and finalized invoice is
-      available within{' '}
-      <Link to="https://control.akamai.com/apps/billing">
-        Akamai Control Center &gt; Billing <ExternalLinkIcon />
-      </Link>
-      .
-    </Typography>
   );
 
   const downloadInvoicePDF = React.useCallback(
