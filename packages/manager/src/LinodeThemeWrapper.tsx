@@ -3,6 +3,7 @@ import * as React from 'react';
 import { ThemeProvider, Theme } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
 import { isProductionBuild } from './constants';
+import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
 
 declare module '@mui/styles/defaultTheme' {
@@ -56,7 +57,9 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
 };
 
 const LinodeThemeWrapper: React.FC = ({ children }) => {
-  const { data: preferences } = usePreferences();
+  // fallback to default when rendering themed components pre-authentication
+  const isAuthenticated = !!useAuthentication().token;
+  const { data: preferences } = usePreferences(isAuthenticated);
 
   const themeChoice: ThemeChoice = preferences?.theme ?? 'light';
 
