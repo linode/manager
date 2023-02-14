@@ -69,8 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     border: 'none',
   },
   unmodified: {
-    backgroundColor: '#FFFFFF',
-    color: '#606469',
+    backgroundColor: theme.bg.bgPaper,
   },
   highlight: {
     backgroundColor: theme.bg.lightBlue1,
@@ -111,14 +110,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleHeaderRow: {
     marginTop: '5px',
-    backgroundColor: '#F9FAFA',
-    color: '#888F91',
+    backgroundColor: theme.bg.tableHeader,
+    color: theme.textColors.tableHeader,
     fontWeight: 'bold',
     height: '46px',
   },
   ruleRow: {
-    borderBottom: '1px solid #F4F5F6',
-    height: '40px',
+    borderBottom: `1px solid ${theme.borderColors.borderTable}`,
+    color: theme.textColors.tableStatic,
   },
   addLabelButton: {
     ...theme.applyLinkStyles,
@@ -306,7 +305,10 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
                     <Grid
                       container
                       data-testid={'table-row-empty'}
-                      className={classNames(classes.unmodified)}
+                      className={classNames(
+                        classes.unmodified,
+                        classes.ruleRow
+                      )}
                       style={{
                         padding: 8,
                         width: '100%',
@@ -542,7 +544,11 @@ export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
   return (
     <Grid
       container
-      className={classNames(classes.policyRow, classes.unmodified)}
+      className={classNames(
+        classes.policyRow,
+        classes.unmodified,
+        classes.ruleRow
+      )}
       tabIndex={0}
     >
       <Grid item xs={colSpan} className={classes.policyText}>
