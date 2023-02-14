@@ -1,14 +1,13 @@
-const escapeStringForCLI = (value: string) => {
-  const doesContainEscapableChars = value.match(/[^\w\s]/gi);
-  let parsedValue = value;
-  if (doesContainEscapableChars) {
-    parsedValue = value.replace(/[^\w\s]/gi, function (char) {
-      return '\\' + char;
-    });
-    return parsedValue;
+// Credit: https://github.com/xxorax/node-shell-escape
+function escapeStringForCLI(s: string): string {
+  if (/[^A-Za-z0-9_\/:=-]/.test(s)) {
+    s = "'" + s.replace(/'/g, "'\\''") + "'";
+    s = s
+      .replace(/^(?:'')+/g, '') // unduplicate single-quote at the beginning
+      .replace(/\\'''/g, "\\'"); // remove non-escaped single-quote if there are enclosed between 2 escaped
   }
-  return value;
-};
+  return s;
+}
 
 type JSONFieldToArray = [string, unknown];
 
