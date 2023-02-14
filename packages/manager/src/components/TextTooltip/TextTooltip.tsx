@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const TextTooltip: React.FC<Props> = (props: Props) => {
+export const TextTooltip = (props: Props) => {
   const classes = useStyles();
   const { displayText, tooltipText } = props;
 

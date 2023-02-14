@@ -204,7 +204,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
     makeFilter(getCutoffFromDateRange(selectedTransactionDate))
   );
 
-  const akamaiBillingInvoiceText = (
+  const AkamaiBillingInvoiceText = (
     <Typography>
       Charges in the final Akamai invoice should be considered the final source
       truth. Linode invoice will not reflect discounting, currency adjustment,
@@ -354,7 +354,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           <div className={classes.headerLeft}>
             <TextTooltip
               displayText="Usage History may not reflect finalized invoice"
-              tooltipText={akamaiBillingInvoiceText}
+              tooltipText={AkamaiBillingInvoiceText}
             />
           </div>
         ) : null}
