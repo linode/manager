@@ -24,7 +24,6 @@ import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './queries/base';
-import PreferenceToggle from './components/PreferenceToggle';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
@@ -55,18 +54,7 @@ const renderApp = (props: RouteComponentProps) => (
       data-qa-toast
       hideIconVariant={true}
     >
-      <PreferenceToggle<'light' | 'dark'>
-        preferenceKey="theme"
-        preferenceOptions={['light', 'dark']}
-      >
-        {({ togglePreference }) => (
-          <App
-            location={props.location}
-            history={props.history}
-            toggleTheme={togglePreference}
-          />
-        )}
-      </PreferenceToggle>
+      <App location={props.location} history={props.history} />
     </SnackBar>
   </>
 );

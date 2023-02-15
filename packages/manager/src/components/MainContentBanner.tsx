@@ -104,6 +104,6 @@ const MainContentBanner: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(React.memo, withPreferences());
+const enhanced = compose<CombinedProps, Props>(React.memo, withPreferences);
 
 export default enhanced(MainContentBanner);

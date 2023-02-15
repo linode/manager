@@ -127,6 +127,6 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<CombinedProps> = (
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences());
+const enhanced = compose<CombinedProps, Props>(withPreferences);
 
 export default enhanced(DatabaseSettingsDeleteClusterDialog);

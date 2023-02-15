@@ -96,6 +96,6 @@ const PreferenceEditor: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, DialogProps>(withPreferences());
+const enhanced = compose<CombinedProps, DialogProps>(withPreferences);
 
 export default enhanced(PreferenceEditor);

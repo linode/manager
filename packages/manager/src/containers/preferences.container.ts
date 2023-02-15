@@ -1,39 +1,36 @@
-import { connect } from 'react-redux';
-import { ApplicationState } from 'src/store';
-
-import { UserPreferences } from 'src/store/preferences/preferences.actions';
-import { State } from 'src/store/preferences/preferences.reducer';
-import {
-  getUserPreferences,
-  updateUserPreferences,
-} from 'src/store/preferences/preferences.requests';
-
-import { ThunkDispatch } from 'src/store/types';
-
+import React from 'react';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 export interface PreferencesStateProps {
-  preferences: UserPreferences;
+  preferences: ManagerPreferences;
 }
 
 export interface PreferencesActionsProps {
-  getUserPreferences: () => Promise<UserPreferences>;
-  updateUserPreferences: (params: UserPreferences) => Promise<UserPreferences>;
+  getUserPreferences: () => Promise<ManagerPreferences>;
+  updateUserPreferences: (
+    params: ManagerPreferences
+  ) => Promise<ManagerPreferences>;
 }
 
 export type Props = PreferencesActionsProps & PreferencesStateProps;
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps?: (ownProps: TOuter, profile: State) => TInner
-) =>
-  connect(
-    (state: ApplicationState, ownProps: TOuter) => {
-      if (mapAccountToProps) {
-        return mapAccountToProps(ownProps, state.preferences);
-      }
-      return { preferences: state.preferences.data ?? {} };
-    },
-    (dispatch: ThunkDispatch) => ({
-      getUserPreferences: () => dispatch(getUserPreferences()),
-      updateUserPreferences: (payload: UserPreferences) =>
-        dispatch(updateUserPreferences(payload)),
-    })
-  );
+const withPreferences = <Props>(
+  Component: React.ComponentType<
+    Props & PreferencesStateProps & PreferencesActionsProps
+  >
+) => (props: Props) => {
+  const { data: preferences, refetch } = usePreferences();
+  const { mutateAsync: updateUserPreferences } = useMutatePreferences();
+  if (preferences === undefined) {
+    return null;
+  }
+  return React.createElement(Component, {
+    ...props,
+    preferences,
+    getUserPreferences: () =>
+      refetch().then(({ data }) => data ?? Promise.reject()),
+    updateUserPreferences,
+  });
+};
+
+export default withPreferences;
