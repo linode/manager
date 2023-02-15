@@ -179,7 +179,7 @@ export const BucketDetail: React.FC = () => {
 
       if (itemsInFolder.data.length > 1) {
         setDeleteObjectLoading(false);
-        setDeleteObjectError('The folder must be empty to delete it');
+        setDeleteObjectError('The folder must be empty to delete it.');
         return;
       }
     }
