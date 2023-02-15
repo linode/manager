@@ -67,6 +67,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     textDecoration: 'underline',
     cursor: 'pointer',
   },
+  createFolderButton: {
+    [theme.breakpoints.down('md')]: {
+      marginRight: theme.spacing(),
+    },
+  },
 }));
 
 interface MatchParams {
@@ -357,6 +362,7 @@ export const BucketDetail: React.FC = () => {
       <Box display="flex" justifyContent="flex-end" mt={1.5} mb={0.5}>
         <Button
           buttonType="outlined"
+          className={classes.createFolderButton}
           onClick={() => setIsCreateFolderDrawerOpen(true)}
         >
           Create Folder
