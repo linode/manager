@@ -389,7 +389,7 @@ const enhanced = compose<CombinedProps, Props>(
   withSnackbar,
   withImages(),
   withRouter,
-  withPreferences()
+  withPreferences
 );
 
 export default enhanced(RebuildFromStackScript);

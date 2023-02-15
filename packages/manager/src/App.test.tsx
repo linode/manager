@@ -10,6 +10,7 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
 import { hasOauthError } from './App';
+import { preferencesFactory } from './factories/preferences';
 
 it('renders without crashing.', () => {
   const component = shallow(
@@ -30,7 +31,9 @@ it('renders without crashing.', () => {
             }}
             documentation={[]}
             appIsLoading={false}
-            toggleTheme={jest.fn()}
+            preferences={preferencesFactory.build()}
+            getUserPreferences={jest.fn()}
+            updateUserPreferences={jest.fn()}
             linodesLoading={false}
             ldClient={{} as any}
             featureFlagsLoading={false}

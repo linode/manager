@@ -133,7 +133,7 @@ const TimeRangeSelect: React.FC<CombinedProps> = (props) => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withPreferences()
+  withPreferences
 )(TimeRangeSelect);
 
 /**

@@ -245,7 +245,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withImages(),
-  withPreferences(),
+  withPreferences,
   userSSHKeyHoc,
   withSnackbar,
   withRouter

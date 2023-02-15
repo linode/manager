@@ -35,9 +35,12 @@ import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { volumeEventsHandler } from './queries/volumes';
 import { tokenEventHandler } from './queries/tokens';
+import withPreferences, {
+  PreferencesActionsProps,
+  PreferencesStateProps,
+} from './containers/preferences.container';
 
 interface Props {
-  toggleTheme: () => void;
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
 }
@@ -53,7 +56,9 @@ type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
   WithSnackbarProps &
-  FeatureFlagConsumerProps;
+  FeatureFlagConsumerProps &
+  PreferencesStateProps &
+  PreferencesActionsProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -88,13 +93,16 @@ export class App extends React.Component<CombinedProps, State> {
     // eslint-disable-next-line
     document.addEventListener('keydown', (event: KeyboardEvent) => {
       const isOSMac = navigator.userAgent.includes('Mac');
-      const letterForThemeShortcut = 'D';
+      const letterForThemeShortcut = 'F';
       const letterForGoToOpen = 'K';
       const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
       if (event[modifierKey] && event.shiftKey) {
         switch (event.key) {
           case letterForThemeShortcut:
-            this.props.toggleTheme();
+            this.props.updateUserPreferences({
+              ...this.props.preferences,
+              theme: this.props.preferences.theme === 'dark' ? 'light' : 'dark',
+            });
             break;
           case letterForGoToOpen:
             this.setState((prevState) => ({
@@ -281,7 +289,8 @@ export default compose(
   withDocumentTitleProvider,
   withSnackbar,
   withFeatureFlagProvider,
-  withFeatureFlagConsumer
+  withFeatureFlagConsumer,
+  withPreferences
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

@@ -115,6 +115,6 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences());
+const enhanced = compose<CombinedProps, Props>(withPreferences);
 
 export default enhanced(RestoreFromBackupDialog);
