@@ -284,6 +284,15 @@
         {
           "$schema": "http://json.schemastore.org/swcrc",
           "jsc": {
+            "transform": {
+              "optimizer": {
+                "globals": {
+                  "vars": {
+                    "import.meta.env": "{}"
+                  }
+                }
+              }
+            },
             "experimental": {
               "plugins": [
                 [
