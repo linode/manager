@@ -324,16 +324,6 @@ button::-moz-focus-inner {
   }
 }
 
-/* Animate Linode Landing pending action status icons */
-.statusOther {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-/* Animate Linode Details pending action status icon */
-.statusOtherDetail::before {
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
 .no-transition *,
 .no-transition *::before,
 .no-transition *::after {

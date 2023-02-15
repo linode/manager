@@ -127,6 +127,15 @@ const AccountLogins = () => {
             <Hidden smDown>
               <TableCell className={classes.cell}>Permission Level</TableCell>
             </Hidden>
+            <TableSortCell
+              active={orderBy === 'status'}
+              direction={order}
+              label="status"
+              handleClick={handleOrderChange}
+              className={classes.cell}
+            >
+              Access
+            </TableSortCell>
           </TableRow>
         </TableHead>
         <TableBody>{renderTableContent()}</TableBody>
