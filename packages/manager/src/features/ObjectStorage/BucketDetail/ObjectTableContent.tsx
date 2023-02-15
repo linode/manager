@@ -9,7 +9,7 @@ import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
-import { displayName, isFolder } from '../utilities';
+import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
 import FolderTableRow from './FolderTableRow';
 import ObjectTableRow from './ObjectTableRow';
 
@@ -69,7 +69,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     <>
       {data.map((page) => {
         return page.data.map((object) => {
-          if (object.name.endsWith('/') && object.size === 0) {
+          if (isEmptyObjectForFolder(object)) {
             if (numOfDisplayedObjects === 1) {
               return (
                 <TableRowEmptyState

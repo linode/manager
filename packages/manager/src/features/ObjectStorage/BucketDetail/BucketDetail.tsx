@@ -33,6 +33,7 @@ import ObjectUploader from '../ObjectUploader';
 import {
   displayName,
   generateObjectUrl,
+  isEmptyObjectForFolder,
   tableUpdateAction,
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
@@ -172,12 +173,20 @@ export const BucketDetail: React.FC = () => {
     setDeleteObjectError(undefined);
 
     if (objectToDelete.endsWith('/')) {
-      const itemsInFolder = await getObjectList(clusterId, bucketName, {
+      const itemsInFolderData = await getObjectList(clusterId, bucketName, {
         prefix: objectToDelete,
         delimiter: OBJECT_STORAGE_DELIMITER,
       });
 
-      if (itemsInFolder.data.length > 1) {
+      // Exclude the empty object the represents a folder so we can
+      // find the true number of objects on the page
+      const itemsInFolder = itemsInFolderData.data.filter(
+        (object) =>
+          !isEmptyObjectForFolder(object) &&
+          !objectToDelete.endsWith(object.name)
+      );
+
+      if (itemsInFolder.length > 0) {
         setDeleteObjectLoading(false);
         setDeleteObjectError('The folder must be empty to delete it.');
         return;
