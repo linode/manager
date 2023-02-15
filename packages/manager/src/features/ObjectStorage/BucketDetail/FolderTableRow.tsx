@@ -6,6 +6,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { FolderActionMenu } from './FolderActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
@@ -22,12 +23,13 @@ interface Props {
   folderName: string;
   displayName: string;
   manuallyCreated: boolean;
+  handleClickDelete: (objectName: string) => void;
 }
 
 const FolderTableRow: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { folderName, displayName, manuallyCreated } = props;
+  const { folderName, displayName, manuallyCreated, handleClickDelete } = props;
 
   return (
     <TableRow
@@ -52,7 +54,12 @@ const FolderTableRow: React.FC<Props> = (props) => {
       <Hidden mdDown>
         <TableCell />
       </Hidden>
-      <TableCell />
+      <TableCell actionCell>
+        <FolderActionMenu
+          handleClickDelete={handleClickDelete}
+          objectName={folderName}
+        />
+      </TableCell>
     </TableRow>
   );
 };
