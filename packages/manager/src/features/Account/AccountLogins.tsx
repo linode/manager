@@ -66,8 +66,8 @@ const AccountLogins = () => {
           rows={1}
           columns={4}
           responsive={{
-            1: { xsDown: true },
-            3: { smDown: true },
+            2: { smDown: true },
+            3: { mdDown: true },
           }}
         />
       );
@@ -113,7 +113,7 @@ const AccountLogins = () => {
             >
               Username
             </TableSortCell>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableSortCell
                 active={orderBy === 'ip'}
                 direction={order}
@@ -124,7 +124,7 @@ const AccountLogins = () => {
                 IP
               </TableSortCell>
             </Hidden>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableCell className={classes.cell}>Permission Level</TableCell>
             </Hidden>
             <TableSortCell

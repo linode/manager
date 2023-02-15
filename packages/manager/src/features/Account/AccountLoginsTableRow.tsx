@@ -25,10 +25,10 @@ const AccountLoginsTableRow = (props: AccountLogin) => {
       <TableCell noWrap>
         <Link to={`/account/users/${username}`}>{username}</Link>
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         <TableCell>{ip}</TableCell>
       </Hidden>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell noWrap>
           {restricted ? 'Restricted' : 'Unrestricted'}
         </TableCell>
