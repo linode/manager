@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-02-13] - v1.86.0
+
+### Added:
+- “Status” column to Linode Backups table
+
+### Changed:
+- Migrate to Material UI v5 theme format
+- Accessibility improvements to TopMenu icons
+- Logo updates
+- Account Agreements Query Small Optimization
+
+### Fixed:
+- Uneven Breakpoints in Kubernetes Landing Table
+
+## [2023-02-07] - v1.85.0
+
+### Added:
+- Databases as a User Permissions Option
+- Monthly Network Transfer Pool to select empty state landing pages
+- API/CLI usage information to Linode Create
+
+### Changed:
+- Improve firewall rule list screen reader support
+- UX copy for “Getting Started” playlists
+
+### Fixed:
+- API Tokens revocation
+
 ## [2023-01-18] - v1.84.0
 
 ### Added:

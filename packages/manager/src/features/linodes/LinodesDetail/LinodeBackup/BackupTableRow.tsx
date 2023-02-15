@@ -2,6 +2,7 @@ import { LinodeBackup } from '@linode/api-v4/lib/linodes';
 import { Duration } from 'luxon';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import StatusIcon, { Status } from 'src/components/StatusIcon/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { parseAPIDate } from 'src/utilities/date';
@@ -20,6 +21,26 @@ const typeMap = {
   snapshot: 'Manual',
 };
 
+const statusTextMap: Record<LinodeBackup['status'], string> = {
+  pending: 'Pending',
+  running: 'Running',
+  needsPostProcessing: 'Processing',
+  successful: 'Success',
+  paused: 'Paused',
+  failed: 'Failed',
+  userAborted: 'Aborted',
+};
+
+const statusIconMap: Record<LinodeBackup['status'], Status> = {
+  pending: 'other',
+  running: 'other',
+  needsPostProcessing: 'other',
+  successful: 'active',
+  paused: 'inactive',
+  failed: 'error',
+  userAborted: 'error',
+};
+
 const BackupTableRow: React.FC<Props> = (props) => {
   const { backup, disabled, handleRestore } = props;
 
@@ -34,6 +55,14 @@ const BackupTableRow: React.FC<Props> = (props) => {
         data-qa-backup-name={backup.label || typeMap[backup.type]}
       >
         {backup.label || typeMap[backup.type]}
+      </TableCell>
+      <TableCell
+        statusCell
+        parentColumn="Status"
+        data-qa-backup-name={backup.status}
+      >
+        <StatusIcon status={statusIconMap[backup.status] ?? 'other'} />
+        {statusTextMap[backup.status]}
       </TableCell>
       <TableCell parentColumn="Date Created">
         {/** important to note that we're intentionally not humanizing the time here */}
