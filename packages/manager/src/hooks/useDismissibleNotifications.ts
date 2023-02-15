@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon';
 import md5 from 'md5';
 import { useState } from 'react';
-import { usePreferences } from 'src/hooks/usePreferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { DismissedNotification } from 'src/store/preferences/preferences.actions';
 
 /**
@@ -45,7 +45,8 @@ export interface DismissibleNotificationsHook {
 }
 
 export const useDismissibleNotifications = (): DismissibleNotificationsHook => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
   const [dismissed, setDismissed] = useState(false);
 
   const dismissedNotifications = preferences?.dismissed_notifications ?? {};

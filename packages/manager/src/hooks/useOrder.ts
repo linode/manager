@@ -2,7 +2,7 @@ import * as qs from 'qs';
 import { useState, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import { usePreferences } from 'src/hooks/usePreferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { OrderSet } from 'src/store/preferences/preferences.actions';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
@@ -25,7 +25,8 @@ export const useOrder = (
   preferenceKey?: string,
   prefix?: string
 ) => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
   const params = getParamsFromUrl(location.search);

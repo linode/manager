@@ -34,7 +34,7 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
-import usePreferences from 'src/hooks/usePreferences';
+import { usePreferences } from 'src/queries/preferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
@@ -173,7 +173,7 @@ const Databases = React.lazy(() => import('src/features/Databases'));
 const MainContent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
-  const { preferences } = usePreferences();
+  const { data: preferences } = usePreferences();
 
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();

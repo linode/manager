@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import { equals, pathOr, sort, splitAt } from 'ramda';
 import * as React from 'react';
 import { Order } from 'src/components/Pagey';
-import usePreferences from 'src/hooks/usePreferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import usePrevious from 'src/hooks/usePrevious';
 import { UserPreferences } from 'src/store/preferences/preferences.actions';
 import {
@@ -149,7 +149,8 @@ export const sortData = (orderBy: string, order: Order) => {
 };
 
 export const OrderBy: React.FC<CombinedProps> = (props) => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
   const params = getParamsFromUrl(location.search);
