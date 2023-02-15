@@ -404,6 +404,11 @@ export class LinodeCreate extends React.PureComponent<
       stackscript_id: this.props.selectedStackScriptID,
       stackscript_data: this.props.selectedUDFs,
     };
+    sendEvent({
+      category: 'Linode Create API CLI Awareness Modal',
+      action: 'Click:Button',
+      label: 'Create Using Command Line',
+    });
     this.props.checkValidation(payload);
   };
 
