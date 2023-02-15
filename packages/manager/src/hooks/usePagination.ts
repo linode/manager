@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { usePreferences } from 'src/hooks/usePreferences';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 export interface PaginationProps<T> {
   page: number;
@@ -12,7 +12,8 @@ export const usePagination = (
   initialPage: number = 1,
   preferenceKey?: string
 ): PaginationProps<any> => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
   const [page, setPage] = useState(initialPage);
   const [pageSize, setPageSize] = useState(
     preferences?.[preferenceKey ?? -1] ?? 25
