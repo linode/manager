@@ -105,7 +105,7 @@
     "start": "vite",
     "start:ci": "yarn serve ./build -p 3000 -s --cors",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
-    "build": "vite build",
+    "build": "node scripts/build.js && vite build",
     "precommit": "lint-staged && yarn typecheck",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
