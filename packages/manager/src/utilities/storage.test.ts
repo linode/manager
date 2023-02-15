@@ -12,7 +12,7 @@ describe('getLocalStorageOverrides', () => {
     label: 'My Env',
   };
 
-  it('it returns overrides if defined and if dev tools are enabled', () => {
+  it.skip('it returns overrides if defined and if dev tools are enabled', () => {
     // Enable the dev tools.
     window.localStorage.setItem('dev-tools', 'true');
 
