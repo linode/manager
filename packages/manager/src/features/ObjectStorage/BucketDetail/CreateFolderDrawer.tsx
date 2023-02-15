@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Drawer from 'src/components/Drawer/Drawer';
 import TextField from 'src/components/TextField';
+import ActionsPanel from 'src/components/ActionsPanel';
 import { useFormik } from 'formik';
 import { useCreateObjectUrlMutation } from 'src/queries/objectStorage';
-import ActionsPanel from 'src/components/ActionsPanel';
 import { Button } from 'src/components/Button/Button';
-import Notice from 'src/components/Notice';
 
 interface Props {
   open: boolean;
@@ -35,15 +34,29 @@ export const CreateFolderDrawer = (props: Props) => {
     initialValues: {
       name: '',
     },
-    async onSubmit({ name }) {
+    validate(values) {
+      if (values.name === '') {
+        return {
+          name: 'Folder name required.',
+        };
+      }
+      return {};
+    },
+    async onSubmit({ name }, helpers) {
       const newObjectAbsolutePath = prefix + name + '/';
-      const { url } = await mutateAsync({
+
+      const { url, exists } = await mutateAsync({
         name: newObjectAbsolutePath,
         method: 'PUT',
         options: {
           content_type: 'application/octet-stream',
         },
       });
+
+      if (exists) {
+        helpers.setFieldError('name', 'This folder already exists.');
+        return;
+      }
 
       fetch(url, {
         method: 'PUT',
@@ -57,14 +70,20 @@ export const CreateFolderDrawer = (props: Props) => {
     },
   });
 
+  useEffect(() => {
+    if (open) {
+      formik.resetForm();
+    }
+  }, [open]);
+
   return (
     <Drawer title="Create Folder" open={open} onClose={onClose}>
-      {error && <Notice error text={error[0].reason} />}
       <form onSubmit={formik.handleSubmit}>
         <TextField
           label="Folder Name"
           name="name"
           onChange={formik.handleChange}
+          errorText={formik.errors.name ?? error?.[0]?.reason}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose}>

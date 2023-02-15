@@ -41,7 +41,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   const { width } = useWindowDimensions();
 
   if (isFetching && !isFetchingNextPage) {
-    return <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />;
+    return <TableRowLoading columns={4} responsive={{ 2: { mdDown: true } }} />;
   }
 
   if (error) {
@@ -122,7 +122,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
         });
       })}
       {isFetchingNextPage ? (
-        <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />
+        <TableRowLoading columns={4} responsive={{ 2: { mdDown: true } }} />
       ) : null}
     </>
   );
