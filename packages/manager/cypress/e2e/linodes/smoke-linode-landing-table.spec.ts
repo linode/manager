@@ -1,17 +1,18 @@
 /* eslint-disable sonarjs/no-duplicate-string */
 import { Linode } from '@linode/api-v4/types';
-import { createLinode } from '../../support/api/linodes';
+import { createLinode } from 'support/api/linodes';
 import {
   containsVisible,
   fbtVisible,
   getClick,
   getVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
 import { routes } from 'cypress/support/ui/constants';
 import { ui } from 'support/ui';
+import { apiMatcher } from 'support/util/intercepts';
 import { regions, regionsMap } from 'support/constants/regions';
 
 const mockLinodes = new Array(5).fill(null).map(
@@ -75,11 +76,11 @@ describe('linode landing checks', () => {
       managed: false,
     });
 
-    cy.intercept('GET', '**/account/settings', (req) => {
+    cy.intercept('GET', apiMatcher('account/settings'), (req) => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
-    cy.intercept('GET', '**/profile').as('getProfile');
-    cy.intercept('GET', '**/linode/instances/*', (req) => {
+    cy.intercept('GET', apiMatcher('profile')).as('getProfile');
+    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
       req.reply(mockLinodesData);
     }).as('getLinodes');
     cy.visitWithLogin('/', { preferenceOverrides });
@@ -269,11 +270,11 @@ describe('linode landing actions', () => {
       managed: false,
     });
 
-    cy.intercept('GET', '**/account/settings', (req) => {
+    cy.intercept('GET', apiMatcher('account/settings'), (req) => {
       req.reply(mockAccountSettings);
     }).as('getAccountSettings');
 
-    cy.intercept('DELETE', '**/linode/instances/*').as('deleteLinode');
+    cy.intercept('DELETE', apiMatcher('linode/instances/*')).as('deleteLinode');
     createLinode().then((linodeA) => {
       createLinode().then((linodeB) => {
         cy.visitWithLogin('/linodes', { preferenceOverrides });

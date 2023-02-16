@@ -8,13 +8,15 @@ import {
 } from 'support/helpers';
 import { ui } from 'support/ui';
 import { assertToast } from 'support/ui/events';
+import { apiMatcher } from 'support/util/intercepts';
 
 describe('clone linode', () => {
   it('clone linode', () => {
     createLinode({ image: null }).then((linode) => {
-      cy.intercept('POST', `**/linode/instances/${linode.id}/clone`).as(
-        'cloneLinode'
-      );
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/clone`)
+      ).as('cloneLinode');
       cy.visitWithLogin(`/linodes/${linode.id}`);
       containsVisible(linode.label);
       if (

@@ -1,5 +1,5 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { Linode } from '../../../../api-v4/lib/linodes/types';
+import { Linode } from '@linode/api-v4/types';
 import { createLinode } from 'support/api/linodes';
 import {
   containsVisible,
@@ -8,6 +8,7 @@ import {
   getClick,
   getVisible,
 } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 
 const deleteDisk = (diskName, inUse = false) => {
   cy.get(`[aria-label="Action menu for Disk ${diskName}"]`)
@@ -60,9 +61,10 @@ describe('linode storage tab', () => {
   it('try to delete in use disk', () => {
     const diskName = 'Debian 10 Disk';
     createLinode().then((linode) => {
-      cy.intercept('DELETE', `**/linode/instances/${linode.id}/disks/*`).as(
-        'deleteDisk'
-      );
+      cy.intercept(
+        'DELETE',
+        apiMatcher(`linode/instances/${linode.id}/disks/*`)
+      ).as('deleteDisk');
       // Wait for Linode to boot before navigating to `Storage` details tab.
       // Navigate via `cy.visitWithLogin` to invoke a page refresh.
       // @TODO Remove this step upon resolution of M3-5762.
@@ -83,12 +85,14 @@ describe('linode storage tab', () => {
   it('delete disk', () => {
     const diskName = 'cy-test-disk';
     createLinode({ image: null }).then((linode: Linode) => {
-      cy.intercept('DELETE', `**/linode/instances/${linode.id}/disks/*`).as(
-        'deleteDisk'
-      );
-      cy.intercept('POST', `**/linode/instances/${linode.id}/disks`).as(
-        'addDisk'
-      );
+      cy.intercept(
+        'DELETE',
+        apiMatcher(`linode/instances/${linode.id}/disks/*`)
+      ).as('deleteDisk');
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/disks`)
+      ).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
@@ -107,9 +111,10 @@ describe('linode storage tab', () => {
   it('add a disk', () => {
     const diskName = 'cy-test-disk';
     createLinode({ image: null }).then((linode: Linode) => {
-      cy.intercept('POST', `**/linode/instances/${linode.id}/disks`).as(
-        'addDisk'
-      );
+      cy.intercept(
+        'POST',
+        apiMatcher(`/linode/instances/${linode.id}/disks`)
+      ).as('addDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);
       fbtVisible(diskName);
@@ -121,12 +126,13 @@ describe('linode storage tab', () => {
   it('resize disk', () => {
     const diskName = 'Debian 10 Disk';
     createLinode({ image: null }).then((linode: Linode) => {
-      cy.intercept('POST', `**/linode/instances/${linode.id}/disks`).as(
-        'addDisk'
-      );
       cy.intercept(
         'POST',
-        `**/linode/instances/${linode.id}/disks/*/resize`
+        apiMatcher(`linode/instances/${linode.id}/disks`)
+      ).as('addDisk');
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/disks/*/resize`)
       ).as('resizeDisk');
       cy.visitWithLogin(`/linodes/${linode.id}/storage`);
       addDisk(linode.id, diskName);

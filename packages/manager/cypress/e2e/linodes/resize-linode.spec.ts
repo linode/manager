@@ -1,12 +1,14 @@
-import { createLinode } from '../../support/api/linodes';
-import { containsVisible, fbtVisible, getClick } from '../../support/helpers';
+import { createLinode } from 'support/api/linodes';
+import { containsVisible, getClick } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 
 describe('resize linode', () => {
   it('resizes a linode', () => {
     createLinode().then((linode) => {
-      cy.intercept('POST', `**/linode/instances/${linode.id}/resize`).as(
-        'linodeResize'
-      );
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/resize`)
+      ).as('linodeResize');
       cy.visitWithLogin(`/linodes/${linode.id}?resize=true`);
       cy.findByText('Shared CPU').click({ scrollBehavior: false });
       containsVisible('Linode 2 GB');

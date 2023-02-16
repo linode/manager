@@ -1,6 +1,7 @@
 import { createLinode } from 'support/api/linodes';
-import { fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { fbtClick, fbtVisible } from 'support/helpers';
 import { ui } from 'support/ui';
+import { apiMatcher } from 'support/util/intercepts';
 
 const rebootInRescueMode = () => {
   fbtClick('Reboot into Rescue Mode');
@@ -11,9 +12,13 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then((linode) => {
       // mock 200 response
-      cy.intercept('POST', `**/linode/instances/${linode.id}/rescue`, (req) => {
-        req.reply(200);
-      }).as('postRebootInRescueMode');
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/rescue`),
+        (req) => {
+          req.reply(200);
+        }
+      ).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}`;
       cy.visit(rescueUrl);
       ui.actionMenu
@@ -37,9 +42,10 @@ describe('rescue linode', () => {
     cy.visitWithLogin('/support');
     createLinode().then((linode) => {
       // not mocking response here, intercepting post
-      cy.intercept('POST', `**/linode/instances/${linode.id}/rescue`).as(
-        'postRebootInRescueMode'
-      );
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/rescue`)
+      ).as('postRebootInRescueMode');
       const rescueUrl = `/linodes/${linode.id}/rescue`;
       cy.visit(rescueUrl);
       fbtVisible(`Rescue Linode ${linode.label}`);

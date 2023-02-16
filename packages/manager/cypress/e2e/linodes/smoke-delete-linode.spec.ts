@@ -1,13 +1,14 @@
-/* eslint-disable sonarjs/no-duplicate-string */
 import { createLinode } from 'support/api/linodes';
-import { containsClick, fbtVisible, getVisible } from 'support/helpers';
 import { ui } from 'support/ui';
+import { apiMatcher } from 'support/util/intercepts';
 
 describe('delete linode', () => {
   it('deletes linode from linode details page', () => {
     createLinode().then((linode) => {
       // catch delete request
-      cy.intercept('DELETE', '**/linode/instances/*').as('deleteLinode');
+      cy.intercept('DELETE', apiMatcher('linode/instances/*')).as(
+        'deleteLinode'
+      );
       cy.visitWithLogin(`/linodes/${linode.id}`);
 
       // Wait for content to load before performing actions via action menu.
