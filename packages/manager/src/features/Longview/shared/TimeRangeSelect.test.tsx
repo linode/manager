@@ -1,3 +1,4 @@
+import { DateTime } from 'luxon';
 import {
   generateSelectOptions,
   generateStartTime,
@@ -38,10 +39,12 @@ describe('Utility Functions', () => {
       });
 
     expect(
-      createDate(
-        generateStartTime('Past 30 Minutes', GMT_november_20_2019_849PM, 2019)
-      )
-    ).toMatch(/11\/20\/2019, 8:19:58 PM/gim);
+      generateStartTime('Past 30 Minutes', GMT_november_20_2019_849PM, 2019)
+    ).toEqual(
+      DateTime.fromSeconds(GMT_november_20_2019_849PM)
+        .minus({ minutes: 30 })
+        .toSeconds()
+    );
 
     expect(
       `${createDate(
