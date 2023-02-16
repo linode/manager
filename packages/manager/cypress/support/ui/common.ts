@@ -28,18 +28,6 @@ const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
   }
 };
 
-// / Wraps an Action of type ()=>void to make ot more stable
-// / Tries Multiple Time, wiats before, and between attempts
-export const defensiveDo = (
-  getFunction,
-  attemptsNumber = 5,
-  waitBeforeTryMs = 300,
-  delayBetweenAttemptsMs = 300
-) => {
-  cy.wait(waitBeforeTryMs);
-  attempt(getFunction, attemptsNumber, delayBetweenAttemptsMs);
-};
-
 export const waitForAppLoad = (path = '/', withLogin = true) => {
   cy.intercept('GET', '**/linode/instances/*').as('getLinodes');
   cy.intercept('GET', '**/account').as('getAccount');
