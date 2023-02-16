@@ -84,20 +84,18 @@ describe('Google Pay', () => {
       .should('be.visible')
       .click();
 
-    cy.get('[data-testid="drawer"]').within(() => {
-      ui.drawer
-        .findByTitle('Make a Payment')
-        .should('be.visible')
-        .within(() => {
-          cy.contains(
-            `${mockPaymentMethodsData[0].card_type} ****${mockPaymentMethodsData[0].last_four}`
-          ).should('be.visible');
-          cy.contains(
-            `${mockPaymentMethodsData[1].card_type} ****${mockPaymentMethodsData[1].last_four}`
-          ).should('be.visible');
-          cy.get('[data-qa-button="gpayButton"]').click();
-        });
-    });
+    ui.drawer
+      .findByTitle('Make a Payment')
+      .should('be.visible')
+      .within(() => {
+        cy.contains(
+          `${mockPaymentMethodsData[0].card_type} ****${mockPaymentMethodsData[0].last_four}`
+        ).should('be.visible');
+        cy.contains(
+          `${mockPaymentMethodsData[1].card_type} ****${mockPaymentMethodsData[1].last_four}`
+        ).should('be.visible');
+        cy.get('[data-qa-button="gpayButton"]').click();
+      });
 
     cy.wait('@braintree');
   });
