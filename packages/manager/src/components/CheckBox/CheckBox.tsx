@@ -30,11 +30,17 @@ const useStyles = makeStyles((theme: Theme) => ({
       fill: `${theme.bg.main}`,
     },
   },
+  formControlStyles: {
+    marginRight: 0,
+  },
+  helpIcon: {
+    padding: '0px 0px 0px 8px',
+  },
 }));
 
 interface Props extends CheckboxProps {
   text?: string | JSX.Element;
-  toolTipText?: string;
+  toolTipText?: string | JSX.Element;
 }
 
 const LinodeCheckBox: React.FC<Props> = (props) => {
@@ -51,6 +57,7 @@ const LinodeCheckBox: React.FC<Props> = (props) => {
     return (
       <React.Fragment>
         <FormControlLabel
+          className={classes.formControlStyles}
           control={
             <Checkbox
               color="primary"
@@ -63,7 +70,9 @@ const LinodeCheckBox: React.FC<Props> = (props) => {
           }
           label={props.text}
         />
-        {toolTipText && <HelpIcon text={toolTipText} />}
+        {toolTipText && (
+          <HelpIcon text={toolTipText} className={classes.helpIcon} />
+        )}
       </React.Fragment>
     );
   }

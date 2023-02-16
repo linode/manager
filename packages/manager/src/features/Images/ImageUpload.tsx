@@ -6,9 +6,7 @@ import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
-import HelpIcon from 'src/components/HelpIcon';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -61,9 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cloudInitCheckboxWrapper: {
     marginTop: theme.spacing(2),
-  },
-  cloudInitCheckbox: {
-    marginRight: 0,
   },
 }));
 export interface Props {
@@ -236,18 +231,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
             disabled={!canCreateImage}
           />
           <div className={classes.cloudInitCheckboxWrapper}>
-            <FormControlLabel
-              className={classes.cloudInitCheckbox}
-              control={
-                <CheckBox
-                  checked={isCloudInitChecked}
-                  onChange={handleCloudInitChange}
-                  data-qa-check-backups="This image is Cloud-init compatible"
-                />
-              }
-              label="This image is Clound-init compatible"
+            <CheckBox
+              checked={isCloudInitChecked}
+              onChange={handleCloudInitChange}
+              data-qa-check-backups="This image is Cloud-init compatible"
+              text="This image is Cloud-init compatible"
+              toolTipText={cloudInitTooltipMessage}
             />
-            <HelpIcon text={cloudInitTooltipMessage} />
           </div>
 
           <RegionSelect
