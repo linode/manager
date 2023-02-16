@@ -1,18 +1,12 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps,
-} from 'src/containers/withFeatureFlagConsumer.container';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -42,10 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = FeatureFlagConsumerProps;
-
-export const CancelLanding: React.FC<CombinedProps> = (props) => {
-  const { flags } = props;
+export const CancelLanding = () => {
   const classes = useStyles();
   const location = useLocation();
 
@@ -61,11 +52,7 @@ export const CancelLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <div className={classes.root} data-testid="body">
-      {flags.brandUpdate ? (
-        <AkamaiLogo className={classes.logo} />
-      ) : (
-        <Logo className={classes.logo} />
-      )}
+      <AkamaiLogo className={classes.logo} />
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
         Your account is closed. We hope you&rsquo;ll consider us for your future
@@ -86,8 +73,4 @@ export const CancelLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  React.memo,
-  withFeatureFlagProvider,
-  withFeatureFlagConsumer
-)(CancelLanding);
+export default React.memo(CancelLanding);
