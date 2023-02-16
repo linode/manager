@@ -681,7 +681,7 @@ export const handlers = [
     const vlans = VLANFactory.buildList(2);
     return res(ctx.json(makeResourcePage(vlans)));
   }),
-  rest.get('*/profile/preferences', (req, res, ctx) => {
+  rest.get('*/profile/preferences*', (req, res, ctx) => {
     return res(ctx.json({}));
   }),
   rest.get('*/profile/devices', (req, res, ctx) => {
