@@ -275,6 +275,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             label={label}
             description={description}
             region={region}
+            isCloudInit={isCloudInitChecked}
             dropzoneDisabled={uploadingDisabled}
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}

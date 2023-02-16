@@ -44,12 +44,14 @@ export const getImages = (params: any = {}, filters: any = {}) =>
 export const createImage = (
   diskId: number,
   label?: string,
-  description?: string
+  description?: string,
+  cloud_init?: boolean
 ) => {
   const data = {
     disk_id: diskId,
     ...(label && { label }),
     ...(description && { description }),
+    ...(cloud_init && { cloud_init }),
   };
 
   return Request<Image>(
