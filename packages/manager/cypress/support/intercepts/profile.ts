@@ -170,7 +170,11 @@ export const mockConfirmTwoFactorAuth = (
  * @returns Cypress chainable.
  */
 export const mockGetAppTokens = (tokens: Token[]): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/profile/apps*', paginateResponse(tokens));
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/apps*'),
+    paginateResponse(tokens)
+  );
 };
 
 /**
@@ -183,7 +187,11 @@ export const mockGetAppTokens = (tokens: Token[]): Cypress.Chainable<null> => {
 export const mockGetPersonalAccessTokens = (
   tokens: Token[]
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/profile/tokens*', paginateResponse(tokens));
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/tokens*'),
+    paginateResponse(tokens)
+  );
 };
 
 /**
@@ -196,7 +204,11 @@ export const mockGetPersonalAccessTokens = (
 export const mockCreatePersonalAccessToken = (
   token: Token
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/profile/tokens', makeResponse(token));
+  return cy.intercept(
+    'POST',
+    apiMatcher('profile/tokens'),
+    makeResponse(token)
+  );
 };
 
 /**
@@ -213,7 +225,7 @@ export const mockUpdatePersonalAccessToken = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'PUT',
-    `*/profile/tokens/${id}`,
+    apiMatcher(`profile/tokens/${id}`),
     makeResponse(updatedToken)
   );
 };
@@ -228,5 +240,9 @@ export const mockUpdatePersonalAccessToken = (
 export const mockRevokePersonalAccessToken = (
   id: number
 ): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', `*/profile/tokens/${id}`, makeResponse({}));
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`profile/tokens/${id}`),
+    makeResponse({})
+  );
 };
