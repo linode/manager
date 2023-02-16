@@ -38,9 +38,9 @@ describe('Utility Functions', () => {
       });
 
     expect(
-      `${createDate(
+      createDate(
         generateStartTime('Past 30 Minutes', GMT_november_20_2019_849PM, 2019)
-      )}`
+      )
     ).toMatch(/11\/20\/2019, 8:19:58 PM/gim);
 
     expect(
