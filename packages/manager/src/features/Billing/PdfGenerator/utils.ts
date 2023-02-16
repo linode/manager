@@ -9,6 +9,7 @@ import {
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 import { ADDRESSES } from 'src/constants';
+import { getShouldUseAkamaiBilling } from '../billingUtils';
 
 /**
  * Margin that has to be applied to every item added to the PDF.
@@ -212,7 +213,8 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
 export const createFooter = (
   doc: JSPDF,
   font: string,
-  address: typeof ADDRESSES['linode']
+  country: string,
+  date: string
 ) => {
   const fontSize = 10;
   const left = 215;
@@ -221,10 +223,30 @@ export const createFooter = (
   doc.setFontSize(fontSize);
   doc.setFont(font);
 
-  const footerText =
-    `${address.address1}, ${address.city}, ${address.state} ${address.zip}\r\n` +
-    `${address.country}\r\n` +
-    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com\r\n';
+  const isAkamaiBilling = getShouldUseAkamaiBilling(date);
+  const isInternational = !['US', 'CA'].includes(country);
+
+  const remitAddress = isAkamaiBilling
+    ? ['US', 'CA'].includes(country)
+      ? ADDRESSES.akamai.us
+      : ADDRESSES.akamai.international
+    : ADDRESSES.linode;
+
+  const footerText = [];
+
+  if (isAkamaiBilling && isInternational) {
+    footerText.push(
+      `${remitAddress.address1}, ${remitAddress.city} ${remitAddress.zip}\r\n`
+    );
+  } else {
+    footerText.push(
+      `${remitAddress.address1}, ${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}\r\n`
+    );
+  }
+  footerText.push(`${remitAddress.country}\r\n`);
+  footerText.push(
+    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com\r\n'
+  );
 
   doc.text(footerText, left, top, {
     charSpace: 0.75,

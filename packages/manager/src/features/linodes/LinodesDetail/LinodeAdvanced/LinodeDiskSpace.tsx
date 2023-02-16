@@ -24,25 +24,25 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     header: {
-      marginTop: theme.spacing(1) + 6,
+      marginTop: `calc(${theme.spacing(1)} + 6px)`,
       marginBottom: theme.spacing(1),
     },
     bar: {
       marginBottom: theme.spacing(1),
     },
     text: {
-      margin: `${theme.spacing(2)}px 0`,
+      margin: `${theme.spacing(2)} 0`,
       // paddingRight: 40
     },
     divider: {
       backgroundColor: theme.color.grey2,
     },
     textOuter: {
-      margin: `${theme.spacing(1) + 2}px 0`,
+      margin: `calc(${theme.spacing(1)} + 2px) 0`,
     },
     code: {
       color: theme.color.black,
-      margin: `0 0 ${theme.spacing(1) + 2}px`,
+      margin: `0 0 calc(${theme.spacing(1)} + 2px)`,
     },
   });
 

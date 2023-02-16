@@ -8,8 +8,8 @@
  * errors such as "theme.bg is undefined"
  */
 
-// import NoSsr from '@material-ui/core/NoSsr'
-// import { jssPreset, StylesProvider } from '@material-ui/styles'
+// import NoSsr from '@mui/material/NoSsr'
+// import { jssPreset, StylesProvider } from '@mui/styles'
 // import { create } from 'jss';
 // import rtl from 'jss-rtl';
 // import { pathOr } from 'ramda'

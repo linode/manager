@@ -85,7 +85,7 @@ export const LinodeDiskRow: React.FC<Props> = (props) => {
           `${disk.size} MB`
         )}
       </TableCell>
-      <Hidden smDown>
+      <Hidden mdDown>
         <TableCell className={classes.diskCreated}>
           <DateTimeDisplay value={disk.created} />
         </TableCell>

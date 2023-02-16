@@ -8,17 +8,17 @@ import 'src/formatted-text.css';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { unsafe_MarkdownIt } from 'src/utilities/markdown';
 import sanitize from 'sanitize-html';
-// Register all languages we intend to use
-// This is not great. Require doesn't work in the broswer and modern TS/JS tooling
-// gets very upset.
-hljs.registerLanguage('apache', require('highlight.js/lib/languages/apache'));
-hljs.registerLanguage('bash', require('highlight.js/lib/languages/bash'));
-hljs.registerLanguage(
-  'javascript',
-  require('highlight.js/lib/languages/javascript')
-);
-hljs.registerLanguage('nginx', require('highlight.js/lib/languages/nginx'));
-hljs.registerLanguage('yaml', require('highlight.js/lib/languages/yaml'));
+import apache from 'highlight.js/lib/languages/apache';
+import bash from 'highlight.js/lib/languages/bash';
+import javascript from 'highlight.js/lib/languages/javascript';
+import nginx from 'highlight.js/lib/languages/nginx';
+import yaml from 'highlight.js/lib/languages/yaml';
+
+hljs.registerLanguage('apache', apache);
+hljs.registerLanguage('bash', bash);
+hljs.registerLanguage('javascript', javascript);
+hljs.registerLanguage('nginx', nginx);
+hljs.registerLanguage('yaml', yaml);
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -34,19 +34,19 @@ export type SupportedLanguage =
   | 'bash'
   | 'javascript'
   | 'nginx'
-  | 'yaml';
+  | 'yaml'
+  | 'shell';
 
 export interface HighlightedMarkdownProps {
+  className?: string;
   textOrMarkdown: string;
   language?: SupportedLanguage;
   sanitizeOptions?: sanitize.IOptions;
 }
 
-export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
-  props
-) => {
+export const HighlightedMarkdown = (props: HighlightedMarkdownProps) => {
   const classes = useStyles();
-  const { language, textOrMarkdown, sanitizeOptions } = props;
+  const { className, language, textOrMarkdown, sanitizeOptions } = props;
   const rootRef = React.useRef<HTMLDivElement>(null);
 
   /**
@@ -84,10 +84,7 @@ export const HighlightedMarkdown: React.FC<HighlightedMarkdownProps> = (
 
   return (
     <Typography
-      className={classNames({
-        [classes.root]: true,
-        'formatted-text': true,
-      })}
+      className={classNames(classes.root, 'formatted-text', className)}
       ref={rootRef}
       dangerouslySetInnerHTML={{
         __html: sanitizedHtml,

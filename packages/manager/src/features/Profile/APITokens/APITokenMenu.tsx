@@ -13,11 +13,9 @@ interface Props {
   openRevokeDialog: (token: Token, type: string) => void;
 }
 
-type CombinedProps = Props;
-
-export const APITokenMenu: React.FC<CombinedProps> = (props) => {
+export const APITokenMenu = (props: Props) => {
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     isThirdPartyAccessToken,
@@ -51,27 +49,24 @@ export const APITokenMenu: React.FC<CombinedProps> = (props) => {
     },
   ].filter(Boolean) as Action[];
 
+  if (matchesSmDown) {
+    return (
+      <ActionMenu
+        actionsList={actions}
+        ariaLabel={`Action menu for API Token ${props.token.label}`}
+      />
+    );
+  }
+
   return (
-    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
-      {matchesSmDown ? (
-        <ActionMenu
-          actionsList={actions}
-          ariaLabel={`Action menu for API Token ${props.token.label}`}
+      {actions.map((action) => (
+        <InlineMenuAction
+          key={action.title}
+          actionText={action.title}
+          onClick={action.onClick}
         />
-      ) : (
-        actions.map((action) => {
-          return (
-            <InlineMenuAction
-              key={action.title}
-              actionText={action.title}
-              onClick={action.onClick}
-            />
-          );
-        })
-      )}
+      ))}
     </>
   );
 };
-
-export default APITokenMenu;

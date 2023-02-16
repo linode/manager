@@ -1,4 +1,4 @@
-import Warning from '@material-ui/icons/CheckCircle';
+import Warning from '@mui/icons-material/CheckCircle';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -50,9 +50,6 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   return (
     <ErrorState
       CustomIcon={Warning}
-      CustomIconStyles={{
-        color: props.theme.color.blue,
-      }}
       errorText={
         <React.Fragment>
           <Typography variant="h2" className={classes.errorHeading}>

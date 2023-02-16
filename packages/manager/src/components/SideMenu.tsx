@@ -68,7 +68,7 @@ export const SideMenu: React.FC<CombinedProps> = (props) => {
           <PrimaryNav closeMenu={closeMenu} isCollapsed={false} />
         </Drawer>
       </Hidden>
-      <Hidden smDown implementation="css">
+      <Hidden mdDown implementation="css">
         <Drawer
           classes={{
             paper: `${classes.menuPaper} ${

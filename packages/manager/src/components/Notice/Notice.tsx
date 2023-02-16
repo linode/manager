@@ -1,4 +1,3 @@
-import Close from '@material-ui/icons/Close';
 import classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
@@ -34,7 +33,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     paddingRight: 18,
     position: 'relative',
     '& + .notice': {
-      marginTop: `${theme.spacing()}px !important`,
+      marginTop: `${theme.spacing()} !important`,
     },
     '& $important': {
       backgroundColor: theme.bg.bgPaper,
@@ -56,12 +55,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     left: -25, // This value must be static regardless of theme selection
   },
-  closeIcon: {
-    ...theme.applyLinkStyles,
-    display: 'flex',
-    color: theme.textColors.tableStatic,
-    marginLeft: 20,
-  },
   inner: {
     width: '100%',
     '& p': {
@@ -80,17 +73,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   error: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
   },
   errorList: {
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
   },
   warning: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
@@ -99,40 +92,34 @@ export const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   warningList: {
-    borderLeft: `5px solid ${theme.palette.status.warningDark}`,
+    borderLeft: `5px solid ${theme.palette.warning.dark}`,
   },
   success: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
     '&$important': {
       borderLeftWidth: 32,
     },
   },
   successList: {
-    borderLeft: `5px solid ${theme.palette.status.successDark}`,
+    borderLeft: `5px solid ${theme.palette.success.dark}`,
+  },
+  marketing: {
+    borderLeft: `5px solid ${theme.color.green}`,
   },
   flag: {
     marginRight: theme.spacing(2),
   },
-  informational: {
-    animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.primary.main}`,
-    '&$important': {
-      borderLeftWidth: 32,
-    },
-  },
-  informationalList: {
-    borderLeft: `5px solid ${theme.palette.primary.main}`,
-  },
 }));
 
-interface Props extends GridProps {
+export interface Props extends GridProps {
   text?: string;
   error?: boolean;
   errorGroup?: string;
   important?: boolean;
   warning?: boolean;
   success?: boolean;
+  marketing?: boolean;
   typeProps?: TypographyProps;
   className?: string;
   flag?: boolean;
@@ -142,10 +129,7 @@ interface Props extends GridProps {
   spacingLeft?: number;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-  // Dismissible Props
-  dismissible?: boolean;
-  onClose?: () => void;
-  informational?: boolean;
+  dismissibleButton?: JSX.Element;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -155,22 +139,21 @@ const Notice: React.FC<CombinedProps> = (props) => {
     className,
     important,
     text,
-    dismissible,
     error,
     breakWords,
     errorGroup,
     warning,
     success,
+    marketing,
     typeProps,
     children,
     flag,
     notificationList,
     onClick,
-    onClose,
     spacingTop,
     spacingBottom,
     spacingLeft,
-    informational,
+    dismissibleButton,
   } = props;
 
   const classes = useStyles();
@@ -223,14 +206,14 @@ const Notice: React.FC<CombinedProps> = (props) => {
         [classes.important]: important,
         [errorScrollClassName]: error,
         [classes.breakWords]: breakWords,
+        [classes.marketing]: marketing && !notificationList,
         [classes.error]: error && !notificationList,
         [classes.errorList]: error && notificationList,
         [classes.success]: success && !notificationList,
         [classes.successList]: success && notificationList,
         [classes.warning]: warning && !notificationList,
+        [classes.marketing]: marketing,
         [classes.warningList]: warning && notificationList,
-        [classes.informational]: informational && !notificationList,
-        [classes.informationalList]: informational && notificationList,
         notice: true,
         ...(className && { [className]: true }),
       })}
@@ -254,17 +237,7 @@ const Notice: React.FC<CombinedProps> = (props) => {
           )) ||
           (error && <Error className={classes.icon} data-qa-error-img />))}
       <div className={classes.inner}>{innerText || _children}</div>
-      {dismissible && (
-        <Grid item className={classes.closeIcon}>
-          <Close
-            style={{
-              cursor: 'pointer',
-            }}
-            onClick={onClose}
-            data-testid="notice-dismiss"
-          />
-        </Grid>
-      )}
+      {dismissibleButton}
     </Grid>
   );
 };

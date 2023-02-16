@@ -36,7 +36,7 @@ const ConfigActionMenu: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleEdit = React.useCallback(() => {
     const { onEdit } = props;

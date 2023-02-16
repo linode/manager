@@ -19,8 +19,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: -20,
   },
   selectContainer: {
-    width: 415 + theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
+    width: `calc(415px + ${theme.spacing(2)})`,
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },

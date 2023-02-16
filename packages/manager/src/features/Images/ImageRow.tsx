@@ -67,14 +67,14 @@ const ImageRow: React.FC<CombinedProps> = (props) => {
   return (
     <TableRow key={id} data-qa-image-cell={id}>
       <TableCell data-qa-image-label>{label}</TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         {status ? <TableCell>{getStatusForImage(status)}</TableCell> : null}
         <TableCell data-qa-image-date>{formatDate(created)}</TableCell>
       </Hidden>
       <TableCell data-qa-image-size>
         {getSizeForImage(size, status, event?.status)}
       </TableCell>
-      <Hidden xsDown>
+      <Hidden smDown>
         {expiry ? (
           <TableCell data-qa-image-date>{formatDate(expiry)}</TableCell>
         ) : null}

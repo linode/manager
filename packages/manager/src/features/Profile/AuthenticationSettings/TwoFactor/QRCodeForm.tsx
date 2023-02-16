@@ -26,7 +26,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
     },
     qrcodeContainer: {
-      margin: `${theme.spacing(2)}px 0`,
+      margin: `${theme.spacing(2)} 0`,
       border: `5px solid #fff`,
       display: 'inline-block',
     },

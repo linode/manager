@@ -1,4 +1,4 @@
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
 import { MultiValueProps } from 'react-select';

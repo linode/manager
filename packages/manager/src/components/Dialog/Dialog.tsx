@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Close from '@material-ui/icons/Close';
+import Close from '@mui/icons-material/Close';
 import Button from 'src/components/Button';
 import MUIDialog, {
   DialogProps as _DialogProps,
@@ -9,6 +9,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { convertForAria } from 'src/components/TabLink/TabLink';
 import Notice from 'src/components/Notice';
+import classNames from 'classnames';
 
 export interface DialogProps extends _DialogProps {
   className?: string;
@@ -20,7 +21,7 @@ export interface DialogProps extends _DialogProps {
 
 const useStyles = makeStyles((theme: Theme) => ({
   paper: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(4)}px`,
+    padding: `${theme.spacing(2)} ${theme.spacing(4)}`,
     paddingTop: 0,
     maxHeight: '100%',
     '& .actionPanel': {
@@ -128,7 +129,12 @@ const Dialog: React.FC<DialogProps> = (props) => {
       >
         <div className={classes.sticky}>
           <Grid item>
-            <Typography variant="h2" id={titleID} data-qa-drawer-title={title}>
+            <Typography
+              variant="h2"
+              id={titleID}
+              data-qa-drawer-title={title}
+              data-qa-dialog-title={title}
+            >
               {title}
             </Typography>
           </Grid>
@@ -138,7 +144,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
               onClick={props.onClose as (e: any) => void}
               className={classes.button}
               data-qa-close-drawer
-              aria-label="Close drawer"
+              aria-label="Close"
             >
               <Close />
             </Button>
@@ -146,7 +152,7 @@ const Dialog: React.FC<DialogProps> = (props) => {
         </div>
         {titleBottomBorder && <hr className={classes.titleBottomBorder} />}
         <Grid container>
-          <div className={className ? className : classes.dialogContent}>
+          <div className={classNames(classes.dialogContent, className)}>
             {error && <Notice text={error} error />}
             {children}
           </div>

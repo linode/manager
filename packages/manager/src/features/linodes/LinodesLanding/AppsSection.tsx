@@ -16,9 +16,9 @@ const useStyles = makeStyles((theme: Theme) => {
   return {
     appSection: {
       display: 'grid',
-      gridTemplateColumns: `repeat(2, ${theme.spacing(20)}px)`,
-      columnGap: `${theme.spacing(3)}px`,
-      rowGap: `${theme.spacing()}px`,
+      gridTemplateColumns: `repeat(2, ${theme.spacing(20)})`,
+      columnGap: theme.spacing(3),
+      rowGap: theme.spacing(),
       gridAutoFlow: 'row',
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),

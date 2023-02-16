@@ -1,8 +1,8 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
-import InsertPhoto from '@material-ui/icons/InsertPhoto';
+import InsertDriveFile from '@mui/icons-material/InsertDriveFile';
+import InsertPhoto from '@mui/icons-material/InsertPhoto';
 
 import { TicketAttachmentRow } from './TicketAttachmentRow';
 

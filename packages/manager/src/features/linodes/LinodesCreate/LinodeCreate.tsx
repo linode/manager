@@ -52,6 +52,7 @@ import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
 import { v4 } from 'uuid';
+import ApiAwarenessModal from './ApiAwarenessModal';
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -59,6 +60,7 @@ import {
   Info,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
+  LinodeCreateValidation,
   StackScriptFormStateHandlers,
   WithDisplayData,
   WithLinodesProps,
@@ -101,7 +103,7 @@ const styles = (theme: Theme) =>
     },
     buttonGroup: {
       marginTop: theme.spacing(3),
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         justifyContent: 'flex-end',
       },
     },
@@ -110,20 +112,21 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       gap: theme.spacing(2),
       flexGrow: 1,
-      [theme.breakpoints.down('sm')]: {
+      [(theme.breakpoints.down('sm'), theme.breakpoints.down('md'))]: {
         margin: theme.spacing(1),
       },
     },
     messageGroupMaxWidth: {
       maxWidth: '70%',
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         maxWidth: 'unset',
       },
     },
     createButton: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(1),
       },
+      marginLeft: theme.spacing(1),
     },
   });
 interface Props {
@@ -146,6 +149,7 @@ interface Props {
   togglePrivateIPEnabled: () => void;
   updateTags: (tags: Tag[]) => void;
   handleSubmitForm: HandleSubmit;
+  checkValidation: LinodeCreateValidation;
   resetCreationState: () => void;
   setBackupID: (id: number) => void;
   showGeneralError?: boolean;
@@ -153,7 +157,9 @@ interface Props {
   ipamAddress: string | null;
   handleVLANChange: (updatedInterface: Interface) => void;
   showAgreement: boolean;
+  showApiAwarenessModal: boolean;
   handleAgreementChange: () => void;
+  handleShowApiAwarenessModal: () => void;
   signedAgreement: boolean;
 }
 
@@ -322,14 +328,13 @@ export class LinodeCreate extends React.PureComponent<
     this.mounted = false;
   }
 
-  createLinode = () => {
+  getPayload = () => {
     const selectedRegion = this.props.selectedRegionID || '';
     const regionSupportsVLANs = doesRegionSupportFeature(
       selectedRegion,
       this.props.regionsData,
       'Vlans'
     );
-
     const payload = {
       image: this.props.selectedImageID,
       region: this.props.selectedRegionID,
@@ -369,8 +374,42 @@ export class LinodeCreate extends React.PureComponent<
       }
       payload['interfaces'] = interfaces;
     }
+    return payload;
+  };
 
+  createLinode = () => {
+    const payload = this.getPayload();
     this.props.handleSubmitForm(payload, this.props.selectedLinodeID);
+  };
+
+  handleClickCreateUsingCommandLine = () => {
+    const payload = {
+      image: this.props.selectedImageID,
+      region: this.props.selectedRegionID,
+      type: this.props.selectedTypeID,
+      label: this.props.label,
+      tags: this.props.tags
+        ? this.props.tags.map((eachTag) => eachTag.label)
+        : [],
+      root_pass: this.props.password,
+      authorized_users: this.props.userSSHKeys
+        .filter((u) => u.selected)
+        .map((u) => u.username),
+      booted: true,
+      backups_enabled: this.props.backupsEnabled,
+      backup_id: this.props.selectedBackupID,
+      private_ip: this.props.privateIPEnabled,
+
+      // StackScripts
+      stackscript_id: this.props.selectedStackScriptID,
+      stackscript_data: this.props.selectedUDFs,
+    };
+    sendEvent({
+      category: 'Linode Create API CLI Awareness Modal',
+      action: 'Click:Button',
+      label: 'Create Using Command Line',
+    });
+    this.props.checkValidation(payload);
   };
 
   render() {
@@ -408,7 +447,9 @@ export class LinodeCreate extends React.PureComponent<
       accountBackupsEnabled,
       showGeneralError,
       showAgreement,
+      showApiAwarenessModal,
       handleAgreementChange,
+      handleShowApiAwarenessModal,
       signedAgreement,
       ...rest
     } = this.props;
@@ -511,6 +552,7 @@ export class LinodeCreate extends React.PureComponent<
                   // error={hasErrorFor.image}
                   accountBackupsEnabled={accountBackupsEnabled}
                   userCannotCreateLinode={userCannotCreateLinode}
+                  errors={errors}
                   {...rest}
                 />
               </SafeTabPanel>
@@ -530,6 +572,7 @@ export class LinodeCreate extends React.PureComponent<
                           imagesData={imagesData!}
                           regionsData={regionsData!}
                           typesData={typesData!}
+                          errors={errors}
                           {...rest}
                         />
                       </SafeTabPanel>
@@ -543,6 +586,7 @@ export class LinodeCreate extends React.PureComponent<
                           imagesData={imagesData!}
                           regionsData={regionsData!}
                           typesData={typesData!}
+                          errors={errors}
                           {...rest}
                         />
                       </SafeTabPanel>
@@ -710,7 +754,6 @@ export class LinodeCreate extends React.PureComponent<
             justifyContent={showAgreement ? 'space-between' : 'flex-end'}
             alignItems="center"
             flexWrap="wrap"
-            className={classes.buttonGroup}
           >
             <div
               className={classNames({
@@ -733,6 +776,26 @@ export class LinodeCreate extends React.PureComponent<
                 />
               ) : null}
             </div>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            alignItems="center"
+            className={classes.buttonGroup}
+          >
+            <Button
+              data-qa-api-cli-linode
+              buttonType="outlined"
+              onClick={this.handleClickCreateUsingCommandLine}
+              className={classes.createButton}
+              disabled={
+                formIsSubmitting ||
+                userCannotCreateLinode ||
+                (showAgreement && !signedAgreement)
+              }
+            >
+              Create using command line
+            </Button>
             <Button
               data-qa-deploy-linode
               buttonType="primary"
@@ -747,6 +810,12 @@ export class LinodeCreate extends React.PureComponent<
             >
               Create Linode
             </Button>
+            <ApiAwarenessModal
+              isOpen={showApiAwarenessModal}
+              onClose={handleShowApiAwarenessModal}
+              route={this.props.match.url}
+              payLoad={this.getPayload()}
+            />
           </Box>
         </Grid>
       </form>

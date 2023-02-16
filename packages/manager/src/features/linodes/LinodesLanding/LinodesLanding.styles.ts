@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
       '&:hover': {
         textDecoration: 'underline',
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(),
       },
     },

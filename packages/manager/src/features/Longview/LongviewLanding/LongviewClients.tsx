@@ -34,7 +34,7 @@ import SubscriptionDialog from './SubscriptionDialog';
 const useStyles = makeStyles((theme: Theme) => ({
   headingWrapper: {
     marginBottom: theme.spacing(),
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: 0,
       marginRight: 0,
     },
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         paddingLeft: 0,
       },
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },

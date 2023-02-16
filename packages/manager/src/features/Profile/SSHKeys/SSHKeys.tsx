@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
         paddingTop: 0,
         paddingRight: 0,
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginRight: theme.spacing(),
       },
     },
@@ -124,7 +124,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
             <TableRow>
               <TableCell data-qa-label-column>Label</TableCell>
               <TableCell data-qa-key-column>Key</TableCell>
-              <Hidden xsDown>
+              <Hidden smDown>
                 <TableCell data-qa-created-column>Created</TableCell>
               </Hidden>
               <TableCell />
@@ -202,7 +202,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
             Fingerprint: {key.fingerprint}
           </Typography>
         </TableCell>
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell data-qa-key-created className={classes.createdCell}>
             {key.created}
           </TableCell>

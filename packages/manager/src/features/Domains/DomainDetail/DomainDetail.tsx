@@ -17,15 +17,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
   root: {
     margin: 0,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       paddingLeft: theme.spacing(),
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       paddingRight: theme.spacing(),
     },
   },
   error: {
-    marginTop: `${theme.spacing(3)}px !important`,
+    marginTop: `${theme.spacing(3)} !important`,
     marginBottom: `0 !important`,
   },
 }));

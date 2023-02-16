@@ -1,5 +1,5 @@
 import {
-  AutoscaleNodePool,
+  AutoscaleSettings,
   PoolNodeResponse,
 } from '@linode/api-v4/lib/kubernetes';
 import * as React from 'react';
@@ -14,7 +14,7 @@ interface Props {
   poolId: number;
   typeLabel: string;
   nodes: PoolNodeResponse[];
-  autoscaler: AutoscaleNodePool;
+  autoscaler: AutoscaleSettings;
   handleClickResize: (poolId: number) => void;
   openAutoscalePoolDialog: (poolId: number) => void;
   openDeletePoolDialog: (poolId: number) => void;
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0px !important',
     '& p': {
       fontSize: '1rem',
-      padding: `${theme.spacing(2)}px 0`,
+      padding: `${theme.spacing(2)} 0`,
     },
   },
   button: {

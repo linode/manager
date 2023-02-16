@@ -1,13 +1,25 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import NodeBalancer from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 
-const NodeBalancerLandingEmptyState: React.FC<{}> = (_) => {
+const useStyles = makeStyles((theme: Theme) => ({
+  placeholderAdjustment: {
+    padding: `${theme.spacing(2)} 0 0 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing(10)} 0 0 0`,
+    },
+  },
+}));
+
+const NodeBalancerLandingEmptyState = () => {
   const history = useHistory();
+  const classes = useStyles();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
@@ -15,12 +27,14 @@ const NodeBalancerLandingEmptyState: React.FC<{}> = (_) => {
         title="NodeBalancers"
         isEntity
         icon={NodeBalancer}
+        className={classes.placeholderAdjustment}
         buttonProps={[
           {
             onClick: () => history.push('/nodebalancers/create'),
             children: 'Create NodeBalancer',
           },
         ]}
+        showTransferDisplay
       >
         <Typography variant="subtitle1">
           <Link to="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/">

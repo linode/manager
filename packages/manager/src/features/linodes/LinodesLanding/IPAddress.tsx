@@ -23,7 +23,7 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginBottom: theme.spacing() / 2,
+      marginBottom: theme.spacing(0.5),
       maxWidth: '100%',
       width: '100%',
       '&:last-child': {
@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
     },
     multipleAddresses: {
       '&:not(:last-child)': {
-        marginBottom: theme.spacing() / 2,
+        marginBottom: theme.spacing(0.5),
       },
     },
     right: {

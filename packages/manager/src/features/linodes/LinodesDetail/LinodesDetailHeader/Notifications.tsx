@@ -20,7 +20,10 @@ const Notifications: React.FC<CombinedProps> = (props) => {
     linodeStatus,
   } = props;
 
-  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery();
+  const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
+    {},
+    { status: { '+or': ['pending, started'] } }
+  );
 
   const maintenanceForThisLinode = accountMaintenanceData?.find(
     (thisMaintenance) =>

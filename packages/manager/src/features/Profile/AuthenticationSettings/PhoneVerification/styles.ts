@@ -10,7 +10,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   buttonContainer: {
     gap: theme.spacing(),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(2),
     },
   },

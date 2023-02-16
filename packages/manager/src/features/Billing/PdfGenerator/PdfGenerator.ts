@@ -12,6 +12,7 @@ import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
 import LinodeLogo from './LinodeLogo.png';
+import AkamaiLogo from './akamai-logo.png';
 import {
   createFooter,
   createInvoiceItemsTable,
@@ -29,9 +30,10 @@ const addLeftHeader = (
   doc: jsPDF,
   page: number,
   pages: number,
-  date: string | null,
+  formattedDate: string,
   type: string,
-  remitAddress: typeof ADDRESSES['linode'],
+  country: string,
+  date: string,
   countryTax: TaxDetail | undefined,
   provincialTax?: TaxDetail | undefined
 ) => {
@@ -54,9 +56,24 @@ const addLeftHeader = (
   addLine('Remit to:');
   doc.setFont(baseFont, 'normal');
 
+  const isAkamaiBilling = getShouldUseAkamaiBilling(date);
+  const isInternational = !['US', 'CA'].includes(country);
+
+  const remitAddress = isAkamaiBilling
+    ? ['US', 'CA'].includes(country)
+      ? ADDRESSES.akamai.us
+      : ADDRESSES.akamai.international
+    : ADDRESSES.linode;
+
   addLine(remitAddress.entity);
   addLine(remitAddress.address1);
-  addLine(`${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}`);
+
+  if (isInternational && isAkamaiBilling) {
+    addLine(`${remitAddress.city} ${remitAddress.zip}`);
+  } else {
+    addLine(`${remitAddress.city}, ${remitAddress.state} ${remitAddress.zip}`);
+  }
+
   addLine(remitAddress.country);
 
   if (countryTax || provincialTax) {
@@ -141,7 +158,8 @@ export const printInvoice = (
   account: Account,
   invoice: Invoice,
   items: InvoiceItem[],
-  taxes: FlagSet['taxBanner'] | FlagSet['taxes']
+  taxes: FlagSet['taxBanner'] | FlagSet['taxes'],
+  brand: FlagSet['brandUpdate']
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
@@ -186,17 +204,9 @@ export const printInvoice = (
       ? taxes?.provincial_tax_ids?.[account.state]
       : undefined;
 
-    const isAkamaiBilling = getShouldUseAkamaiBilling(invoice.date);
-
-    const remitAddress = isAkamaiBilling
-      ? ['US', 'CA'].includes(account.country)
-        ? ADDRESSES.akamai.us
-        : ADDRESSES.akamai.international
-      : ADDRESSES.linode;
-
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
+      doc.addImage(brand ? AkamaiLogo : LinodeLogo, 'JPEG', 160, 10, 120, 40);
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -204,7 +214,8 @@ export const printInvoice = (
         itemsChunks.length,
         date,
         'Invoice',
-        remitAddress,
+        account.country,
+        invoice.date,
         countryTax,
         provincialTax
       );
@@ -215,14 +226,14 @@ export const printInvoice = (
       });
 
       createInvoiceItemsTable(doc, itemsChunk);
-      createFooter(doc, baseFont, remitAddress);
+      createFooter(doc, baseFont, account.country, invoice.date);
       if (index < itemsChunks.length - 1) {
         doc.addPage();
       }
     });
 
     createInvoiceTotalsTable(doc, invoice);
-    createFooter(doc, baseFont, remitAddress);
+    createFooter(doc, baseFont, account.country, invoice.date);
 
     doc.save(`invoice-${date}.pdf`);
     return {
@@ -240,7 +251,8 @@ export const printInvoice = (
 export const printPayment = (
   account: Account,
   payment: Payment,
-  countryTax?: TaxDetail
+  countryTax?: TaxDetail,
+  brand?: FlagSet['brandUpdate']
 ): PdfResult => {
   try {
     const date = formatDate(payment.date, { displayTime: true });
@@ -249,15 +261,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(LinodeLogo, 'JPEG', 160, 10, 120, 40);
-
-    const isAkamaiBilling = getShouldUseAkamaiBilling(payment.date);
-
-    const remitAddress = isAkamaiBilling
-      ? ['US', 'CA'].includes(account.country)
-        ? ADDRESSES.akamai.us
-        : ADDRESSES.akamai.international
-      : ADDRESSES.linode;
+    doc.addImage(brand ? AkamaiLogo : LinodeLogo, 'JPEG', 160, 10, 120, 40);
 
     const leftHeaderYPosition = addLeftHeader(
       doc,
@@ -265,7 +269,8 @@ export const printPayment = (
       1,
       date,
       'Payment',
-      remitAddress,
+      account.country,
+      payment.date,
       countryTax
     );
     const rightHeaderYPosition = addRightHeader(doc, account);
@@ -274,7 +279,7 @@ export const printPayment = (
     });
 
     createPaymentsTable(doc, payment);
-    createFooter(doc, baseFont, remitAddress);
+    createFooter(doc, baseFont, account.country, payment.date);
     createPaymentsTotalsTable(doc, payment);
 
     doc.save(`payment-${date}.pdf`);

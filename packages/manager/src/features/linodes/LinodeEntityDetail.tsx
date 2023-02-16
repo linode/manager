@@ -238,7 +238,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2),
   },
   statusChipLandingDetailView: {
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       marginLeft: theme.spacing(),
     },
   },
@@ -395,7 +395,7 @@ const Header: React.FC<HeaderProps> = (props) => {
             ) : null}
           </Box>
           <Grid item className={`${classes.actionItemsOuter} py0`}>
-            <Hidden smDown>
+            <Hidden mdDown>
               <Button
                 buttonType="secondary"
                 className={classes.actionItem}
@@ -491,7 +491,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   summaryContent: {
     '& > div': {
       flexBasis: '50%',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         flexBasis: '100%',
       },
     },
@@ -502,7 +502,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   rightColumn: {
     flexBasis: '75%',
     flexWrap: 'nowrap',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flexDirection: 'column',
     },
   },
@@ -776,7 +776,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
       marginTop: 0,
       marginBottom: 0,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       alignItems: 'stretch',
       flexDirection: 'column',
     },
@@ -784,7 +784,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   detailRow: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       '&:first-of-type': {
         paddingBottom: theme.spacing(0.5),
       },
@@ -795,7 +795,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
     borderRight: `1px solid ${theme.borderColors.borderTypography}`,
     color: theme.textColors.tableStatic,
     padding: `0px 10px`,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       flex: '50%',
       borderRight: 'none',
       paddingRight: 0,
@@ -833,7 +833,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
 export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const {
     linodePlan,

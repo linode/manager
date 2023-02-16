@@ -29,7 +29,7 @@ import EventRow from './EventRow';
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
     marginBottom: theme.spacing(1),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginLeft: theme.spacing(),
     },
   },
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '60%',
     minWidth: 200,
     paddingLeft: 10,
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '70%',
     },
   },
@@ -278,7 +278,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
       <Table aria-label="List of Events">
         <TableHead>
           <TableRow>
-            <Hidden xsDown>
+            <Hidden smDown>
               <TableCell style={{ padding: 0, width: '1%' }} />
             </Hidden>
             <TableCell
@@ -290,7 +290,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
             <TableCell className={classes.columnHeader}>
               Relative Date
             </TableCell>
-            <Hidden smDown>
+            <Hidden mdDown>
               <TableCell
                 className={classes.columnHeader}
                 data-qa-events-time-header

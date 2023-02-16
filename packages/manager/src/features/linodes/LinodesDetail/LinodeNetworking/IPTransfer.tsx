@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   sourceIPWrapper: {
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '100%',
     },
   },
@@ -52,11 +52,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   ipFieldLabel: {
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing(2)}px)`,
+      width: `calc(175px + ${theme.spacing(2)})`,
     },
   },
   actionsLabel: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },

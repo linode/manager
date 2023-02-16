@@ -31,7 +31,7 @@ import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
@@ -47,23 +47,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(2),
   },
   vlanHelperText: {
-    marginTop: theme.spacing() / 2,
+    marginTop: theme.spacing(0.5),
   },
   buttonGroup: {
     marginTop: theme.spacing(3),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       justifyContent: 'flex-end',
       flexWrap: 'wrap',
     },
   },
   agreement: {
     maxWidth: '70%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       maxWidth: 'unset',
     },
   },
   button: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing(2),
     },
   },
@@ -87,7 +87,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
   const { data: profile } = useProfile();
-  const { data: agreements } = useAccountAgreements();
+  const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(

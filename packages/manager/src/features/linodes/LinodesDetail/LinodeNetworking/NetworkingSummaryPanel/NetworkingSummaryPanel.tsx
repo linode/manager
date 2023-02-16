@@ -12,13 +12,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexFlow: 'row nowrap',
     justifyContent: 'space-between',
     padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2,
-    [theme.breakpoints.down('xs')]: {
+    paddingBottom: theme.spacing(2.5),
+    [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
     },
   },
   transferHistoryContainer: {
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       order: 3,
     },
   },
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       paddingRight: theme.spacing(),
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       order: 2,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       justifyContent: 'center',
     },
   },

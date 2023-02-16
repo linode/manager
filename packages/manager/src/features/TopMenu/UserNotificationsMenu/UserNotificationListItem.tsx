@@ -23,10 +23,6 @@ type ClassNames =
   | 'root';
 
 const styles = (theme: Theme) => {
-  const {
-    palette: { status },
-  } = theme;
-
   return createStyles({
     pointer: {
       cursor: 'pointer',
@@ -34,7 +30,7 @@ const styles = (theme: Theme) => {
     root: {
       margin: 0,
       justifyContent: 'center',
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
       borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create('background-color'),
       '& p': {
@@ -64,20 +60,20 @@ const styles = (theme: Theme) => {
       },
     },
     innerTitle: {
-      marginBottom: theme.spacing(1) / 2,
+      marginBottom: theme.spacing(0.5),
     },
     noticeText: {
       color: theme.palette.text.primary,
       fontFamily: theme.font.bold,
     },
     critical: {
-      borderLeft: `5px solid ${status.errorDark}`,
+      borderLeft: `5px solid ${theme.palette.error.dark}`,
     },
     major: {
-      borderLeft: `5px solid ${status.warningDark}`,
+      borderLeft: `5px solid ${theme.palette.warning.dark}`,
     },
     minor: {
-      borderLeft: `5px solid ${status.successDark}`,
+      borderLeft: `5px solid ${theme.palette.success.dark}`,
     },
     flag: {
       marginRight: theme.spacing(2),

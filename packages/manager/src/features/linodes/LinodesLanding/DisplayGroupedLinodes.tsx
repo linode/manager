@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'auto',
     '& td': {
       // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: `${theme.spacing(2) + 4}px 0 2px`,
+      padding: `calc(${theme.spacing(2)} + 4px) 0 2px`,
       borderBottom: 'none',
       borderTop: 'none',
     },
@@ -144,6 +144,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                 onClick={toggleLinodeView}
                 disableRipple
                 className={classes.toggleButton}
+                size="large"
               >
                 <TableView />
               </IconButton>
@@ -161,6 +162,7 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                 onClick={toggleGroupLinodes}
                 disableRipple
                 className={classes.toggleButton}
+                size="large"
               >
                 <GroupByTag />
               </IconButton>

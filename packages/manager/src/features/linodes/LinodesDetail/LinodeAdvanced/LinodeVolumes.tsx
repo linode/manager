@@ -49,9 +49,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     lineHeight: '1.5rem',
   },
   addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      marginTop: -theme.spacing(1),
+    [theme.breakpoints.down('sm')]: {
+      marginLeft: `-${theme.spacing(1.5)}`,
+      marginTop: `-${theme.spacing(1)}`,
     },
     '&.MuiGrid-item': {
       padding: 5,
@@ -253,7 +253,12 @@ export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
       );
     } else if (data) {
       return data.data.map((volume) => (
-        <VolumeTableRow key={volume.id} {...volume} {...handlers} />
+        <VolumeTableRow
+          key={volume.id}
+          {...volume}
+          {...handlers}
+          isDetailsPageRow
+        />
       ));
     }
 

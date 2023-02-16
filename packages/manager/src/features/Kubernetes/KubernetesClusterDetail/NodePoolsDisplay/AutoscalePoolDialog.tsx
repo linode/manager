@@ -1,4 +1,3 @@
-import { AutoscaleNodePool } from '@linode/api-v4/lib/kubernetes';
 import { AutoscaleNodePoolSchema } from '@linode/validation/lib/kubernetes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
@@ -14,20 +13,16 @@ import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
+import { AutoscaleSettings, KubeNodePoolResponse } from '@linode/api-v4';
+import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
+import { useSnackbar } from 'notistack';
 
 interface Props {
-  poolID: number;
+  clusterId: number;
+  nodePool: KubeNodePoolResponse | undefined;
   open: boolean;
-  loading: boolean;
-  error?: string;
-  getAutoscaler: () => AutoscaleNodePool | undefined;
   handleOpenResizeDrawer: (poolId: number) => void;
   onClose: () => void;
-  onSubmit: (
-    values: AutoscaleNodePool,
-    setSubmitting: (isSubmitting: boolean) => void,
-    setWarningMessage: (warning: string) => void
-  ) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -36,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '0px !important',
     '& p': {
       fontSize: '1rem',
-      padding: `${theme.spacing(2)}px 0`,
+      padding: `${theme.spacing(2)} 0`,
     },
   },
   inputContainer: {
@@ -70,38 +65,29 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const AutoscalePoolDialog: React.FC<Props> = (props) => {
-  const {
-    poolID,
-    error,
-    loading,
-    open,
-    getAutoscaler,
-    handleOpenResizeDrawer,
-    onClose,
-    onSubmit,
-  } = props;
-  const [warningMessage, setWarningMessage] = React.useState('');
-  const autoscaler = getAutoscaler();
+export const AutoscalePoolDialog = (props: Props) => {
+  const { nodePool, open, handleOpenResizeDrawer, onClose, clusterId } = props;
+  const autoscaler = nodePool?.autoscaler;
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const submitForm = () => {
-    onSubmit(values, setSubmitting, setWarningMessage);
+  const { mutateAsync, isLoading, error } = useUpdateNodePoolMutation(
+    clusterId,
+    nodePool?.id ?? -1
+  );
+
+  const onSubmit = async (values: AutoscaleSettings) => {
+    await mutateAsync({ autoscaler: values }).then(() => {
+      enqueueSnackbar(`Autoscaling updated for Node Pool ${nodePool?.id}.`, {
+        variant: 'success',
+      });
+      onClose();
+    });
   };
 
   const handleClose = () => {
     onClose();
-    setWarningMessage('');
     handleReset(values);
-  };
-
-  const handleWarning = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (autoscaler && autoscaler.max > 1 && +e.target.value < autoscaler.max) {
-      return setWarningMessage(
-        'The Node Pool will only be scaled down if there are unneeded nodes.'
-      );
-    }
-    setWarningMessage('');
   };
 
   const {
@@ -110,7 +96,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
     isSubmitting,
     handleChange,
     handleReset,
-    setSubmitting,
+    handleSubmit,
   } = useFormik({
     initialValues: {
       enabled: autoscaler?.enabled ?? false,
@@ -119,15 +105,21 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
     },
     enableReinitialize: true,
     validationSchema: AutoscaleNodePoolSchema,
-    onSubmit: submitForm,
+    onSubmit,
   });
+
+  const warning =
+    autoscaler && autoscaler.max > 1 && +values.max < autoscaler.max
+      ? 'The Node Pool will only be scaled down if there are unneeded nodes.'
+      : undefined;
 
   return (
     <ConfirmationDialog
       open={open}
       title="Autoscale Pool"
       onClose={handleClose}
-      actions={() => (
+      error={error?.[0].reason}
+      actions={
         <ActionsPanel style={{ padding: 0 }}>
           <Button
             buttonType="secondary"
@@ -139,8 +131,8 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
           </Button>
           <Button
             buttonType="primary"
-            onClick={submitForm}
-            loading={loading || isSubmitting}
+            onClick={() => handleSubmit()}
+            loading={isLoading || isSubmitting}
             disabled={
               (values.enabled === autoscaler?.enabled &&
                 values.min === autoscaler?.min &&
@@ -153,12 +145,11 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
             Save Changes
           </Button>
         </ActionsPanel>
-      )}
+      }
     >
-      {error ? <Notice error text={error} /> : null}
-      {warningMessage ? (
+      {warning ? (
         <Notice warning className={classes.notice}>
-          {warningMessage}
+          {warning}
           <div>
             <Button
               buttonType="secondary"
@@ -166,7 +157,7 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
               compactX
               onClick={() => {
                 handleClose();
-                handleOpenResizeDrawer(poolID);
+                handleOpenResizeDrawer(nodePool?.id ?? -1);
               }}
             >
               Resize
@@ -183,66 +174,67 @@ const AutoscalePoolDialog: React.FC<Props> = (props) => {
           Learn More.
         </Link>
       </Typography>
-      <FormControlLabel
-        label="Autoscaler"
-        control={
-          <Toggle
-            name="enabled"
-            checked={values.enabled}
-            onChange={handleChange}
-            disabled={isSubmitting}
-          />
-        }
-        style={{ marginTop: 12 }}
-      />
-      <Grid container className={classes.inputContainer}>
-        <Grid item>
-          <TextField
-            name="min"
-            label="Min"
-            type="number"
-            value={values.min}
-            onChange={handleChange}
-            disabled={!values.enabled || isSubmitting}
-            error={Boolean(errors.min)}
-            className={classes.input}
-          />
+      <form onSubmit={handleSubmit}>
+        <FormControlLabel
+          label="Autoscaler"
+          control={
+            <Toggle
+              name="enabled"
+              checked={values.enabled}
+              onChange={handleChange}
+              disabled={isSubmitting}
+            />
+          }
+          style={{ marginTop: 12 }}
+        />
+        <Grid container className={classes.inputContainer}>
+          <Grid item>
+            <TextField
+              name="min"
+              label="Min"
+              type="number"
+              value={values.min}
+              onChange={handleChange}
+              disabled={!values.enabled || isSubmitting}
+              error={Boolean(errors.min)}
+              className={classes.input}
+            />
+          </Grid>
+          <Grid
+            item
+            className={classNames({
+              [classes.slash]: true,
+              [classes.disabled]: !values.enabled,
+            })}
+          >
+            <Typography>/</Typography>
+          </Grid>
+          <Grid item>
+            <TextField
+              name="max"
+              label="Max"
+              type="number"
+              value={values.max}
+              onChange={handleChange}
+              disabled={!values.enabled || isSubmitting}
+              error={Boolean(errors.max)}
+              className={classes.input}
+            />
+          </Grid>
+          <Grid item xs={12} style={{ padding: '0 8px' }}>
+            {errors.min ? (
+              <Typography className={classes.errorText}>
+                {errors.min}
+              </Typography>
+            ) : null}
+            {errors.max ? (
+              <Typography className={classes.errorText}>
+                {errors.max}
+              </Typography>
+            ) : null}
+          </Grid>
         </Grid>
-        <Grid
-          item
-          className={classNames({
-            [classes.slash]: true,
-            [classes.disabled]: !values.enabled,
-          })}
-        >
-          <Typography>/</Typography>
-        </Grid>
-        <Grid item>
-          <TextField
-            name="max"
-            label="Max"
-            type="number"
-            value={values.max}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              handleChange(e);
-              handleWarning(e);
-            }}
-            disabled={!values.enabled || isSubmitting}
-            error={Boolean(errors.max)}
-            className={classes.input}
-          />
-        </Grid>
-        <Grid item xs={12} style={{ padding: '0 8px' }}>
-          {errors.min ? (
-            <Typography className={classes.errorText}>{errors.min}</Typography>
-          ) : null}
-          {errors.max ? (
-            <Typography className={classes.errorText}>{errors.max}</Typography>
-          ) : null}
-        </Grid>
-      </Grid>
+      </form>
     </ConfirmationDialog>
   );
 };
-
-export default React.memo(AutoscalePoolDialog);

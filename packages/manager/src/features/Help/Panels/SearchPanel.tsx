@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
       '& .insidePath path': {
         stroke: '#04994D',
       },
-      [theme.breakpoints.down('xs')]: {
+      [theme.breakpoints.down('sm')]: {
         display: 'none',
       },
     },

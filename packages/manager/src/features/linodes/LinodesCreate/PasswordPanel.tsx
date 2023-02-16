@@ -25,7 +25,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(3),
     },
     panelBody: {
-      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`,
+      padding: `${theme.spacing(3)} 0 ${theme.spacing(1)}`,
     },
   });
 

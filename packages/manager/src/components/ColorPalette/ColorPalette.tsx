@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

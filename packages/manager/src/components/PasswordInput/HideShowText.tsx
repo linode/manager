@@ -1,5 +1,5 @@
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import * as React from 'react';
 import { TextFieldProps } from 'src/components/core/TextField';
 import TextField from '../TextField';

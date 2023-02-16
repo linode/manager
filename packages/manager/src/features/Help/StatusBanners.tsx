@@ -1,8 +1,9 @@
+import { DateTime } from 'luxon';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import {
   IncidentImpact,
   IncidentStatus,
@@ -80,18 +81,10 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
   const status = _status ?? '';
   const classes = useStyles();
 
-  const [hidden, setHidden] = React.useState(false);
-
-  if (hidden) {
-    return null;
-  }
-
-  const handleDismiss = () => {
-    setHidden(true);
-  };
+  const preferenceKey = `${href}-${status}`;
 
   return (
-    <Notice
+    <DismissibleBanner
       important
       warning={
         ['major', 'minor', 'none'].includes(impact) ||
@@ -101,24 +94,29 @@ export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
         impact === 'critical' && !['monitoring', 'resolved'].includes(status)
       }
       className={classes.root}
-      dismissible
-      onClose={handleDismiss}
+      preferenceKey={preferenceKey}
+      options={{
+        label: preferenceKey,
+        expiry: DateTime.utc().plus({ days: 1 }).toISO(),
+      }}
     >
-      <Typography data-testid="status-banner" className={classes.header}>
-        <Link to={href}>
-          <strong data-testid="incident-status">
-            {title}
-            {status ? `: ${capitalize(status)}` : ''}
-          </strong>
-        </Link>
-      </Typography>
-      <Typography
-        dangerouslySetInnerHTML={{
-          __html: sanitizeHTML(truncateEnd(message, 500)),
-        }}
-        className={classes.text}
-      />
-    </Notice>
+      <>
+        <Typography data-testid="status-banner" className={classes.header}>
+          <Link to={href}>
+            <strong data-testid="incident-status">
+              {title}
+              {status ? `: ${capitalize(status)}` : ''}
+            </strong>
+          </Link>
+        </Typography>
+        <Typography
+          dangerouslySetInnerHTML={{
+            __html: sanitizeHTML(truncateEnd(message, 500)),
+          }}
+          className={classes.text}
+        />
+      </>
+    </DismissibleBanner>
   );
 });
 

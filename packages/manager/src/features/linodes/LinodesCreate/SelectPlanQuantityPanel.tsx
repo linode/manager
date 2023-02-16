@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { PoolNodeRequest } from '@linode/api-v4/lib/kubernetes/types';
 import { LinodeType, LinodeTypeClass } from '@linode/api-v4/lib/linodes/types';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
@@ -27,6 +26,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
+import { CreateNodePoolData } from '@linode/api-v4';
 
 export interface ExtendedType extends LinodeType {
   heading: string;
@@ -78,7 +78,7 @@ const styles = (theme: Theme) =>
     enhancedInputOuter: {
       display: 'flex',
       justifyContent: 'flex-end',
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         justifyContent: 'flex-start',
       },
       alignItems: 'center',
@@ -88,7 +88,7 @@ const styles = (theme: Theme) =>
       minWidth: 85,
       paddingTop: 7,
       paddingBottom: 7,
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         minWidth: 80,
         paddingTop: 12,
         paddingBottom: 12,
@@ -114,7 +114,7 @@ interface Props {
   header?: string;
   copy?: string;
   submitForm?: (key: string, value: number) => void;
-  addPool?: (pool?: PoolNodeRequest) => void;
+  addPool?: (pool?: CreateNodePoolData) => void;
   isOnCreate?: boolean;
   updatePlanCount: any;
   isSubmitting?: boolean;
@@ -178,7 +178,7 @@ export class SelectPlanPanel extends React.Component<
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
-        <Hidden smDown>
+        <Hidden mdDown>
           <TableRow
             data-qa-plan-row={type.label}
             key={type.id}
@@ -272,7 +272,7 @@ export class SelectPlanPanel extends React.Component<
     return (
       <Grid container>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid item xs={12} lg={12}>
             <Table aria-label="List of Linode Plans" spacingBottom={16}>
               {tableHeader}
@@ -401,7 +401,7 @@ export class SelectPlanPanel extends React.Component<
     // Determine initial plan category tab based on current plan selection
     // (if there is one).
     let selectedTypeClass: LinodeTypeClass = pathOr(
-      'standard', // Use `standard` by default
+      'dedicated', // Use `dedicated` by default
       ['class'],
       types.find(
         (type) => type.id === selectedID || type.heading === currentPlanHeading

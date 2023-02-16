@@ -15,7 +15,7 @@ type CombinedProps = Props & RouteComponentProps<{}>;
 
 export const NodeBalancerActionMenu: React.FC<CombinedProps> = (props) => {
   const theme = useTheme<Theme>();
-  const matchesMdDown = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 
   const { nodeBalancerId, history, toggleDialog, label } = props;
 

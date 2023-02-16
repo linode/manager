@@ -1,23 +1,25 @@
+import { KubernetesCluster } from '@linode/api-v4';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { dcDisplayNames } from 'src/constants';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
+import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
+import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { pluralize } from 'src/utilities/pluralize';
-import { getTotalClusterPrice } from '../kubeUtils';
+import {
+  getTotalClusterMemoryCPUAndStorage,
+  getTotalClusterPrice,
+} from '../kubeUtils';
 
 interface Props {
-  cluster: ExtendedCluster;
-  isClusterHighlyAvailable: boolean;
+  cluster: KubernetesCluster;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
-    padding: `${theme.spacing(2) + 4}px ${
-      theme.spacing(2) + 4
-    }px ${theme.spacing(3)}px`,
+    padding: `${theme.spacing(2.5)} ${theme.spacing(2.5)} ${theme.spacing(3)}`,
   },
   mainGridContainer: {
     position: 'relative',
@@ -41,9 +43,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const KubeClusterSpecs: React.FC<Props> = (props) => {
-  const { cluster, isClusterHighlyAvailable } = props;
+export const KubeClusterSpecs = (props: Props) => {
+  const { cluster } = props;
   const classes = useStyles();
+  const { data: types } = useAllLinodeTypesQuery();
+
+  const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
+
+  const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
+    pools ?? [],
+    types ?? []
+  );
 
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
 
@@ -51,20 +61,27 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
     `Version ${cluster.k8s_version}`,
     region,
     `$${getTotalClusterPrice(
-      cluster.node_pools,
-      isClusterHighlyAvailable
+      pools ?? [],
+      types ?? [],
+      cluster.control_plane.high_availability
     ).toFixed(2)}/month`,
   ];
 
   const kubeSpecsRight = [
-    pluralize('CPU Core', 'CPU Cores', cluster.totalCPU),
-    `${cluster.totalMemory / 1024} GB RAM`,
-    `${Math.floor(cluster.totalStorage / 1024)} GB Storage`,
+    pluralize('CPU Core', 'CPU Cores', CPU),
+    `${RAM / 1024} GB RAM`,
+    `${Math.floor(Storage / 1024)} GB Storage`,
   ];
 
-  const kubeSpecItem = (spec: string) => {
+  const kubeSpecItem = (spec: string, idx: number) => {
     return (
-      <Grid item wrap="nowrap" alignItems="center" className={classes.item}>
+      <Grid
+        key={`spec-${idx}`}
+        item
+        wrap="nowrap"
+        alignItems="center"
+        className={classes.item}
+      >
         <Grid item className={classes.iconTextOuter}>
           <Typography>{spec}</Typography>
         </Grid>
@@ -75,10 +92,10 @@ export const KubeClusterSpecs: React.FC<Props> = (props) => {
   return (
     <Grid item container direction="row" xs={12} lg={3}>
       <Grid item lg={6}>
-        {kubeSpecsLeft.map((spec) => kubeSpecItem(spec))}
+        {kubeSpecsLeft.map(kubeSpecItem)}
       </Grid>
       <Grid item lg={6}>
-        {kubeSpecsRight.map((spec) => kubeSpecItem(spec))}
+        {kubeSpecsRight.map(kubeSpecItem)}
       </Grid>
     </Grid>
   );

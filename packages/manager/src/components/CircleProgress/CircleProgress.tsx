@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   progress: {
     position: 'relative',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '72px !important',
       height: '72px !important',
     },
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '100%',
   },
   mini: {
-    padding: theme.spacing() * 1.3,
+    padding: `calc(${theme.spacing()} * 1.3)`,
   },
   noPadding: {
     padding: 0,
@@ -80,7 +80,8 @@ export const CircleProgressComponent: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { className, children, mini, noInner, noPadding, tag, ...rest } = props;
 
-  const variant = typeof props.value === 'number' ? 'static' : 'indeterminate';
+  const variant =
+    typeof props.value === 'number' ? 'determinate' : 'indeterminate';
   const value = typeof props.value === 'number' ? props.value : 0;
 
   return mini ? (

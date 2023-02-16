@@ -26,10 +26,10 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'flex-start',
       cursor: 'pointer',
-      padding: theme.spacing(1) + theme.spacing(1) / 2,
+      padding: theme.spacing(1) + theme.spacing(0.5),
       color: theme.textColors.linkActiveLight,
       transition: 'none',
-      margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
+      margin: `0 -calc(${theme.spacing(1) + theme.spacing(1)} / 2) 2px 0`,
       minHeight: 'auto',
       borderRadius: 0,
       '&:hover': {
@@ -62,7 +62,7 @@ const styles = (theme: Theme) =>
       },
     },
     left: {
-      left: -(theme.spacing(1) + theme.spacing(1) / 2),
+      left: -(theme.spacing(1) + theme.spacing(0.5)),
     },
     label: {
       whiteSpace: 'nowrap',

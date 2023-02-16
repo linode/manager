@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       order: 5,
-      marginRight: -theme.spacing(2),
+      marginRight: `-${theme.spacing(2)}`,
       position: 'relative',
       '&.active $icon': {
         backgroundColor: theme.palette.text.primary,
@@ -48,10 +48,10 @@ const styles = (theme: Theme) =>
       },
     },
     isCritical: {
-      backgroundColor: theme.palette.status.errorDark,
+      backgroundColor: theme.palette.error.dark,
     },
     isMajor: {
-      backgroundColor: theme.palette.status.warningDark,
+      backgroundColor: theme.palette.warning.dark,
     },
     isMinor: {
       backgroundColor: theme.palette.primary.main,
@@ -83,6 +83,7 @@ const userNotificationButton: React.FC<CombinedProps> = ({
       onClick={onClick}
       className={`${classes.root} ${className}`}
       aria-label="User Notifications"
+      size="large"
     >
       <div
         className={classNames({

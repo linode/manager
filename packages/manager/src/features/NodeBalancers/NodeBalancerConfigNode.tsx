@@ -17,11 +17,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'flex-end',
     paddingLeft: theme.spacing(2),
-    marginLeft: -theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing(1),
+    marginLeft: `-${theme.spacing()}`,
+    [theme.breakpoints.down('lg')]: {
+      marginTop: `-${theme.spacing()}`,
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       marginTop: 0,
     },
     '& .remove': {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   statusHeader: {
     fontSize: '.9rem',
     color: theme.color.label,
-    marginTop: theme.spacing(2) - 4,
+    marginTop: `calc(${theme.spacing(2)} - 4)`,
   },
   statusChip: {
     marginTop: theme.spacing(1),
@@ -71,7 +71,10 @@ export interface Props {
   onNodeLabelChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onNodeAddressChange: (nodeIdx: number, value: string) => void;
   onNodeWeightChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onNodeModeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onNodeModeChange: (
+    e: React.ChangeEvent<HTMLInputElement>,
+    nodeId: number
+  ) => void;
   onNodePortChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   removeNode: (e: React.MouseEvent<HTMLElement>) => void;
 }
@@ -218,7 +221,9 @@ export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
                 value={node.mode}
                 select
                 inputProps={{ 'data-node-idx': idx }}
-                onChange={onNodeModeChange}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onNodeModeChange(e, idx)
+                }
                 errorText={nodesErrorMap.mode}
                 data-qa-backend-ip-mode
                 noMarginTop

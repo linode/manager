@@ -24,13 +24,13 @@ const styles = (theme: Theme) =>
       transition: theme.transitions.create(['opacity']),
     },
     destructive: {
-      color: theme.palette.status.errorDark,
+      color: theme.palette.error.dark,
       '&:hover': {
-        color: theme.palette.status.errorDark,
+        color: theme.palette.error.dark,
         opacity: 0.8,
       },
       '&:focus': {
-        color: theme.palette.status.errorDark,
+        color: theme.palette.error.dark,
       },
     },
   });
@@ -51,6 +51,7 @@ const IconButtonWrapper: React.FC<CombinedProps> = (props) => {
       )}
       style={style}
       {...rest}
+      size="large"
     >
       {props.children}
     </IconButton>

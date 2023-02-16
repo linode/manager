@@ -97,7 +97,7 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
           label: thisGroup,
           options: groupedRegions[thisGroup]
             .map((thisRegion) => ({
-              label: thisRegion.display,
+              label: `${thisRegion.display} (${thisRegion.id})`,
               value: thisRegion.id,
               flag:
                 flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),

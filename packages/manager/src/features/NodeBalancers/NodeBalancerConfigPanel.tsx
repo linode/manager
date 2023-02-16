@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
     },
     actionsPanel: {
       paddingBottom: 0,
-      paddingRight: `${theme.spacing()}px !important`,
+      paddingRight: `${theme.spacing()} !important`,
     },
   });
 
@@ -201,11 +201,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   };
 
-  onNodeModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute(DATA_NODE);
-    if (nodeIdx) {
-      this.props.onNodeModeChange!(+nodeIdx, e.target.value);
-    }
+  onNodeModeChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    nodeIdx: number
+  ) => {
+    this.props.onNodeModeChange!(nodeIdx, e.target.value);
   };
 
   addNode = () => {

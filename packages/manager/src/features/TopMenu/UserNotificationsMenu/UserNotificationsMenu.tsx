@@ -26,7 +26,7 @@ type ClassNames = 'root' | 'dropDown' | 'hidden';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`,
+      transform: `translate(-${theme.spacing(1)}, ${theme.spacing(1)})`,
     },
     dropDown: {
       position: 'absolute',
@@ -42,7 +42,15 @@ const styles = (theme: Theme) =>
       },
       '& .notification': {
         margin: 0,
-        ...theme.notificationList,
+        padding: '16px 32px 16px 23px',
+        borderBottom:
+          theme.name === 'darkTheme'
+            ? '1px solid #f4f4f4'
+            : '1px solid #fbfbfb',
+        transition: 'background-color 225ms ease-in-out',
+        '&:hover': {
+          backgroundColor: theme.name === 'darkTheme' ? '#111111' : '#f4f4f4',
+        },
         ...theme.typography.h3,
         '& p': {
           ...theme.typography.h3,
@@ -138,7 +146,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
         />
         <Menu
           anchorEl={anchorEl}
-          getContentAnchorEl={undefined}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
           open={Boolean(anchorEl)}

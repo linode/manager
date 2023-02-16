@@ -3,15 +3,6 @@ import { ControlProps } from 'react-select';
 
 import TextField from 'src/components/TextField';
 
-interface SelectProps {
-  inputRef: any;
-  props: any;
-}
-
-const inputComponent: React.FC<SelectProps> = ({ inputRef, ...props }) => {
-  return <div ref={inputRef} {...props} />;
-};
-
 interface Props extends ControlProps<any, any> {}
 
 const SelectControl: React.FC<Props> = (props) => {
@@ -24,10 +15,10 @@ const SelectControl: React.FC<Props> = (props) => {
       }
       fullWidth
       InputProps={{
-        inputComponent,
+        inputComponent: 'div',
         inputProps: {
           className: props.selectProps.classes.input,
-          inputRef: props.innerRef,
+          ref: props.innerRef,
           children: props.children,
           ...props.innerProps,
         },

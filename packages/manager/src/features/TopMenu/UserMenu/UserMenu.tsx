@@ -1,4 +1,4 @@
-import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import {
   Menu as ReachMenu,
   MenuButton,
@@ -14,7 +14,7 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
-import GravatarIcon from 'src/features/Profile/DisplaySettings/GravatarIcon';
+import { GravatarByEmail } from 'src/components/GravatarByEmail';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useGrants } from 'src/queries/profile';
 
@@ -47,7 +47,7 @@ export const menuLinkStyle = (linkColor: string) => ({
 
 const useStyles = makeStyles((theme: Theme) => ({
   menu: {
-    transform: `translateY(${theme.spacing(1)}px)`,
+    transform: `translateY(${theme.spacing(1)})`,
   },
   button: {
     borderRadius: 30,
@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 30,
       height: 30,
     },
-    [theme.breakpoints.down('md')]: {
+    [theme.breakpoints.down('lg')]: {
       width: '28px',
       height: '28px',
     },
@@ -141,7 +141,7 @@ const useStyles = makeStyles((theme: Theme) => ({
           transform: 'rotate(180deg)',
         },
       },
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         paddingRight: 12,
         paddingLeft: 12,
       },
@@ -161,7 +161,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       position: 'absolute',
       top: 50,
       zIndex: 3000,
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         left: 0,
       },
     },
@@ -171,7 +171,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: 26,
     marginTop: 2,
     marginLeft: 2,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   },
@@ -315,8 +315,11 @@ export const UserMenu: React.FC<{}> = () => {
             className={classes.menuButton}
             data-testid="nav-group-profile"
           >
-            <GravatarIcon username={userName} className={classes.userWrapper} />
-            <Hidden smDown>
+            <GravatarByEmail
+              email={profile?.email ?? ''}
+              className={classes.userWrapper}
+            />
+            <Hidden mdDown>
               <Typography className={classes.inlineUserName}>
                 {userName}
               </Typography>
@@ -324,7 +327,11 @@ export const UserMenu: React.FC<{}> = () => {
             <KeyboardArrowDown className={classes.caret} />
           </MenuButton>
         </Tooltip>
-        <MenuPopover className={classes.menuPopover} position={positionRight}>
+        <MenuPopover
+          className={classes.menuPopover}
+          position={positionRight}
+          data-qa-user-menu
+        >
           <MenuItems className={classes.menuItemList}>
             <div className={classes.userName}>
               <strong>{userName}</strong>

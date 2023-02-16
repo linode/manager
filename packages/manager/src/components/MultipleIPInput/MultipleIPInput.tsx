@@ -1,6 +1,6 @@
 // @todo: this import?
-import { InputBaseProps } from '@material-ui/core/InputBase';
-import Close from '@material-ui/icons/Close';
+import { InputBaseProps } from '@mui/material/InputBase';
+import Close from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     marginTop: 4,
-    marginLeft: -theme.spacing(),
+    marginLeft: `-${theme.spacing()}`,
     minWidth: 'auto',
     minHeight: 'auto',
     padding: 0,

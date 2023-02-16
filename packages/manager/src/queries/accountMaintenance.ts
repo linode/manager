@@ -24,7 +24,7 @@ export const useAllAccountMaintenanceQuery = (
   enabled: boolean = true
 ) => {
   return useQuery<AccountMaintenance[], APIError[]>(
-    queryKey,
+    [queryKey, 'all', params, filter],
     () => getAllAccountMaintenance(params, filter),
     { ...queryPresets.longLived, enabled }
   );

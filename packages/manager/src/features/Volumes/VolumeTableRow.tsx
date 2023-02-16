@@ -1,8 +1,7 @@
+import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
-import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -11,7 +10,6 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities';
-import { ExtendedVolume } from './types';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 import SupportLink from 'src/components/SupportLink';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
@@ -27,7 +25,11 @@ export const useStyles = makeStyles({
   },
 });
 
-export type CombinedProps = Volume & ActionHandlers;
+interface Props {
+  isDetailsPageRow?: boolean;
+}
+
+export type CombinedProps = Props & Volume & ActionHandlers;
 
 export const progressFromEvent = (e?: Event) => {
   if (!e) {
@@ -53,7 +55,7 @@ export const isVolumeUpdating = (e?: Event) => {
   );
 };
 
-export const volumeStatusIconMap: Record<ExtendedVolume['status'], Status> = {
+export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   active: 'active',
   resizing: 'other',
   migrating: 'other',
@@ -63,9 +65,10 @@ export const volumeStatusIconMap: Record<ExtendedVolume['status'], Status> = {
   deleted: 'inactive',
 };
 
-export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
+export const VolumeTableRow = (props: CombinedProps) => {
   const classes = useStyles();
   const {
+    isDetailsPageRow,
     openForClone,
     openForConfig,
     openForEdit,
@@ -84,7 +87,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
     linode_id: linodeId,
   } = props;
 
-  const isVolumesLanding = Boolean(location.pathname.match(/volumes/));
+  const isVolumesLanding = !isDetailsPageRow;
   const formattedRegion = formatRegion(region);
   // const { events } = useEvents();
 
@@ -94,10 +97,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   // const isUpdating = isVolumeUpdating(recentEvent);
   // const progress = progressFromEvent(recentEvent);
 
-  const volumeStatusMap: Record<
-    ExtendedVolume['status'],
-    string | JSX.Element
-  > = {
+  const volumeStatusMap: Record<Volume['status'], string | JSX.Element> = {
     active: 'Active',
     resizing: 'Resizing',
     creating: 'Creating',
@@ -134,7 +134,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       ) : null}
       <TableCell data-qa-volume-size>{size} GB</TableCell>
       {!isVolumesLanding ? (
-        <Hidden xsDown>
+        <Hidden smDown>
           <TableCell className={classes.volumePath} data-qa-fs-path>
             {filesystemPath}
           </TableCell>
@@ -142,7 +142,7 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
       ) : null}
       {isVolumesLanding && (
         <TableCell data-qa-volume-cell-attachment={linode_label}>
-          {linodeId ? (
+          {linodeId !== null ? (
             <Link
               to={`/linodes/${linodeId}/storage`}
               className="link secondaryLink"
@@ -186,6 +186,4 @@ export const VolumeTableRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, ActionHandlers & ExtendedVolume>(
-  React.memo
-)(VolumeTableRow);
+export default React.memo(VolumeTableRow);

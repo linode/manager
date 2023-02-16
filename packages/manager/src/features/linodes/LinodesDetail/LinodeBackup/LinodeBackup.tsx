@@ -113,13 +113,13 @@ const styles = (theme: Theme) =>
     },
     cancelButton: {
       marginBottom: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },
     },
     cancelCopy: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         marginLeft: theme.spacing(),
         marginRight: theme.spacing(),
       },
@@ -150,6 +150,7 @@ interface PreloadedProps {
 
 interface State {
   backups: LinodeBackupsResponse;
+  getBackupsTimer: NodeJS.Timeout | null;
   snapshotForm: {
     label: string;
     errors?: APIError[];
@@ -200,6 +201,7 @@ export const aggregateBackups = (
 class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
+    getBackupsTimer: null,
     snapshotForm: {
       label: '',
     },
@@ -248,6 +250,32 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             this.setState({ enabling: false });
           });
       });
+  }
+
+  // update backup status column from processing -> success/failure
+  componentDidUpdate() {
+    if (this.state.backups.snapshot.in_progress === null) {
+      return;
+    }
+    if (
+      this.state.backups.snapshot.in_progress.status ===
+        'needsPostProcessing' &&
+      this.state.getBackupsTimer === null
+    ) {
+      this.setState({
+        getBackupsTimer: setTimeout(
+          () =>
+            getLinodeBackups(this.props.linodeID).then((data) => {
+              this.setState({
+                ...this.state,
+                backups: data,
+                getBackupsTimer: null,
+              });
+            }),
+          15000
+        ),
+      });
+    }
   }
 
   componentWillUnmount() {
@@ -465,10 +493,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   };
 
   handleDeploy = (backup: LinodeBackup) => {
-    const { history, linodeID } = this.props;
+    const { history, linodeID, linodeType } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}`
+        `?type=Backups&backupID=${backup.id}&linodeID=${linodeID}&typeID=${linodeType}`
     );
   };
 
@@ -493,6 +521,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           <TableHead>
             <TableRow>
               <TableCell>Label</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>Date Created</TableCell>
               <TableCell>Duration</TableCell>
               <TableCell>Disks</TableCell>

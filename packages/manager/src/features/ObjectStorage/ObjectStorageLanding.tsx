@@ -12,10 +12,10 @@ import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LandingHeader from 'src/components/LandingHeader';
 import { Link } from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
 import PromotionalOfferCard from 'src/components/PromotionalOfferCard/PromotionalOfferCard';
 import SafeTabPanel from 'src/components/SafeTabPanel';
@@ -25,7 +25,6 @@ import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useFlags from 'src/hooks/useFlags';
 import useOpenClose from 'src/hooks/useOpenClose';
 import {
@@ -43,7 +42,7 @@ const AccessKeyLanding = React.lazy(
 
 const useStyles = makeStyles((theme: Theme) => ({
   promo: {
-    marginBottom: theme.spacing() / 2,
+    marginBottom: theme.spacing(0.5),
   },
 }));
 
@@ -224,27 +223,18 @@ export const BillingNotice: React.FC<{}> = React.memo(() => {
   const classes = useBillingNoticeStyles();
 
   const dispatch: Dispatch = useDispatch();
-
-  const {
-    dismissNotifications,
-    hasDismissedNotifications,
-  } = useDismissibleNotifications();
-
   const openDrawer = () => dispatch(openBucketDrawer());
 
-  const handleClose = () => {
-    dismissNotifications([NOTIFICATION_KEY], {
-      label: NOTIFICATION_KEY,
-      expiry: DateTime.utc().plus({ days: 30 }).toISO(),
-    });
-  };
-
-  if (hasDismissedNotifications([NOTIFICATION_KEY])) {
-    return null;
-  }
-
   return (
-    <Notice warning important dismissible onClose={handleClose}>
+    <DismissibleBanner
+      warning
+      important
+      preferenceKey={NOTIFICATION_KEY}
+      options={{
+        label: NOTIFICATION_KEY,
+        expiry: DateTime.utc().plus({ days: 30 }).toISO(),
+      }}
+    >
       <Typography>
         You are being billed for Object Storage but do not have any Buckets. You
         can cancel Object Storage in your{' '}
@@ -253,6 +243,6 @@ export const BillingNotice: React.FC<{}> = React.memo(() => {
           create a Bucket.
         </button>
       </Typography>
-    </Notice>
+    </DismissibleBanner>
   );
 });

@@ -1,4 +1,4 @@
-import Input, { InputProps as _InputProps } from '@material-ui/core/Input';
+import Input, { InputProps as _InputProps } from '@mui/material/Input';
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface InputProps extends _InputProps {}

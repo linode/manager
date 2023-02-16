@@ -1,5 +1,5 @@
-import Close from '@material-ui/icons/Close';
-import OpenInNew from '@material-ui/icons/OpenInNew';
+import Close from '@mui/icons-material/Close';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
@@ -15,6 +15,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     width: '100%',
     margin: 'auto',
     textAlign: 'center',
+    [theme.breakpoints.down('md')]: {
+      width: '85%',
+    },
   },
   barLabels: {
     display: 'flex',
@@ -23,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(0.5),
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing(1) / 2,
+    marginBottom: theme.spacing(0.5),
     '& .MuiLinearProgress-root': {
       borderRadius: 1,
     },
@@ -92,7 +95,7 @@ export const TransferDisplay: React.FC<Props> = (props) => {
     <>
       <Typography
         className={classes.root}
-        style={{ marginTop: spacingTop || 8 }}
+        style={{ marginTop: spacingTop ?? 8 }}
       >
         {isLoading ? (
           'Loading transfer data...'

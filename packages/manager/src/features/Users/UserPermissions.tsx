@@ -56,7 +56,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     title: {
-      [theme.breakpoints.down('sm')]: {
+      [theme.breakpoints.down('md')]: {
         paddingLeft: theme.spacing(),
       },
     },
@@ -71,7 +71,7 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
     },
     globalRow: {
-      padding: `${theme.spacing(1)}px 0`,
+      padding: `${theme.spacing(1)} 0`,
     },
     section: {
       marginTop: theme.spacing(2),
@@ -147,6 +147,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'add_images',
     'add_volumes',
     'add_firewalls',
+    'add_databases',
     'cancel_account',
   ];
 
@@ -159,6 +160,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     'nodebalancer',
     'domain',
     'longview',
+    'database',
   ];
 
   getTabInformation = (grants: Grants) =>
@@ -404,6 +406,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       add_volumes: 'Can add Block Storage Volumes to this account ($)',
       add_firewalls: 'Can add Firewalls to this account',
       cancel_account: 'Can cancel the entire account',
+      add_databases: 'Can add Databases to this account ($)',
     };
     return (
       <Grid item key={perm} xs={12} sm={6} className="py0">

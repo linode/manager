@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   tag: {
-    marginTop: theme.spacing(1) / 2,
+    marginTop: theme.spacing(0.5),
     marginRight: 4,
   },
   addButtonWrapper: {
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   errorNotice: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
     '& .noticeText': {
       ...theme.typography.body1,
       fontFamily: '"LatoWeb", sans-serif',

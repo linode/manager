@@ -4,10 +4,10 @@ import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import {
   makeStyles,
+  Theme,
   useMediaQuery,
   useTheme,
 } from 'src/components/core/styles';
-import { Theme } from 'src/components/core/styles/createMuiTheme';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -93,7 +93,7 @@ const useEmailBounceNotificationStyles = makeStyles((theme: Theme) => ({
   },
   buttonContainer: {
     justifyContent: 'flex-end',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       marginTop: 8,
       marginBottom: 4,
       marginLeft: 2,
@@ -135,7 +135,7 @@ const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
   };
 
   const theme = useTheme<Theme>();
-  const matchesSmDown = useMediaQuery(theme.breakpoints.down('sm'));
+  const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
   const confirmationText = matchesSmDown
     ? 'Confirm'

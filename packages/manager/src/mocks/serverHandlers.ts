@@ -3,6 +3,7 @@ import {
   EventAction,
   NotificationType,
   SecurityQuestionsPayload,
+  TokenRequest,
 } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
@@ -73,6 +74,7 @@ import {
   linodeTypeFactory,
   dedicatedTypeFactory,
   proDedicatedTypeFactory,
+  kubernetesVersionFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -454,6 +456,10 @@ export const handlers = [
     const clusters = kubernetesAPIResponse.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
+  rest.get('*/lke/versions', async (req, res, ctx) => {
+    const versions = kubernetesVersionFactory.buildList(1);
+    return res(ctx.json(makeResourcePage(versions)));
+  }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
@@ -725,18 +731,11 @@ export const handlers = [
     const headers = JSON.parse(req.headers.get('x-filter') || '{}');
 
     const accountMaintenance =
-      headers.type === 'volume_migration'
-        ? [
-            accountMaintenanceFactory.build({
-              entity: { type: 'volume', label: 'my-volume-0', id: 0 },
-              status: 'pending',
-              reason: 'Free upgrade to faster NVMe hardware',
-              type: 'volume_migration',
-            }),
-          ]
+      headers.status === 'completed'
+        ? accountMaintenanceFactory.buildList(30, { status: 'completed' })
         : [
-            ...accountMaintenanceFactory.buildList(20, { status: 'pending' }),
-            ...accountMaintenanceFactory.buildList(40, { status: 'started' }),
+            ...accountMaintenanceFactory.buildList(2, { status: 'pending' }),
+            ...accountMaintenanceFactory.buildList(3, { status: 'started' }),
           ];
 
     if (req.headers.get('x-filter')) {
@@ -1220,6 +1219,22 @@ export const handlers = [
   //   const databases = [online, initializing, error, unknown];
   //   return res(ctx.json(makeResourcePage(databases)));
   // }),
+  rest.get('*/profile/tokens', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
+  }),
+  rest.post('*/profile/tokens', (req, res, ctx) => {
+    const data = req.body as TokenRequest;
+    return res(ctx.json(appTokenFactory.build(data)));
+  }),
+  rest.put('*/profile/tokens/:id', (req, res, ctx) => {
+    const data = req.body as Partial<TokenRequest>;
+    return res(
+      ctx.json(appTokenFactory.build({ id: Number(req.params.id), ...data }))
+    );
+  }),
+  rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,

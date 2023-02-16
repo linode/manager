@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       '&:first-child': {
         borderLeft: `1px solid ${theme.palette.primary.light}`,
       },
-      [theme.breakpoints.down('md')]: {
+      [theme.breakpoints.down('lg')]: {
         '&:last-child': {
           borderRight: `1px solid ${theme.palette.primary.light}`,
         },
@@ -157,12 +157,12 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
         [classes.highlight]: highlight,
         [classes.disabled]: disabled,
       })}
-      innerRef={domRef}
+      ref={domRef}
       {...rest}
     >
       {props.children}
       {selected && (
-        <Hidden mdDown>
+        <Hidden lgDown>
           <td colSpan={0} className={classes.selectedOuter}>
             <span className={classes.activeCaret} />
             <span className={classes.activeCaretOverlay} />

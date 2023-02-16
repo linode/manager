@@ -7,7 +7,7 @@ import Notice from 'src/components/Notice';
 const useStyles = makeStyles((theme: Theme) => ({
   emptyImagePanelText: {
     marginTop: theme.spacing(1),
-    padding: `${theme.spacing(1)}px 0`,
+    padding: `${theme.spacing(1)} 0`,
   },
 }));
 

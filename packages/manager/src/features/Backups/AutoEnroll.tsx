@@ -32,7 +32,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1),
     },
     toggleLabelText: {
-      marginTop: theme.spacing(1) + theme.spacing(1) / 2,
+      marginTop: theme.spacing(1) + theme.spacing(0.5),
     },
   });
 

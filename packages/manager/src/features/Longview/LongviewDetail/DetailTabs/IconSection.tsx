@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all',
   },
   headerSection: {
-    marginBottom: theme.spacing(3) - 2,
+    marginBottom: `calc(${theme.spacing(3)} - 2)`,
   },
   iconSection: {
-    marginBottom: theme.spacing(2) - 2,
+    marginBottom: `calc(${theme.spacing(2)} - 2)`,
     '&:last-of-type': {
       marginBottom: 0,
     },

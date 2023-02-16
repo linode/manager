@@ -14,7 +14,7 @@ export type StyleProps = WithStyles<ClassNames>;
 const summaryPanelStyles = (theme: Theme) =>
   createStyles({
     region: {
-      [theme.breakpoints.between('sm', 'md')]: {
+      [theme.breakpoints.between('sm', 'lg')]: {
         flexBasis: '100%',
         maxWidth: '100%',
         display: 'flex',
@@ -54,7 +54,7 @@ const summaryPanelStyles = (theme: Theme) =>
       marginBottom: theme.spacing(2),
     },
     summarySection: {
-      padding: theme.spacing(2) + 4,
+      padding: theme.spacing(2.5),
       marginBottom: theme.spacing(2),
       minHeight: '160px',
       height: '93%',

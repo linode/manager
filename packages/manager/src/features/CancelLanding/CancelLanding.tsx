@@ -4,10 +4,15 @@ import { Redirect, useLocation } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import Logo from 'src/assets/logo/logo-footer.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps,
+} from 'src/containers/withFeatureFlagConsumer.container';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -16,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: theme.bg.main,
     flexDirection: 'column',
     alignItems: 'center',
-    padding: `${theme.spacing(4)}px ${theme.spacing(2)}px 0px`,
+    padding: `${theme.spacing(4)} ${theme.spacing(2)} 0px`,
     '& h1': {
       marginTop: theme.spacing(4),
       marginBottom: theme.spacing(4),
@@ -24,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& p': {
       marginTop: theme.spacing(2),
       fontSize: theme.spacing(2),
-      lineHeight: `${theme.spacing(3)}px`,
+      lineHeight: theme.spacing(3),
     },
     '& button': {
       marginTop: theme.spacing(8),
@@ -37,7 +42,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CancelLanding: React.FC<{}> = () => {
+type CombinedProps = FeatureFlagConsumerProps;
+
+export const CancelLanding: React.FC<CombinedProps> = (props) => {
+  const { flags } = props;
   const classes = useStyles();
   const location = useLocation();
 
@@ -53,11 +61,15 @@ export const CancelLanding: React.FC<{}> = () => {
 
   return (
     <div className={classes.root} data-testid="body">
-      <Logo className={classes.logo} />
+      {flags.brandUpdate ? (
+        <AkamaiLogo className={classes.logo} />
+      ) : (
+        <Logo className={classes.logo} />
+      )}
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
-        Your account is closed. We hope you&rsquo;ll consider Linode for your
-        future cloud hosting needs.
+        Your account is closed. We hope you&rsquo;ll consider us for your future
+        cloud hosting needs.
       </Typography>
       <Typography>
         Would you mind taking a brief survey? It will help us understand why
@@ -74,4 +86,8 @@ export const CancelLanding: React.FC<{}> = () => {
   );
 };
 
-export default compose<{}, {}>(React.memo)(CancelLanding);
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withFeatureFlagProvider,
+  withFeatureFlagConsumer
+)(CancelLanding);

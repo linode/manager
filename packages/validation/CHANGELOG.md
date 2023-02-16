@@ -1,3 +1,23 @@
+## [2023-02-13] - v0.19.0
+
+### Changed:
+- `image` field required in CreateLinodeSchema when creating Linode via StackScript
+
+## [2023-02-07] - v0.18.0
+
+### Fixed:
+- `validation` CommonJS not accepted by Node.js
+
+## [2023-01-13] - v0.17.1
+
+### Fixed:
+- Node.js CommonJS Module Error
+
+## [2023-01-09] - v0.17.0
+
+### Changed:
+- Updated ESLint rules to not include Material UI
+
 ## [2022-11-01] - v0.16.0
 ### Changed:
 - Linode max label length from 32 to 64 characters

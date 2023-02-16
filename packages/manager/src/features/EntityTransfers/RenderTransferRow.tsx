@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   tokenCell: {
     width: '40%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '50%',
     },
   },
@@ -43,22 +43,22 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   createdCell: {
     width: '20%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '25%',
     },
   },
   entitiesCell: {
     width: '15%',
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '20%',
     },
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '25%',
     },
   },
   expiryCell: {
     width: '20%',
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       width: '25%',
     },
   },
@@ -122,7 +122,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           </div>
         </div>
       </TableCell>
-      <Hidden smDown={transferTypeIsPending || transferTypeIsSent}>
+      <Hidden mdDown={transferTypeIsPending || transferTypeIsSent}>
         <TableCell
           className={`${classes.cellContents} ${classes.createdCell}`}
           noWrap
@@ -130,7 +130,7 @@ export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
           <DateTimeDisplay value={created} />
         </TableCell>
       </Hidden>
-      <Hidden xsDown={transferTypeIsPending}>
+      <Hidden smDown={transferTypeIsPending}>
         <TableCell
           className={`${classes.cellContents} ${
             !transferTypeIsReceived && classes.entitiesCell
