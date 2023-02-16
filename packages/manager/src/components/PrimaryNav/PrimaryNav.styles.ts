@@ -44,12 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 90px)',
     width: '100%',
   },
-  logoItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '12px 12px 0 14px',
-    position: 'relative',
-  },
   logoItemAkamai: {
     paddingTop: 12,
     paddingLeft: 12,
