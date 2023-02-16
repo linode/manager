@@ -3,6 +3,7 @@ import { eventFactory } from '@src/factories/events';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { RecPartial } from 'factory.ts';
 import { containsClick, getClick } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 
 const eventActions: RecPartial<EventAction>[] = [
   'backups_enable',
@@ -106,7 +107,7 @@ const events: Event[] = eventActions.map((action) => {
 
 describe('verify notification types and icons', () => {
   it(`notifications`, () => {
-    cy.intercept('**/account/events*', (req) => {
+    cy.intercept(apiMatcher('account/events*'), (req) => {
       req.reply(makeResourcePage(events));
     }).as('mockEvents');
     cy.visitWithLogin('/linodes');
