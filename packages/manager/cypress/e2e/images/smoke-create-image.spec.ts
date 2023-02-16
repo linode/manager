@@ -1,4 +1,4 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import { Linode } from '@linode/api-v4/types';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,
@@ -7,24 +7,25 @@ import {
   getClick,
   getVisible,
 } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 
 describe('create image', () => {
   it('creates first image w/ drawer, and fail because POST is stubbed', () => {
     const diskLabel = 'Debian 10 Disk';
     // stub incoming response
-    cy.intercept('**/v4/images?page_size=100', {
+    cy.intercept(apiMatcher('images?page_size=100'), {
       results: 0,
       data: [],
       page: 1,
       pages: 1,
     }).as('getImages');
-    cy.intercept('POST', '**/images', (req) => {
+    cy.intercept('POST', apiMatcher('images'), (req) => {
       req.reply(200);
     }).as('postImages');
     createLinode().then((linode: Linode) => {
       // stub incoming disks response
-      cy.intercept(`**/linode/instances/${linode.id}/disks*`, {
+      cy.intercept(apiMatcher(`linode/instances/${linode.id}/disks*`), {
         results: 2,
         data: [
           {

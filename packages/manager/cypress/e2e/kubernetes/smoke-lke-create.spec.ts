@@ -1,5 +1,6 @@
 import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
-import { randomLabel } from 'support/util/random';
+import { apiMatcher } from 'support/util/intercepts';
+import { randomLabel, randomNumber } from 'support/util/random';
 
 const multipleClick = (
   subject: Cypress.Chainable,
@@ -27,9 +28,9 @@ const addNodes = (plan: string) => {
 
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
-    const lkeId = Math.ceil(Math.random() * 9999);
+    const lkeId = randomNumber(10000, 99999);
     // intercept request to stub response
-    cy.intercept('POST', '**/lke/clusters', {
+    cy.intercept('POST', apiMatcher('lke/clusters'), {
       id: lkeId,
     }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
