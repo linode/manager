@@ -7,6 +7,7 @@ import type {
   AccountSettings,
   EntityTransfer,
   PaymentMethod,
+  Invoice,
 } from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
@@ -185,7 +186,16 @@ export const mockUpdateUsername = (
   });
 };
 
-export const mockGetPaymentMethods = (paymentMethods: PaymentMethod[]) => {
+/**
+ * Intercepts GET request to retrieve account payment methods and mocks response.
+ *
+ * @param paymentMethods - Array of payment methods with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPaymentMethods = (
+  paymentMethods: PaymentMethod[]
+): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
     apiMatcher('account/payment-methods*'),
@@ -193,6 +203,13 @@ export const mockGetPaymentMethods = (paymentMethods: PaymentMethod[]) => {
   );
 };
 
+/**
+ * Intercepts POST request to set default account payment method and mocks response.
+ *
+ * @param paymentMethodId - ID of payment method for which to intercept request.
+ *
+ * @returns Cypress chainable.
+ */
 export const mockSetDefaultPaymentMethod = (
   paymentMethodId: number
 ): Cypress.Chainable<null> => {
@@ -200,5 +217,22 @@ export const mockSetDefaultPaymentMethod = (
     'POST',
     apiMatcher(`account/payment-methods/${paymentMethodId}/make-default`),
     {}
+  );
+};
+
+/**
+ * Intercepts GET request to fetch account invoices and mocks response.
+ *
+ * @param invoices - Invoice data with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetInvoices = (
+  invoices: Invoice[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/invoices*'),
+    paginateResponse(invoices)
   );
 };
