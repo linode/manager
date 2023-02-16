@@ -1,10 +1,14 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
+import HelpIcon from 'src/components/HelpIcon';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -55,6 +59,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     fontWeight: 700,
   },
+  cloudInitCheckboxWrapper: {
+    marginTop: theme.spacing(2),
+  },
+  cloudInitCheckbox: {
+    marginRight: 0,
+  },
 }));
 export interface Props {
   label: string;
@@ -85,6 +95,11 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
   );
+  const [isCloudInitChecked, setIsCloudInitChecked] = useState<boolean>(false);
+
+  const handleCloudInitChange = () => {
+    setIsCloudInitChecked(!isCloudInitChecked);
+  };
 
   const showAgreement = Boolean(
     !profile?.restricted && agreements?.eu_model === false && isEURegion(region)
@@ -151,6 +166,13 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const cliRegion = formatForCLI(region, 'region');
   const linodeCLICommand = `linode-cli image-upload --label ${cliLabel} --description ${cliDescription} --region ${cliRegion} FILE`;
 
+  const cloudInitTooltipMessage = (
+    <Typography>
+      Copy TBD-Need to have installed cloud-init on the distro and change the
+      config to use our data service. <Link to="/">Link to doc</Link>
+    </Typography>
+  );
+
   return (
     <>
       <Prompt
@@ -213,6 +235,20 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.description}
             disabled={!canCreateImage}
           />
+          <div className={classes.cloudInitCheckboxWrapper}>
+            <FormControlLabel
+              className={classes.cloudInitCheckbox}
+              control={
+                <CheckBox
+                  checked={isCloudInitChecked}
+                  onChange={handleCloudInitChange}
+                  data-qa-check-backups="This image is Cloud-init compatible"
+                />
+              }
+              label="This image is Clound-init compatible"
+            />
+            <HelpIcon text={cloudInitTooltipMessage} />
+          </div>
 
           <RegionSelect
             label="Region"
