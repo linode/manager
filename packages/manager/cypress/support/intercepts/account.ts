@@ -2,10 +2,39 @@
  * @file Cypress intercepts and mocks for Cloud Manager account requests.
  */
 
-import type { AccountSettings, EntityTransfer } from '@linode/api-v4/types';
+import type {
+  Account,
+  AccountSettings,
+  EntityTransfer,
+  PaymentMethod,
+} from '@linode/api-v4/types';
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
+
+/**
+ * Intercepts GET request to fetch account and mocks response.
+ *
+ * @param account - Account data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAccount = (account: Account): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account'), account);
+};
+
+/**
+ * Intercepts PUT request to update account and mocks response.
+ *
+ * @param updatedAccount - Updated account data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccount = (
+  updatedAccount: Account
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher('account'), updatedAccount);
+};
 
 /**
  * Intercepts GET request to fetch account user information.
@@ -154,4 +183,22 @@ export const mockUpdateUsername = (
     tfa_enabled: false,
     verified_phone_number: null,
   });
+};
+
+export const mockGetPaymentMethods = (paymentMethods: PaymentMethod[]) => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/payment-methods*'),
+    paginateResponse(paymentMethods)
+  );
+};
+
+export const mockSetDefaultPaymentMethod = (
+  paymentMethodId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/payment-methods/${paymentMethodId}/make-default`),
+    {}
+  );
 };

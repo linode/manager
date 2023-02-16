@@ -1,7 +1,8 @@
-import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
+import { mockGetAccount, mockUpdateAccount } from 'support/intercepts/account';
+import { accountFactory } from 'src/factories/account';
 
 /* eslint-disable sonarjs/no-duplicate-string */
-const accountData = {
+const accountData = accountFactory.build({
   company: 'company_name',
   email: 'test_email@linode.com',
   first_name: 'First name',
@@ -26,9 +27,9 @@ const accountData = {
   tax_id: '1234567890',
   zip: '19109',
   active_promotions: [],
-};
+});
 
-const newAccountData = {
+const newAccountData = accountFactory.build({
   company: 'New company_name',
   email: 'new_test_email@linode.com',
   first_name: 'NewFirstName',
@@ -41,12 +42,12 @@ const newAccountData = {
   state: 'Pennsylvania',
   tax_id: '9234567890',
   zip: '19108',
-};
+});
 
 const checkAccountContactDisplay = (data) => {
-  fbtVisible('Billing Contact');
-  fbtVisible(data['company']);
-  getVisible('[data-qa-contact-name]');
+  cy.findByText('Billing Contact').should('be.visible');
+  cy.findByText(data['company']).should('be.visible');
+  cy.get('[data-qa-contact-name]').should('be.visible');
   cy.findByText(data['first_name'], { exact: false });
   cy.findByText(data['last_name'], { exact: false });
   cy.contains(data['address_1']);
@@ -61,18 +62,18 @@ const checkAccountContactDisplay = (data) => {
 
 describe('Billing Contact', () => {
   it('Check Billing Contact Form', () => {
-    // intercept get account request and stub response
+    // intercept get account request and stub response.
+    mockGetAccount(accountData).as('getAccount');
     cy.intercept('GET', '**/account', accountData).as('getAccount');
-
     cy.visitWithLogin('/account/billing', { mockRequests: false });
     checkAccountContactDisplay(accountData);
   });
   it('Edit Contact Info', () => {
     // intercept create account request and stub response
-    cy.intercept('PUT', '**/account', newAccountData).as('createAccount');
+    mockUpdateAccount(newAccountData).as('updateAccount');
     cy.visitWithLogin('/account/billing', { mockRequests: false });
     cy.get('[data-qa-contact-summary]').within((_contact) => {
-      fbtClick('Edit');
+      cy.findByText('Edit').should('be.visible').click();
     });
     // checking drawer is visible
     cy.findByLabelText('First Name')
@@ -120,8 +121,8 @@ describe('Billing Contact', () => {
       .click()
       .clear()
       .type(newAccountData['phone']);
-    getClick('[data-qa-contact-country]').type('United States{enter}');
-    getClick('[data-qa-contact-state-province]')
+    cy.get('[data-qa-contact-country]').click().type('United States{enter}');
+    cy.get('[data-qa-contact-state-province]')
       .should('be.visible')
       .click()
       .type(`${newAccountData['state']}{enter}`);
@@ -130,10 +131,12 @@ describe('Billing Contact', () => {
       .click()
       .clear()
       .type(newAccountData['tax_id']);
-    getClick('[data-qa-save-contact-info="true"]').then(() => {
-      cy.wait('@createAccount').then((xhr) => {
-        expect(xhr.response?.body).to.eql(newAccountData);
+    cy.get('[data-qa-save-contact-info="true"]')
+      .click()
+      .then(() => {
+        cy.wait('@updateAccount').then((xhr) => {
+          expect(xhr.response?.body).to.eql(newAccountData);
+        });
       });
-    });
   });
 });
