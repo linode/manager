@@ -1,15 +1,11 @@
-import {
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from '../../support/helpers';
+import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomDomainName } from 'support/util/random';
 
 describe('Create a Domain', () => {
   it('Creates first Domain', () => {
     // modify incoming response
-    cy.intercept('GET', '**/v4/domains*', (req) => {
+    cy.intercept('GET', apiMatcher('domains*'), (req) => {
       req.reply((res) => {
         res.send({
           results: 0,
@@ -20,7 +16,7 @@ describe('Create a Domain', () => {
       });
     }).as('getDomains');
     // intercept create Domain request
-    cy.intercept('POST', '**/domains').as('createDomain');
+    cy.intercept('POST', apiMatcher('domains')).as('createDomain');
     cy.visitWithLogin('/domains');
     cy.wait('@getDomains');
     fbtClick('Create Domain');
