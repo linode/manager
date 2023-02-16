@@ -31,13 +31,6 @@ describe('Utility Functions', () => {
   it('should create values as functions that return the correct datetime', () => {
     const GMT_november_20_2019_849PM = 1574282998;
 
-    const createDate = (value: any) =>
-      /* 3 0s to turn into milliseconds */
-      new Date(value * 1000).toLocaleString('en-US', {
-        timeZoneName: 'short',
-        timeZone: 'GMT',
-      });
-
     expect(
       generateStartTime('Past 30 Minutes', GMT_november_20_2019_849PM, 2019)
     ).toEqual(
@@ -47,38 +40,41 @@ describe('Utility Functions', () => {
     );
 
     expect(
-      `${createDate(
-        generateStartTime('Past 12 Hours', GMT_november_20_2019_849PM, 2019)
-      )}`
-    ).toMatch(/11\/20\/2019, 8:49:58 AM/gim);
+      generateStartTime('Past 12 Hours', GMT_november_20_2019_849PM, 2019)
+    ).toEqual(
+      DateTime.fromSeconds(GMT_november_20_2019_849PM)
+        .minus({ hours: 12 })
+        .toSeconds()
+    );
 
     expect(
-      `${createDate(
-        generateStartTime('Past 24 Hours', GMT_november_20_2019_849PM, 2019)
-      )}`
-    ).toMatch(/11\/19\/2019, 8:49:58 PM/gim);
+      generateStartTime('Past 24 Hours', GMT_november_20_2019_849PM, 2019)
+    ).toEqual(
+      DateTime.fromSeconds(GMT_november_20_2019_849PM)
+        .minus({ hours: 24 })
+        .toSeconds()
+    );
 
     expect(
-      `${createDate(
-        generateStartTime('Past 7 Days', GMT_november_20_2019_849PM, 2019)
-      )}`
-    ).toMatch(/11\/13\/2019, 8:49:58 PM/gim);
+      generateStartTime('Past 7 Days', GMT_november_20_2019_849PM, 2019)
+    ).toEqual(
+      DateTime.fromSeconds(GMT_november_20_2019_849PM)
+        .minus({ days: 7 })
+        .toSeconds()
+    );
 
     expect(
-      `${createDate(
-        generateStartTime('Past 30 Days', GMT_november_20_2019_849PM, 2019)
-      )}`
-    ).toMatch(/10\/21\/2019, 8:49:58 PM/gim);
+      generateStartTime('Past 30 Days', GMT_november_20_2019_849PM, 2019)
+    ).toEqual(
+      DateTime.fromSeconds(GMT_november_20_2019_849PM)
+        .minus({ hours: 24 * 30 })
+        .toSeconds()
+    );
 
     expect(
-      /* 
-        this isn't using createDate() because we want it to be 
-        Jan 1 2019 12AM regardless of timezone 
-      */
-      `${new Date(
-        generateStartTime('2019' as Labels, GMT_november_20_2019_849PM, 2019) *
-          1000
-      ).toLocaleString()}`
-    ).toMatch(/1\/1\/2019, 12:00:00 AM/gim);
+      generateStartTime('2019' as Labels, GMT_november_20_2019_849PM, 2019)
+    ).toEqual(
+      DateTime.fromObject({ day: 1, month: 1, year: 2019 }).toSeconds()
+    );
   });
 });
