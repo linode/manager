@@ -340,8 +340,5 @@
     "last 4 versions",
     "Firefox ESR",
     "not ie < 9"
-  ],
-  "volta": {
-    "node": "18.14.0"
-  }
+  ]
 }
