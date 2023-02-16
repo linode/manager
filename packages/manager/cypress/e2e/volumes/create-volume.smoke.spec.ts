@@ -12,6 +12,7 @@ import {
 } from 'support/helpers';
 import { randomLabel } from 'support/util/random';
 import { selectRegionString } from 'support/ui/constants';
+import { apiMatcher } from 'support/util/intercepts';
 import { ui } from 'support/ui';
 
 const region = 'Newark, NJ';
@@ -84,7 +85,7 @@ const localStorageOverrides = {
 
 describe('volumes', () => {
   it('creates a volume without linode from volumes page', () => {
-    cy.intercept('POST', `**/volumes`, (req) => {
+    cy.intercept('POST', apiMatcher('volumes'), (req) => {
       req.reply(volume);
     }).as('createVolume');
     cy.visitWithLogin('/volumes', {
@@ -99,7 +100,7 @@ describe('volumes', () => {
     fbtClick('Create Volume');
     fbtVisible('Must provide a region or a Linode ID.');
     fbtClick(selectRegionString).type('new {enter}');
-    cy.intercept('GET', `**/volumes*`, (req) => {
+    cy.intercept('GET', apiMatcher('volumes*'), (req) => {
       req.reply(makeResourcePage([volume]));
     }).as('createVolume');
     fbtClick('Create Volume');
@@ -121,18 +122,18 @@ describe('volumes', () => {
     });
     const newVolumeList = makeResourcePage([newVolume]);
 
-    cy.intercept('POST', `**/volumes`, (req) => {
+    cy.intercept('POST', apiMatcher('volumes'), (req) => {
       req.reply(newVolume);
     }).as('createVolume');
-    cy.intercept('GET', '**/linode/instances/*', (req) => {
+    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
       req.reply(linodeList);
     }).as('getLinodes');
-    cy.intercept('GET', `**/linode/instances/${linodeId}*`, (req) => {
+    cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}*`), (req) => {
       req.reply(linode);
     }).as('getLinodeDetail');
     cy.intercept(
       'GET',
-      `**/linode/instances/${linodeId}/volumes*`,
+      apiMatcher(`linode/instances/${linodeId}/volumes*`),
       emptyVolumeList
     ).as('getEmptyVolumes');
 
@@ -153,7 +154,7 @@ describe('volumes', () => {
     getClick('[value="creating_for_linode"]');
     cy.intercept(
       'GET',
-      `**/linode/instances/${linodeId}/volumes*`,
+      apiMatcher(`linode/instances/${linodeId}/volumes*`),
       newVolumeList
     ).as('getNewVolumes');
     getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
@@ -169,7 +170,7 @@ describe('volumes', () => {
   });
 
   it('Detaches attached volume', () => {
-    interceptOnce('GET', `**/volumes*`, attachedVolumeList).as(
+    interceptOnce('GET', apiMatcher('volumes*'), attachedVolumeList).as(
       'getAttachedVolumes'
     );
     cy.visitWithLogin('/volumes', {
@@ -179,7 +180,7 @@ describe('volumes', () => {
     cy.wait('@getAttachedVolumes');
     cy.intercept(
       'POST',
-      '**/volumes/' + attachedVolumeId + '/detach',
+      apiMatcher(`volumes/${attachedVolumeId}/detach`),
       (req) => {
         req.reply({ statusCode: 200 });
       }

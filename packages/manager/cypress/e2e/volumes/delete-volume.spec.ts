@@ -3,6 +3,7 @@ import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { assertToast } from 'support/ui/events';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 import { ui } from 'support/ui';
 
@@ -28,7 +29,7 @@ describe('volume delete flow', () => {
     });
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      cy.intercept('DELETE', '**/volumes/*').as('deleteVolume');
+      cy.intercept('DELETE', apiMatcher('volumes/*')).as('deleteVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });
