@@ -389,11 +389,8 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
     prefetchProps,
   } = props;
 
-  const isActiveLink = linkIsActive(
-    href,
-    locationSearch,
-    locationPathname,
-    activeLinks
+  const isActiveLink = Boolean(
+    linkIsActive(href, locationSearch, locationPathname, activeLinks)
   );
 
   return (
@@ -411,7 +408,7 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
         [classes.listItem]: true,
         [classes.active]: isActiveLink,
       })}
-      aria-current={Boolean(isActiveLink)}
+      aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
     >
       {icon && (
