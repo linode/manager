@@ -2,7 +2,7 @@ import { DateTime } from 'luxon';
 import md5 from 'md5';
 import { useState } from 'react';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
-import { DismissedNotification } from 'src/store/preferences/preferences.actions';
+import { DismissedNotification } from 'src/types/ManagerPreferences';
 
 /**
  * Handlers for dismissing notifications and checking if a notification has been dismissed.

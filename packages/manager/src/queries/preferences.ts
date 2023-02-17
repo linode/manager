@@ -18,7 +18,10 @@ const adaptPreferences = <T>(
 export const usePreferences = (enabled = true) =>
   useQuery<ManagerPreferences, APIError[]>(
     queryKey,
-    adaptPreferences(getUserPreferences),
+    () =>
+      adaptPreferences(getUserPreferences)().then((res) => {
+        return res;
+      }),
     {
       ...queryPresets.oneTimeFetch,
       enabled,

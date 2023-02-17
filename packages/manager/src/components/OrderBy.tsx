@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Order } from 'src/components/Pagey';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import usePrevious from 'src/hooks/usePrevious';
-import { UserPreferences } from 'src/store/preferences/preferences.actions';
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 import {
   sortByArrayLength,
   sortByNumber,
@@ -51,7 +51,7 @@ export type CombinedProps = Props;
  */
 export const getInitialValuesFromUserPreferences = (
   preferenceKey: string,
-  preferences: UserPreferences,
+  preferences: ManagerPreferences,
   params: Record<string, string>,
   defaultOrderBy: string,
   defaultOrder: Order,
