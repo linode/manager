@@ -12,7 +12,7 @@ const props: IncidentProps = {
   impact: 'major',
 };
 
-describe.skip('Status banners from statuspage.io', () => {
+describe('Status banners from statuspage.io', () => {
   describe('StatusBanners wrapper component', () => {
     it('should display a banner for every active incident', async () => {
       renderWithTheme(<StatusBanners />);
