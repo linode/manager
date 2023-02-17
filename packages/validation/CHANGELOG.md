@@ -1,3 +1,12 @@
+## [2023-02-13] - v0.19.0
+
+### Changed:
+- `image` field required in CreateLinodeSchema when creating Linode via StackScript
+
+## [2023-02-07] - v0.18.0
+
+### Fixed:
+- `validation` CommonJS not accepted by Node.js
 
 ## [2023-01-13] - v0.17.1
 

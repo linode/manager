@@ -117,7 +117,13 @@ export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
   ) => {
     const taxes =
       flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
-    const result = printInvoice(account, invoice, items, taxes);
+    const result = printInvoice(
+      account,
+      invoice,
+      items,
+      taxes,
+      flags.brandUpdate
+    );
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };

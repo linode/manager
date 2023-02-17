@@ -75,6 +75,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
   const { children, shouldGetPreferences = true } = props;
+
   const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
@@ -136,9 +137,7 @@ const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = (props) => {
   const { themeChoice, toggleTheme, children } = props;
 
   const theme = React.useMemo(() => {
-    const themeCreator = safelyGetTheme(themes, themeChoice);
-
-    return themeCreator();
+    return safelyGetTheme(themes, themeChoice);
   }, [themeChoice]);
 
   return (

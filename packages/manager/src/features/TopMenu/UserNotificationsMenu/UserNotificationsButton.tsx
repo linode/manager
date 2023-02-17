@@ -48,10 +48,10 @@ const styles = (theme: Theme) =>
       },
     },
     isCritical: {
-      backgroundColor: theme.palette.status.errorDark,
+      backgroundColor: theme.palette.error.dark,
     },
     isMajor: {
-      backgroundColor: theme.palette.status.warningDark,
+      backgroundColor: theme.palette.warning.dark,
     },
     isMinor: {
       backgroundColor: theme.palette.primary.main,

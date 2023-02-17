@@ -11,13 +11,16 @@ import { queryPresets, simpleMutationHandlers } from './base';
 
 export const queryKey = 'account-agreements';
 
-export const useAccountAgreements = () => {
+export const useAccountAgreements = (enabled?: boolean) => {
   const { data: profile } = useProfile();
 
   return useQuery<Agreements, APIError[]>(queryKey, getAccountAgreements, {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
-    enabled: !profile?.restricted,
+    enabled:
+      enabled === undefined
+        ? !profile?.restricted
+        : enabled && !profile?.restricted,
   });
 };
 

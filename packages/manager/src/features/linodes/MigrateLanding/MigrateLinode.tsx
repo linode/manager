@@ -87,7 +87,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
   const { data: profile } = useProfile();
-  const { data: agreements } = useAccountAgreements();
+  const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(

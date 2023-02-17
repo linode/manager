@@ -17,6 +17,9 @@ import {
   ObjectStorageObjectListResponse,
   getBucketsInCluster,
   getBucket,
+  getObjectURL,
+  ObjectStorageObjectURLOptions,
+  ObjectStorageObjectURL,
 } from '@linode/api-v4/lib/object-storage';
 
 export interface BucketError {
@@ -215,3 +218,19 @@ export const updateBucket = async (cluster: string, bucketName: string) => {
     }
   );
 };
+
+export const useCreateObjectUrlMutation = (
+  clusterId: string,
+  bucketName: string
+) =>
+  useMutation<
+    ObjectStorageObjectURL,
+    APIError[],
+    {
+      name: string;
+      method: 'GET' | 'PUT' | 'POST' | 'DELETE';
+      options?: ObjectStorageObjectURLOptions;
+    }
+  >(({ name, method, options }) =>
+    getObjectURL(clusterId, bucketName, name, method, options)
+  );
