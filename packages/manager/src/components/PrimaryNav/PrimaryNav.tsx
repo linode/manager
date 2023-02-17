@@ -265,10 +265,6 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             [classes.logoItemAkamaiCollapsed]: isCollapsed,
           })}
         >
-          {isCollapsed && (
-            // TODO: Unnecessary once brand update is no longer behind feature flag
-            <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
-          )}
           <Link
             to={`/dashboard`}
             onClick={closeMenu}

@@ -55,14 +55,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   logoItemAkamaiCollapsed: {
     paddingLeft: 8,
   },
-  logoCollapsed: {
-    background: theme.bg.primaryNavPaper,
-    height: 48,
-    width: 100,
-    position: 'absolute',
-    top: 12,
-    left: 48,
-  },
   logoAkamaiCollapsed: {
     background: theme.bg.primaryNavPaper,
     width: 96,
