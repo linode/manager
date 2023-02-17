@@ -33,6 +33,7 @@ export interface BaseImagePayload {
 
 export interface CreateImagePayload extends BaseImagePayload {
   diskID: number;
+  cloud_init?: boolean;
 }
 
 export interface ImageUploadPayload extends BaseImagePayload {

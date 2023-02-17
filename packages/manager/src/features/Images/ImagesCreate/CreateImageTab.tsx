@@ -96,9 +96,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
-  const [isCloudInitChecked, setIsCloudInitChecked] = React.useState<boolean>(
-    false
-  );
+  const [isCloudInitChecked, setIsCloudInitChecked] = React.useState<boolean>();
   const [disks, setDisks] = React.useState<Disk[]>([]);
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -169,6 +167,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       diskID: Number(selectedDisk),
       label,
       description: safeDescription,
+      cloud_init: isCloudInitChecked,
     })
       .then((_) => {
         resetEventsPolling();
