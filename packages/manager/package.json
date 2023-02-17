@@ -2,11 +2,8 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.84.0",
+  "version": "1.86.0",
   "private": true,
-  "engines": {
-    "node": ">= 14.17.4"
-  },
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },

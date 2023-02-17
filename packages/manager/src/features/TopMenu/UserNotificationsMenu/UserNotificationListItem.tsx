@@ -23,10 +23,6 @@ type ClassNames =
   | 'root';
 
 const styles = (theme: Theme) => {
-  const {
-    palette: { status },
-  } = theme;
-
   return createStyles({
     pointer: {
       cursor: 'pointer',
@@ -71,13 +67,13 @@ const styles = (theme: Theme) => {
       fontFamily: theme.font.bold,
     },
     critical: {
-      borderLeft: `5px solid ${status.errorDark}`,
+      borderLeft: `5px solid ${theme.palette.error.dark}`,
     },
     major: {
-      borderLeft: `5px solid ${status.warningDark}`,
+      borderLeft: `5px solid ${theme.palette.warning.dark}`,
     },
     minor: {
-      borderLeft: `5px solid ${status.successDark}`,
+      borderLeft: `5px solid ${theme.palette.success.dark}`,
     },
     flag: {
       marginRight: theme.spacing(2),
