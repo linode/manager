@@ -274,8 +274,8 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           <Link
             to={`/dashboard`}
             onClick={closeMenu}
-            aria-label="Dashboard"
-            title="Dashboard"
+            aria-label="Akamai - Dashboard"
+            title="Akamai - Dashboard"
             className={classNames({
               [classes.logoContainer]: isCollapsed,
             })}
@@ -389,6 +389,13 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
     prefetchProps,
   } = props;
 
+  const isActiveLink = linkIsActive(
+    href,
+    locationSearch,
+    locationPathname,
+    activeLinks
+  );
+
   return (
     <Link
       to={href}
@@ -402,13 +409,9 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
       {...attr}
       className={classNames({
         [classes.listItem]: true,
-        [classes.active]: linkIsActive(
-          href,
-          locationSearch,
-          locationPathname,
-          activeLinks
-        ),
+        [classes.active]: isActiveLink,
       })}
+      aria-current={Boolean(isActiveLink)}
       data-testid={`menu-item-${display}`}
     >
       {icon && (
