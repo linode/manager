@@ -1,6 +1,22 @@
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes fadeIn': {
+    from: {
+      opacity: 0,
+    },
+    to: {
+      opacity: 1,
+    },
+  },
+  '@keyframes fadeOut': {
+    from: {
+      opacity: 1,
+    },
+    to: {
+      opacity: 0,
+    },
+  },
   menuGrid: {
     minHeight: 64,
     height: '100%',
@@ -16,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       '& svg': {
         '& path.st0': {
-          fill: '#f93',
+          animation: '$fadeIn .2s ease-in-out',
         },
       },
     },
@@ -35,12 +51,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logoItemAkamai: {
     paddingTop: 10,
+    paddingLeft: 16,
+    transition: 'padding-left .03s linear',
+    '& path.st0': {
+      animation: '$fadeIn .2s ease-in-out',
+    },
   },
-  logoItemAkamaiWave: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '54px 54px 0 58px',
-    position: 'relative',
+  logoItemAkamaiCollapsed: {
+    paddingLeft: 8,
   },
   logoCollapsed: {
     background: theme.bg.primaryNavPaper,
@@ -52,13 +70,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logoAkamaiCollapsed: {
     background: theme.bg.primaryNavPaper,
-    height: 38,
-    width: 128,
-    position: 'absolute',
-    top: 12,
-    left: -8,
+    width: 96,
     '& path.st0': {
-      fill: 'none',
+      animation: '$fadeOut 0s ease-in-out 0s forwards',
     },
   },
   listItem: {
@@ -155,7 +169,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logo: {
     // give the svg a transition so it smoothly resizes
-    transition: 'all .03s linear',
+    transition: 'width .1s linear',
   },
 }));
 
