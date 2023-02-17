@@ -4,9 +4,6 @@
   "description": "The Linode Manager website",
   "version": "1.86.0",
   "private": true,
-  "engines": {
-    "node": ">= 18"
-  },
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },

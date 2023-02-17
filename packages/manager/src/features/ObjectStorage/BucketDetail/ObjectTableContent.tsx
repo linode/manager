@@ -9,7 +9,7 @@ import TableRowError from 'src/components/TableRowError';
 import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
-import { displayName, isFolder } from '../utilities';
+import { displayName, isEmptyObjectForFolder, isFolder } from '../utilities';
 import FolderTableRow from './FolderTableRow';
 import ObjectTableRow from './ObjectTableRow';
 
@@ -41,7 +41,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
   const { width } = useWindowDimensions();
 
   if (isFetching && !isFetchingNextPage) {
-    return <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />;
+    return <TableRowLoading columns={4} responsive={{ 2: { mdDown: true } }} />;
   }
 
   if (error) {
@@ -69,6 +69,19 @@ const ObjectTableContent: React.FC<Props> = (props) => {
     <>
       {data.map((page) => {
         return page.data.map((object) => {
+          if (isEmptyObjectForFolder(object)) {
+            if (numOfDisplayedObjects === 1) {
+              return (
+                <TableRowEmptyState
+                  key={`empty-${object.name}`}
+                  colSpan={6}
+                  message="This folder is empty."
+                />
+              );
+            }
+            return null;
+          }
+
           if (isFolder(object)) {
             return (
               <FolderTableRow
@@ -79,6 +92,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
                   maxNameWidth
                 )}
                 manuallyCreated={false}
+                handleClickDelete={handleClickDelete}
               />
             );
           }
@@ -108,7 +122,7 @@ const ObjectTableContent: React.FC<Props> = (props) => {
         });
       })}
       {isFetchingNextPage ? (
-        <TableRowLoading columns={4} responsive={{ 2: { smDown: true } }} />
+        <TableRowLoading columns={4} responsive={{ 2: { mdDown: true } }} />
       ) : null}
     </>
   );

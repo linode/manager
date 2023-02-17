@@ -278,6 +278,12 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
     const handleTypeChange = React.useCallback(
       (item: Item | null) => {
         const selectedType = item?.value;
+
+        // If the user re-selectes the same preset, don't do anything
+        if (selectedType === values.type) {
+          return;
+        }
+
         setFieldValue('type', selectedType);
 
         if (!selectedType) {
@@ -312,6 +318,7 @@ const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
         category,
         setPresetPorts,
         values.action,
+        values.type,
       ]
     );
 
