@@ -68,5 +68,8 @@
       "packages/*"
     ]
   },
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "volta": {
+    "node": "18.14.1"
+  }
 }
