@@ -1,6 +1,6 @@
 /* eslint-disable cypress/no-unnecessary-waiting */
 import { Method } from 'axios';
-import { RouteHandler, RouteMatcher } from 'cypress/types/net-stubbing';
+import { RouteMatcher } from 'cypress/types/net-stubbing';
 import { deleteAllTestDomains } from '../api/domains';
 import { deleteAllTestFirewalls } from '../api/firewalls';
 import { deleteAllTestImages } from '../api/images';
@@ -14,6 +14,7 @@ import {
 import { deleteAllTestStackscripts } from '../api/stackscripts';
 import { deleteAllTestVolumes } from '../api/volumes';
 import { deleteAllTestTags } from '../api/tags';
+import { apiMatcher } from 'support/util/intercepts';
 
 const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
   cy.log(`Attempts remaining: ${attemptsRemaining}`);
@@ -29,12 +30,16 @@ const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
 };
 
 export const waitForAppLoad = (path = '/', withLogin = true) => {
-  cy.intercept('GET', '**/linode/instances/*').as('getLinodes');
-  cy.intercept('GET', '**/account').as('getAccount');
-  cy.intercept('GET', '**/profile').as('getProfile');
-  cy.intercept('GET', '**/account/settings').as('getAccountSettings');
-  cy.intercept('GET', '**/profile/preferences').as('getProfilePreferences');
-  cy.intercept('GET', '**/account/notifications**').as('getNotifications');
+  cy.intercept('GET', apiMatcher('linode/instances/*')).as('getLinodes');
+  cy.intercept('GET', apiMatcher('account')).as('getAccount');
+  cy.intercept('GET', apiMatcher('profile')).as('getProfile');
+  cy.intercept('GET', apiMatcher('account/settings')).as('getAccountSettings');
+  cy.intercept('GET', apiMatcher('profile/preferences')).as(
+    'getProfilePreferences'
+  );
+  cy.intercept('GET', apiMatcher('account/notifications**')).as(
+    'getNotifications'
+  );
 
   withLogin ? cy.visitWithLogin(path) : cy.visit(path);
   cy.wait([

@@ -31,7 +31,7 @@ const createLinodeWithImageMock = (preselectedImage: boolean) => {
     req.reply(createMockImage());
   }).as('mockImage');
 
-  cy.intercept('POST', apiMatcher('**/linode/instances'), (req) => {
+  cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
       body: mockLinode,
       headers: { image: imageId },

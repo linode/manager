@@ -1,9 +1,10 @@
 import { DateTime } from 'luxon';
-import { UserPreferences } from '@linode/api-v4/lib/profile/types';
+import { UserPreferences } from '@linode/api-v4/types';
 import {
   mockCommonRequests,
   CommonRequestMockOptions,
 } from 'support/intercepts/common';
+import { apiMatcher } from 'support/util/intercepts';
 
 const overrideLocalStorage = (
   window: any,
@@ -108,7 +109,7 @@ Cypress.Commands.add(
     }
 
     if (resolvedLinodeOptions.preferenceOverrides) {
-      cy.intercept('GET', '**/profile/preferences*', (request) => {
+      cy.intercept('GET', apiMatcher('profile/preferences*'), (request) => {
         request.continue((response) => {
           response.body = {
             ...response?.body,

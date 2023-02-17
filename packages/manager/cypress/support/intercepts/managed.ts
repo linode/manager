@@ -329,7 +329,7 @@ export const mockGetStats = (
   stats?: ManagedStats | undefined
 ): Cypress.Chainable<null> => {
   const mockStats = stats ? stats : managedStatsFactory.build();
-  return cy.intercept('GET', apiMatcher('**/managed/stats*'), mockStats);
+  return cy.intercept('GET', apiMatcher('managed/stats*'), mockStats);
 };
 
 /**
