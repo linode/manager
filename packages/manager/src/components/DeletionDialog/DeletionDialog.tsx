@@ -46,8 +46,6 @@ const DeletionDialog: React.FC<CombinedProps> = (props) => {
     loading,
     preferences,
     typeToConfirm,
-    getUserPreferences,
-    updateUserPreferences,
     ...rest
   } = props;
   const [confirmationText, setConfirmationText] = React.useState('');
