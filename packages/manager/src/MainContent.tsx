@@ -38,7 +38,7 @@ import { usePreferences } from 'src/queries/preferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-import { UserPreferences } from './store/preferences/preferences.actions';
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -395,7 +395,7 @@ export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
 };
 
 export const checkPreferencesForBannerDismissal = (
-  preferences: UserPreferences,
+  preferences: ManagerPreferences,
   key = 'defaultKey'
 ) => {
   return Boolean(preferences?.main_content_banner_dismissal?.[key]);

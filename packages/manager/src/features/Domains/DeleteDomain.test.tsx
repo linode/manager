@@ -18,7 +18,8 @@ describe('DeleteDomain', () => {
   });
 
   it('displays the modal when the button is clicked', () => {
-    const { getByText } = render(wrapWithTheme(<DeleteDomain {...props} />));
+    const renderResult = render(wrapWithTheme(<DeleteDomain {...props} />));
+    const { getByText } = renderResult;
     fireEvent.click(getByText('Delete Domain'));
     expect(getByText('Delete Domain example.com?')).toBeInTheDocument();
   });

@@ -57,7 +57,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             }}
           >
             <SnackbarProvider>
-              <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+              <MemoryRouter {...options.MemoryRouter}>
+                {ui.children ?? ui}
+              </MemoryRouter>
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>
