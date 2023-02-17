@@ -32,8 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   link: {
-    color: '#fff',
-    textDecoration: 'underline',
+    color: '#74AAE6',
   },
   closeIcon: {
     position: 'absolute',

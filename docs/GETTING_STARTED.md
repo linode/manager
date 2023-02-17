@@ -17,18 +17,18 @@
 5. After your OAuth App has been created, copy the ID (not the secret).
 6. In `packages/manager`, copy the contents of `.env.example` and paste them into a new file called `.env`.
 7. In `.env` set `REACT_APP_CLIENT_ID` to the ID from step 5.
-8. Install Node.js 14.17.4. We recommend using [Node Version Manager](https://github.com/nvm-sh/nvm) (nvm):
+8. Install Node.js 18.14.1. We recommend using [Volta](https://volta.sh/):
 
    ```bash
 
-   $ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+   $ curl https://get.volta.sh | bash
 
    ## Add nvm to your .*rc file, or open a new terminal window.
 
-   $ nvm install 14.17.4
+   $ volta install node@18.14.1
 
    $ node --version
-   ## v14.17.4
+   ## v18.14.1
 
    ```
 
