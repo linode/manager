@@ -64,7 +64,6 @@ describe('Billing Contact', () => {
   it('Check Billing Contact Form', () => {
     // intercept get account request and stub response.
     mockGetAccount(accountData).as('getAccount');
-    cy.intercept('GET', '**/account', accountData).as('getAccount');
     cy.visitWithLogin('/account/billing', { mockRequests: false });
     checkAccountContactDisplay(accountData);
   });
