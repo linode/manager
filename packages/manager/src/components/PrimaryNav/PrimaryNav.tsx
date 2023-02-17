@@ -263,11 +263,12 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         <div
           className={classNames({
             [classes.logoItem]: !flags.brandUpdate,
-            [classes.logoItemAkamai]: flags.brandUpdate && !isCollapsed,
-            [classes.logoItemAkamaiWave]: flags.brandUpdate && isCollapsed,
+            [classes.logoItemAkamai]: flags.brandUpdate,
+            [classes.logoItemAkamaiCollapsed]: flags.brandUpdate && isCollapsed,
           })}
         >
           {isCollapsed && (
+            // TODO: Unnecessary once brand update is no longer behind feature flag
             <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
           )}
           <Link
@@ -281,8 +282,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           >
             {flags.brandUpdate ? (
               <AkamaiLogo
-                width={140}
-                height={45}
+                width={128}
                 className={classNames(
                   {
                     [classes.logoAkamaiCollapsed]: isCollapsed,
