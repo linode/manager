@@ -23,6 +23,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Link from 'src/components/Link';
+import CheckBox from 'src/components/CheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -57,7 +58,18 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
+  cloudInitCheckboxWrapper: {
+    marginTop: theme.spacing(2),
+    marginLeft: 3,
+  },
 }));
+
+const cloudInitTooltipMessage = (
+  <Typography>
+    Copy TBD-If you deployed this from one of our cloud-init compatible disks
+    then it probably is. <Link to="/">Link to doc</Link>
+  </Typography>
+);
 
 export interface Props {
   label?: string;
@@ -84,6 +96,9 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
+  const [isCloudInitChecked, setIsCloudInitChecked] = React.useState<boolean>(
+    false
+  );
   const [disks, setDisks] = React.useState<Disk[]>([]);
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -138,6 +153,10 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     // Clear any errors
     setErrors(undefined);
     setSelectedDisk(diskID);
+  };
+
+  const handleCloudInitChange = () => {
+    setIsCloudInitChecked(!isCloudInitChecked);
   };
 
   const onSubmit = () => {
@@ -265,6 +284,14 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
+      <Box className={classes.cloudInitCheckboxWrapper}>
+        <CheckBox
+          checked={isCloudInitChecked}
+          onChange={handleCloudInitChange}
+          text="This image is Cloud-init compatible"
+          toolTipText={cloudInitTooltipMessage}
+        />
+      </Box>
       <>
         <TextField
           label="Label"
