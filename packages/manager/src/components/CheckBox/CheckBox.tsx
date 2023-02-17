@@ -70,9 +70,9 @@ const LinodeCheckBox: React.FC<Props> = (props) => {
           }
           label={props.text}
         />
-        {toolTipText && (
+        {toolTipText ? (
           <HelpIcon text={toolTipText} className={classes.helpIcon} />
-        )}
+        ) : null}
       </React.Fragment>
     );
   }

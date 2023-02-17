@@ -59,8 +59,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   cloudInitCheckboxWrapper: {
     marginTop: theme.spacing(2),
+    marginLeft: '3px',
   },
 }));
+
+const cloudInitTooltipMessage = (
+  <Typography>
+    Copy TBD-Need to have installed cloud-init on the distro and change the
+    config to use our data service. <Link to="/">Link to doc</Link>
+  </Typography>
+);
 export interface Props {
   label: string;
   description: string;
@@ -161,13 +169,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const cliRegion = formatForCLI(region, 'region');
   const linodeCLICommand = `linode-cli image-upload --label ${cliLabel} --description ${cliDescription} --region ${cliRegion} FILE`;
 
-  const cloudInitTooltipMessage = (
-    <Typography>
-      Copy TBD-Need to have installed cloud-init on the distro and change the
-      config to use our data service. <Link to="/">Link to doc</Link>
-    </Typography>
-  );
-
   return (
     <>
       <Prompt
@@ -234,7 +235,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
             <CheckBox
               checked={isCloudInitChecked}
               onChange={handleCloudInitChange}
-              data-qa-check-backups="This image is Cloud-init compatible"
               text="This image is Cloud-init compatible"
               toolTipText={cloudInitTooltipMessage}
             />
