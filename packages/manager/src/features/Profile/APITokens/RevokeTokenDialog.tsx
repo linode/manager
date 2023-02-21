@@ -32,7 +32,7 @@ export const RevokeTokenDialog = ({ open, onClose, token, type }: Props) => {
   const onRevoke = () => {
     mutateAsync().then(() => {
       onClose();
-      enqueueSnackbar(`Sucessfully revoked ${token?.label}`, {
+      enqueueSnackbar(`Successfully revoked ${token?.label}`, {
         variant: 'success',
       });
     });

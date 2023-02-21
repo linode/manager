@@ -20,6 +20,11 @@ export const generateObjectUrl = (
   };
 };
 
+// Objects ending with a / and having a size of 0 are often used to represent
+// "folders".
+export const isEmptyObjectForFolder = (object: ObjectStorageObject) =>
+  object.name.endsWith('/') && object.size === 0;
+
 // If an Object does not have an etag, last_modified, owner, or size, it can
 // be considered a "folder".
 export const isFolder = (object: ObjectStorageObject) =>
