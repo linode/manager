@@ -1,7 +1,6 @@
 import { Engine } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -9,11 +8,9 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import { useDeleteDatabaseMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { usePreferences } from 'src/queries/preferences';
 
 interface Props {
   open: boolean;
@@ -22,8 +19,6 @@ interface Props {
   databaseEngine: Engine;
   databaseLabel: string;
 }
-
-export type CombinedProps = Props & PreferencesProps;
 
 const renderActions = (
   disabled: boolean,
@@ -53,18 +48,10 @@ const renderActions = (
   </ActionsPanel>
 );
 
-export const DatabaseSettingsDeleteClusterDialog: React.FC<CombinedProps> = (
-  props
-) => {
-  const {
-    open,
-    onClose,
-    databaseID,
-    databaseEngine,
-    databaseLabel,
-    preferences,
-  } = props;
+export const DatabaseSettingsDeleteClusterDialog: React.FC<Props> = (props) => {
+  const { open, onClose, databaseID, databaseEngine, databaseLabel } = props;
   const { enqueueSnackbar } = useSnackbar();
+  const { data: preferences } = usePreferences();
   const { mutateAsync: deleteDatabase } = useDeleteDatabaseMutation(
     databaseEngine,
     databaseID
@@ -127,6 +114,4 @@ export const DatabaseSettingsDeleteClusterDialog: React.FC<CombinedProps> = (
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences);
-
-export default enhanced(DatabaseSettingsDeleteClusterDialog);
+export default DatabaseSettingsDeleteClusterDialog;
