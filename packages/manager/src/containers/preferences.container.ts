@@ -2,7 +2,7 @@ import React from 'react';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { ManagerPreferences } from 'src/types/ManagerPreferences';
 export interface PreferencesStateProps {
-  preferences: ManagerPreferences;
+  preferences?: ManagerPreferences;
 }
 
 export interface PreferencesActionsProps {
@@ -21,9 +21,7 @@ const withPreferences = <Props>(
 ) => (props: Props) => {
   const { data: preferences, refetch } = usePreferences();
   const { mutateAsync: updateUserPreferences } = useMutatePreferences();
-  if (preferences === undefined) {
-    return null;
-  }
+
   return React.createElement(Component, {
     ...props,
     preferences,

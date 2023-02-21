@@ -101,7 +101,8 @@ export class App extends React.Component<CombinedProps, State> {
           case letterForThemeShortcut:
             this.props.updateUserPreferences({
               ...this.props.preferences,
-              theme: this.props.preferences.theme === 'dark' ? 'light' : 'dark',
+              theme:
+                this.props.preferences?.theme === 'dark' ? 'light' : 'dark',
             });
             break;
           case letterForGoToOpen:
