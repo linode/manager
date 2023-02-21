@@ -29,7 +29,7 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
       .catch(() => {
         setErrorMessage('Unable to load user preferences');
       });
-  }, [refetchPreferences]);
+  }, []);
 
   const handleSavePreferences = () => {
     try {
