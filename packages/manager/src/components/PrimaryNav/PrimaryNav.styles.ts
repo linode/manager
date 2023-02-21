@@ -1,20 +1,23 @@
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+const SLIDE_IN_TRANSFORM = 'matrix(0.01471, 0, 0, 1, 123.982745, 0.000015)';
+const SLIDE_OUT_TRANSFORM = 'translate(0)';
+
 const useStyles = makeStyles((theme: Theme) => ({
-  '@keyframes fadeIn': {
+  '@keyframes slideIn': {
     from: {
-      opacity: 0,
+      transform: SLIDE_IN_TRANSFORM,
     },
     to: {
-      opacity: 1,
+      transform: SLIDE_OUT_TRANSFORM,
     },
   },
-  '@keyframes fadeOut': {
+  '@keyframes slideOut': {
     from: {
-      opacity: 1,
+      transform: SLIDE_OUT_TRANSFORM,
     },
     to: {
-      opacity: 0,
+      transform: SLIDE_IN_TRANSFORM,
     },
   },
   menuGrid: {
@@ -30,10 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: 80,
     },
     '&:hover': {
-      '& svg': {
-        '& path.st0': {
-          animation: '$fadeIn .2s ease-in-out',
-        },
+      '& path.akamai-clip-path': {
+        animation: '$slideIn .33s ease-in-out',
       },
     },
   },
@@ -50,11 +51,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
   },
   logoItemAkamai: {
-    paddingTop: 10,
-    paddingLeft: 16,
+    paddingTop: 12,
+    paddingLeft: 12,
     transition: 'padding-left .03s linear',
-    '& path.st0': {
-      animation: '$fadeIn .2s ease-in-out',
+    '& path.akamai-clip-path': {
+      animation: '$slideIn .33s ease-in-out',
     },
   },
   logoItemAkamaiCollapsed: {
@@ -71,8 +72,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   logoAkamaiCollapsed: {
     background: theme.bg.primaryNavPaper,
     width: 96,
-    '& path.st0': {
-      animation: '$fadeOut 0s ease-in-out 0s forwards',
+    '& path.akamai-clip-path': {
+      animation: '$slideOut 0s ease-in-out 0s forwards',
     },
   },
   listItem: {
