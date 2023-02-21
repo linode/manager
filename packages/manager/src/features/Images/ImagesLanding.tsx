@@ -99,19 +99,23 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
-  const pagination = usePagination(1, queryKey);
-
-  const { order, orderBy, handleOrderChange } = useOrder(
+  // Pagination, order, and query hooks for manual/custom images
+  const paginationForManualImages = usePagination(1, `manual-${queryKey}`);
+  const {
+    order: manualImagesOrder,
+    orderBy: manualImagesOrderBy,
+    handleOrderChange: handleManualImagesOrderChange,
+  } = useOrder(
     {
       orderBy: 'label',
       order: 'asc',
     },
-    `${queryKey}-order`
+    `manual-${queryKey}-order`
   );
 
-  const filter = {
-    ['+order_by']: orderBy,
-    ['+order']: order,
+  const manualImagesFilter = {
+    ['+order_by']: manualImagesOrderBy,
+    ['+order']: manualImagesOrder,
   };
 
   const {
@@ -120,15 +124,37 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     error: manualImagesError,
   } = useImagesQuery(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      page: paginationForManualImages.page,
+      page_size: paginationForManualImages.pageSize,
     },
     {
-      ...filter,
+      ...manualImagesFilter,
       type: 'manual',
       is_public: false,
     }
   );
+
+  // Pagination, order, and query hooks for automatic/recovery images
+  const paginationForAutomaticImages = usePagination(
+    1,
+    `automatic-${queryKey}`
+  );
+  const {
+    order: automaticImagesOrder,
+    orderBy: automaticImagesOrderBy,
+    handleOrderChange: handleAutomaticImagesOrderChange,
+  } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'asc',
+    },
+    `automatic-${queryKey}-order`
+  );
+
+  const automaticImagesFilter = {
+    ['+order_by']: automaticImagesOrderBy,
+    ['+order']: automaticImagesOrder,
+  };
 
   const {
     data: automaticImages,
@@ -136,11 +162,11 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
     error: automaticImagesError,
   } = useImagesQuery(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      page: paginationForAutomaticImages.page,
+      page_size: paginationForAutomaticImages.pageSize,
     },
     {
-      ...filter,
+      ...automaticImagesFilter,
       type: 'automatic',
       is_public: false,
     }
@@ -466,10 +492,10 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
           <TableHead>
             <TableRow>
               <TableSortCell
-                active={orderBy === 'label'}
-                direction={order}
+                active={manualImagesOrderBy === 'label'}
+                direction={manualImagesOrder}
                 label="label"
-                handleClick={handleOrderChange}
+                handleClick={handleManualImagesOrderChange}
               >
                 Image
               </TableSortCell>
@@ -480,10 +506,10 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
                 <TableCell>Created</TableCell>
               </Hidden>
               <TableSortCell
-                active={orderBy === 'size'}
-                direction={order}
+                active={manualImagesOrderBy === 'size'}
+                direction={manualImagesOrder}
                 label="size"
-                handleClick={handleOrderChange}
+                handleClick={handleManualImagesOrderChange}
               >
                 Size
               </TableSortCell>
@@ -515,10 +541,10 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
           <TableHead>
             <TableRow>
               <TableSortCell
-                active={orderBy === 'label'}
-                direction={order}
+                active={automaticImagesOrderBy === 'label'}
+                direction={automaticImagesOrder}
                 label="label"
-                handleClick={handleOrderChange}
+                handleClick={handleAutomaticImagesOrderChange}
               >
                 Image
               </TableSortCell>
@@ -529,10 +555,10 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
                 <TableCell>Created</TableCell>
               </Hidden>
               <TableSortCell
-                active={orderBy === 'size'}
-                direction={order}
+                active={automaticImagesOrderBy === 'size'}
+                direction={automaticImagesOrder}
                 label="size"
-                handleClick={handleOrderChange}
+                handleClick={handleAutomaticImagesOrderChange}
               >
                 Size
               </TableSortCell>
