@@ -2,19 +2,15 @@ import * as React from 'react';
 import Dialog, { DialogProps as _DialogProps } from 'src/components/Dialog';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import Button from 'src/components/Button';
 import Notice from 'src/components/Notice';
-import { compose } from 'recompose';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 type DialogProps = Pick<_DialogProps, 'onClose' | 'open'>;
 
-type CombinedProps = DialogProps & PreferencesProps;
-
-const PreferenceEditor: React.FC<CombinedProps> = (props) => {
-  const { getUserPreferences, updateUserPreferences } = props;
+const PreferenceEditor: React.FC<DialogProps> = (props) => {
+  const { refetch: refetchPreferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const [userPrefs, setUserPrefs] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -24,7 +20,8 @@ const PreferenceEditor: React.FC<CombinedProps> = (props) => {
 
   React.useEffect(() => {
     setLoading(true);
-    getUserPreferences()
+    refetchPreferences()
+      .then(({ data: userPreferences }) => userPreferences ?? Promise.reject())
       .then((userPreferences) => {
         setLoading(false);
         setUserPrefs(JSON.stringify(userPreferences, null, 2));
@@ -32,7 +29,7 @@ const PreferenceEditor: React.FC<CombinedProps> = (props) => {
       .catch(() => {
         setErrorMessage('Unable to load user preferences');
       });
-  }, [getUserPreferences]);
+  }, [refetchPreferences]);
 
   const handleSavePreferences = () => {
     try {
@@ -40,7 +37,7 @@ const PreferenceEditor: React.FC<CombinedProps> = (props) => {
       setSubmitting(true);
       setSuccessMessage('');
       setErrorMessage('');
-      updateUserPreferences(parsed as any)
+      updatePreferences(parsed as any)
         .then(() => {
           setSuccessMessage('Preferences updated successfully');
           setSubmitting(false);
@@ -96,6 +93,4 @@ const PreferenceEditor: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, DialogProps>(withPreferences);
-
-export default enhanced(PreferenceEditor);
+export default PreferenceEditor;

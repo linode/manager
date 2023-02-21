@@ -13,14 +13,12 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
+import { usePreferences } from 'src/queries/preferences';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -56,7 +54,6 @@ export type CombinedProps = Props &
   WithImages &
   UserSSHKeyProps &
   RouteComponentProps &
-  PreferencesProps &
   WithSnackbarProps;
 
 interface RebuildFromImageForm {
@@ -83,8 +80,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     onClose,
     enqueueSnackbar,
     passwordHelperText,
-    preferences,
   } = props;
+
+  const { data: preferences } = usePreferences();
 
   const classes = useStyles();
 
@@ -245,7 +243,6 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withImages(),
-  withPreferences,
   userSSHKeyHoc,
   withSnackbar,
   withRouter
