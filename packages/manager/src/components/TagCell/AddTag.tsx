@@ -1,9 +1,9 @@
-import { getTags } from '@linode/api-v4/lib/tags';
 import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import useAccountManagement from 'src/hooks/useAccountManagement';
+import { useProfile } from 'src/queries/profile';
+import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 
 const useStyles = makeStyles((_: Theme) => ({
   root: {
@@ -27,7 +27,7 @@ interface Props {
   label?: string;
   tags: string[];
   onClose?: () => void;
-  addTag: (tag: string) => void;
+  addTag: (tag: string) => Promise<void>;
   fixedMenu?: boolean;
   inDetailsContext?: boolean;
 }
@@ -37,40 +37,38 @@ export type CombinedProps = Props;
 export const AddTag: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
-  const [accountTags, setAccountTags] = React.useState<Item<string>[]>([]);
 
-  const { _isRestrictedUser } = useAccountManagement();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { data: profile } = useProfile();
+  const {
+    data: accountTags,
+    isLoading: accountTagsLoading,
+  } = useTagSuggestions(!profile?.restricted);
+  // @todo should we toast for this? If we swallow the error the only
+  // thing we lose is preexisting tabs as options; the add tag flow
+  // should still work.
 
-  React.useEffect(() => {
-    if (!_isRestrictedUser) {
-      getTags()
-        .then((response) =>
-          response.data.map((thisTag) => ({
-            value: thisTag.label,
-            label: thisTag.label,
-          }))
-        )
-        .then((tags) => setAccountTags(tags))
-        // @todo should we toast for this? If we swallow the error the only
-        // thing we lose is preexisting tabs as options; the add tag flow
-        // should still work.
-        .catch((_) => null);
-    }
-  }, [_isRestrictedUser]);
-
-  const tagOptions = accountTags.filter(
-    (thisTag) => !tags.includes(thisTag.value)
-  );
+  const tagOptions = accountTags
+    ?.filter((tag) => !tags.includes(tag.label))
+    .map((tag) => ({ value: tag.label, label: tag.label }));
 
   const handleAddTag = (newTag: Item<string>) => {
     if (newTag?.value) {
-      addTag(newTag.value);
-    }
-
-    if (onClose) {
-      onClose();
+      setIsLoading(true);
+      addTag(newTag.value)
+        .then(() => {
+          if (accountTags) {
+            updateTagsSuggestionsData([...accountTags, newTag]);
+          }
+          if (onClose) {
+            onClose();
+          }
+        })
+        .finally(() => setIsLoading(false));
     }
   };
+
+  const loading = accountTagsLoading || isLoading;
 
   return (
     <Select
@@ -84,7 +82,6 @@ export const AddTag: React.FC<Props> = (props) => {
       onChange={handleAddTag}
       options={tagOptions}
       creatable
-      value={null}
       onBlur={onClose}
       placeholder="Create or Select a Tag"
       label={label ?? 'Add a tag'}
@@ -92,8 +89,8 @@ export const AddTag: React.FC<Props> = (props) => {
       // eslint-disable-next-line
       autoFocus
       createOptionPosition="first"
-      blurInputOnSelect={true}
       menuPosition={fixedMenu ? 'fixed' : 'absolute'}
+      isLoading={loading}
     />
   );
 };
