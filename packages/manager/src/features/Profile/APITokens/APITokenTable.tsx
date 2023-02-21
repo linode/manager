@@ -223,7 +223,7 @@ export const APITokenTable = (props: Props) => {
           )}
         </Grid>
       </Grid>
-      <Table aria-label="List of Personal Access Tokens">
+      <Table aria-label={`List of ${title}`}>
         <TableHead>
           <TableRow data-qa-table-head>
             <TableSortCell
