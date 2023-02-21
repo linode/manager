@@ -56,12 +56,20 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
+const isThemeChoice = (value: unknown): value is ThemeChoice => {
+  return typeof value === 'string' && themes[value] !== undefined;
+};
+
 const LinodeThemeWrapper: React.FC = ({ children }) => {
   // fallback to default when rendering themed components pre-authentication
   const isAuthenticated = !!useAuthentication().token;
   const { data: preferences } = usePreferences(isAuthenticated);
 
-  const themeChoice: ThemeChoice = preferences?.theme ?? 'light';
+  const themePreference = preferences?.theme;
+
+  const themeChoice: ThemeChoice = isThemeChoice(themePreference)
+    ? themePreference
+    : 'light';
 
   React.useEffect(() => {
     toggleTheme(themeChoice);
