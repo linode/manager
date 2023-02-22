@@ -101,7 +101,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   // Pagination, order, and query hooks for manual/custom images
-  const paginationForManualImages = usePagination(1, `manual-${queryKey}`);
+  const paginationForManualImages = usePagination(1, `${queryKey}-manual`);
   const {
     order: manualImagesOrder,
     orderBy: manualImagesOrderBy,
@@ -111,7 +111,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       orderBy: 'label',
       order: 'asc',
     },
-    `manual-${queryKey}-order`
+    `${queryKey}-manual-order`,
+    'manual'
   );
 
   const manualImagesFilter = {
@@ -138,7 +139,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
   // Pagination, order, and query hooks for automatic/recovery images
   const paginationForAutomaticImages = usePagination(
     1,
-    `automatic-${queryKey}`
+    `${queryKey}-automatic`
   );
   const {
     order: automaticImagesOrder,
@@ -149,7 +150,8 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       orderBy: 'label',
       order: 'asc',
     },
-    `automatic-${queryKey}-order`
+    `${queryKey}-automatic-order`,
+    'automatic'
   );
 
   const automaticImagesFilter = {
@@ -504,7 +506,14 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
                 <TableCell>Status</TableCell>
               </Hidden>
               <Hidden smDown>
-                <TableCell>Created</TableCell>
+                <TableSortCell
+                  active={manualImagesOrderBy === 'created'}
+                  direction={manualImagesOrder}
+                  label="created"
+                  handleClick={handleManualImagesOrderChange}
+                >
+                  Created
+                </TableSortCell>
               </Hidden>
               <TableSortCell
                 active={manualImagesOrderBy === 'size'}
@@ -561,7 +570,14 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
                 <TableCell>Status</TableCell>
               </Hidden>
               <Hidden smDown>
-                <TableCell>Created</TableCell>
+                <TableSortCell
+                  active={automaticImagesOrderBy === 'created'}
+                  direction={automaticImagesOrder}
+                  label="created"
+                  handleClick={handleAutomaticImagesOrderChange}
+                >
+                  Created
+                </TableSortCell>
               </Hidden>
               <TableSortCell
                 active={automaticImagesOrderBy === 'size'}
