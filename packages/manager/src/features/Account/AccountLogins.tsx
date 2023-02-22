@@ -64,7 +64,7 @@ const AccountLogins = () => {
       return (
         <TableRowLoading
           rows={1}
-          columns={4}
+          columns={5}
           responsive={{
             2: { smDown: true },
             3: { mdDown: true },
@@ -76,7 +76,7 @@ const AccountLogins = () => {
       return <TableRowError colSpan={5} message={error[0].reason} />;
     }
     if (data?.results == 0) {
-      return <TableRowEmptyState message="No account logins" colSpan={6} />;
+      return <TableRowEmptyState message="No account logins" colSpan={5} />;
     }
     if (data) {
       return data.data.map((item: AccountLogin) => (
