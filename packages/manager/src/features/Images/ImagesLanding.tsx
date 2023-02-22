@@ -21,6 +21,7 @@ import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table/Table';
 import TableCell from 'src/components/TableCell/TableCell';
@@ -528,6 +529,14 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
               : noManualImages}
           </TableBody>
         </Table>
+        <PaginationFooter
+          count={manualImages?.results ?? 0}
+          handlePageChange={paginationForManualImages.handlePageChange}
+          handleSizeChange={paginationForManualImages.handlePageSizeChange}
+          page={paginationForManualImages.page}
+          pageSize={paginationForManualImages.pageSize}
+          eventCategory="Custom Images Table"
+        />
       </Paper>
       <Paper className={classes.imageTable}>
         <div className={classes.imageTableHeader}>
@@ -580,6 +589,14 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
               : noAutomaticImages}
           </TableBody>
         </Table>
+        <PaginationFooter
+          count={automaticImages?.results ?? 0}
+          handlePageChange={paginationForAutomaticImages.handlePageChange}
+          handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
+          page={paginationForAutomaticImages.page}
+          pageSize={paginationForAutomaticImages.pageSize}
+          eventCategory="Recovery Images Table"
+        />
       </Paper>
       {renderImageDrawer()}
       <ConfirmationDialog
