@@ -29,11 +29,11 @@ export interface UploadImageResponse {
 export interface BaseImagePayload {
   label?: string;
   description?: string;
+  cloud_init?: boolean;
 }
 
 export interface CreateImagePayload extends BaseImagePayload {
   diskID: number;
-  cloud_init?: boolean;
 }
 
 export interface ImageUploadPayload extends BaseImagePayload {
