@@ -301,7 +301,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           uploadImage({
             label,
             description: description || undefined,
-            cloud_init: isCloudInit,
+            cloud_init: isCloudInit || undefined,
             region,
           })
         )

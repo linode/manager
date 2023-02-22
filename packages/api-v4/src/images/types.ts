@@ -39,5 +39,4 @@ export interface CreateImagePayload extends BaseImagePayload {
 export interface ImageUploadPayload extends BaseImagePayload {
   label: string;
   region: string;
-  cloud_init: boolean | undefined;
 }
