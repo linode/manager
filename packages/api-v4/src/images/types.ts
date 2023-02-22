@@ -4,6 +4,8 @@ export type ImageStatus =
   | 'deleted'
   | 'pending_upload';
 
+type ImageCapabilities = 'cloud-init';
+
 export interface Image {
   eol: string | null;
   id: string;
@@ -19,6 +21,7 @@ export interface Image {
   deprecated: boolean;
   expiry: null | string;
   status: ImageStatus;
+  capabilities: ImageCapabilities[];
 }
 
 export interface UploadImageResponse {

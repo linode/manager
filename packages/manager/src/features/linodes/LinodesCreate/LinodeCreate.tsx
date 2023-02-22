@@ -525,6 +525,14 @@ export class LinodeCreate extends React.PureComponent<
     }
 
     let showUserData = true;
+    if (
+      this.props.selectedImageID &&
+      this.props.imagesData[this.props.selectedImageID]?.capabilities.includes(
+        'cloud-init'
+      )
+    ) {
+      showUserData = true;
+    }
 
     return (
       <form className={classes.form}>
