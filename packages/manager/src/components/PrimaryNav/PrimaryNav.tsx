@@ -263,26 +263,26 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         <div
           className={classNames({
             [classes.logoItem]: !flags.brandUpdate,
-            [classes.logoItemAkamai]: flags.brandUpdate && !isCollapsed,
-            [classes.logoItemAkamaiWave]: flags.brandUpdate && isCollapsed,
+            [classes.logoItemAkamai]: flags.brandUpdate,
+            [classes.logoItemAkamaiCollapsed]: flags.brandUpdate && isCollapsed,
           })}
         >
           {isCollapsed && (
+            // TODO: Unnecessary once brand update is no longer behind feature flag
             <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
           )}
           <Link
             to={`/dashboard`}
             onClick={closeMenu}
-            aria-label="Dashboard"
-            title="Dashboard"
+            aria-label="Akamai - Dashboard"
+            title="Akamai - Dashboard"
             className={classNames({
               [classes.logoContainer]: isCollapsed,
             })}
           >
             {flags.brandUpdate ? (
               <AkamaiLogo
-                width={140}
-                height={45}
+                width={128}
                 className={classNames(
                   {
                     [classes.logoAkamaiCollapsed]: isCollapsed,
@@ -389,6 +389,10 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
     prefetchProps,
   } = props;
 
+  const isActiveLink = Boolean(
+    linkIsActive(href, locationSearch, locationPathname, activeLinks)
+  );
+
   return (
     <Link
       to={href}
@@ -402,13 +406,9 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
       {...attr}
       className={classNames({
         [classes.listItem]: true,
-        [classes.active]: linkIsActive(
-          href,
-          locationSearch,
-          locationPathname,
-          activeLinks
-        ),
+        [classes.active]: isActiveLink,
       })}
+      aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
     >
       {icon && (
