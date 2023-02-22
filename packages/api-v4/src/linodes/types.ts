@@ -302,6 +302,10 @@ export interface IPAllocationRequest {
   public: boolean;
 }
 
+interface UserData {
+  user_data: string;
+}
+
 export interface CreateLinodeRequest {
   type?: string;
   region?: string;
@@ -319,6 +323,7 @@ export interface CreateLinodeRequest {
   private_ip?: boolean;
   authorized_users?: string[];
   interfaces?: Interface[];
+  metadata?: UserData;
 }
 
 export type RescueRequestObject = Pick<

@@ -377,6 +377,13 @@ export class LinodeCreate extends React.PureComponent<
       }
       payload['interfaces'] = interfaces;
     }
+
+    if (this.props.userData) {
+      payload['metadata'] = {
+        user_data: window.btoa(this.props.userData),
+      };
+    }
+
     return payload;
   };
 
