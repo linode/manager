@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -72,12 +71,21 @@ const cloudInitTooltipMessage = (
 export interface Props {
   label: string;
   description: string;
+  isCloudInit: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  cloudInitChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
-  const { label, description, changeLabel, changeDescription } = props;
+  const {
+    label,
+    description,
+    changeLabel,
+    changeDescription,
+    cloudInitChangeHandler,
+    isCloudInit,
+  } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -98,11 +106,6 @@ export const ImageUpload: React.FC<Props> = (props) => {
   const [linodeCLIModalOpen, setLinodeCLIModalOpen] = React.useState<boolean>(
     false
   );
-  const [isCloudInitChecked, setIsCloudInitChecked] = useState<boolean>(false);
-
-  const handleCloudInitChange = () => {
-    setIsCloudInitChecked(!isCloudInitChecked);
-  };
 
   const showAgreement = Boolean(
     !profile?.restricted && agreements?.eu_model === false && isEURegion(region)
@@ -233,8 +236,8 @@ export const ImageUpload: React.FC<Props> = (props) => {
           />
           <div className={classes.cloudInitCheckboxWrapper}>
             <CheckBox
-              checked={isCloudInitChecked}
-              onChange={handleCloudInitChange}
+              checked={isCloudInit}
+              onChange={cloudInitChangeHandler}
               text="This image is Cloud-init compatible"
               toolTipText={cloudInitTooltipMessage}
             />
@@ -275,7 +278,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             label={label}
             description={description}
             region={region}
-            isCloudInit={isCloudInitChecked}
+            isCloudInit={isCloudInit}
             dropzoneDisabled={uploadingDisabled}
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}
