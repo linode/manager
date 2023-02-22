@@ -163,6 +163,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     setErrors(undefined);
     setNotice(undefined);
     setSubmitting(true);
+    // console.log({isCloudInitChecked})
 
     const safeDescription = description ?? '';
     createImage({
