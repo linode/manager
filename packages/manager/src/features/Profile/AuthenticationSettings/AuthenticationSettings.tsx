@@ -56,7 +56,7 @@ export const AuthenticationSettings: React.FC = () => {
   }
 
   return (
-    <div data-testid="authSettings">
+    <>
       <DocumentTitleSegment segment="Login & Authentication" />
       <TPAProviders authType={authType} />
       <Paper className={classes.root}>
@@ -97,7 +97,7 @@ export const AuthenticationSettings: React.FC = () => {
           </>
         ) : null}
       </Paper>
-    </div>
+    </>
   );
 };
 
