@@ -85,6 +85,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: (e) =>
       `Database ${e.entity!.label}'s credentials have been reset.`,
   },
+  database_backup_create: {
+    notification: (e) =>
+      `A backup is being created for Database ${e.entity!.label}.`,
+  },
   disk_create: {
     scheduled: (e) =>
       `${safeSecondaryEntityLabel(
