@@ -53,10 +53,7 @@ export const createImage = (
     ...(label && { label }),
     ...(description && { description }),
     ...(cloud_init && { cloud_init }),
-    // cloud_init: true,
   };
-  // console.log({ cloud_init });
-  // console.log({ data });
 
   return Request<Image>(
     setURL(`${API_ROOT}/images`),

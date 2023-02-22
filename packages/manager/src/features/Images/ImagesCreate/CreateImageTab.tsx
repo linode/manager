@@ -74,16 +74,20 @@ const cloudInitTooltipMessage = (
 export interface Props {
   label?: string;
   description?: string;
+  isCloudInit?: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const {
     label,
     description,
+    isCloudInit,
     changeLabel,
     changeDescription,
+    changeCloudInit,
     createImage,
   } = props;
 
@@ -96,9 +100,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
-  const [isCloudInitChecked, setIsCloudInitChecked] = React.useState<boolean>(
-    false
-  );
   const [disks, setDisks] = React.useState<Disk[]>([]);
   const [notice, setNotice] = React.useState<string | undefined>();
   const [errors, setErrors] = React.useState<APIError[] | undefined>();
@@ -155,22 +156,17 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     setSelectedDisk(diskID);
   };
 
-  const handleCloudInitChange = () => {
-    setIsCloudInitChecked(!isCloudInitChecked);
-  };
-
   const onSubmit = () => {
     setErrors(undefined);
     setNotice(undefined);
     setSubmitting(true);
-    // console.log({isCloudInitChecked})
 
     const safeDescription = description ?? '';
     createImage({
       diskID: Number(selectedDisk),
       label,
       description: safeDescription,
-      cloud_init: isCloudInitChecked ? isCloudInitChecked : undefined,
+      cloud_init: isCloudInit ? isCloudInit : undefined,
     })
       .then((_) => {
         resetEventsPolling();
@@ -288,8 +284,8 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       {isRawDisk ? rawDiskWarning : null}
       <Box className={classes.cloudInitCheckboxWrapper}>
         <CheckBox
-          checked={isCloudInitChecked}
-          onChange={handleCloudInitChange}
+          checked={isCloudInit}
+          onChange={changeCloudInit}
           text="This image is Cloud-init compatible"
           toolTipText={cloudInitTooltipMessage}
         />
