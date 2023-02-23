@@ -89,7 +89,7 @@ describe('linode landing checks', () => {
   });
 
   it('checks the landing page side menu items', () => {
-    getVisible('[title="Dashboard"][href="/dashboard"]');
+    getVisible('[title="Akamai - Dashboard"][href="/dashboard"]');
     getVisible('[data-testid="menu-item-Linodes"][href="/linodes"]');
     getVisible('[data-testid="menu-item-Volumes"][href="/volumes"]');
     getVisible(

@@ -38,4 +38,12 @@ describe('PrimaryNav', () => {
 
     getByTestId('menu-item-Managed');
   });
+
+  it('should have aria-current attribute for accessible links', () => {
+    const { getByTestId } = renderWithTheme(<PrimaryNav {...props} />);
+
+    expect(getByTestId('menu-item-Managed').getAttribute('aria-current')).toBe(
+      'false'
+    );
+  });
 });

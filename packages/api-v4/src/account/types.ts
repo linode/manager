@@ -458,10 +458,13 @@ export interface MakePaymentData {
   payment_method_id?: number;
 }
 
+export type AccountLoginStatus = 'successful' | 'failed';
+
 export interface AccountLogin {
   datetime: string;
   id: number;
   ip: string;
   restricted: boolean;
   username: string;
+  status: AccountLoginStatus;
 }
