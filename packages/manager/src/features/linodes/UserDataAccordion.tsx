@@ -2,7 +2,9 @@ import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 
 interface Props {
@@ -23,7 +25,25 @@ const useStyles = makeStyles(() => ({
 
 const UserDataAccordion: React.FC<Props> = (props) => {
   const { disabled, userData, onChange } = props;
+  const [formatWarning, setFormatWarning] = React.useState(false);
+
   const classes = useStyles();
+
+  const checkFormat = (userData: string, isOnChange: boolean) => {
+    const userDataLower = userData.toLowerCase();
+    if (
+      userData.length > 0 &&
+      !userDataLower.startsWith('#cloud-config') &&
+      !userDataLower.startsWith('content-type: text/') &&
+      !userDataLower.startsWith('#!')
+    ) {
+      if (!isOnChange) {
+        setFormatWarning(true);
+      }
+    } else {
+      setFormatWarning(false);
+    }
+  };
 
   const accordionHeading = (
     <>
@@ -47,11 +67,26 @@ const UserDataAccordion: React.FC<Props> = (props) => {
         multiline
         rows={1}
         expand
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          checkFormat(e.target.value, true);
+          onChange(e.target.value);
+        }}
         value={userData}
         disabled={Boolean(disabled)}
+        onBlur={(e) => checkFormat(e.target.value, false)}
         data-qa-user-data-input
       />
+      {formatWarning ? (
+        <Notice warning important>
+          This user data may not be in a format accepted by cloud-init. See{' '}
+          <ExternalLink
+            text="cloud-init documentation"
+            link="https://cloudinit.readthedocs.io/en/latest/explanation/format.html"
+            fixedIcon
+          />{' '}
+          for more information.
+        </Notice>
+      ) : null}
     </Accordion>
   );
 };
