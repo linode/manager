@@ -531,10 +531,10 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    let showUserData = true;
+    let showUserData = false;
     if (
       this.props.selectedImageID &&
-      this.props.imagesData[this.props.selectedImageID]?.capabilities.includes(
+      this.props.imagesData[this.props.selectedImageID]?.capabilities?.includes(
         'cloud-init'
       )
     ) {
