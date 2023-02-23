@@ -63,7 +63,6 @@ const MainContentBanner: React.FC<Props> = (props) => {
       .then(({ data: preferences }) => preferences ?? Promise.reject())
       .then((preferences) => {
         return updatePreferences({
-          ...preferences,
           main_content_banner_dismissal: {
             ...preferences.main_content_banner_dismissal,
             [bannerKey]: true,

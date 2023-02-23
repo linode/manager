@@ -17,14 +17,25 @@ export const usePreferences = (enabled = true) =>
   });
 
 export const useMutatePreferences = () => {
-  return useMutation<ManagerPreferences, APIError[], ManagerPreferences>(
-    updateUserPreferences,
-    {
-      onMutate: updatePreferenceData,
-    }
-  );
+  const { data: preferences } = usePreferences();
+
+  return useMutation<
+    ManagerPreferences,
+    APIError[],
+    Partial<ManagerPreferences>
+  >((data) => updateUserPreferences({ ...(preferences ?? {}), data }), {
+    onMutate: updatePreferenceData,
+  });
 };
 
-export const updatePreferenceData = (newData: ManagerPreferences): void => {
-  queryClient.setQueryData(queryKey, newData);
+export const updatePreferenceData = (
+  newData: Partial<ManagerPreferences>
+): void => {
+  queryClient.setQueryData<ManagerPreferences>(
+    queryKey,
+    (oldData: ManagerPreferences) => ({
+      ...oldData,
+      ...newData,
+    })
+  );
 };

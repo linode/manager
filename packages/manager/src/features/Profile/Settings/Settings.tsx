@@ -39,7 +39,7 @@ const ProfileSettings = () => {
 
   const toggleTheme = () => {
     const newTheme = preferences?.theme === 'dark' ? 'light' : 'dark';
-    updatePreferences({ ...preferences, theme: newTheme });
+    updatePreferences({ theme: newTheme });
   };
 
   React.useEffect(() => {
