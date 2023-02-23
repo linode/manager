@@ -6,11 +6,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import Notice from 'src/components/Notice';
-import { useMutateProfile, useProfile } from 'src/queries/profile';
+import { useProfile } from 'src/queries/profile';
 import { PhoneVerification } from './PhoneVerification/PhoneVerification';
 import ResetPassword from './ResetPassword';
-import SecuritySettings from './SecuritySettings';
 import { SMSMessaging } from './SMSMessaging';
 import TPAProviders from './TPAProviders';
 import TrustedDevices from './TrustedDevices';
@@ -43,27 +41,11 @@ export const AuthenticationSettings: React.FC = () => {
     error: profileError,
   } = useProfile();
 
-  const {
-    mutateAsync: updateProfile,
-    error: profileUpdateError,
-  } = useMutateProfile();
-
   const authType = profile?.authentication_type ?? 'password';
-  const ipAllowlisting = profile?.ip_whitelist_enabled ?? false;
   const twoFactor = Boolean(profile?.two_factor_auth);
   const username = profile?.username;
 
   const isThirdPartyAuthEnabled = authType !== 'password';
-
-  const [success, setSuccess] = React.useState<string | undefined>(undefined);
-
-  const clearState = () => {
-    setSuccess(undefined);
-  };
-
-  const onAllowlistingDisable = () => {
-    setSuccess('IP allowlisting disabled. This feature cannot be re-enabled.');
-  };
 
   if (profileError) {
     return <ErrorState errorText="Unable to load your profile" />;
@@ -74,9 +56,8 @@ export const AuthenticationSettings: React.FC = () => {
   }
 
   return (
-    <div data-testid="authSettings">
+    <>
       <DocumentTitleSegment segment="Login & Authentication" />
-      {success && <Notice success text={success} />}
       <TPAProviders authType={authType} />
       <Paper className={classes.root}>
         <Typography className={classes.linode} variant="h3">
@@ -87,11 +68,7 @@ export const AuthenticationSettings: React.FC = () => {
           <>
             <ResetPassword username={username} />
             <Divider spacingTop={22} spacingBottom={16} />
-            <TwoFactor
-              twoFactor={twoFactor}
-              username={username}
-              clearState={clearState}
-            />
+            <TwoFactor twoFactor={twoFactor} username={username} />
             <Divider spacingTop={22} spacingBottom={16} />
           </>
         ) : null}
@@ -117,19 +94,10 @@ export const AuthenticationSettings: React.FC = () => {
           <>
             <Divider spacingTop={22} spacingBottom={16} />
             <TrustedDevices />
-            {ipAllowlisting ? (
-              <SecuritySettings
-                updateProfile={updateProfile}
-                onSuccess={onAllowlistingDisable}
-                updateProfileError={profileUpdateError || undefined}
-                ipAllowlistingEnabled={ipAllowlisting}
-                data-qa-allowlisting-form
-              />
-            ) : null}
           </>
         ) : null}
       </Paper>
-    </div>
+    </>
   );
 };
 
