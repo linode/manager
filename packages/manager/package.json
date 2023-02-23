@@ -322,13 +322,6 @@
       "jest-junit"
     ]
   },
-  "resolutions": {
-    "csv-parse": "^4.6.3",
-    "handlebars": "^4.4.3",
-    "braces": "^3.0.2",
-    "https-proxy-agent": "^3.0.1",
-    "axe-core": "^3.4.0"
-  },
   "browserslist": [
     ">1%",
     "last 4 versions",
