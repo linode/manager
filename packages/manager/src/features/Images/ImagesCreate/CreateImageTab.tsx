@@ -77,7 +77,7 @@ export interface Props {
   isCloudInit?: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
@@ -87,7 +87,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     isCloudInit,
     changeLabel,
     changeDescription,
-    changeCloudInit,
+    changeIsCloudInit,
     createImage,
   } = props;
 
@@ -285,7 +285,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       <Box className={classes.cloudInitCheckboxWrapper}>
         <CheckBox
           checked={isCloudInit}
-          onChange={changeCloudInit}
+          onChange={changeIsCloudInit}
           text="This image is Cloud-init compatible"
           toolTipText={cloudInitTooltipMessage}
         />

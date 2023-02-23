@@ -20,10 +20,6 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
   );
   const [isCloudInit, setIsCloudInit] = React.useState<boolean>(false);
 
-  const handleSetCloudInit = () => {
-    setIsCloudInit(!isCloudInit);
-  };
-
   const handleSetLabel = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setLabel(value);
@@ -45,7 +41,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
           isCloudInit={isCloudInit}
           changeLabel={handleSetLabel}
           changeDescription={handleSetDescription}
-          changeCloudInit={handleSetCloudInit}
+          changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
         />
       ),
     },
