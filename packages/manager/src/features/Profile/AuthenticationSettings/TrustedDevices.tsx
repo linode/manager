@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = PaginationProps<TrustedDevice>;
 
-export const TrustedDevices: React.FC<CombinedProps> = (props) => {
+export const TrustedDevices: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const refreshList = () => {
     props.onDelete();

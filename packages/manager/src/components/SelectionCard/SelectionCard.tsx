@@ -51,7 +51,7 @@ export interface Props {
   renderVariant?: () => JSX.Element | null;
 }
 
-const SelectionCard: React.FC<Props> = (props) => {
+const SelectionCard: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     id,
     heading,

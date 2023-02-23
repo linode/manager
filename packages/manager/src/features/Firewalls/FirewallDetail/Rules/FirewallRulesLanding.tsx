@@ -66,7 +66,7 @@ interface Drawer {
 
 type CombinedProps = Props & DispatchProps & RouteComponentProps;
 
-const FirewallRulesLanding: React.FC<CombinedProps> = (props) => {
+const FirewallRulesLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { firewallID, rules, disabled } = props;
 
@@ -405,7 +405,7 @@ interface DiscardChangesDialogProps {
   handleDiscard: () => void;
 }
 
-export const DiscardChangesDialog: React.FC<DiscardChangesDialogProps> = React.memo(
+export const DiscardChangesDialog: React.FC<React.PropsWithChildren<DiscardChangesDialogProps>> = React.memo(
   (props) => {
     const { isOpen, handleClose, handleDiscard } = props;
 

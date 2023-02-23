@@ -124,7 +124,7 @@ type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps;
 
-const EditableText: React.FC<FinalProps> = (props) => {
+const EditableText: React.FC<React.PropsWithChildren<FinalProps>> = (props) => {
   const classes = useStyles();
 
   const [isEditing, setIsEditing] = React.useState(Boolean(props.errorText));

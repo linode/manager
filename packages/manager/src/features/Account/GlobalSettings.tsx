@@ -50,7 +50,7 @@ type CombinedProps = StateProps &
   WithSnackbarProps &
   RouteComponentProps<{}>;
 
-const GlobalSettings: React.FC<CombinedProps> = (props) => {
+const GlobalSettings: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     actions: { openBackupsDrawer, openImportDrawer },
     linodesWithoutBackups,

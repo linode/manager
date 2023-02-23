@@ -6,7 +6,7 @@ interface Props {
   className?: string;
 }
 
-const CancelNotice: React.FC<Props> = ({ className }) => {
+const CancelNotice: React.FC<React.PropsWithChildren<Props>> = ({ className }) => {
   return (
     <Typography className={className}>
       <strong>Please note:</strong> you will still be billed for Object Storage

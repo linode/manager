@@ -88,7 +88,7 @@ export const useStyles = makeStyles(() => ({
 
 const preferenceKey = 'volumes';
 
-export const VolumesLanding: React.FC<CombinedProps> = (props) => {
+export const VolumesLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 

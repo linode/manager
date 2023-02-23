@@ -32,7 +32,7 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
  * essentially this form across all entity landing pages.
  */
 
-export const LandingHeader: React.FC<Props> = (props) => {
+export const LandingHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const {

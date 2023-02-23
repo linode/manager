@@ -15,7 +15,7 @@ const SupportTicketDetail = React.lazy(
   () => import('src/features/Support/SupportTicketDetail')
 );
 
-const HelpAndSupport: React.FC<{}> = (_) => {
+const HelpAndSupport: React.FC<React.PropsWithChildren<{}>> = (_) => {
   return (
     <>
       <StatusBanners />

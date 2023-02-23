@@ -92,7 +92,7 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: '',
 };
 
-export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
+export const RebuildFromStackScript: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     imagesData,
     userSSHKeys,

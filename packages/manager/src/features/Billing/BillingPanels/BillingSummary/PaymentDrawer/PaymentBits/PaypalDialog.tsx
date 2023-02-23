@@ -20,7 +20,7 @@ interface Content {
   error?: string;
 }
 
-const PaypalDialog: React.SFC<CombinedProps> = (props) => {
+const PaypalDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     open,
     closeDialog,

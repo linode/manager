@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ListLinodesEmptyState: React.FC<{}> = (_) => {
+export const ListLinodesEmptyState: React.FC<React.PropsWithChildren<{}>> = (_) => {
   const classes = useStyles();
 
   const { push } = useHistory();

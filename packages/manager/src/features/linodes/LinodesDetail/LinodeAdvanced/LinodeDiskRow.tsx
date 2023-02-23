@@ -44,7 +44,7 @@ interface Props {
   onDelete: () => void;
 }
 
-export const LinodeDiskRow: React.FC<Props> = (props) => {
+export const LinodeDiskRow: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { inProgressEvents } = useEvents();
   const {

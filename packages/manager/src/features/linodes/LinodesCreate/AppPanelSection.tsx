@@ -30,7 +30,7 @@ interface Props {
   ) => void;
 }
 
-export const AppPanelSection: React.FC<Props> = (props) => {
+export const AppPanelSection: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     heading,
     apps,

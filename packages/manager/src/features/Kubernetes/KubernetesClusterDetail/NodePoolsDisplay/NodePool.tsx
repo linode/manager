@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const NodePool: React.FC<Props> = (props) => {
+const NodePool: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     autoscaler,
     handleClickResize,

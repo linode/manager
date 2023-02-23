@@ -70,7 +70,7 @@ export interface Props {
   isCollapsed: boolean;
 }
 
-export const PrimaryNav: React.FC<Props> = (props) => {
+export const PrimaryNav: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { closeMenu, isCollapsed } = props;
   const classes = useStyles();
 
@@ -247,7 +247,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
   );
 
   return (
-    <Grid
+    (<Grid
       className={classes.menuGrid}
       container
       alignItems="flex-start"
@@ -269,7 +269,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
         >
           {isCollapsed && (
             // TODO: Unnecessary once brand update is no longer behind feature flag
-            <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
+            (<span className={`${classes.logoCollapsed} logoCollapsed`}></span>)
           )}
           <Link
             to={`/dashboard`}
@@ -351,7 +351,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
           );
         })}
       </div>
-    </Grid>
+    </Grid>)
   );
 };
 
@@ -371,7 +371,7 @@ interface PrimaryLinkProps extends PrimaryLink {
   };
 }
 
-const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
+const PrimaryLink: React.FC<React.PropsWithChildren<PrimaryLinkProps>> = React.memo((props) => {
   const classes = useStyles();
 
   const {
@@ -438,9 +438,7 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<
-  PrimaryLinkProps & PrefetchPrimaryLinkProps
-> = React.memo((props) => {
+export const PrefetchPrimaryLink: React.FC<React.PropsWithChildren<PrimaryLinkProps & PrefetchPrimaryLinkProps>> = React.memo((props) => {
   const { makeRequest, cancelRequest } = usePrefetch(
     props.prefetchRequestFn,
     props.prefetchRequestCondition

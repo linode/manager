@@ -9,7 +9,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const HostMaintenance: React.FC<Props> = (props) => {
+export const HostMaintenance: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodeStatus } = props;
   if (linodeStatus !== 'stopped') {
     return null;

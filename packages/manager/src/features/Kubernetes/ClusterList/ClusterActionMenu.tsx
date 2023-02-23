@@ -19,7 +19,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
-export const ClusterActionMenu: React.FunctionComponent<CombinedProps> = (
+export const ClusterActionMenu: React.FunctionComponent<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   const theme = useTheme<Theme>();

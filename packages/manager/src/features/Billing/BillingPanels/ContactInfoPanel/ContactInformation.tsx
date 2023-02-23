@@ -67,7 +67,7 @@ interface Props extends Pick<RouteComponentProps, 'history'> {
 
 type CombinedProps = Props;
 
-const ContactInformation: React.FC<CombinedProps> = (props) => {
+const ContactInformation: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     company,
     firstName,

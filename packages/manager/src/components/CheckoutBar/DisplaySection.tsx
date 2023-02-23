@@ -7,7 +7,7 @@ export interface Props {
   details?: string | number;
 }
 
-export const DisplaySection: React.FC<Props> = (props) => {
+export const DisplaySection: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { title, details } = props;
   const classes = useStyles();
   return (

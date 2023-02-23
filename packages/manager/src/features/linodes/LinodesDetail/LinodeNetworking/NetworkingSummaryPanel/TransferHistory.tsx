@@ -56,7 +56,7 @@ interface Props {
   linodeCreated: string;
 }
 
-export const TransferHistory: React.FC<Props> = (props) => {
+export const TransferHistory: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodeID, linodeCreated } = props;
 
   const classes = useStyles();
@@ -200,7 +200,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-    <div tabIndex={0} role="graphics-document" aria-label={graphAriaLabel}>
+    (<div tabIndex={0} role="graphics-document" aria-label={graphAriaLabel}>
       <Box
         display="flex"
         flexDirection="row"
@@ -259,7 +259,7 @@ export const TransferHistory: React.FC<Props> = (props) => {
         </Box>
       </Box>
       {renderStatsGraph()}
-    </div>
+    </div>)
   );
 };
 

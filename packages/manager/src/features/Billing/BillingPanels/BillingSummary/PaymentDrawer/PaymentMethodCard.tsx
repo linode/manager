@@ -92,7 +92,7 @@ const getSubHeading = (paymentMethod: PaymentMethod, isExpired: boolean) => {
   }
 };
 
-export const PaymentMethodCard: React.FC<Props> = (props) => {
+export const PaymentMethodCard: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { paymentMethod, paymentMethodId, handlePaymentMethodChange } = props;
   const { id, type, is_default } = paymentMethod;
 

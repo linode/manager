@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const PopularPosts: React.FC = () => {
+const PopularPosts: React.FC<React.PropsWithChildren<unknown>> = () => {
   const classes = useStyles();
 
   const renderPopularDocs = () => {

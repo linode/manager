@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
 
-export const InvoiceDetail: React.FC<CombinedProps> = (props) => {
+export const InvoiceDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const csvRef = React.useRef<any>();

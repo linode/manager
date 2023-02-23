@@ -59,7 +59,7 @@ export interface Props {
   token?: string;
 }
 
-export const ConfirmTransferDialog: React.FC<Props> = (props) => {
+export const ConfirmTransferDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, open, token } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
@@ -180,7 +180,7 @@ interface ContentProps {
   onSubmit: () => void;
 }
 
-export const DialogContent: React.FC<ContentProps> = React.memo((props) => {
+export const DialogContent: React.FC<React.PropsWithChildren<ContentProps>> = React.memo((props) => {
   const {
     entities,
     errors,

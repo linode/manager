@@ -20,7 +20,7 @@ import { compose } from 'recompose';
 // let contentDocument: any;
 // let contentWindow: any;
 
-const _Frame: React.FC<{}> = (props) => {
+const _Frame: React.FC<React.PropsWithChildren<{}>> = (props) => {
   // const { children, classes } = props;
 
   // const handleRef = (ref: any) => {
@@ -56,7 +56,6 @@ const _Frame: React.FC<{}> = (props) => {
   // }
 
   return (
-    <div />
     // <NoSsr>
     //   <Frame
     //     ref={handleRef}
@@ -74,6 +73,7 @@ const _Frame: React.FC<{}> = (props) => {
     //     ) : null}
     //   </Frame>
     // </NoSsr>
+    (<div />)
   );
 };
 

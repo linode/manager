@@ -8,7 +8,7 @@ const KubernetesLanding = React.lazy(
 const ClusterCreate = React.lazy(() => import('./CreateCluster'));
 const ClusterDetail = React.lazy(() => import('./KubernetesClusterDetail'));
 
-const Kubernetes: React.FC = () => {
+const Kubernetes: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>

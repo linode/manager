@@ -18,7 +18,7 @@ interface Props {
   customFirstRow?: JSX.Element;
 }
 
-const TableContentWrapper: React.FC<Props> = (props) => {
+const TableContentWrapper: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     length,
     loading,

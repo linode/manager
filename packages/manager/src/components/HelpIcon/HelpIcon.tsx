@@ -44,7 +44,7 @@ interface Props
 type CombinedProps = Props;
 
 // @TODO: M3-5457 refactor this component to be generic
-const HelpIcon: React.FC<CombinedProps> = (props) => {
+const HelpIcon: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const styles = useStyles();
 
   const {

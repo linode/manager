@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-const SelectStackScriptPanel: React.FC<CombinedProps> = (props) => {
+const SelectStackScriptPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { publicImages } = props;
   const { data: profile } = useProfile();
   const username = profile?.username || '';

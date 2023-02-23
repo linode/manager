@@ -79,7 +79,7 @@ export interface Props {
 
 type CombinedProps = Props & PaypalScript;
 
-type PaypalButtonType = React.ComponentType<Paypal.PayButtonProps> | undefined;
+type PaypalButtonType = React.ComponentType<React.PropsWithChildren<Paypal.PayButtonProps>> | undefined;
 
 /*
  * Client Script src for Linode Paypal Apps
@@ -97,7 +97,7 @@ export const paypalScriptSrc = () => {
   return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
 };
 
-export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
+export const PayPalDisplay: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isScriptLoaded, usd, setSuccess, disabled } = props;
   const classes = useStyles();
 

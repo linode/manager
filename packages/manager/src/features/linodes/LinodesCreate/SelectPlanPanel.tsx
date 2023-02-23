@@ -155,7 +155,7 @@ const getMetal = (types: PlanSelectionType[]) =>
 
 type CombinedProps = Props & RegionsProps;
 
-export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
+export const SelectPlanPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     selectedID,
     currentPlanHeading,
@@ -531,11 +531,9 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
       const programInfo = getDisabledClass('metal') ? (
         // Until BM-426 is merged, we aren't filtering for regions in getDisabledClass
         // so this branch will never run.
-        <Typography>
-          Bare Metal instances are not available in the selected region.
-          Currently these plans are only available in{' '}
-          {getRegionsWithCapability('Bare Metal')}.
-        </Typography>
+        (<Typography>Bare Metal instances are not available in the selected region.
+                    Currently these plans are only available in{' '}
+          {getRegionsWithCapability('Bare Metal')}.</Typography>)
       ) : (
         <Typography className={classes.gpuGuideLink}>
           Bare Metal Linodes have limited availability and may not be available

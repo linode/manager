@@ -12,7 +12,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const UsersActionMenu: React.FC<CombinedProps> = (props) => {
+const UsersActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const history = useHistory();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -49,7 +49,7 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -67,7 +67,7 @@ const UsersActionMenu: React.FC<CombinedProps> = (props) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

@@ -26,7 +26,7 @@ export type Labels =
 
 type CombinedProps = Props & PreferencesProps;
 
-const TimeRangeSelect: React.FC<CombinedProps> = (props) => {
+const TimeRangeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     defaultValue,
     handleStatsChange,

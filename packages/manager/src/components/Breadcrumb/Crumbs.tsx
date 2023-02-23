@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Crumbs: React.FC<CombinedProps> = (props) => {
+const Crumbs: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

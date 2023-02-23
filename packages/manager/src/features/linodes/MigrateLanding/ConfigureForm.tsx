@@ -47,7 +47,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ConfigureForm: React.FC<CombinedProps> = (props) => {
+const ConfigureForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { allRegions, currentRegion } = props;
 

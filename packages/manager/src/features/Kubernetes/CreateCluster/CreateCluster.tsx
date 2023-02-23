@@ -107,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = RouteComponentProps<{}> & WithTypesProps;
 
-export const CreateCluster: React.FC<CombinedProps> = (props) => {
+export const CreateCluster: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { typesData: allTypes, typesLoading, typesError } = props;
 

@@ -16,7 +16,7 @@ export const getUsedStorage = (data: LVDataProps['longviewClientData']) => {
   return storageInBytes ? storageInBytes.total - storageInBytes.free : 0;
 };
 
-const StorageGauge: React.FC<CombinedProps> = (props) => {
+const StorageGauge: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,

@@ -112,7 +112,7 @@ const linode = {
   href: '',
 };
 
-export const TPAProviders: React.FC<CombinedProps> = (props) => {
+export const TPAProviders: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 

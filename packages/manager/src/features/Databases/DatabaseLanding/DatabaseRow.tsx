@@ -38,7 +38,7 @@ interface Props {
   database: DatabaseInstance;
 }
 
-export const DatabaseRow: React.FC<Props> = ({ database }) => {
+export const DatabaseRow: React.FC<React.PropsWithChildren<Props>> = ({ database }) => {
   const {
     id,
     label,

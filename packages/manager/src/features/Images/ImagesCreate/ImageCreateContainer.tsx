@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ImagesCreateContainer: React.FC = () => {
+export const ImagesCreateContainer: React.FC<React.PropsWithChildren<unknown>> = () => {
   const classes = useStyles();
 
   return (

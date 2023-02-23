@@ -26,7 +26,7 @@ export interface ChipProps extends _ChipProps {
   inTable?: boolean;
 }
 
-const Chip: React.FC<ChipProps> = ({
+const Chip: React.FC<React.PropsWithChildren<ChipProps>> = ({
   outlineColor = 'gray',
   className,
   inTable,

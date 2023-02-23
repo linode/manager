@@ -36,7 +36,7 @@ export interface Props extends LineGraphProps {
 
 type CombinedProps = Props;
 
-const LongviewLineGraph: React.FC<CombinedProps> = (props) => {
+const LongviewLineGraph: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { error, loading, title, subtitle, ariaLabel, ...rest } = props;

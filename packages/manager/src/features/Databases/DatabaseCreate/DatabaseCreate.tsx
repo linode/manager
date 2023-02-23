@@ -189,7 +189,7 @@ interface NodePricing {
   multi: DatabasePriceObject | undefined;
 }
 
-const DatabaseCreate: React.FC<{}> = () => {
+const DatabaseCreate: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
   const history = useHistory();
   const flags = useFlags();

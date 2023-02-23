@@ -55,7 +55,7 @@ export const addIconsToAttachments = (attachments: string[] = []) => {
   });
 };
 
-export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
+export const TicketAttachmentList: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { attachments, classes, showMoreAttachments, toggle } = props;
 
   if (isEmpty(attachments)) {
@@ -65,7 +65,7 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid item container justifyContent="flex-start" className={classes.root}>
+    (<Grid item container justifyContent="flex-start" className={classes.root}>
       <Grid item className={classes.attachmentPaperWrapper}>
         <Typography variant="h3">Attachments</Typography>
         <TicketAttachmentRow
@@ -74,7 +74,7 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
         />
         {attachments.length > 5 && (
           // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-          <div
+          (<div
             onClick={toggle}
             style={{ display: 'inline-block' }}
             data-qa-attachment-toggle
@@ -92,10 +92,10 @@ export const TicketAttachmentList: React.FC<CombinedProps> = (props) => {
                 icons={icons}
               />
             </ShowMoreExpansion>
-          </div>
+          </div>)
         )}
       </Grid>
-    </Grid>
+    </Grid>)
   );
 };
 

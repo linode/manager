@@ -9,7 +9,7 @@ type CombinedProps = RouteComponentProps<{}>;
 const CreateImageTab = React.lazy(() => import('./CreateImageTab'));
 const ImageUpload = React.lazy(() => import('../ImageUpload'));
 
-export const ImageCreate: React.FC<CombinedProps> = (props) => {
+export const ImageCreate: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { location } = useHistory<any>();
 
   const [label, setLabel] = React.useState<string>(

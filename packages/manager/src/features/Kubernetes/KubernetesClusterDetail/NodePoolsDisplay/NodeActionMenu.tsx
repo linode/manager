@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const NodeActionMenu: React.FC<Props> = (props) => {
+export const NodeActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { nodeId, instanceLabel, openRecycleNodeDialog } = props;
   const theme = useTheme<Theme>();
   const classes = useStyles();

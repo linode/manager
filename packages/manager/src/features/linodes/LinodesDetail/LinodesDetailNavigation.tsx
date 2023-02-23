@@ -34,7 +34,7 @@ type CombinedProps = ContextProps &
     linodeId: string;
   }>;
 
-const LinodesDetailNavigation: React.FC<CombinedProps> = (props) => {
+const LinodesDetailNavigation: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     linodeId,
     linodeLabel,

@@ -127,7 +127,7 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
-const FileUploader: React.FC<CombinedProps> = (props) => {
+const FileUploader: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     label,
     description,

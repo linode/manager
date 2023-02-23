@@ -70,7 +70,7 @@ export interface Props {
   children: JSX.Element;
 }
 
-export const TransferTable: React.FC<Props> = (props) => {
+export const TransferTable: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     count,
     hasSelectedAll,

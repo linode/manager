@@ -27,7 +27,7 @@ export interface Props {
   handleSelectVLAN: (vlanIDs: number[]) => void;
 }
 
-export const SelectVLAN: React.FC<Props> = (props) => {
+export const SelectVLAN: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { error, selectedRegionID, selectedVlanIDs, handleSelectVLAN } = props;
   useReduxLoad(['vlans']);
   const classes = useStyles();

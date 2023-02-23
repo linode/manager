@@ -46,7 +46,7 @@ export interface Props extends AccordionProps {
 
 type CombinedProps = Props;
 
-export const Accordion: React.FC<CombinedProps> = (props) => {
+export const Accordion: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

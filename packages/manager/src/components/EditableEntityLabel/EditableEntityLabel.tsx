@@ -30,7 +30,7 @@ interface Props {
   status?: string;
 }
 
-export const EditableEntityLabel: React.FC<Props> = (props) => {
+export const EditableEntityLabel: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { iconVariant, loading, status, subText, text, onEdit } = props;
   const [isEditing, toggleEditing] = React.useState<boolean>(false);
   const [inputText, setInputText] = React.useState<string>(text);

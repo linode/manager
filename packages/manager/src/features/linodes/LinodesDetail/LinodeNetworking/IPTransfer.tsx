@@ -140,7 +140,7 @@ export const getLinodeIPv6Ranges = (
   );
 };
 
-const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
+const LinodeNetworkingIPTransferPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     ipAddresses,
     linodeID,

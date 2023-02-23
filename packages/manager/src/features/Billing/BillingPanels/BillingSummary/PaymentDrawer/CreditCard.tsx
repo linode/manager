@@ -61,7 +61,7 @@ export const getIcon = (type: CardType | undefined) => {
 
 export type CombinedProps = Props;
 
-export const CreditCard: React.FC<CombinedProps> = (props) => {
+export const CreditCard: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     creditCard: { card_type: type = undefined, last_four: lastFour, expiry },
     showIcon = true,

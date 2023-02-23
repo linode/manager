@@ -32,7 +32,7 @@ interface Props {
   isManagedCustomer: boolean;
 }
 
-const AutoBackups: React.FC<Props> = (props) => {
+const AutoBackups: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     backups_enabled,
     hasLinodesWithoutBackups,

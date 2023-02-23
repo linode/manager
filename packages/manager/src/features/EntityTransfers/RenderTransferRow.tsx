@@ -84,7 +84,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const RenderTransferRow: React.FC<CombinedProps> = (props) => {
+export const RenderTransferRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     token,
     created,

@@ -26,7 +26,7 @@ interface Props extends Omit<DialogProps, 'title'> {
 
 export type CombinedProps = Props & PreferencesProps;
 
-export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
+export const RestoreFromBackupDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { database, backup, preferences, onClose, open, ...rest } = props;
 
   const history = useHistory();

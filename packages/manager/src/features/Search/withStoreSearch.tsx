@@ -56,8 +56,8 @@ export const search = (
   };
 };
 
-export default () => (Component: React.ComponentType<any>) => {
-  const WrappedComponent: React.FC<SearchProps> = (props) => {
+export default () => (Component: React.ComponentType<React.PropsWithChildren<any>>) => {
+  const WrappedComponent: React.FC<React.PropsWithChildren<SearchProps>> = (props) => {
     return React.createElement(Component, {
       ...props,
     });

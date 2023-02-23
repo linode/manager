@@ -69,7 +69,7 @@ const initialValues: RebuildFromImageForm = {
   root_pass: '',
 };
 
-export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
+export const RebuildFromImage: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     disabled,
     imagesData,

@@ -7,7 +7,7 @@ const BucketDetail = React.lazy(() => import('./BucketDetail'));
 
 type CombinedProps = RouteComponentProps;
 
-export const ObjectStorage: React.FC<CombinedProps> = (props) => {
+export const ObjectStorage: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const path = props.match.path;
 
   return (

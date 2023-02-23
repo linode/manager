@@ -19,7 +19,7 @@ export const getFinalUsedCPU = (data: LVDataProps['longviewClientData']) => {
   return normalizeValue(usedCPU, numberOfCores);
 };
 
-const CPUGauge: React.FC<CombinedProps> = (props) => {
+const CPUGauge: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,

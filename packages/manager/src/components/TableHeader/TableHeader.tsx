@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const TableHeader: React.FC<CombinedProps> = ({ title, action }) => {
+const TableHeader: React.FC<React.PropsWithChildren<CombinedProps>> = ({ title, action }) => {
   const classes = useStyles();
 
   return (

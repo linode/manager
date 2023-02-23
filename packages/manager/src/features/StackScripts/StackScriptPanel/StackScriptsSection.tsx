@@ -37,7 +37,7 @@ export interface Props {
   category: StackScriptCategory | string;
 }
 
-const StackScriptsSection: React.FC<Props> = (props) => {
+const StackScriptsSection: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { data, isSorting, triggerDelete, triggerMakePublic, category } = props;
 

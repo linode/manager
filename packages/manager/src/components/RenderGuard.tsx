@@ -9,7 +9,7 @@ export interface RenderGuardProps {
 
 /* tslint:disable-next-line */
 const renderGuard = <P extends {}>(
-  Component: React.ComponentType<P & RenderGuardProps>
+  Component: React.ComponentType<React.PropsWithChildren<P & RenderGuardProps>>
 ) => {
   class ComponentWithRenderGuard extends React.Component<
     RenderGuardProps & WithTheme
@@ -41,9 +41,7 @@ const renderGuard = <P extends {}>(
     }
   }
 
-  return themed(ComponentWithRenderGuard) as React.ComponentType<
-    P & RenderGuardProps
-  >;
+  return themed(ComponentWithRenderGuard) as React.ComponentType<React.PropsWithChildren<P & RenderGuardProps>>;
 };
 
 const themed = withTheme;

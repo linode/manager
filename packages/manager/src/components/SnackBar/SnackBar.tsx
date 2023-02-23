@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = SnackbarProviderProps;
 
-const SnackBar: React.FC<CombinedProps> = (props) => {
+const SnackBar: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   /**
    * This pattern is taken from the Notistack docs:

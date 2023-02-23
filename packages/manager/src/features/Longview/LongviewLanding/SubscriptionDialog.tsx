@@ -13,7 +13,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-export const SubscriptionDialog: React.FC<Props> = (props) => {
+export const SubscriptionDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { clientLimit, isManaged, isOpen, onClose, onSubmit } = props;
 
   const actions = () => (

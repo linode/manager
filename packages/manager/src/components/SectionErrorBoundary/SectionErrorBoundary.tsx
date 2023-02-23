@@ -7,7 +7,7 @@ interface State {
   info?: any;
 }
 
-const wrapper = <T extends {}>(Component: React.ComponentType) => {
+const wrapper = <T extends {}>(Component: React.ComponentType<React.PropsWithChildren<unknown>>) => {
   class SectionErrorBoundary extends React.Component<T> {
     state: State = {};
 

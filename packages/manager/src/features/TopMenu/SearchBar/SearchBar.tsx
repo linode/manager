@@ -71,7 +71,7 @@ export const selectStyles = {
 
 const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers', 'images'];
 
-export const SearchBar: React.FC<CombinedProps> = (props) => {
+export const SearchBar: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
 
   const [searchText, setSearchText] = React.useState<string>('');
@@ -306,7 +306,7 @@ export default compose<CombinedProps, {}>(
   withImages(),
   withStoreSearch(),
   styled
-)(SearchBar) as React.ComponentType<{}>;
+)(SearchBar) as React.ComponentType<React.PropsWithChildren<{}>>;
 
 export const createFinalOptions = (
   results: Item[],

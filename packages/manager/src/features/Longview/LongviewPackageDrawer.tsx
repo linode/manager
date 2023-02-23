@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVClientData;
 
-export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
+export const LongviewPackageDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isOpen, clientLabel, longviewClientData, onClose } = props;
 
   const classes = useStyles();
@@ -43,7 +43,7 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
   );
 
   return (
-    <Drawer
+    (<Drawer
       onClose={onClose}
       open={isOpen}
       title={`${clientLabel}: Package Updates`}
@@ -78,11 +78,11 @@ export const LongviewPackageDrawer: React.FC<CombinedProps> = (props) => {
              * not be open-able, so no explicit logic
              * is included here.
              */
-            <TableRowEmptyState colSpan={12} />
+            (<TableRowEmptyState colSpan={12} />)
           )}
         </TableBody>
       </Table>
-    </Drawer>
+    </Drawer>)
   );
 };
 

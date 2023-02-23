@@ -10,7 +10,7 @@ import { ListProps } from './types';
 
 export type CombinedProps = ListProps;
 
-export const ListEntities: React.FC<CombinedProps> = (props) => {
+export const ListEntities: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     data,
     entity,

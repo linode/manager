@@ -108,7 +108,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const ActionMenu: React.FC<CombinedProps> = (props) => {
+const ActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { toggleOpenCallback, actionsList } = props;
 

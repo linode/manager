@@ -34,7 +34,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const AddTag: React.FC<Props> = (props) => {
+export const AddTag: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { addTag, label, onClose, tags, fixedMenu, inDetailsContext } = props;
 

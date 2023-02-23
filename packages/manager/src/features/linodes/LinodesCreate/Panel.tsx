@@ -11,7 +11,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Panel: React.FC<CombinedProps> = (props) => {
+const Panel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { children, error, title } = props;
 
   return (

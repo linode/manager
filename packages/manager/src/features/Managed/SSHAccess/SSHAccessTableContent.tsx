@@ -16,7 +16,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
+export const SSHAccessTableContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { linodeSettings, loading, openDrawer, error } = props;
 
   if (loading) {
@@ -39,7 +39,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {linodeSettings.map(
         (linodeSetting: ManagedLinodeSetting, idx: number) => (
           <SSHAccessRow
@@ -49,7 +49,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = (props) => {
           />
         )
       )}
-    </>
+    </>)
   );
 };
 

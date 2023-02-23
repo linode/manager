@@ -63,7 +63,7 @@ export interface Props {
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const ImageUpload: React.FC<Props> = (props) => {
+export const ImageUpload: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { label, description, changeLabel, changeDescription } = props;
 
   const { data: profile } = useProfile();

@@ -19,7 +19,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const EnableBackupsDialog: React.FC<Props> = (props) => {
+export const EnableBackupsDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodeId, onClose, open } = props;
   /**
    * Calculate the monthly backup price here.

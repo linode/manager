@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export const BackupsPlaceholder: React.FC<Props> = (props) => {
+export const BackupsPlaceholder: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { backupsMonthlyPrice, linodeId, disabled } = props;

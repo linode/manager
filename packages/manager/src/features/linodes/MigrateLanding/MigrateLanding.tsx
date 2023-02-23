@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = LinodeContextProps & WithTypesAndImages;
 
-const MigrateLanding: React.FC<CombinedProps> = (props) => {
+const MigrateLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const history = useHistory();

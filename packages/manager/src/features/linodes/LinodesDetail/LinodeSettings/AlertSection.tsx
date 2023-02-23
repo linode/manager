@@ -84,7 +84,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const AlertSection: React.FC<CombinedProps> = (props) => {
+export const AlertSection: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const {
     title,

@@ -171,7 +171,7 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<CombinedProps> = (props) => {
+const MainContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
   const { preferences } = usePreferences();

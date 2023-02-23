@@ -240,7 +240,7 @@ const profileLinks: MenuLink[] = [
   { display: 'Log Out', href: '/logout' },
 ];
 
-export const UserMenu: React.FC<{}> = () => {
+export const UserMenu: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
 
   const {

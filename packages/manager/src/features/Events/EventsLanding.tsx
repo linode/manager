@@ -127,15 +127,13 @@ export const reducer: EventsReducer = (state, action) => {
             ...nextReduxEvents.filter((eachEvent) => {
               return (
                 /** all events from Redux will have this flag as a boolean value */
-                !eachEvent._initial &&
+                (!eachEvent._initial
                 /**
                  * so here we're basically determining whether or not
                  * an entityID prop was passed, and if so, only show the events
                  * that pertain to that entity. This is useful because it helps
                  * us show only relevant events on the Linode Activity panel, for example
-                 */
-                (typeof entityId === 'undefined' ||
-                  (eachEvent.entity && eachEvent.entity.id === entityId))
+                 */ && (typeof entityId === 'undefined' || (eachEvent.entity && eachEvent.entity.id === entityId)))
               );
             }),
             /*
@@ -170,7 +168,7 @@ export const reducer: EventsReducer = (state, action) => {
   }
 };
 
-export const EventsLanding: React.FC<CombinedProps> = (props) => {
+export const EventsLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const [loading, setLoading] = React.useState<boolean>(false);

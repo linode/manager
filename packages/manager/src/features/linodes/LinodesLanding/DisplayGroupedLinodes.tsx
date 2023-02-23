@@ -91,7 +91,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
+const DisplayGroupedLinodes: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

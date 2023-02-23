@@ -93,7 +93,7 @@ export interface Props {
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
-const IconTextLink: React.FC<FinalProps> = (props) => {
+const IconTextLink: React.FC<React.PropsWithChildren<FinalProps>> = (props) => {
   const {
     SideIcon,
     classes,

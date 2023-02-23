@@ -10,7 +10,7 @@ interface Props {
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessRow: React.FunctionComponent<Props> = (props) => {
+export const SSHAccessRow: React.FunctionComponent<React.PropsWithChildren<Props>> = (props) => {
   const { linodeSetting, openDrawer } = props;
 
   const isAccessEnabled = linodeSetting.ssh.access;

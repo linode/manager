@@ -14,7 +14,7 @@ export interface Props {
   openDrawer: (linodeId: number) => void;
 }
 
-export const SSHAccessActionMenu: React.FC<Props> = (props) => {
+export const SSHAccessActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodeId, isEnabled, openDrawer } = props;
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -74,7 +74,7 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -91,7 +91,7 @@ export const SSHAccessActionMenu: React.FC<Props> = (props) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

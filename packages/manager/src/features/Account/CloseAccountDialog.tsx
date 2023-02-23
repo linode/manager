@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
+const CloseAccountDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
@@ -64,7 +64,7 @@ const CloseAccountDialog: React.FC<CombinedProps> = (props) => {
   }, [inputtedUsername, profile]);
 
   const inputRef = React.useCallback(
-    (node) => {
+    (node: any) => {
       /**
        * focus on first textfield when modal is opened
        */
@@ -159,7 +159,7 @@ interface ActionsProps {
   disabled: boolean;
 }
 
-const Actions: React.FC<ActionsProps> = (props) => {
+const Actions: React.FC<React.PropsWithChildren<ActionsProps>> = (props) => {
   return (
     <ActionsPanel>
       <Button buttonType="secondary" onClick={props.onClose}>

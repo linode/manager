@@ -42,7 +42,7 @@ interface Props {
   linodeSetting?: ManagedLinodeSetting;
 }
 
-const EditSSHAccessDrawer: React.FC<Props> = (props) => {
+const EditSSHAccessDrawer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { isOpen, closeDrawer, linodeSetting } = props;

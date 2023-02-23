@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const SizeField: React.FC<CombinedProps> = (props) => {
+const SizeField: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

@@ -28,7 +28,7 @@ interface Props {
   paymentMethod: PaymentMethod | undefined;
 }
 
-export const DeletePaymentMethodDialog: React.FC<Props> = (props) => {
+export const DeletePaymentMethodDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { open, onClose, loading, onDelete, error, paymentMethod } = props;
   const classes = useStyles();
 

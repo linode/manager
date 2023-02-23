@@ -177,7 +177,7 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel: React.FC<Props> = (props) => {
+export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { accountActiveSince } = props;
 
   const { data: account } = useAccount();
@@ -345,7 +345,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
 
   return (
-    <div className={classes.root}>
+    (<div className={classes.root}>
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.headline}>
           {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
@@ -407,7 +407,9 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       </div>
       <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
         {React.useCallback(
-          ({ data: orderedData }) => (
+          ({
+            data: orderedData
+          }: any) => (
             <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
               {({
                 data: paginatedAndOrderedData,
@@ -503,7 +505,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
           ]
         )}
       </OrderBy>
-    </div>
+    </div>)
   );
 };
 
@@ -516,7 +518,7 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
   isLoading: boolean;
 }
 
-export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
+export const ActivityFeedItem: React.FC<React.PropsWithChildren<ActivityFeedItemProps>> = React.memo(
   (props) => {
     const classes = useStyles();
 

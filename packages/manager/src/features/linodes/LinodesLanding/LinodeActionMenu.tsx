@@ -73,7 +73,7 @@ export const buildQueryStringForLinodeClone = (
   return stringify(params);
 };
 
-export const LinodeActionMenu: React.FC<Props> = (props) => {
+export const LinodeActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     linodeId,
     linodeLabel,

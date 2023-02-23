@@ -111,7 +111,7 @@ export interface Props extends ChipProps {
 
 type CombinedProps = RouteComponentProps<{}> & Props;
 
-export const Tag: React.FC<CombinedProps> = (props) => {
+export const Tag: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

@@ -13,7 +13,7 @@ type DialogProps = Pick<_DialogProps, 'onClose' | 'open'>;
 
 type CombinedProps = DialogProps & PreferencesProps;
 
-const PreferenceEditor: React.FC<CombinedProps> = (props) => {
+const PreferenceEditor: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { getUserPreferences, updateUserPreferences } = props;
 
   const [userPrefs, setUserPrefs] = React.useState('');

@@ -207,7 +207,7 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel: React.FC<CombinedProps> = (props) => {
+export const ManagedChartPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { theme } = props;
   const classes = useStyles();
   const { data: profile } = useProfile();

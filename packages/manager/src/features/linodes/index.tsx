@@ -12,7 +12,7 @@ const LinodesCreate = React.lazy(
   () => import('./LinodesCreate/LinodeCreateContainer')
 );
 
-const LinodesRoutes: React.FC = () => {
+const LinodesRoutes: React.FC<React.PropsWithChildren<unknown>> = () => {
   return (
     <React.Suspense fallback={<SuspenseLoader />}>
       <Switch>
@@ -32,7 +32,7 @@ export default LinodesRoutes;
 // mapStateToProps, but since I wanted to use a query (for accountMaintenance)
 // I needed a Function Component. It seemed safer to do it this way instead of
 // refactoring LinodesLanding.
-const LinodesLandingWrapper: React.FC = React.memo(() => {
+const LinodesLandingWrapper: React.FC<React.PropsWithChildren<unknown>> = React.memo(() => {
   const { data: accountMaintenanceData } = useAllAccountMaintenanceQuery(
     {},
     { status: { '+or': ['pending, started'] } }

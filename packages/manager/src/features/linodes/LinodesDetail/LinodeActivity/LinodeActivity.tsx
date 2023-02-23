@@ -6,7 +6,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type CombinedProps = StateProps;
 
-export const LinodeActivity: React.FC<CombinedProps> = (props) => {
+export const LinodeActivity: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { linodeID } = props;
 
   return (

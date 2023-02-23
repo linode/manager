@@ -39,7 +39,7 @@ interface Props {
   onClick?: () => void;
 }
 
-export const DocsLink: React.FC<Props> = (props) => {
+export const DocsLink: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { href, label, analyticsLabel, onClick } = props;

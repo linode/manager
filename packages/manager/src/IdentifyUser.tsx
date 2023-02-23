@@ -15,7 +15,7 @@ import { useProfile } from './queries/profile';
  * and this is a good side-effect usage of useEffect().
  */
 
-export const IdentifyUser: React.FC<{}> = () => {
+export const IdentifyUser: React.FC<React.PropsWithChildren<{}>> = () => {
   const { data: account, error: accountError } = useAccount();
   const { data: profile } = useProfile();
 

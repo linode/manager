@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
+export const StackScriptsDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
   const { data: grants } = useGrants();

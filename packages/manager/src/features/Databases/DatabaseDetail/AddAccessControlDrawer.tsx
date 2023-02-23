@@ -39,7 +39,7 @@ interface Values {
 
 type CombinedProps = Props;
 
-const AddAccessControlDrawer: React.FC<CombinedProps> = (props) => {
+const AddAccessControlDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { open, onClose, updateDatabase, allowList } = props;
 
   const classes = useStyles();

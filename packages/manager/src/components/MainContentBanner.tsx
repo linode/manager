@@ -54,7 +54,7 @@ interface Props {
 
 type CombinedProps = Props & PreferencesProps;
 
-const MainContentBanner: React.FC<CombinedProps> = (props) => {
+const MainContentBanner: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     bannerText,
     url,

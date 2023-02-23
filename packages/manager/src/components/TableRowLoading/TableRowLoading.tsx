@@ -19,7 +19,7 @@ export interface Props {
   responsive?: Record<number, HiddenProps>;
 }
 
-export const TableRowLoading: React.FC<Props> = ({
+export const TableRowLoading: React.FC<React.PropsWithChildren<Props>> = ({
   rows = 1,
   columns = 1,
   responsive,

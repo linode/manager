@@ -23,7 +23,7 @@ export interface PaperProps extends _PaperProps {
 
 type CombinedProps = PaperProps;
 
-const Paper: React.FC<CombinedProps> = (props) => {
+const Paper: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { error, className, ...rest } = props;
   const classes = useStyles();
 

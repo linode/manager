@@ -66,7 +66,7 @@ export interface Props {
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
+export const CreateImageTab: React.FC<React.PropsWithChildren<Props & ImagesDispatch>> = (props) => {
   const {
     label,
     description,

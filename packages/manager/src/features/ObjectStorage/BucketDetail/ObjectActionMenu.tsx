@@ -12,7 +12,7 @@ export interface Props extends Handlers {
   objectName: string;
 }
 
-export const ObjectActionMenu: React.FC<Props> = (props) => {
+export const ObjectActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -36,7 +36,7 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -53,7 +53,7 @@ export const ObjectActionMenu: React.FC<Props> = (props) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

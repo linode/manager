@@ -181,7 +181,7 @@ export const getInitialValue = (
   return fromProps ?? fromStorage ?? '';
 };
 
-export const SupportTicketDrawer: React.FC<CombinedProps> = (props) => {
+export const SupportTicketDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     open,
     prefilledDescription,

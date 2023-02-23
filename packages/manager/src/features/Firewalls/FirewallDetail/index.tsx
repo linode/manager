@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const FirewallDetail: React.FC<CombinedProps> = (props) => {
+export const FirewallDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();

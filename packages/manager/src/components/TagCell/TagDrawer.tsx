@@ -21,7 +21,7 @@ export interface TagDrawerProps {
 
 export type CombinedProps = Props;
 
-export const TagDrawer: React.FC<Props> = (props) => {
+export const TagDrawer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { updateTags, entityLabel, onClose, open, tags } = props;
 
   return (

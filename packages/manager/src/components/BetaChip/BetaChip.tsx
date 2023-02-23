@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const BetaChip: React.FC<Props> = (props) => {
+const BetaChip: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { className, color } = props;

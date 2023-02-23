@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FEEDBACK_LINK = 'https://www.linode.com/feedback/';
 
-export const Footer: React.FC<Props> = (props) => {
+export const Footer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { desktopMenuIsOpen } = props;

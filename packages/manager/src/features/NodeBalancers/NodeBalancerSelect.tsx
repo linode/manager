@@ -50,7 +50,7 @@ const nodeBalancerFromItems = (
   );
 };
 
-const NodeBalancerSelect: React.FC<CombinedProps> = (props) => {
+const NodeBalancerSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     disabled,
     generalError,

@@ -88,7 +88,7 @@ interface WithStackScriptBaseOptions {
 
 /* tslint:disable-next-line */
 const withStackScriptBase = (options: WithStackScriptBaseOptions) => (
-  Component: React.ComponentType<StateProps>
+  Component: React.ComponentType<React.PropsWithChildren<StateProps>>
 ) => {
   const { isSelecting, useQueryString } = options;
 

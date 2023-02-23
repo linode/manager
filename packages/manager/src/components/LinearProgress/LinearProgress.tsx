@@ -5,7 +5,7 @@ import LinearProgress, {
 
 type CombinedProps = LinearProgressProps;
 
-export const LinearProgressComponent: React.FC<CombinedProps> = (props) => {
+export const LinearProgressComponent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const value = typeof props.value === 'number' ? props.value : 0;
   const variant =
     typeof props.value === 'number' ? 'determinate' : 'indeterminate';

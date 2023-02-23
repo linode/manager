@@ -19,7 +19,7 @@ export type CombinedProps = ListProps &
   PageyIntegrationProps &
   Props;
 
-export const APIPaginatedTable: React.FC<CombinedProps> = (props) => {
+export const APIPaginatedTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     count,
     data,

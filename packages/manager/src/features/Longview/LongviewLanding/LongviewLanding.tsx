@@ -32,7 +32,7 @@ type CombinedProps = LongviewProps &
   RouteComponentProps<{}> &
   WithSnackbarProps;
 
-export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
+export const LongviewLanding: React.FunctionComponent<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   const activeSubscriptionRequestHook = useAPIRequest<ActiveLongviewPlan>(

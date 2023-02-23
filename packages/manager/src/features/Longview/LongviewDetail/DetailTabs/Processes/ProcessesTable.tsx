@@ -62,7 +62,7 @@ export interface Props {
 
 export type CombinedProps = Props;
 
-export const ProcessesTable: React.FC<CombinedProps> = (props) => {
+export const ProcessesTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { width } = useWindowDimensions();
 
@@ -197,7 +197,7 @@ export interface ProcessTableRowProps extends ExtendedProcess {
   setSelectedProcess: (process: Process) => void;
 }
 
-export const ProcessesTableRow: React.FC<ProcessTableRowProps> = React.memo(
+export const ProcessesTableRow: React.FC<React.PropsWithChildren<ProcessTableRowProps>> = React.memo(
   (props) => {
     const {
       name,

@@ -52,7 +52,7 @@ type CombinedProps = Props &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const MutationNotification: React.FC<CombinedProps> = (props) => {
+const MutationNotification: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     classes,
     typesData,

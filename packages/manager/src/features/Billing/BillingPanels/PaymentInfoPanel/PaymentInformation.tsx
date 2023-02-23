@@ -79,7 +79,7 @@ interface Props {
   isAkamaiCustomer: boolean;
 }
 
-const PaymentInformation: React.FC<Props> = (props) => {
+const PaymentInformation: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { loading, error, paymentMethods, isAkamaiCustomer } = props;
   const [addDrawerOpen, setAddDrawerOpen] = React.useState<boolean>(false);
 

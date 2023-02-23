@@ -49,7 +49,7 @@ const useMenuStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const NotificationButton: React.FC<{}> = (_) => {
+export const NotificationButton: React.FC<React.PropsWithChildren<{}>> = (_) => {
   const iconClasses = useStyles();
   const classes = useMenuStyles();
 

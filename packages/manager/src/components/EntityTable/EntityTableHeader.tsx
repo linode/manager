@@ -35,7 +35,7 @@ interface NormalCellProps {
   thisCell: HeaderCell;
 }
 
-export const EntityTableHeader: React.FC<Props> = (props) => {
+export const EntityTableHeader: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     headers,
     handleOrderChange,
@@ -47,7 +47,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
   } = props;
   const classes = useStyles();
 
-  const SortCell: React.FC<SortCellProps> = (props) => {
+  const SortCell: React.FC<React.PropsWithChildren<SortCellProps>> = (props) => {
     const { orderBy, order, thisCell, handleOrderChange } = props;
     return (
       <TableSortCell
@@ -63,7 +63,7 @@ export const EntityTableHeader: React.FC<Props> = (props) => {
     );
   };
 
-  const _NormalCell: React.FC<NormalCellProps> = (props) => {
+  const _NormalCell: React.FC<React.PropsWithChildren<NormalCellProps>> = (props) => {
     const { thisCell } = props;
     return (
       <TableCell
@@ -167,7 +167,7 @@ const useGroupByTagToggleStyles = makeStyles(() => ({
   },
 }));
 
-export const GroupByTagToggle: React.FC<GroupByTagToggleProps> = React.memo(
+export const GroupByTagToggle: React.FC<React.PropsWithChildren<GroupByTagToggleProps>> = React.memo(
   (props) => {
     const classes = useGroupByTagToggleStyles();
 

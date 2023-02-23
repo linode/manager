@@ -40,7 +40,7 @@ export const getDatabaseVersionNumber = (
   version: DatabaseInstance['version']
 ) => version.split('/')[1];
 
-export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
+export const DatabaseSummaryClusterConfiguration: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { database } = props;

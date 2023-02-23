@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivitySummaryContent: React.FC<CombinedProps> = (props) => {
+export const ActivitySummaryContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { classes, error, loading, events } = props;
   if (error) {
     return <ErrorState data-qa-activity-error errorText={error} />;
@@ -67,7 +67,7 @@ export const ActivitySummaryContent: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {events.map((event, idx) => (
         <ActivityRow
           event={event}
@@ -75,7 +75,7 @@ export const ActivitySummaryContent: React.FC<CombinedProps> = (props) => {
           data-qa-activity-row
         />
       ))}
-    </>
+    </>)
   );
 };
 

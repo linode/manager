@@ -43,7 +43,7 @@ const renderActions = (
   );
 };
 
-export const DatabaseSettingsResetPasswordDialog: React.FC<Props> = (props) => {
+export const DatabaseSettingsResetPasswordDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { open, onClose, databaseEngine, databaseID } = props;
 
   const { mutateAsync, isLoading, error } = useDatabaseCredentialsMutation(

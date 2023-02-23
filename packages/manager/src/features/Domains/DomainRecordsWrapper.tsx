@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props & StyleProps;
 
-const DomainRecordsWrapper: React.FC<CombinedProps> = (props) => {
+const DomainRecordsWrapper: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { domain, records, updateRecords, handleUpdateTags, classes } = props;
   const hookClasses = useStyles();
   const history = useHistory();

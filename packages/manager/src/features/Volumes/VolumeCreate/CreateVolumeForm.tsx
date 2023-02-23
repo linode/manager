@@ -117,7 +117,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps;
 
-const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
+const CreateVolumeForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { onSuccess, origin, history, regions } = props;
 
@@ -160,7 +160,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <Formik
+    (<Formik
       initialValues={initialValues}
       validationSchema={CreateVolumeSchema}
       onSubmit={(
@@ -266,7 +266,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
         };
 
         return (
-          <Form>
+          (<Form>
             {generalError ? <NoticePanel error={generalError} /> : null}
             {status ? <NoticePanel success={status.success} /> : null}
             {doesNotHavePermission ? (
@@ -413,10 +413,10 @@ const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
                 </Button>
               </Box>
             </Box>
-          </Form>
+          </Form>)
         );
       }}
-    </Formik>
+    </Formik>)
   );
 };
 

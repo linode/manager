@@ -27,7 +27,7 @@ interface Props extends Handlers {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const ImagesActionMenu: React.FC<CombinedProps> = (props) => {
+export const ImagesActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 

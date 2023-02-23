@@ -23,7 +23,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = (props) => {
+const LinodeConfigSelectionDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     onClose,
     onSubmit,

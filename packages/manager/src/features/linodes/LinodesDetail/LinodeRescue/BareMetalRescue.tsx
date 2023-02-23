@@ -15,7 +15,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const BareMetalRescue: React.FC<Props> = (props) => {
+export const BareMetalRescue: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { isOpen, onClose, linodeID, linodeLabel } = props;
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | undefined>(undefined);

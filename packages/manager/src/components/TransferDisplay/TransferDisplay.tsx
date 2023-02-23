@@ -74,7 +74,7 @@ export interface Props {
   spacingTop?: number;
 }
 
-export const TransferDisplay: React.FC<Props> = (props) => {
+export const TransferDisplay: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { spacingTop } = props;
   const classes = useStyles();
 
@@ -147,14 +147,14 @@ interface DialogProps {
   onClose: () => void;
 }
 
-export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
+export const TransferDialog: React.FC<React.PropsWithChildren<DialogProps>> = React.memo((props) => {
   const classes = useStyles();
   const { isOpen, onClose, poolUsagePct, quota, used } = props;
 
   const daysRemainingInMonth = getDaysRemaining();
 
   return (
-    <Dialog
+    (<Dialog
       open={isOpen}
       classes={{ paper: classes.paper }}
       onClose={onClose}
@@ -197,7 +197,6 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
         className={classes.poolUsageProgress}
         rounded
       />
-
       <Typography className={classes.proratedNotice}>
         <strong>
           Your account&rsquo;s monthly network transfer allotment will reset in{' '}
@@ -218,6 +217,6 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
           <OpenInNew />
         </Link>
       </div>
-    </Dialog>
+    </Dialog>)
   );
 });

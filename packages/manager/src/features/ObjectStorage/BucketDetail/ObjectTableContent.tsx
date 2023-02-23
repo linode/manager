@@ -25,7 +25,7 @@ interface Props {
   prefix: any;
 }
 
-const ObjectTableContent: React.FC<Props> = (props) => {
+const ObjectTableContent: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     data,
     isFetching,

@@ -20,7 +20,7 @@ type CombinedProps = Props;
 
 export const initialValueDefaultId = -1;
 
-const ConfigSelect: React.FC<CombinedProps> = (props) => {
+const ConfigSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     error,
     onChange,

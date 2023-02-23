@@ -58,7 +58,7 @@ interface DialogProps {
 
 type CombinedProps = Props & LinodeDetailContext & LinodeContext;
 
-const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
+const LinodeDetailHeader: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   // Several routes that used to have dedicated pages (e.g. /resize, /rescue)
   // now show their content in modals instead. The logic below facilitates handling
   // modal-related query params (and the older /:subpath routes before the redirect

@@ -39,7 +39,7 @@ interface Props {
   disabled: boolean;
 }
 
-export const GooglePayChip: React.FC<Props> = (props) => {
+export const GooglePayChip: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     disabled: disabledDueToProcessing,
     setMessage,

@@ -36,7 +36,7 @@ interface Props {
 
 type CombinedProps = Props & WithNodeBalancerActions;
 
-export const NodeBalancerSettings: React.FC<CombinedProps> = (props) => {
+export const NodeBalancerSettings: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const history = useHistory();
 

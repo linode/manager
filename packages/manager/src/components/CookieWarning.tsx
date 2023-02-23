@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 
 import { reportException } from 'src/exceptionReporting';
 
-const CookieWarning: React.FC<{}> = () => {
+const CookieWarning: React.FC<React.PropsWithChildren<{}>> = () => {
   React.useEffect(() => {
     reportException(
       'A user just tried to load Cloud Manager without cookies enabled'

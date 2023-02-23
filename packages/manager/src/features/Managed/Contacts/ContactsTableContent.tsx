@@ -21,7 +21,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
+export const ContactsTableContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     contacts,
     loading,
@@ -51,7 +51,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {contacts.map((contact: ManagedContact, idx: number) => (
         <ContactsRow
           key={`managed-contact-row-${idx}`}
@@ -60,11 +60,11 @@ export const ContactsTableContent: React.FC<CombinedProps> = (props) => {
           openDialog={openDialog}
         />
       ))}
-    </>
+    </>)
   );
 };
 
-const memoized = (component: React.FC<CombinedProps>) =>
+const memoized = (component: React.FC<React.PropsWithChildren<CombinedProps>>) =>
   React.memo(
     component,
     (prevProps, nextProps) =>

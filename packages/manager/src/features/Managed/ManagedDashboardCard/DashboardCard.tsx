@@ -32,7 +32,7 @@ interface Props {
   noHeaderActionStyles?: boolean;
 }
 
-const DashboardCard: React.FC<Props> = (props) => {
+const DashboardCard: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const {

@@ -17,7 +17,7 @@ interface Props {
 
 type CombinedProps = Omit<OrderByProps, 'data'> & Props;
 
-const TableWrapper: React.FC<CombinedProps> = (props) => {
+const TableWrapper: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     dataLength,
     order,

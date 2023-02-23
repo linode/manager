@@ -12,7 +12,7 @@ const VolumeCreate = React.lazy(() => import('./VolumeCreate/VolumeCreate'));
 
 type Props = RouteComponentProps<{}>;
 
-const Volumes: React.FC<Props> = (props) => {
+const Volumes: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     match: { path },
   } = props;

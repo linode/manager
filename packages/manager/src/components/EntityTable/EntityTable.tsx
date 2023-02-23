@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export interface EntityTableRow<T> extends BaseProps {
-  Component: React.ComponentType<any>;
+  Component: React.ComponentType<React.PropsWithChildren<any>>;
   data: T[];
   request?: () => Promise<any>;
 }
@@ -38,7 +38,7 @@ interface Props {
 
 export type CombinedProps = Props & PageyIntegrationProps;
 
-export const LandingTable: React.FC<CombinedProps> = (props) => {
+export const LandingTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     entity,
     headers,

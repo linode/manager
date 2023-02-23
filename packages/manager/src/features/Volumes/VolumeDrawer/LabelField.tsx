@@ -28,7 +28,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LabelField: React.FC<CombinedProps> = ({
+const LabelField: React.FC<React.PropsWithChildren<CombinedProps>> = ({
   name,
   value,
   error,

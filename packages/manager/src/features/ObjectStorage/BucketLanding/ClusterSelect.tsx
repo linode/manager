@@ -15,7 +15,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const ClusterSelect: React.FC<Props> = (props) => {
+export const ClusterSelect: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { selectedCluster, error, onChange, onBlur, disabled } = props;
 
   const {

@@ -22,7 +22,7 @@ interface Props {
   openDeleteDialog: (method: PaymentMethod) => void;
 }
 
-const PaymentMethods: React.FC<Props> = (props) => {
+const PaymentMethods: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { loading, error, paymentMethods, openDeleteDialog } = props;
   const classes = useStyles();
 

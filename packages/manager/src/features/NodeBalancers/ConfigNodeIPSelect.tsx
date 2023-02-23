@@ -34,7 +34,7 @@ interface Props {
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
-const ConfigNodeIPSelect: React.FC<CombinedProps> = (props) => {
+const ConfigNodeIPSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
     null
   );

@@ -199,7 +199,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
 
 export default MutateDrawer;
 
-const HighmemG6ToG7: React.FC<{}> = () => {
+const HighmemG6ToG7: React.FC<React.PropsWithChildren<{}>> = () => {
   return (
     <ul className="nonMUI-list">
       <ListItem>

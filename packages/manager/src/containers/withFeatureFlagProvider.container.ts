@@ -24,6 +24,6 @@ const featureFlagProvider = LAUNCH_DARKLY_API_KEY
         privateAttributeNames: ['country', 'taxID'],
       },
     })
-  : (component: React.ComponentType) => component;
+  : (component: React.ComponentType<React.PropsWithChildren<unknown>>) => component;
 
 export default featureFlagProvider;

@@ -43,7 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Breadcrumb: React.FC<CombinedProps> = (props) => {
+export const Breadcrumb: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

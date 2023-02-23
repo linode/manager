@@ -112,7 +112,7 @@ const privateHostCopy =
 const mongoHostHelperCopy =
   'This is a public hostname. Coming soon: connect to your MongoDB clusters using private IPs';
 
-export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
+export const DatabaseSummaryConnectionDetails: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { database } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();

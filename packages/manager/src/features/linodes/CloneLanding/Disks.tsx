@@ -30,7 +30,7 @@ export interface Props {
   handleSelect: (id: number) => void;
 }
 
-export const Disks: React.FC<Props> = (props) => {
+export const Disks: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { disks, diskSelection, selectedConfigIds, handleSelect } = props;
 
   const classes = useStyles();

@@ -44,7 +44,7 @@ interface Handlers {
 
 export type CombinedProps = Props & Handlers;
 
-export const ConfigRow: React.FC<CombinedProps> = (props) => {
+export const ConfigRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     config,
     linodeId,

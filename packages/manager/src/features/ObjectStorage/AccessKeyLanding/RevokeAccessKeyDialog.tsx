@@ -23,7 +23,7 @@ interface RevokeKeysDialogProps {
   errors?: APIError[];
 }
 
-export const RevokeAccessKeyDialog: React.FC<RevokeKeysDialogProps> = (
+export const RevokeAccessKeyDialog: React.FC<React.PropsWithChildren<RevokeKeysDialogProps>> = (
   props
 ) => {
   const {

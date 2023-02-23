@@ -53,7 +53,7 @@ interface TransactionInfo {
   orderID: string;
 }
 
-export const PayPalButton: React.FC<Props> = (props) => {
+export const PayPalButton: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const {
     data,

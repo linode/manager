@@ -104,7 +104,7 @@ const getTitle = (v: DrawerMode) => {
   }
 };
 
-export const DiskDrawer: React.FC<CombinedProps> = (props) => {
+export const DiskDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     disk,
     open,

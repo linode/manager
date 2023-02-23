@@ -35,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Disks: React.FC<CombinedProps> = (props) => {
+const Disks: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

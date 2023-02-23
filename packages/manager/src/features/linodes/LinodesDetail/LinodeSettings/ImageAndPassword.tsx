@@ -35,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props & ContextProps & WithImages;
 
-export const ImageAndPassword: React.FC<CombinedProps> = (props) => {
+export const ImageAndPassword: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     imagesData,
     imagesError,

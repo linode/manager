@@ -23,7 +23,7 @@ const MaintenanceLanding = React.lazy(
   () => import('./Maintenance/MaintenanceLanding')
 );
 
-const AccountLanding: React.FC = () => {
+const AccountLanding: React.FC<React.PropsWithChildren<unknown>> = () => {
   const history = useHistory();
   const location = useLocation();
   const { data: profile } = useProfile();

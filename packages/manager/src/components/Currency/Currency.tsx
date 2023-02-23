@@ -7,7 +7,7 @@ interface CurrencyFormatterProps {
   dataAttrs?: Record<string, any>;
 }
 
-export const Currency: React.FC<CurrencyFormatterProps> = (props) => {
+export const Currency: React.FC<React.PropsWithChildren<CurrencyFormatterProps>> = (props) => {
   const { quantity, wrapInParentheses, dataAttrs } = props;
 
   const formatter = new Intl.NumberFormat('en-US', {

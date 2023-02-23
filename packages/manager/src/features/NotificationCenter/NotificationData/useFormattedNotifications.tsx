@@ -365,7 +365,7 @@ const useComplianceNotificationStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ComplianceNotification: React.FC<{}> = () => {
+const ComplianceNotification: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useComplianceNotificationStyles();
   const complianceModelContext = React.useContext(complianceUpdateContext);
 
@@ -385,7 +385,5 @@ const ComplianceNotification: React.FC<{}> = () => {
 };
 
 export const isEUModelContractNotification = (notification: Notification) => {
-  return (
-    notification.type === 'notice' && /eu-model/gi.test(notification.message)
-  );
+  return (notification.type === 'notice' && /eu-model/gi.test(notification.message));
 };

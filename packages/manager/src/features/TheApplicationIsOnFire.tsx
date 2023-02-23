@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TheApplicationIsOnFire: React.FC<{}> = (props) => {
+const TheApplicationIsOnFire: React.FC<React.PropsWithChildren<{}>> = (props) => {
   return (
     <Dialog open PaperProps={{ role: undefined }} role="dialog">
       <DialogTitle title="Oh snap!" />

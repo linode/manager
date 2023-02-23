@@ -143,7 +143,7 @@ const defaultDialogState = {
   error: undefined,
 };
 
-export const ImagesLanding: React.FC<CombinedProps> = (props) => {
+export const ImagesLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   useReduxLoad(['images']);
 
   const classes = useStyles();

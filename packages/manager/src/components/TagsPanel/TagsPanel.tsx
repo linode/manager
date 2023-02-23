@@ -129,7 +129,7 @@ export interface Props {
   disabled?: boolean;
 }
 
-const TagsPanel: React.FC<Props> = (props) => {
+const TagsPanel: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { tags, disabled, updateTags } = props;
 

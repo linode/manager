@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ResetPassword: React.FC<CombinedProps> = (props) => {
+export const ResetPassword: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { username } = props;
 

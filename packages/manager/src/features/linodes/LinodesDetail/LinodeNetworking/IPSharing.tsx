@@ -76,7 +76,7 @@ type CombinedProps = Props;
 
 type AvailableRangesMap = { [linode_id: number]: string[] };
 
-const IPSharingPanel: React.FC<CombinedProps> = (props) => {
+const IPSharingPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
   const {
@@ -427,7 +427,7 @@ interface WrapperProps {
 }
 
 // Content Wrapper
-const DialogContent: React.FC<WrapperProps> = (props) => {
+const DialogContent: React.FC<React.PropsWithChildren<WrapperProps>> = (props) => {
   if (props.loading) {
     return <CircleProgress />;
   }
@@ -439,7 +439,7 @@ interface RowProps {
   ip: string;
 }
 
-export const IPRow: React.FC<RowProps> = React.memo((props) => {
+export const IPRow: React.FC<React.PropsWithChildren<RowProps>> = React.memo((props) => {
   const { ip } = props;
   const classes = useStyles();
   return (
@@ -470,7 +470,7 @@ interface SharingRowProps extends RowProps {
   handleDelete?: (idx: number) => void;
 }
 
-export const IPSharingRow: React.FC<SharingRowProps> = React.memo((props) => {
+export const IPSharingRow: React.FC<React.PropsWithChildren<SharingRowProps>> = React.memo((props) => {
   const {
     ip,
     idx,

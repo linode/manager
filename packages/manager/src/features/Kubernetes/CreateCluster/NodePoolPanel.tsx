@@ -30,13 +30,13 @@ export const addCountToTypes = (
   }));
 };
 
-export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (
+export const NodePoolPanel: React.FunctionComponent<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   return <RenderLoadingOrContent {...props} />;
 };
 
-const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
+const RenderLoadingOrContent: React.FunctionComponent<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   const { typesError, typesLoading } = props;
@@ -52,7 +52,7 @@ const RenderLoadingOrContent: React.FunctionComponent<CombinedProps> = (
   return <Panel {...props} />;
 };
 
-const Panel: React.FunctionComponent<CombinedProps> = (props) => {
+const Panel: React.FunctionComponent<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { addNodePool, apiError, types, isOnCreate } = props;
 
   const [_types, setNewType] = React.useState<ExtendedTypeWithCount[]>(

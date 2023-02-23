@@ -47,7 +47,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props & LVDataProps & DispatchProps & GrantProps;
 
-const LongviewClientRow: React.FC<CombinedProps> = (props) => {
+const LongviewClientRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

@@ -40,7 +40,7 @@ export interface Props {
   successCallback?: () => void;
 }
 
-export const SingleTextFieldForm: React.FC<Props & TextFieldProps> = (
+export const SingleTextFieldForm: React.FC<React.PropsWithChildren<Props & TextFieldProps>> = (
   props
 ) => {
   const classes = useStyles();

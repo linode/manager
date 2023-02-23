@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AttachVLAN: React.FC<CombinedProps> = (props) => {
+const AttachVLAN: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     handleVLANChange,
     helperText,

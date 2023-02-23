@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const BackupStatus: React.FC<CombinedProps> = (props) => {
+const BackupStatus: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     mostRecentBackup,
     linodeId,

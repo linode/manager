@@ -7,7 +7,7 @@ interface Props {
   events: NotificationItem[];
 }
 
-export const Events: React.FC<Props> = (props) => {
+export const Events: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { events } = props;
 
   return (

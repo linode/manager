@@ -47,7 +47,7 @@ const AttachVolumeValidationSchema = object({
 
 const initialValues = { volume_id: -1, config_id: -1 };
 
-const AttachVolumeToLinodeForm: React.FC<CombinedProps> = (props) => {
+const AttachVolumeToLinodeForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { actions, onClose, linodeId, linodeRegion, readOnly } = props;
 
   const { data: grants } = useGrants();

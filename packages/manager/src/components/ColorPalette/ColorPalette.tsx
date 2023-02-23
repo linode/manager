@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const ColorPalette: React.FC<{}> = () => {
+export const ColorPalette: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
   const theme = useTheme();
 

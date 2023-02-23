@@ -17,7 +17,7 @@ import withClientData, {
 
 type commbinedProps = Props & WithTheme & LVDataProps;
 
-const RAMGauge: React.FC<commbinedProps> = (props) => {
+const RAMGauge: React.FC<React.PropsWithChildren<commbinedProps>> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,

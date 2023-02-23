@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeviceSelection: React.FC<CombinedProps> = (props) => {
+const DeviceSelection: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     devices,
     onChange,
@@ -116,7 +116,7 @@ const DeviceSelection: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default DeviceSelection as React.ComponentType<Props>;
+export default DeviceSelection as React.ComponentType<React.PropsWithChildren<Props>>;
 
 const blockDeviceRegex = /[0-9]+/g;
 

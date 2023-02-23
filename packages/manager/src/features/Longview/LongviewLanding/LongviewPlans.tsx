@@ -134,7 +134,7 @@ export const managedText = (
   </span>
 );
 
-export const LongviewPlans: React.FC<CombinedProps> = (props) => {
+export const LongviewPlans: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { subscriptionRequestHook: subscriptions } = props;
   const classes = useStyles();
   const mounted = React.useRef<boolean>(false);
@@ -331,7 +331,7 @@ interface LongviewPlansTableBodyProps {
   disabled: boolean;
 }
 
-export const LongviewPlansTableBody: React.FC<LongviewPlansTableBodyProps> = React.memo(
+export const LongviewPlansTableBody: React.FC<React.PropsWithChildren<LongviewPlansTableBodyProps>> = React.memo(
   (props) => {
     const { loading, error, subscriptions, selectedSub, ...rest } = props;
 
@@ -395,7 +395,7 @@ interface LongviewSubscriptionRowProps {
   disabled: boolean;
 }
 
-export const LongviewSubscriptionRow: React.FC<LongviewSubscriptionRowProps> = React.memo(
+export const LongviewSubscriptionRow: React.FC<React.PropsWithChildren<LongviewSubscriptionRowProps>> = React.memo(
   (props) => {
     const {
       id,

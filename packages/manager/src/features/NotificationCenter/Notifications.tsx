@@ -5,7 +5,7 @@ interface Props {
   notificationsList: NotificationItem[];
 }
 
-export const Notifications: React.FC<Props> = (props) => {
+export const Notifications: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { notificationsList } = props;
 
   return (

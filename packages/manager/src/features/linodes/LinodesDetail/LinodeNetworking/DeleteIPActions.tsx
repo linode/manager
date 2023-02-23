@@ -13,7 +13,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeleteIPActions: React.FC<CombinedProps> = (props) => {
+const DeleteIPActions: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { handleCancel, loading, linodeID, handleDelete, IPAddress } = props;
 
   const handleDeleteIP = () => {

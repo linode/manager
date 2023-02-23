@@ -30,7 +30,7 @@ export interface TableProps {
   servicesError?: string;
 }
 
-export const ListeningServices: React.FC<TableProps> = (props) => {
+export const ListeningServices: React.FC<React.PropsWithChildren<TableProps>> = (props) => {
   const classes = useStyles();
 
   const { services, servicesError, servicesLoading } = props;
@@ -49,7 +49,7 @@ export const ListeningServices: React.FC<TableProps> = (props) => {
   );
 };
 
-export const ServicesTable: React.FC<TableProps> = (props) => {
+export const ServicesTable: React.FC<React.PropsWithChildren<TableProps>> = (props) => {
   const { services, servicesError, servicesLoading } = props;
 
   return (

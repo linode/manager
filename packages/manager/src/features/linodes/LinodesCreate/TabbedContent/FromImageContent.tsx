@@ -33,7 +33,7 @@ export type CombinedProps = Props &
   ReduxStateProps &
   WithTypesRegionsAndImages;
 
-export const FromImageContent: React.FC<CombinedProps> = (props) => {
+export const FromImageContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

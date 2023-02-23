@@ -39,7 +39,7 @@ interface Props {
   defaultExpanded?: boolean;
 }
 
-const ShowMoreExpansion: React.FC<Props> = (props) => {
+const ShowMoreExpansion: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { name, defaultExpanded, children } = props;
 
   const classes = useStyles();

@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CopyTooltip: React.FC<Props> = (props) => {
+export const CopyTooltip: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const [copied, setCopied] = React.useState<boolean>(false);
 

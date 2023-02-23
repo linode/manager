@@ -116,7 +116,7 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect: React.FC<Props> = (props) => {
+export const ImageSelect: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     disabled,
     error,
@@ -146,11 +146,8 @@ export const ImageSelect: React.FC<Props> = (props) => {
          * We don't want them to show up as a selectable image to deploy since
          * the Kubernetes images are used behind the scenes with LKE.
          */
-        return (
-          thisImage.is_public &&
-          thisImage.status === 'available' &&
-          !thisImage.label.match(/kube/i)
-        );
+        return (thisImage.is_public &&
+        thisImage.status === 'available' && !thisImage.label.match(/kube/i));
       case 'private':
         return !thisImage.is_public && thisImage.status === 'available';
       case 'all':

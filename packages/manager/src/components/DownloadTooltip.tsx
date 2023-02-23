@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DownloadTooltip: React.FC<Props> = (props) => {
+export const DownloadTooltip: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { text, className, displayText, onClickCallback, fileName } = props;

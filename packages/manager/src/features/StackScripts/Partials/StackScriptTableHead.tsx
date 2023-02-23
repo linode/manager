@@ -111,7 +111,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
+export const StackScriptTableHead: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const {
     currentFilterType,
@@ -121,7 +121,7 @@ export const StackScriptTableHead: React.FC<CombinedProps> = (props) => {
     category,
   } = props;
 
-  const Cell: React.ComponentType<any> =
+  const Cell: React.ComponentType<React.PropsWithChildren<any>> =
     !!handleClickTableHeader && sortOrder ? TableSortCell : TableCell;
 
   const maybeAddSortingProps = (orderBy: string) =>

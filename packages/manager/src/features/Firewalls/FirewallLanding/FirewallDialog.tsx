@@ -25,7 +25,7 @@ const toContinuousTense = (s: string) => {
   return s.replace(/e$/, 'ing');
 };
 
-const FirewallDialog: React.FC<CombinedProps> = (props) => {
+const FirewallDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
@@ -111,7 +111,7 @@ interface ActionsProps {
   mode: Mode;
 }
 
-const Actions: React.FC<ActionsProps> = (props) => {
+const Actions: React.FC<React.PropsWithChildren<ActionsProps>> = (props) => {
   return (
     <ActionsPanel>
       <Button buttonType="secondary" onClick={props.onClose}>

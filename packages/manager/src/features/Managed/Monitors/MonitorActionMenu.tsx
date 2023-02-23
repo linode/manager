@@ -21,7 +21,7 @@ export interface Props {
   openHistoryDrawer: (id: number, label: string) => void;
 }
 
-export const MonitorActionMenu: React.FC<Props> = (props) => {
+export const MonitorActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { enqueueSnackbar } = useSnackbar();

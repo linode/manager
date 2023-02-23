@@ -82,7 +82,7 @@ interface Props {
   isRestrictedUser: boolean;
 }
 
-const UsersLanding: React.FC<Props> = (props) => {
+const UsersLanding: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const pagination = usePagination(1, 'account-users');
   const { data: users, isLoading, error, refetch } = useAccountUsers({
     page: pagination.page,

@@ -40,7 +40,7 @@ const initialValues: CreateFirewallPayload = {
   },
 };
 
-const AddFirewallDrawer: React.FC<CombinedProps> = (props) => {
+const AddFirewallDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { onClose, onSubmit, ...restOfDrawerProps } = props;
 
   /**

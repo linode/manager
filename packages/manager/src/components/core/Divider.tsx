@@ -22,7 +22,7 @@ interface Props extends _DividerProps {
   spacingBottom?: number;
 }
 
-const _Divider: React.FC<Props> = (props) => {
+const _Divider: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { dark, light, spacingTop, spacingBottom, ...rest } = props;
 

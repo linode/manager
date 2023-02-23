@@ -72,7 +72,7 @@ const getColor = cond([
   [() => true, always(undefined)],
 ]);
 
-export const Button: React.FC<CombinedProps> = (props) => {
+export const Button: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

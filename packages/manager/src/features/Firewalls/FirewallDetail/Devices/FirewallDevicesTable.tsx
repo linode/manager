@@ -25,7 +25,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const FirewallTable: React.FC<CombinedProps> = (props) => {
+const FirewallTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     devices,
     error,

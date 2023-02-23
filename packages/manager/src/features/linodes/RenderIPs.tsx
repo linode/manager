@@ -10,7 +10,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const RenderIPs: React.FC<CombinedProps> = (props) => {
+export const RenderIPs: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { ipv4, ipv6, linodeId } = props;
 
   const ipv4ShouldTruncate = ipv4.length > 4;

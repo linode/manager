@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = RouteComponentProps<{}>;
 
-export const SupportWidget: React.FC<CombinedProps> = (props) => {
+export const SupportWidget: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { history } = props;

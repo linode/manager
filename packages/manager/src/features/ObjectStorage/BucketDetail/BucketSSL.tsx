@@ -62,7 +62,7 @@ interface Props {
   clusterId: string;
 }
 
-export const BucketSSL: React.FC<Props> = (props) => {
+export const BucketSSL: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { bucketName, clusterId } = props;
   const classes = useStyles();
 
@@ -92,7 +92,7 @@ interface BodyProps {
   clusterId: string;
 }
 
-export const SSLBody: React.FC<BodyProps> = (props) => {
+export const SSLBody: React.FC<React.PropsWithChildren<BodyProps>> = (props) => {
   const { bucketName, clusterId } = props;
 
   const request = useAPIRequest(
@@ -121,7 +121,7 @@ export interface FormProps extends BodyProps {
   update: () => void;
 }
 
-export const AddCertForm: React.FC<FormProps> = (props) => {
+export const AddCertForm: React.FC<React.PropsWithChildren<FormProps>> = (props) => {
   const { bucketName, clusterId, update } = props;
   const [certificate, setCertificate] = React.useState('');
   const [sslKey, setSSLKey] = React.useState('');
@@ -202,7 +202,7 @@ export const AddCertForm: React.FC<FormProps> = (props) => {
   );
 };
 
-export const RemoveCertForm: React.FC<FormProps> = (props) => {
+export const RemoveCertForm: React.FC<React.PropsWithChildren<FormProps>> = (props) => {
   const { bucketName, clusterId, update } = props;
   const [open, setOpen] = React.useState(false);
 

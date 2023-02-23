@@ -21,7 +21,7 @@ interface WithLinodesProps
 
 type CombinedProps = Props & WithLinodesProps;
 
-const IPSelect: React.FC<CombinedProps> = (props) => {
+const IPSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     linode,
     value,

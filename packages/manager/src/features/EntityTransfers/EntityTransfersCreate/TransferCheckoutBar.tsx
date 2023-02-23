@@ -82,10 +82,10 @@ export const generatePayload = (
   return { entities };
 };
 
-export const TransferRow: React.FC<{
+export const TransferRow: React.FC<React.PropsWithChildren<{
   label: string;
   onClick: () => void;
-}> = React.memo((props) => {
+}>> = React.memo((props) => {
   const { label, onClick } = props;
   const classes = useStyles();
   return (
@@ -100,7 +100,7 @@ export const TransferRow: React.FC<{
   );
 });
 
-export const TransferCheckoutBar: React.FC<Props> = (props) => {
+export const TransferCheckoutBar: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { handleSubmit, isCreating, selectedEntities, removeEntities } = props;
   const classes = useStyles();
   const onSubmit = () => {

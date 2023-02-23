@@ -45,7 +45,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const LinodeRowLoading: React.FC<CombinedProps> = (props) => {
+const LinodeRowLoading: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     classes,
     linodeId,
@@ -75,9 +75,9 @@ const styled = withStyles(styles);
 
 export default styled(LinodeRowLoading);
 
-const ProgressDisplay: React.FC<{
+const ProgressDisplay: React.FC<React.PropsWithChildren<{
   progress: null | number;
-}> = (props) => {
+}>> = (props) => {
   const { progress } = props;
 
   return progress ? (

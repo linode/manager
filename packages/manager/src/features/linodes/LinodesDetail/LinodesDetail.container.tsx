@@ -22,7 +22,7 @@ interface Props {
  * If we have recently requested all Linode data, we're good. If not,
  * we show a loading spinner until the requests are complete.
  */
-export const LinodesDetailContainer: React.FC<Props> = (props) => {
+export const LinodesDetailContainer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodes } = useLinodes();
   const dispatch = useDispatch<ThunkDispatch>();
   const { account } = useAccountManagement();

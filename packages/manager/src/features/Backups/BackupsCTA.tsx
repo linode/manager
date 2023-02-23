@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = StateProps & DispatchProps;
 
-const BackupsCTA: React.FC<CombinedProps> = (props) => {
+const BackupsCTA: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     linodesWithoutBackups,
     actions: { openBackupsDrawer },
@@ -58,7 +58,7 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
   }
 
   return (
-    <PreferenceToggle<boolean>
+    (<PreferenceToggle<boolean>
       preferenceKey="backups_cta_dismissed"
       preferenceOptions={[false, true]}
       localStorageKey="BackupsCtaDismissed"
@@ -69,7 +69,7 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
       }: ToggleProps<boolean>) => {
         return isDismissed ? (
           // eslint-disable-next-line react/jsx-no-useless-fragment
-          <React.Fragment />
+          (<React.Fragment />)
         ) : (
           <Paper className={classes.root}>
             <Typography style={{ fontSize: '1rem', marginLeft: '0.5rem' }}>
@@ -89,7 +89,7 @@ const BackupsCTA: React.FC<CombinedProps> = (props) => {
           </Paper>
         );
       }}
-    </PreferenceToggle>
+    </PreferenceToggle>)
   );
 };
 

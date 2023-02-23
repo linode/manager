@@ -153,7 +153,7 @@ export interface ExtendedButtonProps extends ButtonProps {
 }
 
 export interface Props {
-  icon?: React.ComponentType<any>;
+  icon?: React.ComponentType<React.PropsWithChildren<any>>;
   children?: string | React.ReactNode;
   title: string;
   buttonProps?: ExtendedButtonProps[];
@@ -165,7 +165,7 @@ export interface Props {
   showTransferDisplay?: boolean;
 }
 
-const Placeholder: React.FC<Props> = (props) => {
+const Placeholder: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     isEntity,
     title,

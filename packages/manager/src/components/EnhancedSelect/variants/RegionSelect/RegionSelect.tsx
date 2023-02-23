@@ -141,7 +141,7 @@ const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   return 0;
 };
 
-const SelectRegionPanel: React.FC<Props> = (props) => {
+const SelectRegionPanel: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     label,
     disabled,

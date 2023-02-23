@@ -64,7 +64,7 @@ export interface PaginationProps<T> extends State<T> {
 }
 
 export default (requestFn: PaginatedRequest, options: Options = {}) => (
-  Component: React.ComponentType<any>
+  Component: React.ComponentType<React.PropsWithChildren<any>>
 ) => {
   return class WrappedComponent extends React.PureComponent<any, State> {
     state: State = {

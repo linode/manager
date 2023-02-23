@@ -18,7 +18,7 @@ export interface PromiseLoaderResponse<T> {
 
 /* tslint:disable */
 export default function preload<P>(requests: RequestMap<P>) {
-  return function (Component: React.ComponentType<P>) {
+  return function (Component: React.ComponentType<React.PropsWithChildren<P>>) {
     /* tslint:enable */
     return class LoadedComponent extends React.Component<P, State> {
       mounted: boolean = false;

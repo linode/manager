@@ -24,7 +24,7 @@ interface Props {
   addDevice: (selectedLinodes: number[]) => void;
 }
 
-export const AddDeviceDrawer: React.FC<Props> = (props) => {
+export const AddDeviceDrawer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     open,
     error,

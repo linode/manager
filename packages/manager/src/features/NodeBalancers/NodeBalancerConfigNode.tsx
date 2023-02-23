@@ -79,7 +79,7 @@ export interface Props {
   removeNode: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-export const NodeBalancerConfigNode: React.FC<Props> = (props) => {
+export const NodeBalancerConfigNode: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const {
     disabled,

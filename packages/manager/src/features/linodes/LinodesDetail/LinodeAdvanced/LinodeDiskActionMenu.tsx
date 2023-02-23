@@ -32,7 +32,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps;
 
-export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
+export const DiskActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const classes = useStyles();

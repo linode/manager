@@ -3,7 +3,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LinodePubKey from './LinodePubKey';
 import SSHAccessTable from './SSHAccessTable';
 
-const SSHAcess: React.FC<{}> = () => {
+const SSHAcess: React.FC<React.PropsWithChildren<{}>> = () => {
   return (
     <>
       <DocumentTitleSegment segment="SSH Access" />

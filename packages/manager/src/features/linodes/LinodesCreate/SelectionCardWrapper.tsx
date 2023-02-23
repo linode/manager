@@ -51,7 +51,7 @@ interface Props {
   checked: boolean;
 }
 
-export const SelectionCardWrapper: React.FC<Props> = (props) => {
+export const SelectionCardWrapper: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     iconUrl,
     id,

@@ -32,7 +32,7 @@ interface Props {
   timezone: string;
 }
 
-export const Apache: React.FC<Props> = (props) => {
+export const Apache: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
   const [version, setVersion] = React.useState<string | undefined>();

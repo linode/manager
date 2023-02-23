@@ -222,7 +222,7 @@ const deviceCounterDefault = 1;
 // DiskID reserved on the back-end to indicate Finnix.
 const finnixDiskID = 25669;
 
-const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
+const LinodeConfigDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     open,
     onClose,
@@ -1064,7 +1064,7 @@ interface ConfigFormProps {
   children: JSX.Element;
 }
 
-const DialogContent: React.FC<ConfigFormProps> = (props) => {
+const DialogContent: React.FC<React.PropsWithChildren<ConfigFormProps>> = (props) => {
   const { loading, errors } = props;
 
   if (loading) {

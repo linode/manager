@@ -19,7 +19,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const AddNewLink: React.FC<CombinedProps> = (props) => {
+const AddNewLink: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

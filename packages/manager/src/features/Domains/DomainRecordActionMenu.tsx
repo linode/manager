@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const DomainRecordActionMenu: React.FC<CombinedProps> = (props) => {
+export const DomainRecordActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { editPayload, onEdit, deleteData } = props;
 
   const handleEdit = () => {

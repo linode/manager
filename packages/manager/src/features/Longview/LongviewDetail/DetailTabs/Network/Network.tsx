@@ -31,7 +31,7 @@ interface Props {
   timezone: string;
 }
 
-export const NetworkLanding: React.FC<Props> = (props) => {
+export const NetworkLanding: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;

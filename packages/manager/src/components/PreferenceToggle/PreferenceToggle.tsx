@@ -35,7 +35,7 @@ type CombinedProps<T = PreferenceValue> = Props<T> &
   PreferenceProps &
   PreferencesActionsProps;
 
-const PreferenceToggle: React.FC<CombinedProps> = (props) => {
+const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     value,
     preferenceError,
@@ -224,7 +224,7 @@ interface PreferenceProps {
   preferencesLastUpdated: number;
 }
 
-const memoized = (component: React.FC<CombinedProps>) =>
+const memoized = (component: React.FC<React.PropsWithChildren<CombinedProps>>) =>
   React.memo(component, (prevProps, nextProps) => {
     /**
      * only prevent rendering if the preferences AND profileError

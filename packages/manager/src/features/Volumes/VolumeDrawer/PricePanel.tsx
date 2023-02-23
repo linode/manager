@@ -35,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const PricePanel: React.FC<CombinedProps> = ({
+const PricePanel: React.FC<React.PropsWithChildren<CombinedProps>> = ({
   currentSize,
   value,
   classes,

@@ -26,7 +26,7 @@ interface GuidanceProps {
 }
 type CombinedProps = GuidanceProps;
 
-const Guidance: React.FC<CombinedProps> = (props) => {
+const Guidance: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { text } = props;
 

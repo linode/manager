@@ -325,4 +325,4 @@ export default rCompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
   withLinodeActions
-)(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;
+)(LinodeSettingsAlertsPanel) as React.ComponentType<React.PropsWithChildren<Props>>;

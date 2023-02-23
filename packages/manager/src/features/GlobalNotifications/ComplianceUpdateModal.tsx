@@ -12,7 +12,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import EUAgreementCheckbox from '../Account/Agreements/EUAgreementCheckbox';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 
-const ComplianceUpdateModal: React.FC<{}> = () => {
+const ComplianceUpdateModal: React.FC<React.PropsWithChildren<{}>> = () => {
   const [error, setError] = React.useState('');
   const [checked, setChecked] = React.useState(false);
   const dispatch: Dispatch = useDispatch();

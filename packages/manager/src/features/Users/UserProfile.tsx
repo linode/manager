@@ -56,7 +56,7 @@ interface Props {
   originalEmail?: string;
 }
 
-const UserProfile: React.FC<Props> = (props) => {
+const UserProfile: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { push } = useHistory();
   const { enqueueSnackbar } = useSnackbar();
@@ -241,7 +241,7 @@ const UserProfile: React.FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {username !== undefined ? (
         <>
           <DocumentTitleSegment segment={`${username} - Profile`} />
@@ -257,7 +257,7 @@ const UserProfile: React.FC<Props> = (props) => {
       ) : (
         <CircleProgress />
       )}
-    </>
+    </>)
   );
 };
 

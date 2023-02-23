@@ -59,7 +59,7 @@ const renderBanner = (statusWarnings: string[]): JSX.Element => {
   );
 };
 
-export const RegionStatusBanner: React.FC<Props> = (props) => {
+export const RegionStatusBanner: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { regions } = props;
 
   const statusWarnings = regions

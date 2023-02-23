@@ -16,7 +16,7 @@ const setDocsHOC = (
   docs: Linode.Doc[] | RequestDocs,
   updateCond?: UpdateCond
 ) => <OriginalProps extends {}>(
-  Component: React.ComponentType<OriginalProps>
+  Component: React.ComponentType<React.PropsWithChildren<OriginalProps>>
 ) => {
   class SetDocumentation extends React.Component<
     OriginalProps & DispatchProps

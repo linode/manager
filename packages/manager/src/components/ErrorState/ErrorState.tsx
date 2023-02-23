@@ -9,7 +9,7 @@ interface Props {
   errorText: string | JSX.Element;
   compact?: boolean;
   cozy?: boolean;
-  CustomIcon?: React.ComponentType<SvgIconProps>;
+  CustomIcon?: React.ComponentType<React.PropsWithChildren<SvgIconProps>>;
   CustomIconStyles?: React.CSSProperties;
 }
 

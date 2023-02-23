@@ -17,7 +17,7 @@ interface Props {
  * connections a more fluid experience. Use the `delayInMS` prop
  * to specify an exact delay duration.
  */
-export const LandingLoading: React.FC<Props> = ({
+export const LandingLoading: React.FC<React.PropsWithChildren<Props>> = ({
   shouldDelay,
   delayInMS,
   children,
@@ -50,7 +50,7 @@ export const LandingLoading: React.FC<Props> = ({
   return showLoading ? (
     !!children ? (
       /** allows us to pass a custom Loader if we please */
-      <React.Fragment>{children}</React.Fragment>
+      (<React.Fragment>{children}</React.Fragment>)
     ) : (
       <CircleProgress />
     )

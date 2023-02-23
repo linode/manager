@@ -24,7 +24,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const Modals: React.FC<CombinedProps> = (props) => {
+const Modals: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     secretID,
     secret,

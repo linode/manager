@@ -17,7 +17,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const TableRowEmptyState: React.FC<CombinedProps> = (props) => {
+const TableRowEmptyState: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   return (

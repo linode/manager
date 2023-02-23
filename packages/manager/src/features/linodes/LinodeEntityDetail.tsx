@@ -76,7 +76,7 @@ interface LinodeEntityDetailProps {
 
 export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
 
-const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
+const LinodeEntityDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     variant,
     linode,
@@ -296,7 +296,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Header: React.FC<HeaderProps> = (props) => {
+const Header: React.FC<React.PropsWithChildren<HeaderProps>> = (props) => {
   const classes = useHeaderStyles();
 
   const {
@@ -508,7 +508,7 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Body: React.FC<BodyProps> = React.memo((props) => {
+export const Body: React.FC<React.PropsWithChildren<BodyProps>> = React.memo((props) => {
   const classes = useBodyStyles();
   const {
     numCPUs,
@@ -714,7 +714,7 @@ interface AccessTableProps {
   footer?: JSX.Element;
 }
 
-export const AccessTable: React.FC<AccessTableProps> = React.memo((props) => {
+export const AccessTable: React.FC<React.PropsWithChildren<AccessTableProps>> = React.memo((props) => {
   const classes = useAccessTableStyles();
   return (
     <Grid container item md={6} direction="column" {...props.gridProps}>
@@ -830,7 +830,7 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Footer: React.FC<FooterProps> = React.memo((props) => {
+export const Footer: React.FC<React.PropsWithChildren<FooterProps>> = React.memo((props) => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));

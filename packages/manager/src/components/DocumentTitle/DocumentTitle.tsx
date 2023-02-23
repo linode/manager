@@ -58,7 +58,7 @@ export class DocumentTitleSegment extends React.Component<Props> {
 
 /* tslint:disable-next-line */
 export function withDocumentTitleProvider<P>(
-  Component: React.ComponentType<P>
+  Component: React.ComponentType<React.PropsWithChildren<P>>
 ) {
   return class DocumentTitleProviderManager extends React.Component<
     P,

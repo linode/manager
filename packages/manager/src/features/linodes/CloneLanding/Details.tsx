@@ -86,7 +86,7 @@ interface Props {
   clearAll: () => void;
 }
 
-export const Configs: React.FC<Props> = (props) => {
+export const Configs: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     currentLinodeId,
     selectedConfigs,

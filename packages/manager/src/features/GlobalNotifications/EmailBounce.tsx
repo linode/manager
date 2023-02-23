@@ -18,7 +18,7 @@ import { useMutateProfile, useProfile } from 'src/queries/profile';
 // =============================================================================
 // <EmailBounceNotificationSection />
 // =============================================================================
-export const EmailBounceNotificationSection: React.FC<{}> = React.memo(() => {
+export const EmailBounceNotificationSection: React.FC<React.PropsWithChildren<{}>> = React.memo(() => {
   const { data: account } = useAccount();
   const { mutateAsync: updateAccount } = useMutateAccount();
   const { data: profile } = useProfile();
@@ -110,7 +110,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const EmailBounceNotification: React.FC<CombinedProps> = React.memo((props) => {
+const EmailBounceNotification: React.FC<React.PropsWithChildren<CombinedProps>> = React.memo((props) => {
   const { text, confirmEmail, changeEmail } = props;
 
   const classes = useEmailBounceNotificationStyles();

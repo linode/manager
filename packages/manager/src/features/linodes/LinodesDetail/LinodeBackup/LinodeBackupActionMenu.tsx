@@ -12,7 +12,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const LinodeBackupActionMenu: React.FC<CombinedProps> = (props) => {
+export const LinodeBackupActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { backup, disabled, onRestore, onDeploy } = props;
   const disabledProps = {
     disabled,

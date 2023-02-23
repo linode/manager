@@ -25,7 +25,7 @@ type CombinedProps = Props &
   LinodeActionsProps &
   RouteComponentProps<{}>;
 
-export const LinodeWatchdogPanel: React.FC<CombinedProps> = (props) => {
+export const LinodeWatchdogPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     linodeId,
     linodeActions: { updateLinode },
@@ -124,4 +124,4 @@ export default recompose<CombinedProps, Props>(
   withRouter,
   withLinodeActions,
   linodeContext
-)(LinodeWatchdogPanel) as React.ComponentType<Props>;
+)(LinodeWatchdogPanel) as React.ComponentType<React.PropsWithChildren<Props>>;

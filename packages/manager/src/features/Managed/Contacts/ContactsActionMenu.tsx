@@ -11,7 +11,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
+export const ContactsActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { contactId, openDrawer, openDialog } = props;
 
   const actions: Action[] = [
@@ -31,7 +31,7 @@ export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {actions.map((action) => {
         return (
           <InlineMenuAction
@@ -41,7 +41,7 @@ export const ContactsActionMenu: React.FC<CombinedProps> = (props) => {
           />
         );
       })}
-    </>
+    </>)
   );
 };
 

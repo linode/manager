@@ -10,7 +10,9 @@ interface InnerProps {
 
 type CombinedProps = Props & InnerProps;
 
-const AccountActivationError: React.FC<CombinedProps> = (props) => {
+const AccountActivationError: React.FC<
+  React.PropsWithChildren<CombinedProps>
+> = (props) => {
   React.useEffect(() => {
     /** set an account_unactivated error if one hasn't already been set */
     if (!props.globalErrors.account_unactivated) {
@@ -21,11 +23,14 @@ const AccountActivationError: React.FC<CombinedProps> = (props) => {
   }, [props.globalErrors]);
 
   return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <React.Fragment>
-      {getAPIErrorOrDefault(
-        props.errors,
-        'Your account is not yet activated. Please reach out to support@linode.com for more information'
-      )}
+      {
+        getAPIErrorOrDefault(
+          props.errors,
+          'Your account is not yet activated. Please reach out to support@linode.com for more information'
+        )[0].reason
+      }
     </React.Fragment>
   );
 };

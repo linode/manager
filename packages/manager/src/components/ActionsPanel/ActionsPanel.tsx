@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const ActionPanel: React.FC<BoxProps> = (props) => {
+const ActionPanel: React.FC<React.PropsWithChildren<BoxProps>> = (props) => {
   const classes = useStyles();
   const { className, children, ...rest } = props;
 

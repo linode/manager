@@ -9,7 +9,7 @@ export interface ProfileProps {
   grants: UseQueryResult<Grants, APIError[]>;
 }
 
-export default (Component: React.ComponentType<any>) => {
+export default (Component: React.ComponentType<React.PropsWithChildren<any>>) => {
   return (props: any) => {
     const profile = useProfile();
     const grants = useGrants();

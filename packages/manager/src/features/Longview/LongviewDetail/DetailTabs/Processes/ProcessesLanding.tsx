@@ -59,7 +59,7 @@ export const filterResults = (
   );
 };
 
-const ProcessesLanding: React.FC<Props> = (props) => {
+const ProcessesLanding: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { clientAPIKey, lastUpdated, lastUpdatedError, timezone } = props;
   const classes = useStyles();
 

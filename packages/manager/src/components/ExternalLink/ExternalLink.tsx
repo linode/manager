@@ -56,7 +56,7 @@ interface Props {
   onClick?: () => void;
 }
 
-const ExternalLink: React.FC<Props> = (props) => {
+const ExternalLink: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const {
     link,

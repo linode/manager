@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const LinodePubKey: React.FC<{}> = () => {
+const LinodePubKey: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
 
   const { data, isLoading, error } = useManagedSSHKey();

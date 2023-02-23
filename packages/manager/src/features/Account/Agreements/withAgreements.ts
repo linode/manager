@@ -8,7 +8,7 @@ export interface AgreementsProps {
   agreements: UseQueryResult<Agreements, APIError[]>;
 }
 
-export default (Component: React.ComponentType<any>) => {
+export default (Component: React.ComponentType<React.PropsWithChildren<any>>) => {
   return (props: any) => {
     const agreements = useAccountAgreements();
 

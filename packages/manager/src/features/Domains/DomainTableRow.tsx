@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = { domain: Domain } & Handlers;
 
-const DomainTableRow: React.FC<CombinedProps> = (props) => {
+const DomainTableRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { domain, onDisableOrEnable, onClone, onRemove, onEdit } = props;
 
   const classes = useStyles();

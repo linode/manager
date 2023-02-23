@@ -23,7 +23,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-export const NGINXGraphs: React.FC<CombinedProps> = (props) => {
+export const NGINXGraphs: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     data,
     error,

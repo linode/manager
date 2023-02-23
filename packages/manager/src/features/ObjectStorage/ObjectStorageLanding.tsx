@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = DispatchProps & RouteComponentProps<{}>;
 
-export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
+export const ObjectStorageLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { replace } = props.history;
   const [mode, setMode] = React.useState<MODE>('creating');
@@ -219,7 +219,7 @@ const useBillingNoticeStyles = makeStyles((theme: Theme) => ({
 
 const NOTIFICATION_KEY = 'obj-billing-notification';
 
-export const BillingNotice: React.FC<{}> = React.memo(() => {
+export const BillingNotice: React.FC<React.PropsWithChildren<{}>> = React.memo(() => {
   const classes = useBillingNoticeStyles();
 
   const dispatch: Dispatch = useDispatch();

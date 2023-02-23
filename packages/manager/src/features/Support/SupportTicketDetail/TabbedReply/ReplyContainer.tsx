@@ -62,7 +62,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ReplyContainer: React.FC<CombinedProps> = (props) => {
+const ReplyContainer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { onSuccess, reloadAttachments, lastReply, ...rest } = props;

@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const AuthenticationSettings: React.FC = () => {
+export const AuthenticationSettings: React.FC<React.PropsWithChildren<unknown>> = () => {
   const classes = useStyles();
 
   const {

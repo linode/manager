@@ -15,7 +15,7 @@ const ImageCreate = React.lazy(
 
 type Props = RouteComponentProps<{}>;
 
-export const ImagesRoutes: React.FC<Props> = (props) => {
+export const ImagesRoutes: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     match: { path },
   } = props;

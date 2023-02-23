@@ -13,7 +13,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-export const NodeBalancerActionMenu: React.FC<CombinedProps> = (props) => {
+export const NodeBalancerActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesMdDown = useMediaQuery(theme.breakpoints.down('lg'));
 

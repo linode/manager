@@ -73,7 +73,7 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
-const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
+const LinodeThemeWrapper: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { children, shouldGetPreferences = true } = props;
 
   const toggleTheme = (value: ThemeChoice) => {
@@ -133,7 +133,7 @@ interface MemoizedThemeProviderProps {
   children: any;
 }
 
-const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = (props) => {
+const MemoizedThemeProvider: React.FC<React.PropsWithChildren<MemoizedThemeProviderProps>> = (props) => {
   const { themeChoice, toggleTheme, children } = props;
 
   const theme = React.useMemo(() => {

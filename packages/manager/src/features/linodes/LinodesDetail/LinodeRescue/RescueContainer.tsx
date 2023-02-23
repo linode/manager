@@ -9,7 +9,7 @@ export interface Props {
   linodeId: number;
 }
 
-export const RescueContainer: React.FC<Props> = (props) => {
+export const RescueContainer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodeId, open, onClose } = props;
   const linode = useExtendedLinode(linodeId);
   const isBareMetalInstance = linode?._type?.class === 'metal';
@@ -31,7 +31,7 @@ export const RescueContainer: React.FC<Props> = (props) => {
     />
   ) : (
     /** For normal Linodes, load the standard rescue dialog. */
-    <RescueDialog linodeId={linodeId} open={open} onClose={onClose} />
+    (<RescueDialog linodeId={linodeId} open={open} onClose={onClose} />)
   );
 };
 

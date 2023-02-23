@@ -39,7 +39,7 @@ export interface Props {
   clientID: number;
 }
 
-export const TopProcesses: React.FC<Props> = (props) => {
+export const TopProcesses: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const {
     topProcessesData,
@@ -156,7 +156,7 @@ interface TopProcessRowProps {
   mem: number;
 }
 
-export const TopProcessRow: React.FC<TopProcessRowProps> = React.memo(
+export const TopProcessRow: React.FC<React.PropsWithChildren<TopProcessRowProps>> = React.memo(
   (props) => {
     const { name, cpu, mem } = props;
 

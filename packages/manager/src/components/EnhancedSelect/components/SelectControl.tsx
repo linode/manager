@@ -5,7 +5,7 @@ import TextField from 'src/components/TextField';
 
 interface Props extends ControlProps<any, any> {}
 
-const SelectControl: React.FC<Props> = (props) => {
+const SelectControl: React.FC<React.PropsWithChildren<Props>> = (props) => {
   return (
     <TextField
       data-qa-enhanced-select={

@@ -7,7 +7,7 @@ interface Props {
   service: LongviewService;
 }
 
-export const LongviewServiceRow: React.FC<Props> = (props) => {
+export const LongviewServiceRow: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { service } = props;
 
   return (

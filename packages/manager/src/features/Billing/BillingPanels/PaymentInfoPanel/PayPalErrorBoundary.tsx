@@ -7,6 +7,7 @@ interface State {
 
 interface Props {
   renderError: (errorMsg: string) => JSX.Element;
+  children: React.ReactNode;
 }
 
 class PayPalErrorBoundary extends React.Component<Props, State> {

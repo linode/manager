@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DisplaySettings: React.FC<WithNotifications> = (props) => {
+export const DisplaySettings: React.FC<React.PropsWithChildren<WithNotifications>> = (props) => {
   const classes = useStyles();
 
   const { mutateAsync: updateProfile } = useMutateProfile();

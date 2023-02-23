@@ -24,7 +24,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
-const UserDetail: React.FC = () => {
+const UserDetail: React.FC<React.PropsWithChildren<unknown>> = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
   const location = useLocation<{ newUsername: string; success: boolean }>();
   const history = useHistory();

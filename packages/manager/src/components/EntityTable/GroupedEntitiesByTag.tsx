@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = ListProps;
 
-export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
+export const GroupedEntitiesByTag: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     data,
     entity,

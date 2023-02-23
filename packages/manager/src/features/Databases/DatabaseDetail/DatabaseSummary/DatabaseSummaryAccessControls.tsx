@@ -7,7 +7,7 @@ interface Props {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const DatabaseSummaryAccessControls: React.FC<Props> = (props) => {
+export const DatabaseSummaryAccessControls: React.FC<React.PropsWithChildren<Props>> = (props) => {
   // const databases = useDatabases();
   // const { databaseID } = props;
   // const thisDatabase = databases.databases.itemsById[databaseID];

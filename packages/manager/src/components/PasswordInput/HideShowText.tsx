@@ -56,4 +56,4 @@ class HideShowText extends React.Component<Props, State> {
   }
 }
 
-export default HideShowText as React.ComponentType<Props>;
+export default HideShowText as React.ComponentType<React.PropsWithChildren<Props>>;

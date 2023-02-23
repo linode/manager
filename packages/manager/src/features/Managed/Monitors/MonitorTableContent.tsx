@@ -21,7 +21,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
+export const MonitorTableContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     error,
     issues,
@@ -51,7 +51,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line
-    <>
+    (<>
       {monitors.map((monitor: ManagedServiceMonitor, idx: number) => (
         <MonitorRow
           key={`service-monitor-row-${idx}`}
@@ -62,7 +62,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = (props) => {
           openHistoryDrawer={openHistoryDrawer}
         />
       ))}
-    </>
+    </>)
   );
 };
 

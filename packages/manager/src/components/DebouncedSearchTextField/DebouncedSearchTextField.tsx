@@ -28,7 +28,7 @@ interface Props extends TextFieldProps {
 
 type CombinedProps = Props;
 
-const DebouncedSearch: React.FC<CombinedProps> = (props) => {
+const DebouncedSearch: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     className,
     isSearching,

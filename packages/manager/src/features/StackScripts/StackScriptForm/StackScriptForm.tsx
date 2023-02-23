@@ -95,7 +95,7 @@ const errorResources = {
 
 // exported as a class component, otherwise no display name
 // appears in tests
-export const StackScriptForm: React.FC<CombinedProps> = (props) => {
+export const StackScriptForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     currentUser,
     label,

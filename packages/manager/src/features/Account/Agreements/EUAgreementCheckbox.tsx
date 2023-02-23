@@ -14,7 +14,7 @@ interface Props {
   ) => void;
 }
 
-const EUAgreementCheckbox: React.FC<Props> = (props) => {
+const EUAgreementCheckbox: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { checked, onChange, className, centerCheckbox } = props;
 
   const checkboxStyle = centerCheckbox

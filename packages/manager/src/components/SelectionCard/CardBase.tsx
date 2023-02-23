@@ -82,7 +82,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const CardBase: React.FC<CombinedProps> = (props) => {
+const CardBase: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { renderIcon, heading, subheadings, renderVariant } = props;
 
   const classes = useStyles();

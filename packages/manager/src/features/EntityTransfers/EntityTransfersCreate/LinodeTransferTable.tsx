@@ -19,7 +19,7 @@ interface Props {
   handleToggle: (linode: Entity) => void;
 }
 
-export const LinodeTransferTable: React.FC<Props> = (props) => {
+export const LinodeTransferTable: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { handleRemove, handleSelect, handleToggle, selectedLinodes } = props;
   const [searchText, setSearchText] = React.useState('');
 
@@ -104,7 +104,7 @@ interface RowProps {
   handleToggleCheck: () => void;
 }
 
-const LinodeRow: React.FC<RowProps> = (props) => {
+const LinodeRow: React.FC<React.PropsWithChildren<RowProps>> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
   const { typesMap } = useTypes();
   const displayRegion = dcDisplayNames[linode.region] ?? linode.region;

@@ -93,7 +93,7 @@ export interface Props extends PromotionalOffer {
 
 type CombinedProps = Props;
 
-export const PromotionalOfferCard: React.FC<CombinedProps> = (props) => {
+export const PromotionalOfferCard: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { fullWidth, ...promotionalOfferAttributes } = props;

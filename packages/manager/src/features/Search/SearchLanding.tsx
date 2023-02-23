@@ -88,7 +88,7 @@ const splitWord = (word: any) => {
   return word;
 };
 
-export const SearchLanding: React.FC<CombinedProps> = (props) => {
+export const SearchLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { entities, errors, search, searchResultsByEntity } = props;
 
   const classes = useStyles();

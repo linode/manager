@@ -47,7 +47,7 @@ const options = getOptions(process.env);
 
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.
-const EnvironmentToggleTool: React.FC<{}> = () => {
+const EnvironmentToggleTool: React.FC<React.PropsWithChildren<{}>> = () => {
   const [selectedOption, setSelectedOption] = React.useState(0);
 
   const localStorageEnv = storage.devToolsEnv.get();

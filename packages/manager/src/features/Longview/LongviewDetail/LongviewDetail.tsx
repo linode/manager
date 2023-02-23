@@ -64,7 +64,7 @@ export type CombinedProps = RouteComponentProps<{ id: string }> &
   LVDataProps &
   DispatchProps;
 
-export const LongviewDetail: React.FC<CombinedProps> = (props) => {
+export const LongviewDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     client,
     longviewClientsLastUpdated,

@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
 
 type CombinedProps = Props;
 
-const PasswordInput: React.FC<CombinedProps> = (props) => {
+const PasswordInput: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
       props.onChange(e);

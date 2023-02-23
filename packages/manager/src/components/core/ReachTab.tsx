@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Tab: React.FC<TabProps & { className?: string }> = ({
+const Tab: React.FC<React.PropsWithChildren<TabProps & { className?: string }>> = ({
   children,
   className,
   ...rest

@@ -21,7 +21,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const EnableTwoFactorForm: React.FC<CombinedProps> = (props) => {
+export const EnableTwoFactorForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [token, setToken] = React.useState<string>('');

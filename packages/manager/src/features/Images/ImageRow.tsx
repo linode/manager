@@ -15,7 +15,7 @@ export interface ImageWithEvent extends Image {
 
 type CombinedProps = Handlers & ImageWithEvent;
 
-const ImageRow: React.FC<CombinedProps> = (props) => {
+const ImageRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     created,
     description,
@@ -120,10 +120,10 @@ const progressFromEvent = (e?: Event) => {
     : undefined;
 };
 
-const ProgressDisplay: React.FC<{
+const ProgressDisplay: React.FC<React.PropsWithChildren<{
   progress: undefined | number;
   text: string;
-}> = (props) => {
+}>> = (props) => {
   const { progress, text } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 

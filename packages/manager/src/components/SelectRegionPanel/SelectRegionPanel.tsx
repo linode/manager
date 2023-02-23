@@ -56,7 +56,7 @@ export const regionHelperText = (onClick?: () => void) => (
   </Typography>
 );
 
-const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = (props) => {
+const SelectRegionPanel: React.FC<React.PropsWithChildren<Props & WithStyles<ClassNames>>> = (props) => {
   const {
     classes,
     disabled,

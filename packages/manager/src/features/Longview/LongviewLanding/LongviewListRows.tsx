@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LongviewListRows: React.FC<CombinedProps> = (props) => {
+const LongviewListRows: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     longviewClientsData,
     openPackageDrawer,
@@ -24,7 +24,7 @@ const LongviewListRows: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line
-    <React.Fragment>
+    (<React.Fragment>
       {longviewClientsData.map((eachClient) => {
         return (
           <ClientRow
@@ -40,7 +40,7 @@ const LongviewListRows: React.FC<CombinedProps> = (props) => {
           />
         );
       })}
-    </React.Fragment>
+    </React.Fragment>)
   );
 };
 

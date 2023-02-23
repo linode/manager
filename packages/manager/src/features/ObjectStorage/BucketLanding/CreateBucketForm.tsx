@@ -47,7 +47,7 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
-export const CreateBucketForm: React.FC<Props> = (props) => {
+export const CreateBucketForm: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { isRestrictedUser, onClose, onSuccess } = props;
 
   const {

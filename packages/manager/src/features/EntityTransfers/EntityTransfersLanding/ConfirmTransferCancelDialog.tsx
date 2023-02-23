@@ -30,7 +30,7 @@ export interface Props {
   entities?: TransferEntities;
 }
 
-export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
+export const ConfirmTransferCancelDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, open, token, entities } = props;
 
   const classes = useStyles();

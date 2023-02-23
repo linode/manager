@@ -31,7 +31,7 @@ const useStyles = makeStyles(() => ({
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-const ConfigActionMenu: React.FC<CombinedProps> = (props) => {
+const ConfigActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { readOnly, history, linodeId, config } = props;
 
   const classes = useStyles();

@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const StatusBanners: React.FC<{}> = (_) => {
+export const StatusBanners: React.FC<React.PropsWithChildren<{}>> = (_) => {
   const { data: incidentsData } = useIncidentQuery();
   const incidents = incidentsData?.incidents ?? [];
 
@@ -47,7 +47,7 @@ export const StatusBanners: React.FC<{}> = (_) => {
 
   return (
     // eslint-disable-next-line
-    <>
+    (<>
       {incidents.map((thisIncident) => {
         const mostRecentUpdate = thisIncident.incident_updates.filter(
           (thisUpdate) => thisUpdate.status !== 'postmortem'
@@ -63,7 +63,7 @@ export const StatusBanners: React.FC<{}> = (_) => {
           />
         );
       })}
-    </>
+    </>)
   );
 };
 
@@ -76,7 +76,7 @@ export interface IncidentProps {
   impact: IncidentImpact;
 }
 
-export const IncidentBanner: React.FC<IncidentProps> = React.memo((props) => {
+export const IncidentBanner: React.FC<React.PropsWithChildren<IncidentProps>> = React.memo((props) => {
   const { message, status: _status, title, impact, href } = props;
   const status = _status ?? '';
   const classes = useStyles();

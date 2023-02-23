@@ -7,7 +7,7 @@ interface Props {
   connection: LongviewPort;
 }
 
-export const ConnectionRow: React.FC<Props> = (props) => {
+export const ConnectionRow: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { connection } = props;
 
   return (

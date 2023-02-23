@@ -33,7 +33,7 @@ export interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
-export const StackScriptRow: React.FC<CombinedProps> = (props) => {
+export const StackScriptRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     classes,
     label,
@@ -78,7 +78,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
   };
 
   return (
-    <TableRow
+    (<TableRow
       data-qa-table-row={label}
       ariaLabel={label}
       className={classes.row}
@@ -100,11 +100,11 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
         </TableCell>
       </Hidden>
       {communityStackScript ? null : ( // We hide the "Status" column in the "Community StackScripts" tab of the StackScripts landing page since all of those are public.
-        <Hidden lgDown>
+        (<Hidden lgDown>
           <TableCell data-qa-stackscript-status>
             {isPublic ? 'Public' : 'Private'}
           </TableCell>
-        </Hidden>
+        </Hidden>)
       )}
       <TableCell actionCell className={classes.row}>
         <StackScriptsActionMenu
@@ -119,7 +119,7 @@ export const StackScriptRow: React.FC<CombinedProps> = (props) => {
           category={category}
         />
       </TableCell>
-    </TableRow>
+    </TableRow>)
   );
 };
 

@@ -73,7 +73,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
+export const AddPaymentMethodDrawer: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, open, paymentMethods } = props;
 
   const classes = useStyles();

@@ -93,7 +93,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Referrals: React.FC<{}> = () => {
+export const Referrals: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
   const {
     data: profile,

@@ -60,7 +60,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ImageUploadSuccessDialog: React.FC<Props> = (props) => {
+export const ImageUploadSuccessDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { isOpen, onClose, command, analyticsKey } = props;
   const classes = useStyles();
 

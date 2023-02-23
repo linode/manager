@@ -83,7 +83,7 @@ export type CombinedProps = Props &
 
 type SortKey = 'name' | 'cpu' | 'ram' | 'swap' | 'load' | 'network' | 'storage';
 
-export const LongviewClients: React.FC<CombinedProps> = (props) => {
+export const LongviewClients: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { getLongviewClients } = props;
 
   const { data: profile } = useProfile();

@@ -69,7 +69,7 @@ interface Props {
 
 type CombinedProps = Props & DispatchProps & LVDataProps;
 
-export const LongviewClientHeader: React.FC<CombinedProps> = (props) => {
+export const LongviewClientHeader: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     clientID,
     clientLabel,

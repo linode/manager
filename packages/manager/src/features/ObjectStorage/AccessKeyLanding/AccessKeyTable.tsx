@@ -38,7 +38,7 @@ export interface Props {
   openDrawer: OpenAccessDrawer;
 }
 
-export const AccessKeyTable: React.FC<Props> = (props) => {
+export const AccessKeyTable: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     isRestrictedUser,
     openRevokeDialog,

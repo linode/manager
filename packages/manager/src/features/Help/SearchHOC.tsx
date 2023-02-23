@@ -112,7 +112,7 @@ export const cleanDescription = (description: string): string => {
 };
 
 export default (options: SearchOptions) => (
-  Component: React.ComponentType<any>
+  Component: React.ComponentType<React.PropsWithChildren<any>>
 ) => {
   const { hitsPerPage, highlight } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {

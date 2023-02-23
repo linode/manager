@@ -58,7 +58,7 @@ export const generateCalendar = (timezone: string, issues: ManagedIssue[]) => {
   return days;
 };
 
-export const IssueCalendar: React.FC<Props> = (props) => {
+export const IssueCalendar: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { issues } = props;
   const { data: profile } = useProfile();
   const timezone = getUserTimezone(profile);

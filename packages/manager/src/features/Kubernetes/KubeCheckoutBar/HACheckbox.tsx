@@ -46,7 +46,7 @@ export interface Props {
   ) => void;
 }
 
-const HACheckbox: React.FC<Props> = (props) => {
+const HACheckbox: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { checked, onChange } = props;
   const classes = useStyles();
 

@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = Props & ReplyProps;
 
-const TabbedReply: React.FC<CombinedProps> = (props) => {
+const TabbedReply: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { innerClass, rootClass, value, error, ...rest } = props;
 
@@ -58,7 +58,7 @@ const TabbedReply: React.FC<CombinedProps> = (props) => {
 };
 
 /** only update on error and value change */
-const memoized = (component: React.FC<CombinedProps>) =>
+const memoized = (component: React.FC<React.PropsWithChildren<CombinedProps>>) =>
   React.memo<CombinedProps>(component, (prevProps, nextProps) => {
     return (
       prevProps.error === nextProps.error &&

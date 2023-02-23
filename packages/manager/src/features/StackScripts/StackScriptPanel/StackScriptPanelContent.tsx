@@ -50,7 +50,7 @@ const defaultDialogState = {
   stackScriptLabel: '',
 };
 
-export const StackScriptPanelContent: React.FC<CombinedProps> = (props) => {
+export const StackScriptPanelContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { currentFilter } = props;
 
   const [mounted, setMounted] = React.useState<boolean>(false);

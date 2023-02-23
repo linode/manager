@@ -15,7 +15,7 @@ import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & LVDataProps & WithTheme;
 
-const NetworkGauge: React.FC<CombinedProps> = (props) => {
+const NetworkGauge: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     longviewClientDataLoading: loading,
     longviewClientDataError: error,

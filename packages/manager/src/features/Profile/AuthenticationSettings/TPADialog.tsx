@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const TPADialog: React.FC<CombinedProps> = (props) => {
+const TPADialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const flags = useFlags();
 

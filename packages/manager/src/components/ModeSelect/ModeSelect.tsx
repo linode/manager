@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ModeSelect: React.FC<CombinedProps> = ({
+export const ModeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = ({
   modes,
   onChange,
   selected,

@@ -16,7 +16,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const CredentialTableContent: React.FC<CombinedProps> = (props) => {
+export const CredentialTableContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { error, loading, credentials, openDialog, openForEdit } = props;
   if (loading) {
     return <TableRowLoading columns={3} />;

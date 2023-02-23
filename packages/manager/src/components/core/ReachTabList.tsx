@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const TabList: React.FC<TabListProps & { className?: string }> = ({
+const TabList: React.FC<React.PropsWithChildren<TabListProps & { className?: string }>> = ({
   children,
   className,
   ...rest

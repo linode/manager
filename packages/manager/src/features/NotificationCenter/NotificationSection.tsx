@@ -89,7 +89,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const NotificationSection: React.FC<Props> = (props) => {
+export const NotificationSection: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const {
@@ -121,7 +121,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {isActualNotificationContainer && content.length === 0 ? null : (
         <>
           <Hidden smDown>
@@ -170,7 +170,7 @@ export const NotificationSection: React.FC<Props> = (props) => {
           </Hidden>
         </>
       )}
-    </>
+    </>)
   );
 };
 
@@ -185,7 +185,7 @@ interface BodyProps {
   loading: boolean;
 }
 
-const ContentBody: React.FC<BodyProps> = React.memo((props) => {
+const ContentBody: React.FC<React.PropsWithChildren<BodyProps>> = React.memo((props) => {
   const classes = useStyles();
 
   const { header, content, count, emptyMessage, loading } = props;
@@ -204,7 +204,7 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
 
   return _content.length > 0 ? (
     // eslint-disable-next-line
-    <>
+    (<>
       {_content.map((thisItem) => (
         <div
           className={classes.notificationItem}
@@ -231,7 +231,7 @@ const ContentBody: React.FC<BodyProps> = React.memo((props) => {
           </button>
         </Box>
       ) : null}
-    </>
+    </>)
   ) : header === 'Events' ? (
     <Typography className={classes.emptyMessage} variant="body1">
       {emptyMessage

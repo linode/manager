@@ -27,7 +27,7 @@ interface Props {
   height: number;
 }
 
-export const StatsPanel: React.FC<Props> = (props) => {
+export const StatsPanel: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { height, loading, renderBody, title } = props;

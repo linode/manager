@@ -84,7 +84,7 @@ const humanizeLargeData = (value: number) => {
   return value;
 };
 
-const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
+const LineGraph: React.FC<React.PropsWithChildren<CombinedProps>> = (props: CombinedProps) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
@@ -287,7 +287,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
   return (
     // Allow `tabIndex` on `<div>` because it represents an interactive element.
     // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
-    <div
+    (<div
       className={classes.wrapper}
       tabIndex={tabIndex ?? 0}
       role="graphics-document"
@@ -393,7 +393,7 @@ const LineGraph: React.FC<CombinedProps> = (props: CombinedProps) => {
           </Table>
         </div>
       )}
-    </div>
+    </div>)
   );
 };
 

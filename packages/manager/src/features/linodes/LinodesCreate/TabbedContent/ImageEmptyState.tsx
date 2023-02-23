@@ -16,7 +16,7 @@ interface Props {
   className?: string;
 }
 
-export const ImageEmptyState: React.FC<Props> = (props) => {
+export const ImageEmptyState: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { errorText, className } = props;
   const classes = useStyles();
 

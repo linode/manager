@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const DNSResolvers: React.FC<Props> = (props) => {
+export const DNSResolvers: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { region } = props;
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];

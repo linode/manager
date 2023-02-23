@@ -31,7 +31,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const RenderProgressEvent: React.FC<Props> = (props) => {
+export const RenderProgressEvent: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { event, onClose } = props;
   const eventClasses = useEventStyles();
   const classes = useStyles();

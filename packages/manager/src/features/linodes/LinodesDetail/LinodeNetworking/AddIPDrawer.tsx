@@ -96,7 +96,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AddIPDrawer: React.FC<CombinedProps> = (props) => {
+const AddIPDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const [selectedIPv4, setSelectedIPv4] = React.useState<IPType | null>(null);

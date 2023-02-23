@@ -29,7 +29,7 @@ interface ContentProps {
   openConfirmationModal: () => void;
 }
 
-export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
+export const ObjectStorageContent: React.FC<React.PropsWithChildren<ContentProps>> = (props) => {
   const { object_storage, openConfirmationModal } = props;
 
   if (object_storage !== 'disabled') {
@@ -71,7 +71,7 @@ export const ObjectStorageContent: React.FC<ContentProps> = (props) => {
   );
 };
 
-export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
+export const EnableObjectStorage: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { object_storage } = props;
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();

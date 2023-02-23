@@ -53,7 +53,7 @@ const renderActions = (
   </ActionsPanel>
 );
 
-export const DatabaseSettingsDeleteClusterDialog: React.FC<CombinedProps> = (
+export const DatabaseSettingsDeleteClusterDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   const {

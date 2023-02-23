@@ -48,7 +48,7 @@ interface Props {
 
 type CombinedProps = RouteComponentProps & Props & LinodesProps;
 
-const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
+const FirewallLinodesLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { firewallID, firewallLabel, disabled } = props;
   const classes = useStyles();
   const {

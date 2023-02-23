@@ -7,7 +7,7 @@ interface State {
   info?: any;
 }
 
-export default <T extends {}>(Component: React.ComponentType) => {
+export default <T extends {}>(Component: React.ComponentType<React.PropsWithChildren<unknown>>) => {
   class LinodeDetailErrorBoundary extends React.Component<T, State> {
     state: State = {};
 

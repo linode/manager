@@ -5,7 +5,7 @@ import Link from 'src/components/Link';
 import { useStyles } from './iconStyles';
 import TopMenuIcon from './TopMenuIcon';
 
-export const Help: React.FC<{ className?: string }> = ({ className }) => {
+export const Help: React.FC<React.PropsWithChildren<{ className?: string }>> = ({ className }) => {
   const classes = useStyles();
   return (
     <Link

@@ -102,7 +102,7 @@ const linkGAEventTemplate = {
   action: 'Click:link',
 };
 
-const DatabaseEmptyState: React.FC = () => {
+const DatabaseEmptyState: React.FC<React.PropsWithChildren<unknown>> = () => {
   const classes = useStyles();
   const history = useHistory();
 

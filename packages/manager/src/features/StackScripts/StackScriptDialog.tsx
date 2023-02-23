@@ -21,7 +21,7 @@ interface Props {
 
 type CombinedProps = DispatchProps & Props;
 
-export const StackScriptDialog: React.FC<CombinedProps> = (props) => {
+export const StackScriptDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { stackScriptId, open, closeDrawer } = props;
 
   const [stackScript, setStackScript] = React.useState<StackScript | undefined>(

@@ -77,7 +77,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
+export const AppDetailDrawer: React.FunctionComponent<React.PropsWithChildren<Props>> = (props) => {
   const { stackScriptLabel, open, onClose } = props;
   const classes = useStyles();
   const { oneClickAppsDocsOverride } = useFlags();

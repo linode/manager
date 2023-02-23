@@ -63,7 +63,7 @@ interface Props {
 
 export type CombinedProps = Props & DispatchProps;
 
-export const BucketLanding: React.FC<CombinedProps> = (props) => {
+export const BucketLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isRestrictedUser, openBucketDrawer } = props;
 
   const {
@@ -279,19 +279,19 @@ export const BucketLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const RenderLoading: React.FC<{}> = () => {
+const RenderLoading: React.FC<React.PropsWithChildren<{}>> = () => {
   return <CircleProgress />;
 };
 
-const RenderError: React.FC<{}> = () => {
+const RenderError: React.FC<React.PropsWithChildren<{}>> = () => {
   return (
     <ErrorState errorText="There was an error retrieving your buckets. Please reload and try again." />
   );
 };
 
-const RenderEmpty: React.FC<{
+const RenderEmpty: React.FC<React.PropsWithChildren<{
   onClick: () => void;
-}> = (props) => {
+}>> = (props) => {
   const classes = useStyles();
 
   return (
@@ -344,7 +344,7 @@ interface UnavailableClustersDisplayProps {
   unavailableClusters: ObjectStorageCluster[];
 }
 
-const UnavailableClustersDisplay: React.FC<UnavailableClustersDisplayProps> = React.memo(
+const UnavailableClustersDisplay: React.FC<React.PropsWithChildren<UnavailableClustersDisplayProps>> = React.memo(
   ({ unavailableClusters }) => {
     return (
       <Banner
@@ -360,7 +360,7 @@ interface BannerProps {
   regionsAffected: string[];
 }
 
-const Banner: React.FC<BannerProps> = React.memo(({ regionsAffected }) => {
+const Banner: React.FC<React.PropsWithChildren<BannerProps>> = React.memo(({ regionsAffected }) => {
   const moreThanOneRegionAffected = regionsAffected.length > 1;
 
   return (

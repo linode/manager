@@ -40,7 +40,7 @@ const emptyContactPayload: ContactPayload = {
   group: '',
 };
 
-const ContactsDrawer: React.FC<CombinedProps> = (props) => {
+const ContactsDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isOpen, closeDrawer, mode, contact, groups } = props;
 
   const isEditing = mode === 'edit' && contact;

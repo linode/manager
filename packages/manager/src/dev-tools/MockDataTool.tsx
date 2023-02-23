@@ -11,7 +11,7 @@ const options: { label: string; key: keyof MockData }[] = [
   { label: 'Volumes', key: 'volume' },
 ];
 
-const MockDataTool: React.FC<{}> = () => {
+const MockDataTool: React.FC<React.PropsWithChildren<{}>> = () => {
   // Keep track of mockData state locally to this component, so it can be referenced during render.
   const [localMockData, setLocalMockData] = React.useState<MockData>(
     mockDataController.mockData

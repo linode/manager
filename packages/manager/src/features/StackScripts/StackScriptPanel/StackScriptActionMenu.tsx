@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
+const StackScriptActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();
@@ -105,7 +105,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {category === 'account' || matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -125,7 +125,7 @@ const StackScriptActionMenu: React.FC<CombinedProps> = (props) => {
           })}
         </Hidden>
       )}
-    </>
+    </>)
   );
 };
 

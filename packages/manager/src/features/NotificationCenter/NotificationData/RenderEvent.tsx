@@ -52,7 +52,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const RenderEvent: React.FC<Props> = (props) => {
+export const RenderEvent: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { event, onClose } = props;

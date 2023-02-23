@@ -25,7 +25,7 @@ interface Props {
   onClose: () => void;
 }
 
-const PromoDialog: React.FC<Props> = (props) => {
+const PromoDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { open, onClose } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();

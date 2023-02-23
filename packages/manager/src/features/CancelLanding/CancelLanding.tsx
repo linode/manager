@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = FeatureFlagConsumerProps;
 
-export const CancelLanding: React.FC<CombinedProps> = (props) => {
+export const CancelLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { flags } = props;
   const classes = useStyles();
   const location = useLocation();

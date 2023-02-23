@@ -33,7 +33,7 @@ interface Props extends ActionHandlers {
   userCanModifyClient: boolean;
 }
 
-export const LongviewClientInstructions: React.FC<Props> = (props) => {
+export const LongviewClientInstructions: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     clientID,
     clientLabel,

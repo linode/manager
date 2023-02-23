@@ -47,7 +47,7 @@ interface Props {
   linodeId: number;
 }
 
-const CautionNotice: React.FC<Props> = (props) => {
+const CautionNotice: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { data: account } = useAccount();
 

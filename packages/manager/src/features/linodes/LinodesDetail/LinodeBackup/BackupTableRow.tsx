@@ -41,7 +41,7 @@ const statusIconMap: Record<LinodeBackup['status'], Status> = {
   userAborted: 'error',
 };
 
-const BackupTableRow: React.FC<Props> = (props) => {
+const BackupTableRow: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { backup, disabled, handleRestore } = props;
 
   const onDeploy = () => {

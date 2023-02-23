@@ -22,10 +22,10 @@ export interface DefaultProps {
  * and pass regions through there.
  */
 type Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => React.FC<unknown>;
+  Component: React.ComponentType<React.PropsWithChildren<DefaultProps>>
+) => React.FC<React.PropsWithChildren<unknown>>;
 const regionsContainer: Wrapper = (
-  Component: React.ComponentType<DefaultProps>
+  Component: React.ComponentType<React.PropsWithChildren<DefaultProps>>
 ) => (props) => {
   const { data, error, isLoading, dataUpdatedAt } = useRegionsQuery();
   return (

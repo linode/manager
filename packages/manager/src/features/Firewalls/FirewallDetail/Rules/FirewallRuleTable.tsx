@@ -193,7 +193,7 @@ interface Props extends RowActionHandlers {
 
 type CombinedProps = Props;
 
-const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
+const FirewallRuleTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     category,
     openRuleDrawer,
@@ -383,7 +383,7 @@ type FirewallRuleTableRowProps = RuleRow &
     disabled: boolean;
   };
 
-const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
+const FirewallRuleTableRow: React.FC<React.PropsWithChildren<FirewallRuleTableRowProps>> = React.memo(
   (props) => {
     const classes = useStyles();
     const theme: Theme = useTheme();
@@ -521,7 +521,7 @@ const policyOptions: Item<FirewallPolicyType>[] = [
   { label: 'Drop', value: 'DROP' },
 ];
 
-export const PolicyRow: React.FC<PolicyRowProps> = React.memo((props) => {
+export const PolicyRow: React.FC<React.PropsWithChildren<PolicyRowProps>> = React.memo((props) => {
   const { category, policy, disabled, handlePolicyChange } = props;
   const classes = useStyles();
 
@@ -580,7 +580,7 @@ interface ConditionalErrorProps {
   errors?: FirewallRuleError[];
 }
 
-export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
+export const ConditionalError: React.FC<React.PropsWithChildren<ConditionalErrorProps>> = React.memo(
   (props) => {
     const classes = useStyles();
 
@@ -591,7 +591,7 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
 
     return (
       // eslint-disable-next-line react/jsx-no-useless-fragment
-      <>
+      (<>
         {uniqueByFormField.map((thisError) => {
           if (formField !== thisError.formField || !thisError.reason) {
             return null;
@@ -602,7 +602,7 @@ export const ConditionalError: React.FC<ConditionalErrorProps> = React.memo(
             </div>
           );
         })}
-      </>
+      </>)
     );
   }
 );

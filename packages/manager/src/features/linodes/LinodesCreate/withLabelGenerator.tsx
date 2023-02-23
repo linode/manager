@@ -24,7 +24,7 @@ export interface LabelState {
 //     names anymore, even if additional selections are made, because once they've touched the label input field,
 //     they may have given it a custom name, which we don't want to erase.
 //
-export const withLabelGenerator = (Component: React.ComponentType<any>) => {
+export const withLabelGenerator = (Component: React.ComponentType<React.PropsWithChildren<any>>) => {
   class WrappedComponent extends React.PureComponent<any, LabelState> {
     state: LabelState = {
       customLabel: '',

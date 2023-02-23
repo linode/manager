@@ -11,7 +11,7 @@ import { baseGaugeProps, BaseProps as Props } from './common';
 
 type CombinedProps = Props & WithTheme & LVDataProps;
 
-const SwapGauge: React.FC<CombinedProps> = (props) => {
+const SwapGauge: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     longviewClientDataError: error,
     longviewClientDataLoading: loading,

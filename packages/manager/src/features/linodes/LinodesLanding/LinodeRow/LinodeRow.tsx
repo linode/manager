@@ -75,7 +75,7 @@ export type CombinedProps = Props &
   WithNotifications &
   StyleProps;
 
-export const LinodeRow: React.FC<CombinedProps> = (props) => {
+export const LinodeRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     // linode props
     backups,
@@ -261,11 +261,11 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(LinodeRow);
 
-export const RenderFlag: React.FC<{
+export const RenderFlag: React.FC<React.PropsWithChildren<{
   mutationAvailable: boolean;
   linodeNotifications: Notification[];
   classes: any;
-}> = (props) => {
+}>> = (props) => {
   /*
    * Render either a flag for if the Linode has a notification
    * or if it has a pending mutation available. Mutations take
@@ -283,13 +283,13 @@ export const RenderFlag: React.FC<{
   if (linodeNotifications.length > 0) {
     return (
       // eslint-disable-next-line
-      <>
+      (<>
         {linodeNotifications.map((notification, idx) => (
           <Tooltip key={idx} title={notification.message}>
             <Flag className={classes.flag} />
           </Tooltip>
         ))}
-      </>
+      </>)
     );
   }
   return null;
@@ -297,11 +297,11 @@ export const RenderFlag: React.FC<{
 
 RenderFlag.displayName = `RenderFlag`;
 
-export const ProgressDisplay: React.FC<{
+export const ProgressDisplay: React.FC<React.PropsWithChildren<{
   className?: string;
   progress: null | number;
   text: string | undefined;
-}> = (props) => {
+}>> = (props) => {
   const { progress, text, className } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 

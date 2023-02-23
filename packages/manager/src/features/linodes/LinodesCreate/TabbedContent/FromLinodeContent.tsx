@@ -32,7 +32,7 @@ export type CombinedProps = CloneFormStateHandlers &
   ReduxStateProps &
   WithLinodesTypesRegionsAndImages;
 
-export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
+export const FromLinodeContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {
@@ -62,7 +62,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line
-    <React.Fragment>
+    (<React.Fragment>
       {linodesData && linodesData.length === 0 ? (
         <Grid item className={`${classes.main} mlMain py0`}>
           <Paper>
@@ -96,7 +96,7 @@ export const FromLinodeContent: React.FC<CombinedProps> = (props) => {
           />
         </Grid>
       )}
-    </React.Fragment>
+    </React.Fragment>)
   );
 };
 

@@ -76,7 +76,7 @@ interface Form {
 
 export type CombinedProps = Props;
 
-const FirewallRuleDrawer: React.FC<CombinedProps> = (props) => {
+const FirewallRuleDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isOpen, onClose, category, mode, ruleToModify } = props;
 
   // Custom IPs are tracked separately from the form. The <MultipleIPs />
@@ -215,7 +215,7 @@ interface FirewallRuleFormProps extends FormikProps<Form> {
   ruleErrors?: FirewallRuleError[];
 }
 
-const FirewallRuleForm: React.FC<FirewallRuleFormProps> = React.memo(
+const FirewallRuleForm: React.FC<React.PropsWithChildren<FirewallRuleFormProps>> = React.memo(
   (props) => {
     const classes = useStyles();
 

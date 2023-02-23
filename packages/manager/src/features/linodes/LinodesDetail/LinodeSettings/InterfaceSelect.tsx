@@ -71,7 +71,7 @@ export interface ExtendedInterface extends Omit<Interface, 'purpose'> {
   purpose: ExtendedPurpose;
 }
 
-export const InterfaceSelect: React.FC<Props> = (props) => {
+export const InterfaceSelect: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const {

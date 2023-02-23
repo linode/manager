@@ -64,7 +64,7 @@ type CombinedProps = Props &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
-const LinodeControls: React.FC<CombinedProps> = (props) => {
+const LinodeControls: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { classes, linode, updateLinode, breadcrumbProps } = props;
 
   const {

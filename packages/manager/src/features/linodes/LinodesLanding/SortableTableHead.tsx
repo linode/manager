@@ -76,7 +76,7 @@ interface Props {
 
 type CombinedProps = Props & Omit<OrderByProps, 'data'>;
 
-const SortableTableHead: React.FC<CombinedProps> = (props) => {
+const SortableTableHead: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

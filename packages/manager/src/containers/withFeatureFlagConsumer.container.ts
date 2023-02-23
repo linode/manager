@@ -19,7 +19,7 @@ export interface FeatureFlagConsumerProps {
 // We have to provide an HOC around the `withLDConsumer` HOC in order to retrieve mock flags
 // for the custom dev tools.
 export const withFeatureFlagConsumer = (
-  Component: React.ComponentType<any>
+  Component: React.ComponentType<React.PropsWithChildren<any>>
 ) => {
   class WrappedComponent extends React.Component<StateProps & LDProps> {
     render() {

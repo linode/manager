@@ -13,7 +13,7 @@ export interface Props extends Partial<BaseSelectProps> {
   handleChange: (selected: number[]) => void;
 }
 
-export const LinodeMultiSelect: React.FC<Props> = (props) => {
+export const LinodeMultiSelect: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     allowedRegions,
     errorText,

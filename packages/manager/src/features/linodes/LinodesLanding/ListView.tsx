@@ -31,7 +31,7 @@ export interface ExtendedLinodeWithPlan
 
 type CombinedProps = Props & PaginationProps;
 
-export const ListView: React.FC<CombinedProps> = (props) => {
+export const ListView: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { data, openDialog, openPowerActionDialog } = props;
 
   const notificationContext = React.useContext(_notificationContext);
@@ -45,7 +45,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line
-    <>
+    (<>
       {/* @todo: fix this "any" typing once https://github.com/linode/manager/pull/6999 is merged. */}
       {data.map((linode: ExtendedLinodeWithPlan, idx: number) => (
         <LinodeRow
@@ -73,7 +73,7 @@ export const ListView: React.FC<CombinedProps> = (props) => {
           openPowerActionDialog={openPowerActionDialog}
         />
       ))}
-    </>
+    </>)
   );
 };
 

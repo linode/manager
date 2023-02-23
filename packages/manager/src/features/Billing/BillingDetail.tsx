@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = SetDocsProps & RouteComponentProps<{}>;
 
-export const BillingDetail: React.FC<CombinedProps> = (props) => {
+export const BillingDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     data: paymentMethods,
     isLoading: paymentMethodsLoading,

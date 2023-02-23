@@ -90,7 +90,7 @@ interface Props {
 
 const chartHeight = 160;
 
-const LinodeSummary: React.FC<Props> = (props) => {
+const LinodeSummary: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { linodeCreated, isBareMetalInstance } = props;
   const { linodeId } = useParams<{ linodeId: string }>();
   const id = Number(linodeId);

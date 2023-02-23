@@ -46,7 +46,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AccessKeyMenu: React.FC<CombinedProps> = (props) => {
+const AccessKeyMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { openRevokeDialog, objectStorageKey, openDrawer } = props;
 

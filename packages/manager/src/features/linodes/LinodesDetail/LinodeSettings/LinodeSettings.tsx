@@ -13,7 +13,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeSettings: React.FC<CombinedProps> = (props) => {
+const LinodeSettings: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isBareMetalInstance } = props;
 
   return (

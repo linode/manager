@@ -77,7 +77,7 @@ interface Props {
 
 type CombinedProps = Props & WithTypesAndImages;
 
-const MigrateLanding: React.FC<CombinedProps> = (props) => {
+const MigrateLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { linodeID, notifications, onClose, open } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();

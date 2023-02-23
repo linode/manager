@@ -12,7 +12,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const VolumesActionsPanel: React.FC<CombinedProps> = ({
+const VolumesActionsPanel: React.FC<React.PropsWithChildren<CombinedProps>> = ({
   onSubmit,
   isSubmitting,
   onCancel,

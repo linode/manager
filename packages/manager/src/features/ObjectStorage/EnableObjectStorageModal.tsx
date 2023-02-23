@@ -12,7 +12,7 @@ export interface Props {
   handleSubmit: () => void;
 }
 
-export const EnableObjectStorageModal: React.FC<Props> = ({
+export const EnableObjectStorageModal: React.FC<React.PropsWithChildren<Props>> = ({
   open,
   onClose,
   handleSubmit,

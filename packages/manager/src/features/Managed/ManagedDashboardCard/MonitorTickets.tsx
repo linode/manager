@@ -30,7 +30,7 @@ interface Props {
   issues: ExtendedIssue[];
 }
 
-export const MonitorTickets: React.FC<Props> = (props) => {
+export const MonitorTickets: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { issues } = props;
   const classes = useStyles();
   const history = useHistory();

@@ -31,13 +31,13 @@ const renderEntityLink = (ticket: SupportTicket) => {
        * Ticket has a labeled entity, but the entity no longer exists (or there was some other problem).
        * Include the label but don't make it a clickable link.
        */
-      <Typography>{ticket.entity.label}</Typography>
+      (<Typography>{ticket.entity.label}</Typography>)
     )
   ) : /** This ticket doesn't have an entity; leave the link column blank. */
   null;
 };
 
-const TicketRow: React.FC<Props> = ({ ticket }) => {
+const TicketRow: React.FC<React.PropsWithChildren<Props>> = ({ ticket }) => {
   const classes = useStyles();
 
   return (

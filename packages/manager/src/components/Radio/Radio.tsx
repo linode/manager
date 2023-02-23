@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Radio: React.FC<RadioProps> = (props) => {
+export const Radio: React.FC<React.PropsWithChildren<RadioProps>> = (props) => {
   const classes = useStyles();
 
   const classnames = classNames({

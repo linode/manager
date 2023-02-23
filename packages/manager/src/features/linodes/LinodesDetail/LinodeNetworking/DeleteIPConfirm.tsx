@@ -35,7 +35,7 @@ export interface IPDeleteArgs {
   IPAddress: string;
 }
 
-const DeleteIPConfirm: React.FC<CombinedProps> = (props) => {
+const DeleteIPConfirm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const handleRemoveIP = (data: IPDeleteArgs) => {
     const {
       setErrorAndClearLoading,

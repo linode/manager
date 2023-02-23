@@ -8,7 +8,7 @@ interface Props {
   openAddFirewallDrawer: () => void;
 }
 
-const FirewallEmptyState: React.FC<Props> = (props) => {
+const FirewallEmptyState: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { openAddFirewallDrawer } = props;
   return (
     <Placeholder

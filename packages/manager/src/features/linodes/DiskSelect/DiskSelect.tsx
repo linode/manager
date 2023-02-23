@@ -31,7 +31,7 @@ const diskFromValue = (
   return thisDisk ? thisDisk : null;
 };
 
-const DiskSelect: React.FC<CombinedProps> = (props) => {
+const DiskSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     disabled,
     disks,

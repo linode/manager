@@ -50,7 +50,7 @@ interface Props {
 
 type CombinedProps = Props & LongviewProps;
 
-const LongviewList: React.FC<CombinedProps> = (props) => {
+const LongviewList: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     createLongviewClient,
     loading,
@@ -117,7 +117,7 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
   return (
     // Don't use the value from local storage for this case,
     // since displaying a large number of client rows has performance impacts.
-    <Paginate data={filteredData} pageSize={pageSize}>
+    (<Paginate data={filteredData} pageSize={pageSize}>
       {({
         data: paginatedAndOrderedData,
         count,
@@ -147,7 +147,7 @@ const LongviewList: React.FC<CombinedProps> = (props) => {
           ) : null}
         </>
       )}
-    </Paginate>
+    </Paginate>)
   );
 };
 

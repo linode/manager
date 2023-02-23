@@ -65,7 +65,7 @@ export const SCOPES: Record<string, AccessType> = {
   write: 'read_write',
 };
 
-export const LimitedAccessControls: React.FC<Props> = (props) => {
+export const LimitedAccessControls: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { checked, handleToggle, ...rest } = props;
 
   return (
@@ -100,7 +100,7 @@ interface TableProps {
   updateScopes: (newScopes: Scope[]) => void;
 }
 
-export const AccessTable: React.FC<TableProps> = React.memo((props) => {
+export const AccessTable: React.FC<React.PropsWithChildren<TableProps>> = React.memo((props) => {
   const { checked, mode, bucket_access, updateScopes } = props;
 
   const classes = useStyles();

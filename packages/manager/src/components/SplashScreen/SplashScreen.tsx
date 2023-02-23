@@ -33,7 +33,7 @@ const useStyles = makeStyles({
 
 type CombinedProps = StateProps;
 
-const SplashScreen: React.FC<CombinedProps> = (props) => {
+const SplashScreen: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   React.useEffect(() => {

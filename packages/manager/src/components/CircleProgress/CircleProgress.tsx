@@ -76,7 +76,7 @@ interface Props extends CircularProgressProps {
 
 type CombinedProps = Props;
 
-export const CircleProgressComponent: React.FC<CombinedProps> = (props) => {
+export const CircleProgressComponent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { className, children, mini, noInner, noPadding, tag, ...rest } = props;
 

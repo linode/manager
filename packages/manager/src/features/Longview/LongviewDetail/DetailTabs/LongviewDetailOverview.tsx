@@ -35,7 +35,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const LongviewDetailOverview: React.FC<CombinedProps> = (props) => {
+export const LongviewDetailOverview: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     client,
     clientID,

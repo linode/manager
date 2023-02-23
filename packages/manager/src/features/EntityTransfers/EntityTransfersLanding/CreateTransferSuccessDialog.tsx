@@ -57,7 +57,7 @@ interface Props {
   onClose: () => void;
 }
 
-export const CreateTransferSuccessDialog: React.FC<Props> = (props) => {
+export const CreateTransferSuccessDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { isOpen, onClose, transfer } = props;
   const [tooltipOpen, setTooltipOpen] = React.useState([false, false]);
   const classes = useStyles();

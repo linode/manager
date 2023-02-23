@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const MarkdownReference: React.FC<CombinedProps> = (props) => {
+const MarkdownReference: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   return (

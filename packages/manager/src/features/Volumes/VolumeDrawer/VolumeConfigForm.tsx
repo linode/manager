@@ -31,7 +31,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const VolumeConfigDrawer: React.FC<CombinedProps> = (props) => {
+const VolumeConfigDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { classes, message } = props;
 
   return (

@@ -35,7 +35,7 @@ type Props = TextFieldProps & {
 
 type CombinedProps = Props;
 
-export const CopyableTextField: React.FC<CombinedProps> = (props) => {
+export const CopyableTextField: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { value, className, hideIcon, ...restProps } = props;
 

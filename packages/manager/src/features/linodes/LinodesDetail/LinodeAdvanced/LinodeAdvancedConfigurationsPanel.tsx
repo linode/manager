@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = LinodeContextProps;
 
-const LinodeAdvancedConfigurationsPanel: React.FC<CombinedProps> = () => {
+const LinodeAdvancedConfigurationsPanel: React.FC<React.PropsWithChildren<CombinedProps>> = () => {
   const classes = useStyles();
 
   return (

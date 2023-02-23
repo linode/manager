@@ -20,7 +20,7 @@ interface Props extends Actions {
 
 type CombinedProps = Props;
 
-const CreditCardDialog: React.SFC<CombinedProps> = (props) => {
+const CreditCardDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { cancel, error, open, usd, ...actionsProps } = props;
 
   return (

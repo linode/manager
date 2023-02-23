@@ -90,7 +90,7 @@ export const getDefaultDeviceMapAndCounter = (
   return [deviceMap, counter];
 };
 
-const LinodeRescue: React.FC<CombinedProps> = (props) => {
+const LinodeRescue: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { diskError, open, onClose, linodeId } = props;
 
   const classes = useStyles();

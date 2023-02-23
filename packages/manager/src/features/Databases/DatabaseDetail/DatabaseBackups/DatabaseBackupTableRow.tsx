@@ -11,7 +11,7 @@ interface Props {
   onRestore: (id: number) => void;
 }
 
-const BackupTableRow: React.FC<Props> = ({ backup, onRestore }) => {
+const BackupTableRow: React.FC<React.PropsWithChildren<Props>> = ({ backup, onRestore }) => {
   const { id, created } = backup;
 
   return (

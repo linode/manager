@@ -13,7 +13,7 @@ export interface Props extends Partial<ActionMenuProps> {
 
 type CombinedProps = Props;
 
-const FirewallRuleActionMenu: React.FC<CombinedProps> = (props) => {
+const FirewallRuleActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 

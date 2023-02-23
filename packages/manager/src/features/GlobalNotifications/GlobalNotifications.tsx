@@ -11,7 +11,7 @@ import { EmailBounceNotificationSection } from './EmailBounce';
 import RegionStatusBanner from './RegionStatusBanner';
 import TaxCollectionBanner from './TaxCollectionBanner';
 
-const GlobalNotifications: React.FC<{}> = () => {
+const GlobalNotifications: React.FC<React.PropsWithChildren<{}>> = () => {
   const flags = useFlags();
   const suppliedMaintenances = flags.apiMaintenance?.maintenances; // The data (ID, and sometimes the title and body) we supply regarding maintenance events in LD.
 

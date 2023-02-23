@@ -26,7 +26,7 @@ interface Props {
   handleClickDelete: (objectName: string) => void;
 }
 
-const FolderTableRow: React.FC<Props> = (props) => {
+const FolderTableRow: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { folderName, displayName, manuallyCreated, handleClickDelete } = props;

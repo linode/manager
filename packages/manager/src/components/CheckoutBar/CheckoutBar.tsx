@@ -19,7 +19,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const CheckoutBar: React.FC<CombinedProps> = (props) => {
+const CheckoutBar: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

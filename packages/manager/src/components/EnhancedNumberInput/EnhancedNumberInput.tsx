@@ -83,7 +83,7 @@ interface Props {
   min?: number;
 }
 
-export const EnhancedNumberInput: React.FC<Props> = (props) => {
+export const EnhancedNumberInput: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { inputLabel, setValue, disabled } = props;
 
   const max = props.max ?? 100;

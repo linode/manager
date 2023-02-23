@@ -36,7 +36,7 @@ export interface TableProps {
   connectionsError?: string;
 }
 
-export const ActiveConnections: React.FC<TableProps> = (props) => {
+export const ActiveConnections: React.FC<React.PropsWithChildren<TableProps>> = (props) => {
   const { connections, connectionsError, connectionsLoading } = props;
   const classes = useStyles();
 
@@ -53,7 +53,7 @@ export const ActiveConnections: React.FC<TableProps> = (props) => {
     </Grid>
   );
 };
-export const ConnectionsTable: React.FC<TableProps> = (props) => {
+export const ConnectionsTable: React.FC<React.PropsWithChildren<TableProps>> = (props) => {
   const { connections, connectionsLoading, connectionsError } = props;
 
   return (

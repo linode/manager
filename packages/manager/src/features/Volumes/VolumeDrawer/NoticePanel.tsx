@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const NoticePanel: React.FC<CombinedProps> = ({
+const NoticePanel: React.FC<React.PropsWithChildren<CombinedProps>> = ({
   success,
   error,
   important,

@@ -58,7 +58,7 @@ interface Props {
 
 type CombinedProps = Props & StateProps & DispatchProps;
 
-const CreateVolumeForm: React.FC<CombinedProps> = (props) => {
+const CreateVolumeForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const {
     onClose,

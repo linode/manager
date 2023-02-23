@@ -12,7 +12,7 @@ import MigrationNotification from './MigrationNotification';
 
 type CombinedProps = ContextProps & { requestNotifications: () => void };
 
-const Notifications: React.FC<CombinedProps> = (props) => {
+const Notifications: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     requestNotifications,
     linodeNotifications,

@@ -10,7 +10,7 @@ import { useGraphs } from './useGraphs';
 
 export type CombinedProps = GraphProps & WithTheme;
 
-export const DiskGraph: React.FC<CombinedProps> = (props) => {
+export const DiskGraph: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     clientAPIKey,
     end,

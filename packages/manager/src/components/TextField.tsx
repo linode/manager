@@ -118,7 +118,7 @@ export type Props = BaseProps & TextFieldProps & TextFieldPropsOverrides;
 
 type CombinedProps = Props & WithTheme;
 
-export const LinodeTextField: React.FC<CombinedProps> = (props) => {
+export const LinodeTextField: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {
@@ -366,4 +366,4 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
 
 export default compose<CombinedProps, Props>(React.memo)(
   LinodeTextField
-) as React.ComponentType<Props>;
+) as React.ComponentType<React.PropsWithChildren<Props>>;

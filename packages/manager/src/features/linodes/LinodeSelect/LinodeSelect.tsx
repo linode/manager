@@ -52,7 +52,7 @@ interface Props {
 
 type CombinedProps = Props & WithLinodesProps;
 
-const LinodeSelect: React.FC<CombinedProps> = (props) => {
+const LinodeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     disabled,
     generalError,

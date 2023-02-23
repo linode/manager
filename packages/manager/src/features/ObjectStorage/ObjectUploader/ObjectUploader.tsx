@@ -112,7 +112,7 @@ interface Props {
   maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
 }
 
-const ObjectUploader: React.FC<Props> = (props) => {
+const ObjectUploader: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { clusterId, bucketName, prefix } = props;
 
   const { enqueueSnackbar } = useSnackbar();

@@ -1,6 +1,5 @@
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import {
   BrowserRouter as Router,
@@ -24,6 +23,7 @@ import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './queries/base';
+import { createRoot } from 'react-dom/client';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
 const App = React.lazy(() => import('./App'));
@@ -86,7 +86,7 @@ const renderCancel = () => (
 );
 
 const renderAuthentication = () => (
-  <React.Suspense fallback={renderSplashScreen}>
+  <React.Suspense fallback={<>{renderSplashScreen()}</>}>
     <Switch>
       <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
       <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
@@ -110,11 +110,14 @@ const renderAuthentication = () => (
   </React.Suspense>
 );
 
+const container = document.getElementById('root');
+const root = createRoot(container!);
+
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
 //
 // Load dev tools if need be.
 loadDevTools(() => {
-  ReactDOM.render(
+  root.render(
     navigator.cookieEnabled ? (
       <Provider store={store}>
         <Router>
@@ -127,8 +130,7 @@ loadDevTools(() => {
       </Provider>
     ) : (
       <CookieWarning />
-    ),
-    document.getElementById('root') as HTMLElement
+    )
   );
 });
 

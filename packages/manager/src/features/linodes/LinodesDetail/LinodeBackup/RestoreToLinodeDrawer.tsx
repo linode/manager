@@ -41,7 +41,7 @@ const canEditLinode = (
   return getPermissionsForLinode(grants, linodeId) === 'read_only';
 };
 
-export const RestoreToLinodeDrawer: React.FC<CombinedProps> = (props) => {
+export const RestoreToLinodeDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     onSubmit,
     linodeID,

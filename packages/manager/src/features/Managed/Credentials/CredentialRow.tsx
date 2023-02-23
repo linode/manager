@@ -35,7 +35,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const CredentialRow: React.FunctionComponent<CombinedProps> = (
+export const CredentialRow: React.FunctionComponent<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   const { credential, openDialog, openForEdit } = props;

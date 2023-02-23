@@ -74,7 +74,7 @@ export interface Props {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-export const NodeTable: React.FC<Props> = (props) => {
+export const NodeTable: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { nodes, poolId, typeLabel, openRecycleNodeDialog } = props;
 
   const classes = useStyles();
@@ -204,7 +204,7 @@ interface NodeRowProps extends NodeRow {
   openRecycleNodeDialog: (nodeID: string, linodeLabel: string) => void;
 }
 
-export const NodeRow: React.FC<NodeRowProps> = React.memo((props) => {
+export const NodeRow: React.FC<React.PropsWithChildren<NodeRowProps>> = React.memo((props) => {
   const {
     nodeId,
     instanceId,

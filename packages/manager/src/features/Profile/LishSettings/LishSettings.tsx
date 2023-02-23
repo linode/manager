@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const LishSettings: React.FC = () => {
+const LishSettings: React.FC<React.PropsWithChildren<unknown>> = () => {
   const classes = useStyles();
   const { data: profile, isLoading } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();

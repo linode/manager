@@ -27,7 +27,7 @@ type CombinedProps = Props &
   ConfirmationDialogProps &
   Partial<TypeToConfirmProps>;
 
-const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
+const TypeToConfirmDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     open,
     title,

@@ -29,7 +29,7 @@ interface Props extends PlaceholderProps<any, any> {}
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const SelectPlaceholder: React.FC<CombinedProps> = (props) => {
+const SelectPlaceholder: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   return (
     <Typography
       className={props.classes.root}

@@ -98,7 +98,7 @@ const emptyInitialValues = {
   notes: '',
 } as ManagedServicePayload;
 
-const MonitorDrawer: React.FC<CombinedProps> = (props) => {
+const MonitorDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { credentials, groups, mode, monitor, open, onClose, onSubmit } = props;
 
   const credentialOptions = getCredentialOptions(credentials);

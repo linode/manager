@@ -9,7 +9,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const Tags: React.FC<CombinedProps> = (props) => {
+export const Tags: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { tags } = props;
 
   const renderTags = (tags: string[]) => {

@@ -36,7 +36,7 @@ interface Props {
   disabled: boolean;
 }
 
-export const PayPalChip: React.FC<Props> = (props) => {
+export const PayPalChip: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, disabled, setProcessing, renderError } = props;
   const { data, isLoading, error: clientTokenError } = useClientToken();
   const [{ options, isPending }, dispatch] = usePayPalScriptReducer();

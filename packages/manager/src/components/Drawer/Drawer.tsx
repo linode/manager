@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = Props;
 
-const DDrawer: React.FC<CombinedProps> = (props) => {
+const DDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { title, children, onClose, wide, ...rest } = props;

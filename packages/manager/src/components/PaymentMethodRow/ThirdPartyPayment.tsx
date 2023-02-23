@@ -68,7 +68,7 @@ export const getIcon = (paymentMethod: ThirdPartyPayment) => {
   return thirdPartyPaymentMap[paymentMethod].icon;
 };
 
-export const TPP: React.FC<Props> = (props) => {
+export const TPP: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { paymentMethod } = props;
 
   const classes = useStyles();

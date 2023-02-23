@@ -16,7 +16,7 @@ interface Props {
   onRestore: (id: number) => void;
 }
 
-const DatabaseBackupActionMenu: React.FC<Props> = (props) => {
+const DatabaseBackupActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
   const { backup, onRestore } = props;
 

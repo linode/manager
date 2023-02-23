@@ -34,7 +34,7 @@ interface ExtendedAction extends Action {
 
 type CombinedProps = Props & Handlers;
 
-export const DomainActionMenu: React.FC<CombinedProps> = (props) => {
+export const DomainActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { domain, onClone, onDisableOrEnable, onEdit, onRemove } = props;

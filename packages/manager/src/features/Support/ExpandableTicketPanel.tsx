@@ -107,7 +107,7 @@ interface Data {
   updated: string;
 }
 
-export const ExpandableTicketPanel: React.FC<CombinedProps> = (props) => {
+export const ExpandableTicketPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { parentTicket, ticket, open, reply, ticketUpdated } = props;

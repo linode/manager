@@ -14,7 +14,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const AdditionalMenuItems: React.FC<CombinedProps> = (props) => {
+const AdditionalMenuItems: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { isCollapsed } = props;
   const links: PrimaryLink[] = [
     {

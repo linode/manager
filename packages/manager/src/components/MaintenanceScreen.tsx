@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const MaintenanceScreen: React.FC<{}> = () => {
+export const MaintenanceScreen: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
 
   const maintenanceCopy = (

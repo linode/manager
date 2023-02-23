@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = Firewall & ActionHandlers;
 
-export const FirewallRow: React.FC<CombinedProps> = (props) => {
+export const FirewallRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { id, label, status, rules, ...actionHandlers } = props;

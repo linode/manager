@@ -37,7 +37,7 @@ interface Props {
 
 export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
 
-export const AccessKeyLanding: React.FC<Props> = (props) => {
+export const AccessKeyLanding: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     closeAccessDrawer,
     openAccessDrawer,

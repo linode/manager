@@ -42,7 +42,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
+export const ViewRangeDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { open, onClose, rdns, range, address, ips, updateIPs } = props;
 
   const [currentRDNS, setRDNS] = React.useState<string | null | undefined>(

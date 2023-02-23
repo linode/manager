@@ -11,8 +11,8 @@ export interface NavTab {
   title: string;
   routeName: string;
   component?:
-    | React.ComponentType
-    | React.LazyExoticComponent<React.ComponentType>;
+    | React.ComponentType<React.PropsWithChildren<unknown>>
+    | React.LazyExoticComponent<React.ComponentType<React.PropsWithChildren<unknown>>>;
   render?: JSX.Element;
   // Whether or not this tab should be rendered in the background (even when
   // not on screen). Consumers should consider performance implications,
@@ -27,7 +27,7 @@ export interface NavTabsProps {
 
 type CombinedProps = NavTabsProps;
 
-const NavTabs: React.FC<CombinedProps> = (props) => {
+const NavTabs: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const history = useHistory();
   const reactRouterLocation = useLocation();
 

@@ -46,7 +46,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const TicketAttachmentRow: React.FC<CombinedProps> = (props) => {
+export const TicketAttachmentRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { attachments, classes, icons } = props;
   return (
     <Grid item>

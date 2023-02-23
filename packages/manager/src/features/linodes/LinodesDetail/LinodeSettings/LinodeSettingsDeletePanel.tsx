@@ -27,7 +27,7 @@ type CombinedProps = Props &
   LinodeActionsProps &
   RouteComponentProps<{}>;
 
-export const LinodeSettingsDeletePanel: React.FC<CombinedProps> = (props) => {
+export const LinodeSettingsDeletePanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     linodeId,
     linodeLabel,
@@ -108,4 +108,4 @@ const enhanced = compose<CombinedProps, Props>(
 
 export default enhanced(
   LinodeSettingsDeletePanel
-) as React.ComponentType<Props>;
+) as React.ComponentType<React.PropsWithChildren<Props>>;

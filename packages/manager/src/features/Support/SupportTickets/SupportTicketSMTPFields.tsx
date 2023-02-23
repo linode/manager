@@ -26,7 +26,7 @@ export const fieldNameToLabelMap: Record<string, string> = {
     "Links to public information - e.g. your business or application's website, Twitter profile, GitHub, etc.",
 };
 
-const SupportTicketSMTPFields: React.FC<Props> = (props) => {
+const SupportTicketSMTPFields: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { handleChange, formState } = props;
 
   return (

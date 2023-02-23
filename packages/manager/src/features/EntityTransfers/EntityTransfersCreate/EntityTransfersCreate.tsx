@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const EntityTransfersCreate: React.FC<{}> = (_) => {
+export const EntityTransfersCreate: React.FC<React.PropsWithChildren<{}>> = (_) => {
   const { push } = useHistory();
   const { mutateAsync: createTransfer, error, isLoading } = useCreateTransfer();
   const classes = useStyles();

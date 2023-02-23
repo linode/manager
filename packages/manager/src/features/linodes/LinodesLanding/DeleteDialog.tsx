@@ -15,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DeleteLinodeDialog: React.FC<CombinedProps> = (props) => {
+const DeleteLinodeDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { linodeID, linodeLabel, open, onClose, handleDelete } = props;
 
   const [isDeleting, setDeleting] = React.useState<boolean>(false);

@@ -44,7 +44,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const EventRow: React.FC<CombinedProps> = (props) => {
+export const EventRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { event, entityId } = props;
   const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -67,7 +67,7 @@ export const EventRow: React.FC<CombinedProps> = (props) => {
 
 export interface RowProps {
   action: EventAction;
-  link?: string | (() => void);
+  link?: string;
   message?: string | void;
   status?: string;
   type:
@@ -81,7 +81,7 @@ export interface RowProps {
   username: string | null;
 }
 
-export const Row: React.FC<RowProps> = (props) => {
+export const Row: React.FC<React.PropsWithChildren<RowProps>> = (props) => {
   const classes = useStyles();
 
   const { action, link, message, created, username } = props;

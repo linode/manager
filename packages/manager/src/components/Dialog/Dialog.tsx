@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const Dialog: React.FC<DialogProps> = (props) => {
+const Dialog: React.FC<React.PropsWithChildren<DialogProps>> = (props) => {
   const {
     className,
     title,

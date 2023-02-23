@@ -22,7 +22,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-const Profile: React.FC<CombinedProps> = (props) => {
+const Profile: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     match: { url },
     toggleTheme,

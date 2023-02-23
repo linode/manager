@@ -5,7 +5,7 @@ export interface Props {
   isDisabled?: boolean;
 }
 
-export const CreateLinodeDisabled: React.FC<Props> = (props) => {
+export const CreateLinodeDisabled: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { isDisabled } = props;
   if (!isDisabled) {
     return null;

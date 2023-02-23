@@ -81,7 +81,7 @@ interface Props {
   description?: JSX.Element;
 }
 
-export const AccessControls: React.FC<Props> = (props) => {
+export const AccessControls: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     database: { id, engine, allow_list: allowList },
     description,

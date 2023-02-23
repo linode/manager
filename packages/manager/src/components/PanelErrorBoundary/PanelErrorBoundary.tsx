@@ -6,7 +6,7 @@ import Accordion, { AccordionProps } from 'src/components/Accordion';
 export interface Props extends Omit<AccordionProps, 'children'> {}
 
 export default (AccordionProps: Props) => <P extends {}>(
-  Component: React.ComponentType<P>
+  Component: React.ComponentType<React.PropsWithChildren<P>>
 ) => {
   interface State {
     error?: Error;

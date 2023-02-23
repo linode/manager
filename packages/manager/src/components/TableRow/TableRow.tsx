@@ -1,7 +1,5 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import _TableRow, { TableRowProps } from 'src/components/core/TableRow';
@@ -127,9 +125,9 @@ export interface Props {
   selected?: boolean;
 }
 
-export type CombinedProps = Props & TableRowProps & RouteComponentProps<{}>;
+export type CombinedProps = Props & TableRowProps;
 
-export const TableRow: React.FC<CombinedProps> = (props) => {
+export const TableRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {
@@ -140,10 +138,6 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
     forceIndex,
     highlight,
     selected,
-    // Defining `staticContext` here to prevent `...rest` from containing it
-    // since it leads to a console warning
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    staticContext,
     ...rest
   } = props;
 
@@ -173,9 +167,4 @@ export const TableRow: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter,
-  React.memo
-)(TableRow);
-
-export default enhanced;
+export default TableRow;

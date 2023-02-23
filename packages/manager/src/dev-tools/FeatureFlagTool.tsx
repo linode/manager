@@ -11,7 +11,7 @@ const options: { label: string; flag: keyof Flags }[] = [
   { label: 'Brand Update', flag: 'brandUpdate' },
 ];
 
-const FeatureFlagTool: React.FC<{}> = () => {
+const FeatureFlagTool: React.FC<React.PropsWithChildren<{}>> = () => {
   const dispatch: Dispatch = useDispatch();
   const flags = useFlags();
 

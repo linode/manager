@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const EntityDetail: React.FC<EntityDetailProps> = (props) => {
+export const EntityDetail: React.FC<React.PropsWithChildren<EntityDetailProps>> = (props) => {
   const { header, body, footer } = props;
   const classes = useStyles();
 

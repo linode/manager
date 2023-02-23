@@ -20,7 +20,7 @@ interface Props extends ActionHandlers {
 
 type CombinedProps = Props;
 
-const FirewallActionMenu: React.FC<CombinedProps> = (props) => {
+const FirewallActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
   const { data: profile } = useProfile();

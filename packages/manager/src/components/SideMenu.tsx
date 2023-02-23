@@ -47,7 +47,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const SideMenu: React.FC<CombinedProps> = (props) => {
+export const SideMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { collapse, open, closeMenu } = props;
 

@@ -59,7 +59,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
+const UserSSHKeyPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);

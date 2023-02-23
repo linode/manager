@@ -279,4 +279,4 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 export default recompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext
-)(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;
+)(LinodeSettingsPasswordPanel) as React.ComponentType<React.PropsWithChildren<Props>>;

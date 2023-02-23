@@ -33,7 +33,7 @@ interface Props {
 
 type CombinedProps = Props & LinodeDetailContext & RouteComponentProps<{}>;
 
-const LinodeControls: React.FC<CombinedProps> = (props) => {
+const LinodeControls: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { linode, updateLinode, breadcrumbProps } = props;

@@ -11,7 +11,7 @@ interface Props {
   openDialog: (contactId: number) => void;
 }
 
-export const ContactsRow: React.FunctionComponent<Props> = (props) => {
+export const ContactsRow: React.FunctionComponent<React.PropsWithChildren<Props>> = (props) => {
   const { contact, openDrawer, openDialog } = props;
 
   return (

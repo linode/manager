@@ -58,7 +58,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 type CombinedProps = StateProps & RouteComponentProps<{}> & DispatchProps;
 
-const VolumeCreate: React.FC<CombinedProps> = (props) => {
+const VolumeCreate: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
 

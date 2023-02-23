@@ -90,7 +90,7 @@ type CombinedProps = LinodeContextProps & DispatchProps;
 
 export const preferenceKey = 'linode-volumes';
 
-export const LinodeVolumes: React.FC<CombinedProps> = (props) => {
+export const LinodeVolumes: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     openForConfig,
     openForClone,

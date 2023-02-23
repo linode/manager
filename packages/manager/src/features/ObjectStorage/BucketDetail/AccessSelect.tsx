@@ -34,7 +34,7 @@ export interface Props {
 
 type CombinedProps = Props;
 
-const AccessSelect: React.FC<CombinedProps> = (props) => {
+const AccessSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const { getAccess, updateAccess, name, variant } = props;

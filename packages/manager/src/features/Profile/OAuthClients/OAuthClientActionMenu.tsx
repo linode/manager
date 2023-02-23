@@ -20,7 +20,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
+export const OAuthClientActionMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -49,7 +49,7 @@ export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -66,7 +66,7 @@ export const OAuthClientActionMenu: React.FC<CombinedProps> = (props) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

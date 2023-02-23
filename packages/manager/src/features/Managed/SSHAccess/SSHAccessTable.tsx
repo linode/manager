@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const SSHAccessTable: React.FC<{}> = () => {
+const SSHAccessTable: React.FC<React.PropsWithChildren<{}>> = () => {
   const classes = useStyles();
 
   const { data: settings, isLoading, error } = useAllLinodeSettingsQuery();

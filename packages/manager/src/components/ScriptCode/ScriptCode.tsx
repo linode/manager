@@ -44,7 +44,7 @@ export interface Props {
 
 type PropsWithStyles = Props;
 
-export const ScriptCode: React.FC<PropsWithStyles> = (props) => {
+export const ScriptCode: React.FC<React.PropsWithChildren<PropsWithStyles>> = (props) => {
   const classes = useStyles();
 
   const { script } = props;

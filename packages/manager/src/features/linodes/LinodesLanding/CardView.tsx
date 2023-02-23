@@ -55,7 +55,7 @@ interface Props {
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
-const CardView: React.FC<CombinedProps> = (props) => {
+const CardView: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const notificationContext = React.useContext(_notificationContext);
 

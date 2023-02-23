@@ -27,7 +27,7 @@ export interface BaseProps {
 export interface ListProps extends BaseProps {
   entity: string;
   data: Entity[];
-  RowComponent: React.ComponentType;
+  RowComponent: React.ComponentType<React.PropsWithChildren<unknown>>;
   headers: HeaderCell[];
   initialOrder?: {
     order: OrderByProps['order'];
@@ -39,7 +39,7 @@ export interface ListProps extends BaseProps {
 }
 
 export interface EntityTableRow<T> extends BaseProps {
-  Component: React.ComponentType<any>;
+  Component: React.ComponentType<React.PropsWithChildren<any>>;
   data: T[];
   request?: () => Promise<T[]>;
 }

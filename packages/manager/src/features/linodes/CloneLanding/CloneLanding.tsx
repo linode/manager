@@ -89,7 +89,7 @@ type CombinedProps = RouteComponentProps<{}> &
   WithLinodesProps &
   DispatchProps;
 
-export const CloneLanding: React.FC<CombinedProps> = (props) => {
+export const CloneLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     configs,
     disks,
@@ -290,7 +290,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
   );
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
   return (
-    <React.Fragment>
+    (<React.Fragment>
       <DocumentTitleSegment segment="Clone" />
       {/* The header *basically* duplicated from LinodeDetailHeader. Why don't we use that component instead?...
       ...Because we don't want the Nav tabs and we want <LinodeControls /> with a custom <Breadcrumb />.
@@ -368,8 +368,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
             selectedDisks={disksInState.filter((disk) => {
               return (
                 // This disk has been individually selected ...
-                state.diskSelection[disk.id].isSelected &&
-                // ... AND it's associated configs are NOT selected
+                (state.diskSelection[disk.id].isSelected && // ... AND it's associated configs are NOT selected
                 intersection(
                   pathOr(
                     [],
@@ -377,7 +376,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
                     state.diskSelection
                   ),
                   selectedConfigIds
-                ).length === 0
+                ).length === 0)
               );
             })}
             selectedLinodeId={state.selectedLinodeId}
@@ -396,7 +395,7 @@ export const CloneLanding: React.FC<CombinedProps> = (props) => {
       <React.Suspense fallback={<SuspenseLoader />}>
         <Switch />
       </React.Suspense>
-    </React.Fragment>
+    </React.Fragment>)
   );
 };
 

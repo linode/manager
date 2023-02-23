@@ -25,7 +25,7 @@ interface Props {
   toggleTheme: () => void;
 }
 
-const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
+const ProfileSettings: React.FC<React.PropsWithChildren<Props & { theme: Theme }>> = (props) => {
   const classes = useStyles();
   const { toggleTheme, theme } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);

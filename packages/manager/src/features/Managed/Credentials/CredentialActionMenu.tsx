@@ -10,7 +10,7 @@ interface Props {
   openForEdit: (id: number) => void;
 }
 
-const CredentialActionMenu: React.FC<Props> = (props) => {
+const CredentialActionMenu: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -37,7 +37,7 @@ const CredentialActionMenu: React.FC<Props> = (props) => {
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    <>
+    (<>
       {matchesSmDown ? (
         <ActionMenu
           actionsList={actions}
@@ -54,7 +54,7 @@ const CredentialActionMenu: React.FC<Props> = (props) => {
           );
         })
       )}
-    </>
+    </>)
   );
 };
 

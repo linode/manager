@@ -21,7 +21,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const LinodeRowBackupCell: React.FC<CombinedProps> = (props) => {
+const LinodeRowBackupCell: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const {

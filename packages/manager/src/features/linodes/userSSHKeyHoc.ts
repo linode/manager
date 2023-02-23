@@ -26,7 +26,7 @@ const resetKeys = (key: UserSSHKeyObject) => {
   return assoc('selected', false, key);
 };
 
-export default (Component: React.ComponentType<any>) => {
+export default (Component: React.ComponentType<React.PropsWithChildren<any>>) => {
   return (props: any) => {
     const { data: profile } = useProfile();
 

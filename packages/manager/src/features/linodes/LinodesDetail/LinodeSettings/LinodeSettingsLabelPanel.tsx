@@ -19,7 +19,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type CombinedProps = ContextProps;
 
-export const LinodeSettingsLabelPanel: React.FC<CombinedProps> = (props) => {
+export const LinodeSettingsLabelPanel: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { linodeLabel, permissions, updateLinode } = props;
 
   const [initialValue, setInitialValue] = React.useState<string>(linodeLabel);
@@ -115,4 +115,4 @@ const linodeContext = withLinodeDetailContext<ContextProps>(
 export default recompose<CombinedProps, {}>(
   errorBoundary,
   linodeContext
-)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;
+)(LinodeSettingsLabelPanel) as React.ComponentType<React.PropsWithChildren<{}>>;

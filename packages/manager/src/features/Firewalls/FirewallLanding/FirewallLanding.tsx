@@ -61,7 +61,7 @@ export const headers = [
   },
 ];
 
-const FirewallLanding: React.FC<CombinedProps> = () => {
+const FirewallLanding: React.FC<React.PropsWithChildren<CombinedProps>> = () => {
   const { data: profile } = useProfile();
   const { data, isLoading, error, dataUpdatedAt } = useFirewallQuery();
 
@@ -167,7 +167,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
       // Some repetition here, which we need to resolve separately
       // (move the create form to /firewalls/create, or as a top
       // level drawer).
-      <>
+      (<>
         <FirewallEmptyState openAddFirewallDrawer={openDrawer} />
         <AddFirewallDrawer
           open={addFirewallDrawerOpen}
@@ -175,7 +175,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
           onSubmit={createFirewall}
           title="Create Firewall"
         />
-      </>
+      </>)
     );
   }
 

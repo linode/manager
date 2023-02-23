@@ -65,7 +65,7 @@ interface Props {
   timezone?: string;
 }
 
-export const MaintenanceWindow: React.FC<Props> = (props) => {
+export const MaintenanceWindow: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { database, timezone } = props;
 
   const [maintenanceUpdateError, setMaintenanceUpdateError] = React.useState<

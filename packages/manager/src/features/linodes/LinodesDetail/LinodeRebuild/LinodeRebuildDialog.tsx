@@ -57,7 +57,7 @@ const options = [
 
 const passwordHelperText = 'Set a password for your rebuilt Linode.';
 
-const LinodeRebuildDialog: React.FC<CombinedProps> = (props) => {
+const LinodeRebuildDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { linodeId, open, onClose } = props;
   const linode = useExtendedLinode(linodeId);
   const linodeLabel = linode?.label;

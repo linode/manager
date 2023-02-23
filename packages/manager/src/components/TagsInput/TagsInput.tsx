@@ -25,7 +25,7 @@ export interface Props {
   menuPlacement?: 'bottom' | 'top' | 'auto' | undefined;
 }
 
-const TagsInput: React.FC<Props> = (props) => {
+const TagsInput: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const {
     label,
     hideLabel,

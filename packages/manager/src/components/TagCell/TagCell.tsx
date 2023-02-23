@@ -124,7 +124,7 @@ const checkOverflow = (el: any) => {
 
 export type CombinedProps = Props;
 
-export const TagCell: React.FC<Props> = (props) => {
+export const TagCell: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { updateTags, tags } = props;
@@ -133,7 +133,7 @@ export const TagCell: React.FC<Props> = (props) => {
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const overflowRef = React.useCallback(
-    (node) => {
+    (node: any) => {
       if (node !== null) {
         setOverflow(checkOverflow(node));
       }

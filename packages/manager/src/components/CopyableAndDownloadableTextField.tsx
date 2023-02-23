@@ -29,7 +29,7 @@ type CombinedProps = TextFieldProps & {
   fileName?: string;
 };
 
-export const CopyableAndDownloadableTextField: React.FC<CombinedProps> = (
+export const CopyableAndDownloadableTextField: React.FC<React.PropsWithChildren<CombinedProps>> = (
   props
 ) => {
   const classes = useStyles();

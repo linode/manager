@@ -48,7 +48,7 @@ interface Props {
   disabled?: boolean;
 }
 
-export const TwoFactor: React.FC<Props> = (props) => {
+export const TwoFactor: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const needSecurityQuestionsCopy =
@@ -287,7 +287,7 @@ interface ToggleProps {
   disabled?: boolean;
 }
 
-const TwoFactorToggle: React.FC<ToggleProps> = (props) => {
+const TwoFactorToggle: React.FC<React.PropsWithChildren<ToggleProps>> = (props) => {
   const { disabled, twoFactorEnabled } = props;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

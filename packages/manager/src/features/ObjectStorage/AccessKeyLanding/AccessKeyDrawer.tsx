@@ -66,7 +66,7 @@ export const getDefaultScopes = (buckets: ObjectStorageBucket[]): Scope[] =>
     }))
     .sort(sortByCluster);
 
-export const AccessKeyDrawer: React.FC<CombinedProps> = (props) => {
+export const AccessKeyDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     isRestrictedUser,
     open,

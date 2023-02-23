@@ -34,7 +34,7 @@ export interface Props extends DialogProps {
   title: string;
 }
 
-const ConfirmationDialog: React.FC<Props> = (props) => {
+const ConfirmationDialog: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const classes = useStyles();
 
   const { title, children, actions, error, ...dialogProps } = props;

@@ -18,7 +18,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ViewRDNSDrawer: React.FC<CombinedProps> = (props) => {
+const ViewRDNSDrawer: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { open, onClose, ips } = props;
   const classes = useStyles();
 

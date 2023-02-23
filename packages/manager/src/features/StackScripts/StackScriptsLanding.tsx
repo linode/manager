@@ -15,7 +15,7 @@ import StackScriptPanel from './StackScriptPanel';
 
 type CombinedProps = WithImages & RouteComponentProps<{}, any, any>;
 
-export const StackScriptsLanding: React.FC<CombinedProps> = (props) => {
+export const StackScriptsLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const { history, imagesData } = props;
   const { _loading } = useReduxLoad(['images']);
 

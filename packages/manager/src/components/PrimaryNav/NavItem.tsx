@@ -20,14 +20,14 @@ export interface PrimaryLink {
   onClick?: () => void;
   QAKey: string;
   display: string;
-  logo?: React.ComponentType<any>;
+  logo?: React.ComponentType<React.PropsWithChildren<any>>;
   icon?: JSX.Element;
   isDisabled?: () => string;
 }
 
 type CombinedProps = Props;
 
-const NavItem: React.SFC<CombinedProps> = (props) => {
+const NavItem: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const {
     href,
     onClick,
@@ -50,7 +50,7 @@ const NavItem: React.SFC<CombinedProps> = (props) => {
      href takes priority here. So if an href and onClick
      are provided, the onClick will not be applied
     */
-    <React.Fragment>
+    (<React.Fragment>
       {href ? (
         <Link
           to={href}
@@ -94,7 +94,7 @@ const NavItem: React.SFC<CombinedProps> = (props) => {
         </Tooltip>
       )}
       <Divider className={props.dividerClasses} />
-    </React.Fragment>
+    </React.Fragment>)
   );
 };
 

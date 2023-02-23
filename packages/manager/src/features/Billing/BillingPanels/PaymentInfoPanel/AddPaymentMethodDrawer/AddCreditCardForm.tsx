@@ -45,7 +45,7 @@ interface Values {
   country: string;
 }
 
-const AddCreditCardForm: React.FC<Props> = (props) => {
+const AddCreditCardForm: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const { onClose, disabled } = props;
   const [error, setError] = React.useState<string>();
   const classes = useStyles();
@@ -307,7 +307,7 @@ export interface CreditCardFormProps extends NumberFormatProps {
 type CombinedCreditCardFormProps = CreditCardFormProps &
   InputBaseComponentProps;
 
-const creditCardField: React.FC<CombinedCreditCardFormProps> = ({
+const creditCardField: React.FC<React.PropsWithChildren<CombinedCreditCardFormProps>> = ({
   inputRef,
   onChange,
   ...other

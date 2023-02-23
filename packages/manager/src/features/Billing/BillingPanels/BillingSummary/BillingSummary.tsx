@@ -86,7 +86,7 @@ interface BillingSummaryProps {
   balance: number;
 }
 
-export const BillingSummary: React.FC<BillingSummaryProps> = (props) => {
+export const BillingSummary: React.FC<React.PropsWithChildren<BillingSummaryProps>> = (props) => {
   const classes = useStyles();
   const notifications = useNotifications();
   const { account, _isRestrictedUser } = useAccountManagement();
@@ -310,7 +310,7 @@ export default React.memo(BillingSummary);
 // =============================================================================
 export type PromoDisplayProps = ActivePromotion;
 
-export const PromoDisplay: React.FC<PromoDisplayProps> = React.memo((props) => {
+export const PromoDisplay: React.FC<React.PropsWithChildren<PromoDisplayProps>> = React.memo((props) => {
   const classes = useStyles();
 
   const {

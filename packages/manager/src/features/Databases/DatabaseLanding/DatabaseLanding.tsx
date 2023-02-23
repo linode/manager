@@ -22,7 +22,7 @@ import { DatabaseRow } from './DatabaseRow';
 
 const preferenceKey = 'databases';
 
-const DatabaseLanding: React.FC = () => {
+const DatabaseLanding: React.FC<React.PropsWithChildren<unknown>> = () => {
   const history = useHistory();
   const pagination = usePagination(1, preferenceKey);
 

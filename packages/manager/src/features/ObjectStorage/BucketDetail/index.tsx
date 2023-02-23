@@ -34,7 +34,7 @@ interface MatchProps {
 
 type CombinedProps = RouteComponentProps<MatchProps>;
 
-export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
+export const BucketDetailLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
 
   const matches = (p: string) => {

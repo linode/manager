@@ -45,7 +45,7 @@ const renderActions = (
   </ActionsPanel>
 );
 
-export const SecretTokenDialog: React.FC<CombinedProps> = (props) => {
+export const SecretTokenDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
   const classes = useStyles();
   const { title, value, objectStorageKey, open, onClose } = props;
 
