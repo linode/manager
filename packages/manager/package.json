@@ -187,7 +187,6 @@
     "circular-dependency-plugin": "^5.2.0",
     "core-js": "^2.6.5",
     "css-loader": "^6.7.2",
-    "csstype": "^2.5.5",
     "cypress": "^12.2.0",
     "cypress-axe": "^1.0.0",
     "cypress-file-upload": "^5.0.7",
