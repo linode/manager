@@ -9,7 +9,6 @@ import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
 import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
-import { indicatePromise } from 'src/utilities/indicatePromise';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
 import ThemeToggle from './ThemeToggle';
@@ -52,12 +51,10 @@ const ProfileSettings = () => {
     getQueryParam(window.location.search, 'preferenceEditor') === 'true';
 
   const toggle = () => {
-    indicatePromise(
-      updateProfile({
-        email_notifications: !profile?.email_notifications,
-      }),
-      setSubmitting
-    );
+    setSubmitting(true);
+    updateProfile({
+      email_notifications: !profile?.email_notifications,
+    }).finally(() => setSubmitting(false));
   };
 
   return (
