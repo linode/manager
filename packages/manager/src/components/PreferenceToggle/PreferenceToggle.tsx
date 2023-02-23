@@ -147,7 +147,6 @@ const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
            * PUT to /preferences on every toggle, debounced.
            */
           updateUserPreferences({
-            ...preferences,
             [preferenceKey]: currentlySetPreference,
           }).catch(() => /** swallow the error */ null);
 

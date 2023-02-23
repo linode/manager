@@ -100,7 +100,6 @@ export class App extends React.Component<CombinedProps, State> {
         switch (event.key) {
           case letterForThemeShortcut:
             this.props.updateUserPreferences({
-              ...this.props.preferences,
               theme:
                 this.props.preferences?.theme === 'dark' ? 'light' : 'dark',
             });
