@@ -1,5 +1,6 @@
 import { equals } from 'ramda';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Error from 'src/assets/icons/error.svg';
@@ -14,6 +15,7 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { listToItemsByID } from 'src/queries/base';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
 import {
@@ -21,7 +23,9 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
+import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -119,10 +123,26 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
   const {
-    data: images,
+    data: _privateImages,
     isLoading: areImagesLoading,
     error: imagesError,
   } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+
+  const { data: _publicImages } = useAllImagesQuery(
+    {},
+    { is_public: true },
+    !_isLargeAccount
+  );
+
+  const linodes = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.linodes.itemsById)
+  );
+  const types = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.types.entities)
+  );
+  const searchableLinodes = linodes.map((linode) =>
+    formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
+  );
 
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
@@ -172,7 +192,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         objectStorageBuckets?.buckets ?? [],
         domains ?? [],
         volumes ?? [],
-        images ?? []
+        _privateImages ?? [],
+        searchableLinodes ?? []
       );
     }
   }, [
@@ -184,7 +205,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
-    images,
+    _privateImages,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {

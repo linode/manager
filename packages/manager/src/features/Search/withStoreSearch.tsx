@@ -29,7 +29,8 @@ interface HandlerProps {
     buckets: ObjectStorageBucket[],
     domains: Domain[],
     volumes: Volume[],
-    images: Image[]
+    images: Image[],
+    searchableLinodes: SearchableItem<string | number>[]
   ) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
@@ -81,7 +82,8 @@ export default () => (Component: React.ComponentType<any>) => {
           objectStorageBuckets: ObjectStorageBucket[],
           domains: Domain[],
           volumes: Volume[],
-          images: Image[]
+          images: Image[],
+          searchableLinodes: SearchableItem<string | number>[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
             bucketToSearchableItem(bucket)
@@ -95,13 +97,15 @@ export default () => (Component: React.ComponentType<any>) => {
           const searchableImages = images.map((image) =>
             imageToSearchableItem(image)
           );
+
           const results = search(
             [
+              ...searchableLinodes,
+              ...searchableImages,
               ...props.entities,
               ...searchableBuckets,
               ...searchableDomains,
               ...searchableVolumes,
-              ...searchableImages,
             ],
             query
           );

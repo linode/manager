@@ -28,6 +28,10 @@ import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { debounce } from 'throttle-debounce';
 import styled, { StyleProps } from './SearchBar.styles';
 import SearchSuggestion from './SearchSuggestion';
+import { useSelector } from 'react-redux';
+import { ApplicationState } from 'src/store';
+import { formatLinode } from 'src/store/selectors/getSearchEntities';
+import { listToItemsByID } from 'src/queries/base';
 
 type CombinedProps = WithTypesProps &
   SearchProps &
@@ -96,19 +100,35 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
 
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
-
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
-  const { data: _images, isLoading: imagesLoading } = useAllImagesQuery(
+  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
     {},
     { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
     shouldMakeRequests
   );
 
+  const { data: _publicImages } = useAllImagesQuery(
+    {},
+    { is_public: true },
+    shouldMakeRequests
+  );
+  const publicImages = _publicImages ?? [];
+
   const { _loading } = useReduxLoad(
     searchDeps,
     REFRESH_INTERVAL,
     shouldMakeRequests
+  );
+
+  const linodes = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.linodes.itemsById)
+  );
+  const types = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.types.entities)
+  );
+  const searchableLinodes = linodes.map((linode) =>
+    formatLinode(linode, types, listToItemsByID(publicImages))
   );
 
   const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
@@ -140,7 +160,14 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, buckets, domains ?? [], volumes ?? [], _images ?? []);
+      search(
+        searchText,
+        buckets,
+        domains ?? [],
+        volumes ?? [],
+        _privateImages ?? [],
+        searchableLinodes ?? []
+      );
     }
   }, [
     _loading,
@@ -152,7 +179,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
-    _images,
+    _privateImages,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {

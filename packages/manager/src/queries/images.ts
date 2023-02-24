@@ -1,28 +1,26 @@
 import {
-  // ImageUploadPayload,
+  ImageUploadPayload,
   createImage,
   CreateImagePayload,
   deleteImage,
-  // uploadImage,
+  uploadImage,
   Event,
   getImage,
   getImages,
   Image,
   updateImage,
-  // UploadImageResponse,
+  UploadImageResponse,
 } from '@linode/api-v4';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import {
   doesItemExistInPaginatedStore,
   queryClient,
-  // queryPresets,
   updateInPaginatedStore,
 } from './base';
 import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'images';
-// export const pendingUploadQueryKey = 'image-pending-upload';
 
 export const useImagesQuery = (params: any, filters: any) =>
   useQuery<ResourcePage<Image>, APIError[]>(
@@ -81,7 +79,7 @@ export const removeImageFromCache = () =>
   queryClient.invalidateQueries(`${queryKey}-list`);
 
 // Get all Images
-const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
+export const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
   getAll<Image>((params, filter) =>
     getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
@@ -98,6 +96,9 @@ export const useAllImagesQuery = (
       enabled,
     }
   );
+
+export const useUploadImageQuery = (payload: ImageUploadPayload) =>
+  useMutation<UploadImageResponse, APIError[]>(() => uploadImage(payload));
 
 export const imageEventsHandler = (event: Event) => {
   const { action, status, entity } = event;
@@ -138,6 +139,21 @@ export const imageEventsHandler = (event: Event) => {
           }
         );
         return;
+      }
+
+    case 'image_upload':
+      if (event.status === 'finished') {
+        // eslint-disable-next-line no-unused-expressions
+        (async () =>
+          await getImage(`private/${event.entity?.id}`).then(() => {
+            updateInPaginatedStore<Image>(
+              `${queryKey}-list`,
+              `private/${event.entity?.id}`,
+              {
+                status: 'available',
+              }
+            );
+          }))();
       }
 
     default:

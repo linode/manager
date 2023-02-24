@@ -33,12 +33,10 @@ const _getEntityByIDFromStore = (
     return;
   }
   const _store = store.getState();
-  const { linodes, kubernetes, nodeBalancers, images } = _store.__resources;
+  const { linodes, kubernetes, nodeBalancers } = _store.__resources;
   switch (entityType) {
     case 'linode':
       return linodes.itemsById[entityID];
-    case 'image':
-      return (images.itemsById || {})[entityID];
     case 'nodebalancer':
       return nodeBalancers.itemsById[entityID];
     case 'kubeCluster':

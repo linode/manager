@@ -1,38 +1,41 @@
-import { Image, ImageStatus } from '@linode/api-v4/lib/images';
+import { Event, Image, ImageStatus } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import produce from 'immer';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { partition } from 'ramda';
+import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import ImageIcon from 'src/assets/icons/entityIcons/image.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import EntityTable, {
-  EntityTableRow,
-  HeaderCell,
-} from 'src/components/EntityTable';
 import ErrorState from 'src/components/ErrorState';
 import LandingHeader from 'src/components/LandingHeader';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import { Order } from 'src/components/Pagey';
+import PaginationFooter from 'src/components/PaginationFooter/PaginationFooter';
 import Placeholder from 'src/components/Placeholder';
+import Table from 'src/components/Table/Table';
+import TableCell from 'src/components/TableCell/TableCell';
+import TableRow from 'src/components/TableRow/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableSortCell from 'src/components/TableSortCell/TableSortCell';
 import { useOrder } from 'src/hooks/useOrder';
 import { usePagination } from 'src/hooks/usePagination';
 import { listToItemsByID } from 'src/queries/base';
 import {
+  queryKey,
+  removeImageFromCache,
   useDeleteImageMutation,
   useImagesQuery,
-  removeImageFromCache,
 } from 'src/queries/images';
 import { ApplicationState } from 'src/store';
 import imageEvents from 'src/store/selectors/imageEvents';
@@ -55,52 +58,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const getHeaders = (tableType: 'automatic' | 'manual'): HeaderCell[] =>
-  [
-    {
-      label: 'Image',
-      dataColumn: 'label',
-      sortable: true,
-      widthPercent: 30,
-    },
-    {
-      label: 'Status',
-      dataColumn: 'status',
-      sortable: true,
-      widthPercent: 15,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Created',
-      dataColumn: 'created',
-      sortable: false,
-      widthPercent: 20,
-      hideOnMobile: true,
-    },
-    {
-      label: 'Size',
-      dataColumn: 'size',
-      sortable: true,
-      widthPercent: 15,
-    },
-    tableType === 'automatic'
-      ? {
-          label: 'Expires',
-          dataColumn: 'expires',
-          sortable: false,
-          widthPercent: 20,
-          hideOnMobile: true,
-        }
-      : null,
-    {
-      label: 'Action Menu',
-      visuallyHidden: true,
-      dataColumn: '',
-      sortable: false,
-      widthPercent: 15,
-    },
-  ].filter(Boolean) as HeaderCell[];
-
 interface ImageDrawerState {
   open: boolean;
   mode: DrawerMode;
@@ -120,10 +77,7 @@ interface ImageDialogState {
   status?: ImageStatus;
 }
 
-type CombinedProps = ImageDrawerState &
-  ImageDialogState &
-  RouteComponentProps<{}> &
-  WithSnackbarProps;
+type CombinedProps = ImageDrawerState & ImageDialogState;
 
 const defaultDrawerState = {
   open: false,
@@ -141,36 +95,84 @@ const defaultDialogState = {
   error: undefined,
 };
 
-const preferenceKey = 'images';
-
-export const ImagesLanding: React.FC<CombinedProps> = (props) => {
+export const ImagesLanding: React.FC<CombinedProps> = () => {
   const classes = useStyles();
+  const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const pagination = usePagination(1, preferenceKey);
-
-  const { order, orderBy } = useOrder(
+  // Pagination, order, and query hooks for manual/custom images
+  const paginationForManualImages = usePagination(1, `${queryKey}-manual`);
+  const {
+    order: manualImagesOrder,
+    orderBy: manualImagesOrderBy,
+    handleOrderChange: handleManualImagesOrderChange,
+  } = useOrder(
     {
       orderBy: 'label',
-      order: 'desc',
+      order: 'asc',
     },
-    `${preferenceKey}-order`
+    `${queryKey}-manual-order`,
+    'manual'
   );
 
-  const filter = {
-    ['+order_by']: orderBy,
-    ['+order']: order,
+  const manualImagesFilter = {
+    ['+order_by']: manualImagesOrderBy,
+    ['+order']: manualImagesOrder,
   };
 
   const {
-    data: images,
-    isLoading: imagesLoading,
-    error: imagesError,
+    data: manualImages,
+    isLoading: manualImagesLoading,
+    error: manualImagesError,
   } = useImagesQuery(
     {
-      page: pagination.page,
-      page_size: pagination.pageSize,
+      page: paginationForManualImages.page,
+      page_size: paginationForManualImages.pageSize,
     },
-    filter
+    {
+      ...manualImagesFilter,
+      type: 'manual',
+      is_public: false,
+    }
+  );
+
+  // Pagination, order, and query hooks for automatic/recovery images
+  const paginationForAutomaticImages = usePagination(
+    1,
+    `${queryKey}-automatic`
+  );
+  const {
+    order: automaticImagesOrder,
+    orderBy: automaticImagesOrderBy,
+    handleOrderChange: handleAutomaticImagesOrderChange,
+  } = useOrder(
+    {
+      orderBy: 'label',
+      order: 'asc',
+    },
+    `${queryKey}-automatic-order`,
+    'automatic'
+  );
+
+  const automaticImagesFilter = {
+    ['+order_by']: automaticImagesOrderBy,
+    ['+order']: automaticImagesOrder,
+  };
+
+  const {
+    data: automaticImages,
+    isLoading: automaticImagesLoading,
+    error: automaticImagesError,
+  } = useImagesQuery(
+    {
+      page: paginationForAutomaticImages.page,
+      page_size: paginationForAutomaticImages.pageSize,
+    },
+    {
+      ...automaticImagesFilter,
+      type: 'automatic',
+      is_public: false,
+    }
   );
 
   const { mutateAsync: deleteImage } = useDeleteImageMutation();
@@ -178,41 +180,16 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   const eventState = useSelector((state: ApplicationState) => state.events);
   const events = imageEvents(eventState);
 
-  // We want private images and also want the associated events tied in.
-  const imagesItemsById = listToItemsByID(images?.data ?? []);
-  const imagesData = Object.values(imagesItemsById).reduce(
-    (accum, thisImage: Image) =>
-      produce(accum, (draft: any) => {
-        if (!thisImage.is_public) {
-          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
-          const matchingEvent = events.find(
-            (thisEvent) =>
-              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
-              (`private/${thisEvent.entity?.id}` === thisImage.id &&
-                thisEvent.status === 'failed')
-          );
-          if (matchingEvent) {
-            draft.push({ ...thisImage, event: matchingEvent });
-          } else {
-            draft.push(thisImage);
-          }
-        }
-      }),
-    []
-  ) as ImageWithEvent[];
+  // Private images with the associated events tied in.
+  const manualImagesData = getImagesWithEvents(
+    manualImages?.data ?? [],
+    events
+  );
 
-  /**
-   * Separate manual Images (created by the user, either from disk or from uploaded file)
-   * from automatic Images (created by the backend when a Linode is deleted).
-   *
-   * This is temporary until the API filtering for machine images is complete. Eventually,
-   * we should retire this code and use a React query for `is_mine` && `manual` and a separate
-   * query for `is_mine` && `automatic`.
-   */
-
-  const [manualImages, automaticImages] = partition(
-    (thisImage) => thisImage.type === 'manual',
-    imagesData ?? []
+  // Automatic images with the associated events tied in.
+  const automaticImagesData = getImagesWithEvents(
+    automaticImages?.data ?? [],
+    events
   );
 
   const [drawer, setDrawer] = React.useState<ImageDrawerState>(
@@ -270,7 +247,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
          * from taking any action on the Image.
          */
         // this.props.onDelete();
-        props.enqueueSnackbar('Image has been scheduled for deletion.', {
+        enqueueSnackbar('Image has been scheduled for deletion.', {
           variant: 'info',
         });
       })
@@ -288,7 +265,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const onCreateButtonClick = () => {
-    props.history.push('/images/create');
+    history.push('/images/create');
   };
 
   const onRetryClick = (
@@ -297,7 +274,7 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     imageDescription: string
   ) => {
     removeImageFromCache();
-    props.history.push('/images/create/upload', {
+    history.push('/images/create/upload', {
       imageLabel,
       imageDescription,
     });
@@ -328,7 +305,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const deployNewLinode = (imageID: string) => {
-    const { history } = props;
     history.push({
       pathname: `/linodes/create/`,
       search: `?type=Images&imageID=${imageID}`,
@@ -421,30 +397,6 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     onCancelFailed: onCancelFailedClick,
   };
 
-  const manualHeaders = getHeaders('manual');
-  const automaticHeaders = getHeaders('automatic');
-
-  const initialOrder = {
-    order: 'asc' as Order,
-    orderBy: 'label',
-  };
-
-  const manualImageRow: EntityTableRow<Image> = {
-    Component: ImageRow,
-    data: manualImages,
-    loading: false,
-    lastUpdated: 100,
-    handlers,
-  };
-
-  const autoImageRow: EntityTableRow<Image> = {
-    Component: ImageRow,
-    data: automaticImages,
-    loading: false,
-    lastUpdated: 100,
-    handlers,
-  };
-
   const renderError = (_: APIError[]) => {
     return (
       <React.Fragment>
@@ -490,19 +442,37 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
     );
   };
 
-  if (imagesLoading) {
+  if (manualImagesLoading || automaticImagesLoading) {
     return renderLoading();
   }
 
   /** Error State */
-  if (imagesError) {
-    return renderError(imagesError);
+  if (manualImagesError) {
+    return renderError(manualImagesError);
   }
 
-  /** Empty State */
-  if (!imagesData || imagesData.length === 0) {
+  if (automaticImagesError) {
+    return renderError(automaticImagesError);
+  }
+
+  /** Empty States */
+  if (
+    (!manualImagesData || manualImagesData.length === 0) &&
+    (!automaticImagesData || automaticImagesData.length === 0)
+  ) {
     return renderEmpty();
   }
+
+  const noManualImages = (
+    <TableRowEmptyState message={`No Custom Images to display.`} colSpan={5} />
+  );
+
+  const noAutomaticImages = (
+    <TableRowEmptyState
+      message={`No Recovery Images to display.`}
+      colSpan={6}
+    />
+  );
 
   return (
     <React.Fragment>
@@ -521,12 +491,60 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             Linode disk.
           </Typography>
         </div>
-        <EntityTable
-          entity="image"
-          row={manualImageRow}
-          headers={manualHeaders}
-          emptyMessage={'No Custom Images to display.'}
-          initialOrder={initialOrder}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                active={manualImagesOrderBy === 'label'}
+                direction={manualImagesOrder}
+                label="label"
+                handleClick={handleManualImagesOrderChange}
+              >
+                Image
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Status</TableCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableSortCell
+                  active={manualImagesOrderBy === 'created'}
+                  direction={manualImagesOrder}
+                  label="created"
+                  handleClick={handleManualImagesOrderChange}
+                >
+                  Created
+                </TableSortCell>
+              </Hidden>
+              <TableSortCell
+                active={manualImagesOrderBy === 'size'}
+                direction={manualImagesOrder}
+                label="size"
+                handleClick={handleManualImagesOrderChange}
+              >
+                Size
+              </TableSortCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {manualImagesData.length > 0
+              ? manualImagesData.map((manualImage) => (
+                  <ImageRow
+                    key={manualImage.id}
+                    {...manualImage}
+                    {...handlers}
+                  />
+                ))
+              : noManualImages}
+          </TableBody>
+        </Table>
+        <PaginationFooter
+          count={manualImages?.results ?? 0}
+          handlePageChange={paginationForManualImages.handlePageChange}
+          handleSizeChange={paginationForManualImages.handlePageSizeChange}
+          page={paginationForManualImages.page}
+          pageSize={paginationForManualImages.pageSize}
+          eventCategory="Custom Images Table"
         />
       </Paper>
       <Paper className={classes.imageTable}>
@@ -537,12 +555,63 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
             deleted. They will be deleted after the indicated expiration date.
           </Typography>
         </div>
-        <EntityTable
-          entity="image"
-          row={autoImageRow}
-          headers={automaticHeaders}
-          emptyMessage={'No Recovery Images to display.'}
-          initialOrder={initialOrder}
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableSortCell
+                active={automaticImagesOrderBy === 'label'}
+                direction={automaticImagesOrder}
+                label="label"
+                handleClick={handleAutomaticImagesOrderChange}
+              >
+                Image
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Status</TableCell>
+              </Hidden>
+              <Hidden smDown>
+                <TableSortCell
+                  active={automaticImagesOrderBy === 'created'}
+                  direction={automaticImagesOrder}
+                  label="created"
+                  handleClick={handleAutomaticImagesOrderChange}
+                >
+                  Created
+                </TableSortCell>
+              </Hidden>
+              <TableSortCell
+                active={automaticImagesOrderBy === 'size'}
+                direction={automaticImagesOrder}
+                label="size"
+                handleClick={handleAutomaticImagesOrderChange}
+              >
+                Size
+              </TableSortCell>
+              <Hidden smDown>
+                <TableCell>Expires</TableCell>
+              </Hidden>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {automaticImagesData.length > 0
+              ? automaticImagesData.map((automaticImage) => (
+                  <ImageRow
+                    key={automaticImage.id}
+                    {...automaticImage}
+                    {...handlers}
+                  />
+                ))
+              : noAutomaticImages}
+          </TableBody>
+        </Table>
+        <PaginationFooter
+          count={automaticImages?.results ?? 0}
+          handlePageChange={paginationForAutomaticImages.handlePageChange}
+          handleSizeChange={paginationForAutomaticImages.handlePageSizeChange}
+          page={paginationForAutomaticImages.page}
+          pageSize={paginationForAutomaticImages.pageSize}
+          eventCategory="Recovery Images Table"
         />
       </Paper>
       {renderImageDrawer()}
@@ -563,7 +632,28 @@ export const ImagesLanding: React.FC<CombinedProps> = (props) => {
   );
 };
 
-export default compose<CombinedProps, {}>(
-  withRouter,
-  withSnackbar
-)(ImagesLanding);
+export default ImagesLanding;
+
+const getImagesWithEvents = (images: Image[], events: Event[]) => {
+  const itemsById = listToItemsByID(images ?? []);
+  return Object.values(itemsById).reduce(
+    (accum, thisImage: Image) =>
+      produce(accum, (draft: any) => {
+        if (!thisImage.is_public) {
+          // NB: the secondary_entity returns only the numeric portion of the image ID so we have to interpolate.
+          const matchingEvent = events.find(
+            (thisEvent) =>
+              `private/${thisEvent.secondary_entity?.id}` === thisImage.id ||
+              (`private/${thisEvent.entity?.id}` === thisImage.id &&
+                thisEvent.status === 'failed')
+          );
+          if (matchingEvent) {
+            draft.push({ ...thisImage, event: matchingEvent });
+          } else {
+            draft.push(thisImage);
+          }
+        }
+      }),
+    []
+  ) as ImageWithEvent[];
+};

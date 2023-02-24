@@ -23,7 +23,7 @@ export interface DefaultProps {
  * to FCs (these include: LinodeCreateContainer/LinodeCreate, StackScriptCreate, LinodesLanding).
  * Please do NOT use this wrapper for any future components; if a class component is needed,
  * best practice is to include an FC container above it (the routing level often works well)
- * and pass regions through there.
+ * and pass the data through there.
  */
 type Wrapper = (
   Component: React.ComponentType<DefaultProps>
