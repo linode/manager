@@ -90,6 +90,7 @@
     "search-string": "^3.1.0",
     "stream-browserify": "^3.0.0",
     "throttle-debounce": "^2.0.0",
+    "tss-react": "^4.6.1",
     "typescript-fsa": "^3.0.0",
     "typescript-fsa-reducers": "^1.2.0",
     "url-parse": "^1.5.9",
