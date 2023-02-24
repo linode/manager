@@ -262,9 +262,6 @@
       "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
     ],
     "testEnvironment": "jsdom",
-    "testPathIgnorePatterns": [
-      "<rootDir>/src/components/Storyshots.test.tsx"
-    ],
     "testURL": "https://api.linode.com",
     "transform": {
       "^.+\\.tsx?$": [
