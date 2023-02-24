@@ -23,7 +23,7 @@ export const useMutatePreferences = () => {
     ManagerPreferences,
     APIError[],
     Partial<ManagerPreferences>
-  >((data) => updateUserPreferences({ ...(preferences ?? {}), data }), {
+  >((data) => updateUserPreferences({ ...(preferences ?? {}), ...data }), {
     onMutate: updatePreferenceData,
   });
 };
