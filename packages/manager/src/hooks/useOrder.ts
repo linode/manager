@@ -1,4 +1,3 @@
-import * as qs from 'qs';
 import { useState, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
@@ -71,11 +70,13 @@ export const useOrder = (
           orderBy: newOrderBy,
         };
 
-    const queryParams = qs.parse(location.search.replace('?', ''));
+    const queryParams = new URLSearchParams(location.search);
 
-    const newQueries = { ...queryParams, ...urlData };
+    for (const [key, value] of Object.entries(urlData)) {
+      queryParams.set(key, value);
+    }
 
-    history.replace(`?${qs.stringify(newQueries)}`);
+    history.replace(`?${queryParams.toString()}`);
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };
