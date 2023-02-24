@@ -16,25 +16,33 @@ export const usePreferences = (enabled = true) =>
     enabled,
   });
 
-export const useMutatePreferences = () => {
-  const { data: preferences } = usePreferences();
+export const useMutatePreferences = (replace?: boolean) => {
+  const { data: preferences } = usePreferences(!replace);
 
   return useMutation<
     ManagerPreferences,
     APIError[],
     Partial<ManagerPreferences>
-  >((data) => updateUserPreferences({ ...(preferences ?? {}), ...data }), {
-    onMutate: updatePreferenceData,
-  });
+  >(
+    (data) =>
+      updateUserPreferences({
+        ...(!replace && preferences !== undefined ? preferences : {}),
+        ...data,
+      }),
+    {
+      onMutate: (data) => updatePreferenceData(data, replace),
+    }
+  );
 };
 
 export const updatePreferenceData = (
-  newData: Partial<ManagerPreferences>
+  newData: Partial<ManagerPreferences>,
+  replace?: boolean
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
     queryKey,
     (oldData: ManagerPreferences) => ({
-      ...oldData,
+      ...(!replace ? oldData : {}),
       ...newData,
     })
   );

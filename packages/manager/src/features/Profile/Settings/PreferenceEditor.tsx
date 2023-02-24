@@ -10,7 +10,7 @@ type DialogProps = Pick<_DialogProps, 'onClose' | 'open'>;
 
 const PreferenceEditor: React.FC<DialogProps> = (props) => {
   const { refetch: refetchPreferences } = usePreferences();
-  const { mutateAsync: updatePreferences } = useMutatePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences(true);
 
   const [userPrefs, setUserPrefs] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState('');
