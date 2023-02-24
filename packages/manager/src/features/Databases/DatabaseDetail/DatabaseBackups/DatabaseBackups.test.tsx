@@ -75,7 +75,7 @@ describe('Database Backups', () => {
     );
 
     const { getByTestId, getByText } = renderWithTheme(<DatabaseBackups />, {
-      queryClient,
+      queryClient: new QueryClient(),
     });
 
     // Should render a loading state

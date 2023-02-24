@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { OrderSet } from 'src/store/preferences/preferences.actions';
 import { baseStore, wrapWithStore } from 'src/utilities/testHelpers';

@@ -102,7 +102,9 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding {...props} />, {
+      queryClient: new QueryClient(),
+    });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
@@ -149,7 +151,9 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding {...props} />, {
+      queryClient: new QueryClient(),
+    });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
@@ -177,7 +181,9 @@ describe('ObjectStorageLanding', () => {
       })
     );
 
-    renderWithTheme(<BucketLanding {...props} />, { queryClient });
+    renderWithTheme(<BucketLanding {...props} />, {
+      queryClient: new QueryClient(),
+    });
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 

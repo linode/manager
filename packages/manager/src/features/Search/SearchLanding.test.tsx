@@ -49,7 +49,7 @@ describe('Component', () => {
     const { getByText, getByTestId } = renderWithTheme(
       <SearchLanding {...props} />
     );
-    await waitForElementToBeRemoved(getByTestId('loading'));
+    await waitForElementToBeRemoved(getByTestId('circle-progress'));
     expect(getByText(/search/));
   });
 

@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 import usePolling from './usePolling';
 
 jest.mock('react-page-visibility', () => ({

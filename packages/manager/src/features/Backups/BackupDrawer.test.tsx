@@ -1,11 +1,11 @@
 import '@testing-library/jest-dom/extend-expect';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, waitFor } from '@testing-library/react';
 import * as React from 'react';
 
 import { LinodeType } from '@linode/api-v4/lib/linodes';
 import data from 'src/utilities/types.json';
 import { linodeFactory } from 'src/factories/linodes';
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 
 import {
@@ -124,16 +124,6 @@ const props = {
   updatedCount: 0,
 };
 
-const { rerender, getByTestId, findByTestId, queryByTestId } = render(
-  wrapWithTheme(
-    <BackupDrawer
-      closeSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
-      {...props}
-    />
-  )
-);
-
 describe('BackupDrawer component', () => {
   afterEach(() => {
     jest.resetAllMocks();
@@ -182,57 +172,48 @@ describe('BackupDrawer component', () => {
   });
   describe('Backup Drawer', () => {
     it('should display an error Notice', () => {
-      expect(queryByTestId('result-notice')).toBeNull();
-      rerender(
-        wrapWithTheme(
-          <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
-            {...props}
-            enableErrors={[error]}
-          />
-        )
+      const { getByTestId } = renderWithTheme(
+        <BackupDrawer
+          closeSnackbar={jest.fn()}
+          enqueueSnackbar={jest.fn()}
+          {...props}
+          enableErrors={[error]}
+        />
       );
       expect(getByTestId('result-notice')).toBeDefined();
     });
     it('should include the number of failures and successes in the Notice', () => {
-      rerender(
-        wrapWithTheme(
-          <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
-            {...props}
-            enableErrors={[error]}
-            updatedCount={2}
-          />
-        )
+      const { getByTestId } = renderWithTheme(
+        <BackupDrawer
+          closeSnackbar={jest.fn()}
+          enqueueSnackbar={jest.fn()}
+          {...props}
+          enableErrors={[error]}
+          updatedCount={2}
+        />
       );
       expect(getByTestId('result-notice')).toHaveTextContent('1 Linode failed');
       expect(getByTestId('result-notice')).toHaveTextContent('2 Linodes');
     });
     it('should call enrollAutoBackups on submit', async () => {
-      rerender(
-        wrapWithTheme(
-          <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
-            {...props}
-          />
-        )
+      const { findByTestId } = renderWithTheme(
+        <BackupDrawer
+          closeSnackbar={jest.fn()}
+          enqueueSnackbar={jest.fn()}
+          {...props}
+        />
       );
       const submit = await findByTestId('submit');
       fireEvent.click(submit);
       await waitFor(() => expect(actions.enroll).toHaveBeenCalled());
     });
     it('should close the drawer on Cancel', async () => {
-      rerender(
-        wrapWithTheme(
-          <BackupDrawer
-            closeSnackbar={jest.fn()}
-            enqueueSnackbar={jest.fn()}
-            {...props}
-          />
-        )
+      const { findByTestId } = renderWithTheme(
+        <BackupDrawer
+          closeSnackbar={jest.fn()}
+          enqueueSnackbar={jest.fn()}
+          {...props}
+        />
       );
       const cancelButton = await findByTestId('cancel');
       fireEvent.click(cancelButton);

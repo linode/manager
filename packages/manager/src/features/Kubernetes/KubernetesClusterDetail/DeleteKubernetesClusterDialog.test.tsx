@@ -84,7 +84,7 @@ describe('Kubernetes deletion dialog', () => {
     const { queryByText, getByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />,
       {
-        queryClient,
+        queryClient: new QueryClient(),
       }
     );
 
@@ -103,7 +103,7 @@ describe('Kubernetes deletion dialog', () => {
     expect(props.onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('should not be able to submit form before the user fills out confirmation text', () => {
+  it('should not be able to submit form before the user fills out confirmation text', async () => {
     server.use(
       rest.get(`*/profile/preference`, (req, res, ctx) => {
         return res(
@@ -117,6 +117,9 @@ describe('Kubernetes deletion dialog', () => {
     const { getByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
+
+    await waitForElementToBeRemoved(getByTestId('circle-progress'));
+
     const button = getByTestId('dialog-confirm');
 
     expect(button).toBeDisabled();

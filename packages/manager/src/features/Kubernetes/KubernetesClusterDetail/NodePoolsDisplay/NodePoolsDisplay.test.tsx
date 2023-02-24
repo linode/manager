@@ -1,6 +1,10 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { linodeTypeFactory, nodePoolFactory } from 'src/factories';
+import {
+  kubeLinodeFactory,
+  linodeTypeFactory,
+  nodePoolFactory,
+} from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
@@ -18,6 +22,7 @@ describe('NodeTable', () => {
         const pools = nodePoolFactory.buildList(1, {
           count: 1,
           type: 'g6-standard-1',
+          nodes: kubeLinodeFactory.buildList(1),
         });
         return res(ctx.json(makeResourcePage(pools)));
       }),
@@ -35,12 +40,12 @@ describe('NodeTable', () => {
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(
+    const { getAllByText, getByTestId } = renderWithTheme(
       <NodePoolsDisplay {...props} />
     );
 
     await waitForElementToBeRemoved(getByTestId('circle-progress'));
 
-    getByText('Linode 2GB');
+    getAllByText('Linode 2GB');
   });
 });
