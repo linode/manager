@@ -64,6 +64,10 @@ export default (
     return `/images`;
   }
 
+  if (['linode_snapshot', 'backups_enable'].includes(action)) {
+    return `/linodes/${id}/backup`;
+  }
+
   switch (type) {
     case 'linode':
       return action === 'linode_addip'

@@ -1,7 +1,7 @@
 # `manager`
 #
 # Serves Cloud Manager.
-FROM node:14.17-bullseye-slim as manager
+FROM node:18.14-bullseye-slim as manager
 ENV NODE_ENV=development
 WORKDIR /home/node/app
 VOLUME /home/node/app
@@ -27,6 +27,6 @@ ENV CI=1
 ENV NO_COLOR=1
 ENV HOME=/home/node/
 ENV CYPRESS_CACHE_FOLDER=/home/node/.cache/Cypress
-ENTRYPOINT [ "yarn", "cy:ci" ]
+ENTRYPOINT yarn cy:ci --record --parallel --ci-build-id=${BUILD_ID}
 
 # TODO Add `e2e-m1`.

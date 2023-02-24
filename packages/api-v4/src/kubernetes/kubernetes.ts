@@ -138,9 +138,15 @@ export const getKubernetesVersion = (versionID: string) =>
  *
  */
 
-export const getKubernetesClusterEndpoints = (clusterID: number) =>
+export const getKubernetesClusterEndpoints = (
+  clusterID: number,
+  params?: any,
+  filters?: any
+) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),
+    setXFilter(filters),
+    setParams(params),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/api-endpoints`)
   );
 

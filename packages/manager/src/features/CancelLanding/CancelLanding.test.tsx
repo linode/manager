@@ -1,6 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
+import { LDClient } from 'src/containers/withFeatureFlagConsumer.container';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CancelLanding } from './CancelLanding';
 
@@ -13,19 +14,32 @@ afterAll(() => {
 
 describe('CancelLanding', () => {
   it('does not render the body when there is no survey_link in the state', () => {
-    const { queryByTestId } = render(wrapWithTheme(<CancelLanding />));
+    const { queryByTestId } = render(
+      wrapWithTheme(
+        <CancelLanding
+          flags={{ brandUpdate: true }}
+          ldClient={{} as LDClient}
+        />
+      )
+    );
     expect(queryByTestId('body')).toBe(null);
   });
 
   it('renders the body when there is a survey_link in the state', () => {
     const { queryByTestId } = render(
-      wrapWithTheme(<CancelLanding />, {
-        MemoryRouter: {
-          initialEntries: [
-            { pathname: '/cancel', state: { survey_link: 'linode.com' } },
-          ],
-        },
-      })
+      wrapWithTheme(
+        <CancelLanding
+          flags={{ brandUpdate: true }}
+          ldClient={{} as LDClient}
+        />,
+        {
+          MemoryRouter: {
+            initialEntries: [
+              { pathname: '/cancel', state: { survey_link: 'linode.com' } },
+            ],
+          },
+        }
+      )
     );
     expect(queryByTestId('body')).toBeInTheDocument();
   });
@@ -39,13 +53,18 @@ describe('CancelLanding', () => {
     window.location = { ...realLocation, assign: mockAssign };
 
     const survey_link = 'https://linode.com';
-
     const { getByTestId } = render(
-      wrapWithTheme(<CancelLanding />, {
-        MemoryRouter: {
-          initialEntries: [{ pathname: '/cancel', state: { survey_link } }],
-        },
-      })
+      wrapWithTheme(
+        <CancelLanding
+          flags={{ brandUpdate: true }}
+          ldClient={{} as LDClient}
+        />,
+        {
+          MemoryRouter: {
+            initialEntries: [{ pathname: '/cancel', state: { survey_link } }],
+          },
+        }
+      )
     );
     const button = getByTestId('survey-button');
     fireEvent.click(button);

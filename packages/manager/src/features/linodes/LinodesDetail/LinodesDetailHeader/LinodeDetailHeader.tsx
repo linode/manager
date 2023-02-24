@@ -247,17 +247,9 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const addTag = (linodeID: number, newTag: string) => {
-    const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId: linodeID, tags: _tags }).then((_) => {
-      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
-    });
-  };
-
-  const deleteTag = (linodeId: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
-    return updateLinode({ linodeId, tags: _tags }).then((_) => {
-      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags: _tags }));
+  const updateTags = (linodeId: number, tags: string[]) => {
+    return updateLinode({ linodeId, tags }).then((_) => {
+      setTagDrawer((tagDrawer) => ({ ...tagDrawer, tags }));
     });
   };
 
@@ -341,8 +333,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         entityLabel={linode.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(linode.id, newTag)}
-        deleteTag={(tag: string) => deleteTag(linode.id, tag)}
+        updateTags={(tags) => updateTags(linode.id, tags)}
         onClose={closeTagDrawer}
       />
       <EnableBackupDialog

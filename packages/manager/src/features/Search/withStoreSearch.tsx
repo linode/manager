@@ -1,4 +1,4 @@
-import { Image, Volume } from '@linode/api-v4';
+import { Image, KubernetesCluster, Volume } from '@linode/api-v4';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
@@ -13,6 +13,7 @@ import getSearchEntities, {
   bucketToSearchableItem,
   domainToSearchableItem,
   imageToSearchableItem,
+  kubernetesClusterToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 import { refinedSearch } from './refinedSearch';
@@ -29,6 +30,7 @@ interface HandlerProps {
     buckets: ObjectStorageBucket[],
     domains: Domain[],
     volumes: Volume[],
+    clusters: KubernetesCluster[],
     images: Image[],
     searchableLinodes: SearchableItem<string | number>[]
   ) => SearchResults;
@@ -82,6 +84,7 @@ export default () => (Component: React.ComponentType<any>) => {
           objectStorageBuckets: ObjectStorageBucket[],
           domains: Domain[],
           volumes: Volume[],
+          clusters: KubernetesCluster[],
           images: Image[],
           searchableLinodes: SearchableItem<string | number>[]
         ) => {
@@ -98,6 +101,9 @@ export default () => (Component: React.ComponentType<any>) => {
             imageToSearchableItem(image)
           );
 
+          const searchableClusters = clusters.map((cluster) =>
+            kubernetesClusterToSearchableItem(cluster)
+          );
           const results = search(
             [
               ...searchableLinodes,
@@ -106,6 +112,7 @@ export default () => (Component: React.ComponentType<any>) => {
               ...searchableBuckets,
               ...searchableDomains,
               ...searchableVolumes,
+              ...searchableClusters,
             ],
             query
           );

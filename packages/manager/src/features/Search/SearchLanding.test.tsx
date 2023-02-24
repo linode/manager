@@ -21,8 +21,6 @@ const props: Props = {
     hasErrors: false,
     linodes: false,
     nodebalancers: false,
-    volumes: false,
-    kubernetes: false,
   },
   ...reactRouterProps,
 };

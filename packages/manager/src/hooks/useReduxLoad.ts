@@ -1,13 +1,11 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePageVisibility } from 'react-page-visibility';
 import { useDispatch, useStore } from 'react-redux';
 import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
-import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ApplicationState } from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
-import { requestKubernetesClusters } from 'src/store/kubernetes/kubernetes.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
@@ -21,7 +19,6 @@ interface UseReduxPreload {
 
 export type ReduxEntity =
   | 'linodes'
-  | 'kubernetes'
   | 'nodeBalancers'
   | 'notifications'
   | 'types'
@@ -38,7 +35,6 @@ const requestMap: RequestMap = {
   events: getEvents,
   types: requestTypes,
   notifications: requestNotifications,
-  kubernetes: requestKubernetesClusters,
   longview: getAllLongviewClients,
   firewalls: () => getAllFirewalls({}),
   vlans: () => getAllVlans({}),
@@ -58,14 +54,6 @@ export const useReduxLoad = (
    * which gums up the works. We want to prevent that particular
    * request for a restricted user.
    */
-  const { _isRestrictedUser } = useAccountManagement();
-  const _deps = useMemo(() => {
-    if (!_isRestrictedUser) {
-      return deps;
-    }
-    return deps.filter((thisDep) => thisDep !== 'kubernetes');
-  }, [deps, _isRestrictedUser]);
-
   const mountedRef = useRef<boolean>(true);
 
   const _setLoading = (val: boolean) => {
@@ -79,12 +67,12 @@ export const useReduxLoad = (
       requestDeps(
         store.getState(),
         dispatch,
-        _deps,
+        deps,
         refreshInterval,
         _setLoading
       );
     }
-  }, [predicate, refreshInterval, _deps, dispatch, store, isVisible]);
+  }, [predicate, refreshInterval, deps, dispatch, store, isVisible]);
 
   useEffect(() => {
     return () => {

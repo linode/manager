@@ -32,6 +32,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { listToItemsByID } from 'src/queries/base';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 type CombinedProps = WithTypesProps &
   SearchProps &
@@ -72,7 +73,7 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers', 'kubernetes'];
+const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers'];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
@@ -100,6 +101,9 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
 
   const { data: domains } = useAllDomainsQuery(shouldMakeRequests);
+
+  const { data: clusters } = useAllKubernetesClustersQuery(shouldMakeRequests);
+
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
   const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
@@ -165,6 +169,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
         buckets,
         domains ?? [],
         volumes ?? [],
+        clusters ?? [],
         _privateImages ?? [],
         searchableLinodes ?? []
       );

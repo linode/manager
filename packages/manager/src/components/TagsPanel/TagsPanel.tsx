@@ -1,16 +1,14 @@
-import { getTags } from '@linode/api-v4/lib/tags';
 import classNames from 'classnames';
-import { clone } from 'ramda';
 import * as React from 'react';
 import Plus from 'src/assets/icons/plusSign.svg';
 import CircleProgress from 'src/components/CircleProgress';
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
-import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { Theme, makeStyles } from 'src/components/core/styles';
-import { useSnackbar } from 'notistack';
+import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
+import { useProfile } from 'src/queries/profile';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   errorNotice: {
     animation: '$fadeIn 225ms linear forwards',
-    borderLeft: `5px solid ${theme.palette.status.errorDark}`,
+    borderLeft: `5px solid ${theme.palette.error.dark}`,
     '& .noticeText': {
       ...theme.typography.body1,
       fontFamily: '"LatoWeb", sans-serif',
@@ -134,56 +132,47 @@ export interface Props {
 const TagsPanel: React.FC<Props> = (props) => {
   const classes = useStyles();
   const { tags, disabled, updateTags } = props;
-  const { enqueueSnackbar } = useSnackbar();
 
-  const [tagsToSuggest, setTagsToSuggest] = React.useState<Item[]>([]);
-  const [tagError, setTagError] = React.useState('');
+  const [tagError, setTagError] = React.useState<string>('');
   const [isCreatingTag, setIsCreatingTag] = React.useState(false);
   const [tagInputValue, setTagInputValue] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
+  const [tagsLoading, setTagsLoading] = React.useState(false);
+
+  const { data: profile } = useProfile();
+
+  const {
+    data: userTags,
+    isLoading: userTagsLoading,
+    error: userTagsError,
+  } = useTagSuggestions(!profile?.restricted);
+
+  const tagsToSuggest = React.useMemo<Item[] | undefined>(
+    () =>
+      userTags
+        ?.filter((tag) => !tags.some((appliedTag) => appliedTag === tag.label))
+        .map((tag) => ({
+          label: tag.label,
+          value: tag.label,
+        })),
+    [userTags, tags]
+  );
 
   React.useEffect(() => {
-    if (!isRestrictedUser()) {
-      getTags()
-        .then((response) => {
-          /*
-           * The end goal is to display to the user a list of auto-suggestions
-           * when they start typing in a new tag, but we don't want to display
-           * tags that are already applied because there cannot
-           * be duplicates.
-           */
-          const filteredTags = response.data.filter((thisTag: Tag) => {
-            return !tags.some((alreadyAppliedTag: string) => {
-              return alreadyAppliedTag === thisTag.label;
-            });
-          });
-          /*
-           * reshaping them for the purposes of being passed to the Select component
-           */
-          const reshapedTags = filteredTags.map((thisTag: Tag) => {
-            return {
-              label: thisTag.label,
-              value: thisTag.label,
-            };
-          });
-          setTagsToSuggest(reshapedTags);
-        })
-        .catch((e) => e);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setTagError('');
+  }, [isCreatingTag]);
 
   const toggleTagInput = () => {
     if (!disabled) {
-      if (tagError) {
-        setTagError('');
-      }
       setIsCreatingTag((prev) => !prev);
     }
   };
 
+  const userTagsErrorDisplay = userTagsError
+    ? 'There was an error retrieving your tags.'
+    : '';
+
   const handleDeleteTag = (label: string) => {
-    setLoading(true);
+    setTagsLoading(true);
 
     const tagsWithoutDeletedTag = tags.filter(
       (thisTag: string) => thisTag !== label
@@ -191,25 +180,14 @@ const TagsPanel: React.FC<Props> = (props) => {
 
     updateTags(tagsWithoutDeletedTag)
       .then(() => {
-        /*
-         * Remove this tag from the current list of tags that are queued for deletion
-         */
-        const cloneTagSuggestions = clone(tagsToSuggest) || [];
-        setTagsToSuggest([
-          {
-            value: label,
-            label,
-          },
-          ...cloneTagSuggestions,
-        ]);
-        setLoading(false);
         setTagError('');
       })
-      .catch((_) => {
-        enqueueSnackbar(`Could not delete Tag: ${label}`, {
-          variant: 'error',
-        });
-        setLoading(false);
+      .catch((e) => {
+        const tagError = getErrorStringOrDefault(e, 'Error while deleting tag');
+        setTagError(tagError);
+      })
+      .finally(() => {
+        setTagsLoading(false);
       });
   };
 
@@ -241,29 +219,25 @@ const TagsPanel: React.FC<Props> = (props) => {
     } else if (tagExists(inputValue)) {
       setTagError(`Tag "${inputValue}" is a duplicate`);
     } else {
-      setLoading(true);
-      updateTags([...tags, value.label])
+      setTagError('');
+      setTagsLoading(true);
+      updateTags([...tags, value.label].sort())
         .then(() => {
           // set the input value to blank on submit
           setTagInputValue('');
-          /*
-           * Filter out the new tag out of the auto-suggestion list
-           * since we can't attach this tag anymore
-           */
-          const cloneTagSuggestions = clone(tagsToSuggest) || [];
-          const filteredTags = cloneTagSuggestions.filter((thisTag: Item) => {
-            return thisTag.label !== value.label;
-          });
-          setTagsToSuggest(filteredTags);
-          setLoading(false);
+          if (userTags) {
+            updateTagsSuggestionsData([...userTags, value]);
+          }
         })
         .catch((e) => {
           const tagError = getErrorStringOrDefault(
             e,
             'Error while creating tag'
           );
-          setLoading(false);
           setTagError(tagError);
+        })
+        .finally(() => {
+          setTagsLoading(false);
         });
     }
   };
@@ -286,6 +260,7 @@ const TagsPanel: React.FC<Props> = (props) => {
           blurInputOnSelect
           // eslint-disable-next-line
           autoFocus
+          isLoading={userTagsLoading}
         />
       ) : (
         <div
@@ -304,9 +279,8 @@ const TagsPanel: React.FC<Props> = (props) => {
           </button>
         </div>
       )}
-
       <div className={classes.tagsPanelItemWrapper}>
-        {loading && (
+        {tagsLoading && (
           <div className={classes.progress}>
             <CircleProgress mini />
           </div>
@@ -317,7 +291,7 @@ const TagsPanel: React.FC<Props> = (props) => {
               key={`tag-item-${thisTag}`}
               className={classNames({
                 [classes.tag]: true,
-                [classes.loading]: loading,
+                [classes.loading]: tagsLoading,
               })}
               colorVariant="lightBlue"
               label={thisTag}
@@ -326,8 +300,10 @@ const TagsPanel: React.FC<Props> = (props) => {
             />
           );
         })}
-        {tagError && (
-          <Typography className={classes.errorNotice}>{tagError}</Typography>
+        {(tagError.length > 0 || userTagsErrorDisplay.length > 0) && (
+          <Typography className={classes.errorNotice}>
+            {tagError.length > 0 ? tagError : userTagsErrorDisplay}
+          </Typography>
         )}
       </div>
     </>

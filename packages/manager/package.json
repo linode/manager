@@ -2,11 +2,8 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "1.83.2",
+  "version": "1.87.0",
   "private": true,
-  "engines": {
-    "node": ">= 14.17.4"
-  },
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
   },
@@ -168,6 +165,7 @@
     "@types/ramda": "0.25.16",
     "@types/reach__router": "^1.3.10",
     "@types/react": "^17.0.27",
+    "@types/react-csv": "^1.1.3",
     "@types/react-dom": "^17.0.9",
     "@types/react-page-visibility": "^6.4.1",
     "@types/react-redux": "~7.1.7",
@@ -237,7 +235,6 @@
     "style-loader": "^3.3.1",
     "tsconfig-paths-webpack-plugin": "^4.0.0",
     "url-loader": "^4.1.1",
-    "wait-on": "^6.0.1",
     "webpack": "^5.75.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "webpack-dev-server": "^4.11.1",
@@ -307,7 +304,9 @@
       "ramda": "ramda/src/index.js",
       "^src/(.*)": "<rootDir>/src/$1",
       "@linode/api-v4/lib(.*)$": "<rootDir>/../api-v4/src/$1",
-      "@linode/validation/lib(.*)$": "<rootDir>/../validation/src/$1"
+      "@linode/validation/lib(.*)$": "<rootDir>/../validation/src/$1",
+      "@linode/api-v4": "<rootDir>/../api-v4/src/index.ts",
+      "@linode/validation": "<rootDir>/../validation/src/index.ts"
     },
     "moduleFileExtensions": [
       "mjs",

@@ -32,7 +32,7 @@ import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
@@ -91,7 +91,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const images = listToItemsByID(imagesData ?? []);
 
   const { data: profile } = useProfile();
-  const { data: agreements } = useAccountAgreements();
+  const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(

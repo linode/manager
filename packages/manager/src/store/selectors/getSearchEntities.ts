@@ -6,15 +6,10 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
-import {
-  extendCluster,
-  getDescriptionForCluster,
-} from 'src/features/Kubernetes/kubeUtils';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
+import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
-import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -134,7 +129,7 @@ export const nodeBalToSearchableItem = (
 });
 
 export const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: ExtendedCluster
+  kubernetesCluster: KubernetesCluster
 ): SearchableItem => ({
   label: kubernetesCluster.label,
   value: kubernetesCluster.id,
@@ -171,34 +166,12 @@ export const bucketToSearchableItem = (
 
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const typesSelector = (state: State) => state.types.entities;
-const kubernetesClusterSelector = (state: State) =>
-  Object.values(state.kubernetes.itemsById);
-const kubePoolSelector = (state: State) => state.nodePools.entities;
 
-export default createSelector<
-  State,
-  NodeBalancer[],
-  LinodeType[],
-  KubernetesCluster[],
-  ExtendedNodePool[],
-  SearchableItem[]
->(
+export default createSelector<State, NodeBalancer[], SearchableItem[]>(
   nodebalSelector,
-  typesSelector,
-  kubernetesClusterSelector,
-  kubePoolSelector,
-  (nodebalancers, types, kubernetesClusters, nodePools) => {
+  (nodebalancers) => {
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
-    const searchableKubernetesClusters = kubernetesClusters
-      .map((thisCluster) => {
-        const pools = nodePools.filter(
-          (thisPool) => thisPool.clusterID === thisCluster.id
-        );
-        return extendCluster(thisCluster, pools, types);
-      })
-      .map(kubernetesClusterToSearchableItem);
 
-    return [...searchableNodebalancers, ...searchableKubernetesClusters];
+    return [...searchableNodebalancers];
   }
 );

@@ -1,6 +1,25 @@
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+const SLIDE_IN_TRANSFORM = 'matrix(0.01471, 0, 0, 1, 123.982745, 0.000015)';
+const SLIDE_OUT_TRANSFORM = 'translate(0)';
+
 const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes slideIn': {
+    from: {
+      transform: SLIDE_IN_TRANSFORM,
+    },
+    to: {
+      transform: SLIDE_OUT_TRANSFORM,
+    },
+  },
+  '@keyframes slideOut': {
+    from: {
+      transform: SLIDE_OUT_TRANSFORM,
+    },
+    to: {
+      transform: SLIDE_IN_TRANSFORM,
+    },
+  },
   menuGrid: {
     minHeight: 64,
     height: '100%',
@@ -12,6 +31,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.up('md')]: {
       minHeight: 80,
+    },
+    '&:hover': {
+      '& path.akamai-clip-path': {
+        animation: '$slideIn .33s ease-in-out',
+      },
     },
   },
   fadeContainer: {
@@ -26,6 +50,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '12px 12px 0 14px',
     position: 'relative',
   },
+  logoItemAkamai: {
+    paddingTop: 12,
+    paddingLeft: 12,
+    transition: 'padding-left .03s linear',
+    '& path.akamai-clip-path': {
+      animation: '$slideIn .33s ease-in-out',
+    },
+  },
+  logoItemAkamaiCollapsed: {
+    paddingLeft: 8,
+  },
   logoCollapsed: {
     background: theme.bg.primaryNavPaper,
     height: 48,
@@ -33,6 +68,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     top: 12,
     left: 48,
+  },
+  logoAkamaiCollapsed: {
+    background: theme.bg.primaryNavPaper,
+    width: 96,
+    '& path.akamai-clip-path': {
+      animation: '$slideOut 0s ease-in-out 0s forwards',
+    },
   },
   listItem: {
     display: 'flex',
@@ -128,7 +170,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logo: {
     // give the svg a transition so it smoothly resizes
-    transition: 'all .03s linear',
+    transition: 'width .1s linear',
   },
 }));
 

@@ -1,4 +1,6 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
+import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -67,6 +69,7 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import {
   HandleSubmit,
+  LinodeCreateValidation,
   Info,
   TypeInfo,
   WithLinodesProps,
@@ -97,6 +100,7 @@ interface State {
   tags?: Tag[];
   errors?: APIError[];
   showAgreement: boolean;
+  showApiAwarenessModal: boolean;
   signedAgreement: boolean;
   formIsSubmitting: boolean;
   appInstances?: StackScript[];
@@ -145,6 +149,7 @@ const defaultState: State = {
   appInstancesLoading: false,
   attachedVLANLabel: '',
   vlanIPAMAddress: null,
+  showApiAwarenessModal: false,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -393,6 +398,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
+  handleShowApiAwarenessModal = () => {
+    this.setState((prevState) => ({
+      showApiAwarenessModal: !prevState.showApiAwarenessModal,
+    }));
+  };
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
@@ -483,7 +493,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     if (payload.root_pass) {
       const passwordError = validatePassword(payload.root_pass);
-
       if (passwordError) {
         this.setState(
           {
@@ -620,6 +629,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
   };
 
+  checkValidation: LinodeCreateValidation = (payload) => {
+    try {
+      CreateLinodeSchema.validateSync(payload, { abortEarly: false });
+      //reset errors to default state
+      this.setState({ errors: undefined, showApiAwarenessModal: true });
+    } catch (error) {
+      const processedErrors = convertYupToLinodeErrors(error);
+      this.setState(
+        () => ({
+          errors: getAPIErrorOrDefault(processedErrors),
+          formIsSubmitting: false,
+        }),
+        () => scrollErrorIntoView()
+      );
+    }
+  };
   getBackupsMonthlyPrice = (): number | undefined | null => {
     const type = this.getTypeInfo();
 
@@ -764,6 +789,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             togglePrivateIPEnabled={this.togglePrivateIPEnabled}
             updateTags={this.setTags}
             handleSubmitForm={this.submitForm}
+            checkValidation={this.checkValidation}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
@@ -773,6 +799,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
             handleAgreementChange={this.handleAgreementChange}
+            handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
             {...restOfProps}

@@ -18,6 +18,7 @@ import { useReduxLoad } from 'src/hooks/useReduxLoad';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllImagesQuery } from 'src/queries/images';
+import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
@@ -117,6 +118,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   } = useAllDomainsQuery(!_isLargeAccount);
 
   const {
+    data: kubernetesClusters,
+    error: kubernetesClustersError,
+    isLoading: areKubernetesClustersLoading,
+  } = useAllKubernetesClustersQuery(!_isLargeAccount);
+
+  const {
     data: volumes,
     isLoading: areVolumesLoading,
     error: volumesError,
@@ -157,7 +164,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'kubernetes'],
+    ['linodes', 'nodeBalancers'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
@@ -192,6 +199,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         objectStorageBuckets?.buckets ?? [],
         domains ?? [],
         volumes ?? [],
+        kubernetesClusters ?? [],
         _privateImages ?? [],
         searchableLinodes ?? []
       );
@@ -205,6 +213,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
+    kubernetesClusters,
     _privateImages,
   ]);
 
@@ -225,7 +234,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (errors.nodebalancers) {
       errorString.push('NodeBalancers');
     }
-    if (errors.kubernetes) {
+    if (kubernetesClustersError) {
       errorString.push('Kubernetes');
     }
     if (objectStorageClustersError) {
@@ -252,6 +261,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areClustersLoading ||
     areDomainsLoading ||
     areVolumesLoading ||
+    areKubernetesClustersLoading ||
     areImagesLoading;
 
   return (
