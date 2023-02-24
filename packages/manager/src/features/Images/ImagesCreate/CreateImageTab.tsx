@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const cloudInitTooltipMessage = (
   <Typography>
     Copy TBD-If you deployed this from one of our cloud-init compatible disks
-    then it probably is. <Link to="/">Link to doc</Link>
+    then it probably is. <Link to="https://cloud.linode.com">Link to doc</Link>
   </Typography>
 );
 
@@ -288,6 +288,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
           onChange={changeIsCloudInit}
           text="This image is Cloud-init compatible"
           toolTipText={cloudInitTooltipMessage}
+          toolTipInteractive
         />
       </Box>
       <>
