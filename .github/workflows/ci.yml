@@ -108,7 +108,7 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: "16.16.0"
+          node-version: "18.14"
 
       # Download the validation and api-v4 artifacts (built packages)
       - uses: actions/download-artifact@v2
