@@ -37,7 +37,7 @@ const PreferenceEditor: React.FC<DialogProps> = (props) => {
       setSubmitting(true);
       setSuccessMessage('');
       setErrorMessage('');
-      updatePreferences(parsed as any)
+      updatePreferences(parsed)
         .then(() => {
           setSuccessMessage('Preferences updated successfully');
           setSubmitting(false);
