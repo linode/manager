@@ -3,7 +3,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Typography from 'src/components/core/Typography';
 import { Token } from '@linode/api-v4/lib/profile/types';
-import { Button } from 'src/components/Button/Button';
+import Button from 'src/components/Button';
 import { APITokenType } from './APITokenTable';
 import {
   useRevokeAppAccessTokenMutation,
