@@ -113,7 +113,7 @@ const KubernetesEmptyState = () => {
   return (
     <Placeholder
       title="Kubernetes"
-      subtitle=""
+      subtitle="Fully managed Kubernetes infrastructure"
       className={classes.placeholderAdjustment}
       icon={KubernetesSvg}
       isEntity
@@ -175,7 +175,10 @@ const KubernetesEmptyState = () => {
       }
     >
       {' '}
-      <Typography variant="subtitle1">Placeholder</Typography>
+      <Typography variant="subtitle1">
+        Deploy and scale your applications with the Linode Kubernetes Engine
+        (LKE), a Kubernetes service equipped with a fully managed control plane.
+      </Typography>
     </Placeholder>
   );
 };
