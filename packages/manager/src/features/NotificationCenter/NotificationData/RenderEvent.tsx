@@ -52,7 +52,9 @@ interface Props {
   onClose: () => void;
 }
 
-export const RenderEvent: React.FC<React.PropsWithChildren<Props>> = (props) => {
+export const RenderEvent: React.FC<React.PropsWithChildren<Props>> = (
+  props
+) => {
   const classes = useStyles();
 
   const { event, onClose } = props;
@@ -63,13 +65,13 @@ export const RenderEvent: React.FC<React.PropsWithChildren<Props>> = (props) => 
   }
 
   const eventMessage = (
-    <Typography
+    <div
       className={classNames({
         [classes.unseenEvent]: !event.seen,
       })}
     >
       <HighlightedMarkdown textOrMarkdown={message} />
-    </Typography>
+    </div>
   );
 
   return (
