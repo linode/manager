@@ -66,8 +66,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const cloudInitTooltipMessage = (
   <Typography>
-    Copy TBD-If you deployed this from one of our cloud-init compatible disks
-    then it probably is. <Link to="https://cloud.linode.com">Link to doc</Link>
+    Many Linode supported distributions are compatible with cloud-init by
+    default, or you may have installed cloud-init.{' '}
+    <Link to="/">Learn more.</Link>
   </Typography>
 );
 
