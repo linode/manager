@@ -9251,10 +9251,10 @@ find-yarn-workspace-root@^2.0.0:
   dependencies:
     micromatch "^4.0.2"
 
-flag-icon-css@^3.3.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/flag-icon-css/-/flag-icon-css-3.5.0.tgz#430747d5cb91e60babf85494de99173c16dc7cf2"
-  integrity sha512-pgJnJLrtb0tcDgU1fzGaQXmR8h++nXvILJ+r5SmOXaaL/2pocunQo2a8TAXhjQnBpRLPtZ1KCz/TYpqeNuE2ew==
+flag-icons@^6.6.5:
+  version "6.6.6"
+  resolved "https://registry.yarnpkg.com/flag-icons/-/flag-icons-6.6.6.tgz#9ddff81e1126778ca6a5a1e0e2cfac2e865f2cb7"
+  integrity sha512-4lHDKxldnQ7q617pf9Dx9nAetT+9zcMpUexbRrc9kjLw9KJgZ83zA5Dky3Vv7ZDzUjAiZ46x/cy5P0HnEnqA2A==
 
 flat-cache@^2.0.1:
   version "2.0.1"
