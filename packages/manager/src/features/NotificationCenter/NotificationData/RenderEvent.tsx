@@ -6,7 +6,6 @@ import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import { Link } from 'src/components/Link';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { parseAPIDate } from 'src/utilities/date';
 import useEventInfo from './useEventInfo';
@@ -26,7 +25,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
     color: theme.textColors.tableHeader,
     '&:hover': {
       backgroundColor: theme.bg.app,
-      cursor: 'pointer',
       // Extends the hover state to the edges of the drawer
       marginLeft: -20,
       marginRight: -20,
@@ -55,7 +53,7 @@ interface Props {
 export const RenderEvent: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { event, onClose } = props;
+  const { event } = props;
   const { message, linkTarget } = useEventInfo(event);
 
   if (message === null) {
@@ -87,13 +85,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
           className={classes.icon}
         />
         <div className={classes.eventMessage}>
-          {linkTarget ? (
-            <Link to={linkTarget} onClick={onClose}>
-              {eventMessage}
-            </Link>
-          ) : (
-            eventMessage
-          )}
+          {eventMessage}
           <Typography
             className={classNames({ [classes.unseenEvent]: !event.seen })}
           >

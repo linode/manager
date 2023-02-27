@@ -2,6 +2,7 @@ import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import createLinkHandlerForNotification from 'src/utilities/getEventsActionLink';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -770,8 +771,10 @@ export default (e: Event): string => {
     });
   }
 
-  /** return either the message or an empty string */
-  return applyBolding(e, message);
+  /** return either the formatted message or an empty string */
+  let formattedMessage = applyLinking(e, message);
+  formattedMessage = applyBolding(e, formattedMessage);
+  return formattedMessage;
 };
 
 function applyBolding(event: Event, message: string) {
@@ -819,6 +822,28 @@ function applyBolding(event: Event, message: string) {
 
   for (const word of wordsToBold) {
     newMessage = newMessage.replace(word, `**${word}**`);
+  }
+
+  return newMessage;
+}
+
+function applyLinking(event: Event, message: string) {
+  if (!message) {
+    return '';
+  }
+
+  const linkTarget = createLinkHandlerForNotification(
+    event.action,
+    event.entity,
+    false
+  );
+  let newMessage = message;
+
+  if (event.entity && linkTarget) {
+    newMessage = newMessage.replace(
+      event.entity.label,
+      `<a href="${linkTarget}">${event.entity.label}</a>`
+    );
   }
 
   return newMessage;

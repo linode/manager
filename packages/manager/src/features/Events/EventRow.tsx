@@ -6,7 +6,6 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -111,25 +110,13 @@ export const Row: React.FC<RowProps> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
-        {link ? (
-          <Link to={link}>
-            <HighlightedMarkdown
-              textOrMarkdown={displayedMessage}
-              sanitizeOptions={{
-                allowedTags: [],
-                disallowedTagsMode: 'discard',
-              }}
-            />
-          </Link>
-        ) : (
-          <HighlightedMarkdown
-            textOrMarkdown={displayedMessage}
-            sanitizeOptions={{
-              allowedTags: [],
-              disallowedTagsMode: 'discard',
-            }}
-          />
-        )}
+        <HighlightedMarkdown
+          textOrMarkdown={displayedMessage}
+          sanitizeOptions={{
+            allowedTags: ['a'],
+            disallowedTagsMode: 'discard',
+          }}
+        />
       </TableCell>
       <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}
