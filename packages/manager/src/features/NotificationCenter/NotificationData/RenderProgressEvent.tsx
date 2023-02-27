@@ -7,7 +7,6 @@ import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
 import {
   eventLabelGenerator,
   eventMessageGenerator,
@@ -32,7 +31,7 @@ interface Props {
 export type CombinedProps = Props;
 
 export const RenderProgressEvent: React.FC<Props> = (props) => {
-  const { event, onClose } = props;
+  const { event } = props;
   const eventClasses = useEventStyles();
   const classes = useStyles();
 
@@ -77,13 +76,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
           className={eventClasses.icon}
         />
         <div className={eventClasses.eventMessage} data-test-id={event.action}>
-          {linkTarget ? (
-            <Link to={linkTarget} onClick={onClose}>
-              {eventMessage}
-            </Link>
-          ) : (
-            eventMessage
-          )}
+          {eventMessage}
           <BarPercent
             className={classes.bar}
             max={100}
