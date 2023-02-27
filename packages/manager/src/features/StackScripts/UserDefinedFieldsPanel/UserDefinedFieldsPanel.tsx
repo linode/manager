@@ -234,7 +234,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
 
       {isCluster ? (
         <div className={classes.clusterNotice} data-testid="temp-node-notice">
-          <Notice informational>
+          <Notice success>
             <strong>
               You are creating a cluster with {numberOfNodes} nodes. A temporary{' '}
               {addOrdinalSuffix(temporaryNodeNumber)} node will be provisioned
