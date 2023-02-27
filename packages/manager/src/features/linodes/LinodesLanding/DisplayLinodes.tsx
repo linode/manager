@@ -199,7 +199,7 @@ const DisplayLinodes = (props: CombinedProps) => {
                   page={queryPage}
                   eventCategory={'linodes landing'}
                   // Disabling showAll as it is impacting page perofrmance.
-                  showAll={true}
+                  showAll={false}
                 />
               }
             </Grid>
