@@ -1,4 +1,4 @@
-import { LISH_ROOT, ZONES } from 'src/constants';
+import { LISH_ROOT } from 'src/constants';
 
 export const lishLaunch = (linodeId: number) => {
   window.open(
@@ -13,7 +13,7 @@ export const getLishSchemeAndHostname = (region: string): string => {
     /* Note: This is only the case for pre-production environments! */
     return `wss://${LISH_ROOT}`;
   }
-  return `wss://${ZONES[region]}.${LISH_ROOT}`;
+  return `wss://${region}.${LISH_ROOT}`;
 };
 
 export const resizeViewPort = (width: number, height: number) => {
