@@ -1,4 +1,3 @@
-import browser from 'browser-detect';
 import {
   Notification,
   NotificationSeverity,
@@ -14,10 +13,8 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
 import { MapState } from 'src/store/types';
-import UserAgentNotification from 'src/UserAgentNotification';
 import UserNotificationButton from './UserNotificationsButton';
 import UserNotificationsList from './UserNotificationsList';
 
@@ -64,37 +61,9 @@ const styles = (theme: Theme) =>
 
 interface State {
   anchorEl?: HTMLElement;
-  UserAgentNotification: boolean;
-  UserAgentNotificationWarning: any;
 }
 
 type CombinedProps = StateProps & WithStyles<ClassNames>;
-
-const b =
-  typeof browser === 'function' ? browser() : () => ({ name: 'unknown' });
-
-const userAgentDetection = () => {
-  switch (b.name) {
-    case 'ie':
-      return (
-        <Typography>
-          Your Web Browser (<strong>{b.name}</strong>) is not compatible with
-          the Linode Manager. Please update to{' '}
-          <a
-            href="https://www.microsoft.com/en-us/windows/microsoft-edge"
-            target="_blank"
-            aria-describedby="external-site"
-            rel="noopener noreferrer"
-          >
-            Microsoft Edge
-          </a>{' '}
-          for more security, speed and the best experience on this site.
-        </Typography>
-      );
-    default:
-      return undefined;
-  }
-};
 
 class UserNotificationsMenu extends React.Component<CombinedProps, State> {
   static displayedEvents: NotificationType[] = [
@@ -110,15 +79,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
 
   state: State = {
     anchorEl: undefined,
-    UserAgentNotification: true,
-    UserAgentNotificationWarning: false,
   };
-
-  componentDidMount() {
-    this.setState({
-      UserAgentNotificationWarning: userAgentDetection(),
-    });
-  }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     const { notifications } = this.props;
@@ -128,11 +89,8 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     }
   }
 
-  closeUserAgentNotification = () =>
-    this.setState({ UserAgentNotification: false });
-
   render() {
-    const { anchorEl, UserAgentNotificationWarning } = this.state;
+    const { anchorEl } = this.state;
     const { classes, notifications } = this.props;
     const severity = notifications.reduce(reduceSeverity, null);
 
@@ -164,13 +122,6 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
             closeMenu={this.closeMenu}
           />
         </Menu>
-        {UserAgentNotificationWarning && (
-          <UserAgentNotification
-            open={this.state.UserAgentNotification}
-            onClose={this.closeUserAgentNotification}
-            warning={UserAgentNotificationWarning}
-          />
-        )}
       </React.Fragment>
     );
   }

@@ -49,7 +49,6 @@
     "jest",
     "node_modules",
     "scripts",
-    "src/components/Storyshots.test.tsx",
     "src/setupTests.ts",
     "webpack"
   ]
