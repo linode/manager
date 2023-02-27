@@ -83,7 +83,7 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const { action, link, message, created, username } = props;
+  const { action, message, created, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -99,7 +99,7 @@ export const Row: React.FC<RowProps> = (props) => {
       data-qa-event-row
       data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}
-      className={link ? classes.row : ''}
+      className={classes.row}
     >
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>

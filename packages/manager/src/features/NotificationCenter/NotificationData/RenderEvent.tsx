@@ -54,7 +54,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { event } = props;
-  const { message, linkTarget } = useEventInfo(event);
+  const { message } = useEventInfo(event);
 
   if (message === null) {
     return null;
@@ -75,7 +75,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
       <Box
         className={classNames({
           [classes.root]: true,
-          [classes.event]: !!linkTarget,
+          [classes.event]: true,
         })}
         display="flex"
         data-test-id={event.action}
