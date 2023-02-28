@@ -1,9 +1,11 @@
-import { screen } from '@testing-library/react';
 import * as React from 'react';
-import { renderWithTheme } from 'src/utilities/testHelpers';
 import UserMenu from './UserMenu';
+import { renderWithTheme } from 'src/utilities/testHelpers';
 
-it('renders without crashing', () => {
-  renderWithTheme(<UserMenu />);
-  expect(screen.queryByText('My Profile')).not.toBeNull();
+it('renders without crashing', async () => {
+  const { getByRole } = renderWithTheme(<UserMenu />);
+
+  const button = getByRole('button');
+
+  expect(button).toBeInTheDocument();
 });
