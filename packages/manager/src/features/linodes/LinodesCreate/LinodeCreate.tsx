@@ -1,12 +1,15 @@
-import classNames from 'classnames';
 import { Interface, restoreBackup } from '@linode/api-v4/lib/linodes';
 import { Tag } from '@linode/api-v4/lib/tags/types';
+import classNames from 'classnames';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
+import Button from 'src/components/Button';
+import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
 import CircleProgress from 'src/components/CircleProgress';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -18,6 +21,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
+import DocsLink from 'src/components/DocsLink';
 import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
@@ -29,6 +33,9 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
 import { AppsDocs } from 'src/documentation';
+import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
+import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
+import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -42,8 +49,11 @@ import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { doesRegionSupportFeature } from 'src/utilities/doesRegionSupportFeature';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { sendEvent } from 'src/utilities/ga';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { v4 } from 'uuid';
 import AddonsPanel from './AddonsPanel';
+import ApiAwarenessModal from './ApiAwarenessModal';
 import SelectPlanPanel from './SelectPlanPanel';
 import FromAppsContent from './TabbedContent/FromAppsContent';
 import FromBackupsContent from './TabbedContent/FromBackupsContent';
@@ -51,16 +61,14 @@ import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
 import { renderBackupsDisplaySection } from './TabbedContent/utils';
-import { v4 } from 'uuid';
-import ApiAwarenessModal from './ApiAwarenessModal';
 import {
   AllFormStateAndHandlers,
   AppsData,
   HandleSubmit,
   Info,
+  LinodeCreateValidation,
   ReduxStateProps,
   ReduxStatePropsAndSSHKeys,
-  LinodeCreateValidation,
   StackScriptFormStateHandlers,
   WithDisplayData,
   WithLinodesProps,
@@ -68,13 +76,6 @@ import {
   WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
-import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
-import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
-import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';
-import Button from 'src/components/Button';
-import Box from 'src/components/core/Box';
-import DocsLink from 'src/components/DocsLink';
-import { sendEvent } from 'src/utilities/ga';
 
 type ClassNames =
   | 'form'
@@ -161,6 +162,8 @@ interface Props {
   handleAgreementChange: () => void;
   handleShowApiAwarenessModal: () => void;
   signedAgreement: boolean;
+  userData: string | undefined;
+  updateUserData: (userData: string) => void;
 }
 
 const errorMap = [
@@ -374,6 +377,13 @@ export class LinodeCreate extends React.PureComponent<
       }
       payload['interfaces'] = interfaces;
     }
+
+    if (this.props.userData) {
+      payload['metadata'] = {
+        user_data: window.btoa(this.props.userData),
+      };
+    }
+
     return payload;
   };
 
@@ -451,6 +461,7 @@ export class LinodeCreate extends React.PureComponent<
       handleAgreementChange,
       handleShowApiAwarenessModal,
       signedAgreement,
+      updateUserData,
       ...rest
     } = this.props;
 
@@ -518,6 +529,16 @@ export class LinodeCreate extends React.PureComponent<
       displaySections.push({
         title: 'Private IP',
       });
+    }
+
+    let showUserData = false;
+    if (
+      this.props.selectedImageID &&
+      this.props.imagesData[this.props.selectedImageID]?.capabilities?.includes(
+        'cloud-init'
+      )
+    ) {
+      showUserData = true;
     }
 
     return (
@@ -720,6 +741,12 @@ export class LinodeCreate extends React.PureComponent<
               requestKeys={requestKeys}
             />
           )}
+          {showUserData ? (
+            <UserDataAccordion
+              userData={this.props.userData}
+              onChange={updateUserData}
+            />
+          ) : null}
           <AddonsPanel
             data-qa-addons-panel
             backups={this.props.backupsEnabled}

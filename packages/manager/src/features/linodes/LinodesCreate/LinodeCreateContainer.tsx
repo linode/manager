@@ -111,6 +111,7 @@ interface State {
   disabledClasses?: LinodeTypeClass[];
   attachedVLANLabel: string | null;
   vlanIPAMAddress: string | null;
+  userData: string | undefined;
 }
 
 type CombinedProps = WithSnackbarProps &
@@ -153,6 +154,7 @@ const defaultState: State = {
   attachedVLANLabel: '',
   vlanIPAMAddress: null,
   showApiAwarenessModal: false,
+  userData: undefined,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -395,6 +397,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setTags = (tags: Tag[]) => this.setState({ tags });
 
   setUDFs = (udfs: any) => this.setState({ udfs });
+
+  setUserData = (userData: string) => this.setState({ userData });
 
   handleVLANChange = (updatedInterface: Interface) => {
     this.setState({
@@ -815,6 +819,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
+            updateUserData={this.setUserData}
             {...restOfProps}
             {...restOfState}
           />
