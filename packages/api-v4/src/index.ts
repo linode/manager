@@ -28,6 +28,8 @@ export * from './support';
 
 export * from './tags';
 
+export * from './types';
+
 export * from './vlans';
 
 export * from './volumes';

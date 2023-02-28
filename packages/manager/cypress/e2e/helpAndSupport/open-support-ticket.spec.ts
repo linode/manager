@@ -5,8 +5,10 @@ import {
   containsClick,
   getVisible,
   containsVisible,
-} from '../../support/helpers';
+} from 'support/helpers';
 import 'cypress-file-upload';
+import { interceptGetProfile } from 'support/intercepts/profile';
+import { apiMatcher } from 'support/util/intercepts';
 
 describe('help & support', () => {
   it('open support ticket', () => {
@@ -16,8 +18,7 @@ describe('help & support', () => {
     const ticketId = Math.floor(Math.random() * 99999999 + 10000000);
     const ts = new Date();
 
-    // intercept incoming response
-    cy.intercept('GET', '*/profile').as('getProfile');
+    interceptGetProfile().as('getProfile');
 
     cy.visitWithLogin('/support/tickets');
     cy.wait('@getProfile').then((xhr) => {
@@ -37,23 +38,25 @@ describe('help & support', () => {
         updated_by: user,
       };
       // intercept create ticket request, stub response.
-      cy.intercept('POST', '*/support/tickets', mockTicketData).as(
+      cy.intercept('POST', apiMatcher('support/tickets'), mockTicketData).as(
         'createTicket'
       );
       // stub incoming response
-      cy.intercept('GET', `*/support/tickets/${ticketId}`, mockTicketData).as(
-        'getTicket'
-      );
+      cy.intercept(
+        'GET',
+        apiMatcher(`support/tickets/${ticketId}`),
+        mockTicketData
+      ).as('getTicket');
       // intercept create support ticket request, stub response with 200
       cy.intercept(
         'POST',
-        `*/support/tickets/${ticketId}/attachments`,
+        apiMatcher(`support/tickets/${ticketId}/attachments`),
         (req) => {
           req.reply(200);
         }
       ).as('attachmentPost');
       // stub incoming response
-      cy.intercept(`*/support/tickets/${ticketId}/replies`, {
+      cy.intercept(apiMatcher(`support/tickets/${ticketId}/replies`), {
         data: [],
         page: 1,
         pages: 1,

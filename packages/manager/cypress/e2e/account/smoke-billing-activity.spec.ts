@@ -1,99 +1,110 @@
-/* eslint-disable sonarjs/no-duplicate-string */
-const mockGetInvoices = (data) => {
-  // modify incoming response
-  cy.intercept('*/account/invoices?*', (req) => {
-    req.reply((res) => {
-      res.send(data);
-    });
-  }).as('getAccount');
-};
+import { DateTime, IANAZone } from 'luxon';
+import { Invoice, Profile } from '@linode/api-v4/types';
+import { getProfile } from '@linode/api-v4/lib/profile';
+import { profileFactory } from 'src/factories/profile';
+import { invoiceFactory } from 'src/factories/billing';
+import { authenticate } from 'support/api/authentication';
+import { mockGetInvoices } from 'support/intercepts/account';
+import { mockGetProfile } from 'support/intercepts/profile';
+import { randomString } from 'support/util/random';
 
-const mockTwoInvoices = {
-  data: [
-    {
-      id: '12346',
-      date: '2020-01-03T00:01:01',
-      label: 'Invoice adfgh',
-      subtotal: 90.25,
-      tax: 9.25,
-      total: 99.5,
-    },
-    {
-      id: '12345',
-      date: '2020-01-01T00:01:01',
-      label: 'Invoice oiiohio',
-      subtotal: 120.25,
-      tax: 12.25,
-      total: 132.5,
-    },
-  ],
-  page: 1,
-  pages: 1,
-  results: 2,
-};
+// Time zones against which
 const timeZonesList = ['America/New_York', 'GMT', 'Asia/Hong_Kong'];
 
-import { DateTime, IANAZone } from 'luxon';
+// Array of mock invoice objects to use for tests.
+const invoiceMocks: Invoice[] = [
+  invoiceFactory.build({
+    id: 12346,
+    date: '2020-01-03T00:01:01',
+    label: `Invoice ${randomString(6)}`,
+    subtotal: 90.25,
+    tax: 9.25,
+    total: 99.5,
+  }),
+  invoiceFactory.build({
+    id: 12345,
+    date: '2020-01-01T00:01:01',
+    label: `Invoice ${randomString(6)}`,
+    subtotal: 120.25,
+    tax: 12.25,
+    total: 132.5,
+  }),
+];
 
-const localizeDate = (apiDate, timezone: string) => {
-  expect(IANAZone.isValidZone(timezone)).to.be.true;
+/**
+ * Localizes an API date string for the given time zone.
+ *
+ * @param apiDate - API date string to localize.
+ * @param timeZone - Time zone string for desired localization.
+ *
+ * @returns Localized date string.
+ */
+const localizeDate = (apiDate: string, timeZone: string): string => {
+  expect(IANAZone.isValidZone(timeZone)).to.be.true;
   return DateTime.fromISO(apiDate, { zone: 'utc' })
-    .setZone(timezone)
+    .setZone(timeZone)
     .toFormat('yyyy-LL-dd');
 };
 
-// here We precompute the response as it should be before we modify the timezone for these tests
-let cachedGetProfile = {};
-import { getProfile } from '../../support/api/account';
-import {
-  containsClick,
-  containsVisible,
-  fbtVisible,
-} from '../../support/helpers';
-beforeEach(() => {
-  getProfile().then((resp) => {
-    cachedGetProfile = resp.body;
+/**
+ * Creates a mocked profile using cached data from a real request with a custom time zone.
+ *
+ * @param timeZone - Time zone to include in mocked profile.
+ *
+ * @returns Profile mock.
+ */
+const createProfileMock = (timeZone: string): Profile => {
+  return profileFactory.build({
+    ...cachedGetProfile,
+    timezone: timeZone,
   });
-});
-
-const mockProfile = (timezone) => {
-  // modify incoming response
-  cy.intercept('*/profile', (req) => {
-    req.reply((res) => {
-      res.send({ ...cachedGetProfile, timezone });
-    });
-  }).as('getProfile');
 };
 
-const checkInvoice = (invoice, tz) => {
-  mockGetInvoices(mockTwoInvoices);
-  mockProfile(tz);
+/**
+ * Assert that the given invoice is shown with expected information.
+ *
+ * @param invoice - Invoice to check.
+ * @param timeZone - Time zone for invoice dates.
+ */
+const checkInvoice = (invoice: Invoice, timeZone: string) => {
+  mockGetInvoices(invoiceMocks).as('getInvoices');
+  mockGetProfile(createProfileMock(timeZone)).as('getProfile');
   cy.visitWithLogin('/account/billing');
   // need to select show all time, to not have invoices hidden due to date
   // findbylabel fails due to react-select being a non acc essible component, will change soon
   // cy.findByLabelText('Transaction Dates').select('All Times')
   cy.wait('@getProfile');
-  cy.wait('@getAccount');
-  fbtVisible('Billing & Payment History');
-  containsClick('6 Months').type('All time{enter}');
-  cy.log(invoice.date, tz);
-  containsVisible(localizeDate(invoice.date, tz));
-  fbtVisible(invoice.label);
-  fbtVisible(`$${invoice.total.toFixed(2)}`);
+  cy.wait('@getInvoices');
+  cy.findByText('Billing & Payment History').should('be.visible');
+  cy.contains('6 Months').click().type('All time{enter}');
+  cy.log(invoice.date, timeZone);
+  cy.contains(localizeDate(invoice.date, timeZone)).should('be.visible');
+  cy.findByText(invoice.label).should('be.visible');
+  cy.findByText(`$${invoice.total.toFixed(2)}`).should('be.visible');
 };
+
+authenticate();
+let cachedGetProfile = {};
+
+// Fetch and cache real profile object.
+beforeEach(() => {
+  cy.defer(getProfile()).then((profile: Profile) => {
+    cachedGetProfile = profile;
+  });
+});
 
 describe('Billling Activity Feed', () => {
   describe('Lists Invoices', () => {
-    mockTwoInvoices.data.forEach((invoice) => {
+    invoiceMocks.forEach((invoice) => {
       return it(`ID ${invoice.id}`, () => {
         checkInvoice(invoice, timeZonesList[0]);
       });
     });
   });
   describe('Test different timezones', () => {
-    timeZonesList.forEach((tz) => {
-      return it(`Check Invoice date with timezone ${tz}`, () => {
-        checkInvoice(mockTwoInvoices.data[0], tz);
+    timeZonesList.forEach((timeZone) => {
+      return it(`Check Invoice date with timezone ${timeZone}`, () => {
+        checkInvoice(invoiceMocks[0], timeZone);
       });
     });
   });
