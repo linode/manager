@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/hooks/useTypes';
+import { useTypes } from 'src/queries/types';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 
@@ -38,13 +38,13 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
   const { linodes } = useLinodes();
-  const { typesMap } = useTypes();
+  const { data: types } = useTypes();
 
   const linodesDataWithFullType = Object.values(linodes.itemsById).map(
     (thisLinode) => {
       return {
         ...thisLinode,
-        _type: typesMap[thisLinode.type ?? ''],
+        _type: types?.find((type) => type.id === thisLinode.type),
       };
     }
   );

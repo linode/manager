@@ -6,7 +6,7 @@ import SelectableTableRow from 'src/components/SelectableTableRow';
 import TableCell from 'src/components/TableCell/TableCell';
 import { dcDisplayNames } from 'src/constants';
 import TableContentWrapper from 'src/components/TableContentWrapper';
-import { useTypes } from 'src/hooks/useTypes';
+import { useTypes } from 'src/queries/types';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
 import { useLinodesByIdQuery } from 'src/queries/linodes';
@@ -106,9 +106,10 @@ interface RowProps {
 
 const LinodeRow: React.FC<RowProps> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
-  const { typesMap } = useTypes();
+  const { data: types } = useTypes();
   const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
-  const displayType = typesMap[linode.type ?? '']?.label ?? linode.type;
+  const displayType =
+    types?.find((type) => type.id === linode.type)?.label ?? linode.type;
   return (
     <SelectableTableRow
       isChecked={isChecked}

@@ -19,7 +19,7 @@ import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvan
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 import { useImages } from 'src/hooks/useImages';
-import { useTypes } from 'src/hooks/useTypes';
+import { useTypes } from 'src/queries/types';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -83,7 +83,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const regions = useRegionsQuery().data ?? [];
-  const { types } = useTypes();
+  const { data: types } = useTypes();
   const linode = useExtendedLinode(linodeID);
   const { images } = useImages();
   const { data: profile } = useProfile();
@@ -179,7 +179,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const newLabel = getLinodeDescription(
-    displayType(linode.type, types.entities || []),
+    displayType(linode.type, types ?? []),
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,

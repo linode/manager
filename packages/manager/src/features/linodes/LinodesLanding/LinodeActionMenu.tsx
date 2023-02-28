@@ -13,7 +13,7 @@ import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useTypes } from 'src/hooks/useTypes';
+import { useTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
@@ -51,7 +51,7 @@ export const buildQueryStringForLinodeClone = (
   linodeId: number,
   linodeRegion: string,
   linodeType: string | null,
-  types: LinodeType[],
+  types: LinodeType[] | null,
   regions: Region[]
 ): string => {
   const params: Record<string, string> = {
@@ -87,7 +87,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { types } = useTypes();
+  const { data: types } = useTypes();
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
@@ -203,7 +203,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
                 linodeId,
                 linodeRegion,
                 linodeType?.id ?? null,
-                types.entities,
+                types ?? null,
                 regions
               ),
             });

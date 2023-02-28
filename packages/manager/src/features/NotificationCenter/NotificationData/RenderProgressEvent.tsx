@@ -14,7 +14,7 @@ import {
 } from 'src/eventMessageGenerator_CMR';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/hooks/useTypes';
+import { useTypes } from 'src/queries/types';
 import { useStyles as useEventStyles } from './RenderEvent';
 import useEventInfo from './useEventInfo';
 
@@ -37,11 +37,10 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { linodes } = useLinodes();
-  const { types } = useTypes();
+  const { data: types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
-  const _types = types.entities;
   const { linkTarget } = useEventInfo(event);
-  const message = eventMessageGenerator(event, _linodes, _types);
+  const message = eventMessageGenerator(event, _linodes, types);
 
   if (message === null) {
     return null;

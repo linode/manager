@@ -35,7 +35,7 @@ import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useImages from 'src/hooks/useImages';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
-import { useTypes } from 'src/hooks/useTypes';
+import { useTypes } from 'src/queries/types';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -94,7 +94,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
-  const { types } = useTypes();
+  const { data: types } = useTypes();
 
   const imageSlug = linode.image;
 
@@ -104,7 +104,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
       : null;
 
   const linodeType = Boolean(linode.type)
-    ? types.entities.find((thisType) => thisType.id === linode.type) ?? null
+    ? types?.find((thisType) => thisType.id === linode.type) ?? null
     : null;
 
   const linodePlan = linodeType?.label ?? null;
