@@ -4,7 +4,6 @@ import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
-import { preferencesFactory } from 'src/factories/preferences';
 
 jest.mock('src/utilities/scrollErrorIntoView');
 jest.mock('src/components/EnhancedSelect/Select');
@@ -28,9 +27,6 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   passwordHelperText: '',
   requestKeys: jest.fn(),
-  getUserPreferences: jest.fn(),
-  updateUserPreferences: jest.fn(),
-  preferences: preferencesFactory.build(),
   disabled: false,
   handleRebuildError: jest.fn(),
   onClose: jest.fn(),

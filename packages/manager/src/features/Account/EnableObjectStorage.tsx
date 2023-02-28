@@ -13,7 +13,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import { updateAccountSettingsData } from 'src/queries/accountSettings';
-import usePreferences from 'src/hooks/usePreferences';
+import { usePreferences } from 'src/queries/preferences';
 import { useProfile } from 'src/queries/profile';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/objectStorage';
@@ -77,7 +77,7 @@ export const EnableObjectStorage: React.FC<CombinedProps> = (props) => {
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
   const [confirmText, setConfirmText] = React.useState('');
-  const { preferences } = usePreferences();
+  const { data: preferences } = usePreferences();
   const { data: profile } = useProfile();
   const username = profile?.username;
   const disabledConfirm =

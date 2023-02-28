@@ -103,7 +103,7 @@ describe('Kubernetes deletion dialog', () => {
     expect(props.onClose).toHaveBeenCalledTimes(1);
   });
 
-  it('should not be able to submit form before the user fills out confirmation text', () => {
+  it('should not be able to submit form before the user fills out confirmation text', async () => {
     server.use(
       rest.get(`*/profile/preference`, (req, res, ctx) => {
         return res(
@@ -114,12 +114,14 @@ describe('Kubernetes deletion dialog', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, findByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
     const button = getByTestId('dialog-confirm');
 
     expect(button).toBeDisabled();
+
+    await findByTestId('textfield-input');
 
     const input = getByTestId('textfield-input');
     fireEvent.change(input, { target: { value: 'this-cluster' } });

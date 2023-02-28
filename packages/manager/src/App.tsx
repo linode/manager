@@ -35,9 +35,12 @@ import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { volumeEventsHandler } from './queries/volumes';
 import { tokenEventHandler } from './queries/tokens';
+import withPreferences, {
+  PreferencesActionsProps,
+  PreferencesStateProps,
+} from './containers/preferences.container';
 
 interface Props {
-  toggleTheme: () => void;
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
 }
@@ -53,7 +56,9 @@ type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
   WithSnackbarProps &
-  FeatureFlagConsumerProps;
+  FeatureFlagConsumerProps &
+  PreferencesStateProps &
+  PreferencesActionsProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -94,7 +99,10 @@ export class App extends React.Component<CombinedProps, State> {
       if (event[modifierKey] && event.shiftKey) {
         switch (event.key) {
           case letterForThemeShortcut:
-            this.props.toggleTheme();
+            this.props.updateUserPreferences({
+              theme:
+                this.props.preferences?.theme === 'dark' ? 'light' : 'dark',
+            });
             break;
           case letterForGoToOpen:
             this.setState((prevState) => ({
@@ -173,7 +181,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { hasError } = this.state;
     const {
-      toggleTheme,
       linodesError,
       typesError,
       imagesError,
@@ -227,7 +234,6 @@ export class App extends React.Component<CombinedProps, State> {
           <MainContent
             history={this.props.history}
             location={this.props.location}
-            toggleTheme={toggleTheme}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
           />
@@ -283,7 +289,8 @@ export default compose(
   withDocumentTitleProvider,
   withSnackbar,
   withFeatureFlagProvider,
-  withFeatureFlagConsumer
+  withFeatureFlagConsumer,
+  withPreferences
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
