@@ -26,6 +26,7 @@ import {
   MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
+import { flushSync } from 'react-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -127,7 +128,9 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
-const FileUploader: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const FileUploader: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const {
     label,
     description,
@@ -265,7 +268,11 @@ const FileUploader: React.FC<React.PropsWithChildren<CombinedProps>> = (props) =
           autoHideDuration: 6000,
         });
 
-        dispatchAction(setPendingUpload(false));
+        // React force a render so that `pendingUpload` is false when navigating away
+        // from the upload page.
+        flushSync(() => {
+          dispatchAction(setPendingUpload(false));
+        });
 
         recordImageAnalytics('success', file);
 
