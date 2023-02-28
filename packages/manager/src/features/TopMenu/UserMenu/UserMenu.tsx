@@ -305,84 +305,90 @@ export const UserMenu: React.FC<React.PropsWithChildren<{}>> = () => {
   return (
     <div>
       <ReachMenu>
-        <Tooltip
-          title={'Profile & Account'}
-          disableTouchListener
-          enterDelay={500}
-          leaveDelay={0}
-        >
-          <MenuButton
-            className={classes.menuButton}
-            data-testid="nav-group-profile"
-          >
-            <GravatarByEmail
-              email={profile?.email ?? ''}
-              className={classes.userWrapper}
-            />
-            <Hidden mdDown>
-              <Typography className={classes.inlineUserName}>
-                {userName}
-              </Typography>
-            </Hidden>
-            <KeyboardArrowDown className={classes.caret} />
-          </MenuButton>
-        </Tooltip>
-        <MenuPopover
-          className={classes.menuPopover}
-          position={positionRight}
-          data-qa-user-menu
-        >
-          <MenuItems className={classes.menuItemList}>
-            <div className={classes.userName}>
-              <strong>{userName}</strong>
-            </div>
-            <div className={classes.menuHeader}>My Profile</div>
-            <Grid container>
-              <Grid
-                container
-                item
-                xs={6}
-                wrap="nowrap"
-                direction="column"
-                className={classes.profileWrapper}
+        {({ isExpanded }) => (
+          <>
+            <Tooltip
+              title={'Profile & Account'}
+              disableTouchListener
+              enterDelay={500}
+              leaveDelay={0}
+            >
+              <MenuButton
+                className={classes.menuButton}
+                data-testid="nav-group-profile"
               >
-                {profileLinks.slice(0, 4).map(renderLink)}
-              </Grid>
-              <Grid
-                container
-                item
-                xs={6}
-                wrap="nowrap"
-                direction="column"
-                className={classes.profileWrapper}
+                <GravatarByEmail
+                  email={profile?.email ?? ''}
+                  className={classes.userWrapper}
+                />
+                <Hidden mdDown>
+                  <Typography className={classes.inlineUserName}>
+                    {userName}
+                  </Typography>
+                </Hidden>
+                <KeyboardArrowDown className={classes.caret} />
+              </MenuButton>
+            </Tooltip>
+            {isExpanded && (
+              <MenuPopover
+                className={classes.menuPopover}
+                position={positionRight}
+                data-qa-user-menu
               >
-                {profileLinks.slice(4).map(renderLink)}
-              </Grid>
-            </Grid>
-            {_hasAccountAccess ? (
-              <>
-                <div className={classes.menuHeader}>Account</div>
-                <Grid container>
-                  <Grid item className={classes.accountColumn}>
-                    {accountLinks.map((menuLink) =>
-                      menuLink.hide ? null : (
-                        <MenuLink
-                          key={menuLink.display}
-                          as={Link}
-                          to={menuLink.href}
-                          className={classes.menuItemLink}
-                          data-testid={`menu-item-${menuLink.display}`}
-                        >
-                          {menuLink.display}
-                        </MenuLink>
-                      )
-                    )}
+                <MenuItems className={classes.menuItemList}>
+                  <div className={classes.userName}>
+                    <strong>{userName}</strong>
+                  </div>
+                  <div className={classes.menuHeader}>My Profile</div>
+                  <Grid container>
+                    <Grid
+                      container
+                      item
+                      xs={6}
+                      wrap="nowrap"
+                      direction="column"
+                      className={classes.profileWrapper}
+                    >
+                      {profileLinks.slice(0, 4).map(renderLink)}
+                    </Grid>
+                    <Grid
+                      container
+                      item
+                      xs={6}
+                      wrap="nowrap"
+                      direction="column"
+                      className={classes.profileWrapper}
+                    >
+                      {profileLinks.slice(4).map(renderLink)}
+                    </Grid>
                   </Grid>
-                </Grid>
-              </>
-            ) : null}
-          </MenuItems>
-        </MenuPopover>
+                  {_hasAccountAccess ? (
+                    <>
+                      <div className={classes.menuHeader}>Account</div>
+                      <Grid container>
+                        <Grid item className={classes.accountColumn}>
+                          {accountLinks.map((menuLink) =>
+                            menuLink.hide ? null : (
+                              <MenuLink
+                                key={menuLink.display}
+                                as={Link}
+                                to={menuLink.href}
+                                className={classes.menuItemLink}
+                                data-testid={`menu-item-${menuLink.display}`}
+                              >
+                                {menuLink.display}
+                              </MenuLink>
+                            )
+                          )}
+                        </Grid>
+                      </Grid>
+                    </>
+                  ) : null}
+                </MenuItems>
+              </MenuPopover>
+            )}
+          </>
+        )}
       </ReachMenu>
     </div>
   );
