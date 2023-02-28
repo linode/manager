@@ -64,8 +64,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const cloudInitTooltipMessage = (
   <Typography>
-    Copy TBD-Need to have installed cloud-init on the distro and change the
-    config to use our data service. <Link to="/">Link to doc</Link>
+    Only check this box if your Custom Image that is compatible with cloud-init,
+    or has had cloud-init installed at some point, and the config has been
+    changed to use our data service. <Link to="/">Link to doc</Link>
   </Typography>
 );
 export interface Props {
@@ -74,7 +75,7 @@ export interface Props {
   isCloudInit: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  cloudInitChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
@@ -83,7 +84,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
     description,
     changeLabel,
     changeDescription,
-    cloudInitChangeHandler,
+    changeIsCloudInit,
     isCloudInit,
   } = props;
 
@@ -237,7 +238,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
           <div className={classes.cloudInitCheckboxWrapper}>
             <CheckBox
               checked={isCloudInit}
-              onChange={cloudInitChangeHandler}
+              onChange={changeIsCloudInit}
               text="This image is Cloud-init compatible"
               toolTipText={cloudInitTooltipMessage}
             />
