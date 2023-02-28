@@ -1,5 +1,4 @@
 import classNames from 'classnames';
-import { isNil } from 'ramda';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -44,9 +43,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Props;
-
-const StrengthIndicator: React.FC<CombinedProps> = (props: Props) => {
+const StrengthIndicator = (props: Props) => {
   const classes = useStyles();
 
   const { strength, hideStrengthLabel } = props;
@@ -64,7 +61,10 @@ const StrengthIndicator: React.FC<CombinedProps> = (props: Props) => {
           <div
             className={classNames({
               [classes.block]: true,
-              [`strength-${strength}`]: !isNil(strength) && idx < strength,
+              [`strength-${strength}`]:
+                strength !== undefined &&
+                strength !== null &&
+                idx <= scaledStrength(strength),
             })}
           />
         </Grid>
@@ -86,6 +86,22 @@ const StrengthIndicator: React.FC<CombinedProps> = (props: Props) => {
 };
 
 export default StrengthIndicator;
+
+const scaledStrength = (strength: number) => {
+  if ([0, 1].includes(strength)) {
+    return 1;
+  }
+
+  if ([2, 3].includes(strength)) {
+    return 2;
+  }
+
+  if (strength === 4) {
+    return 3;
+  }
+
+  return 0;
+};
 
 export const convertStrengthScore = (strength: StrengthValues) => {
   switch (strength) {
