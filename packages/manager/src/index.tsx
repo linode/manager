@@ -80,13 +80,13 @@ const renderAuthentication = () => (
               <Route render={renderApp} />
             </Switch>
           </AuthenticationWrapper>
-          <ReactQueryDevtools
-            initialIsOpen={false}
-            toggleButtonProps={{ style: { marginLeft: '3em' } }}
-          />
         </Switch>
       </React.Suspense>
     </LinodeThemeWrapper>
+    <ReactQueryDevtools
+      initialIsOpen={false}
+      toggleButtonProps={{ style: { marginLeft: '3em' } }}
+    />
   </QueryClientProvider>
 );
 
