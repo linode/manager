@@ -111,10 +111,6 @@ import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
 } from './pendingUpload';
-import preferences, {
-  defaultState as preferencesState,
-  State as PreferencesState,
-} from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
 import vlans, {
   defaultState as defaultVLANState,
@@ -162,7 +158,6 @@ export interface ApplicationState {
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
-  preferences: PreferencesState;
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
@@ -185,7 +180,6 @@ export const defaultState: ApplicationState = {
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
-  preferences: preferencesState,
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
@@ -223,7 +217,6 @@ const reducers = combineReducers<ApplicationState>({
   bucketDrawer,
   events,
   createLinode: linodeCreateReducer,
-  preferences,
   pendingUpload,
   initialLoad,
   featureFlagsLoad,

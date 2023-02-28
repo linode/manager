@@ -16,8 +16,8 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
-import usePreferences from 'src/hooks/usePreferences';
 import { useAllImagesQuery } from 'src/queries/images';
+import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -75,8 +75,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     passwordHelperText,
   } = props;
 
+  const { data: preferences } = usePreferences();
+
   const classes = useStyles();
-  const { preferences } = usePreferences();
   const { enqueueSnackbar } = useSnackbar();
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);

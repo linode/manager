@@ -26,7 +26,7 @@ import {
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import usePreferences from 'src/hooks/usePreferences';
+import { usePreferences } from 'src/queries/preferences';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
@@ -97,8 +97,9 @@ export const RebuildFromStackScript: React.FC<CombinedProps> = (props) => {
     passwordHelperText,
   } = props;
 
+  const { data: preferences } = usePreferences();
+
   const classes = useStyles();
-  const { preferences } = usePreferences();
   const { enqueueSnackbar } = useSnackbar();
 
   const { data: imagesData } = useAllImagesQuery();
