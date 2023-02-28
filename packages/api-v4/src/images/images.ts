@@ -40,6 +40,7 @@ export const getImages = (params: any = {}, filters: any = {}) =>
  * @param diskId { number } The ID of the Linode Disk that this Image will be created from.
  * @param label { string } A short description of the Image. Labels cannot contain special characters.
  * @param description { string } A detailed description of this Image.
+ * @param cloud_init { boolean } An indicator of whether Image supports cloud-init.
  */
 export const createImage = (
   diskId: number,

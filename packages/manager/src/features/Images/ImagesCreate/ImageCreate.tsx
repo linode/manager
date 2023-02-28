@@ -18,6 +18,7 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
   const [description, setDescription] = React.useState<string>(
     location?.state ? location.state.imageDescription : ''
   );
+  const [isCloudInit, setIsCloudInit] = React.useState<boolean>(false);
 
   const [isCloudInit, setIsCloudInit] = React.useState<boolean>(false);
 
@@ -39,8 +40,10 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
         <CreateImageTab
           label={label}
           description={description}
+          isCloudInit={isCloudInit}
           changeLabel={handleSetLabel}
           changeDescription={handleSetDescription}
+          changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
         />
       ),
     },

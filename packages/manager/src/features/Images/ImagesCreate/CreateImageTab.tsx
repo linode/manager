@@ -23,6 +23,7 @@ import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import Link from 'src/components/Link';
+import CheckBox from 'src/components/CheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -57,21 +58,37 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '100%',
     },
   },
+  cloudInitCheckboxWrapper: {
+    marginTop: theme.spacing(2),
+    marginLeft: 3,
+  },
 }));
+
+const cloudInitTooltipMessage = (
+  <Typography>
+    Many Linode supported distributions are compatible with cloud-init by
+    default, or you may have installed cloud-init.{' '}
+    <Link to="/">Learn more.</Link>
+  </Typography>
+);
 
 export interface Props {
   label?: string;
   description?: string;
+  isCloudInit?: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   const {
     label,
     description,
+    isCloudInit,
     changeLabel,
     changeDescription,
+    changeIsCloudInit,
     createImage,
   } = props;
 
@@ -150,6 +167,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
       diskID: Number(selectedDisk),
       label,
       description: safeDescription,
+      cloud_init: isCloudInit ? isCloudInit : undefined,
     })
       .then((_) => {
         resetEventsPolling();
@@ -265,6 +283,15 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
         />
       </Box>
       {isRawDisk ? rawDiskWarning : null}
+      <Box className={classes.cloudInitCheckboxWrapper}>
+        <CheckBox
+          checked={isCloudInit}
+          onChange={changeIsCloudInit}
+          text="This image is Cloud-init compatible"
+          toolTipText={cloudInitTooltipMessage}
+          toolTipInteractive
+        />
+      </Box>
       <>
         <TextField
           label="Label"

@@ -33,18 +33,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   formControlStyles: {
     marginRight: 0,
   },
-  helpIcon: {
-    padding: '0px 0px 0px 8px',
-  },
 }));
 
 interface Props extends CheckboxProps {
   text?: string | JSX.Element;
   toolTipText?: string | JSX.Element;
+  toolTipInteractive?: boolean;
 }
 
-const LinodeCheckBox: React.FC<Props> = (props) => {
-  const { toolTipText, text, ...rest } = props;
+const LinodeCheckBox = (props: Props) => {
+  const { toolTipInteractive, toolTipText, text, ...rest } = props;
   const classes = useStyles();
 
   const classnames = classNames({
@@ -68,10 +66,10 @@ const LinodeCheckBox: React.FC<Props> = (props) => {
               {...rest}
             />
           }
-          label={props.text}
+          label={text}
         />
         {toolTipText ? (
-          <HelpIcon text={toolTipText} className={classes.helpIcon} />
+          <HelpIcon interactive={toolTipInteractive} text={toolTipText} />
         ) : null}
       </React.Fragment>
     );

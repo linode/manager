@@ -29,7 +29,8 @@ export const requestImages = createRequestThunk(requestImagesActions, () =>
 
 export const createImage = createRequestThunk(
   createImageActions,
-  ({ diskID, label, description }) => _create(diskID, label, description)
+  ({ diskID, label, description, cloud_init }) =>
+    _create(diskID, label, description, cloud_init)
 );
 
 export const uploadImage = createRequestThunk(uploadImageActions, (payload) =>
