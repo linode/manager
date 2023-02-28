@@ -1,3 +1,4 @@
+import { Image } from '@linode/api-v4';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -7,7 +8,6 @@ import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import { filterImagesByType } from 'src/store/image/image.helpers';
 import StackScriptPanel from './StackScriptPanel';
 
 export const StackScriptsLanding = () => {
@@ -15,10 +15,12 @@ export const StackScriptsLanding = () => {
     successMessage?: string;
   }>();
 
-  const { data: _imagesData, isLoading: _loading } = useAllImagesQuery();
+  const { data: _imagesData, isLoading: _loading } = useAllImagesQuery(
+    {},
+    { is_public: true }
+  );
 
-  const _imagesDataById = listToItemsByID(_imagesData ?? []);
-  const imagesData = filterImagesByType(_imagesDataById, 'public');
+  const imagesData: Record<string, Image> = listToItemsByID(_imagesData ?? []);
 
   const goToCreateStackScript = () => {
     history.push('/stackscripts/create');
