@@ -21,8 +21,7 @@ const useStyles = makeStyles(() => ({
     },
   },
   accordionSummary: {
-    paddingLeft: 24,
-    paddingRight: 24,
+    padding: '5px 24px 0px 24px',
   },
   accordionDetail: {
     padding: '0px 24px 24px 24px',
