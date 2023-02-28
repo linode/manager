@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -10,9 +9,7 @@ import Notice from 'src/components/Notice';
 import { titlecase } from 'src/features/linodes/presentation';
 import { capitalize } from 'src/utilities/capitalize';
 import { DialogProps } from '../Dialog';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
+import { usePreferences } from 'src/queries/preferences';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -32,9 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = Props & PreferencesProps;
-
-const DeletionDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const DeletionDialog: React.FC<Props> = (props) => {
   const classes = useStyles();
   const {
     entity,
@@ -44,12 +39,10 @@ const DeletionDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props)
     onDelete,
     open,
     loading,
-    preferences,
     typeToConfirm,
-    getUserPreferences,
-    updateUserPreferences,
     ...rest
   } = props;
+  const { data: preferences } = usePreferences();
   const [confirmationText, setConfirmationText] = React.useState('');
   const typeToConfirmRequired =
     typeToConfirm && preferences?.type_to_confirm !== false;
@@ -112,7 +105,4 @@ const DeletionDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props)
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withPreferences()
-)(DeletionDialog);
+export default React.memo(DeletionDialog);

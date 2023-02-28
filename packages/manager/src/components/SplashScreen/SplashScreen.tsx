@@ -1,4 +1,3 @@
-import classNames from 'classnames';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -21,19 +20,11 @@ const useStyles = makeStyles({
     top: 0,
     left: 0,
   },
-  layer: {
-    position: 'absolute',
-    boxShadow: '0 2px 4px 0 rgba(0, 0, 0, 0.4)',
-    transform: 'rotateX(50deg) rotateY(0deg) rotateZ(45deg)',
-  },
-  logo: {
-    position: 'relative',
-  },
 });
 
 type CombinedProps = StateProps;
 
-const SplashScreen: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const SplashScreen = (props: CombinedProps) => {
   const classes = useStyles();
 
   React.useEffect(() => {
@@ -43,12 +34,7 @@ const SplashScreen: React.FC<React.PropsWithChildren<CombinedProps>> = (props) =
   const { featureFlagsLoading } = useFeatureFlagsLoad();
 
   return props.appIsLoading || featureFlagsLoading ? (
-    <div
-      className={classNames({
-        [classes.root]: true,
-      })}
-      aria-label="Loading Cloud Manager"
-    >
+    <div className={classes.root} aria-label="Loading Cloud Manager">
       <CircleProgress />
     </div>
   ) : null;

@@ -44,70 +44,50 @@ const renderNullAuth = () => <span>null auth route</span>;
 
 const renderNull = () => <span>null route</span>;
 
-const renderLish = () => (
-  <LinodeThemeWrapper>
-    <Lish />
-  </LinodeThemeWrapper>
-);
-
-const renderSplashScreen = () => (
-  <LinodeThemeWrapper>
-    <SplashScreen />
-  </LinodeThemeWrapper>
-);
-
 const renderApp = (props: RouteComponentProps) => (
   <>
-    {renderSplashScreen()}
-    <LinodeThemeWrapper>
-      {(toggle) => (
-        <SnackBar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          maxSnack={3}
-          autoHideDuration={4000}
-          data-qa-toast
-          hideIconVariant={true}
-        >
-          <App
-            toggleTheme={toggle}
-            location={props.location}
-            history={props.history}
-          />
-        </SnackBar>
-      )}
-    </LinodeThemeWrapper>
+    <SplashScreen />
+    <SnackBar
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      maxSnack={3}
+      autoHideDuration={4000}
+      data-qa-toast
+      hideIconVariant={true}
+    >
+      <App location={props.location} history={props.history} />
+    </SnackBar>
   </>
 );
 
-const renderCancel = () => (
-  <LinodeThemeWrapper>
-    <Cancel />
-  </LinodeThemeWrapper>
-);
-
 const renderAuthentication = () => (
-  <React.Suspense fallback={<>{renderSplashScreen()}</>}>
-    <Switch>
-      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-      <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
-      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-      <Route exact path="/nullauth" render={renderNullAuth} />
-      <Route exact path="/logout" component={Logout} />
-      <Route exact path="/cancel" render={renderCancel} />
-      <QueryClientProvider client={queryClient}>
-        <AuthenticationWrapper>
-          <Switch>
-            <Route path="/linodes/:linodeId/lish/:type" render={renderLish} />
-            <Route render={renderApp} />
-          </Switch>
-        </AuthenticationWrapper>
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          toggleButtonProps={{ style: { marginLeft: '3em' } }}
-        />
-      </QueryClientProvider>
-    </Switch>
-  </React.Suspense>
+  <QueryClientProvider client={queryClient}>
+    <LinodeThemeWrapper>
+      <React.Suspense fallback={<SplashScreen />}>
+        <Switch>
+          <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+          <Route
+            exact
+            path="/admin/callback"
+            component={LoginAsCustomerCallback}
+          />
+          {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+          <Route exact path="/nullauth" render={renderNullAuth} />
+          <Route exact path="/logout" component={Logout} />
+          <Route exact path="/cancel" component={Cancel} />
+          <AuthenticationWrapper>
+            <Switch>
+              <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
+              <Route render={renderApp} />
+            </Switch>
+          </AuthenticationWrapper>
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            toggleButtonProps={{ style: { marginLeft: '3em' } }}
+          />
+        </Switch>
+      </React.Suspense>
+    </LinodeThemeWrapper>
+  </QueryClientProvider>
 );
 
 const container = document.getElementById('root');

@@ -34,11 +34,11 @@ import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import useFlags from 'src/hooks/useFlags';
-import usePreferences from 'src/hooks/usePreferences';
+import { usePreferences } from 'src/queries/preferences';
 import { isFeatureEnabled } from 'src/utilities/accountCapabilities';
 import { complianceUpdateContext } from './context/complianceUpdateContext';
 import { FlagSet } from './featureFlags';
-import { UserPreferences } from './store/preferences/preferences.actions';
+import { ManagerPreferences } from 'src/types/ManagerPreferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   appFrame: {
@@ -135,7 +135,6 @@ interface Props {
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
   appIsLoading: boolean;
-  toggleTheme: () => void;
   isLoggedInAsCustomer: boolean;
 }
 
@@ -171,10 +170,12 @@ const AccountActivationLanding = React.lazy(
 const Firewalls = React.lazy(() => import('src/features/Firewalls'));
 const Databases = React.lazy(() => import('src/features/Databases'));
 
-const MainContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const MainContent: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const classes = useStyles();
   const flags = useFlags();
-  const { preferences } = usePreferences();
+  const { data: preferences } = usePreferences();
 
   const NotificationProvider = notificationContext.Provider;
   const contextValue = useNotificationContext();
@@ -345,10 +346,7 @@ const MainContent: React.FC<React.PropsWithChildren<CombinedProps>> = (props) =>
                             <Route
                               path="/profile"
                               render={(routeProps) => (
-                                <Profile
-                                  {...routeProps}
-                                  toggleTheme={props.toggleTheme}
-                                />
+                                <Profile {...routeProps} />
                               )}
                             />
                             <Route path="/support" component={Help} />
@@ -399,7 +397,7 @@ export const checkFlagsForMainContentBanner = (flags: FlagSet) => {
 };
 
 export const checkPreferencesForBannerDismissal = (
-  preferences: UserPreferences,
+  preferences: ManagerPreferences,
   key = 'defaultKey'
 ) => {
   return Boolean(preferences?.main_content_banner_dismissal?.[key]);

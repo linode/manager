@@ -1,15 +1,12 @@
 import { getActiveLongviewPlan } from '@linode/api-v4/lib/longview';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import Select, {
   BaseSelectProps,
   Item,
 } from 'src/components/EnhancedSelect/Select';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 interface Props extends Omit<BaseSelectProps, 'onChange' | 'defaultValue'> {
   handleStatsChange?: (start: number, end: number) => void;
@@ -24,17 +21,11 @@ export type Labels =
   | 'Past 30 Days'
   | 'Past Year';
 
-type CombinedProps = Props & PreferencesProps;
+const TimeRangeSelect: React.FC<Props> = (props) => {
+  const { defaultValue, handleStatsChange, ...restOfSelectProps } = props;
 
-const TimeRangeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
-  const {
-    defaultValue,
-    handleStatsChange,
-    preferences,
-    getUserPreferences,
-    updateUserPreferences,
-    ...restOfSelectProps
-  } = props;
+  const { data: preferences, refetch: refetchPreferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const [isLongviewPro, setLongviewPro] = React.useState(false);
 
@@ -43,7 +34,7 @@ const TimeRangeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props
       .then((response) => {
         setLongviewPro(!isEmpty(response));
       })
-      .catch((_) => null); // Swallow errors, default to free tier time select options.
+      .catch(); // Swallow errors, default to free tier time select options.
   }, []);
 
   /*
@@ -99,14 +90,15 @@ const TimeRangeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props
   const handleChange = (item: Item<Labels, Labels>) => {
     setTimeRange(item.value);
 
-    getUserPreferences()
+    refetchPreferences()
+      .then(({ data: response }) => response ?? Promise.reject())
       .then((response) => {
-        updateUserPreferences({
+        updatePreferences({
           ...response,
           longviewTimeRange: item.value,
         });
       })
-      .catch((_) => null); // swallow the error, it's nbd if the choice isn't saved
+      .catch(); // swallow the error, it's nbd if the choice isn't saved
 
     if (!!handleStatsChange) {
       handleStatsChange(
@@ -131,10 +123,7 @@ const TimeRangeSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  withPreferences()
-)(TimeRangeSelect);
+export default React.memo(TimeRangeSelect);
 
 /**
  * react-select option generator that aims to remain a pure function

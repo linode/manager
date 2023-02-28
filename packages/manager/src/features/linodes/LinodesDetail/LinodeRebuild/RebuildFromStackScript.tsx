@@ -15,9 +15,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
@@ -32,6 +29,7 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
+import { usePreferences } from 'src/queries/preferences';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -77,7 +75,6 @@ export type CombinedProps = Props &
   WithImages &
   UserSSHKeyProps &
   RouteComponentProps &
-  PreferencesProps &
   WithSnackbarProps;
 
 interface RebuildFromStackScriptForm {
@@ -92,7 +89,9 @@ const initialValues: RebuildFromStackScriptForm = {
   stackscript_id: '',
 };
 
-export const RebuildFromStackScript: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const RebuildFromStackScript: React.FC<
+  React.PropsWithChildren<CombinedProps>
+> = (props) => {
   const {
     imagesData,
     userSSHKeys,
@@ -104,8 +103,9 @@ export const RebuildFromStackScript: React.FC<React.PropsWithChildren<CombinedPr
     onClose,
     enqueueSnackbar,
     passwordHelperText,
-    preferences,
   } = props;
+
+  const { data: preferences } = usePreferences();
 
   const classes = useStyles();
 
@@ -388,8 +388,7 @@ const enhanced = compose<CombinedProps, Props>(
   userSSHKeyHoc,
   withSnackbar,
   withImages(),
-  withRouter,
-  withPreferences()
+  withRouter
 );
 
 export default enhanced(RebuildFromStackScript);

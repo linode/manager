@@ -114,7 +114,7 @@ describe('Kubernetes deletion dialog', () => {
       })
     );
 
-    const { getByTestId } = renderWithTheme(
+    const { getByTestId, findByTestId } = renderWithTheme(
       <DeleteKubernetesClusterDialog {...props} />
     );
 
@@ -123,6 +123,8 @@ describe('Kubernetes deletion dialog', () => {
     const button = getByTestId('dialog-confirm');
 
     expect(button).toBeDisabled();
+
+    await findByTestId('textfield-input');
 
     const input = getByTestId('textfield-input');
     fireEvent.change(input, { target: { value: 'this-cluster' } });

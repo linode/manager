@@ -1,10 +1,6 @@
-import { equals, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
-
-import withPreferences, {
-  PreferencesActionsProps,
-} from 'src/containers/preferences.container';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 type PreferenceValue = boolean | string | number;
 
@@ -13,12 +9,12 @@ export interface ToggleProps<T> {
   togglePreference: () => T;
 }
 
-interface RenderChildrenProps {
-  preference: PreferenceValue;
-  togglePreference: () => PreferenceValue;
+interface RenderChildrenProps<T> {
+  preference: T;
+  togglePreference: () => T;
 }
 
-type RenderChildren = (props: RenderChildrenProps) => JSX.Element;
+type RenderChildren<T> = (props: RenderChildrenProps<T>) => JSX.Element;
 
 interface Props<T = PreferenceValue> {
   preferenceKey: string;
@@ -28,30 +24,32 @@ interface Props<T = PreferenceValue> {
   toggleCallbackFnDebounced?: (value: T) => void;
   initialSetCallbackFn?: (value: T) => void;
   localStorageKey?: string;
-  children: RenderChildren;
+  children: RenderChildren<T>;
 }
 
-type CombinedProps<T = PreferenceValue> = Props<T> &
-  PreferenceProps &
-  PreferencesActionsProps;
-
-const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const PreferenceToggle = <T extends unknown>(props: Props<T>) => {
   const {
     value,
-    preferenceError,
     preferenceKey,
     preferenceOptions,
     toggleCallbackFnDebounced,
     toggleCallbackFn,
     children,
-    preferences,
   } = props;
 
   /** will be undefined and render-block children unless otherwise specified */
-  const [currentlySetPreference, setPreference] = React.useState<
-    PreferenceValue | undefined
-  >(value);
+  const [currentlySetPreference, setPreference] = React.useState<T | undefined>(
+    value
+  );
   const [lastUpdated, setLastUpdated] = React.useState<number>(0);
+
+  const {
+    data: preferences,
+    error: preferencesError,
+    refetch: refetchUserPreferences,
+  } = usePreferences();
+
+  const { mutateAsync: updateUserPreferences } = useMutatePreferences();
 
   React.useEffect(() => {
     /**
@@ -67,7 +65,7 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
      */
     if (
       isNullOrUndefined(currentlySetPreference) &&
-      !!props.preferenceError &&
+      !!preferencesError &&
       lastUpdated === 0
     ) {
       /**
@@ -88,13 +86,10 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
      */
     if (
       isNullOrUndefined(currentlySetPreference) &&
-      !!props.preferences &&
+      !!preferences &&
       lastUpdated === 0
     ) {
-      const preferenceFromAPI = path<PreferenceValue>(
-        [preferenceKey],
-        props.preferences
-      );
+      const preferenceFromAPI = path<T>([preferenceKey], preferences);
 
       /**
        * this is the first time the user is setting the user preference
@@ -112,7 +107,7 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
         props.initialSetCallbackFn(preferenceToSet);
       }
     }
-  }, [props.preferenceError, props.preferences]);
+  }, [preferences, preferencesError]);
 
   React.useEffect(() => {
     /**
@@ -127,7 +122,7 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
          *
          * Don't update anything if the GET fails
          */
-        if (!!preferenceError && lastUpdated !== 0) {
+        if (!!preferencesError && lastUpdated !== 0) {
           /** invoke our callback prop if we have one */
           if (
             toggleCallbackFnDebounced &&
@@ -135,16 +130,12 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
           ) {
             toggleCallbackFnDebounced(currentlySetPreference);
           }
-
-          props
-            .getUserPreferences()
+          refetchUserPreferences()
             .then((response) => {
-              props
-                .updateUserPreferences({
-                  ...response,
-                  [preferenceKey]: currentlySetPreference,
-                })
-                .catch(() => /** swallow the error */ null);
+              updateUserPreferences({
+                ...response.data,
+                [preferenceKey]: currentlySetPreference,
+              }).catch(() => /** swallow the error */ null);
             })
             .catch(() => /** swallow the error */ null);
         } else if (
@@ -155,12 +146,9 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
           /**
            * PUT to /preferences on every toggle, debounced.
            */
-          props
-            .updateUserPreferences({
-              ...props.preferences,
-              [preferenceKey]: currentlySetPreference,
-            })
-            .catch(() => /** swallow the error */ null);
+          updateUserPreferences({
+            [preferenceKey]: currentlySetPreference,
+          }).catch(() => /** swallow the error */ null);
 
           /** invoke our callback prop if we have one */
           if (
@@ -218,70 +206,8 @@ const PreferenceToggle: React.FC<React.PropsWithChildren<CombinedProps>> = (prop
     : null;
 };
 
-interface PreferenceProps {
-  preferences?: Record<string, any>;
-  preferenceError?: any;
-  preferencesLastUpdated: number;
-}
-
-const memoized = (component: React.FC<React.PropsWithChildren<CombinedProps>>) =>
-  React.memo(component, (prevProps, nextProps) => {
-    /**
-     * only prevent rendering if the preferences AND profileError
-     * went from being defined to defined or vise versa.
-     *
-     * we don't care to re-render if the preferences have been updated in Redux
-     * state. All the relevant preference state will be handled in the component.
-     * This component only cares about what the preferences are on app load.
-     */
-
-    const shouldRerender =
-      !equals(prevProps.preferences, nextProps.preferences) ||
-      wasUndefinedNowDefined(
-        prevProps.preferenceError,
-        nextProps.preferenceError
-      ) ||
-      wasDefinedNowUndefined(
-        prevProps.preferenceError,
-        nextProps.preferenceError
-      ) ||
-      !equals(prevProps.children, nextProps.children) ||
-      /** we only care what the server tells us on app load */
-      isUpdatingForTheFirstTime(
-        prevProps.preferencesLastUpdated,
-        nextProps.preferencesLastUpdated
-      );
-
-    /** react memo cares about if the props are equal so set to the opposite */
-    return !shouldRerender;
-  });
-
-const wasUndefinedNowDefined = (prevProp: any, nextProp: any) => {
-  return !prevProp && !!nextProp;
-};
-
-const wasDefinedNowUndefined = (prevProp: any, nextProp: any) => {
-  return !!prevProp && !nextProp;
-};
-
-const isUpdatingForTheFirstTime = (
-  prevLastUpdated: number,
-  nextLastUpdated: number
-) => {
-  return prevLastUpdated === 0 && nextLastUpdated !== 0;
-};
-
 const isNullOrUndefined = (value: any): value is null | undefined => {
   return typeof value === 'undefined' || value === null;
 };
 
-export default (compose<CombinedProps, Props>(
-  withPreferences<PreferenceProps, Props>(
-    (ownProps, { data: preferences, error, lastUpdated }) => ({
-      preferences,
-      preferenceError: error,
-      preferencesLastUpdated: lastUpdated,
-    })
-  ),
-  memoized
-)(PreferenceToggle) as unknown) as <T>(props: Props<T>) => React.ReactElement;
+export default PreferenceToggle;
