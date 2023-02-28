@@ -25,7 +25,7 @@ const mockProps: CombinedProps = {
 describe('FromImageContent', () => {
   const component = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark">
+      <LinodeThemeWrapper>
         <FromLinodeContent {...mockProps} />
       </LinodeThemeWrapper>
     </Provider>
@@ -33,7 +33,7 @@ describe('FromImageContent', () => {
 
   const componentWithoutLinodes = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark">
+      <LinodeThemeWrapper>
         <FromLinodeContent {...mockProps} linodesData={[]} />
       </LinodeThemeWrapper>
     </Provider>
