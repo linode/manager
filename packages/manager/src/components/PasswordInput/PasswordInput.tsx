@@ -83,13 +83,9 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
 const maybeStrength = (value?: string) => {
   if (!value || isEmpty(value)) {
     return null;
-  } else {
-    const score = zxcvbn(value).score;
-    if (score === 4) {
-      return 3;
-    }
-    return score;
   }
+
+  return zxcvbn(value).score;
 };
 
 export default React.memo(PasswordInput);

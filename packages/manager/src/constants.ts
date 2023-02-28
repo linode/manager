@@ -250,7 +250,7 @@ export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
 export const OBJECT_STORAGE_DELIMITER = '/';
 
 // Value from  1-4 reflecting a minimum score from zxcvbn
-export const MINIMUM_PASSWORD_STRENGTH = 2;
+export const MINIMUM_PASSWORD_STRENGTH = 4;
 
 // When true, use the mock API defined in serverHandlers.ts instead of making network requests
 export const MOCK_SERVICE_WORKER =
