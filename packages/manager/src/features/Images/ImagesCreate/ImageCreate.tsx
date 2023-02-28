@@ -54,6 +54,8 @@ export const ImageCreate: React.FC<CombinedProps> = (props) => {
           description={description}
           changeLabel={handleSetLabel}
           changeDescription={handleSetDescription}
+          changeIsCloudInit={() => setIsCloudInit(!isCloudInit)}
+          isCloudInit={isCloudInit}
         />
       ),
     },
