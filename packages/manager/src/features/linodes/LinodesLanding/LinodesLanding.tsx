@@ -2,6 +2,7 @@ import { Config, Linode } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { parse, stringify } from 'qs';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -111,11 +112,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewInstant = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
-    const query = new URLSearchParams(location.search);
+    const updatedParams = updateParams(location.search, (params) => ({
+      ...params,
+      view: style,
+    }));
 
-    query.set('view', style);
-
-    history.push(`?${query.toString()}`);
+    history.push(`?${updatedParams}`);
   };
 
   updatePageUrl = (page: number) => {
@@ -207,12 +209,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesInTransition,
     } = this.props;
 
-    const params = new URLSearchParams(this.props.location.search);
-
-    const view =
-      params.has('view') && ['grid', 'list'].includes(params.get('view')!)
-        ? (params.get('view') as 'grid' | 'list')
-        : undefined;
+    const params: Params = parse(this.props.location.search, {
+      ignoreQueryPrefix: true,
+    });
 
     // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
     const filteredLinodes = this.props.filterLinodesFn
@@ -330,7 +329,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                  * we want the URL query param to take priority here, but if it's
                  * undefined, just use the user preference
                  */
-                value={view}
+                value={
+                  params.view === 'grid' || params.view === 'list'
+                    ? params.view
+                    : undefined
+                }
               >
                 {({
                   preference: linodeViewPreference,
@@ -546,6 +549,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 });
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
+
+const updateParams = (params: string, updater: (s: any) => any) => {
+  const paramsAsObject = parse(params, { ignoreQueryPrefix: true });
+  return stringify(updater(paramsAsObject));
+};
 
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,

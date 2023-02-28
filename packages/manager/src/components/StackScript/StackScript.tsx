@@ -1,4 +1,5 @@
 import { StackScript as StackScriptType } from '@linode/api-v4/lib/stackscripts';
+import { stringify } from 'qs';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
@@ -142,10 +143,7 @@ export const StackScript: React.FC<Props> = (props) => {
     { available: [], deprecated: [] }
   );
 
-  const queryString = new URLSearchParams({
-    query: `username:${username}`,
-  }).toString();
-
+  const queryString = stringify({ query: `username:${username}` });
   const link =
     profile?.username === username
       ? '/stackscripts/account'

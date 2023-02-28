@@ -2,6 +2,7 @@ import { Image } from '@linode/api-v4/lib/images';
 import { StackScript } from '@linode/api-v4/lib/stackscripts';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import classNames from 'classnames';
+import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -636,7 +637,7 @@ const updateQueryString = (
   query: string,
   history: RouteComponentProps<{}>['history']
 ) => {
-  const queryString = new URLSearchParams({ query }).toString();
+  const queryString = stringify({ query });
 
   // Use `replace` instead of `push` so that each keystroke is not a separate
   // browser history item.

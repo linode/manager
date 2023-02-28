@@ -6,6 +6,7 @@ import {
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
+import { stringify } from 'qs';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
@@ -53,7 +54,7 @@ export const buildQueryStringForLinodeClone = (
   linodeType: string | null,
   types: LinodeType[],
   regions: Region[]
-): string => {
+) => {
   const params: Record<string, string> = {
     type: 'Clone Linode',
     linodeID: String(linodeId),
@@ -69,7 +70,7 @@ export const buildQueryStringForLinodeClone = (
     params.regionID = linodeRegion;
   }
 
-  return new URLSearchParams(params).toString();
+  return stringify(params);
 };
 
 export const LinodeActionMenu: React.FC<Props> = (props) => {

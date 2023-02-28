@@ -11,7 +11,6 @@ module.exports = {
   https: protocol === 'https',
   host: HOST,
   port: PORT,
-  allowedHosts: ['.lindev.local', '.linode.com'],
   historyApiFallback: {
     disableDotRule: true,
   },

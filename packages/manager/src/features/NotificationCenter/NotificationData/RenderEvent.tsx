@@ -63,13 +63,13 @@ export const RenderEvent: React.FC<Props> = (props) => {
   }
 
   const eventMessage = (
-    <div
+    <Typography
       className={classNames({
         [classes.unseenEvent]: !event.seen,
       })}
     >
       <HighlightedMarkdown textOrMarkdown={message} />
-    </div>
+    </Typography>
   );
 
   return (

@@ -1,15 +1,14 @@
-<svg
-  version="1.1"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  x="0px"
+<svg 
+  version="1.1" 
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  x="0px" 
   y="0px"
   width="12px"
   height="12px"
   fill="currentColor"
   stroke-width="1"
-  viewBox="0 0 467.871 467.871" xml:space="preserve"
-  data-testId="ReloadIcon">
+  viewBox="0 0 467.871 467.871" xml:space="preserve">
   <g>
     <path d="M392.098,344.131c-6.597-5.014-16.007-3.729-21.019,2.868c-0.962,1.266-1.948,2.516-2.957,3.751
       c-15.046,18.411-35.315,33.36-60.321,44.474c-0.124,0.055-0.247,0.111-0.369,0.17c-39.456,18.831-85.618,21.405-129.896,7.274

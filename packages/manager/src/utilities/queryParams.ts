@@ -1,3 +1,4 @@
+import { parse } from 'qs';
 import { pathOr } from 'ramda';
 import parseUrl from 'url-parse';
 
@@ -8,7 +9,7 @@ import parseUrl from 'url-parse';
  * @returns An object of the parsed key/value pairs
  */
 export const parseQueryParams = (str: string) =>
-  Object.fromEntries(new URLSearchParams(str));
+  parse(str, { ignoreQueryPrefix: true });
 
 export const getQueryParam = (
   str: string,

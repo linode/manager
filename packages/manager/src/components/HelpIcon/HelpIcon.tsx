@@ -4,7 +4,6 @@ import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles } from 'src/components/core/styles';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
-import { SxProps } from '@mui/system';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -21,7 +20,6 @@ const useStyles = makeStyles(() => ({
 
 interface Props
   extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {
-  sx?: SxProps;
   text: string | JSX.Element;
   className?: string;
   interactive?: boolean;
@@ -58,12 +56,10 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     leaveDelay,
     classes,
     onMouseEnter,
-    sx,
   } = props;
 
   return (
     <Tooltip
-      sx={sx}
       title={text}
       data-qa-help-tooltip
       enterTouchDelay={0}

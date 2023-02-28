@@ -1,1 +1,0 @@
-export { isPropValid } from './isPropValid';

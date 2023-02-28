@@ -1,3 +1,4 @@
+import { parse } from 'querystring';
 import { Reducer } from 'redux';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { CreateTypes, handleChangeCreateType } from './linodeCreate.actions';
@@ -7,44 +8,55 @@ export interface State {
 }
 
 export const getInitialType = (): CreateTypes => {
-  const queryParams = new URLSearchParams(location.search.toLowerCase());
+  let queryParams;
+  try {
+    queryParams = parse(location.search.replace('?', '').toLowerCase());
+  } catch (e) {
+    // Broken query params shouldn't break the app, just default to fromImage
+    return 'fromImage';
+  }
 
-  if (queryParams.has('type')) {
-    if (queryParams.has('subtype')) {
+  if (queryParams.type) {
+    if (queryParams.subtype) {
       // Lowercase the subtype to make comparisons
-      const normalizedSubtype = queryParams.get('subtype')?.toLowerCase();
+      const normalizedSubtype =
+        typeof queryParams.subtype === 'string'
+          ? queryParams.subtype.toLowerCase()
+          : queryParams.subtype.map((s) => s.toLowerCase());
 
       /**
        * we have a subtype in the query string so now we need to deduce what
        * endpoint we should be POSTing to based on what is in the query params
        */
       if (
-        normalizedSubtype?.includes('community') ||
-        normalizedSubtype?.includes('account')
+        normalizedSubtype.includes('community') ||
+        normalizedSubtype.includes('account')
       ) {
         return 'fromStackScript';
-      } else if (normalizedSubtype?.includes('clone')) {
+      } else if (normalizedSubtype.includes('clone')) {
         return 'fromLinode';
-      } else if (normalizedSubtype?.includes('backup')) {
+      } else if (normalizedSubtype.includes('backup')) {
         return 'fromBackup';
       } else {
         return 'fromApp';
       }
     } else {
       // Lowercase the type to make comparisons
-      const normalizedType = queryParams.get('type')?.toLowerCase();
-
+      const normalizedType =
+        typeof queryParams.type === 'string'
+          ? queryParams.type.toLowerCase()
+          : queryParams.type.map((s) => s.toLowerCase());
       /**
        * here we know we don't have a subtype in the query string
        * but we do have a type (AKA a parent tab is selected). In this case,
        * we can assume the first child tab is selected within the parent tabs
        * This is needed to determine the createType for conditional logic in the UI.
        */
-      if (normalizedType?.includes('one-click')) {
+      if (normalizedType.includes('one-click')) {
         return 'fromApp';
-      } else if (normalizedType?.includes('clone')) {
+      } else if (normalizedType.includes('clone')) {
         return 'fromLinode';
-      } else if (normalizedType?.includes('backup')) {
+      } else if (normalizedType.includes('backup')) {
         return 'fromBackup';
       } else {
         return 'fromImage';
