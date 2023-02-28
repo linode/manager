@@ -85,17 +85,9 @@ const CardView: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const addTag = (linodeId: number, newTag: string) => {
-    const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId, tags: _tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags: _tags });
-    });
-  };
-
-  const deleteTag = (linodeId: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
-    return updateLinode({ linodeId, tags: _tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags: _tags });
+  const updateTags = (linodeId: number, tags: string[]) => {
+    return updateLinode({ linodeId, tags }).then((_) => {
+      setTagDrawer({ ...tagDrawer, tags });
     });
   };
 
@@ -155,8 +147,7 @@ const CardView: React.FC<CombinedProps> = (props) => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
+        updateTags={(tags) => updateTags(tagDrawer.entityID, tags)}
         onClose={closeTagDrawer}
       />
     </React.Fragment>

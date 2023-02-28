@@ -4,7 +4,6 @@ import { eventFactory } from 'src/factories/events';
 import { randomLabel } from 'support/util/random';
 import { sequentialStub } from 'support/stubs/sequential-stub';
 import { paginateResponse } from 'support/util/paginate';
-import { containsClick, fbtClick, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 
 interface databaseClusterConfiguration {
@@ -12,8 +11,8 @@ interface databaseClusterConfiguration {
   linodeType: string;
   clusterSize: ClusterSize;
   dbType: Engine;
-  regionTypeahead: string;
   region: string;
+  regionTypeahead: string;
   engine: string;
   version: string;
 }
@@ -25,20 +24,20 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
     linodeType: 'g6-nanode-1',
     clusterSize: 1,
     dbType: 'mysql',
-    regionTypeahead: 'Newark',
     region: 'us-east',
+    regionTypeahead: 'Newark',
     engine: 'MySQL',
-    version: '8.0.26',
+    version: '8',
   },
   {
     label: randomLabel(),
     linodeType: 'g6-dedicated-16',
     clusterSize: 3,
     dbType: 'mysql',
-    regionTypeahead: 'Atlanta',
     region: 'us-southeast',
+    regionTypeahead: 'Atlanta',
     engine: 'MySQL',
-    version: '5.7.30',
+    version: '5',
   },
   // {
   //   label: randomLabel(),
@@ -48,17 +47,17 @@ const databaseConfigurations: databaseClusterConfiguration[] = [
   //   regionTypeahead: 'Atlanta',
   //   region: 'us-southeast',
   //   engine: 'MongoDB',
-  //   version: '4.4.10',
+  //   version: '4',
   // },
   {
     label: randomLabel(),
     linodeType: 'g6-nanode-1',
     clusterSize: 3,
     dbType: 'postgresql',
-    regionTypeahead: 'Newark',
     region: 'us-east',
+    regionTypeahead: 'Newark',
     engine: 'PostgreSQL',
-    version: '13.2',
+    version: '13',
   },
 ];
 
@@ -66,7 +65,7 @@ describe('create a database cluster, mocked data', () => {
   databaseConfigurations.forEach(
     (configuration: databaseClusterConfiguration) => {
       // @TODO Add assertions for DBaaS pricing.
-      it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version} ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
+      it(`creates a ${configuration.linodeType} ${configuration.engine} v${configuration.version}.x ${configuration.clusterSize}-node cluster at ${configuration.region}`, () => {
         const databaseMock = databaseInstanceFactory.build({
           label: configuration.label,
           type: configuration.linodeType,
@@ -112,42 +111,41 @@ describe('create a database cluster, mocked data', () => {
         cy.visitWithLogin('/databases/create');
         cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
 
-        containsClick('Cluster Label').type(configuration.label);
-        containsClick('Select a Database Engine').type(
-          `${configuration.engine} v${configuration.version} {enter}`
-        );
-        containsClick('Select a Region').type(
-          `${configuration.regionTypeahead} {enter}`
-        );
+        cy.contains('Cluster Label').click().type(configuration.label);
+        cy.contains('Select a Database Engine')
+          .click()
+          .type(`${configuration.engine} v${configuration.version} {enter}`);
+        cy.contains('Select a Region')
+          .click()
+          .type(`${configuration.regionTypeahead} {enter}`);
 
         // Database Linode type selection.
         if (configuration.linodeType.indexOf('-dedicated-') !== -1) {
-          fbtClick('Dedicated CPU');
+          cy.findByText('Dedicated CPU').should('be.visible').click();
         } else {
-          fbtClick('Shared CPU');
+          cy.findByText('Shared CPU').should('be.visible').click();
         }
-        getClick(`[id="${configuration.linodeType}"]`);
+        cy.get(`[id="${configuration.linodeType}"]`).click();
 
         // Database cluster size selection.
         if (configuration.clusterSize > 1) {
-          containsClick('3 Nodes');
+          cy.contains('3 Nodes').click();
         } else {
-          containsClick('1 Node');
+          cy.contains('1 Node').click();
         }
 
         // Create database.
-        fbtClick('Create Database Cluster');
+        cy.findByText('Create Database Cluster').should('be.visible').click();
 
-        // Verify database is listed and appears to be configured correctly.
-        cy.wait('@createDatabase');
-        cy.wait('@listDatabases');
+        cy.wait(['@createDatabase', '@listDatabases']);
         cy.get(`[data-qa-database-cluster-id="${databaseMock.id}"]`).within(
           () => {
             cy.findByText(configuration.label).should('be.visible');
             cy.findByText('Provisioning').should('be.visible');
-            cy.findByText(
-              `${configuration.engine} v${configuration.version}`
-            ).should('be.visible');
+            // Confirm that database is the expected engine and major version.
+            cy.findByText(`${configuration.engine} v${configuration.version}`, {
+              exact: false,
+            }).should('be.visible');
             cy.findByText(configuration.regionTypeahead, {
               exact: false,
             }).should('be.visible');
