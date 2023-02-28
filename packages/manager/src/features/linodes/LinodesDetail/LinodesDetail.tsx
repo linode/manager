@@ -28,9 +28,18 @@ interface Props {
   linodeId: string;
 }
 
+const Main = () => (
+  <React.Fragment>
+    <LinodesDetailHeader />
+    <LinodesDetailNavigation />
+  </React.Fragment>
+);
+
 type CombinedProps = Props & RouteComponentProps<{ linodeId: string }>;
 
-const LinodeDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const LinodeDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const {
     linodeId,
     match: { path, url },
@@ -56,31 +65,12 @@ const LinodeDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) =
           have to reload all the configs, disks, etc. once we get to the CloneLanding page.
           */}
           <Route path={`${path}/clone`} component={CloneLanding} />
-
-          <Route
-            render={() => (
-              <React.Fragment>
-                <LinodesDetailHeader />
-                <LinodesDetailNavigation />
-                <Switch>
-                  <Redirect from={`${url}/resize`} to={`${url}?resize=true`} />
-                  <Redirect
-                    from={`${url}/rebuild`}
-                    to={`${url}?rebuild=true`}
-                  />
-                  <Redirect from={`${url}/rescue`} to={`${url}?rescue=true`} />
-                  <Redirect
-                    from={`${url}/migrate`}
-                    to={`${url}?migrate=true`}
-                  />
-                  <Redirect
-                    from={`${url}/upgrade`}
-                    to={`${url}?upgrade=true`}
-                  />
-                </Switch>
-              </React.Fragment>
-            )}
-          />
+          <Redirect from={`${path}/resize`} to={`${url}?resize=true`} />
+          <Redirect from={`${path}/rebuild`} to={`${url}?rebuild=true`} />
+          <Redirect from={`${path}/rescue`} to={`${url}?rescue=true`} />
+          <Redirect from={`${path}/migrate`} to={`${url}?migrate=true`} />
+          <Redirect from={`${path}/upgrade`} to={`${url}?upgrade=true`} />
+          <Route path={path} component={Main} />
         </Switch>
       </React.Suspense>
     </LinodeDetailContextProvider>
