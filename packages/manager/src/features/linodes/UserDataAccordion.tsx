@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const UserDataAccordion: React.FC<Props> = (props) => {
+const UserDataAccordion = (props: Props) => {
   const { disabled, userData, onChange } = props;
   const classes = useStyles();
 
