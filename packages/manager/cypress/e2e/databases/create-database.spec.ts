@@ -4,6 +4,7 @@ import { eventFactory } from 'src/factories/events';
 import { randomLabel } from 'support/util/random';
 import { sequentialStub } from 'support/stubs/sequential-stub';
 import { paginateResponse } from 'support/util/paginate';
+import { apiMatcher } from 'support/util/intercepts';
 
 interface databaseClusterConfiguration {
   label: string;
@@ -94,13 +95,13 @@ describe('create a database cluster, mocked data', () => {
 
         cy.intercept(
           'POST',
-          `*/databases/${configuration.dbType}/instances`,
+          apiMatcher(`databases/${configuration.dbType}/instances`),
           databaseMock
         ).as('createDatabase');
 
         cy.intercept(
           'GET',
-          '*/databases/instances?page=1&page_size=25',
+          apiMatcher('databases/instances?page=1&page_size=25'),
           sequentialStub([
             paginateResponse(databaseMock),
             paginateResponse({ ...databaseMock, status: 'active' }),
@@ -152,7 +153,7 @@ describe('create a database cluster, mocked data', () => {
         );
 
         // Begin intercepting and stubbing event to mock database creation completion.
-        cy.intercept('GET', '*/account/events?page_size=25', (req) => {
+        cy.intercept('GET', apiMatcher('account/events*'), (req) => {
           req.reply(paginateResponse(eventMock));
         }).as('getEvent');
 
