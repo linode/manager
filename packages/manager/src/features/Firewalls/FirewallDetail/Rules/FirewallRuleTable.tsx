@@ -466,7 +466,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
         <Hidden smDown>
           <Grid
             item
-            style={{ whiteSpace: 'nowrap', width: '10%' }}
+            style={{ whiteSpace: 'normal', width: '10%' }}
             aria-label={`Ports: ${ports}`}
           >
             {ports === '1-65535' ? 'All Ports' : ports}
@@ -474,7 +474,7 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           </Grid>
           <Grid
             item
-            style={{ whiteSpace: 'nowrap', width: '15%' }}
+            style={{ whiteSpace: 'normal', width: '15%' }}
             aria-label={`Addresses: ${addresses}`}
           >
             {addresses}{' '}
