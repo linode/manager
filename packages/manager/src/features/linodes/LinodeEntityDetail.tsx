@@ -32,10 +32,11 @@ import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/L
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import useImages from 'src/hooks/useImages';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -76,7 +77,9 @@ interface LinodeEntityDetailProps {
 
 export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
 
-const LinodeEntityDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const LinodeEntityDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const {
     variant,
     linode,
@@ -92,15 +95,17 @@ const LinodeEntityDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (pr
     recentEvent,
   } = props;
 
-  useReduxLoad(['images', 'types']);
-  const { images } = useImages();
+  const { data: images } = useAllImagesQuery({}, {});
+  const imagesItemsById = listToItemsByID(images ?? []);
+
+  useReduxLoad(['types']);
   const { types } = useTypes();
 
   const imageSlug = linode.image;
 
   const imageVendor =
-    imageSlug && images.itemsById[imageSlug]
-      ? images.itemsById[imageSlug].vendor
+    imageSlug && imagesItemsById[imageSlug]
+      ? imagesItemsById[imageSlug].vendor
       : null;
 
   const linodeType = Boolean(linode.type)
@@ -508,98 +513,107 @@ const useBodyStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Body: React.FC<React.PropsWithChildren<BodyProps>> = React.memo((props) => {
-  const classes = useBodyStyles();
-  const {
-    numCPUs,
-    gbRAM,
-    gbStorage,
-    region,
-    ipv4,
-    ipv6,
-    username,
-    linodeLabel,
-    linodeId,
-    numVolumes,
-  } = props;
+export const Body: React.FC<React.PropsWithChildren<BodyProps>> = React.memo(
+  (props) => {
+    const classes = useBodyStyles();
+    const {
+      numCPUs,
+      gbRAM,
+      gbStorage,
+      region,
+      ipv4,
+      ipv6,
+      username,
+      linodeLabel,
+      linodeId,
+      numVolumes,
+    } = props;
 
-  const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
+    const numIPAddresses = ipv4.length + (ipv6 ? 1 : 0);
 
-  const firstAddress = ipv4[0];
+    const firstAddress = ipv4[0];
 
-  // If IPv6 is enabled, always use it in the second address slot. Otherwise use
-  // the second IPv4 address if it exists.
-  const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
+    // If IPv6 is enabled, always use it in the second address slot. Otherwise use
+    // the second IPv4 address if it exists.
+    const secondAddress = ipv6 ? ipv6 : ipv4.length > 1 ? ipv4[1] : null;
 
-  return (
-    <Grid container item className={classes.body} direction="row">
-      {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
-      <Grid
-        container
-        item
-        className={classes.summaryContainer}
-        direction="column"
-      >
-        <Grid item className={classes.columnLabel}>
-          Summary
-        </Grid>
-        <Grid container item className={classes.summaryContent} direction="row">
-          <Grid item>
-            <Typography>
-              {pluralize('CPU Core', 'CPU Cores', numCPUs)}
-            </Typography>
+    return (
+      <Grid container item className={classes.body} direction="row">
+        {/* @todo: Rewrite this code to make it dynamic. It's very similar to the LKE display. */}
+        <Grid
+          container
+          item
+          className={classes.summaryContainer}
+          direction="column"
+        >
+          <Grid item className={classes.columnLabel}>
+            Summary
           </Grid>
-          <Grid item>
-            <Typography>{gbStorage} GB Storage</Typography>
-          </Grid>
-          <Grid item>
-            <Typography>{gbRAM} GB RAM</Typography>
-          </Grid>
-          <Grid item>
-            <Typography>
-              {pluralize('Volume', 'Volumes', numVolumes)}
-            </Typography>
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Grid
-        container
-        item
-        className={classes.rightColumn}
-        direction="row"
-        justifyContent="space-between"
-      >
-        <AccessTable
-          title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
-          rows={[{ text: firstAddress }, { text: secondAddress }]}
-          footer={
-            numIPAddresses > 2 ? (
-              <Typography variant="body1">
-                <HashLink to={`/linodes/${linodeId}/networking#${ipv4TableID}`}>
-                  View all IP Addresses
-                </HashLink>
+          <Grid
+            container
+            item
+            className={classes.summaryContent}
+            direction="row"
+          >
+            <Grid item>
+              <Typography>
+                {pluralize('CPU Core', 'CPU Cores', numCPUs)}
               </Typography>
-            ) : undefined
-          }
-          gridProps={{ md: 5 }}
-        />
+            </Grid>
+            <Grid item>
+              <Typography>{gbStorage} GB Storage</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>{gbRAM} GB RAM</Typography>
+            </Grid>
+            <Grid item>
+              <Typography>
+                {pluralize('Volume', 'Volumes', numVolumes)}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
 
-        <AccessTable
-          title="Access"
-          rows={[
-            { heading: 'SSH Access', text: sshLink(ipv4[0]) },
-            {
-              heading: 'LISH Console via SSH',
-              text: lishLink(username, region, linodeLabel),
-            },
-          ]}
-          gridProps={{ md: 7 }}
-        />
+        <Grid
+          container
+          item
+          className={classes.rightColumn}
+          direction="row"
+          justifyContent="space-between"
+        >
+          <AccessTable
+            title={`IP Address${numIPAddresses > 1 ? 'es' : ''}`}
+            rows={[{ text: firstAddress }, { text: secondAddress }]}
+            footer={
+              numIPAddresses > 2 ? (
+                <Typography variant="body1">
+                  <HashLink
+                    to={`/linodes/${linodeId}/networking#${ipv4TableID}`}
+                  >
+                    View all IP Addresses
+                  </HashLink>
+                </Typography>
+              ) : undefined
+            }
+            gridProps={{ md: 5 }}
+          />
+
+          <AccessTable
+            title="Access"
+            rows={[
+              { heading: 'SSH Access', text: sshLink(ipv4[0]) },
+              {
+                heading: 'LISH Console via SSH',
+                text: lishLink(username, region, linodeLabel),
+              },
+            ]}
+            gridProps={{ md: 7 }}
+          />
+        </Grid>
       </Grid>
-    </Grid>
-  );
-});
+    );
+  }
+);
 
 // =============================================================================
 // AccessTable
@@ -714,7 +728,9 @@ interface AccessTableProps {
   footer?: JSX.Element;
 }
 
-export const AccessTable: React.FC<React.PropsWithChildren<AccessTableProps>> = React.memo((props) => {
+export const AccessTable: React.FC<
+  React.PropsWithChildren<AccessTableProps>
+> = React.memo((props) => {
   const classes = useAccessTableStyles();
   return (
     <Grid container item md={6} direction="column" {...props.gridProps}>
@@ -830,7 +846,9 @@ const useFooterStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const Footer: React.FC<React.PropsWithChildren<FooterProps>> = React.memo((props) => {
+export const Footer: React.FC<
+  React.PropsWithChildren<FooterProps>
+> = React.memo((props) => {
   const classes = useFooterStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));

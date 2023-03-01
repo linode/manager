@@ -5,8 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
-import { useImages } from 'src/hooks/useImages';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useAllImagesQuery } from 'src/queries/images';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { groupImages } from 'src/utilities/images';
 
@@ -42,7 +41,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const ImageSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const ImageSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const {
     helperText,
     images,
@@ -59,14 +60,14 @@ export const ImageSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (pr
 
   const classes = useStyles();
 
-  const { _loading } = useReduxLoad(['images']);
+  const { isLoading: imagesLoading, isError, error } = useAllImagesQuery(
+    {},
+    {}
+  );
 
-  // Check for request errors in Redux
-  const {
-    images: { error },
-  } = useImages();
-  const reduxError = error?.read
-    ? getAPIErrorOrDefault(error.read, 'Unable to load Images')[0].reason
+  // Check for request errors in RQ
+  const rqError = isError
+    ? getAPIErrorOrDefault(error ?? [], 'Unable to load Images')[0].reason
     : undefined;
 
   const renderedImages = React.useMemo(() => getImagesOptions(images), [
@@ -99,10 +100,10 @@ export const ImageSelect: React.FC<React.PropsWithChildren<CombinedProps>> = (pr
       <Grid item className={classes.selectContainer}>
         <Select
           id={'image-select'}
-          isLoading={_loading}
+          isLoading={imagesLoading}
           value={value}
           isMulti={Boolean(isMulti)}
-          errorText={imageError || imageFieldError || reduxError}
+          errorText={imageError || imageFieldError || rqError}
           disabled={disabled || Boolean(imageError)}
           onChange={onSelect}
           options={imageSelectOptions as any}

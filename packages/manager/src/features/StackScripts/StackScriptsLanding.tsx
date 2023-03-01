@@ -1,23 +1,26 @@
+import { Image } from '@linode/api-v4';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
+import { useHistory } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LandingHeader from 'src/components/LandingHeader';
 import Notice from 'src/components/Notice';
-import withImagesContainer, {
-  WithImages,
-} from 'src/containers/withImages.container';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { filterImagesByType } from 'src/store/image/image.helpers';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import StackScriptPanel from './StackScriptPanel';
 
-type CombinedProps = WithImages & RouteComponentProps<{}, any, any>;
+export const StackScriptsLanding = () => {
+  const history = useHistory<{
+    successMessage?: string;
+  }>();
 
-export const StackScriptsLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
-  const { history, imagesData } = props;
-  const { _loading } = useReduxLoad(['images']);
+  const { data: _imagesData, isLoading: _loading } = useAllImagesQuery(
+    {},
+    { is_public: true }
+  );
+
+  const imagesData: Record<string, Image> = listToItemsByID(_imagesData ?? []);
 
   const goToCreateStackScript = () => {
     history.push('/stackscripts/create');
@@ -26,9 +29,9 @@ export const StackScriptsLanding: React.FC<React.PropsWithChildren<CombinedProps
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="StackScripts" />
-      {!!history.location.state && !!history.location.state.successMessage && (
+      {!!history.location.state && !!history.location.state.successMessage ? (
         <Notice success text={history.location.state.successMessage} />
-      )}
+      ) : null}
       <LandingHeader
         title="StackScripts"
         entity="StackScript"
@@ -44,9 +47,9 @@ export const StackScriptsLanding: React.FC<React.PropsWithChildren<CombinedProps
           <Grid item className="p0" xs={12}>
             <StackScriptPanel
               publicImages={imagesData}
-              queryString={props.location.search}
-              history={props.history}
-              location={props.location}
+              queryString={history.location.search}
+              history={history}
+              location={history.location}
             />
           </Grid>
         )}
@@ -55,11 +58,4 @@ export const StackScriptsLanding: React.FC<React.PropsWithChildren<CombinedProps
   );
 };
 
-export default compose<CombinedProps, {}>(
-  withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesData: filterImagesByType(imagesData, 'public'),
-    imagesLoading,
-    imagesError,
-  }))
-)(StackScriptsLanding);
+export default StackScriptsLanding;

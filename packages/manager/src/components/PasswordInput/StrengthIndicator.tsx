@@ -1,66 +1,52 @@
 import classNames from 'classnames';
-import { isNil } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
+type StrengthValues = null | 0 | 1 | 2 | 3 | 4;
 interface Props {
-  strength: null | 0 | 1 | 2 | 3;
+  strength: StrengthValues;
   hideStrengthLabel?: boolean;
 }
-type ClassNames =
-  | 'root'
-  | 'block'
-  | 'strengthText'
-  | 'strengthLabel'
-  | 'blockOuter';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      maxWidth: `calc(415px + ${theme.spacing(1)})`,
-      [theme.breakpoints.down('sm')]: {
-        maxWidth: `calc(100% + ${theme.spacing(1)})`,
-      },
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    maxWidth: `calc(415px + ${theme.spacing(1)})`,
+    [theme.breakpoints.down('sm')]: {
+      maxWidth: `calc(100% + ${theme.spacing(1)})`,
     },
-    block: {
-      backgroundColor: '#C9CACB',
-      height: '4px',
-      transition: 'background-color .5s ease-in-out',
-      '&[class*="strength-"]': {
-        backgroundColor: theme.palette.primary.main,
-      },
+  },
+  block: {
+    backgroundColor: '#C9CACB',
+    height: '4px',
+    transition: 'background-color .5s ease-in-out',
+    '&[class*="strength-"]': {
+      backgroundColor: theme.palette.primary.main,
     },
-    strengthText: {
-      position: 'relative',
-      fontSize: '.85rem',
-      textAlign: 'right',
-      [theme.breakpoints.down('sm')]: {
-        textAlign: 'center',
-      },
+  },
+  strengthText: {
+    position: 'relative',
+    fontSize: '.85rem',
+    textAlign: 'right',
+    [theme.breakpoints.down('sm')]: {
+      textAlign: 'center',
     },
-    strengthLabel: {
-      [theme.breakpoints.down('sm')]: {
-        display: 'none',
-      },
+  },
+  strengthLabel: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
     },
-    blockOuter: {
-      padding: '4px !important' as '4px',
-    },
-  });
+  },
+  blockOuter: {
+    padding: '4px !important' as '4px',
+  },
+}));
 
-const styled = withStyles(styles);
+const StrengthIndicator = (props: Props) => {
+  const classes = useStyles();
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const StrengthIndicator: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
-  const { classes, strength, hideStrengthLabel } = props;
+  const { strength, hideStrengthLabel } = props;
 
   return (
     <Grid
@@ -75,7 +61,10 @@ const StrengthIndicator: React.FC<React.PropsWithChildren<CombinedProps>> = (pro
           <div
             className={classNames({
               [classes.block]: true,
-              [`strength-${strength}`]: !isNil(strength) && idx <= strength,
+              [`strength-${strength}`]:
+                strength !== undefined &&
+                strength !== null &&
+                idx <= scaledStrength(strength),
             })}
           />
         </Grid>
@@ -89,15 +78,43 @@ const StrengthIndicator: React.FC<React.PropsWithChildren<CombinedProps>> = (pro
           {!hideStrengthLabel && (
             <span className={classes.strengthLabel}>Strength:</span>
           )}
-          {strength
-            ? (strength === 1 && ' Weak') ||
-              (strength === 2 && ' Fair') ||
-              (strength === 3 && ' Good')
-            : ' Weak'}
+          {convertStrengthScore(strength)}
         </Typography>
       </Grid>
     </Grid>
   );
 };
 
-export default styled(StrengthIndicator);
+export default StrengthIndicator;
+
+const scaledStrength = (strength: number) => {
+  if ([0, 1].includes(strength)) {
+    return 1;
+  }
+
+  if ([2, 3].includes(strength)) {
+    return 2;
+  }
+
+  if (strength === 4) {
+    return 3;
+  }
+
+  return 0;
+};
+
+export const convertStrengthScore = (strength: StrengthValues) => {
+  switch (strength) {
+    case null:
+    case 0:
+    case 1:
+      return ' Weak';
+    case 2:
+    case 3:
+      return ' Fair';
+    case 4:
+      return ' Good';
+    default:
+      return ' Weak';
+  }
+};

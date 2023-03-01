@@ -7,9 +7,7 @@ import useFlags from 'src/hooks/useFlags';
 import { setMockFeatureFlags } from 'src/store/mockFeatureFlags';
 import Grid from 'src/components/core/Grid';
 
-const options: { label: string; flag: keyof Flags }[] = [
-  { label: 'Brand Update', flag: 'brandUpdate' },
-];
+const options: { label: string; flag: keyof Flags }[] = [];
 
 const FeatureFlagTool: React.FC<React.PropsWithChildren<{}>> = () => {
   const dispatch: Dispatch = useDispatch();

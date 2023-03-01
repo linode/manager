@@ -29,9 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& .primaryNavLink': {
         opacity: 1,
       },
-      '& .logoCollapsed': {
-        opacity: 0,
-      },
     },
     [theme.breakpoints.up('sm')]: {
       overflowY: 'hidden',
@@ -47,7 +44,9 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const SideMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const SideMenu: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const classes = useStyles();
   const { collapse, open, closeMenu } = props;
 

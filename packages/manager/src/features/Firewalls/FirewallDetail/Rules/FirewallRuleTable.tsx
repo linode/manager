@@ -94,7 +94,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelCol: {
     paddingLeft: 6,
-    whiteSpace: 'nowrap',
   },
   ruleGrid: {
     width: '100%',
@@ -102,7 +101,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleList: {
     backgroundColor: theme.color.border3,
-    whiteSpace: 'nowrap',
     listStyle: 'none',
     paddingLeft: 0,
     width: '100%',
@@ -193,7 +191,9 @@ interface Props extends RowActionHandlers {
 
 type CombinedProps = Props;
 
-const FirewallRuleTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const FirewallRuleTable: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const {
     category,
     openRuleDrawer,
@@ -278,7 +278,6 @@ const FirewallRuleTable: React.FC<React.PropsWithChildren<CombinedProps>> = (pro
             <Grid
               item
               style={{
-                whiteSpace: 'nowrap',
                 width: '10%',
               }}
             >
@@ -383,131 +382,130 @@ type FirewallRuleTableRowProps = RuleRow &
     disabled: boolean;
   };
 
-const FirewallRuleTableRow: React.FC<React.PropsWithChildren<FirewallRuleTableRowProps>> = React.memo(
-  (props) => {
-    const classes = useStyles();
-    const theme: Theme = useTheme();
-    const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
+const FirewallRuleTableRow: React.FC<
+  React.PropsWithChildren<FirewallRuleTableRowProps>
+> = React.memo((props) => {
+  const classes = useStyles();
+  const theme: Theme = useTheme();
+  const xsDown = useMediaQuery(theme.breakpoints.down('sm'));
 
-    const {
-      id,
-      action,
-      label,
-      protocol,
-      ports,
-      addresses,
-      status,
-      triggerCloneFirewallRule,
-      triggerDeleteFirewallRule,
-      triggerOpenRuleDrawerForEditing,
-      triggerUndo,
-      errors,
-      disabled,
-      originalIndex,
-    } = props;
+  const {
+    id,
+    action,
+    label,
+    protocol,
+    ports,
+    addresses,
+    status,
+    triggerCloneFirewallRule,
+    triggerDeleteFirewallRule,
+    triggerOpenRuleDrawerForEditing,
+    triggerUndo,
+    errors,
+    disabled,
+    originalIndex,
+  } = props;
 
-    const actionMenuProps = {
-      idx: id,
-      disabled: status === 'PENDING_DELETION' || disabled,
-      triggerCloneFirewallRule,
-      triggerDeleteFirewallRule,
-      triggerOpenRuleDrawerForEditing,
-    };
+  const actionMenuProps = {
+    idx: id,
+    disabled: status === 'PENDING_DELETION' || disabled,
+    triggerCloneFirewallRule,
+    triggerDeleteFirewallRule,
+    triggerOpenRuleDrawerForEditing,
+  };
 
-    return (
+  return (
+    <Grid
+      container
+      key={id}
+      aria-label={label}
+      className={classNames({
+        [classes.ruleGrid]: true,
+        [classes.ruleRow]: true,
+        // Highlight the row if it's been modified or reordered. ID is the
+        // current index, so if it doesn't match the original index we know
+        // that the rule has been moved.
+        [classes.unmodified]: status === 'NOT_MODIFIED',
+        [classes.highlight]:
+          status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
+        [classes.disabled]: status === 'PENDING_DELETION' || disabled,
+      })}
+    >
       <Grid
-        container
-        key={id}
-        aria-label={label}
-        className={classNames({
-          [classes.ruleGrid]: true,
-          [classes.ruleRow]: true,
-          // Highlight the row if it's been modified or reordered. ID is the
-          // current index, so if it doesn't match the original index we know
-          // that the rule has been moved.
-          [classes.unmodified]: status === 'NOT_MODIFIED',
-          [classes.highlight]:
-            status === 'MODIFIED' || status === 'NEW' || originalIndex !== id,
-          [classes.disabled]: status === 'PENDING_DELETION' || disabled,
-        })}
+        item
+        style={{
+          paddingLeft: 8,
+          width: xsDown ? '50%' : '30%',
+          overflowWrap: 'break-word',
+        }}
+        aria-label={`Label: ${label}`}
       >
+        <DragIndicator
+          className={classes.dragIcon}
+          aria-label="Drag indicator icon"
+        />
+        {label || (
+          <button
+            className={classes.addLabelButton}
+            style={{
+              color: disabled ? 'inherit' : '',
+            }}
+            onClick={() => triggerOpenRuleDrawerForEditing(id)}
+            disabled={disabled}
+          >
+            Add a label
+          </button>
+        )}{' '}
+      </Grid>
+      <Hidden lgDown>
         <Grid
           item
-          style={{ paddingLeft: 8, width: xsDown ? '50%' : '30%' }}
-          aria-label={`Label: ${label}`}
+          style={{ width: '10%' }}
+          aria-label={`Protocol: ${protocol}`}
         >
-          <DragIndicator
-            className={classes.dragIcon}
-            aria-label="Drag indicator icon"
-          />
-          {label || (
+          {protocol}
+          <ConditionalError errors={errors} formField="protocol" />
+        </Grid>
+      </Hidden>
+      <Hidden smDown>
+        <Grid item style={{ width: '10%' }} aria-label={`Ports: ${ports}`}>
+          {ports === '1-65535' ? 'All Ports' : ports}
+          <ConditionalError errors={errors} formField="ports" />
+        </Grid>
+        <Grid
+          item
+          style={{ width: '15%' }}
+          aria-label={`Addresses: ${addresses}`}
+        >
+          {addresses} <ConditionalError errors={errors} formField="addresses" />
+        </Grid>
+      </Hidden>
+      <Grid item style={{ width: '5%' }} aria-label={`Action: ${action}`}>
+        {capitalize(action?.toLocaleLowerCase() ?? '')}
+      </Grid>
+      <Grid item style={{ marginLeft: 'auto' }}>
+        {status !== 'NOT_MODIFIED' ? (
+          <div className={classes.undoButtonContainer}>
             <button
-              className={classes.addLabelButton}
-              style={{
-                color: disabled ? 'inherit' : '',
-              }}
-              onClick={() => triggerOpenRuleDrawerForEditing(id)}
+              className={classNames({
+                [classes.undoButton]: true,
+                [classes.highlight]: status !== 'PENDING_DELETION',
+              })}
+              onClick={() => triggerUndo(id)}
+              aria-label="Undo change to Firewall Rule"
               disabled={disabled}
             >
-              Add a label
+              <Undo />
             </button>
-          )}{' '}
-        </Grid>
-        <Hidden lgDown>
-          <Grid
-            item
-            style={{ width: '10%' }}
-            aria-label={`Protocol: ${protocol}`}
-          >
-            {protocol}
-            <ConditionalError errors={errors} formField="protocol" />
-          </Grid>
-        </Hidden>
-        <Hidden smDown>
-          <Grid
-            item
-            style={{ whiteSpace: 'nowrap', width: '10%' }}
-            aria-label={`Ports: ${ports}`}
-          >
-            {ports === '1-65535' ? 'All Ports' : ports}
-            <ConditionalError errors={errors} formField="ports" />
-          </Grid>
-          <Grid
-            item
-            style={{ whiteSpace: 'nowrap', width: '15%' }}
-            aria-label={`Addresses: ${addresses}`}
-          >
-            {addresses}{' '}
-            <ConditionalError errors={errors} formField="addresses" />
-          </Grid>
-        </Hidden>
-        <Grid item style={{ width: '5%' }} aria-label={`Action: ${action}`}>
-          {capitalize(action?.toLocaleLowerCase() ?? '')}
-        </Grid>
-        <Grid item style={{ marginLeft: 'auto' }}>
-          {status !== 'NOT_MODIFIED' ? (
-            <div className={classes.undoButtonContainer}>
-              <button
-                className={classNames({
-                  [classes.undoButton]: true,
-                  [classes.highlight]: status !== 'PENDING_DELETION',
-                })}
-                onClick={() => triggerUndo(id)}
-                aria-label="Undo change to Firewall Rule"
-                disabled={disabled}
-              >
-                <Undo />
-              </button>
-              <FirewallRuleActionMenu {...actionMenuProps} />
-            </div>
-          ) : (
             <FirewallRuleActionMenu {...actionMenuProps} />
-          )}
-        </Grid>
+          </div>
+        ) : (
+          <FirewallRuleActionMenu {...actionMenuProps} />
+        )}
       </Grid>
-    );
-  }
-);
+    </Grid>
+  );
+});
 
 interface PolicyRowProps {
   category: Category;
@@ -521,7 +519,9 @@ const policyOptions: Item<FirewallPolicyType>[] = [
   { label: 'Drop', value: 'DROP' },
 ];
 
-export const PolicyRow: React.FC<React.PropsWithChildren<PolicyRowProps>> = React.memo((props) => {
+export const PolicyRow: React.FC<
+  React.PropsWithChildren<PolicyRowProps>
+> = React.memo((props) => {
   const { category, policy, disabled, handlePolicyChange } = props;
   const classes = useStyles();
 
@@ -580,32 +580,32 @@ interface ConditionalErrorProps {
   errors?: FirewallRuleError[];
 }
 
-export const ConditionalError: React.FC<React.PropsWithChildren<ConditionalErrorProps>> = React.memo(
-  (props) => {
-    const classes = useStyles();
+export const ConditionalError: React.FC<
+  React.PropsWithChildren<ConditionalErrorProps>
+> = React.memo((props) => {
+  const classes = useStyles();
 
-    const { formField, errors } = props;
+  const { formField, errors } = props;
 
-    // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
-    const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
+  // It's possible to have multiple IP errors, but we only want to display ONE in the table row.
+  const uniqueByFormField = uniqBy(prop('formField'), errors ?? []);
 
-    return (
-      // eslint-disable-next-line react/jsx-no-useless-fragment
-      (<>
-        {uniqueByFormField.map((thisError) => {
-          if (formField !== thisError.formField || !thisError.reason) {
-            return null;
-          }
-          return (
-            <div key={thisError.idx} className={classes.error}>
-              <Typography variant="body1">{thisError.reason}</Typography>
-            </div>
-          );
-        })}
-      </>)
-    );
-  }
-);
+  return (
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {uniqueByFormField.map((thisError) => {
+        if (formField !== thisError.formField || !thisError.reason) {
+          return null;
+        }
+        return (
+          <div key={thisError.idx} className={classes.error}>
+            <Typography variant="body1">{thisError.reason}</Typography>
+          </div>
+        );
+      })}
+    </>
+  );
+});
 
 // =============================================================================
 // Utilities

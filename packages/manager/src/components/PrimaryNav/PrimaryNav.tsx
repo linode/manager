@@ -17,7 +17,6 @@ import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
 import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
-import LinodeLogo from 'src/assets/logo/logo.svg';
 import BetaChip from 'src/components/BetaChip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -247,7 +246,7 @@ export const PrimaryNav: React.FC<React.PropsWithChildren<Props>> = (props) => {
   );
 
   return (
-    (<Grid
+    <Grid
       className={classes.menuGrid}
       container
       alignItems="flex-start"
@@ -262,15 +261,10 @@ export const PrimaryNav: React.FC<React.PropsWithChildren<Props>> = (props) => {
       <Grid item>
         <div
           className={classNames({
-            [classes.logoItem]: !flags.brandUpdate,
-            [classes.logoItemAkamai]: flags.brandUpdate,
-            [classes.logoItemAkamaiCollapsed]: flags.brandUpdate && isCollapsed,
+            [classes.logoItemAkamai]: !isCollapsed,
+            [classes.logoItemAkamaiCollapsed]: isCollapsed,
           })}
         >
-          {isCollapsed && (
-            // TODO: Unnecessary once brand update is no longer behind feature flag
-            (<span className={`${classes.logoCollapsed} logoCollapsed`}></span>)
-          )}
           <Link
             to={`/dashboard`}
             onClick={closeMenu}
@@ -280,28 +274,16 @@ export const PrimaryNav: React.FC<React.PropsWithChildren<Props>> = (props) => {
               [classes.logoContainer]: isCollapsed,
             })}
           >
-            {flags.brandUpdate ? (
-              <AkamaiLogo
-                width={128}
-                className={classNames(
-                  {
-                    [classes.logoAkamaiCollapsed]: isCollapsed,
-                  },
-                  classes.logo
-                )}
-              />
-            ) : (
-              <LinodeLogo
-                width={128}
-                height={50}
-                className={classNames(
-                  {
-                    [classes.logoSvgCollapsed]: isCollapsed,
-                  },
-                  classes.logo
-                )}
-              />
-            )}
+            <AkamaiLogo
+              width={140}
+              height={45}
+              className={classNames(
+                {
+                  [classes.logoAkamaiCollapsed]: isCollapsed,
+                },
+                classes.logo
+              )}
+            />
           </Link>
         </div>
       </Grid>
@@ -351,7 +333,7 @@ export const PrimaryNav: React.FC<React.PropsWithChildren<Props>> = (props) => {
           );
         })}
       </div>
-    </Grid>)
+    </Grid>
   );
 };
 
@@ -371,7 +353,9 @@ interface PrimaryLinkProps extends PrimaryLink {
   };
 }
 
-const PrimaryLink: React.FC<React.PropsWithChildren<PrimaryLinkProps>> = React.memo((props) => {
+const PrimaryLink: React.FC<
+  React.PropsWithChildren<PrimaryLinkProps>
+> = React.memo((props) => {
   const classes = useStyles();
 
   const {
@@ -438,7 +422,9 @@ interface PrefetchPrimaryLinkProps {
 }
 
 // Wrapper around PrimaryLink that includes the usePrefetchHook.
-export const PrefetchPrimaryLink: React.FC<React.PropsWithChildren<PrimaryLinkProps & PrefetchPrimaryLinkProps>> = React.memo((props) => {
+export const PrefetchPrimaryLink: React.FC<
+  React.PropsWithChildren<PrimaryLinkProps & PrefetchPrimaryLinkProps>
+> = React.memo((props) => {
   const { makeRequest, cancelRequest } = usePrefetch(
     props.prefetchRequestFn,
     props.prefetchRequestCondition

@@ -27,7 +27,9 @@ const useStyles = makeStyles(() => ({
 
 type CombinedProps = Props;
 
-const PasswordInput: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const PasswordInput: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
       props.onChange(e);
@@ -83,13 +85,9 @@ const PasswordInput: React.FC<React.PropsWithChildren<CombinedProps>> = (props) 
 const maybeStrength = (value?: string) => {
   if (!value || isEmpty(value)) {
     return null;
-  } else {
-    const score = zxcvbn(value).score;
-    if (score === 4) {
-      return 3;
-    }
-    return score;
   }
+
+  return zxcvbn(value).score;
 };
 
 export default React.memo(PasswordInput);

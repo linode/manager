@@ -10,8 +10,7 @@ import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import { useImages } from 'src/hooks/useImages';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { useAllImagesQuery } from 'src/queries/images';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
@@ -116,10 +115,11 @@ export const imagesToGroupedItems = (images: Image[]) => {
     }, []);
 };
 
-export const ImageSelect: React.FC<React.PropsWithChildren<Props>> = (props) => {
+export const ImageSelect: React.FC<React.PropsWithChildren<Props>> = (
+  props
+) => {
   const {
     disabled,
-    error,
     handleSelectImage,
     images,
     selectedImageID,
@@ -129,13 +129,11 @@ export const ImageSelect: React.FC<React.PropsWithChildren<Props>> = (props) => 
     ...reactSelectProps
   } = props;
 
-  const { _loading } = useReduxLoad(['images']);
+  // Check for loading status and request errors in React Query
+  const { isLoading: _loading, error } = useAllImagesQuery();
 
-  // Check for request errors in Redux
-  const { images: _images } = useImages();
-  const imageError = _images?.error?.read
-    ? getAPIErrorOrDefault(_images.error.read, 'Unable to load Images')[0]
-        .reason
+  const imageError = error
+    ? getAPIErrorOrDefault(error, 'Unable to load Images')[0].reason
     : undefined;
 
   const filteredImages = images.filter((thisImage) => {
@@ -146,8 +144,11 @@ export const ImageSelect: React.FC<React.PropsWithChildren<Props>> = (props) => 
          * We don't want them to show up as a selectable image to deploy since
          * the Kubernetes images are used behind the scenes with LKE.
          */
-        return (thisImage.is_public &&
-        thisImage.status === 'available' && !thisImage.label.match(/kube/i));
+        return (
+          thisImage.is_public &&
+          thisImage.status === 'available' &&
+          !thisImage.label.match(/kube/i)
+        );
       case 'private':
         return !thisImage.is_public && thisImage.status === 'available';
       case 'all':

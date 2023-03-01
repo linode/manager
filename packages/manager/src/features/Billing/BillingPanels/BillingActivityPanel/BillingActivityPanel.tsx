@@ -177,7 +177,9 @@ export interface Props {
   accountActiveSince?: string;
 }
 
-export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (props) => {
+export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (
+  props
+) => {
   const { accountActiveSince } = props;
 
   const { data: account } = useAccount();
@@ -242,13 +244,7 @@ export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (p
           pdfLoading.delete(id);
 
           const invoiceItems = response.data;
-          const result = printInvoice(
-            account!,
-            invoice,
-            invoiceItems,
-            taxes,
-            flags.brandUpdate
-          );
+          const result = printInvoice(account!, invoice, invoiceItems, taxes);
 
           if (result.status === 'error') {
             pdfErrors.add(id);
@@ -286,12 +282,7 @@ export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (p
         taxes?.date,
         taxes?.country_tax
       );
-      const result = printPayment(
-        account,
-        payment,
-        countryTax,
-        flags.brandUpdate
-      );
+      const result = printPayment(account, payment, countryTax);
 
       if (result.status === 'error') {
         pdfErrors.add(id);
@@ -345,7 +336,7 @@ export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (p
   }, [selectedTransactionType, selectedTransactionDate, combinedData]);
 
   return (
-    (<div className={classes.root}>
+    <div className={classes.root}>
       <div className={classes.headerContainer}>
         <Typography variant="h2" className={classes.headline}>
           {`${isAkamaiCustomer ? 'Usage' : 'Billing & Payment'} History`}
@@ -407,9 +398,7 @@ export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (p
       </div>
       <OrderBy data={filteredData} orderBy={'date'} order={'desc'}>
         {React.useCallback(
-          ({
-            data: orderedData
-          }: any) => (
+          ({ data: orderedData }: any) => (
             <Paginate pageSize={25} data={orderedData} shouldScroll={false}>
               {({
                 data: paginatedAndOrderedData,
@@ -505,7 +494,7 @@ export const BillingActivityPanel: React.FC<React.PropsWithChildren<Props>> = (p
           ]
         )}
       </OrderBy>
-    </div>)
+    </div>
   );
 };
 
@@ -518,63 +507,63 @@ interface ActivityFeedItemProps extends ActivityFeedItem {
   isLoading: boolean;
 }
 
-export const ActivityFeedItem: React.FC<React.PropsWithChildren<ActivityFeedItemProps>> = React.memo(
-  (props) => {
-    const classes = useStyles();
+export const ActivityFeedItem: React.FC<
+  React.PropsWithChildren<ActivityFeedItemProps>
+> = React.memo((props) => {
+  const classes = useStyles();
 
-    const {
-      date,
-      label,
-      total,
-      id,
-      type,
-      downloadPDF,
-      hasError,
-      isLoading,
-    } = props;
+  const {
+    date,
+    label,
+    total,
+    id,
+    type,
+    downloadPDF,
+    hasError,
+    isLoading,
+  } = props;
 
-    const handleClick = React.useCallback(
-      (e: React.MouseEvent) => {
-        e.stopPropagation();
-        e.preventDefault();
-        downloadPDF(id);
-      },
-      [id, downloadPDF]
-    );
+  const handleClick = React.useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      downloadPDF(id);
+    },
+    [id, downloadPDF]
+  );
 
-    const action = {
-      title: hasError ? 'Error. Click to try again.' : 'Download PDF',
-      className: hasError ? classes.pdfError : '',
-      onClick: handleClick,
-    };
+  const action = {
+    title: hasError ? 'Error. Click to try again.' : 'Download PDF',
+    className: hasError ? classes.pdfError : '',
+    onClick: handleClick,
+  };
 
-    return (
-      <TableRow data-testid={`${type}-${id}`}>
-        <TableCell>
-          {type === 'invoice' ? (
-            <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
-          ) : (
-            label
-          )}
-        </TableCell>
-        <TableCell>
-          <DateTimeDisplay value={date} />
-        </TableCell>
-        <TableCell className={classes.totalColumn}>
-          <Currency quantity={total} wrapInParentheses={total < 0} />
-        </TableCell>
-        <TableCell className={classes.pdfDownloadColumn}>
-          <InlineMenuAction
-            actionText={action.title}
-            className={action.className}
-            onClick={action.onClick}
-            loading={isLoading}
-          />
-        </TableCell>
-      </TableRow>
-    );
-  }
-);
+  return (
+    <TableRow data-testid={`${type}-${id}`}>
+      <TableCell>
+        {type === 'invoice' ? (
+          <Link to={`/account/billing/invoices/${id}`}>{label}</Link>
+        ) : (
+          label
+        )}
+      </TableCell>
+      <TableCell>
+        <DateTimeDisplay value={date} />
+      </TableCell>
+      <TableCell className={classes.totalColumn}>
+        <Currency quantity={total} wrapInParentheses={total < 0} />
+      </TableCell>
+      <TableCell className={classes.pdfDownloadColumn}>
+        <InlineMenuAction
+          actionText={action.title}
+          className={action.className}
+          onClick={action.onClick}
+          loading={isLoading}
+        />
+      </TableCell>
+    </TableRow>
+  );
+});
 
 // =============================================================================
 // Utilities

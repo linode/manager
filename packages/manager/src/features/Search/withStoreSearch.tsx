@@ -1,4 +1,4 @@
-import { KubernetesCluster, Volume } from '@linode/api-v4';
+import { Image, KubernetesCluster, Volume } from '@linode/api-v4';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
@@ -12,6 +12,7 @@ import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   bucketToSearchableItem,
   domainToSearchableItem,
+  imageToSearchableItem,
   kubernetesClusterToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
@@ -29,7 +30,9 @@ interface HandlerProps {
     buckets: ObjectStorageBucket[],
     domains: Domain[],
     volumes: Volume[],
-    clusters: KubernetesCluster[]
+    clusters: KubernetesCluster[],
+    images: Image[],
+    searchableLinodes: SearchableItem<string | number>[]
   ) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
@@ -56,8 +59,12 @@ export const search = (
   };
 };
 
-export default () => (Component: React.ComponentType<React.PropsWithChildren<any>>) => {
-  const WrappedComponent: React.FC<React.PropsWithChildren<SearchProps>> = (props) => {
+export default () => (
+  Component: React.ComponentType<React.PropsWithChildren<any>>
+) => {
+  const WrappedComponent: React.FC<React.PropsWithChildren<SearchProps>> = (
+    props
+  ) => {
     return React.createElement(Component, {
       ...props,
     });
@@ -81,7 +88,9 @@ export default () => (Component: React.ComponentType<React.PropsWithChildren<any
           objectStorageBuckets: ObjectStorageBucket[],
           domains: Domain[],
           volumes: Volume[],
-          clusters: KubernetesCluster[]
+          clusters: KubernetesCluster[],
+          images: Image[],
+          searchableLinodes: SearchableItem<string | number>[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
             bucketToSearchableItem(bucket)
@@ -92,11 +101,17 @@ export default () => (Component: React.ComponentType<React.PropsWithChildren<any
           const searchableVolumes = volumes.map((volume) =>
             volumeToSearchableItem(volume)
           );
+          const searchableImages = images.map((image) =>
+            imageToSearchableItem(image)
+          );
+
           const searchableClusters = clusters.map((cluster) =>
             kubernetesClusterToSearchableItem(cluster)
           );
           const results = search(
             [
+              ...searchableLinodes,
+              ...searchableImages,
               ...props.entities,
               ...searchableBuckets,
               ...searchableDomains,

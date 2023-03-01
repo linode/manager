@@ -11,11 +11,11 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import ScriptCode from 'src/components/ScriptCode';
-import { useImages } from 'src/hooks/useImages';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';
-import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import HelpIcon from '../HelpIcon';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import Box from '../core/Box';
+import HelpIcon from '../HelpIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -110,12 +110,16 @@ export const StackScript: React.FC<React.PropsWithChildren<Props>> = (
   const history = useHistory();
   const { profile } = useAccountManagement();
 
-  const { images: imagesData } = useImages('public');
-  useReduxLoad(['images']);
+  const { data: imagesData } = useAllImagesQuery(
+    {},
+    { is_public: true } // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+  );
+
+  const imagesItemsById = listToItemsByID(imagesData ?? []);
 
   const imageChips = images.reduce(
     (acc: StackScriptImages, image: string) => {
-      const imageObj = imagesData.itemsById[image];
+      const imageObj = imagesItemsById[image];
 
       // If an image is null, just continue the reduce.
       if (!image) {

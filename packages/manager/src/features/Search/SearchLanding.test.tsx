@@ -21,7 +21,6 @@ const props: Props = {
     hasErrors: false,
     linodes: false,
     nodebalancers: false,
-    images: false,
   },
   ...reactRouterProps,
 };

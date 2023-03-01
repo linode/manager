@@ -3,10 +3,9 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
 import { RebuildLinodeFromStackScriptSchema } from '@linode/validation/lib/linodes.schema';
 import { Formik, FormikProps } from 'formik';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -15,7 +14,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import userSSHKeyHoc, {
@@ -28,8 +26,10 @@ import {
   getMineAndAccountStackScripts,
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-import { useStackScript } from 'src/hooks/useStackScript';
 import { usePreferences } from 'src/queries/preferences';
+import { useStackScript } from 'src/hooks/useStackScript';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { filterImagesByType } from 'src/store/image/image.helpers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
@@ -71,11 +71,7 @@ interface Props {
   onClose: () => void;
 }
 
-export type CombinedProps = Props &
-  WithImages &
-  UserSSHKeyProps &
-  RouteComponentProps &
-  WithSnackbarProps;
+export type CombinedProps = Props & UserSSHKeyProps;
 
 interface RebuildFromStackScriptForm {
   image: string;
@@ -93,7 +89,6 @@ export const RebuildFromStackScript: React.FC<
   React.PropsWithChildren<CombinedProps>
 > = (props) => {
   const {
-    imagesData,
     userSSHKeys,
     sshError,
     requestKeys,
@@ -101,13 +96,16 @@ export const RebuildFromStackScript: React.FC<
     linodeLabel,
     handleRebuildError,
     onClose,
-    enqueueSnackbar,
     passwordHelperText,
   } = props;
 
   const { data: preferences } = usePreferences();
 
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { data: imagesData } = useAllImagesQuery();
+  const _imagesData = listToItemsByID(imagesData ?? []);
 
   /**
    * Dynamic validation schema, with password validation
@@ -127,7 +125,7 @@ export const RebuildFromStackScript: React.FC<
     handleChangeUDF,
     resetStackScript,
   ] = useStackScript(
-    Object.keys(imagesData).map((eachKey) => imagesData[eachKey])
+    Object.keys(_imagesData).map((eachKey) => _imagesData[eachKey])
   );
 
   // In this component, most errors are handled by Formik. This is not
@@ -290,7 +288,7 @@ export const RebuildFromStackScript: React.FC<
                 selectedUsername={ss.username}
                 updateFor={[classes, ss.id, errors]}
                 onSelect={handleSelect}
-                publicImages={filterImagesByType(imagesData, 'public')}
+                publicImages={filterImagesByType(_imagesData, 'public')}
                 resetSelectedStackScript={resetStackScript}
                 data-qa-select-stackscript
                 category={props.type}
@@ -384,12 +382,7 @@ export const RebuildFromStackScript: React.FC<
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  userSSHKeyHoc,
-  withSnackbar,
-  withImages(),
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(userSSHKeyHoc);
 
 export default enhanced(RebuildFromStackScript);
 

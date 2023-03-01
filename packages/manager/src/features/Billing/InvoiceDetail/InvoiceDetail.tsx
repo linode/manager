@@ -58,7 +58,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type CombinedProps = RouteComponentProps<{ invoiceId: string }>;
 
-export const InvoiceDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const InvoiceDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const classes = useStyles();
 
   const csvRef = React.useRef<any>();
@@ -117,13 +119,7 @@ export const InvoiceDetail: React.FC<React.PropsWithChildren<CombinedProps>> = (
   ) => {
     const taxes =
       flags[getShouldUseAkamaiBilling(invoice.date) ? 'taxes' : 'taxBanner'];
-    const result = printInvoice(
-      account,
-      invoice,
-      items,
-      taxes,
-      flags.brandUpdate
-    );
+    const result = printInvoice(account, invoice, items, taxes);
 
     setPDFGenerationError(result.status === 'error' ? result.error : undefined);
   };
