@@ -42,6 +42,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
     extraActions,
     createButtonWidth,
     createButtonText,
+    isDetailLanding,
     loading,
     breadcrumbProps,
     disabledCreateButton,
@@ -82,7 +83,7 @@ export const LandingHeader: React.FC<Props> = (props) => {
 
   return (
     <EntityHeader
-      isLanding
+      isLanding={!isDetailLanding}
       actions={extraActions || onAddNew ? actions : undefined}
       docsLink={docsLink}
       breadcrumbProps={breadcrumbProps}

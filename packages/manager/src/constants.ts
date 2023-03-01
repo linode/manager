@@ -339,3 +339,9 @@ export const ADDRESSES = {
     },
   },
 };
+
+export const ACCESS_LEVELS = {
+  readOnly: 'read_only',
+  readWrite: 'read_write',
+  none: 'none',
+};

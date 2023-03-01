@@ -9,6 +9,7 @@ import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
 
 export interface HeaderProps extends BreadCrumbProps {
   actions?: JSX.Element;
+  analyticsLabel?: string;
   body?: JSX.Element;
   docsLink?: string;
   docsLabel?: string;
@@ -20,6 +21,7 @@ export interface HeaderProps extends BreadCrumbProps {
   headerOnly?: boolean;
   removeCrumbX?: number;
   breadcrumbProps?: BreadcrumbProps;
+  onDocsClick?: () => void;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -29,9 +31,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'space-between',
     margin: 0,
     width: '100%',
+    background: 'red',
   },
   landing: {
-    marginBottom: 0,
+    marginBottom: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       padding: 0,
@@ -44,7 +47,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(2),
   },
   details: {
-    backgroundColor: theme.bg.bgPaper,
+    backgroundColor: 'yellow',
+    // backgroundColor: theme.bg.bgPaper,
     margin: 0,
     [theme.breakpoints.down('sm')]: {
       flexWrap: 'wrap',
@@ -99,6 +103,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginBottom: 0,
     },
   },
+  pink: {
+    background: 'pink',
+  },
+  detailed: {
+    background: 'green',
+  },
 }));
 
 // @todo: Refactor this entire component now that we have less variants.
@@ -107,6 +117,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
 
   const {
     actions,
+    analyticsLabel,
     body,
     docsLink,
     docsLabel,
@@ -120,9 +131,13 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
     headerOnly,
     removeCrumbX,
     breadcrumbProps,
+    onDocsClick,
   } = props;
 
   const labelTitle = title.toString();
+  const docsAnalyticsLabel = analyticsLabel
+    ? analyticsLabel
+    : `${title} Landing`;
 
   return (
     <>
@@ -130,13 +145,13 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
         <Grid
           data-qa-entity-header
           container
-          item
           className={`${classes.root} ${classes.landing}`}
         >
           <Grid container item xs={12} sm={4}>
             <Breadcrumb
+              className={`${classes.pink}`}
               labelTitle={labelTitle}
-              pathname={location.pathname}
+              pathname={location.pathname} // TODO: This doesn't exist and is causing issues...
               removeCrumbX={removeCrumbX}
               {...breadcrumbProps}
               data-qa-title
@@ -144,8 +159,9 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
           </Grid>
           <Grid
             className={classes.actionsWrapper}
-            container
             item
+            container
+            direction="row"
             alignItems="center"
             justifyContent="flex-end"
             xs={12}
@@ -156,7 +172,8 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
               <DocsLink
                 href={docsLink}
                 label={docsLabel}
-                analyticsLabel={`${title} Landing`}
+                analyticsLabel={docsAnalyticsLabel}
+                onClick={onDocsClick}
               />
             ) : null}
             <div className={classes.actions}>{actions}</div>
@@ -177,7 +194,7 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
         <Grid
           item
           xs={12}
-          className={classNames({
+          className={classNames(classes.detailed, {
             [classes.breadcrumbOuter]: isDetailLanding,
             [classes.breadCrumbDetail]: Boolean(parentLink),
             [classes.breadCrumbSecondary]: Boolean(isSecondary),

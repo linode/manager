@@ -26,7 +26,6 @@ import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
-import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
@@ -280,7 +279,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      <LinodeDetailsBreadcrumb />
       <LinodeEntityDetail
         variant="details"
         id={linode.id}

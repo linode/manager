@@ -22,7 +22,6 @@ import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
-import EntityHeader from 'src/components/EntityHeader';
 import Grid, { GridProps } from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
@@ -43,6 +42,7 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
+import LandingHeader from 'src/components/LandingHeader';
 import withRecentEvent, {
   WithRecentEvent,
 } from './LinodesLanding/withRecentEvent';
@@ -51,6 +51,13 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
+
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
+import { GrantLevel } from '@linode/api-v4/lib/account';
+import { ACCESS_LEVELS } from 'src/constants';
+import { APIError } from '@linode/api-v4/lib/types';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import useExtendedLinode from 'src/hooks/useExtendedLinode';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -85,8 +92,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     openPowerActionDialog,
     backups,
     linodeConfigs,
-    numVolumes,
     isDetailLanding,
+    numVolumes,
     openTagDrawer,
     openNotificationMenu,
     recentEvent,
@@ -95,6 +102,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
   const { types } = useTypes();
+
+  const extendedLinode = useExtendedLinode(+linode.id);
 
   const imageSlug = linode.image;
 
@@ -128,12 +137,13 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           linodeLabel={linode.label}
           linodeId={linode.id}
           linodeStatus={linode.status}
+          linodePermissions={extendedLinode?._permissions}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
-          linodeConfigs={linodeConfigs}
           isDetailLanding={isDetailLanding}
+          linodeConfigs={linodeConfigs}
           type={linodeType}
           image={linode.image ?? 'Unknown Image'}
           openNotificationMenu={openNotificationMenu || (() => null)}
@@ -187,6 +197,7 @@ export interface HeaderProps {
   linodeLabel: string;
   linodeId: number;
   linodeStatus: Linode['status'];
+  linodePermissions?: GrantLevel;
   openDialog: OpenDialog;
   openPowerActionDialog: (
     bootAction: BootAction,
@@ -304,6 +315,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     linodeLabel,
     linodeId,
     linodeStatus,
+    linodePermissions,
     linodeRegionDisplay,
     openDialog,
     openPowerActionDialog,
@@ -317,7 +329,7 @@ const Header: React.FC<HeaderProps> = (props) => {
   } = props;
 
   const isDetails = variant === 'details';
-
+  const disabled = linodePermissions === ACCESS_LEVELS.readOnly;
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
   const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
@@ -336,17 +348,54 @@ const Header: React.FC<HeaderProps> = (props) => {
     // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
     // to display "Cloning to 'destination-linode'.
     formattedTransitionText !== formattedStatus;
+  const {
+    editableLabelError,
+    setEditableLabelError,
+    resetEditableLabel,
+  } = useEditableLabelState();
+  const { updateLinode } = useLinodeActions();
+
+  const handleSubmitLabelChange = (label: string) => {
+    return updateLinode({ linodeId, label })
+      .then(() => {
+        resetEditableLabel();
+      })
+      .catch((err) => {
+        const errors: APIError[] = getAPIErrorOrDefault(
+          err,
+          'An error occurred while updating label',
+          'label'
+        );
+        const errorStrings: string[] = errors.map((e) => e.reason);
+        setEditableLabelError(errorStrings[0]);
+        scrollErrorIntoView();
+        return Promise.reject(errorStrings[0]);
+      });
+  };
 
   return (
-    <EntityHeader
-      parentLink={isDetails ? '/linodes' : undefined}
-      parentText={isDetails ? 'Linodes' : undefined}
-      isDetailLanding={isDetailLanding}
+    <LandingHeader
       title={
         <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
           {linodeLabel}
         </Link>
       }
+      breadcrumbProps={{
+        pathname: `/linodes/${linodeLabel}`,
+        onEditHandlers: !disabled
+          ? {
+              editableTextTitle: linodeLabel,
+              onEdit: handleSubmitLabelChange,
+              onCancel: resetEditableLabel,
+              errorText: editableLabelError,
+            }
+          : undefined,
+      }}
+      analyticsLabel={'Linode Detail'}
+      docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+      parentLink={isDetails ? '/linodes' : undefined}
+      parentText={isDetails ? 'Linodes' : undefined}
+      isDetailLanding={isDetailLanding}
       bodyClassName={classes.body}
       body={
         <Grid
@@ -373,7 +422,7 @@ const Header: React.FC<HeaderProps> = (props) => {
                 })}
                 label={formattedStatus}
                 component="span"
-                {...isOther}
+                // {...isOther} // TODO: This used to be https://github.com/linode/manager/blame/484c5e37c6fb6a34fa1c1362a033064f2a66aec7/packages/manager/src/features/linodes/LinodeEntityDetail.tsx#L348
               />
             </Grid>
             {hasSecondaryStatus ? (

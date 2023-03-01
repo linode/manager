@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    maxHeight: 48,
+    // maxHeight: 48,
     position: 'relative',
   },
   initial: {
