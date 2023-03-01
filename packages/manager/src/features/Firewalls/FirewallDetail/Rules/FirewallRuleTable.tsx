@@ -433,7 +433,11 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       >
         <Grid
           item
-          style={{ paddingLeft: 8, width: xsDown ? '50%' : '30%' }}
+          style={{
+            paddingLeft: 8,
+            width: xsDown ? '50%' : '30%',
+            whiteSpace: 'normal',
+          }}
           aria-label={`Label: ${label}`}
         >
           <DragIndicator
