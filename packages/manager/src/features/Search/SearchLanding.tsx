@@ -1,5 +1,6 @@
 import { equals } from 'ramda';
 import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Error from 'src/assets/icons/error.svg';
@@ -14,15 +15,20 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
+import { listToItemsByID } from 'src/queries/base';
 import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllImagesQuery } from 'src/queries/images';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
+import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 import ResultGroup from './ResultGroup';
@@ -123,6 +129,28 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     error: volumesError,
   } = useAllVolumesQuery({}, {}, !_isLargeAccount);
 
+  const {
+    data: _privateImages,
+    isLoading: areImagesLoading,
+    error: imagesError,
+  } = useAllImagesQuery({}, { is_public: false }, !_isLargeAccount); // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+
+  const { data: _publicImages } = useAllImagesQuery(
+    {},
+    { is_public: true },
+    !_isLargeAccount
+  );
+
+  const linodes = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.linodes.itemsById)
+  );
+  const types = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.types.entities)
+  );
+  const searchableLinodes = linodes.map((linode) =>
+    formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
+  );
+
   const [apiResults, setAPIResults] = React.useState<any>({});
   const [apiError, setAPIError] = React.useState<string | null>(null);
   const [apiSearchLoading, setAPILoading] = React.useState<boolean>(false);
@@ -136,12 +164,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   }
 
   const { _loading: reduxLoading } = useReduxLoad(
-    ['linodes', 'nodeBalancers', 'images'],
+    ['linodes', 'nodeBalancers'],
     REFRESH_INTERVAL,
     !_isLargeAccount
   );
 
-  const { searchAPI } = useAPISearch();
+  const { searchAPI } = useAPISearch(!isNilOrEmpty(query));
 
   const _searchAPI = React.useRef(
     debounce(500, false, (_searchText: string) => {
@@ -171,7 +199,9 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         objectStorageBuckets?.buckets ?? [],
         domains ?? [],
         volumes ?? [],
-        kubernetesClusters ?? []
+        kubernetesClusters ?? [],
+        _privateImages ?? [],
+        searchableLinodes ?? []
       );
     }
   }, [
@@ -184,6 +214,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     domains,
     volumes,
     kubernetesClusters,
+    _privateImages,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {
@@ -197,11 +228,11 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     if (volumesError) {
       errorString.push('Volumes');
     }
+    if (imagesError) {
+      errorString.push('Images');
+    }
     if (errors.nodebalancers) {
       errorString.push('NodeBalancers');
-    }
-    if (errors.images) {
-      errorString.push('Images');
     }
     if (kubernetesClustersError) {
       errorString.push('Kubernetes');
@@ -230,7 +261,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     areClustersLoading ||
     areDomainsLoading ||
     areVolumesLoading ||
-    areKubernetesClustersLoading;
+    areKubernetesClustersLoading ||
+    areImagesLoading;
 
   return (
     <Grid container className={classes.root} direction="column">

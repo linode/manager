@@ -15,7 +15,6 @@ import FileUpload from 'src/features/ObjectStorage/ObjectUploader/FileUpload';
 import { onUploadProgressFactory } from 'src/features/ObjectStorage/ObjectUploader/ObjectUploader';
 import { useCurrentToken } from 'src/hooks/useAuthentication';
 import { redirectToLogin } from 'src/session';
-import { uploadImage } from 'src/store/image/image.requests';
 import { setPendingUpload } from 'src/store/pendingUpload';
 import { sendImageUploadEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -26,6 +25,8 @@ import {
   MAX_PARALLEL_UPLOADS,
   pathOrFileName,
 } from 'src/features/ObjectStorage/ObjectUploader/reducer';
+import { useUploadImageQuery, queryKey } from 'src/queries/images';
+import { queryClient } from 'src/queries/base';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -141,6 +142,12 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const [uploadToURL, setUploadToURL] = React.useState<string>('');
+  const { mutateAsync: uploadImage } = useUploadImageQuery({
+    label,
+    region,
+    description: description ? description : undefined,
+    cloud_init: isCloudInit ? isCloudInit : undefined,
+  });
 
   const classes = useStyles();
   const history = useHistory();
@@ -280,6 +287,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             redirectToLogin('/images');
           }, 3000);
         } else {
+          queryClient.invalidateQueries(`${queryKey}-list`);
           history.push('/images');
         }
       };
@@ -297,14 +305,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
       };
 
       if (!uploadToURL) {
-        dispatchAction(
-          uploadImage({
-            label,
-            description: description || undefined,
-            cloud_init: isCloudInit || undefined,
-            region,
-          })
-        )
+        uploadImage()
           .then((response) => {
             setUploadToURL(response.upload_to);
 

@@ -5,24 +5,21 @@ import { useSnackbar } from 'notistack';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import { Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import withImages, {
-  ImagesDispatch,
-} from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { useCreateImageMutation } from 'src/queries/images';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-import Link from 'src/components/Link';
 import CheckBox from 'src/components/CheckBox';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -81,7 +78,7 @@ export interface Props {
   changeIsCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
+export const CreateImageTab: React.FC<Props> = (props) => {
   const {
     label,
     description,
@@ -89,7 +86,6 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
     changeLabel,
     changeDescription,
     changeIsCloudInit,
-    createImage,
   } = props;
 
   const classes = useStyles();
@@ -98,6 +94,8 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
+
+  const { mutateAsync: createImage } = useCreateImageMutation();
 
   const [selectedLinode, setSelectedLinode] = React.useState<Linode>();
   const [selectedDisk, setSelectedDisk] = React.useState<string | null>('');
@@ -346,9 +344,7 @@ export const CreateImageTab: React.FC<Props & ImagesDispatch> = (props) => {
   );
 };
 
-export default compose<Props & ImagesDispatch, Props>(withImages())(
-  CreateImageTab
-);
+export default CreateImageTab;
 
 const rawDiskWarningText =
   'Using a raw disk may fail, as Linode Images cannot be created from disks formatted with custom filesystems.';

@@ -7,6 +7,7 @@ import {
   getClick,
 } from 'support/helpers';
 import { selectRegionString } from 'support/ui/constants';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel } from 'support/util/random';
 
 describe('create linode', () => {
@@ -16,7 +17,7 @@ describe('create linode', () => {
     // intercept request
     cy.visitWithLogin('/linodes/create');
     cy.get('[data-qa-deploy-linode]');
-    cy.intercept('POST', '*/linode/instances').as('linodeCreated');
+    cy.intercept('POST', apiMatcher('linode/instances')).as('linodeCreated');
     cy.get('[data-qa-header="Create"]').should('have.text', 'Create');
     containsClick(selectRegionString).type('new {enter}');
     fbtClick('Shared CPU');

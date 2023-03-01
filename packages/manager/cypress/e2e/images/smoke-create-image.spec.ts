@@ -1,4 +1,5 @@
-import { Linode } from '@linode/api-v4/lib/linodes/types';
+import type { Linode } from '@linode/api-v4/types';
+import { imageFactory } from 'src/factories/images';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,
@@ -7,24 +8,37 @@ import {
   getClick,
   getVisible,
 } from 'support/helpers';
-import { randomLabel } from 'support/util/random';
+import { apiMatcher } from 'support/util/intercepts';
+import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 
 describe('create image', () => {
-  it('creates first image w/ drawer, and fail because POST is stubbed', () => {
+  it('captures image from Linode and mocks create image', () => {
+    const imageLabel = randomLabel();
+    const imageDescription = randomPhrase();
     const diskLabel = 'Debian 10 Disk';
+    const mockNewImage = imageFactory.build({
+      id: `private/${randomNumber(1000, 99999)}`,
+      label: imageLabel,
+      description: imageDescription,
+      type: 'manual',
+      is_public: false,
+      vendor: null,
+      expiry: null,
+      eol: null,
+      status: 'creating',
+    });
+
     // stub incoming response
-    cy.intercept('/v4/images?page_size=100', {
+    cy.intercept(apiMatcher('images?page_size=100'), {
       results: 0,
       data: [],
       page: 1,
       pages: 1,
     }).as('getImages');
-    cy.intercept('POST', '*/images', (req) => {
-      req.reply(200);
-    }).as('postImages');
+    cy.intercept('POST', apiMatcher('images'), mockNewImage).as('createImage');
     createLinode().then((linode: Linode) => {
       // stub incoming disks response
-      cy.intercept(`*/linode/instances/${linode.id}/disks*`, {
+      cy.intercept(apiMatcher(`linode/instances/${linode.id}/disks*`), {
         results: 2,
         data: [
           {
@@ -53,7 +67,7 @@ describe('create image', () => {
       getVisible('[data-qa-header]').within(() => {
         fbtVisible('Images');
       });
-      const imageLabel = randomLabel();
+
       getVisible('[data-qa-header]').within(() => {
         fbtVisible('Images');
       });
@@ -66,11 +80,9 @@ describe('create image', () => {
       cy.findAllByLabelText('Label', { exact: false }).type(
         `${imageLabel}{enter}`
       );
-      cy.findAllByLabelText('Description').type(
-        `${imageLabel} is an amazing image`
-      );
+      cy.findAllByLabelText('Description').type(imageDescription);
       getClick('[data-qa-submit="true"]');
-      cy.wait('@postImages');
+      cy.wait('@createImage');
       cy.url().should('endWith', 'images');
       deleteLinodeById(linode.id);
     });
