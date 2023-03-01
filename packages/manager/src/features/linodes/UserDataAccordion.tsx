@@ -2,7 +2,6 @@ import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Link from 'src/components/Link';
@@ -98,13 +97,7 @@ const UserDataAccordion = (props: Props) => {
       </Typography>
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
-          This user data may not be in a format accepted by cloud-init. See{' '}
-          <ExternalLink
-            text="cloud-init documentation"
-            link="https://cloudinit.readthedocs.io/en/latest/explanation/format.html"
-            fixedIcon
-          />{' '}
-          for more information.
+          This user data may not be in a format accepted by cloud-init.
         </Notice>
       ) : null}
       <TextField
