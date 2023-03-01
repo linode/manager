@@ -43,11 +43,10 @@ const UserDataAccordion = (props: Props) => {
     hasInputValueChanged: boolean;
   }) => {
     const userDataLower = userData.toLowerCase();
-    const isUserDataValid = [
-      '#cloud-config',
-      'content-type: text/',
-      '#!',
-    ].some((prefix) => userDataLower.startsWith(prefix));
+    const validPrefixes = ['#cloud-config', 'content-type: text/', '#!/bin/'];
+    const isUserDataValid = validPrefixes.some((prefix) =>
+      userDataLower.startsWith(prefix)
+    );
     if (userData.length > 0 && !isUserDataValid) {
       if (!hasInputValueChanged) {
         setFormatWarning(true);
