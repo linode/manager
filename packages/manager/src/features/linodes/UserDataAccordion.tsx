@@ -35,15 +35,21 @@ const UserDataAccordion = (props: Props) => {
 
   const classes = useStyles();
 
-  const checkFormat = (userData: string, isOnChange: boolean) => {
+  const checkFormat = ({
+    userData,
+    hasInputValueChanged,
+  }: {
+    userData: string;
+    hasInputValueChanged: boolean;
+  }) => {
     const userDataLower = userData.toLowerCase();
-    if (
-      userData.length > 0 &&
-      !userDataLower.startsWith('#cloud-config') &&
-      !userDataLower.startsWith('content-type: text/') &&
-      !userDataLower.startsWith('#!')
-    ) {
-      if (!isOnChange) {
+    const isUserDataValid = [
+      '#cloud-config',
+      'content-type: text/',
+      '#!',
+    ].some((prefix) => userDataLower.startsWith(prefix));
+    if (userData.length > 0 && !isUserDataValid) {
+      if (!hasInputValueChanged) {
         setFormatWarning(true);
       }
     } else {
@@ -106,12 +112,14 @@ const UserDataAccordion = (props: Props) => {
         rows={1}
         expand
         onChange={(e) => {
-          checkFormat(e.target.value, true);
+          checkFormat({ userData: e.target.value, hasInputValueChanged: true });
           onChange(e.target.value);
         }}
         value={userData}
         disabled={Boolean(disabled)}
-        onBlur={(e) => checkFormat(e.target.value, false)}
+        onBlur={(e) =>
+          checkFormat({ userData: e.target.value, hasInputValueChanged: false })
+        }
         data-qa-user-data-input
       />
     </Accordion>
