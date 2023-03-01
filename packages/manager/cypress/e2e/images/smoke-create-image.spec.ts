@@ -29,7 +29,7 @@ describe('create image', () => {
     });
 
     // stub incoming response
-    cy.intercept(apiMatcher('images?page_size=100'), {
+    cy.intercept(apiMatcher('images?*'), {
       results: 0,
       data: [],
       page: 1,
@@ -38,7 +38,7 @@ describe('create image', () => {
     cy.intercept('POST', apiMatcher('images'), mockNewImage).as('createImage');
     createLinode().then((linode: Linode) => {
       // stub incoming disks response
-      cy.intercept(apiMatcher(`linode/instances/${linode.id}/disks*`), {
+      cy.intercept('GET', apiMatcher(`linode/instances/${linode.id}/disks*`), {
         results: 2,
         data: [
           {
@@ -74,9 +74,8 @@ describe('create image', () => {
       cy.wait('@getImages');
       fbtClick('Create Image');
       fbtClick('Select a Linode').type(`${linode.label}{enter}`);
-      cy.wait('@getDisks').then(() => {
-        containsClick('Select a Disk').type(`${diskLabel}{enter}`);
-      });
+      cy.wait('@getDisks');
+      containsClick('Select a Disk').type(`${diskLabel}{enter}`);
       cy.findAllByLabelText('Label', { exact: false }).type(
         `${imageLabel}{enter}`
       );
