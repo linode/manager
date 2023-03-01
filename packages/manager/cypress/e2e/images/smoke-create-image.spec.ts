@@ -1,13 +1,6 @@
 import type { Linode } from '@linode/api-v4/types';
 import { imageFactory } from 'src/factories/images';
 import { createLinode, deleteLinodeById } from 'support/api/linodes';
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomNumber, randomPhrase } from 'support/util/random';
 
@@ -64,23 +57,28 @@ describe('create image', () => {
         pages: 1,
       }).as('getDisks');
       cy.visitWithLogin('/images');
-      getVisible('[data-qa-header]').within(() => {
-        fbtVisible('Images');
-      });
+      cy.get('[data-qa-header]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Images').should('be.visible');
+        });
 
-      getVisible('[data-qa-header]').within(() => {
-        fbtVisible('Images');
-      });
+      cy.get('[data-qa-header]')
+        .should('be.visible')
+        .within(() => {
+          cy.findByText('Images').should('be.visible');
+        });
+
       cy.wait('@getImages');
-      fbtClick('Create Image');
-      fbtClick('Select a Linode').type(`${linode.label}{enter}`);
+      cy.findByText('Create Image').click();
+      cy.findByText('Select a Linode').click().type(`${linode.label}{enter}`);
       cy.wait('@getDisks');
-      containsClick('Select a Disk').type(`${diskLabel}{enter}`);
+      cy.contains('Select a Disk').click().type(`${diskLabel}{enter}`);
       cy.findAllByLabelText('Label', { exact: false }).type(
         `${imageLabel}{enter}`
       );
       cy.findAllByLabelText('Description').type(imageDescription);
-      getClick('[data-qa-submit="true"]');
+      cy.get('[data-qa-submit]').click();
       cy.wait('@createImage');
       cy.url().should('endWith', 'images');
       deleteLinodeById(linode.id);
