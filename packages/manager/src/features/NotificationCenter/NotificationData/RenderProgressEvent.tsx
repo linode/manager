@@ -37,8 +37,8 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const classes = useStyles();
 
   const { linodes } = useLinodes();
-  const { data: types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
+  const { data: types } = useTypes(_linodes.map((linode) => linode.type));
   const { linkTarget } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, types);
 

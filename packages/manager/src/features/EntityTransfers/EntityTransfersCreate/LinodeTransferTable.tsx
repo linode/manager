@@ -106,7 +106,7 @@ interface RowProps {
 
 const LinodeRow: React.FC<RowProps> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
-  const { data: types } = useTypes();
+  const { data: types } = useTypes([linode.type]);
   const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
   const displayType =
     types?.find((type) => type.id === linode.type)?.label ?? linode.type;

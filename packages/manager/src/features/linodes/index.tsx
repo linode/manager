@@ -38,7 +38,9 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
   const { linodes } = useLinodes();
-  const { data: types } = useTypes();
+  const { data: types } = useTypes(
+    Object.values(linodes.itemsById).map((linode) => linode.type)
+  );
 
   const linodesDataWithFullType = Object.values(linodes.itemsById).map(
     (thisLinode) => {

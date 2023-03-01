@@ -94,7 +94,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   useReduxLoad(['images', 'types']);
   const { images } = useImages();
-  const { data: types } = useTypes();
+  const { data: types } = useTypes([linode.type]);
 
   const imageSlug = linode.image;
 

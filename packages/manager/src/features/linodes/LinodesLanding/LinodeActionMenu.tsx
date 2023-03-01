@@ -87,7 +87,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { data: types } = useTypes();
+  const { data: types } = useTypes([linodeType?.id ?? null]);
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';

@@ -83,8 +83,8 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const { enqueueSnackbar } = useSnackbar();
 
   const regions = useRegionsQuery().data ?? [];
-  const { data: types } = useTypes();
   const linode = useExtendedLinode(linodeID);
+  const { data: types } = useTypes([linode?.type ?? null]);
   const { images } = useImages();
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements(open);
