@@ -19,6 +19,7 @@ import {
 import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomItem, randomLabel, randomUuid } from 'support/util/random';
+import { visitUrlWithManagedEnabled } from 'support/api/managed';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
@@ -421,5 +422,44 @@ describe('Account service transfers', () => {
       .within(() => {
         cy.findByText(token).should('be.visible');
       });
+  });
+
+  /*
+   * - Confirms that the managed users are not able to initiate service transfers.
+   */
+  it('can not initiate a service transfer by managed users', () => {
+    // Create a Linode to transfer and wait for it to boot.
+    const setupLinode = async (): Promise<Linode> => {
+      const payload = createLinodeRequestFactory.build({
+        label: randomLabel(),
+        region: randomItem(regions),
+      });
+
+      const linode: Linode = await createLinode(payload);
+      await pollLinodeStatus(linode.id, 'running', {
+        initialDelay: 15000,
+      });
+
+      return linode;
+    };
+
+    cy.defer(setupLinode()).then((linode: Linode) => {
+      interceptInitiateEntityTransfer().as('initiateTransfer');
+
+      // Navigate to Service Transfer landing page, initiate transfer.
+      visitUrlWithManagedEnabled(serviceTransferLandingUrl);
+      ui.button
+        .findByTitle('Make a Service Transfer')
+        .should('be.visible')
+        .should('be.enabled')
+        .click();
+
+      cy.findByText('Make a Service Transfer').should('be.visible');
+      cy.url().should('endWith', serviceTransferCreateUrl);
+      initiateLinodeTransfer(linode.label);
+      cy.findByText(
+        'You cannot initiate transfers with Managed enabled.'
+      ).should('be.visible');
+    });
   });
 });
