@@ -31,7 +31,7 @@ import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
-import { WithImages } from 'src/containers/withImages.container';
+import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { AppsDocs } from 'src/documentation';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
@@ -192,7 +192,7 @@ type CombinedProps = Props &
   SetDocsProps &
   StateProps &
   WithDisplayData &
-  WithImages &
+  ImagesProps &
   WithLinodesProps &
   WithRegionsProps &
   WithStyles<ClassNames> &
@@ -473,7 +473,7 @@ export class LinodeCreate extends React.PureComponent<
       return <CircleProgress />;
     }
 
-    if (regionsError || imagesError.read || linodesError || typesError) {
+    if (regionsError || imagesError || linodesError || typesError) {
       return (
         <ErrorState errorText="There was an issue loading Linode creation options." />
       );

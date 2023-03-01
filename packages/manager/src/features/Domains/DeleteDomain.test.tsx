@@ -17,9 +17,12 @@ describe('DeleteDomain', () => {
     getByText('Delete Domain');
   });
 
-  it('displays the modal when the button is clicked', () => {
-    const { getByText } = render(wrapWithTheme(<DeleteDomain {...props} />));
+  it('displays the modal when the button is clicked', async () => {
+    const { getByText, findByText } = render(
+      wrapWithTheme(<DeleteDomain {...props} />)
+    );
     fireEvent.click(getByText('Delete Domain'));
+    await findByText('Delete Domain example.com?');
     expect(getByText('Delete Domain example.com?')).toBeInTheDocument();
   });
 

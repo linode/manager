@@ -5,7 +5,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import Notice from 'src/components/Notice';
-import usePreferences from 'src/hooks/usePreferences';
+import { usePreferences } from 'src/queries/preferences';
 import {
   useAllKubernetesNodePoolQuery,
   useDeleteKubernetesClusterMutation,
@@ -41,7 +41,7 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   } = useDeleteKubernetesClusterMutation();
 
   const history = useHistory();
-  const { preferences } = usePreferences();
+  const { data: preferences } = usePreferences();
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
