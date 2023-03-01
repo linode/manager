@@ -36,10 +36,6 @@ import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
 } from 'src/store/globalErrors';
-import images, {
-  defaultState as defaultImagesState,
-  State as ImagesState,
-} from 'src/store/image/image.reducer';
 import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState,
@@ -101,7 +97,6 @@ import initialLoad, {
 } from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
-import imageEvents from './middleware/imageEvents';
 import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
@@ -130,7 +125,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  images: defaultImagesState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
@@ -143,7 +137,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  images: ImagesState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
@@ -203,7 +196,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  images,
   linodes,
   linodeConfigs,
   linodeDisks,
@@ -242,7 +234,6 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       longviewEvents,
-      imageEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       diskEvents,

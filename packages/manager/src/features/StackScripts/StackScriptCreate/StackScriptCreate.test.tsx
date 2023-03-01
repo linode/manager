@@ -22,6 +22,7 @@ describe('StackScriptCreate', () => {
       }}
       imagesData={images}
       imagesLoading={false}
+      imagesLastUpdated={0}
       profile={
         { data: profileFactory.build() } as UseQueryResult<Profile, APIError[]>
       }

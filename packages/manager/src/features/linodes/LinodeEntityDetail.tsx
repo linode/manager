@@ -32,10 +32,11 @@ import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/L
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import useImages from 'src/hooks/useImages';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -92,15 +93,17 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     recentEvent,
   } = props;
 
-  useReduxLoad(['images', 'types']);
-  const { images } = useImages();
+  const { data: images } = useAllImagesQuery({}, {});
+  const imagesItemsById = listToItemsByID(images ?? []);
+
+  useReduxLoad(['types']);
   const { types } = useTypes();
 
   const imageSlug = linode.image;
 
   const imageVendor =
-    imageSlug && images.itemsById[imageSlug]
-      ? images.itemsById[imageSlug].vendor
+    imageSlug && imagesItemsById[imageSlug]
+      ? imagesItemsById[imageSlug].vendor
       : null;
 
   const linodeType = Boolean(linode.type)

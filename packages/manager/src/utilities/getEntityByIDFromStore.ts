@@ -1,7 +1,7 @@
 import { curry } from 'ramda';
 import store from 'src/store';
 
-export type EntityType = 'linode' | 'nodebalancer' | 'image';
+export type EntityType = 'linode' | 'nodebalancer';
 
 /**
  * The store uses different structures for storing entity data. Ideally we would use the
@@ -28,12 +28,10 @@ const _getEntityByIDFromStore = (
     return;
   }
   const _store = store.getState();
-  const { linodes, nodeBalancers, images } = _store.__resources;
+  const { linodes, nodeBalancers } = _store.__resources;
   switch (entityType) {
     case 'linode':
       return linodes.itemsById[entityID];
-    case 'image':
-      return (images.itemsById || {})[entityID];
     case 'nodebalancer':
       return nodeBalancers.itemsById[entityID];
     default:
