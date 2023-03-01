@@ -50,6 +50,7 @@ export const LinkButton = (props: Props) => {
       )}
       disabled={isDisabled}
       onClick={onClick}
+      type="button"
     >
       {children}
     </button>
