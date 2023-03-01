@@ -29,9 +29,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       '& .primaryNavLink': {
         opacity: 1,
       },
-      '& .logoCollapsed': {
-        opacity: 0,
-      },
     },
     [theme.breakpoints.up('sm')]: {
       overflowY: 'hidden',

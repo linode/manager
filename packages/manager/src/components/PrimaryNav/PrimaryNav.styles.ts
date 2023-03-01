@@ -44,12 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 90px)',
     width: '100%',
   },
-  logoItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '12px 12px 0 14px',
-    position: 'relative',
-  },
   logoItemAkamai: {
     paddingTop: 12,
     paddingLeft: 12,
@@ -60,14 +54,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logoItemAkamaiCollapsed: {
     paddingLeft: 8,
-  },
-  logoCollapsed: {
-    background: theme.bg.primaryNavPaper,
-    height: 48,
-    width: 100,
-    position: 'absolute',
-    top: 12,
-    left: 48,
   },
   logoAkamaiCollapsed: {
     background: theme.bg.primaryNavPaper,
