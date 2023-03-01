@@ -9,28 +9,32 @@ import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { REFRESH_INTERVAL } from 'src/constants';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
+import useAPISearch from 'src/features/Search/useAPISearch';
 import withStoreSearch, {
   SearchProps,
 } from 'src/features/Search/withStoreSearch';
-import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { ReduxEntity, useReduxLoad } from 'src/hooks/useReduxLoad';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { sendSearchBarUsedEvent } from 'src/utilities/ga';
-import { debounce } from 'throttle-debounce';
-import styled, { StyleProps } from './SearchBar.styles';
-import SearchSuggestion from './SearchSuggestion';
+import { useAllDomainsQuery } from 'src/queries/domains';
+import { useAllImagesQuery } from 'src/queries/images';
 import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
-import { useAllDomainsQuery } from 'src/queries/domains';
 import { useAllVolumesQuery } from 'src/queries/volumes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendSearchBarUsedEvent } from 'src/utilities/ga';
+import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
+import { debounce } from 'throttle-debounce';
+import styled, { StyleProps } from './SearchBar.styles';
+import SearchSuggestion from './SearchSuggestion';
+import { useSelector } from 'react-redux';
+import { ApplicationState } from 'src/store';
+import { formatLinode } from 'src/store/selectors/getSearchEntities';
+import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 
 type CombinedProps = WithTypesProps &
-  WithImages &
   SearchProps &
   StyleProps &
   RouteComponentProps<{}>;
@@ -69,7 +73,7 @@ export const selectStyles = {
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' }),
 };
 
-const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers', 'images'];
+const searchDeps: ReduxEntity[] = ['linodes', 'nodeBalancers'];
 
 export const SearchBar: React.FC<CombinedProps> = (props) => {
   const { classes, combinedResults, entitiesLoading, search } = props;
@@ -102,13 +106,36 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 
   const { data: volumes } = useAllVolumesQuery({}, {}, shouldMakeRequests);
 
+  const { data: _privateImages, isLoading: imagesLoading } = useAllImagesQuery(
+    {},
+    { is_public: false }, // We want to display private images (i.e., not Debian, Ubuntu, etc. distros)
+    shouldMakeRequests
+  );
+
+  const { data: _publicImages } = useAllImagesQuery(
+    {},
+    { is_public: true },
+    shouldMakeRequests
+  );
+  const publicImages = _publicImages ?? [];
+
   const { _loading } = useReduxLoad(
     searchDeps,
     REFRESH_INTERVAL,
     shouldMakeRequests
   );
 
-  const { searchAPI } = useAPISearch();
+  const linodes = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.linodes.itemsById)
+  );
+  const types = useSelector((state: ApplicationState) =>
+    Object.values(state.__resources.types.entities)
+  );
+  const searchableLinodes = linodes.map((linode) =>
+    formatLinode(linode, types, listToItemsByID(publicImages))
+  );
+
+  const { searchAPI } = useAPISearch(!isNilOrEmpty(searchText));
 
   const _searchAPI = React.useRef(
     debounce(500, false, (_searchText: string) => {
@@ -137,10 +164,19 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     if (_isLargeAccount) {
       _searchAPI(searchText);
     } else {
-      search(searchText, buckets, domains ?? [], volumes ?? [], clusters ?? []);
+      search(
+        searchText,
+        buckets,
+        domains ?? [],
+        volumes ?? [],
+        clusters ?? [],
+        _privateImages ?? [],
+        searchableLinodes ?? []
+      );
     }
   }, [
     _loading,
+    imagesLoading,
     search,
     searchText,
     _searchAPI,
@@ -148,6 +184,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     objectStorageBuckets,
     domains,
     volumes,
+    _privateImages,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
@@ -231,7 +268,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const finalOptions = createFinalOptions(
     _isLargeAccount ? apiResults : combinedResults,
     searchText,
-    _loading || apiSearchLoading,
+    _loading || imagesLoading || apiSearchLoading,
     // Ignore "Unauthorized" errors, since these will always happen on LKE
     // endpoints for restricted users. It's not really an "error" in this case.
     // We still want these users to be able to use the search feature.
@@ -303,7 +340,6 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
 export default compose<CombinedProps, {}>(
   withTypes,
   withRouter,
-  withImages(),
   withStoreSearch(),
   styled
 )(SearchBar) as React.ComponentType<{}>;
