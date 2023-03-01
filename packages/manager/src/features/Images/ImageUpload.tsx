@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -55,16 +56,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.applyLinkStyles,
     fontWeight: 700,
   },
+  cloudInitCheckboxWrapper: {
+    marginTop: theme.spacing(2),
+    marginLeft: '3px',
+  },
 }));
+
+const cloudInitTooltipMessage = (
+  <Typography>
+    Only check this box if your Custom Image that is compatible with cloud-init,
+    or has had cloud-init installed at some point, and the config has been
+    changed to use our data service. <Link to="/">Link to doc</Link>
+  </Typography>
+);
 export interface Props {
   label: string;
   description: string;
+  isCloudInit: boolean;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeIsCloudInit: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const ImageUpload: React.FC<Props> = (props) => {
-  const { label, description, changeLabel, changeDescription } = props;
+  const {
+    label,
+    description,
+    changeLabel,
+    changeDescription,
+    changeIsCloudInit,
+    isCloudInit,
+  } = props;
 
   const { data: profile } = useProfile();
   const { data: grants } = useGrants();
@@ -213,6 +235,15 @@ export const ImageUpload: React.FC<Props> = (props) => {
             errorText={errorMap.description}
             disabled={!canCreateImage}
           />
+          <div className={classes.cloudInitCheckboxWrapper}>
+            <CheckBox
+              checked={isCloudInit}
+              onChange={changeIsCloudInit}
+              text="This image is Cloud-init compatible"
+              toolTipText={cloudInitTooltipMessage}
+              toolTipInteractive
+            />
+          </div>
 
           <RegionSelect
             label="Region"
@@ -249,6 +280,7 @@ export const ImageUpload: React.FC<Props> = (props) => {
             label={label}
             description={description}
             region={region}
+            isCloudInit={isCloudInit}
             dropzoneDisabled={uploadingDisabled}
             apiError={errorMap.none} // Any errors that aren't related to 'label', 'description', or 'region' fields
             setErrors={setErrors}

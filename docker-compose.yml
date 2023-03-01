@@ -1,5 +1,37 @@
 ---
-version: '3'
+version: '3.4'
+
+x-e2e-env:
+  &default-env
+  BUILD_ID: ${BUILD_ID}
+  BUILD_URL: ${BUILD_URL}
+  BUILD_NUMBER: ${BUILD_NUMBER}
+  COMMIT_INFO_BRANCH: ${GIT_BRANCH}
+  COMMIT_INFO_SHA: ${GIT_COMMIT}
+  ghprbPullId: ${ghprbPullId}
+  JENKINS_HOME: ${JENKINS_HOME}
+  JENKINS_VERSION: ${JENKINS_VERSION}
+  HUDSON_URL: ${HUDSON_URL}
+  HUDSON_HOME: ${HUDSON_HOME}
+  CYPRESS_BASE_URL: http://web:3000
+  CYPRESS_RECORD: ${CYPRESS_RECORD}
+  CYPRESS_RECORD_KEY: ${CYPRESS_RECORD_KEY}
+  HOME: /home/node
+  REACT_APP_API_ROOT: ${REACT_APP_API_ROOT}
+  REACT_APP_CLIENT_ID: ${REACT_APP_CLIENT_ID}
+  REACT_APP_LAUNCH_DARKLY_ID: ${REACT_APP_LAUNCH_DARKLY_ID}
+  REACT_APP_LOGIN_ROOT: ${REACT_APP_LOGIN_ROOT}
+
+
+x-e2e-volumes:
+  &default-volumes
+  - ./.git:/home/node/app/.git
+  - ./packages/manager:/home/node/app/packages/manager
+  - ./packages/validation:/home/node/app/packages/validation
+  - ./packages/api-v4:/home/node/app/packages/api-v4
+  - ./package.json:/home/node/app/package.json
+  - ./node_modules:/home/node/app/node_modules
+
 services:
 
   web:
@@ -20,6 +52,9 @@ services:
       timeout: 10s
       retries: 10
 
+  # Use this service to run E2E tests via Docker locally.
+  # Later, this should be renamed to better clarify this distinction.
+  # (Perhaps it should be removed entirely?)
   e2e:
     build:
       context: .
@@ -29,19 +64,68 @@ services:
       web:
         condition: service_healthy
     environment:
-      - CYPRESS_BASE_URL=http://web:3000
-      - CYPRESS_RECORD=${CYPRESS_RECORD}
-      - CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
-      - HOME=/home/node
-      - MANAGER_OAUTH=${MANAGER_OAUTH_1}
-      - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
-      - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
-      - REACT_APP_LAUNCH_DARKLY_ID=${REACT_APP_LAUNCH_DARKLY_ID}
-      - REACT_APP_LOGIN_ROOT=${REACT_APP_LOGIN_ROOT}
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
     env_file: ./packages/manager/.env
-    volumes:
-      - ./packages/manager:/home/node/app/packages/manager
-      - ./packages/validation:/home/node/app/packages/validation
-      - ./packages/api-v4:/home/node/app/packages/api-v4
-      - ./package.json:/home/node/app/package.json
-      - ./node_modules:/home/node/app/node_modules
+    entrypoint: yarn cy:ci
+    volumes: *default-volumes
+
+  e2e-1:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    container_name: cloud-e2e-1
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH_1}
+    env_file: ./packages/manager/.env
+    volumes: *default-volumes
+
+  e2e-2:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    container_name: cloud-e2e-2
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH_2}
+    env_file: ./packages/manager/.env
+    volumes: *default-volumes
+
+  e2e-3:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    container_name: cloud-e2e-3
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH_3}
+    env_file: ./packages/manager/.env
+    volumes: *default-volumes
+
+  e2e-4:
+    build:
+      context: .
+      dockerfile: ./packages/manager/Dockerfile
+      target: e2e
+    container_name: cloud-e2e-4
+    depends_on:
+      web:
+        condition: service_healthy
+    environment:
+      <<: *default-env
+      MANAGER_OAUTH: ${MANAGER_OAUTH_4}
+    env_file: ./packages/manager/.env
+    volumes: *default-volumes

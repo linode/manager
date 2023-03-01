@@ -5,8 +5,8 @@ import Plus from 'src/assets/icons/plusSign.svg';
 import IconButton from 'src/components/core/IconButton';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import TableCell from 'src/components/TableCell';
 import Tag from 'src/components/Tag';
+import CircleProgress from '../CircleProgress';
 import AddTag from './AddTag';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -87,17 +87,24 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: 10,
     },
   },
+  progress: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+    height: '100%',
+    width: '100%',
+    zIndex: 2,
+  },
+  loading: {
+    opacity: 0.4,
+  },
 }));
 
 interface Props {
-  className?: string;
-  breakpoint?: number;
   tags: string[];
-  width: number; // Required so we can fade out after a certain point
-  addTag: (newTag: string) => void;
-  deleteTag: (tagToDelete: string) => void;
+  updateTags: (tags: string[]) => Promise<any>;
   listAllTags: (tags: string[]) => void;
-  inTableContext?: boolean;
 }
 
 // https://stackoverflow.com/questions/143815/determine-if-an-html-elements-content-overflows
@@ -120,10 +127,11 @@ export type CombinedProps = Props;
 export const TagCell: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { addTag, className, tags, width, inTableContext } = props;
+  const { updateTags, tags } = props;
 
   const [hasOverflow, setOverflow] = React.useState<boolean>(false);
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
+  const [loading, setLoading] = React.useState<boolean>(false);
   const overflowRef = React.useCallback(
     (node) => {
       if (node !== null) {
@@ -137,69 +145,18 @@ export const TagCell: React.FC<Props> = (props) => {
     [tags]
   );
 
-  return inTableContext ? (
-    <TableCell
-      className={`${classes.root} ${className}`}
-      style={{
-        overflow: addingTag ? 'visible' : 'hidden',
-        minWidth: width,
-      }}
-    >
-      <Grid container direction="row" alignItems="center" wrap="nowrap">
-        {addingTag ? (
-          <AddTag
-            tags={tags}
-            onClose={() => setAddingTag(false)}
-            addTag={addTag}
-            fixedMenu
-          />
-        ) : (
-          <>
-            <Grid
-              item
-              className={classNames({
-                [classes.addTag]: true,
-                [classes.menuItem]: true,
-              })}
-              onClick={() => setAddingTag(true)}
-            >
-              <Plus />
-            </Grid>
-            <div
-              ref={overflowRef}
-              style={{ width: `${width - 100}px` }}
-              className={classNames({
-                [classes.tagList]: true,
-                [classes.tagListOverflow]: hasOverflow,
-              })}
-            >
-              {tags.map((thisTag) => (
-                <Tag
-                  key={`tag-item-${thisTag}`}
-                  colorVariant="lightBlue"
-                  label={thisTag}
-                  onDelete={() => props.deleteTag(thisTag)}
-                />
-              ))}
-            </div>
+  const handleAddTag = async (tag: string) => {
+    await updateTags([...tags, tag]);
+  };
 
-            {hasOverflow && (
-              <IconButton
-                onKeyPress={() => props.listAllTags(tags)}
-                onClick={() => props.listAllTags(tags)}
-                className={classes.button}
-                disableRipple
-                aria-label="Display all tags"
-                size="large"
-              >
-                <MoreHoriz />
-              </IconButton>
-            )}
-          </>
-        )}
-      </Grid>
-    </TableCell>
-  ) : (
+  const handleDeleteTag = (tagToDelete: string) => {
+    setLoading(true);
+    updateTags(tags.filter((tag) => tag !== tagToDelete)).finally(() =>
+      setLoading(false)
+    );
+  };
+
+  return (
     <Grid
       className={classNames({
         [classes.root]: true,
@@ -210,11 +167,16 @@ export const TagCell: React.FC<Props> = (props) => {
       alignItems="center"
       wrap="nowrap"
     >
+      {loading ? (
+        <div className={classes.progress}>
+          <CircleProgress mini />
+        </div>
+      ) : null}
       {addingTag ? (
         <AddTag
           tags={tags}
           onClose={() => setAddingTag(false)}
-          addTag={addTag}
+          addTag={handleAddTag}
           inDetailsContext
         />
       ) : (
@@ -231,12 +193,13 @@ export const TagCell: React.FC<Props> = (props) => {
                 key={`tag-item-${thisTag}`}
                 colorVariant="lightBlue"
                 label={thisTag}
-                onDelete={() => props.deleteTag(thisTag)}
+                className={classNames({ [classes.loading]: loading })}
+                onDelete={() => handleDeleteTag(thisTag)}
               />
             ))}
           </div>
 
-          {hasOverflow && (
+          {hasOverflow ? (
             <Grid item className="py0">
               <IconButton
                 onKeyPress={() => props.listAllTags(tags)}
@@ -249,7 +212,7 @@ export const TagCell: React.FC<Props> = (props) => {
                 <MoreHoriz />
               </IconButton>
             </Grid>
-          )}
+          ) : null}
           <button
             className={classes.addTagButton}
             title="Add a tag"

@@ -82,7 +82,11 @@ export const Accordion: React.FC<CombinedProps> = (props) => {
         {...summaryProps}
         data-qa-panel-summary={props.heading}
       >
-        <Typography {...headingProps} variant="h3" data-qa-panel-subheading>
+        <Typography
+          {...headingProps}
+          variant={headingProps?.variant ?? 'h3'}
+          data-qa-panel-subheading
+        >
           {props.heading}
         </Typography>
         {headingNumberCount && headingNumberCount > 0 ? (

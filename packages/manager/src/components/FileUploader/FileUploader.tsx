@@ -116,6 +116,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   label: string;
   description?: string;
+  isCloudInit?: boolean;
   region: string;
   dropzoneDisabled: boolean;
   apiError: string | undefined;
@@ -131,6 +132,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
   const {
     label,
     description,
+    isCloudInit,
     region,
     dropzoneDisabled,
     apiError,
@@ -299,6 +301,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
           uploadImage({
             label,
             description: description || undefined,
+            cloud_init: isCloudInit || undefined,
             region,
           })
         )

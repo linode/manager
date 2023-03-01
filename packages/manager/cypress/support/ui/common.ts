@@ -77,6 +77,7 @@ export const deleteAllTestData = () => {
   const asyncDeletionPromise = Promise.all([
     deleteAllTestBuckets(),
     deleteAllTestAccessKeys(),
+    deleteAllTestTags(),
   ]);
 
   // Remaining deletion functions then run sequentially.
@@ -89,6 +90,5 @@ export const deleteAllTestData = () => {
     deleteAllTestFirewalls();
     deleteAllTestStackscripts();
     deleteAllTestDomains();
-    deleteAllTestTags();
   });
 };

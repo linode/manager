@@ -45,7 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   username?: string;
   twoFactor?: boolean;
-  clearState: () => void;
   disabled?: boolean;
 }
 
@@ -55,7 +54,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
   const needSecurityQuestionsCopy =
     'To use two-factor authentication you must set up your security questions listed below.';
 
-  const { clearState, disabled, twoFactor, username } = props;
+  const { disabled, twoFactor, username } = props;
 
   const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
@@ -76,10 +75,6 @@ export const TwoFactor: React.FC<Props> = (props) => {
     securityQuestionsData?.security_questions.filter(
       (question) => question.response
     ).length === 3;
-
-  React.useEffect(() => {
-    clearState();
-  }, [twoFactorEnabled, clearState]);
 
   React.useEffect(() => {
     setTwoFactorConfirmed(twoFactor);

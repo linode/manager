@@ -5,6 +5,7 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
+import Link from 'src/components/Link';
 import TextField from 'src/components/TextField';
 
 interface Props {
@@ -21,9 +22,15 @@ const useStyles = makeStyles(() => ({
       stroke: 'none',
     },
   },
+  accordionSummary: {
+    padding: '5px 24px 0px 24px',
+  },
+  accordionDetail: {
+    padding: '0px 24px 24px 24px',
+  },
 }));
 
-const UserDataAccordion: React.FC<Props> = (props) => {
+const UserDataAccordion = (props: Props) => {
   const { disabled, userData, onChange } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
@@ -49,7 +56,13 @@ const UserDataAccordion: React.FC<Props> = (props) => {
     <>
       Add User Data{' '}
       <HelpIcon
-        text={'Definition of user data and what it is used for'}
+        text={
+          <>
+            User data is part of a virtual machine&rsquo;s cloud-init metadata
+            containing information related to a user&rsquo;s local account.{' '}
+            <Link to="/">Learn more.</Link>
+          </>
+        }
         className={classes.helpIcon}
         interactive
       />
@@ -57,10 +70,31 @@ const UserDataAccordion: React.FC<Props> = (props) => {
   );
 
   return (
-    <Accordion heading={accordionHeading} style={{ marginTop: 24 }}>
+    <Accordion
+      heading={accordionHeading}
+      style={{ marginTop: 24 }}
+      headingProps={{
+        variant: 'h2',
+      }}
+      summaryProps={{
+        classes: {
+          root: classes.accordionSummary,
+        },
+      }}
+      detailProps={{
+        classes: {
+          root: classes.accordionDetail,
+        },
+      }}
+    >
       <Typography>
-        Paste user data into the field below. Formats accepted are YAML and
-        bash. Helper text with links to docs and guides.
+        <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
+          User Data
+        </Link>{' '}
+        is part of a virtual machine&rsquo;s cloud-init metadata that contains
+        anything related to a user&rsquo;s local account, including username and
+        user group(s). <br /> Accepted formats are YAML and bash.{' '}
+        <Link to="https://www.linode.com/docs">Learn more.</Link>
       </Typography>
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
