@@ -62,6 +62,17 @@ const UserDataAccordion: React.FC<Props> = (props) => {
         Paste user data into the field below. Formats accepted are YAML and
         bash. Helper text with links to docs and guides.
       </Typography>
+      {formatWarning ? (
+        <Notice warning spacingTop={16} spacingBottom={16}>
+          This user data may not be in a format accepted by cloud-init. See{' '}
+          <ExternalLink
+            text="cloud-init documentation"
+            link="https://cloudinit.readthedocs.io/en/latest/explanation/format.html"
+            fixedIcon
+          />{' '}
+          for more information.
+        </Notice>
+      ) : null}
       <TextField
         label="User Data"
         multiline
@@ -76,17 +87,6 @@ const UserDataAccordion: React.FC<Props> = (props) => {
         onBlur={(e) => checkFormat(e.target.value, false)}
         data-qa-user-data-input
       />
-      {formatWarning ? (
-        <Notice warning important>
-          This user data may not be in a format accepted by cloud-init. See{' '}
-          <ExternalLink
-            text="cloud-init documentation"
-            link="https://cloudinit.readthedocs.io/en/latest/explanation/format.html"
-            fixedIcon
-          />{' '}
-          for more information.
-        </Notice>
-      ) : null}
     </Accordion>
   );
 };
