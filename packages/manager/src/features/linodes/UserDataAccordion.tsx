@@ -3,6 +3,7 @@ import Accordion from 'src/components/Accordion';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
+import Notice from 'src/components/Notice';
 import Link from 'src/components/Link';
 import TextField from 'src/components/TextField';
 
@@ -30,7 +31,30 @@ const useStyles = makeStyles(() => ({
 
 const UserDataAccordion = (props: Props) => {
   const { disabled, userData, onChange } = props;
+  const [formatWarning, setFormatWarning] = React.useState(false);
+
   const classes = useStyles();
+
+  const checkFormat = ({
+    userData,
+    hasInputValueChanged,
+  }: {
+    userData: string;
+    hasInputValueChanged: boolean;
+  }) => {
+    const userDataLower = userData.toLowerCase();
+    const validPrefixes = ['#cloud-config', 'content-type: text/', '#!/bin/'];
+    const isUserDataValid = validPrefixes.some((prefix) =>
+      userDataLower.startsWith(prefix)
+    );
+    if (userData.length > 0 && !isUserDataValid) {
+      if (!hasInputValueChanged) {
+        setFormatWarning(true);
+      }
+    } else {
+      setFormatWarning(false);
+    }
+  };
 
   const accordionHeading = (
     <>
@@ -76,14 +100,25 @@ const UserDataAccordion = (props: Props) => {
         user group(s). <br /> Accepted formats are YAML and bash.{' '}
         <Link to="https://www.linode.com/docs">Learn more.</Link>
       </Typography>
+      {formatWarning ? (
+        <Notice warning spacingTop={16} spacingBottom={16}>
+          This user data may not be in a format accepted by cloud-init.
+        </Notice>
+      ) : null}
       <TextField
         label="User Data"
         multiline
         rows={1}
         expand
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => {
+          checkFormat({ userData: e.target.value, hasInputValueChanged: true });
+          onChange(e.target.value);
+        }}
         value={userData}
         disabled={Boolean(disabled)}
+        onBlur={(e) =>
+          checkFormat({ userData: e.target.value, hasInputValueChanged: false })
+        }
         data-qa-user-data-input
       />
     </Accordion>
