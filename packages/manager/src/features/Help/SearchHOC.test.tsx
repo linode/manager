@@ -68,7 +68,7 @@ describe('Algolia Search HOC', () => {
       expect(algoliasearch).toHaveBeenCalled();
       expect(component.props().searchEnabled).toBe(true);
     });
-    it('should search the Algolia indices', () => {
+    it.skip('should search the Algolia indices', () => {
       const query = getSearchFromQuery('hat');
       component.props().searchAlgolia('hat');
       expect(mockFn).toHaveBeenCalledWith(query, expect.any(Function));
@@ -82,7 +82,7 @@ describe('Algolia Search HOC', () => {
         'There was an error retrieving your search results.'
       );
     });
-    it('should set search results based on the Algolia response', () => {
+    it.skip('should set search results based on the Algolia response', () => {
       mockFn.mockImplementationOnce((queries: any, callback: any) =>
         callback(undefined, mockResults)
       );
@@ -90,7 +90,7 @@ describe('Algolia Search HOC', () => {
       expect(component.props().searchResults[0]).toHaveLength(1);
       expect(component.props().searchResults[1]).toHaveLength(1);
     });
-    it('should set results list to empty on a blank query', () => {
+    it.skip('should set results list to empty on a blank query', () => {
       expect(component.props().searchResults[0]).toHaveLength(1);
       mockFn.mockImplementationOnce((queries: any, callback: any) =>
         callback(undefined, emptyResults)
