@@ -1,6 +1,5 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { mergeConfig } from 'vite';
-import react from '@vitejs/plugin-react-swc';
 
 const config: StorybookConfig = {
   stories: [
@@ -11,6 +10,7 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
+    'storybook-dark-mode',
   ],
   staticDirs: ['../public'],
   framework: {
@@ -19,22 +19,13 @@ const config: StorybookConfig = {
   },
   features: { storyStoreV7: true },
   async viteFinal(config) {
-    // const plugins =  config.plugins?.filter(plugin => !Array.isArray(plugin));
-    // config.plugins = plugins;
-    console.log(config);
     return mergeConfig(config, {
-      // root: `${__dirname}/../`,
-      // cacheDir: path.resolve(__dirname, '../node_modules/.cache/vite'),
       resolve: {
-        // alias: {
-        //   src: `${__dirname}/../src`,
-        // },
         preserveSymlinks: true,
       },
       define: {
         'process.env': {},
       },
-      // plugins: []
     });
   },
 };
