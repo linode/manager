@@ -15,7 +15,6 @@ import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
 import { useStyles as useEventStyles } from './RenderEvent';
-import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -39,7 +38,6 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
-  const { linkTarget } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, _types);
 
   if (message === null) {
@@ -66,7 +64,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
       <Box
         className={classNames({
           [eventClasses.root]: true,
-          [eventClasses.event]: !!linkTarget,
+          [eventClasses.event]: true,
         })}
         display="flex"
         data-test-id={event.action}
