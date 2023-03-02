@@ -7438,6 +7438,13 @@ cypress-real-events@^1.7.0:
   resolved "https://registry.yarnpkg.com/cypress-real-events/-/cypress-real-events-1.7.6.tgz#6f17e0b2ceea1d6dc60f6737d8f84cc517bbbb4c"
   integrity sha512-yP6GnRrbm6HK5q4DH6Nnupz37nOfZu/xn1xFYqsE2o4G73giPWQOdu6375QYpwfU1cvHNCgyD2bQ2hPH9D7NMw==
 
+cypress-vite@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/cypress-vite/-/cypress-vite-1.3.1.tgz#e8bfc5f3eb7f65b4ef70a82b55e0ad666449b09f"
+  integrity sha512-dgLxSkk+rYOp7L/ngm5q+Ps8LBrDi/69qcZSSoJ9T8HN2XQ08qWZ2XcrdewOqb5+TXFRRBCondB7lOZriG5kHg==
+  dependencies:
+    debug "^4.3.4"
+
 cypress@^12.2.0:
   version "12.6.0"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.6.0.tgz#d71a82639756173c0682b3d467eb9f0523460e91"
@@ -12598,9 +12605,9 @@ lru-cache@^6.0.0:
     yallist "^4.0.0"
 
 lru-cache@^7.5.1:
-  version "7.17.0"
-  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.17.0.tgz#00c7ba5919e5ea7c69ff94ddabbf32cb09ab805c"
-  integrity sha512-zSxlVVwOabhVyTi6E8gYv2cr6bXK+8ifYz5/uyJb9feXX6NACVDwY4p5Ut3WC3Ivo/QhpARHU3iujx2xGAYHbQ==
+  version "7.18.1"
+  resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-7.18.1.tgz#4716408dec51d5d0104732647f584d1f6738b109"
+  integrity sha512-8/HcIENyQnfUTCDizRu9rrDyG6XG/21M4X7/YEGZeD76ZJilFPAUVb/2zysFf7VVO1LEjCDFyHp8pMMvozIrvg==
 
 luxon@^3.2.1:
   version "3.2.1"
