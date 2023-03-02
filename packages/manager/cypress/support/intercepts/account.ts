@@ -5,6 +5,7 @@
 import type { AccountSettings, EntityTransfer } from '@linode/api-v4/types';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
+import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch account user information.
@@ -24,6 +25,23 @@ export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
   return cy.intercept('POST', '*/account/entity-transfers');
+};
+
+/**
+ * Intercepts POST request to generate entity transfer token and mocks response.
+ *
+ * @param errorMessage - Mocks an error response with the given message.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockInitiateEntityTransferError = (
+  errorMessage: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    '*/account/entity-transfers',
+    makeErrorResponse(errorMessage)
+  );
 };
 
 /**

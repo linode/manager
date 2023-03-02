@@ -15,6 +15,7 @@ import {
   mockAcceptEntityTransfer,
   mockGetEntityTransfers,
   mockReceiveEntityTransfer,
+  mockInitiateEntityTransferError,
 } from 'support/intercepts/account';
 import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
@@ -444,7 +445,9 @@ describe('Account service transfers', () => {
     };
 
     cy.defer(setupLinode()).then((linode: Linode) => {
-      interceptInitiateEntityTransfer().as('initiateTransfer');
+      const errorMessage =
+        'You cannot initiate transfers with Managed enabled.';
+      mockInitiateEntityTransferError(errorMessage);
 
       // Navigate to Service Transfer landing page, initiate transfer.
       visitUrlWithManagedEnabled(serviceTransferLandingUrl);
@@ -457,9 +460,7 @@ describe('Account service transfers', () => {
       cy.findByText('Make a Service Transfer').should('be.visible');
       cy.url().should('endWith', serviceTransferCreateUrl);
       initiateLinodeTransfer(linode.label);
-      cy.findByText(
-        'You cannot initiate transfers with Managed enabled.'
-      ).should('be.visible');
+      cy.findByText(errorMessage).should('be.visible');
     });
   });
 });
