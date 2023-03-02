@@ -772,9 +772,8 @@ export default (e: Event): string => {
   }
 
   /** return either the formatted message or an empty string */
-  let formattedMessage = applyLinking(e, message);
-  formattedMessage = applyBolding(e, formattedMessage);
-  return formattedMessage;
+  const formattedMessage = applyLinking(e, message);
+  return applyBolding(e, formattedMessage);
 };
 
 function applyBolding(event: Event, message: string) {
