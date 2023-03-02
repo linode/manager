@@ -1,4 +1,3 @@
-import { ZoneName } from '@linode/api-v4/lib/networking';
 import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 
 const PRODUCTION = 'production';
@@ -105,36 +104,6 @@ export const INTERVAL = 1000;
  * Time after which data from the API is considered stale (half an hour)
  */
 export const REFRESH_INTERVAL = 60 * 30 * 1000;
-
-/**
- * Used by e.g. LISH to determine the websocket connection address.
- * Whenever updating this, also update the corresponding name in resolvers.ts
- */
-export const ZONES: Record<string, ZoneName> = {
-  'us-east': 'newark',
-  'us-east-1a': 'newark',
-  'us-south': 'dallas',
-  'us-south-1a': 'dallas',
-  'us-west': 'fremont',
-  'us-west-1a': 'fremont',
-  'us-central': 'dallas',
-  'us-southeast': 'atlanta',
-  'us-southeast-1a': 'atlanta',
-  'eu-central': 'frankfurt',
-  'eu-central-1a': 'frankfurt',
-  'eu-west': 'london',
-  'eu-west-1a': 'london',
-  'ap-northeast': 'shinagawa1',
-  'ap-northeast-1a': 'tokyo',
-  'ap-northeast-1b': 'shinagawa1',
-  'ap-south': 'singapore',
-  'ap-south-1a': 'singapore',
-  'ca-central': 'toronto1',
-  'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'mumbai1',
-  'ap-southeast': 'sydney1',
-  'us-iad': 'washington3',
-};
 
 export const dcDisplayNames = {
   // us-east-1 is for backwards-compatibility
@@ -281,7 +250,7 @@ export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
 export const OBJECT_STORAGE_DELIMITER = '/';
 
 // Value from  1-4 reflecting a minimum score from zxcvbn
-export const MINIMUM_PASSWORD_STRENGTH = 2;
+export const MINIMUM_PASSWORD_STRENGTH = 4;
 
 // When true, use the mock API defined in serverHandlers.ts instead of making network requests
 export const MOCK_SERVICE_WORKER =

@@ -1,13 +1,14 @@
+import 'cypress-file-upload';
 import { EventStatus, ImageStatus } from '@linode/api-v4/types';
 import { eventFactory, imageFactory } from '@src/factories';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
-import 'cypress-file-upload';
 import { RecPartial } from 'factory.ts';
 import { DateTime } from 'luxon';
 import { regions } from 'support/constants/regions';
 import { fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { ui } from 'support/ui';
 import { interceptOnce } from 'support/ui/common';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomItem, randomLabel, randomPhrase } from 'support/util/random';
 
 /*
@@ -54,7 +55,7 @@ const eventIntercept = (
   const numericId = numericImageIdFromString(id);
   interceptOnce(
     'GET',
-    '*/account/events*',
+    apiMatcher('account/events*'),
     makeResourcePage(
       eventFactory.buildList(1, {
         created: created ? created : DateTime.local().toISO(),
@@ -83,7 +84,7 @@ const eventIntercept = (
  * @param status - Image status.
  */
 const imageIntercept = (label: string, id: string, status: ImageStatus) => {
-  cy.intercept('GET', `*/images/${id}*`, (req) => {
+  cy.intercept('GET', apiMatcher(`images/${id}*`), (req) => {
     req.reply(
       imageFactory.build({
         label,
@@ -152,7 +153,7 @@ const uploadImage = (label: string) => {
       mimeType: 'application/x-gzip',
     });
   });
-  cy.intercept('POST', '*/images/upload').as('imageUpload');
+  cy.intercept('POST', apiMatcher('images/upload')).as('imageUpload');
 };
 
 describe('machine image', () => {
