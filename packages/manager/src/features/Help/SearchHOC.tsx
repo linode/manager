@@ -1,4 +1,4 @@
-import Algolia from 'algoliasearch';
+import Algolia, { SearchClient } from 'algoliasearch';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -32,7 +32,7 @@ interface SearchOptions {
 }
 
 interface AlgoliaContent {
-  results: Algolia.Response[];
+  results: unknown;
 }
 
 interface AlgoliaError {
@@ -116,7 +116,7 @@ export default (options: SearchOptions) => (
 ) => {
   const { hitsPerPage, highlight } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    searchIndex: any;
+    searchIndex: SearchClient;
     mounted: boolean = false;
 
     componentDidMount() {
