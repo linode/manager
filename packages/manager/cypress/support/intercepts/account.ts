@@ -70,7 +70,7 @@ export const mockInitiateEntityTransferError = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '*/account/entity-transfers',
+    apiMatcher('account/entity-transfers'),
     makeErrorResponse(errorMessage)
   );
 };
