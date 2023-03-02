@@ -1,13 +1,12 @@
-// .storybook/preview.js
+import React from 'react';
+import CssBaseline from '../src/components/core/CssBaseline';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
-import React from 'react';
-import '../public/fonts/fonts.css';
-import CssBaseline from '../src/components/core/CssBaseline';
 import { ThemeProvider } from '../src/components/core/styles';
-import '../src/index.css';
 import { dark, light } from '../src/themes';
 import { wrapWithTheme } from '../src/utilities/testHelpers';
+import '../public/fonts/fonts.css';
+import '../src/index.css';
 
 const options = {
   dark,
