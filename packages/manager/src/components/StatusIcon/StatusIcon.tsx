@@ -23,30 +23,40 @@ const useStyles = makeStyles((theme: Theme) => ({
   statusIconOther: {
     backgroundColor: theme.color.orange,
   },
+  pulse: {
+    animation: 'pulse 1.5s ease-in-out infinite',
+  },
 }));
 
 export type Status = 'active' | 'inactive' | 'error' | 'other';
 
 export interface StatusProps {
   status: Status;
+  pulse?: boolean;
 }
 
-export const StatusIcon: React.FC<StatusProps> = (props) => {
-  const { status } = props;
+export const StatusIcon = (props: StatusProps) => {
+  const { status, pulse } = props;
 
   const classes = useStyles();
+
+  const shouldPulse =
+    pulse === undefined
+      ? // If pulse is not defined, use old behavior for choosing when to pulse
+        !['inactive', 'active', 'error'].includes(status)
+      : pulse;
 
   return (
     <div
       className={classNames({
         [classes.statusIcon]: true,
+        [classes.pulse]: shouldPulse,
         [classes.statusIconRunning]: status === 'active',
         [classes.statusIconOffline]: status === 'inactive',
         [classes.statusIconError]: status === 'error',
         [classes.statusIconOther]: !['inactive', 'active', 'error'].includes(
           status
         ),
-        statusOther: !['inactive', 'active', 'error'].includes(status),
       })}
     />
   );

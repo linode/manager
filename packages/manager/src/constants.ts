@@ -1,4 +1,3 @@
-import { ZoneName } from '@linode/api-v4/lib/networking';
 import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 
 const PRODUCTION = import.meta.env.PROD;
@@ -7,7 +6,9 @@ const PRODUCTION = import.meta.env.PROD;
 export const isProductionBuild = PRODUCTION;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = Boolean(import.meta.env.REACT_APP_ENABLE_DEV_TOOLS);
+export const ENABLE_DEV_TOOLS = Boolean(
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
+);
 
 /** required for the app to function */
 export const APP_ROOT =
@@ -35,7 +36,8 @@ export const ALGOLIA_SEARCH_KEY =
 export const LAUNCH_DARKLY_API_KEY =
   import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 export const LINODE_STATUS_PAGE_URL =
-  import.meta.env.REACT_APP_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
+  import.meta.env.REACT_APP_STATUS_PAGE_URL ||
+  'https://status.linode.com/api/v2';
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
@@ -47,7 +49,8 @@ export const API_MAX_PAGE_SIZE =
 export const LARGE_ACCOUNT_THRESHOLD = 1500;
 
 // PayPal Client ID
-export const PAYPAL_CLIENT_ID = import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
+export const PAYPAL_CLIENT_ID =
+  import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
 
 // Sets Paypal Environment, valid values: 'sandbox|production'
 // @todo lets depreate this with the PayPal + Braintree work
@@ -58,7 +61,8 @@ export const PAYPAL_CLIENT_ENV =
 export const GPAY_MERCHANT_ID = import.meta.env.REACT_APP_GPAY_MERCHANT_ID;
 
 // Google Pay Environment: 'TEST|PRODUCTION'
-export const GPAY_CLIENT_ENV = import.meta.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
+export const GPAY_CLIENT_ENV =
+  import.meta.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
@@ -105,36 +109,6 @@ export const INTERVAL = 1000;
  * Time after which data from the API is considered stale (half an hour)
  */
 export const REFRESH_INTERVAL = 60 * 30 * 1000;
-
-/**
- * Used by e.g. LISH to determine the websocket connection address.
- * Whenever updating this, also update the corresponding name in resolvers.ts
- */
-export const ZONES: Record<string, ZoneName> = {
-  'us-east': 'newark',
-  'us-east-1a': 'newark',
-  'us-south': 'dallas',
-  'us-south-1a': 'dallas',
-  'us-west': 'fremont',
-  'us-west-1a': 'fremont',
-  'us-central': 'dallas',
-  'us-southeast': 'atlanta',
-  'us-southeast-1a': 'atlanta',
-  'eu-central': 'frankfurt',
-  'eu-central-1a': 'frankfurt',
-  'eu-west': 'london',
-  'eu-west-1a': 'london',
-  'ap-northeast': 'shinagawa1',
-  'ap-northeast-1a': 'tokyo',
-  'ap-northeast-1b': 'shinagawa1',
-  'ap-south': 'singapore',
-  'ap-south-1a': 'singapore',
-  'ca-central': 'toronto1',
-  'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'mumbai1',
-  'ap-southeast': 'sydney1',
-  'us-iad': 'washington3',
-};
 
 export const dcDisplayNames = {
   // us-east-1 is for backwards-compatibility
@@ -281,7 +255,7 @@ export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
 export const OBJECT_STORAGE_DELIMITER = '/';
 
 // Value from  1-4 reflecting a minimum score from zxcvbn
-export const MINIMUM_PASSWORD_STRENGTH = 2;
+export const MINIMUM_PASSWORD_STRENGTH = 4;
 
 // When true, use the mock API defined in serverHandlers.ts instead of making network requests
 export const MOCK_SERVICE_WORKER =

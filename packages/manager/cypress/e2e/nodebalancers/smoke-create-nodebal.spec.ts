@@ -8,6 +8,7 @@ import {
   getClick,
   getVisible,
 } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel } from 'support/util/random';
 
 const deployNodeBalancer = () => {
@@ -37,7 +38,9 @@ describe('create NodeBalancer', () => {
         linodePrivateIp: linode.ipv4[1],
       };
       // catch request
-      cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
+      cy.intercept('POST', apiMatcher('nodebalancers')).as(
+        'createNodeBalancer'
+      );
       createNodeBalancerWithUI(nodeBal);
       cy.wait('@createNodeBalancer')
         .its('response.statusCode')
@@ -47,7 +50,9 @@ describe('create NodeBalancer', () => {
   it('API error Handling', () => {
     createLinode().then((linode) => {
       // catch request
-      cy.intercept('POST', '*/nodebalancers').as('createNodeBalancer');
+      cy.intercept('POST', apiMatcher('nodebalancers')).as(
+        'createNodeBalancer'
+      );
       createNodeBalancerWithUI({
         label: 'cy-test-dfghjk^uu7',
         linodePrivateIp: linode.ipv4[1],

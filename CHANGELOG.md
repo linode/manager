@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-02-21] - v1.87.0
+
+### Added:
+- Ability to create Object Storage folders
+
+### Changed:
+- Standardize Text tooltip
+- Prevent Firewall Rule Drawer reset if the same preset is reselected
+
 ## [2023-02-13] - v1.86.0
 
 ### Added:

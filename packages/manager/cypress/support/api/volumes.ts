@@ -6,6 +6,7 @@ import {
   isTestEntity,
 } from './common';
 import { deleteLinodeById } from './linodes';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomLabel, randomString } from 'support/util/random';
 
 const relativeApiPath = 'volumes';
@@ -69,9 +70,10 @@ export const deleteAllTestVolumes = () => {
   getVolumes().then((resp) => {
     resp.body.data.forEach((vol) => {
       // catch delete linode request
-      cy.intercept('DELETE', `linode/instances/${vol.linode_id}`).as(
-        'deleteLinode'
-      );
+      cy.intercept(
+        'DELETE',
+        apiMatcher(`linode/instances/${vol.linode_id}`)
+      ).as('deleteLinode');
       if (isTestEntity(vol) && vol.linode_id === null) {
         deleteVolumeById(vol.id);
       } else if (isTestEntity(vol) && vol.linode_id !== null) {
