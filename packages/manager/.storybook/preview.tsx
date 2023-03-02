@@ -1,6 +1,5 @@
 // .storybook/preview.js
 import { StyledEngineProvider } from '@mui/material/styles';
-import { select, withKnobs } from '@storybook/addon-knobs';
 import { MINIMAL_VIEWPORTS } from '@storybook/addon-viewport';
 import React from 'react';
 import '../public/fonts/fonts.css';
@@ -16,13 +15,10 @@ const options = {
 };
 
 export const decorators = [
-  withKnobs,
   (Story) => {
-    const _key = select('theme', ['light', 'dark'], 'light');
-
     return wrapWithTheme(
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={options[_key]}>
+        <ThemeProvider theme={light}>
           <CssBaseline />
           {/* Keep this in case we want to change the background color based on the mode */}
           {/* <div

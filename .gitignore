@@ -109,6 +109,7 @@ localStorage.json
 
 # storybook static files
 .out
+packages/manager/storybook-static/
 
 # Vim users
 *.swp
