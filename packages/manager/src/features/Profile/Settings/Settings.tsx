@@ -1,12 +1,13 @@
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme, withTheme } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
@@ -21,13 +22,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  toggleTheme: () => void;
-}
-
-const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
+const ProfileSettings = () => {
   const classes = useStyles();
-  const { toggleTheme, theme } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [
     preferenceEditorOpen,
@@ -36,6 +32,14 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
 
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
+
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
+
+  const toggleTheme = () => {
+    const newTheme = preferences?.theme === 'dark' ? 'light' : 'dark';
+    updatePreferences({ theme: newTheme });
+  };
 
   React.useEffect(() => {
     if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
@@ -48,14 +52,9 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
 
   const toggle = () => {
     setSubmitting(true);
-
-    updateProfile({ email_notifications: !profile?.email_notifications })
-      .then(() => {
-        setSubmitting(false);
-      })
-      .catch(() => {
-        setSubmitting(false);
-      });
+    updateProfile({
+      email_notifications: !profile?.email_notifications,
+    }).finally(() => setSubmitting(false));
   };
 
   return (
@@ -99,7 +98,7 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
             <FormControlLabel
               control={<ThemeToggle toggleTheme={toggleTheme} />}
               label={` Dark mode is ${
-                theme.name === 'darkTheme' ? 'enabled' : 'disabled'
+                preferences?.theme === 'dark' ? 'enabled' : 'disabled'
               }`}
               disabled={submitting}
             />
@@ -147,4 +146,4 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
   );
 };
 
-export default withTheme(ProfileSettings);
+export default ProfileSettings;

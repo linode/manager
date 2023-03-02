@@ -22,6 +22,7 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import { validatePassword } from 'src/utilities/validatePassword';
 
 interface Props {
   isBareMetalInstance: boolean;
@@ -68,6 +69,22 @@ class LinodeSettingsPasswordPanel extends React.Component<
     const { linodeId, isBareMetalInstance } = this.props;
 
     if (!diskId && !isBareMetalInstance) {
+      return;
+    }
+
+    // Enforce password complexity/requirements
+    const passwordError = validatePassword(value);
+    if (passwordError) {
+      this.setState({
+        ...this.state,
+        success: undefined,
+        errors: [
+          {
+            field: 'password',
+            reason: passwordError,
+          },
+        ],
+      });
       return;
     }
 

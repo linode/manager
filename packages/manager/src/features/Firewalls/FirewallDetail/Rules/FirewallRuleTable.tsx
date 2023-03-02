@@ -94,7 +94,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelCol: {
     paddingLeft: 6,
-    whiteSpace: 'nowrap',
   },
   ruleGrid: {
     width: '100%',
@@ -102,7 +101,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   ruleList: {
     backgroundColor: theme.color.border3,
-    whiteSpace: 'nowrap',
     listStyle: 'none',
     paddingLeft: 0,
     width: '100%',
@@ -278,7 +276,6 @@ const FirewallRuleTable: React.FC<CombinedProps> = (props) => {
             <Grid
               item
               style={{
-                whiteSpace: 'nowrap',
                 width: '10%',
               }}
             >
@@ -433,7 +430,11 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
       >
         <Grid
           item
-          style={{ paddingLeft: 8, width: xsDown ? '50%' : '30%' }}
+          style={{
+            paddingLeft: 8,
+            width: xsDown ? '50%' : '30%',
+            overflowWrap: 'break-word',
+          }}
           aria-label={`Label: ${label}`}
         >
           <DragIndicator
@@ -464,17 +465,13 @@ const FirewallRuleTableRow: React.FC<FirewallRuleTableRowProps> = React.memo(
           </Grid>
         </Hidden>
         <Hidden smDown>
-          <Grid
-            item
-            style={{ whiteSpace: 'nowrap', width: '10%' }}
-            aria-label={`Ports: ${ports}`}
-          >
+          <Grid item style={{ width: '10%' }} aria-label={`Ports: ${ports}`}>
             {ports === '1-65535' ? 'All Ports' : ports}
             <ConditionalError errors={errors} formField="ports" />
           </Grid>
           <Grid
             item
-            style={{ whiteSpace: 'nowrap', width: '15%' }}
+            style={{ width: '15%' }}
             aria-label={`Addresses: ${addresses}`}
           >
             {addresses}{' '}

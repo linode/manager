@@ -1,31 +1,24 @@
+import type { CreditCardData } from '@linode/api-v4/types';
 import { paymentMethodFactory } from '@src/factories/accountPayment';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { fbtVisible, getClick } from 'cypress/support/helpers';
+import {
+  mockSetDefaultPaymentMethod,
+  mockGetPaymentMethods,
+} from 'support/intercepts/account';
 
-const interceptOnce = (method, url, response) => {
-  let count = 0;
-  return cy.intercept(method, url, (req) => {
-    count += 1;
-    if (count < 2) {
-      req.reply(response);
-    }
-  });
-};
-
-const paymentMethodGpay = (isDefault) => {
+const paymentMethodGpay = (isDefault: boolean) => {
   return paymentMethodFactory.build({
     id: 434357,
     type: 'google_pay',
-    ...isDefault,
+    is_default: isDefault,
     data: { card_type: 'Visa', last_four: '2045', expiry: '07/2025' },
   });
 };
 
-const paymentMethodCC = (isDefault) => {
+const paymentMethodCC = (isDefault: boolean) => {
   return paymentMethodFactory.build({
     id: 420330,
     type: 'credit_card',
-    ...isDefault,
+    is_default: isDefault,
     data: {
       card_type: 'American Express',
       last_four: '2222',
@@ -34,22 +27,15 @@ const paymentMethodCC = (isDefault) => {
   });
 };
 
-const gpayDefault = makeResourcePage([
-  paymentMethodCC({ is_default: false }),
-  paymentMethodGpay({ is_default: true }),
-]);
-const ccDefault = makeResourcePage([
-  paymentMethodCC({ is_default: true }),
-  paymentMethodGpay({ is_default: false }),
-]);
+const gpayDefault = [paymentMethodCC(false), paymentMethodGpay(true)];
 
-const gpayIdCcDefault = ccDefault.data[1].id;
-const ccIdGpayDefault = gpayDefault.data[0].id;
+const ccDefault = [paymentMethodCC(true), paymentMethodGpay(false)];
 
-const gpayLastFourCcDefault = ccDefault.data[1].data.last_four;
-const ccLastFourGpayDefault = gpayDefault.data[0].data.last_four;
+const gpayIdCcDefault = ccDefault[1].id;
+const ccIdGpayDefault = gpayDefault[0].id;
 
-const getPaymentURL = '*/account/payment-methods*';
+const gpayLastFourCcDefault = (ccDefault[1].data as CreditCardData).last_four;
+const ccLastFourGpayDefault = (gpayDefault[0].data as CreditCardData).last_four;
 
 describe('Default Payment Method', () => {
   beforeEach(() => {
@@ -57,14 +43,8 @@ describe('Default Payment Method', () => {
   });
 
   it('makes google pay default', () => {
-    interceptOnce('GET', getPaymentURL, ccDefault).as('getPaymentMethod');
-    cy.intercept(
-      'POST',
-      `*/account/payment-methods/${gpayIdCcDefault}/make-default`,
-      (req) => {
-        req.reply({});
-      }
-    ).as('changeDefault');
+    mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
+    mockSetDefaultPaymentMethod(gpayIdCcDefault).as('changeDefault');
     cy.wait('@getPaymentMethod');
     cy.get(
       `[aria-label="Action menu for card ending in ${gpayLastFourCcDefault}"]`
@@ -72,33 +52,26 @@ describe('Default Payment Method', () => {
       .invoke('attr', 'aria-controls')
       .then(($id) => {
         if ($id) {
-          getClick(
+          cy.get(
             `[aria-label="Action menu for card ending in ${gpayLastFourCcDefault}"]`
-          );
+          ).click();
         }
-        cy.intercept('GET', getPaymentURL, (req) => {
-          req.reply(gpayDefault);
-        }).as('getPaymentMethodAfter');
-        getClick(
+        mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
+        cy.get(
           `[id="option-1--${$id}"][data-qa-action-menu-item="Make Default"]`
-        );
+        ).click();
       });
     cy.wait('@changeDefault');
-    cy.wait('@getPaymentMethodAfter');
+    cy.wait('@getPaymentMethod');
     cy.get('[data-qa-payment-row=google_pay]').within(() => {
-      fbtVisible('DEFAULT');
+      cy.findByText('DEFAULT').should('be.visible');
     });
   });
 
   it('makes cc default', () => {
-    interceptOnce('GET', getPaymentURL, gpayDefault).as('getPaymentMethod');
-    cy.intercept(
-      'POST',
-      `*/account/payment-methods/${ccIdGpayDefault}/make-default`,
-      (req) => {
-        req.reply({});
-      }
-    ).as('changeDefault');
+    mockGetPaymentMethods(gpayDefault).as('getPaymentMethod');
+    mockSetDefaultPaymentMethod(ccIdGpayDefault).as('changeDefault');
+
     cy.wait('@getPaymentMethod');
     cy.get(
       `[aria-label="Action menu for card ending in ${ccLastFourGpayDefault}"]`
@@ -106,21 +79,19 @@ describe('Default Payment Method', () => {
       .invoke('attr', 'aria-controls')
       .then(($id) => {
         if ($id) {
-          getClick(
+          cy.get(
             `[aria-label="Action menu for card ending in ${ccLastFourGpayDefault}"]`
-          );
+          ).click();
         }
-        cy.intercept('GET', getPaymentURL, (req) => {
-          req.reply(ccDefault);
-        }).as('getPaymentMethodAfter');
-        getClick(
+        mockGetPaymentMethods(ccDefault).as('getPaymentMethod');
+        cy.get(
           `[id="option-1--${$id}"][data-qa-action-menu-item="Make Default"]`
-        );
+        ).click();
       });
     cy.wait('@changeDefault');
-    cy.wait('@getPaymentMethodAfter');
+    cy.wait('@getPaymentMethod');
     cy.get('[data-qa-payment-row=credit_card]').within(() => {
-      fbtVisible('DEFAULT');
+      cy.findByText('DEFAULT').should('be.visible');
     });
   });
 });

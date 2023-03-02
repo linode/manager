@@ -18,13 +18,14 @@ import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementChec
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import { useImages } from 'src/hooks/useImages';
 import { useTypes } from 'src/queries/types';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
@@ -85,7 +86,10 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const regions = useRegionsQuery().data ?? [];
   const linode = useExtendedLinode(linodeID);
   const { data: types } = useTypes([linode?.type ?? null]);
-  const { images } = useImages();
+
+  const { data: imagesData } = useAllImagesQuery({}, {}, open);
+  const images = listToItemsByID(imagesData ?? []);
+
   const { data: profile } = useProfile();
   const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
@@ -184,7 +188,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     linode.specs.disk,
     linode.specs.vcpus,
     linode.image ?? null,
-    images.itemsById
+    images
   );
 
   if (regions.length === 0) {
