@@ -228,10 +228,13 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         .split(' ');
 
       const matchingOCALabels = oneClickApps.reduce(
-        (acc: string[], { categories, name, alt_name, alt_description }) => {
-          const ocaAppString = `${name} ${alt_name} ${categories.join(
-            ' '
-          )} ${alt_description}`.toLocaleLowerCase();
+        (
+          acc: string[],
+          { categories, name, alt_name, alt_description, cluster_name }
+        ) => {
+          const ocaAppString = `${name} ${alt_name} ${
+            cluster_name || ''
+          } ${categories.join(' ')} ${alt_description}`.toLocaleLowerCase();
 
           const hasMatchingOCA = queryWords.every((queryWord) =>
             ocaAppString.includes(queryWord)
@@ -239,6 +242,9 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
 
           if (hasMatchingOCA) {
             acc.push(name.trim());
+            if (cluster_name) {
+              acc.push(cluster_name.trim());
+            }
           }
 
           return acc;
