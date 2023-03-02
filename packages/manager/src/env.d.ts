@@ -30,6 +30,7 @@ interface ImportMetaEnv {
   REACT_APP_LOGIN_ROOT?: string;
   REACT_APP_APP_ROOT?: string;
   REACT_APP_ENABLE_DEV_TOOLS?: boolean;
+  REACT_APP_DISABLE_NEW_RELIC?: boolean;
 }
 
 interface ImportMeta {
