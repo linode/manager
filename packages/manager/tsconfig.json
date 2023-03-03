@@ -18,8 +18,8 @@
     "allowJs": false,
 
     /* Emit */
-    "outDir": "build/dist",
     "sourceMap": true,
+    "noEmit": true,
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
@@ -36,7 +36,10 @@
     "suppressImplicitAnyIndexErrors": true,
 
     /* Completeness */
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    /* Optimizations */
+    "incremental": true
   },
   "include": [
     "src",
