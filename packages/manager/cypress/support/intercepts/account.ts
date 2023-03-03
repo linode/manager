@@ -12,6 +12,7 @@ import type {
 import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
+import { makeErrorResponse } from 'support/util/errors';
 
 /**
  * Intercepts GET request to fetch account and mocks response.
@@ -55,6 +56,23 @@ export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
   return cy.intercept('POST', apiMatcher('account/entity-transfers'));
+};
+
+/**
+ * Intercepts POST request to generate entity transfer token and mocks response.
+ *
+ * @param errorMessage - Mocks an error response with the given message.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockInitiateEntityTransferError = (
+  errorMessage: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/entity-transfers'),
+    makeErrorResponse(errorMessage)
+  );
 };
 
 /**
