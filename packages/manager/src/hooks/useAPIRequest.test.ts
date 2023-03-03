@@ -1,4 +1,4 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import { useAPIRequest } from './useAPIRequest';
 
 const mockError = [{ reason: 'An error occurred.' }];
@@ -23,20 +23,25 @@ describe('useAPIRequest', () => {
     });
   });
 
-  it.skip('executes request when dependencies change', async () => {
+  it('executes request when dependencies change', async () => {
     let mockDep = 1;
     const { result, rerender } = renderHook(() =>
       useAPIRequest<number>(mockRequestWithDep(mockDep), 0, [mockDep])
     );
 
-    act(() => {
-      const data1 = result.current.data;
+    // intial value of 0
+    expect(result.current.data).toBe(0);
 
-      mockDep = 2;
-      rerender();
-      const data2 = result.current.data;
+    await waitFor(() => {
+      expect(result.current.data).toBe(1);
+    });
 
-      expect(data1).not.toEqual(data2);
+    mockDep = 2;
+
+    rerender();
+
+    await waitFor(() => {
+      expect(result.current.data).toBe(2);
     });
   });
 
