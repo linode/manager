@@ -92,7 +92,7 @@
     "start": "vite",
     "start:ci": "yarn serve ./build -p 3000 -s --cors",
     "lint": "yarn run eslint . --ext .js,.ts,.tsx --quiet",
-    "build": "node scripts/prebuild.mjs && concurrently --raw \"tsc\" \"vite build\"",
+    "build": "node scripts/prebuild.mjs && vite build",
     "precommit": "lint-staged && yarn typecheck",
     "test": "jest --color",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
@@ -104,7 +104,7 @@
     "cy:debug": "cypress open --e2e",
     "cy:rec-snap": "cypress run --headless -b chrome --env visualRegMode=record --spec ./cypress/integration/**/*visual*.spec.ts",
     "release": "./scripts/release_changelog.sh",
-    "typecheck": "tsc"
+    "typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [

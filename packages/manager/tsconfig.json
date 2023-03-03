@@ -3,7 +3,7 @@
     /* Language and Environment */
     "jsx": "react",
     "lib": ["dom", "es2019"],
-    "target": "ESNext",
+    "target": "es5",
 
     /* Modules */
     "baseUrl": ".",
@@ -18,8 +18,8 @@
     "allowJs": false,
 
     /* Emit */
+    "outDir": "build/dist",
     "sourceMap": true,
-    "noEmit": true,
 
     /* Interop Constraints */
     "allowSyntheticDefaultImports": true,
