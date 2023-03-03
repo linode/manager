@@ -14,7 +14,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-const DownloadCSV: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const DownloadCSV: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const { className, headers, filename, data, children } = props;
   return (
     <CSVLink
@@ -76,4 +78,4 @@ export const cleanCSVData = (data: any): any => {
   return data;
 };
 
-export default DownloadCSV;
+export default React.memo(DownloadCSV);
