@@ -1,13 +1,11 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
-import { imageFactory, normalizeEntities } from 'src/factories';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {
   CombinedProps,
   RebuildFromStackScript,
 } from './RebuildFromStackScript';
-import { preferencesFactory } from 'src/factories/preferences';
 
 const request = jest.requireMock('@linode/api-v4/lib/account');
 
@@ -15,25 +13,14 @@ jest.mock('@linode/api-v4/lib/account', () => ({
   getUsers: jest.fn(),
 }));
 
-const images = normalizeEntities(imageFactory.buildList(10));
-
 request.getUsers = jest.fn().mockResolvedValue([]);
 
 const props: CombinedProps = {
   type: 'community',
   linodeId: 1234,
-  imagesData: images,
   requestKeys: jest.fn(),
-  imagesLoading: false,
-  imagesError: {},
-  imagesLastUpdated: 0,
   userSSHKeys: [],
-  getUserPreferences: jest.fn(),
-  updateUserPreferences: jest.fn(),
-  preferences: preferencesFactory.build(),
   disabled: false,
-  closeSnackbar: jest.fn(),
-  enqueueSnackbar: jest.fn(),
   passwordHelperText: '',
   handleRebuildError: jest.fn(),
   onClose: jest.fn(),

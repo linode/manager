@@ -31,7 +31,7 @@ describe('Status banners from statuspage.io', () => {
       expect(screen.getByRole('link')).toHaveAttribute('href', props.href);
     });
 
-    it.skip("clicking a banner's close icon should remove it from view", () => {
+    it("clicking a banner's close icon should remove it from view", () => {
       const { container } = renderWithTheme(<IncidentBanner {...props} />);
       const dismissButton = screen.getByTestId('notice-dismiss');
       userEvent.click(dismissButton);

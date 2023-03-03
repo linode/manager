@@ -1,24 +1,26 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { createLinode, deleteLinodeById } from '../../support/api/linodes';
+import { createLinode, deleteLinodeById } from 'support/api/linodes';
 import {
   containsClick,
   containsVisible,
   fbtClick,
   fbtVisible,
   getClick,
-} from '../../support/helpers';
-import { assertToast } from '../../support/ui/events';
+} from 'support/helpers';
+import { assertToast } from 'support/ui/events';
+import { apiMatcher } from 'support/util/intercepts';
 
 describe('linode backups', () => {
   it('enable backups', () => {
     createLinode().then((linode) => {
       cy.visitWithLogin(`/dashboard`);
       // intercept request
-      cy.intercept('POST', `*/linode/instances/${linode.id}/backups/enable`).as(
-        'enableBackups'
-      );
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/backups/enable`)
+      ).as('enableBackups');
       // intercept response
-      cy.intercept('*/account/settings').as('getSettings');
+      cy.intercept(apiMatcher('account/settings')).as('getSettings');
       cy.visit(`/linodes/${linode.id}/backup`);
       // if account is managed, test will pass but skip enabling backups
       containsVisible(`${linode.label}`);
@@ -32,6 +34,10 @@ describe('linode backups', () => {
         }
       });
       if (
+        // TODO Resolve potential flake.
+        // If Cloud Manager loads slowly (e.g. due to slow API requests, network issues, etc.),
+        // it is possible to load the Linode details page after it has finished booting. In those
+        // cases, Cypress will never find the `PROVISIONING` status indicator and the test will fail.
         cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
         cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
       ) {
@@ -46,11 +52,13 @@ describe('linode backups', () => {
     createLinode({ backups_enabled: true }).then((linode) => {
       cy.visit(`/linodes/${linode.id}/backup`);
       // intercept request
-      cy.intercept('POST', `*/linode/instances/${linode.id}/backups`).as(
-        'enableBackups'
-      );
+      cy.intercept(
+        'POST',
+        apiMatcher(`linode/instances/${linode.id}/backups`)
+      ).as('enableBackups');
       fbtVisible(`${linode.label}`);
       if (
+        // TODO Resolve potential flake.
         cy.contains('PROVISIONING', { timeout: 180000 }).should('not.exist') &&
         cy.contains('BOOTING', { timeout: 180000 }).should('not.exist')
       ) {
