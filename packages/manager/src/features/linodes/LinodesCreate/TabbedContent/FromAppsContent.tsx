@@ -274,7 +274,13 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
-      const appLabels = appsInCategory.map((app) => app.name.trim());
+      const appLabels = appsInCategory.reduce((acc: string[], app: any) => {
+        if (app.cluster_name) {
+          acc.push(app.cluster_name.trim());
+        }
+        acc.push(app.name.trim());
+        return acc;
+      }, []);
       instancesInCategory = this.props.appInstances?.filter((instance) => {
         return appLabels.includes(instance.label.trim());
       });
