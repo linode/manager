@@ -255,7 +255,6 @@ export class NodeBalancersLanding extends React.Component<
                   onAddNew={() =>
                     this.props.history.push('/nodebalancers/create')
                   }
-                  createButtonWidth={190}
                   docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
                 />
                 <EntityTable

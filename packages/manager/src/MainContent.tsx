@@ -315,7 +315,11 @@ const MainContent: React.FC<CombinedProps> = (props) => {
                     role="main"
                   >
                     <Grid container spacing={0} className={classes.grid}>
-                      <Grid item className={`${classes.switchWrapper} p0`}>
+                      <Grid
+                        item
+                        // container // @TODO: Testing... can remove
+                        className={`${classes.switchWrapper} p0`}
+                      >
                         <GlobalNotifications />
                         <React.Suspense fallback={<SuspenseLoader />}>
                           <Switch>
