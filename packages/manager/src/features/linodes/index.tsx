@@ -2,9 +2,10 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/queries/types';
+import { useSpecificTypes } from 'src/queries/types';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
+import cleanArray from 'src/utilities/cleanArray';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
@@ -38,9 +39,11 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
     { status: { '+or': ['pending, started'] } }
   );
   const { linodes } = useLinodes();
-  const { data: types } = useTypes(
-    Object.values(linodes.itemsById).map((linode) => linode.type)
+  const typesQuery = useSpecificTypes(
+    cleanArray(Object.values(linodes.itemsById).map((linode) => linode.type))
   );
+
+  const types = cleanArray(typesQuery.map((result) => result.data));
 
   const linodesDataWithFullType = Object.values(linodes.itemsById).map(
     (thisLinode) => {

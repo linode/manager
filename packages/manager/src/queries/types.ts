@@ -5,8 +5,7 @@ import {
   LinodeType,
 } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
-import { difference } from 'ramda';
-import { useQuery } from 'react-query';
+import { useQueries, useQuery, UseQueryOptions } from 'react-query';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -55,40 +54,33 @@ export const extendType = (type: LinodeType): ExtendedType => {
   };
 };
 
-/**
- * Get all Linode types, including legacy types and those specified in `linodeTypes` which aren't
- * returned by the /types and /types-legacy endpoints.
- */
-const getAllTypes = async (linodeTypes: string[] = []) => {
-  const [{ data: types }, { data: legacyTypes }] = await Promise.all([
+const getAllTypes = async () =>
+  Promise.all([
     getAll<LinodeType>(getLinodeTypes)(),
     getAll<LinodeType>(getDeprecatedLinodeTypes)(),
-  ]);
-  const knownTypes = [...types, ...legacyTypes];
+  ])
+    .then(([{ data: types }, { data: legacyTypes }]) => [
+      ...types,
+      ...legacyTypes,
+    ])
+    .then((allTypes) => allTypes.map(extendType));
 
-  // Try to fetch any of the specified types which weren't returned from the call above.
-  const shadowTypeIds = difference(
-    linodeTypes,
-    knownTypes.map((type) => type.id)
-  );
-  const shadowTypes = await Promise.all(
-    shadowTypeIds.map((id) => getType(id).catch()) // swallow errors
-  );
+const getSingleType = async (type: string) => getType(type).then(extendType);
 
-  const allTypes = [...knownTypes, ...shadowTypes];
-  return allTypes.map(extendType);
-};
+export const useAllTypes = () =>
+  useQuery<ExtendedType[], APIError[]>(queryKey, getAllTypes, {
+    ...queryPresets.oneTimeFetch,
+  });
 
 /**
- * Some Linodes may have types that aren't returned by the /types and /types-legacy endpoints. If a
- * type specified in `linodeTypes` isn't returned by these endpoints, an attempt will be made to
- * fetch them individually.
+ * Some Linodes may have types that aren't returned by the /types and /types-legacy endpoints. This
+ * hook may be useful in fetching these "shadow plans".
  */
-export const useTypes = (linodeTypes: (string | null)[] = []) =>
-  useQuery<ExtendedType[], APIError[]>(
-    [queryKey, ...linodeTypes],
-    () => getAllTypes(linodeTypes.filter((type) => type !== null) as string[]),
-    {
-      ...queryPresets.oneTimeFetch,
-    }
+export const useSpecificTypes = (types: string[]) => {
+  return useQueries(
+    types.map<UseQueryOptions<ExtendedType, APIError[]>>((type) => ({
+      queryKey: [queryKey, type],
+      queryFn: () => getSingleType(type),
+    }))
   );
+};

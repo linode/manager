@@ -18,7 +18,7 @@ import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementChec
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import { useTypes } from 'src/queries/types';
+import { useSpecificTypes } from 'src/queries/types';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
@@ -36,6 +36,7 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
+import cleanArray from 'src/utilities/cleanArray';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -85,7 +86,8 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
 
   const regions = useRegionsQuery().data ?? [];
   const linode = useExtendedLinode(linodeID);
-  const { data: types } = useTypes([linode?.type ?? null]);
+  const typesQuery = useSpecificTypes(cleanArray([linode?.type]));
+  const type = typesQuery[0]?.data;
 
   const { data: imagesData } = useAllImagesQuery({}, {}, open);
   const images = listToItemsByID(imagesData ?? []);
@@ -183,7 +185,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   };
 
   const newLabel = getLinodeDescription(
-    displayType(linode.type, types ?? []),
+    displayType(linode.type, type ? [type] : []),
     linode.specs.memory,
     linode.specs.disk,
     linode.specs.vcpus,

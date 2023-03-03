@@ -14,9 +14,10 @@ import {
 } from 'src/eventMessageGenerator_CMR';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
-import { useTypes } from 'src/queries/types';
+import { useSpecificTypes } from 'src/queries/types';
 import { useStyles as useEventStyles } from './RenderEvent';
 import useEventInfo from './useEventInfo';
+import cleanArray from 'src/utilities/cleanArray';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -38,7 +39,10 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
 
   const { linodes } = useLinodes();
   const _linodes = Object.values(linodes.itemsById);
-  const { data: types } = useTypes(_linodes.map((linode) => linode.type));
+  const typesQuery = useSpecificTypes(
+    cleanArray(_linodes.map((linode) => linode.type))
+  );
+  const types = cleanArray(typesQuery.map((result) => result.data));
   const { linkTarget } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, types);
 

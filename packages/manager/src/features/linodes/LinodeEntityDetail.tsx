@@ -33,7 +33,7 @@ import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrD
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
 import useLinodeActions from 'src/hooks/useLinodeActions';
-import { useTypes } from 'src/queries/types';
+import { useSpecificTypes } from 'src/queries/types';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
@@ -51,6 +51,7 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
+import cleanArray from 'src/utilities/cleanArray';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -95,7 +96,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const { data: images } = useAllImagesQuery({}, {});
   const imagesItemsById = listToItemsByID(images ?? []);
 
-  const { data: types } = useTypes([linode.type]);
+  const typesQuery = useSpecificTypes(cleanArray([linode.type]));
+  const type = typesQuery[0]?.data;
 
   const imageSlug = linode.image;
 
@@ -104,9 +106,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
       ? imagesItemsById[imageSlug].vendor
       : null;
 
-  const linodeType = Boolean(linode.type)
-    ? types?.find((thisType) => thisType.id === linode.type) ?? null
-    : null;
+  const linodeType = Boolean(linode.type) ? type ?? null : null;
 
   const linodePlan = linodeType?.label ?? null;
 
