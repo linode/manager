@@ -31,7 +31,10 @@ import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import withTypes, {
+  WithSpecificTypesProps,
+  WithTypesProps,
+} from 'src/containers/types.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import SelectPlanPanel from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -42,6 +45,7 @@ import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { EntityError } from 'src/store/types';
+import cleanArray from 'src/utilities/cleanArray';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -116,6 +120,7 @@ interface State {
 
 type CombinedProps = Props &
   WithTypesProps &
+  WithSpecificTypesProps &
   WithStyles<ClassNames> &
   DispatchProps &
   PreferencesProps &
@@ -137,7 +142,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeType,
       enqueueSnackbar,
       updateLinode,
-      typesData,
+      requestedTypesData,
     } = this.props;
     const { selectedId } = this.state;
 
@@ -148,7 +153,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       selectedId,
       linodeType || '',
-      typesData
+      requestedTypesData
     );
 
     this.setState({
@@ -234,7 +239,17 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     this.setState({ autoDiskResize: !this.state.autoDiskResize });
   };
 
-  componentDidUpdate = (prevProps: CombinedProps) => {
+  updateSelectedTypes = () => {
+    this.props.setRequestedTypes(
+      cleanArray([this.props.linodeType, this.state.selectedId])
+    );
+  };
+
+  componentDidMount = () => {
+    this.updateSelectedTypes();
+  };
+
+  componentDidUpdate = (prevProps: CombinedProps, prevState: State) => {
     if (
       prevProps.linodeId !== this.props.linodeId &&
       !!this.props.linodeId &&
@@ -255,11 +270,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         )[1],
       });
     }
+
+    if (
+      prevProps.linodeType !== this.props.linodeType ||
+      prevState.selectedId !== this.state.selectedId
+    ) {
+      this.updateSelectedTypes();
+    }
   };
 
   render() {
     const {
       typesData,
+      requestedTypesData,
       linodeType,
       classes,
       linodeDisks,
@@ -271,7 +294,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       preferences,
     } = this.props;
     const { confirmationText, submissionError } = this.state;
-    const type = typesData.find((t) => t.id === linodeType);
+    const type = requestedTypesData.find((t) => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized =
@@ -299,7 +322,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       this.state.selectedId,
       linodeType || '',
-      typesData
+      requestedTypesData
     );
 
     return (
@@ -335,9 +358,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <div className={classes.selectPlanPanel}>
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
-            types={typesData.filter(
-              (thisType) => !thisType.isDeprecated && !thisType.isShadowPlan
-            )}
+            types={
+              typesData?.filter(
+                (thisType) => !thisType.isDeprecated && !thisType.isShadowPlan
+              ) ?? []
+            }
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId}
             disabled={tableDisabled}

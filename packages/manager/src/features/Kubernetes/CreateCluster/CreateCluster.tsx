@@ -7,7 +7,6 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
@@ -20,7 +19,6 @@ import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import { regionHelperText } from 'src/components/SelectRegionPanel/SelectRegionPanel';
 import TextField from 'src/components/TextField';
-import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import {
   reportAgreementSigningError,
   useMutateAccountAgreements,
@@ -30,6 +28,7 @@ import {
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -105,11 +104,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = RouteComponentProps<{}> & WithTypesProps;
-
-export const CreateCluster: React.FC<CombinedProps> = (props) => {
+export const CreateCluster: React.FC<RouteComponentProps> = (props) => {
   const classes = useStyles();
-  const { typesData: allTypes, typesLoading, typesError } = props;
+  const {
+    data: allTypes,
+    isLoading: typesLoading,
+    error: typesError,
+  } = useAllTypes();
 
   const {
     mutateAsync: createKubernetesCluster,
@@ -365,6 +366,4 @@ export const CreateCluster: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(withRouter, withTypes);
-
-export default enhanced(CreateCluster);
+export default withRouter(CreateCluster);

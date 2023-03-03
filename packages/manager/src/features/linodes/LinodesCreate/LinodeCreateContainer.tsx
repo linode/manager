@@ -632,7 +632,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   checkValidation: LinodeCreateValidation = (payload) => {
     try {
       CreateLinodeSchema.validateSync(payload, { abortEarly: false });
-      //reset errors to default state
+      // reset errors to default state
       this.setState({ errors: undefined, showApiAwarenessModal: true });
     } catch (error) {
       const processedErrors = convertYupToLinodeErrors(error);
@@ -653,12 +653,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   getTypeInfo = (): TypeInfo => {
     const { selectedTypeID } = this.state;
-    /**
-     * safe to ignore possibility of "undefined"
-     * null checking happens in CALinodeCreate
-     */
     return this.reshapeTypeInfo(
-      this.props.typesData!.find((type) => type.id === selectedTypeID)
+      this.props.typesData?.find((type) => type.id === selectedTypeID)
     );
   };
 
