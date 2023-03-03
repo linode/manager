@@ -50,12 +50,12 @@ async function prebuild() {
    */
   console.log('Caching common requests');
 
+  const requests = cachedRequests.map((request) =>
+    handleRequest(request.endpoint, request.filename)
+  );
+
   try {
-    for (const endpoint of cachedRequests) {
-      // um why would this be a rule??
-      // eslint-disable-next-line no-await-in-loop
-      await handleRequest(endpoint.endpoint, endpoint.filename);
-    }
+    await Promise.all(requests);
     console.log('Caching successful');
   } catch (error) {
     console.error('Caching failed', e);

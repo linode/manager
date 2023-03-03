@@ -2,7 +2,7 @@ import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 
 const PRODUCTION = import.meta.env.PROD;
 
-// native to webpack build
+// whether or not this is a Vite production build
 export const isProductionBuild = PRODUCTION;
 
 // allow us to explicity enable dev tools
