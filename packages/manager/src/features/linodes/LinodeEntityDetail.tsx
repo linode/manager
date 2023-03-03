@@ -20,7 +20,7 @@ import {
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
-import Typography from 'src/components/core/Typography';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
 import EntityDetail from 'src/components/EntityDetail';
 import Grid, { GridProps } from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
@@ -42,7 +42,8 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-import LandingHeader from 'src/components/LandingHeader';
+// import LandingHeader from 'src/components/LandingHeader';
+import EntityHeader from 'src/components/EntityHeader';
 import withRecentEvent, {
   WithRecentEvent,
 } from './LinodesLanding/withRecentEvent';
@@ -52,17 +53,15 @@ import {
   transitionText as _transitionText,
 } from './transitions';
 
-import useEditableLabelState from 'src/hooks/useEditableLabelState';
+// import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { GrantLevel } from '@linode/api-v4/lib/account';
-import { ACCESS_LEVELS } from 'src/constants';
-import { APIError } from '@linode/api-v4/lib/types';
-import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+// import { ACCESS_LEVELS } from 'src/constants';
+// import { APIError } from '@linode/api-v4/lib/types';
+// import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
 
-type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
-
 interface LinodeEntityDetailProps {
-  variant: LinodeEntityDetailVariant;
+  variant?: TypographyProps['variant'];
   id: number;
   linode: Linode;
   username?: string;
@@ -78,7 +77,7 @@ interface LinodeEntityDetailProps {
   numVolumes: number;
   openTagDrawer: (tags: string[]) => void;
   openNotificationMenu?: () => void;
-  isDetailLanding?: boolean;
+  isSummaryView?: boolean;
 }
 
 export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
@@ -92,7 +91,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     openPowerActionDialog,
     backups,
     linodeConfigs,
-    isDetailLanding,
+    isSummaryView,
     numVolumes,
     openTagDrawer,
     openNotificationMenu,
@@ -142,7 +141,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
           openPowerActionDialog={openPowerActionDialog}
           linodeRegionDisplay={linodeRegionDisplay}
           backups={backups}
-          isDetailLanding={isDetailLanding}
+          isSummaryView={isSummaryView}
           linodeConfigs={linodeConfigs}
           type={linodeType}
           image={linode.image ?? 'Unknown Image'}
@@ -192,7 +191,7 @@ export default enhanced(LinodeEntityDetail);
 // Header
 // =============================================================================
 export interface HeaderProps {
-  variant: LinodeEntityDetailVariant;
+  variant?: TypographyProps['variant'];
   imageVendor: string | null;
   linodeLabel: string;
   linodeId: number;
@@ -210,7 +209,7 @@ export interface HeaderProps {
   type: ExtendedType | null;
   image: string;
   linodeConfigs: Config[];
-  isDetailLanding?: boolean;
+  isSummaryView?: boolean;
   openNotificationMenu: () => void;
   progress?: number;
   transitionText?: string;
@@ -311,25 +310,26 @@ const Header: React.FC<HeaderProps> = (props) => {
   const classes = useHeaderStyles();
 
   const {
-    variant,
+    // variant,
     linodeLabel,
     linodeId,
     linodeStatus,
-    linodePermissions,
+    // linodePermissions,
     linodeRegionDisplay,
     openDialog,
     openPowerActionDialog,
     backups,
     type,
+    variant,
     linodeConfigs,
-    isDetailLanding,
+    isSummaryView,
     progress,
     transitionText,
     openNotificationMenu,
   } = props;
 
-  const isDetails = variant === 'details';
-  const disabled = linodePermissions === ACCESS_LEVELS.readOnly;
+  // const isDetails = variant === 'details';
+  // const disabled = linodePermissions === ACCESS_LEVELS.readOnly;
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
   const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
@@ -348,163 +348,160 @@ const Header: React.FC<HeaderProps> = (props) => {
     // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
     // to display "Cloning to 'destination-linode'.
     formattedTransitionText !== formattedStatus;
-  const {
-    editableLabelError,
-    setEditableLabelError,
-    resetEditableLabel,
-  } = useEditableLabelState();
-  const { updateLinode } = useLinodeActions();
+  // const {
+  //   editableLabelError,
+  //   setEditableLabelError,
+  //   resetEditableLabel,
+  // } = useEditableLabelState();
+  // const { updateLinode } = useLinodeActions();
 
-  const handleSubmitLabelChange = (label: string) => {
-    return updateLinode({ linodeId, label })
-      .then(() => {
-        resetEditableLabel();
-      })
-      .catch((err) => {
-        const errors: APIError[] = getAPIErrorOrDefault(
-          err,
-          'An error occurred while updating label',
-          'label'
-        );
-        const errorStrings: string[] = errors.map((e) => e.reason);
-        setEditableLabelError(errorStrings[0]);
-        scrollErrorIntoView();
-        return Promise.reject(errorStrings[0]);
-      });
-  };
+  // const handleSubmitLabelChange = (label: string) => {
+  //   return updateLinode({ linodeId, label })
+  //     .then(() => {
+  //       resetEditableLabel();
+  //     })
+  //     .catch((err) => {
+  //       const errors: APIError[] = getAPIErrorOrDefault(
+  //         err,
+  //         'An error occurred while updating label',
+  //         'label'
+  //       );
+  //       const errorStrings: string[] = errors.map((e) => e.reason);
+  //       setEditableLabelError(errorStrings[0]);
+  //       scrollErrorIntoView();
+  //       return Promise.reject(errorStrings[0]);
+  //     });
+  // };
 
   return (
-    <LandingHeader
+    <EntityHeader
       title={
         <Link to={`linodes/${linodeId}`} className={classes.linodeLabel}>
           {linodeLabel}
         </Link>
       }
-      breadcrumbProps={{
-        pathname: `/linodes/${linodeLabel}`,
-        onEditHandlers: !disabled
-          ? {
-              editableTextTitle: linodeLabel,
-              onEdit: handleSubmitLabelChange,
-              onCancel: resetEditableLabel,
-              errorText: editableLabelError,
-            }
-          : undefined,
-      }}
-      analyticsLabel={'Linode Detail'}
-      docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-      parentLink={isDetails ? '/linodes' : undefined}
-      parentText={isDetails ? 'Linodes' : undefined}
-      isDetailLanding={isDetailLanding}
+      variant={variant}
+      // breadcrumbProps={{
+      //   pathname: `/linodes/${linodeLabel}`,
+      //   onEditHandlers: !disabled
+      //     ? {
+      //         editableTextTitle: linodeLabel,
+      //         onEdit: handleSubmitLabelChange,
+      //         onCancel: resetEditableLabel,
+      //         errorText: editableLabelError,
+      //       }
+      //     : undefined,
+      // }}
+      // analyticsLabel={'Linode Detail'}
+      // docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
+      // parentLink={isDetails ? '/linodes' : undefined}
+      // parentText={isDetails ? 'Linodes' : undefined}
+      isSummaryView={isSummaryView}
       bodyClassName={classes.body}
-      body={
-        <Grid
-          container
-          className="m0"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <Box display="flex" alignItems="center">
-            <Grid
-              item
-              className={`p0 ${isDetailLanding && classes.chipWrapper}`}
-            >
-              <Chip
-                data-qa-linode-status
-                className={classNames({
-                  [classes.statusChip]: true,
-                  [classes.statusChipLandingDetailView]: isDetailLanding,
-                  [classes.statusRunning]: isRunning,
-                  [classes.statusOffline]: isOffline,
-                  [classes.statusOther]: isOther,
-                  [classes.divider]: hasSecondaryStatus,
-                  statusOtherDetail: isOther,
-                })}
-                label={formattedStatus}
-                component="span"
-                // {...isOther} // TODO: This used to be https://github.com/linode/manager/blame/484c5e37c6fb6a34fa1c1362a033064f2a66aec7/packages/manager/src/features/linodes/LinodeEntityDetail.tsx#L348
-              />
-            </Grid>
-            {hasSecondaryStatus ? (
-              <Grid
-                item
-                className="py0"
-                style={{ marginLeft: 16, marginBottom: 2 }}
-              >
-                <button
-                  className={classes.statusLink}
-                  onClick={openNotificationMenu}
-                >
-                  <ProgressDisplay
-                    progress={progress ?? 0}
-                    text={formattedTransitionText}
-                  />
-                </button>
-              </Grid>
-            ) : null}
-          </Box>
-          <Grid item className={`${classes.actionItemsOuter} py0`}>
-            <Hidden mdDown>
-              <Button
-                buttonType="secondary"
-                className={classes.actionItem}
-                disabled={!['running', 'offline'].includes(linodeStatus)}
-                onClick={() => {
-                  const action =
-                    linodeStatus === 'running' ? 'Power Off' : 'Power On';
-                  sendLinodeActionMenuItemEvent(`${action} Linode`);
-
-                  openPowerActionDialog(
-                    `${action}` as BootAction,
-                    linodeId,
-                    linodeLabel,
-                    linodeStatus === 'running' ? linodeConfigs : []
-                  );
-                }}
-              >
-                {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-              </Button>
-              <Button
-                buttonType="secondary"
-                className={classes.actionItem}
-                disabled={linodeStatus === 'offline'}
-                onClick={() => {
-                  sendLinodeActionMenuItemEvent('Reboot Linode');
-                  openPowerActionDialog(
-                    'Reboot',
-                    linodeId,
-                    linodeLabel,
-                    linodeConfigs
-                  );
-                }}
-              >
-                Reboot
-              </Button>
-              <Button
-                buttonType="secondary"
-                className={classes.actionItem}
-                onClick={() => {
-                  handleConsoleButtonClick(linodeId);
-                }}
-              >
-                Launch LISH Console
-              </Button>
-            </Hidden>
-
-            <LinodeActionMenu
-              linodeId={linodeId}
-              linodeLabel={linodeLabel}
-              linodeRegion={linodeRegionDisplay}
-              linodeType={type ?? undefined}
-              linodeStatus={linodeStatus}
-              linodeBackups={backups}
-              openDialog={openDialog}
-              openPowerActionDialog={openPowerActionDialog}
+    >
+      <Grid
+        container
+        className="m0"
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Box display="flex" alignItems="center">
+          <Grid item className={`p0 ${isSummaryView && classes.chipWrapper}`}>
+            <Chip
+              data-qa-linode-status
+              className={classNames({
+                [classes.statusChip]: true,
+                [classes.statusChipLandingDetailView]: isSummaryView,
+                [classes.statusRunning]: isRunning,
+                [classes.statusOffline]: isOffline,
+                [classes.statusOther]: isOther,
+                [classes.divider]: hasSecondaryStatus,
+                statusOtherDetail: isOther,
+              })}
+              label={formattedStatus}
+              component="span"
+              // {...isOther} // TODO: This used to be https://github.com/linode/manager/blame/484c5e37c6fb6a34fa1c1362a033064f2a66aec7/packages/manager/src/features/linodes/LinodeEntityDetail.tsx#L348
             />
           </Grid>
+          {hasSecondaryStatus ? (
+            <Grid
+              item
+              className="py0"
+              style={{ marginLeft: 16, marginBottom: 2 }}
+            >
+              <button
+                className={classes.statusLink}
+                onClick={openNotificationMenu}
+              >
+                <ProgressDisplay
+                  progress={progress ?? 0}
+                  text={formattedTransitionText}
+                />
+              </button>
+            </Grid>
+          ) : null}
+        </Box>
+        <Grid item className={`${classes.actionItemsOuter} py0`}>
+          <Hidden mdDown>
+            <Button
+              buttonType="secondary"
+              className={classes.actionItem}
+              disabled={!['running', 'offline'].includes(linodeStatus)}
+              onClick={() => {
+                const action =
+                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
+                sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+                openPowerActionDialog(
+                  `${action}` as BootAction,
+                  linodeId,
+                  linodeLabel,
+                  linodeStatus === 'running' ? linodeConfigs : []
+                );
+              }}
+            >
+              {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+            </Button>
+            <Button
+              buttonType="secondary"
+              className={classes.actionItem}
+              disabled={linodeStatus === 'offline'}
+              onClick={() => {
+                sendLinodeActionMenuItemEvent('Reboot Linode');
+                openPowerActionDialog(
+                  'Reboot',
+                  linodeId,
+                  linodeLabel,
+                  linodeConfigs
+                );
+              }}
+            >
+              Reboot
+            </Button>
+            <Button
+              buttonType="secondary"
+              className={classes.actionItem}
+              onClick={() => {
+                handleConsoleButtonClick(linodeId);
+              }}
+            >
+              Launch LISH Console
+            </Button>
+          </Hidden>
+
+          <LinodeActionMenu
+            linodeId={linodeId}
+            linodeLabel={linodeLabel}
+            linodeRegion={linodeRegionDisplay}
+            linodeType={type ?? undefined}
+            linodeStatus={linodeStatus}
+            linodeBackups={backups}
+            openDialog={openDialog}
+            openPowerActionDialog={openPowerActionDialog}
+          />
         </Grid>
-      }
-    />
+      </Grid>
+    </EntityHeader>
   );
 };
 

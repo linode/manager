@@ -1,13 +1,11 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
-import DocsLink from '../DocsLink';
-import HeaderBreadCrumb, { BreadCrumbProps } from './HeaderBreadCrumb';
+import { BreadcrumbProps } from '../Breadcrumb';
+import Typography, { TypographyProps } from 'src/components/core/Typography';
 
-export interface HeaderProps extends BreadCrumbProps {
+export interface HeaderProps {
   actions?: JSX.Element;
   analyticsLabel?: string;
   body?: JSX.Element;
@@ -16,8 +14,8 @@ export interface HeaderProps extends BreadCrumbProps {
   title: string | JSX.Element;
   bodyClassName?: string;
   isLanding?: boolean;
-  isSecondary?: boolean;
-  isDetailLanding?: boolean;
+  isSummaryView?: boolean;
+  variant?: TypographyProps['variant'];
   headerOnly?: boolean;
   removeCrumbX?: number;
   breadcrumbProps?: BreadcrumbProps;
@@ -25,6 +23,20 @@ export interface HeaderProps extends BreadCrumbProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
+  rootWithoutParent: {
+    background: 'magenta',
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(),
+    whiteSpace: 'nowrap',
+  },
+  rootHeaderOnly: {
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.up('sm')]: {
+      flexBasis: '100%',
+    },
+  },
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -65,9 +77,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderBottom: `1px solid ${theme.borderColors.borderTable}`,
     },
   },
-  breadCrumbDetail: {
-    padding: 0,
-  },
   breadCrumbSecondary: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -107,7 +116,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     background: 'pink',
   },
   detailed: {
-    background: 'green',
+    background: 'lightgreen',
   },
 }));
 
@@ -116,97 +125,55 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
   const classes = useStyles();
 
   const {
-    actions,
-    analyticsLabel,
-    body,
-    docsLink,
-    docsLabel,
-    parentLink,
-    parentText,
+    // actions,
+    // analyticsLabel,
+    // docsLink,
+    // docsLabel,
+    children,
     title,
-    isLanding,
+    // isLanding,
     bodyClassName,
-    isSecondary,
-    isDetailLanding,
+    isSummaryView,
+    variant = 'h2',
     headerOnly,
-    removeCrumbX,
-    breadcrumbProps,
-    onDocsClick,
+    // removeCrumbX,
+    // breadcrumbProps,
+    // onDocsClick,
   } = props;
 
-  const labelTitle = title.toString();
-  const docsAnalyticsLabel = analyticsLabel
-    ? analyticsLabel
-    : `${title} Landing`;
+  // const labelTitle = title.toString();
+  // const docsAnalyticsLabel = analyticsLabel
+  //   ? analyticsLabel
+  //   : `${title} Landing`;
 
   return (
     <>
-      {isLanding && (
-        <Grid
-          data-qa-entity-header
-          container
-          className={`${classes.root} ${classes.landing}`}
-        >
-          <Grid container item xs={12} sm={4}>
-            <Breadcrumb
-              className={`${classes.pink}`}
-              labelTitle={labelTitle}
-              pathname={location.pathname} // TODO: This doesn't exist and is causing issues...
-              removeCrumbX={removeCrumbX}
-              {...breadcrumbProps}
-              data-qa-title
-            />
-          </Grid>
-          <Grid
-            className={classes.actionsWrapper}
-            item
-            container
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-end"
-            xs={12}
-            sm={8}
-          >
-            {props.children}
-            {docsLink ? (
-              <DocsLink
-                href={docsLink}
-                label={docsLabel}
-                analyticsLabel={docsAnalyticsLabel}
-                onClick={onDocsClick}
-              />
-            ) : null}
-            <div className={classes.actions}>{actions}</div>
-          </Grid>
-        </Grid>
-      )}
+      {/* {isLanding && (
 
-      {/* Currently only used for the Linode Landing card/summary view */}
+      )} */}
+
       <Grid item className={`${classes.root} ${classes.details}`}>
-        {isDetailLanding && (
-          <HeaderBreadCrumb
-            title={title}
-            parentLink={parentLink}
-            parentText={parentText}
-            headerOnly={headerOnly}
-          />
+        {/* Currently only used for the Linode Landing card/summary view */}
+        {isSummaryView && (
+          <div
+            className={
+              headerOnly ? classes.rootHeaderOnly : classes.rootWithoutParent
+            }
+          >
+            <Grid item>
+              <Typography variant={variant}>{title}</Typography>
+            </Grid>
+          </div>
         )}
         <Grid
           item
           xs={12}
           className={classNames(classes.detailed, {
-            [classes.breadcrumbOuter]: isDetailLanding,
-            [classes.breadCrumbDetail]: Boolean(parentLink),
-            [classes.breadCrumbSecondary]: Boolean(isSecondary),
-            [classes.breadCrumbDetailLanding]: Boolean(isDetailLanding),
+            [classes.breadcrumbOuter]: isSummaryView,
+            [classes.breadCrumbDetailLanding]: Boolean(isSummaryView),
           })}
         >
-          {isSecondary ? (
-            <Typography variant="h3" className={classes.label}>
-              {labelTitle}
-            </Typography>
-          ) : null}
-          {body && (
+          {children && (
             <Grid
               className={classNames({
                 [classes.contentOuter]: true,
@@ -214,10 +181,9 @@ export const EntityHeader: React.FC<HeaderProps> = (props) => {
               })}
               item
             >
-              {body}
+              {children}
             </Grid>
           )}
-          {isSecondary ? actions : null}
         </Grid>
       </Grid>
     </>
