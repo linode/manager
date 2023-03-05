@@ -26,7 +26,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const CloseAccountDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const CloseAccountDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const [isClosingAccount, setIsClosingAccount] = React.useState<boolean>(
     false
   );
@@ -64,7 +66,7 @@ const CloseAccountDialog: React.FC<React.PropsWithChildren<CombinedProps>> = (pr
   }, [inputtedUsername, profile]);
 
   const inputRef = React.useCallback(
-    (node: any) => {
+    (node: HTMLElement | null) => {
       /**
        * focus on first textfield when modal is opened
        */

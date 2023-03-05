@@ -133,7 +133,7 @@ export const TagCell: React.FC<React.PropsWithChildren<Props>> = (props) => {
   const [addingTag, setAddingTag] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(false);
   const overflowRef = React.useCallback(
-    (node: any) => {
+    (node: HTMLElement | null) => {
       if (node !== null) {
         setOverflow(checkOverflow(node));
       }

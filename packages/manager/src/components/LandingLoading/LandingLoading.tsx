@@ -50,7 +50,7 @@ export const LandingLoading: React.FC<React.PropsWithChildren<Props>> = ({
   return showLoading ? (
     !!children ? (
       /** allows us to pass a custom Loader if we please */
-      (<React.Fragment>{children}</React.Fragment>)
+      <React.Fragment>{children}</React.Fragment>
     ) : (
       <CircleProgress />
     )

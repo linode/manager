@@ -6,13 +6,15 @@ interface Props {
   displaySections?: { title: string; details?: string | number }[];
 }
 
-export const DisplaySectionList: React.FC<React.PropsWithChildren<Props>> = ({ displaySections }) => {
+export const DisplaySectionList: React.FC<React.PropsWithChildren<Props>> = ({
+  displaySections,
+}) => {
   if (!displaySections) {
     return null;
   }
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    (<>
+    <>
       {displaySections.map(({ title, details }, idx) => (
         <React.Fragment key={`fragment-${title}-${idx}`}>
           {idx !== 0 && <Divider light spacingTop={0} spacingBottom={0} />}
@@ -23,7 +25,7 @@ export const DisplaySectionList: React.FC<React.PropsWithChildren<Props>> = ({ d
           />
         </React.Fragment>
       ))}
-    </>)
+    </>
   );
 };
 
