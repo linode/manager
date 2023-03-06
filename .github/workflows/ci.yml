@@ -3,8 +3,7 @@ name: ci
 on:
   push:
     branches:
-      - feature/validate-api-v4
-      # - master
+      - master
   pull_request:
 
 jobs:
