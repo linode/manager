@@ -19,6 +19,6 @@ Feel free to open an issue to report a bug or request a feature.
     **commit types:** `feat`, `fix`, `refactor`, `style`, `build`, `chore`, `ci`, `docs`, `perf`, `test`
     
     e.g. `feat: [M#-1234] - Allow user to view their login history`
-6. Open a pull request against `develop`.
+6. Open a pull request against `develop` and make sure the title follows the same format as the commit message.
 
 Two reviews from members of the Cloud Manager team are required before merge. After approval, all pull requests are squash merged.
