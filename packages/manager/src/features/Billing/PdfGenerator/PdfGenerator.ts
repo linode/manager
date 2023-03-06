@@ -58,11 +58,18 @@ const addLeftHeader = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['US', 'CA'].includes(country);
 
-  const remitAddress = isAkamaiBilling
-    ? ['US', 'CA'].includes(country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
+  const getRemitAddress = (isAkamaiBilling: boolean) => {
+    // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
+    if (!isAkamaiBilling || country === 'US') {
+      return ADDRESSES.linode;
+    }
+    if (['CA'].includes(country)) {
+      return ADDRESSES.akamai.us;
+    }
+    return ADDRESSES.akamai.international;
+  };
+
+  const remitAddress = getRemitAddress(isAkamaiBilling);
 
   addLine(remitAddress.entity);
   addLine(remitAddress.address1);
