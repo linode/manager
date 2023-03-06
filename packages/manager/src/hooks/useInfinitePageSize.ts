@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { storage } from 'src/utilities/storage';
 
 export const useInfinitePageSize = () => {
-  // Setting infinitePageSize to 100 since show all effecting page performacne.
+  // Setting infinitePageSize to 100 since show all effecting page performance.
   const infinitePageSize =
     storage.infinitePageSize.get() === Infinity
       ? 100

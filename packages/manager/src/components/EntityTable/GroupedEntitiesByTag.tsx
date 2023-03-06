@@ -132,7 +132,7 @@ export const GroupedEntitiesByTag: React.FC<CombinedProps> = (props) => {
                                   pageSize={pageSize}
                                   page={page}
                                   eventCategory={'Entity table'}
-                                  // Disabling showAll as it is impacting page perofrmance.
+                                  // Disabling showAll as it is impacting page performance.
                                   showAll={false}
                                 />
                               </TableCell>
