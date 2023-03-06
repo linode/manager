@@ -488,6 +488,7 @@ export const base: ThemeOptions = {
           '&:disabled': {
             color: 'white',
           },
+          // TODO: We can remove this after migration since we can define variants
           '&.loading': {
             backgroundColor: primaryColors.text,
           },
@@ -509,6 +510,7 @@ export const base: ThemeOptions = {
             borderColor: '#c9cacb',
             color: '#c9cacb',
           },
+          // TODO: We can remove this after migration since we can define variants
           '&.loading': {
             color: primaryColors.text,
           },

@@ -32,10 +32,11 @@ import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/L
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { OpenDialog } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import useImages from 'src/hooks/useImages';
 import useLinodeActions from 'src/hooks/useLinodeActions';
 import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -92,15 +93,17 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
     recentEvent,
   } = props;
 
-  useReduxLoad(['images', 'types']);
-  const { images } = useImages();
+  const { data: images } = useAllImagesQuery({}, {});
+  const imagesItemsById = listToItemsByID(images ?? []);
+
+  useReduxLoad(['types']);
   const { types } = useTypes();
 
   const imageSlug = linode.image;
 
   const imageVendor =
-    imageSlug && images.itemsById[imageSlug]
-      ? images.itemsById[imageSlug].vendor
+    imageSlug && imagesItemsById[imageSlug]
+      ? imagesItemsById[imageSlug].vendor
       : null;
 
   const linodeType = Boolean(linode.type)
@@ -847,31 +850,18 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
   const { updateLinode } = useLinodeActions();
   const { enqueueSnackbar } = useSnackbar();
 
-  const addTag = React.useCallback(
-    (tag: string) => {
-      const newTags = [...linodeTags, tag];
-      updateLinode({ linodeId, tags: newTags }).catch((e) =>
-        enqueueSnackbar(getAPIErrorOrDefault(e, 'Error adding tag')[0].reason, {
-          variant: 'error',
-        })
-      );
-    },
-    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
-  );
-
-  const deleteTag = React.useCallback(
-    (tag: string) => {
-      const newTags = linodeTags.filter((thisTag) => thisTag !== tag);
-      updateLinode({ linodeId, tags: newTags }).catch((e) =>
+  const updateTags = React.useCallback(
+    (tags: string[]) => {
+      return updateLinode({ linodeId, tags }).catch((e) =>
         enqueueSnackbar(
-          getAPIErrorOrDefault(e, 'Error deleting tag')[0].reason,
+          getAPIErrorOrDefault(e, 'Error updating tags')[0].reason,
           {
             variant: 'error',
           }
         )
       );
     },
-    [linodeTags, linodeId, updateLinode, enqueueSnackbar]
+    [linodeId, updateLinode, enqueueSnackbar]
   );
 
   return (
@@ -918,10 +908,8 @@ export const Footer: React.FC<FooterProps> = React.memo((props) => {
       </Grid>
       <Grid item className={classes.tags} md={12}>
         <TagCell
-          width={500}
           tags={linodeTags}
-          addTag={addTag}
-          deleteTag={deleteTag}
+          updateTags={updateTags}
           listAllTags={openTagDrawer}
         />
       </Grid>

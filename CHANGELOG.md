@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2023-03-06] - v1.88.0
+
+### Breaking:
+- Remove deprecated `ip_whitelist_enabled` Profile Toggle
+
+### Added:
+- Support for local development access from local domain
+- Account Logins Show `Successful` or `Failed` Access
+
+### Changed:
+- Increased minimum acceptable password strength for Linode root passwords
+- Use React Query to fetch and store user preferences, tags, and images
+- Use `URLSearchParams` to standardize query string parsing and stringifying
+- Improvements to PrimaryNav new branded logo animation, transition, and accessibility
+- Update Node.js from 14.17.4 LTS to 18.14.1 LTS
+- Add `tss-react` and refactor `Button` to styled API
+- Use Region ID to dynamically generate LISH URLs
+
+### Removed:
+- `wait-on` package for CVE-2023-25166
+
+### Fixed:
+- Firewall Rules Table rendering overlapping text
+- `validateDOMNesting` warning in console
+
 ## [2023-02-21] - v1.87.0
 
 ### Added:
