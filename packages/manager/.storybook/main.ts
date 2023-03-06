@@ -10,7 +10,7 @@ const config: StorybookConfig = {
     '@storybook/addon-docs',
     '@storybook/addon-controls',
     '@storybook/addon-viewport',
-    'storybook-dark-mode',
+    'storybook-dark-mode-v7',
   ],
   staticDirs: ['../public'],
   framework: {
