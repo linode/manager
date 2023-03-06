@@ -19,6 +19,28 @@ If you are using VSCode it is highly recommended to use the ESlint extension. Th
   - Example: `condition ? <Component /> : null` instead of `condition && <Component />`
   - This is to avoid hard-to-catch bugs ([read more](https://kentcdodds.com/blog/use-ternaries-rather-than-and-and-in-jsx)).
 
+
+## Event Handler Naming Convention:
+In React, it's a convention to prefix prop names that hold event handler functions with `on`, such as `onClick`, `onSubmit`, `onFocus`, etc. This convention helps in maintaining consistency and readability across the codebase. By following this convention, we declare that these props will be used for event handler functions.
+
+Similarly, when defining function names that handle events or perform some action, it's a convention to prefix them with `handle`. For example, if we have a component that handles a click event, we can define a function named `handleClick` that performs the desired action. This convention helps to distinguish between functions that handle events and other functions that perform different actions.
+
+Example of prop naming:
+```
+<TextField onChange={handleInputChange} />
+```
+Example of function naming:
+```
+function handleInputChange(event) {...}
+```
+
+More complex names can be handled with the same convention:
+```
+API: {prefix}{noun}{verb}
+Prop: onLabelChange
+Function: handleLabelChange
+```
+
 ## CSS
 
 The styles for Cloud Manager are located in three places:
