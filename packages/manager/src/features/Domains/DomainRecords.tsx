@@ -798,7 +798,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                               page={page}
                               pageSize={pageSize}
                               eventCategory={`${type.title.toLowerCase()} panel`}
-                              // Disabling showAll as it is impacting page perofrmance.
+                              // Disabling show All as it is impacting page performance.
                               showAll={false}
                             />
                           </>
