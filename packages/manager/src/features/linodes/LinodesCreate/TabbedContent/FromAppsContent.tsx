@@ -241,7 +241,9 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
           );
 
           if (hasMatchingOCA) {
-            acc.push(name.trim());
+            if (!queryWords.includes('cluster') || /cluster/i.test(name)) {
+              acc.push(name.trim());
+            }
             if (cluster_name) {
               acc.push(cluster_name.trim());
             }
