@@ -13,6 +13,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   label: {
     maxWidth: 350,
   },
+  noDelete: {
+    '& > span': {
+      borderRadius: '3px !important',
+      borderRight: '0 !important',
+    },
+  },
   root: {
     height: 30,
     paddingLeft: 0,
@@ -96,7 +102,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props extends ChipProps {
   label: string;
-  colorVariant?: Variants;
+  colorVariant: Variants;
   asSuggestion?: boolean;
   closeMenu?: any;
   component?: string;
@@ -138,8 +144,9 @@ export const Tag: React.FC<CombinedProps> = (props) => {
       {...chipProps}
       label={_label}
       className={classNames(className, {
-        [classes[colorVariant!]]: true,
+        [classes[colorVariant]]: true,
         [classes.root]: true,
+        [classes.noDelete]: !chipProps.onDelete,
       })}
       deleteIcon={
         chipProps.onDelete ? (

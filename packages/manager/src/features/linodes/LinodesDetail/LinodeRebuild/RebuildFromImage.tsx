@@ -1,10 +1,9 @@
 import { rebuildLinode, RebuildRequest } from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { Formik, FormikProps } from 'formik';
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -13,14 +12,13 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
+import { useAllImagesQuery } from 'src/queries/images';
+import { usePreferences } from 'src/queries/preferences';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -52,12 +50,7 @@ interface Props {
   onClose: () => void;
 }
 
-export type CombinedProps = Props &
-  WithImages &
-  UserSSHKeyProps &
-  RouteComponentProps &
-  PreferencesProps &
-  WithSnackbarProps;
+export type CombinedProps = Props & UserSSHKeyProps;
 
 interface RebuildFromImageForm {
   image: string;
@@ -72,8 +65,6 @@ const initialValues: RebuildFromImageForm = {
 export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const {
     disabled,
-    imagesData,
-    imagesError,
     userSSHKeys,
     sshError,
     requestKeys,
@@ -81,16 +72,20 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     linodeLabel,
     handleRebuildError,
     onClose,
-    enqueueSnackbar,
     passwordHelperText,
-    preferences,
   } = props;
 
+  const { data: preferences } = usePreferences();
+
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
+
+  const { data: _imagesData, error: imagesError } = useAllImagesQuery();
+
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
@@ -136,6 +131,10 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
       });
   };
 
+  const _imagesError = imagesError
+    ? getAPIErrorOrDefault(imagesError, 'Unable to load Images')[0].reason
+    : undefined;
+
   return (
     <Formik
       initialValues={initialValues}
@@ -174,11 +173,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
             <form>
               <ImageSelect
                 title="Select Image"
-                images={Object.values(imagesData)}
-                error={
-                  (imagesError.read && imagesError.read[0].reason) ||
-                  errors.image
-                }
+                images={_imagesData ?? []}
+                error={_imagesError || errors.image}
                 selectedImageID={values.image}
                 handleSelectImage={(selected) =>
                   setFieldValue('image', selected)
@@ -243,12 +239,6 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withImages(),
-  withPreferences(),
-  userSSHKeyHoc,
-  withSnackbar,
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(userSSHKeyHoc);
 
 export default enhanced(RebuildFromImage);

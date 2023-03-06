@@ -6,6 +6,7 @@ import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
 import { regions } from 'support/constants/regions';
 import { assertToast } from 'support/ui/events';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomItem, randomLabel, randomString } from 'support/util/random';
 
 // Local storage override to force volume table to list up to 100 items.
@@ -63,7 +64,9 @@ describe('volume attach and detach flows', () => {
     ]);
 
     cy.defer(entityPromise).then(([volume, linode]: [Volume, Linode]) => {
-      cy.intercept('POST', `*/volumes/${volume.id}/attach`).as('attachVolume');
+      cy.intercept('POST', apiMatcher(`volumes/${volume.id}/attach`)).as(
+        'attachVolume'
+      );
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });
@@ -114,7 +117,7 @@ describe('volume attach and detach flows', () => {
   it.skip('detaches a volume from a Linode', () => {
     cy.defer(createLinodeAndAttachVolume()).then(
       ([linode, volume]: [Linode, Volume]) => {
-        cy.intercept('POST', `*/volumes/${volume.id}/detach`).as(
+        cy.intercept('POST', apiMatcher(`volumes/${volume.id}/detach`)).as(
           'detachVolume'
         );
 

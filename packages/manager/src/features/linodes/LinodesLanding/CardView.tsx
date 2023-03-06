@@ -1,14 +1,11 @@
-import { Image } from '@linode/api-v4/lib/images';
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
 import TagDrawer, { TagDrawerProps } from 'src/components/TagCell/TagDrawer';
-import withImages from 'src/containers/withImages.container';
 import LinodeEntityDetail from 'src/features/linodes/LinodeEntityDetail';
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
@@ -39,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   data: LinodeWithMaintenance[];
-  images: Image[];
   showHead?: boolean;
   openDialog: (type: DialogType, linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -53,7 +49,7 @@ interface Props {
   linodeID: number;
 }
 
-type CombinedProps = WithImagesProps & PaginationProps & Props;
+type CombinedProps = Props & PaginationProps;
 
 const CardView: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -85,17 +81,9 @@ const CardView: React.FC<CombinedProps> = (props) => {
     });
   };
 
-  const addTag = (linodeId: number, newTag: string) => {
-    const _tags = [...tagDrawer.tags, newTag];
-    return updateLinode({ linodeId, tags: _tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags: _tags });
-    });
-  };
-
-  const deleteTag = (linodeId: number, tagToDelete: string) => {
-    const _tags = tagDrawer.tags.filter((thisTag) => thisTag !== tagToDelete);
-    return updateLinode({ linodeId, tags: _tags }).then((_) => {
-      setTagDrawer({ ...tagDrawer, tags: _tags });
+  const updateTags = (linodeId: number, tags: string[]) => {
+    return updateLinode({ linodeId, tags }).then((_) => {
+      setTagDrawer({ ...tagDrawer, tags });
     });
   };
 
@@ -155,23 +143,11 @@ const CardView: React.FC<CombinedProps> = (props) => {
         entityLabel={tagDrawer.label}
         open={tagDrawer.open}
         tags={tagDrawer.tags}
-        addTag={(newTag: string) => addTag(tagDrawer.entityID, newTag)}
-        deleteTag={(tag: string) => deleteTag(tagDrawer.entityID, tag)}
+        updateTags={(tags) => updateTags(tagDrawer.entityID, tags)}
         onClose={closeTagDrawer}
       />
     </React.Fragment>
   );
 };
 
-interface WithImagesProps {
-  imagesData: Record<string, Image>;
-}
-
-const enhanced = compose<CombinedProps, Props>(
-  withImages((ownProps, imagesData) => ({
-    ...ownProps,
-    imagesData,
-  }))
-);
-
-export default enhanced(CardView);
+export default CardView;

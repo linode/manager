@@ -4,11 +4,13 @@ import {
   getObjectList,
   getObjectStorageKeys,
   getObjectURL,
+  revokeObjectStorageKey,
+} from '@linode/api-v4/lib/object-storage';
+import {
   ObjectStorageBucket,
   ObjectStorageKey,
   ObjectStorageObject,
-  revokeObjectStorageKey,
-} from '@linode/api-v4/lib/object-storage';
+} from '@linode/api-v4/types';
 import axios from 'axios';
 import { authenticate } from 'support/api/authentication';
 import { isTestLabel } from 'support/api/common';
@@ -64,11 +66,11 @@ export const deleteAllTestBucketObjects = async (
 export const deleteAllTestBuckets = async () => {
   authenticate();
   const bucketsPage = (page: number) => getBuckets({ page });
-  const buckets: ObjectStorageBucket[] = (await depaginate(bucketsPage)).filter(
-    (bucket: ObjectStorageBucket) => {
-      return isTestLabel(bucket.label);
-    }
-  );
+  const buckets: ObjectStorageBucket[] = (
+    await depaginate<ObjectStorageBucket>(bucketsPage)
+  ).filter((bucket: ObjectStorageBucket) => {
+    return isTestLabel(bucket.label);
+  });
 
   const deleteBucketsPromises = buckets.map(
     async (bucket: ObjectStorageBucket) => {
@@ -98,7 +100,7 @@ export const deleteAllTestAccessKeys = async (): Promise<
 
   // Get all access keys that begin with `cy-test`.
   const accessKeys: ObjectStorageKey[] = (
-    await depaginate(getAccessKeysPage)
+    await depaginate<ObjectStorageKey>(getAccessKeysPage)
   ).filter((accessKey: ObjectStorageKey) => {
     return isTestLabel(accessKey.label);
   });

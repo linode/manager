@@ -3,7 +3,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
 
 const LinodesLanding: React.FC<Props> = (props) => {
-  const { _loading } = useReduxLoad(['linodes', 'images']);
+  const { _loading } = useReduxLoad(['linodes']);
+
   return _loading ? <CircleProgress /> : <_LinodesLanding {...props} />;
 };
 

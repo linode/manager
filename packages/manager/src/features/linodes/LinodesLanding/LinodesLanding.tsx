@@ -2,7 +2,6 @@ import { Config, Linode } from '@linode/api-v4/lib/linodes/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { parse, stringify } from 'qs';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -21,7 +20,6 @@ import OrderBy from 'src/components/OrderBy';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import TransferDisplay from 'src/components/TransferDisplay';
 import withFeatureFlagConsumer from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, { WithImages } from 'src/containers/withImages.container';
 import { LinodeGettingStarted, SecuringYourServer } from 'src/documentation';
 import { BackupsCTA } from 'src/features/Backups';
 import { DialogType } from 'src/features/linodes/types';
@@ -84,7 +82,6 @@ export interface Props {
 }
 
 type CombinedProps = Props &
-  WithImages &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -112,12 +109,11 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
   changeViewInstant = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
-    const updatedParams = updateParams(location.search, (params) => ({
-      ...params,
-      view: style,
-    }));
+    const query = new URLSearchParams(location.search);
 
-    history.push(`?${updatedParams}`);
+    query.set('view', style);
+
+    history.push(`?${query.toString()}`);
   };
 
   updatePageUrl = (page: number) => {
@@ -199,8 +195,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      imagesError,
-      imagesLoading,
       linodesRequestError,
       linodesRequestLoading,
       linodesCount,
@@ -209,9 +203,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesInTransition,
     } = this.props;
 
-    const params: Params = parse(this.props.location.search, {
-      ignoreQueryPrefix: true,
-    });
+    const params = new URLSearchParams(this.props.location.search);
+
+    const view =
+      params.has('view') && ['grid', 'list'].includes(params.get('view')!)
+        ? (params.get('view') as 'grid' | 'list')
+        : undefined;
 
     // Filter the Linodes according to the `filterLinodesFn` prop (if it exists).
     const filteredLinodes = this.props.filterLinodesFn
@@ -230,7 +227,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       openDialog: this.openDialog,
     };
 
-    if (imagesError.read || linodesRequestError) {
+    if (linodesRequestError) {
       let errorText: string | JSX.Element =
         linodesRequestError?.[0]?.reason ?? 'Error loading Linodes';
 
@@ -255,7 +252,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       );
     }
 
-    if (linodesRequestLoading || imagesLoading) {
+    if (linodesRequestLoading) {
       return <CircleProgress />;
     }
 
@@ -329,11 +326,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                  * we want the URL query param to take priority here, but if it's
                  * undefined, just use the user preference
                  */
-                value={
-                  params.view === 'grid' || params.view === 'list'
-                    ? params.view
-                    : undefined
-                }
+                value={view}
               >
                 {({
                   preference: linodeViewPreference,
@@ -550,17 +543,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const updateParams = (params: string, updater: (s: any) => any) => {
-  const paramsAsObject = parse(params, { ignoreQueryPrefix: true });
-  return stringify(updater(paramsAsObject));
-};
-
 export const enhanced = compose<CombinedProps, Props>(
   withRouter,
   setDocs(ListLinodes.docs),
   withSnackbar,
   connected,
-  withImages(),
   styled,
   withFeatureFlagConsumer
 );

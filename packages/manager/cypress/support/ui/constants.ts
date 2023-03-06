@@ -268,7 +268,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          loadAppNoLogin(routes.account);
+          loadAppNoLogin(`${routes.account}/billing`);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
           cy.get('[data-reach-tab]').contains('Users').click();
@@ -285,7 +285,7 @@ export const pages = [
       {
         name: 'Tab',
         go: () => {
-          loadAppNoLogin(routes.account);
+          loadAppNoLogin(`${routes.account}/billing`);
           cy.findByText('Billing Contact');
           waitDoubleRerender();
           cy.contains('Settings').click();

@@ -1,16 +1,15 @@
-import { flatten } from 'ramda';
-import { useCallback } from 'react';
 import { getDomains } from '@linode/api-v4/lib/domains';
 import { getImages, Image } from '@linode/api-v4/lib/images';
-import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
+import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
-import { refinedSearch } from './refinedSearch';
-import { SearchableItem, SearchResults } from './search.interfaces';
+import { flatten } from 'ramda';
+import { useCallback } from 'react';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
-import { emptyResults, separateResultsByEntity } from './utils';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import store from 'src/store';
 import {
   domainToSearchableItem,
@@ -20,13 +19,19 @@ import {
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
+import { refinedSearch } from './refinedSearch';
+import { SearchableItem, SearchResults } from './search.interfaces';
+import { emptyResults, separateResultsByEntity } from './utils';
 
 interface Search {
   searchAPI: (query: string) => Promise<SearchResults>;
 }
 
-export const useAPISearch = (): Search => {
+export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
+  const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
+
+  const images = listToItemsByID(_images ?? []);
 
   const searchAPI = useCallback(
     (searchText: string) => {
@@ -39,7 +44,6 @@ export const useAPISearch = (): Search => {
       const resources = store.getState().__resources;
 
       const types = resources.types.entities as LinodeType[];
-      const images = resources.images.itemsById;
 
       return requestEntities(searchText, types, images, _isRestrictedUser).then(
         (results) => {
@@ -51,7 +55,7 @@ export const useAPISearch = (): Search => {
         }
       );
     },
-    [_isRestrictedUser]
+    [_isRestrictedUser, images]
   );
 
   return { searchAPI };

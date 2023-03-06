@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import { stringify } from 'querystring';
 import { APP_ROOT, CLIENT_ID, LOGIN_ROOT } from 'src/constants';
 import {
   authentication,
@@ -25,6 +24,10 @@ export const genOAuthEndpoint = (
   const clientID = localStorageOverrides?.clientID ?? CLIENT_ID;
   const loginRoot = localStorageOverrides?.loginRoot ?? LOGIN_ROOT;
 
+  if (!clientID) {
+    throw new Error('No CLIENT_ID specified.');
+  }
+
   const query = {
     client_id: clientID,
     scope,
@@ -33,7 +36,9 @@ export const genOAuthEndpoint = (
     state: nonce,
   };
 
-  return `${loginRoot}/oauth/authorize?${stringify(query)}`;
+  return `${loginRoot}/oauth/authorize?${new URLSearchParams(
+    query
+  ).toString()}`;
 };
 
 /**
@@ -78,7 +83,7 @@ export const revokeToken = (client_id: string, token: string) => {
     baseURL: loginURL,
     url: `/oauth/revoke`,
     method: 'POST',
-    data: stringify({ client_id, token }),
+    data: new URLSearchParams({ client_id, token }).toString(),
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
     },

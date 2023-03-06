@@ -1,6 +1,25 @@
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+const SLIDE_IN_TRANSFORM = 'matrix(0.01471, 0, 0, 1, 123.982745, 0.000015)';
+const SLIDE_OUT_TRANSFORM = 'translate(0)';
+
 const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes slideIn': {
+    from: {
+      transform: SLIDE_IN_TRANSFORM,
+    },
+    to: {
+      transform: SLIDE_OUT_TRANSFORM,
+    },
+  },
+  '@keyframes slideOut': {
+    from: {
+      transform: SLIDE_OUT_TRANSFORM,
+    },
+    to: {
+      transform: SLIDE_IN_TRANSFORM,
+    },
+  },
   menuGrid: {
     minHeight: 64,
     height: '100%',
@@ -14,10 +33,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       minHeight: 80,
     },
     '&:hover': {
-      '& svg': {
-        '& path.st0': {
-          fill: '#f93',
-        },
+      '& path.akamai-clip-path': {
+        animation: '$slideIn .33s ease-in-out',
       },
     },
   },
@@ -27,38 +44,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: 'calc(100% - 90px)',
     width: '100%',
   },
-  logoItem: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '12px 12px 0 14px',
-    position: 'relative',
-  },
   logoItemAkamai: {
-    paddingTop: 10,
+    paddingTop: 12,
+    paddingLeft: 12,
+    transition: 'padding-left .03s linear',
+    '& path.akamai-clip-path': {
+      animation: '$slideIn .33s ease-in-out',
+    },
   },
-  logoItemAkamaiWave: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '54px 54px 0 58px',
-    position: 'relative',
-  },
-  logoCollapsed: {
-    background: theme.bg.primaryNavPaper,
-    height: 48,
-    width: 100,
-    position: 'absolute',
-    top: 12,
-    left: 48,
+  logoItemAkamaiCollapsed: {
+    paddingLeft: 8,
   },
   logoAkamaiCollapsed: {
     background: theme.bg.primaryNavPaper,
-    height: 38,
-    width: 128,
-    position: 'absolute',
-    top: 12,
-    left: -8,
-    '& path.st0': {
-      fill: 'none',
+    width: 96,
+    '& path.akamai-clip-path': {
+      animation: '$slideOut 0s ease-in-out 0s forwards',
     },
   },
   listItem: {
@@ -155,7 +156,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logo: {
     // give the svg a transition so it smoothly resizes
-    transition: 'all .03s linear',
+    transition: 'width .1s linear',
   },
 }));
 

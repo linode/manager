@@ -1,9 +1,9 @@
-import * as qs from 'qs';
 import { useState, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getInitialValuesFromUserPreferences } from 'src/components/OrderBy';
-import { usePreferences } from 'src/hooks/usePreferences';
-import { OrderSet } from 'src/store/preferences/preferences.actions';
+import { Order } from 'src/components/Pagey/Pagey';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
+import { OrderSet } from 'src/types/ManagerPreferences';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { debounce } from 'throttle-debounce';
 
@@ -25,7 +25,8 @@ export const useOrder = (
   preferenceKey?: string,
   prefix?: string
 ) => {
-  const { preferences, updatePreferences } = usePreferences();
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
   const location = useLocation();
   const history = useHistory();
   const params = getParamsFromUrl(location.search);
@@ -43,7 +44,7 @@ export const useOrder = (
   const [order, setOrder] = useState<'asc' | 'desc'>(initialOrder.order);
 
   const debouncedUpdateUserPreferences = useRef(
-    debounce(1500, false, (orderBy: string, order: 'asc' | 'desc') => {
+    debounce(1500, false, (orderBy: string, order: Order) => {
       if (preferenceKey) {
         updatePreferences({
           sortKeys: {
@@ -55,7 +56,7 @@ export const useOrder = (
     })
   ).current;
 
-  const handleOrderChange = (newOrderBy: string, newOrder: 'asc' | 'desc') => {
+  const handleOrderChange = (newOrderBy: string, newOrder: Order) => {
     setOrderBy(newOrderBy);
     setOrder(newOrder);
 
@@ -69,11 +70,13 @@ export const useOrder = (
           orderBy: newOrderBy,
         };
 
-    const queryParams = qs.parse(location.search.replace('?', ''));
+    const queryParams = new URLSearchParams(location.search);
 
-    const newQueries = { ...queryParams, ...urlData };
+    for (const [key, value] of Object.entries(urlData)) {
+      queryParams.set(key, value);
+    }
 
-    history.replace(`?${qs.stringify(newQueries)}`);
+    history.replace(`?${queryParams.toString()}`);
 
     debouncedUpdateUserPreferences(newOrderBy, newOrder);
   };

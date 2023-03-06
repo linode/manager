@@ -2,7 +2,7 @@
   "compilerOptions": {
     /* Language and Environment */
     "jsx": "react",
-    "lib": ["dom", "es2017"],
+    "lib": ["dom", "es2019"],
     "target": "es5",
 
     /* Modules */
@@ -49,7 +49,6 @@
     "jest",
     "node_modules",
     "scripts",
-    "src/components/Storyshots.test.tsx",
     "src/setupTests.ts",
     "webpack"
   ]

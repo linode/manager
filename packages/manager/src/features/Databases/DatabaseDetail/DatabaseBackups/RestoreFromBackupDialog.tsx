@@ -1,7 +1,6 @@
 import { Database, DatabaseBackup } from '@linode/api-v4/lib/databases';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { compose } from 'recompose';
 import { useHistory } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -10,12 +9,10 @@ import TypeToConfirm from 'src/components/TypeToConfirm';
 import Typography from 'src/components/core/Typography';
 import { DialogProps } from 'src/components/Dialog';
 import Notice from 'src/components/Notice';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
-import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import { usePreferences } from 'src/queries/preferences';
+import { useRestoreFromBackupMutation } from 'src/queries/databases';
 
 interface Props extends Omit<DialogProps, 'title'> {
   open: boolean;
@@ -24,15 +21,15 @@ interface Props extends Omit<DialogProps, 'title'> {
   backup: DatabaseBackup;
 }
 
-export type CombinedProps = Props & PreferencesProps;
-
-export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
-  const { database, backup, preferences, onClose, open, ...rest } = props;
+export const RestoreFromBackupDialog: React.FC<Props> = (props) => {
+  const { database, backup, onClose, open, ...rest } = props;
 
   const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const [confirmationText, setConfirmationText] = React.useState('');
+
+  const { data: preferences } = usePreferences();
 
   const {
     mutateAsync: restore,
@@ -115,6 +112,4 @@ export const RestoreFromBackupDialog: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withPreferences());
-
-export default enhanced(RestoreFromBackupDialog);
+export default RestoreFromBackupDialog;

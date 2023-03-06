@@ -17,10 +17,6 @@ describe('ListLinodes', () => {
     const { getByText } = render(
       wrapWithTheme(
         <ListLinodes
-          imagesLoading={false}
-          imagesError={{}}
-          imagesData={{}}
-          imagesLastUpdated={100}
           someLinodesHaveScheduledMaintenance={true}
           linodesData={[]}
           classes={classes}

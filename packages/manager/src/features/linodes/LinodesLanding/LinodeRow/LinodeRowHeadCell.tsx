@@ -3,14 +3,11 @@ import { LinodeBackups, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
-import withImages, { WithImages } from 'src/containers/withImages.container';
-import { filterImagesByType } from 'src/store/image/image.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -86,11 +83,9 @@ interface Props {
   isVLAN?: boolean;
 }
 
-type CombinedProps = Props & Pick<WithImages, 'imagesData'>;
+type CombinedProps = Props;
 
 const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
   const {
     // linode props
     label,
@@ -100,6 +95,8 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
     maintenance,
     isDashboard,
   } = props;
+
+  const classes = useStyles();
 
   const style = width ? { width: `${width}%` } : {};
   const dateTime = maintenance && maintenance.split(' ');
@@ -152,11 +149,4 @@ const LinodeRowHeadCell: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withImages((ownProps, imagesData) => ({
-    ...ownProps,
-    imagesData: filterImagesByType(imagesData, 'public'),
-  }))
-);
-
-export default enhanced(LinodeRowHeadCell);
+export default LinodeRowHeadCell;

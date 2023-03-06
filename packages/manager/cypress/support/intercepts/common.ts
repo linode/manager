@@ -3,6 +3,7 @@
  */
 
 import { accountFactory } from 'src/factories/account';
+import { apiMatcher } from 'support/util/intercepts';
 
 /**
  * Options for mocking common Linode APIv4 requests.
@@ -44,7 +45,7 @@ export const mockCommonRequests = (
 
   if (resolvedOptions.account) {
     const mockedAccount = accountFactory.build();
-    cy.intercept('GET', `*/account`, mockedAccount).as('getAccount');
+    cy.intercept('GET', apiMatcher('account'), mockedAccount).as('getAccount');
     aliases.push('@getAccount');
   }
 
