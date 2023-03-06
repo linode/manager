@@ -12,9 +12,11 @@
 
 **How do I run relevant unit or e2e tests?**
 
-## Commit message format standards
+## Commit message and Pull Request Title format standards
 
 **Remove this section before opening the pull request**
+
+**Make sure your commit message and PR title are formatted as shown below**
 
 `<commit type>: [JIRA-ticket-number] - <description>`
 
