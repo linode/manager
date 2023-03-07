@@ -22,9 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       backgroundColor:
         theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
     },
-    '& a': {
-      color: 'inherit',
-    },
   },
   icon: {
     height: 24,
