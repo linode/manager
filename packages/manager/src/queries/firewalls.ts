@@ -27,7 +27,7 @@ import {
   itemInListCreationHandler,
 } from './base';
 
-const queryKey = 'firewall';
+export const queryKey = 'firewall';
 
 export const useAllFirewallDevicesQuery = (id: number) =>
   useQuery<FirewallDevice[], APIError[]>([queryKey, id, 'devices'], () =>

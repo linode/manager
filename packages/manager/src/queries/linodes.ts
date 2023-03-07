@@ -187,3 +187,16 @@ const getAllLinodeTypes = () =>
   getAll<LinodeType>((params) => getLinodeTypes(params))().then(
     (data) => data.data
   );
+
+export const getAllLinodeFirewalls = (
+  linodeId: number,
+  passedParams: any = {},
+  passedFilter: any = {}
+) =>
+  getAll<Firewall>((params, filter) =>
+    getLinodeFirewalls(
+      linodeId,
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter }
+    )
+  )().then((data) => data.data);
