@@ -43,7 +43,7 @@ export const LandingHeader = ({
   title,
 }: Props) => {
   const theme = useTheme();
-  const renderActions = onAddNew || extraActions;
+  const renderActions = Boolean(onAddNew || extraActions);
   const labelTitle = title.toString();
 
   const docsAnalyticsLabel = analyticsLabel
@@ -84,7 +84,7 @@ export const LandingHeader = ({
         {renderActions && (
           <Actions>
             {extraActions}
-            {onAddNew && (
+            {onAddNew ? (
               <Button
                 buttonType="primary"
                 disabled={disabledCreateButton}
@@ -94,7 +94,7 @@ export const LandingHeader = ({
               >
                 {createButtonText ?? `Create ${entity}`}
               </Button>
-            )}
+            ) : null}
           </Actions>
         )}
       </Grid>

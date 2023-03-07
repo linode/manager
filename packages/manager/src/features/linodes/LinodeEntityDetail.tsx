@@ -400,109 +400,101 @@ const Header: React.FC<HeaderProps> = (props) => {
       // parentLink={isDetails ? '/linodes' : undefined}
       // parentText={isDetails ? 'Linodes' : undefined}
       isSummaryView={isSummaryView}
-      bodyClassName={classes.body}
     >
-      <Grid
-        container
-        className="m0"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Box display="flex" alignItems="center">
-          <Grid item className={`p0 ${isSummaryView && classes.chipWrapper}`}>
-            <Chip
-              data-qa-linode-status
-              className={classNames({
-                [classes.statusChip]: true,
-                [classes.statusChipLandingDetailView]: isSummaryView,
-                [classes.statusRunning]: isRunning,
-                [classes.statusOffline]: isOffline,
-                [classes.statusOther]: isOther,
-                [classes.divider]: hasSecondaryStatus,
-                statusOtherDetail: isOther,
-              })}
-              label={formattedStatus}
-              component="span"
-              // {...isOther} // TODO: This used to be https://github.com/linode/manager/blame/484c5e37c6fb6a34fa1c1362a033064f2a66aec7/packages/manager/src/features/linodes/LinodeEntityDetail.tsx#L348
-            />
-          </Grid>
-          {hasSecondaryStatus ? (
-            <Grid
-              item
-              className="py0"
-              style={{ marginLeft: 16, marginBottom: 2 }}
-            >
-              <button
-                className={classes.statusLink}
-                onClick={openNotificationMenu}
-              >
-                <ProgressDisplay
-                  progress={progress ?? 0}
-                  text={formattedTransitionText}
-                />
-              </button>
-            </Grid>
-          ) : null}
-        </Box>
-        <Grid item className={`${classes.actionItemsOuter} py0`}>
-          <Hidden mdDown>
-            <Button
-              buttonType="secondary"
-              className={classes.actionItem}
-              disabled={!['running', 'offline'].includes(linodeStatus)}
-              onClick={() => {
-                const action =
-                  linodeStatus === 'running' ? 'Power Off' : 'Power On';
-                sendLinodeActionMenuItemEvent(`${action} Linode`);
-
-                openPowerActionDialog(
-                  `${action}` as BootAction,
-                  linodeId,
-                  linodeLabel,
-                  linodeStatus === 'running' ? linodeConfigs : []
-                );
-              }}
-            >
-              {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
-            </Button>
-            <Button
-              buttonType="secondary"
-              className={classes.actionItem}
-              disabled={linodeStatus === 'offline'}
-              onClick={() => {
-                sendLinodeActionMenuItemEvent('Reboot Linode');
-                openPowerActionDialog(
-                  'Reboot',
-                  linodeId,
-                  linodeLabel,
-                  linodeConfigs
-                );
-              }}
-            >
-              Reboot
-            </Button>
-            <Button
-              buttonType="secondary"
-              className={classes.actionItem}
-              onClick={() => {
-                handleConsoleButtonClick(linodeId);
-              }}
-            >
-              Launch LISH Console
-            </Button>
-          </Hidden>
-
-          <LinodeActionMenu
-            linodeId={linodeId}
-            linodeLabel={linodeLabel}
-            linodeRegion={linodeRegionDisplay}
-            linodeType={type ?? undefined}
-            linodeStatus={linodeStatus}
-            linodeBackups={backups}
-            openDialog={openDialog}
-            openPowerActionDialog={openPowerActionDialog}
+      <Box display="flex" alignItems="center">
+        <Grid item className={`p0 ${isSummaryView && classes.chipWrapper}`}>
+          <Chip
+            data-qa-linode-status
+            className={classNames({
+              [classes.statusChip]: true,
+              [classes.statusChipLandingDetailView]: isSummaryView,
+              [classes.statusRunning]: isRunning,
+              [classes.statusOffline]: isOffline,
+              [classes.statusOther]: isOther,
+              [classes.divider]: hasSecondaryStatus,
+              statusOtherDetail: isOther,
+            })}
+            label={formattedStatus}
+            component="span"
+            // {...isOther} // TODO: This used to be https://github.com/linode/manager/blame/484c5e37c6fb6a34fa1c1362a033064f2a66aec7/packages/manager/src/features/linodes/LinodeEntityDetail.tsx#L348
           />
         </Grid>
+        {hasSecondaryStatus ? (
+          <Grid
+            item
+            className="py0"
+            style={{ marginLeft: 16, marginBottom: 2 }}
+          >
+            <button
+              className={classes.statusLink}
+              onClick={openNotificationMenu}
+            >
+              <ProgressDisplay
+                progress={progress ?? 0}
+                text={formattedTransitionText}
+              />
+            </button>
+          </Grid>
+        ) : null}
+      </Box>
+      <Grid item className={`${classes.actionItemsOuter} py0`}>
+        <Hidden mdDown>
+          <Button
+            buttonType="secondary"
+            className={classes.actionItem}
+            disabled={!['running', 'offline'].includes(linodeStatus)}
+            onClick={() => {
+              const action =
+                linodeStatus === 'running' ? 'Power Off' : 'Power On';
+              sendLinodeActionMenuItemEvent(`${action} Linode`);
+
+              openPowerActionDialog(
+                `${action}` as BootAction,
+                linodeId,
+                linodeLabel,
+                linodeStatus === 'running' ? linodeConfigs : []
+              );
+            }}
+          >
+            {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+          </Button>
+          <Button
+            buttonType="secondary"
+            className={classes.actionItem}
+            disabled={linodeStatus === 'offline'}
+            onClick={() => {
+              sendLinodeActionMenuItemEvent('Reboot Linode');
+              openPowerActionDialog(
+                'Reboot',
+                linodeId,
+                linodeLabel,
+                linodeConfigs
+              );
+            }}
+          >
+            Reboot
+          </Button>
+          <Button
+            buttonType="secondary"
+            className={classes.actionItem}
+            onClick={() => {
+              handleConsoleButtonClick(linodeId);
+            }}
+          >
+            Launch LISH Console
+          </Button>
+        </Hidden>
+
+        <LinodeActionMenu
+          linodeId={linodeId}
+          linodeLabel={linodeLabel}
+          linodeRegion={linodeRegionDisplay}
+          linodeType={type ?? undefined}
+          linodeStatus={linodeStatus}
+          linodeBackups={backups}
+          openDialog={openDialog}
+          openPowerActionDialog={openPowerActionDialog}
+        />
       </Grid>
     </EntityHeader>
   );
