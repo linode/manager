@@ -100,8 +100,3 @@ export const regions: Region[] = [
     resolvers,
   },
 ];
-
-export const extendedRegions = regions.map((thisRegion) => ({
-  ...thisRegion,
-  display: thisRegion.id,
-}));
