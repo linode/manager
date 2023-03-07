@@ -1,5 +1,3 @@
-import { objectStorageClusterDisplay } from 'src/constants';
-
 export const getHumanReadableCountry = (regionSlug: string) => {
   if (regionSlug.match(/(us)/gim)) {
     return 'United States';
@@ -15,9 +13,6 @@ export const getHumanReadableCountry = (regionSlug: string) => {
   }
   return 'Other';
 };
-
-export const formatObjectStorageCluster = (clusterId: string) =>
-  objectStorageClusterDisplay[clusterId] || '';
 
 export const isEURegion = (region: string | null | undefined) =>
   region?.match('^eu');

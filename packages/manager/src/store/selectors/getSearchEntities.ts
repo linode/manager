@@ -11,7 +11,6 @@ import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 export type State = ApplicationState['__resources'];
@@ -159,7 +158,7 @@ export const bucketToSearchableItem = (
     path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
     created: bucket.created,
     label: bucket.label,
-    region: objectStorageClusterDisplay[bucket.cluster],
+    cluster: bucket.cluster,
     description: readableBytes(bucket.size).formatted,
   },
 });
