@@ -228,17 +228,25 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         .split(' ');
 
       const matchingOCALabels = oneClickApps.reduce(
-        (acc: string[], { categories, name, alt_name, alt_description }) => {
-          const ocaAppString = `${name} ${alt_name} ${categories.join(
-            ' '
-          )} ${alt_description}`.toLocaleLowerCase();
+        (
+          acc: string[],
+          { categories, name, alt_name, alt_description, cluster_name }
+        ) => {
+          const ocaAppString = `${name} ${alt_name} ${
+            cluster_name || ''
+          } ${categories.join(' ')} ${alt_description}`.toLocaleLowerCase();
 
           const hasMatchingOCA = queryWords.every((queryWord) =>
             ocaAppString.includes(queryWord)
           );
 
           if (hasMatchingOCA) {
-            acc.push(name.trim());
+            if (!queryWords.includes('cluster') || /cluster/i.test(name)) {
+              acc.push(name.trim());
+            }
+            if (cluster_name) {
+              acc.push(cluster_name.trim());
+            }
           }
 
           return acc;
@@ -268,7 +276,13 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
-      const appLabels = appsInCategory.map((app) => app.name.trim());
+      const appLabels = appsInCategory.reduce((acc: string[], app: any) => {
+        if (app.cluster_name) {
+          acc.push(app.cluster_name.trim());
+        }
+        acc.push(app.name.trim());
+        return acc;
+      }, []);
       instancesInCategory = this.props.appInstances?.filter((instance) => {
         return appLabels.includes(instance.label.trim());
       });
