@@ -16,7 +16,9 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
+  getLinodeFirewalls,
 } from '@linode/api-v4/lib/linodes';
+import { Firewall } from '@linode/api-v4';
 
 export const STATS_NOT_READY_API_MESSAGE =
   'Stats are unavailable at this time.';
@@ -147,6 +149,13 @@ export const useLinodeLishTokenQuery = (id: number) => {
   );
 };
 
+export const useLinodeFirewalls = (linodeID: number) =>
+  useQuery<ResourcePage<Firewall>, APIError[]>(
+    [queryKey, linodeID, 'linodes'],
+    () => getLinodeFirewalls(linodeID),
+    queryPresets.oneTimeFetch
+  );
+
 /** Use with care; originally added to request all Linodes in a given region for IP sharing and transfer */
 const getAllLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
   getAll<Linode>((params, filter) =>
@@ -162,4 +171,17 @@ const getLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
 const getAllLinodeConfigs = (id: number) =>
   getAll<Config>((params, filter) =>
     getLinodeConfigs(id, params, filter)
+  )().then((data) => data.data);
+
+export const getAllLinodeFirewalls = (
+  linodeId: number,
+  passedParams: any = {},
+  passedFilter: any = {}
+) =>
+  getAll<Firewall>((params, filter) =>
+    getLinodeFirewalls(
+      linodeId,
+      { ...params, ...passedParams },
+      { ...filter, ...passedFilter }
+    )
   )().then((data) => data.data);
