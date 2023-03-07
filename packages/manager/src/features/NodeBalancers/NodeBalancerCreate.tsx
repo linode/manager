@@ -29,7 +29,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
@@ -65,6 +64,7 @@ import {
   queryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
+import { Region } from '@linode/api-v4/lib/regions';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -514,7 +514,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         displaySections = [
           {
             title: dcDisplayCountry[foundRegion.id],
-            details: foundRegion.display,
+            details: foundRegion.label,
           },
         ];
       } else {
@@ -844,7 +844,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
 };
 
 interface WithRegions {
-  regionsData: ExtendedRegion[];
+  regionsData: Region[];
   regionsLoading: boolean;
   regionsError: APIError[];
 }

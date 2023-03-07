@@ -3,7 +3,7 @@ import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
-import { dcDisplayNames } from 'src/constants';
+
 export interface Props {
   regions: Region[];
 }
@@ -63,11 +63,8 @@ export const RegionStatusBanner: React.FC<Props> = (props) => {
   const { regions } = props;
 
   const statusWarnings = regions
-    .filter(
-      (thisRegion) =>
-        thisRegion.status === 'outage' && !!dcDisplayNames[thisRegion.id]
-    )
-    .map((thisRegion) => dcDisplayNames[thisRegion.id]);
+    .filter((thisRegion) => thisRegion.status === 'outage')
+    .map((thisRegion) => thisRegion.label);
 
   if (statusWarnings.length === 0) {
     return null;

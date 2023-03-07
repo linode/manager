@@ -105,31 +105,31 @@ export const INTERVAL = 1000;
  */
 export const REFRESH_INTERVAL = 60 * 30 * 1000;
 
-export const dcDisplayNames = {
-  // us-east-1 is for backwards-compatibility
-  'us-east-1': 'Newark, NJ',
-  'us-east-1a': 'Newark, NJ',
-  'us-south-1a': 'Dallas, TX',
-  'us-west-1a': 'Fremont, CA',
-  'us-southeast-1a': 'Atlanta, GA',
-  'eu-central-1a': 'Frankfurt, DE',
-  'eu-west-1a': 'London, UK',
-  'ap-northeast-1a': 'Tokyo, JP',
-  'ap-northeast-1b': 'Tokyo 2, JP',
-  'us-central': 'Dallas, TX',
-  'us-west': 'Fremont, CA',
-  'us-southeast': 'Atlanta, GA',
-  'us-east': 'Newark, NJ',
-  'eu-west': 'London, UK',
-  'ap-south': 'Singapore, SG',
-  'eu-central': 'Frankfurt, DE',
-  'ap-northeast': 'Tokyo 2, JP',
-  'ca-central': 'Toronto, ON',
-  'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'Mumbai, IN',
-  'ap-southeast': 'Sydney, AU',
-  'us-iad': 'Washington, DC',
-};
+// export const dcDisplayNames = {
+//   // us-east-1 is for backwards-compatibility
+//   'us-east-1': 'Newark, NJ',
+//   'us-east-1a': 'Newark, NJ',
+//   'us-south-1a': 'Dallas, TX',
+//   'us-west-1a': 'Fremont, CA',
+//   'us-southeast-1a': 'Atlanta, GA',
+//   'eu-central-1a': 'Frankfurt, DE',
+//   'eu-west-1a': 'London, UK',
+//   'ap-northeast-1a': 'Tokyo, JP',
+//   'ap-northeast-1b': 'Tokyo 2, JP',
+//   'us-central': 'Dallas, TX',
+//   'us-west': 'Fremont, CA',
+//   'us-southeast': 'Atlanta, GA',
+//   'us-east': 'Newark, NJ',
+//   'eu-west': 'London, UK',
+//   'ap-south': 'Singapore, SG',
+//   'eu-central': 'Frankfurt, DE',
+//   'ap-northeast': 'Tokyo 2, JP',
+//   'ca-central': 'Toronto, ON',
+//   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+//   'ap-west': 'Mumbai, IN',
+//   'ap-southeast': 'Sydney, AU',
+//   'us-iad': 'Washington, DC',
+// };
 
 export const dcDisplayCountry = {
   'us-east-1a': 'US',

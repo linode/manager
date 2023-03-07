@@ -1,35 +1,4 @@
-import {
-  /* dcDisplayCountry, */ dcDisplayNames,
-  objectStorageClusterDisplay,
-} from 'src/constants';
-
-export const formatRegion = (region: string) => {
-  const city = dcDisplayNames[region];
-
-  return `${city || region}`;
-
-  /**
-   * There doesn't seem to be a good way to format Country, City, Province/State inline.
-   * We only have country for all international DCs. All of the following formats looks strange
-   * even for the US:
-   *
-   * US Newark, NJ
-   * Newark, NJ US
-   * (US) Newark, NJ
-   * Newark, NJ (US)
-   * US - Newark, NJ
-   * Newark, NJ - US
-   *
-   * JP Tokyo, JP
-   * Tokyo, JP JP
-   * (JP) Tokyo, JP
-   * Tokyo, JP (JP)
-   * JP - Tokyo, JP
-   * Tokyo, JP - JP
-   */
-  // const country = dcDisplayCountry[region];
-  // return `${country || ''} ${city || ''}`;
-};
+import { objectStorageClusterDisplay } from 'src/constants';
 
 export const getHumanReadableCountry = (regionSlug: string) => {
   if (regionSlug.match(/(us)/gim)) {

@@ -119,7 +119,7 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
           />
           <UserNotificationsList
             notifications={notifications}
-            closeMenu={this.closeMenu}
+            closeMenu={() => this.closeMenu}
           />
         </Menu>
       </React.Fragment>

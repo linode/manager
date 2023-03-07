@@ -7,11 +7,8 @@ import Typography from 'src/components/core/Typography';
 import RegionSelect, {
   flags,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { dcDisplayNames } from 'src/constants';
-import {
-  formatRegion,
-  getHumanReadableCountry,
-} from 'src/utilities/formatRegion';
+import { useRegionsQuery } from 'src/queries/regions';
+import { getHumanReadableCountry } from 'src/utilities/formatRegion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -51,6 +48,10 @@ const ConfigureForm: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { allRegions, currentRegion } = props;
 
+  const { data: regions } = useRegionsQuery();
+
+  const currentActualRegion = regions?.find((r) => r.id === currentRegion);
+
   const country =
     allRegions.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
@@ -61,17 +62,16 @@ const ConfigureForm: React.FC<CombinedProps> = (props) => {
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
         {pathOr(() => null, [country], flags)()}
-        <Typography>{`${getHumanReadableCountry(
-          props.currentRegion
-        )}: ${formatRegion(currentRegion)}`}</Typography>
+        <Typography>{`${getHumanReadableCountry(props.currentRegion)}: ${
+          currentActualRegion?.label ?? currentRegion
+        }`}</Typography>
       </div>
       <RegionSelect
-        regions={props.allRegions
-          .filter((eachRegion) => eachRegion.id !== props.currentRegion)
-          .map((eachRegion) => ({
-            ...eachRegion,
-            display: dcDisplayNames[eachRegion.id],
-          }))}
+        regions={
+          regions?.filter(
+            (eachRegion) => eachRegion.id !== props.currentRegion
+          ) ?? []
+        }
         handleSelection={props.handleSelectRegion}
         selectedID={props.selectedRegion}
         errorText={props.errorText}

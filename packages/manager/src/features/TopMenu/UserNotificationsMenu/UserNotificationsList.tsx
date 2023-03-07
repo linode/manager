@@ -1,87 +1,89 @@
 import { Notification } from '@linode/api-v4/lib/account';
-import { compose, path } from 'ramda';
+import { Region } from '@linode/api-v4/lib/regions';
+import { path } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { useHistory } from 'react-router-dom';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import { useRegionsQuery } from 'src/queries/regions';
 import UserNotificationListItem from './UserNotificationListItem';
 
-type ClassNames = 'emptyText';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    emptyText: {
-      padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
-      fontFamily: theme.font.bold,
-    },
-  });
+const useStyles = makeStyles((theme: Theme) => ({
+  emptyText: {
+    padding: `${theme.spacing(2)} ${theme.spacing(3)}`,
+    fontFamily: theme.font.bold,
+  },
+}));
 
 interface Props {
   notifications: Notification[];
   closeMenu: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<void> & WithStyles<ClassNames>;
+const UserNotificationsList = (props: Props) => {
+  const { push } = useHistory();
+  const classes = useStyles();
+  const { notifications, closeMenu } = props;
 
-class UserNotificationsList extends React.Component<CombinedProps, {}> {
-  render() {
-    const {
-      classes,
-      notifications,
-      closeMenu,
-      history: { push },
-    } = this.props;
+  const { data: regions } = useRegionsQuery();
 
-    if (notifications.length === 0) {
-      return (
-        <Typography className={classes.emptyText}>
-          You have no notifications.
-        </Typography>
-      );
-    }
-
-    return (notifications || []).map((notification, idx) => {
-      const interceptedNotification = interceptNotification(notification);
-      const onClick = createClickHandlerForNotification(
-        interceptedNotification,
-        (targetPath: string) => {
-          closeMenu();
-          push(targetPath);
-        }
-      );
-      return React.createElement(UserNotificationListItem, {
-        key: idx,
-        label: interceptedNotification.label,
-        message: interceptedNotification.message,
-        severity: interceptedNotification.severity,
-        onClick,
-      });
-    });
+  if (notifications.length === 0) {
+    return (
+      <Typography className={classes.emptyText}>
+        You have no notifications.
+      </Typography>
+    );
   }
-}
 
-const interceptNotification = (notification: Notification): Notification => {
+  return (
+    <>
+      {notifications.map((notification, idx) => {
+        const interceptedNotification = interceptNotification(
+          notification,
+          regions ?? []
+        );
+        const onClick = createClickHandlerForNotification(
+          interceptedNotification,
+          (targetPath: string) => {
+            closeMenu();
+            push(targetPath);
+          }
+        );
+        return (
+          <UserNotificationListItem
+            key={idx}
+            label={interceptedNotification.label}
+            message={interceptedNotification.message}
+            severity={interceptedNotification.severity}
+            onClick={onClick}
+          />
+        );
+      })}
+    </>
+  );
+};
+
+const interceptNotification = (
+  notification: Notification,
+  regions: Region[]
+): Notification => {
   /** this is an outage to one of the datacenters */
   if (
     notification.type === 'outage' &&
     notification.entity &&
     notification.entity.type === 'region'
   ) {
-    const convertedRegion = dcDisplayNames[notification.entity.id];
+    const region = regions.find(
+      // @ts-expect-error are the API docs wrong?
+      (r) => r.id === notification.entity.id
+    );
 
-    if (!convertedRegion) {
+    if (!region) {
       reportException(
         'Could not find the DC name for the outage notification',
         {
-          rawRegion: notification.entity.id,
-          convertedRegion,
+          region: notification.entity.id,
         }
       );
     }
@@ -91,10 +93,10 @@ const interceptNotification = (notification: Notification): Notification => {
       ...notification,
       label: notification.label
         .toLowerCase()
-        .replace('this facility', convertedRegion || 'one of our facilities'),
+        .replace('this facility', region?.label ?? 'one of our facilities'),
       message: notification.message
         .toLowerCase()
-        .replace('this facility', convertedRegion || 'one of our facilities'),
+        .replace('this facility', region?.label ?? 'one of our facilities'),
     };
   }
 
@@ -146,8 +148,4 @@ const createClickHandlerForNotification = (
   }
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<any, any, any>(styled, withRouter);
-
-export default enhanced(UserNotificationsList);
+export default UserNotificationsList;

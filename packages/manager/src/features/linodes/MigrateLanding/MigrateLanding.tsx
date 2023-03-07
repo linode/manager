@@ -71,7 +71,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     error: regionsError,
     dataUpdatedAt: regionsLastUpdated,
   } = useRegionsQuery();
-  const regionsData = data ?? [];
+  const regions = data ?? [];
 
   const { data: _images } = useAllImagesQuery();
   const images = listToItemsByID(_images ?? []);
@@ -120,8 +120,9 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
         resetEventsPolling();
         setLoading(false);
         sendMigrationInitiatedEvent(
-          region,
-          selectedRegion,
+          regions.find((r) => r.id === region)?.label ?? 'Unknown Region',
+          regions.find((r) => r.id === selectedRegion)?.label ??
+            'Unknown Region',
           +formatDate(new Date().toISOString(), {
             format: 'H',
           })
@@ -157,7 +158,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     );
   }
 
-  if (regionsData.length === 0 && regionsLastUpdated !== 0) {
+  if (regions.length === 0 && regionsLastUpdated !== 0) {
     return null;
   }
 
@@ -217,7 +218,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
       />
       <ConfigureForm
         currentRegion={region}
-        allRegions={regionsData}
+        allRegions={regions}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
         errorText={regionError}

@@ -30,7 +30,7 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { dcDisplayNames, LINODE_NETWORK_IN } from 'src/constants';
+import { LINODE_NETWORK_IN } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
@@ -191,7 +191,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const regions = props.regionsData ?? [];
     const withCapability = regions
       .filter((thisRegion) => thisRegion.capabilities.includes(capability))
-      .map((thisRegion) => dcDisplayNames[thisRegion.id]);
+      .map((thisRegion) => thisRegion.label);
     return arrayToList(withCapability);
   };
 
