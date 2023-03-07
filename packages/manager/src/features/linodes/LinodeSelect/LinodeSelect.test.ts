@@ -47,7 +47,7 @@ describe('utilities', () => {
 
     it('includes all options in a specific regions in each group', () => {
       groupedItems[0].options.forEach((option) => {
-        expect(option.data.region).toBe('us-east-1a');
+        expect(option.data.region).toBe('us-east');
       });
       groupedItems[1].options.forEach((option) => {
         expect(option.data.region).toBe('eu-west');
