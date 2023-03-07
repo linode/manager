@@ -831,17 +831,28 @@ function applyLinking(event: Event, message: string) {
     return '';
   }
 
-  const linkTarget = createLinkHandlerForNotification(
+  const entityLinkTarget = createLinkHandlerForNotification(
     event.action,
     event.entity,
     false
   );
+  const secondaryEntityLinkTarget = createLinkHandlerForNotification(
+    event.action,
+    event.secondary_entity,
+    false
+  );
   let newMessage = message;
 
-  if (event.entity && linkTarget) {
+  if (event.entity && entityLinkTarget) {
     newMessage = newMessage.replace(
       event.entity.label,
-      `<a href="${linkTarget}">${event.entity.label}</a>`
+      `<a href="${entityLinkTarget}">${event.entity.label}</a>`
+    );
+  }
+  if (event.secondary_entity && secondaryEntityLinkTarget) {
+    newMessage = newMessage.replace(
+      event.secondary_entity.label,
+      `<a href="${secondaryEntityLinkTarget}">${event.secondary_entity.label}</a>`
     );
   }
 
