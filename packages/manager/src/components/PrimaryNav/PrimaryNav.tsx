@@ -260,8 +260,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
     >
       <Grid item>
         <div
-          className={classNames({
-            [classes.logoItemAkamai]: !isCollapsed,
+          className={classNames(classes.logoItemAkamai, {
             [classes.logoItemAkamaiCollapsed]: isCollapsed,
           })}
         >
@@ -275,8 +274,7 @@ export const PrimaryNav: React.FC<Props> = (props) => {
             })}
           >
             <AkamaiLogo
-              width={140}
-              height={45}
+              width={128}
               className={classNames(
                 {
                   [classes.logoAkamaiCollapsed]: isCollapsed,
