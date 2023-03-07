@@ -20,12 +20,12 @@ describe('UserDataAccordion', () => {
   });
 
   it('should NOT have a notice recommending new user data be used if a Linode is not being rebuilt', () => {
-    const { getByText } = renderWithTheme(
+    const { queryByText } = renderWithTheme(
       <UserDataAccordion userData={''} onChange={() => null} />
     );
 
     expect(
-      getByText(
+      queryByText(
         'Adding new user data is recommended as part of the rebuild process.'
       )
     ).not.toBeInTheDocument();
