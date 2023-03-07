@@ -809,14 +809,6 @@ function applyBolding(event: Event, message: string) {
     'upgraded',
   ];
 
-  if (event.entity) {
-    wordsToBold.push(event.entity.label);
-  }
-
-  if (event.secondary_entity) {
-    wordsToBold.push(event.secondary_entity.label);
-  }
-
   let newMessage = message;
 
   for (const word of wordsToBold) {
