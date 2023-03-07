@@ -11,12 +11,7 @@ import CopyTooltip from 'src/components/CopyTooltip';
 import Box from 'src/components/core/Box';
 import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme,
-} from 'src/components/core/styles';
+import { makeStyles, Theme, useMediaQuery } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -60,6 +55,10 @@ import { GrantLevel } from '@linode/api-v4/lib/account';
 // import { APIError } from '@linode/api-v4/lib/types';
 // import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
+import {
+  useTheme,
+  // styled
+} from '@mui/material/styles';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -311,6 +310,7 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
 
 const Header: React.FC<HeaderProps> = (props) => {
   const classes = useHeaderStyles();
+  const theme = useTheme();
 
   const {
     // variant,
@@ -351,6 +351,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     // Kind of a hacky way to avoid "CLONING | CLONING (50%)" until we add logic
     // to display "Cloning to 'destination-linode'.
     formattedTransitionText !== formattedStatus;
+
   // const {
   //   editableLabelError,
   //   setEditableLabelError,
@@ -375,6 +376,21 @@ const Header: React.FC<HeaderProps> = (props) => {
   //       return Promise.reject(errorStrings[0]);
   //     });
   // };
+
+  // const ProgressButton = styled('button', {
+  //   name: 'ProgressButton',
+  // })(({ theme }) => ({
+
+  // }));
+
+  //  const StyledChip = styled(Chip, {
+  //   name: 'Chip',
+  // })(({ theme }) => ({
+  //   ...theme.applyStatusPillStyles,
+  //   borderRadius: 0,
+  //   height: `24px`,
+  //   marginLeft: theme.spacing(2),
+  // }));
 
   return (
     <EntityHeader
@@ -401,43 +417,48 @@ const Header: React.FC<HeaderProps> = (props) => {
       // parentText={isDetails ? 'Linodes' : undefined}
       isSummaryView={isSummaryView}
     >
-      <Box display="flex" alignItems="center">
-        <Grid item className={`p0 ${isSummaryView && classes.chipWrapper}`}>
-          <Chip
-            data-qa-linode-status
-            className={classNames({
-              [classes.statusChip]: true,
-              [classes.statusChipLandingDetailView]: isSummaryView,
-              [classes.statusRunning]: isRunning,
-              [classes.statusOffline]: isOffline,
-              [classes.statusOther]: isOther,
-              [classes.divider]: hasSecondaryStatus,
-              statusOtherDetail: isOther,
-            })}
-            label={formattedStatus}
-            component="span"
-            // {...isOther} // TODO: This used to be https://github.com/linode/manager/blame/484c5e37c6fb6a34fa1c1362a033064f2a66aec7/packages/manager/src/features/linodes/LinodeEntityDetail.tsx#L348
-          />
-        </Grid>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
+        <Chip
+          data-qa-linode-status
+          className={classNames({
+            [classes.statusChip]: true,
+            [classes.statusChipLandingDetailView]: isSummaryView,
+            [classes.statusRunning]: isRunning,
+            [classes.statusOffline]: isOffline,
+            [classes.statusOther]: isOther,
+            [classes.divider]: hasSecondaryStatus,
+            statusOtherDetail: isOther,
+          })}
+          label={formattedStatus}
+          component="span"
+        />
         {hasSecondaryStatus ? (
-          <Grid
-            item
-            className="py0"
-            style={{ marginLeft: 16, marginBottom: 2 }}
+          <Button
+            buttonType="secondary"
+            sx={{
+              minWidth: '50px',
+            }}
+            onClick={openNotificationMenu}
           >
-            <button
-              className={classes.statusLink}
-              onClick={openNotificationMenu}
-            >
-              <ProgressDisplay
-                progress={progress ?? 0}
-                text={formattedTransitionText}
-              />
-            </button>
-          </Grid>
+            <ProgressDisplay
+              progress={progress ?? 0}
+              sx={{ color: 'primary.main', fontFamily: theme.font.bold }}
+              text={formattedTransitionText}
+            />
+          </Button>
         ) : null}
       </Box>
-      <Grid item className={`${classes.actionItemsOuter} py0`}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+        }}
+      >
         <Hidden mdDown>
           <Button
             buttonType="secondary"
@@ -495,7 +516,7 @@ const Header: React.FC<HeaderProps> = (props) => {
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
         />
-      </Grid>
+      </Box>
     </EntityHeader>
   );
 };

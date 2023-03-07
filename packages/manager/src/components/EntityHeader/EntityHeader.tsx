@@ -1,8 +1,7 @@
 import * as React from 'react';
-import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import { styled } from '@mui/material/styles';
-import { isPropValid } from '../../utilities/isPropValid';
 
 export interface HeaderProps {
   children?: React.ReactNode;
@@ -11,8 +10,6 @@ export interface HeaderProps {
   title: string | JSX.Element;
   variant?: TypographyProps['variant'];
 }
-
-type SummaryHeaderProps = Pick<HeaderProps, 'headerOnly'>;
 
 const Wrapper = styled('div', {
   name: 'EntityHeader',
@@ -28,26 +25,13 @@ const Wrapper = styled('div', {
   },
 }));
 
-const SummaryHeader = styled('div', {
-  shouldForwardProp: (prop) => isPropValid(['headerOnly'], prop),
-})<SummaryHeaderProps>(({ theme, ...props }) => ({
-  alignItems: 'center',
-  background: 'magenta',
-  display: 'flex',
-  ...(!props.headerOnly && {
-    padding: theme.spacing(),
-    whiteSpace: 'nowrap',
-  }),
-  ...(props.headerOnly && {
-    [theme.breakpoints.up('sm')]: {
-      flexBasis: '100%',
-    },
-  }),
-}));
+const sxTypography = {
+  whiteSpace: 'nowrap',
+  padding: 1,
+};
 
 export const EntityHeader: React.FC<HeaderProps> = ({
   children,
-  headerOnly,
   isSummaryView,
   title,
   variant = 'h2',
@@ -55,21 +39,21 @@ export const EntityHeader: React.FC<HeaderProps> = ({
   return (
     <Wrapper>
       {isSummaryView ? (
-        <SummaryHeader headerOnly={headerOnly}>
-          <Grid item>
-            <Typography variant={variant}>{title}</Typography>
-          </Grid>
-        </SummaryHeader>
+        <Typography variant={variant} sx={sxTypography}>
+          {title}
+        </Typography>
       ) : null}
       {children && (
-        <Grid
-          container
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            width: '100%',
+          }}
         >
           {children}
-        </Grid>
+        </Box>
       )}
     </Wrapper>
   );
