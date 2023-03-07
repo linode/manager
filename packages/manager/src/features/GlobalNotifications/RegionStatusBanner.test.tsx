@@ -17,6 +17,7 @@ describe('Region status banner', () => {
     const regions = regionFactory.buildList(1, {
       status: 'outage',
       id: 'us-east',
+      label: 'Newark, NJ',
     });
     const { queryAllByText, queryAllByTestId } = renderWithTheme(
       <RegionStatusBanner regions={regions} />
