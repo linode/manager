@@ -145,8 +145,14 @@ export const changeLinodePassword = (linodeId: number, root_pass: string) =>
  * View Firewall information for Firewalls associated with this Linode
  */
 
-export const getLinodeFirewalls = (linodeId: number) =>
+export const getLinodeFirewalls = (
+  linodeId: number,
+  params?: any,
+  filter?: any
+) =>
   Request<Page<Firewall>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/firewalls`),
-    setMethod('GET')
+    setMethod('GET'),
+    setXFilter(filter),
+    setParams(params)
   );
