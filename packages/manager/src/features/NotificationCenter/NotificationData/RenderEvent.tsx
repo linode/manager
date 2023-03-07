@@ -31,9 +31,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 20,
       paddingRight: 20,
       width: 'calc(100% + 40px)',
-      '& a': {
-        textDecoration: 'none',
-      },
     },
   },
   eventMessage: {
