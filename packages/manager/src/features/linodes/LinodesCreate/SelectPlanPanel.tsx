@@ -37,7 +37,7 @@ import withRegions, {
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/queries/types';
 import { ApplicationState } from 'src/store';
 
 const useStyles = makeStyles((theme: Theme) => ({

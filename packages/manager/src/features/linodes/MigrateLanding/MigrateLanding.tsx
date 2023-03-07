@@ -4,7 +4,6 @@ import {
   Disk,
   LinodeSpecs,
   LinodeStatus,
-  LinodeType,
   scheduleOrQueueMigration,
 } from '@linode/api-v4/lib/linodes';
 import { APIError as APIErrorType } from '@linode/api-v4/lib/types';
@@ -27,7 +26,9 @@ import { displayType } from 'src/features/linodes/presentation';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useRegionsQuery } from 'src/queries/regions';
+import { useSpecificTypes } from 'src/queries/types';
 import { ApplicationState } from 'src/store';
+import cleanArray from 'src/utilities/cleanArray';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type CombinedProps = LinodeContextProps & WithTypes;
+type CombinedProps = LinodeContextProps & WithNotifications;
 
 const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
@@ -83,11 +84,13 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     linodeStatus,
     linodeEvents,
     linodeSpecs,
-    types,
     type,
     image,
     notifications,
   } = props;
+
+  const typesQuery = useSpecificTypes(cleanArray([type]));
+  const types = cleanArray(typesQuery.map((result) => result.data));
 
   React.useEffect(() => {
     scrollErrorIntoView();
@@ -263,15 +266,15 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeDisks: linode._disks,
 }));
 
-interface WithTypes {
-  types: LinodeType[];
+interface WithNotifications {
   notifications: Notification[];
 }
 
-const mapStateToProps: MapStateToProps<WithTypes, {}, ApplicationState> = (
-  state
-) => ({
-  types: state.__resources.types.entities,
+const mapStateToProps: MapStateToProps<
+  WithNotifications,
+  {},
+  ApplicationState
+> = (state) => ({
   notifications: state.__resources.notifications.data || [],
 });
 

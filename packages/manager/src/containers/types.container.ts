@@ -1,7 +1,7 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 import { useAllTypes, useSpecificTypes } from 'src/queries/types';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/queries/types';
 import cleanArray from 'src/utilities/cleanArray';
 
 export interface WithTypesProps {

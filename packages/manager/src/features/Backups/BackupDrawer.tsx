@@ -12,6 +12,7 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
 import { ApplicationState } from 'src/store';
 import {
@@ -57,10 +58,7 @@ interface StateProps {
   updatedCount: number;
 }
 
-type CombinedProps = DispatchProps &
-  StateProps &
-  WithTypesProps &
-  WithSnackbarProps;
+type CombinedProps = DispatchProps & StateProps & WithSnackbarProps;
 
 const getFailureNotificationText = (
   success: number,
@@ -261,9 +259,9 @@ export const enhanceLinodes = (
 
 const mapStateToProps: MapStateToProps<
   StateProps,
-  CombinedProps,
+  CombinedProps & WithTypesProps,
   ApplicationState
-> = (state: ApplicationState, ownProps: CombinedProps) => {
+> = (state: ApplicationState, ownProps: CombinedProps & WithTypesProps) => {
   const enableErrors = pathOr([], ['backups', 'enableErrors'], state);
   const linodes = getLinodesWithoutBackups(state.__resources);
   return {
@@ -279,7 +277,7 @@ const mapStateToProps: MapStateToProps<
     linodesWithoutBackups: enhanceLinodes(
       linodes,
       enableErrors,
-      ownProps.typesData
+      ownProps.typesData ?? []
     ),
     autoEnroll: pathOr(false, ['backups', 'autoEnroll'], state),
     enrolling: pathOr(false, ['backups', 'enrolling'], state),
@@ -289,14 +287,6 @@ const mapStateToProps: MapStateToProps<
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-interface WithTypesProps {
-  typesData: LinodeType[];
-}
-
-const withTypes = connect((state: ApplicationState) => ({
-  typesData: state.__resources.types.entities,
-}));
-
-const enhanced = compose<CombinedProps, {}>(withTypes, connected, withSnackbar);
+const enhanced = compose<CombinedProps, {}>(connected, withTypes, withSnackbar);
 
 export default enhanced(BackupDrawer);

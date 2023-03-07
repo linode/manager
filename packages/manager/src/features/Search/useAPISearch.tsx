@@ -5,12 +5,13 @@ import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
+import React from 'react';
 import { useCallback } from 'react';
 import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import store from 'src/store';
+import { useAllTypes, useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -19,6 +20,7 @@ import {
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
+import cleanArray from 'src/utilities/cleanArray';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
@@ -30,6 +32,14 @@ interface Search {
 export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
   const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
+  const { data: allTypes } = useAllTypes();
+
+  // Some types may not be returned by the hook above
+  const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
+  const typesQuery = useSpecificTypes(requestedTypes);
+  const additionalTypes = cleanArray(typesQuery.map((result) => result.data));
+
+  const types = [...(allTypes ?? []), ...additionalTypes];
 
   const images = listToItemsByID(_images ?? []);
 
@@ -41,21 +51,22 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
           combinedResults: [],
         });
       }
-      const resources = store.getState().__resources;
 
-      const types = resources.types.entities as LinodeType[];
-
-      return requestEntities(searchText, types, images, _isRestrictedUser).then(
-        (results) => {
-          const combinedResults = refinedSearch(searchText, results);
-          return {
-            combinedResults,
-            searchResultsByEntity: separateResultsByEntity(combinedResults),
-          };
-        }
-      );
+      return requestEntities(
+        searchText,
+        types ?? [],
+        images,
+        setRequestedTypes,
+        _isRestrictedUser
+      ).then((results) => {
+        const combinedResults = refinedSearch(searchText, results);
+        return {
+          combinedResults,
+          searchResultsByEntity: separateResultsByEntity(combinedResults),
+        };
+      });
     },
-    [_isRestrictedUser, images]
+    [_isRestrictedUser, images, types]
   );
 
   return { searchAPI };
@@ -91,17 +102,22 @@ const requestEntities = (
   searchText: string,
   types: LinodeType[],
   images: Record<string, Image>,
+  setRequestedTypes: (types: string[]) => void,
   isRestricted: boolean = false
 ) => {
   return Promise.all([
     getDomains(params, generateFilter(searchText, 'domain')).then((results) =>
       results.data.map(domainToSearchableItem)
     ),
-    getLinodes(
-      params,
-      generateFilter(searchText, 'label', true)
-    ).then((results) =>
-      results.data.map((thisResult) => formatLinode(thisResult, types, images))
+    getLinodes(params, generateFilter(searchText, 'label', true)).then(
+      (results) => {
+        setRequestedTypes(
+          cleanArray(results.data.map((result) => result.type))
+        );
+        return results.data.map((thisResult) =>
+          formatLinode(thisResult, types, images)
+        );
+      }
     ),
     getImages(
       params,

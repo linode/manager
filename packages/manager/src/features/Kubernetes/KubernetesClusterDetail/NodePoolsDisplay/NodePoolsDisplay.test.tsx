@@ -1,4 +1,3 @@
-import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
 import { linodeTypeFactory, nodePoolFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
@@ -21,26 +20,20 @@ describe('NodeTable', () => {
         });
         return res(ctx.json(makeResourcePage(pools)));
       }),
-      rest.get('*/linode/types', (req, res, ctx) => {
+      rest.get('*/linode/types/g6-standard-1', (req, res, ctx) => {
         return res(
           ctx.json(
-            makeResourcePage(
-              linodeTypeFactory.buildList(1, {
-                label: 'Linode 2GB',
-                id: 'g6-standard-1',
-              })
-            )
+            linodeTypeFactory.build({
+              label: 'Linode 2GB',
+              id: 'g6-standard-1',
+            })
           )
         );
       })
     );
 
-    const { getByText, getByTestId } = renderWithTheme(
-      <NodePoolsDisplay {...props} />
-    );
+    const { findByText } = renderWithTheme(<NodePoolsDisplay {...props} />);
 
-    await waitForElementToBeRemoved(getByTestId('circle-progress'));
-
-    getByText('Linode 2GB');
+    await findByText('Linode 2 GB');
   });
 });

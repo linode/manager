@@ -1,7 +1,5 @@
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/queries/types';
 
 export const filterCurrentTypes = (types: ExtendedType[] = []) => {
-  return types.filter(
-    (thisType) => !thisType.isDeprecated && !thisType.isShadowPlan
-  );
+  return types.filter((thisType) => !thisType.isDeprecated);
 };

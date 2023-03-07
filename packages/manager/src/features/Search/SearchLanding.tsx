@@ -23,10 +23,12 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useSpecificTypes } from 'src/queries/types';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
+import cleanArray from 'src/utilities/cleanArray';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -144,9 +146,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
-  const types = useSelector((state: ApplicationState) =>
-    Object.values(state.__resources.types.entities)
+
+  const typesQuery = useSpecificTypes(
+    cleanArray(linodes.map((linode) => linode.type))
   );
+  const types = cleanArray(typesQuery.map((result) => result.data));
+
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(_publicImages ?? []))
   );

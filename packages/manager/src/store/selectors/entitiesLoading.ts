@@ -1,4 +1,4 @@
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Volume } from '@linode/api-v4/lib/volumes';
@@ -30,7 +30,6 @@ const emptyResource = {
 export const linodesSelector = (state: State) => state.linodes;
 export const volumesSelector = (state: State) => emptyResource; // state.volumes
 export const nodeBalsSelector = (state: State) => emptyResource; // state.nodebalancers
-export const typesSelector = (state: State) => state.types;
 
 const isInitialLoad = (
   e: Resource<any, any> | RequestableDataWithEntityError<any>
@@ -41,15 +40,13 @@ export default createSelector<
   MappedEntityState<Linode, EntityError>,
   Resource<Volume[]>,
   Resource<NodeBalancer[][]>,
-  Resource<LinodeType[]>,
   boolean
 >(
   linodesSelector,
   volumesSelector,
   nodeBalsSelector,
-  typesSelector,
-  (linodes, volumes, nodebalancers, types) => {
-    const entities = [linodes, volumes, nodebalancers, types];
+  (linodes, volumes, nodebalancers) => {
+    const entities = [linodes, volumes, nodebalancers];
     const l = entities.length;
     for (let i = 0; i < l; i++) {
       if (isInitialLoad(entities[i])) {

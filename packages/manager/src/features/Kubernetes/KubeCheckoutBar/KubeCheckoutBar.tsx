@@ -12,8 +12,9 @@ import {
 } from 'src/features/Kubernetes/kubeUtils';
 import { useAccount } from 'src/queries/account';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { useProfile } from 'src/queries/profile';
+import { useSpecificTypes } from 'src/queries/types';
+import cleanArray from 'src/utilities/cleanArray';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import HACheckbox from './HACheckbox';
@@ -52,7 +53,9 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const { data: profile } = useProfile();
   const { data: account } = useAccount();
   const { data: agreements } = useAccountAgreements();
-  const { data: types, isLoading } = useAllLinodeTypesQuery();
+  const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
+  const types = cleanArray(typesQuery.map((result) => result.data));
+  const isLoading = typesQuery.some((query) => query.isLoading);
 
   const showGDPRCheckbox =
     isEURegion(region) &&

@@ -9,7 +9,6 @@ import ActionMenu from './ClusterActionMenu';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { dcDisplayNames } from 'src/constants';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import {
   getNextVersion,
@@ -19,6 +18,8 @@ import {
   useAllKubernetesNodePoolQuery,
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
+import { useSpecificTypes } from 'src/queries/types';
+import cleanArray from 'src/utilities/cleanArray';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -64,7 +65,8 @@ export const KubernetesClusterRow = (props: Props) => {
 
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
-  const { data: types } = useAllLinodeTypesQuery();
+  const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
+  const types = cleanArray(typesQuery.map((result) => result.data));
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 

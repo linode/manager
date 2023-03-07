@@ -58,7 +58,7 @@ import {
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/queries/types';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';

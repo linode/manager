@@ -13,11 +13,10 @@ import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { useSpecificTypes } from 'src/queries/types';
+import { ExtendedType, useSpecificTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent,

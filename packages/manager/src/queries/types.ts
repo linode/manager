@@ -5,7 +5,13 @@ import {
   LinodeType,
 } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQueries, useQuery, UseQueryOptions } from 'react-query';
+import {
+  QueryClient,
+  useQueries,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from 'react-query';
 import { LINODE_NETWORK_IN } from 'src/constants';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
@@ -18,7 +24,6 @@ export interface ExtendedType extends LinodeType {
   heading: string;
   subHeadings: string[];
   isDeprecated: boolean;
-  isShadowPlan?: boolean;
 }
 
 export const extendType = (type: LinodeType): ExtendedType => {
@@ -54,7 +59,7 @@ export const extendType = (type: LinodeType): ExtendedType => {
   };
 };
 
-const getAllTypes = async () =>
+const getAllTypes = () =>
   Promise.all([
     getAll<LinodeType>(getLinodeTypes)(),
     getAll<LinodeType>(getDeprecatedLinodeTypes)(),
@@ -65,7 +70,13 @@ const getAllTypes = async () =>
     ])
     .then((allTypes) => allTypes.map(extendType));
 
-const getSingleType = async (type: string) => getType(type).then(extendType);
+const getSingleType = async (type: string, queryClient: QueryClient) => {
+  const allTypesCache = queryClient.getQueryData<ExtendedType[]>(queryKey);
+  return (
+    allTypesCache?.find((cachedType) => cachedType.id === type) ??
+    getType(type).then(extendType)
+  );
+};
 
 export const useAllTypes = () =>
   useQuery<ExtendedType[], APIError[]>(queryKey, getAllTypes, {
@@ -77,10 +88,12 @@ export const useAllTypes = () =>
  * hook may be useful in fetching these "shadow plans".
  */
 export const useSpecificTypes = (types: string[]) => {
+  const queryClient = useQueryClient();
   return useQueries(
     types.map<UseQueryOptions<ExtendedType, APIError[]>>((type) => ({
       queryKey: [queryKey, type],
-      queryFn: () => getSingleType(type),
+      queryFn: () => getSingleType(type, queryClient),
+      ...queryPresets.oneTimeFetch,
     }))
   );
 };

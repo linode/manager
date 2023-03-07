@@ -14,10 +14,11 @@ import { DeleteNodePoolDialog } from './DeleteNodePoolDialog';
 import { AutoscalePoolDialog } from './AutoscalePoolDialog';
 import Button from 'src/components/Button';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
-import { useAllLinodeTypesQuery } from 'src/queries/linodes';
 import CircleProgress from 'src/components/CircleProgress';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
+import { useSpecificTypes } from 'src/queries/types';
+import cleanArray from 'src/utilities/cleanArray';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -71,8 +72,6 @@ export const NodePoolsDisplay = (props: Props) => {
     error: poolsError,
   } = useAllKubernetesNodePoolQuery(clusterID, { refetchInterval: 15000 });
 
-  const { data: types } = useAllLinodeTypesQuery();
-
   const [selectedNodeId, setSelectedNodeId] = useState<string>('');
 
   const [selectedPoolId, setSelectedPoolId] = useState(-1);
@@ -89,6 +88,10 @@ export const NodePoolsDisplay = (props: Props) => {
   const [isAutoscaleDialogOpen, setIsAutoscaleDialogOpen] = useState(false);
 
   const [numPoolsToDisplay, setNumPoolsToDisplay] = React.useState(25);
+  const _pools = pools?.slice(0, numPoolsToDisplay);
+
+  const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
+  const types = cleanArray(typesQuery.map((result) => result.data));
 
   const handleShowMore = () => {
     if (numPoolsToDisplay < (pools?.length ?? 0)) {
@@ -108,8 +111,6 @@ export const NodePoolsDisplay = (props: Props) => {
     setSelectedPoolId(poolId);
     setIsResizeDrawerOpen(true);
   };
-
-  const _pools = pools?.slice(0, numPoolsToDisplay);
 
   if (isLoading || pools === undefined) {
     return <CircleProgress />;

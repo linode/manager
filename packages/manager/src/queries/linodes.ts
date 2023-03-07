@@ -16,8 +16,6 @@ import {
   getLinodeLishToken,
   getLinodeConfigs,
   Config,
-  LinodeType,
-  getLinodeTypes,
 } from '@linode/api-v4/lib/linodes';
 
 export const STATS_NOT_READY_API_MESSAGE =
@@ -149,14 +147,6 @@ export const useLinodeLishTokenQuery = (id: number) => {
   );
 };
 
-export const useAllLinodeTypesQuery = () => {
-  return useQuery<LinodeType[], APIError[]>(
-    [queryKey, 'types'],
-    getAllLinodeTypes,
-    { ...queryPresets.oneTimeFetch }
-  );
-};
-
 /** Use with care; originally added to request all Linodes in a given region for IP sharing and transfer */
 const getAllLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
   getAll<Linode>((params, filter) =>
@@ -173,8 +163,3 @@ const getAllLinodeConfigs = (id: number) =>
   getAll<Config>((params, filter) =>
     getLinodeConfigs(id, params, filter)
   )().then((data) => data.data);
-
-const getAllLinodeTypes = () =>
-  getAll<LinodeType>((params) => getLinodeTypes(params))().then(
-    (data) => data.data
-  );

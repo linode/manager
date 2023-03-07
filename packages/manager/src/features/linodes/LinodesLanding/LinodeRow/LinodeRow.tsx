@@ -23,11 +23,8 @@ import {
   transitionText,
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
+import { ExtendedType } from 'src/queries/types';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
-import hasMutationAvailable, {
-  HasMutationAvailable,
-} from '../hasMutationAvailable';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
 import RegionIndicator from '../RegionIndicator';
@@ -70,7 +67,6 @@ interface Props {
 }
 
 export type CombinedProps = Props &
-  HasMutationAvailable &
   WithRecentEvent &
   WithNotifications &
   StyleProps;
@@ -101,7 +97,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
     openPowerActionDialog,
     openNotificationMenu,
     recentEvent,
-    mutationAvailable,
   } = props;
 
   const isBareMetalInstance = type?.class === 'metal';
@@ -231,7 +226,7 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
       <TableCell actionCell data-qa-notifications>
         <RenderFlag
-          mutationAvailable={mutationAvailable}
+          mutationAvailable={type?.isDeprecated ?? false}
           linodeNotifications={linodeNotifications}
           classes={classes}
         />
@@ -253,7 +248,6 @@ export const LinodeRow: React.FC<CombinedProps> = (props) => {
 
 const enhanced = compose<CombinedProps, Props>(
   withRecentEvent,
-  hasMutationAvailable,
   withNotifications,
   styled,
   React.memo

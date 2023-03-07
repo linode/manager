@@ -2,14 +2,16 @@ import { Event, GrantLevel, Notification } from '@linode/api-v4/lib/account';
 import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
 import { useSelector } from 'react-redux';
 import { useGrants } from 'src/queries/profile';
+import { useSpecificTypes } from 'src/queries/types';
 import { ApplicationState } from 'src/store';
 import { eventsForLinode } from 'src/store/events/event.selectors';
 import { getLinodeConfigsForLinode } from 'src/store/linodes/config/config.selectors';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
-import { getTypeById } from 'src/store/linodeType/linodeType.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
+import cleanArray from 'src/utilities/cleanArray';
+import useLinodes from './useLinodes';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {
   _configs: Config[];
@@ -22,22 +24,23 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
 
 export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
   const { data: grants } = useGrants();
+  const { linodes } = useLinodes();
+  const linode = linodes.itemsById[linodeId];
+  const typesQuery = useSpecificTypes(cleanArray([linode?.type]));
+  const type = typesQuery[0]?.data;
 
   return useSelector((state: ApplicationState) => {
-    const { events, __resources } = state;
-    const { notifications, types, linodeConfigs, linodeDisks } = __resources;
-
-    const linode = state.__resources.linodes.itemsById[linodeId];
     if (!linode) {
       return null;
     }
 
-    const { type } = linode;
+    const { events, __resources } = state;
+    const { notifications, linodeConfigs, linodeDisks } = __resources;
 
     return {
       ...linode,
       _notifications: getNotificationsForLinode(notifications, linodeId),
-      _type: getTypeById(types, type),
+      _type: type,
       _events: eventsForLinode(events, linodeId),
       _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
       _disks: getLinodeDisksForLinode(linodeDisks, linodeId),

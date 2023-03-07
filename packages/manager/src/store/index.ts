@@ -54,10 +54,6 @@ import linodes, {
   defaultState as defaultLinodesState,
   State as LinodesState,
 } from 'src/store/linodes/linodes.reducer';
-import types, {
-  defaultState as defaultTypesState,
-  State as TypesState,
-} from 'src/store/linodeType/linodeType.reducer';
 import longviewEvents from 'src/store/longview/longview.events';
 import longview, {
   defaultState as defaultLongviewState,
@@ -131,7 +127,6 @@ const __resourcesDefaultState = {
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
-  types: defaultTypesState,
   vlans: defaultVLANState,
 };
 
@@ -143,7 +138,6 @@ export interface ResourcesState {
   nodeBalancerConfigs: NodeBalancerConfigsState;
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
-  types: TypesState;
   vlans: VlanState;
 }
 
@@ -202,7 +196,6 @@ const __resources = combineReducers({
   nodeBalancers,
   nodeBalancerConfigs,
   notifications,
-  types,
   vlans,
 });
 

@@ -39,6 +39,7 @@ import withPreferences, {
   PreferencesActionsProps,
   PreferencesStateProps,
 } from './containers/preferences.container';
+import withTypes, { WithTypesProps } from './containers/types.container';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -58,7 +59,8 @@ type CombinedProps = Props &
   WithSnackbarProps &
   FeatureFlagConsumerProps &
   PreferencesStateProps &
-  PreferencesActionsProps;
+  PreferencesActionsProps &
+  WithTypesProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -147,7 +149,7 @@ export class App extends React.Component<CombinedProps, State> {
       )
       .subscribe(imageEventsHandler);
 
-    /* 
+    /*
       Send any Token events to the Token events handler in the queries file
      */
     events$
@@ -276,7 +278,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
   notificationsError: state.__resources.notifications.error,
-  typesError: state.__resources.types.error,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
@@ -297,7 +298,8 @@ export default compose(
   withSnackbar,
   withFeatureFlagProvider,
   withFeatureFlagConsumer,
-  withPreferences
+  withPreferences,
+  withTypes
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
