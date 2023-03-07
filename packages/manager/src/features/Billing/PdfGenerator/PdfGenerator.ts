@@ -59,8 +59,12 @@ const addLeftHeader = (
   const isInternational = !['US', 'CA'].includes(country);
 
   const getRemitAddress = (isAkamaiBilling: boolean) => {
+    if (!isAkamaiBilling) {
+      return ADDRESSES.linode;
+    }
     // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
-    if (!isAkamaiBilling || country === 'US') {
+    if (country === 'US') {
+      ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
       return ADDRESSES.linode;
     }
     if (['CA'].includes(country)) {
