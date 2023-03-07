@@ -19,7 +19,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const TrustedDevicesTable: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const TrustedDevicesTable: React.FC<
+  React.PropsWithChildren<CombinedProps>
+> = (props) => {
   const { loading, error, data } = props;
 
   const triggerDeletion = (deviceId: number) => {
@@ -46,7 +48,7 @@ export const TrustedDevicesTable: React.FC<React.PropsWithChildren<CombinedProps
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    (<>
+    <>
       {data.map((eachDevice) => {
         return (
           <TableRow ariaLabel={`Device ${eachDevice.id}`} key={eachDevice.id}>
@@ -67,7 +69,7 @@ export const TrustedDevicesTable: React.FC<React.PropsWithChildren<CombinedProps
           </TableRow>
         );
       })}
-    </>)
+    </>
   );
 };
 
@@ -77,7 +79,9 @@ interface ButtonProps {
   deviceId?: number;
   triggerDeletion: (deviceId: number) => void;
 }
-export const RevokeButton: React.FC<React.PropsWithChildren<ButtonProps>> = (props) => {
+export const RevokeButton: React.FC<React.PropsWithChildren<ButtonProps>> = (
+  props
+) => {
   const handleDelete = () => {
     const { triggerDeletion, deviceId } = props;
     if (!!deviceId) {

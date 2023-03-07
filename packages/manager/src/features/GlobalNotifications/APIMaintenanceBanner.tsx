@@ -11,7 +11,9 @@ interface Props {
   suppliedMaintenances: SuppliedMaintenanceData[] | undefined;
 }
 
-export const APIMaintenanceBanner: React.FC<React.PropsWithChildren<Props>> = (props) => {
+export const APIMaintenanceBanner: React.FC<React.PropsWithChildren<Props>> = (
+  props
+) => {
   const { suppliedMaintenances } = props;
 
   const { data: maintenancesData } = useMaintenanceQuery({
@@ -84,11 +86,11 @@ export const APIMaintenanceBanner: React.FC<React.PropsWithChildren<Props>> = (p
 
   return (
     // eslint-disable-next-line react/jsx-no-useless-fragment
-    (<>
+    <>
       {scheduledAPIMaintenances.map((scheduledAPIMaintenance) =>
         renderBanner(scheduledAPIMaintenance)
       )}
-    </>)
+    </>
   );
 };
 
