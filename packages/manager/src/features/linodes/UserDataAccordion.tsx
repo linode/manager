@@ -1,39 +1,70 @@
+import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import { makeStyles } from 'src/components/core/styles';
+import CheckBox from 'src/components/CheckBox';
+import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
-import Notice from 'src/components/Notice';
 import Link from 'src/components/Link';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 
 interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
+  flowSource?: 'rebuild' | null;
+  reuseUserData?: boolean;
+  onReuseUserDataChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const useStyles = makeStyles(() => ({
-  helpIcon: {
-    padding: '0px 0px 4px 8px',
-    '& svg': {
-      fill: 'currentColor',
-      stroke: 'none',
-    },
+const StyledHelpIcon = styled(HelpIcon)({
+  padding: '0px 0px 4px 8px',
+  '& svg': {
+    fill: 'currentColor',
+    stroke: 'none',
   },
-  accordionSummary: {
-    padding: '5px 24px 0px 24px',
+});
+
+const accordionHeading = (
+  <>
+    Add User Data{' '}
+    <StyledHelpIcon
+      text={
+        <>
+          User data is part of a virtual machine&rsquo;s cloud-init metadata
+          containing information related to a user&rsquo;s local account.{' '}
+          <Link to="/">Learn more.</Link>
+        </>
+      }
+      interactive
+    />
+  </>
+);
+
+const StyledBox = styled(Box)({
+  '.MuiFormControlLabel-root': {
+    paddingLeft: 2,
   },
-  accordionDetail: {
-    padding: '0px 24px 24px 24px',
+});
+
+const StyledDiv = styled('div')({
+  '& .notice': {
+    padding: '8px !important',
+    marginBottom: '0px !important',
   },
-}));
+});
 
 const UserDataAccordion = (props: Props) => {
-  const { disabled, userData, onChange } = props;
+  const {
+    disabled,
+    userData,
+    onChange,
+    flowSource,
+    reuseUserData,
+    onReuseUserDataChange,
+  } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
-
-  const classes = useStyles();
 
   const checkFormat = ({
     userData,
@@ -56,23 +87,6 @@ const UserDataAccordion = (props: Props) => {
     }
   };
 
-  const accordionHeading = (
-    <>
-      Add User Data{' '}
-      <HelpIcon
-        text={
-          <>
-            User data is part of a virtual machine&rsquo;s cloud-init metadata
-            containing information related to a user&rsquo;s local account.{' '}
-            <Link to="/">Learn more.</Link>
-          </>
-        }
-        className={classes.helpIcon}
-        interactive
-      />
-    </>
-  );
-
   return (
     <Accordion
       heading={accordionHeading}
@@ -81,25 +95,29 @@ const UserDataAccordion = (props: Props) => {
         variant: 'h2',
       }}
       summaryProps={{
-        classes: {
-          root: classes.accordionSummary,
-        },
+        sx: { padding: '5px 24px 0px 24px' },
       }}
       detailProps={{
-        classes: {
-          root: classes.accordionDetail,
-        },
+        sx:
+          flowSource !== 'rebuild'
+            ? { padding: '0px 24px 24px 24px' }
+            : { padding: '0px 24px 24px 0px' },
       }}
     >
-      <Typography>
-        <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
-          User Data
-        </Link>{' '}
-        is part of a virtual machine&rsquo;s cloud-init metadata that contains
-        anything related to a user&rsquo;s local account, including username and
-        user group(s). <br /> Accepted formats are YAML and bash.{' '}
-        <Link to="https://www.linode.com/docs">Learn more.</Link>
-      </Typography>
+      {flowSource !== 'rebuild' ? (
+        <>
+          {userDataExplanatoryCopy}
+          {acceptedFormatsCopy}
+        </>
+      ) : (
+        <StyledDiv>
+          <Notice
+            success
+            text="Adding new user data is recommended as part of the rebuild process."
+          />
+          {acceptedFormatsCopy}
+        </StyledDiv>
+      )}
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           This user data may not be in a format accepted by cloud-init.
@@ -121,8 +139,35 @@ const UserDataAccordion = (props: Props) => {
         }
         data-qa-user-data-input
       />
+      {flowSource === 'rebuild' ? (
+        <StyledBox>
+          <CheckBox
+            checked={reuseUserData}
+            onChange={onReuseUserDataChange}
+            text="Reuse user data previously provided for this Linode."
+          />
+        </StyledBox>
+      ) : null}
     </Accordion>
   );
 };
 
 export default UserDataAccordion;
+
+const userDataExplanatoryCopy = (
+  <Typography>
+    <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
+      User Data
+    </Link>{' '}
+    is part of a virtual machine&rsquo;s cloud-init metadata that contains
+    anything related to a user&rsquo;s local account, including username and
+    user group(s).
+  </Typography>
+);
+
+const acceptedFormatsCopy = (
+  <Typography>
+    <br /> Accepted formats are YAML and bash.{' '}
+    <Link to="https://www.linode.com/docs">Learn more.</Link>
+  </Typography>
+);

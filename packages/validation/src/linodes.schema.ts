@@ -79,7 +79,7 @@ export const UpdateLinodePasswordSchema = object({
 });
 
 const MetadataSchema = object({
-  user_data: string().notRequired(),
+  user_data: string().notRequired().nullable(true),
 });
 
 export const CreateLinodeSchema = object({
@@ -194,6 +194,7 @@ export const RebuildLinodeSchema = object().shape({
   stackscript_id: number().notRequired(),
   stackscript_data,
   booted: boolean().notRequired(),
+  metadata: MetadataSchema,
 });
 
 export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({

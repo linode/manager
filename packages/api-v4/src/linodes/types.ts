@@ -302,8 +302,8 @@ export interface IPAllocationRequest {
   public: boolean;
 }
 
-interface UserData {
-  user_data: string;
+export interface UserData {
+  user_data: string | null;
 }
 
 export interface CreateLinodeRequest {
@@ -345,6 +345,7 @@ export interface LinodeCloneData {
 export interface RebuildRequest {
   image: string;
   root_pass: string;
+  metadata?: UserData;
   authorized_keys?: SSHKey[];
   authorized_users?: string[];
   stackscript_id?: number;

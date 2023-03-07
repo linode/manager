@@ -1,4 +1,8 @@
-import { rebuildLinode, RebuildRequest } from '@linode/api-v4/lib/linodes';
+import {
+  rebuildLinode,
+  RebuildRequest,
+  UserData,
+} from '@linode/api-v4/lib/linodes';
 import { RebuildLinodeSchema } from '@linode/validation/lib/linodes.schema';
 import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
@@ -13,6 +17,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
+import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -55,11 +60,15 @@ export type CombinedProps = Props & UserSSHKeyProps;
 interface RebuildFromImageForm {
   image: string;
   root_pass: string;
+  metadata?: UserData;
 }
 
 const initialValues: RebuildFromImageForm = {
   image: '',
   root_pass: '',
+  metadata: {
+    user_data: '',
+  },
 };
 
 export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
@@ -79,12 +88,28 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+  const { data: _imagesData, error: imagesError } = useAllImagesQuery();
 
   const RebuildSchema = () => extendValidationSchema(RebuildLinodeSchema);
 
   const [confirmationText, setConfirmationText] = React.useState<string>('');
 
-  const { data: _imagesData, error: imagesError } = useAllImagesQuery();
+  const [userData, setUserData] = React.useState<string | undefined>('');
+  const [reuseUserData, setReuseUserData] = React.useState<boolean>(false);
+
+  const handleUserDataChange = (userData: string) => {
+    setUserData(userData);
+  };
+
+  const handleReuseUserDataChange = () => {
+    setReuseUserData(!reuseUserData);
+  };
+
+  React.useEffect(() => {
+    if (reuseUserData) {
+      setUserData('');
+    }
+  }, [reuseUserData]);
 
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
@@ -101,6 +126,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     const params: RebuildRequest = {
       image,
       root_pass,
+      metadata: {
+        user_data: userData && !reuseUserData ? window.btoa(userData) : null,
+      },
       authorized_users: userSSHKeys
         .filter((u) => u.selected)
         .map((u) => u.username),
@@ -168,6 +196,13 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
           handleRebuildError(status.generalError);
         }
 
+        const shouldDisplayUserDataAccordion = Boolean(
+          values.image &&
+            _imagesData
+              ?.find((image) => image.id === values.image)
+              ?.capabilities?.includes('cloud-init')
+        );
+
         return (
           <Grid item className={classes.root}>
             <form>
@@ -203,6 +238,16 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 disabled={disabled}
                 passwordHelperText={passwordHelperText}
               />
+              {shouldDisplayUserDataAccordion ? (
+                <UserDataAccordion
+                  userData={userData}
+                  onChange={handleUserDataChange}
+                  flowSource="rebuild"
+                  reuseUserData={reuseUserData}
+                  onReuseUserDataChange={handleReuseUserDataChange}
+                  disabled={reuseUserData}
+                />
+              ) : null}
               <ActionsPanel className={classes.actionPanel}>
                 <TypeToConfirm
                   confirmationText={
