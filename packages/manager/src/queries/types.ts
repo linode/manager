@@ -59,15 +59,17 @@ export const extendType = (type: LinodeType): ExtendedType => {
   };
 };
 
-const getAllTypes = () =>
+const getAllTypes = (includeLegacy: boolean) =>
   Promise.all([
     getAll<LinodeType>(getLinodeTypes)(),
-    getAll<LinodeType>(getDeprecatedLinodeTypes)(),
+    ...(includeLegacy ? [getAll<LinodeType>(getDeprecatedLinodeTypes)()] : []),
   ])
-    .then(([{ data: types }, { data: legacyTypes }]) => [
-      ...types,
-      ...legacyTypes,
-    ])
+    .then((results) =>
+      results.reduce((acc: LinodeType[], cur) => {
+        acc.push(...cur.data);
+        return acc;
+      }, [])
+    )
     .then((allTypes) => allTypes.map(extendType));
 
 const getSingleType = async (type: string, queryClient: QueryClient) => {
@@ -78,10 +80,21 @@ const getSingleType = async (type: string, queryClient: QueryClient) => {
   );
 };
 
-export const useAllTypes = () =>
-  useQuery<ExtendedType[], APIError[]>(queryKey, getAllTypes, {
-    ...queryPresets.oneTimeFetch,
-  });
+export interface TypesQueryOptions {
+  includeLegacy?: boolean;
+  enabled?: boolean;
+}
+
+export const useAllTypes = (options?: TypesQueryOptions) => {
+  return useQuery<ExtendedType[], APIError[]>(
+    [queryKey, options ?? {}],
+    () => getAllTypes(options?.includeLegacy ?? false),
+    {
+      enabled: options?.enabled ?? true,
+      ...queryPresets.oneTimeFetch,
+    }
+  );
+};
 
 /**
  * Some Linodes may have types that aren't returned by the /types and /types-legacy endpoints. This

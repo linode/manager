@@ -31,7 +31,9 @@ import withProfile, { ProfileProps } from 'src/components/withProfile';
 import withPreferences, {
   Props as PreferencesProps,
 } from 'src/containers/preferences.container';
-import withTypes, {
+import {
+  withTypes,
+  withSpecificTypes,
   WithSpecificTypesProps,
   WithTypesProps,
 } from 'src/containers/types.container';
@@ -561,7 +563,11 @@ export const isSmallerThanCurrentPlan = (
 };
 
 export default compose<CombinedProps, Props>(
-  withTypes,
+  // this awkward line avoids fetching all types until this dialog is opened which
+  // is important since LinodeResize is mounted on the default landing page
+  (component: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
+    withTypes(component, { enabled: props.open })(props),
+  withSpecificTypes,
   styled,
   withSnackbar,
   connected,

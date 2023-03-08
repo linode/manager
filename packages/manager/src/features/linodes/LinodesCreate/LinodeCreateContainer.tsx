@@ -27,7 +27,7 @@ import withImages, {
   DefaultProps as ImagesProps,
 } from 'src/containers/images.container';
 import withRegions from 'src/containers/regions.container';
-import withTypes from 'src/containers/types.container';
+import { withTypes, WithTypesProps } from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -75,7 +75,6 @@ import {
   WithLinodesProps,
   WithRegionsProps,
 } from './types';
-import { WithTypesProps } from 'src/containers/types.container';
 import { getRegionIDFromLinodeID } from './utilities';
 
 const DEFAULT_IMAGE = 'linode/debian11';

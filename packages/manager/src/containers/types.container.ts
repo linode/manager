@@ -1,6 +1,10 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
-import { useAllTypes, useSpecificTypes } from 'src/queries/types';
+import {
+  TypesQueryOptions,
+  useAllTypes,
+  useSpecificTypes,
+} from 'src/queries/types';
 import { ExtendedType } from 'src/queries/types';
 import cleanArray from 'src/utilities/cleanArray';
 
@@ -15,17 +19,27 @@ export interface WithSpecificTypesProps {
   requestedTypesData: ExtendedType[];
 }
 
-const withTypes = <Props>(
-  Component: React.ComponentType<
-    Props & WithTypesProps & WithSpecificTypesProps
-  >
+export const withTypes = <Props>(
+  Component: React.ComponentType<Props & WithTypesProps>,
+  options?: TypesQueryOptions
 ) => (props: Props) => {
   const {
     data: typesData,
     isLoading: typesLoading,
     error: typesError,
-  } = useAllTypes();
+  } = useAllTypes(options);
 
+  return React.createElement(Component, {
+    ...props,
+    typesData,
+    typesLoading,
+    typesError: typesError ?? undefined,
+  });
+};
+
+export const withSpecificTypes = <Props>(
+  Component: React.ComponentType<Props & WithSpecificTypesProps>
+) => (props: Props) => {
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
   const requestedTypesData = cleanArray(
@@ -34,12 +48,7 @@ const withTypes = <Props>(
 
   return React.createElement(Component, {
     ...props,
-    typesData,
-    typesLoading,
-    typesError: typesError ?? undefined,
     setRequestedTypes,
     requestedTypesData,
   });
 };
-
-export default withTypes;

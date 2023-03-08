@@ -39,7 +39,7 @@ import withPreferences, {
   PreferencesActionsProps,
   PreferencesStateProps,
 } from './containers/preferences.container';
-import withTypes, { WithTypesProps } from './containers/types.container';
+import { withTypes, WithTypesProps } from './containers/types.container';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -299,7 +299,8 @@ export default compose(
   withFeatureFlagProvider,
   withFeatureFlagConsumer,
   withPreferences,
-  withTypes
+  (component: React.ComponentType<WithTypesProps>) =>
+    withTypes(component, { enabled: false })
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

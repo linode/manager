@@ -74,7 +74,7 @@ export interface Props {
 export const AddNodePoolDrawer = (props: Props) => {
   const { clusterId, clusterLabel, onClose, open } = props;
   const classes = useStyles();
-  const { data: types } = useAllTypes();
+  const { data: types } = useAllTypes({ enabled: open });
   const {
     mutateAsync: createPool,
     isLoading,

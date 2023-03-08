@@ -12,7 +12,8 @@ import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
-import withTypes, {
+import {
+  withSpecificTypes,
   WithSpecificTypesProps,
 } from 'src/containers/types.container';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
@@ -307,6 +308,10 @@ const mapStateToProps: MapStateToProps<
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = compose<CombinedProps, {}>(connected, withTypes, withSnackbar);
+const enhanced = compose<CombinedProps, {}>(
+  connected,
+  withSpecificTypes,
+  withSnackbar
+);
 
 export default enhanced(BackupDrawer);

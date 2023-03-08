@@ -11,7 +11,7 @@ import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import { useAllTypes, useSpecificTypes } from 'src/queries/types';
+import { useSpecificTypes } from 'src/queries/types';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -32,14 +32,10 @@ interface Search {
 export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
   const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
-  const { data: allTypes } = useAllTypes();
 
-  // Some types may not be returned by the hook above
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
-  const additionalTypes = cleanArray(typesQuery.map((result) => result.data));
-
-  const types = [...(allTypes ?? []), ...additionalTypes];
+  const types = cleanArray(typesQuery.map((result) => result.data));
 
   const images = listToItemsByID(_images ?? []);
 
