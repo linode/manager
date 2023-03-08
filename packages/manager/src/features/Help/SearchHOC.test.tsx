@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import algoliasearch from 'algoliasearch';
 import { shallow } from 'enzyme';
 import * as React from 'react';
@@ -71,7 +72,7 @@ describe('Algolia Search HOC', () => {
     it('should search the Algolia indices', () => {
       const query = getSearchFromQuery('hat');
       component.props().searchAlgolia('hat');
-      expect(mockFn).toHaveBeenCalledWith(query, expect.any(Function));
+      expect(mockFn).toHaveBeenCalledWith(query);
     });
     it('should save an error to state if the request to Algolia fails', () => {
       mockFn.mockImplementationOnce((queries: any, callback: any) =>
@@ -82,22 +83,22 @@ describe('Algolia Search HOC', () => {
         'There was an error retrieving your search results.'
       );
     });
-    it('should set search results based on the Algolia response', () => {
-      mockFn.mockImplementationOnce((queries: any, callback: any) =>
-        callback(undefined, mockResults)
-      );
+    it('should set search results based on the Algolia response', async () => {
+      mockFn.mockImplementationOnce(() => mockResults);
       component.props().searchAlgolia('existentialism');
-      expect(component.props().searchResults[0]).toHaveLength(1);
-      expect(component.props().searchResults[1]).toHaveLength(1);
+
+      await waitFor(() => {
+        expect(component.props().searchResults[0]).toHaveLength(1);
+        expect(component.props().searchResults[1]).toHaveLength(1);
+      });
     });
-    it('should set results list to empty on a blank query', () => {
-      expect(component.props().searchResults[0]).toHaveLength(1);
-      mockFn.mockImplementationOnce((queries: any, callback: any) =>
-        callback(undefined, emptyResults)
-      );
+    it('should set results list to empty on a blank query', async () => {
+      mockFn.mockImplementationOnce(() => emptyResults);
       component.props().searchAlgolia('existentialism');
-      expect(component.props().searchResults[0]).toHaveLength(0);
-      expect(component.props().searchResults[1]).toHaveLength(0);
+      await waitFor(() => {
+        expect(component.props().searchResults[0]).toHaveLength(0);
+        expect(component.props().searchResults[1]).toHaveLength(0);
+      });
     });
   });
   describe('internal methods', () => {

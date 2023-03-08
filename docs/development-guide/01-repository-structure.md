@@ -54,7 +54,7 @@ A few notable directories in the root level of the manager package:
 - **/build**
   - where the app is compiled to after running `yarn build` (gitignored)
 - **/config**
-  - webpack configs and setup code
+  - configuration for unit tests
 - **/cypress**
   - end-to-end tests
 - **/e2e**

@@ -10,7 +10,7 @@ import {
 import { linodeFactory } from '@src/factories/linodes';
 import { makeResourcePage } from '@src/mocks/serverHandlers';
 import { accountSettingsFactory } from '@src/factories/accountSettings';
-import { routes } from 'cypress/support/ui/constants';
+import { routes } from 'support/ui/constants';
 import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { regions, regionsMap } from 'support/constants/regions';

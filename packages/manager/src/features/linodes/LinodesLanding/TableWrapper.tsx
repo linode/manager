@@ -1,4 +1,3 @@
-import sync from 'css-animation-sync';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
@@ -30,10 +29,6 @@ const TableWrapper: React.FC<CombinedProps> = (props) => {
     isVLAN,
     tableProps,
   } = props;
-
-  React.useEffect(() => {
-    sync('pulse');
-  }, []);
 
   return (
     <Grid container className="m0" spacing={0} style={{ width: '100%' }}>

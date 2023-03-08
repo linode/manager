@@ -39,6 +39,7 @@ import withPreferences, {
   PreferencesActionsProps,
   PreferencesStateProps,
 } from './containers/preferences.container';
+import { loadScript } from './hooks/useScript';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -77,6 +78,10 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    if (import.meta.env.PROD && !import.meta.env.REACT_APP_DISABLE_NEW_RELIC) {
+      loadScript('/new-relic.js');
+    }
+
     /**
      * Send pageviews unless blocklisted.
      */
