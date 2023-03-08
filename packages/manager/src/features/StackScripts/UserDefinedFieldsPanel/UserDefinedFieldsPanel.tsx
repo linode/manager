@@ -199,11 +199,11 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
   );
 
   const isCluster = userDefinedFields?.some(
-    (udf) => udf.name === 'node_options'
+    (udf) => udf.name === 'cluster_size'
   );
   const numberOfNodes =
-    udf_data['node_options'] !== undefined && udf_data['node_options'] !== null
-      ? Number(udf_data['node_options'])
+    udf_data['cluster_size'] !== undefined && udf_data['cluster_size'] !== null
+      ? Number(udf_data['cluster_size'])
       : 0;
 
   React.useEffect(() => {

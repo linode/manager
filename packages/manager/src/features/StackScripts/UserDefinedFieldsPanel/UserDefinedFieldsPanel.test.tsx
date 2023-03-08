@@ -20,9 +20,9 @@ describe('UserDefinedFieldsPanel', () => {
     const { queryByTestId } = renderWithTheme(
       <UserDefinedFieldsPanel
         handleChange={() => null}
-        udf_data={[{ name: 'node_options' }]}
+        udf_data={[{ name: 'cluster_size' }]}
         userDefinedFields={[
-          { name: 'node_options', label: 'Set Number of Nodes' },
+          { name: 'cluster_size', label: 'Set Number of Nodes' },
         ]}
         selectedLabel={''}
         selectedUsername={''}

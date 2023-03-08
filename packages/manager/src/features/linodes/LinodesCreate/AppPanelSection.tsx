@@ -59,7 +59,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
           const isCluster =
             decodedLabel.endsWith('Cluster ') &&
             eachApp.user_defined_fields.some(
-              (field) => field.name === 'node_options'
+              (field) => field.name === 'cluster_size'
             );
 
           const label = isCluster
