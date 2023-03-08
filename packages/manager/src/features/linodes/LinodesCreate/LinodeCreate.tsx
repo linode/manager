@@ -24,7 +24,6 @@ import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsLink from 'src/components/DocsLink';
 import DocsSidebar from 'src/components/DocsSidebar';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -33,7 +32,6 @@ import SafeTabPanel from 'src/components/SafeTabPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TabLinkList, { Tab } from 'src/components/TabLinkList';
 import { WithImages } from 'src/containers/withImages.container';
-import { AppsDocs } from 'src/documentation';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import {
   getCommunityStackscripts,
@@ -188,7 +186,6 @@ type CombinedProps = Props &
   AllFormStateAndHandlers &
   AppsData &
   ReduxStatePropsAndSSHKeys &
-  SetDocsProps &
   StateProps &
   WithDisplayData &
   WithImages &
@@ -875,38 +872,10 @@ const mapStateToProps: MapStateToProps<
   documentation: state.documentation,
 });
 
-const generateDocs = (ownProps: InnerProps & StateProps) => {
-  const { selectedStackScriptLabel } = ownProps;
-  if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter((eachDoc) => {
-      return eachDoc.title
-        .toLowerCase()
-        .includes(
-          selectedStackScriptLabel
-            .substr(0, selectedStackScriptLabel.indexOf(' '))
-            .toLowerCase()
-        );
-    });
-    return foundDocs.length ? foundDocs : [];
-  }
-  return [];
-};
-
-const updateCond = (
-  prevProps: InnerProps & StateProps,
-  nextProps: InnerProps & StateProps
-) => {
-  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
-};
-
 const styled = withStyles(styles);
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-const enhanced = recompose<CombinedProps, InnerProps>(
-  connected,
-  styled,
-  setDocs(generateDocs, updateCond)
-);
+const enhanced = recompose<CombinedProps, InnerProps>(connected, styled);
 
 export default enhanced(LinodeCreate);

@@ -11,10 +11,8 @@ import {
   withStyles,
   WithStyles,
 } from 'src/components/core/styles';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import { AppsDocs } from 'src/documentation';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -112,10 +110,7 @@ type InnerProps = Props &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
-type CombinedProps = WithStyles<ClassNames> &
-  InnerProps &
-  StateProps &
-  SetDocsProps;
+type CombinedProps = WithStyles<ClassNames> & InnerProps & StateProps;
 
 interface State {
   detailDrawerOpen: boolean;
@@ -444,32 +439,7 @@ const mapStateToProps: MapStateToProps<
 
 const connected = connect(mapStateToProps);
 
-const generateDocs = (ownProps: InnerProps & StateProps) => {
-  const { selectedStackScriptLabel } = ownProps;
-  if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter((eachDoc) => {
-      return eachDoc.title
-        .toLowerCase()
-        .includes(
-          selectedStackScriptLabel
-            .substr(0, selectedStackScriptLabel.indexOf(' '))
-            .toLowerCase()
-        );
-    });
-    return foundDocs.length ? foundDocs : [];
-  }
-  return [];
-};
-
-const updateCond = (
-  prevProps: InnerProps & StateProps,
-  nextProps: InnerProps & StateProps
-) => {
-  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
-};
-
 export default compose<CombinedProps, InnerProps>(
   connected,
-  setDocs(generateDocs, updateCond),
   styled
 )(FromAppsContent);
