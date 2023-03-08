@@ -113,7 +113,7 @@ interface Props {
 }
 
 interface State {
-  selectedId: string;
+  selectedId: string | null;
   errors?: APIError[];
   autoDiskResize: boolean;
   confirmationText: string;
@@ -133,7 +133,7 @@ type CombinedProps = Props &
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
-    selectedId: '',
+    selectedId: null,
     autoDiskResize: false,
     confirmationText: '',
     submitting: false,
@@ -149,13 +149,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     } = this.props;
     const { selectedId } = this.state;
 
-    if (!linodeId) {
+    if (!linodeId || !selectedId) {
       return;
     }
 
     const isSmaller = isSmallerThanCurrentPlan(
       selectedId,
-      linodeType || '',
+      linodeType ?? null,
       requestedTypesData
     );
 
@@ -363,7 +363,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             currentPlanHeading={currentPlanHeading}
             types={filterCurrentTypes(typesData)}
             onSelect={this.handleSelectPlan}
-            selectedID={this.state.selectedId}
+            selectedID={this.state.selectedId ?? undefined}
             disabled={tableDisabled}
             updateFor={[this.state.selectedId]}
           />
@@ -548,8 +548,8 @@ export const shouldEnableAutoResizeDiskOption = (
 };
 
 export const isSmallerThanCurrentPlan = (
-  selectedPlanID: string,
-  currentPlanID: string,
+  selectedPlanID: string | null,
+  currentPlanID: string | null,
   types: ExtendedType[]
 ) => {
   const currentType = types.find((thisType) => thisType.id === currentPlanID);
