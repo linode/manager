@@ -1,3 +1,5 @@
+// TODO: THIS FILE CAN BE DELETED. IT IS NO LONGER USED.
+
 import { APIError } from '@linode/api-v4/lib/types';
 import { last } from 'ramda';
 import * as React from 'react';

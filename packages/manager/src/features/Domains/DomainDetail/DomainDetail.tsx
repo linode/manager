@@ -1,29 +1,18 @@
 import { DomainRecord, getDomainRecords } from '@linode/api-v4/lib/domains';
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import { useDomainQuery, useUpdateDomainMutation } from 'src/queries/domains';
 import { getAllWithArguments } from 'src/utilities/getAll';
 import DomainRecords from '../DomainRecordsWrapper';
+import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
-  root: {
-    margin: 0,
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-    },
-    [theme.breakpoints.down('md')]: {
-      paddingRight: theme.spacing(),
-    },
-  },
   error: {
     marginTop: `${theme.spacing(3)} !important`,
     marginBottom: `0 !important`,
@@ -101,27 +90,20 @@ const DomainDetail = () => {
 
   return (
     <>
-      <Grid
-        container
-        className={`${classes.root} m0`}
-        justifyContent="space-between"
-      >
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={location.pathname}
-            labelOptions={{ noCap: true }}
-            onEditHandlers={{
-              editableTextTitle: domain.domain,
-              onEdit: handleLabelChange,
-              onCancel: resetEditableLabel,
-              errorText: updateError,
-            }}
-          />
-        </Grid>
-        <Grid item className="p0" style={{ marginTop: 14 }}>
-          <DocsLink href="https://www.linode.com/docs/guides/dns-manager/" />
-        </Grid>
-      </Grid>
+      <LandingHeader
+        title="Domain Details"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/dns-manager/"
+        breadcrumbProps={{
+          pathname: location.pathname,
+          onEditHandlers: {
+            editableTextTitle: domain.domain,
+            onEdit: handleLabelChange,
+            onCancel: resetEditableLabel,
+            errorText: updateError,
+          },
+        }}
+      />
       {location.state && location.state.recordError && (
         <Notice
           className={classes.error}

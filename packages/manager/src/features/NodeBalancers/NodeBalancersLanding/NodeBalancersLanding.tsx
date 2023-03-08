@@ -252,7 +252,7 @@ export class NodeBalancersLanding extends React.Component<
                 <LandingHeader
                   title="NodeBalancers"
                   entity="NodeBalancer"
-                  onAddNew={() =>
+                  onButtonClick={() =>
                     this.props.history.push('/nodebalancers/create')
                   }
                   docsLink="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"

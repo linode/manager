@@ -157,7 +157,7 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
         entity="Object Storage"
         createButtonText={createButtonText}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
-        onAddNew={createButtonAction}
+        onButtonClick={createButtonAction}
         removeCrumbX={1}
         breadcrumbProps={{ pathname: '/object-storage' }}
       />

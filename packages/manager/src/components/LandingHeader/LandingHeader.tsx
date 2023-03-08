@@ -9,6 +9,7 @@ import { useTheme, styled } from '@mui/material/styles';
 export interface Props extends Omit<HeaderProps, 'actions'> {
   analyticsLabel?: string;
   body?: JSX.Element;
+  buttonDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
   createButtonText?: string;
   disabledCreateButton?: boolean;
@@ -17,10 +18,11 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
   entity?: string;
   extraActions?: JSX.Element;
   loading?: boolean;
-  onAddNew?: () => void;
+  onButtonClick?: () => void;
+  onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
   onDocsClick?: () => void;
   removeCrumbX?: number;
-  title: string | JSX.Element;
+  title?: string | JSX.Element;
 }
 
 const Actions = styled('div')(({ theme }) => ({
@@ -30,6 +32,7 @@ const Actions = styled('div')(({ theme }) => ({
 export const LandingHeader = ({
   analyticsLabel,
   breadcrumbProps,
+  buttonDataAttrs,
   createButtonText,
   disabledCreateButton,
   docsLabel,
@@ -37,14 +40,15 @@ export const LandingHeader = ({
   entity,
   extraActions,
   loading,
-  onAddNew,
+  onButtonClick,
+  onButtonKeyPress,
   onDocsClick,
   removeCrumbX,
   title,
 }: Props) => {
   const theme = useTheme();
-  const renderActions = Boolean(onAddNew || extraActions);
-  const labelTitle = title.toString();
+  const renderActions = Boolean(onButtonClick || extraActions);
+  const labelTitle = title?.toString();
 
   const docsAnalyticsLabel = analyticsLabel
     ? analyticsLabel
@@ -55,48 +59,52 @@ export const LandingHeader = ({
   };
 
   return (
-    <Grid container data-qa-entity-header>
-      <Grid container item xs={12} sm={4}>
+    <Grid
+      container
+      data-qa-entity-header
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <Grid item>
         <Breadcrumb
-          {...breadcrumbProps}
           data-qa-title
           labelTitle={labelTitle}
-          pathname={location.pathname} // TODO: How is this passed in?
+          // Location is a global variable that is set by Reach Router.
+          // The pathname set when passing "breadcrumbProps" is just a fallback to satisfy the type.
+          pathname={location.pathname}
           removeCrumbX={removeCrumbX}
+          {...breadcrumbProps}
         />
       </Grid>
-      <Grid
-        alignItems="center"
-        container
-        item
-        justifyContent="flex-end"
-        sm={8}
-        xs={12}
-      >
-        {docsLink ? (
-          <DocsLink
-            href={docsLink}
-            label={docsLabel}
-            analyticsLabel={docsAnalyticsLabel}
-            onClick={onDocsClick}
-          />
-        ) : null}
-        {renderActions && (
-          <Actions>
-            {extraActions}
-            {onAddNew ? (
-              <Button
-                buttonType="primary"
-                disabled={disabledCreateButton}
-                loading={loading}
-                onClick={onAddNew}
-                sx={sxButton}
-              >
-                {createButtonText ?? `Create ${entity}`}
-              </Button>
-            ) : null}
-          </Actions>
-        )}
+      <Grid item>
+        <Grid alignItems="center" container item justifyContent="flex-end">
+          {docsLink ? (
+            <DocsLink
+              href={docsLink}
+              label={docsLabel}
+              analyticsLabel={docsAnalyticsLabel}
+              onClick={onDocsClick}
+            />
+          ) : null}
+          {renderActions && (
+            <Actions>
+              {extraActions}
+              {onButtonClick ? (
+                <Button
+                  buttonType="primary"
+                  disabled={disabledCreateButton}
+                  loading={loading}
+                  onClick={onButtonClick}
+                  sx={sxButton}
+                  onKeyPress={onButtonKeyPress}
+                  {...buttonDataAttrs}
+                >
+                  {createButtonText ?? `Create ${entity}`}
+                </Button>
+              ) : null}
+            </Actions>
+          )}
+        </Grid>
       </Grid>
     </Grid>
   );

@@ -313,7 +313,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
       <Notifications />
       <LandingHeader
         title="Create"
-        docsLabel="Getting Started"
+        docsLabel="Docs"
         docsLink="https://www.linode.com/docs/guides/platform/get-started/"
         breadcrumbProps={{
           pathname: `/linodes/${linode.label}`,

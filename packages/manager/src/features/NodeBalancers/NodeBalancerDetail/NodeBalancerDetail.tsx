@@ -9,7 +9,6 @@ import { last, pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
@@ -20,9 +19,7 @@ import {
   WithStyles,
 } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import DocsLink from 'src/components/DocsLink';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
@@ -49,6 +46,8 @@ import { NodeBalancerProvider } from './context';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
+import LandingHeader from 'src/components/LandingHeader';
+import { sendEvent } from 'src/utilities/ga';
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
@@ -267,7 +266,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   render() {
     const matches = (pathName: string) =>
       Boolean(matchPath(this.props.location.pathname, { path: pathName }));
-    const { classes, error, loading } = this.props;
+    const { error, loading } = this.props;
     const { nodeBalancer } = this.state;
 
     /** Loading State */
@@ -306,27 +305,27 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     return (
       <NodeBalancerProvider value={p}>
         <React.Fragment>
-          <Grid
-            container
-            className={`${classes.root} m0`}
-            justifyContent="space-between"
-          >
-            <Grid item className="p0">
-              <Breadcrumb
-                pathname={`/nodebalancers/${nodeBalancerLabel}`}
-                firstAndLastOnly
-                onEditHandlers={{
-                  editableTextTitle: nodeBalancerLabel,
-                  onEdit: this.updateLabel,
-                  onCancel: this.cancelUpdate,
-                  errorText: labelError,
-                }}
-              />
-            </Grid>
-            <Grid item className="p0" style={{ marginTop: 14 }}>
-              <DocsLink href="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/" />
-            </Grid>
-          </Grid>
+          <LandingHeader
+            title="Node Balancers"
+            docsLabel="Docs"
+            docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
+            breadcrumbProps={{
+              pathname: `/nodebalancers/${nodeBalancerLabel}`,
+              onEditHandlers: {
+                editableTextTitle: nodeBalancerLabel,
+                onEdit: this.updateLabel,
+                onCancel: this.cancelUpdate,
+                errorText: labelError,
+              },
+            }}
+            onDocsClick={() => {
+              sendEvent({
+                category: 'Node Balancer Details',
+                action: 'Click:link',
+                label: 'Getting Started',
+              });
+            }}
+          />
           {errorMap.none && <Notice error text={errorMap.none} />}
           <Tabs
             index={Math.max(

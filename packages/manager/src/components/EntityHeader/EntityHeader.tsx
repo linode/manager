@@ -7,7 +7,7 @@ export interface HeaderProps {
   children?: React.ReactNode;
   headerOnly?: boolean;
   isSummaryView?: boolean;
-  title: string | JSX.Element;
+  title?: string | JSX.Element;
   variant?: TypographyProps['variant'];
 }
 

@@ -38,7 +38,6 @@ import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { pluralize } from 'src/utilities/pluralize';
 import { ipv4TableID } from './LinodesDetail/LinodeNetworking/LinodeNetworking';
 import { lishLink, sshLink } from './LinodesDetail/utilities';
-// import LandingHeader from 'src/components/LandingHeader';
 import EntityHeader from 'src/components/EntityHeader';
 import withRecentEvent, {
   WithRecentEvent,
@@ -245,6 +244,8 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
   },
   statusChip: {
     ...theme.applyStatusPillStyles,
+    fontSize: '0.875rem',
+    letterSpacing: '.5px',
     borderRadius: 0,
     height: `24px !important`,
     marginLeft: theme.spacing(2),
@@ -280,32 +281,6 @@ const useHeaderStyles = makeStyles((theme: Theme) => ({
       paddingRight: 0,
     },
   },
-  actionItem: {
-    borderRadius: 0,
-    color: theme.textColors.linkActiveLight,
-    fontFamily: theme.font.normal,
-    fontSize: '0.875rem',
-    height: theme.spacing(5),
-    minWidth: 'auto',
-    '&:focus': {
-      outline: '1px dotted #999',
-    },
-    '&:hover': {
-      backgroundColor: '#3683dc !important',
-      color: '#ffffff',
-      textDecoration: 'none',
-    },
-  },
-  statusLink: {
-    backgroundColor: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    padding: 0,
-    '& p': {
-      color: theme.palette.primary.main,
-      fontFamily: theme.font.bold,
-    },
-  },
 }));
 
 const Header: React.FC<HeaderProps> = (props) => {
@@ -313,11 +288,9 @@ const Header: React.FC<HeaderProps> = (props) => {
   const theme = useTheme();
 
   const {
-    // variant,
     linodeLabel,
     linodeId,
     linodeStatus,
-    // linodePermissions,
     linodeRegionDisplay,
     openDialog,
     openPowerActionDialog,
@@ -352,45 +325,37 @@ const Header: React.FC<HeaderProps> = (props) => {
     // to display "Cloning to 'destination-linode'.
     formattedTransitionText !== formattedStatus;
 
-  // const {
-  //   editableLabelError,
-  //   setEditableLabelError,
-  //   resetEditableLabel,
-  // } = useEditableLabelState();
-  // const { updateLinode } = useLinodeActions();
+  const sxActionItem = {
+    color: theme.textColors.linkActiveLight,
+    fontFamily: theme.font.normal,
+    fontSize: '0.875rem',
+    height: theme.spacing(5),
+    minWidth: 'auto',
+    '&:hover': {
+      backgroundColor: theme.color.blueDTwhite,
+      color: theme.color.white,
+    },
+  };
 
-  // const handleSubmitLabelChange = (label: string) => {
-  //   return updateLinode({ linodeId, label })
-  //     .then(() => {
-  //       resetEditableLabel();
-  //     })
-  //     .catch((err) => {
-  //       const errors: APIError[] = getAPIErrorOrDefault(
-  //         err,
-  //         'An error occurred while updating label',
-  //         'label'
-  //       );
-  //       const errorStrings: string[] = errors.map((e) => e.reason);
-  //       setEditableLabelError(errorStrings[0]);
-  //       scrollErrorIntoView();
-  //       return Promise.reject(errorStrings[0]);
-  //     });
-  // };
+  const sxBoxFlex = {
+    alignItems: 'center',
+    display: 'flex',
+  };
 
-  // const ProgressButton = styled('button', {
-  //   name: 'ProgressButton',
-  // })(({ theme }) => ({
-
-  // }));
-
-  //  const StyledChip = styled(Chip, {
-  //   name: 'Chip',
-  // })(({ theme }) => ({
-  //   ...theme.applyStatusPillStyles,
-  //   borderRadius: 0,
-  //   height: `24px`,
-  //   marginLeft: theme.spacing(2),
-  // }));
+  const handleStatusChange = ({
+    linodeConfigs,
+    linodeId,
+    linodeLabel,
+    status,
+  }: {
+    linodeConfigs: Config[];
+    linodeId: number;
+    linodeLabel: string;
+    status: BootAction;
+  }) => {
+    sendLinodeActionMenuItemEvent(`${status} Linode`);
+    openPowerActionDialog(status, linodeId, linodeLabel, linodeConfigs);
+  };
 
   return (
     <EntityHeader
@@ -400,29 +365,9 @@ const Header: React.FC<HeaderProps> = (props) => {
         </Link>
       }
       variant={variant}
-      // breadcrumbProps={{
-      //   pathname: `/linodes/${linodeLabel}`,
-      //   onEditHandlers: !disabled
-      //     ? {
-      //         editableTextTitle: linodeLabel,
-      //         onEdit: handleSubmitLabelChange,
-      //         onCancel: resetEditableLabel,
-      //         errorText: editableLabelError,
-      //       }
-      //     : undefined,
-      // }}
-      // analyticsLabel={'Linode Detail'}
-      // docsLink="https://www.linode.com/docs/platform/billing-and-support/linode-beginners-guide/"
-      // parentLink={isDetails ? '/linodes' : undefined}
-      // parentText={isDetails ? 'Linodes' : undefined}
       isSummaryView={isSummaryView}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={sxBoxFlex}>
         <Chip
           data-qa-linode-status
           className={classNames({
@@ -440,10 +385,8 @@ const Header: React.FC<HeaderProps> = (props) => {
         {hasSecondaryStatus ? (
           <Button
             buttonType="secondary"
-            sx={{
-              minWidth: '50px',
-            }}
             onClick={openNotificationMenu}
+            sx={{ minWidth: '64px' }}
           >
             <ProgressDisplay
               progress={progress ?? 0}
@@ -453,51 +396,41 @@ const Header: React.FC<HeaderProps> = (props) => {
           </Button>
         ) : null}
       </Box>
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
+      <Box sx={sxBoxFlex}>
         <Hidden mdDown>
           <Button
             buttonType="secondary"
-            className={classes.actionItem}
-            disabled={!['running', 'offline'].includes(linodeStatus)}
-            onClick={() => {
-              const action =
-                linodeStatus === 'running' ? 'Power Off' : 'Power On';
-              sendLinodeActionMenuItemEvent(`${action} Linode`);
-
-              openPowerActionDialog(
-                `${action}` as BootAction,
+            sx={sxActionItem}
+            disabled={!(isRunning || isOffline)}
+            onClick={() =>
+              handleStatusChange({
+                linodeConfigs,
                 linodeId,
                 linodeLabel,
-                linodeStatus === 'running' ? linodeConfigs : []
-              );
-            }}
+                status: isRunning ? 'Power Off' : 'Power On',
+              })
+            }
           >
-            {linodeStatus === 'running' ? 'Power Off' : 'Power On'}
+            {isRunning ? 'Power Off' : 'Power On'}
           </Button>
           <Button
             buttonType="secondary"
-            className={classes.actionItem}
-            disabled={linodeStatus === 'offline'}
-            onClick={() => {
-              sendLinodeActionMenuItemEvent('Reboot Linode');
-              openPowerActionDialog(
-                'Reboot',
+            sx={sxActionItem}
+            disabled={isOffline}
+            onClick={() =>
+              handleStatusChange({
+                linodeConfigs,
                 linodeId,
                 linodeLabel,
-                linodeConfigs
-              );
-            }}
+                status: 'Reboot',
+              })
+            }
           >
             Reboot
           </Button>
           <Button
             buttonType="secondary"
-            className={classes.actionItem}
+            sx={sxActionItem}
             onClick={() => {
               handleConsoleButtonClick(linodeId);
             }}
@@ -507,12 +440,12 @@ const Header: React.FC<HeaderProps> = (props) => {
         </Hidden>
 
         <LinodeActionMenu
+          linodeBackups={backups}
           linodeId={linodeId}
           linodeLabel={linodeLabel}
           linodeRegion={linodeRegionDisplay}
-          linodeType={type ?? undefined}
           linodeStatus={linodeStatus}
-          linodeBackups={backups}
+          linodeType={type ?? undefined}
           openDialog={openDialog}
           openPowerActionDialog={openPowerActionDialog}
         />

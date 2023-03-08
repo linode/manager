@@ -15,7 +15,6 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CheckoutBar, { DisplaySectionList } from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
@@ -65,6 +64,7 @@ import {
   queryKey,
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
+import LandingHeader from 'src/components/LandingHeader';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -531,10 +531,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container className="m0">
           <Grid item className={`mlMain p0`}>
-            <Breadcrumb
-              pathname="/nodebalancers/create"
-              data-qa-create-nodebalancer-header
-            />
+            <LandingHeader title="Create" data-qa-create-nodebalancer-header />
             {generalError && !this.disabled && (
               <Notice spacingTop={8} error>
                 {generalError}
