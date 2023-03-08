@@ -34,6 +34,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+import { styled } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -255,7 +256,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                     onChange={handleUserDataChange}
                     disabled={reuseUserData}
                     renderNotice={() => (
-                      <Notice
+                      <StyledNotice
                         success
                         text="Adding new user data is recommended as part of the rebuild process."
                       />
@@ -312,3 +313,9 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 const enhanced = compose<CombinedProps, Props>(userSSHKeyHoc);
 
 export default enhanced(RebuildFromImage);
+
+const StyledNotice = styled(Notice)({
+  // @TODO: Remove the !important's once Notice.tsx has been refactored to use MUI's styled()
+  padding: '8px !important',
+  marginBottom: '0px !important',
+});
