@@ -16,9 +16,11 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import { Link } from 'src/components/Link';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import TextTooltip from 'src/components/TextTooltip';
 import {
   handleFieldErrors,
   handleGeneralErrors,
@@ -34,6 +36,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     margin: `${theme.spacing(2)} ${theme.spacing(1)} 0 `,
     width: `calc(100% - ${theme.spacing(2)})`,
+  },
+  formHelperTextLink: {
+    display: 'block',
+    marginTop: theme.spacing(1),
+  },
+  command: {
+    // backgroundColor: theme.color.
   },
 }));
 
@@ -182,6 +191,13 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
 
   return (
     <Drawer title={getTitle(mode)} open={open} onClose={props.onClose}>
+      <FormHelperText>
+        The size of a Linode Compute Instance&rsquo;s disk can be increased or
+        decreased as needed.
+        <Link to={'/'} className={classes.formHelperTextLink}>
+          Learn more about restrictions to keep in mind.
+        </Link>
+      </FormHelperText>
       <Grid container direction="row">
         {mode === 'create' && (
           <Grid item data-qa-mode-toggle>
@@ -280,7 +296,16 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
               data-qa-disk-size
             />
             <FormHelperText style={{ marginTop: 8 }}>
-              Maximum Size: {props.maximumSize} MB
+              Maximum size: {props.maximumSize} MB
+            </FormHelperText>
+            <FormHelperText>
+              Minimum size is determined how much space the files on the disk
+              are using.{' '}
+              <TextTooltip
+                displayText="Check disk usage."
+                tooltipText={MaxSizeTooltipText}
+                sxTypography={{ display: 'inline' }}
+              />
             </FormHelperText>
           </form>
         </Grid>
@@ -308,3 +333,10 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
 };
 
 export default React.memo(DiskDrawer);
+
+const MaxSizeTooltipText = (
+  <>
+    Run the command df -h within the Linode&rsquo;s command line (through{' '}
+    <Link to="/">SSH</Link> or <Link to="/">Lish</Link>).
+  </>
+);

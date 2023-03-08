@@ -344,6 +344,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             <TextTooltip
               displayText="Usage History may not reflect finalized invoice"
               tooltipText={AkamaiBillingInvoiceText}
+              sxTypography={{ paddingLeft: '4px' }}
             />
           </div>
         ) : null}
