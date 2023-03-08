@@ -12,9 +12,13 @@ import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
+import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
@@ -30,7 +34,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import Divider from 'src/components/core/Divider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -250,11 +253,23 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                   <UserDataAccordion
                     userData={userData}
                     onChange={handleUserDataChange}
-                    reuseUserData={reuseUserData}
-                    onReuseUserDataChange={handleReuseUserDataChange}
                     disabled={reuseUserData}
-                    renderNotice
-                    renderCheckbox
+                    renderNotice={() => (
+                      <Notice
+                        success
+                        text="Adding new user data is recommended as part of the rebuild process."
+                      />
+                    )}
+                    renderCheckbox={() => (
+                      <Box>
+                        <CheckBox
+                          checked={reuseUserData}
+                          onChange={handleReuseUserDataChange}
+                          text="Reuse user data previously provided for this Linode."
+                          sxFormLabel={{ paddingLeft: '2px' }}
+                        />
+                      </Box>
+                    )}
                   />
                 </>
               ) : null}

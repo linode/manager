@@ -1,8 +1,6 @@
 import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
@@ -13,10 +11,8 @@ interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
-  reuseUserData?: boolean;
-  onReuseUserDataChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  renderNotice?: boolean;
-  renderCheckbox?: boolean;
+  renderNotice?: () => JSX.Element;
+  renderCheckbox?: () => JSX.Element;
 }
 
 const StyledHelpIcon = styled(HelpIcon)({
@@ -44,15 +40,7 @@ const accordionHeading = (
 );
 
 const UserDataAccordion = (props: Props) => {
-  const {
-    disabled,
-    userData,
-    onChange,
-    reuseUserData,
-    onReuseUserDataChange,
-    renderNotice,
-    renderCheckbox,
-  } = props;
+  const { disabled, userData, onChange, renderNotice, renderCheckbox } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
@@ -98,19 +86,11 @@ const UserDataAccordion = (props: Props) => {
       }}
     >
       {renderNotice ? (
-        <div>
-          <Notice
-            success
-            text="Adding new user data is recommended as part of the rebuild process."
-          />
-          {acceptedFormatsCopy}
-        </div>
+        <div data-testid="render-notice">{renderNotice()}</div>
       ) : (
-        <>
-          {userDataExplanatoryCopy}
-          {acceptedFormatsCopy}
-        </>
+        userDataExplanatoryCopy
       )}
+      {acceptedFormatsCopy}
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           This user data may not be in a format accepted by cloud-init.
@@ -132,16 +112,7 @@ const UserDataAccordion = (props: Props) => {
         }
         data-qa-user-data-input
       />
-      {renderCheckbox ? (
-        <Box>
-          <CheckBox
-            checked={reuseUserData}
-            onChange={onReuseUserDataChange}
-            text="Reuse user data previously provided for this Linode."
-            sxFormLabel={{ paddingLeft: '2px' }}
-          />
-        </Box>
-      ) : null}
+      {renderCheckbox ? renderCheckbox() : null}
     </Accordion>
   );
 };
