@@ -29,6 +29,21 @@ describe('NodeTable', () => {
             })
           )
         );
+      }),
+      rest.get('*/linode/types', (req, res, ctx) => {
+        return res(
+          ctx.json(
+            makeResourcePage(
+              linodeTypeFactory.buildList(1, {
+                label: 'Linode 2GB',
+                id: 'g6-standard-1',
+              })
+            )
+          )
+        );
+      }),
+      rest.get('*/linode/types-legacy', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage(linodeTypeFactory.buildList(0))));
       })
     );
 
