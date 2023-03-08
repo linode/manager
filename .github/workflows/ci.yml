@@ -166,7 +166,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v3
+      - uses: actions/cache@v2
         with:
           path: |
             **/node_modules
