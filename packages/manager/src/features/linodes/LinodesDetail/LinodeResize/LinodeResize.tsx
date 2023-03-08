@@ -240,14 +240,14 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     this.setState({ autoDiskResize: !this.state.autoDiskResize });
   };
 
-  updateSelectedTypes = () => {
+  updateRequestedTypes = () => {
     this.props.setRequestedTypes(
       cleanArray([this.props.linodeType, this.state.selectedId])
     );
   };
 
   componentDidMount = () => {
-    this.updateSelectedTypes();
+    this.updateRequestedTypes();
   };
 
   componentDidUpdate = (prevProps: CombinedProps, prevState: State) => {
@@ -276,7 +276,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       prevProps.linodeType !== this.props.linodeType ||
       prevState.selectedId !== this.state.selectedId
     ) {
-      this.updateSelectedTypes();
+      this.updateRequestedTypes();
     }
   };
 

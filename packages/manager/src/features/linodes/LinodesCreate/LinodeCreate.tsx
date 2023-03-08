@@ -65,9 +65,9 @@ import {
   WithDisplayData,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps,
   WithTypesRegionsAndImages,
 } from './types';
+import { WithTypesProps } from 'src/containers/types.container';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
 import { CheckoutSummary } from 'src/components/CheckoutSummary/CheckoutSummary';

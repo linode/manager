@@ -50,12 +50,6 @@ export interface WithRegionsProps {
   regionsError?: APIError[];
 }
 
-export interface WithTypesProps {
-  typesData?: ExtendedType[];
-  typesLoading: boolean;
-  typesError?: APIError[];
-}
-
 /**
  * Pure Data without the loading and error
  * keys. Component with these props have already been

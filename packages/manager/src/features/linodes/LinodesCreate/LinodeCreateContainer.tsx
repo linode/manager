@@ -74,8 +74,8 @@ import {
   TypeInfo,
   WithLinodesProps,
   WithRegionsProps,
-  WithTypesProps,
 } from './types';
+import { WithTypesProps } from 'src/containers/types.container';
 import { getRegionIDFromLinodeID } from './utilities';
 
 const DEFAULT_IMAGE = 'linode/debian11';
