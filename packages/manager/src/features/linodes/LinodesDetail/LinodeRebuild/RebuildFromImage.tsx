@@ -30,6 +30,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
+import Divider from 'src/components/core/Divider';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -102,7 +103,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   };
 
   const handleReuseUserDataChange = () => {
-    setReuseUserData(!reuseUserData);
+    setReuseUserData((reuseUserData) => !reuseUserData);
   };
 
   React.useEffect(() => {
@@ -133,6 +134,11 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
         .filter((u) => u.selected)
         .map((u) => u.username),
     };
+
+    // If no user data has been added, do not include the metadata property in the payload.
+    if (!userData && !reuseUserData) {
+      delete params['metadata'];
+    }
 
     // @todo: eventually this should be a dispatched action instead of a services library call
     rebuildLinode(linodeId, params)
@@ -239,14 +245,18 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                 passwordHelperText={passwordHelperText}
               />
               {shouldDisplayUserDataAccordion ? (
-                <UserDataAccordion
-                  userData={userData}
-                  onChange={handleUserDataChange}
-                  flowSource="rebuild"
-                  reuseUserData={reuseUserData}
-                  onReuseUserDataChange={handleReuseUserDataChange}
-                  disabled={reuseUserData}
-                />
+                <>
+                  <Divider spacingTop={40} />
+                  <UserDataAccordion
+                    userData={userData}
+                    onChange={handleUserDataChange}
+                    reuseUserData={reuseUserData}
+                    onReuseUserDataChange={handleReuseUserDataChange}
+                    disabled={reuseUserData}
+                    renderNotice
+                    renderCheckbox
+                  />
+                </>
               ) : null}
               <ActionsPanel className={classes.actionPanel}>
                 <TypeToConfirm

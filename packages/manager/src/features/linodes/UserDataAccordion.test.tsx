@@ -3,13 +3,9 @@ import { renderWithTheme } from 'src/utilities/testHelpers';
 import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
 
 describe('UserDataAccordion', () => {
-  it('should have a notice recommending new user data be used when a Linode is being rebuilt', () => {
+  it('should have a notice recommending new user data be used when the renderNotice prop is passed in', () => {
     const { getByText } = renderWithTheme(
-      <UserDataAccordion
-        userData={''}
-        onChange={() => null}
-        flowSource="rebuild"
-      />
+      <UserDataAccordion userData={''} onChange={() => null} renderNotice />
     );
 
     expect(
@@ -19,7 +15,7 @@ describe('UserDataAccordion', () => {
     ).toBeInTheDocument();
   });
 
-  it('should NOT have a notice recommending new user data be used if a Linode is not being rebuilt', () => {
+  it('should NOT have a notice recommending new user data be used when the renderNotice prop is not passed in', () => {
     const { queryByText } = renderWithTheme(
       <UserDataAccordion userData={''} onChange={() => null} />
     );

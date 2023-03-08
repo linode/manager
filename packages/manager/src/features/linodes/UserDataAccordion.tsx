@@ -13,9 +13,10 @@ interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
-  flowSource?: 'rebuild' | null;
   reuseUserData?: boolean;
   onReuseUserDataChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  renderNotice?: boolean;
+  renderCheckbox?: boolean;
 }
 
 const StyledHelpIcon = styled(HelpIcon)({
@@ -60,9 +61,10 @@ const UserDataAccordion = (props: Props) => {
     disabled,
     userData,
     onChange,
-    flowSource,
     reuseUserData,
     onReuseUserDataChange,
+    renderNotice,
+    renderCheckbox,
   } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
@@ -90,7 +92,7 @@ const UserDataAccordion = (props: Props) => {
   return (
     <Accordion
       heading={accordionHeading}
-      style={{ marginTop: 24 }}
+      style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
       }}
@@ -98,18 +100,17 @@ const UserDataAccordion = (props: Props) => {
         sx: { padding: '5px 24px 0px 24px' },
       }}
       detailProps={{
-        sx:
-          flowSource !== 'rebuild'
-            ? { padding: '0px 24px 24px 24px' }
-            : { padding: '0px 24px 24px 0px' },
+        sx: renderNotice
+          ? { padding: '0px 24px 24px 0px' }
+          : { padding: '0px 24px 24px 24px' },
+      }}
+      sx={{
+        '&:before': {
+          display: 'none',
+        },
       }}
     >
-      {flowSource !== 'rebuild' ? (
-        <>
-          {userDataExplanatoryCopy}
-          {acceptedFormatsCopy}
-        </>
-      ) : (
+      {renderNotice ? (
         <StyledDiv>
           <Notice
             success
@@ -117,6 +118,11 @@ const UserDataAccordion = (props: Props) => {
           />
           {acceptedFormatsCopy}
         </StyledDiv>
+      ) : (
+        <>
+          {userDataExplanatoryCopy}
+          {acceptedFormatsCopy}
+        </>
       )}
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
@@ -139,7 +145,7 @@ const UserDataAccordion = (props: Props) => {
         }
         data-qa-user-data-input
       />
-      {flowSource === 'rebuild' ? (
+      {renderCheckbox ? (
         <StyledBox>
           <CheckBox
             checked={reuseUserData}
