@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   btnRoot: {
@@ -74,23 +73,17 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
     );
   } else {
     return (
-      <Tooltip
-        title={tooltip ?? ''}
-        disableTouchListener
-        enterDelay={500}
-        leaveDelay={0}
-      >
-        <>
-          <Button
-            className={`${className} ${classes.btnRoot}`}
-            onClick={onClick}
-            disabled={disabled}
-            loading={loading}
-          >
-            {actionText}
-          </Button>
-        </>
-      </Tooltip>
+      <>
+        <Button
+          className={`${className} ${classes.btnRoot}`}
+          onClick={onClick}
+          disabled={disabled}
+          loading={loading}
+          tooltipText={tooltip}
+        >
+          {actionText}
+        </Button>
+      </>
     );
   }
 };
