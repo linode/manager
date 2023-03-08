@@ -328,6 +328,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       requestedTypesData
     );
 
+    const currentTypes = filterCurrentTypes(typesData);
+
     return (
       <Dialog
         title={`Resize Linode ${this.props.linodeLabel ?? ''}`}
@@ -361,11 +363,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <div className={classes.selectPlanPanel}>
           <SelectPlanPanel
             currentPlanHeading={currentPlanHeading}
-            types={filterCurrentTypes(typesData)}
+            types={currentTypes}
             onSelect={this.handleSelectPlan}
             selectedID={this.state.selectedId ?? undefined}
             disabled={tableDisabled}
-            updateFor={[this.state.selectedId]}
+            updateFor={[this.state.selectedId, currentTypes]}
           />
         </div>
         <Typography variant="h2" className={classes.resizeTitle}>
