@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-import * as zxcvbn from 'zxcvbn';
+import zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 

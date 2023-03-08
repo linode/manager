@@ -1,4 +1,4 @@
-import Algolia from 'algoliasearch';
+import Algolia, { SearchClient } from 'algoliasearch';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Item } from 'src/components/EnhancedSelect/Select';
@@ -32,12 +32,7 @@ interface SearchOptions {
 }
 
 interface AlgoliaContent {
-  results: Algolia.Response[];
-}
-
-interface AlgoliaError {
-  message: string;
-  code: number;
+  results: unknown;
 }
 
 // Functional helper methods
@@ -116,7 +111,7 @@ export default (options: SearchOptions) => (
 ) => {
   const { hitsPerPage, highlight } = options;
   class WrappedComponent extends React.PureComponent<{}, AlgoliaState> {
-    searchIndex: any;
+    client: SearchClient;
     mounted: boolean = false;
 
     componentDidMount() {
@@ -131,7 +126,7 @@ export default (options: SearchOptions) => (
     initializeSearchIndices = () => {
       try {
         const client = Algolia(ALGOLIA_APPLICATION_ID, ALGOLIA_SEARCH_KEY);
-        this.searchIndex = client;
+        this.client = client;
         this.setState({ searchEnabled: true, searchError: undefined });
       } catch {
         // Credentials were incorrect or couldn't be found;
@@ -144,7 +139,7 @@ export default (options: SearchOptions) => (
       }
     };
 
-    searchAlgolia = (inputValue: string) => {
+    searchAlgolia = async (inputValue: string) => {
       if (!this.mounted) {
         return;
       }
@@ -152,15 +147,16 @@ export default (options: SearchOptions) => (
         this.setState({ searchResults: [[], []] });
         return;
       }
-      if (!this.searchIndex) {
+      if (!this.client) {
         this.setState({
           searchResults: [[], []],
           searchError: 'Search could not be enabled.',
         });
         return;
       }
-      this.searchIndex.search(
-        [
+
+      try {
+        const results = await this.client.search([
           {
             indexName: 'linode-docs',
             query: inputValue,
@@ -182,24 +178,20 @@ export default (options: SearchOptions) => (
               ],
             },
           },
-        ],
-        this.searchSuccess
-      );
-    };
-
-    searchSuccess = (err: AlgoliaError, content: AlgoliaContent) => {
-      if (!this.mounted) {
-        return;
-      }
-      if (err) {
-        /*
-         * Errors from Algolia have the format: {'message': string, 'code': number}
-         * We do not want to push these messages on to the user as they are not under
-         * our control and can be account-related (e.g. "You have exceeded your quota").
-         */
+        ]);
+        this.searchSuccess(results);
+      } catch (e) {
+        if (!this.mounted) {
+          return;
+        }
         this.setState({
           searchError: 'There was an error retrieving your search results.',
         });
+      }
+    };
+
+    searchSuccess = (content: AlgoliaContent) => {
+      if (!this.mounted) {
         return;
       }
 

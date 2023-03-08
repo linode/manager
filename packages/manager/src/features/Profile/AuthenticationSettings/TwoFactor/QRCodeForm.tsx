@@ -1,4 +1,4 @@
-import * as QRCode from 'qrcode.react';
+import QRCode from 'qrcode.react';
 import { compose } from 'ramda';
 import * as React from 'react';
 import CopyableTextField from 'src/components/CopyableTextField';
@@ -10,12 +10,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
-
-declare module 'qrcode.react' {
-  export interface QRCodeProps {
-    className: any;
-  }
-}
 
 type ClassNames = 'root' | 'instructions' | 'qrcodeContainer';
 
@@ -39,7 +33,9 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const QRCodeForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const QRCodeForm: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const { classes, secret, secretLink } = props;
   return (
     <React.Fragment>
@@ -52,7 +48,6 @@ const QRCodeForm: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => 
           level="H" // QR code error checking level ("High"); gives a higher resolution code
           value={secretLink}
           data-qa-qr-code
-          className="qrCode"
         />
       </div>
       <Typography variant="h3" data-qa-copy className={classes.instructions}>

@@ -19,7 +19,7 @@ interface EnvironmentOption {
 // Repeat for each desired environment, incrementing the "1" to "2", e.g.:
 //
 // REACT_APP_DEV_TOOLS_ENV_2_LABEL+"Another environment"
-export const getOptions = (env: typeof process.env) => {
+export const getOptions = (env: Partial<ImportMetaEnv>) => {
   const envVariables = Object.keys(env);
 
   return envVariables.reduce<EnvironmentOption[]>((acc, thisEnvVariable) => {
@@ -43,7 +43,7 @@ export const getOptions = (env: typeof process.env) => {
   }, []);
 };
 
-const options = getOptions(process.env);
+const options = getOptions(import.meta.env);
 
 // This component works by setting local storage values that override the API_ROOT, LOGIN_ROOT,
 // and CLIENT_ID environment variables, giving client-side control over the environment.

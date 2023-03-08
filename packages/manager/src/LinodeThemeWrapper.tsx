@@ -60,12 +60,17 @@ const isThemeChoice = (value: unknown): value is ThemeChoice => {
   return typeof value === 'string' && themes[value] !== undefined;
 };
 
-const LinodeThemeWrapper = ({ children }: { children: React.ReactNode }) => {
+interface Props {
+  children: React.ReactNode;
+  theme?: 'light' | 'dark';
+}
+
+const LinodeThemeWrapper = ({ children, theme }: Props) => {
   // fallback to default when rendering themed components pre-authentication
   const isAuthenticated = !!useAuthentication().token;
   const { data: preferences } = usePreferences(isAuthenticated);
 
-  const themePreference = preferences?.theme;
+  const themePreference = theme ?? preferences?.theme;
 
   const themeChoice: ThemeChoice = isThemeChoice(themePreference)
     ? themePreference
