@@ -29,7 +29,7 @@ interface Props {
   name: string;
 }
 
-const SayHello: React.FC<Props> = (props) => {
+const SayHello = (props: Props) => {
   const classes = useStyles();
   return <h1 className={classes.name}>Hello, {capitalize(props.name)}</h1>;
 };
@@ -45,7 +45,7 @@ export default SayHello;
 
 - Import React with `import * as React from 'react'`.
 - Use absolute imports, e.g. `import { queryClient } from 'src/queries/base'`.
-- Methods from the api-v4 package should be imported from `@linode/api-v4/lib/..`.
+- Methods from the api-v4 package should be imported from `@linode/api-v4` or `@linode/validation`.
 
 #### Styles
 
@@ -58,7 +58,22 @@ export default SayHello;
 #### Types and Interfaces
 
 - To specify component props, define an interface called `Props` and pass it to the component as a type argument
-  - e.g. `const SayHello: React.FC<Props> // ...`
+  - e.g. `const SayHello = (props: Props) => // ...`
+
+#### Components with Children
+
+- For components that require children, explicity define `children` in the Props interface
+
+```typescript
+interface Props {
+  children: React.ReactNode;
+  id: number;
+}
+
+const Button = (props: Props) => {
+  return <button>{props.children}</button>;
+};
+```
 
 #### Function Component Definition
 
@@ -73,4 +88,4 @@ export default SayHello;
 #### Default Export
 
 - Usually you'll export the component by default,
-  - e.g. `export default = MyComponent`
+  - e.g. `export default MyComponent`
