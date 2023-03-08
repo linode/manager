@@ -31,6 +31,7 @@ interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
   queryClient?: QueryClient;
+  theme?: 'light' | 'dark';
 }
 
 /**
@@ -49,7 +50,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
-        <LinodeThemeWrapper>
+        <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
             value={{
               flags: options.flags ?? {},

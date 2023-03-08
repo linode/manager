@@ -208,7 +208,7 @@ export const {
 export const getEnvLocalStorageOverrides = () => {
   // This is broken into two logical branches so that local storage is accessed
   // ONLY if the dev tools are enabled and it's a development build.
-  if (devToolsEnabled() && process.env.NODE_ENV === 'development') {
+  if (devToolsEnabled() && import.meta.env.DEV) {
     const localStorageOverrides = storage.devToolsEnv.get();
     if (localStorageOverrides) {
       return localStorageOverrides;
