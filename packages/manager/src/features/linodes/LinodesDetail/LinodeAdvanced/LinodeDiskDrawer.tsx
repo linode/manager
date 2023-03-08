@@ -41,9 +41,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'block',
     marginTop: theme.spacing(1),
   },
-  command: {
-    // backgroundColor: theme.color.
-  },
 }));
 
 /**
