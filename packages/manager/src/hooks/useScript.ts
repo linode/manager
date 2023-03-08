@@ -9,11 +9,14 @@ type ScriptStatus = 'idle' | 'loading' | 'ready' | 'error';
  * @param setStatus a react state set function so that the hook's state can be updated
  * @returns void
  */
-const loadScript = (src: string, setStatus: (status: ScriptStatus) => void) => {
+export const loadScript = (
+  src: string,
+  setStatus?: (status: ScriptStatus) => void
+) => {
   // Allow falsy src value if waiting on other data needed for
   // constructing the script URL passed to this hook.
   if (!src) {
-    setStatus('idle');
+    setStatus?.('idle');
     return;
   }
   // Fetch existing script element by src
@@ -41,13 +44,13 @@ const loadScript = (src: string, setStatus: (status: ScriptStatus) => void) => {
     script.addEventListener('error', setAttributeFromEvent);
   } else {
     // Grab existing script status from attribute and set to state.
-    setStatus(script.getAttribute('data-status') as ScriptStatus);
+    setStatus?.(script.getAttribute('data-status') as ScriptStatus);
   }
   // Script event handler to update status in state
   // Note: Even if the script already exists we still need to add
   // event handlers to update the state for *this* hook instance.
   const setStateFromEvent = (event: any) => {
-    setStatus(event.type === 'load' ? 'ready' : 'error');
+    setStatus?.(event.type === 'load' ? 'ready' : 'error');
   };
   // Add event listeners
   script.addEventListener('load', setStateFromEvent);
