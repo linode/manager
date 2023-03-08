@@ -103,30 +103,6 @@ export const INTERVAL = 1000;
  */
 export const REFRESH_INTERVAL = 60 * 30 * 1000;
 
-export const dcDisplayCountry = {
-  'us-east-1a': 'US',
-  'us-south-1a': 'US',
-  'us-west-1a': 'US',
-  'us-southeast-1a': 'US',
-  'eu-central-1a': 'DE',
-  'eu-west-1a': 'UK',
-  'ap-northeast-1a': 'JP',
-  'ap-northeast-1b': 'JP',
-  'us-central': 'US',
-  'us-west': 'US',
-  'us-southeast': 'US',
-  'us-east': 'US',
-  'eu-west': 'UK',
-  'ap-south': 'SG',
-  'eu-central': 'DE',
-  'ap-northeast': 'JP',
-  'ca-central': 'CA',
-  'ca-east': 'CA',
-  'ap-west': 'IN',
-  'ap-southeast': 'AU',
-  'us-iad': 'US',
-};
-
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
 

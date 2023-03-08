@@ -35,7 +35,6 @@ import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { dcDisplayCountry } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
@@ -513,7 +512,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       if (foundRegion) {
         displaySections = [
           {
-            title: dcDisplayCountry[foundRegion.id],
+            title: foundRegion.country,
             details: foundRegion.label,
           },
         ];
