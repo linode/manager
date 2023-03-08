@@ -89,6 +89,9 @@ export default (
     case 'stackscript':
       return `/stackscripts/${id}`;
 
+    case 'firewall':
+      return `/firewalls/${id}`;
+
     case 'nodebalancer':
       // eslint-disable-next-line sonarjs/no-small-switch
       switch (action) {
