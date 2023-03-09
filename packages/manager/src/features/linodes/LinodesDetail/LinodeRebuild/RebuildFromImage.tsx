@@ -108,7 +108,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     setUserData(userData);
   };
 
-  const handleReuseUserDataChange = () => {
+  const handleShouldReuseUserDataChange = () => {
     setShouldReuseUserData((shouldReuseUserData) => !shouldReuseUserData);
   };
 
@@ -268,7 +268,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                       <Box>
                         <CheckBox
                           checked={shouldReuseUserData}
-                          onChange={handleReuseUserDataChange}
+                          onChange={handleShouldReuseUserDataChange}
                           text="Reuse user data previously provided for this Linode."
                           sxFormLabel={{ paddingLeft: '2px' }}
                         />
