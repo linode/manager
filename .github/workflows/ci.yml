@@ -16,6 +16,11 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "18.14"
+      - uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
       - run: yarn --frozen-lockfile
       - run: yarn workspace @linode/validation run build
       - uses: actions/upload-artifact@v2
