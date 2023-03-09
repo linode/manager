@@ -10,7 +10,7 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
   analyticsLabel?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
-  buttonDataAttrs?: { [key: string]: boolean };
+  buttonDataAttrs?: { [key: string]: boolean | string };
   createButtonText?: string;
   disabledCreateButton?: boolean;
   docsLabel?: string;
@@ -24,10 +24,6 @@ export interface Props extends Omit<HeaderProps, 'actions'> {
   removeCrumbX?: number;
   title?: string | JSX.Element;
 }
-
-const Actions = styled('div')(({ theme }) => ({
-  marginLeft: `${theme.spacing(2)}`,
-}));
 
 /**
  * @note Passing a title prop will override the final `breadcrumbProps` label.
@@ -116,3 +112,7 @@ export const LandingHeader = ({
 };
 
 export default LandingHeader;
+
+const Actions = styled('div')(({ theme }) => ({
+  marginLeft: `${theme.spacing(2)}`,
+}));

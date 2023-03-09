@@ -10,25 +10,6 @@ export interface HeaderProps {
   variant?: TypographyProps['variant'];
 }
 
-const Wrapper = styled('div', {
-  name: 'EntityHeader',
-})(({ theme }) => ({
-  alignItems: 'center',
-  backgroundColor: theme.bg.bgPaper,
-  display: 'flex',
-  justifyContent: 'space-between',
-  margin: 0,
-  width: '100%',
-  [theme.breakpoints.down('sm')]: {
-    flexWrap: 'wrap',
-  },
-}));
-
-const sxTypography = {
-  whiteSpace: 'nowrap',
-  padding: 1,
-};
-
 export const EntityHeader: React.FC<HeaderProps> = ({
   children,
   isSummaryView,
@@ -59,3 +40,22 @@ export const EntityHeader: React.FC<HeaderProps> = ({
 };
 
 export default EntityHeader;
+
+const Wrapper = styled('div', {
+  name: 'EntityHeader',
+})(({ theme }) => ({
+  alignItems: 'center',
+  backgroundColor: theme.bg.bgPaper,
+  display: 'flex',
+  justifyContent: 'space-between',
+  margin: 0,
+  width: '100%',
+  [theme.breakpoints.down('sm')]: {
+    flexWrap: 'wrap',
+  },
+}));
+
+const sxTypography = {
+  whiteSpace: 'nowrap',
+  padding: 1,
+};
