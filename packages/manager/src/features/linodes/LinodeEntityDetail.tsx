@@ -47,17 +47,9 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-
-// import useEditableLabelState from 'src/hooks/useEditableLabelState';
 import { GrantLevel } from '@linode/api-v4/lib/account';
-// import { ACCESS_LEVELS } from 'src/constants';
-// import { APIError } from '@linode/api-v4/lib/types';
-// import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import {
-  useTheme,
-  // styled
-} from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 interface LinodeEntityDetailProps {
   variant?: TypographyProps['variant'];
@@ -77,6 +69,13 @@ interface LinodeEntityDetailProps {
   openTagDrawer: (tags: string[]) => void;
   openNotificationMenu?: () => void;
   isSummaryView?: boolean;
+}
+
+interface StatusChange {
+  linodeConfigs: Config[];
+  linodeId: number;
+  linodeLabel: string;
+  status: BootAction;
 }
 
 export type CombinedProps = LinodeEntityDetailProps & WithRecentEvent;
@@ -103,7 +102,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['types']);
   const { types } = useTypes();
 
-  const extendedLinode = useExtendedLinode(+linode.id);
+  const extendedLinode = useExtendedLinode(linode.id);
 
   const imageSlug = linode.image;
 
@@ -304,8 +303,6 @@ const Header: React.FC<HeaderProps> = (props) => {
     openNotificationMenu,
   } = props;
 
-  // const isDetails = variant === 'details';
-  // const disabled = linodePermissions === ACCESS_LEVELS.readOnly;
   const isRunning = linodeStatus === 'running';
   const isOffline = linodeStatus === 'stopped' || linodeStatus === 'offline';
   const isOther = !['running', 'stopped', 'offline'].includes(linodeStatus);
@@ -347,12 +344,7 @@ const Header: React.FC<HeaderProps> = (props) => {
     linodeId,
     linodeLabel,
     status,
-  }: {
-    linodeConfigs: Config[];
-    linodeId: number;
-    linodeLabel: string;
-    status: BootAction;
-  }) => {
+  }: StatusChange) => {
     sendLinodeActionMenuItemEvent(`${status} Linode`);
     openPowerActionDialog(status, linodeId, linodeLabel, linodeConfigs);
   };

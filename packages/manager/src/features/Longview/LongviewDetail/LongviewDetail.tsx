@@ -210,8 +210,9 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/longview/longview/"
         breadcrumbProps={{
-          pathname: props.location.pathname,
           firstAndLastOnly: true,
+          labelOptions: { noCap: true },
+          pathname: props.location.pathname,
         }}
       />
       {notifications.map((thisNotification, idx) => (

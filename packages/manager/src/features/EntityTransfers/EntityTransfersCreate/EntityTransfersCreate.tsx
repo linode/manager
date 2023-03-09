@@ -28,14 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'center',
     },
   },
-  crumb: {
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-    },
-    [theme.breakpoints.only('md')]: {
-      paddingLeft: theme.spacing(),
-    },
-  },
   sidebar: {
     [theme.breakpoints.down('lg')]: {
       padding: '0px 8px !important',
@@ -106,6 +98,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
         title="Make a Service Transfer"
         breadcrumbProps={{
           pathname: location.pathname,
+          labelOptions: { noCap: true },
           crumbOverrides: [
             {
               position: 2,

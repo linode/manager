@@ -96,6 +96,7 @@ const DomainDetail = () => {
         docsLink="https://www.linode.com/docs/guides/dns-manager/"
         breadcrumbProps={{
           pathname: location.pathname,
+          labelOptions: { noCap: true },
           onEditHandlers: {
             editableTextTitle: domain.domain,
             onEdit: handleLabelChange,

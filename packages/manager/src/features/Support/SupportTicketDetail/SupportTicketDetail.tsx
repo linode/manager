@@ -323,6 +323,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
     // Format date for header
     const formattedDate = formatDate(ticket.updated);
+    const status = ticket.status === 'closed' ? 'Closed' : 'Last updated';
 
     const _Chip = () => (
       <Chip
@@ -347,10 +348,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           title={`#${ticket.id}: ${ticket.summary}`}
           breadcrumbProps={{
             pathname: location.pathname,
+            breadcrumbDataAttrs: {
+              'data-qa-breadcrumb': true,
+            },
             labelOptions: {
-              subtitle: `${
-                ticket.status === 'closed' ? 'Closed' : 'Last updated'
-              } by ${ticket.updated_by} at ${formattedDate}`,
+              subtitle: `${status} by ${ticket.updated_by} at ${formattedDate}`,
               suffixComponent: <_Chip />,
             },
             crumbOverrides: [
@@ -366,7 +368,6 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
               },
             ],
           }}
-          data-qa-breadcrumb
         />
 
         {/* If a user attached files when creating the ticket and was redirected here, display those errors. */}

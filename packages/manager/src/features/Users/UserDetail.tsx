@@ -198,6 +198,7 @@ const UserDetail: React.FC = () => {
     <>
       <LandingHeader
         title={username}
+        removeCrumbX={4}
         breadcrumbProps={{
           pathname: location.pathname,
           labelOptions: {

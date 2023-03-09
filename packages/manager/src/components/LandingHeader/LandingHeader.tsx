@@ -8,9 +8,9 @@ import { useTheme, styled } from '@mui/material/styles';
 
 export interface Props extends Omit<HeaderProps, 'actions'> {
   analyticsLabel?: string;
-  body?: JSX.Element;
-  buttonDataAttrs?: { [key: string]: boolean };
+  breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
+  buttonDataAttrs?: { [key: string]: boolean };
   createButtonText?: string;
   disabledCreateButton?: boolean;
   docsLabel?: string;
@@ -29,8 +29,13 @@ const Actions = styled('div')(({ theme }) => ({
   marginLeft: `${theme.spacing(2)}`,
 }));
 
+/**
+ * @note Passing a title prop will override the final `breadcrumbProps` label.
+ * If you don't want this behavior, omit a title prop.
+ */
 export const LandingHeader = ({
   analyticsLabel,
+  breadcrumbDataAttrs,
   breadcrumbProps,
   buttonDataAttrs,
   createButtonText,
@@ -69,10 +74,10 @@ export const LandingHeader = ({
         <Breadcrumb
           data-qa-title
           labelTitle={labelTitle}
-          // Location is a global variable that is set by Reach Router.
-          // The pathname set when passing "breadcrumbProps" is just a fallback to satisfy the type.
+          // The pathname set by "breadcrumbProps" is just a fallback to satisfy the type.
           pathname={location.pathname}
           removeCrumbX={removeCrumbX}
+          {...breadcrumbDataAttrs}
           {...breadcrumbProps}
         />
       </Grid>

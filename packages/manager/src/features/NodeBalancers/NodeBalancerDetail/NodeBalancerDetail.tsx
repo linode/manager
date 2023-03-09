@@ -12,12 +12,6 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
@@ -62,19 +56,7 @@ type CombinedProps = WithNodeBalancerActions &
   RouteProps &
   FeatureFlagConsumerProps &
   LoadingAndErrorHandlers &
-  LoadingAndErrorState &
-  WithStyles<ClassNames>;
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {
-      [theme.breakpoints.down('sm')]: {
-        paddingLeft: theme.spacing(),
-      },
-    },
-  });
+  LoadingAndErrorState;
 
 class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   state: State = {
@@ -311,6 +293,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             docsLink="https://www.linode.com/docs/guides/getting-started-with-nodebalancers/"
             breadcrumbProps={{
               pathname: `/nodebalancers/${nodeBalancerLabel}`,
+              firstAndLastOnly: true,
               onEditHandlers: {
                 editableTextTitle: nodeBalancerLabel,
                 onEdit: this.updateLabel,
@@ -373,8 +356,6 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
 const reloaded = reloadableWithRouter<
   CombinedProps,
   { nodeBalancerId?: number }
@@ -391,6 +372,5 @@ export default compose(
   withFeatureFlagConsumerContainer,
   withSnackbar,
   withNodeBalancerActions,
-  withLoadingAndError,
-  styled
+  withLoadingAndError
 )(NodeBalancerDetail);

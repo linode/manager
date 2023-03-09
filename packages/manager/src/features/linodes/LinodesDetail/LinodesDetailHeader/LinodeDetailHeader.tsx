@@ -335,7 +335,6 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
         }}
       />
       <LinodeEntityDetail
-        // variant="details"
         id={linode.id}
         linode={linode}
         numVolumes={numAttachedVolumes}

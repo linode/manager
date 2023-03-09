@@ -7,11 +7,11 @@ export const ImagesCreateContainer: React.FC = () => {
   return (
     <Grid container>
       <LandingHeader
-        title="Create"
+        breadcrumbDataAttrs={{ 'data-qa-create-image-header': true }}
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/products/tools/images/"
         removeCrumbX={2}
-        data-qa-create-image-header
+        title="Create"
       />
       <Grid item className="p0" xs={12}>
         <ImageCreate />

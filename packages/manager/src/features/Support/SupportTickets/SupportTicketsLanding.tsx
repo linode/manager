@@ -155,6 +155,12 @@ export class SupportTicketsLanding extends React.PureComponent<
     );
   };
 
+  handleButtonKeyPress = (e: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'Enter') {
+      this.openDrawer();
+    }
+  };
+
   render() {
     const { notice, newTicket, value } = this.state;
 
@@ -165,11 +171,7 @@ export class SupportTicketsLanding extends React.PureComponent<
           title="Tickets"
           createButtonText="Open New Ticket"
           onButtonClick={this.openDrawer}
-          onButtonKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              this.openDrawer();
-            }
-          }}
+          onButtonKeyPress={this.handleButtonKeyPress}
           data-qa-breadcrumb
           buttonDataAttrs={{ 'data-qa-open-ticket-link': true }}
         />

@@ -5,7 +5,6 @@ import { styled } from '@mui/material/styles';
 
 export interface HeaderProps {
   children?: React.ReactNode;
-  headerOnly?: boolean;
   isSummaryView?: boolean;
   title?: string | JSX.Element;
   variant?: TypographyProps['variant'];

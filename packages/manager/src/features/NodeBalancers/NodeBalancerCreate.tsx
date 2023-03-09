@@ -531,7 +531,15 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create a NodeBalancer" />
         <Grid container className="m0">
           <Grid item className={`mlMain p0`}>
-            <LandingHeader title="Create" data-qa-create-nodebalancer-header />
+            <LandingHeader
+              title="Create"
+              breadcrumbProps={{
+                pathname: '/nodebalancers/create',
+                breadcrumbDataAttrs: {
+                  'data-qa-create-nodebalancer-header': true,
+                },
+              }}
+            />
             {generalError && !this.disabled && (
               <Notice spacingTop={8} error>
                 {generalError}

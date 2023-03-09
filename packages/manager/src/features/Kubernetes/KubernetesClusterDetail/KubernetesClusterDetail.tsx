@@ -85,8 +85,9 @@ export const KubernetesClusterDetail = () => {
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
         breadcrumbProps={{
-          pathname: location.pathname,
+          breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
           firstAndLastOnly: true,
+          pathname: location.pathname,
           onEditHandlers: {
             editableTextTitle: cluster?.label,
             onEdit: handleLabelChange,
@@ -100,7 +101,6 @@ export const KubernetesClusterDetail = () => {
             ? handleUpgradeToHA
             : undefined
         }
-        data-qa-breadcrumb
       />
       <Grid item>
         <KubeSummaryPanel cluster={cluster} />

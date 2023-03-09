@@ -122,17 +122,18 @@ export const DatabaseDetail: React.FC = () => {
         breadcrumbProps={{
           firstAndLastOnly: true,
           pathname: location.pathname,
+          labelOptions: { noCap: true },
           crumbOverrides: [
             {
-              position: 1,
               label: 'Database Clusters',
+              position: 1,
             },
           ],
           onEditHandlers: {
             editableTextTitle: database.label,
-            onEdit: handleSubmitLabelChange,
-            onCancel: resetEditableLabel,
             errorText: editableLabelError,
+            onCancel: resetEditableLabel,
+            onEdit: handleSubmitLabelChange,
           },
         }}
       />

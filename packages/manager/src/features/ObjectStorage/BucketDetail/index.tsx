@@ -10,7 +10,6 @@ import { BucketAccess } from './BucketAccess';
 import LandingHeader from 'src/components/LandingHeader';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
-// const Access = React.lazy(() => import('./BucketAccess'));
 const BucketSSL = React.lazy(() => import('./BucketSSL'));
 
 interface MatchProps {
@@ -53,6 +52,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <LandingHeader
+        // Purposefully not using the title prop here because we want to the `bucketName` override.
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         breadcrumbProps={{
