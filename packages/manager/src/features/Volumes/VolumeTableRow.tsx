@@ -11,8 +11,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import SupportLink from 'src/components/SupportLink';
-import { Volume, VolumeStatus } from '@linode/api-v4/lib/volumes/types';
+import { Volume } from '@linode/api-v4/lib/volumes/types';
 // import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
@@ -95,18 +94,6 @@ export const VolumeTableRow = (props: CombinedProps) => {
   // const isUpdating = isVolumeUpdating(recentEvent);
   // const progress = progressFromEvent(recentEvent);
 
-  const getVolumeStatus = (status: VolumeStatus) => {
-    if (status === 'offline') {
-      return (
-        <SupportLink
-          text="Contact Support"
-          entity={{ type: 'volume_id', id }}
-        />
-      );
-    }
-    return status.replace('_', ' ');
-  };
-
   return (
     <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
       <TableCell data-qa-volume-cell-label={label}>
@@ -123,7 +110,7 @@ export const VolumeTableRow = (props: CombinedProps) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[status]} />
-        {getVolumeStatus(status)}
+        {status.replace('_', ' ')}
       </TableCell>
       {isVolumesLanding && region ? (
         <TableCell data-qa-volume-region noWrap>
