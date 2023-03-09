@@ -41,7 +41,9 @@ export const TextTooltip = (props: Props) => {
       className={classes.root}
       classes={{ popper: classes.popper }}
     >
-      <Typography sx={sxTypography}>{displayText}</Typography>
+      <Typography component="span" sx={sxTypography}>
+        {displayText}
+      </Typography>
     </ToolTip>
   );
 };

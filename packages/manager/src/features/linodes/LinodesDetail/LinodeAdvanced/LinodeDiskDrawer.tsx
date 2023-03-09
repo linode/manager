@@ -301,7 +301,6 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
               <TextTooltip
                 displayText="Check disk usage."
                 tooltipText={MaxSizeTooltipText}
-                sxTypography={{ display: 'inline' }}
               />
             </FormHelperText>
           </form>
