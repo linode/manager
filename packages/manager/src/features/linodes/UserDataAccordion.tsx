@@ -1,11 +1,10 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
 import Typography from 'src/components/core/Typography';
-import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { StyledHelpIcon } from './UserDataAccordion.styles';
 
 interface Props {
   userData: string | undefined;
@@ -14,30 +13,6 @@ interface Props {
   renderNotice?: () => JSX.Element;
   renderCheckbox?: () => JSX.Element;
 }
-
-const StyledHelpIcon = styled(HelpIcon)({
-  padding: '0px 0px 4px 8px',
-  '& svg': {
-    fill: 'currentColor',
-    stroke: 'none',
-  },
-});
-
-const accordionHeading = (
-  <>
-    Add User Data{' '}
-    <StyledHelpIcon
-      text={
-        <>
-          User data is part of a virtual machine&rsquo;s cloud-init metadata
-          containing information related to a user&rsquo;s local account.{' '}
-          <Link to="/">Learn more.</Link>
-        </>
-      }
-      interactive
-    />
-  </>
-);
 
 const UserDataAccordion = (props: Props) => {
   const { disabled, userData, onChange, renderNotice, renderCheckbox } = props;
@@ -118,6 +93,22 @@ const UserDataAccordion = (props: Props) => {
 };
 
 export default UserDataAccordion;
+
+const accordionHeading = (
+  <>
+    Add User Data{' '}
+    <StyledHelpIcon
+      text={
+        <>
+          User data is part of a virtual machine&rsquo;s cloud-init metadata
+          containing information related to a user&rsquo;s local account.{' '}
+          <Link to="/">Learn more.</Link>
+        </>
+      }
+      interactive
+    />
+  </>
+);
 
 const userDataExplanatoryCopy = (
   <Typography>

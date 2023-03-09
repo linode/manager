@@ -18,7 +18,6 @@ import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import Notice from 'src/components/Notice';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
 import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
@@ -34,7 +33,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import { styled } from '@mui/material/styles';
+import { StyledNotice } from './RebuildFromImage.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -316,9 +315,3 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
 const enhanced = compose<CombinedProps, Props>(userSSHKeyHoc);
 
 export default enhanced(RebuildFromImage);
-
-const StyledNotice = styled(Notice)({
-  // @TODO: Remove the !important's once Notice.tsx has been refactored to use MUI's styled()
-  padding: '8px !important',
-  marginBottom: '0px !important',
-});
