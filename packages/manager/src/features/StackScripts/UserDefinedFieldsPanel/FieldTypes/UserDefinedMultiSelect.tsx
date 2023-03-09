@@ -42,7 +42,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { manyof } = this.state;
-    const { error, field, isOptional, value: propValue } = this.props;
+    const { error, field, value: propValue } = this.props;
 
     /**
      * if we don't have any options selected for this multivalue
