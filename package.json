@@ -25,8 +25,10 @@
     "build": "yarn build:validation && yarn build:sdk && yarn workspace linode-manager build",
     "build:analyze": "yarn build --bundle-analyze",
     "up": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all",
+    "up:expose": "yarn install:all && yarn build:validation && yarn build:sdk && yarn start:all:expose",
     "dev": "yarn install:all && yarn start:all",
     "start:all": "concurrently -n api-v4,validation,manager -c blue,yellow,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace linode-manager start\"",
+    "start:all:expose": "concurrently -n api-v4,validation,manager -c blue,yellow,green \"yarn workspace @linode/api-v4 start\" \"yarn workspace @linode/validation start\" \"yarn workspace linode-manager start --host\"",
     "start:manager": "yarn workspace linode-manager start",
     "start:manager:ci": "yarn workspace linode-manager start:ci",
     "clean": "rm -rf node_modules && rm -rf packages/@linode/api-v4/node_modules && rm -rf packages/manager/node_modules && rm -rf packages/@linode/validation/node_modules",
@@ -61,7 +63,8 @@
     "minimatch": "^3.0.5",
     "nth-check": "^2.0.1",
     "@types/react": "^17",
-    "loader-utils": "^2.0.4"
+    "loader-utils": "^2.0.4",
+    "@braintree/sanitize-url": "^6.0.2"
   },
   "workspaces": {
     "packages": [

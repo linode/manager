@@ -2,9 +2,41 @@
  * @file Cypress intercepts and mocks for Cloud Manager account requests.
  */
 
-import type { AccountSettings, EntityTransfer } from '@linode/api-v4/types';
+import type {
+  Account,
+  AccountSettings,
+  EntityTransfer,
+  PaymentMethod,
+  Invoice,
+} from '@linode/api-v4/types';
+import { apiMatcher } from 'support/util/intercepts';
 import { paginateResponse } from 'support/util/paginate';
 import { getFilters } from 'support/util/request';
+import { makeErrorResponse } from 'support/util/errors';
+
+/**
+ * Intercepts GET request to fetch account and mocks response.
+ *
+ * @param account - Account data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAccount = (account: Account): Cypress.Chainable<null> => {
+  return cy.intercept('GET', apiMatcher('account'), account);
+};
+
+/**
+ * Intercepts PUT request to update account and mocks response.
+ *
+ * @param updatedAccount - Updated account data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdateAccount = (
+  updatedAccount: Account
+): Cypress.Chainable<null> => {
+  return cy.intercept('PUT', apiMatcher('account'), updatedAccount);
+};
 
 /**
  * Intercepts GET request to fetch account user information.
@@ -14,7 +46,7 @@ import { getFilters } from 'support/util/request';
  * @returns Cypress chainable.
  */
 export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `*/account/users/${username}`);
+  return cy.intercept('GET', apiMatcher(`account/users/${username}`));
 };
 
 /**
@@ -23,7 +55,24 @@ export const interceptGetUser = (username: string): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const interceptInitiateEntityTransfer = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/account/entity-transfers');
+  return cy.intercept('POST', apiMatcher('account/entity-transfers'));
+};
+
+/**
+ * Intercepts POST request to generate entity transfer token and mocks response.
+ *
+ * @param errorMessage - Mocks an error response with the given message.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockInitiateEntityTransferError = (
+  errorMessage: string
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('account/entity-transfers'),
+    makeErrorResponse(errorMessage)
+  );
 };
 
 /**
@@ -48,7 +97,7 @@ export const mockGetEntityTransfers = (
   received: EntityTransfer[],
   sent: EntityTransfer[]
 ) => {
-  return cy.intercept('GET', '*/account/entity-transfers*', (req) => {
+  return cy.intercept('GET', apiMatcher('account/entity-transfers*'), (req) => {
     const filters = getFilters(req);
 
     if (filters?.['status'] === 'pending') {
@@ -94,7 +143,11 @@ export const mockReceiveEntityTransfer = (
   token: string,
   transfer: EntityTransfer
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', `*/account/entity-transfers/${token}`, transfer);
+  return cy.intercept(
+    'GET',
+    apiMatcher(`account/entity-transfers/${token}`),
+    transfer
+  );
 };
 
 /**
@@ -107,7 +160,11 @@ export const mockReceiveEntityTransfer = (
 export const mockAcceptEntityTransfer = (
   token: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', `*/account/entity-transfers/${token}/accept`, {});
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/entity-transfers/${token}/accept`),
+    {}
+  );
 };
 
 /**
@@ -120,7 +177,7 @@ export const mockAcceptEntityTransfer = (
 export const mockGetAccountSettings = (
   settings: AccountSettings
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/account/settings', settings);
+  return cy.intercept('GET', apiMatcher('account/settings'), settings);
 };
 
 /**
@@ -137,7 +194,7 @@ export const mockUpdateUsername = (
   newUsername: string,
   restricted: boolean = false
 ) => {
-  return cy.intercept('PUT', `*/account/users/${oldUsername}`, {
+  return cy.intercept('PUT', apiMatcher(`account/users/${oldUsername}`), {
     username: newUsername,
     email: 'mockEmail@example.com',
     restricted,
@@ -145,4 +202,55 @@ export const mockUpdateUsername = (
     tfa_enabled: false,
     verified_phone_number: null,
   });
+};
+
+/**
+ * Intercepts GET request to retrieve account payment methods and mocks response.
+ *
+ * @param paymentMethods - Array of payment methods with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPaymentMethods = (
+  paymentMethods: PaymentMethod[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/payment-methods*'),
+    paginateResponse(paymentMethods)
+  );
+};
+
+/**
+ * Intercepts POST request to set default account payment method and mocks response.
+ *
+ * @param paymentMethodId - ID of payment method for which to intercept request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockSetDefaultPaymentMethod = (
+  paymentMethodId: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher(`account/payment-methods/${paymentMethodId}/make-default`),
+    {}
+  );
+};
+
+/**
+ * Intercepts GET request to fetch account invoices and mocks response.
+ *
+ * @param invoices - Invoice data with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetInvoices = (
+  invoices: Invoice[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('account/invoices*'),
+    paginateResponse(invoices)
+  );
 };

@@ -544,5 +544,5 @@ export default compose<CombinedProps, Props>(
   withSnackbar,
   connected,
   withProfile,
-  withPreferences()
+  withPreferences
 )(LinodeResize);

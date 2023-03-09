@@ -1,11 +1,7 @@
-import { createMockImage } from 'cypress/support/api/images';
-import { createMockLinodeList } from 'cypress/support/api/linodes';
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-} from 'cypress/support/helpers';
+import { createMockImage } from 'support/api/images';
+import { createMockLinodeList } from 'support/api/linodes';
+import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
 import { randomString } from 'support/util/random';
 
 const mockImage = createMockImage().data[0];
@@ -26,17 +22,17 @@ const mockLinodeList = createMockLinodeList({
 const mockLinode = mockLinodeList.data[0];
 
 const createLinodeWithImageMock = (preselectedImage: boolean) => {
-  cy.intercept('*/images*', (req) => {
+  cy.intercept(apiMatcher('images*'), (req) => {
     req.reply(createMockImage());
   }).as('mockImage');
 
-  cy.intercept('POST', '*/linode/instances', (req) => {
+  cy.intercept('POST', apiMatcher('linode/instances'), (req) => {
     req.reply({
       body: mockLinode,
       headers: { image: imageId },
     });
   }).as('mockLinodeRequest');
-  cy.intercept('GET', `*/linode/instances/${linodeId}`, (req) => {
+  cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}`), (req) => {
     req.reply(mockLinode);
   }).as('mockLinodeResponse');
 
