@@ -317,6 +317,12 @@ export const handlers = [
       status: 'available',
       type: 'manual',
     });
+    const cloudinitCompatableImages = imageFactory.buildList(5, {
+      id: 'metadata-test',
+      status: 'available',
+      type: 'manual',
+      capabilities: ['cloud-init'],
+    });
     const creatingImages = imageFactory.buildList(2, {
       type: 'manual',
       status: 'creating',
@@ -331,6 +337,7 @@ export const handlers = [
     });
     const publicImages = imageFactory.buildList(0, { is_public: true });
     const images = [
+      ...cloudinitCompatableImages,
       ...automaticImages,
       ...privateImages,
       ...publicImages,
@@ -364,6 +371,10 @@ export const handlers = [
     });
     const offlineLinodes = linodeFactory.buildList(1, { status: 'offline' });
     const busyLinodes = linodeFactory.buildList(1, { status: 'migrating' });
+    const metaDataLinodes = linodeFactory.buildList(2, {
+      image: 'metadata-test',
+      label: 'metadata-test',
+    });
     const eventLinode = linodeFactory.build({
       id: 999,
       status: 'rebooting',
@@ -382,6 +393,7 @@ export const handlers = [
       tags: ['test1', 'test2', 'test3'],
     });
     const linodes = [
+      ...metaDataLinodes,
       ...onlineLinodes,
       linodeWithEligibleVolumes,
       ...offlineLinodes,

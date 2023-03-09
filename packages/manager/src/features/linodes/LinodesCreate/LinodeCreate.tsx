@@ -531,12 +531,21 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
+    const selectedLinode = this.props.linodesData?.find(
+      (image) => image.id === this.props.selectedLinodeID
+    );
+
     let showUserData = false;
     if (
-      this.props.selectedImageID &&
-      this.props.imagesData[this.props.selectedImageID]?.capabilities?.includes(
-        'cloud-init'
-      )
+      (this.props.selectedImageID &&
+        this.props.imagesData[
+          this.props.selectedImageID
+        ]?.capabilities?.includes('cloud-init')) ||
+      (this.props.selectedLinodeID &&
+        selectedLinode?.image &&
+        this.props.imagesData[selectedLinode?.image]?.capabilities?.includes(
+          'cloud-init'
+        ))
     ) {
       showUserData = true;
     }
