@@ -106,8 +106,6 @@ This hybrid button style should be used with discretion. It is used when:
 
 ---
 
-<!-- TODO: Look into why the code generated from binding the component is not accurate -->
-
 export const Template = (args) => (
   <Button buttonType="primary" {...args}>
     I'm a button, style me using the table below
@@ -177,7 +175,6 @@ export const Template = (args) => (
   story="Component API"
   sort="requiredFirst"
   exclude={[
-    <!-- These are props that are not relevant -->
     'children',
     'className',
     'color',
@@ -190,7 +187,6 @@ export const Template = (args) => (
     'startIcon',
     'tabIndex',
     'variant',
-    <!-- These are props inherited from ButtonBase that we do not use -->
     'ref',
     'action',
     'centerRipple',
