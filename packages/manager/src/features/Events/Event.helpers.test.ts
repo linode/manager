@@ -122,7 +122,11 @@ describe('Utility Functions', () => {
         )
       ).toEqual(message);
     });
+
+    // TODO: add test to check that username is not appended to event where it already exists
   });
+
+  // TODO: add test for formatEventWithAppendedText
 
   describe('maybeRemoveTrailingPeriod', () => {
     it('should remove trailing periods', () => {

@@ -3,6 +3,10 @@ import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import createLinkHandlerForNotification from 'src/utilities/getEventsActionLink';
+import {
+  formatEventWithUsername,
+  formatEventWithAppendedText,
+} from './features/Events/Event.helpers';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -159,7 +163,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   disk_resize: {
     scheduled: (e) => `A disk on ${e.entity!.label} is scheduled for resizing.`,
     started: (e) => `A disk on Linode ${e.entity!.label} is being resized.`,
-    failed: (e) => `A disk on Linode ${e.entity!.label} could not be resized.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `A disk on Linode ${e.entity!.label} could not be resized.`,
+        'Learn more',
+        '/'
+      )}`,
     finished: (e) => `A disk on Linode ${e.entity!.label} has been resized`,
     // notification: e => ``,
   },
@@ -771,8 +781,15 @@ export default (e: Event): string => {
     });
   }
 
+  /** add the username to message; if it already contains the username, return the original message **/
+  const messageWithUsername = formatEventWithUsername(
+    e.action,
+    e.username,
+    message
+  );
+
   /** return either the formatted message or an empty string */
-  const formattedMessage = applyLinking(e, message);
+  const formattedMessage = applyLinking(e, messageWithUsername);
   return applyBolding(e, formattedMessage);
 };
 

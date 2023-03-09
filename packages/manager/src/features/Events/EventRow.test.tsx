@@ -28,14 +28,15 @@ describe('EventRow component', () => {
     expect(container.closest('tr')).toBeNull();
   });
 
-  it('should display the message with a username if one exists', () => {
-    const username = 'banks';
-    const propsWithUsername = { ...props, username };
+  // TODO: remove or rewrite this once other tests are rewritten; we're no longer adding usernames to events at this point in the code
+  // it('should display the message with a username if one exists', () => {
+  //   const username = 'banks';
+  //   const propsWithUsername = { ...props, username };
 
-    const { getByText } = renderWithTheme(
-      wrapWithTableBody(<Row {...propsWithUsername} />)
-    );
+  //   const { getByText } = renderWithTheme(
+  //     wrapWithTableBody(<Row {...propsWithUsername} />)
+  //   );
 
-    expect(getByText(`this is a message by ${username}.`)).toBeInTheDocument();
-  });
+  //   expect(getByText(`this is a message by ${username}.`)).toBeInTheDocument();
+  // });
 });
