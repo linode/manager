@@ -100,21 +100,23 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const [confirmationText, setConfirmationText] = React.useState<string>('');
 
   const [userData, setUserData] = React.useState<string | undefined>('');
-  const [reuseUserData, setReuseUserData] = React.useState<boolean>(false);
+  const [shouldReuseUserData, setShouldReuseUserData] = React.useState<boolean>(
+    false
+  );
 
   const handleUserDataChange = (userData: string) => {
     setUserData(userData);
   };
 
   const handleReuseUserDataChange = () => {
-    setReuseUserData((reuseUserData) => !reuseUserData);
+    setShouldReuseUserData((shouldReuseUserData) => !shouldReuseUserData);
   };
 
   React.useEffect(() => {
-    if (reuseUserData) {
+    if (shouldReuseUserData) {
       setUserData('');
     }
-  }, [reuseUserData]);
+  }, [shouldReuseUserData]);
 
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
@@ -132,7 +134,8 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
       image,
       root_pass,
       metadata: {
-        user_data: userData && !reuseUserData ? window.btoa(userData) : null,
+        user_data:
+          userData && !shouldReuseUserData ? window.btoa(userData) : null,
       },
       authorized_users: userSSHKeys
         .filter((u) => u.selected)
@@ -140,7 +143,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     };
 
     // If no user data has been added, do not include the metadata property in the payload.
-    if (!userData && !reuseUserData) {
+    if (!userData && !shouldReuseUserData) {
       delete params['metadata'];
     }
 
@@ -254,7 +257,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                   <UserDataAccordion
                     userData={userData}
                     onChange={handleUserDataChange}
-                    disabled={reuseUserData}
+                    disabled={shouldReuseUserData}
                     renderNotice={() => (
                       <StyledNotice
                         success
@@ -264,7 +267,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                     renderCheckbox={() => (
                       <Box>
                         <CheckBox
-                          checked={reuseUserData}
+                          checked={shouldReuseUserData}
                           onChange={handleReuseUserDataChange}
                           text="Reuse user data previously provided for this Linode."
                           sxFormLabel={{ paddingLeft: '2px' }}
