@@ -10,7 +10,6 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import SupportLink from 'src/components/SupportLink';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
 import { useRegionsQuery } from 'src/queries/regions';
 // import useEvents from 'src/hooks/useEvents';
@@ -60,9 +59,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   resizing: 'other',
   migrating: 'other',
   creating: 'other',
-  contact_support: 'error',
-  deleting: 'other',
-  deleted: 'inactive',
+  offline: 'inactive',
 };
 
 export const VolumeTableRow = (props: CombinedProps) => {
@@ -99,18 +96,6 @@ export const VolumeTableRow = (props: CombinedProps) => {
   // const isUpdating = isVolumeUpdating(recentEvent);
   // const progress = progressFromEvent(recentEvent);
 
-  const volumeStatusMap: Record<Volume['status'], string | JSX.Element> = {
-    active: 'Active',
-    resizing: 'Resizing',
-    creating: 'Creating',
-    contact_support: (
-      <SupportLink text="Contact Support" entity={{ type: 'volume_id', id }} />
-    ),
-    deleting: 'Deleting',
-    deleted: 'Deleted',
-    migrating: 'Migrating',
-  };
-
   return (
     <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
       <TableCell data-qa-volume-cell-label={label}>
@@ -127,7 +112,7 @@ export const VolumeTableRow = (props: CombinedProps) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[status]} />
-        {volumeStatusMap[status]}
+        {status.replace('_', ' ')}
       </TableCell>
       {isVolumesLanding && region ? (
         <TableCell data-qa-volume-region data-testid="region" noWrap>
