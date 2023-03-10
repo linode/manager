@@ -1,39 +1,22 @@
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import HelpIcon from 'src/components/HelpIcon';
-import Notice from 'src/components/Notice';
 import Link from 'src/components/Link';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { StyledHelpIcon } from './UserDataAccordion.styles';
 
 interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
+  renderNotice?: JSX.Element;
+  renderCheckbox?: JSX.Element;
 }
 
-const useStyles = makeStyles(() => ({
-  helpIcon: {
-    padding: '0px 0px 4px 8px',
-    '& svg': {
-      fill: 'currentColor',
-      stroke: 'none',
-    },
-  },
-  accordionSummary: {
-    padding: '5px 24px 0px 24px',
-  },
-  accordionDetail: {
-    padding: '0px 24px 24px 24px',
-  },
-}));
-
 const UserDataAccordion = (props: Props) => {
-  const { disabled, userData, onChange } = props;
+  const { disabled, userData, onChange, renderNotice, renderCheckbox } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
-
-  const classes = useStyles();
 
   const checkFormat = ({
     userData,
@@ -56,50 +39,33 @@ const UserDataAccordion = (props: Props) => {
     }
   };
 
-  const accordionHeading = (
-    <>
-      Add User Data{' '}
-      <HelpIcon
-        text={
-          <>
-            User data is part of a virtual machine&rsquo;s cloud-init metadata
-            containing information related to a user&rsquo;s local account.{' '}
-            <Link to="/">Learn more.</Link>
-          </>
-        }
-        className={classes.helpIcon}
-        interactive
-      />
-    </>
-  );
+  const sxDetails = {
+    padding: `0px 24px 24px ${renderNotice ? 0 : 24}px`,
+  };
 
   return (
     <Accordion
       heading={accordionHeading}
-      style={{ marginTop: 24 }}
+      style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
       }}
       summaryProps={{
-        classes: {
-          root: classes.accordionSummary,
-        },
+        sx: { padding: '5px 24px 0px 24px' },
       }}
-      detailProps={{
-        classes: {
-          root: classes.accordionDetail,
+      detailProps={{ sx: sxDetails }}
+      sx={{
+        '&:before': {
+          display: 'none',
         },
       }}
     >
-      <Typography>
-        <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
-          User Data
-        </Link>{' '}
-        is part of a virtual machine&rsquo;s cloud-init metadata that contains
-        anything related to a user&rsquo;s local account, including username and
-        user group(s). <br /> Accepted formats are YAML and bash.{' '}
-        <Link to="https://www.linode.com/docs">Learn more.</Link>
-      </Typography>
+      {renderNotice ? (
+        <div data-testid="render-notice">{renderNotice}</div>
+      ) : (
+        userDataExplanatoryCopy
+      )}
+      {acceptedFormatsCopy}
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           This user data may not be in a format accepted by cloud-init.
@@ -121,8 +87,43 @@ const UserDataAccordion = (props: Props) => {
         }
         data-qa-user-data-input
       />
+      {renderCheckbox ?? null}
     </Accordion>
   );
 };
 
 export default UserDataAccordion;
+
+const accordionHeading = (
+  <>
+    Add User Data{' '}
+    <StyledHelpIcon
+      text={
+        <>
+          User data is part of a virtual machine&rsquo;s cloud-init metadata
+          containing information related to a user&rsquo;s local account.{' '}
+          <Link to="/">Learn more.</Link>
+        </>
+      }
+      interactive
+    />
+  </>
+);
+
+const userDataExplanatoryCopy = (
+  <Typography>
+    <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
+      User Data
+    </Link>{' '}
+    is part of a virtual machine&rsquo;s cloud-init metadata that contains
+    anything related to a user&rsquo;s local account, including username and
+    user group(s).
+  </Typography>
+);
+
+const acceptedFormatsCopy = (
+  <Typography>
+    <br /> Accepted formats are YAML and bash.{' '}
+    <Link to="https://www.linode.com/docs">Learn more.</Link>
+  </Typography>
+);
