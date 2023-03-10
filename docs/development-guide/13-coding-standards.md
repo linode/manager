@@ -51,5 +51,5 @@ The styles for Cloud Manager are located in three places:
   - The breakpoints can be modified at the end of `themeFactory.ts`.
 - Component-specific styles may be defined in the component's file.
   - With the transition to MUI v5, the [`styled`](https://mui.com/system/styled/) API, along with the [`sx` prop](https://mui.com/system/getting-started/the-sx-prop/), is the preferred way to specify component-specific styles.
-  - These styles may also be defined in a dedicated file, named `ComponentName.styles.tsx`, to reduce the lenght of the component file.
+  - These styles may also be defined in a dedicated file, named `ComponentName.styles.tsx`, to reduce the length of the component file.
   - For component files longer than 100 lines, these styles **must** be defined in a dedicated file.
