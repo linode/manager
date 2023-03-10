@@ -3,7 +3,7 @@ import UserDefinedFieldsPanel from './UserDefinedFieldsPanel';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 
 describe('UserDefinedFieldsPanel', () => {
-  it('does not show a <Notice /> about temporary nodes when a One-Click App without clusters is selected', () => {
+  it('does not show a <Notice /> about number of nodes when a One-Click App without clusters is selected', () => {
     const { queryByTestId } = renderWithTheme(
       <UserDefinedFieldsPanel
         handleChange={() => null}
@@ -13,10 +13,10 @@ describe('UserDefinedFieldsPanel', () => {
       />
     );
 
-    expect(queryByTestId('temp-node-notice')).not.toBeInTheDocument();
+    expect(queryByTestId('create-cluster-notice')).not.toBeInTheDocument();
   });
 
-  it('shows a <Notice /> about temporary nodes when a One-Click App with clusters is selected', () => {
+  it('shows a <Notice /> about number of nodes when a One-Click App with clusters is selected', () => {
     const { queryByTestId } = renderWithTheme(
       <UserDefinedFieldsPanel
         handleChange={() => null}
@@ -29,6 +29,6 @@ describe('UserDefinedFieldsPanel', () => {
       />
     );
 
-    expect(queryByTestId('temp-node-notice')).toBeInTheDocument();
+    expect(queryByTestId('create-cluster-notice')).toBeInTheDocument();
   });
 });

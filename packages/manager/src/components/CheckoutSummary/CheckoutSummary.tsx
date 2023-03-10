@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { addOrdinalSuffix } from 'src/utilities/stringUtils';
 import Paper from '../core/Paper';
 import { makeStyles, Theme, useMediaQuery, useTheme } from '../core/styles';
 import Typography from '../core/Typography';
@@ -11,7 +10,6 @@ interface Props {
   children?: JSX.Element | null;
   agreement?: JSX.Element;
   displaySections: SummaryItem[];
-  numberOfNodesForUDFSummary?: number;
 }
 
 export interface SummaryItem {
@@ -39,9 +37,6 @@ const useStyles = makeStyles((theme: Theme) => ({
       },
     },
   },
-  summaryClusterBlurb: {
-    marginTop: '1rem',
-  },
 }));
 
 export const CheckoutSummary: React.FC<Props> = (props) => {
@@ -49,14 +44,7 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const {
-    heading,
-    agreement,
-    displaySections,
-    numberOfNodesForUDFSummary,
-  } = props;
-
-  const planInformation = displaySections.find((section) => section.hourly);
+  const { heading, agreement, displaySections } = props;
 
   return (
     <Paper data-qa-summary className={classes.paper}>
@@ -83,18 +71,6 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
         ))}
       </Grid>
       {props.children}
-      {numberOfNodesForUDFSummary !== undefined &&
-      numberOfNodesForUDFSummary > 0 ? (
-        <Typography
-          className={classes.summaryClusterBlurb}
-          data-testid="summary-blurb-clusters"
-        >
-          To provision a cluster, a{' '}
-          {addOrdinalSuffix(numberOfNodesForUDFSummary + 1)} node is created and
-          then deleted, usually within an hour. You will see this charge on your
-          next Linode invoice. Estimated charge ${planInformation?.hourly ?? 0}
-        </Typography>
-      ) : null}
       {agreement ? agreement : null}
     </Paper>
   );

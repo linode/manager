@@ -101,7 +101,7 @@ const errorResources = {
 };
 
 interface Props {
-  setNumberOfNodesForUDFSummary: (num: number) => void;
+  setNumberOfNodesForAppCluster: (num: number) => void;
 }
 
 type InnerProps = Props &
@@ -306,7 +306,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       appInstancesError,
       appInstancesLoading,
       userCannotCreateLinode,
-      setNumberOfNodesForUDFSummary,
+      setNumberOfNodesForAppCluster,
     } = this.props;
 
     // ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
@@ -394,7 +394,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
               udf_data={udf_data || {}}
               appLogo={appLogo}
               openDrawer={this.openDrawer}
-              setNumberOfNodesForUDFSummary={setNumberOfNodesForUDFSummary}
+              setNumberOfNodesForAppCluster={setNumberOfNodesForAppCluster}
             />
           ) : null}
           {!userCannotCreateLinode &&
