@@ -104,10 +104,21 @@ export class App extends React.Component<CombinedProps, State> {
       if (event[modifierKey] && event.shiftKey) {
         switch (event.key) {
           case letterForThemeShortcut:
-            this.props.updateUserPreferences({
-              theme:
-                this.props.preferences?.theme === 'dark' ? 'light' : 'dark',
-            });
+            const isSystemInDarkMode =
+              window.matchMedia &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            const currentTheme = this.props.preferences?.theme;
+            const newTheme =
+              currentTheme === 'system'
+                ? isSystemInDarkMode
+                  ? 'light'
+                  : 'dark'
+                : currentTheme === 'dark'
+                ? 'light'
+                : 'dark';
+
+            this.props.updateUserPreferences({ theme: newTheme });
             break;
           case letterForGoToOpen:
             this.setState((prevState) => ({
