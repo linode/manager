@@ -16,6 +16,7 @@ interface Props {
   reuseUserData?: boolean;
   onReuseUserDataChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   renderNotice?: boolean;
+  headerWarningMessage?: React.ReactNode;
   renderCheckbox?: boolean;
 }
 
@@ -27,21 +28,24 @@ const StyledHelpIcon = styled(HelpIcon)({
   },
 });
 
-const accordionHeading = (
-  <>
-    Add User Data{' '}
-    <StyledHelpIcon
-      text={
-        <>
-          User data is part of a virtual machine&rsquo;s cloud-init metadata
-          containing information related to a user&rsquo;s local account.{' '}
-          <Link to="/">Learn more.</Link>
-        </>
-      }
-      interactive
-    />
-  </>
-);
+const AccordionHeading = (props: any) => {
+  return (
+    <>
+      Add User Data{' '}
+      <StyledHelpIcon
+        text={
+          <>
+            User data is part of a virtual machine&rsquo;s cloud-init metadata
+            containing information related to a user&rsquo;s local account.{' '}
+            <Link to="/">Learn more.</Link>
+          </>
+        }
+        interactive
+      />
+      {props.headerWarningMessage ? props.headerWarningMessage : null}
+    </>
+  );
+};
 
 const StyledBox = styled(Box)({
   '.MuiFormControlLabel-root': {
@@ -64,6 +68,7 @@ const UserDataAccordion = (props: Props) => {
     reuseUserData,
     onReuseUserDataChange,
     renderNotice,
+    headerWarningMessage,
     renderCheckbox,
   } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
@@ -91,7 +96,7 @@ const UserDataAccordion = (props: Props) => {
 
   return (
     <Accordion
-      heading={accordionHeading}
+      heading={<AccordionHeading headerWarningMessage={headerWarningMessage} />}
       style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
