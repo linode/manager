@@ -1,8 +1,6 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
 import * as React from 'react';
-import { linodeTypeFactory } from 'src/factories';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
-import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import KubeCheckoutBar, { Props } from './KubeCheckoutBar';
 
@@ -25,24 +23,6 @@ const renderComponent = (_props: Props) =>
   renderWithTheme(<KubeCheckoutBar {..._props} />);
 
 describe('KubeCheckoutBar', () => {
-  beforeEach(() => {
-    server.use(
-      rest.get('*/linode/types/g6-standard-1', (_, res, ctx) => {
-        return res(
-          ctx.json(
-            linodeTypeFactory.build({
-              id: 'g6-standard-1',
-              label: 'Linode Fake 1GB',
-              price: {
-                monthly: 10,
-              },
-            })
-          )
-        );
-      })
-    );
-  });
-
   it('should render a section for each pool', async () => {
     const { queryAllByTestId, getByTestId } = renderComponent(props);
 

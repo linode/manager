@@ -353,6 +353,18 @@ export const handlers = [
       )
     );
   }),
+  rest.get('*/linode/types-legacy', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(linodeTypeFactory.buildList(0))));
+  }),
+  ...[
+    ...linodeTypeFactory.buildList(7),
+    ...dedicatedTypeFactory.buildList(7),
+    proDedicatedTypeFactory.build(),
+  ].map((type) =>
+    rest.get(`*/linode/types/${type.id}`, (req, res, ctx) => {
+      return res(ctx.json(type));
+    })
+  ),
   rest.get('*/linode/instances', async (req, res, ctx) => {
     const onlineLinodes = linodeFactory.buildList(60, {
       backups: { enabled: false },

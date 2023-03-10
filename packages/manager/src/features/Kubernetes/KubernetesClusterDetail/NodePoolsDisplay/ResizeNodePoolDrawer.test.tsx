@@ -3,8 +3,6 @@ import * as React from 'react';
 import { nodePoolFactory } from 'src/factories/kubernetesCluster';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { ResizeNodePoolDrawer, Props } from './ResizeNodePoolDrawer';
-import { rest, server } from 'src/mocks/testServer';
-import { linodeTypeFactory } from 'src/factories';
 
 const pool = nodePoolFactory.build({
   type: 'g6-standard-1',
@@ -20,22 +18,9 @@ const props: Props = {
 
 describe('ResizeNodePoolDrawer', () => {
   it("should render the pool's type and size", async () => {
-    server.use(
-      rest.get('*/linode/types/g6-standard-1', (req, res, ctx) => {
-        return res(
-          ctx.json(
-            linodeTypeFactory.build({
-              id: 'g6-standard-1',
-              label: 'Linode 2GB',
-            })
-          )
-        );
-      })
-    );
-
     const { findByText } = renderWithTheme(<ResizeNodePoolDrawer {...props} />);
 
-    await findByText(/linode 2 GB/i);
+    await findByText(/linode 1 GB/i);
   });
 
   it('should display a warning if the user tries to resize a node pool to < 3 nodes', () => {
