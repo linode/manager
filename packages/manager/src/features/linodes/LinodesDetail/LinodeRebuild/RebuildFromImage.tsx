@@ -133,16 +133,25 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
       image,
       root_pass,
       metadata: {
-        user_data:
-          userData && !shouldReuseUserData ? window.btoa(userData) : null,
+        user_data: userData
+          ? window.btoa(userData)
+          : !userData && !shouldReuseUserData
+          ? null
+          : '',
       },
       authorized_users: userSSHKeys
         .filter((u) => u.selected)
         .map((u) => u.username),
     };
 
-    // If no user data has been added, do not include the metadata property in the payload.
-    if (!userData && !shouldReuseUserData) {
+    /*
+      User Data logic:
+      1) if user data has been provided, encode it and include it in the payload
+      2) if user data has not been provided and the Reuse User Data checkbox is
+        not checked, send null in the payload
+      3) if the Reuse User Data checkbox is checked, remove the Metadata property from the payload.
+    */
+    if (shouldReuseUserData) {
       delete params['metadata'];
     }
 
