@@ -12,7 +12,7 @@ import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { ThemeChoice } from 'src/LinodeThemeWrapper';
+import { ThemeChoice } from 'src/utilities/theme';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

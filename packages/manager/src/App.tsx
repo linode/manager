@@ -40,6 +40,7 @@ import withPreferences, {
   PreferencesStateProps,
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
+import { getNextThemeValue } from './utilities/theme';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -104,19 +105,8 @@ export class App extends React.Component<CombinedProps, State> {
       if (event[modifierKey] && event.shiftKey) {
         switch (event.key) {
           case letterForThemeShortcut:
-            const isSystemInDarkMode =
-              window.matchMedia &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches;
-
             const currentTheme = this.props.preferences?.theme;
-            const newTheme =
-              currentTheme === 'system'
-                ? isSystemInDarkMode
-                  ? 'light'
-                  : 'dark'
-                : currentTheme === 'dark'
-                ? 'light'
-                : 'dark';
+            const newTheme = getNextThemeValue(currentTheme);
 
             this.props.updateUserPreferences({ theme: newTheme });
             break;

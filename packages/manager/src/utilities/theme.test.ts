@@ -1,7 +1,20 @@
 import {
+  getNextThemeValue,
   getThemeFromPreferenceValue,
   isValidTheme,
-} from './LinodeThemeWrapper';
+} from './theme';
+
+describe('getNextThemeValue', () => {
+  it('should return light if current theme is dark', () => {
+    expect(getNextThemeValue('dark')).toBe('light');
+  });
+  it('should return dark if the current theme is light', () => {
+    expect(getNextThemeValue('light')).toBe('dark');
+  });
+  it('should return dark if the current theme is undefined', () => {
+    expect(getNextThemeValue(undefined)).toBe('dark');
+  });
+});
 
 describe('isValidTheme', () => {
   it('should return false if theme is not valid (string)', () => {

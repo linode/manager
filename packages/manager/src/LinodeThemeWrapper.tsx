@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { dark, light } from 'src/themes';
 import { isProductionBuild } from './constants';
 import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
@@ -10,15 +9,16 @@ import {
   Theme,
   useMediaQuery,
 } from 'src/components/core/styles';
+import {
+  getThemeFromPreferenceValue,
+  ThemeChoice,
+  themes,
+} from './utilities/theme';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
-
-export type ThemeChoice = 'light' | 'dark' | 'system';
-
-const themes: Record<ThemeName, Theme> = { light, dark };
 
 const setActiveHighlightTheme = (value: ThemeChoice) => {
   /**
@@ -59,23 +59,6 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
       thisLink.disabled = value === 'dark';
     }
   });
-};
-
-export const isValidTheme = (value: unknown): boolean => {
-  return typeof value === 'string' && themes[value] !== undefined;
-};
-
-export const getThemeFromPreferenceValue = (
-  value: unknown,
-  isSystemInDarkMode: boolean
-): ThemeName => {
-  if (value === 'system') {
-    return isSystemInDarkMode ? 'dark' : 'light';
-  }
-  if (isValidTheme(value)) {
-    return value as ThemeName;
-  }
-  return 'light';
 };
 
 interface Props {
