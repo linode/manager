@@ -11,7 +11,8 @@ import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
-import ThemeToggle from './ThemeToggle';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { ThemeChoice } from 'src/LinodeThemeWrapper';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -34,12 +35,7 @@ const ProfileSettings = () => {
   const { mutateAsync: updateProfile } = useMutateProfile();
 
   const { data: preferences } = usePreferences();
-  const { mutateAsync: updatePreferences } = useMutatePreferences();
-
-  const toggleTheme = () => {
-    const newTheme = preferences?.theme === 'dark' ? 'light' : 'dark';
-    updatePreferences({ theme: newTheme });
-  };
+  const { mutateAsync: updatePreferences, isLoading } = useMutatePreferences();
 
   React.useEffect(() => {
     if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
@@ -56,6 +52,12 @@ const ProfileSettings = () => {
       email_notifications: !profile?.email_notifications,
     }).finally(() => setSubmitting(false));
   };
+
+  const themeOptions: Item<ThemeChoice>[] = [
+    { label: 'Light', value: 'light' },
+    { label: 'Dark', value: 'dark' },
+    { label: 'System', value: 'system' },
+  ];
 
   return (
     <>
@@ -91,16 +93,23 @@ const ProfileSettings = () => {
       </Paper>
       <Paper className={classes.root}>
         <Typography variant="h2" className={classes.title}>
-          Dark Mode
+          Theme
         </Typography>
         <Grid container alignItems="center">
           <Grid item xs={12}>
-            <FormControlLabel
-              control={<ThemeToggle toggleTheme={toggleTheme} />}
-              label={` Dark mode is ${
-                preferences?.theme === 'dark' ? 'enabled' : 'disabled'
-              }`}
-              disabled={submitting}
+            <Select
+              options={themeOptions}
+              value={
+                themeOptions.find(
+                  (option) => option.value === preferences?.theme
+                ) ?? themeOptions[0]
+              }
+              onChange={(theme: Item<ThemeChoice>) =>
+                updatePreferences({ theme: theme.value })
+              }
+              isClearable={false}
+              isLoading={isLoading}
+              hideLabel
             />
           </Grid>
         </Grid>
