@@ -498,7 +498,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           breadcrumbProps={{
             pathname: location.pathname,
             breadcrumbDataAttrs: {
-              'data-qa-stackscript-breadcrumb': true,
+              'data-qa-create-stackscript-breadcrumb': true,
             },
             crumbOverrides: [
               {

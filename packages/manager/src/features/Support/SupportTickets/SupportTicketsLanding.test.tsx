@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
@@ -7,7 +7,7 @@ import {
 } from './SupportTicketsLanding';
 
 describe('Support Tickets Landing', () => {
-  const component = shallow(
+  const component = render(
     <SupportTicketsLanding
       globalErrors={{}}
       setErrors={jest.fn()}
@@ -16,21 +16,19 @@ describe('Support Tickets Landing', () => {
     />
   );
 
-  it('title of page should read "Customer Support"', () => {
-    const titleText = component.find('[data-qa-breadcrumb]').prop('labelTitle');
-    expect(titleText).toBe('Tickets');
+  it('should render a title that reads "Tickets"', () => {
+    const titleText = component.getByText('Tickets');
+    expect(titleText).toBeInTheDocument();
   });
 
   it('should have an Open New Ticket Button', () => {
-    expect(component.find('[data-qa-open-ticket-link]')).toHaveLength(1);
+    const openTicketButton = component.getByText('Open New Ticket');
+    expect(openTicketButton).toBeInTheDocument();
   });
 
   it('button text should read "Open New Ticket"', () => {
-    const openTicketButton = component
-      .find('[data-qa-open-ticket-link]')
-      .children()
-      .text();
-    expect(openTicketButton).toContain('Open New Ticket');
+    const openTicketButton = component.getByText('Open New Ticket');
+    expect(openTicketButton).toBeInTheDocument();
   });
 });
 
