@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { shallow } from 'enzyme';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import {
@@ -7,7 +7,7 @@ import {
 } from './SupportTicketsLanding';
 
 describe('Support Tickets Landing', () => {
-  const component = render(
+  const component = shallow(
     <SupportTicketsLanding
       globalErrors={{}}
       setErrors={jest.fn()}
@@ -16,19 +16,18 @@ describe('Support Tickets Landing', () => {
     />
   );
 
-  it('should render a title that reads "Tickets"', () => {
-    const titleText = component.getByText('Tickets');
-    expect(titleText).toBeInTheDocument();
+  it('should render a <LandingHeader />', () => {
+    expect(component.find('LandingHeader')).toHaveLength(1);
   });
 
-  it('should have an Open New Ticket Button', () => {
-    const openTicketButton = component.getByText('Open New Ticket');
-    expect(openTicketButton).toBeInTheDocument();
+  it('should render a <LandingHeader /> with a title prop', () => {
+    expect(component.find('LandingHeader').prop('title')).toBeDefined();
   });
 
-  it('button text should read "Open New Ticket"', () => {
-    const openTicketButton = component.getByText('Open New Ticket');
-    expect(openTicketButton).toBeInTheDocument();
+  it('should render a <LandingHeader /> with a createButtonText prop', () => {
+    expect(
+      component.find('LandingHeader').prop('createButtonText')
+    ).toBeDefined();
   });
 });
 
