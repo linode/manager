@@ -53,6 +53,7 @@ jobs:
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
+          yarn install:all
           yarn build
           yarn start:manager:ci &
       - name: Run tests
