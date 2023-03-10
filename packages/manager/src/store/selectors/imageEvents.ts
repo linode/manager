@@ -12,8 +12,8 @@ import {
  * is in progress and has a secondary_entity
  * (which will be the actual Image)
  */
-export default createSelector<ApplicationState['events'], Event[], Event[]>(
-  (state) => state.events || [],
+export default createSelector(
+  (state: ApplicationState['events']) => state.events || [],
   (events) =>
     events.filter(
       (thisEvent: Event) =>
