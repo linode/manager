@@ -6,7 +6,6 @@ import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -22,9 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover': {
       backgroundColor:
         theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
-    },
-    '& a': {
-      color: 'inherit',
     },
   },
   icon: {
@@ -44,7 +40,9 @@ interface Props {
 
 type CombinedProps = Props;
 
-export const EventRow: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const EventRow: React.FC<React.PropsWithChildren<CombinedProps>> = (
+  props
+) => {
   const { event, entityId } = props;
   const link = getEventsActionLink(event.action, event.entity, event._deleted);
   const type = pathOr<string>('linode', ['entity', 'type'], event);
@@ -84,7 +82,7 @@ export interface RowProps {
 export const Row: React.FC<React.PropsWithChildren<RowProps>> = (props) => {
   const classes = useStyles();
 
-  const { action, link, message, created, username } = props;
+  const { action, message, created, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -100,7 +98,7 @@ export const Row: React.FC<React.PropsWithChildren<RowProps>> = (props) => {
       data-qa-event-row
       data-test-id={action}
       ariaLabel={`Event ${displayedMessage}`}
-      className={link ? classes.row : ''}
+      className={classes.row}
     >
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>
@@ -111,25 +109,13 @@ export const Row: React.FC<React.PropsWithChildren<RowProps>> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
-        {link ? (
-          <Link to={link}>
-            <HighlightedMarkdown
-              textOrMarkdown={displayedMessage}
-              sanitizeOptions={{
-                allowedTags: [],
-                disallowedTagsMode: 'discard',
-              }}
-            />
-          </Link>
-        ) : (
-          <HighlightedMarkdown
-            textOrMarkdown={displayedMessage}
-            sanitizeOptions={{
-              allowedTags: [],
-              disallowedTagsMode: 'discard',
-            }}
-          />
-        )}
+        <HighlightedMarkdown
+          textOrMarkdown={displayedMessage}
+          sanitizeOptions={{
+            allowedTags: ['a'],
+            disallowedTagsMode: 'discard',
+          }}
+        />
       </TableCell>
       <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}

@@ -91,7 +91,9 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayGroupedLinodes: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+const DisplayGroupedLinodes: React.FC<
+  React.PropsWithChildren<CombinedProps>
+> = (props) => {
   const classes = useStyles();
 
   const {
@@ -322,7 +324,8 @@ const DisplayGroupedLinodes: React.FC<React.PropsWithChildren<CombinedProps>> = 
                               pageSize={pageSize}
                               page={page}
                               eventCategory={'linodes landing'}
-                              showAll
+                              // Disabling showAll as it is impacting page performance.
+                              showAll={false}
                             />
                           </TableCell>
                         </TableRow>

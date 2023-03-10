@@ -11,7 +11,6 @@ import Grid from 'src/components/Grid';
 import H1Header from 'src/components/H1Header';
 import Notice from 'src/components/Notice';
 import { REFRESH_INTERVAL } from 'src/constants';
-import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import useAPISearch from 'src/features/Search/useAPISearch';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
@@ -328,15 +327,6 @@ export const SearchLanding: React.FC<React.PropsWithChildren<CombinedProps>> = (
   );
 };
 
-const reloaded = reloadableWithRouter((routePropsOld, routePropsNew) => {
-  // reload if we're on the search landing
-  // and we enter a new term to search for
-  return routePropsOld.location.search !== routePropsNew.location.search;
-});
-
-const enhanced = compose<CombinedProps, {}>(
-  reloaded,
-  withStoreSearch()
-)(SearchLanding);
+const enhanced = compose<CombinedProps, {}>(withStoreSearch())(SearchLanding);
 
 export default enhanced;

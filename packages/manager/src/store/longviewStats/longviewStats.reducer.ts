@@ -1,7 +1,7 @@
 import {
   LongviewNotification,
   LongviewResponse,
-} from 'src/features/Longview/request.types.ts';
+} from 'src/features/Longview/request.types';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { RelationalDataSet } from '../types';
 import { requestClientStats } from './longviewStats.actions';

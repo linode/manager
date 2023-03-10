@@ -48,7 +48,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export type CombinedProps = ListProps;
 
-export const GroupedEntitiesByTag: React.FC<React.PropsWithChildren<CombinedProps>> = (props) => {
+export const GroupedEntitiesByTag: React.FC<
+  React.PropsWithChildren<CombinedProps>
+> = (props) => {
   const {
     data,
     entity,
@@ -132,7 +134,8 @@ export const GroupedEntitiesByTag: React.FC<React.PropsWithChildren<CombinedProp
                                   pageSize={pageSize}
                                   page={page}
                                   eventCategory={'Entity table'}
-                                  showAll
+                                  // Disabling showAll as it is impacting page performance.
+                                  showAll={false}
                                 />
                               </TableCell>
                             </TableRow>

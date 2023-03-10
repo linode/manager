@@ -6,7 +6,6 @@ import {
   EntityType,
   getEntityByIDFromStore,
 } from 'src/utilities/getEntityByIDFromStore';
-import createLinkHandlerForNotification from 'src/utilities/getEventsActionLink';
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 import { Variant } from 'src/components/EntityIcon';
 
@@ -20,7 +19,6 @@ export interface EventInfo {
   message: string | null;
   type: Variant;
   status?: string;
-  linkTarget?: string;
 }
 
 export const useEventInfo = (event: Event): EventInfo => {
@@ -36,12 +34,6 @@ export const useEventInfo = (event: Event): EventInfo => {
     event.entity?.id ?? -1
   );
 
-  const linkTarget = createLinkHandlerForNotification(
-    event.action,
-    event.entity,
-    false
-  );
-
   const status = path<string>(['status'], entity);
 
   const duration = formatEventSeconds(event.duration);
@@ -51,7 +43,6 @@ export const useEventInfo = (event: Event): EventInfo => {
     message: messageWithUsername,
     status,
     type,
-    linkTarget,
   };
 };
 

@@ -256,7 +256,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     })
       .then((_) => {
         this.setState(
-          compose(
+          compose<State, State, State>(
             set(
               lensPath(['success']),
               `Linode alert thresholds changed successfully.`
@@ -325,4 +325,6 @@ export default rCompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
   withLinodeActions
-)(LinodeSettingsAlertsPanel) as React.ComponentType<React.PropsWithChildren<Props>>;
+)(LinodeSettingsAlertsPanel) as React.ComponentType<
+  React.PropsWithChildren<Props>
+>;
