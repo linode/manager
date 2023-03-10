@@ -25,12 +25,9 @@ export interface DefaultProps {
  * best practice is to include an FC container above it (the routing level often works well)
  * and pass the data through there.
  */
-type Wrapper = (
+const imagesContainer = <P extends {}>(
   Component: React.ComponentType<DefaultProps>
-) => React.FC<unknown>;
-const imagesContainer: Wrapper = (
-  Component: React.ComponentType<DefaultProps>
-) => (props) => {
+) => (props: P) => {
   const { data, error, isLoading, dataUpdatedAt } = useAllImagesQuery();
 
   const _imagesData = listToItemsByID(data ?? []);
