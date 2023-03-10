@@ -266,13 +266,13 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                     userData={userData}
                     onChange={handleUserDataChange}
                     disabled={shouldReuseUserData}
-                    renderNotice={() => (
+                    renderNotice={
                       <StyledNotice
                         success
                         text="Adding new user data is recommended as part of the rebuild process."
                       />
-                    )}
-                    renderCheckbox={() => (
+                    }
+                    renderCheckbox={
                       <Box>
                         <CheckBox
                           checked={shouldReuseUserData}
@@ -281,7 +281,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                           sxFormLabel={{ paddingLeft: '2px' }}
                         />
                       </Box>
-                    )}
+                    }
                   />
                 </>
               ) : null}

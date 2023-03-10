@@ -10,8 +10,8 @@ interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
-  renderNotice?: () => JSX.Element;
-  renderCheckbox?: () => JSX.Element;
+  renderNotice?: JSX.Element;
+  renderCheckbox?: JSX.Element;
 }
 
 const UserDataAccordion = (props: Props) => {
@@ -61,7 +61,7 @@ const UserDataAccordion = (props: Props) => {
       }}
     >
       {renderNotice ? (
-        <div data-testid="render-notice">{renderNotice()}</div>
+        <div data-testid="render-notice">{renderNotice}</div>
       ) : (
         userDataExplanatoryCopy
       )}
@@ -87,7 +87,7 @@ const UserDataAccordion = (props: Props) => {
         }
         data-qa-user-data-input
       />
-      {renderCheckbox ? renderCheckbox() : null}
+      {renderCheckbox ?? null}
     </Accordion>
   );
 };
