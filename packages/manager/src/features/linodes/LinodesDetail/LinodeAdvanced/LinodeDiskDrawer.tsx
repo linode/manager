@@ -9,6 +9,7 @@ import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Code from 'src/components/Code';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
@@ -332,7 +333,7 @@ export default React.memo(DiskDrawer);
 
 const MaxSizeTooltipText = (
   <>
-    Run the command df -h within the Linode&rsquo;s command line (through{' '}
-    <Link to="/">SSH</Link> or <Link to="/">Lish</Link>).
+    Run the command <Code>df -h</Code> within the Linode&rsquo;s command line
+    (through <Link to="/">SSH</Link> or <Link to="/">Lish</Link>).
   </>
 );
