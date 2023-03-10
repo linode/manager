@@ -49,6 +49,9 @@ export default SayHello;
 
 #### Styles
 
+- Component-specific styles may be defined at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`.
+  - Component files longer than 100 lines must have these styles defined in a dedicated file.
+- With the transition to MUI v5, the [`styled`](https://mui.com/system/styled/) API, along with the [`sx` prop](https://mui.com/system/getting-started/the-sx-prop/), is the preferred way to specify component-specific styles.
 - Most components should use `makeStyles` for styling.
   - The `theme` argument should be used for global definitions (like theme colors).
   - The class names `makeStyles` generates are dynamic and may change between renders.

@@ -49,7 +49,4 @@ The styles for Cloud Manager are located in three places:
 - `packages/manager/src/themeFactory.ts` and `packages/manager/src/themes.ts` contains code for modifying the default [Material UI](https://mui.com) styles and theme specific styles.
   - Light mode styles are located in `themeFactory.ts` and dark mode styles are located in `themes.ts`.
   - The breakpoints can be modified at the end of `themeFactory.ts`.
-- Component-specific styles may be defined in the component's file.
-  - With the transition to MUI v5, the [`styled`](https://mui.com/system/styled/) API, along with the [`sx` prop](https://mui.com/system/getting-started/the-sx-prop/), is the preferred way to specify component-specific styles.
-  - These styles may also be defined in a dedicated file, named `ComponentName.styles.tsx`, to reduce the length of the component file.
-  - For component files longer than 100 lines, these styles **must** be defined in a dedicated file.
+- Component-specific styles may be defined either at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`. Refer to the guidelines outlined in the "Styles" section of [Component Structure](02-component-structure.md#styles). 
