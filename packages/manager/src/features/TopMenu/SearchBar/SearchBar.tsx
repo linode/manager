@@ -33,7 +33,7 @@ import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 

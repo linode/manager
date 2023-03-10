@@ -10,7 +10,7 @@ import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 import useLinodes from './useLinodes';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {

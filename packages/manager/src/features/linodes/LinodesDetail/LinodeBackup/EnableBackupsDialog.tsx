@@ -10,7 +10,7 @@ import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 interface Props {
   linodeId: number;

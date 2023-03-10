@@ -18,7 +18,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

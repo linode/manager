@@ -51,7 +51,7 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 

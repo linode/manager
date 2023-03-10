@@ -11,7 +11,7 @@ import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
 import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { usePagination } from 'src/hooks/usePagination';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 interface Props {
   selectedLinodes: TransferEntity;

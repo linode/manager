@@ -47,7 +47,7 @@ import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { ExtendedType } from 'src/queries/types';
 import { EntityError } from 'src/store/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

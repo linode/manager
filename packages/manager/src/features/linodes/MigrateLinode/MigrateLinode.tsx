@@ -36,7 +36,7 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {

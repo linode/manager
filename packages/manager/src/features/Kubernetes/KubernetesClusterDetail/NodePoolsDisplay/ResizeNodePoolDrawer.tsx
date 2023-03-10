@@ -10,7 +10,7 @@ import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { pluralize } from 'src/utilities/pluralize';
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
 

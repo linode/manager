@@ -23,7 +23,7 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { useSpecificTypes } from 'src/queries/types';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MutateDrawer from '../MutateDrawer';

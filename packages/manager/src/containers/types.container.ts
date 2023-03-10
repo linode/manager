@@ -6,7 +6,7 @@ import {
   useSpecificTypes,
 } from 'src/queries/types';
 import { ExtendedType } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 export interface WithTypesProps {
   typesData?: ExtendedType[];

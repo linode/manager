@@ -15,7 +15,7 @@ import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 import { useStyles as useEventStyles } from './RenderEvent';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {

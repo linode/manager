@@ -22,7 +22,7 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 export interface Props {
   linodeId: number;

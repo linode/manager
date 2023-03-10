@@ -6,7 +6,7 @@ import Grid from 'src/components/Grid';
 import { dcDisplayNames } from 'src/constants';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { pluralize } from 'src/utilities/pluralize';
 import {
   getTotalClusterMemoryCPUAndStorage,

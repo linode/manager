@@ -28,7 +28,7 @@ import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';

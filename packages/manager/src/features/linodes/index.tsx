@@ -5,7 +5,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));

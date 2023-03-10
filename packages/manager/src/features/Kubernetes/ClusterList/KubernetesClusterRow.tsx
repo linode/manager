@@ -19,7 +19,7 @@ import {
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import cleanArray from 'src/utilities/cleanArray';
+import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
