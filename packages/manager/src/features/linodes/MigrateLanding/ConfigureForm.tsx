@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -57,7 +56,7 @@ const ConfigureForm = (props: Props) => {
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
-        {pathOr(() => null, [country], flags)()}
+        {flags[country]?.()}
         <Typography>{`${getHumanReadableCountry(props.currentRegion)}: ${
           currentActualRegion?.label ?? currentRegion
         }`}</Typography>

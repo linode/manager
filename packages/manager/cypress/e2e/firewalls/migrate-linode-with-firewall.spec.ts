@@ -116,7 +116,7 @@ describe('Migrate Linode With Firewall', () => {
     };
 
     // modify incoming response
-    cy.intercept(apiMatcher('regions'), (req) => {
+    cy.intercept(apiMatcher('regions*'), (req) => {
       req.reply((res) => {
         res.send(fakeRegionsData);
       });
