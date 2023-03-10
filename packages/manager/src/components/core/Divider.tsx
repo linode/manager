@@ -5,7 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   light: {
-    borderColor: theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238',
+    borderColor: theme.name === 'light' ? '#e3e5e8' : '#2e3238',
   },
   dark: {
     borderColor: theme.color.border2,

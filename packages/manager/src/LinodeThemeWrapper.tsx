@@ -4,6 +4,7 @@ import { dark, light } from 'src/themes';
 import { isProductionBuild } from './constants';
 import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
+import { ThemeName } from './themeFactory';
 import {
   ThemeProvider,
   Theme,
@@ -17,7 +18,7 @@ declare module '@mui/styles/defaultTheme' {
 
 export type ThemeChoice = 'light' | 'dark' | 'system';
 
-const themes: Record<'light' | 'dark', Theme> = { light, dark };
+const themes: Record<ThemeName, Theme> = { light, dark };
 
 const setActiveHighlightTheme = (value: ThemeChoice) => {
   /**
@@ -67,12 +68,12 @@ export const isValidTheme = (value: unknown): boolean => {
 export const getThemeFromPreferenceValue = (
   value: unknown,
   isSystemInDarkMode: boolean
-): 'light' | 'dark' => {
+): ThemeName => {
   if (value === 'system') {
     return isSystemInDarkMode ? 'dark' : 'light';
   }
   if (isValidTheme(value)) {
-    return value as 'light' | 'dark';
+    return value as ThemeName;
   }
   return 'light';
 };
@@ -80,7 +81,7 @@ export const getThemeFromPreferenceValue = (
 interface Props {
   children: React.ReactNode;
   /** Allows theme to be overwritten. Used for Storybook theme switching */
-  theme?: 'light' | 'dark';
+  theme?: ThemeName;
 }
 
 const LinodeThemeWrapper = ({ children, theme }: Props) => {
