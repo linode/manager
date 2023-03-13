@@ -11,8 +11,11 @@ import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { ThemeChoice } from 'src/utilities/theme';
+import FormControl from 'src/components/core/FormControl';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { Radio } from 'src/components/Radio/Radio';
+import { FormLabel } from '@mui/material';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -35,7 +38,7 @@ const ProfileSettings = () => {
   const { mutateAsync: updateProfile } = useMutateProfile();
 
   const { data: preferences } = usePreferences();
-  const { mutateAsync: updatePreferences, isLoading } = useMutatePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   React.useEffect(() => {
     if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
@@ -52,16 +55,6 @@ const ProfileSettings = () => {
       email_notifications: !profile?.email_notifications,
     }).finally(() => setSubmitting(false));
   };
-
-  const themeOptions: Item<ThemeChoice>[] = [
-    { label: 'Light', value: 'light' },
-    { label: 'Dark', value: 'dark' },
-    { label: 'System', value: 'system' },
-  ];
-
-  const themeSelectValue =
-    themeOptions.find((option) => option.value === preferences?.theme) ??
-    themeOptions.find((option) => option.value === 'system'); // default to system
 
   return (
     <>
@@ -96,21 +89,36 @@ const ProfileSettings = () => {
         )}
       </Paper>
       <Paper className={classes.root}>
-        <Typography variant="h2" className={classes.title}>
-          Theme
-        </Typography>
         <Grid container alignItems="center">
           <Grid item xs={12}>
-            <Select
-              options={themeOptions}
-              value={themeSelectValue}
-              onChange={(theme: Item<ThemeChoice>) =>
-                updatePreferences({ theme: theme.value })
-              }
-              isClearable={false}
-              isLoading={isLoading}
-              hideLabel
-            />
+            <FormControl>
+              <FormLabel>
+                <Typography variant="h2">Theme</Typography>
+              </FormLabel>
+              <RadioGroup
+                row
+                value={preferences?.theme ?? 'system'}
+                onChange={(e) =>
+                  updatePreferences({ theme: e.target.value as ThemeChoice })
+                }
+              >
+                <FormControlLabel
+                  value="light"
+                  control={<Radio />}
+                  label="Light"
+                />
+                <FormControlLabel
+                  value="dark"
+                  control={<Radio />}
+                  label="Dark"
+                />
+                <FormControlLabel
+                  value="system"
+                  control={<Radio />}
+                  label="System"
+                />
+              </RadioGroup>
+            </FormControl>
           </Grid>
         </Grid>
       </Paper>
