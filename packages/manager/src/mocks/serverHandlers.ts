@@ -330,12 +330,16 @@ export const handlers = [
       expiry: '2021-05-01',
     });
     const publicImages = imageFactory.buildList(0, { is_public: true });
+    const cloudInitImages = imageFactory.buildList(1, {
+      capabilities: ['cloud-init'],
+    });
     const images = [
       ...automaticImages,
       ...privateImages,
       ...publicImages,
       ...pendingImages,
       ...creatingImages,
+      ...cloudInitImages,
     ];
     return res(ctx.json(makeResourcePage(images)));
   }),
