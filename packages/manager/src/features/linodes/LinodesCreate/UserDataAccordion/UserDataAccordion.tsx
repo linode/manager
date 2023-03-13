@@ -1,10 +1,10 @@
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { StyledHelpIcon } from './UserDataAccordion.styles';
+import Notice from 'src/components/Notice';
+import AcceptedFormats from './AcceptedFormats';
+import AccordionHeading from './AccordionHeading';
+import UserDataExplanatory from './UserDataExplanatory';
 
 interface Props {
   userData: string | undefined;
@@ -71,9 +71,9 @@ const UserDataAccordion = (props: Props) => {
       {renderNotice ? (
         <div data-testid="render-notice">{renderNotice}</div>
       ) : (
-        userDataExplanatoryCopy
+        <UserDataExplanatory />
       )}
-      {acceptedFormatsCopy}
+      <AcceptedFormats />
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           This user data may not be in a format accepted by cloud-init.
@@ -101,38 +101,3 @@ const UserDataAccordion = (props: Props) => {
 };
 
 export default UserDataAccordion;
-
-const AccordionHeading = (props: any) => (
-  <>
-    Add User Data{' '}
-    <StyledHelpIcon
-      text={
-        <>
-          User data is part of a virtual machine&rsquo;s cloud-init metadata
-          containing information related to a user&rsquo;s local account.{' '}
-          <Link to="/">Learn more.</Link>
-        </>
-      }
-      interactive
-    />
-    {props.warningNotice ? props.warningNotice : null}
-  </>
-);
-
-const userDataExplanatoryCopy = (
-  <Typography>
-    <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
-      User Data
-    </Link>{' '}
-    is part of a virtual machine&rsquo;s cloud-init metadata that contains
-    anything related to a user&rsquo;s local account, including username and
-    user group(s).
-  </Typography>
-);
-
-const acceptedFormatsCopy = (
-  <Typography>
-    <br /> Accepted formats are YAML and bash.{' '}
-    <Link to="https://www.linode.com/docs">Learn more.</Link>
-  </Typography>
-);
