@@ -35,7 +35,7 @@ import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { AppsDocs } from 'src/documentation';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
-import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
+import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
