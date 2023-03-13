@@ -38,10 +38,8 @@ const UserDataAccordion = (props: Props) => {
     const isUserDataValid = validPrefixes.some((prefix) =>
       userDataLower.startsWith(prefix)
     );
-    if (userData.length > 0 && !isUserDataValid) {
-      if (!hasInputValueChanged) {
-        setFormatWarning(true);
-      }
+    if (userData.length > 0 && !isUserDataValid && !hasInputValueChanged) {
+      setFormatWarning(true);
     } else {
       setFormatWarning(false);
     }
