@@ -23,6 +23,7 @@ import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomItem, randomLabel, randomUuid } from 'support/util/random';
 import { visitUrlWithManagedEnabled } from 'support/api/managed';
+import { cancelAllTestEntityTransfers } from 'support/api/entityTransfer';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
