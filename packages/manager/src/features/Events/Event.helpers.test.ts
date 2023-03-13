@@ -160,7 +160,9 @@ describe('Utility Functions', () => {
 
       expect(
         formatEventWithAppendedText(mockEvent, message, appendedText, link)
-      ).toEqual(`${message} <a href=\"${link}\">${appendedText}</a>.`);
+      ).toEqual(
+        `${message} <a href=\"${link}\" target=_blank>${appendedText}</a>.`
+      );
     });
   });
 
