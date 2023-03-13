@@ -13,9 +13,9 @@ const Code = (props: Props) => {
 
 export default Code;
 
-const Span = styled('span')({
-  backgroundColor: '#EEEEEE',
+const Span = styled('span')(({ theme }) => ({
+  backgroundColor: theme.color.grey8,
   fontWeight: 'bold',
   fontFamily: 'Courier',
-  color: '#000000',
-});
+  color: theme.name === 'darkTheme' ? theme.color.white : theme.color.black,
+}));
