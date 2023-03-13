@@ -17,5 +17,5 @@ const Span = styled('span')(({ theme }) => ({
   backgroundColor: theme.color.grey8,
   fontWeight: 'bold',
   fontFamily: 'Courier',
-  color: theme.name === 'darkTheme' ? theme.color.white : theme.color.black,
+  color: theme.name === 'dark' ? theme.color.white : theme.color.black,
 }));
