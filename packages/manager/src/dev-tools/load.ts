@@ -33,8 +33,5 @@ export const devToolsEnabled = () => {
     window.localStorage.getItem('dev-tools') === 'true' ||
     ENABLE_DEV_TOOLS;
 
-  return (
-    !explicitlyDisabled &&
-    (process.env.NODE_ENV === 'development' || explicitlyEnabled)
-  );
+  return !explicitlyDisabled && (import.meta.env.DEV || explicitlyEnabled);
 };

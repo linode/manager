@@ -8,7 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import StatusIcon from 'src/components/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import useFirewallDevices from 'src/hooks/useFirewallDevices';
+import { useAllFirewallDevicesQuery } from 'src/queries/firewalls';
 import capitalize from 'src/utilities/capitalize';
 import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
@@ -31,17 +31,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
 
   const { id, label, status, rules, ...actionHandlers } = props;
 
-  const {
-    devices: { itemsById, error, loading, lastUpdated },
-    requestDevices,
-  } = useFirewallDevices(id);
-  const devices = Object.values(itemsById);
-
-  React.useEffect(() => {
-    if (lastUpdated === 0 && !(loading || error.read)) {
-      requestDevices();
-    }
-  }, [error, lastUpdated, loading, requestDevices]);
+  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(id);
 
   const count = getCountOfRules(rules);
 
@@ -63,7 +53,7 @@ export const FirewallRow: React.FC<CombinedProps> = (props) => {
       <Hidden smDown>
         <TableCell>{getRuleString(count)}</TableCell>
         <TableCell>
-          {getLinodesCellString(devices, loading, error.read)}
+          {getLinodesCellString(devices ?? [], isLoading, error ?? undefined)}
         </TableCell>
       </Hidden>
       <TableCell actionCell>

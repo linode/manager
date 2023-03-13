@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Theme, makeStyles } from 'src/components/core/styles';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
+import packageJson from '../../../package.json';
 
 interface Props {
   desktopMenuIsOpen: boolean;
@@ -123,7 +124,7 @@ export const Footer: React.FC<Props> = (props) => {
 };
 
 const renderVersion = (className: string) => {
-  const { VERSION } = process.env;
+  const VERSION = packageJson.version;
   if (!VERSION) {
     return null;
   }

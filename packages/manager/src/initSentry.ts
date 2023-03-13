@@ -2,13 +2,14 @@ import { BrowserOptions, Event as SentryEvent, init } from '@sentry/browser';
 import { SENTRY_URL } from 'src/constants';
 import redactAccessToken from 'src/utilities/redactAccessToken';
 import deepStringTransform from 'src/utilities/deepStringTransform';
+import packageJson from '../package.json';
 
 export const initSentry = () => {
   if (SENTRY_URL) {
     init({
       dsn: SENTRY_URL,
-      release: process.env.VERSION,
-      environment: process.env.NODE_ENV,
+      release: packageJson.version,
+      environment: import.meta.env.PROD ? 'production' : 'development',
       beforeSend,
       autoSessionTracking: false,
       ignoreErrors: [

@@ -24,9 +24,9 @@ import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './queries/base';
+import App from './App';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
-const App = React.lazy(() => import('./App'));
 const Cancel = React.lazy(() => import('src/features/CancelLanding'));
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
@@ -111,7 +111,3 @@ loadDevTools(() => {
     document.getElementById('root') as HTMLElement
   );
 });
-
-if (module.hot && !isProductionBuild) {
-  module.hot.accept();
-}

@@ -1,11 +1,6 @@
-import { createMockImage } from 'cypress/support/api/images';
-import { createMockLinodeList } from 'cypress/support/api/linodes';
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-} from 'cypress/support/helpers';
+import { createMockImage } from 'support/api/images';
+import { createMockLinodeList } from 'support/api/linodes';
+import { containsClick, fbtClick, fbtVisible, getClick } from 'support/helpers';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString } from 'support/util/random';
 

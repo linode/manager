@@ -1,6 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
-import sync from 'css-animation-sync';
 import Box from 'src/components/core/Box';
 import Hidden from 'src/components/core/Hidden';
 import TableBody from 'src/components/core/TableBody';
@@ -101,10 +100,6 @@ export const MaintenanceTable = ({ type }: Props) => {
     },
     filter
   );
-
-  React.useEffect(() => {
-    sync('pulse');
-  }, []);
 
   const renderTableContent = () => {
     if (isLoading) {
