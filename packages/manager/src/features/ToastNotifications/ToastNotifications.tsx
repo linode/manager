@@ -8,6 +8,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { events$ } from 'src/events';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 /**
  * Boilerplate for sending a success toast
@@ -27,8 +28,10 @@ export const toastSuccessAndFailure = curry(
     persistSuccessMessage: boolean | undefined,
     persistFailureMessage: boolean | undefined,
     successMessage: string | undefined,
-    failureMessage: string | undefined
+    failureMessage: string | undefined,
+    includesLink: boolean | undefined
   ) => {
+    let linkedMessage;
     if (
       ['finished', 'notification'].includes(eventStatus) &&
       Boolean(successMessage)
@@ -38,7 +41,16 @@ export const toastSuccessAndFailure = curry(
         persist: persistSuccessMessage,
       });
     } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
-      return enqueueSnackbar(failureMessage, {
+      if (includesLink) {
+        linkedMessage = (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: sanitizeHTML(failureMessage ?? ''),
+            }}
+          />
+        );
+      }
+      return enqueueSnackbar(linkedMessage ?? failureMessage, {
         variant: 'error',
         persist: persistFailureMessage,
       });
@@ -97,6 +109,14 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
             return _toast(
               `Image ${secondaryLabel} created successfully.`,
               `Error creating Image ${secondaryLabel}.`
+            );
+          case 'disk_resize':
+            return _toastWithPersist(
+              false,
+              true,
+              `Disk ${secondaryLabel} resized successfully.`,
+              `Disk resize failed. <a href="https://cloud.linode.com" target=_blank>Learn more about resizing restrictions.</a>`,
+              true // includesLink
             );
           case 'image_upload':
             const isDeletion = event.message === 'Upload cancelled.';
