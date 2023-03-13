@@ -16,6 +16,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 import { useStyles as useEventStyles } from './RenderEvent';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { extendType } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -40,7 +41,9 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const typesQuery = useSpecificTypes(
     cleanArray(_linodes.map((linode) => linode.type))
   );
-  const types = cleanArray(typesQuery.map((result) => result.data));
+  const types = cleanArray(typesQuery.map((result) => result.data)).map(
+    extendType
+  );
   const message = eventMessageGenerator(event, _linodes, types);
 
   if (message === null) {

@@ -9,7 +9,7 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
-import { ExtendedType } from 'src/queries/types';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export interface ExtendedLinode extends Linode {
   heading: string;

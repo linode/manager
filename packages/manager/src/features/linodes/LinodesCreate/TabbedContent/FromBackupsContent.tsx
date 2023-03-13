@@ -16,6 +16,7 @@ import {
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import { reportException } from 'src/exceptionReporting';
+import { extendType } from 'src/utilities/extendType';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import SelectBackupPanel from '../SelectBackupPanel';
 import SelectLinodePanel from '../SelectLinodePanel';
@@ -179,6 +180,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
       typesData,
     } = this.props;
 
+    const extendedTypes = typesData?.map(extendType);
+
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
 
     const userHasBackups = linodesData.some(
@@ -205,7 +208,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               error={hasErrorFor('linode_id')}
               linodes={ramdaCompose(
                 (linodes: Linode[]) =>
-                  extendLinodes(linodes, imagesData, typesData),
+                  extendLinodes(linodes, imagesData, extendedTypes),
                 filterLinodesWithBackups
               )(linodesData)}
               selectedLinodeID={selectedLinodeID}

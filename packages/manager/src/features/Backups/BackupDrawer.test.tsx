@@ -15,7 +15,7 @@ import {
   getTotalPrice,
 } from './BackupDrawer';
 import { ExtendedLinode } from './types';
-import { ExtendedType, extendType } from 'src/queries/types';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { LinodeType } from '@linode/api-v4';
 
 const cachedTypesData = (data.data as LinodeType[]).map(

@@ -27,7 +27,7 @@ import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { gpuPlanText } from './utilities';
 import { CreateNodePoolData } from '@linode/api-v4';
-import { ExtendedType } from 'src/queries/types';
+import { ExtendedType } from 'src/utilities/extendType';
 
 type ClassNames =
   | 'root'

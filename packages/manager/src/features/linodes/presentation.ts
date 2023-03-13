@@ -1,4 +1,4 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export const titlecase = (string: string): string => {
   return `${string.substr(0, 1).toUpperCase()}${string.substr(1)}`;
@@ -25,7 +25,7 @@ export const typeLabelDetails = (
 
 export const displayType = (
   linodeTypeId: null | string,
-  types: Pick<LinodeType, 'id' | 'label'>[]
+  types: Pick<ExtendedType, 'id' | 'label'>[]
 ): string => {
   if (linodeTypeId === null) {
     return 'No Plan';

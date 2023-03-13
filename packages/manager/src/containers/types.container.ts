@@ -1,33 +1,29 @@
+import { LinodeType } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
-import {
-  TypesQueryOptions,
-  useAllTypes,
-  useSpecificTypes,
-} from 'src/queries/types';
-import { ExtendedType } from 'src/queries/types';
+import { useAllTypes, useSpecificTypes } from 'src/queries/types';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 export interface WithTypesProps {
-  typesData?: ExtendedType[];
+  typesData?: LinodeType[];
   typesLoading: boolean;
   typesError?: APIError[];
 }
 
 export interface WithSpecificTypesProps {
   setRequestedTypes: (types: string[]) => void;
-  requestedTypesData: ExtendedType[];
+  requestedTypesData: LinodeType[];
 }
 
 export const withTypes = <Props>(
   Component: React.ComponentType<Props & WithTypesProps>,
-  options?: TypesQueryOptions
+  enabled = true
 ) => (props: Props) => {
   const {
     data: typesData,
     isLoading: typesLoading,
     error: typesError,
-  } = useAllTypes(options);
+  } = useAllTypes(enabled);
 
   return React.createElement(Component, {
     ...props,

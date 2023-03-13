@@ -70,7 +70,7 @@ export const getAllLinodeConfigs: ThunkActionCreator<
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeConfigsActions;
   dispatch(started(params));
-  const req = getAll<Entity>((configParams?: any, filter?: any) =>
+  const req = getAll((configParams?: any, filter?: any) =>
     _getLinodeConfigs(linodeId, configParams, filter)
   );
 

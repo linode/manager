@@ -305,7 +305,7 @@ export default compose(
   withFeatureFlagConsumer,
   withPreferences,
   (component: React.ComponentType<WithTypesProps>) =>
-    withTypes(component, { enabled: false })
+    withTypes(component, false)
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

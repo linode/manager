@@ -1,9 +1,4 @@
-import {
-  getDeprecatedLinodeTypes,
-  getLinodeTypes,
-  getType,
-  LinodeType,
-} from '@linode/api-v4';
+import { getLinodeTypes, getType, LinodeType } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import {
   QueryClient,
@@ -12,88 +7,26 @@ import {
   useQueryClient,
   UseQueryOptions,
 } from 'react-query';
-import { LINODE_NETWORK_IN } from 'src/constants';
-import { typeLabelDetails } from 'src/features/linodes/presentation';
-import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 
 export const queryKey = 'types';
 
-export interface ExtendedType extends LinodeType {
-  heading: string;
-  subHeadings: string[];
-  isDeprecated: boolean;
-}
-
-export const extendType = (type: LinodeType): ExtendedType => {
-  const {
-    label,
-    memory,
-    vcpus,
-    disk,
-    network_out,
-    transfer,
-    price: { monthly, hourly },
-  } = type;
-  const formattedLabel = formatStorageUnits(label);
-
-  const subHeadings = [
-    `$${monthly}/mo ($${hourly}/hr)`,
-    typeLabelDetails(memory, disk, vcpus),
-    `${transfer / 1000} TB Transfer`,
-  ];
-
-  if (network_out > 0) {
-    subHeadings.push(
-      `${LINODE_NETWORK_IN} Gbps In / ${network_out / 1000} Gbps Out`
-    );
-  }
-
-  return {
-    ...type,
-    label: formattedLabel,
-    heading: formattedLabel,
-    subHeadings,
-    isDeprecated: type.successor !== null,
-  };
-};
-
-const getAllTypes = (includeLegacy: boolean) =>
-  Promise.all([
-    getAll<LinodeType>(getLinodeTypes)(),
-    ...(includeLegacy ? [getAll<LinodeType>(getDeprecatedLinodeTypes)()] : []),
-  ])
-    .then((results) =>
-      results.reduce((acc: LinodeType[], cur) => {
-        acc.push(...cur.data);
-        return acc;
-      }, [])
-    )
-    .then((allTypes) => allTypes.map(extendType));
+const getAllTypes = () =>
+  getAll(getLinodeTypes)().then((results) => results.data);
 
 const getSingleType = async (type: string, queryClient: QueryClient) => {
-  const allTypesCache = queryClient.getQueryData<ExtendedType[]>(queryKey);
+  const allTypesCache = queryClient.getQueryData<LinodeType[]>(queryKey);
   return (
-    allTypesCache?.find((cachedType) => cachedType.id === type) ??
-    getType(type).then(extendType)
+    allTypesCache?.find((cachedType) => cachedType.id === type) ?? getType(type)
   );
 };
 
-export interface TypesQueryOptions {
-  includeLegacy?: boolean;
-  enabled?: boolean;
-}
-
-export const useAllTypes = (options?: TypesQueryOptions) => {
-  return useQuery<ExtendedType[], APIError[]>(
-    [queryKey, options ?? {}],
-    () => getAllTypes(options?.includeLegacy ?? false),
-    {
-      enabled: options?.enabled ?? true,
-      ...queryPresets.oneTimeFetch,
-    }
-  );
+export const useAllTypes = (enabled = true) => {
+  return useQuery<LinodeType[], APIError[]>([queryKey], getAllTypes, {
+    enabled,
+    ...queryPresets.oneTimeFetch,
+  });
 };
 
 /**
@@ -103,7 +36,7 @@ export const useAllTypes = (options?: TypesQueryOptions) => {
 export const useSpecificTypes = (types: string[]) => {
   const queryClient = useQueryClient();
   return useQueries(
-    types.map<UseQueryOptions<ExtendedType, APIError[]>>((type) => ({
+    types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
       queryKey: [queryKey, type],
       queryFn: () => getSingleType(type, queryClient),
       ...queryPresets.oneTimeFetch,

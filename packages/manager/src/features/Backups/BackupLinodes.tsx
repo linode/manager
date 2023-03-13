@@ -1,4 +1,3 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -11,6 +10,7 @@ import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { ExtendedType } from 'src/utilities/extendType';
 import { ExtendedLinode } from './types';
 
 type ClassNames = 'root' | 'error';
@@ -37,9 +37,9 @@ export const displayPrice = (price: string | number) => {
   return _displayPrice(price);
 };
 
-const getLabel = (type?: LinodeType) => pathOr('Unknown', ['label'], type);
+const getLabel = (type?: ExtendedType) => pathOr('Unknown', ['label'], type);
 
-const getPrice = (type?: LinodeType) =>
+const getPrice = (type?: ExtendedType) =>
   pathOr('Unavailable', ['addons', 'backups', 'price', 'monthly'], type);
 
 export const BackupLinodes: React.FC<CombinedProps> = (props) => {

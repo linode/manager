@@ -36,7 +36,6 @@ import useLinodeActions from 'src/hooks/useLinodeActions';
 import { useSpecificTypes } from 'src/queries/types';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
-import { ExtendedType } from 'src/queries/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
@@ -52,6 +51,7 @@ import {
   transitionText as _transitionText,
 } from './transitions';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
 
@@ -97,7 +97,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const imagesItemsById = listToItemsByID(images ?? []);
 
   const typesQuery = useSpecificTypes(cleanArray([linode.type]));
-  const type = typesQuery[0]?.data;
+  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
   const imageSlug = linode.image;
 

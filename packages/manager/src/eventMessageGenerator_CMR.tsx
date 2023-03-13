@@ -1,14 +1,15 @@
 import * as React from 'react';
 import { Event } from '@linode/api-v4/lib/account';
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import Link from 'src/components/Link';
 import { dcDisplayNames } from 'src/constants';
 import { formatEventWithAPIMessage } from 'src/eventMessageGenerator';
+import { ExtendedType } from './utilities/extendType';
 
 export const eventMessageGenerator = (
   e: Event,
   linodes: Linode[] = [],
-  types: LinodeType[] = []
+  types: ExtendedType[] = []
 ) => {
   const eventLinode = linodes.find(
     (thisLinode) => thisLinode.id === e.entity?.id

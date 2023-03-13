@@ -2,7 +2,6 @@ import {
   Config,
   getLinodeConfigs,
   LinodeBackups,
-  LinodeType,
 } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -13,7 +12,7 @@ import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { DialogType } from 'src/features/linodes/types';
 import { lishLaunch } from 'src/features/Lish/lishUtils';
-import { ExtendedType, useSpecificTypes } from 'src/queries/types';
+import { useSpecificTypes } from 'src/queries/types';
 import { useGrants } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
@@ -23,6 +22,7 @@ import {
   sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 export interface Props {
   linodeId: number;
@@ -51,7 +51,7 @@ export const buildQueryStringForLinodeClone = (
   linodeId: number,
   linodeRegion: string,
   linodeType: string | null,
-  types: LinodeType[] | null,
+  types: ExtendedType[] | null,
   regions: Region[]
 ): string => {
   const params: Record<string, string> = {
@@ -89,6 +89,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
 
   const typesQuery = useSpecificTypes(cleanArray([linodeType?.id]));
   const type = typesQuery[0]?.data;
+  const extendedType = type ? extendType(type) : undefined;
   const history = useHistory();
   const regions = useRegionsQuery().data ?? [];
   const isBareMetalInstance = linodeType?.class === 'metal';
@@ -204,7 +205,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
                 linodeId,
                 linodeRegion,
                 linodeType?.id ?? null,
-                type ? [type] : null,
+                extendedType ? [extendedType] : null,
                 regions
               ),
             });

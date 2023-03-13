@@ -58,7 +58,6 @@ import {
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
-import { ExtendedType } from 'src/queries/types';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -76,6 +75,7 @@ import {
   WithRegionsProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -652,8 +652,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   getTypeInfo = (): TypeInfo => {
     const { selectedTypeID } = this.state;
+    const selectedType = this.props.typesData?.find(
+      (type) => type.id === selectedTypeID
+    );
     return this.reshapeTypeInfo(
-      this.props.typesData?.find((type) => type.id === selectedTypeID)
+      selectedType ? extendType(selectedType) : undefined
     );
   };
 
@@ -714,13 +717,15 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
 
+    const extendedTypeData = typesData?.map(extendType);
+
     const userCannotCreateLinode =
       Boolean(profile.data?.restricted) &&
       !hasGrant('add_linodes', grants.data);
 
     // If the selected type is a GPU plan, only display region
     // options that support GPUs.
-    const selectedType = this.props.typesData?.find(
+    const selectedType = extendedTypeData?.find(
       (thisType) => thisType.id === this.state.selectedTypeID
     );
 
@@ -789,7 +794,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
             regionHelperText={regionHelperText}
-            typesData={typesData}
+            typesData={extendedTypeData}
             vlanLabel={this.state.attachedVLANLabel}
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}

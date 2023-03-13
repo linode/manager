@@ -1,9 +1,4 @@
-import {
-  Disk,
-  LinodeSpecs,
-  LinodeType,
-  startMutation,
-} from '@linode/api-v4/lib/linodes';
+import { Disk, LinodeSpecs, startMutation } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -30,6 +25,7 @@ import MutateDrawer from '../MutateDrawer';
 import withMutationDrawerState, {
   MutationDrawerProps,
 } from './mutationDrawerState';
+import { ExtendedType } from 'src/utilities/extendType';
 
 type ClassNames = 'pendingMutationLink';
 
@@ -189,7 +185,7 @@ const styled = withStyles(styles);
 interface ContextProps {
   linodeSpecs: LinodeSpecs;
   linodeId: number;
-  linodeType?: LinodeType | null;
+  linodeType?: ExtendedType | null;
 }
 
 interface DispatchProps {

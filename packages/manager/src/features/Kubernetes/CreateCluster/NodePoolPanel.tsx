@@ -8,7 +8,7 @@ import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
-import { ExtendedType } from 'src/queries/types';
+import { ExtendedType } from 'src/utilities/extendType';
 
 interface Props {
   types: ExtendedType[];

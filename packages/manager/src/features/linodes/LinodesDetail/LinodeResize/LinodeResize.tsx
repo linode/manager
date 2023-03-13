@@ -1,10 +1,5 @@
 import { GrantLevel } from '@linode/api-v4/lib/account';
-import {
-  Disk,
-  LinodeStatus,
-  LinodeType,
-  resizeLinode,
-} from '@linode/api-v4/lib/linodes';
+import { Disk, LinodeStatus, resizeLinode } from '@linode/api-v4/lib/linodes';
 import { APIError } from '@linode/api-v4/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -45,7 +40,6 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
-import { ExtendedType } from 'src/queries/types';
 import { EntityError } from 'src/store/types';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -54,6 +48,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 type ClassNames =
   | 'title'
@@ -149,6 +144,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     } = this.props;
     const { selectedId } = this.state;
 
+    const extendedTypeData = requestedTypesData.map(extendType);
+
     if (!linodeId || !selectedId) {
       return;
     }
@@ -156,7 +153,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       selectedId,
       linodeType ?? null,
-      requestedTypesData
+      extendedTypeData
     );
 
     this.setState({
@@ -297,7 +294,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       preferences,
     } = this.props;
     const { confirmationText, submissionError } = this.state;
-    const type = requestedTypesData.find((t) => t.id === linodeType);
+    const extendedTypeData = requestedTypesData.map(extendType);
+    const type = extendedTypeData.find((t) => t.id === linodeType);
 
     const hostMaintenance = linodeStatus === 'stopped';
     const unauthorized =
@@ -325,10 +323,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     const isSmaller = isSmallerThanCurrentPlan(
       this.state.selectedId,
       linodeType || '',
-      requestedTypesData
+      extendedTypeData
     );
 
-    const currentTypes = filterCurrentTypes(typesData);
+    const currentTypes = filterCurrentTypes(typesData?.map(extendType));
 
     return (
       <Dialog
@@ -510,7 +508,10 @@ const mapStateToProps: MapStateToProps<StateProps, Props> = (
 
 const connected = connect(mapStateToProps, mapDispatchToProps);
 
-export const getLinodeType = (types: LinodeType[], selectedTypeID: string) => {
+export const getLinodeType = (
+  types: ExtendedType[],
+  selectedTypeID: string
+) => {
   return types.find((thisType) => thisType.id === selectedTypeID);
 };
 
@@ -568,7 +569,7 @@ export default compose<CombinedProps, Props>(
   // this awkward line avoids fetching all types until this dialog is opened which
   // is important since LinodeResize is mounted on the default landing page
   (component: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
-    withTypes(component, { enabled: props.open })(props),
+    withTypes(component, props.open)(props),
   withSpecificTypes,
   styled,
   withSnackbar,

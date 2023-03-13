@@ -1,4 +1,4 @@
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Linode } from '@linode/api-v4/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -29,6 +29,7 @@ import {
 } from 'src/store/backupDrawer';
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { ThunkDispatch } from 'src/store/types';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
@@ -149,10 +150,12 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
       updatedCount,
       requestedTypesData,
     } = this.props;
+
+    const extendedTypeData = requestedTypesData.map(extendType);
     const extendedLinodes = enhanceLinodes(
       this.props.linodesWithoutBackups,
       enableErrors,
-      requestedTypesData
+      extendedTypeData
     );
     const linodeCount = extendedLinodes.length;
     return (
@@ -248,7 +251,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 /* Attaches a full type object to each Linode. Needed to calculate
  * price and label information in BackupsTable.tsx.
  */
-export const addTypeInfo = (types: LinodeType[], linodes: Linode[]) =>
+export const addTypeInfo = (types: ExtendedType[], linodes: Linode[]) =>
   linodes.map((linode) => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {
@@ -276,7 +279,7 @@ export const addErrors = (
 export const enhanceLinodes = (
   linodes: Linode[],
   errors: BackupError[],
-  types: LinodeType[]
+  types: ExtendedType[]
 ) => {
   const linodesWithTypes = addTypeInfo(types, linodes);
   return addErrors(errors, linodesWithTypes);

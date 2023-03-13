@@ -30,6 +30,7 @@ import {
 import { useRegionsQuery } from 'src/queries/regions';
 import { useAllTypes } from 'src/queries/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import KubeCheckoutBar from '../KubeCheckoutBar';
@@ -120,7 +121,7 @@ export const CreateCluster: React.FC<RouteComponentProps> = (props) => {
   const regionsData = data ?? [];
 
   // Only want to use current types here.
-  const typesData = filterCurrentTypes(allTypes);
+  const typesData = filterCurrentTypes(allTypes?.map(extendType));
 
   // Only include regions that have LKE capability
   const filteredRegions = React.useMemo(() => {

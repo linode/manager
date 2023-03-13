@@ -10,6 +10,7 @@ import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import Notice from 'src/components/Notice';
 import { useUpdateNodePoolMutation } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
+import { extendType } from 'src/utilities/extendType';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { pluralize } from 'src/utilities/pluralize';
 import { getMonthlyPrice, nodeWarning } from '../../kubeUtils';
@@ -44,7 +45,9 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   const typesQuery = useSpecificTypes(cleanArray([nodePool?.type]));
   const isLoadingTypes = typesQuery[0]?.isLoading ?? false;
-  const planType = typesQuery[0]?.data;
+  const planType = typesQuery[0]?.data
+    ? extendType(typesQuery[0].data)
+    : undefined;
 
   const {
     mutateAsync: updateNodePool,

@@ -1,7 +1,7 @@
 import { getDomains } from '@linode/api-v4/lib/domains';
 import { getImages, Image } from '@linode/api-v4/lib/images';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
-import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
+import { getLinodes } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
@@ -20,6 +20,7 @@ import {
   nodeBalToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
@@ -35,7 +36,9 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
 
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
-  const types = cleanArray(typesQuery.map((result) => result.data));
+  const types = cleanArray(typesQuery.map((result) => result.data)).map(
+    extendType
+  );
 
   const images = listToItemsByID(_images ?? []);
 
@@ -96,7 +99,7 @@ const params = { page_size: API_MAX_PAGE_SIZE };
 
 const requestEntities = (
   searchText: string,
-  types: LinodeType[],
+  types: ExtendedType[],
   images: Record<string, Image>,
   setRequestedTypes: (types: string[]) => void,
   isRestricted: boolean = false

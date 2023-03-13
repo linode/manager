@@ -34,6 +34,7 @@ import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { extendType } from 'src/utilities/extendType';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
@@ -129,7 +130,9 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   const typesQuery = useSpecificTypes(
     cleanArray(linodes.map((linode) => linode.type))
   );
-  const types = cleanArray(typesQuery.map((result) => result.data));
+  const types = cleanArray(typesQuery.map((result) => result.data)).map(
+    extendType
+  );
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(publicImages))
   );

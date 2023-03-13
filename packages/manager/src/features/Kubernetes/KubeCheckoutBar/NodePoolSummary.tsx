@@ -1,4 +1,3 @@
-import { LinodeType } from '@linode/api-v4/lib/linodes/types';
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
@@ -8,6 +7,7 @@ import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import EnhancedNumberInput from 'src/components/EnhancedNumberInput';
 import IconButton from 'src/components/IconButton';
+import { ExtendedType } from 'src/utilities/extendType';
 import { pluralize } from 'src/utilities/pluralize';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   nodeCount: number;
-  poolType: LinodeType | null;
+  poolType: ExtendedType | null;
   price: number;
   updateNodeCount: (count: number) => void;
   onRemove: () => void;

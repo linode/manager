@@ -7,7 +7,6 @@ import {
   LinodeBackup,
   LinodeBackupSchedule,
   LinodeBackupsResponse,
-  LinodeType,
   takeSnapshot,
   Window,
 } from '@linode/api-v4/lib/linodes';
@@ -52,6 +51,7 @@ import {
   withLinodeActions,
 } from 'src/store/linodes/linode.containers';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { ExtendedType } from 'src/utilities/extendType';
 import { formatDate } from 'src/utilities/formatDate';
 import { sendBackupsDisabledEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -145,7 +145,7 @@ interface ContextProps {
 
 interface PreloadedProps {
   backups: PromiseLoaderResponse<LinodeBackupsResponse>;
-  type: PromiseLoaderResponse<LinodeType>;
+  type: PromiseLoaderResponse<ExtendedType>;
 }
 
 interface State {

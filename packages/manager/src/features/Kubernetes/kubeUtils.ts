@@ -4,8 +4,8 @@ import {
   KubernetesCluster,
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
-import { LinodeType } from '@linode/api-v4/lib/linodes';
 import { dcDisplayNames, HIGH_AVAILABILITY_PRICE } from 'src/constants';
+import { ExtendedType } from 'src/utilities/extendType';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
 export const nodesDeletionWarning = `All nodes will be deleted and new nodes will be created to replace them.`;
@@ -14,18 +14,18 @@ export const localStorageWarning = `Any local storage (such as \u{2019}hostPath\
 export const getMonthlyPrice = (
   type: string,
   count: number,
-  types: LinodeType[]
+  types: ExtendedType[]
 ) => {
   if (!types) {
     return 0;
   }
-  const thisType = types.find((t: LinodeType) => t.id === type);
+  const thisType = types.find((t: ExtendedType) => t.id === type);
   return thisType ? (thisType.price.monthly ?? 0) * count : 0;
 };
 
 export const getTotalClusterPrice = (
   pools: KubeNodePoolResponse[],
-  types: LinodeType[],
+  types: ExtendedType[],
   highAvailability: boolean = false
 ) => {
   const price = pools.reduce((accumulator, node) => {
@@ -43,7 +43,7 @@ interface ClusterData {
 
 export const getTotalClusterMemoryCPUAndStorage = (
   pools: KubeNodePoolResponse[],
-  types: LinodeType[]
+  types: ExtendedType[]
 ) => {
   if (!types || !pools) {
     return { RAM: 0, CPU: 0, Storage: 0 };
@@ -52,7 +52,7 @@ export const getTotalClusterMemoryCPUAndStorage = (
   return pools.reduce(
     (accumulator: ClusterData, thisPool: KubeNodePoolResponse) => {
       const thisType = types.find(
-        (type: LinodeType) => type.id === thisPool.type
+        (type: ExtendedType) => type.id === thisPool.type
       );
       if (!thisType) {
         return accumulator;

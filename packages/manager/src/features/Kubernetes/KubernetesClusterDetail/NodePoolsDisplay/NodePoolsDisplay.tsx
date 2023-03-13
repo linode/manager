@@ -19,6 +19,7 @@ import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { extendType } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -91,7 +92,9 @@ export const NodePoolsDisplay = (props: Props) => {
   const _pools = pools?.slice(0, numPoolsToDisplay);
 
   const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
-  const types = cleanArray(typesQuery.map((result) => result.data));
+  const types = cleanArray(typesQuery.map((result) => result.data)).map(
+    extendType
+  );
 
   const handleShowMore = () => {
     if (numPoolsToDisplay < (pools?.length ?? 0)) {

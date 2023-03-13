@@ -37,6 +37,7 @@ import ResultGroup from './ResultGroup';
 import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
+import { extendType } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -150,7 +151,9 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   const typesQuery = useSpecificTypes(
     cleanArray(linodes.map((linode) => linode.type))
   );
-  const types = cleanArray(typesQuery.map((result) => result.data));
+  const types = cleanArray(typesQuery.map((result) => result.data)).map(
+    extendType
+  );
 
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(_publicImages ?? []))

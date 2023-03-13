@@ -1,5 +1,5 @@
 import { Event, GrantLevel, Notification } from '@linode/api-v4/lib/account';
-import { Config, Disk, LinodeType } from '@linode/api-v4/lib/linodes';
+import { Config, Disk } from '@linode/api-v4/lib/linodes';
 import { useSelector } from 'react-redux';
 import { useGrants } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
@@ -10,6 +10,7 @@ import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
+import { ExtendedType, extendType } from 'src/utilities/extendType';
 import { cleanArray } from 'src/utilities/nullOrUndefined';
 import useLinodes from './useLinodes';
 
@@ -18,7 +19,7 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
   _disks: Disk[];
   _events: Event[];
   _notifications: Notification[];
-  _type?: null | LinodeType;
+  _type?: null | ExtendedType;
   _permissions: GrantLevel;
 }
 
@@ -40,7 +41,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
     return {
       ...linode,
       _notifications: getNotificationsForLinode(notifications, linodeId),
-      _type: type,
+      _type: type ? extendType(type) : undefined,
       _events: eventsForLinode(events, linodeId),
       _configs: getLinodeConfigsForLinode(linodeConfigs, linodeId),
       _disks: getLinodeDisksForLinode(linodeDisks, linodeId),

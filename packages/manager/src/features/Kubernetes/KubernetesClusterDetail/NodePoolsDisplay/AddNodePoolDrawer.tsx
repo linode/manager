@@ -11,7 +11,8 @@ import SelectPlanQuantityPanel, {
   ExtendedTypeWithCount,
 } from 'src/features/linodes/LinodesCreate/SelectPlanQuantityPanel';
 import { useCreateNodePoolMutation } from 'src/queries/kubernetes';
-import { extendType, useAllTypes } from 'src/queries/types';
+import { useAllTypes } from 'src/queries/types';
+import { extendType } from 'src/utilities/extendType';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { pluralize } from 'src/utilities/pluralize';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -74,7 +75,7 @@ export interface Props {
 export const AddNodePoolDrawer = (props: Props) => {
   const { clusterId, clusterLabel, onClose, open } = props;
   const classes = useStyles();
-  const { data: types } = useAllTypes({ enabled: open });
+  const { data: types } = useAllTypes(open);
   const {
     mutateAsync: createPool,
     isLoading,

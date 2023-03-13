@@ -23,7 +23,7 @@ import {
   transitionText,
 } from 'src/features/linodes/transitions';
 import { DialogType } from 'src/features/linodes/types';
-import { ExtendedType } from 'src/queries/types';
+import { ExtendedType } from 'src/utilities/extendType';
 import { capitalize, capitalizeAllWords } from 'src/utilities/capitalize';
 import IPAddress from '../IPAddress';
 import LinodeActionMenu from '../LinodeActionMenu';
