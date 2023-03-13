@@ -379,7 +379,6 @@ const Header: React.FC<HeaderProps> = (props) => {
                 })}
                 label={formattedStatus}
                 component="span"
-                {...isOther}
               />
             </Grid>
             {hasSecondaryStatus ? (
