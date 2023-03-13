@@ -12,14 +12,24 @@
 
 **How do I run relevant unit or e2e tests?**
 
-## Commit message and Pull Request Title format standards
+## Commit message and pull request title format standards
 
 **Remove this section before opening the pull request**
 
-**Make sure your commit message and PR title are formatted as shown below**
+**Make sure your PR title and commit message on squash and merge are as shown below**
 
 `<commit type>: [JIRA-ticket-number] - <description>`
 
-**commit types:** `feat`, `fix`, `refactor`, `style`, `build`, `chore`, `ci`, `docs`, `perf`, `test`
+**commit types:**
+`feat`: New feature for the user (not a part of the code, or ci, ...).
+`fix`: Bugfix for the user (not a fix to build something, ...).
+`refactor`: Refactoring production code. For example: Renaming a variable.
+`style`: General styling changes. Does not change any functionality.
+`build`: Changes to the application build.
+`chore`: Other changes that do not impact production code.
+`ci`: Changes to the CI pipeline.
+`docs`: Changes to the documentation docs.
+`perf`: Performance changes.
+`test`" New tests or changes to existing tests. Does not change the production code.
     
-e.g. `feat: [M#-1234] - Allow user to view their login history`
+**Example:** `feat: [M3-1234] - Allow user to view their login history`
