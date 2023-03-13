@@ -97,6 +97,7 @@ const ProfileSettings = () => {
               </FormLabel>
               <RadioGroup
                 row
+                style={{ marginBottom: 0 }}
                 value={preferences?.theme ?? 'system'}
                 onChange={(e) =>
                   updatePreferences({ theme: e.target.value as ThemeChoice })
