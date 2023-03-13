@@ -30,7 +30,7 @@ import {
 import { getLinodesWithoutBackups } from 'src/store/selectors/getLinodesWithBackups';
 import { ThunkDispatch } from 'src/store/types';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
@@ -95,7 +95,9 @@ export const getTotalPrice = (linodes: ExtendedLinode[]) => {
 export class BackupDrawer extends React.Component<CombinedProps, {}> {
   updateRequestedTypes = () => {
     this.props.setRequestedTypes(
-      cleanArray(this.props.linodesWithoutBackups.map((linode) => linode.type))
+      this.props.linodesWithoutBackups
+        .map((linode) => linode.type)
+        .filter(isNotNullOrUndefined)
     );
   };
 

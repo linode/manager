@@ -33,8 +33,8 @@ import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 type CombinedProps = SearchProps & StyleProps & RouteComponentProps;
 
@@ -128,11 +128,12 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     Object.values(state.__resources.linodes.itemsById)
   );
   const typesQuery = useSpecificTypes(
-    cleanArray(linodes.map((linode) => linode.type))
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(publicImages))
   );

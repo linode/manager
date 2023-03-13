@@ -5,7 +5,7 @@ import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
@@ -40,10 +40,14 @@ const LinodesLandingWrapper: React.FC = React.memo(() => {
   );
   const { linodes } = useLinodes();
   const typesQuery = useSpecificTypes(
-    cleanArray(Object.values(linodes.itemsById).map((linode) => linode.type))
+    Object.values(linodes.itemsById)
+      .map((linode) => linode.type)
+      .filter(isNotNullOrUndefined)
   );
 
-  const types = cleanArray(typesQuery.map((result) => result.data));
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined);
 
   const linodesDataWithFullType = Object.values(linodes.itemsById).map(
     (thisLinode) => {

@@ -18,8 +18,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import { RecycleClusterDialog } from '../RecycleClusterDialog';
 import classNames from 'classnames';
 import { useSpecificTypes } from 'src/queries/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -92,9 +92,10 @@ export const NodePoolsDisplay = (props: Props) => {
   const _pools = pools?.slice(0, numPoolsToDisplay);
 
   const typesQuery = useSpecificTypes(_pools?.map((pool) => pool.type) ?? []);
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
 
   const handleShowMore = () => {
     if (numPoolsToDisplay < (pools?.length ?? 0)) {

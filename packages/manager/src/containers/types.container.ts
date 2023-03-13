@@ -2,7 +2,7 @@ import { LinodeType } from '@linode/api-v4';
 import { APIError } from '@linode/api-v4/lib/types';
 import React from 'react';
 import { useAllTypes, useSpecificTypes } from 'src/queries/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 export interface WithTypesProps {
   typesData?: LinodeType[];
@@ -38,9 +38,9 @@ export const withSpecificTypes = <Props>(
 ) => (props: Props) => {
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
-  const requestedTypesData = cleanArray(
-    typesQuery.map((result) => result.data)
-  );
+  const requestedTypesData = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined);
 
   return React.createElement(Component, {
     ...props,

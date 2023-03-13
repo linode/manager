@@ -10,7 +10,6 @@ import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/eventsPolling';
 import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 interface Props {
   linodeId: number;
@@ -30,7 +29,9 @@ export const EnableBackupsDialog: React.FC<Props> = (props) => {
    */
   const { linodes } = useLinodes();
   const thisLinode = linodes.itemsById[linodeId];
-  const typesQuery = useSpecificTypes(cleanArray([thisLinode?.type]));
+  const typesQuery = useSpecificTypes(
+    thisLinode?.type ? [thisLinode.type] : []
+  );
   const thisLinodeType = typesQuery[0]?.data;
 
   const price = thisLinodeType?.addons.backups.price.monthly ?? 0;

@@ -21,7 +21,7 @@ import {
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { refinedSearch } from './refinedSearch';
 import { SearchableItem, SearchResults } from './search.interfaces';
 import { emptyResults, separateResultsByEntity } from './utils';
@@ -36,9 +36,10 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
 
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
 
   const images = listToItemsByID(_images ?? []);
 
@@ -111,7 +112,7 @@ const requestEntities = (
     getLinodes(params, generateFilter(searchText, 'label', true)).then(
       (results) => {
         setRequestedTypes(
-          cleanArray(results.data.map((result) => result.type))
+          results.data.map((result) => result.type).filter(isNotNullOrUndefined)
         );
         return results.data.map((thisResult) =>
           formatLinode(thisResult, types, images)

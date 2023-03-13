@@ -50,7 +50,6 @@ import {
   isEventWithSecondaryLinodeStatus,
   transitionText as _transitionText,
 } from './transitions';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 type LinodeEntityDetailVariant = 'dashboard' | 'landing' | 'details';
@@ -96,7 +95,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   const { data: images } = useAllImagesQuery({}, {});
   const imagesItemsById = listToItemsByID(images ?? []);
 
-  const typesQuery = useSpecificTypes(cleanArray([linode.type]));
+  const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
   const imageSlug = linode.image;

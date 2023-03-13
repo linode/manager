@@ -7,7 +7,7 @@ import { dcDisplayNames } from 'src/constants';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 import { pluralize } from 'src/utilities/pluralize';
 import {
   getTotalClusterMemoryCPUAndStorage,
@@ -52,9 +52,10 @@ export const KubeClusterSpecs = (props: Props) => {
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
 
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
 
   const { RAM, CPU, Storage } = getTotalClusterMemoryCPUAndStorage(
     pools ?? [],

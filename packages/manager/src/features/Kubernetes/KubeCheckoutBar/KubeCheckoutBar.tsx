@@ -14,12 +14,12 @@ import { useAccount } from 'src/queries/account';
 import { useAccountAgreements } from 'src/queries/accountAgreements';
 import { useProfile } from 'src/queries/profile';
 import { useSpecificTypes } from 'src/queries/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { getTotalClusterPrice, nodeWarning } from '../kubeUtils';
 import HACheckbox from './HACheckbox';
 import NodePoolSummary from './NodePoolSummary';
 import { extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 export interface Props {
   pools: KubeNodePoolResponse[];
@@ -55,9 +55,10 @@ export const KubeCheckoutBar: React.FC<Props> = (props) => {
   const { data: account } = useAccount();
   const { data: agreements } = useAccountAgreements();
   const typesQuery = useSpecificTypes(pools.map((pool) => pool.type));
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
   const isLoading = typesQuery.some((query) => query.isLoading);
 
   const showGDPRCheckbox =

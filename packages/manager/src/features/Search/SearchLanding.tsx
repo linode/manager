@@ -27,7 +27,6 @@ import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -37,6 +36,7 @@ import './searchLanding.css';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 import { extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -148,11 +148,12 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
   );
 
   const typesQuery = useSpecificTypes(
-    cleanArray(linodes.map((linode) => linode.type))
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
 
   const searchableLinodes = linodes.map((linode) =>
     formatLinode(linode, types, listToItemsByID(_publicImages ?? []))

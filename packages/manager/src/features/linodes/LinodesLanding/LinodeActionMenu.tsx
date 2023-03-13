@@ -21,7 +21,6 @@ import {
   sendLinodeActionMenuItemEvent,
   sendMigrationNavigationEvent,
 } from 'src/utilities/ga';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
 
 export interface Props {
@@ -87,7 +86,7 @@ export const LinodeActionMenu: React.FC<Props> = (props) => {
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const typesQuery = useSpecificTypes(cleanArray([linodeType?.id]));
+  const typesQuery = useSpecificTypes(linodeType?.id ? [linodeType.id] : []);
   const type = typesQuery[0]?.data;
   const extendedType = type ? extendType(type) : undefined;
   const history = useHistory();

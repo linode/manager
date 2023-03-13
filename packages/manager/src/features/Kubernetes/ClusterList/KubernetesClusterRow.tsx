@@ -19,8 +19,8 @@ import {
   useKubernetesVersionQuery,
 } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -67,9 +67,10 @@ export const KubernetesClusterRow = (props: Props) => {
   const { data: versions } = useKubernetesVersionQuery();
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
   const typesQuery = useSpecificTypes(pools?.map((pool) => pool.type) ?? []);
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 

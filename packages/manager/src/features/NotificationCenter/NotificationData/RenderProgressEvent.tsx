@@ -15,8 +15,8 @@ import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
 import { useSpecificTypes } from 'src/queries/types';
 import { useStyles as useEventStyles } from './RenderEvent';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -39,11 +39,12 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { linodes } = useLinodes();
   const _linodes = Object.values(linodes.itemsById);
   const typesQuery = useSpecificTypes(
-    cleanArray(_linodes.map((linode) => linode.type))
+    _linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
   );
-  const types = cleanArray(typesQuery.map((result) => result.data)).map(
-    extendType
-  );
+  const types = typesQuery
+    .map((result) => result.data)
+    .filter(isNotNullOrUndefined)
+    .map(extendType);
   const message = eventMessageGenerator(event, _linodes, types);
 
   if (message === null) {

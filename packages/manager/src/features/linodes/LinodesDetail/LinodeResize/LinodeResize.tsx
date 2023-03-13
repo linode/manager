@@ -41,7 +41,6 @@ import { getLinodeDisksForLinode } from 'src/store/linodes/disk/disk.selectors';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { EntityError } from 'src/store/types';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { GetAllData } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -49,6 +48,7 @@ import HostMaintenanceError from '../HostMaintenanceError';
 import LinodePermissionsError from '../LinodePermissionsError';
 import { filterCurrentTypes } from 'src/utilities/filterCurrentLinodeTypes';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
 
 type ClassNames =
   | 'title'
@@ -241,7 +241,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   updateRequestedTypes = () => {
     this.props.setRequestedTypes(
-      cleanArray([this.props.linodeType, this.state.selectedId])
+      [this.props.linodeType, this.state.selectedId].filter(
+        isNotNullOrUndefined
+      )
     );
   };
 

@@ -11,7 +11,6 @@ import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
 import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { usePagination } from 'src/hooks/usePagination';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 
 interface Props {
   selectedLinodes: TransferEntity;
@@ -107,7 +106,7 @@ interface RowProps {
 
 const LinodeRow: React.FC<RowProps> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
-  const typesQuery = useSpecificTypes(cleanArray([linode.type]));
+  const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data;
   const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
   const displayType = type?.label ?? linode.type;

@@ -11,7 +11,6 @@ import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector';
 import { getNotificationsForLinode } from 'src/store/notification/notification.selector';
 import { ExtendedType, extendType } from 'src/utilities/extendType';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import useLinodes from './useLinodes';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {
@@ -27,7 +26,7 @@ export const useExtendedLinode = (linodeId: number): ExtendedLinode | null => {
   const { data: grants } = useGrants();
   const { linodes } = useLinodes();
   const linode = linodes.itemsById[linodeId];
-  const typesQuery = useSpecificTypes(cleanArray([linode?.type]));
+  const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
   const type = typesQuery[0]?.data;
 
   return useSelector((state: ApplicationState) => {

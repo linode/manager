@@ -18,7 +18,6 @@ import { resetEventsPolling } from 'src/eventsPolling';
 import { useSpecificTypes } from 'src/queries/types';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
-import { cleanArray } from 'src/utilities/nullOrUndefined';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import MutateDrawer from '../MutateDrawer';
@@ -63,7 +62,9 @@ const MutationNotification: React.FC<CombinedProps> = (props) => {
     updateLinode,
   } = props;
 
-  const typesQuery = useSpecificTypes(cleanArray([linodeType?.successor]));
+  const typesQuery = useSpecificTypes(
+    linodeType?.successor ? [linodeType?.successor] : []
+  );
   const successorMetaData = typesQuery[0]?.data ?? null;
 
   const initMutation = () => {
