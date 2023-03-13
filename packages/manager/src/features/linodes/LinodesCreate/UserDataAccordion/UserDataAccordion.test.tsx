@@ -53,7 +53,7 @@ describe('UserDataAccordion', () => {
     expect(headerWarningMessage).toBeInTheDocument();
   });
 
-  it('should displays a custom notice', () => {
+  it('should display a custom notice', () => {
     renderWithTheme(
       <UserDataAccordion {...props} renderNotice={<div>Custom notice</div>} />
     );
