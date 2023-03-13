@@ -168,7 +168,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e,
         `A disk on Linode ${e.entity!.label} could not be resized.`,
         'Learn more',
-        '/'
+        'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
       )}`,
     finished: (e) => `A disk on Linode ${e.entity!.label} has been resized`,
     // notification: e => ``,

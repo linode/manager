@@ -192,7 +192,12 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
       <FormHelperText>
         The size of a Linode Compute Instance&rsquo;s disk can be increased or
         decreased as needed.
-        <Link to={'/'} className={classes.formHelperTextLink}>
+        <Link
+          to={
+            'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+          }
+          className={classes.formHelperTextLink}
+        >
           Learn more about restrictions to keep in mind.
         </Link>
       </FormHelperText>
@@ -297,7 +302,7 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
               Maximum size: {props.maximumSize} MB
             </FormHelperText>
             <FormHelperText>
-              Minimum size is determined how much space the files on the disk
+              Minimum size is determined by how much space the files on the disk
               are using.{' '}
               <TextTooltip
                 displayText="Check disk usage."
@@ -334,6 +339,14 @@ export default React.memo(DiskDrawer);
 const MaxSizeTooltipText = (
   <>
     Run the command <Code>df -h</Code> within the Linode&rsquo;s command line
-    (through <Link to="/">SSH</Link> or <Link to="/">Lish</Link>).
+    (through{' '}
+    <Link to="https://www.linode.com/docs/guides/connect-to-server-over-ssh/">
+      SSH
+    </Link>{' '}
+    or{' '}
+    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/">
+      Lish
+    </Link>
+    ).
   </>
 );

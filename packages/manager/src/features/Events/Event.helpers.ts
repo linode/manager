@@ -119,7 +119,9 @@ export const formatEventWithAppendedText = (
     event.username,
     message
   );
-  const appendedMessage = link ? `<a href="${link}">${text}</a>` : text;
+  const appendedMessage = link
+    ? `<a href="${link}" target=_blank>${text}</a>`
+    : text;
   return `${messageWithUsername} ${maybeRemoveTrailingPeriod(
     appendedMessage
   )}.`;

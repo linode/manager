@@ -115,7 +115,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               false,
               true,
               `Disk ${secondaryLabel} resized successfully.`,
-              `Disk resize failed. <a href="https://cloud.linode.com" target=_blank>Learn more about resizing restrictions.</a>`,
+              `Disk resize failed. <a href="https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/" target=_blank>Learn more about resizing restrictions.</a>`,
               true // includesLink
             );
           case 'image_upload':
