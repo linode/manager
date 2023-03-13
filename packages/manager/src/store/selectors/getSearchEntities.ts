@@ -12,6 +12,7 @@ import { ApplicationState } from 'src/store';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { Region } from '@linode/api-v4/lib/regions';
 
 export type State = ApplicationState['__resources'];
 
@@ -128,7 +129,8 @@ export const nodeBalToSearchableItem = (
 });
 
 export const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: KubernetesCluster
+  kubernetesCluster: KubernetesCluster,
+  regions: Region[]
 ): SearchableItem => ({
   label: kubernetesCluster.label,
   value: kubernetesCluster.id,
@@ -143,7 +145,7 @@ export const kubernetesClusterToSearchableItem = (
     region: kubernetesCluster.region,
     k8s_version: kubernetesCluster.k8s_version,
     tags: kubernetesCluster.tags,
-    description: getDescriptionForCluster(kubernetesCluster),
+    description: getDescriptionForCluster(kubernetesCluster, regions),
   },
 });
 

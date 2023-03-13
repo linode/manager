@@ -5,6 +5,7 @@ import {
   KubernetesVersion,
 } from '@linode/api-v4/lib/kubernetes';
 import { LinodeType } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
 import { HIGH_AVAILABILITY_PRICE } from 'src/constants';
 
 export const nodeWarning = `We recommend a minimum of 3 nodes in each Node Pool to avoid downtime during upgrades and maintenance.`;
@@ -67,10 +68,14 @@ export const getTotalClusterMemoryCPUAndStorage = (
   );
 };
 
-export const getDescriptionForCluster = (cluster: KubernetesCluster) => {
+export const getDescriptionForCluster = (
+  cluster: KubernetesCluster,
+  regions: Region[]
+) => {
+  const region = regions.find((r) => r.id === cluster.region);
   const description: string[] = [
     `Kubernetes ${cluster.k8s_version}`,
-    cluster.region ?? 'Unknown Region',
+    region?.label ?? cluster.region,
   ];
 
   if (cluster.control_plane.high_availability) {
