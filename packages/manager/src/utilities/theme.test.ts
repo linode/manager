@@ -41,6 +41,12 @@ describe('isValidTheme', () => {
 });
 
 describe('getThemeFromPreferenceValue', () => {
+  it('should return light if user has no theme preference and the system is NOT in dark mode', () => {
+    expect(getThemeFromPreferenceValue(undefined, false)).toBe('light');
+  });
+  it('should return dark if user has no theme preference and the system is in dark mode', () => {
+    expect(getThemeFromPreferenceValue(undefined, true)).toBe('dark');
+  });
   it('should return dark if preferences says dark mode', () => {
     expect(getThemeFromPreferenceValue('dark', false)).toBe('dark');
   });

@@ -36,11 +36,12 @@ export const getThemeFromPreferenceValue = (
   value: unknown,
   isSystemInDarkMode: boolean
 ): ThemeName => {
+  const systemTheme = isSystemInDarkMode ? 'dark' : 'light';
   if (value === 'system') {
-    return isSystemInDarkMode ? 'dark' : 'light';
+    return systemTheme;
   }
   if (isValidTheme(value)) {
     return value as ThemeName;
   }
-  return 'light';
+  return systemTheme;
 };

@@ -59,6 +59,10 @@ const ProfileSettings = () => {
     { label: 'System', value: 'system' },
   ];
 
+  const themeSelectValue =
+    themeOptions.find((option) => option.value === preferences?.theme) ??
+    themeOptions.find((option) => option.value === 'system'); // default to system
+
   return (
     <>
       <DocumentTitleSegment segment="My Settings" />
@@ -99,11 +103,7 @@ const ProfileSettings = () => {
           <Grid item xs={12}>
             <Select
               options={themeOptions}
-              value={
-                themeOptions.find(
-                  (option) => option.value === preferences?.theme
-                ) ?? themeOptions[0]
-              }
+              value={themeSelectValue}
               onChange={(theme: Item<ThemeChoice>) =>
                 updatePreferences({ theme: theme.value })
               }
