@@ -1,76 +1,21 @@
-import { styled } from '@mui/material/styles';
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import CheckBox from 'src/components/CheckBox';
-import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
-import HelpIcon from 'src/components/HelpIcon';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import { StyledHelpIcon } from './UserDataAccordion.styles';
 
 interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
-  reuseUserData?: boolean;
-  onReuseUserDataChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  renderNotice?: boolean;
-  headerWarningMessage?: React.ReactNode;
-  renderCheckbox?: boolean;
+  renderNotice?: JSX.Element;
+  renderCheckbox?: JSX.Element;
 }
 
-const StyledHelpIcon = styled(HelpIcon)({
-  padding: '0px 0px 4px 8px',
-  '& svg': {
-    fill: 'currentColor',
-    stroke: 'none',
-  },
-});
-
-const AccordionHeading = (props: any) => {
-  return (
-    <>
-      Add User Data{' '}
-      <StyledHelpIcon
-        text={
-          <>
-            User data is part of a virtual machine&rsquo;s cloud-init metadata
-            containing information related to a user&rsquo;s local account.{' '}
-            <Link to="/">Learn more.</Link>
-          </>
-        }
-        interactive
-      />
-      {props.headerWarningMessage ? props.headerWarningMessage : null}
-    </>
-  );
-};
-
-const StyledBox = styled(Box)({
-  '.MuiFormControlLabel-root': {
-    paddingLeft: 2,
-  },
-});
-
-const StyledDiv = styled('div')({
-  '& .notice': {
-    padding: '8px !important',
-    marginBottom: '0px !important',
-  },
-});
-
 const UserDataAccordion = (props: Props) => {
-  const {
-    disabled,
-    userData,
-    onChange,
-    reuseUserData,
-    onReuseUserDataChange,
-    renderNotice,
-    headerWarningMessage,
-    renderCheckbox,
-  } = props;
+  const { disabled, userData, onChange, renderNotice, renderCheckbox } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
@@ -94,9 +39,13 @@ const UserDataAccordion = (props: Props) => {
     }
   };
 
+  const sxDetails = {
+    padding: `0px 24px 24px ${renderNotice ? 0 : 24}px`,
+  };
+
   return (
     <Accordion
-      heading={<AccordionHeading headerWarningMessage={headerWarningMessage} />}
+      heading={accordionHeading}
       style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
@@ -104,11 +53,7 @@ const UserDataAccordion = (props: Props) => {
       summaryProps={{
         sx: { padding: '5px 24px 0px 24px' },
       }}
-      detailProps={{
-        sx: renderNotice
-          ? { padding: '0px 24px 24px 0px' }
-          : { padding: '0px 24px 24px 24px' },
-      }}
+      detailProps={{ sx: sxDetails }}
       sx={{
         '&:before': {
           display: 'none',
@@ -116,19 +61,11 @@ const UserDataAccordion = (props: Props) => {
       }}
     >
       {renderNotice ? (
-        <StyledDiv>
-          <Notice
-            success
-            text="Adding new user data is recommended as part of the rebuild process."
-          />
-          {acceptedFormatsCopy}
-        </StyledDiv>
+        <div data-testid="render-notice">{renderNotice}</div>
       ) : (
-        <>
-          {userDataExplanatoryCopy}
-          {acceptedFormatsCopy}
-        </>
+        userDataExplanatoryCopy
       )}
+      {acceptedFormatsCopy}
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           This user data may not be in a format accepted by cloud-init.
@@ -150,20 +87,28 @@ const UserDataAccordion = (props: Props) => {
         }
         data-qa-user-data-input
       />
-      {renderCheckbox ? (
-        <StyledBox>
-          <CheckBox
-            checked={reuseUserData}
-            onChange={onReuseUserDataChange}
-            text="Reuse user data previously provided for this Linode."
-          />
-        </StyledBox>
-      ) : null}
+      {renderCheckbox ?? null}
     </Accordion>
   );
 };
 
 export default UserDataAccordion;
+
+const accordionHeading = (
+  <>
+    Add User Data{' '}
+    <StyledHelpIcon
+      text={
+        <>
+          User data is part of a virtual machine&rsquo;s cloud-init metadata
+          containing information related to a user&rsquo;s local account.{' '}
+          <Link to="/">Learn more.</Link>
+        </>
+      }
+      interactive
+    />
+  </>
+);
 
 const userDataExplanatoryCopy = (
   <Typography>

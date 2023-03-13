@@ -550,10 +550,10 @@ export class LinodeCreate extends React.PureComponent<
       showUserData = true;
     }
 
-    const userDataHeaderWarningMessage =
-      this.props.createType === 'fromBackup'
-        ? 'Existing user data is not available when creating a Linode from a backup'
-        : 'User data is not cloned.';
+    // const userDataHeaderWarningMessage =
+    //   this.props.createType === 'fromBackup'
+    //     ? 'Existing user data is not available when creating a Linode from a backup'
+    //     : 'User data is not cloned.';
 
     return (
       <form className={classes.form}>
@@ -759,11 +759,11 @@ export class LinodeCreate extends React.PureComponent<
             <UserDataAccordion
               userData={this.props.userData}
               onChange={updateUserData}
-              headerWarningMessage={
-                <Notice warning spacingTop={16} spacingBottom={16}>
-                  {userDataHeaderWarningMessage}
-                </Notice>
-              }
+              // headerWarningMessage={
+              //   <Notice warning spacingTop={16} spacingBottom={16}>
+              //     {userDataHeaderWarningMessage}
+              //   </Notice>
+              // }
             />
           ) : null}
           <AddonsPanel

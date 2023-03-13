@@ -12,6 +12,9 @@ import { compose } from 'recompose';
 import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
+import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
@@ -30,7 +33,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
-import Divider from 'src/components/core/Divider';
+import { StyledNotice } from './RebuildFromImage.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -96,21 +99,23 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   const [confirmationText, setConfirmationText] = React.useState<string>('');
 
   const [userData, setUserData] = React.useState<string | undefined>('');
-  const [reuseUserData, setReuseUserData] = React.useState<boolean>(false);
+  const [shouldReuseUserData, setShouldReuseUserData] = React.useState<boolean>(
+    false
+  );
 
   const handleUserDataChange = (userData: string) => {
     setUserData(userData);
   };
 
-  const handleReuseUserDataChange = () => {
-    setReuseUserData((reuseUserData) => !reuseUserData);
+  const handleShouldReuseUserDataChange = () => {
+    setShouldReuseUserData((shouldReuseUserData) => !shouldReuseUserData);
   };
 
   React.useEffect(() => {
-    if (reuseUserData) {
+    if (shouldReuseUserData) {
       setUserData('');
     }
-  }, [reuseUserData]);
+  }, [shouldReuseUserData]);
 
   const submitButtonDisabled =
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
@@ -128,15 +133,25 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
       image,
       root_pass,
       metadata: {
-        user_data: userData && !reuseUserData ? window.btoa(userData) : null,
+        user_data: userData
+          ? window.btoa(userData)
+          : !userData && !shouldReuseUserData
+          ? null
+          : '',
       },
       authorized_users: userSSHKeys
         .filter((u) => u.selected)
         .map((u) => u.username),
     };
 
-    // If no user data has been added, do not include the metadata property in the payload.
-    if (!userData && !reuseUserData) {
+    /*
+      User Data logic:
+      1) if user data has been provided, encode it and include it in the payload
+      2) if user data has not been provided and the Reuse User Data checkbox is
+        not checked, send null in the payload
+      3) if the Reuse User Data checkbox is checked, remove the Metadata property from the payload.
+    */
+    if (shouldReuseUserData) {
       delete params['metadata'];
     }
 
@@ -250,11 +265,23 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                   <UserDataAccordion
                     userData={userData}
                     onChange={handleUserDataChange}
-                    reuseUserData={reuseUserData}
-                    onReuseUserDataChange={handleReuseUserDataChange}
-                    disabled={reuseUserData}
-                    renderNotice
-                    renderCheckbox
+                    disabled={shouldReuseUserData}
+                    renderNotice={
+                      <StyledNotice
+                        success
+                        text="Adding new user data is recommended as part of the rebuild process."
+                      />
+                    }
+                    renderCheckbox={
+                      <Box>
+                        <CheckBox
+                          checked={shouldReuseUserData}
+                          onChange={handleShouldReuseUserDataChange}
+                          text="Reuse user data previously provided for this Linode."
+                          sxFormLabel={{ paddingLeft: '2px' }}
+                        />
+                      </Box>
+                    }
                   />
                 </>
               ) : null}

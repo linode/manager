@@ -1,3 +1,4 @@
+import { SxProps } from '@mui/system';
 import classNames from 'classnames';
 import * as React from 'react';
 import CheckboxIcon from 'src/assets/icons/checkbox.svg';
@@ -39,10 +40,11 @@ interface Props extends CheckboxProps {
   text?: string | JSX.Element;
   toolTipText?: string | JSX.Element;
   toolTipInteractive?: boolean;
+  sxFormLabel?: SxProps;
 }
 
 const LinodeCheckBox = (props: Props) => {
-  const { toolTipInteractive, toolTipText, text, ...rest } = props;
+  const { toolTipInteractive, toolTipText, text, sxFormLabel, ...rest } = props;
   const classes = useStyles();
 
   const classnames = classNames({
@@ -67,6 +69,7 @@ const LinodeCheckBox = (props: Props) => {
             />
           }
           label={text}
+          sx={sxFormLabel}
         />
         {toolTipText ? (
           <HelpIcon interactive={toolTipInteractive} text={toolTipText} />
