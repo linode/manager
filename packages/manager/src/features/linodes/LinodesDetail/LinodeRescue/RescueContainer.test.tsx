@@ -18,7 +18,7 @@ const props: Props = {
   open: true,
 };
 
-const render = (propOverride?: Record<string, any>) =>
+const render = (propOverride?: Partial<Props>) =>
   renderWithTheme(<RescueContainer {...props} {...propOverride} />, {
     customStore: {
       __resources: {

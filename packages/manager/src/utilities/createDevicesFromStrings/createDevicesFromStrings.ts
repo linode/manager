@@ -1,5 +1,4 @@
 import { Devices } from '@linode/api-v4/lib/linodes';
-import { isNil, objOf, split } from 'ramda';
 
 type DiskRecord = Record<'disk_id', number>;
 
@@ -20,21 +19,24 @@ export interface DevicesAsStrings {
  * The `value` should be formatted as volume-123, disk-123, etc.,
  */
 const createTypeRecord = (value?: string): null | DiskRecord | VolumeRecord => {
-  if (isNil(value) || value === 'none') {
+  if (value === null || value === undefined || value === 'none') {
     return null;
   }
 
   // Given: volume-123
-  const [type, id] = split('-', value); // -> [volume, 123]
+  const [type, id] = value.split('-'); // -> [volume, 123]
 
-  const key = `${type}_id`; // -> `volume_id`
+  if (type !== 'volume' && type !== 'disk') {
+    return null;
+  }
+
+  const key = `${type}_id` as const; // -> `volume_id`
   const idAsNumber = Number(id); // -> 123
 
-  return objOf(key, idAsNumber); // -> { volume_id: 123 }
+  return { [key]: idAsNumber } as DiskRecord | VolumeRecord; // -> { volume_id: 123 }
 };
 
-let createDevicesFromStrings: (v: DevicesAsStrings) => Devices;
-createDevicesFromStrings = (devices) => ({
+const createDevicesFromStrings = (devices: DevicesAsStrings): Devices => ({
   sda: createTypeRecord(devices.sda),
   sdb: createTypeRecord(devices.sdb),
   sdc: createTypeRecord(devices.sdc),
