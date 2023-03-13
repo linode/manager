@@ -167,11 +167,8 @@ export const bucketToSearchableItem = (
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 
-export default createSelector<State, NodeBalancer[], SearchableItem[]>(
-  nodebalSelector,
-  (nodebalancers) => {
-    const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
+export default createSelector(nodebalSelector, (nodebalancers) => {
+  const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
 
-    return [...searchableNodebalancers];
-  }
-);
+  return [...searchableNodebalancers];
+});

@@ -206,7 +206,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
+      compose<State, State, State>(
+        set(L.sslCertificateLens, ''),
+        set(L.privateKeyLens, '')
+      )
     );
   };
 
