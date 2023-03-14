@@ -7,12 +7,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import MenuItem from 'src/components/MenuItem';
 import { MapState } from 'src/store/types';
 import UserNotificationButton from './UserNotificationsButton';

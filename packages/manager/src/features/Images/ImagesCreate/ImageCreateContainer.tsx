@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Breadcrumb from 'src/components/Breadcrumb';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DocsLink from 'src/components/DocsLink';
 import Grid from 'src/components/Grid';
 import ImageCreate from './ImageCreate';

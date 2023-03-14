@@ -2,12 +2,8 @@ import classNames from 'classnames';
 import { NotificationSeverity } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =

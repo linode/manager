@@ -1,6 +1,6 @@
 import { StyledEngineProvider } from '@mui/material/styles';
 import * as React from 'react';
-import { ThemeProvider, Theme } from 'src/components/core/styles';
+import { ThemeProvider, Theme } from '@mui/material/styles';
 import { dark, light } from 'src/themes';
 import { isProductionBuild } from './constants';
 import { useAuthentication } from './hooks/useAuthentication';

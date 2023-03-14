@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Close from '@mui/icons-material/Close';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/core/Grid';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';

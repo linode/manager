@@ -4,7 +4,8 @@ import DashboardCard from './DashboardCard';
 import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import {
   useAllManagedIssuesQuery,
   useAllManagedMonitorsQuery,

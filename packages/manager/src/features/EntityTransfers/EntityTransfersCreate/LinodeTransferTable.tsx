@@ -1,7 +1,9 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import { useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import TableCell from 'src/components/TableCell/TableCell';
 import { dcDisplayNames } from 'src/constants';

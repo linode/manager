@@ -1,7 +1,8 @@
 import Close from '@mui/icons-material/Close';
 import * as React from 'react';
 import DialogTitle from 'src/components/core/DialogTitle';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

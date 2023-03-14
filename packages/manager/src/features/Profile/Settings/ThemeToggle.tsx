@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { Theme, useTheme } from 'src/components/core/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Toggle from 'src/components/Toggle';
 
 interface Props {

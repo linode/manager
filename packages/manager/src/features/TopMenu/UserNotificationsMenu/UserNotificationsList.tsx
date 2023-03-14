@@ -2,12 +2,8 @@ import { Notification } from '@linode/api-v4/lib/account';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';

@@ -6,7 +6,8 @@ import {
 } from 'src/queries/securityQuestions';
 import { QuestionAndAnswerPair } from './QuestionAndAnswerPair';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Box from 'src/components/core/Box';
 import Typography from 'src/components/core/Typography';
 import { SecurityQuestionsData } from '@linode/api-v4';

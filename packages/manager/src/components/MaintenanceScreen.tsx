@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Link from 'src/components/Link';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Box from 'src/components/core/Box';
 import Logo from 'src/assets/logo/logo.svg';

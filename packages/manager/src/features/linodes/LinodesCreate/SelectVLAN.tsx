@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import useReduxLoad from 'src/hooks/useReduxLoad';

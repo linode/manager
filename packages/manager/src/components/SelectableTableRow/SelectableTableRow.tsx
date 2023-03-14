@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 

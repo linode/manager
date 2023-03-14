@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
