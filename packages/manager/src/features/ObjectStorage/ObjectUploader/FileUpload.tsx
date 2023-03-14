@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1,
   },
   barColorPrimary: {
-    backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#243142',
+    backgroundColor: theme.name === 'light' ? '#cce2ff' : '#243142',
   },
   container: {
     display: 'flex',
