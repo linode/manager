@@ -1,5 +1,5 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
   doesItemExistInPaginatedStore,
@@ -44,6 +44,20 @@ export const useVolumesQuery = (params: any, filters: any) =>
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
     { keepPreviousData: true }
+  );
+
+export const useInfiniteVolumesQuery = (filter: any) =>
+  useInfiniteQuery<ResourcePage<Volume>, APIError[]>(
+    [queryKey, filter],
+    ({ pageParam }) => getVolumes({ page: pageParam, page_size: 25 }, filter),
+    {
+      getNextPageParam: ({ page, pages }) => {
+        if (page === pages) {
+          return undefined;
+        }
+        return page + 1;
+      },
+    }
   );
 
 export const useLinodeVolumesQuery = (
