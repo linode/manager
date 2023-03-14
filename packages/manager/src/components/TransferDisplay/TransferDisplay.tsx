@@ -1,9 +1,9 @@
-import Close from '@mui/icons-material/Close';
+// import Close from '@mui/icons-material/Close';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Dialog from 'src/components/core/Dialog';
+import Dialog from 'src/components/Dialog';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -160,17 +160,6 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
       onClose={onClose}
       title="Monthly Network Transfer Pool"
     >
-      <Grid
-        container
-        justifyContent="space-between"
-        alignItems="center"
-        className={classes.title}
-      >
-        <Typography variant="h2">Monthly Network Transfer Pool</Typography>
-        <button className={classes.wrapper} onClick={onClose}>
-          <Close />
-        </button>
-      </Grid>
       <Grid
         container
         justifyContent="space-between"
