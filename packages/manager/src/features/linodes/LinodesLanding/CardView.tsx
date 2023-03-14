@@ -22,8 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   summaryOuter: {
-    backgroundColor: 'magenta',
-    // backgroundColor: theme.bg.bgPaper,
+    backgroundColor: theme.bg.bgPaper,
     margin: `${theme.spacing()} 0`,
     marginBottom: 20,
     '&.MuiGrid-item': {
@@ -123,7 +122,6 @@ const CardView: React.FC<CombinedProps> = (props) => {
           <React.Fragment key={`linode-card-${idx}`}>
             <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
               <LinodeEntityDetail
-                // variant="landing"
                 id={linode.id}
                 linode={linode}
                 isSummaryView

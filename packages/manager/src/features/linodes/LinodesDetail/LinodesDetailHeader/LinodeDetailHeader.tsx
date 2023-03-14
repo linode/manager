@@ -287,22 +287,32 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     resetEditableLabel,
   } = useEditableLabelState();
   const disabled = linode._permissions === ACCESS_LEVELS.readOnly;
-  const handleSubmitLabelChange = (label: string) => {
+
+  const updateLinodeLabel = async (linodeId: number, label: string) => {
+    try {
+      await updateLinode({ linodeId, label });
+    } catch (updateError) {
+      const errors: APIError[] = getAPIErrorOrDefault(
+        updateError,
+        'An error occurred while updating label',
+        'label'
+      );
+      const errorReasons: string[] = errors.map((error) => error.reason);
+      throw new Error(errorReasons[0]);
+    }
+  };
+
+  const handleLinodeLabelUpdate = (label: string) => {
     const linodeId = linode.id;
-    return updateLinode({ linodeId, label })
+    return updateLinodeLabel(linodeId, label)
       .then(() => {
         resetEditableLabel();
       })
-      .catch((err) => {
-        const errors: APIError[] = getAPIErrorOrDefault(
-          err,
-          'An error occurred while updating label',
-          'label'
-        );
-        const errorStrings: string[] = errors.map((e) => e.reason);
-        setEditableLabelError(errorStrings[0]);
+      .catch((updateError) => {
+        const errorReasons: string[] = [updateError.message];
+        setEditableLabelError(errorReasons[0]);
         scrollErrorIntoView();
-        return Promise.reject(errorStrings[0]);
+        return Promise.reject(errorReasons[0]);
       });
   };
 
@@ -320,7 +330,7 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
           onEditHandlers: !disabled
             ? {
                 editableTextTitle: linode.label,
-                onEdit: handleSubmitLabelChange,
+                onEdit: handleLinodeLabelUpdate,
                 onCancel: resetEditableLabel,
                 errorText: editableLabelError,
               }
