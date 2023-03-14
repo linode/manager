@@ -535,20 +535,21 @@ export class LinodeCreate extends React.PureComponent<
       (image) => image.id === this.props.selectedLinodeID
     );
 
-    let showUserData = false;
-    if (
-      (this.props.selectedImageID &&
-        this.props.imagesData[
-          this.props.selectedImageID
-        ]?.capabilities?.includes('cloud-init')) ||
-      (this.props.selectedLinodeID &&
-        selectedLinode?.image &&
-        this.props.imagesData[selectedLinode?.image]?.capabilities?.includes(
-          'cloud-init'
-        ))
-    ) {
-      showUserData = true;
-    }
+    const imageIsCloudInitCompatible =
+      this.props.selectedImageID &&
+      this.props.imagesData[this.props.selectedImageID]?.capabilities?.includes(
+        'cloud-init'
+      );
+
+    const linodeIsCloudInitCompatible =
+      this.props.selectedLinodeID &&
+      selectedLinode?.image &&
+      this.props.imagesData[selectedLinode?.image]?.capabilities?.includes(
+        'cloud-init'
+      );
+
+    const showUserData =
+      imageIsCloudInitCompatible || linodeIsCloudInitCompatible;
 
     const userDataHeaderWarningMessage =
       this.props.createType === 'fromBackup'
