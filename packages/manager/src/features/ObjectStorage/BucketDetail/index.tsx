@@ -52,7 +52,7 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <LandingHeader
-        // Purposefully not using the title prop here because we want to the `bucketName` override.
+        // Purposefully not using the title prop here because we want to use the `bucketName` override.
         docsLabel="Docs"
         docsLink="https://www.linode.com/docs/platform/object-storage/"
         breadcrumbProps={{
