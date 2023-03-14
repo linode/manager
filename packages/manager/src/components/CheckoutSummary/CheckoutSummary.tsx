@@ -39,12 +39,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CheckoutSummary: React.FC<Props> = (props) => {
+export const CheckoutSummary = (props: Props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { heading, agreement, displaySections } = props;
+  const { heading, agreement, displaySections, children } = props;
 
   return (
     <Paper data-qa-summary className={classes.paper}>
@@ -70,7 +70,7 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
           <SummaryItem key={`${item.title}-${item.details}`} {...item} />
         ))}
       </Grid>
-      {props.children}
+      {children}
       {agreement ? agreement : null}
     </Paper>
   );
