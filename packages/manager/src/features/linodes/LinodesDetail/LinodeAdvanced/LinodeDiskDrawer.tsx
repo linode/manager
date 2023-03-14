@@ -26,6 +26,7 @@ import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { sendEvent } from 'src/utilities/ga';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
@@ -109,6 +110,14 @@ const getTitle = (v: DrawerMode) => {
     case 'resize':
       return 'Resize Disk';
   }
+};
+
+const handleLinkClick = (label: string) => {
+  sendEvent({
+    category: 'Disk Resize Flow',
+    action: `Click:link`,
+    label,
+  });
 };
 
 export const DiskDrawer: React.FC<CombinedProps> = (props) => {
@@ -196,6 +205,9 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
           to={
             'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
           }
+          onClick={() => {
+            handleLinkClick('Learn more about restrictions to keep in mind.');
+          }}
           className={classes.formHelperTextLink}
         >
           Learn more about restrictions to keep in mind.
@@ -340,11 +352,21 @@ const MaxSizeTooltipText = (
   <>
     Run the command <Code>df -h</Code> within the Linode&rsquo;s command line
     (through{' '}
-    <Link to="https://www.linode.com/docs/guides/connect-to-server-over-ssh/">
+    <Link
+      to="https://www.linode.com/docs/guides/connect-to-server-over-ssh/"
+      onClick={() => {
+        handleLinkClick('SSH');
+      }}
+    >
       SSH
     </Link>{' '}
     or{' '}
-    <Link to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/">
+    <Link
+      to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/"
+      onClick={() => {
+        handleLinkClick('Lish');
+      }}
+    >
       Lish
     </Link>
     ).
