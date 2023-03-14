@@ -1,12 +1,7 @@
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
-import {
-  doesItemExistInPaginatedStore,
-  getItemInPaginatedStore,
-  queryClient,
-  updateInPaginatedStore,
-} from './base';
+import { queryClient, updateInPaginatedStore } from './base';
 import {
   attachVolume,
   AttachVolumePayload,
@@ -26,22 +21,33 @@ import {
   getLinodeVolumes,
 } from '@linode/api-v4';
 
-/**
- * For Volumes, we must maintain the following stores to keep our cache up to date.
- * When we manually mutate our cache, we must keep data under the following queryKeys up to date.
- *
- * Query Key Prefixes:
- * - `volumes-all` - Contains an array of all volumes
- *   - Only use this when absolutely necessary
- * - `volumes-list` - Contains ResourcePage of Paginated Volumes
- * - [`volumes-list`, 'linode', id] - Conatins Paginated Volumes for a Specifc Linode
- */
+const queryKey = 'volumes' as const;
 
-export const queryKey = 'volumes';
+export const volumeQueryKeys = {
+  invalidationKey: [queryKey] as const,
+  all: {
+    queryKey: (params: any, filter: any) =>
+      [queryKey, 'all', params, filter] as const,
+    invalidationKey: [queryKey, 'all'] as const,
+  },
+  paginated: {
+    invalidationKey: [queryKey, 'paginated'] as const,
+    all: {
+      queryKey: (params: any, filter: any) =>
+        [queryKey, 'paginated', 'all', params, filter] as const,
+      invalidationKey: [queryKey, 'paginated'] as const,
+    },
+    forLinode: (linodeId: number) => ({
+      queryKey: (params: any, filter: any) =>
+        [queryKey, 'paginated', linodeId, params, filter] as const,
+      invalidationKey: [queryKey, 'paginated', linodeId] as const,
+    }),
+  },
+};
 
 export const useVolumesQuery = (params: any, filters: any) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
-    [`${queryKey}-list`, params, filters],
+    volumeQueryKeys.paginated.all.queryKey(params, filters),
     () => getVolumes(params, filters),
     { keepPreviousData: true }
   );
@@ -53,7 +59,7 @@ export const useLinodeVolumesQuery = (
   enabled = true
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
-    [`${queryKey}-list`, 'linode', linodeId, params, filters],
+    volumeQueryKeys.paginated.forLinode(linodeId).queryKey(params, filters),
     () => getLinodeVolumes(linodeId, params, filters),
     { keepPreviousData: true, enabled }
   );
@@ -63,7 +69,7 @@ export const useAllVolumesQuery = (
   enabled = true
 ) =>
   useQuery<Volume[], APIError[]>(
-    [`${queryKey}-all`, params, filters],
+    volumeQueryKeys.all.queryKey(params, filters),
     () => getAllVolumes(params, filters),
     {
       enabled,
@@ -75,7 +81,11 @@ export const useResizeVolumeMutation = () =>
     ({ volumeId, ...data }) => resizeVolume(volumeId, data),
     {
       onSuccess(volume) {
-        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
+        updateInPaginatedStore<Volume>(
+          volumeQueryKeys.paginated.invalidationKey,
+          volume.id,
+          volume
+        );
       },
     }
   );
@@ -85,7 +95,9 @@ export const useCloneVolumeMutation = () =>
     ({ volumeId, ...data }) => cloneVolume(volumeId, data),
     {
       onSuccess() {
-        queryClient.invalidateQueries(`${queryKey}-list`);
+        queryClient.invalidateQueries(
+          volumeQueryKeys.paginated.invalidationKey
+        );
       },
     }
   );
@@ -93,14 +105,14 @@ export const useCloneVolumeMutation = () =>
 export const useDeleteVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => deleteVolume(id), {
     onSuccess() {
-      queryClient.invalidateQueries(`${queryKey}-list`);
+      queryClient.invalidateQueries(volumeQueryKeys.paginated.invalidationKey);
     },
   });
 
 export const useCreateVolumeMutation = () =>
   useMutation<Volume, APIError[], VolumeRequestPayload>(createVolume, {
     onSuccess() {
-      queryClient.invalidateQueries(`${queryKey}-list`);
+      queryClient.invalidateQueries(volumeQueryKeys.paginated.invalidationKey);
     },
   });
 
@@ -109,7 +121,11 @@ export const useUpdateVolumeMutation = () =>
     ({ volumeId, ...data }) => updateVolume(volumeId, data),
     {
       onSuccess(volume) {
-        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
+        updateInPaginatedStore<Volume>(
+          volumeQueryKeys.paginated.invalidationKey,
+          volume.id,
+          volume
+        );
       },
     }
   );
@@ -119,9 +135,14 @@ export const useAttachVolumeMutation = () =>
     ({ volumeId, ...data }) => attachVolume(volumeId, data),
     {
       onSuccess(volume) {
-        updateInPaginatedStore<Volume>(`${queryKey}-list`, volume.id, volume);
+        updateInPaginatedStore<Volume>(
+          volumeQueryKeys.paginated.invalidationKey,
+          volume.id,
+          volume
+        );
         queryClient.invalidateQueries([
-          `${queryKey}-list`,
+          volumeQueryKeys.paginated.forLinode(volume.linode_id!)
+            .invalidationKey,
           'linode',
           volume.linode_id,
         ]);
@@ -133,96 +154,13 @@ export const useDetachVolumeMutation = () =>
   useMutation<{}, APIError[], { id: number }>(({ id }) => detachVolume(id));
 
 export const volumeEventsHandler = (event: Event) => {
-  const { action, status, entity } = event;
+  queryClient.invalidateQueries(queryKey);
 
-  // Keep the getAll query up to date so that when we have to use it, it contains accurate data
-  queryClient.invalidateQueries(`${queryKey}-all`);
-
-  switch (action) {
-    case 'volume_create':
-      switch (status) {
-        case 'started':
-        case 'scheduled':
-          return;
-        case 'failed':
-        case 'finished':
-        case 'notification':
-          queryClient.invalidateQueries(`${queryKey}-list`);
-          return;
-      }
-    case 'volume_attach':
-      switch (status) {
-        case 'scheduled':
-        case 'started':
-        case 'notification':
-          return;
-        case 'finished':
-          const volume = getItemInPaginatedStore<Volume>(
-            `${queryKey}-list`,
-            entity!.id
-          );
-          if (volume && volume.linode_id === null) {
-            queryClient.invalidateQueries(`${queryKey}-list`);
-          }
-          return;
-        case 'failed':
-          // This means a attach was unsuccessful. Remove associated Linode.
-          updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-            linode_id: null,
-            linode_label: null,
-          });
-          return;
-      }
-    case 'volume_update':
-      return;
-    case 'volume_detach':
-      switch (status) {
-        case 'scheduled':
-        case 'failed':
-        case 'started':
-          return;
-        case 'notification':
-        case 'finished':
-          const volume = getItemInPaginatedStore<Volume>(
-            `${queryKey}-list`,
-            entity!.id
-          );
-          updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-            linode_id: null,
-            linode_label: null,
-          });
-          if (volume && volume.linode_id !== null) {
-            queryClient.invalidateQueries([
-              `${queryKey}-list`,
-              'linode',
-              volume.linode_id,
-            ]);
-          }
-          return;
-      }
-    case 'volume_resize':
-      // This means a resize was successful. Transition from 'resizing' to 'active'.
-      updateInPaginatedStore<Volume>(`${queryKey}-list`, entity!.id, {
-        status: 'active',
-      });
-      return;
-    case 'volume_clone':
-      // This is very hacky, but we have no way to know when a cloned volume should transition
-      // from 'creating' to 'active' so we will wait a bit after a volume is cloned, then refresh
-      // and hopefully the volume is active.
-      setTimeout(() => {
-        queryClient.invalidateQueries(`${queryKey}-list`);
-      }, 5000);
-      return;
-    case 'volume_delete':
-      if (doesItemExistInPaginatedStore(`${queryKey}-list`, entity!.id)) {
-        queryClient.invalidateQueries(`${queryKey}-list`);
-      }
-      return;
-    case 'volume_migrate':
-      return;
-    default:
-      return;
+  // Special case. Refetch volumes a while after a clone happens
+  if (event.action === 'volume_clone') {
+    setTimeout(() => {
+      queryClient.invalidateQueries(queryKey);
+    }, 10000);
   }
 };
 
