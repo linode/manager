@@ -16,7 +16,6 @@ import {
   mockVerifyVerificationCode,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { assertToast } from 'support/ui/events';
 
 describe('SMS phone verification', () => {
   /*
@@ -84,7 +83,7 @@ describe('SMS phone verification', () => {
     cy.findByText('Resend verification code').should('be.visible').click();
 
     cy.wait('@sendVerificationCode');
-    assertToast('Successfully resent verification code');
+    ui.toast.assertMessage('Successfully resent verification code');
 
     // Mock successful verification code for second attempt.
     mockVerifyVerificationCode().as('verifyCode');
@@ -102,7 +101,7 @@ describe('SMS phone verification', () => {
 
     cy.wait('@verifyCode');
 
-    assertToast('Successfully verified phone number');
+    ui.toast.assertMessage('Successfully verified phone number');
 
     cy.findByText('+1 1115551155').should('be.visible');
 
@@ -162,6 +161,6 @@ describe('SMS phone verification', () => {
     cy.wait('@smsOptOut');
     cy.findByText(expectedOptOutMessage).should('be.visible');
 
-    assertToast('Successfully opted out of SMS messaging');
+    ui.toast.assertMessage('Successfully opted out of SMS messaging');
   });
 });
