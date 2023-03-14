@@ -11,7 +11,6 @@ interface Props {
   cozy?: boolean;
   CustomIcon?: React.ComponentType<SvgIconProps>;
   CustomIconStyles?: React.CSSProperties;
-  iconClassName?: string;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const ErrorState = (props: Props) => {
-  const { CustomIcon, iconClassName } = props;
+  const { CustomIcon } = props;
   const classes = useStyles();
   return (
     <Grid
@@ -54,7 +53,7 @@ const ErrorState = (props: Props) => {
         <div className={classes.iconContainer}>
           {CustomIcon ? (
             <CustomIcon
-              className={classNames(classes.icon, iconClassName)}
+              className={classes.icon}
               data-qa-error-icon
               style={props.CustomIconStyles}
             />
