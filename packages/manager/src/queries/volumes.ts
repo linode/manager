@@ -160,7 +160,7 @@ export const volumeEventsHandler = (event: Event) => {
   if (event.action === 'volume_clone') {
     setTimeout(() => {
       queryClient.invalidateQueries(queryKey);
-    }, 10000);
+    }, 8000);
   }
 };
 
