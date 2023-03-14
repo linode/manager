@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   bgStyling: {
     backgroundColor: theme.bg.main,
     minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
   },
   maintenanceWrapper: {
     padding: theme.spacing(4),
@@ -56,9 +59,10 @@ export const MaintenanceScreen: React.FC<{}> = () => {
         <Box
           style={{
             display: 'flex',
+            justifyContent: 'center',
           }}
         >
-          <Logo width={115} height={43} className={classes.logo} />
+          <Logo width={215} className={classes.logo} />
         </Box>
 
         <ErrorState
