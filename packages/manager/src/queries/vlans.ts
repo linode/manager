@@ -7,7 +7,7 @@ import { getAll } from 'src/utilities/getAll';
 export const queryKey = 'vlans';
 
 const _getVlans = (): Promise<VLAN[]> =>
-  getAll<VLAN>(() => getVlans())().then(({ data }) => data);
+  getAll<VLAN>((params) => getVlans(params))().then(({ data }) => data);
 
 export const useVlansQuery = () => {
   return useQuery<VLAN[], APIError[]>(queryKey, _getVlans, {
