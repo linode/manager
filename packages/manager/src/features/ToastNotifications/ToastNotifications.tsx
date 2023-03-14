@@ -89,17 +89,23 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           case 'volume_attach':
             return _toast(
               `Volume ${label} successfully attached.`,
-              `Error attaching Volume ${label}.`
+              `Error attaching Volume ${label}.`,
+              undefined,
+              undefined
             );
           case 'volume_detach':
             return _toast(
               `Volume ${label} successfully detached.`,
-              `Error detaching Volume ${label}.`
+              `Error detaching Volume ${label}.`,
+              undefined,
+              undefined
             );
           case 'volume_create':
             return _toast(
               `Volume ${label} successfully created.`,
-              `Error creating Volume ${label}.`
+              `Error creating Volume ${label}.`,
+              undefined,
+              undefined
             );
           case 'volume_delete':
             return _toast(
@@ -111,7 +117,9 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           case 'disk_imagize':
             return _toast(
               `Image ${secondaryLabel} created successfully.`,
-              `Error creating Image ${secondaryLabel}.`
+              `Error creating Image ${secondaryLabel}.`,
+              undefined,
+              undefined
             );
           case 'disk_resize':
             return _toastWithPersist(
@@ -141,24 +149,32 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
                 : `There was a problem processing image ${label}: ${event.message?.replace(
                     'cancelled',
                     'canceled'
-                  )}`
+                  )}`,
+              undefined,
+              undefined
             );
           case 'image_delete':
             return _toast(
               `Image ${label} deleted successfully.`,
-              `Error deleting Image ${label}.`
+              `Error deleting Image ${label}.`,
+              undefined,
+              undefined
             );
           case 'disk_delete':
             return _toast(
               `Disk ${secondaryLabel} deleted successfully.`,
               `Unable to delete disk ${secondaryLabel} ${
                 label ? ` on ${label}` : ''
-              }. Is it attached to a configuration profile that is in use?`
+              }. Is it attached to a configuration profile that is in use?`,
+              undefined,
+              undefined
             );
           case 'linode_snapshot':
             return _toast(
               undefined,
-              `There was an error creating a snapshot on Linode ${label}.`
+              `There was an error creating a snapshot on Linode ${label}.`,
+              undefined,
+              undefined
             );
           /**
            * These create/delete failures are hypothetical.
@@ -168,49 +184,80 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           case 'linode_config_delete':
             return _toast(
               undefined,
-              `Error deleting config ${secondaryLabel}.`
+              `Error deleting config ${secondaryLabel}.`,
+              undefined,
+              undefined
             );
           case 'linode_config_create':
             return _toast(
               undefined,
-              `Error creating config ${secondaryLabel}.`
+              `Error creating config ${secondaryLabel}.`,
+              undefined,
+              undefined
             );
           case 'linode_clone':
             return _toast(
               `Linode ${label} has been cloned successfully to ${secondaryLabel}.`,
-              `Error cloning Linode ${label}.`
+              `Error cloning Linode ${label}.`,
+              undefined,
+              undefined
             );
           case 'linode_migrate_datacenter':
           case 'linode_migrate':
             return _toast(
               `Linode ${label} has been migrated successfully.`,
-              `Error migrating Linode ${label}.`
+              `Error migrating Linode ${label}.`,
+              undefined,
+              undefined
             );
           case 'linode_resize':
             return _toast(
               `Linode ${label} has been resized successfully.`,
-              `Error resizing Linode ${label}.`
+              `Error resizing Linode ${label}.`,
+              undefined,
+              undefined
             );
           case 'firewall_enable':
-            return _toast(undefined, `Error enabling Firewall ${label}.`);
+            return _toast(
+              undefined,
+              `Error enabling Firewall ${label}.`,
+              undefined,
+              undefined
+            );
           case 'firewall_disable':
-            return _toast(undefined, `Error disabling Firewall ${label}.`);
+            return _toast(
+              undefined,
+              `Error disabling Firewall ${label}.`,
+              undefined,
+              undefined
+            );
           case 'firewall_delete':
-            return _toast(undefined, `Error deleting Firewall ${label}.`);
+            return _toast(
+              undefined,
+              `Error deleting Firewall ${label}.`,
+              undefined,
+              undefined
+            );
           case 'firewall_device_add':
             return _toast(
               undefined,
-              `Error adding ${secondaryLabel} to Firewall ${label}.`
+              `Error adding ${secondaryLabel} to Firewall ${label}.`,
+              undefined,
+              undefined
             );
           case 'firewall_device_remove':
             return _toast(
               undefined,
-              `Error removing ${secondaryLabel} from Firewall ${label}.`
+              `Error removing ${secondaryLabel} from Firewall ${label}.`,
+              undefined,
+              undefined
             );
           case 'longviewclient_create':
             return _toast(
               `Longview Client ${label} successfully created.`,
-              `Error creating Longview Client ${label}.`
+              `Error creating Longview Client ${label}.`,
+              undefined,
+              undefined
             );
           default:
             // eslint-disable-next-line array-callback-return
@@ -241,7 +288,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
 
 export default withSnackbar(ToastNotifications);
 
-const formatLink = (text: string, link: string, handleClick) => {
+const formatLink = (text: string, link: string, handleClick: any) => {
   return (
     <Link to={link} onClick={() => handleClick}>
       {text}
