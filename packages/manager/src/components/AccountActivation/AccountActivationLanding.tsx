@@ -50,9 +50,6 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   return (
     <ErrorState
       CustomIcon={Warning}
-      CustomIconStyles={{
-        color: props.theme.color.blue,
-      }}
       errorText={
         <React.Fragment>
           <Typography variant="h2" className={classes.errorHeading}>

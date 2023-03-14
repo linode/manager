@@ -8,6 +8,9 @@ import {
   updateProfile,
   verifyPhoneNumberCode,
   VerifyVerificationCodePayload,
+  Token,
+  TokenRequest,
+  createPersonalAccessToken,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -24,10 +27,19 @@ export const useProfile = (givenProfile?: Profile) =>
 
 export const useMutateProfile = () => {
   return useMutation<Profile, APIError[], Partial<Profile>>(
-    (data) => {
-      return updateProfile(data);
-    },
+    (data) => updateProfile(data),
     { onSuccess: updateProfileData }
+  );
+};
+
+export const useCreatePersonalAccessTokenMutation = () => {
+  return useMutation<Token, APIError[], TokenRequest>(
+    createPersonalAccessToken,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
+      },
+    }
   );
 };
 

@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.name === 'lightTheme' ? '#3a3f46' : '#23262a',
+      backgroundColor: theme.name === 'light' ? '#3a3f46' : '#23262a',
       color: 'white',
     },
   },
@@ -327,7 +327,11 @@ export const UserMenu: React.FC<{}> = () => {
             <KeyboardArrowDown className={classes.caret} />
           </MenuButton>
         </Tooltip>
-        <MenuPopover className={classes.menuPopover} position={positionRight}>
+        <MenuPopover
+          className={classes.menuPopover}
+          position={positionRight}
+          data-qa-user-menu
+        >
           <MenuItems className={classes.menuItemList}>
             <div className={classes.userName}>
               <strong>{userName}</strong>

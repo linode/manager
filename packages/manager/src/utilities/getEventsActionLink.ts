@@ -64,6 +64,10 @@ export default (
     return `/images`;
   }
 
+  if (['linode_snapshot', 'backups_enable'].includes(action)) {
+    return `/linodes/${id}/backup`;
+  }
+
   switch (type) {
     case 'linode':
       return action === 'linode_addip'
@@ -84,6 +88,9 @@ export default (
 
     case 'stackscript':
       return `/stackscripts/${id}`;
+
+    case 'firewall':
+      return `/firewalls/${id}`;
 
     case 'nodebalancer':
       // eslint-disable-next-line sonarjs/no-small-switch

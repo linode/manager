@@ -3,7 +3,7 @@ import ConfirmationDialog, {
   ConfirmationDialogProps,
 } from 'src/components/ConfirmationDialog';
 import TypeToConfirm from 'src/components/TypeToConfirm';
-import usePreferences from 'src/hooks/usePreferences';
+import { usePreferences } from 'src/queries/preferences';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { TypeToConfirmProps } from 'src/components/TypeToConfirm';
@@ -68,7 +68,7 @@ const TypeToConfirmDialog: React.FC<CombinedProps> = (props) => {
 
   const [confirmText, setConfirmText] = React.useState('');
 
-  const { preferences } = usePreferences();
+  const { data: preferences } = usePreferences();
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== entity.label;
 

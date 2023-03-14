@@ -4,10 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/core/Grid';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import withPreferences, {
-  Props as PreferencesProps,
-} from 'src/containers/preferences.container';
-import { compose } from 'recompose';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bannerOuter: {
@@ -32,8 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   link: {
-    color: '#fff',
-    textDecoration: 'underline',
+    color: '#74AAE6',
   },
   closeIcon: {
     position: 'absolute',
@@ -53,27 +49,20 @@ interface Props {
   onClose: () => void;
 }
 
-type CombinedProps = Props & PreferencesProps;
+const MainContentBanner: React.FC<Props> = (props) => {
+  const { bannerText, url, linkText, bannerKey, onClose } = props;
 
-const MainContentBanner: React.FC<CombinedProps> = (props) => {
-  const {
-    bannerText,
-    url,
-    linkText,
-    bannerKey,
-    getUserPreferences,
-    updateUserPreferences,
-    onClose,
-  } = props;
+  const { refetch: refetchPrefrences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   const classes = useStyles();
 
   const dismiss = () => {
     onClose();
-    getUserPreferences()
+    refetchPrefrences()
+      .then(({ data: preferences }) => preferences ?? Promise.reject())
       .then((preferences) => {
-        updateUserPreferences({
-          ...preferences,
+        return updatePreferences({
           main_content_banner_dismissal: {
             ...preferences.main_content_banner_dismissal,
             [bannerKey]: true,
@@ -81,7 +70,7 @@ const MainContentBanner: React.FC<CombinedProps> = (props) => {
         });
       })
       // It's OK if this fails (the banner is still dismissed in the UI due to local state).
-      .catch((_) => null);
+      .catch();
   };
 
   return (
@@ -105,6 +94,4 @@ const MainContentBanner: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(React.memo, withPreferences());
-
-export default enhanced(MainContentBanner);
+export default React.memo(MainContentBanner);

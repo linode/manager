@@ -1,6 +1,5 @@
 import '@reach/menu-button/styles.css';
 import '@reach/tabs/styles.css';
-import { Image } from '@linode/api-v4/lib/images';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -34,9 +33,16 @@ import GoTo from './GoTo';
 import { databaseEventsHandler } from './queries/databases';
 import { domainEventsHandler } from './queries/domains';
 import { volumeEventsHandler } from './queries/volumes';
+import { imageEventsHandler } from './queries/images';
+import { tokenEventHandler } from './queries/tokens';
+import withPreferences, {
+  PreferencesActionsProps,
+  PreferencesStateProps,
+} from './containers/preferences.container';
+import { loadScript } from './hooks/useScript';
+import { getNextThemeValue } from './utilities/theme';
 
 interface Props {
-  toggleTheme: () => void;
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
 }
@@ -52,7 +58,9 @@ type CombinedProps = Props &
   StateProps &
   RouteComponentProps &
   WithSnackbarProps &
-  FeatureFlagConsumerProps;
+  FeatureFlagConsumerProps &
+  PreferencesStateProps &
+  PreferencesActionsProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
@@ -71,6 +79,10 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
+    if (import.meta.env.PROD && !import.meta.env.REACT_APP_DISABLE_NEW_RELIC) {
+      loadScript('/new-relic.js');
+    }
+
     /**
      * Send pageviews unless blocklisted.
      */
@@ -85,25 +97,7 @@ export class App extends React.Component<CombinedProps, State> {
      * a key combination
      */
     // eslint-disable-next-line
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      const isOSMac = navigator.userAgent.includes('Mac');
-      const letterForThemeShortcut = 'D';
-      const letterForGoToOpen = 'K';
-      const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
-      if (event[modifierKey] && event.shiftKey) {
-        switch (event.key) {
-          case letterForThemeShortcut:
-            this.props.toggleTheme();
-            break;
-          case letterForGoToOpen:
-            this.setState((prevState) => ({
-              ...prevState,
-              goToOpen: !prevState.goToOpen,
-            }));
-            break;
-        }
-      }
-    });
+    document.addEventListener('keydown', this.keyboardListener);
 
     /*
      * Send any Database events to the Database events handler in the queries file
@@ -125,6 +119,25 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('volume') && !event._initial)
       .subscribe(volumeEventsHandler);
+
+    /*
+      Send any Image events to the Image events handler in the queries file.
+    */
+    events$
+      .filter(
+        (event) =>
+          (event.action.startsWith('image') ||
+            event.action === 'disk_imagize') &&
+          !event._initial
+      )
+      .subscribe(imageEventsHandler);
+
+    /* 
+      Send any Token events to the Token events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('token') && !event._initial)
+      .subscribe(tokenEventHandler);
 
     /*
      * We want to listen for migration events side-wide
@@ -157,6 +170,32 @@ export class App extends React.Component<CombinedProps, State> {
         }
       });
   }
+  componentWillUnmount(): void {
+    document.removeEventListener('keydown', this.keyboardListener);
+  }
+
+  keyboardListener = (event: KeyboardEvent) => {
+    const isOSMac = navigator.userAgent.includes('Mac');
+    const letterForThemeShortcut = 'D';
+    const letterForGoToOpen = 'K';
+    const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
+    if (event[modifierKey] && event.shiftKey) {
+      switch (event.key) {
+        case letterForThemeShortcut:
+          const currentTheme = this.props.preferences?.theme;
+          const newTheme = getNextThemeValue(currentTheme);
+
+          this.props.updateUserPreferences({ theme: newTheme });
+          break;
+        case letterForGoToOpen:
+          this.setState((prevState) => ({
+            ...prevState,
+            goToOpen: !prevState.goToOpen,
+          }));
+          break;
+      }
+    }
+  };
 
   goToClose = () => {
     this.setState({ goToOpen: false });
@@ -165,10 +204,8 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { hasError } = this.state;
     const {
-      toggleTheme,
       linodesError,
       typesError,
-      imagesError,
       notificationsError,
       volumesError,
       bucketsError,
@@ -188,7 +225,6 @@ export class App extends React.Component<CombinedProps, State> {
       hasOauthError(
         linodesError,
         typesError,
-        imagesError,
         notificationsError,
         volumesError,
         bucketsError,
@@ -219,7 +255,6 @@ export class App extends React.Component<CombinedProps, State> {
           <MainContent
             history={this.props.history}
             location={this.props.location}
-            toggleTheme={toggleTheme}
             appIsLoading={this.props.appIsLoading}
             isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
           />
@@ -231,7 +266,6 @@ export class App extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   linodes: Linode[];
-  images?: Image[];
   types?: string[];
   regions?: Region[];
   documentation: Linode.Doc[];
@@ -240,7 +274,6 @@ interface StateProps {
   linodesError?: APIError[];
   volumesError?: APIError[];
   nodeBalancersError?: APIError[];
-  imagesError?: APIError[];
   bucketsError?: APIError[];
   notificationsError?: APIError[];
   typesError?: APIError[];
@@ -253,7 +286,6 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state) => ({
   linodes: Object.values(state.__resources.linodes.itemsById),
   linodesError: path(['read'], state.__resources.linodes.error),
-  imagesError: path(['read'], state.__resources.images.error),
   notificationsError: state.__resources.notifications.error,
   typesError: state.__resources.types.error,
   documentation: state.documentation,
@@ -275,7 +307,8 @@ export default compose(
   withDocumentTitleProvider,
   withSnackbar,
   withFeatureFlagProvider,
-  withFeatureFlagConsumer
+  withFeatureFlagConsumer,
+  withPreferences
 )(App);
 
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {

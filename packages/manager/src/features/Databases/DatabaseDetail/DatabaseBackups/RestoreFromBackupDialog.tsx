@@ -5,10 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { useRestoreFromBackupMutation } from 'src/queries/databases';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
-import { DatabaseBackupType } from '@linode/api-v4/lib/databases/types';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
-import Notice from 'src/components/Notice';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 
 interface Props {
   open: boolean;
@@ -17,11 +16,6 @@ interface Props {
   backup: DatabaseBackup;
 }
 
-interface BackupDialogData {
-  title: string;
-  confirmationText: JSX.Element;
-  label: string;
-}
 export const RestoreFromBackupDialog = (props: Props) => {
   const { database, backup, onClose, open } = props;
 
@@ -34,7 +28,7 @@ export const RestoreFromBackupDialog = (props: Props) => {
     error,
   } = useRestoreFromBackupMutation(database.engine, database.id, backup.id);
 
-  const backupDialogMap: Record<DatabaseBackupType, BackupDialogData> = {
+  const options = {
     snapshot: {
       title: `Restore Manual Backup ${formatDate(backup.created)}`,
       confirmationText: (
@@ -69,12 +63,14 @@ export const RestoreFromBackupDialog = (props: Props) => {
     });
   };
 
+  const dialogData = options[backup.type];
+
   return (
     <TypeToConfirmDialog
-      title={backupDialogMap[backup.type].title}
+      title={dialogData.title}
       entity={{ type: 'Database Backup', label: formatDate(backup.created) }}
       open={open}
-      confirmationText={backupDialogMap[backup.type].confirmationText}
+      confirmationText={dialogData.confirmationText}
       loading={isLoading}
       onClose={onClose}
       onClick={handleRestoreDatabase}

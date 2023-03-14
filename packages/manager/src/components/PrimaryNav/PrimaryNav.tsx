@@ -16,7 +16,7 @@ import StackScript from 'src/assets/icons/entityIcons/stackscript.svg';
 import Volume from 'src/assets/icons/entityIcons/volume.svg';
 import HelpIcon from 'src/assets/icons/get_help.svg';
 import Longview from 'src/assets/icons/longview.svg';
-import Logo from 'src/assets/logo/logo.svg';
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import BetaChip from 'src/components/BetaChip';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -259,25 +259,25 @@ export const PrimaryNav: React.FC<Props> = (props) => {
       id="main-navigation"
     >
       <Grid item>
-        <div className={classes.logoItem}>
-          {isCollapsed && (
-            <span className={`${classes.logoCollapsed} logoCollapsed`}></span>
-          )}
+        <div
+          className={classNames(classes.logoItemAkamai, {
+            [classes.logoItemAkamaiCollapsed]: isCollapsed,
+          })}
+        >
           <Link
             to={`/dashboard`}
             onClick={closeMenu}
-            aria-label="Dashboard"
-            title="Dashboard"
+            aria-label="Akamai - Dashboard"
+            title="Akamai - Dashboard"
             className={classNames({
               [classes.logoContainer]: isCollapsed,
             })}
           >
-            <Logo
+            <AkamaiLogo
               width={128}
-              height={50}
               className={classNames(
                 {
-                  [classes.logoSvgCollapsed]: isCollapsed,
+                  [classes.logoAkamaiCollapsed]: isCollapsed,
                 },
                 classes.logo
               )}
@@ -369,6 +369,10 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
     prefetchProps,
   } = props;
 
+  const isActiveLink = Boolean(
+    linkIsActive(href, locationSearch, locationPathname, activeLinks)
+  );
+
   return (
     <Link
       to={href}
@@ -382,13 +386,9 @@ const PrimaryLink: React.FC<PrimaryLinkProps> = React.memo((props) => {
       {...attr}
       className={classNames({
         [classes.listItem]: true,
-        [classes.active]: linkIsActive(
-          href,
-          locationSearch,
-          locationPathname,
-          activeLinks
-        ),
+        [classes.active]: isActiveLink,
       })}
+      aria-current={isActiveLink}
       data-testid={`menu-item-${display}`}
     >
       {icon && (

@@ -1,20 +1,34 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
+import DocsIcon from 'src/assets/icons/docs.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
+import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
+import PointerIcon from 'src/assets/icons/pointer.svg';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
+import List from 'src/components/core/List';
+import ListItem from 'src/components/core/ListItem';
 import { makeStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
 import ProductInformationBanner from 'src/components/ProductInformationBanner';
-import { sendEvent } from 'src/utilities/ga';
 import LinksSection from 'src/features/linodes/LinodesLanding/LinksSection';
 import LinkSubSection from 'src/features/linodes/LinodesLanding/LinksSubSection';
-import DocsIcon from 'src/assets/icons/docs.svg';
-import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import PointerIcon from 'src/assets/icons/pointer.svg';
-import List from 'src/components/core/List';
-import ListItem from 'src/components/core/ListItem';
+import {
+  docsLink,
+  getLinkOnClick,
+  guidesMoreLinkText,
+  youtubeChannelLink,
+  youtubeMoreLinkLabel,
+  youtubeMoreLinkText,
+} from 'src/utilities/emptyStateLandingUtils';
+import { sendEvent } from 'src/utilities/ga';
+
+const gaCategory = 'Managed Databases landing page empty';
+const linkGAEventTemplate = {
+  category: gaCategory,
+  action: 'Click:link',
+};
 
 const guidesLinkData = [
   {
@@ -49,18 +63,14 @@ const youtubeLinkData = [
   },
 ];
 
-const getLinkOnClick = (linkText: string) => () => {
-  sendEvent({
-    ...linkGAEventTemplate,
-    label: linkText,
-  });
-};
-
 const guideLinks = (
   <List>
     {guidesLinkData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+        <Link
+          to={linkData.to}
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+        >
           {linkData.text}
         </Link>
       </ListItem>
@@ -72,7 +82,10 @@ const youtubeLinks = (
   <List>
     {youtubeLinkData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+        <Link
+          to={linkData.to}
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+        >
           {linkData.text}
           <ExternalLinkIcon />
         </Link>
@@ -88,20 +101,6 @@ const useStyles = makeStyles(() => ({
     },
   },
 }));
-
-const gaCategory = 'Managed Databases landing page empty';
-
-const linkGAEventTemplate = {
-  category: gaCategory,
-  action: 'Click:link',
-};
-
-const onLinkClick = (
-  event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
-) => {
-  const label = event.currentTarget.textContent ?? '';
-  sendEvent({ ...linkGAEventTemplate, label });
-};
 
 const DatabaseEmptyState: React.FC = () => {
   const classes = useStyles();
@@ -136,11 +135,14 @@ const DatabaseEmptyState: React.FC = () => {
               icon={<DocsIcon />}
               MoreLink={(props) => (
                 <Link
-                  onClick={onLinkClick}
-                  to="https://www.linode.com/docs/"
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    guidesMoreLinkText
+                  )}
+                  to={docsLink}
                   {...props}
                 >
-                  Check out all our Docs
+                  {guidesMoreLinkText}
                   <PointerIcon />
                 </Link>
               )}
@@ -148,16 +150,19 @@ const DatabaseEmptyState: React.FC = () => {
               {guideLinks}
             </LinkSubSection>
             <LinkSubSection
-              title="Getting Started Playlist"
+              title="Video Playlist"
               icon={<YoutubeIcon />}
               external
               MoreLink={(props) => (
                 <Link
-                  onClick={onLinkClick}
-                  to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                  onClick={getLinkOnClick(
+                    linkGAEventTemplate,
+                    youtubeMoreLinkLabel
+                  )}
+                  to={youtubeChannelLink}
                   {...props}
                 >
-                  View the complete playlist
+                  {youtubeMoreLinkText}
                   <ExternalLinkIcon style={{ marginLeft: 8 }} />
                 </Link>
               )}

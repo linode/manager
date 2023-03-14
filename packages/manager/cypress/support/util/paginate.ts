@@ -1,4 +1,4 @@
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import type { ResourcePage } from '@linode/api-v4/types';
 import { Response } from 'support/util/response';
 
 /**
@@ -46,7 +46,7 @@ export const paginate = (data: any | any[]): PaginatedData => {
  */
 export const depaginate = async <T>(
   resultGenerator: (page: number) => Promise<ResourcePage<T>>
-): Promise<Array<T>> => {
+): Promise<T[]> => {
   const firstResult: ResourcePage<T> = await resultGenerator(1);
   const data = firstResult.data;
   if (firstResult.pages > 1) {

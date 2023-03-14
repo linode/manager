@@ -3,7 +3,19 @@ import Chip, { ChipProps } from 'src/components/core/Chip';
 import classNames from 'classnames';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
-interface Props extends ChipProps {
+interface Props
+  extends Omit<
+    ChipProps,
+    | 'label'
+    | 'deleteIcon'
+    | 'onDelete'
+    | 'avatar'
+    | 'disabled'
+    | 'clickable'
+    | 'variant'
+    | 'outlineColor'
+    | 'icon'
+  > {
   className?: string;
   color?: 'default' | 'primary';
 }

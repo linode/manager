@@ -39,7 +39,6 @@ describe('CancelLanding', () => {
     window.location = { ...realLocation, assign: mockAssign };
 
     const survey_link = 'https://linode.com';
-
     const { getByTestId } = render(
       wrapWithTheme(<CancelLanding />, {
         MemoryRouter: {

@@ -1,12 +1,6 @@
-import {
-  containsClick,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
-import { selectRegionString } from 'support/ui/constants';
-import { randomLabel } from 'support/util/random';
+import { fbtClick, fbtVisible, getClick, getVisible } from 'support/helpers';
+import { apiMatcher } from 'support/util/intercepts';
+import { randomLabel, randomNumber } from 'support/util/random';
 
 const multipleClick = (
   subject: Cypress.Chainable,
@@ -34,24 +28,26 @@ const addNodes = (plan: string) => {
 
 describe('LKE Create Cluster', () => {
   it('Simple Page Check', () => {
-    const lkeId = Math.ceil(Math.random() * 9999);
+    const lkeId = randomNumber(10000, 99999);
     // intercept request to stub response
-    cy.intercept('POST', '*/lke/clusters', {
+    cy.intercept('POST', apiMatcher('lke/clusters'), {
       id: lkeId,
     }).as('createCluster');
     cy.visitWithLogin('/kubernetes/create');
     fbtVisible('Add Node Pools');
     cy.contains('Cluster Label').next().children().click().type(randomLabel());
-    containsClick(selectRegionString).type('Newar{enter}');
+    cy.findByLabelText('Region')
+      .should('be.visible')
+      .focus()
+      .type('Dallas{enter}');
     cy.get('[id="kubernetes-version"]').type('{enter}');
     fbtClick('Shared CPU');
     addNodes('Linode 2 GB');
 
     // wait for change to reflect on Checkout bar
 
-    fbtVisible('Linode 2 GB Plan');
     cy.get('[data-testid="kube-checkout-bar"]').within((_bar) => {
-      fbtVisible('Linode 2 GB Plan');
+      fbtVisible('Linode 2GB Plan');
       getVisible('[data-testid="remove-pool-button"]');
       cy.get('[data-qa-notice="true"]').within((_notice) => {
         fbtVisible(

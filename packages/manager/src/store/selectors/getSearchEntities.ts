@@ -6,20 +6,15 @@ import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
-import {
-  extendCluster,
-  getDescriptionForCluster,
-} from 'src/features/Kubernetes/kubeUtils';
-import { ExtendedCluster } from 'src/features/Kubernetes/types';
+import { getDescriptionForCluster } from 'src/features/Kubernetes/kubeUtils';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
-import { ExtendedNodePool } from 'src/store/kubernetes/nodePools.actions';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-type State = ApplicationState['__resources'];
+export type State = ApplicationState['__resources'];
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
@@ -82,7 +77,7 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   },
 });
 
-const imageReducer = (accumulator: SearchableItem[], image: Image) =>
+export const imageReducer = (accumulator: SearchableItem[], image: Image) =>
   image.is_public
     ? accumulator
     : [...accumulator, imageToSearchableItem(image)];
@@ -134,7 +129,7 @@ export const nodeBalToSearchableItem = (
 });
 
 export const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: ExtendedCluster
+  kubernetesCluster: KubernetesCluster
 ): SearchableItem => ({
   label: kubernetesCluster.label,
   value: kubernetesCluster.id,
@@ -169,52 +164,11 @@ export const bucketToSearchableItem = (
   },
 });
 
-const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
-const imageSelector = (state: State) => state.images.itemsById || {};
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const typesSelector = (state: State) => state.types.entities;
-const kubernetesClusterSelector = (state: State) =>
-  Object.values(state.kubernetes.itemsById);
-const kubePoolSelector = (state: State) => state.nodePools.entities;
 
-export default createSelector<
-  State,
-  Linode[],
-  { [key: string]: Image },
-  NodeBalancer[],
-  LinodeType[],
-  KubernetesCluster[],
-  ExtendedNodePool[],
-  SearchableItem[]
->(
-  linodeSelector,
-  imageSelector,
-  nodebalSelector,
-  typesSelector,
-  kubernetesClusterSelector,
-  kubePoolSelector,
-  (linodes, images, nodebalancers, types, kubernetesClusters, nodePools) => {
-    const arrOfImages = Object.values(images);
-    const searchableLinodes = linodes.map((linode) =>
-      formatLinode(linode, types, images)
-    );
-    const searchableImages = arrOfImages.reduce(imageReducer, []);
-    const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
-    const searchableKubernetesClusters = kubernetesClusters
-      .map((thisCluster) => {
-        const pools = nodePools.filter(
-          (thisPool) => thisPool.clusterID === thisCluster.id
-        );
-        return extendCluster(thisCluster, pools, types);
-      })
-      .map(kubernetesClusterToSearchableItem);
+export default createSelector(nodebalSelector, (nodebalancers) => {
+  const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
 
-    return [
-      ...searchableLinodes,
-      ...searchableImages,
-      ...searchableNodebalancers,
-      ...searchableKubernetesClusters,
-    ];
-  }
-);
+  return [...searchableNodebalancers];
+});

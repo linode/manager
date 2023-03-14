@@ -1,4 +1,6 @@
 import { Agreements, signAgreement } from '@linode/api-v4/lib/account';
+import { CreateLinodeSchema } from '@linode/validation/lib/linodes.schema';
+import { convertYupToLinodeErrors } from '@linode/api-v4/lib/request';
 import { Image } from '@linode/api-v4/lib/images';
 import {
   cloneLinode,
@@ -21,16 +23,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { REFRESH_INTERVAL } from 'src/constants';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, {
-  ImagesDispatch,
-  WithImages,
-} from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
@@ -39,7 +39,6 @@ import withAgreements, {
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
-import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import userSSHKeyHoc, {
   State as userSSHKeysProps,
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -69,6 +68,7 @@ import { validatePassword } from 'src/utilities/validatePassword';
 import LinodeCreate from './LinodeCreate';
 import {
   HandleSubmit,
+  LinodeCreateValidation,
   Info,
   TypeInfo,
   WithLinodesProps,
@@ -99,6 +99,7 @@ interface State {
   tags?: Tag[];
   errors?: APIError[];
   showAgreement: boolean;
+  showApiAwarenessModal: boolean;
   signedAgreement: boolean;
   formIsSubmitting: boolean;
   appInstances?: StackScript[];
@@ -112,8 +113,7 @@ interface State {
 type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
-  WithImages &
-  ImagesDispatch &
+  ImagesProps &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -148,6 +148,7 @@ const defaultState: State = {
   appInstancesLoading: false,
   attachedVLANLabel: '',
   vlanIPAMAddress: null,
+  showApiAwarenessModal: false,
 };
 
 const getDisabledClasses = (regionID: string, regions: Region[] = []) => {
@@ -257,14 +258,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           appInstancesError: 'There was an error loading Marketplace Apps.',
         });
       });
-
-    // If we haven't requested images yet (or in a while), request them
-    if (
-      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL &&
-      !this.props.imagesLoading
-    ) {
-      this.props.requestImages();
-    }
   }
 
   clearCreationState = () => {
@@ -404,6 +397,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     }));
   };
 
+  handleShowApiAwarenessModal = () => {
+    this.setState((prevState) => ({
+      showApiAwarenessModal: !prevState.showApiAwarenessModal,
+    }));
+  };
   generateLabel = () => {
     const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
@@ -494,7 +492,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     if (payload.root_pass) {
       const passwordError = validatePassword(payload.root_pass);
-
       if (passwordError) {
         this.setState(
           {
@@ -631,6 +628,22 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       });
   };
 
+  checkValidation: LinodeCreateValidation = (payload) => {
+    try {
+      CreateLinodeSchema.validateSync(payload, { abortEarly: false });
+      //reset errors to default state
+      this.setState({ errors: undefined, showApiAwarenessModal: true });
+    } catch (error) {
+      const processedErrors = convertYupToLinodeErrors(error);
+      this.setState(
+        () => ({
+          errors: getAPIErrorOrDefault(processedErrors),
+          formIsSubmitting: false,
+        }),
+        () => scrollErrorIntoView()
+      );
+    }
+  };
   getBackupsMonthlyPrice = (): number | undefined | null => {
     const type = this.getTypeInfo();
 
@@ -699,8 +712,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const {
       profile,
       grants,
-      enqueueSnackbar,
-      closeSnackbar,
       regionsData,
       typesData,
       ...restOfProps
@@ -777,6 +788,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             togglePrivateIPEnabled={this.togglePrivateIPEnabled}
             updateTags={this.setTags}
             handleSubmitForm={this.submitForm}
+            checkValidation={this.checkValidation}
             resetCreationState={this.clearCreationState}
             setBackupID={this.setBackupID}
             regionsData={filteredRegions!}
@@ -786,6 +798,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             ipamAddress={this.state.vlanIPAMAddress}
             handleVLANChange={this.handleVLANChange}
             handleAgreementChange={this.handleAgreementChange}
+            handleShowApiAwarenessModal={this.handleShowApiAwarenessModal}
             userCannotCreateLinode={userCannotCreateLinode}
             accountBackupsEnabled={getAccountBackupsEnabled()}
             {...restOfProps}
@@ -812,12 +825,7 @@ interface DispatchProps {
 const connected = connect(mapStateToProps, { upsertLinode });
 
 export default recompose<CombinedProps, {}>(
-  deepCheckRouter(
-    (oldProps, newProps) =>
-      oldProps.location.search !== newProps.location.search,
-    true
-  ),
-  withImages(),
+  withImages,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,

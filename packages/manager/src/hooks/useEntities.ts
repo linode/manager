@@ -1,6 +1,4 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import useImages from './useImages';
-import useKubernetesClusters from './useKubernetesClusters';
 import useLinodeActions from './useLinodeActions';
 import useLinodes from './useLinodes';
 import useNodeBalancers from './useNodeBalancers';
@@ -25,15 +23,10 @@ export interface Entity<T> {
 export const useEntities = () => {
   const { linodes: _linodes } = useLinodes();
   const { requestLinodes } = useLinodeActions();
-  const { images: _images, requestImages } = useImages();
   const {
     nodeBalancers: _nodeBalancers,
     requestNodeBalancers,
   } = useNodeBalancers();
-  const {
-    kubernetesClusters: _kubernetesClusters,
-    requestKubernetesClusters,
-  } = useKubernetesClusters();
 
   /** Our Redux store is currently inconsistent about
    * the data shape for different entity types.
@@ -45,25 +38,9 @@ export const useEntities = () => {
    */
 
   const linodes = Object.values(_linodes.itemsById);
-  const images = (Object.values(_images.itemsById) ?? []).filter(
-    (thisImage) => !thisImage.is_public
-  );
-  const kubernetesClusters = Object.values(_kubernetesClusters.itemsById);
   const nodeBalancers = Object.values(_nodeBalancers.itemsById);
 
   return {
-    images: {
-      data: images,
-      request: requestImages,
-      lastUpdated: _images.lastUpdated,
-      error: _images.error.read,
-    },
-    kubernetesClusters: {
-      data: kubernetesClusters,
-      request: () => requestKubernetesClusters(),
-      lastUpdated: _kubernetesClusters.lastUpdated,
-      error: _kubernetesClusters.error?.read,
-    },
     linodes: {
       data: linodes,
       request: requestLinodes,

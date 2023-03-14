@@ -28,6 +28,8 @@ export * from './support';
 
 export * from './tags';
 
+export * from './types';
+
 export * from './vlans';
 
 export * from './volumes';
@@ -38,4 +40,9 @@ export * from './databases';
 
 export * from './entity-transfers';
 
-export { baseRequest, setToken, isEmpty } from './request';
+export {
+  baseRequest,
+  setToken,
+  isEmpty,
+  convertYupToLinodeErrors,
+} from './request';

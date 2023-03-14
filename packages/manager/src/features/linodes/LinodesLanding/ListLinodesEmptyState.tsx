@@ -1,23 +1,31 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
-import Typography from 'src/components/core/Typography';
-import Placeholder from 'src/components/Placeholder';
-import LinksSection from './LinksSection';
-import LinksSubSection from './LinksSubSection';
 import DocsIcon from 'src/assets/icons/docs.svg';
-import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
-import YoutubeIcon from 'src/assets/icons/youtube.svg';
-import PointerIcon from 'src/assets/icons/pointer.svg';
+import LinodeSvg from 'src/assets/icons/entityIcons/linode.svg';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import Link from 'src/components/Link';
+import MarketplaceIcon from 'src/assets/icons/marketplace.svg';
+import PointerIcon from 'src/assets/icons/pointer.svg';
+import YoutubeIcon from 'src/assets/icons/youtube.svg';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import AppsSection from './AppsSection';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Link from 'src/components/Link';
+import Placeholder from 'src/components/Placeholder';
+import {
+  docsLink,
+  getLinkOnClick,
+  guidesMoreLinkText,
+  youtubeChannelLink,
+  youtubeMoreLinkLabel,
+  youtubeMoreLinkText,
+} from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
+import AppsSection from './AppsSection';
+import LinksSection from './LinksSection';
+import LinksSubSection from './LinksSubSection';
 
 const gaCategory = 'Linodes landing page empty';
-
 const linkGAEventTemplate = {
   category: gaCategory,
   action: 'Click:link',
@@ -63,18 +71,14 @@ const youtubeLinksData = [
   },
 ];
 
-const getLinkOnClick = (linkText: string) => () => {
-  sendEvent({
-    ...linkGAEventTemplate,
-    label: linkText,
-  });
-};
-
 const guideLinks = (
   <List>
     {gettingStartedGuideLinksData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+        <Link
+          to={linkData.to}
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+        >
           {linkData.text}
         </Link>
       </ListItem>
@@ -82,15 +86,16 @@ const guideLinks = (
   </List>
 );
 
-const guidesMoreLinkText = 'Check out all our Docs';
 const appsMoreLinkText = 'See all Marketplace apps';
-const youtubeMoreLinkText = 'View the complete playlist';
 
 const youtubeLinks = (
   <List>
     {youtubeLinksData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link onClick={getLinkOnClick(linkData.text)} to={linkData.to}>
+        <Link
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+          to={linkData.to}
+        >
           {linkData.text}
           <ExternalLinkIcon />
         </Link>
@@ -99,7 +104,18 @@ const youtubeLinks = (
   </List>
 );
 
+const useStyles = makeStyles((theme: Theme) => ({
+  placeholderAdjustment: {
+    padding: `${theme.spacing(2)} 0`,
+    [theme.breakpoints.up('md')]: {
+      padding: `${theme.spacing(10)} 0 ${theme.spacing(4)}`,
+    },
+  },
+}));
+
 export const ListLinodesEmptyState: React.FC<{}> = (_) => {
+  const classes = useStyles();
+
   const { push } = useHistory();
 
   return (
@@ -108,6 +124,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
       subtitle="Cloud-based virtual machines"
       icon={LinodeSvg}
       isEntity
+      className={classes.placeholderAdjustment}
       buttonProps={[
         {
           onClick: () => {
@@ -128,8 +145,11 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             icon={<DocsIcon />}
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(guidesMoreLinkText)}
-                to="https://www.linode.com/docs/"
+                onClick={getLinkOnClick(
+                  linkGAEventTemplate,
+                  guidesMoreLinkText
+                )}
+                to={docsLink}
                 {...props}
               >
                 {guidesMoreLinkText}
@@ -144,7 +164,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             icon={<MarketplaceIcon />}
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(appsMoreLinkText)}
+                onClick={getLinkOnClick(linkGAEventTemplate, appsMoreLinkText)}
                 to="/linodes/create?type=One-Click"
                 {...props}
               >
@@ -156,13 +176,16 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             <AppsSection />
           </LinksSubSection>
           <LinksSubSection
-            title="Getting Started Playlist"
+            title="Video Playlist"
             icon={<YoutubeIcon />}
             external
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(youtubeMoreLinkText)}
-                to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                onClick={getLinkOnClick(
+                  linkGAEventTemplate,
+                  youtubeMoreLinkLabel
+                )}
+                to={youtubeChannelLink}
                 {...props}
               >
                 {youtubeMoreLinkText}
@@ -174,6 +197,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
           </LinksSubSection>
         </LinksSection>
       }
+      showTransferDisplay
     >
       <Typography
         style={{ fontSize: '1.125rem', lineHeight: '1.75rem', maxWidth: 541 }}

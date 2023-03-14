@@ -3,6 +3,8 @@ import {
   EventAction,
   NotificationType,
   SecurityQuestionsPayload,
+  TokenRequest,
+  VolumeStatus,
 } from '@linode/api-v4';
 import { RequestHandler, rest } from 'msw';
 import cachedRegions from 'src/cachedData/regions.json';
@@ -73,6 +75,7 @@ import {
   linodeTypeFactory,
   dedicatedTypeFactory,
   proDedicatedTypeFactory,
+  kubernetesVersionFactory,
 } from 'src/factories';
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
@@ -454,6 +457,10 @@ export const handlers = [
     const clusters = kubernetesAPIResponse.buildList(10);
     return res(ctx.json(makeResourcePage(clusters)));
   }),
+  rest.get('*/lke/versions', async (req, res, ctx) => {
+    const versions = kubernetesVersionFactory.buildList(1);
+    return res(ctx.json(makeResourcePage(versions)));
+  }),
   rest.get('*/lke/clusters/:clusterId', async (req, res, ctx) => {
     const id = Number(req.params.clusterId);
     const cluster = kubernetesAPIResponse.build({ id, k8s_version: '1.16' });
@@ -623,48 +630,14 @@ export const handlers = [
     );
   }),
   rest.get('*/volumes', (req, res, ctx) => {
-    const hddVolumeUnattached = volumeFactory.build({
-      id: 30,
-      label: 'hdd-unattached',
-    });
-    const hddVolumeAttached = volumeFactory.build({
-      id: 20,
-      linode_id: 20,
-      label: 'eligible-now-for-nvme',
-    });
-    const hddVolumeAttached2 = volumeFactory.build({
-      id: 2,
-      linode_id: 2,
-      label: 'example-upgrading',
-    });
-    const nvmeVolumeUpgrading = volumeFactory.build({
-      id: 2,
-      // hardware_type: 'nvme',
-    });
-    const newNVMeVolume = volumeFactory.build({
-      id: 1,
-      // hardware_type: 'nvme',
-    });
-
-    const volumes = [
-      newNVMeVolume,
-      nvmeVolumeUpgrading,
-      hddVolumeAttached,
-      hddVolumeAttached2,
-      hddVolumeUnattached,
-      volumeFactory.build({
-        status: 'contact_support',
-      }),
-      volumeFactory.build({
-        status: 'creating',
-      }),
-      volumeFactory.build({
-        status: 'deleting',
-      }),
-      volumeFactory.build({
-        status: 'resizing',
-      }),
+    const statuses: VolumeStatus[] = [
+      'active',
+      'creating',
+      'migrating',
+      'offline',
+      'resizing',
     ];
+    const volumes = statuses.map((status) => volumeFactory.build({ status }));
     return res(ctx.json(makeResourcePage(volumes)));
   }),
   rest.post('*/volumes', (req, res, ctx) => {
@@ -1213,6 +1186,22 @@ export const handlers = [
   //   const databases = [online, initializing, error, unknown];
   //   return res(ctx.json(makeResourcePage(databases)));
   // }),
+  rest.get('*/profile/tokens', (req, res, ctx) => {
+    return res(ctx.json(makeResourcePage(appTokenFactory.buildList(30))));
+  }),
+  rest.post('*/profile/tokens', (req, res, ctx) => {
+    const data = req.body as TokenRequest;
+    return res(ctx.json(appTokenFactory.build(data)));
+  }),
+  rest.put('*/profile/tokens/:id', (req, res, ctx) => {
+    const data = req.body as Partial<TokenRequest>;
+    return res(
+      ctx.json(appTokenFactory.build({ id: Number(req.params.id), ...data }))
+    );
+  }),
+  rest.delete('*/profile/tokens/:id', (req, res, ctx) => {
+    return res(ctx.json({}));
+  }),
   ...entityTransfers,
   ...statusPage,
   ...databases,

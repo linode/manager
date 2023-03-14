@@ -1,4 +1,4 @@
-import { Volume } from '@linode/api-v4';
+import { Image, KubernetesCluster, Volume } from '@linode/api-v4';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
@@ -12,6 +12,8 @@ import entitiesLoading from 'src/store/selectors/entitiesLoading';
 import getSearchEntities, {
   bucketToSearchableItem,
   domainToSearchableItem,
+  imageToSearchableItem,
+  kubernetesClusterToSearchableItem,
   volumeToSearchableItem,
 } from 'src/store/selectors/getSearchEntities';
 import { refinedSearch } from './refinedSearch';
@@ -27,7 +29,10 @@ interface HandlerProps {
     query: string,
     buckets: ObjectStorageBucket[],
     domains: Domain[],
-    volumes: Volume[]
+    volumes: Volume[],
+    clusters: KubernetesCluster[],
+    images: Image[],
+    searchableLinodes: SearchableItem<string | number>[]
   ) => SearchResults;
 }
 export interface SearchProps extends HandlerProps {
@@ -78,7 +83,10 @@ export default () => (Component: React.ComponentType<any>) => {
           query: string,
           objectStorageBuckets: ObjectStorageBucket[],
           domains: Domain[],
-          volumes: Volume[]
+          volumes: Volume[],
+          clusters: KubernetesCluster[],
+          images: Image[],
+          searchableLinodes: SearchableItem<string | number>[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
             bucketToSearchableItem(bucket)
@@ -89,12 +97,22 @@ export default () => (Component: React.ComponentType<any>) => {
           const searchableVolumes = volumes.map((volume) =>
             volumeToSearchableItem(volume)
           );
+          const searchableImages = images.map((image) =>
+            imageToSearchableItem(image)
+          );
+
+          const searchableClusters = clusters.map((cluster) =>
+            kubernetesClusterToSearchableItem(cluster)
+          );
           const results = search(
             [
+              ...searchableLinodes,
+              ...searchableImages,
               ...props.entities,
               ...searchableBuckets,
               ...searchableDomains,
               ...searchableVolumes,
+              ...searchableClusters,
             ],
             query
           );

@@ -1,10 +1,9 @@
 import { path } from 'ramda';
 import * as React from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
-import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
-import Logo from 'src/assets/logo/logo-footer.svg';
+import AkamaiLogo from 'src/assets/logo/akamai-logo.svg';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CancelLanding: React.FC<{}> = () => {
+export const CancelLanding = () => {
   const classes = useStyles();
   const location = useLocation();
 
@@ -53,11 +52,11 @@ export const CancelLanding: React.FC<{}> = () => {
 
   return (
     <div className={classes.root} data-testid="body">
-      <Logo className={classes.logo} />
+      <AkamaiLogo className={classes.logo} />
       <H1Header title="It&rsquo;s been our pleasure to serve you." />
       <Typography>
-        Your account is closed. We hope you&rsquo;ll consider Linode for your
-        future cloud hosting needs.
+        Your account is closed. We hope you&rsquo;ll consider us for your future
+        cloud hosting needs.
       </Typography>
       <Typography>
         Would you mind taking a brief survey? It will help us understand why
@@ -74,4 +73,4 @@ export const CancelLanding: React.FC<{}> = () => {
   );
 };
 
-export default compose<{}, {}>(React.memo)(CancelLanding);
+export default React.memo(CancelLanding);

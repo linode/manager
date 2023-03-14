@@ -106,7 +106,7 @@ export const setData = (
     return (object: any) => ({
       ...object,
       data: updatedData,
-      validationErrors: convertYupToLinodeErrors(error),
+      validationErrors: convertYupToLinodeErrors(error as ValidationError),
     });
   }
 };
@@ -115,7 +115,7 @@ export const setData = (
  * Attempt to convert a Yup error to our pattern. The only magic here is the recursive call
  * to itself since we have nested structures (think NodeBalancers).
  */
-const convertYupToLinodeErrors = (
+export const convertYupToLinodeErrors = (
   validationError: ValidationError
 ): APIError[] => {
   const { inner } = validationError;

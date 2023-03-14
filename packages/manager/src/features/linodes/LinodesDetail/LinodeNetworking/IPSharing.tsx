@@ -214,7 +214,7 @@ const IPSharingPanel: React.FC<CombinedProps> = (props) => {
           if (groupedUnsharedRanges.hasOwnProperty(linode_id)) {
             groupedUnsharedRanges[linode_id] = [
               ...groupedUnsharedRanges[linode_id],
-              [strippedIP],
+              strippedIP,
             ];
           } else {
             groupedUnsharedRanges[linode_id] = [strippedIP];

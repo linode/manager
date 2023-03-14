@@ -2,12 +2,16 @@
  * @file Cypress intercepts and mocks for Cloud Manager profile requests.
  */
 
+import { makeResponse } from 'support/util/response';
+import { paginateResponse } from 'support/util/paginate';
 import { makeErrorResponse } from 'support/util/errors';
+import { apiMatcher } from 'support/util/intercepts';
 import type {
   Profile,
   UserPreferences,
   SecurityQuestionsData,
   SecurityQuestionsPayload,
+  Token,
 } from '@linode/api-v4/types';
 
 /**
@@ -16,7 +20,7 @@ import type {
  * @returns Cypress chainable.
  */
 export const interceptGetProfile = (): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/profile');
+  return cy.intercept('GET', apiMatcher('profile'));
 };
 
 /**
@@ -27,7 +31,7 @@ export const interceptGetProfile = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/profile', profile);
+  return cy.intercept('GET', apiMatcher('profile'), profile);
 };
 
 /**
@@ -40,7 +44,7 @@ export const mockGetProfile = (profile: Profile): Cypress.Chainable<null> => {
 export const mockGetUserPreferences = (
   preferences: UserPreferences
 ): Cypress.Chainable<null> => {
-  return cy.intercept('GET', '*/profile/preferences', preferences);
+  return cy.intercept('GET', apiMatcher('profile/preferences'), preferences);
 };
 
 /**
@@ -49,7 +53,7 @@ export const mockGetUserPreferences = (
  * @returns Cypress chainable.
  */
 export const mockSmsVerificationOptOut = (): Cypress.Chainable<null> => {
-  return cy.intercept('DELETE', '*/profile/phone-number', {});
+  return cy.intercept('DELETE', apiMatcher('profile/phone-number'), {});
 };
 
 /**
@@ -58,7 +62,7 @@ export const mockSmsVerificationOptOut = (): Cypress.Chainable<null> => {
  * @returns Cypress chainable.
  */
 export const mockSendVerificationCode = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/profile/phone-number', {});
+  return cy.intercept('POST', apiMatcher('profile/phone-number'), {});
 };
 
 /**
@@ -75,7 +79,11 @@ export const mockVerifyVerificationCode = (
   errorMessage?: string | undefined
 ): Cypress.Chainable<null> => {
   const response = !!errorMessage ? makeErrorResponse(errorMessage) : {};
-  return cy.intercept('POST', '*/profile/phone-number/verify', response);
+  return cy.intercept(
+    'POST',
+    apiMatcher('profile/phone-number/verify'),
+    response
+  );
 };
 
 /**
@@ -90,7 +98,7 @@ export const mockGetSecurityQuestions = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'GET',
-    '*/profile/security-questions',
+    apiMatcher('profile/security-questions'),
     securityQuestionsData
   );
 };
@@ -107,7 +115,7 @@ export const mockUpdateSecurityQuestions = (
 ): Cypress.Chainable<null> => {
   return cy.intercept(
     'POST',
-    '*/profile/security-questions',
+    apiMatcher('profile/security-questions'),
     securityQuestionsPayload
   );
 };
@@ -124,7 +132,7 @@ export const mockEnableTwoFactorAuth = (
 ): Cypress.Chainable<null> => {
   // TODO Create an expiration date based on the current time.
   const expiry = '2025-05-01T03:59:59';
-  return cy.intercept('POST', '*/profile/tfa-enable', {
+  return cy.intercept('POST', apiMatcher('profile/tfa-enable'), {
     secret: secretString,
     expiry,
   });
@@ -136,7 +144,7 @@ export const mockEnableTwoFactorAuth = (
  * @returns Cypress chainable.
  */
 export const mockDisableTwoFactorAuth = (): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/profile/tfa-disable', {});
+  return cy.intercept('POST', apiMatcher('profile/tfa-disable'), {});
 };
 
 /**
@@ -149,7 +157,92 @@ export const mockDisableTwoFactorAuth = (): Cypress.Chainable<null> => {
 export const mockConfirmTwoFactorAuth = (
   scratchCode: string
 ): Cypress.Chainable<null> => {
-  return cy.intercept('POST', '*/profile/tfa-enable-confirm', {
+  return cy.intercept('POST', apiMatcher('profile/tfa-enable-confirm'), {
     scratch: scratchCode,
   });
+};
+
+/**
+ * Intercepts GET request to retrieve third party app tokens and mocks response.
+ *
+ * @param tokens - Array of third party app tokens with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetAppTokens = (tokens: Token[]): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/apps*'),
+    paginateResponse(tokens)
+  );
+};
+
+/**
+ * Intercepts GET request to retrieve personal access tokens and mocks response.
+ *
+ * @param tokens - Array of personal access tokens with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockGetPersonalAccessTokens = (
+  tokens: Token[]
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'GET',
+    apiMatcher('profile/tokens*'),
+    paginateResponse(tokens)
+  );
+};
+
+/**
+ * Intercepts POST request to create a personal access token and mocks response.
+ *
+ * @param token - Personal access token with which to respond.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockCreatePersonalAccessToken = (
+  token: Token
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'POST',
+    apiMatcher('profile/tokens'),
+    makeResponse(token)
+  );
+};
+
+/**
+ * Intercepts PUT request to update a personal access token and mocks response.
+ *
+ * @param id - ID of token for intercepted update request.
+ * @param updatedToken - Token data with which to mock response.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockUpdatePersonalAccessToken = (
+  id: number,
+  updatedToken: Token
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'PUT',
+    apiMatcher(`profile/tokens/${id}`),
+    makeResponse(updatedToken)
+  );
+};
+
+/**
+ * Intercepts DELETE request to revoke a personal access token and mocks response.
+ *
+ * @param id - ID of token for intercepted revoke request.
+ *
+ * @returns Cypress chainable.
+ */
+export const mockRevokePersonalAccessToken = (
+  id: number
+): Cypress.Chainable<null> => {
+  return cy.intercept(
+    'DELETE',
+    apiMatcher(`profile/tokens/${id}`),
+    makeResponse({})
+  );
 };

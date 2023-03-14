@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   expPanelSummary: {
-    backgroundColor:
-      theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
+    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     borderTop: `1px solid ${theme.bg.main}`,
     paddingTop: theme.spacing(),
   },

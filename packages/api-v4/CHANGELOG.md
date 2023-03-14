@@ -1,3 +1,24 @@
+
+## [2023-03-06] - v0.87.0
+
+### Added:
+- Increased minimum acceptable password strength for Linode root passwords
+- Removed zone types for LISH URL change
+- Account Logins Show `Successful` or `Failed` Access
+
+### Changed:
+- Update Node.js from 14.17.4 LTS to 18.14.1 LTS
+
+## [2023-02-07] - v0.86.0
+
+### Added:
+- Databases as a User Permissions Option
+- `label` to Region type
+- Token related events
+
+### Fixed:
+- `api-v4` CommonJS not accepted by Node.js
+
 ## [2023-01-09] - v0.85.0
 
 ### Added:

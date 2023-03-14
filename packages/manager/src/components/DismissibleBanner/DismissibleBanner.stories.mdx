@@ -4,7 +4,6 @@ import DismissibleBanner from './DismissibleBanner';
 import Grid from 'src/components/Grid';
 import Link from 'src/components/Link';
 import Typography from 'src/components/core/Typography';
-// import StatusBanners from 'src/features/Help/StatusBanners';
 
 <Meta
   title="Components/Notifications/Dismissible Banners"
@@ -123,15 +122,14 @@ Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-s
   </Story>
 </Canvas>
 
-<ArgsTable story="Dismissible Banners" include={['preferenceKey', 'children', 'options', 'text', 'success', 'error', 'warning', 'important', ]} />
+#### Beta
 
-<!-- The Status Banners story below can be restored once the MSW works in production builds of Storybook. --!>
-<!-- Status Banners appear on our `/support` pages and communicate information about data center connectivity and service issues. The information populating these banners is sourced from Statuspage and corresponds to incidents detailed at [status.linode.com](https://status.linode.com).
+Beta banners, along with [beta chips](/docs/elements-chips-beta-chips--default-story), provide notice to users about beta features.
 
 <Canvas>
-    <Story
-        name="StatusBanners"
-    >
-        {StatusBannersTemplate.bind({})}
-    </Story>
-</Canvas> -->
+  <Story name="Beta Banners">
+    {BetaBanner.bind({})}
+  </Story>
+</Canvas>
+
+<ArgsTable story="Dismissible Banners" exclude={['className']} sort="requiredFirst" />

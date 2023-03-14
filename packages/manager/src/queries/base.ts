@@ -159,7 +159,7 @@ export const itemInListMutationHandler = <
 };
 
 export const itemInListCreationHandler = <T, V, E = APIError[]>(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (createdEntity) => {
@@ -181,7 +181,7 @@ export const itemInListDeletionHandler = <
   V extends { id?: number | string },
   E = APIError[]
 >(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {
@@ -213,8 +213,8 @@ export const itemInListDeletionHandler = <
  * @param newData the new data for the entity
  */
 export const updateInPaginatedStore = <T extends { id: number | string }>(
-  queryKey: string,
-  id: number,
+  queryKey: QueryKey,
+  id: number | string,
   newData: Partial<T>
 ) => {
   queryClient.setQueriesData<ResourcePage<T> | undefined>(

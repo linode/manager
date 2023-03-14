@@ -18,20 +18,21 @@ import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementChec
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
 import { displayType } from 'src/features/linodes/presentation';
 import useExtendedLinode from 'src/hooks/useExtendedLinode';
-import { useImages } from 'src/hooks/useImages';
 import { useTypes } from 'src/hooks/useTypes';
 import {
   reportAgreementSigningError,
   useAccountAgreements,
   useMutateAccountAgreements,
 } from 'src/queries/accountAgreements';
+import { listToItemsByID } from 'src/queries/base';
+import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
 import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
 import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
@@ -85,9 +86,12 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const regions = useRegionsQuery().data ?? [];
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
-  const { images } = useImages();
+
+  const { data: imagesData } = useAllImagesQuery({}, {}, open);
+  const images = listToItemsByID(imagesData ?? []);
+
   const { data: profile } = useProfile();
-  const { data: agreements } = useAccountAgreements();
+  const { data: agreements } = useAccountAgreements(open);
   const { mutateAsync: updateAccountAgreements } = useMutateAccountAgreements();
 
   const [selectedRegion, handleSelectRegion] = React.useState<string | null>(
@@ -184,7 +188,7 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     linode.specs.disk,
     linode.specs.vcpus,
     linode.image ?? null,
-    images.itemsById
+    images
   );
 
   if (regions.length === 0) {

@@ -1,9 +1,11 @@
+import classNames from 'classnames';
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Button, { ButtonProps } from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import H1Header from 'src/components/H1Header';
+import { TransferDisplay } from '../TransferDisplay/TransferDisplay';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes scaleIn': {
@@ -26,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(5, 1fr) 35% 35% repeat(5, 1fr)',
     gridTemplateRows:
-      'max-content 12px max-content 7px max-content 15px max-content 24px max-content 111px min-content',
+      'max-content 12px max-content 7px max-content 15px max-content 24px max-content 64px min-content',
     gridTemplateAreas: `
       ". . . . . icon icon . . . . ."
       ". . . . . . . . . . . ."
@@ -41,6 +43,21 @@ const useStyles = makeStyles((theme: Theme) => ({
       ". . . links links links links links links . . ."
     `,
     justifyItems: 'center',
+  },
+  containerAdjustment: {
+    gridTemplateRows:
+      'max-content 12px max-content 7px max-content 15px max-content 24px max-content 40px',
+    gridTemplateAreas: `
+      ". . . . . icon icon . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . title title . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . subtitle subtitle . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . copy copy . . . . ."
+      ". . . . . . . . . . . ."
+      ". . . . . button button . . . . ."
+    `,
   },
   root: {
     padding: `${theme.spacing(2)} 0`,
@@ -62,11 +79,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '160px',
     padding: theme.spacing(2),
     '& .outerCircle': {
-      fill: theme.name === 'lightTheme' ? '#fff' : '#000',
+      fill: theme.name === 'light' ? '#fff' : '#000',
       stroke: theme.bg.offWhite,
     },
     '& .circle': {
-      fill: theme.name === 'lightTheme' ? '#fff' : '#000',
+      fill: theme.name === 'light' ? '#fff' : '#000',
     },
     '& .insidePath path': {
       opacity: 0,
@@ -111,10 +128,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linksSection: {
     gridArea: 'links',
-    borderTop: `1px solid ${
-      theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'
-    }`,
+    borderTop: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
     paddingTop: '38px',
+  },
+  linksSectionBottomSeparation: {
+    paddingBottom: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+      paddingBottom: theme.spacing(4),
+    },
+    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
   },
   iconWrapper: {
     gridArea: 'icon',
@@ -136,6 +158,7 @@ export interface Props {
   renderAsSecondary?: boolean;
   subtitle?: string;
   linksSection?: JSX.Element;
+  showTransferDisplay?: boolean;
 }
 
 const Placeholder: React.FC<Props> = (props) => {
@@ -147,52 +170,73 @@ const Placeholder: React.FC<Props> = (props) => {
     renderAsSecondary,
     subtitle,
     linksSection,
+    showTransferDisplay,
   } = props;
+
   const classes = useStyles();
+
   const hasSubtitle = subtitle !== undefined;
+
   return (
-    <div className={`${classes.container} ${classes.root} ${props.className}`}>
+    <>
       <div
-        className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}
+        className={classNames(props.className, {
+          [classes.container]: true,
+          [classes.root]: true,
+          [classes.containerAdjustment]:
+            showTransferDisplay && linksSection === undefined,
+        })}
       >
-        {Icon && <Icon className={classes.icon} />}
-      </div>
+        <div
+          className={`${classes.iconWrapper} ${isEntity ? classes.entity : ''}`}
+        >
+          {Icon && <Icon className={classes.icon} />}
+        </div>
 
-      <H1Header
-        title={title}
-        className={classes.title}
-        renderAsSecondary={renderAsSecondary}
-        data-qa-placeholder-title
-      />
-      {hasSubtitle ? (
-        <Typography variant="h2" className={classes.subtitle}>
-          {subtitle}
-        </Typography>
-      ) : null}
+        <H1Header
+          title={title}
+          className={classes.title}
+          renderAsSecondary={renderAsSecondary}
+          data-qa-placeholder-title
+        />
+        {hasSubtitle ? (
+          <Typography variant="h2" className={classes.subtitle}>
+            {subtitle}
+          </Typography>
+        ) : null}
 
-      <div className={classes.copy}>
-        {typeof props.children === 'string' ? (
-          <Typography variant="subtitle1">{props.children}</Typography>
-        ) : (
-          props.children
-        )}
+        <div className={classes.copy}>
+          {typeof props.children === 'string' ? (
+            <Typography variant="subtitle1">{props.children}</Typography>
+          ) : (
+            props.children
+          )}
+        </div>
+        <div className={classes.button}>
+          {buttonProps &&
+            buttonProps.map((thisButton, index) => (
+              <Button
+                buttonType="primary"
+                {...thisButton}
+                data-qa-placeholder-button
+                data-testid="placeholder-button"
+                key={index}
+              />
+            ))}
+        </div>
+        {linksSection !== undefined ? (
+          <div
+            className={classNames({
+              [classes.linksSection]: true,
+              [classes.linksSectionBottomSeparation]: showTransferDisplay,
+            })}
+          >
+            {linksSection}
+          </div>
+        ) : null}
       </div>
-      <div className={classes.button}>
-        {buttonProps &&
-          buttonProps.map((thisButton, index) => (
-            <Button
-              buttonType="primary"
-              {...thisButton}
-              data-qa-placeholder-button
-              data-testid="placeholder-button"
-              key={index}
-            />
-          ))}
-      </div>
-      <div className={classes.linksSection}>
-        {linksSection !== undefined ? linksSection : null}
-      </div>
-    </div>
+      {showTransferDisplay ? <TransferDisplay spacingTop={0} /> : null}
+    </>
   );
 };
 

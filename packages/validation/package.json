@@ -1,27 +1,27 @@
 {
   "name": "@linode/validation",
-  "version": "0.17.1",
+  "version": "0.19.0",
   "description": "Yup validation schemas for use with the Linode APIv4",
   "type": "module",
-  "main": "lib/index.js",
-  "module": "lib/esm/index.js",
+  "main": "lib/index.cjs",
+  "module": "lib/index.js",
   "exports": {
     ".": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./lib": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     },
     "./lib/*": {
-      "import": "./lib/esm/index.js",
-      "require": "./lib/index.js"
+      "import": "./lib/index.js",
+      "require": "./lib/index.cjs"
     }
   },
   "types": "./lib/index.d.ts",
-  "browser": "./lib/iife/index.js",
-  "unpkg": "./lib/iife/index.js",
+  "browser": "./lib/index.global.js",
+  "unpkg": "./lib/index.global.js",
   "files": [
     "lib"
   ],
@@ -49,9 +49,9 @@
     "eslint": "^6.8.0",
     "eslint-plugin-ramda": "^2.5.1",
     "eslint-plugin-sonarjs": "^0.5.0",
-    "lint-staged": "^9.4.2",
+    "lint-staged": "^13.2.0",
     "prettier": "~2.2.1",
-    "tsup": "6.2.1"
+    "tsup": "^6.6.3"
   },
   "keywords": [
     "linode",
@@ -61,8 +61,7 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "eslint --ext .js,.ts,.tsx",
-      "git add"
+      "eslint --ext .js,.ts,.tsx"
     ],
     ".{ts,tsx}": [
       "tsc -p tsconfig.json --noEmit true --emitDeclarationOnly false"

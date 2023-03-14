@@ -36,18 +36,6 @@ import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState,
 } from 'src/store/globalErrors';
-import images, {
-  defaultState as defaultImagesState,
-  State as ImagesState,
-} from 'src/store/image/image.reducer';
-import kubernetes, {
-  defaultState as defaultKubernetesState,
-  State as KubernetesState,
-} from 'src/store/kubernetes/kubernetes.reducer';
-import nodePools, {
-  defaultState as defaultNodePoolsState,
-  State as KubeNodePoolsState,
-} from 'src/store/kubernetes/nodePools.reducer';
 import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState,
@@ -109,7 +97,6 @@ import initialLoad, {
 } from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
-import imageEvents from './middleware/imageEvents';
 import mockFeatureFlags, {
   defaultMockFeatureFlagState,
   MockFeatureFlagState,
@@ -124,10 +111,6 @@ import pendingUpload, {
   defaultState as pendingUploadState,
   State as PendingUploadState,
 } from './pendingUpload';
-import preferences, {
-  defaultState as preferencesState,
-  State as PreferencesState,
-} from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
 import vlans, {
   defaultState as defaultVLANState,
@@ -142,9 +125,6 @@ initReselectDevtools();
  */
 const __resourcesDefaultState = {
   accountManagement: defaultAccountManagementState,
-  images: defaultImagesState,
-  kubernetes: defaultKubernetesState,
-  nodePools: defaultNodePoolsState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
@@ -157,9 +137,6 @@ const __resourcesDefaultState = {
 
 export interface ResourcesState {
   accountManagement: AccountManagementState;
-  images: ImagesState;
-  kubernetes: KubernetesState;
-  nodePools: KubeNodePoolsState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
@@ -181,7 +158,6 @@ export interface ApplicationState {
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
-  preferences: PreferencesState;
   pendingUpload: PendingUploadState;
   initialLoad: InitialLoadState;
   featureFlagsLoad: FeatureFlagsLoadState;
@@ -204,7 +180,6 @@ export const defaultState: ApplicationState = {
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
-  preferences: preferencesState,
   pendingUpload: pendingUploadState,
   initialLoad: initialLoadState,
   featureFlagsLoad: featureFlagsLoadState,
@@ -221,9 +196,6 @@ export const defaultState: ApplicationState = {
  */
 const __resources = combineReducers({
   accountManagement,
-  images,
-  kubernetes,
-  nodePools,
   linodes,
   linodeConfigs,
   linodeDisks,
@@ -245,7 +217,6 @@ const reducers = combineReducers<ApplicationState>({
   bucketDrawer,
   events,
   createLinode: linodeCreateReducer,
-  preferences,
   pendingUpload,
   initialLoad,
   featureFlagsLoad,
@@ -263,7 +234,6 @@ const enhancers = compose(
     combineEventsMiddleware(
       linodeEvents,
       longviewEvents,
-      imageEvents,
       nodeBalancerEvents,
       nodeBalancerConfigEvents,
       diskEvents,
