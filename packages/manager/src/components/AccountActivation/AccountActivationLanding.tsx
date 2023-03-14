@@ -52,7 +52,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <ErrorState
-      className={classes.icon}
+      iconClassName={classes.icon}
       CustomIcon={Warning}
       errorText={
         <React.Fragment>
