@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   cta: {
     ...theme.applyLinkStyles,
   },
+  icon: {
+    color: '#63A701', // Akamai green success color
+  },
 }));
 
 type CombinedProps = WithTheme & RouteComponentProps;
@@ -49,6 +52,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <ErrorState
+      className={classes.icon}
       CustomIcon={Warning}
       errorText={
         <React.Fragment>
