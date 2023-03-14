@@ -1,21 +1,29 @@
 import * as React from 'react';
 import Accordion from 'src/components/Accordion';
-import Typography from 'src/components/core/Typography';
-import Link from 'src/components/Link';
-import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { StyledHelpIcon } from './UserDataAccordion.styles';
+import Notice from 'src/components/Notice';
+import AcceptedFormats from './AcceptedFormats';
+import AccordionHeading from './AccordionHeading';
+import UserDataExplanatory from './UserDataExplanatory';
 
 interface Props {
   userData: string | undefined;
   onChange: (userData: string) => void;
   disabled?: boolean;
+  renderHeaderWarningMessage?: JSX.Element;
   renderNotice?: JSX.Element;
   renderCheckbox?: JSX.Element;
 }
 
 const UserDataAccordion = (props: Props) => {
-  const { disabled, userData, onChange, renderNotice, renderCheckbox } = props;
+  const {
+    disabled,
+    userData,
+    onChange,
+    renderHeaderWarningMessage,
+    renderNotice,
+    renderCheckbox,
+  } = props;
   const [formatWarning, setFormatWarning] = React.useState(false);
 
   const checkFormat = ({
@@ -30,10 +38,8 @@ const UserDataAccordion = (props: Props) => {
     const isUserDataValid = validPrefixes.some((prefix) =>
       userDataLower.startsWith(prefix)
     );
-    if (userData.length > 0 && !isUserDataValid) {
-      if (!hasInputValueChanged) {
-        setFormatWarning(true);
-      }
+    if (userData.length > 0 && !isUserDataValid && !hasInputValueChanged) {
+      setFormatWarning(true);
     } else {
       setFormatWarning(false);
     }
@@ -45,7 +51,7 @@ const UserDataAccordion = (props: Props) => {
 
   return (
     <Accordion
-      heading={accordionHeading}
+      heading={<AccordionHeading warningNotice={renderHeaderWarningMessage} />}
       style={{ marginTop: renderNotice && renderCheckbox ? 0 : 24 }} // for now, these props can be taken as an indicator we're in the Rebuild flow.
       headingProps={{
         variant: 'h2',
@@ -63,9 +69,9 @@ const UserDataAccordion = (props: Props) => {
       {renderNotice ? (
         <div data-testid="render-notice">{renderNotice}</div>
       ) : (
-        userDataExplanatoryCopy
+        <UserDataExplanatory />
       )}
-      {acceptedFormatsCopy}
+      <AcceptedFormats />
       {formatWarning ? (
         <Notice warning spacingTop={16} spacingBottom={16}>
           This user data may not be in a format accepted by cloud-init.
@@ -93,37 +99,3 @@ const UserDataAccordion = (props: Props) => {
 };
 
 export default UserDataAccordion;
-
-const accordionHeading = (
-  <>
-    Add User Data{' '}
-    <StyledHelpIcon
-      text={
-        <>
-          User data is part of a virtual machine&rsquo;s cloud-init metadata
-          containing information related to a user&rsquo;s local account.{' '}
-          <Link to="/">Learn more.</Link>
-        </>
-      }
-      interactive
-    />
-  </>
-);
-
-const userDataExplanatoryCopy = (
-  <Typography>
-    <Link to="https://cloudinit.readthedocs.io/en/latest/reference/examples.html">
-      User Data
-    </Link>{' '}
-    is part of a virtual machine&rsquo;s cloud-init metadata that contains
-    anything related to a user&rsquo;s local account, including username and
-    user group(s).
-  </Typography>
-);
-
-const acceptedFormatsCopy = (
-  <Typography>
-    <br /> Accepted formats are YAML and bash.{' '}
-    <Link to="https://www.linode.com/docs">Learn more.</Link>
-  </Typography>
-);

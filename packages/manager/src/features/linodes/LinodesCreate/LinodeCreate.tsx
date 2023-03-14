@@ -35,7 +35,7 @@ import { DefaultProps as ImagesProps } from 'src/containers/images.container';
 import { AppsDocs } from 'src/documentation';
 import EUAgreementCheckbox from 'src/features/Account/Agreements/EUAgreementCheckbox';
 import SMTPRestrictionText from 'src/features/linodes/SMTPRestrictionText';
-import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
+import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts,
@@ -531,15 +531,30 @@ export class LinodeCreate extends React.PureComponent<
       });
     }
 
-    let showUserData = false;
-    if (
+    const selectedLinode = this.props.linodesData?.find(
+      (image) => image.id === this.props.selectedLinodeID
+    );
+
+    const imageIsCloudInitCompatible =
       this.props.selectedImageID &&
       this.props.imagesData[this.props.selectedImageID]?.capabilities?.includes(
         'cloud-init'
-      )
-    ) {
-      showUserData = true;
-    }
+      );
+
+    const linodeIsCloudInitCompatible =
+      this.props.selectedLinodeID &&
+      selectedLinode?.image &&
+      this.props.imagesData[selectedLinode?.image]?.capabilities?.includes(
+        'cloud-init'
+      );
+
+    const showUserData =
+      imageIsCloudInitCompatible || linodeIsCloudInitCompatible;
+
+    const userDataHeaderWarningMessage =
+      this.props.createType === 'fromBackup'
+        ? 'Existing user data is not available when creating a Linode from a backup.'
+        : 'User data is not cloned.';
 
     return (
       <form className={classes.form}>
@@ -745,6 +760,11 @@ export class LinodeCreate extends React.PureComponent<
             <UserDataAccordion
               userData={this.props.userData}
               onChange={updateUserData}
+              renderHeaderWarningMessage={
+                <Notice warning spacingTop={16} spacingBottom={16}>
+                  {userDataHeaderWarningMessage}
+                </Notice>
+              }
             />
           ) : null}
           <AddonsPanel

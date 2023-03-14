@@ -20,7 +20,7 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
-import UserDataAccordion from 'src/features/linodes/UserDataAccordion';
+import UserDataAccordion from 'src/features/linodes/LinodesCreate/UserDataAccordion/UserDataAccordion';
 import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
