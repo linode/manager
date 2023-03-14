@@ -1,12 +1,11 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { HeaderProps } from 'src/components/EntityHeader/EntityHeader';
 import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
 import DocsLink from '../DocsLink';
 import Grid from '@mui/material/Grid';
 import { useTheme, styled } from '@mui/material/styles';
 
-export interface Props extends Omit<HeaderProps, 'actions'> {
+export interface Props {
   analyticsLabel?: string;
   breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
