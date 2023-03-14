@@ -8,7 +8,6 @@ import {
   mockUpdateSecurityQuestions,
 } from 'support/intercepts/profile';
 import { ui } from 'support/ui';
-import { assertToast } from 'support/ui/events';
 
 /**
  * Finds the "Security Questions" section on the profile auth page.
@@ -159,7 +158,7 @@ describe('Account security questions', () => {
       .should('be.enabled')
       .click();
 
-    assertToast('You must answer all 3 security questions.');
+    ui.toast.assertMessage('You must answer all 3 security questions.');
 
     setSecurityQuestionAnswer(
       2,
@@ -180,7 +179,7 @@ describe('Account security questions', () => {
       .click();
 
     cy.wait('@setSecurityQuestions');
-    assertToast('Successfully added your security questions');
+    ui.toast.assertMessage('Successfully added your security questions');
 
     // Confirm that TFA security questions warning goes away after answering security questions.
     cy.contains(tfaSecurityQuestionsWarning).should('not.exist');
@@ -306,7 +305,7 @@ describe('Account security questions', () => {
       .click();
     cy.wait('@setSecurityQuestions');
 
-    assertToast('Successfully updated your security questions');
+    ui.toast.assertMessage('Successfully updated your security questions');
 
     // Confirm that 'Update Security Questions' button is disabled again.
     ui.button

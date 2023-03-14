@@ -1,4 +1,3 @@
-import { assertToast } from 'support/ui/events';
 import {
   containsClick,
   containsVisible,
@@ -7,6 +6,7 @@ import {
   getClick,
 } from 'support/helpers';
 import { selectRegionString } from 'support/ui/constants';
+import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 import { randomString, randomLabel } from 'support/util/random';
 
@@ -26,7 +26,7 @@ describe('create linode', () => {
     cy.get('#root-password').type(rootpass);
     getClick('[data-qa-deploy-linode]');
     cy.wait('@linodeCreated').its('response.statusCode').should('eq', 200);
-    assertToast(`Your Linode ${linodeLabel} is being created.`);
+    ui.toast.assertMessage(`Your Linode ${linodeLabel} is being created.`);
     containsVisible('PROVISIONING');
     fbtVisible(linodeLabel);
     cy.contains('RUNNING', { timeout: 300000 }).should('be.visible');
