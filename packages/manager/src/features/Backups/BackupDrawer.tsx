@@ -315,7 +315,9 @@ const connected = connect(mapStateToProps, mapDispatchToProps);
 
 const enhanced = compose<CombinedProps, {}>(
   connected,
-  withSpecificTypes,
+  // this awkward line avoids fetching all types until this dialog is opened
+  (comp: React.ComponentType<CombinedProps>) => (props: CombinedProps) =>
+    withSpecificTypes(comp, props.open)(props),
   withSnackbar
 );
 

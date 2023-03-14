@@ -34,10 +34,11 @@ export const withTypes = <Props>(
 };
 
 export const withSpecificTypes = <Props>(
-  Component: React.ComponentType<Props & WithSpecificTypesProps>
+  Component: React.ComponentType<Props & WithSpecificTypesProps>,
+  enabled = true
 ) => (props: Props) => {
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
-  const typesQuery = useSpecificTypes(requestedTypes);
+  const typesQuery = useSpecificTypes(requestedTypes, enabled);
   const requestedTypesData = typesQuery
     .map((result) => result.data)
     .filter(isNotNullOrUndefined);

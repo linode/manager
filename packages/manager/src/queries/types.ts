@@ -33,12 +33,13 @@ export const useAllTypes = (enabled = true) => {
  * Some Linodes may have types that aren't returned by the /types and /types-legacy endpoints. This
  * hook may be useful in fetching these "shadow plans".
  */
-export const useSpecificTypes = (types: string[]) => {
+export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
   return useQueries(
     types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
       queryKey: [queryKey, type],
       queryFn: () => getSingleType(type, queryClient),
+      enabled,
       ...queryPresets.oneTimeFetch,
     }))
   );

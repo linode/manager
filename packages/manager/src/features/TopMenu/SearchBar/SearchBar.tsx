@@ -128,7 +128,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     Object.values(state.__resources.linodes.itemsById)
   );
   const typesQuery = useSpecificTypes(
-    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined)
+    linodes.map((linode) => linode.type).filter(isNotNullOrUndefined),
+    shouldMakeRequests
   );
   const types = typesQuery
     .map((result) => result.data)
