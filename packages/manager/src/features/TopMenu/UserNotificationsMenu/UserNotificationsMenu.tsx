@@ -37,12 +37,10 @@ const styles = (theme: Theme) =>
         margin: 0,
         padding: '16px 32px 16px 23px',
         borderBottom:
-          theme.name === 'darkTheme'
-            ? '1px solid #f4f4f4'
-            : '1px solid #fbfbfb',
+          theme.name === 'dark' ? '1px solid #f4f4f4' : '1px solid #fbfbfb',
         transition: 'background-color 225ms ease-in-out',
         '&:hover': {
-          backgroundColor: theme.name === 'darkTheme' ? '#111111' : '#f4f4f4',
+          backgroundColor: theme.name === 'dark' ? '#111111' : '#f4f4f4',
         },
         ...theme.typography.h3,
         '& p': {

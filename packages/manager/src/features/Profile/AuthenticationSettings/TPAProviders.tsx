@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   button: {
     borderRadius: 1,
-    backgroundColor: theme.name === 'lightTheme' ? '#f5f6f7' : '#444',
+    backgroundColor: theme.name === 'light' ? '#f5f6f7' : '#444',
     marginTop: theme.spacing(),
     minHeight: 70,
     paddingRight: `calc(${theme.spacing(3)} - 4px)`,

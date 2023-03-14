@@ -863,13 +863,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
+      compose<State, State, State>(
+        set(L.sslCertificateLens, ''),
+        set(L.privateKeyLens, '')
+      )
     );
   };
 
   afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
+      compose<State, State, State, State, State>(
         set(
           L.checkBodyLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_body
@@ -883,7 +886,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           L.healthCheckIntervalLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]
             .check_interval
-        ) as () => string,
+        ),
         set(
           L.healthCheckTimeoutLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]

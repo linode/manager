@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: theme.name === 'lightTheme' ? '#000' : '#fff',
+    backgroundColor: theme.name === 'light' ? '#000' : '#fff',
     border: 0,
     borderRadius: 4,
     cursor: 'pointer',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       transition: 'none',
     },
     '& svg': {
-      color: theme.name === 'lightTheme' ? '#fff' : '#616161',
+      color: theme.name === 'light' ? '#fff' : '#616161',
       height: 16,
     },
     [theme.breakpoints.down('md')]: {

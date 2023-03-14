@@ -243,7 +243,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       updateGrants(username, { global: grants.global })
         .then((grantsResponse) => {
           this.setState(
-            compose(
+            compose<State, State, State>(
               set(lensPath(['grants', 'global']), grantsResponse.global),
               set(lensPath(['originalGrants', 'global']), grantsResponse.global)
             )

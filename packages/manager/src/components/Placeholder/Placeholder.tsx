@@ -80,11 +80,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     height: '160px',
     padding: theme.spacing(2),
     '& .outerCircle': {
-      fill: theme.name === 'lightTheme' ? '#fff' : '#000',
+      fill: theme.name === 'light' ? '#fff' : '#000',
       stroke: theme.bg.offWhite,
     },
     '& .circle': {
-      fill: theme.name === 'lightTheme' ? '#fff' : '#000',
+      fill: theme.name === 'light' ? '#fff' : '#000',
     },
     '& .insidePath path': {
       opacity: 0,
@@ -129,9 +129,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   linksSection: {
     gridArea: 'links',
-    borderTop: `1px solid ${
-      theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'
-    }`,
+    borderTop: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
     paddingTop: '38px',
   },
   linksSectionBottomSeparation: {
@@ -139,9 +137,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('md')]: {
       paddingBottom: theme.spacing(4),
     },
-    borderBottom: `1px solid ${
-      theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238'
-    }`,
+    borderBottom: `1px solid ${theme.name === 'light' ? '#e3e5e8' : '#2e3238'}`,
   },
   iconWrapper: {
     gridArea: 'icon',

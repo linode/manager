@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   status: {
+    textTransform: 'capitalize',
     display: 'flex',
     alignItems: 'center',
     whiteSpace: 'nowrap',

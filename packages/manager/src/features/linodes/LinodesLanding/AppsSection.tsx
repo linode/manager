@@ -6,7 +6,7 @@ import PointerIcon from 'src/assets/icons/pointer.svg';
 import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const isDarkTheme = theme.name === 'darkTheme';
+  const isDarkTheme = theme.name === 'dark';
   const backgroundColor = isDarkTheme
     ? theme.bg.primaryNavPaper
     : theme.bg.offWhite;

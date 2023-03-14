@@ -9,8 +9,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(),
   },
   example: {
-    backgroundColor:
-      theme.name === 'darkTheme' ? theme.bg.white : theme.bg.offWhite,
+    backgroundColor: theme.name === 'dark' ? theme.bg.white : theme.bg.offWhite,
     margin: `${theme.spacing(2)} 0`,
     padding: theme.spacing(2),
   },

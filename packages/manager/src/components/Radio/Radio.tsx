@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: '10px 10px',
     transition: theme.transitions.create(['color']),
     '& .defaultFill': {
+      fill: theme.color.white,
       transition: theme.transitions.create(['fill']),
     },
     '&:hover': {

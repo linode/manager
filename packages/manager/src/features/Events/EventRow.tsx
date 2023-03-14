@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   row: {
     '&:hover': {
       backgroundColor:
-        theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
+        theme.name === 'light' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
     },
   },
   icon: {

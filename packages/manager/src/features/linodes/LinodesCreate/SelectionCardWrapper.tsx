@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(1)} 0`,
   },
   selectionCard: {
-    mixBlendMode: theme.name === 'darkTheme' ? 'initial' : 'darken',
+    mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
     '& .cardBaseIcon': {
       width: 40,
       paddingRight: 0,

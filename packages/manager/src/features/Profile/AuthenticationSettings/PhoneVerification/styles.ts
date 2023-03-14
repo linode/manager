@@ -46,7 +46,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   label: {
     marginTop: theme.spacing(2),
-    color: theme.name === 'lightTheme' ? '#555' : '#c9cacb',
+    color: theme.name === 'light' ? '#555' : '#c9cacb',
     padding: 0,
     fontSize: '.875rem',
     fontWeight: 400,
@@ -55,12 +55,12 @@ export const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWebBold',
   },
   inputContainer: {
-    border: theme.name === 'lightTheme' ? '1px solid #ccc' : '1px solid #222',
+    border: theme.name === 'light' ? '1px solid #ccc' : '1px solid #222',
     width: 'fit-content',
     transition: 'border-color 225ms ease-in-out',
   },
   focused:
-    theme.name === 'lightTheme'
+    theme.name === 'light'
       ? {
           boxShadow: '0 0 2px 1px #e1edfa',
           borderColor: '#3683dc',

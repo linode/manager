@@ -323,7 +323,8 @@ const DisplayGroupedLinodes: React.FC<CombinedProps> = (props) => {
                               pageSize={pageSize}
                               page={page}
                               eventCategory={'linodes landing'}
-                              showAll
+                              // Disabling showAll as it is impacting page performance.
+                              showAll={false}
                             />
                           </TableCell>
                         </TableRow>
