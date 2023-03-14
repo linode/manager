@@ -73,17 +73,15 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
     );
   } else {
     return (
-      <>
-        <Button
-          className={`${className} ${classes.btnRoot}`}
-          onClick={onClick}
-          disabled={disabled}
-          loading={loading}
-          tooltipText={tooltip}
-        >
-          {actionText}
-        </Button>
-      </>
+      <Button
+        className={`${className} ${classes.btnRoot}`}
+        onClick={onClick}
+        disabled={disabled}
+        loading={loading}
+        tooltipText={tooltip}
+      >
+        {actionText}
+      </Button>
     );
   }
 };

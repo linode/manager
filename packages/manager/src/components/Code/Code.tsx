@@ -8,12 +8,12 @@ interface Props {
 const Code = (props: Props) => {
   const { children } = props;
 
-  return <Span>{children}</Span>;
+  return <StyledSpan>{children}</StyledSpan>;
 };
 
 export default Code;
 
-const Span = styled('span')(({ theme }) => ({
+const StyledSpan = styled('span')(({ theme }) => ({
   backgroundColor: theme.color.grey8,
   fontWeight: 'bold',
   fontFamily: 'Courier',
