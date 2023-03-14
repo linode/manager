@@ -3,7 +3,7 @@ import Link from 'src/components/Link';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Box from 'src/components/core/Box';
-import Logo from 'src/assets/logo/logo.svg';
+import Logo from 'src/assets/logo/akamai-logo.svg';
 import ErrorState from 'src/components/ErrorState';
 import BuildIcon from '@mui/icons-material/Build';
 
@@ -11,6 +11,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   bgStyling: {
     backgroundColor: theme.bg.main,
     minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column',
   },
   maintenanceWrapper: {
     padding: theme.spacing(4),
@@ -46,7 +49,7 @@ export const MaintenanceScreen: React.FC<{}> = () => {
     <Typography className={classes.subheading}>
       Visit{' '}
       <Link to="https://status.linode.com/">https://status.linode.com</Link> for
-      updates on the Linode Cloud Manager and API.
+      updates on the Cloud Manager and API.
     </Typography>
   );
 
@@ -56,9 +59,10 @@ export const MaintenanceScreen: React.FC<{}> = () => {
         <Box
           style={{
             display: 'flex',
+            justifyContent: 'center',
           }}
         >
-          <Logo width={115} height={43} className={classes.logo} />
+          <Logo width={215} className={classes.logo} />
         </Box>
 
         <ErrorState

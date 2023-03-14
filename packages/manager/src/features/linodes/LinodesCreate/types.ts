@@ -4,9 +4,9 @@ import {
   Linode,
   LinodeTypeClass,
 } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
 import { StackScript, UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
-import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
 import { ExtendedType } from 'src/utilities/extendType';
@@ -45,7 +45,7 @@ export interface WithLinodesProps {
 }
 
 export interface WithRegionsProps {
-  regionsData: ExtendedRegion[];
+  regionsData: Region[];
   regionsLoading: boolean;
   regionsError?: APIError[];
 }
@@ -56,7 +56,7 @@ export interface WithRegionsProps {
  * safe-guarded with null, loading, and error checking
  */
 export interface WithTypesRegionsAndImages {
-  regionsData: ExtendedRegion[];
+  regionsData: Region[];
   typesData?: ExtendedType[];
   imagesData: Record<string, Image>;
 }

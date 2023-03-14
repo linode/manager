@@ -4,13 +4,13 @@ import Hidden from 'src/components/core/Hidden';
 import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
 import SelectableTableRow from 'src/components/SelectableTableRow';
 import TableCell from 'src/components/TableCell/TableCell';
-import { dcDisplayNames } from 'src/constants';
 import TableContentWrapper from 'src/components/TableContentWrapper';
 import { useSpecificTypes } from 'src/queries/types';
 import { Entity, TransferEntity } from './transferReducer';
 import TransferTable from './TransferTable';
 import { useLinodesByIdQuery } from 'src/queries/linodes';
 import { usePagination } from 'src/hooks/usePagination';
+import { useRegionsQuery } from 'src/queries/regions';
 
 interface Props {
   selectedLinodes: TransferEntity;
@@ -108,8 +108,11 @@ const LinodeRow: React.FC<RowProps> = (props) => {
   const { linode, isChecked, handleToggleCheck } = props;
   const typesQuery = useSpecificTypes(linode.type ? [linode.type] : []);
   const type = typesQuery[0]?.data;
-  const displayRegion = dcDisplayNames[linode.region] ?? linode.region;
   const displayType = type?.label ?? linode.type;
+
+  const { data: regions } = useRegionsQuery();
+  const region = regions?.find((r) => r.id === linode.region);
+  const displayRegion = region?.label ?? linode.region;
   return (
     <SelectableTableRow
       isChecked={isChecked}

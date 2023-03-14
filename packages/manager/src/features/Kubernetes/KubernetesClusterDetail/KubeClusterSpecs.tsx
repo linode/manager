@@ -3,11 +3,11 @@ import * as React from 'react';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { dcDisplayNames } from 'src/constants';
 import { useAllKubernetesNodePoolQuery } from 'src/queries/kubernetes';
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { useRegionsQuery } from 'src/queries/regions';
 import { pluralize } from 'src/utilities/pluralize';
 import {
   getTotalClusterMemoryCPUAndStorage,
@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const KubeClusterSpecs = (props: Props) => {
   const { cluster } = props;
   const classes = useStyles();
+  const { data: regions } = useRegionsQuery();
 
   const { data: pools } = useAllKubernetesNodePoolQuery(cluster.id);
 
@@ -62,11 +63,13 @@ export const KubeClusterSpecs = (props: Props) => {
     types ?? []
   );
 
-  const region = dcDisplayNames[cluster.region] || 'Unknown region';
+  const region = regions?.find((r) => r.id === cluster.region);
+
+  const displayRegion = region?.label ?? cluster.region;
 
   const kubeSpecsLeft = [
     `Version ${cluster.k8s_version}`,
-    region,
+    displayRegion,
     `$${getTotalClusterPrice(
       pools ?? [],
       types ?? [],

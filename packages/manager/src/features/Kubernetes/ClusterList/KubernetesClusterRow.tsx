@@ -8,7 +8,6 @@ import TableRow from 'src/components/TableRow';
 import ActionMenu from './ClusterActionMenu';
 import { Link } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import { dcDisplayNames } from 'src/constants';
 import { KubeNodePoolResponse, KubernetesCluster } from '@linode/api-v4';
 import {
   getNextVersion,
@@ -21,6 +20,7 @@ import {
 import { useSpecificTypes } from 'src/queries/types';
 import { extendType } from 'src/utilities/extendType';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
+import { useRegionsQuery } from 'src/queries/regions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   link: {
@@ -71,6 +71,9 @@ export const KubernetesClusterRow = (props: Props) => {
     .map((result) => result.data)
     .filter(isNotNullOrUndefined)
     .map(extendType);
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find((r) => r.id === cluster.region);
 
   const nextVersion = getNextVersion(cluster.k8s_version, versions ?? []);
 
@@ -140,7 +143,7 @@ export const KubernetesClusterRow = (props: Props) => {
         </TableCell>
       </Hidden>
       <TableCell data-qa-cluster-region>
-        {dcDisplayNames[cluster.region] ?? cluster.region}
+        {region?.label ?? cluster.region}
       </TableCell>
       <Hidden smDown>
         <TableCell data-qa-cluster-memory>{`${RAM / 1024} GB`}</TableCell>

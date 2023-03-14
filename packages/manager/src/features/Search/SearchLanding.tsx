@@ -23,6 +23,7 @@ import {
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
 import { useSpecificTypes } from 'src/queries/types';
+import { useRegionsQuery } from 'src/queries/regions';
 import { useAllVolumesQuery } from 'src/queries/volumes';
 import { ApplicationState } from 'src/store';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
@@ -143,6 +144,8 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     !_isLargeAccount
   );
 
+  const { data: regions } = useRegionsQuery();
+
   const linodes = useSelector((state: ApplicationState) =>
     Object.values(state.__resources.linodes.itemsById)
   );
@@ -209,6 +212,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
         volumes ?? [],
         kubernetesClusters ?? [],
         _privateImages ?? [],
+        regions ?? [],
         searchableLinodes ?? []
       );
     }
@@ -223,6 +227,7 @@ export const SearchLanding: React.FC<CombinedProps> = (props) => {
     volumes,
     kubernetesClusters,
     _privateImages,
+    regions,
   ]);
 
   const getErrorMessage = (errors: ErrorObject): string => {

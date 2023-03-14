@@ -3,6 +3,7 @@ import { getImages, Image } from '@linode/api-v4/lib/images';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
 import { getLinodes } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
+import { Region } from '@linode/api-v4/lib/regions';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
 import React from 'react';
@@ -12,6 +13,7 @@ import useAccountManagement from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useSpecificTypes } from 'src/queries/types';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   domainToSearchableItem,
   formatLinode,
@@ -33,6 +35,7 @@ interface Search {
 export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
   const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
+  const { data: regions } = useRegionsQuery();
 
   const [requestedTypes, setRequestedTypes] = React.useState<string[]>([]);
   const typesQuery = useSpecificTypes(requestedTypes);
@@ -55,8 +58,9 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
       return requestEntities(
         searchText,
         types ?? [],
-        images,
         setRequestedTypes,
+        images,
+        regions ?? [],
         _isRestrictedUser
       ).then((results) => {
         const combinedResults = refinedSearch(searchText, results);
@@ -101,8 +105,9 @@ const params = { page_size: API_MAX_PAGE_SIZE };
 const requestEntities = (
   searchText: string,
   types: ExtendedType[],
-  images: Record<string, Image>,
   setRequestedTypes: (types: string[]) => void,
+  images: Record<string, Image>,
+  regions: Region[],
   isRestricted: boolean = false
 ) => {
   return Promise.all([
@@ -140,7 +145,9 @@ const requestEntities = (
           // Can't filter LKE by label (or anything maybe?)
           // But no one has more than 500, so this is fine for the short term.
           // @todo replace with generateFilter() when LKE-1889 is complete
-          results.data.map(kubernetesClusterToSearchableItem)
+          results.data.map((cluster) =>
+            kubernetesClusterToSearchableItem(cluster, regions)
+          )
         )
       : Promise.resolve([]),
     // API filtering on Object Storage buckets does not work.

@@ -1,6 +1,6 @@
 import { UserPreferences } from '@linode/api-v4';
-import { ThemeChoice } from 'src/LinodeThemeWrapper';
 import { Order } from 'src/components/Pagey';
+import { ThemeChoice } from 'src/utilities/theme';
 
 export interface OrderSet {
   order: Order;

@@ -9,7 +9,7 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { formatRegion } from 'src/utilities';
+import { useRegionsQuery } from 'src/queries/regions';
 import LinodeSelect from '../LinodeSelect';
 import {
   EstimatedCloneTimeMode,
@@ -102,6 +102,10 @@ export const Configs: React.FC<Props> = (props) => {
     handleClone,
     clearAll,
   } = props;
+
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find((r) => r.id === thisLinodeRegion);
 
   const classes = useStyles();
 
@@ -238,7 +242,7 @@ export const Configs: React.FC<Props> = (props) => {
       )}
 
       <Typography>
-        Current Datacenter: {formatRegion(thisLinodeRegion)}
+        Current Datacenter: {region?.label ?? thisLinodeRegion}
       </Typography>
 
       {/* Show the estimated clone time if we're able to submit the form. */}

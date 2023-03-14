@@ -683,7 +683,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedRegion && {
-        title: selectedRegion.display,
+        title: selectedRegion.label,
       }
     );
   };
