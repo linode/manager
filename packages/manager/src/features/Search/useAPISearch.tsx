@@ -3,6 +3,7 @@ import { getImages, Image } from '@linode/api-v4/lib/images';
 import { getKubernetesClusters } from '@linode/api-v4/lib/kubernetes';
 import { getLinodes, LinodeType } from '@linode/api-v4/lib/linodes';
 import { getNodeBalancers } from '@linode/api-v4/lib/nodebalancers';
+import { Region } from '@linode/api-v4/lib/regions';
 import { getVolumes } from '@linode/api-v4/lib/volumes';
 import { flatten } from 'ramda';
 import { useCallback } from 'react';
@@ -10,6 +11,7 @@ import { API_MAX_PAGE_SIZE } from 'src/constants';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+import { useRegionsQuery } from 'src/queries/regions';
 import store from 'src/store';
 import {
   domainToSearchableItem,
@@ -30,6 +32,7 @@ interface Search {
 export const useAPISearch = (conductedSearch: boolean): Search => {
   const { _isRestrictedUser } = useAccountManagement();
   const { data: _images } = useAllImagesQuery({}, {}, conductedSearch);
+  const { data: regions } = useRegionsQuery();
 
   const images = listToItemsByID(_images ?? []);
 
@@ -45,15 +48,19 @@ export const useAPISearch = (conductedSearch: boolean): Search => {
 
       const types = resources.types.entities as LinodeType[];
 
-      return requestEntities(searchText, types, images, _isRestrictedUser).then(
-        (results) => {
-          const combinedResults = refinedSearch(searchText, results);
-          return {
-            combinedResults,
-            searchResultsByEntity: separateResultsByEntity(combinedResults),
-          };
-        }
-      );
+      return requestEntities(
+        searchText,
+        types,
+        images,
+        regions ?? [],
+        _isRestrictedUser
+      ).then((results) => {
+        const combinedResults = refinedSearch(searchText, results);
+        return {
+          combinedResults,
+          searchResultsByEntity: separateResultsByEntity(combinedResults),
+        };
+      });
     },
     [_isRestrictedUser, images]
   );
@@ -91,6 +98,7 @@ const requestEntities = (
   searchText: string,
   types: LinodeType[],
   images: Record<string, Image>,
+  regions: Region[],
   isRestricted: boolean = false
 ) => {
   return Promise.all([
@@ -124,7 +132,9 @@ const requestEntities = (
           // Can't filter LKE by label (or anything maybe?)
           // But no one has more than 500, so this is fine for the short term.
           // @todo replace with generateFilter() when LKE-1889 is complete
-          results.data.map(kubernetesClusterToSearchableItem)
+          results.data.map((cluster) =>
+            kubernetesClusterToSearchableItem(cluster, regions)
+          )
         )
       : Promise.resolve([]),
     // API filtering on Object Storage buckets does not work.

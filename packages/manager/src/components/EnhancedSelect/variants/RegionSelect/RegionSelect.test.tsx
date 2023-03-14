@@ -1,13 +1,13 @@
-import { extendedRegions } from 'src/__data__/regionsData';
+import { regions } from 'src/__data__/regionsData';
 import { getRegionOptions, getSelectedRegionById } from './RegionSelect';
 
-const fakeRegion = { ...extendedRegions[0], country: 'NZ' };
+const fakeRegion = { ...regions[0], country: 'NZ' };
 
 describe('SelectRegionPanel', () => {
   describe('helper functions', () => {
     describe('getRegionOptions', () => {
       it('should return a list of items grouped by country', () => {
-        const groupedRegions = getRegionOptions(extendedRegions);
+        const groupedRegions = getRegionOptions(regions);
         const [r1, r2, r3] = groupedRegions;
         expect(groupedRegions).toHaveLength(3);
         expect(r1.options).toHaveLength(5);
@@ -24,11 +24,11 @@ describe('SelectRegionPanel', () => {
 
     describe('getSelectedRegionById', () => {
       it('should return the matching Item from a list of GroupedItems', () => {
-        const groupedRegions = getRegionOptions(extendedRegions);
-        const selectedID = extendedRegions[1].id;
+        const groupedRegions = getRegionOptions(regions);
+        const selectedID = regions[1].id;
         expect(
           getSelectedRegionById(selectedID, groupedRegions)
-        ).toHaveProperty('value', extendedRegions[1].id);
+        ).toHaveProperty('value', regions[1].id);
       });
     });
   });

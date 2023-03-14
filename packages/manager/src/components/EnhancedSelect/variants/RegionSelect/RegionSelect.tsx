@@ -17,13 +17,8 @@ import Select, {
 } from 'src/components/EnhancedSelect/Select';
 import RegionOption, { RegionItem } from './RegionOption';
 
-export interface ExtendedRegion extends Region {
-  display: string;
-  disabled?: boolean;
-}
-
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
-  regions: ExtendedRegion[];
+  regions: Region[];
   handleSelection: (id: string) => void;
   selectedID: string | null;
   label?: string;
@@ -70,8 +65,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const getRegionOptions = (regions: ExtendedRegion[]) => {
-  const groupedRegions = groupBy<ExtendedRegion>((thisRegion) => {
+export const getRegionOptions = (regions: Region[]) => {
+  const groupedRegions = groupBy<Region>((thisRegion) => {
     if (thisRegion.country.match(/(us|ca)/)) {
       return 'North America';
     }
@@ -97,7 +92,7 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
           label: thisGroup,
           options: groupedRegions[thisGroup]
             .map((thisRegion) => ({
-              label: `${thisRegion.display} (${thisRegion.id})`,
+              label: `${thisRegion.label} (${thisRegion.id})`,
               value: thisRegion.id,
               flag:
                 flags[thisRegion.country.toLocaleLowerCase()] ?? (() => null),

@@ -26,7 +26,6 @@ import EntityHeader from 'src/components/EntityHeader';
 import Grid, { GridProps } from 'src/components/Grid';
 import TableRow from 'src/components/TableRow';
 import TagCell from 'src/components/TagCell';
-import { dcDisplayNames } from 'src/constants';
 import LinodeActionMenu from 'src/features/linodes/LinodesLanding/LinodeActionMenu';
 import { ProgressDisplay } from 'src/features/linodes/LinodesLanding/LinodeRow/LinodeRow';
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
@@ -37,6 +36,7 @@ import useReduxLoad from 'src/hooks/useReduxLoad';
 import { useTypes } from 'src/hooks/useTypes';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
+import { useRegionsQuery } from 'src/queries/regions';
 import { ExtendedType } from 'src/store/linodeType/linodeType.reducer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -99,6 +99,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
   useReduxLoad(['types']);
   const { types } = useTypes();
 
+  const { data: regions } = useRegionsQuery();
+
   const imageSlug = linode.image;
 
   const imageVendor =
@@ -112,7 +114,8 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   const linodePlan = linodeType?.label ?? null;
 
-  const linodeRegionDisplay = dcDisplayNames[linode.region] ?? null;
+  const linodeRegionDisplay =
+    regions?.find((r) => r.id === linode.region)?.label ?? linode.region;
 
   let progress;
   let transitionText;

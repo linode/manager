@@ -1,30 +1,17 @@
 import { getRegions, Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
-import { dcDisplayNames } from 'src/constants';
-import { queryClient, queryPresets } from './base';
-
-export interface ExtendedRegion extends Region {
-  display: string;
-}
-
+import { queryPresets } from './base';
 import data from 'src/cachedData/regions.json';
+import { getAll } from 'src/utilities/getAll';
 
-const extendRegion = (region: Region): ExtendedRegion => ({
-  ...region,
-  display: dcDisplayNames[region.id],
-});
-
-const cachedData = data.data.map(extendRegion);
-
-export const _getRegions = () =>
-  getRegions().then(({ data }) => data.map(extendRegion));
+const cachedData = data.data as Region[];
 
 export const useRegionsQuery = () =>
-  useQuery<ExtendedRegion[], APIError[]>('regions', _getRegions, {
+  useQuery<Region[], APIError[]>('regions', getAllRegionsRequest, {
     ...queryPresets.longLived,
-    placeholderData: cachedData as ExtendedRegion[],
-    onError: () => {
-      queryClient.setQueryData('regions', cachedData as Region[]);
-    },
+    placeholderData: cachedData,
   });
+
+const getAllRegionsRequest = () =>
+  getAll<Region>((params) => getRegions(params))().then((data) => data.data);

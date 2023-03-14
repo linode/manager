@@ -3,7 +3,6 @@ import * as React from 'react';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useFlags from 'src/hooks/useFlags';
-import { useRegionsQuery } from 'src/queries/regions';
 import { APIMaintenanceBanner } from './APIMaintenanceBanner';
 import ComplianceBanner from './ComplianceBanner';
 import ComplianceUpdateModal from './ComplianceUpdateModal';
@@ -27,12 +26,10 @@ const GlobalNotifications: React.FC<{}> = () => {
     [_hasDismissedNotifications, suppliedMaintenances]
   );
 
-  const regions = useRegionsQuery().data ?? [];
-
   return (
     <>
       <EmailBounceNotificationSection />
-      <RegionStatusBanner regions={regions} />
+      <RegionStatusBanner />
       <AbuseTicketBanner />
       <ComplianceBanner />
       <ComplianceUpdateModal />

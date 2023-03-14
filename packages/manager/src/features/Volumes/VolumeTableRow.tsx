@@ -9,9 +9,9 @@ import StatusIcon from 'src/components/StatusIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { formatRegion } from 'src/utilities';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
+import { useRegionsQuery } from 'src/queries/regions';
 // import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
@@ -64,6 +64,7 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
 
 export const VolumeTableRow = (props: CombinedProps) => {
   const classes = useStyles();
+  const { data: regions } = useRegionsQuery();
   const {
     isDetailsPageRow,
     openForClone,
@@ -85,7 +86,8 @@ export const VolumeTableRow = (props: CombinedProps) => {
   } = props;
 
   const isVolumesLanding = !isDetailsPageRow;
-  const formattedRegion = formatRegion(region);
+
+  const regionLabel = regions?.find((r) => r.id === region)?.label ?? region;
   // const { events } = useEvents();
 
   // const recentEvent = events.find((event) => event.entity?.id === id);
@@ -113,8 +115,8 @@ export const VolumeTableRow = (props: CombinedProps) => {
         {status.replace('_', ' ')}
       </TableCell>
       {isVolumesLanding && region ? (
-        <TableCell data-qa-volume-region noWrap>
-          {formattedRegion}
+        <TableCell data-qa-volume-region data-testid="region" noWrap>
+          {regionLabel}
         </TableCell>
       ) : null}
       <TableCell data-qa-volume-size>{size} GB</TableCell>

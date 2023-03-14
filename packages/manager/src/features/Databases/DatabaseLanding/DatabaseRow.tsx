@@ -11,7 +11,7 @@ import StatusIcon from 'src/components/StatusIcon';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { dcDisplayNames } from 'src/constants';
+import { useRegionsQuery } from 'src/queries/regions';
 import { capitalize } from 'src/utilities/capitalize';
 import { isWithinDays, parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
@@ -50,6 +50,10 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
     cluster_size,
   } = database;
 
+  const { data: regions } = useRegionsQuery();
+
+  const actualRegion = regions?.find((r) => r.id === region);
+
   const configuration =
     cluster_size === 1 ? (
       'Primary'
@@ -84,7 +88,7 @@ export const DatabaseRow: React.FC<Props> = ({ database }) => {
       </Hidden>
       <TableCell>{`${databaseEngineMap[engine]} v${version}`}</TableCell>
       <Hidden mdDown>
-        <TableCell>{dcDisplayNames[region] || 'Unknown Region'}</TableCell>
+        <TableCell>{actualRegion?.label ?? region}</TableCell>
       </Hidden>
       <Hidden lgDown>
         <TableCell>

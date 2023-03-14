@@ -10,7 +10,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import { formatRegion } from 'src/utilities';
+import { useRegionsQuery } from 'src/queries/regions';
 
 type ClassNames = 'root' | 'section';
 
@@ -36,6 +36,10 @@ const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
   const { classes, range } = props;
   const region = (range && range.region) || '';
 
+  const { data: regions } = useRegionsQuery();
+
+  const actualRegion = regions?.find((r) => r.id === region);
+
   return (
     <Drawer
       open={props.open}
@@ -57,7 +61,9 @@ const ViewRangeDrawer: React.FC<CombinedProps> = (props) => {
             style={{ border: 0, paddingBottom: 0 }}
           >
             <Typography variant="h3">Region</Typography>
-            <Typography variant="body1">{formatRegion(region)}</Typography>
+            <Typography variant="body1">
+              {actualRegion?.label ?? region}
+            </Typography>
           </div>
 
           <ActionsPanel>

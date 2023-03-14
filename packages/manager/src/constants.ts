@@ -1,5 +1,3 @@
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
-
 const PRODUCTION = import.meta.env.PROD;
 
 // whether or not this is a Vite production build
@@ -109,67 +107,6 @@ export const INTERVAL = 1000;
  * Time after which data from the API is considered stale (half an hour)
  */
 export const REFRESH_INTERVAL = 60 * 30 * 1000;
-
-export const dcDisplayNames = {
-  // us-east-1 is for backwards-compatibility
-  'us-east-1': 'Newark, NJ',
-  'us-east-1a': 'Newark, NJ',
-  'us-south-1a': 'Dallas, TX',
-  'us-west-1a': 'Fremont, CA',
-  'us-southeast-1a': 'Atlanta, GA',
-  'eu-central-1a': 'Frankfurt, DE',
-  'eu-west-1a': 'London, UK',
-  'ap-northeast-1a': 'Tokyo, JP',
-  'ap-northeast-1b': 'Tokyo 2, JP',
-  'us-central': 'Dallas, TX',
-  'us-west': 'Fremont, CA',
-  'us-southeast': 'Atlanta, GA',
-  'us-east': 'Newark, NJ',
-  'eu-west': 'London, UK',
-  'ap-south': 'Singapore, SG',
-  'eu-central': 'Frankfurt, DE',
-  'ap-northeast': 'Tokyo 2, JP',
-  'ca-central': 'Toronto, ON',
-  'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'Mumbai, IN',
-  'ap-southeast': 'Sydney, AU',
-  'us-iad': 'Washington, DC',
-};
-
-export const dcDisplayCountry = {
-  'us-east-1a': 'US',
-  'us-south-1a': 'US',
-  'us-west-1a': 'US',
-  'us-southeast-1a': 'US',
-  'eu-central-1a': 'DE',
-  'eu-west-1a': 'UK',
-  'ap-northeast-1a': 'JP',
-  'ap-northeast-1b': 'JP',
-  'us-central': 'US',
-  'us-west': 'US',
-  'us-southeast': 'US',
-  'us-east': 'US',
-  'eu-west': 'UK',
-  'ap-south': 'SG',
-  'eu-central': 'DE',
-  'ap-northeast': 'JP',
-  'ca-central': 'CA',
-  'ca-east': 'CA',
-  'ap-west': 'IN',
-  'ap-southeast': 'AU',
-  'us-iad': 'US',
-};
-
-// Map OBJ Cluster IDs to their display country.
-export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID,
-  string
-> = {
-  'us-east-1': 'Newark, NJ',
-  'eu-central-1': 'Frankfurt, DE',
-  'ap-south-1': 'Singapore, SG',
-  'us-southeast-1': 'Atlanta, GA',
-};
 
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';

@@ -1,4 +1,4 @@
-import { Image, KubernetesCluster, Volume } from '@linode/api-v4';
+import { Image, KubernetesCluster, Region, Volume } from '@linode/api-v4';
 import { Domain } from '@linode/api-v4/lib/domains';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
@@ -32,6 +32,7 @@ interface HandlerProps {
     volumes: Volume[],
     clusters: KubernetesCluster[],
     images: Image[],
+    regions: Region[],
     searchableLinodes: SearchableItem<string | number>[]
   ) => SearchResults;
 }
@@ -86,6 +87,7 @@ export default () => (Component: React.ComponentType<any>) => {
           volumes: Volume[],
           clusters: KubernetesCluster[],
           images: Image[],
+          regions: Region[],
           searchableLinodes: SearchableItem<string | number>[]
         ) => {
           const searchableBuckets = objectStorageBuckets.map((bucket) =>
@@ -102,7 +104,7 @@ export default () => (Component: React.ComponentType<any>) => {
           );
 
           const searchableClusters = clusters.map((cluster) =>
-            kubernetesClusterToSearchableItem(cluster)
+            kubernetesClusterToSearchableItem(cluster, regions)
           );
           const results = search(
             [
