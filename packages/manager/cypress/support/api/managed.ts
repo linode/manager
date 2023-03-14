@@ -33,7 +33,7 @@ export const visitUrlWithManagedEnabled = (url: string) => {
  * @param url - URL to visit.
  */
 export const visitUrlWithManagedDisabled = (url: string) => {
-  mockGetUserPreferences(nonManagedAccount).as('getAccountSettings');
+  mockGetAccountSettings(nonManagedAccount).as('getAccountSettings');
   cy.visitWithLogin(url);
   cy.wait('@getAccountSettings');
 };

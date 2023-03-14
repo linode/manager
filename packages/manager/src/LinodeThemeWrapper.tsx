@@ -1,36 +1,24 @@
-import { StyledEngineProvider } from '@mui/material/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
-import { ThemeProvider, Theme } from 'src/components/core/styles';
-import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import withPreferences, {
-  PreferencesActionsProps,
-} from 'src/containers/preferences.container';
-import { dark, light } from 'src/themes';
+import { StyledEngineProvider } from '@mui/material/styles';
 import { isProductionBuild } from './constants';
+import { useAuthentication } from './hooks/useAuthentication';
+import { usePreferences } from './queries/preferences';
+import { ThemeName } from './themeFactory';
+import {
+  ThemeProvider,
+  Theme,
+  useMediaQuery,
+} from 'src/components/core/styles';
+import {
+  getThemeFromPreferenceValue,
+  ThemeChoice,
+  themes,
+} from './utilities/theme';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
-
-export type ThemeChoice = 'light' | 'dark';
-
-type RenderChildren = (toggle: () => void) => React.ReactNode;
-
-interface Props {
-  children: RenderChildren | React.ReactNode;
-  /**
-   * override base theme with props
-   * this is mostly so the unit tests work
-   */
-  theme?: ThemeChoice;
-  shouldGetPreferences?: boolean;
-}
-
-const themes = { light, dark };
-
-type CombinedProps = Props & PreferencesActionsProps;
 
 const setActiveHighlightTheme = (value: ThemeChoice) => {
   /**
@@ -73,97 +61,38 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
-const LinodeThemeWrapper: React.FC<CombinedProps> = (props) => {
-  const { children, shouldGetPreferences = true } = props;
-
-  const toggleTheme = (value: ThemeChoice) => {
-    setTimeout(() => {
-      document.body.classList.remove('no-transition');
-    }, 500);
-    setActiveHighlightTheme(value);
-  };
-
-  React.useEffect(() => {
-    if (shouldGetPreferences) {
-      /** request the user preferences on app load */
-      props
-        .getUserPreferences()
-        .then((response) => {
-          // Without the timeout a race condition sometimes runs the theme
-          // highlight checker before the stylesheets have fully loaded.
-          window.setTimeout(
-            () => setActiveHighlightTheme(response?.theme ?? 'light'),
-            1000
-          );
-        })
-        .catch(
-          () =>
-            /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
-        );
-    }
-  }, []);
-
-  return (
-    <PreferenceToggle<'light' | 'dark'>
-      preferenceKey="theme"
-      preferenceOptions={['light', 'dark']}
-      toggleCallbackFnDebounced={toggleTheme}
-      /** purely for unit test purposes */
-      value={props.theme}
-      localStorageKey="themeChoice"
-    >
-      {({
-        preference: themeChoice,
-        togglePreference: _toggleTheme,
-      }: ToggleProps<ThemeChoice>) => (
-        <MemoizedThemeProvider
-          themeChoice={themeChoice}
-          toggleTheme={_toggleTheme}
-        >
-          {children}
-        </MemoizedThemeProvider>
-      )}
-    </PreferenceToggle>
-  );
-};
-
-interface MemoizedThemeProviderProps {
-  themeChoice: ThemeChoice;
-  toggleTheme: () => ThemeChoice;
-  children: any;
+interface Props {
+  children: React.ReactNode;
+  /** Allows theme to be overwritten. Used for Storybook theme switching */
+  theme?: ThemeName;
 }
 
-const MemoizedThemeProvider: React.FC<MemoizedThemeProviderProps> = (props) => {
-  const { themeChoice, toggleTheme, children } = props;
+const LinodeThemeWrapper = ({ children, theme }: Props) => {
+  // fallback to default when rendering themed components pre-authentication
+  const isAuthenticated = !!useAuthentication().token;
+  const { data: preferences } = usePreferences(isAuthenticated);
+  const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  const theme = React.useMemo(() => {
-    return safelyGetTheme(themes, themeChoice);
-  }, [themeChoice]);
+  const selectedTheme =
+    theme ??
+    getThemeFromPreferenceValue(preferences?.theme, isSystemInDarkMode);
+
+  React.useEffect(() => {
+    toggleTheme(selectedTheme);
+  }, [selectedTheme]);
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={theme}>
-        {typeof children === 'function'
-          ? (children as RenderChildren)(toggleTheme)
-          : children}
-      </ThemeProvider>
+      <ThemeProvider theme={themes[selectedTheme]}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
 
-/** safely return light theme if the theme choice isn't "light" or "dark" */
-const safelyGetTheme = (
-  themesToChoose: Record<'dark' | 'light', any>,
-  themeChoice: string
-) => {
-  /* tslint:disable */
-  return !!Object.keys(themesToChoose).some(
-    (eachTheme) => eachTheme === themeChoice
-  )
-    ? themesToChoose[themeChoice]
-    : themesToChoose['light'];
+const toggleTheme = (value: ThemeChoice) => {
+  setTimeout(() => {
+    document.body.classList.remove('no-transition');
+  }, 500);
+  setActiveHighlightTheme(value);
 };
 
-export default compose<CombinedProps, Props>(withPreferences())(
-  LinodeThemeWrapper
-);
+export default LinodeThemeWrapper;

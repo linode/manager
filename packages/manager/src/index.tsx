@@ -24,9 +24,9 @@ import loadDevTools from './dev-tools/load';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { queryClient } from './queries/base';
+import App from './App';
 
 const Lish = React.lazy(() => import('src/features/Lish'));
-const App = React.lazy(() => import('./App'));
 const Cancel = React.lazy(() => import('src/features/CancelLanding'));
 const LoginAsCustomerCallback = React.lazy(
   () => import('src/layouts/LoginAsCustomerCallback')
@@ -44,70 +44,50 @@ const renderNullAuth = () => <span>null auth route</span>;
 
 const renderNull = () => <span>null route</span>;
 
-const renderLish = () => (
-  <LinodeThemeWrapper>
-    <Lish />
-  </LinodeThemeWrapper>
-);
-
-const renderSplashScreen = () => (
-  <LinodeThemeWrapper>
-    <SplashScreen />
-  </LinodeThemeWrapper>
-);
-
 const renderApp = (props: RouteComponentProps) => (
   <>
-    {renderSplashScreen()}
-    <LinodeThemeWrapper>
-      {(toggle) => (
-        <SnackBar
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          maxSnack={3}
-          autoHideDuration={4000}
-          data-qa-toast
-          hideIconVariant={true}
-        >
-          <App
-            toggleTheme={toggle}
-            location={props.location}
-            history={props.history}
-          />
-        </SnackBar>
-      )}
-    </LinodeThemeWrapper>
+    <SplashScreen />
+    <SnackBar
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      maxSnack={3}
+      autoHideDuration={4000}
+      data-qa-toast
+      hideIconVariant={true}
+    >
+      <App location={props.location} history={props.history} />
+    </SnackBar>
   </>
 );
 
-const renderCancel = () => (
-  <LinodeThemeWrapper>
-    <Cancel />
-  </LinodeThemeWrapper>
-);
-
 const renderAuthentication = () => (
-  <React.Suspense fallback={renderSplashScreen}>
-    <Switch>
-      <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
-      <Route exact path="/admin/callback" component={LoginAsCustomerCallback} />
-      {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
-      <Route exact path="/nullauth" render={renderNullAuth} />
-      <Route exact path="/logout" component={Logout} />
-      <Route exact path="/cancel" render={renderCancel} />
-      <QueryClientProvider client={queryClient}>
-        <AuthenticationWrapper>
-          <Switch>
-            <Route path="/linodes/:linodeId/lish/:type" render={renderLish} />
-            <Route render={renderApp} />
-          </Switch>
-        </AuthenticationWrapper>
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          toggleButtonProps={{ style: { marginLeft: '3em' } }}
-        />
-      </QueryClientProvider>
-    </Switch>
-  </React.Suspense>
+  <QueryClientProvider client={queryClient}>
+    <LinodeThemeWrapper>
+      <React.Suspense fallback={<SplashScreen />}>
+        <Switch>
+          <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
+          <Route
+            exact
+            path="/admin/callback"
+            component={LoginAsCustomerCallback}
+          />
+          {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
+          <Route exact path="/nullauth" render={renderNullAuth} />
+          <Route exact path="/logout" component={Logout} />
+          <Route exact path="/cancel" component={Cancel} />
+          <AuthenticationWrapper>
+            <Switch>
+              <Route path="/linodes/:linodeId/lish/:type" component={Lish} />
+              <Route render={renderApp} />
+            </Switch>
+          </AuthenticationWrapper>
+        </Switch>
+      </React.Suspense>
+    </LinodeThemeWrapper>
+    <ReactQueryDevtools
+      initialIsOpen={false}
+      toggleButtonProps={{ style: { marginLeft: '3em' } }}
+    />
+  </QueryClientProvider>
 );
 
 // Thanks to https://kentcdodds.com/blog/make-your-own-dev-tools
@@ -131,7 +111,3 @@ loadDevTools(() => {
     document.getElementById('root') as HTMLElement
   );
 });
-
-if (module.hot && !isProductionBuild) {
-  module.hot.accept();
-}

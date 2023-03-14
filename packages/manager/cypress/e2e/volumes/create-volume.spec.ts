@@ -1,8 +1,10 @@
-import { createLinode, Linode } from '@linode/api-v4/lib/linodes';
+import type { Linode } from '@linode/api-v4/types';
+import { createLinode } from '@linode/api-v4/lib/linodes';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { authenticate } from 'support/api/authentication';
 import { regions, regionsMap } from 'support/constants/regions';
 import { containsClick, fbtVisible, fbtClick, getClick } from 'support/helpers';
+import { interceptCreateVolume } from 'support/intercepts/volumes';
 import {
   randomNumber,
   randomItem,
@@ -33,7 +35,7 @@ describe('volume create flow', () => {
       regionLabel: regionsMap[regionId],
     };
 
-    cy.intercept('POST', '*/volumes').as('createVolume');
+    interceptCreateVolume().as('createVolume');
     cy.visitWithLogin('/volumes/create', {
       localStorageOverrides: pageSizeOverride,
     });
@@ -83,7 +85,7 @@ describe('volume create flow', () => {
     };
 
     cy.defer(createLinode(linodeRequest)).then((linode) => {
-      cy.intercept('POST', '*/volumes').as('createVolume');
+      interceptCreateVolume().as('createVolume');
       cy.visitWithLogin('/volumes/create', {
         localStorageOverrides: pageSizeOverride,
       });

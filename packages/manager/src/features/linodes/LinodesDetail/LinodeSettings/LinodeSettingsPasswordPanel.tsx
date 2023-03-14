@@ -22,6 +22,7 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
 import { withLinodeDetailContext } from '../linodeDetailContext';
+import { validatePassword } from 'src/utilities/validatePassword';
 
 interface Props {
   isBareMetalInstance: boolean;
@@ -71,27 +72,43 @@ class LinodeSettingsPasswordPanel extends React.Component<
       return;
     }
 
+    // Enforce password complexity/requirements
+    const passwordError = validatePassword(value);
+    if (passwordError) {
+      this.setState({
+        ...this.state,
+        success: undefined,
+        errors: [
+          {
+            field: 'password',
+            reason: passwordError,
+          },
+        ],
+      });
+      return;
+    }
+
     this.setState(
-      compose(
+      compose<State, State, State, State>(
         set(lensPath(['submitting']), true),
         set(lensPath(['success']), undefined),
-        set(lensPath(['errors']), undefined) as () => APIError[]
+        set(lensPath(['errors']), undefined)
       )
     );
 
     const handleSuccess = () => {
       this.setState(
-        compose(
+        compose<State, State, State, State>(
           set(lensPath(['success']), `Linode password changed successfully.`),
           set(lensPath(['submitting']), false),
-          set(lensPath(['value']), '') as () => string
+          set(lensPath(['value']), '')
         )
       );
     };
 
     const handleError = (errors: APIError[]) => {
       this.setState(
-        compose(
+        compose<State, State, State>(
           set(lensPath(['errors']), errors),
           set(lensPath(['submitting']), false)
         ),

@@ -7,7 +7,6 @@ import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { Link } from 'src/components/Link';
 import {
   eventLabelGenerator,
   eventMessageGenerator,
@@ -16,7 +15,6 @@ import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import useLinodes from 'src/hooks/useLinodes';
 import { useTypes } from 'src/hooks/useTypes';
 import { useStyles as useEventStyles } from './RenderEvent';
-import useEventInfo from './useEventInfo';
 
 const useStyles = makeStyles((theme: Theme) => ({
   bar: {
@@ -32,7 +30,7 @@ interface Props {
 export type CombinedProps = Props;
 
 export const RenderProgressEvent: React.FC<Props> = (props) => {
-  const { event, onClose } = props;
+  const { event } = props;
   const eventClasses = useEventStyles();
   const classes = useStyles();
 
@@ -40,7 +38,6 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
   const { types } = useTypes();
   const _linodes = Object.values(linodes.itemsById);
   const _types = types.entities;
-  const { linkTarget } = useEventInfo(event);
   const message = eventMessageGenerator(event, _linodes, _types);
 
   if (message === null) {
@@ -67,7 +64,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
       <Box
         className={classNames({
           [eventClasses.root]: true,
-          [eventClasses.event]: !!linkTarget,
+          [eventClasses.event]: true,
         })}
         display="flex"
         data-test-id={event.action}
@@ -77,13 +74,7 @@ export const RenderProgressEvent: React.FC<Props> = (props) => {
           className={eventClasses.icon}
         />
         <div className={eventClasses.eventMessage} data-test-id={event.action}>
-          {linkTarget ? (
-            <Link to={linkTarget} onClick={onClose}>
-              {eventMessage}
-            </Link>
-          ) : (
-            eventMessage
-          )}
+          {eventMessage}
           <BarPercent
             className={classes.bar}
             max={100}

@@ -23,16 +23,14 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { REFRESH_INTERVAL } from 'src/constants';
+import withImages, {
+  DefaultProps as ImagesProps,
+} from 'src/containers/images.container';
 import withRegions from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
 import withFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';
-import withImages, {
-  ImagesDispatch,
-  WithImages,
-} from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/eventsPolling';
 import withAgreements, {
@@ -41,7 +39,6 @@ import withAgreements, {
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
-import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import userSSHKeyHoc, {
   State as userSSHKeysProps,
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -116,8 +113,7 @@ interface State {
 type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
-  WithImages &
-  ImagesDispatch &
+  ImagesProps &
   WithTypesProps &
   WithLinodesProps &
   WithRegionsProps &
@@ -262,14 +258,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           appInstancesError: 'There was an error loading Marketplace Apps.',
         });
       });
-
-    // If we haven't requested images yet (or in a while), request them
-    if (
-      Date.now() - this.props.imagesLastUpdated > REFRESH_INTERVAL &&
-      !this.props.imagesLoading
-    ) {
-      this.props.requestImages();
-    }
   }
 
   clearCreationState = () => {
@@ -725,8 +713,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const {
       profile,
       grants,
-      enqueueSnackbar,
-      closeSnackbar,
       regionsData,
       typesData,
       ...restOfProps
@@ -840,12 +826,7 @@ interface DispatchProps {
 const connected = connect(mapStateToProps, { upsertLinode });
 
 export default recompose<CombinedProps, {}>(
-  deepCheckRouter(
-    (oldProps, newProps) =>
-      oldProps.location.search !== newProps.location.search,
-    true
-  ),
-  withImages(),
+  withImages,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
     linodesLoading,

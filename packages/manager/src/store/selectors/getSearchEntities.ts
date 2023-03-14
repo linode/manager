@@ -14,7 +14,7 @@ import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
 
-type State = ApplicationState['__resources'];
+export type State = ApplicationState['__resources'];
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
@@ -77,7 +77,7 @@ export const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   },
 });
 
-const imageReducer = (accumulator: SearchableItem[], image: Image) =>
+export const imageReducer = (accumulator: SearchableItem[], image: Image) =>
   image.is_public
     ? accumulator
     : [...accumulator, imageToSearchableItem(image)];
@@ -164,36 +164,11 @@ export const bucketToSearchableItem = (
   },
 });
 
-const linodeSelector = (state: State) => Object.values(state.linodes.itemsById);
-const imageSelector = (state: State) => state.images.itemsById || {};
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const typesSelector = (state: State) => state.types.entities;
 
-export default createSelector<
-  State,
-  Linode[],
-  { [key: string]: Image },
-  NodeBalancer[],
-  LinodeType[],
-  SearchableItem[]
->(
-  linodeSelector,
-  imageSelector,
-  nodebalSelector,
-  typesSelector,
-  (linodes, images, nodebalancers, types) => {
-    const arrOfImages = Object.values(images);
-    const searchableLinodes = linodes.map((linode) =>
-      formatLinode(linode, types, images)
-    );
-    const searchableImages = arrOfImages.reduce(imageReducer, []);
-    const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
+export default createSelector(nodebalSelector, (nodebalancers) => {
+  const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
 
-    return [
-      ...searchableLinodes,
-      ...searchableImages,
-      ...searchableNodebalancers,
-    ];
-  }
-);
+  return [...searchableNodebalancers];
+});

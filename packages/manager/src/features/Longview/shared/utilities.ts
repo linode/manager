@@ -239,7 +239,7 @@ export const statMax = (stats: StatWithDummyPoint[] = []): number => {
  * output will be a single data series of type T, where the y values will
  * be summed for each matching value of X.
  */
-export const sumStatsObject = <T>(
+export const sumStatsObject = <T extends {}>(
   data: Record<string, T>,
   emptyState: T = {} as T
 ): T => {
