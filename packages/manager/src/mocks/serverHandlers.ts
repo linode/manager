@@ -269,6 +269,10 @@ const databases = [
   }),
 ];
 
+const standardTypes = linodeTypeFactory.buildList(7);
+const dedicatedTypes = dedicatedTypeFactory.buildList(7);
+const proDedicatedType = proDedicatedTypeFactory.build();
+
 export const handlers = [
   rest.get('*/profile', (req, res, ctx) => {
     const profile = profileFactory.build({
@@ -334,9 +338,6 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(images)));
   }),
   rest.get('*/linode/types', (req, res, ctx) => {
-    const standardTypes = linodeTypeFactory.buildList(7);
-    const dedicatedTypes = dedicatedTypeFactory.buildList(7);
-    const proDedicatedType = proDedicatedTypeFactory.build();
     return res(
       ctx.json(
         makeResourcePage([
@@ -350,11 +351,7 @@ export const handlers = [
   rest.get('*/linode/types-legacy', (req, res, ctx) => {
     return res(ctx.json(makeResourcePage(linodeTypeFactory.buildList(0))));
   }),
-  ...[
-    ...linodeTypeFactory.buildList(7),
-    ...dedicatedTypeFactory.buildList(7),
-    proDedicatedTypeFactory.build(),
-  ].map((type) =>
+  ...[...standardTypes, ...dedicatedTypes, proDedicatedType].map((type) =>
     rest.get(`*/linode/types/${type.id}`, (req, res, ctx) => {
       return res(ctx.json(type));
     })
