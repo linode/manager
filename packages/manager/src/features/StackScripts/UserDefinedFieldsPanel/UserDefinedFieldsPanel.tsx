@@ -11,7 +11,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
-import { addOrdinalSuffix } from 'src/utilities/stringUtils';
 import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
@@ -61,7 +60,7 @@ interface Props {
   selectedUsername: string;
   appLogo?: JSX.Element;
   openDrawer?: (stackScriptLabel: string) => void;
-  setNumberOfNodesForUDFSummary?: (num: number) => void;
+  setNumberOfNodesForAppCluster?: (num: number) => void;
 }
 
 type CombinedProps = Props;
@@ -191,7 +190,7 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
     udf_data,
     errors,
     appLogo,
-    setNumberOfNodesForUDFSummary,
+    setNumberOfNodesForAppCluster,
   } = props;
 
   const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
@@ -199,20 +198,18 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
   );
 
   const isCluster = userDefinedFields?.some(
-    (udf) => udf.name === 'node_options'
+    (udf) => udf.name === 'cluster_size'
   );
   const numberOfNodes =
-    udf_data['node_options'] !== undefined && udf_data['node_options'] !== null
-      ? Number(udf_data['node_options'])
+    udf_data['cluster_size'] !== undefined && udf_data['cluster_size'] !== null
+      ? Number(udf_data['cluster_size'])
       : 0;
 
   React.useEffect(() => {
-    if (setNumberOfNodesForUDFSummary) {
-      setNumberOfNodesForUDFSummary(numberOfNodes);
+    if (setNumberOfNodesForAppCluster) {
+      setNumberOfNodesForAppCluster(numberOfNodes);
     }
-  }, [setNumberOfNodesForUDFSummary, numberOfNodes]);
-
-  const temporaryNodeNumber = numberOfNodes > 0 ? numberOfNodes + 1 : 0; // A temporary additional node is created for clusters.
+  }, [setNumberOfNodesForAppCluster, numberOfNodes]);
 
   const isDrawerOpenable = openDrawer !== undefined;
 
@@ -233,12 +230,13 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
       </Box>
 
       {isCluster ? (
-        <div className={classes.clusterNotice} data-testid="temp-node-notice">
+        <div
+          className={classes.clusterNotice}
+          data-testid="create-cluster-notice"
+        >
           <Notice success>
             <strong>
-              You are creating a cluster with {numberOfNodes} nodes. A temporary{' '}
-              {addOrdinalSuffix(temporaryNodeNumber)} node will be provisioned
-              and deleted once the provisioning is complete.
+              You are creating a cluster with {numberOfNodes} nodes.
             </strong>
           </Notice>
         </div>
