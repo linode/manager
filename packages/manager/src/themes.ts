@@ -128,7 +128,7 @@ const genericTableHeaderStyle = {
 };
 
 const darkThemeOptions: ThemeOptions = {
-  name: 'darkTheme',
+  name: 'dark',
   breakpoints,
   bg: customDarkModeOptions.bg,
   color: customDarkModeOptions.color,

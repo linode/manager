@@ -41,7 +41,7 @@ const loadConfiguration = () => {
  * Displays a warning if tests are running on an unsupported version of Node JS.
  */
 const nodeVersionCheck = () => {
-  const recommendedVersions = [14];
+  const recommendedVersions = [18];
   const versionString = process.version.substr(1, process.version.length - 1);
   const currentVersion = versionString
     .split('.')

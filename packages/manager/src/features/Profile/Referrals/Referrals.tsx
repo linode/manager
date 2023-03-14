@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   removeDisabledStyles: {
     '&.Mui-disabled': {
-      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
-      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      borderColor: theme.name === 'light' ? '#ccc' : '#222',
+      color: theme.name === 'light' ? 'inherit' : '#fff !important',
       opacity: 1,
     },
   },
@@ -76,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     '& svg': {
-      color: theme.name === 'lightTheme' ? '#ededf4' : '#83868c',
+      color: theme.name === 'light' ? '#ededf4' : '#83868c',
     },
     [theme.breakpoints.down('sm')]: {
       marginBottom: theme.spacing(2),
