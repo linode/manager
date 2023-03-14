@@ -7,8 +7,9 @@ import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
+import Link from 'src/components/Link';
 import { events$ } from 'src/events';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sendEvent } from 'src/utilities/ga';
 
 /**
  * Boilerplate for sending a success toast
@@ -29,7 +30,8 @@ export const toastSuccessAndFailure = curry(
     persistFailureMessage: boolean | undefined,
     successMessage: string | undefined,
     failureMessage: string | undefined,
-    includesLink: boolean | undefined
+    includesLink: boolean | undefined,
+    link: JSX.Element | undefined
   ) => {
     let linkedMessage;
     if (
@@ -43,11 +45,10 @@ export const toastSuccessAndFailure = curry(
     } else if (['failed'].includes(eventStatus) && Boolean(failureMessage)) {
       if (includesLink) {
         linkedMessage = (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: sanitizeHTML(failureMessage ?? ''),
-            }}
-          />
+          <>
+            {failureMessage}&nbsp;
+            {link}
+          </>
         );
       }
       return enqueueSnackbar(linkedMessage ?? failureMessage, {
@@ -103,7 +104,9 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           case 'volume_delete':
             return _toast(
               `Volume successfully deleted.`,
-              `Error deleting Volume.`
+              `Error deleting Volume.`,
+              undefined,
+              undefined
             );
           case 'disk_imagize':
             return _toast(
@@ -115,8 +118,17 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
               false,
               true,
               `Disk ${secondaryLabel} resized successfully.`,
-              `Disk resize failed. <a href="https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/" target=_blank>Learn more about resizing restrictions.</a>`,
-              true // includesLink
+              `Disk resize failed.`,
+              true, // includesLink
+              formatLink(
+                'Learn more about resizing restrictions.',
+                'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
+                sendEvent({
+                  category: 'Disk resize',
+                  action: `Click:link`,
+                  label: 'Disk resize failed toast',
+                })
+              )
             );
           case 'image_upload':
             const isDeletion = event.message === 'Upload cancelled.';
@@ -228,3 +240,11 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
 }
 
 export default withSnackbar(ToastNotifications);
+
+const formatLink = (text: string, link: string, handleClick) => {
+  return (
+    <Link to={link} onClick={() => handleClick}>
+      {text}
+    </Link>
+  );
+};
