@@ -18,22 +18,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '85%',
     },
   },
-  barLabels: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(0.5),
-  },
   poolUsageProgress: {
     marginBottom: theme.spacing(0.5),
     '& .MuiLinearProgress-root': {
       borderRadius: 1,
     },
-  },
-  title: {
-    marginBottom: theme.spacing(),
-    paddingLeft: theme.spacing(),
-    fontSize: '0.95rem',
   },
   link: {
     display: 'flex',
@@ -55,11 +44,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(3),
   },
-  wrapper: {
-    border: 'none',
-    backgroundColor: 'inherit',
-    cursor: 'pointer',
-  },
   proratedNotice: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -73,8 +57,7 @@ export interface Props {
   spacingTop?: number;
 }
 
-export const TransferDisplay: React.FC<Props> = (props) => {
-  const { spacingTop } = props;
+export const TransferDisplay = ({ spacingTop }: Props) => {
   const classes = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -158,6 +141,7 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
       classes={{ paper: classes.paper }}
       onClose={onClose}
       title="Monthly Network Transfer Pool"
+      maxWidth="sm"
     >
       <Grid
         container
