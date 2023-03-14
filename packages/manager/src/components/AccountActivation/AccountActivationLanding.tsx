@@ -50,15 +50,16 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   return (
     <ErrorState
       CustomIcon={Warning}
+      CustomIconStyles={{ color: '#63A701' }}
       errorText={
         <React.Fragment>
           <Typography variant="h2" className={classes.errorHeading}>
-            Thanks for signing up!
+            Your account is currently being reviewed.
           </Typography>
           <Typography className={classes.subheading}>
-            Your account is currently being reviewed. You&rsquo;ll receive an
-            email from us once our review is complete, so hang tight! If you
-            have questions during this process{' '}
+            Thanks for signing up! You&rsquo;ll receive an email from us once
+            our review is complete, so hang tight. If you have questions during
+            this process{' '}
             <button
               onClick={() => toggleSupportDrawer(true)}
               className={classes.cta}
