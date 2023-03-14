@@ -23,11 +23,11 @@ jobs:
       matrix:
         user: ["USER_1", "USER_2", "USER_3", "USER_4"]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
           node-version: "18.14"
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: |
             node_modules
@@ -52,9 +52,12 @@ jobs:
           echo "REACT_APP_LOGIN_ROOT=${{ secrets.REACT_APP_LOGIN_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_API_ROOT=${{ secrets.REACT_APP_API_ROOT }}" >> ./packages/manager/.env
           echo "REACT_APP_APP_ROOT=${{ secrets.REACT_APP_APP_ROOT }}" >> ./packages/manager/.env
-          yarn up &
+          echo "REACT_APP_DISABLE_NEW_RELIC=1" >> ./packages/manager/.env
+          yarn install:all
+          yarn build
+          yarn start:manager:ci &
       - name: Run tests
-        uses: cypress-io/github-action@v4
+        uses: cypress-io/github-action@v5
         with:
           working-directory: packages/manager
           wait-on: "http://localhost:3000"

@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import useAccountManagement from 'src/hooks/useAccountManagement';
 import { useLinodes } from 'src/hooks/useLinodes';
-import useReduxLoad from 'src/hooks/useReduxLoad';
+import { useAllImagesQuery } from 'src/queries/images';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
@@ -30,7 +30,8 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
   const params = useParams<{ linodeId: string }>();
   const linodeId = props.linodeId ? props.linodeId : params.linodeId;
 
-  const { _loading } = useReduxLoad(['images']);
+  const { isLoading: imagesLoading } = useAllImagesQuery({}, {});
+
   const { configs, disks } = useSelector((state: ApplicationState) => {
     const disks = state.__resources.linodeDisks[linodeId];
     const configs = state.__resources.linodeConfigs[linodeId];
@@ -67,7 +68,7 @@ export const LinodesDetailContainer: React.FC<Props> = (props) => {
     }
   }, [dispatch, configs, disks, showVlans, linodeId, linodes]);
 
-  if ((linodes.lastUpdated === 0 && linodes.loading) || _loading) {
+  if ((linodes.lastUpdated === 0 && linodes.loading) || imagesLoading) {
     return <CircleProgress />;
   }
 

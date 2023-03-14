@@ -3,7 +3,7 @@ import * as React from 'react';
 import { makeStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-import * as zxcvbn from 'zxcvbn';
+import zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
@@ -86,13 +86,9 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
 const maybeStrength = (value?: string) => {
   if (!value || isEmpty(value)) {
     return null;
-  } else {
-    const score = zxcvbn(value).score;
-    if (score === 4) {
-      return 3;
-    }
-    return score;
   }
+
+  return zxcvbn(value).score;
 };
 
 export default React.memo(PasswordInput);

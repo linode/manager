@@ -31,6 +31,7 @@ interface Options {
   customStore?: DeepPartial<ApplicationState>;
   flags?: FlagSet;
   queryClient?: QueryClient;
+  theme?: 'light' | 'dark';
 }
 
 /**
@@ -49,7 +50,7 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={storeToPass}>
       <QueryClientProvider client={passedQueryClient || queryClient}>
-        <LinodeThemeWrapper theme="dark" shouldGetPreferences={false}>
+        <LinodeThemeWrapper theme={options.theme}>
           <LDProvider
             value={{
               flags: options.flags ?? {},
@@ -57,7 +58,9 @@ export const wrapWithTheme = (ui: any, options: Options = {}) => {
             }}
           >
             <SnackbarProvider>
-              <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
+              <MemoryRouter {...options.MemoryRouter}>
+                {ui.children ?? ui}
+              </MemoryRouter>
             </SnackbarProvider>
           </LDProvider>
         </LinodeThemeWrapper>

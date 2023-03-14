@@ -8,7 +8,7 @@ import AddNewMenu from './AddNewMenu';
 describe('AddNewMenu', () => {
   it('should render without error', () => {
     renderWithTheme(
-      <LinodeThemeWrapper theme="light">
+      <LinodeThemeWrapper>
         <AddNewMenu />
       </LinodeThemeWrapper>
     );
@@ -16,7 +16,7 @@ describe('AddNewMenu', () => {
 
   it('should have an entry for database', () => {
     const { getByText } = renderWithTheme(
-      <LinodeThemeWrapper theme="light">
+      <LinodeThemeWrapper>
         <AddNewMenu />
       </LinodeThemeWrapper>,
       { flags: { databases: true } }

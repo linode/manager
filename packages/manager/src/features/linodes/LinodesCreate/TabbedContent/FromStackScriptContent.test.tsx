@@ -36,7 +36,7 @@ const mockProps: CombinedProps = {
 describe('FromImageContent', () => {
   const component = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark">
+      <LinodeThemeWrapper>
         <FromStackScriptContent {...mockProps} />
       </LinodeThemeWrapper>
     </Provider>
@@ -44,7 +44,7 @@ describe('FromImageContent', () => {
 
   const componentWithUDFs = shallow(
     <Provider store={store}>
-      <LinodeThemeWrapper theme="dark">
+      <LinodeThemeWrapper>
         <FromStackScriptContent
           {...mockProps}
           availableUserDefinedFields={mockUserDefinedFields}

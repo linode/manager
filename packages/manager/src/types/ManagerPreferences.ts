@@ -1,10 +1,6 @@
-import { APIError } from '@linode/api-v4/lib/types';
-import { actionCreatorFactory } from 'typescript-fsa';
-
+import { UserPreferences } from '@linode/api-v4';
 import { Order } from 'src/components/Pagey';
-import { ThemeChoice } from 'src/LinodeThemeWrapper';
-
-const actionCreator = actionCreatorFactory(`@@manager/preferences`);
+import { ThemeChoice } from 'src/utilities/theme';
 
 export interface OrderSet {
   order: Order;
@@ -18,7 +14,7 @@ export interface DismissedNotification {
   label?: string;
 }
 
-export interface UserPreferences {
+export interface ManagerPreferences extends UserPreferences {
   longviewTimeRange?: string;
   gst_banner_dismissed?: boolean;
   linodes_group_by_tag?: boolean;
@@ -36,15 +32,3 @@ export interface UserPreferences {
   type_to_confirm?: boolean;
   dismissed_notifications?: Record<string, DismissedNotification>;
 }
-
-export const handleGetPreferences = actionCreator.async<
-  void,
-  UserPreferences,
-  APIError[]
->(`get`);
-
-export const handleUpdatePreferences = actionCreator.async<
-  UserPreferences,
-  UserPreferences,
-  APIError[]
->(`update`);

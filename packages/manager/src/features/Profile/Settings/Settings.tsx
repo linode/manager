@@ -1,16 +1,21 @@
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme, withTheme } from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import Toggle from 'src/components/Toggle';
+import { useMutatePreferences, usePreferences } from 'src/queries/preferences';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { getQueryParam } from 'src/utilities/queryParams';
 import PreferenceEditor from './PreferenceEditor';
-import ThemeToggle from './ThemeToggle';
+import { ThemeChoice } from 'src/utilities/theme';
+import FormControl from 'src/components/core/FormControl';
+import RadioGroup from 'src/components/core/RadioGroup';
+import { Radio } from 'src/components/Radio/Radio';
+import { FormLabel } from '@mui/material';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,13 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface Props {
-  toggleTheme: () => void;
-}
-
-const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
+const ProfileSettings = () => {
   const classes = useStyles();
-  const { toggleTheme, theme } = props;
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [
     preferenceEditorOpen,
@@ -36,6 +36,9 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
 
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile } = useMutateProfile();
+
+  const { data: preferences } = usePreferences();
+  const { mutateAsync: updatePreferences } = useMutatePreferences();
 
   React.useEffect(() => {
     if (getQueryParam(window.location.search, 'preferenceEditor') === 'true') {
@@ -48,14 +51,9 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
 
   const toggle = () => {
     setSubmitting(true);
-
-    updateProfile({ email_notifications: !profile?.email_notifications })
-      .then(() => {
-        setSubmitting(false);
-      })
-      .catch(() => {
-        setSubmitting(false);
-      });
+    updateProfile({
+      email_notifications: !profile?.email_notifications,
+    }).finally(() => setSubmitting(false));
   };
 
   return (
@@ -91,18 +89,37 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
         )}
       </Paper>
       <Paper className={classes.root}>
-        <Typography variant="h2" className={classes.title}>
-          Dark Mode
-        </Typography>
         <Grid container alignItems="center">
           <Grid item xs={12}>
-            <FormControlLabel
-              control={<ThemeToggle toggleTheme={toggleTheme} />}
-              label={` Dark mode is ${
-                theme.name === 'darkTheme' ? 'enabled' : 'disabled'
-              }`}
-              disabled={submitting}
-            />
+            <FormControl>
+              <FormLabel>
+                <Typography variant="h2">Theme</Typography>
+              </FormLabel>
+              <RadioGroup
+                row
+                style={{ marginBottom: 0 }}
+                value={preferences?.theme ?? 'system'}
+                onChange={(e) =>
+                  updatePreferences({ theme: e.target.value as ThemeChoice })
+                }
+              >
+                <FormControlLabel
+                  value="light"
+                  control={<Radio />}
+                  label="Light"
+                />
+                <FormControlLabel
+                  value="dark"
+                  control={<Radio />}
+                  label="Dark"
+                />
+                <FormControlLabel
+                  value="system"
+                  control={<Radio />}
+                  label="System"
+                />
+              </RadioGroup>
+            </FormControl>
           </Grid>
         </Grid>
       </Paper>
@@ -147,4 +164,4 @@ const ProfileSettings: React.FC<Props & { theme: Theme }> = (props) => {
   );
 };
 
-export default withTheme(ProfileSettings);
+export default ProfileSettings;

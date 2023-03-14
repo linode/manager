@@ -11,7 +11,6 @@ import { reportException } from 'src/exceptionReporting';
 import { FlagSet, TaxDetail } from 'src/featureFlags';
 import formatDate from 'src/utilities/formatDate';
 import { getShouldUseAkamaiBilling } from '../billingUtils';
-import LinodeLogo from './LinodeLogo.png';
 import AkamaiLogo from './akamai-logo.png';
 import {
   createFooter,
@@ -59,11 +58,22 @@ const addLeftHeader = (
   const isAkamaiBilling = getShouldUseAkamaiBilling(date);
   const isInternational = !['US', 'CA'].includes(country);
 
-  const remitAddress = isAkamaiBilling
-    ? ['US', 'CA'].includes(country)
-      ? ADDRESSES.akamai.us
-      : ADDRESSES.akamai.international
-    : ADDRESSES.linode;
+  const getRemitAddress = (isAkamaiBilling: boolean) => {
+    if (!isAkamaiBilling) {
+      return ADDRESSES.linode;
+    }
+    // M3-6218: Temporarily change "Remit To" address for US customers back to the Philly address
+    if (country === 'US') {
+      ADDRESSES.linode.entity = 'Akamai Technologies, Inc.';
+      return ADDRESSES.linode;
+    }
+    if (['CA'].includes(country)) {
+      return ADDRESSES.akamai.us;
+    }
+    return ADDRESSES.akamai.international;
+  };
+
+  const remitAddress = getRemitAddress(isAkamaiBilling);
 
   addLine(remitAddress.entity);
   addLine(remitAddress.address1);
@@ -158,8 +168,7 @@ export const printInvoice = (
   account: Account,
   invoice: Invoice,
   items: InvoiceItem[],
-  taxes: FlagSet['taxBanner'] | FlagSet['taxes'],
-  brand: FlagSet['brandUpdate']
+  taxes: FlagSet['taxBanner'] | FlagSet['taxes']
 ): PdfResult => {
   try {
     const itemsPerPage = 12;
@@ -206,7 +215,7 @@ export const printInvoice = (
 
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
-      doc.addImage(brand ? AkamaiLogo : LinodeLogo, 'JPEG', 160, 10, 120, 40);
+      doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40);
 
       const leftHeaderYPosition = addLeftHeader(
         doc,
@@ -251,8 +260,7 @@ export const printInvoice = (
 export const printPayment = (
   account: Account,
   payment: Payment,
-  countryTax?: TaxDetail,
-  brand?: FlagSet['brandUpdate']
+  countryTax?: TaxDetail
 ): PdfResult => {
   try {
     const date = formatDate(payment.date, { displayTime: true });
@@ -261,7 +269,7 @@ export const printPayment = (
     });
     doc.setFontSize(10);
 
-    doc.addImage(brand ? AkamaiLogo : LinodeLogo, 'JPEG', 160, 10, 120, 40);
+    doc.addImage(AkamaiLogo, 'JPEG', 160, 10, 120, 40);
 
     const leftHeaderYPosition = addLeftHeader(
       doc,
