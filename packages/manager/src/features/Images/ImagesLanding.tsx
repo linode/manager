@@ -481,7 +481,7 @@ export const ImagesLanding: React.FC<CombinedProps> = () => {
       <LandingHeader
         title="Images"
         entity="Image"
-        onAddNew={onCreateButtonClick}
+        onButtonClick={onCreateButtonClick}
         docsLink="https://www.linode.com/docs/platform/disk-images/linode-images/"
       />
       <Paper className={classes.imageTable}>

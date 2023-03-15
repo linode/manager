@@ -19,7 +19,6 @@ import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import TransferDisplay from 'src/components/TransferDisplay';
 import TypeToConfirmDialog from 'src/components/TypeToConfirmDialog';
-import { objectStorageClusterDisplay } from 'src/constants';
 import bucketDrawerContainer, {
   DispatchProps,
 } from 'src/containers/bucketDrawer.container';
@@ -30,6 +29,7 @@ import {
   useObjectStorageBuckets,
   useObjectStorageClusters,
 } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
 import {
   sendDeleteBucketEvent,
   sendDeleteBucketFailedEvent,
@@ -347,13 +347,15 @@ interface UnavailableClustersDisplayProps {
 
 const UnavailableClustersDisplay: React.FC<UnavailableClustersDisplayProps> = React.memo(
   ({ unavailableClusters }) => {
-    return (
-      <Banner
-        regionsAffected={unavailableClusters.map(
-          (cluster) => objectStorageClusterDisplay[cluster.id] || cluster.region
-        )}
-      />
+    const { data: regions } = useRegionsQuery();
+
+    const regionsAffected = unavailableClusters.map(
+      (cluster) =>
+        regions?.find((region) => region.id === cluster.region)?.label ??
+        cluster.region
     );
+
+    return <Banner regionsAffected={regionsAffected} />;
   }
 );
 

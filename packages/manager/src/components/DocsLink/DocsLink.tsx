@@ -12,9 +12,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontSize: '.875rem',
     lineHeight: 'normal',
     margin: 0,
-    marginTop: 2,
     minWidth: 'auto',
-    padding: 0,
     '& svg': {
       marginRight: theme.spacing(),
     },

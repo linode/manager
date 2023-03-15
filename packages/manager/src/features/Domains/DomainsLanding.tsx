@@ -280,7 +280,7 @@ export const DomainsLanding: React.FC<Props> = (props) => {
           </Button>
         }
         entity="Domain"
-        onAddNew={navigateToCreate}
+        onButtonClick={navigateToCreate}
         docsLink="https://www.linode.com/docs/platform/manager/dns-manager/"
       />
       <Table>

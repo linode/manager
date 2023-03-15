@@ -28,7 +28,6 @@ import {
 import { listToItemsByID } from 'src/queries/base';
 import { useAllImagesQuery } from 'src/queries/images';
 import { useProfile } from 'src/queries/profile';
-import { useRegionsQuery } from 'src/queries/regions';
 import { ApplicationState } from 'src/store';
 import { formatDate } from 'src/utilities/formatDate';
 import { isEURegion } from 'src/utilities/formatRegion';
@@ -84,7 +83,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
 
-  const regions = useRegionsQuery().data ?? [];
   const { types } = useTypes();
   const linode = useExtendedLinode(linodeID);
 
@@ -192,10 +190,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
     images
   );
 
-  if (regions.length === 0) {
-    return null;
-  }
-
   const disabledText = getDisabledReason(
     linode._events,
     linode.status,
@@ -239,7 +233,6 @@ const MigrateLanding: React.FC<CombinedProps> = (props) => {
       />
       <ConfigureForm
         currentRegion={region}
-        allRegions={regions}
         handleSelectRegion={handleSelectRegion}
         selectedRegion={selectedRegion}
       />

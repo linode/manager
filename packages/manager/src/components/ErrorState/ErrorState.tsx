@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: '100%',
     padding: theme.spacing(10),
+    marginLeft: 0,
   },
   compact: {
     padding: theme.spacing(5),

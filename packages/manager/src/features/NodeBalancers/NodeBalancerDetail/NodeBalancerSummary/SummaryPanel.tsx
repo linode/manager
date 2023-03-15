@@ -11,7 +11,7 @@ import summaryPanelStyles, {
 } from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { ExtendedNodeBalancer } from 'src/features/NodeBalancers/types';
-import { formatRegion } from 'src/utilities';
+import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerConsumer } from '../context';
 
@@ -53,6 +53,9 @@ type CombinedProps = Props & StyleProps & WithStyles<ClassNames>;
 
 const SummaryPanel: React.FC<CombinedProps> = (props) => {
   const { nodeBalancer, classes } = props;
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find((r) => r.id === nodeBalancer.region);
 
   return (
     <NodeBalancerConsumer>
@@ -106,7 +109,8 @@ const SummaryPanel: React.FC<CombinedProps> = (props) => {
               </div>
               <div className={classes.section}>
                 <Typography variant="body1" data-qa-region>
-                  <strong>Region:</strong> {formatRegion(nodeBalancer.region)}
+                  <strong>Region:</strong>{' '}
+                  {region?.label ?? nodeBalancer.region}
                 </Typography>
               </div>
             </Paper>

@@ -1,4 +1,3 @@
-import Close from '@mui/icons-material/Close';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { DateTime } from 'luxon';
 import * as React from 'react';
@@ -20,22 +19,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       width: '85%',
     },
   },
-  barLabels: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    justifyContent: 'space-between',
-    marginBottom: theme.spacing(0.5),
-  },
   poolUsageProgress: {
     marginBottom: theme.spacing(0.5),
     '& .MuiLinearProgress-root': {
       borderRadius: 1,
     },
-  },
-  title: {
-    marginBottom: theme.spacing(),
-    paddingLeft: theme.spacing(),
-    fontSize: '0.95rem',
   },
   link: {
     display: 'flex',
@@ -57,11 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(3),
   },
-  wrapper: {
-    border: 'none',
-    backgroundColor: 'inherit',
-    cursor: 'pointer',
-  },
   proratedNotice: {
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -75,8 +58,7 @@ export interface Props {
   spacingTop?: number;
 }
 
-export const TransferDisplay: React.FC<Props> = (props) => {
-  const { spacingTop } = props;
+export const TransferDisplay = ({ spacingTop }: Props) => {
   const classes = useStyles();
 
   const [modalOpen, setModalOpen] = React.useState(false);
@@ -148,10 +130,9 @@ interface DialogProps {
   onClose: () => void;
 }
 
-export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
-  const classes = useStyles();
+export const TransferDialog = React.memo((props: DialogProps) => {
   const { isOpen, onClose, poolUsagePct, quota, used } = props;
-
+  const classes = useStyles();
   const daysRemainingInMonth = getDaysRemaining();
 
   return (
@@ -160,18 +141,8 @@ export const TransferDialog: React.FC<DialogProps> = React.memo((props) => {
       classes={{ paper: classes.paper }}
       onClose={onClose}
       title="Monthly Network Transfer Pool"
+      maxWidth="sm"
     >
-      <Grid
-        container
-        justifyContent="space-between"
-        alignItems="center"
-        className={classes.title}
-      >
-        <Typography variant="h2">Monthly Network Transfer Pool</Typography>
-        <button className={classes.wrapper} onClick={onClose}>
-          <Close />
-        </button>
-      </Grid>
       <Grid
         container
         justifyContent="space-between"
