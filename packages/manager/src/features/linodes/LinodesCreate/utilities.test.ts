@@ -60,7 +60,7 @@ describe('Marketplace cluster pricing', () => {
 
   it('should round the hourly price to 3 digits', () => {
     expect(getMonthlyAndHourlyNodePricing(30, 0.045, 5)).toEqual({
-      monthlyPrice: 90,
+      monthlyPrice: 150,
       hourlyPrice: 0.225,
     });
   });
