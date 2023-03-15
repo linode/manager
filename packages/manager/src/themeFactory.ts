@@ -461,6 +461,27 @@ export const base: ThemeOptions = {
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          backgroundColor: bg.white,
+          border: `1px solid ${primaryColors.main}`,
+        },
+        endAdornment: {
+          top: 'unset',
+          paddingRight: 8,
+        },
+        inputRoot: {
+          paddingLeft: 8,
+        },
+        loading: {
+          border: `1px solid ${primaryColors.main}`,
+        },
+        noOptions: {
+          border: `1px solid ${primaryColors.main}`,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
