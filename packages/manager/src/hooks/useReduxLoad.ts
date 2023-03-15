@@ -5,7 +5,6 @@ import { Dispatch } from 'redux';
 import { REFRESH_INTERVAL } from 'src/constants';
 import { ApplicationState } from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
-import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
@@ -24,7 +23,6 @@ export type ReduxEntity =
   | 'types'
   | 'events'
   | 'longview'
-  | 'firewalls'
   | 'vlans';
 
 type RequestMap = Record<ReduxEntity, any>;
@@ -36,7 +34,6 @@ const requestMap: RequestMap = {
   types: requestTypes,
   notifications: requestNotifications,
   longview: getAllLongviewClients,
-  firewalls: () => getAllFirewalls({}),
   vlans: () => getAllVlans({}),
 };
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import TabPanels from 'src/components/core/ReachTabPanels';
@@ -13,9 +12,6 @@ import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
-import withFirewalls, {
-  Props as WithFirewallsProps,
-} from 'src/containers/firewalls.container';
 import { useProfile, useGrants } from 'src/queries/profile';
 import { useFirewallQuery, useMutateFirewall } from 'src/queries/firewalls';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -26,7 +22,7 @@ const FirewallRulesLanding = React.lazy(
 
 const FirewallLinodesLanding = React.lazy(() => import('./Devices'));
 
-type CombinedProps = RouteComponentProps<{ id: string }> & WithFirewallsProps;
+type CombinedProps = RouteComponentProps<{ id: string }>;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -69,7 +65,7 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
     props.history.push(tabs[index].routeName);
   };
 
-  const { data } = useFirewallQuery();
+  const { data, isLoading, error: allFirewallsError } = useFirewallQuery();
   const thisFirewall = data?.[thisFirewallId];
 
   const { mutateAsync: updateFirewall, error, reset } = useMutateFirewall();
@@ -79,11 +75,11 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   // If we're still fetching Firewalls, display a loading spinner. This will
   // probably only happen when navigating to a Firewall's Detail page directly
   // via URL bookmark (as opposed to clicking on the Firewall Landing table).
-  if (props.lastUpdated === 0 && props.loading === true && !thisFirewall) {
+  if (isLoading && !thisFirewall) {
     return <CircleProgress />;
   }
 
-  if (props.error.read) {
+  if (allFirewallsError) {
     return (
       <ErrorState errorText="There was a problem retrieving your Firewall. Please try again." />
     );
@@ -163,6 +159,4 @@ export const FirewallDetail: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose(withFirewalls());
-
-export default enhanced(FirewallDetail);
+export default FirewallDetail;
