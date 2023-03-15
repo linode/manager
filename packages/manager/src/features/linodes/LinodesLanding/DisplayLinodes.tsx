@@ -61,7 +61,7 @@ interface Props {
 
 type CombinedProps = Props & OrderByProps;
 
-const DisplayLinodes: React.FC<CombinedProps> = (props) => {
+const DisplayLinodes = (props: CombinedProps) => {
   const classes = useStyles();
   const {
     count,
@@ -80,12 +80,14 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
   } = props;
 
   const { infinitePageSize, setInfinitePageSize } = useInfinitePageSize();
-  const numberOfLinodesWithMaintenance = data.reduce((acc, thisLinode) => {
-    if (thisLinode.maintenance) {
-      acc++;
-    }
-    return acc;
-  }, 0);
+  const numberOfLinodesWithMaintenance = React.useMemo(() => {
+    return data.reduce((acc, thisLinode) => {
+      if (thisLinode.maintenance) {
+        acc++;
+      }
+      return acc;
+    }, 0);
+  }, [JSON.stringify(data)]);
   const pageSize =
     numberOfLinodesWithMaintenance > infinitePageSize
       ? getMinimumPageSizeForNumberOfItems(numberOfLinodesWithMaintenance)
@@ -198,7 +200,8 @@ const DisplayLinodes: React.FC<CombinedProps> = (props) => {
                   pageSize={pageSize}
                   page={queryPage}
                   eventCategory={'linodes landing'}
-                  showAll
+                  // Disabling showAll as it is impacting page performance.
+                  showAll={false}
                 />
               }
             </Grid>

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { APIError } from '@linode/api-v4/lib/types';
-import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions';
+import { Region } from '@linode/api-v4/lib/regions';
 
 export interface DefaultProps {
-  regionsData: ExtendedRegion[];
+  regionsData: Region[];
   regionsError?: APIError[];
   regionsLoading: boolean;
   regionsLastUpdated: number;

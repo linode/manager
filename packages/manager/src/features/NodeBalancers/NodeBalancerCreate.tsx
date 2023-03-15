@@ -28,14 +28,12 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
-import { dcDisplayCountry } from 'src/constants';
 import withRegions from 'src/containers/regions.container';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import {
@@ -65,6 +63,7 @@ import {
   reportAgreementSigningError,
 } from 'src/queries/accountAgreements';
 import LandingHeader from 'src/components/LandingHeader';
+import { Region } from '@linode/api-v4/lib/regions';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -206,7 +205,10 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
+      compose<State, State, State>(
+        set(L.sslCertificateLens, ''),
+        set(L.privateKeyLens, '')
+      )
     );
   };
 
@@ -513,8 +515,8 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       if (foundRegion) {
         displaySections = [
           {
-            title: dcDisplayCountry[foundRegion.id],
-            details: foundRegion.display,
+            title: foundRegion.country,
+            details: foundRegion.label,
           },
         ];
       } else {
@@ -849,7 +851,7 @@ export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
 };
 
 interface WithRegions {
-  regionsData: ExtendedRegion[];
+  regionsData: Region[];
   regionsLoading: boolean;
   regionsError: APIError[];
 }

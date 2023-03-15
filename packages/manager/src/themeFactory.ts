@@ -2,7 +2,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
 import { customDarkModeOptions } from './themes';
 
-type ThemeName = 'lightTheme' | 'darkTheme';
+export type ThemeName = 'light' | 'dark';
 
 type Fonts = typeof primaryFonts;
 
@@ -247,7 +247,7 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const base: ThemeOptions = {
-  name: 'lightTheme', // we really should just leverage pallete.mode
+  name: 'light', // we really should just leverage pallete.mode
   breakpoints,
   shadows: [
     'none',

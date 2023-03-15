@@ -16,7 +16,6 @@ import {
   mockGetDatabase,
 } from 'support/intercepts/databases';
 import { ui } from 'support/ui';
-import { assertToast } from 'support/ui/events';
 
 describe('Delete database clusters', () => {
   /*
@@ -65,7 +64,7 @@ describe('Delete database clusters', () => {
       });
 
     cy.url().should('endWith', '/databases');
-    assertToast('Database Cluster deleted successfully.');
+    ui.toast.assertMessage('Database Cluster deleted successfully.');
   });
 
   /*

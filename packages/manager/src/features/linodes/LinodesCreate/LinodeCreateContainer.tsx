@@ -37,7 +37,6 @@ import withAgreements, {
 import withLabelGenerator, {
   LabelProps,
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
-import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import userSSHKeyHoc, {
   State as userSSHKeysProps,
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -685,7 +684,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedRegion && {
-        title: selectedRegion.display,
+        title: selectedRegion.label,
       }
     );
   };
@@ -813,11 +812,6 @@ interface DispatchProps {
 const connected = connect(mapStateToProps, { upsertLinode });
 
 export default recompose<CombinedProps, {}>(
-  deepCheckRouter(
-    (oldProps, newProps) =>
-      oldProps.location.search !== newProps.location.search,
-    true
-  ),
   withImages,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     linodesData,
