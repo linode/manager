@@ -45,7 +45,7 @@ interface Props {
   iconUrl: string;
   id: number;
   label: string;
-  clusterLabel: string | null;
+  clusterLabel: string;
   userDefinedFields: UserDefinedField[];
   availableImages: string[];
   disabled: boolean;
