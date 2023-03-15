@@ -1,33 +1,44 @@
 /* eslint-disable sonarjs/no-duplicate-string */
-import { volumeFactory } from '@src/factories';
-import { makeResourcePage } from '@src/mocks/serverHandlers';
-import { interceptOnce } from 'support/ui/common';
-import { createMockLinodeList } from 'support/api/linodes';
+import { volumeFactory, linodeFactory } from '@src/factories';
 import {
-  containsVisible,
-  fbtClick,
-  fbtVisible,
-  getClick,
-  getVisible,
-} from 'support/helpers';
-import { randomLabel } from 'support/util/random';
-import { selectRegionString } from 'support/ui/constants';
-import { apiMatcher } from 'support/util/intercepts';
+  mockGetLinodes,
+  mockGetLinodeDetails,
+  mockGetLinodeVolumes,
+} from 'support/intercepts/linodes';
+import {
+  mockCreateVolume,
+  mockGetVolumes,
+  mockDetachVolume,
+} from 'support/intercepts/volumes';
+import { randomLabel, randomNumber } from 'support/util/random';
 import { ui } from 'support/ui';
 
 const region = 'Newark, NJ';
 
+/**
+ * Asserts that a volume is listed and has the expected config information.
+ *
+ * The "Volume Configuration" drawer should be open before this function is
+ * called.
+ *
+ * @param volumeLabel - Label of Volume to validate.
+ * @param attachedLinodeLabel - Label of attached Linode if applicable.
+ */
 const validateBasicVolume = (
-  volLabel: string,
-  volId: number,
-  isAttached: boolean = false
+  volumeLabel: string,
+  attachedLinodeLabel?: string
 ) => {
-  const attached = isAttached ? linodeLabel : 'Unattached';
-  containsVisible('Volume Configuration');
-  cy.findByDisplayValue(`mkdir "/mnt/${volLabel}"`);
-  getClick('[data-qa-close-drawer="true"]');
+  const attached = attachedLinodeLabel ?? 'Unattached';
+  ui.drawer
+    .findByTitle('Volume Configuration')
+    .should('be.visible')
+    .within(() => {
+      cy.findByDisplayValue(`mkdir "/mnt/${volumeLabel}"`).should('be.visible');
 
-  cy.findByText(volLabel)
+      ui.drawerCloseButton.find().should('be.visible').click();
+    });
+
+  cy.findByText(volumeLabel)
     .closest('tr')
     .within(() => {
       cy.findByText(region).should('be.visible');
@@ -35,36 +46,9 @@ const validateBasicVolume = (
     });
 };
 
-const linodeList = createMockLinodeList({ region: 'us-southeast' }, 3);
-const linode = linodeList.data[1];
-const linodeLabel = linode.label;
-const linodeId = linode.id;
-
-const emptyVolumeList = makeResourcePage([]);
-
-const volumeList = makeResourcePage([
-  volumeFactory.build({
-    label: randomLabel(),
-  }),
-  volumeFactory.build({
-    label: randomLabel(),
-  }),
-]);
-
-const volume = volumeList.data[1];
-const volumeLabel = volume.label;
-const volumeId = volume.id;
-const attachedVolumeList = makeResourcePage(
-  volumeFactory.buildList(1, {
-    label: volumeLabel,
-    linode_id: linodeId,
-    linode_label: linodeLabel,
-  })
-);
-const attachedVolume = attachedVolumeList.data[0];
-const attachedVolumeLabel = attachedVolume.label;
-const attachedVolumeId = attachedVolume.id;
-
+// Force Volume table to be organized and sorted in a specific way to reduce flake.
+// This is a workaround for accounts that have volumes unrelated to tests.
+// @TODO Remove preference override when volumes are removed from test accounts.
 const preferenceOverrides = {
   linodes_view_style: 'list',
   linodes_group_by_tag: false,
@@ -77,38 +61,49 @@ const preferenceOverrides = {
 };
 
 // Local storage override to force volume table to list up to 100 items.
-// This is a workaround while we wait to get stuck volumes removed.
-// @TODO Remove local storage override when stuck volumes are removed from test accounts.
+// This is a workaround for accounts that have volumes unrelated to tests.
+// @TODO Remove local storage override when volumes are removed from test accounts.
 const localStorageOverrides = {
   PAGE_SIZE: 100,
 };
 
 describe('volumes', () => {
   it('creates a volume without linode from volumes page', () => {
-    cy.intercept('POST', apiMatcher('volumes'), (req) => {
-      req.reply(volume);
-    }).as('createVolume');
+    const mockVolume = volumeFactory.build({ label: randomLabel() });
+
+    mockGetVolumes([]).as('getVolumes');
+    mockCreateVolume(mockVolume).as('createVolume');
+
     cy.visitWithLogin('/volumes', {
       preferenceOverrides,
       localStorageOverrides,
     });
-    fbtClick('Create Volume');
-    cy.findByText('volumes');
-    fbtClick('Create Volume');
-    fbtVisible('Label is required.');
-    getClick('[id="label"][data-testid="textfield-input"]').type(volumeLabel);
-    fbtClick('Create Volume');
-    fbtVisible('Must provide a region or a Linode ID.');
-    fbtClick(selectRegionString).type('new {enter}');
-    cy.intercept('GET', apiMatcher('volumes*'), (req) => {
-      req.reply(makeResourcePage([volume]));
-    }).as('createVolume');
-    fbtClick('Create Volume');
-    cy.wait('@createVolume');
-    validateBasicVolume(volumeLabel, volumeId);
+
+    ui.button.findByTitle('Create Volume').should('be.visible').click();
+
+    cy.url().should('endWith', 'volumes/create');
+
+    ui.button.findByTitle('Create Volume').should('be.visible').click();
+
+    cy.findByText('Label is required.').should('be.visible');
+    cy.findByLabelText('Label', { exact: false })
+      .should('be.visible')
+      .click()
+      .type(mockVolume.label);
+
+    ui.button.findByTitle('Create Volume').should('be.visible').click();
+
+    cy.findByText('Must provide a region or a Linode ID.').should('be.visible');
+
+    cy.findByText('Region').should('be.visible').click().type('new {enter}');
+
+    mockGetVolumes([mockVolume]).as('getVolumes');
+    ui.button.findByTitle('Create Volume').should('be.visible').click();
+    cy.wait(['@createVolume', '@getVolumes']);
+    validateBasicVolume(mockVolume.label);
 
     ui.actionMenu
-      .findByTitle(`Action menu for Volume ${volumeLabel}`)
+      .findByTitle(`Action menu for Volume ${mockVolume.label}`)
       .should('be.visible')
       .click();
 
@@ -116,26 +111,18 @@ describe('volumes', () => {
   });
 
   it('creates volume from linode details', () => {
-    const newVolumeLabel = randomLabel();
-    const newVolume = volumeFactory.build({
-      label: newVolumeLabel,
+    const mockLinode = linodeFactory.build({
+      label: randomLabel(),
+      id: randomNumber(),
     });
-    const newVolumeList = makeResourcePage([newVolume]);
+    const newVolume = volumeFactory.build({
+      label: randomLabel(),
+    });
 
-    cy.intercept('POST', apiMatcher('volumes'), (req) => {
-      req.reply(newVolume);
-    }).as('createVolume');
-    cy.intercept('GET', apiMatcher('linode/instances/*'), (req) => {
-      req.reply(linodeList);
-    }).as('getLinodes');
-    cy.intercept('GET', apiMatcher(`linode/instances/${linodeId}*`), (req) => {
-      req.reply(linode);
-    }).as('getLinodeDetail');
-    cy.intercept(
-      'GET',
-      apiMatcher(`linode/instances/${linodeId}/volumes*`),
-      emptyVolumeList
-    ).as('getEmptyVolumes');
+    mockCreateVolume(newVolume).as('createVolume');
+    mockGetLinodes([mockLinode]).as('getLinodes');
+    mockGetLinodeDetails(mockLinode.id, mockLinode).as('getLinodeDetail');
+    mockGetLinodeVolumes(mockLinode.id, []).as('getVolumes');
 
     cy.visitWithLogin('/linodes', {
       preferenceOverrides,
@@ -144,65 +131,74 @@ describe('volumes', () => {
 
     // Visit a Linode's details page.
     cy.wait('@getLinodes');
-    fbtClick(linodeLabel);
-    cy.wait('@getEmptyVolumes');
+    cy.findByText(mockLinode.label).should('be.visible').click();
+    cy.wait('@getVolumes');
     cy.wait('@getLinodeDetail');
 
     // Create a new volume.
-    fbtClick('Storage');
-    fbtClick('Create Volume');
-    getClick('[value="creating_for_linode"]');
-    cy.intercept(
-      'GET',
-      apiMatcher(`linode/instances/${linodeId}/volumes*`),
-      newVolumeList
-    ).as('getNewVolumes');
-    getVisible(`[data-qa-drawer-title="Create Volume for ${linodeLabel}"]`);
-    getClick('[data-qa-volume-label="true"]').type(newVolumeLabel);
-    getClick('[data-qa-submit="true"]');
+    cy.findByText('Storage').should('be.visible').click();
+
+    ui.button.findByTitle('Create Volume').should('be.visible').click();
+
+    mockGetLinodeVolumes(mockLinode.id, [newVolume]).as('getVolumes');
+    ui.drawer
+      .findByTitle(`Create Volume for ${mockLinode.label}`)
+      .should('be.visible')
+      .within(() => {
+        cy.findByText('Create and Attach Volume').should('be.visible').click();
+        cy.get('[data-qa-volume-label]').click().type(newVolume.label);
+        ui.button.findByTitle('Create Volume').should('be.visible').click();
+      });
+
+    cy.wait(['@createVolume', '@getVolumes']);
+    ui.drawer
+      .findByTitle('Volume Configuration')
+      .should('be.visible')
+      .within(() => {
+        cy.findByDisplayValue(`mkdir "/mnt/${newVolume.label}"`).should(
+          'be.visible'
+        );
+        ui.drawerCloseButton.find().click();
+      });
 
     // Confirm that new volume is shown.
-    cy.wait(['@createVolume', '@getNewVolumes']);
-    containsVisible('Volume Configuration');
-    cy.findByDisplayValue(`mkdir "/mnt/${newVolumeLabel}"`);
-    getClick('[data-qa-close-drawer="true"][aria-label="Close drawer"]');
-    fbtVisible('1 Volume');
+    cy.findByText('1 Volume').should('be.visible');
   });
 
   it('Detaches attached volume', () => {
-    interceptOnce('GET', apiMatcher('volumes*'), attachedVolumeList).as(
-      'getAttachedVolumes'
-    );
+    const mockLinode = linodeFactory.build({ label: randomLabel() });
+    const mockAttachedVolume = volumeFactory.build({
+      label: randomLabel(),
+      linode_id: mockLinode.id,
+      linode_label: mockLinode.label,
+    });
+
+    mockDetachVolume(mockAttachedVolume.id).as('detachVolume');
+    mockGetVolumes([mockAttachedVolume]).as('getAttachedVolumes');
     cy.visitWithLogin('/volumes', {
       preferenceOverrides,
       localStorageOverrides,
     });
     cy.wait('@getAttachedVolumes');
-    cy.intercept(
-      'POST',
-      apiMatcher(`volumes/${attachedVolumeId}/detach`),
-      (req) => {
-        req.reply({ statusCode: 200 });
-      }
-    ).as('volumeDetached');
-    containsVisible(attachedVolume.linode_label);
-    containsVisible(attachedVolumeLabel);
+
+    cy.findByText(mockAttachedVolume.label).should('be.visible');
+    cy.findByText(mockLinode.label).should('be.visible');
 
     ui.actionMenu
-      .findByTitle(`Action menu for Volume ${attachedVolumeLabel}`)
+      .findByTitle(`Action menu for Volume ${mockAttachedVolume.label}`)
       .should('be.visible')
       .click();
 
     ui.actionMenuItem.findByTitle('Detach').click();
 
     ui.dialog
-      .findByTitle(`Detach Volume ${attachedVolumeLabel}?`)
+      .findByTitle(`Detach Volume ${mockAttachedVolume.label}?`)
       .should('be.visible')
       .within(() => {
         cy.findByLabelText('Volume Label')
           .should('be.visible')
           .click()
-          .type(attachedVolumeLabel);
+          .type(mockAttachedVolume.label);
 
         ui.button
           .findByTitle('Detach')
@@ -211,7 +207,7 @@ describe('volumes', () => {
           .click();
       });
 
-    cy.wait('@volumeDetached').its('response.statusCode').should('eq', 200);
+    cy.wait('@detachVolume').its('response.statusCode').should('eq', 200);
     ui.toast.assertMessage('Volume detachment started');
   });
 });

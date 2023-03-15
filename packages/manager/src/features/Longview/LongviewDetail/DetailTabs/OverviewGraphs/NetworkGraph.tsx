@@ -1,7 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import { withTheme, WithTheme } from '@mui/styles';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {
   formatNetworkTooltip,

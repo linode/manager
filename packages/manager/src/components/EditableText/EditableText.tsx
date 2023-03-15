@@ -5,7 +5,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import H1Header from 'src/components/H1Header';
 import TextField from '../TextField';
@@ -34,7 +35,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-start',
-    maxHeight: 48,
     position: 'relative',
   },
   initial: {

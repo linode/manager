@@ -8,7 +8,8 @@ import TableRow from 'src/components/TableRow';
 import AccessCell from 'src/features/ObjectStorage/AccessKeyLanding/AccessCell';
 import { scopeStringToPermTuples, basePermNameMap } from './utils';
 import { Token } from '@linode/api-v4/lib/profile/types';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   permsTable: {

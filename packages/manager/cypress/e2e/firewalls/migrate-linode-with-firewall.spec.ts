@@ -18,9 +18,17 @@ const fakeRegionsData = {
   data: [
     {
       capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
+      country: 'us',
+      id: 'us-central',
+      status: 'ok',
+      label: 'Dallas, TX',
+    },
+    {
+      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
       country: 'uk',
       id: 'eu-west',
       status: 'ok',
+      label: 'London, UK',
     },
     {
       capabilities: [
@@ -32,6 +40,7 @@ const fakeRegionsData = {
       country: 'sg',
       id: 'ap-south',
       status: 'ok',
+      label: 'Singapore, SG',
     },
   ],
 };
@@ -116,7 +125,7 @@ describe('Migrate Linode With Firewall', () => {
     };
 
     // modify incoming response
-    cy.intercept(apiMatcher('regions'), (req) => {
+    cy.intercept(apiMatcher('regions*'), (req) => {
       req.reply((res) => {
         res.send(fakeRegionsData);
       });
@@ -244,7 +253,7 @@ describe('Migrate Linode With Firewall', () => {
       getClick('[data-qa-checked="false"]');
       fbtClick(selectRegionString);
 
-      ui.regionSelect.findItemByRegionName('Toronto, ON').click();
+      ui.regionSelect.findItemByRegionName('Toronto, CA').click();
       validateMigration();
 
       deleteFirewallByLabel(firewallLabel);

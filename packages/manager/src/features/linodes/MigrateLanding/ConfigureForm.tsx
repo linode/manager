@@ -1,17 +1,13 @@
-import { Region } from '@linode/api-v4/lib/regions';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import RegionSelect, {
   flags,
 } from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { dcDisplayNames } from 'src/constants';
-import {
-  formatRegion,
-  getHumanReadableCountry,
-} from 'src/utilities/formatRegion';
+import { useRegionsQuery } from 'src/queries/regions';
+import { getHumanReadableCountry } from 'src/utilities/formatRegion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -38,21 +34,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   currentRegion: string;
-  allRegions: Region[];
   handleSelectRegion: (id: string) => void;
   selectedRegion: string | null;
   errorText?: string;
   helperText?: string;
 }
 
-type CombinedProps = Props;
-
-const ConfigureForm: React.FC<CombinedProps> = (props) => {
+const ConfigureForm = (props: Props) => {
   const classes = useStyles();
-  const { allRegions, currentRegion } = props;
+  const { currentRegion } = props;
+
+  const { data: regions } = useRegionsQuery();
+
+  const currentActualRegion = regions?.find((r) => r.id === currentRegion);
 
   const country =
-    allRegions.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
+    regions?.find((thisRegion) => thisRegion.id == currentRegion)?.country ??
     'us';
 
   return (
@@ -60,18 +57,17 @@ const ConfigureForm: React.FC<CombinedProps> = (props) => {
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region</Typography>
       <div className={classes.currentRegion}>
-        {pathOr(() => null, [country], flags)()}
-        <Typography>{`${getHumanReadableCountry(
-          props.currentRegion
-        )}: ${formatRegion(currentRegion)}`}</Typography>
+        {flags[country]?.()}
+        <Typography>{`${getHumanReadableCountry(props.currentRegion)}: ${
+          currentActualRegion?.label ?? currentRegion
+        }`}</Typography>
       </div>
       <RegionSelect
-        regions={props.allRegions
-          .filter((eachRegion) => eachRegion.id !== props.currentRegion)
-          .map((eachRegion) => ({
-            ...eachRegion,
-            display: dcDisplayNames[eachRegion.id],
-          }))}
+        regions={
+          regions?.filter(
+            (eachRegion) => eachRegion.id !== props.currentRegion
+          ) ?? []
+        }
         handleSelection={props.handleSelectRegion}
         selectedID={props.selectedRegion}
         errorText={props.errorText}

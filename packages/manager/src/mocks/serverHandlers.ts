@@ -304,14 +304,7 @@ export const handlers = [
     return res(ctx.json(req.body as SecurityQuestionsPayload));
   }),
   rest.get('*/regions', async (req, res, ctx) => {
-    return res(
-      ctx.json(
-        cachedRegions.data.map((thisRegion) => ({
-          ...thisRegion,
-          status: 'outage',
-        }))
-      )
-    );
+    return res(ctx.json(cachedRegions));
   }),
   rest.get('*/images', async (req, res, ctx) => {
     const privateImages = imageFactory.buildList(5, {

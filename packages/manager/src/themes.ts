@@ -213,6 +213,17 @@ const darkThemeOptions: ThemeOptions = {
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          backgroundColor: customDarkModeOptions.bg.white,
+          border: `1px solid ${primaryColors.main}`,
+        },
+        loading: {
+          color: '#fff',
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {

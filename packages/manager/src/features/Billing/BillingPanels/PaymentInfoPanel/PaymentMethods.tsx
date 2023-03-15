@@ -2,7 +2,7 @@ import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import PaymentMethodRow from 'src/components/PaymentMethodRow';

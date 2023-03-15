@@ -33,6 +33,7 @@ import { ApplicationState } from 'src/store';
 import { formatLinode } from 'src/store/selectors/getSearchEntities';
 import { listToItemsByID } from 'src/queries/base';
 import { useAllKubernetesClustersQuery } from 'src/queries/kubernetes';
+import { useRegionsQuery } from 'src/queries/regions';
 
 type CombinedProps = WithTypesProps &
   SearchProps &
@@ -119,6 +120,8 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
   );
   const publicImages = _publicImages ?? [];
 
+  const { data: regions } = useRegionsQuery();
+
   const { _loading } = useReduxLoad(
     searchDeps,
     REFRESH_INTERVAL,
@@ -171,6 +174,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
         volumes ?? [],
         clusters ?? [],
         _privateImages ?? [],
+        regions ?? [],
         searchableLinodes ?? []
       );
     }
@@ -185,6 +189,7 @@ export const SearchBar: React.FC<CombinedProps> = (props) => {
     domains,
     volumes,
     _privateImages,
+    regions,
   ]);
 
   const handleSearchChange = (_searchText: string): void => {
