@@ -1,12 +1,8 @@
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendPaginationEvent } from 'src/utilities/ga';
 import PageNumbers from './PageNumbers';

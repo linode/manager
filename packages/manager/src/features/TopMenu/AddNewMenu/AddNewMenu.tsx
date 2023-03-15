@@ -20,12 +20,8 @@ import NodebalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import OneClickIcon from 'src/assets/icons/entityIcons/oneclick.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import DatabaseIcon from 'src/assets/icons/entityIcons/database.svg';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import withFeatureFlags, {
   FeatureFlagConsumerProps,
 } from 'src/containers/withFeatureFlagConsumer.container';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { makeStyles, Theme } from '../core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from '../core/Typography';
 import Grid from '../Grid';
 import { SummaryItem as Props } from './CheckoutSummary';

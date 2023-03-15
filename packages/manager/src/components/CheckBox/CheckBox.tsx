@@ -4,7 +4,8 @@ import CheckboxIcon from 'src/assets/icons/checkbox.svg';
 import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import Checkbox, { CheckboxProps } from 'src/components/core/Checkbox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 const useStyles = makeStyles((theme: Theme) => ({

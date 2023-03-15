@@ -6,7 +6,8 @@ import DiscoverIcon from 'src/assets/icons/payment/discover.svg';
 import JCBIcon from 'src/assets/icons/payment/jcb.svg';
 import MastercardIcon from 'src/assets/icons/payment/mastercard.svg';
 import VisaIcon from 'src/assets/icons/payment/visa.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import isCreditCardExpired, { formatExpiry } from 'src/utilities/creditCard';
 

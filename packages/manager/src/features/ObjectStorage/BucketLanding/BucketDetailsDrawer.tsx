@@ -7,7 +7,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';

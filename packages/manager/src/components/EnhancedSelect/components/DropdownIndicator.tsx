@@ -1,12 +1,8 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
 import { IndicatorProps } from 'react-select';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 type ClassNames = 'root' | 'enhancedSelectDropdown';
 

@@ -1,4 +1,4 @@
-import { Theme } from 'src/components/core/styles';
+import { Theme } from '@mui/material/styles';
 import { ThemeName } from 'src/themeFactory';
 import { dark, light } from 'src/themes';
 

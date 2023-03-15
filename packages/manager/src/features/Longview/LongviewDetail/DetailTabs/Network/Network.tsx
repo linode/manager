@@ -1,7 +1,8 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { isToday as _isToday } from 'src/utilities/isToday';
