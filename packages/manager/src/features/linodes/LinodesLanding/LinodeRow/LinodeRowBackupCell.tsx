@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TableCell from 'src/components/TableCell';
 
 const useStyles = makeStyles(() => ({

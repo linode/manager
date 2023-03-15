@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import { withTheme, WithTheme } from '@mui/styles';
 import ErrorState from 'src/components/ErrorState';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import Placeholder from 'src/components/Placeholder';

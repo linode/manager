@@ -1,6 +1,7 @@
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({

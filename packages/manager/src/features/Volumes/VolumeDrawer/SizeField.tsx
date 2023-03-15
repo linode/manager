@@ -1,7 +1,8 @@
 import * as React from 'react';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TextField from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 

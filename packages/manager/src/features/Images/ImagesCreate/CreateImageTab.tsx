@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import Button from 'src/components/Button';
 import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { Theme } from 'src/components/core/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';

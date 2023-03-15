@@ -2,7 +2,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CloseTicketLink from '../CloseTicketLink';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
   actions: {

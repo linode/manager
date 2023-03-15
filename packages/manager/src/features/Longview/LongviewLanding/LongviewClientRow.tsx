@@ -2,7 +2,8 @@ import { Grant } from '@linode/api-v4/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import withLongviewClients, {
   DispatchProps,

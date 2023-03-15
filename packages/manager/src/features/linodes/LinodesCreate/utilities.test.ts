@@ -45,7 +45,7 @@ describe('Extend Linode', () => {
 describe('getRegionIDFromLinodeID', () => {
   it('returns the regionID from the given Linodes and Linode ID', () => {
     expect(getRegionIDFromLinodeID([linode1, linode2], 2020425)).toBe(
-      'us-east-1a'
+      'us-east'
     );
   });
 });

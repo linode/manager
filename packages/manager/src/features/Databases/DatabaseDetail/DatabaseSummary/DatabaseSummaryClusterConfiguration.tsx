@@ -1,11 +1,12 @@
 import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';
-import { dcDisplayNames } from 'src/constants';
+import { useRegionsQuery } from 'src/queries/regions';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import {
   databaseEngineMap,
@@ -46,6 +47,9 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
   const { database } = props;
 
   const { data: types } = useDatabaseTypesQuery();
+  const { data: regions } = useRegionsQuery();
+
+  const region = regions?.find((r) => r.id === database.region);
 
   const type = types?.find((type) => type.id === database?.type);
 
@@ -81,7 +85,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
         </Box>
         <Box display="flex" style={{ marginBottom: 12 }}>
           <Typography className={classes.label}>Region</Typography>
-          {dcDisplayNames[database.region]}
+          {region?.label ?? database.region}
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Plan</Typography>

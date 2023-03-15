@@ -1,7 +1,8 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import { partition } from 'ramda';
 import { Provider } from 'react-redux';
-import { useTheme, useMediaQuery } from 'src/components/core/styles';
+import { useTheme } from '@mui/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   domainFactory,
   firewallFactory,

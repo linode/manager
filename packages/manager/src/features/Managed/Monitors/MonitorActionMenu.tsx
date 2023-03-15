@@ -4,7 +4,9 @@ import { useSnackbar } from 'notistack';
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu';
-import { Theme, useMediaQuery, useTheme } from 'src/components/core/styles';
+import { useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 import {
   useDisableMonitorMutation,

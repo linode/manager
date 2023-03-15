@@ -2,7 +2,8 @@ import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
 import FileCopy from 'src/assets/icons/copy.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import ToolTip from 'src/components/core/Tooltip';
 
 interface Props {
