@@ -2,7 +2,12 @@ import {
   FirewallDevice,
   FirewallDevicePayload,
 } from '@linode/api-v4/lib/firewalls';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -12,8 +17,8 @@ export const actionCreator = actionCreatorFactory(
 
 export interface GetDevicesPayload {
   firewallID: number;
-  params?: any;
-  filters?: any;
+  params?: Params;
+  filters?: Filter;
 }
 export const getAllFirewallDevicesActions = actionCreator.async<
   GetDevicesPayload,

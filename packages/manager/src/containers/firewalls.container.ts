@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import {
   CreateFirewallPayload,
   Firewall,
@@ -23,7 +24,10 @@ import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
-  getFirewalls: (params?: any, filters?: any) => Promise<GetAllData<Firewall>>;
+  getFirewalls: (
+    params?: Params,
+    filters?: Filter
+  ) => Promise<GetAllData<Firewall>>;
   createFirewall: (payload: CreateFirewallPayload) => Promise<Firewall>;
   deleteFirewall: (firewallID: number) => Promise<{}>;
   disableFirewall: (firewallID: number) => Promise<Firewall>;

@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import {
   createFirewall as _create,
   deleteFirewall as _delete,
@@ -19,8 +20,8 @@ import {
 } from './firewalls.actions';
 
 export const getAllFirewallsRequest = (payload: {
-  params?: any;
-  filter?: any;
+  params?: Params;
+  filter?: Filter;
 }) =>
   getAll<Firewall>((passedParams, passedFilter) =>
     getFirewalls(passedParams, passedFilter)

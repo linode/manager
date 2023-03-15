@@ -10,8 +10,13 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import summaryPanelStyles from 'src/containers/SummaryPanels.styles';
 import { useDomainQuery, useUpdateDomainMutation } from 'src/queries/domains';
-import { getAllWithArguments } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import DomainRecords from '../DomainRecordsWrapper';
+
+const getAllDomainRecords = (domainId: number) =>
+  getAll<DomainRecord>((params) => getDomainRecords(domainId, params))().then(
+    ({ data }) => data
+  );
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...summaryPanelStyles(theme),
@@ -77,9 +82,9 @@ const DomainDetail = () => {
   };
 
   const refreshDomainRecords = () => {
-    getAllWithArguments<DomainRecord>(getDomainRecords)([+domainId!])
-      .then(({ data }) => {
-        updateRecords(data);
+    getAllDomainRecords(domainId)
+      .then((records) => {
+        updateRecords(records);
       })
       /** silently fail if DNS records couldn't be updated. No harm here */
       .catch(() => null);

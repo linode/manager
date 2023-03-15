@@ -6,7 +6,7 @@ import {
   StackScript,
   UserDefinedField,
 } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -83,10 +83,10 @@ interface Props extends RenderGuardProps {
   disabled?: boolean;
   request: (
     username: string,
-    params?: any,
-    filter?: any,
+    params?: Params,
+    filter?: Filter,
     stackScriptGrants?: Grant[]
-  ) => Promise<ResourcePage<any>>;
+  ) => Promise<ResourcePage<StackScript>>;
   category: string;
   header: string;
   isOnCreate?: boolean;

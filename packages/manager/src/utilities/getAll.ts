@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import { range } from 'ramda';
 
 import { API_MAX_PAGE_SIZE } from 'src/constants';
@@ -10,13 +11,14 @@ export interface APIResponsePage<T> {
 }
 
 export type GetFunction = (
-  params?: any,
-  filters?: any
+  params?: Params,
+  filters?: Filter
 ) => Promise<APIResponsePage<any>>;
+
 export type GetFromEntity = (
   entityId?: number,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filters?: Filter
 ) => Promise<APIResponsePage<any>>;
 
 export interface GetAllData<T> {
@@ -51,11 +53,11 @@ export const getAll: <T>(
   getter: GetFunction,
   pageSize?: number,
   cb?: any
-) => (params?: any, filter?: any) => Promise<GetAllData<T>> = (
+) => (params?: Params, filter?: Filter) => Promise<GetAllData<T>> = (
   getter,
   pageSize = API_MAX_PAGE_SIZE,
   cb
-) => (params?: any, filter?: any) => {
+) => (params?: Params, filter?: Filter) => {
   const pagination = { ...params, page_size: pageSize };
   return getter(pagination, filter).then(
     ({ data: firstPageData, page, pages, results }) => {
@@ -104,10 +106,15 @@ export const getAll: <T>(
 export const getAllWithArguments: <T>(
   getter: GetFunction,
   pageSize?: number
-) => (args: any[], params?: any, filter?: any) => Promise<GetAllData<T>> = (
-  getter,
-  pageSize = API_MAX_PAGE_SIZE
-) => (args = [], params, filter) => {
+) => (
+  args: any[],
+  params?: Params,
+  filter?: Filter
+) => Promise<GetAllData<T>> = (getter, pageSize = API_MAX_PAGE_SIZE) => (
+  args = [],
+  params,
+  filter
+) => {
   const pagination = { ...params, page_size: pageSize };
 
   return getter(...args, pagination, filter).then(

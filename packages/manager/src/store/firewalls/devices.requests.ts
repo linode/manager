@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import {
   addFirewallDevice as _add,
   deleteFirewallDevice as _delete,
@@ -14,8 +15,8 @@ import {
 
 const requestAll = (payload: {
   firewallID: number;
-  params?: any;
-  filter?: any;
+  params?: Params;
+  filter?: Filter;
 }) =>
   getAllWithArguments<FirewallDevice>(_get)(
     [payload.firewallID],
