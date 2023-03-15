@@ -3,12 +3,8 @@ import ViewModule from '@mui/icons-material/ViewModule';
 import * as React from 'react';
 import { compose } from 'redux';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 type CSSClasses =
   | 'root'

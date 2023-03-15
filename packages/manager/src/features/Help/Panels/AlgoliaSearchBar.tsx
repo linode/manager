@@ -3,13 +3,8 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-  WithTheme,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { selectStyles } from 'src/features/TopMenu/SearchBar';

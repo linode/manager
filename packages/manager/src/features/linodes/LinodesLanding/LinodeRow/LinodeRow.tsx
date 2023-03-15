@@ -34,6 +34,7 @@ import withRecentEvent, { WithRecentEvent } from '../withRecentEvent';
 import styled, { StyleProps } from './LinodeRow.style';
 import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
+import { SxProps } from '@mui/system';
 
 interface Props {
   backups: LinodeBackups;
@@ -293,14 +294,15 @@ RenderFlag.displayName = `RenderFlag`;
 
 export const ProgressDisplay: React.FC<{
   className?: string;
+  sx?: SxProps;
   progress: null | number;
   text: string | undefined;
 }> = (props) => {
-  const { progress, text, className } = props;
+  const { progress, text, className, sx } = props;
   const displayProgress = progress ? `${progress}%` : `scheduled`;
 
   return (
-    <Typography variant="body1" className={className}>
+    <Typography variant="body1" className={className} sx={sx}>
       {text} {displayProgress === 'scheduled' ? '(0%)' : `(${displayProgress})`}
     </Typography>
   );

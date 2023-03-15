@@ -2,8 +2,8 @@ import { CreateTransferPayload } from '@linode/api-v4/lib/entity-transfers';
 import { curry } from 'ramda';
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -15,6 +15,7 @@ import { countByEntity } from '../utilities';
 import LinodeTransferTable from './LinodeTransferTable';
 import TransferCheckoutBar from './TransferCheckoutBar';
 import TransferHeader from './TransferHeader';
+import LandingHeader from 'src/components/LandingHeader';
 import {
   curriedTransferReducer,
   defaultTransferState,
@@ -26,14 +27,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('lg')]: {
       margin: 0,
       justifyContent: 'center',
-    },
-  },
-  crumb: {
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-    },
-    [theme.breakpoints.only('md')]: {
-      paddingLeft: theme.spacing(),
     },
   },
   sidebar: {
@@ -102,17 +95,18 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
   return (
     <>
       <DocumentTitleSegment segment="Make a Service Transfer" />
-      <Breadcrumb
-        className={classes.crumb}
-        pathname={location.pathname}
-        labelTitle="Make a Service Transfer"
-        labelOptions={{ noCap: true }}
-        crumbOverrides={[
-          {
-            position: 2,
-            label: 'Service Transfers',
-          },
-        ]}
+      <LandingHeader
+        title="Make a Service Transfer"
+        breadcrumbProps={{
+          pathname: location.pathname,
+          labelOptions: { noCap: true },
+          crumbOverrides: [
+            {
+              position: 2,
+              label: 'Service Transfers',
+            },
+          ],
+        }}
       />
       {error ? (
         <Notice

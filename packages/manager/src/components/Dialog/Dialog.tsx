@@ -4,7 +4,8 @@ import Button from 'src/components/Button';
 import MUIDialog, {
   DialogProps as _DialogProps,
 } from 'src/components/core/Dialog';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { convertForAria } from 'src/components/TabLink/TabLink';

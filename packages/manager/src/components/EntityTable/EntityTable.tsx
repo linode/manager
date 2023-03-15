@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import { OrderByProps } from 'src/components/OrderBy';
 import APIPaginatedTable from './APIPaginatedTable';
 import GroupedEntitiesByTag from './GroupedEntitiesByTag';
