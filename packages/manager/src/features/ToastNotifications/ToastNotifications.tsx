@@ -122,7 +122,7 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
                 'Learn more about resizing restrictions.',
                 'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/',
                 sendEvent({
-                  category: 'Disk resize',
+                  category: 'Disk Resize Flow',
                   action: `Click:link`,
                   label: 'Disk resize failed toast',
                 })
