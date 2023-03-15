@@ -1,96 +1,117 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import EntityHeader, {
-  HeaderProps,
-} from 'src/components/EntityHeader/EntityHeader';
-import { BreadcrumbProps } from '../Breadcrumb';
+import Breadcrumb, { BreadcrumbProps } from '../Breadcrumb';
+import DocsLink from '../DocsLink';
+import Grid from '@mui/material/Grid';
+import { useTheme, styled } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  button: {
-    marginLeft: theme.spacing(),
-    padding: 0,
-  },
-}));
-
-export interface Props extends Omit<HeaderProps, 'actions'> {
-  extraActions?: JSX.Element;
-  body?: JSX.Element;
-  docsLink?: string;
-  onAddNew?: () => void;
-  entity?: string;
-  createButtonWidth?: number;
-  createButtonText?: string;
-  loading?: boolean;
+export interface Props {
+  analyticsLabel?: string;
+  breadcrumbDataAttrs?: { [key: string]: boolean };
   breadcrumbProps?: BreadcrumbProps;
+  buttonDataAttrs?: { [key: string]: boolean | string };
+  createButtonText?: string;
   disabledCreateButton?: boolean;
+  docsLabel?: string;
+  docsLink?: string;
+  entity?: string;
+  extraActions?: JSX.Element;
+  loading?: boolean;
+  onButtonClick?: () => void;
+  onButtonKeyPress?: (e: React.KeyboardEvent<HTMLButtonElement>) => void;
+  onDocsClick?: () => void;
+  removeCrumbX?: number;
+  title?: string | JSX.Element;
 }
 
 /**
- * This component is essentially a variant of the more abstract EntityHeader
- * component, included as its own component because it will be used in
- * essentially this form across all entity landing pages.
+ * @note Passing a title prop will override the final `breadcrumbProps` label.
+ * If you don't want this behavior, omit a title prop.
  */
+export const LandingHeader = ({
+  analyticsLabel,
+  breadcrumbDataAttrs,
+  breadcrumbProps,
+  buttonDataAttrs,
+  createButtonText,
+  disabledCreateButton,
+  docsLabel,
+  docsLink,
+  entity,
+  extraActions,
+  loading,
+  onButtonClick,
+  onButtonKeyPress,
+  onDocsClick,
+  removeCrumbX,
+  title,
+}: Props) => {
+  const theme = useTheme();
+  const renderActions = Boolean(onButtonClick || extraActions);
+  const labelTitle = title?.toString();
 
-export const LandingHeader: React.FC<Props> = (props) => {
-  const classes = useStyles();
+  const docsAnalyticsLabel = analyticsLabel
+    ? analyticsLabel
+    : `${title} Landing`;
 
-  const {
-    docsLink,
-    onAddNew,
-    entity,
-    extraActions,
-    createButtonWidth,
-    createButtonText,
-    loading,
-    breadcrumbProps,
-    disabledCreateButton,
-  } = props;
-
-  const defaultCreateButtonWidth = 152;
-
-  const actions = React.useMemo(
-    () => (
-      <>
-        {extraActions}
-
-        {onAddNew && (
-          <Button
-            buttonType="primary"
-            className={classes.button}
-            loading={loading}
-            onClick={onAddNew}
-            style={{ width: createButtonWidth ?? defaultCreateButtonWidth }}
-            disabled={disabledCreateButton}
-          >
-            {createButtonText ?? `Create ${entity}`}
-          </Button>
-        )}
-      </>
-    ),
-    [
-      extraActions,
-      onAddNew,
-      classes.button,
-      loading,
-      createButtonWidth,
-      createButtonText,
-      entity,
-      disabledCreateButton,
-    ]
-  );
+  const sxButton = {
+    marginLeft: theme.spacing(1),
+  };
 
   return (
-    <EntityHeader
-      isLanding
-      actions={extraActions || onAddNew ? actions : undefined}
-      docsLink={docsLink}
-      breadcrumbProps={breadcrumbProps}
-      {...props}
+    <Grid
+      container
+      data-qa-entity-header
+      justifyContent="space-between"
+      alignItems="center"
     >
-      {props.children}
-    </EntityHeader>
+      <Grid item>
+        <Breadcrumb
+          data-qa-title
+          labelTitle={labelTitle}
+          // The pathname set by "breadcrumbProps" is just a fallback to satisfy the type.
+          pathname={location.pathname}
+          removeCrumbX={removeCrumbX}
+          {...breadcrumbDataAttrs}
+          {...breadcrumbProps}
+        />
+      </Grid>
+      <Grid item>
+        <Grid alignItems="center" container item justifyContent="flex-end">
+          {docsLink ? (
+            <DocsLink
+              href={docsLink}
+              label={docsLabel}
+              analyticsLabel={docsAnalyticsLabel}
+              onClick={onDocsClick}
+            />
+          ) : null}
+          {renderActions && (
+            <Actions>
+              {extraActions}
+              {onButtonClick ? (
+                <Button
+                  buttonType="primary"
+                  disabled={disabledCreateButton}
+                  loading={loading}
+                  onClick={onButtonClick}
+                  sx={sxButton}
+                  onKeyPress={onButtonKeyPress}
+                  {...buttonDataAttrs}
+                >
+                  {createButtonText ?? `Create ${entity}`}
+                </Button>
+              ) : null}
+            </Actions>
+          )}
+        </Grid>
+      </Grid>
+    </Grid>
   );
 };
 
 export default LandingHeader;
+
+const Actions = styled('div')(({ theme }) => ({
+  marginLeft: `${theme.spacing(2)}`,
+}));

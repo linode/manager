@@ -497,7 +497,7 @@ export const base: ThemeOptions = {
           backgroundColor: 'transparent',
           color: textColors.linkActiveLight,
           '&:hover, &:focus': {
-            backgroundColor: 'transparent !important',
+            backgroundColor: 'transparent',
             color: textColors.linkActiveLight,
           },
           '&:active': {
@@ -521,7 +521,7 @@ export const base: ThemeOptions = {
           color: textColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: '#f5f8ff !important',
+            backgroundColor: '#f5f8ff',
             border: '1px solid #d7dfed',
             color: '#2575d0',
           },

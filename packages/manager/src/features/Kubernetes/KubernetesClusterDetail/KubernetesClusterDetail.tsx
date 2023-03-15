@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import { getKubeHighAvailability } from 'src/features/Kubernetes/kubeUtils';
@@ -19,28 +15,9 @@ import KubeSummaryPanel from './KubeSummaryPanel';
 import { NodePoolsDisplay } from './NodePoolsDisplay/NodePoolsDisplay';
 import { UpgradeKubernetesClusterToHADialog } from './UpgradeClusterDialog';
 import UpgradeKubernetesVersionBanner from './UpgradeKubernetesVersionBanner';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('md')]: {
-      paddingRight: theme.spacing(),
-    },
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-    },
-  },
-  error: {
-    [theme.breakpoints.down('sm')]: {
-      paddingBottom: 20,
-    },
-  },
-  upgradeToHAButton: {
-    marginLeft: 24,
-  },
-}));
+import LandingHeader from 'src/components/LandingHeader';
 
 export const KubernetesClusterDetail = () => {
-  const classes = useStyles();
   const { data: account } = useAccount();
   const { clusterID } = useParams<{ clusterID: string }>();
   const id = Number(clusterID);
@@ -89,6 +66,10 @@ export const KubernetesClusterDetail = () => {
     return cluster?.label;
   };
 
+  const handleUpgradeToHA = () => {
+    setIsUpgradeToHAOpen(true);
+  };
+
   return (
     <>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster?.label}`} />
@@ -99,37 +80,28 @@ export const KubernetesClusterDetail = () => {
           currentVersion={cluster?.k8s_version}
         />
       </Grid>
-      <Grid container className={classes.root} justifyContent="space-between">
-        <Grid item className="p0">
-          <Breadcrumb
-            onEditHandlers={{
-              editableTextTitle: cluster?.label,
-              onEdit: handleLabelChange,
-              onCancel: resetEditableLabel,
-              errorText: updateError,
-            }}
-            firstAndLastOnly
-            pathname={location.pathname}
-            data-qa-breadcrumb
-          />
-        </Grid>
-        <Grid
-          item
-          className="p0"
-          style={{ marginTop: 14, marginBottom: 8, display: 'flex' }}
-        >
-          <DocsLink href="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/" />
-          {showHighAvailability && !isClusterHighlyAvailable ? (
-            <Button
-              className={classes.upgradeToHAButton}
-              buttonType="primary"
-              onClick={() => setIsUpgradeToHAOpen(true)}
-            >
-              Upgrade to HA
-            </Button>
-          ) : null}
-        </Grid>
-      </Grid>
+      <LandingHeader
+        title="Kubernetes Cluster Details"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
+        breadcrumbProps={{
+          breadcrumbDataAttrs: { 'data-qa-breadcrumb': true },
+          firstAndLastOnly: true,
+          pathname: location.pathname,
+          onEditHandlers: {
+            editableTextTitle: cluster?.label,
+            onEdit: handleLabelChange,
+            onCancel: resetEditableLabel,
+            errorText: updateError,
+          },
+        }}
+        createButtonText="Upgrade to HA"
+        onButtonClick={
+          showHighAvailability && !isClusterHighlyAvailable
+            ? handleUpgradeToHA
+            : undefined
+        }
+      />
       <Grid item>
         <KubeSummaryPanel cluster={cluster} />
       </Grid>

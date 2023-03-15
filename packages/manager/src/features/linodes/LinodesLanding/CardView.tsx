@@ -122,10 +122,9 @@ const CardView: React.FC<CombinedProps> = (props) => {
           <React.Fragment key={`linode-card-${idx}`}>
             <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
               <LinodeEntityDetail
-                variant="landing"
                 id={linode.id}
                 linode={linode}
-                isDetailLanding
+                isSummaryView
                 numVolumes={getVolumesByLinode(linode.id)}
                 username={profile?.username}
                 linodeConfigs={linodeConfigs}

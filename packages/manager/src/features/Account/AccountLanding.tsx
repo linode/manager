@@ -107,7 +107,7 @@ const AccountLanding: React.FC = () => {
       'https://www.linode.com/docs/guides/how-linode-billing-works/';
     landingHeaderProps.createButtonText = 'Make a Payment';
     if (!isAkamaiAccount) {
-      landingHeaderProps.onAddNew = () =>
+      landingHeaderProps.onButtonClick = () =>
         history.replace('/account/billing/make-payment');
     }
     landingHeaderProps.disabledCreateButton = readOnlyAccountAccess;

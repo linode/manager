@@ -139,8 +139,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
     ? 'Create Access Key'
     : 'Create Bucket';
 
-  const createButtonWidth = matchesAccessKeys ? 180 : 152;
-
   const createButtonAction = () => {
     if (matchesAccessKeys) {
       setMode('creating');
@@ -158,9 +156,8 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
         title="Object Storage"
         entity="Object Storage"
         createButtonText={createButtonText}
-        createButtonWidth={createButtonWidth}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
-        onAddNew={createButtonAction}
+        onButtonClick={createButtonAction}
         removeCrumbX={1}
         breadcrumbProps={{ pathname: '/object-storage' }}
       />

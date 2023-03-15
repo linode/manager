@@ -7,13 +7,8 @@ import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
-import DocsLink from 'src/components/DocsLink';
-import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import _StackScript from 'src/components/StackScript';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
@@ -24,6 +19,7 @@ import {
   canUserModifyAccountStackScript,
   getStackScriptUrl,
 } from './stackScriptUtils';
+import LandingHeader from 'src/components/LandingHeader';
 
 interface MatchProps {
   stackScriptId: string;
@@ -33,34 +29,7 @@ type RouteProps = RouteComponentProps<MatchProps>;
 
 type CombinedProps = RouteProps & SetDocsProps;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    margin: 0,
-    [theme.breakpoints.down('md')]: {
-      paddingRight: theme.spacing(),
-    },
-    [theme.breakpoints.down('sm')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      paddingLeft: theme.spacing(),
-    },
-  },
-  cta: {
-    display: 'flex',
-    flexGrow: 1,
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    justifyContent: 'flex-end',
-    marginTop: 6,
-    marginLeft: theme.spacing(),
-  },
-  button: {
-    marginLeft: theme.spacing(3),
-  },
-}));
-
 export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
   const { _isRestrictedUser, _hasGrant, profile } = useAccountManagement();
   const { data: grants } = useGrants();
   const { history } = props;
@@ -152,46 +121,35 @@ export const StackScriptsDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Grid container className={classes.root} justifyContent="space-between">
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={props.location.pathname}
-            labelTitle={stackScript.label}
-            labelOptions={{ noCap: true }}
-            crumbOverrides={[
-              {
-                position: 1,
-                label: 'StackScripts',
-                linkTo: stackScript.mine
-                  ? '/stackscripts/account'
-                  : '/stackscripts/community',
-              },
-            ]}
-            onEditHandlers={
-              userCanModify
-                ? {
-                    editableTextTitle: stackScriptLabel,
-                    onEdit: handleLabelChange,
-                    onCancel: resetEditableLabel,
-                    errorText: labelError,
-                  }
-                : undefined
-            }
-          />
-        </Grid>
-        <Grid item className={`${classes.cta} p0`}>
-          <DocsLink href="https://www.linode.com/docs/platform/stackscripts" />
-          <Button
-            buttonType="primary"
-            className={classes.button}
-            onClick={handleCreateClick}
-            disabled={userCannotAddLinodes}
-            data-qa-stack-deploy
-          >
-            Deploy New Linode
-          </Button>
-        </Grid>
-      </Grid>
+      <LandingHeader
+        title={stackScript.label}
+        docsLabel="Docs"
+        createButtonText="Deploy New Linode"
+        disabledCreateButton={userCannotAddLinodes}
+        onButtonClick={handleCreateClick}
+        docsLink="https://www.linode.com/docs/platform/stackscripts"
+        breadcrumbProps={{
+          pathname: props.location.pathname,
+          labelOptions: { noCap: true },
+          crumbOverrides: [
+            {
+              position: 1,
+              label: 'StackScripts',
+              linkTo: stackScript.mine
+                ? '/stackscripts/account'
+                : '/stackscripts/community',
+            },
+          ],
+          onEditHandlers: userCanModify
+            ? {
+                editableTextTitle: stackScriptLabel,
+                onEdit: handleLabelChange,
+                onCancel: resetEditableLabel,
+                errorText: labelError,
+              }
+            : undefined,
+        }}
+      />
       <div className="detailsWrapper">
         <_StackScript data={stackScript} userCanModify={userCanModify} />
       </div>

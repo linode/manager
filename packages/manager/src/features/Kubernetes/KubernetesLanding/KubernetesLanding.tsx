@@ -150,7 +150,7 @@ export const KubernetesLanding = () => {
       <LandingHeader
         title="Kubernetes"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
-        onAddNew={() => push('/kubernetes/create')}
+        onButtonClick={() => push('/kubernetes/create')}
         entity="Cluster"
         removeCrumbX={1}
       />

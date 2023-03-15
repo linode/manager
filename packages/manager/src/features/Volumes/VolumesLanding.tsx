@@ -271,7 +271,7 @@ export const VolumesLanding: React.FC<CombinedProps> = (props) => {
       <LandingHeader
         title="Volumes"
         entity="Volume"
-        onAddNew={() => history.push('/volumes/create')}
+        onButtonClick={() => history.push('/volumes/create')}
         docsLink="https://www.linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode/"
       />
       <Table>

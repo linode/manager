@@ -131,7 +131,7 @@ export const LongviewLanding: React.FunctionComponent<CombinedProps> = (
         createButtonText="Add Client"
         docsLink="https://www.linode.com/docs/platform/longview/longview/"
         loading={newClientLoading}
-        onAddNew={handleAddClient}
+        onButtonClick={handleAddClient}
         removeCrumbX={1}
       />
       <Tabs

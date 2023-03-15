@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(1) + theme.spacing(0.5),
       color: theme.textColors.linkActiveLight,
       transition: 'none',
-      margin: `0 -calc(${theme.spacing(1) + theme.spacing(1)} / 2) 2px 0`,
+      margin: `0 ${theme.spacing(1)} 2px 0`,
       minHeight: 'auto',
       borderRadius: 0,
       '&:hover': {
