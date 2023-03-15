@@ -571,6 +571,27 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'Galera',
+    alt_name: 'SQL database',
+    alt_description: 'SQL database.',
+    categories: ['Databases'],
+    description: `Galera provides a performant multi-master/active-active database solution with synchronous replication, to achieve high availability.`,
+    summary: `Multi-master MariaDB database cluster.`,
+    related_guides: [
+      {
+        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+      },
+    ],
+    website: 'https://galeracluster.com/',
+    logo_url: 'galera.svg',
+    colors: {
+      start: 'EC7704',
+      end: '000000',
+    },
+  },
+  {
     name: 'Gitea',
     alt_name: 'Git repository hosting',
     alt_description: 'Open source, self-hosted Git management tool.',
@@ -1197,6 +1218,27 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'MongoDB Cluster',
+    alt_name: 'NoSQL database',
+    alt_description: 'Popular document database.',
+    categories: ['Databases'],
+    description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
+    summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
+    related_guides: [
+      {
+        title: 'Deploy MongoDB Cluster with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb-cluster/',
+      },
+    ],
+    website: 'https://www.mongodb.com/',
+    logo_url: 'mongodb.svg',
+    colors: {
+      start: '28aa52',
+      end: '136149',
+    },
+  },
+  {
     name: 'Moodle',
     alt_name: 'Online course CMS',
     alt_description: 'Open source course builder and education tool.',
@@ -1656,6 +1698,27 @@ export const oneClickApps: OCA[] = [
     },
   },
   {
+    name: 'PostgreSQL Cluster',
+    alt_name: 'SQL database',
+    alt_description: 'MySQL alternative for SQL database.',
+    categories: ['Databases'],
+    description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
+    summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
+    related_guides: [
+      {
+        title: 'Deploy PostgreSQL Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
+      },
+    ],
+    website: 'https://www.postgresql.org/',
+    logo_url: 'postgresql.svg',
+    colors: {
+      start: '326690',
+      end: '254078',
+    },
+  },
+  {
     name: 'Pritunl',
     alt_name: 'Enterprise VPN',
     alt_description: 'Virtual private network for businesses and teams.',
@@ -1754,6 +1817,28 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy Redis through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
+      },
+    ],
+    website: 'https://redis.io/',
+    logo_url: 'redis.svg',
+    colors: {
+      start: '222222',
+      end: '722b20',
+    },
+  },
+  {
+    name: 'Redis Sentinel Cluster',
+    alt_name: 'High performance database',
+    alt_description: 'In-memory caching database.',
+    categories: ['Databases'],
+    description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
+    summary:
+      'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
+    related_guides: [
+      {
+        title: 'Deploy Redis Sentinel Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
       },
     ],
     website: 'https://redis.io/',

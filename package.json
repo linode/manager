@@ -69,5 +69,8 @@
   "version": "0.0.0",
   "volta": {
     "node": "18.14.1"
+  },
+  "dependencies": {
+    "ua-parser-js": "^0.7.33"
   }
 }
