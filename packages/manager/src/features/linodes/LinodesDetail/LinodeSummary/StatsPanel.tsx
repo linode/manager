@@ -1,6 +1,6 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles(() => ({

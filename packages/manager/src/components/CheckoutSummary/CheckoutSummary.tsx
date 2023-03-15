@@ -1,6 +1,9 @@
 import * as React from 'react';
 import Paper from '../core/Paper';
-import { makeStyles, Theme, useMediaQuery, useTheme } from '../core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+
 import Typography from '../core/Typography';
 import Grid from '../Grid';
 import { SummaryItem } from './SummaryItem';

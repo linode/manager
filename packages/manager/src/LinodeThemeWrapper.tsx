@@ -4,11 +4,8 @@ import { isProductionBuild } from './constants';
 import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
 import { ThemeName } from './themeFactory';
-import {
-  ThemeProvider,
-  Theme,
-  useMediaQuery,
-} from 'src/components/core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { ThemeProvider, Theme } from '@mui/material/styles';
 import {
   getThemeFromPreferenceValue,
   ThemeChoice,

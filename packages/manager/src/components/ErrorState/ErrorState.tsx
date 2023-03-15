@@ -3,7 +3,9 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import classNames from 'classnames';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { makeStyles, SvgIconProps, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { SvgIconProps } from '@mui/material/SvgIcon';
+import { Theme } from '@mui/material/styles';
 
 interface Props {
   errorText: string | JSX.Element;

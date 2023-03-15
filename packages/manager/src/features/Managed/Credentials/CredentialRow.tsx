@@ -1,6 +1,7 @@
 import { ManagedCredential } from '@linode/api-v4/lib/managed';
 import * as React from 'react';
-import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';

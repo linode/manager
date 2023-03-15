@@ -1,12 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import IconButton, { IconButtonProps } from 'src/components/core/IconButton';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 type ClassNames = 'root' | 'destructive';
 

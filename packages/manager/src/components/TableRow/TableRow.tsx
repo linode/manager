@@ -3,7 +3,8 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import _TableRow, { TableRowProps } from 'src/components/core/TableRow';
 
 const useStyles = makeStyles((theme: Theme) => ({

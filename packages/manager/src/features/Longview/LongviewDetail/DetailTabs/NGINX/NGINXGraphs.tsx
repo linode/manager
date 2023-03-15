@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { WithTheme, withTheme } from 'src/components/core/styles';
+import { WithTheme, withTheme } from '@mui/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import { LongviewProcesses, NginxResponse } from '../../../request.types';

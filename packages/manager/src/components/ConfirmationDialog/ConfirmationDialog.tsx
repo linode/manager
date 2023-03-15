@@ -3,7 +3,8 @@ import Dialog, { DialogProps } from 'src/components/core/Dialog';
 import DialogActions from 'src/components/core/DialogActions';
 import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DialogTitle from 'src/components/DialogTitle';
 
 const useStyles = makeStyles((theme: Theme) => ({

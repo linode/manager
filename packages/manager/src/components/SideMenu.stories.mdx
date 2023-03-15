@@ -1,7 +1,7 @@
 import { ArgsTable, Canvas, Meta, Story } from '@storybook/addon-docs';
 import { useState } from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import SideMenu from './SideMenu';
 
 <Meta title="Features/Navigation/Side Menu" component={SideMenu} />
@@ -64,5 +64,5 @@ export const SideMenuSourceCode = `
 <SideMenu
   collapse={collapse}
   open={open}
-  closeMenu={() => setOpen(false)} 
+  closeMenu={() => setOpen(false)}
 />`;

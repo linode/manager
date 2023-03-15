@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { WithTheme, withTheme } from 'src/components/core/styles';
+import { WithTheme, withTheme } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {

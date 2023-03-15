@@ -4,7 +4,8 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip, { ChipProps } from 'src/components/core/Chip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { truncateEnd } from 'src/utilities/truncate';
 
 type Variants = 'blue' | 'lightBlue';

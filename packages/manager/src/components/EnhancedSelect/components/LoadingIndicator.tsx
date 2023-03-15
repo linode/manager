@@ -1,12 +1,8 @@
 import * as React from 'react';
 import { IndicatorProps } from 'react-select';
 import CircularProgress from 'src/components/core/CircularProgress';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 type ClassNames = 'root';
 

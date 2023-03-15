@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import packageJson from '../../../package.json';

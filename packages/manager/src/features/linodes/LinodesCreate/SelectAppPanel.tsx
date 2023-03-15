@@ -2,12 +2,8 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import ErrorState from 'src/components/ErrorState';
 import Loading from 'src/components/LandingLoading';
 import Notice from 'src/components/Notice';

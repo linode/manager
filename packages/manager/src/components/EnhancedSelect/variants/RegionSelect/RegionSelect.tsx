@@ -9,7 +9,8 @@ import SG from 'flag-icons/flags/4x3/sg.svg';
 import US from 'flag-icons/flags/4x3/us.svg';
 import { groupBy } from 'ramda';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,

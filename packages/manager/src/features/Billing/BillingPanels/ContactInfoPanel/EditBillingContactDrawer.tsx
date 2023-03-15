@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Drawer from 'src/components/Drawer';
 import UpdateContactInformationForm from './UpdateContactInformationForm';
 

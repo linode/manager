@@ -1,7 +1,8 @@
 import { Database, DatabaseInstance } from '@linode/api-v4/lib/databases/types';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import { useDatabaseTypesQuery } from 'src/queries/databases';

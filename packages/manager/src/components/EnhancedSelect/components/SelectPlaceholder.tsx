@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { PlaceholderProps } from 'react-select';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root';

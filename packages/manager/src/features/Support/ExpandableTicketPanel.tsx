@@ -1,7 +1,8 @@
 import { SupportReply, SupportTicket } from '@linode/api-v4';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';

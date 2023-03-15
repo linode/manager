@@ -2,7 +2,8 @@ import { APIError } from '@linode/api-v4/lib/types';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
 import {

@@ -7,8 +7,8 @@ import Typography from 'src/components/core/Typography';
 
 import { ResultGroup } from './ResultGroup';
 
-jest.mock('src/components/core/styles', () => ({
-  ...(jest.requireActual('src/components/core/styles') as any),
+jest.mock('@mui/styles', () => ({
+  ...(jest.requireActual('@mui/styles') as any),
   makeStyles: jest.fn(() => () => ({})),
 }));
 jest.mock('src/hooks/useFlags', () => ({

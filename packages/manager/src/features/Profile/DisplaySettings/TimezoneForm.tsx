@@ -7,7 +7,8 @@ import Typography from 'src/components/core/Typography';
 import CircleProgress from 'src/components/CircleProgress';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { useSnackbar } from 'notistack';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { useMutateProfile, useProfile } from 'src/queries/profile';
 import { DateTime } from 'luxon';
 

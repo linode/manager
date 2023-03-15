@@ -1,7 +1,8 @@
 import FileCopy from '@mui/icons-material/FileCopy';
 import copy from 'copy-to-clipboard';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { prefixArrayToString } from '../utilities';

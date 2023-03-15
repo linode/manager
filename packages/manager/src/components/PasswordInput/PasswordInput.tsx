@@ -1,6 +1,6 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import zxcvbn from 'zxcvbn';

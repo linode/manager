@@ -1,7 +1,8 @@
 import { Config, Disk, Interface } from '@linode/api-v4/lib/linodes';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { API_MAX_PAGE_SIZE } from 'src/constants';

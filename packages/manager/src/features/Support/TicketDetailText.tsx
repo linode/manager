@@ -1,6 +1,7 @@
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
 import IconButton from 'src/components/IconButton';

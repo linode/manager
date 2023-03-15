@@ -1,6 +1,7 @@
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import CloseSnackbar from './CloseSnackbar';
 
 const useStyles = makeStyles((theme: Theme) => ({

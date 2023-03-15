@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useHistory } from 'react-router-dom';
 import { PaymentMethod } from '@linode/api-v4/lib/account/types';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Paper from 'src/components/core/Paper';
 import Grid from 'src/components/Grid';
 import Chip from 'src/components/core/Chip';

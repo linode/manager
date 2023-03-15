@@ -5,7 +5,8 @@ import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import {
   eventLabelGenerator,

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { WithTheme, withTheme } from 'src/components/core/styles';
+import { WithTheme, withTheme } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import withClientStats, {
@@ -83,8 +83,8 @@ const NetworkGauge: React.FC<CombinedProps> = (props) => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      /* 
-        the max here is not meant to act as an actual max 
+      /*
+        the max here is not meant to act as an actual max
         but instead just a logical high value.
 
         This max comes from the product review on Nov 1st, 2019
@@ -108,7 +108,7 @@ export default compose<CombinedProps, Props>(
 /*
   What's returned from Network is a bit of an unknown, but assuming that
   there might be multiple interfaces, we might have a payload like so
-  
+
   "Network": {
     "mac_addr": "f2:3c:92:50:4a:65",
     "Interface": {

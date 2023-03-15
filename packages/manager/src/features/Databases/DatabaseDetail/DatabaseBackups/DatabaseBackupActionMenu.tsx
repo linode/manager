@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { DatabaseBackup } from '@linode/api-v4/lib/databases';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 
 const useStyles = makeStyles(() => ({

@@ -1,7 +1,8 @@
 import Close from '@mui/icons-material/Close';
 import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import Notice, { NoticeProps } from 'src/components/Notice';
 import useDismissibleNotifications, {

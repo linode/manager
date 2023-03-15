@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';

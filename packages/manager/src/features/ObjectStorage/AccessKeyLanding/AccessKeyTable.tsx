@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import CopyTooltip from 'src/components/CopyTooltip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
