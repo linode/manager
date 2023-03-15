@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import { Event, Notification } from './types';
 
 /**
@@ -9,7 +9,7 @@ import { Event, Notification } from './types';
  * Retrieve a list of events on your account.
  *
  */
-export const getEvents = (params: any = {}, filter: any = {}) =>
+export const getEvents = (params: Params = {}, filter: Filter = {}) =>
   Request<ResourcePage<Event>>(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),

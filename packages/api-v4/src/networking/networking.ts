@@ -12,7 +12,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Params, ResourcePage as Page } from '../types';
 import {
   CreateIPv6RangePayload,
   IPAddress,
@@ -149,7 +149,7 @@ export const shareAddresses = (payload: IPSharingPayload) =>
  * Displays the IPv6 pools on your Account.
  *
  */
-export const getIPv6Pools = (params?: unknown) =>
+export const getIPv6Pools = (params?: Params) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/pools`),
     setMethod('GET'),
@@ -160,7 +160,7 @@ export const getIPv6Pools = (params?: unknown) =>
  * View IPv6 range information.
  *
  */
-export const getIPv6Ranges = (params?: any) =>
+export const getIPv6Ranges = (params?: Params) =>
   Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
@@ -172,7 +172,7 @@ export const getIPv6Ranges = (params?: any) =>
  *
  * @param range { string } The range address to operate on.
  */
-export const getIPv6RangeInfo = (range: string, params?: any) =>
+export const getIPv6RangeInfo = (range: string, params?: Params) =>
   Request<IPRangeInformation>(
     setURL(`${API_ROOT}/networking/ipv6/ranges/${range}`),
     setMethod('GET'),

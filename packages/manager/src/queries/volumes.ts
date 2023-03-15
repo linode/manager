@@ -25,6 +25,7 @@ import {
   createVolume,
   getLinodeVolumes,
 } from '@linode/api-v4';
+import { Filter, Params } from '@linode/api-v4/src/types';
 
 /**
  * For Volumes, we must maintain the following stores to keep our cache up to date.
@@ -39,7 +40,7 @@ import {
 
 export const queryKey = 'volumes';
 
-export const useVolumesQuery = (params: any, filters: any) =>
+export const useVolumesQuery = (params: Params, filters: Filter) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
     [`${queryKey}-list`, params, filters],
     () => getVolumes(params, filters),
