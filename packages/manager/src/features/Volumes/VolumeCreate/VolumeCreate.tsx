@@ -1,21 +1,12 @@
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
-import BreadCrumb from 'src/components/Breadcrumb';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useRegionsQuery } from 'src/queries/regions';
 import { MapState } from 'src/store/types';
 import { openForConfig, viewResizeInstructions } from 'src/store/volumeForm';
 import CreateVolumeForm from './CreateVolumeForm';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  title: {
-    [theme.breakpoints.down('sm')]: {
-      marginLeft: theme.spacing(),
-    },
-  },
-}));
+import LandingHeader from 'src/components/LandingHeader';
 
 interface StateProps {
   mode: string;
@@ -59,7 +50,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 type CombinedProps = StateProps & RouteComponentProps<{}> & DispatchProps;
 
 const VolumeCreate: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
   const regions = useRegionsQuery().data ?? [];
 
   const { actions, history } = props;
@@ -67,11 +57,7 @@ const VolumeCreate: React.FC<CombinedProps> = (props) => {
   return (
     <>
       <DocumentTitleSegment segment="Create Volume" />
-      <BreadCrumb
-        className={classes.title}
-        labelTitle="Create"
-        pathname={props.location.pathname}
-      />
+      <LandingHeader title="Create" />
       <CreateVolumeForm
         onSuccess={actions.openForConfig}
         regions={regions}

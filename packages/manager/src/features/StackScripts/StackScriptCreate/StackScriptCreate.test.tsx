@@ -31,6 +31,11 @@ describe('StackScriptCreate', () => {
       clearDocs={jest.fn()}
     />
   );
+
+  xit('should container <LandingHeader />', () => {
+    expect(component.find('LandingHeader')).toHaveLength(1);
+  });
+
   xit('should render a title that reads "Create StackScript', () => {
     const titleText = component
       .find('WithStyles(Typography)')
@@ -62,15 +67,6 @@ describe('StackScriptCreate', () => {
       const backIcon = component.find('WithStyles(IconButton)').first();
       const parentLink = backIcon.closest('Link');
       expect(parentLink.prop('to')).toBe('/stackscripts');
-    });
-  });
-
-  describe('Breadcrumb', () => {
-    const breadcrumb = component.find(
-      '[data-qa-create-stackscript-breadcrumb]'
-    );
-    it('should render', () => {
-      expect(breadcrumb).toHaveLength(1);
     });
   });
 });

@@ -174,7 +174,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
         title="Firewalls"
         entity="Firewall"
         breadcrumbProps={{ pathname: '/firewalls' }}
-        onAddNew={openDrawer}
+        onButtonClick={openDrawer}
         docsLink="https://linode.com/docs/platform/cloud-firewall/getting-started-with-cloud-firewall/"
       />
       <EntityTable
