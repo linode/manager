@@ -12,6 +12,7 @@ export interface OCA {
   colors: Colors;
   categories: AppCategory[];
   cluster_name?: string;
+  cluster_guides?: Doc[];
 }
 
 export interface Doc {
@@ -568,6 +569,35 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: '2997f8',
       end: '1d52ad',
+    },
+  },
+  {
+    name: 'Galera',
+    alt_name: 'SQL database',
+    alt_description: 'SQL database.',
+    categories: ['Databases'],
+    cluster_name: 'Galera Cluster',
+    description: `Galera provides a performant multi-master/active-active database solution with synchronous replication, to achieve high availability.`,
+    summary: `Multi-master MariaDB database cluster.`,
+    related_guides: [
+      {
+        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+      },
+    ],
+    cluster_guides: [
+      {
+        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+      },
+    ],
+    website: 'https://galeracluster.com/',
+    logo_url: 'galera.svg',
+    colors: {
+      start: 'EC7704',
+      end: '000000',
     },
   },
   {
@@ -1189,6 +1219,13 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb/',
       },
     ],
+    cluster_guides: [
+      {
+        title: 'Deploy MongoDB Cluster with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb-cluster/',
+      },
+    ],
     website: 'https://www.mongodb.com/',
     logo_url: 'mongodb.svg',
     colors: {
@@ -1223,7 +1260,6 @@ export const oneClickApps: OCA[] = [
     alt_name: 'SQL database',
     alt_description: 'SQL database.',
     categories: ['Databases'],
-    cluster_name: 'Galera Cluster',
     description: `MySQL, or MariaDB for Linux distributions, is primarily used for web and server applications, including as a component of the industry-standard LAMP and LEMP stacks.`,
     summary: `World's most popular open source database.`,
     related_guides: [
@@ -1648,6 +1684,13 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
       },
     ],
+    cluster_guides: [
+      {
+        title: 'Deploy PostgreSQL Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
+      },
+    ],
     website: 'https://www.postgresql.org/',
     logo_url: 'postgresql.svg',
     colors: {
@@ -1754,6 +1797,13 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy Redis through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
+      },
+    ],
+    cluster_guides: [
+      {
+        title: 'Deploy Redis Sentinel Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
       },
     ],
     website: 'https://redis.io/',

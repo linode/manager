@@ -88,13 +88,6 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
 
   const labelIndicatesCluster = /.+\s(Cluster)/.test(stackScriptLabel);
 
-  /*
-    Since we use the label to search within the OCA array and clusters use
-    the app info from their individual app counterparts, we need to extract
-    the base StackScript label out to be able to search the array successfully.
-  */
-  const baseStackScriptLabel = stackScriptLabel.replace(' Cluster', '');
-
   const gradient = {
     backgroundImage: `url(/assets/marketplace-background.png),linear-gradient(to right, #${selectedApp?.colors.start}, #${selectedApp?.colors.end})`,
   };
@@ -105,19 +98,11 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
         .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
         .trim();
 
-      const cleanedBaseStackScriptLabel = baseStackScriptLabel
-        .replace(/[^\w\s\/$*+-?&.:()]/gi, '')
-        .trim();
-
       const cleanedAppName = app.name.replace('&reg;', '');
 
-      /* This logic is to capture two cases:
-          1) the matching app name does not contain " Cluster " (e.g., MongoDB)
-          2) the matching app name does contain " Cluster " (e.g., Galera Cluster)
-      */
       return (
         cleanedStackScriptLabel === cleanedAppName ||
-        cleanedBaseStackScriptLabel === cleanedAppName
+        cleanedStackScriptLabel === app.cluster_name
       );
     });
 
@@ -128,18 +113,8 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
     const appCopy = cloneDeep(app);
 
     if (labelIndicatesCluster) {
-      appCopy.name += ' Cluster';
-      // eslint-disable-next-line no-unused-expressions
-      appCopy.related_guides?.push(
-        {
-          title: 'Learn about database clusters',
-          href: 'https://www.linode.com/docs/guides', // temporary placeholder
-        },
-        {
-          title: 'Set up Linode API token',
-          href: 'https://www.linode.com/docs/guides', // temporary placeholder
-        }
-      );
+      appCopy.name = app.cluster_name ?? app.name;
+      appCopy.related_guides = app.cluster_guides;
     }
 
     setSelectedApp(appCopy);
@@ -147,7 +122,7 @@ export const AppDetailDrawer: React.FunctionComponent<Props> = (props) => {
     return () => {
       setSelectedApp(null);
     };
-  }, [baseStackScriptLabel, labelIndicatesCluster, stackScriptLabel]);
+  }, [labelIndicatesCluster, stackScriptLabel]);
 
   return (
     <Drawer

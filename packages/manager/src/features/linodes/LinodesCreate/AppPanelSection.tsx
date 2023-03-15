@@ -73,6 +73,7 @@ export const AppPanelSection: React.FC<Props> = (props) => {
               checked={eachApp.id === selectedStackScriptID}
               // Decode App labels since they may contain HTML entities.
               label={label}
+              clusterLabel={decodedLabel}
               availableImages={eachApp.images}
               userDefinedFields={eachApp.user_defined_fields}
               handleClick={handleClick}
