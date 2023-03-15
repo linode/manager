@@ -195,7 +195,7 @@ export const EventsLanding: React.FC<CombinedProps> = (props) => {
 
     const getEventsRequest = props.getEventsRequest || getEvents;
 
-    getEventsRequest({ page: currentPage, pageSize: 50 })
+    getEventsRequest({ page: currentPage })
       .then(handleEventsRequestSuccess)
       .catch(() => {
         props.enqueueSnackbar('There was an error loading more events', {

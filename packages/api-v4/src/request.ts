@@ -64,7 +64,7 @@ export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
   set('method', method);
 
 /** Param */
-export const setParams = (params: Params = {}) => set('params', params);
+export const setParams = (params: Params | undefined) => set('params', params);
 
 export const setHeaders = (newHeaders: any = {}) => (object: any) => {
   return !isEmpty(newHeaders)
@@ -141,7 +141,7 @@ const mapYupToLinodeAPIError = ({
 });
 
 /** X-Filter */
-export const setXFilter = (xFilter: Filter) => {
+export const setXFilter = (xFilter: Filter | undefined) => {
   return (object: any) =>
     !isEmpty(xFilter)
       ? {

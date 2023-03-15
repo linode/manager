@@ -12,7 +12,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { Params, ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   CreateIPv6RangePayload,
   IPAddress,
@@ -27,7 +27,7 @@ import {
  * addresses.
  *
  */
-export const getIPs = (params?: any, filters?: any) =>
+export const getIPs = (params?: Params, filters?: Filter) =>
   Request<Page<IPAddress>>(
     setURL(`${API_ROOT}/networking/ips`),
     setMethod('GET'),

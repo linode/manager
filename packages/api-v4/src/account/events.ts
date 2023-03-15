@@ -62,7 +62,7 @@ export const markEventRead = (eventId: number) =>
  * Retrieve a list of active notifications on your account.
  *
  */
-export const getNotifications = (params?: any, filter?: any) =>
+export const getNotifications = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<Notification>>(
     setURL(`${API_ROOT}/account/notifications`),
     setMethod('GET'),

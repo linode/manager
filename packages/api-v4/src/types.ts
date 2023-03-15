@@ -31,14 +31,11 @@ export interface Params {
   page_size?: number;
 }
 
-interface BaseConditionTypes {
+interface FilterConditionTypes {
   '+and'?: Filter[];
   '+or'?: Filter[];
   '+order_by'?: string;
   '+order'?: string;
-}
-
-interface FilterConditionTypes extends BaseConditionTypes {
   '+gt'?: number;
   '+gte'?: number;
   '+lt'?: number;
@@ -47,51 +44,47 @@ interface FilterConditionTypes extends BaseConditionTypes {
   '+neq'?: string;
 }
 
-export type Filter =
-  | {
-      [key in keyof BaseConditionTypes]: FilterConditionTypes[key];
-    }
-  | { [key: string]: string | number | NotBaseFilter | undefined };
+export type Filter = LinodeFilter | LinodeFilter[];
 
-type NotBaseFilter =
+type LinodeFilter =
   | {
       [key in keyof FilterConditionTypes]: FilterConditionTypes[key];
     }
-  | { [key: string]: string | number | NotBaseFilter | undefined };
+  | { [key: string]: string | number | boolean | Filter | undefined };
 
-const filter: Filter = {
-  '+or': [{ vcpus: 1 }, { class: 'standard' }],
-};
+// const filter: Filter = {
+//   '+or': [{ vcpus: 1 }, { class: 'standard' }],
+// };
 
-const f1: Filter = {
-  '+and': [{ label: 'test' }, { id: 'odk' }],
-};
+// const f1: Filter = {
+//   '+and': [{ label: 'test' }, { id: 'odk' }],
+// };
 
-const f: Filter = {
-  '+or': [
-    {
-      '+or': [
-        {
-          class: 'standard',
-        },
-        {
-          class: 'highmem',
-        },
-      ],
-    },
-    {
-      '+and': [
-        {
-          vcpus: {
-            '+gte': 12,
-          },
-        },
-        {
-          vcpus: {
-            '+lte': 20,
-          },
-        },
-      ],
-    },
-  ],
-};
+// const f: Filter = {
+//   '+or': [
+//     {
+//       '+or': [
+//         {
+//           class: 'standard',
+//         },
+//         {
+//           class: 'highmem',
+//         },
+//       ],
+//     },
+//     {
+//       '+and': [
+//         {
+//           vcpus: {
+//             '+gte': 12,
+//           },
+//         },
+//         {
+//           vcpus: {
+//             '+lte': 20,
+//           },
+//         },
+//       ],
+//     },
+//   ],
+// };
