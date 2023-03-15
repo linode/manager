@@ -9,6 +9,7 @@ import {
   useTheme,
 } from 'src/components/core/styles';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -107,6 +108,16 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
               onClick={action.onClick}
               disabled={action.disabled}
               tooltip={action.tooltip}
+              onTooltipMouseEnter={
+                action.title === 'Resize'
+                  ? () =>
+                      sendEvent({
+                        category: `Disk ${action.title} Flow`,
+                        action: `On mouse enter:tooltip`,
+                        label: `${action.title} help icon tooltip`,
+                      })
+                  : undefined
+              }
             />
           );
         })}

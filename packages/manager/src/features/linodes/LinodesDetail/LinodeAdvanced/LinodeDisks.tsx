@@ -42,6 +42,7 @@ import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendEvent } from 'src/utilities/ga';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
 
@@ -181,7 +182,16 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
           </Grid>
           <span className={classes.addNewWrapperContainer}>
             {!freeDiskSpace ? (
-              <HelpIcon text={noFreeDiskSpaceWarning}></HelpIcon>
+              <HelpIcon
+                text={noFreeDiskSpaceWarning}
+                onMouseEnter={() =>
+                  sendEvent({
+                    category: `Disk Resize Flow`,
+                    action: `On mouse enter:tooltip`,
+                    label: `Add a Disk help icon tooltip`,
+                  })
+                }
+              />
             ) : null}
             <Grid item className={classes.addNewWrapper}>
               <AddNewLink

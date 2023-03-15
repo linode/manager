@@ -41,6 +41,7 @@ interface Props
     | 'top-end'
     | 'top-start'
     | 'top';
+  onMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
 }
 
 type CombinedProps = Props;
