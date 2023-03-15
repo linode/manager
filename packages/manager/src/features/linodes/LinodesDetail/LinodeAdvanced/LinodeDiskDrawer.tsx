@@ -220,23 +220,25 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
         </Grid>
         <Grid item xs={12} className={classes.section}>
           <form>
-            <FormHelperText>
-              The size of a Linode Compute Instance&rsquo;s disk can be
-              increased or decreased as needed.
-              <Link
-                to={
-                  'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
-                }
-                onClick={() => {
-                  handleLinkClick(
-                    'Learn more about restrictions to keep in mind.'
-                  );
-                }}
-                className={classes.formHelperTextLink}
-              >
-                Learn more about restrictions to keep in mind.
-              </Link>
-            </FormHelperText>
+            {mode === 'resize' ? (
+              <FormHelperText>
+                The size of a Linode Compute Instance&rsquo;s disk can be
+                increased or decreased as needed.
+                <Link
+                  to={
+                    'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+                  }
+                  onClick={() => {
+                    handleLinkClick(
+                      'Learn more about restrictions to keep in mind.'
+                    );
+                  }}
+                  className={classes.formHelperTextLink}
+                >
+                  Learn more about restrictions to keep in mind.
+                </Link>
+              </FormHelperText>
+            ) : null}
             <TextField
               disabled={['resize'].includes(props.mode)}
               label="Label"
@@ -312,17 +314,21 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
               }}
               data-qa-disk-size
             />
-            <FormHelperText style={{ marginTop: 8 }}>
-              Maximum size: {props.maximumSize} MB
-            </FormHelperText>
-            <FormHelperText>
-              Minimum size is determined by how much space the files on the disk
-              are using.{' '}
-              <TextTooltip
-                displayText="Check disk usage."
-                tooltipText={MaxSizeTooltipText}
-              />
-            </FormHelperText>
+            {mode !== 'rename' ? (
+              <FormHelperText style={{ marginTop: 8 }}>
+                Maximum size: {props.maximumSize} MB
+              </FormHelperText>
+            ) : null}
+            {mode === 'resize' ? (
+              <FormHelperText>
+                Minimum size is determined by how much space the files on the
+                disk are using.{' '}
+                <TextTooltip
+                  displayText="Check disk usage."
+                  tooltipText={MaxSizeTooltipText}
+                />
+              </FormHelperText>
+            ) : null}
           </form>
         </Grid>
       </Grid>
