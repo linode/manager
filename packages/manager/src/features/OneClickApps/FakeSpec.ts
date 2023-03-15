@@ -586,6 +586,13 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
       },
     ],
+    cluster_guides: [
+      {
+        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+      },
+    ],
     website: 'https://galeracluster.com/',
     logo_url: 'galera.svg',
     colors: {

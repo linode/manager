@@ -45,6 +45,7 @@ interface Props {
   iconUrl: string;
   id: number;
   label: string;
+  clusterLabel: string | null;
   userDefinedFields: UserDefinedField[];
   availableImages: string[];
   disabled: boolean;
@@ -58,6 +59,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
     id,
     checked,
     label,
+    clusterLabel,
     userDefinedFields,
     availableImages,
     disabled,
@@ -83,12 +85,12 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const handleInfoClick = (e: React.MouseEvent<any>) => {
     e.stopPropagation();
     e.preventDefault();
-    openDrawer(label);
+    openDrawer(clusterLabel ?? label);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      openDrawer(label);
+      openDrawer(clusterLabel ?? label);
     }
   };
 
