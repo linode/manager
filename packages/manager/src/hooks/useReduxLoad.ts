@@ -10,7 +10,6 @@ import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { getAllLongviewClients } from 'src/store/longview/longview.requests';
 import { getAllNodeBalancers } from 'src/store/nodeBalancer/nodeBalancer.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
-import { getAllVlans } from 'src/store/vlans/vlans.requests';
 
 interface UseReduxPreload {
   _loading: boolean;
@@ -22,8 +21,7 @@ export type ReduxEntity =
   | 'notifications'
   | 'types'
   | 'events'
-  | 'longview'
-  | 'vlans';
+  | 'longview';
 
 type RequestMap = Record<ReduxEntity, any>;
 
@@ -34,7 +32,6 @@ const requestMap: RequestMap = {
   types: requestTypes,
   notifications: requestNotifications,
   longview: getAllLongviewClients,
-  vlans: () => getAllVlans({}),
 };
 
 export const useReduxLoad = (
