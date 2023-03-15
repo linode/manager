@@ -6,7 +6,7 @@ import {
   resetOAuthClientSecret,
   updateOAuthClient,
 } from '@linode/api-v4/lib/account';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -460,7 +460,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) =>
+const updatedRequest = (ownProps: any, params: Params, filters: Filter) =>
   getOAuthClients(params, filters).then((response) => response);
 
 const paginated = paginate(updatedRequest);

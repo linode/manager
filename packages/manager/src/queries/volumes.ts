@@ -49,8 +49,8 @@ export const useVolumesQuery = (params: Params, filters: Filter) =>
 
 export const useLinodeVolumesQuery = (
   linodeId: number,
-  params: any = {},
-  filters: any = {},
+  params: Params = {},
+  filters: Filter = {},
   enabled = true
 ) =>
   useQuery<ResourcePage<Volume>, APIError[]>(
@@ -59,8 +59,8 @@ export const useLinodeVolumesQuery = (
     { keepPreviousData: true, enabled }
   );
 export const useAllVolumesQuery = (
-  params: any = {},
-  filters: any = {},
+  params: Params = {},
+  filters: Filter = {},
   enabled = true
 ) =>
   useQuery<Volume[], APIError[]>(
@@ -227,7 +227,7 @@ export const volumeEventsHandler = (event: Event) => {
   }
 };
 
-const getAllVolumes = (passedParams: any = {}, passedFilter: any = {}) =>
+const getAllVolumes = (passedParams: Params = {}, passedFilter: Filter = {}) =>
   getAll<Volume>((params, filter) =>
     getVolumes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);

@@ -51,7 +51,7 @@ export const withNodeBalancerActions = connect(
         },
         dispatch
       ),
-      getNodeBalancerPage: (params: any = {}, filters: any = {}) =>
+      getNodeBalancerPage: (params: Params = {}, filters: Filter = {}) =>
         dispatch(getNodeBalancersPage({ params, filters })),
       getNodeBalancerWithConfigs: (nodeBalancerId: number) =>
         dispatch(getNodeBalancerWithConfigs({ nodeBalancerId })),

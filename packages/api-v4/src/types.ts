@@ -33,7 +33,7 @@ export interface Params {
 
 interface FilterConditionTypes {
   '+and'?: Filter[];
-  '+or'?: Filter[];
+  '+or'?: Filter[] | string[];
   '+order_by'?: string;
   '+order'?: string;
   '+gt'?: number;

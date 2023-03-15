@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import { getSSHKeys, SSHKey } from '@linode/api-v4/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -260,7 +261,7 @@ const updateResponseData = (keys: SSHKey[]) =>
 
 const documented = setDocs(SSHKeys.docs);
 
-const updatedRequest = (ownProps: any, params: any, filters: any) =>
+const updatedRequest = (ownProps: any, params: Params, filters: Filter) =>
   getSSHKeys(params, filters).then((response) => ({
     ...response,
     data: updateResponseData(response.data),
