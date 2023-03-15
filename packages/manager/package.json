@@ -113,7 +113,6 @@
     ]
   },
   "devDependencies": {
-    "@jest/types": "^29.5.0",
     "@mdx-js/loader": "^2.1.5",
     "@storybook/addon-actions": "~7.0.0-beta.60",
     "@storybook/addon-controls": "~7.0.0-beta.60",
@@ -209,7 +208,6 @@
     "serve": "^14.0.1",
     "storybook": "~7.0.0-beta.60",
     "storybook-dark-mode-v7": "3.0.0-alpha.0",
-    "ts-node": "^10.9.1",
     "vite": "^4.2.0-beta.1",
     "vite-plugin-svgr": "^2.4.0"
   },
