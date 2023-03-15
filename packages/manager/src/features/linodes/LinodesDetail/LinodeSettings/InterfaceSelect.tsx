@@ -5,7 +5,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import TextField from 'src/components/TextField';
-import useVlansQuery from 'src/queries/vlans';
+import { useVlansQuery } from 'src/queries/vlans';
 import { sendLinodeCreateDocsEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({

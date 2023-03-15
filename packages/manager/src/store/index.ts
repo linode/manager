@@ -112,10 +112,6 @@ import pendingUpload, {
   State as PendingUploadState,
 } from './pendingUpload';
 import { initReselectDevtools } from './selectors';
-import vlans, {
-  defaultState as defaultVLANState,
-  State as VlanState,
-} from './vlans/vlans.reducer';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
 initReselectDevtools();
@@ -132,7 +128,6 @@ const __resourcesDefaultState = {
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   types: defaultTypesState,
-  vlans: defaultVLANState,
 };
 
 export interface ResourcesState {
@@ -144,7 +139,6 @@ export interface ResourcesState {
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   types: TypesState;
-  vlans: VlanState;
 }
 
 export interface ApplicationState {
@@ -203,7 +197,6 @@ const __resources = combineReducers({
   nodeBalancerConfigs,
   notifications,
   types,
-  vlans,
 });
 
 const reducers = combineReducers<ApplicationState>({
