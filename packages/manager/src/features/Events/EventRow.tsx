@@ -15,7 +15,6 @@ import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
-import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
@@ -90,13 +89,11 @@ export const Row: React.FC<RowProps> = (props) => {
     return null;
   }
 
-  const displayedMessage = formatEventWithUsername(action, username, message);
-
   return (
     <TableRow
       data-qa-event-row
       data-test-id={action}
-      ariaLabel={`Event ${displayedMessage}`}
+      ariaLabel={`Event ${message}`}
       className={classes.row}
     >
       <Hidden smDown>
@@ -109,7 +106,7 @@ export const Row: React.FC<RowProps> = (props) => {
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
         <HighlightedMarkdown
-          textOrMarkdown={displayedMessage}
+          textOrMarkdown={message}
           sanitizeOptions={{
             allowedTags: ['a'],
             disallowedTagsMode: 'discard',

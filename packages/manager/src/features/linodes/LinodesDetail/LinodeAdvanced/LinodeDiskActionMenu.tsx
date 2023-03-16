@@ -6,6 +6,7 @@ import { makeStyles, useTheme } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import InlineMenuAction from 'src/components/InlineMenuAction';
+import { sendEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -104,6 +105,16 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
               onClick={action.onClick}
               disabled={action.disabled}
               tooltip={action.tooltip}
+              tooltipGAEvent={
+                action.title === 'Resize'
+                  ? () =>
+                      sendEvent({
+                        category: `Disk ${action.title} Flow`,
+                        action: `Open:tooltip`,
+                        label: `${action.title} help icon tooltip`,
+                      })
+                  : undefined
+              }
             />
           );
         })}
