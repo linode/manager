@@ -32,7 +32,6 @@ interface Props {
   region?: string;
   handleChange: (linode: Linode | null) => void;
   textFieldProps?: Omit<TextFieldProps, 'label'>;
-  groupByRegion?: boolean;
   placeholder?: string;
   valueOverride?: Override;
   labelOverride?: Override;
@@ -51,17 +50,12 @@ interface Props {
   required?: boolean;
 }
 
-type CombinedProps = Props & WithLinodesProps;
-
-const LinodeSelect: React.FC<CombinedProps> = (props) => {
+const LinodeSelect = (props: Props) => {
   const {
     disabled,
     generalError,
     handleChange,
     linodeError,
-    linodesError,
-    linodesLoading,
-    linodesData,
     region,
     selectedLinode,
     groupByRegion,

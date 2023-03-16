@@ -12,7 +12,7 @@ import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
-import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/AddFirewallDrawer';
+import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
 
 interface Props {
   open: boolean;
