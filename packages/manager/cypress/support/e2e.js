@@ -17,7 +17,6 @@
 import chaiString from 'chai-string';
 import { authenticate } from './api/authentication';
 import { deleteAllTestData } from './ui/common';
-import { cancelAllTestEntityTransfers } from './api/entityTransfer';
 import 'cypress-real-events/support';
 
 // chai is a global exposed by Cypress which means
@@ -32,9 +31,4 @@ import './request-tracking';
 // Runs before each test file.
 before(() => {
   deleteAllTestData();
-});
-
-// Runs after each test file.
-after(() => {
-  cancelAllTestEntityTransfers();
 });

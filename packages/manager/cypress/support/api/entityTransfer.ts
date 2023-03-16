@@ -1,4 +1,4 @@
-import { EntityTransfer } from '@linode/api-v4/types';
+import { EntityTransfer, Linode } from '@linode/api-v4/types';
 import {
   getEntityTransfers,
   cancelTransfer,
@@ -13,24 +13,26 @@ import { isTestLabel } from './common';
  * @returns Promise that resolves when entity transfers have been cancelled or rejects on HTTP error.
  */
 export const cancelAllTestEntityTransfers = async (): Promise<void> => {
-  const entityTransfers = await depaginate<EntityTransfer>((page: number) =>
-    getEntityTransfers({ page_size: 500, page })
+  const entityTransfers = (
+    await depaginate<EntityTransfer>((page: number) =>
+      getEntityTransfers({ page_size: 500, page })
+    )
+  ).filter(
+    (entityTransfer: EntityTransfer) => entityTransfer.status === 'pending'
   );
-  const testEntityTransfers: EntityTransfer[] = [];
-  for (let i = 0; i < entityTransfers.length; i++) {
+
+  for (const entityTransfer of entityTransfers) {
     // eslint-disable-next-line no-await-in-loop
     const isTest = await areAllLinodesWithTestLabel(
-      entityTransfers[i]?.entities?.linodes
+      entityTransfer?.entities?.linodes
     );
     if (isTest) {
-      testEntityTransfers.push(entityTransfers[i]);
+      console.log(`entityTransfer - details: ${entityTransfer}`);
+      // We want to send these requests sequentially
+      // to avoid overloading the API.
+      // eslint-disable-next-line no-await-in-loop
+      await cancelTransfer(entityTransfer.token);
     }
-  }
-  for (const testEntityTransfer of testEntityTransfers) {
-    // We want to send these requests sequentially
-    // to avoid overloading the API.
-    // eslint-disable-next-line no-await-in-loop
-    await cancelTransfer(testEntityTransfer.token);
   }
 };
 
@@ -38,29 +40,10 @@ const areAllLinodesWithTestLabel = async (
   linodeIds: number[]
 ): Promise<boolean> => {
   if (linodeIds?.length > 0) {
-    const filteredLinodeIds = await linodeFilter(linodeIds);
-    // If all the linodes are with test label, the length of
-    // the filtered array should be the same as that of the
-    // original one
-    return filteredLinodeIds.length == linodeIds.length;
+    const linodes = await Promise.all(
+      linodeIds.map((id: number) => getLinode(id))
+    );
+    return linodes.every((linode: Linode) => isTestLabel(linode.label));
   }
   return false;
-};
-
-const linodeFilter = async (linodeIds: number[]) => {
-  const results = await Promise.all(
-    linodeIds.map(async (linodeId: number) => {
-      try {
-        const linode = await getLinode(linodeId);
-        return isTestLabel(linode.label);
-      } catch (error: any) {
-        const notFoundErrorMessage = 'Request failed with status code 404';
-        // If the linode instance is not found, it should
-        // be safe to cancel the entity transfer
-        return error?.message === notFoundErrorMessage;
-      }
-    })
-  );
-  const filteredIds = linodeIds.filter((_v, index) => results[index]);
-  return filteredIds;
 };

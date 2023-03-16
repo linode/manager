@@ -74,6 +74,7 @@ export const deleteAllTestData = () => {
     deleteAllTestBuckets(),
     deleteAllTestAccessKeys(),
     deleteAllTestTags(),
+    cancelAllTestEntityTransfers(),
   ]);
 
   // Remaining deletion functions then run sequentially.
