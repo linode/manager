@@ -15,7 +15,7 @@ export interface Props extends ButtonProps {
   compactY?: boolean;
   loading?: boolean;
   tooltipText?: string;
-  onTooltipMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
+  tooltipGAEvent?: () => void;
 }
 
 const StyledButton = styled(_Button, {
@@ -67,7 +67,7 @@ const Button = ({
   loading,
   sx,
   tooltipText,
-  onTooltipMouseEnter,
+  tooltipGAEvent,
   ...rest
 }: Props) => {
   const theme = useTheme();
@@ -101,7 +101,7 @@ const Button = ({
         <HelpIcon
           sx={sxHelpIcon}
           text={tooltipText}
-          onMouseEnter={onTooltipMouseEnter}
+          tooltipGAEvent={tooltipGAEvent}
         />
       )}
     </React.Fragment>

@@ -105,12 +105,12 @@ export const DiskActionMenu: React.FC<CombinedProps> = (props) => {
               onClick={action.onClick}
               disabled={action.disabled}
               tooltip={action.tooltip}
-              onTooltipMouseEnter={
+              tooltipGAEvent={
                 action.title === 'Resize'
                   ? () =>
                       sendEvent({
                         category: `Disk ${action.title} Flow`,
-                        action: `On mouse enter:tooltip`,
+                        action: `Open:tooltip`,
                         label: `${action.title} help icon tooltip`,
                       })
                   : undefined

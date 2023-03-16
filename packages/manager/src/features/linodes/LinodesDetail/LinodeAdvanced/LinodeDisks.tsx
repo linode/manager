@@ -180,15 +180,15 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             {!freeDiskSpace ? (
               <HelpIcon
                 text={noFreeDiskSpaceWarning}
-                onMouseEnter={() =>
+                tooltipGAEvent={() =>
                   sendEvent({
                     category: `Disk Resize Flow`,
-                    action: `On mouse enter:tooltip`,
+                    action: `Open:tooltip`,
                     label: `Add a Disk help icon tooltip`,
                   })
                 }
               />
-            ) : null}
+            ) : undefined}
             <Grid item className={classes.addNewWrapper}>
               <AddNewLink
                 onClick={this.openDrawerForCreation}
