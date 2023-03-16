@@ -226,7 +226,7 @@ describe('Migrate Linode With Firewall', () => {
       cy.get('[data-testid="textfield-input"]:last')
         .should('be.visible')
         .click()
-        .type(`${linode.label}`)
+        .type(linode.label)
         .wait(5000) // How do I wait for API requests before selecting?
         .type(`{downArrow}{enter}`);
 
@@ -280,14 +280,16 @@ describe('Migrate Linode With Firewall', () => {
         fbtClick('Create Firewall');
       });
 
-      cy.get('[data-testid="textfield-input"]')
+      cy.get('[data-testid="textfield-input"]:first')
         .should('be.visible')
         .type(firewallLabel);
 
-      cy.get('[data-qa-enhanced-select="Select a Linode or type to search..."]')
+      cy.get('[data-testid="textfield-input"]:last')
         .should('be.visible')
         .click()
-        .type(`${linodeLabel}{enter}`);
+        .type(linodeLabel)
+        .wait(5000) // How do I wait for API requests before selecting?
+        .type(`{downArrow}{enter}`);
 
       cy.findByText(linodeLabel).should('be.visible');
 
