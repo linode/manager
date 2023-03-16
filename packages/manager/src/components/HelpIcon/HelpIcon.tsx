@@ -2,8 +2,8 @@ import ErrorOutline from '@mui/icons-material/ErrorOutline';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
-import { makeStyles } from '@mui/styles';
 import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
+import { makeStyles } from '@mui/styles';
 import { SxProps } from '@mui/system';
 
 const useStyles = makeStyles(() => ({
@@ -29,6 +29,7 @@ interface Props
   classes?: any;
   leaveDelay?: boolean;
   tooltipPosition?: TooltipProps['placement'];
+  tooltipGAEvent?: () => void;
 }
 
 type CombinedProps = Props;
@@ -45,9 +46,15 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
     isError,
     leaveDelay,
     classes,
-    onMouseEnter,
+    tooltipGAEvent,
     sx,
   } = props;
+
+  const handleOpenTooltip = () => {
+    if (tooltipGAEvent) {
+      tooltipGAEvent();
+    }
+  };
 
   return (
     <Tooltip
@@ -60,7 +67,7 @@ const HelpIcon: React.FC<CombinedProps> = (props) => {
       disableInteractive={!interactive}
       placement={tooltipPosition ? tooltipPosition : 'bottom'}
       classes={classes}
-      onMouseEnter={onMouseEnter}
+      onOpen={handleOpenTooltip}
     >
       <IconButton
         className={`${className} ${styles.root}`}
