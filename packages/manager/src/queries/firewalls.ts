@@ -80,7 +80,7 @@ export const useMutateFirewall = (id: number) => {
     {
       onSuccess(firewall) {
         queryClient.setQueryData([queryKey, id], firewall);
-        updateInPaginatedStore([queryKey, 'paginated'], id, firewall);
+        queryClient.invalidateQueries([queryKey, 'paginated']);
       },
     }
   );
