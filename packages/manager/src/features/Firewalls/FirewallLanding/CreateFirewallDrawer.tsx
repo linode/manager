@@ -113,9 +113,6 @@ const CreateFirewallDrawer = (props: Props) => {
   const userCannotAddFirewall =
     _isRestrictedUser && !_hasGrant('add_firewalls');
 
-  const firewallHelperText = `Assign one or more Linodes to this firewall. You can add
-  Linodes later if you want to customize your rules first.`;
-
   // If a user is restricted, they can not add a read-only Linode to a firewall.
   const readOnlyLinodeIds = _isRestrictedUser
     ? getEntityIdsByPermission(grants, 'linode', 'read_only')
@@ -123,6 +120,10 @@ const CreateFirewallDrawer = (props: Props) => {
 
   const linodeSelectGuidance =
     readOnlyLinodeIds.length > 0 ? READ_ONLY_LINODES_HIDDEN_MESSAGE : undefined;
+
+  const firewallHelperText = `Assign one or more Linodes to this firewall. You can add Linodes later if you want to customize your rules first. ${
+    linodeSelectGuidance ? linodeSelectGuidance : ''
+  }`;
 
   const generalError =
     status?.generalError ||
@@ -170,7 +171,6 @@ const CreateFirewallDrawer = (props: Props) => {
           value={values.devices?.linodes ?? []}
           filteredLinodes={readOnlyLinodeIds}
           onBlur={handleBlur}
-          guidance={linodeSelectGuidance}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>

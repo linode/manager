@@ -10,9 +10,8 @@ export interface Props {
   onChange: (selected: number[]) => void;
   value: number[];
   errorText?: string;
-  guidance?: string;
   disabled?: boolean;
-  onBlur?: (e: any) => any;
+  onBlur?: (e: React.FocusEvent) => void;
 }
 
 export const LinodeMultiSelect = (props: Props) => {
@@ -23,7 +22,6 @@ export const LinodeMultiSelect = (props: Props) => {
     helperText,
     onChange,
     value,
-    // guidance,
     disabled,
     onBlur,
   } = props;
@@ -39,6 +37,19 @@ export const LinodeMultiSelect = (props: Props) => {
       }
     : {};
 
+  const linodesFilter =
+    filteredLinodes && filteredLinodes.length > 0
+      ? { '+and': filteredLinodes.map((id) => ({ id: { '+neq': id } })) }
+      : {};
+
+  const regionFilter = allowedRegions
+    ? {
+        '+and': allowedRegions.map((regionId) => ({
+          region: regionId,
+        })),
+      }
+    : {};
+
   const {
     data,
     isLoading,
@@ -47,10 +58,8 @@ export const LinodeMultiSelect = (props: Props) => {
     fetchNextPage,
   } = useInfiniteLinodesQuery({
     ...searchFilter,
-    ...(allowedRegions ? { region: { '+or': allowedRegions } } : {}), // @todo test this filter
-    ...(filteredLinodes && filteredLinodes.length > 0
-      ? { '+and': filteredLinodes.map((id) => ({ id: { '+neq': id } })) }
-      : {}),
+    ...regionFilter,
+    ...linodesFilter,
   });
 
   const options = data?.pages
@@ -63,18 +72,24 @@ export const LinodeMultiSelect = (props: Props) => {
   return (
     <Autocomplete
       multiple
-      onBlur={onBlur}
+      clearOnBlur
+      onBlur={(e) => {
+        onBlur?.(e);
+        setInputValue('');
+      }}
       disabled={disabled}
+      loading={isLoading}
       options={options ?? []}
       value={selectedLinodeOptions}
-      onChange={(event, value) => onChange(value.map((option) => option.id))}
+      onChange={(event, value) => {
+        onChange(value.map((option) => option.id));
+      }}
       inputValue={inputValue}
       onInputChange={(event, value, reason) => {
         if (reason !== 'reset') {
           setInputValue(value);
         }
       }}
-      isOptionEqualToValue={(option) => value.includes(option.id)}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
@@ -87,7 +102,6 @@ export const LinodeMultiSelect = (props: Props) => {
           }
         },
       }}
-      loading={isLoading}
       renderInput={(params) => (
         <TextField
           label="Linodes"
@@ -102,4 +116,4 @@ export const LinodeMultiSelect = (props: Props) => {
   );
 };
 
-export default React.memo(LinodeMultiSelect);
+export default LinodeMultiSelect;

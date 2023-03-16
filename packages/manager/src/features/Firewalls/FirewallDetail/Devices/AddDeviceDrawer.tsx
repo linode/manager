@@ -106,9 +106,10 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
         <LinodeMultiSelect
           onChange={(selected) => setSelectedLinodes(selected)}
           value={selectedLinodes}
-          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
+          helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
+            linodeSelectGuidance ? linodeSelectGuidance : ''
+          }`}
           filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
-          guidance={linodeSelectGuidance}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
