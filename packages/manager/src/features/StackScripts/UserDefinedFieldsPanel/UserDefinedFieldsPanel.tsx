@@ -149,7 +149,7 @@ const renderField = (
               <>
                 {' '}
                 To create an API token, go to{' '}
-                <Link to="/profile/tokens">your profile</Link>
+                <Link to="/profile/tokens">your profile.</Link>
               </>
             ) : undefined
           }

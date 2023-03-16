@@ -305,7 +305,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       setNumberOfNodesForAppCluster,
     } = this.props;
 
-    // ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+    // ramda's curry placeholder conflicts with lodash so the lodash curry and placeholder is used here
     const handleSelectStackScript = curriedHandleSelectStackScript(
       curry.placeholder,
       curry.placeholder,

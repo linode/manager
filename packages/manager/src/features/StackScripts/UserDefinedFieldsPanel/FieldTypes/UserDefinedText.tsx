@@ -26,7 +26,7 @@ interface Props {
   placeholder?: string;
   error?: string;
   value: string;
-  tooltip?: JSX.Element | undefined;
+  tooltip?: JSX.Element;
   tooltipInteractive?: boolean;
 }
 
