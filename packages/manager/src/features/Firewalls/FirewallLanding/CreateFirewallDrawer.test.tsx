@@ -36,25 +36,6 @@ describe('Create Firewall Drawer', () => {
     expect(error).toBeInTheDocument();
   });
 
-  // it('should default inbound and outbound policy to ACCEPT', async () => {
-  //   renderWithTheme(<CreateFirewallDrawer {...props} />);
-  //   const label = '123abc!@#';
-  //   userEvent.type(screen.getByLabelText('Label'), label);
-  //   userEvent.click(screen.getByTestId('create-firewall-submit'));
-  //   await waitFor(() =>
-  //     expect(props.onSubmit).toHaveBeenCalledWith({
-  //       devices: {
-  //         linodes: [],
-  //       },
-  //       label,
-  //       rules: {
-  //         inbound_policy: 'ACCEPT',
-  //         outbound_policy: 'ACCEPT',
-  //       },
-  //     })
-  //   );
-  // });
-
   describe('restricted user support', () => {
     it('should not show a read only linode for a restricted user', async () => {
       server.use(

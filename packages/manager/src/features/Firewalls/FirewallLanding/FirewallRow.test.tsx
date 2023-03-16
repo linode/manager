@@ -12,7 +12,6 @@ import {
   wrapWithTableBody,
 } from 'src/utilities/testHelpers';
 import {
-  CombinedProps,
   FirewallRow,
   getCountOfRules,
   getDeviceLinks,
@@ -46,7 +45,7 @@ describe('FirewallRow', () => {
     const mockTriggerDisableFirewall = jest.fn();
     const mockTriggerEnableFirewall = jest.fn();
 
-    const baseProps: CombinedProps = {
+    const baseProps = {
       ...firewall,
       triggerDeleteFirewall: mockTriggerDeleteFirewall,
       triggerDisableFirewall: mockTriggerDisableFirewall,
