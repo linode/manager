@@ -55,7 +55,6 @@ import {
   HandleSubmit,
   Info,
   ReduxStateProps,
-  ReduxStatePropsAndSSHKeys,
   LinodeCreateValidation,
   StackScriptFormStateHandlers,
   WithDisplayData,
@@ -157,6 +156,7 @@ interface Props {
   handleAgreementChange: () => void;
   handleShowApiAwarenessModal: () => void;
   signedAgreement: boolean;
+  setAuthorizedUsers: (usernames: string[]) => void;
 }
 
 const errorMap = [
@@ -181,7 +181,7 @@ type CombinedProps = Props &
   InnerProps &
   AllFormStateAndHandlers &
   AppsData &
-  ReduxStatePropsAndSSHKeys &
+  ReduxStateProps &
   SetDocsProps &
   StateProps &
   WithDisplayData &
@@ -340,9 +340,7 @@ export class LinodeCreate extends React.PureComponent<
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
       root_pass: this.props.password,
-      authorized_users: this.props.userSSHKeys
-        .filter((u) => u.selected)
-        .map((u) => u.username),
+      authorized_users: this.props.authorized_users,
       booted: true,
       backups_enabled: this.props.backupsEnabled,
       backup_id: this.props.selectedBackupID,
@@ -388,9 +386,7 @@ export class LinodeCreate extends React.PureComponent<
         ? this.props.tags.map((eachTag) => eachTag.label)
         : [],
       root_pass: this.props.password,
-      authorized_users: this.props.userSSHKeys
-        .filter((u) => u.selected)
-        .map((u) => u.username),
+      authorized_users: this.props.authorized_users,
       booted: true,
       backups_enabled: this.props.backupsEnabled,
       backup_id: this.props.selectedBackupID,
@@ -435,9 +431,6 @@ export class LinodeCreate extends React.PureComponent<
       updateTags,
       updatePassword,
       errors,
-      sshError,
-      userSSHKeys,
-      requestKeys,
       backupsMonthlyPrice,
       userCannotCreateLinode,
       accountBackupsEnabled,
@@ -701,19 +694,17 @@ export class LinodeCreate extends React.PureComponent<
                   : ''
               }
               error={hasErrorFor.root_pass}
-              sshKeyError={sshError}
               password={this.props.password}
               handleChange={this.props.updatePassword}
               updateFor={[
                 this.props.password,
                 errors,
-                sshError,
-                userSSHKeys,
                 this.props.selectedImageID,
                 userCannotCreateLinode,
+                this.props.authorized_users,
               ]}
-              users={userSSHKeys}
-              requestKeys={requestKeys}
+              setAuthorizedUsers={this.props.setAuthorizedUsers}
+              authorizedUsers={this.props.authorized_users}
             />
           )}
           <AddonsPanel

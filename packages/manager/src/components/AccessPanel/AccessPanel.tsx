@@ -32,14 +32,11 @@ const styled = withStyles(styles);
 interface Props {
   password: string | null;
   error?: string;
-  sshKeyError?: string;
   handleChange: (value: string) => void;
   heading?: string;
   label?: string;
   required?: boolean;
   placeholder?: string;
-  users?: UserSSHKeyObject[];
-  requestKeys?: () => void;
   disabled?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
@@ -47,17 +44,8 @@ interface Props {
   small?: boolean;
   isOptional?: boolean;
   passwordHelperText?: string;
-}
-
-export interface UserSSHKeyObject {
-  gravatarUrl: string;
-  username: string;
-  selected: boolean;
-  keys: string[];
-  onSSHKeyChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    result: boolean
-  ) => void;
+  setAuthorizedUsers: (usernames: string[]) => void;
+  authorizedUsers: string[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -67,18 +55,17 @@ class AccessPanel extends React.Component<CombinedProps> {
     const {
       classes,
       error,
-      sshKeyError,
       label,
       required,
       placeholder,
-      users,
       disabled,
       disabledReason,
       hideStrengthLabel,
       className,
       isOptional,
       passwordHelperText,
-      requestKeys,
+      setAuthorizedUsers,
+      authorizedUsers,
     } = this.props;
 
     return (
@@ -109,17 +96,12 @@ class AccessPanel extends React.Component<CombinedProps> {
             helperText={passwordHelperText}
           />
         </React.Suspense>
-        {users && (
-          <>
-            <Divider spacingTop={44} spacingBottom={20} />
-            <UserSSHKeyPanel
-              users={users}
-              error={sshKeyError}
-              disabled={disabled}
-              onKeyAddSuccess={requestKeys || (() => null)}
-            />
-          </>
-        )}
+        <Divider spacingTop={44} spacingBottom={20} />
+        <UserSSHKeyPanel
+          setAuthorizedUsers={setAuthorizedUsers}
+          authorizedUsers={authorizedUsers}
+          disabled={disabled}
+        />
       </Paper>
     );
   }

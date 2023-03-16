@@ -127,7 +127,8 @@ export interface BaseFormStateAndHandlers {
   tags?: Tag[];
   updateTags: (tags: Tag[]) => void;
   resetCreationState: () => void;
-  resetSSHKeys: () => void;
+  authorized_users: string[];
+  setAuthorizedUsers: (usernames: string[]) => void;
   selectedVlanIDs: number[];
   setVlanID: (ids: number[]) => void;
 }
@@ -185,9 +186,3 @@ export type AllFormStateAndHandlers = BaseFormStateAndHandlers &
   CloneFormStateHandlers &
   StackScriptFormStateHandlers &
   BackupFormStateHandlers;
-
-/**
- * Additional props that don't have a logic place to live under but still
- * need to be passed down to the children
- */
-export type ReduxStatePropsAndSSHKeys = ReduxStateProps & userSSHKeysProps;

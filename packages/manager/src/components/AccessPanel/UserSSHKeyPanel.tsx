@@ -6,7 +6,6 @@ import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -14,6 +13,11 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
+import { useProfile } from 'src/queries/profile';
+import { useAccountUsers } from 'src/queries/accountUsers';
+import usePagination from 'src/hooks/usePagination';
+import { getGravatarUrl } from 'src/utilities/gravatar';
+import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
 
 export const MAX_SSH_KEYS_DISPLAY = 100;
 
@@ -40,36 +44,89 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export interface UserSSHKeyObject {
-  gravatarUrl: string;
-  username: string;
-  selected: boolean;
-  keys: string[];
-  onSSHKeyChange: (
-    e: React.ChangeEvent<HTMLInputElement>,
-    result: boolean
-  ) => void;
-}
-
 interface Props {
-  users?: UserSSHKeyObject[];
-  error?: string;
+  setAuthorizedUsers: (usernames: string[]) => void;
+  authorizedUsers: string[];
   disabled?: boolean;
-  onKeyAddSuccess: () => void;
 }
 
 const UserSSHKeyPanel = (props: Props) => {
   const classes = useStyles();
+  const { disabled, setAuthorizedUsers, authorizedUsers } = props;
 
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
     false
   );
 
-  const { disabled, error, onKeyAddSuccess, users } = props;
+  const pagination = usePagination(1);
 
-  const usersWithKeys = users
-    ? users.filter((thisUser) => thisUser.keys?.length > 0)
-    : [];
+  const { data: profile } = useProfile();
+  const { data: users, isLoading, error } = useAccountUsers({
+    page: pagination.page,
+    page_size: pagination.pageSize,
+  });
+
+  const isRestricted = profile?.restricted ?? false;
+
+  const onToggle = (username: string) => {
+    if (authorizedUsers.includes(username)) {
+      // Remove username
+      setAuthorizedUsers(authorizedUsers.filter((u) => u !== username));
+    } else {
+      setAuthorizedUsers([...authorizedUsers, username]);
+    }
+  };
+
+  const renderTableBody = () => {
+    if (error) {
+      return <TableRowError colSpan={12} message={error?.[0].reason} />;
+    }
+
+    if (users?.results === 0) {
+      return (
+        <TableRowEmptyState
+          colSpan={12}
+          message={"You don't have any SSH keys available."}
+        />
+      );
+    }
+
+    if (isLoading) {
+      return <TableRowLoading />;
+    }
+
+    return users?.data.map((user) => (
+      <TableRow
+        key={user.username}
+        data-qa-ssh-public-key
+        data-testid="ssh-public-key"
+      >
+        <TableCell className={classes.cellCheckbox}>
+          <CheckBox
+            disabled={disabled}
+            checked={authorizedUsers.includes(user.username)}
+            onChange={(_, checked) => onToggle(user.username)}
+            inputProps={{
+              'aria-label': `Enable SSH for ${user.username}`,
+            }}
+          />
+        </TableCell>
+        <TableCell className={classes.cellUser}>
+          <div className={classes.userWrapper}>
+            <img
+              src={getGravatarUrl(user.email)}
+              className={classes.gravatar}
+              alt={user.username}
+            />
+            {user.username}
+          </div>
+        </TableCell>
+        <TableCell>
+          {truncateAndJoinList(user.ssh_keys, MAX_SSH_KEYS_DISPLAY)}
+        </TableCell>
+      </TableRow>
+    ));
+  };
 
   return (
     <React.Fragment>
@@ -86,50 +143,7 @@ const UserSSHKeyPanel = (props: Props) => {
             <TableCell data-qa-table-header="SSH Keys">SSH Keys</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {error ? (
-            <TableRowError colSpan={12} message={error} />
-          ) : usersWithKeys.length > 0 ? (
-            usersWithKeys.map(
-              ({ gravatarUrl, keys, onSSHKeyChange, selected, username }) => (
-                <TableRow
-                  key={username}
-                  data-qa-ssh-public-key
-                  data-testid="ssh-public-key"
-                >
-                  <TableCell className={classes.cellCheckbox}>
-                    <CheckBox
-                      disabled={disabled}
-                      checked={selected}
-                      onChange={onSSHKeyChange}
-                      inputProps={{
-                        'aria-label': `Enable SSH for ${username}`,
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell className={classes.cellUser}>
-                    <div className={classes.userWrapper}>
-                      <img
-                        src={gravatarUrl}
-                        className={classes.gravatar}
-                        alt={username}
-                      />
-                      {username}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {truncateAndJoinList(keys, MAX_SSH_KEYS_DISPLAY)}
-                  </TableCell>
-                </TableRow>
-              )
-            )
-          ) : (
-            <TableRowEmptyState
-              colSpan={12}
-              message={"You don't have any SSH keys available."}
-            />
-          )}
-        </TableBody>
+        <TableBody>{renderTableBody()}</TableBody>
       </Table>
       <Button
         buttonType="outlined"
