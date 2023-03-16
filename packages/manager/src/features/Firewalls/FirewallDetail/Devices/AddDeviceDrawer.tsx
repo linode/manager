@@ -1,6 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
-import v4 from 'uuid';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -43,20 +42,10 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
-  // Used to reset the selected form values on form submit, since
-  // the LinodeMultiSelect manages its state internally.
-  const [key, setKey] = React.useState<string>(v4());
-
-  React.useEffect(() => {
-    // If we have a new error, clear out the select values
-    if (error && error.length > 0) {
-      setKey(v4());
-    }
-  }, [error]);
-
   const handleSubmit = () => {
     // @todo handling will have to be added here when we support Firewalls for NodeBalancers
     addDevice(selectedLinodes);
+    setSelectedLinodes([]); // @todo only do this on success. What is happening lol
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -115,8 +104,8 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
       >
         {errorMessage ? errorNotice(errorMessage) : null}
         <LinodeMultiSelect
-          key={key}
-          handleChange={(selected) => setSelectedLinodes(selected)}
+          onChange={(selected) => setSelectedLinodes(selected)}
+          value={selectedLinodes}
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall.`}
           filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
           guidance={linodeSelectGuidance}

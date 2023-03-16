@@ -91,8 +91,8 @@ export const useCreateFirewall = () => {
     (data) => createFirewall(data),
     {
       onSuccess(firewall) {
+        queryClient.invalidateQueries([queryKey, 'paginated']);
         queryClient.setQueryData([queryKey, firewall.id], firewall);
-        queryClient.invalidateQueries([[queryKey, 'paginated']]);
       },
     }
   );
@@ -101,8 +101,8 @@ export const useCreateFirewall = () => {
 export const useDeleteFirewall = (id: number) => {
   return useMutation<{}, APIError[]>(() => deleteFirewall(id), {
     onSuccess() {
-      queryClient.removeQueries([[queryKey, id]]);
-      queryClient.invalidateQueries([[queryKey, 'paginated']]);
+      queryClient.removeQueries([queryKey, id]);
+      queryClient.invalidateQueries([queryKey, 'paginated']);
     },
   });
 };

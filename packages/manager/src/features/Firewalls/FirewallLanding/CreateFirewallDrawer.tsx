@@ -161,13 +161,13 @@ const CreateFirewallDrawer = (props: Props) => {
           }}
         />
         <LinodeMultiSelect
-          showAllOption
           disabled={userCannotAddFirewall}
           helperText={firewallHelperText}
           errorText={errors['devices.linodes']}
-          handleChange={(selected: number[]) =>
+          onChange={(selected: number[]) =>
             setFieldValue('devices.linodes', selected)
           }
+          value={values.devices?.linodes ?? []}
           filteredLinodes={readOnlyLinodeIds}
           onBlur={handleBlur}
           guidance={linodeSelectGuidance}
