@@ -1,4 +1,3 @@
-import { APIError } from '@linode/api-v4/lib/types';
 import * as React from 'react';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -12,40 +11,49 @@ import SupportLink from 'src/components/SupportLink';
 import { useGrants, useProfile } from 'src/queries/profile';
 import { getEntityIdsByPermission } from 'src/utilities/grants';
 import { READ_ONLY_LINODES_HIDDEN_MESSAGE } from '../../FirewallLanding/CreateFirewallDrawer';
+import { useParams } from 'react-router-dom';
+import {
+  useAddFirewallDeviceMutation,
+  useAllFirewallDevicesQuery,
+  useFirewallQuery,
+} from 'src/queries/firewalls';
 
 interface Props {
   open: boolean;
-  error?: APIError[];
-  isSubmitting: boolean;
-  currentDevices: number[];
-  firewallLabel: string;
   onClose: () => void;
-  addDevice: (selectedLinodes: number[]) => void;
 }
 
-export const AddDeviceDrawer: React.FC<Props> = (props) => {
-  const {
-    open,
-    error,
-    isSubmitting,
-    currentDevices,
-    firewallLabel,
-    onClose,
-    addDevice,
-  } = props;
+export const AddDeviceDrawer = (props: Props) => {
+  const { open, onClose } = props;
 
+  const { id } = useParams<{ id: string }>();
+
+  const classes = useStyles();
   const { data: grants } = useGrants();
   const { data: profile } = useProfile();
   const isRestrictedUser = Boolean(profile?.restricted);
 
-  const classes = useStyles();
+  const { data: firewall } = useFirewallQuery(Number(id));
+  const { data: currentDevices } = useAllFirewallDevicesQuery(Number(id));
+
+  const currentDeviceIds = currentDevices?.map((device) => device.id) ?? [];
+
+  const {
+    mutateAsync: addDevice,
+    error,
+    isLoading,
+  } = useAddFirewallDeviceMutation(Number(id));
 
   const [selectedLinodes, setSelectedLinodes] = React.useState<number[]>([]);
 
-  const handleSubmit = () => {
-    // @todo handling will have to be added here when we support Firewalls for NodeBalancers
-    addDevice(selectedLinodes);
-    setSelectedLinodes([]); // @todo only do this on success. What is happening lol
+  const handleSubmit = async () => {
+    await Promise.all(
+      selectedLinodes.map((thisLinode) =>
+        addDevice({ type: 'linode', id: thisLinode })
+      )
+    );
+    onClose();
+    setSelectedLinodes([]);
   };
 
   // @todo title and error messaging will update to "Device" once NodeBalancers are allowed
@@ -92,7 +100,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
 
   return (
     <Drawer
-      title={`Add Linode to Firewall: ${firewallLabel}`}
+      title={`Add Linode to Firewall: ${firewall?.label}`}
       open={open}
       onClose={onClose}
     >
@@ -109,7 +117,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
-          filteredLinodes={[...currentDevices, ...readOnlyLinodeIds]}
+          filteredLinodes={[...currentDeviceIds, ...readOnlyLinodeIds]}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
@@ -119,7 +127,7 @@ export const AddDeviceDrawer: React.FC<Props> = (props) => {
             buttonType="primary"
             onClick={handleSubmit}
             disabled={selectedLinodes.length === 0}
-            loading={isSubmitting}
+            loading={isLoading}
             data-qa-submit
           >
             Add
