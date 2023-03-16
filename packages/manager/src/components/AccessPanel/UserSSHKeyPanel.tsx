@@ -58,33 +58,14 @@ interface Props {
   onKeyAddSuccess: () => void;
 }
 
-type CombinedProps = Props;
-
-const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
+const UserSSHKeyPanel = (props: Props) => {
   const classes = useStyles();
 
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
-  /**
-   * Success state can be handled here, which makes it hard to clear on e.g. form errors,
-   * or it can be handled several levels up, which makes it complex and hard to maintain.
-   * Went with here for now since this kind of thing is what Hooks are there for. Can
-   * discuss post-POC.
-   *
-   * In addition, there's never been any error handling for SSH keys, which maybe we should add.
-   */
-  const [success, setSuccess] = React.useState<boolean>(false);
+  const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState<boolean>(
+    false
+  );
+
   const { disabled, error, onKeyAddSuccess, users } = props;
-
-  const handleKeyAddSuccess = () => {
-    onKeyAddSuccess();
-    setSuccess(true);
-    setDrawerOpen(false);
-  };
-
-  const handleOpenDrawer = () => {
-    setSuccess(false);
-    setDrawerOpen(true);
-  };
 
   const usersWithKeys = users
     ? users.filter((thisUser) => thisUser.keys?.length > 0)
@@ -95,11 +76,6 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
       <Typography variant="h2" className={classes.title}>
         SSH Keys
       </Typography>
-      {success && (
-        <Notice success data-testid="ssh-success-message">
-          <Typography>SSH key added successfully.</Typography>
-        </Notice>
-      )}
       <Table spacingBottom={16}>
         <TableHead>
           <TableRow>
@@ -157,16 +133,15 @@ const UserSSHKeyPanel: React.FC<CombinedProps> = (props) => {
       </Table>
       <Button
         buttonType="outlined"
-        onClick={handleOpenDrawer}
+        onClick={() => setIsCreateDrawerOpen(true)}
         compactX
         disabled={disabled}
       >
         Add an SSH Key
       </Button>
       <SSHKeyCreationDrawer
-        open={drawerOpen}
-        onSuccess={handleKeyAddSuccess}
-        onCancel={() => setDrawerOpen(false)}
+        open={isCreateDrawerOpen}
+        onClose={() => setIsCreateDrawerOpen(false)}
       />
     </React.Fragment>
   );

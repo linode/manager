@@ -7,9 +7,7 @@ interface Props {
   onDelete: (id: number, label: string) => void;
 }
 
-type CombinedProps = Props;
-
-export const SSHKeyActionMenu: React.FC<CombinedProps> = (props) => {
+export const SSHKeyActionMenu = (props: Props) => {
   const { id, label, onDelete } = props;
 
   return (
