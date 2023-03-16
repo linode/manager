@@ -5,7 +5,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
+import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { useAccountManagement } from 'src/hooks/useAccountManagement';

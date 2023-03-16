@@ -4,7 +4,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Link from 'src/components/Link';
-import LinodeMultiSelect from 'src/components/LinodeMultiSelect';
+import LinodeMultiSelect from 'src/components/LinodeMultiSelect/LinodeMultiSelect';
 import Notice from 'src/components/Notice';
 import { useStyles } from 'src/components/Notice/Notice';
 import SupportLink from 'src/components/SupportLink';

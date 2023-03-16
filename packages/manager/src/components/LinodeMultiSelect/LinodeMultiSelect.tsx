@@ -14,7 +14,7 @@ export interface Props {
   onBlur?: (e: React.FocusEvent) => void;
 }
 
-export const LinodeMultiSelect = (props: Props) => {
+const LinodeMultiSelect = (props: Props) => {
   const {
     allowedRegions,
     errorText,
@@ -116,4 +116,4 @@ export const LinodeMultiSelect = (props: Props) => {
   );
 };
 
-export default LinodeMultiSelect;
+export default React.memo(LinodeMultiSelect);
