@@ -36,7 +36,10 @@ export const AddDeviceDrawer = (props: Props) => {
   const { data: firewall } = useFirewallQuery(Number(id));
   const { data: currentDevices } = useAllFirewallDevicesQuery(Number(id));
 
-  const currentDeviceIds = currentDevices?.map((device) => device.id) ?? [];
+  const currentLinodeIds =
+    currentDevices
+      ?.filter((device) => device.entity.type === 'linode')
+      .map((device) => device.entity.id) ?? [];
 
   const {
     mutateAsync: addDevice,
@@ -117,7 +120,7 @@ export const AddDeviceDrawer = (props: Props) => {
           helperText={`You can assign one or more Linodes to this Firewall. Each Linode can only be assigned to a single Firewall. ${
             linodeSelectGuidance ? linodeSelectGuidance : ''
           }`}
-          filteredLinodes={[...currentDeviceIds, ...readOnlyLinodeIds]}
+          filteredLinodes={[...currentLinodeIds, ...readOnlyLinodeIds]}
         />
         <ActionsPanel>
           <Button buttonType="secondary" onClick={onClose} data-qa-cancel>

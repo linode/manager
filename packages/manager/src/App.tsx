@@ -41,6 +41,7 @@ import withPreferences, {
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
+import { firewallEventsHandler } from './queries/firewalls';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -138,6 +139,13 @@ export class App extends React.Component<CombinedProps, State> {
     events$
       .filter((event) => event.action.startsWith('token') && !event._initial)
       .subscribe(tokenEventHandler);
+
+    /*
+      Send any Token events to the Token events handler in the queries file
+     */
+    events$
+      .filter((event) => event.action.startsWith('firewall') && !event._initial)
+      .subscribe(firewallEventsHandler);
 
     /*
      * We want to listen for migration events side-wide

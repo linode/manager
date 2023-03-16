@@ -22,6 +22,7 @@ import {
   itemInListCreationHandler,
   updateInPaginatedStore,
 } from './base';
+import { Event } from '@linode/api-v4';
 
 export const queryKey = 'firewall';
 
@@ -149,3 +150,8 @@ const getAllFirewallsRequest = () =>
   getAll<Firewall>((passedParams, passedFilter) =>
     getFirewalls(passedParams, passedFilter)
   )().then((data) => data.data);
+
+export const firewallEventsHandler = (event: Event) => {
+  // We will over-fetch a little bit, bit this ensures Cloud firewalls are *always* up to date
+  queryClient.invalidateQueries(queryKey);
+};
