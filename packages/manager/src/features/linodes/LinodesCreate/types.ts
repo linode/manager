@@ -20,6 +20,7 @@ export type TypeInfo =
       title: string;
       details: string;
       monthly: number;
+      hourly: number;
       backupsMonthly: number | null;
     }
   | undefined;

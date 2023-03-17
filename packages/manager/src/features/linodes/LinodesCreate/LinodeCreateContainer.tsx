@@ -353,9 +353,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
     const defaultImage = images.length === 1 ? images[0].id : undefined;
 
+    const stackScriptLabel = defaultData?.cluster_size
+      ? `${label} Cluster`
+      : label;
+
     this.setState({
       selectedStackScriptID: id,
-      selectedStackScriptLabel: label,
+      selectedStackScriptLabel: stackScriptLabel,
       selectedStackScriptUsername: username,
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: images,
@@ -666,6 +670,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         title: type.label,
         details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
+        hourly: type.price.hourly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
       }
     );

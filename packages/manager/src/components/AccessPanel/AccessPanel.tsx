@@ -38,7 +38,8 @@ interface Props {
   required?: boolean;
   placeholder?: string;
   disabled?: boolean;
-  disabledReason?: string;
+  disabledReason?: string | JSX.Element;
+  tooltipInteractive?: boolean;
   hideStrengthLabel?: boolean;
   className?: string;
   small?: boolean;
@@ -60,6 +61,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       placeholder,
       disabled,
       disabledReason,
+      tooltipInteractive,
       hideStrengthLabel,
       className,
       isOptional,
@@ -87,6 +89,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             required={required}
             disabled={disabled}
             disabledReason={disabledReason || ''}
+            tooltipInteractive={tooltipInteractive}
             autoComplete="off"
             value={this.props.password || ''}
             label={label || 'Root Password'}
