@@ -304,7 +304,10 @@ const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
       /**
        * if the "default" key exists, it's optional
        */
-      if (eachUDF.hasOwnProperty('default')) {
+      if (
+        eachUDF.hasOwnProperty('default') &&
+        !eachUDF.hasOwnProperty('required')
+      ) {
         return [[...accum[0]], [...accum[1], eachUDF]];
       } else {
         return [[...accum[0], eachUDF], [...accum[1]]];
