@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { sshKeyFactory } from 'src/factories';
 import { rest, server } from 'src/mocks/testServer';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { SSHKeyCreationDrawer } from './SSHKeyCreationDrawer';
+import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
 
 const props = {
   open: true,

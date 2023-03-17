@@ -2,22 +2,28 @@ import * as React from 'react';
 import InlineMenuAction from 'src/components/InlineMenuAction';
 
 interface Props {
-  id: number;
-  label: string;
-  onDelete: (id: number, label: string) => void;
+  onDelete: () => void;
+  onEdit: () => void;
 }
 
 export const SSHKeyActionMenu = (props: Props) => {
-  const { id, label, onDelete } = props;
+  const { onDelete, onEdit } = props;
 
   return (
-    <InlineMenuAction
-      key="Delete"
-      actionText="Delete"
-      onClick={() => {
-        onDelete(id, label);
-      }}
-    />
+    <>
+      <InlineMenuAction
+        actionText="Edit"
+        onClick={() => {
+          onEdit();
+        }}
+      />
+      <InlineMenuAction
+        actionText="Delete"
+        onClick={() => {
+          onDelete();
+        }}
+      />
+    </>
   );
 };
 

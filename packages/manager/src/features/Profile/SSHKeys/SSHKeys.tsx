@@ -18,10 +18,11 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
-import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
+import SSHKeyCreationDrawer from './CreateSSHKeyDrawer';
 import { useSSHKeysQuery } from 'src/queries/profile';
 import { usePagination } from 'src/hooks/usePagination';
 import { parseAPIDate } from 'src/utilities/date';
+import EditSSHKeyDrawer from './EditSSHKeyDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   sshKeysHeader: {
@@ -46,6 +47,7 @@ const SSHKeys = () => {
 
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [isCreateDrawerOpen, setIsCreateDrawerOpen] = React.useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = React.useState(false);
   const [selectedKeyId, setSelectedKeyId] = React.useState(-1);
 
   const pagination = usePagination(1, preferenceKey);
@@ -62,6 +64,11 @@ const SSHKeys = () => {
   const onDelete = (id: number) => {
     setSelectedKeyId(id);
     setIsDeleteDialogOpen(true);
+  };
+
+  const onEdit = (id: number) => {
+    setSelectedKeyId(id);
+    setIsEditDrawerOpen(true);
   };
 
   const renderTableBody = () => {
@@ -95,7 +102,10 @@ const SSHKeys = () => {
           <TableCell>{parseAPIDate(key.created).toRelative()}</TableCell>
         </Hidden>
         <TableCell actionCell>
-          <SSHKeyActionMenu id={key.id} label={key.label} onDelete={onDelete} />
+          <SSHKeyActionMenu
+            onDelete={() => onDelete(key.id)}
+            onEdit={() => onEdit(key.id)}
+          />
         </TableCell>
       </TableRow>
     ));
@@ -143,6 +153,11 @@ const SSHKeys = () => {
         label={selectedKey?.label}
         open={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
+      />
+      <EditSSHKeyDrawer
+        open={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        sshKey={selectedKey}
       />
       <SSHKeyCreationDrawer
         open={isCreateDrawerOpen}

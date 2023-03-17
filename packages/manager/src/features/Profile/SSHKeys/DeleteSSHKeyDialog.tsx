@@ -51,4 +51,4 @@ const DeleteSSHKeyDialog = ({ id, open, onClose, label }: Props) => {
   );
 };
 
-export default DeleteSSHKeyDialog;
+export default React.memo(DeleteSSHKeyDialog);

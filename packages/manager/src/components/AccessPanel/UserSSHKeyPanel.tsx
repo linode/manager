@@ -11,7 +11,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
-import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
+import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/CreateSSHKeyDrawer';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
 import { useAccountUsers } from 'src/queries/accountUsers';

@@ -15,6 +15,7 @@ import {
   createSSHKey,
   SSHKey,
   deleteSSHKey,
+  updateSSHKey,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
@@ -97,6 +98,18 @@ export const useSSHKeysQuery = (params?: any, filter?: any, enabled = true) =>
 export const useCreateSSHKeyMutation = () =>
   useMutation<SSHKey, APIError[], { label: string; ssh_key: string }>(
     createSSHKey,
+    {
+      onSuccess() {
+        queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+        // also invalidate the /account/users data because that endpoint returns some SSH key data
+        queryClient.invalidateQueries([accountUsersQueryKey]);
+      },
+    }
+  );
+
+export const useUpdateSSHKeyMutation = (id: number) =>
+  useMutation<SSHKey, APIError[], { label: string }>(
+    (data) => updateSSHKey(id, data),
     {
       onSuccess() {
         queryClient.invalidateQueries([queryKey, 'ssh-keys']);
