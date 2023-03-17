@@ -30,7 +30,7 @@ export const getTotalLinodes = (pools: KubeNodePoolResponse[]) => {
 export const DeleteKubernetesClusterDialog = (props: Props) => {
   const { clusterLabel, clusterId, open, onClose } = props;
 
-  const { data: pools, isLoading } = useAllKubernetesNodePoolQuery(clusterId, {
+  const { data: isLoading } = useAllKubernetesNodePoolQuery(clusterId, {
     enabled: open,
   });
 
@@ -45,8 +45,6 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
   const [confirmText, setConfirmText] = React.useState<string>('');
   const disabled =
     preferences?.type_to_confirm !== false && confirmText !== clusterLabel;
-  const poolCount = pools?.length;
-  const linodeCount = getTotalLinodes(pools ?? []);
 
   const onDelete = () => {
     deleteCluster({ id: clusterId }).then(() => {
@@ -92,16 +90,16 @@ export const DeleteKubernetesClusterDialog = (props: Props) => {
         <>
           <Notice warning>
             <Typography style={{ fontSize: '0.875rem' }}>
-              <strong>Warning:</strong> This cluster contains {` `}
-              <strong>
-                {poolCount === 1 ? `1 node pool ` : `${poolCount} node pools `}
-              </strong>
-              with a total of {` `}
-              <strong>
-                {linodeCount === 1 ? `1 Linode ` : `${linodeCount} Linodes `}
-              </strong>
-              that will be deleted along with the cluster. Deleting a cluster is
-              permanent and can&rsquo;t be undone.
+              <strong>Warning:</strong>
+              <ul style={{ paddingLeft: '15px', margin: '5px 0px 0px' }}>
+                <li>
+                  Deleting a cluster is permanent and can&apos;t be undone.
+                </li>
+                <li>
+                  Attached Block Storage Volumes or NodeBalancers must be
+                  deleted separately.
+                </li>
+              </ul>
             </Typography>
           </Notice>
           <TypeToConfirm
