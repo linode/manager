@@ -50,7 +50,6 @@ export const SSHKeyCreationDrawer = ({ open, onClose }: Props) => {
           name="label"
           onChange={formik.handleChange}
           value={formik.values.label}
-          data-qa-label-field
         />
         <TextField
           errorText={hasErrorFor('ssh_key')}
@@ -58,19 +57,18 @@ export const SSHKeyCreationDrawer = ({ open, onClose }: Props) => {
           name="ssh_key"
           onChange={formik.handleChange}
           value={formik.values.ssh_key}
-          data-qa-ssh-key-field
           multiline
           rows={1.75}
         />
         <ActionsPanel>
-          <Button buttonType="secondary" onClick={onClose} data-qa-cancel>
+          <Button buttonType="secondary" onClick={onClose}>
             Cancel
           </Button>
           <Button
             buttonType="primary"
             type="submit"
             loading={isLoading}
-            data-qa-submit
+            data-testid="submit"
           >
             Add Key
           </Button>

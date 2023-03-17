@@ -1,51 +1,75 @@
-// import { shallow, ShallowWrapper } from 'enzyme';
-// import * as React from 'react';
-// import { SSHKeyCreationDrawer } from './SSHKeyCreationDrawer';
+import * as React from 'react';
+import { act, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { sshKeyFactory } from 'src/factories';
+import { rest, server } from 'src/mocks/testServer';
+import { renderWithTheme } from 'src/utilities/testHelpers';
+import { SSHKeyCreationDrawer } from './SSHKeyCreationDrawer';
 
-// jest.mock('@linode/api-v4/lib/profile');
+const props = {
+  open: true,
+  onClose: jest.fn(),
+};
 
-// const o = {
-//   labelField: `[data-qa-label-field=true]`,
-//   keyField: `[data-qa-ssh-key-field]`,
-//   submitButton: `[data-qa-submit]`,
-//   cancelButton: `[data-qa-cancel]`,
-// };
+describe('SSHKeyCreationDrawer', () => {
+  it('should have an input field for label', () => {
+    const { getByText } = renderWithTheme(<SSHKeyCreationDrawer {...props} />);
+    // Check for inputs
+    getByText('Label');
+    getByText('SSH Public Key');
 
-// describe('SSHKeyCreationDrawer', () => {
-//   let wrapper: ShallowWrapper;
-//   const onSuccess = jest.fn();
-//   const onCancel = jest.fn();
+    // Check for buttons
+    getByText('Add Key');
+    getByText('Cancel');
+  });
 
-//   beforeEach(() => {
-//     onSuccess.mockReset();
-//     onCancel.mockReset();
+  it('should be submittable and should show client side validation errors', async () => {
+    const { getAllByRole, getByTestId, getByText } = renderWithTheme(
+      <SSHKeyCreationDrawer {...props} />
+    );
 
-//     wrapper = shallow(
-//       <SSHKeyCreationDrawer
-//         open={true}
-//         onCancel={onCancel}
-//         onSuccess={onSuccess}
-//       />
-//     );
-//   });
+    const inputs = getAllByRole('textbox');
 
-//   it('should have an input field for label', () => {
-//     const labelField = wrapper.find(o.labelField);
-//     expect(labelField.exists()).toBeTruthy();
-//   });
+    const labelInput = inputs[0];
+    const sskKeyInput = inputs[1];
+    const submitButton = getByTestId('submit');
 
-//   it('should have an input field for public key', () => {
-//     const keyField = wrapper.find(o.keyField);
-//     expect(keyField.exists()).toBeTruthy();
-//   });
+    act(() => {
+      userEvent.type(labelInput, '');
+      userEvent.type(sskKeyInput, 'invalid ssh key');
+      userEvent.click(submitButton);
+    });
 
-//   it('should have a button to save', () => {
-//     const submitButton = wrapper.find(o.submitButton);
-//     expect(submitButton.exists()).toBeTruthy();
-//   });
+    await waitFor(() => {
+      getByText('Label is required.');
+    });
+  });
 
-//   it('should have a button to cancel', () => {
-//     const cancelButton = wrapper.find(o.cancelButton);
-//     expect(cancelButton.exists()).toBeTruthy();
-//   });
-// });
+  it('should submit and call onClose', async () => {
+    server.use(
+      rest.post('*/profile/sshkeys', (req, res, ctx) => {
+        return res(ctx.json(sshKeyFactory.build()));
+      })
+    );
+
+    const { getAllByRole, getByTestId } = renderWithTheme(
+      <SSHKeyCreationDrawer {...props} />
+    );
+
+    const inputs = getAllByRole('textbox');
+
+    const labelInput = inputs[0];
+    const sskKeyInput = inputs[1];
+    const submitButton = getByTestId('submit');
+
+    act(() => {
+      userEvent.type(labelInput, 'my-ssh-key');
+      userEvent.type(sskKeyInput, 'pretend this is a valid ssh key');
+      userEvent.click(submitButton);
+    });
+
+    await waitFor(() => {
+      expect(props.onClose).toBeCalled();
+    });
+  });
+});
