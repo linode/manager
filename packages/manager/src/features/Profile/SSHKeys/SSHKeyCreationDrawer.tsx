@@ -26,6 +26,7 @@ export const SSHKeyCreationDrawer = ({ open, onClose }: Props) => {
     async onSubmit(values) {
       await mutateAsync(values);
       enqueueSnackbar('Successfully created SSH key.', { variant: 'success' });
+      formik.resetForm();
       onClose();
     },
   });
