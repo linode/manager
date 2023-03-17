@@ -41,6 +41,7 @@ import withPreferences, {
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
 import { getNextThemeValue } from './utilities/theme';
+import { sshKeyEventHandler } from './queries/profile';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -132,12 +133,21 @@ export class App extends React.Component<CombinedProps, State> {
       )
       .subscribe(imageEventsHandler);
 
-    /* 
+    /*
       Send any Token events to the Token events handler in the queries file
      */
     events$
       .filter((event) => event.action.startsWith('token') && !event._initial)
       .subscribe(tokenEventHandler);
+
+    /*
+      Send any SSH Key events to the SSH Key events handler in the queries file
+     */
+    events$
+      .filter(
+        (event) => event.action.startsWith('user_ssh_key') && !event._initial
+      )
+      .subscribe(sshKeyEventHandler);
 
     /*
      * We want to listen for migration events side-wide

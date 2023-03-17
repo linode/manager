@@ -21,6 +21,7 @@ import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
 import { queryKey as accountUsersQueryKey } from './accountUsers';
+import { Event } from '@linode/api-v4';
 
 export const queryKey = 'profile';
 
@@ -113,3 +114,12 @@ export const useDeleteSSHKeyMutation = (id: number) =>
       queryClient.invalidateQueries([accountUsersQueryKey]);
     },
   });
+
+export const sshKeyEventHandler = (event: Event) => {
+  // This event handler is a bit agressive and will over-fetch, but UX will
+  // be great because this will ensure Cloud has up to date data all the time.
+
+  queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+  // also invalidate the /account/users data because that endpoint returns some SSH key data
+  queryClient.invalidateQueries([accountUsersQueryKey]);
+};
