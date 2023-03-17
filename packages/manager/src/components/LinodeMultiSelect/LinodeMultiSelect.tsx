@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes';
 import Autocomplete from '@mui/material/Autocomplete';
+import Popper from '@mui/material/Popper';
 import TextField from 'src/components/TextField';
 import { isNumeric } from 'src/utilities/stringUtils';
 
@@ -100,6 +101,9 @@ const LinodeMultiSelect = (props: Props) => {
           setInputValue(value);
         }
       }}
+      PopperComponent={(popperProps) => (
+        <Popper {...popperProps} data-qa-autocomplete-popper />
+      )}
       ListboxProps={{
         onScroll: (event: React.SyntheticEvent) => {
           const listboxNode = event.currentTarget;
