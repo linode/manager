@@ -58,8 +58,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     marginLeft: theme.spacing(2),
   },
+  actionBtnDisabled: {
+    display: 'flex',
+    '& g': {
+      stroke: theme.color.disabledText,
+    },
+  },
   actionText: {
     color: theme.textColors.linkActiveLight,
+    whiteSpace: 'nowrap',
+  },
+  actionTextDisabled: {
+    color: theme.color.disabledText,
     whiteSpace: 'nowrap',
   },
   connectionDetailsCtn: {
@@ -166,6 +176,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   };
 
   const disableShowBtn = ['provisioning', 'failed'].includes(database.status);
+  const disableDownloadCACertificateBtn = database.status === 'provisioning';
   // const connectionDetailsCopy = `username = ${credentials?.username}\npassword = ${credentials?.password}\nhost = ${database.host}\nport = ${database.port}\ssl = ${ssl}`;
 
   const credentialsBtn = (handleClick: () => void, btnText: string) => {
@@ -179,6 +190,53 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
       </Button>
     );
   };
+
+  const caCertificateJSX = (
+    <>
+      <Grid
+        item
+        onClick={() => {
+          if (disableDownloadCACertificateBtn) {
+            return;
+          }
+
+          handleDownloadCACertificate();
+        }}
+        role="button"
+        onKeyDown={(e) => {
+          if (disableDownloadCACertificateBtn) {
+            return;
+          }
+          if (e.key === 'Enter') {
+            handleDownloadCACertificate();
+          }
+        }}
+        tabIndex={0}
+        className={
+          disableDownloadCACertificateBtn
+            ? classes.actionBtnDisabled
+            : classes.actionBtn
+        }
+      >
+        <DownloadIcon style={{ marginRight: 8 }} />
+        <Typography
+          className={
+            disableDownloadCACertificateBtn
+              ? classes.actionTextDisabled
+              : classes.actionText
+          }
+        >
+          Download CA Certificate
+        </Typography>
+      </Grid>
+      {disableDownloadCACertificateBtn ? (
+        <HelpIcon
+          className={classes.helpIcon}
+          text="Your Database Cluster is currently provisioning."
+        />
+      ) : null}
+    </>
+  );
 
   return (
     <>
@@ -346,25 +404,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
         </Typography>
       </Grid>
       <div className={classes.actionBtnsCtn}>
-        {database.ssl_connection ? (
-          <Grid
-            item
-            onClick={handleDownloadCACertificate}
-            role="button"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                handleDownloadCACertificate();
-              }
-            }}
-            tabIndex={0}
-            className={classes.actionBtn}
-          >
-            <DownloadIcon style={{ marginRight: 8 }} />
-            <Typography className={classes.actionText}>
-              Download CA Certificate
-            </Typography>
-          </Grid>
-        ) : null}
+        {database.ssl_connection ? caCertificateJSX : null}
       </div>
     </>
   );
