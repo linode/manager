@@ -10,7 +10,8 @@ import HideShowText from './HideShowText';
 type Props = TextFieldProps & {
   value?: string | undefined;
   required?: boolean;
-  disabledReason?: string;
+  disabledReason?: string | JSX.Element;
+  tooltipInteractive?: boolean;
   hideStrengthLabel?: boolean;
   hideValidation?: boolean;
 };
@@ -38,6 +39,7 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
     value,
     required,
     disabledReason,
+    tooltipInteractive,
     hideStrengthLabel,
     hideValidation,
     ...rest
@@ -62,6 +64,7 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
         <HideShowText
           {...rest}
           tooltipText={disabledReason}
+          tooltipInteractive={tooltipInteractive}
           value={value}
           onChange={onChange}
           fullWidth
