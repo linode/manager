@@ -93,6 +93,6 @@ export const getMonthlyAndHourlyNodePricing = (
 ) => {
   return {
     monthlyPrice: monthlyPrice * numberOfNodes,
-    hourlyPrice: Number((hourlyPrice * numberOfNodes).toFixed(3)),
+    hourlyPrice: Math.round(hourlyPrice * numberOfNodes * 1000) / 1000,
   };
 };

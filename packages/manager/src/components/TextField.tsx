@@ -100,7 +100,7 @@ interface ToolTipProps {
   tooltipText?: string | JSX.Element;
   tooltipInteractive?: boolean;
   tooltipClasses?: string;
-  tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
+  tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
 }
 
 interface TextFieldPropsOverrides extends TextFieldProps {
