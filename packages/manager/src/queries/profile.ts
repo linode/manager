@@ -83,12 +83,13 @@ export const useVerifyPhoneVerificationCodeMutation = () =>
     verifyPhoneNumberCode
   );
 
-export const useSSHKeysQuery = (params?: any, filter?: any) =>
+export const useSSHKeysQuery = (params?: any, filter?: any, enabled = true) =>
   useQuery(
     [queryKey, 'ssh-keys', params, filter],
     () => getSSHKeys(params, filter),
     {
       keepPreviousData: true,
+      enabled,
     }
   );
 

@@ -5,12 +5,12 @@ import { useProfile } from 'src/queries/profile';
 
 export const queryKey = 'account-users';
 
-export const useAccountUsers = (params?: any) => {
+export const useAccountUsers = (params?: any, filters?: any) => {
   const { data: profile } = useProfile();
 
   return useQuery<ResourcePage<User>, APIError[]>(
-    [queryKey, params.page, params.page_size],
-    () => getUsers(params),
+    [queryKey, params, filters],
+    () => getUsers(params, filters),
     {
       enabled: !profile?.restricted,
     }

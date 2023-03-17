@@ -13,13 +13,14 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
 import { truncateAndJoinList } from 'src/utilities/stringUtils';
-import { useProfile } from 'src/queries/profile';
+import { useProfile, useSSHKeysQuery } from 'src/queries/profile';
 import { useAccountUsers } from 'src/queries/accountUsers';
 import usePagination from 'src/hooks/usePagination';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import { TableRowLoading } from '../TableRowLoading/TableRowLoading';
+import PaginationFooter from '../PaginationFooter/PaginationFooter';
 
-export const MAX_SSH_KEYS_DISPLAY = 100;
+export const MAX_SSH_KEYS_DISPLAY = 25;
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -61,12 +62,36 @@ const UserSSHKeyPanel = (props: Props) => {
   const pagination = usePagination(1);
 
   const { data: profile } = useProfile();
-  const { data: users, isLoading, error } = useAccountUsers({
-    page: pagination.page,
-    page_size: pagination.pageSize,
-  });
 
   const isRestricted = profile?.restricted ?? false;
+
+  // For non-restricted users, this query data will be used to render options
+  const {
+    data: users,
+    isLoading: isAccountUsersLoading,
+    error: accountUsersError,
+  } = useAccountUsers(
+    {
+      page: pagination.page,
+      page_size: pagination.pageSize,
+    }
+    // { ssh_keys: { '+neq': null } }
+  );
+
+  // Restricted users can't hit /account/users.
+  // For restricted users, we assume that they can only choose their own SSH keys,
+  // so we use this query to get them so we can display their labels.
+  // Notice how the query is only enabled when the user is restricted.
+  // Also notice this query is usually requires us to handle pagination, BUT,
+  // because we truncate the results, we don't need all items.
+  const {
+    data: sshKeys,
+    isLoading: isSSHKeysLoading,
+    error: sshKeysError,
+  } = useSSHKeysQuery(undefined, undefined, isRestricted);
+
+  const sshKeyLabels = sshKeys?.data.map((key) => key.label) ?? [];
+  const sshKeyTotal = sshKeys?.results ?? 0;
 
   const onToggle = (username: string) => {
     if (authorizedUsers.includes(username)) {
@@ -77,35 +102,69 @@ const UserSSHKeyPanel = (props: Props) => {
     }
   };
 
+  const isLoading = isRestricted ? isSSHKeysLoading : isAccountUsersLoading;
+  const error = isRestricted ? sshKeysError : accountUsersError;
+
   const renderTableBody = () => {
     if (error) {
-      return <TableRowError colSpan={12} message={error?.[0].reason} />;
+      return <TableRowError colSpan={3} message={error?.[0].reason} />;
     }
 
-    if (users?.results === 0) {
+    if (isRestricted && sshKeys?.results === 0) {
       return (
         <TableRowEmptyState
-          colSpan={12}
+          colSpan={3}
           message={"You don't have any SSH keys available."}
         />
       );
     }
 
     if (isLoading) {
-      return <TableRowLoading />;
+      return <TableRowLoading rows={1} columns={3} />;
+    }
+
+    // Special case for restricted users
+    if (profile && isRestricted) {
+      return (
+        <TableRow>
+          <TableCell className={classes.cellCheckbox}>
+            <CheckBox
+              disabled={disabled}
+              checked={authorizedUsers.includes(profile.username)}
+              onChange={() => onToggle(profile.username)}
+              inputProps={{
+                'aria-label': `Enable SSH for ${profile.username}`,
+              }}
+            />
+          </TableCell>
+          <TableCell className={classes.cellUser}>
+            <div className={classes.userWrapper}>
+              <img
+                src={`${getGravatarUrl(profile.email)}?d=mp&s=24`}
+                className={classes.gravatar}
+                alt={profile.username}
+              />
+              {profile.username}
+            </div>
+          </TableCell>
+          <TableCell>
+            {truncateAndJoinList(
+              sshKeyLabels,
+              MAX_SSH_KEYS_DISPLAY,
+              sshKeyTotal
+            )}
+          </TableCell>
+        </TableRow>
+      );
     }
 
     return users?.data.map((user) => (
-      <TableRow
-        key={user.username}
-        data-qa-ssh-public-key
-        data-testid="ssh-public-key"
-      >
+      <TableRow key={user.username}>
         <TableCell className={classes.cellCheckbox}>
           <CheckBox
             disabled={disabled}
             checked={authorizedUsers.includes(user.username)}
-            onChange={(_, checked) => onToggle(user.username)}
+            onChange={() => onToggle(user.username)}
             inputProps={{
               'aria-label': `Enable SSH for ${user.username}`,
             }}
@@ -114,7 +173,7 @@ const UserSSHKeyPanel = (props: Props) => {
         <TableCell className={classes.cellUser}>
           <div className={classes.userWrapper}>
             <img
-              src={getGravatarUrl(user.email)}
+              src={`${getGravatarUrl(user.email)}?d=mp&s=24`}
               className={classes.gravatar}
               alt={user.username}
             />
@@ -122,7 +181,9 @@ const UserSSHKeyPanel = (props: Props) => {
           </div>
         </TableCell>
         <TableCell>
-          {truncateAndJoinList(user.ssh_keys, MAX_SSH_KEYS_DISPLAY)}
+          {user.ssh_keys.length === 0
+            ? 'None'
+            : truncateAndJoinList(user.ssh_keys, MAX_SSH_KEYS_DISPLAY)}
         </TableCell>
       </TableRow>
     ));
@@ -137,14 +198,22 @@ const UserSSHKeyPanel = (props: Props) => {
         <TableHead>
           <TableRow>
             <TableCell className={classes.cellCheckbox} />
-            <TableCell className={classes.cellUser} data-qa-table-header="User">
-              User
-            </TableCell>
-            <TableCell data-qa-table-header="SSH Keys">SSH Keys</TableCell>
+            <TableCell className={classes.cellUser}>User</TableCell>
+            <TableCell>SSH Keys</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>{renderTableBody()}</TableBody>
       </Table>
+      {!isRestricted && (
+        <PaginationFooter
+          count={users?.results ?? 0}
+          handlePageChange={pagination.handlePageChange}
+          handleSizeChange={pagination.handlePageSizeChange}
+          page={pagination.page}
+          pageSize={pagination.pageSize}
+          eventCategory="SSH Key Users Table"
+        />
+      )}
       <Button
         buttonType="outlined"
         onClick={() => setIsCreateDrawerOpen(true)}
