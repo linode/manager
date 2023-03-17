@@ -64,22 +64,42 @@ const SSHKeys = () => {
     setIsDeleteDialogOpen(true);
   };
 
-  if (isLoading) {
-    return <TableRowLoading columns={4} />;
-  }
+  const renderTableBody = () => {
+    if (isLoading) {
+      return <TableRowLoading columns={4} />;
+    }
 
-  if (data?.results === 0) {
-    return <TableRowEmptyState colSpan={4} />;
-  }
+    if (data?.results === 0) {
+      return <TableRowEmptyState colSpan={4} />;
+    }
 
-  if (error) {
-    return (
-      <TableRowError
-        colSpan={4}
-        message="Unable to load SSH keys. Please try again."
-      />
-    );
-  }
+    if (error) {
+      return (
+        <TableRowError
+          colSpan={4}
+          message="Unable to load SSH keys. Please try again."
+        />
+      );
+    }
+
+    return data?.data.map((key) => (
+      <TableRow key={key.id}>
+        <TableCell>{key.label}</TableCell>
+        <TableCell>
+          <Typography variant="body1">{key.ssh_key.slice(0, 26)}</Typography>
+          <Typography variant="body1">
+            Fingerprint: {getSSHKeyFingerprint(key.ssh_key)}
+          </Typography>
+        </TableCell>
+        <Hidden smDown>
+          <TableCell>{parseAPIDate(key.created).toRelative()}</TableCell>
+        </Hidden>
+        <TableCell actionCell>
+          <SSHKeyActionMenu id={key.id} label={key.label} onDelete={onDelete} />
+        </TableCell>
+      </TableRow>
+    ));
+  };
 
   return (
     <>
@@ -108,31 +128,7 @@ const SSHKeys = () => {
             <TableCell />
           </TableRow>
         </TableHead>
-        <TableBody>
-          {data?.data.map((key) => (
-            <TableRow key={key.id}>
-              <TableCell>{key.label}</TableCell>
-              <TableCell>
-                <Typography variant="body1">
-                  {key.ssh_key.slice(0, 26)}
-                </Typography>
-                <Typography variant="body1">
-                  Fingerprint: {getSSHKeyFingerprint(key.ssh_key)}
-                </Typography>
-              </TableCell>
-              <Hidden smDown>
-                <TableCell>{parseAPIDate(key.created).toRelative()}</TableCell>
-              </Hidden>
-              <TableCell actionCell>
-                <SSHKeyActionMenu
-                  id={key.id}
-                  label={key.label}
-                  onDelete={onDelete}
-                />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        <TableBody>{renderTableBody()}</TableBody>
       </Table>
       <PaginationFooter
         page={pagination.page}

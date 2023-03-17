@@ -109,5 +109,7 @@ export const useDeleteSSHKeyMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteSSHKey(id), {
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'ssh-keys']);
+      // also invalidate the /account/users data because that endpoint returns some SSH key data
+      queryClient.invalidateQueries([accountUsersQueryKey]);
     },
   });
