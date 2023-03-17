@@ -4,14 +4,6 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { RebuildFromStackScript } from './RebuildFromStackScript';
 
-const request = jest.requireMock('@linode/api-v4/lib/account');
-
-jest.mock('@linode/api-v4/lib/account', () => ({
-  getUsers: jest.fn(),
-}));
-
-request.getUsers = jest.fn().mockResolvedValue([]);
-
 const props = {
   type: 'community' as const,
   linodeId: 1234,

@@ -80,6 +80,7 @@ import {
 import { accountAgreementsFactory } from 'src/factories/accountAgreements';
 import { grantFactory, grantsFactory } from 'src/factories/grants';
 import { pickRandom } from 'src/utilities/random';
+import { accountUserFactory } from 'src/factories/accountUsers';
 
 export const makeResourcePage = <T>(
   e: T[],
@@ -731,7 +732,7 @@ export const handlers = [
     return res(ctx.json(makeResourcePage(accountMaintenance)));
   }),
   rest.get('*/account/users', (req, res, ctx) => {
-    return res(ctx.json(makeResourcePage([profileFactory.build()])));
+    return res(ctx.json(makeResourcePage([accountUserFactory.build()])));
   }),
   rest.get('*/account/users/:user', (req, res, ctx) => {
     return res(ctx.json(profileFactory.build()));

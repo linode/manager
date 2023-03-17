@@ -1,102 +1,39 @@
-// import { shallow } from 'enzyme';
-// import * as React from 'react';
-// import { pageyProps } from 'src/__data__/pageyProps';
-// import { SSHKeys } from './SSHKeys';
+import { waitForElementToBeRemoved } from '@testing-library/react';
+import * as React from 'react';
+import { sshKeyFactory } from 'src/factories';
+import { makeResourcePage } from 'src/mocks/serverHandlers';
+import { rest, server } from 'src/mocks/testServer';
+import { mockMatchMedia, renderWithTheme } from 'src/utilities/testHelpers';
+import SSHKeys from './SSHKeys';
 
-// /**
-//  * Displays a table
-//  * Table has 4 columns
-//  * Row contains label, key, fingerprint, relative date, and action menu.
-//  */
+// We have to do this because if we don't, the <Hidden /> columns don't render
+beforeAll(() => mockMatchMedia());
 
-// describe('SSHKeys', () => {
-//   describe('layout', () => {
-//     const wrapper = shallow(
-//       <SSHKeys
-//         {...pageyProps}
-//         classes={{
-//           sshKeysHeader: '',
-//           addNewWrapper: '',
-//           createdCell: '',
-//         }}
-//         data={[
-//           { id: 1, label: '', ssh_key: '', created: '', fingerprint: '' },
-//           { id: 2, label: '', ssh_key: '', created: '', fingerprint: '' },
-//           { id: 3, label: '', ssh_key: '', created: '', fingerprint: '' },
-//         ]}
-//         timezone={'GMT'}
-//       />
-//     );
+describe('SSHKeys', () => {
+  it('should have table header with SSH Keys title', async () => {
+    const sshKeys = sshKeyFactory.buildList(5);
 
-//     it('should have table header with SSH Keys title', () => {
-//       expect(wrapper.find('[data-qa-table-head]').exists()).toBeTruthy();
-//     });
+    server.use(
+      rest.get('*/profile/sshkeys', (req, res, ctx) => {
+        return res(ctx.json(makeResourcePage(sshKeys)));
+      })
+    );
 
-//     it('should have a table', () => {
-//       expect(wrapper.find(`WrappedTable`).exists()).toBeTruthy();
-//     });
+    const { getByText, getByTestId } = renderWithTheme(<SSHKeys />);
 
-//     it('should have pagination controls', () => {
-//       expect(
-//         wrapper.find(`WithStyles(PaginationFooter)`).exists()
-//       ).toBeTruthy();
-//     });
+    // Check for table headers
+    getByText('Label');
+    getByText('Key');
+    getByText('Created');
 
-//     it('should display table row for each key', () => {
-//       expect(wrapper.find('[data-qa-content-row]')).toHaveLength(3);
-//     });
-//   });
+    // Loading state should render
+    expect(getByTestId('table-row-loading')).toBeInTheDocument();
 
-//   it('should display TableRowLoading if props.loading is true.', () => {
-//     const wrapper = shallow(
-//       <SSHKeys
-//         {...pageyProps}
-//         classes={{
-//           sshKeysHeader: '',
-//           addNewWrapper: '',
-//           createdCell: '',
-//         }}
-//         data={undefined}
-//         loading={true}
-//         timezone={'GMT'}
-//       />
-//     );
+    await waitForElementToBeRemoved(getByTestId('table-row-loading'));
 
-//     expect(wrapper.find(`TableRowLoading`).exists()).toBeTruthy();
-//   });
-
-//   it('should display TableRowError if error if state.error is set.', () => {
-//     const wrapper = shallow(
-//       <SSHKeys
-//         {...pageyProps}
-//         classes={{
-//           sshKeysHeader: '',
-//           addNewWrapper: '',
-//           createdCell: '',
-//         }}
-//         data={undefined}
-//         error={[{ reason: 'error here' }]}
-//         timezone={'GMT'}
-//       />
-//     );
-
-//     expect(wrapper.find(`TableRowError`).exists()).toBeTruthy();
-//   });
-
-//   it('should display TableEmptyState if done loading and count is 0', () => {
-//     const wrapper = shallow(
-//       <SSHKeys
-//         {...pageyProps}
-//         classes={{
-//           sshKeysHeader: '',
-//           addNewWrapper: '',
-//           createdCell: '',
-//         }}
-//         data={undefined}
-//         timezone={'GMT'}
-//       />
-//     );
-
-//     expect(wrapper.find(`TableRowEmptyState`).exists()).toBeTruthy();
-//   });
-// });
+    // Verify some SSH keys render in the table after loading
+    for (const key of sshKeys) {
+      getByText(key.label);
+    }
+  });
+});
