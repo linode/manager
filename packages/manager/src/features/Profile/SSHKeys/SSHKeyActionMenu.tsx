@@ -11,18 +11,8 @@ export const SSHKeyActionMenu = (props: Props) => {
 
   return (
     <>
-      <InlineMenuAction
-        actionText="Edit"
-        onClick={() => {
-          onEdit();
-        }}
-      />
-      <InlineMenuAction
-        actionText="Delete"
-        onClick={() => {
-          onDelete();
-        }}
-      />
+      <InlineMenuAction actionText="Edit" onClick={onEdit} />
+      <InlineMenuAction actionText="Delete" onClick={onDelete} />
     </>
   );
 };
