@@ -139,12 +139,10 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
 
     const newApps = appInstances.filter((app) => {
       return [
-        'apache airflow',
-        'haltdos community waf',
-        'superinsight',
-        'gopaddle',
-        'passky',
-        'onlyoffice docs',
+        'mongodb cluster',
+        'redis sentinel cluster',
+        'galera cluster',
+        'postgresql cluster',
       ].includes(app.label.toLowerCase().trim());
     });
 

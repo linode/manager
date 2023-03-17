@@ -7,12 +7,18 @@ import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import SelectionCardWrapper from 'src/features/linodes/LinodesCreate/SelectionCardWrapper';
+import Chip from 'src/components/core/Chip';
 
 const useStyles = makeStyles((theme: Theme) => ({
   flatImagePanelSelections: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(),
     padding: `${theme.spacing(1)} 0`,
+  },
+  chip: {
+    '& span': {
+      color: 'inherit !important',
+    },
   },
 }));
 
@@ -49,21 +55,40 @@ export const AppPanelSection: React.FC<Props> = (props) => {
         <Divider spacingTop={16} spacingBottom={16} />
       ) : null}
       <Grid className={classes.flatImagePanelSelections} container>
-        {apps.map((eachApp) => (
-          <SelectionCardWrapper
-            id={eachApp.id}
-            key={eachApp.id}
-            checked={eachApp.id === selectedStackScriptID}
-            // Decode App labels since they may contain HTML entities.
-            label={decode(eachApp.label)}
-            availableImages={eachApp.images}
-            userDefinedFields={eachApp.user_defined_fields}
-            handleClick={handleClick}
-            openDrawer={openDrawer}
-            disabled={disabled}
-            iconUrl={eachApp.logo_url.toLowerCase() || ''}
-          />
-        ))}
+        {apps.map((eachApp) => {
+          const decodedLabel = decode(eachApp.label);
+          const isCluster =
+            decodedLabel.endsWith('Cluster ') &&
+            eachApp.user_defined_fields.some(
+              (field) => field.name === 'cluster_size'
+            );
+
+          const label = isCluster
+            ? decodedLabel.split(' Cluster')[0]
+            : decodedLabel;
+
+          return (
+            <SelectionCardWrapper
+              id={eachApp.id}
+              key={eachApp.id}
+              checked={eachApp.id === selectedStackScriptID}
+              // Decode App labels since they may contain HTML entities.
+              label={label}
+              clusterLabel={decodedLabel}
+              availableImages={eachApp.images}
+              userDefinedFields={eachApp.user_defined_fields}
+              handleClick={handleClick}
+              openDrawer={openDrawer}
+              disabled={disabled}
+              iconUrl={eachApp.logo_url.toLowerCase() || ''}
+              labelDecoration={
+                isCluster ? (
+                  <Chip size="small" label="CLUSTER" className={classes.chip} />
+                ) : undefined
+              }
+            />
+          );
+        })}
       </Grid>
     </>
   );

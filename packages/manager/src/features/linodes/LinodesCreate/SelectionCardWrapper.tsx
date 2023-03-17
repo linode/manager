@@ -46,10 +46,12 @@ interface Props {
   iconUrl: string;
   id: number;
   label: string;
+  clusterLabel: string;
   userDefinedFields: UserDefinedField[];
   availableImages: string[];
   disabled: boolean;
   checked: boolean;
+  labelDecoration?: JSX.Element;
 }
 
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
@@ -58,11 +60,13 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
     id,
     checked,
     label,
+    clusterLabel,
     userDefinedFields,
     availableImages,
     disabled,
     handleClick,
     openDrawer,
+    labelDecoration,
   } = props;
   /**
    * '' is the default value for a stackscript's logo_url;
@@ -82,12 +86,12 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const handleInfoClick = (e: React.MouseEvent<any>) => {
     e.stopPropagation();
     e.preventDefault();
-    openDrawer(label);
+    openDrawer(clusterLabel ?? label);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      openDrawer(label);
+      openDrawer(clusterLabel ?? label);
     }
   };
 
@@ -121,6 +125,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
       data-qa-selection-card
       disabled={disabled}
       className={classes.selectionCard}
+      headingDecoration={labelDecoration}
     />
   );
 };
