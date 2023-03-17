@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useInfiniteLinodesQuery } from 'src/queries/linodes';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from 'src/components/TextField';
+import { isNumeric } from 'src/utilities/stringUtils';
 
 export interface Props {
   allowedRegions?: string[];
@@ -28,12 +29,20 @@ const LinodeMultiSelect = (props: Props) => {
 
   const [inputValue, setInputValue] = React.useState<string>('');
 
+  const isInputValueNumeric = isNumeric(inputValue);
+
   const searchFilter = inputValue
     ? {
-        '+or': [
-          { label: { '+contains': inputValue } },
-          { tags: { '+contains': inputValue } },
-        ],
+        '+or': isInputValueNumeric
+          ? [
+              { id: Number(inputValue) },
+              { label: { '+contains': inputValue } },
+              { tags: { '+contains': inputValue } },
+            ]
+          : [
+              { label: { '+contains': inputValue } },
+              { tags: { '+contains': inputValue } },
+            ],
       }
     : {};
 
@@ -81,6 +90,7 @@ const LinodeMultiSelect = (props: Props) => {
       loading={isLoading}
       options={options ?? []}
       value={selectedLinodeOptions}
+      filterOptions={(options) => options}
       onChange={(event, value) => {
         onChange(value.map((option) => option.id));
       }}
