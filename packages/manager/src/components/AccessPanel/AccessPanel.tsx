@@ -44,8 +44,8 @@ interface Props {
   small?: boolean;
   isOptional?: boolean;
   passwordHelperText?: string;
-  setAuthorizedUsers: (usernames: string[]) => void;
-  authorizedUsers: string[];
+  setAuthorizedUsers?: (usernames: string[]) => void;
+  authorizedUsers?: string[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -96,12 +96,16 @@ class AccessPanel extends React.Component<CombinedProps> {
             helperText={passwordHelperText}
           />
         </React.Suspense>
-        <Divider spacingTop={44} spacingBottom={20} />
-        <UserSSHKeyPanel
-          setAuthorizedUsers={setAuthorizedUsers}
-          authorizedUsers={authorizedUsers}
-          disabled={disabled}
-        />
+        {setAuthorizedUsers !== undefined && authorizedUsers !== undefined && (
+          <>
+            <Divider spacingTop={44} spacingBottom={20} />
+            <UserSSHKeyPanel
+              setAuthorizedUsers={setAuthorizedUsers}
+              authorizedUsers={authorizedUsers}
+              disabled={disabled}
+            />
+          </>
+        )}
       </Paper>
     );
   }

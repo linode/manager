@@ -162,7 +162,7 @@ const UserSSHKeyPanel = (props: Props) => {
       <TableRow key={user.username}>
         <TableCell className={classes.cellCheckbox}>
           <CheckBox
-            disabled={disabled}
+            disabled={disabled || user.ssh_keys.length === 0}
             checked={authorizedUsers.includes(user.username)}
             onChange={() => onToggle(user.username)}
             inputProps={{
