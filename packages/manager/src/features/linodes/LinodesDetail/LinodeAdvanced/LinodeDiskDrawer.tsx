@@ -6,7 +6,6 @@ import {
 } from '@linode/validation/lib/linodes.schema';
 import { useFormik } from 'formik';
 import * as React from 'react';
-import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -62,8 +61,8 @@ export interface Props {
   onClose: () => void;
   onSubmit: (values: any) => Promise<any>;
   passwordError?: string;
-  userSSHKeys?: UserSSHKeyObject[];
-  requestKeys?: () => void;
+  setAuthorizedUsers: (usernames: string[]) => void;
+  authorizedUsers: string[];
 }
 
 type CombinedProps = Props;
@@ -113,8 +112,8 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
     mode,
     onClose,
     onSubmit,
-    userSSHKeys,
-    requestKeys,
+    setAuthorizedUsers,
+    authorizedUsers,
   } = props;
 
   const CreateFromImageSchema = () =>
@@ -258,8 +257,8 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
                 onPasswordChange={(root_pass: string) =>
                   formik.setFieldValue('root_pass', root_pass)
                 }
-                userSSHKeys={userSSHKeys || []}
-                requestKeys={requestKeys || (() => null)}
+                authorizedUsers={authorizedUsers}
+                setAuthorizedUsers={setAuthorizedUsers}
               />
             )}
             <TextField

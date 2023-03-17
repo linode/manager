@@ -2,10 +2,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import {
-  CombinedProps,
-  RebuildFromStackScript,
-} from './RebuildFromStackScript';
+import { RebuildFromStackScript } from './RebuildFromStackScript';
 
 const request = jest.requireMock('@linode/api-v4/lib/account');
 
@@ -15,11 +12,9 @@ jest.mock('@linode/api-v4/lib/account', () => ({
 
 request.getUsers = jest.fn().mockResolvedValue([]);
 
-const props: CombinedProps = {
-  type: 'community',
+const props = {
+  type: 'community' as const,
   linodeId: 1234,
-  requestKeys: jest.fn(),
-  userSSHKeys: [],
   disabled: false,
   passwordHelperText: '',
   handleRebuildError: jest.fn(),

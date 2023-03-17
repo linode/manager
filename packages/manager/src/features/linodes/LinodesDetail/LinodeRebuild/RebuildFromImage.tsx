@@ -4,8 +4,7 @@ import { Formik, FormikProps } from 'formik';
 import { useSnackbar } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
-import AccessPanel from 'src/components/AccessPanel';
+import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles } from '@mui/styles';
@@ -14,9 +13,6 @@ import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import TypeToConfirm from 'src/components/TypeToConfirm';
 import { resetEventsPolling } from 'src/eventsPolling';
-import userSSHKeyHoc, {
-  UserSSHKeyProps,
-} from 'src/features/linodes/userSSHKeyHoc';
 import { useAllImagesQuery } from 'src/queries/images';
 import { usePreferences } from 'src/queries/preferences';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -51,24 +47,21 @@ interface Props {
   onClose: () => void;
 }
 
-export type CombinedProps = Props & UserSSHKeyProps;
-
 interface RebuildFromImageForm {
   image: string;
   root_pass: string;
+  authorized_users: string[];
 }
 
 const initialValues: RebuildFromImageForm = {
   image: '',
   root_pass: '',
+  authorized_users: [],
 };
 
-export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
+export const RebuildFromImage = (props: Props) => {
   const {
     disabled,
-    userSSHKeys,
-    sshError,
-    requestKeys,
     linodeId,
     linodeLabel,
     handleRebuildError,
@@ -91,7 +84,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     preferences?.type_to_confirm !== false && confirmationText !== linodeLabel;
 
   const handleFormSubmit = (
-    { image, root_pass }: RebuildFromImageForm,
+    { image, root_pass, authorized_users }: RebuildFromImageForm,
     { setSubmitting, setStatus, setErrors }: FormikProps<RebuildFromImageForm>
   ) => {
     setSubmitting(true);
@@ -102,9 +95,7 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
     const params: RebuildRequest = {
       image,
       root_pass,
-      authorized_users: userSSHKeys
-        .filter((u) => u.selected)
-        .map((u) => u.username),
+      authorized_users,
     };
 
     // @todo: eventually this should be a dispatched action instead of a services library call
@@ -192,14 +183,14 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
                   disabled,
                   values.root_pass,
                   errors,
-                  sshError,
-                  userSSHKeys,
+                  values.authorized_users,
                   values.image,
                 ]}
                 error={errors.root_pass}
-                sshKeyError={sshError}
-                users={userSSHKeys}
-                requestKeys={requestKeys}
+                setAuthorizedUsers={(usernames) =>
+                  setFieldValue('authorized_users', usernames)
+                }
+                authorizedUsers={values.authorized_users}
                 data-qa-access-panel
                 disabled={disabled}
                 passwordHelperText={passwordHelperText}
@@ -240,6 +231,4 @@ export const RebuildFromImage: React.FC<CombinedProps> = (props) => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(userSSHKeyHoc);
-
-export default enhanced(RebuildFromImage);
+export default RebuildFromImage;

@@ -33,9 +33,6 @@ import {
   UpdateLinodeDisk,
   withLinodeDetailContext,
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import userSSHKeyHoc, {
-  UserSSHKeyProps,
-} from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
@@ -92,6 +89,7 @@ interface State {
   drawer: DrawerState;
   imagizeDrawer: ImagizeDrawerState;
   confirmDelete: ConfirmDeleteState;
+  authorized_users: string[];
 }
 
 interface Props {
@@ -99,7 +97,6 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  UserSSHKeyProps &
   LinodeContextProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
@@ -135,6 +132,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       drawer: defaultDrawerState,
       imagizeDrawer: defaultImagizeDrawerState,
       confirmDelete: defaultConfirmDeleteState,
+      authorized_users: [],
     };
   }
 
@@ -427,6 +425,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     });
   };
 
+  setAuthorizedUsers = (value: string[]) => {
+    this.setState({ authorized_users: value });
+  };
+
   drawer = () => {
     const { diskId, mode, open, maximumSize } = this.state.drawer;
     const { disks } = this.props;
@@ -439,8 +441,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         maximumSize={maximumSize}
         onClose={this.closeDrawer}
         onSubmit={this.onDrawerSubmit}
-        userSSHKeys={this.props.userSSHKeys}
-        requestKeys={this.props.requestKeys}
+        setAuthorizedUsers={this.setAuthorizedUsers}
+        authorizedUsers={this.state.authorized_users}
       />
     );
   };
@@ -473,7 +475,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   };
 
   createDisk = (values: any) => {
-    const { linodeId, userSSHKeys, createLinodeDisk } = this.props;
+    const { linodeId, createLinodeDisk } = this.props;
     const { label, size, filesystem, image, root_pass } = values;
     if (!linodeId) {
       // Safety check; should never happen.
@@ -486,9 +488,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       filesystem: filesystem === '_none_' ? undefined : filesystem,
       image: Boolean(image) ? image : undefined,
       root_pass: Boolean(root_pass) ? root_pass : undefined,
-      authorized_users: userSSHKeys
-        ? userSSHKeys.filter((u) => u.selected).map((u) => u.username)
-        : undefined,
+      authorized_users: this.state.authorized_users,
     }).then((_) => resetEventsPolling());
   };
 
@@ -616,7 +616,6 @@ const linodeContext = withLinodeDetailContext(
 const enhanced = compose<CombinedProps, {}>(
   styled,
   linodeContext,
-  userSSHKeyHoc,
   withSnackbar
 );
 

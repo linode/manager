@@ -5,7 +5,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-import AccessPanel from 'src/components/AccessPanel';
+import AccessPanel from 'src/components/AccessPanel/AccessPanel';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
