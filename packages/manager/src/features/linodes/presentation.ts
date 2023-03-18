@@ -25,15 +25,15 @@ export const typeLabelDetails = (
 
 export const displayType = (
   linodeTypeId: null | string,
-  types: Pick<ExtendedType, 'id' | 'label'>[]
+  types: Pick<ExtendedType, 'id' | 'formattedLabel'>[]
 ): string => {
   if (linodeTypeId === null) {
     return 'No Plan';
   }
 
   const foundType = types.find((t) => t.id === linodeTypeId);
-  if (foundType && foundType.label) {
-    return foundType.label;
+  if (foundType && foundType.formattedLabel) {
+    return foundType.formattedLabel;
   }
 
   return 'Unknown Plan';

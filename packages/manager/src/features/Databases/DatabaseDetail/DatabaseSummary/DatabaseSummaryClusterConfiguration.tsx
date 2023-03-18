@@ -12,6 +12,7 @@ import {
   databaseEngineMap,
   databaseStatusMap,
 } from '../../DatabaseLanding/DatabaseRow';
+import { formatStorageUnits } from 'src/utilities/formatStorageUnits';
 
 const useStyles = makeStyles((theme: Theme) => ({
   header: {
@@ -89,7 +90,7 @@ export const DatabaseSummaryClusterConfiguration: React.FC<Props> = (props) => {
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>Plan</Typography>
-          {type.label}
+          {formatStorageUnits(type.label)}
         </Box>
         <Box display="flex">
           <Typography className={classes.label}>RAM</Typography>

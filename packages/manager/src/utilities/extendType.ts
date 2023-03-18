@@ -7,6 +7,7 @@ export interface ExtendedType extends LinodeType {
   heading: string;
   subHeadings: string[];
   isDeprecated: boolean;
+  formattedLabel: string;
 }
 
 export const extendType = (type: LinodeType): ExtendedType => {
@@ -35,7 +36,7 @@ export const extendType = (type: LinodeType): ExtendedType => {
 
   return {
     ...type,
-    label: formattedLabel,
+    formattedLabel,
     heading: formattedLabel,
     subHeadings,
     isDeprecated: type.successor !== null,

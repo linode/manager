@@ -76,7 +76,7 @@ export const NodePoolSummary: React.FC<Props> = (props) => {
         <Box display="flex" justifyContent="space-between">
           <div>
             <Typography className={classes.typeHeader}>
-              {poolType.label} Plan
+              {poolType.formattedLabel} Plan
             </Typography>
             <Typography className={classes.typeSubheader}>
               {pluralize('CPU', 'CPUs', poolType.vcpus)}, {poolType.disk / 1024}{' '}

@@ -661,7 +661,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   reshapeTypeInfo = (type?: ExtendedType): TypeInfo | undefined => {
     return (
       type && {
-        title: type.label,
+        title: type.formattedLabel,
         details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,

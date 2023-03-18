@@ -36,6 +36,7 @@ import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
+import { extendType } from 'src/utilities/extendType';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -85,7 +86,7 @@ const MigrateLinode: React.FC<CombinedProps> = (props) => {
 
   const linode = useExtendedLinode(linodeID);
   const typesQuery = useSpecificTypes(linode?.type ? [linode.type] : []);
-  const type = typesQuery[0]?.data;
+  const type = typesQuery[0]?.data ? extendType(typesQuery[0].data) : undefined;
 
   const { data: imagesData } = useAllImagesQuery({}, {}, open);
   const images = listToItemsByID(imagesData ?? []);

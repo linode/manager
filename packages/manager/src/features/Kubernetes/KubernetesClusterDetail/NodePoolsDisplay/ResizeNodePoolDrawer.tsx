@@ -94,7 +94,7 @@ export const ResizeNodePoolDrawer = (props: Props) => {
 
   return (
     <Drawer
-      title={`Resize Pool: ${planType?.label ?? 'Unknown'} Plan`}
+      title={`Resize Pool: ${planType?.formattedLabel ?? 'Unknown'} Plan`}
       open={open}
       onClose={onClose}
     >

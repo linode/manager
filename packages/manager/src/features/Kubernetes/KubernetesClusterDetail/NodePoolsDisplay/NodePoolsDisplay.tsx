@@ -170,7 +170,8 @@ export const NodePoolsDisplay = (props: Props) => {
                   (thisType) => thisType.id === thisPool.type
                 );
 
-                const typeLabel = thisPoolType?.label ?? 'Unknown type';
+                const typeLabel =
+                  thisPoolType?.formattedLabel ?? 'Unknown type';
 
                 return (
                   <div key={id} className={classes.nodePool}>

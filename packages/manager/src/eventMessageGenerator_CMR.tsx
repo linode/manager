@@ -25,7 +25,7 @@ export const eventMessageGenerator = (
         (thisType) => thisType.id === eventLinode?.type
       );
       return `resize ${
-        eventLinodeType ? `to ${eventLinodeType.label} Plan` : ''
+        eventLinodeType ? `to ${eventLinodeType.formattedLabel} Plan` : ''
       }`;
     case 'linode_migrate':
     case 'linode_migrate_datacenter':

@@ -116,7 +116,7 @@ const LinodeEntityDetail: React.FC<CombinedProps> = (props) => {
 
   const linodeType = Boolean(linode.type) ? type ?? null : null;
 
-  const linodePlan = linodeType?.label ?? null;
+  const linodePlan = linodeType?.formattedLabel ?? null;
 
   const linodeRegionDisplay =
     regions?.find((r) => r.id === linode.region)?.label ?? linode.region;

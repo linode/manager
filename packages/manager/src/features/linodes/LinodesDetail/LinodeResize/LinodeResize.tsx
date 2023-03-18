@@ -309,7 +309,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     const currentPlanHeading = linodeType
       ? type
-        ? type.label
+        ? type.formattedLabel
         : 'Unknown Plan'
       : 'No Assigned Plan';
 

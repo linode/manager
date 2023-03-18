@@ -172,7 +172,7 @@ export class SelectPlanPanel extends React.Component<
         {/* Displays Table Row for larger screens */}
         <Hidden mdDown>
           <TableRow
-            data-qa-plan-row={type.label}
+            data-qa-plan-row={type.formattedLabel}
             key={type.id}
             className={classNames({
               [classes.disabledRow]: disabled,

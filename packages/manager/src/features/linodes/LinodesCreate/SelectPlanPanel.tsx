@@ -1,9 +1,5 @@
 import { useSelector } from 'react-redux';
-import {
-  LinodeTypeClass,
-  BaseType,
-  PriceObject,
-} from '@linode/api-v4/lib/linodes';
+import { LinodeTypeClass, BaseType } from '@linode/api-v4/lib/linodes';
 import { Capabilities } from '@linode/api-v4/lib/regions/types';
 import classNames from 'classnames';
 import { LDClient } from 'launchdarkly-js-client-sdk';
@@ -104,10 +100,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface PlanSelectionType extends BaseType {
-  class: string;
-  heading: string;
-  subHeadings: string[];
-  price: PriceObject;
+  formattedLabel: ExtendedType['formattedLabel'];
+  class: ExtendedType['class'];
+  heading: ExtendedType['heading'];
+  subHeadings: ExtendedType['subHeadings'];
+  price: ExtendedType['price'];
   transfer?: ExtendedType['transfer'];
   network_out?: ExtendedType['network_out'];
 }
@@ -212,18 +209,18 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     }
 
     const rowAriaLabel =
-      type && type.label && isSamePlan
-        ? `${type.label} this is your current plan`
+      type && type.formattedLabel && isSamePlan
+        ? `${type.formattedLabel} this is your current plan`
         : planTooSmall
-        ? `${type.label} this plan is too small for resize`
-        : type.label;
+        ? `${type.formattedLabel} this plan is too small for resize`
+        : type.formattedLabel;
 
     return (
       <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden lgDown={isCreate} mdDown={!isCreate}>
           <TableRow
-            data-qa-plan-row={type.label}
+            data-qa-plan-row={type.formattedLabel}
             aria-label={rowAriaLabel}
             key={type.id}
             onClick={
