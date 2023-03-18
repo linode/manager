@@ -85,3 +85,14 @@ export const gpuPlanText = (useTypography?: boolean): JSX.Element => {
     </>
   );
 };
+
+export const getMonthlyAndHourlyNodePricing = (
+  monthlyPrice: number,
+  hourlyPrice: number,
+  numberOfNodes: number
+) => {
+  return {
+    monthlyPrice: monthlyPrice * numberOfNodes,
+    hourlyPrice: Math.round(hourlyPrice * numberOfNodes * 1000) / 1000,
+  };
+};

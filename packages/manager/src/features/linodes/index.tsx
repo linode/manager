@@ -6,7 +6,7 @@ import { useSpecificTypes } from 'src/queries/types';
 import { useAllAccountMaintenanceQuery } from 'src/queries/accountMaintenance';
 import { addMaintenanceToLinodes } from 'src/store/linodes/linodes.helpers';
 import { isNotNullOrUndefined } from 'src/utilities/nullOrUndefined';
-import { ExtendedType, extendType } from 'src/utilities/extendType';
+import { extendType } from 'src/utilities/extendType';
 
 const LinodesLanding = React.lazy(() => import('./LinodesLanding'));
 const LinodesDetail = React.lazy(() => import('./LinodesDetail'));
