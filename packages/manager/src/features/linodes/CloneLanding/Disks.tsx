@@ -2,7 +2,7 @@ import { Disk } from '@linode/api-v4/lib/linodes';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Grid from 'src/components/Grid';

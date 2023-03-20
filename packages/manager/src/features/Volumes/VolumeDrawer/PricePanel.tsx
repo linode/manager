@@ -1,10 +1,6 @@
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DisplayPrice from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 

@@ -12,29 +12,22 @@ describe('Support Tickets Landing', () => {
       globalErrors={{}}
       setErrors={jest.fn()}
       clearErrors={jest.fn()}
-      classes={{
-        title: '',
-        openTicketButton: '',
-      }}
       {...reactRouterProps}
     />
   );
 
-  it('title of page should read "Customer Support"', () => {
-    const titleText = component.find('[data-qa-breadcrumb]').prop('labelTitle');
-    expect(titleText).toBe('Tickets');
+  it('should render a <LandingHeader />', () => {
+    expect(component.find('LandingHeader')).toHaveLength(1);
   });
 
-  it('should have an Open New Ticket Button', () => {
-    expect(component.find('[data-qa-open-ticket-link]')).toHaveLength(1);
+  it('should render a <LandingHeader /> with a title prop', () => {
+    expect(component.find('LandingHeader').prop('title')).toBeDefined();
   });
 
-  it('button text should read "Open New Ticket"', () => {
-    const openTicketButton = component
-      .find('[data-qa-open-ticket-link]')
-      .children()
-      .text();
-    expect(openTicketButton).toContain('Open New Ticket');
+  it('should render a <LandingHeader /> with a createButtonText prop', () => {
+    expect(
+      component.find('LandingHeader').prop('createButtonText')
+    ).toBeDefined();
   });
 });
 

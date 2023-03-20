@@ -17,7 +17,8 @@ Here is a minimal code example demonstrating the basic structure of a component 
 
 ```tsx
 import * as React from "react";
-import { makeStyles, Theme } from "src/components/core/styles";
+import { makeStyles } from "@mui/styles";
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   name: {
@@ -49,11 +50,9 @@ export default SayHello;
 
 #### Styles
 
-- Most components should use `makeStyles` for styling.
-  - The `theme` argument should be used for global definitions (like theme colors).
-  - The class names `makeStyles` generates are dynamic and may change between renders.
-- It's OK to write the styles directly in an HTML component instead of importing `makeStyles` if only a few styles are needed.
-  - e.g. `<h1 style={{ marginTop: 8 }}>Hello</h1>`.
+- With the transition to MUI v5, the [`styled`](https://mui.com/system/styled/) API, along with the [`sx` prop](https://mui.com/system/getting-started/the-sx-prop/), is the preferred way to specify component-specific styles.
+  - Component-specific styles may be defined at the end of the component file or in a dedicated file, named `ComponentName.styles.tsx`.
+  - Component files longer than 100 lines must have these styles defined in a dedicated file.
 
 #### Types and Interfaces
 

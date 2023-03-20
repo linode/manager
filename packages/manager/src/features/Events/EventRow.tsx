@@ -3,10 +3,10 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import Link from 'src/components/Link';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -15,16 +15,12 @@ import { parseAPIDate } from 'src/utilities/date';
 import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import getEventsActionLink from 'src/utilities/getEventsActionLink';
 import { GravatarByUsername } from '../../components/GravatarByUsername';
-import { formatEventWithUsername } from './Event.helpers';
 
 const useStyles = makeStyles((theme: Theme) => ({
   row: {
     '&:hover': {
       backgroundColor:
-        theme.name === 'lightTheme' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
-    },
-    '& a': {
-      color: 'inherit',
+        theme.name === 'light' ? '#fbfbfb' : 'rgba(0, 0, 0, 0.1)',
     },
   },
   icon: {
@@ -84,7 +80,7 @@ export interface RowProps {
 export const Row: React.FC<RowProps> = (props) => {
   const classes = useStyles();
 
-  const { action, link, message, created, username } = props;
+  const { action, message, created, username } = props;
 
   /** Some event types may not be handled by our system (or new types
    * may be added). Filter these out so we don't display blank messages to the user.
@@ -93,14 +89,12 @@ export const Row: React.FC<RowProps> = (props) => {
     return null;
   }
 
-  const displayedMessage = formatEventWithUsername(action, username, message);
-
   return (
     <TableRow
       data-qa-event-row
       data-test-id={action}
-      ariaLabel={`Event ${displayedMessage}`}
-      className={link ? classes.row : ''}
+      ariaLabel={`Event ${message}`}
+      className={classes.row}
     >
       <Hidden smDown>
         <TableCell data-qa-event-icon-cell>
@@ -111,25 +105,13 @@ export const Row: React.FC<RowProps> = (props) => {
         </TableCell>
       </Hidden>
       <TableCell parentColumn="Event" data-qa-event-message-cell>
-        {link ? (
-          <Link to={link}>
-            <HighlightedMarkdown
-              textOrMarkdown={displayedMessage}
-              sanitizeOptions={{
-                allowedTags: [],
-                disallowedTagsMode: 'discard',
-              }}
-            />
-          </Link>
-        ) : (
-          <HighlightedMarkdown
-            textOrMarkdown={displayedMessage}
-            sanitizeOptions={{
-              allowedTags: [],
-              disallowedTagsMode: 'discard',
-            }}
-          />
-        )}
+        <HighlightedMarkdown
+          textOrMarkdown={message}
+          sanitizeOptions={{
+            allowedTags: ['a'],
+            disallowedTagsMode: 'discard',
+          }}
+        />
       </TableCell>
       <TableCell parentColumn="Relative Date">
         {parseAPIDate(created).toRelative()}

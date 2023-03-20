@@ -18,7 +18,7 @@ import { usePagination } from 'src/hooks/usePagination';
 import { useKubernetesClustersQuery } from 'src/queries/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { KubernetesClusterRow } from '../ClusterList/KubernetesClusterRow';
-import { KubernetesEmptyState } from './KubernetesLandingEmptyState';
+import KubernetesEmptyState from './KubernetesLandingEmptyState';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { useHistory } from 'react-router-dom';
 import { KubeNodePoolResponse } from '@linode/api-v4';
@@ -150,7 +150,7 @@ export const KubernetesLanding = () => {
       <LandingHeader
         title="Kubernetes"
         docsLink="https://www.linode.com/docs/kubernetes/deploy-and-manage-a-cluster-with-linode-kubernetes-engine-a-tutorial/"
-        onAddNew={() => push('/kubernetes/create')}
+        onButtonClick={() => push('/kubernetes/create')}
         entity="Cluster"
         removeCrumbX={1}
       />

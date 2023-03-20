@@ -1,7 +1,8 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import Info from 'src/assets/icons/info.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
 import { APP_ROOT } from 'src/constants';
@@ -13,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: `${theme.spacing(1)} 0`,
   },
   selectionCard: {
-    mixBlendMode: theme.name === 'darkTheme' ? 'initial' : 'darken',
+    mixBlendMode: theme.name === 'dark' ? 'initial' : 'darken',
     '& .cardBaseIcon': {
       width: 40,
       paddingRight: 0,
@@ -45,10 +46,12 @@ interface Props {
   iconUrl: string;
   id: number;
   label: string;
+  clusterLabel: string;
   userDefinedFields: UserDefinedField[];
   availableImages: string[];
   disabled: boolean;
   checked: boolean;
+  labelDecoration?: JSX.Element;
 }
 
 export const SelectionCardWrapper: React.FC<Props> = (props) => {
@@ -57,11 +60,13 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
     id,
     checked,
     label,
+    clusterLabel,
     userDefinedFields,
     availableImages,
     disabled,
     handleClick,
     openDrawer,
+    labelDecoration,
   } = props;
   /**
    * '' is the default value for a stackscript's logo_url;
@@ -81,12 +86,12 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
   const handleInfoClick = (e: React.MouseEvent<any>) => {
     e.stopPropagation();
     e.preventDefault();
-    openDrawer(label);
+    openDrawer(clusterLabel ?? label);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
-      openDrawer(label);
+      openDrawer(clusterLabel ?? label);
     }
   };
 
@@ -120,6 +125,7 @@ export const SelectionCardWrapper: React.FC<Props> = (props) => {
       data-qa-selection-card
       disabled={disabled}
       className={classes.selectionCard}
+      headingDecoration={labelDecoration}
     />
   );
 };

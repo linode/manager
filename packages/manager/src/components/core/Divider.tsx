@@ -1,11 +1,12 @@
 import Divider, { DividerProps as _DividerProps } from '@mui/material/Divider';
 import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   light: {
-    borderColor: theme.name === 'lightTheme' ? '#e3e5e8' : '#2e3238',
+    borderColor: theme.name === 'light' ? '#e3e5e8' : '#2e3238',
   },
   dark: {
     borderColor: theme.color.border2,

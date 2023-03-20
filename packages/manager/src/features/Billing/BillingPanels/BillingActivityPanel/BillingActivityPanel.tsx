@@ -7,7 +7,8 @@ import {
 import { DateTime } from 'luxon';
 import * as React from 'react';
 import ExternalLinkIcon from 'src/assets/icons/external-link.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -344,6 +345,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             <TextTooltip
               displayText="Usage History may not reflect finalized invoice"
               tooltipText={AkamaiBillingInvoiceText}
+              sxTypography={{ paddingLeft: '4px' }}
             />
           </div>
         ) : null}

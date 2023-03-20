@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
   prefixComponentWrapper: {

@@ -1,25 +1,25 @@
-import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
+const PRODUCTION = import.meta.env.PROD;
 
-const PRODUCTION = 'production';
-
-// native to webpack build
-export const isProductionBuild = process.env.NODE_ENV === PRODUCTION;
+// whether or not this is a Vite production build
+export const isProductionBuild = PRODUCTION;
 
 // allow us to explicity enable dev tools
-export const ENABLE_DEV_TOOLS = Boolean(process.env.REACT_APP_ENABLE_DEV_TOOLS);
+export const ENABLE_DEV_TOOLS = Boolean(
+  import.meta.env.REACT_APP_ENABLE_DEV_TOOLS
+);
 
 /** required for the app to function */
 export const APP_ROOT =
-  process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
+  import.meta.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
 export const LOGIN_ROOT =
-  process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
+  import.meta.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
 export const API_ROOT =
-  process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
+  import.meta.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 export const BETA_API_ROOT = API_ROOT + 'beta';
 export const LISH_ROOT =
-  process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
+  import.meta.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
-export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
+export const CLIENT_ID = import.meta.env.REACT_APP_CLIENT_ID;
 /** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
@@ -28,55 +28,58 @@ export const DOCS_SEARCH_URL =
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
 export const ALGOLIA_APPLICATION_ID =
-  process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
+  import.meta.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY =
-  process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+  import.meta.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
-  process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
+  import.meta.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 export const LINODE_STATUS_PAGE_URL =
-  process.env.REACT_APP_STATUS_PAGE_URL || 'https://status.linode.com/api/v2';
+  import.meta.env.REACT_APP_STATUS_PAGE_URL ||
+  'https://status.linode.com/api/v2';
 
 // Maximum page size allowed by the API. Used in the `getAll()` helper function
 // to request as many items at once as possible.
 export const API_MAX_PAGE_SIZE =
-  Number(process.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
+  Number(import.meta.env.REACT_APP_API_MAX_PAGE_SIZE) || 500;
 
 // Having more of a single entity than this number classifies you as having
 // a "large account".
 export const LARGE_ACCOUNT_THRESHOLD = 1500;
 
 // PayPal Client ID
-export const PAYPAL_CLIENT_ID = process.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
+export const PAYPAL_CLIENT_ID =
+  import.meta.env.REACT_APP_PAYPAL_CLIENT_ID || 'sb';
 
 // Sets Paypal Environment, valid values: 'sandbox|production'
 // @todo lets depreate this with the PayPal + Braintree work
 export const PAYPAL_CLIENT_ENV =
-  process.env.REACT_APP_PAYPAL_ENV || 'production';
+  import.meta.env.REACT_APP_PAYPAL_ENV || 'production';
 
 // Google Pay Merchant ID
-export const GPAY_MERCHANT_ID = process.env.REACT_APP_GPAY_MERCHANT_ID;
+export const GPAY_MERCHANT_ID = import.meta.env.REACT_APP_GPAY_MERCHANT_ID;
 
 // Google Pay Environment: 'TEST|PRODUCTION'
-export const GPAY_CLIENT_ENV = process.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
+export const GPAY_CLIENT_ENV =
+  import.meta.env.REACT_APP_GPAY_ENV || 'PRODUCTION';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 
 /** optional variables */
-export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
+export const SENTRY_URL = import.meta.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
-export const GA_ID = process.env.REACT_APP_GA_ID;
-export const GTM_ID = process.env.REACT_APP_GTM_ID;
+export const GA_ID = import.meta.env.REACT_APP_GA_ID;
+export const GTM_ID = import.meta.env.REACT_APP_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
-export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
+export const ACCESS_TOKEN = import.meta.env.REACT_APP_ACCESS_TOKEN;
 
 export const LOG_PERFORMANCE_METRICS =
   !isProductionBuild &&
-  process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+  import.meta.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
 
 export const DISABLE_EVENT_THROTTLE =
-  Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
+  Boolean(import.meta.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
 
 // read about luxon formats https://moment.github.io/luxon/docs/manual/formatting.html
 // this format is not ISO
@@ -104,67 +107,6 @@ export const INTERVAL = 1000;
  * Time after which data from the API is considered stale (half an hour)
  */
 export const REFRESH_INTERVAL = 60 * 30 * 1000;
-
-export const dcDisplayNames = {
-  // us-east-1 is for backwards-compatibility
-  'us-east-1': 'Newark, NJ',
-  'us-east-1a': 'Newark, NJ',
-  'us-south-1a': 'Dallas, TX',
-  'us-west-1a': 'Fremont, CA',
-  'us-southeast-1a': 'Atlanta, GA',
-  'eu-central-1a': 'Frankfurt, DE',
-  'eu-west-1a': 'London, UK',
-  'ap-northeast-1a': 'Tokyo, JP',
-  'ap-northeast-1b': 'Tokyo 2, JP',
-  'us-central': 'Dallas, TX',
-  'us-west': 'Fremont, CA',
-  'us-southeast': 'Atlanta, GA',
-  'us-east': 'Newark, NJ',
-  'eu-west': 'London, UK',
-  'ap-south': 'Singapore, SG',
-  'eu-central': 'Frankfurt, DE',
-  'ap-northeast': 'Tokyo 2, JP',
-  'ca-central': 'Toronto, ON',
-  'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
-  'ap-west': 'Mumbai, IN',
-  'ap-southeast': 'Sydney, AU',
-  'us-iad': 'Washington, DC',
-};
-
-export const dcDisplayCountry = {
-  'us-east-1a': 'US',
-  'us-south-1a': 'US',
-  'us-west-1a': 'US',
-  'us-southeast-1a': 'US',
-  'eu-central-1a': 'DE',
-  'eu-west-1a': 'UK',
-  'ap-northeast-1a': 'JP',
-  'ap-northeast-1b': 'JP',
-  'us-central': 'US',
-  'us-west': 'US',
-  'us-southeast': 'US',
-  'us-east': 'US',
-  'eu-west': 'UK',
-  'ap-south': 'SG',
-  'eu-central': 'DE',
-  'ap-northeast': 'JP',
-  'ca-central': 'CA',
-  'ca-east': 'CA',
-  'ap-west': 'IN',
-  'ap-southeast': 'AU',
-  'us-iad': 'US',
-};
-
-// Map OBJ Cluster IDs to their display country.
-export const objectStorageClusterDisplay: Record<
-  ObjectStorageClusterID,
-  string
-> = {
-  'us-east-1': 'Newark, NJ',
-  'eu-central-1': 'Frankfurt, DE',
-  'ap-south-1': 'Singapore, SG',
-  'us-southeast-1': 'Atlanta, GA',
-};
 
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
@@ -254,7 +196,7 @@ export const MINIMUM_PASSWORD_STRENGTH = 4;
 
 // When true, use the mock API defined in serverHandlers.ts instead of making network requests
 export const MOCK_SERVICE_WORKER =
-  process.env.REACT_APP_MOCK_SERVICE_WORKER === 'true';
+  import.meta.env.REACT_APP_MOCK_SERVICE_WORKER === 'true';
 
 // Maximum payment methods
 export const MAXIMUM_PAYMENT_METHODS = 6;
@@ -266,9 +208,9 @@ export const PAYMENT_HARD_MAX = 50_000;
 
 // Price of LKE's High Availability offering in USD
 export const HIGH_AVAILABILITY_PRICE =
-  process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
+  import.meta.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE === undefined
     ? undefined
-    : Number(process.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
+    : Number(import.meta.env.REACT_APP_LKE_HIGH_AVAILABILITY_PRICE);
 
 export const DB_ROOT_USERNAME = 'linroot';
 
@@ -307,4 +249,10 @@ export const ADDRESSES = {
       country: 'Switzerland',
     },
   },
+};
+
+export const ACCESS_LEVELS = {
+  readOnly: 'read_only',
+  readWrite: 'read_write',
+  none: 'none',
 };

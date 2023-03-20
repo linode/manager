@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Link from 'src/components/Link';
 import PointerIcon from 'src/assets/icons/pointer.svg';
-import { sendEvent } from 'src/utilities/ga';
+import { getLinkOnClick } from 'src/utilities/emptyStateLandingUtils';
 
 const useStyles = makeStyles((theme: Theme) => {
-  const isDarkTheme = theme.name === 'darkTheme';
+  const isDarkTheme = theme.name === 'dark';
   const backgroundColor = isDarkTheme
     ? theme.bg.primaryNavPaper
     : theme.bg.offWhite;
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) => {
       maxWidth: theme.spacing(20),
       paddingLeft: theme.spacing(),
       justifyContent: 'space-between',
-      backgroundColor: backgroundColor,
+      backgroundColor,
       fontSize: '0.875rem',
       fontWeight: 700,
       color: theme.palette.text.primary,
@@ -56,7 +57,6 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 const gaCategory = 'Linodes landing page empty';
-
 const linkGAEventTemplate = {
   category: gaCategory,
   action: 'Click:link',
@@ -95,14 +95,6 @@ const appsLinkData = [
   },
 ];
 
-const getOnLinkClick = (label: string) => {
-  return () =>
-    sendEvent({
-      ...linkGAEventTemplate,
-      label,
-    });
-};
-
 interface AppLinkProps {
   to: string;
   text: string;
@@ -112,7 +104,11 @@ const AppLink = (props: AppLinkProps) => {
   const { to, text } = props;
   const classes = useStyles();
   return (
-    <Link onClick={getOnLinkClick(text)} to={to} className={classes.appLink}>
+    <Link
+      onClick={getLinkOnClick(linkGAEventTemplate, text)}
+      to={to}
+      className={classes.appLink}
+    >
       {text}
       <div className={classes.appLinkIcon}>
         <PointerIcon />

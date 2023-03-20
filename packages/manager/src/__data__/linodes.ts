@@ -23,7 +23,7 @@ export const linode1: Linode = {
   label: 'test',
   image: 'linode/Ubuntu16.10',
   group: 'active',
-  region: 'us-east-1a',
+  region: 'us-east',
   type: 'g6-nanode-1',
   backups: {
     schedule: {
@@ -62,7 +62,7 @@ export const linode2: Linode = {
   label: 'another-test',
   image: 'linode/Ubuntu16.04LTS',
   group: 'inactive',
-  region: 'us-east-1a',
+  region: 'us-east',
   type: 'g6-standard-1',
   backups: {
     schedule: {
@@ -101,7 +101,7 @@ export const linode3: Linode = {
   label: 'another-test',
   image: 'linode/Ubuntu16.04LTS',
   group: 'inactive',
-  region: 'us-east-1a',
+  region: 'us-east',
   type: 'g6-standard-2',
   backups: {
     schedule: {

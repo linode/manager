@@ -9,11 +9,9 @@ import {
   useLocation,
   useParams,
 } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import TabLinkList from 'src/components/TabLinkList';
@@ -23,6 +21,7 @@ import { useProfile } from 'src/queries/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
+import LandingHeader from 'src/components/LandingHeader';
 
 const UserDetail: React.FC = () => {
   const { username: usernameParam } = useParams<{ username: string }>();
@@ -189,14 +188,7 @@ const UserDetail: React.FC = () => {
   if (error) {
     return (
       <React.Fragment>
-        <Grid container justifyContent="space-between">
-          <Grid item>
-            <Breadcrumb
-              pathname={location.pathname}
-              labelTitle={username || ''}
-            />
-          </Grid>
-        </Grid>
+        <LandingHeader title={username || ''} />
         <ErrorState errorText={error} />
       </React.Fragment>
     );
@@ -204,22 +196,15 @@ const UserDetail: React.FC = () => {
 
   return (
     <>
-      <Breadcrumb
-        pathname={location.pathname}
-        labelTitle={username}
-        labelOptions={{
-          noCap: true,
-        }}
-        crumbOverrides={[
-          {
-            position: 2,
-            label: 'Users',
-            linkTo: {
-              pathname: `/account/users`,
-            },
-          },
-        ]}
+      <LandingHeader
+        title={username}
         removeCrumbX={4}
+        breadcrumbProps={{
+          pathname: location.pathname,
+          labelOptions: {
+            noCap: true,
+          },
+        }}
       />
       <Tabs
         index={Math.max(

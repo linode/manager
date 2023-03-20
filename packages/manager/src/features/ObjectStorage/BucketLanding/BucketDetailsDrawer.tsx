@@ -7,12 +7,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import ExternalLink from 'src/components/ExternalLink';
+import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
 import formatDate from 'src/utilities/formatDate';
-import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { pluralize } from 'src/utilities/pluralize';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -51,6 +52,12 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
     objectsNumber,
   } = props;
 
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: regions } = useRegionsQuery();
+
+  const actualCluster = clusters?.find((c) => c.id === cluster);
+  const region = regions?.find((r) => r.id === actualCluster?.region);
+
   let formattedCreated;
   try {
     if (created) {
@@ -74,7 +81,7 @@ const BucketDetailsDrawer: React.FC<Props> = (props) => {
 
       {cluster ? (
         <Typography variant="subtitle2" data-testid="cluster">
-          {formatObjectStorageCluster(cluster)}
+          {region?.label ?? cluster}
         </Typography>
       ) : null}
 

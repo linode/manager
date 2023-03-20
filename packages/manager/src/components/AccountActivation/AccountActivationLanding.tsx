@@ -2,12 +2,8 @@ import Warning from '@mui/icons-material/CheckCircle';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { makeStyles, withTheme, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
@@ -50,15 +46,16 @@ const AccountActivationLanding: React.FC<CombinedProps> = (props) => {
   return (
     <ErrorState
       CustomIcon={Warning}
+      CustomIconStyles={{ color: '#63A701' }}
       errorText={
         <React.Fragment>
           <Typography variant="h2" className={classes.errorHeading}>
-            Thanks for signing up!
+            Your account is currently being reviewed.
           </Typography>
           <Typography className={classes.subheading}>
-            Your account is currently being reviewed. You&rsquo;ll receive an
-            email from us once our review is complete, so hang tight! If you
-            have questions during this process{' '}
+            Thanks for signing up! You&rsquo;ll receive an email from us once
+            our review is complete, so hang tight. If you have questions during
+            this process{' '}
             <button
               onClick={() => toggleSupportDrawer(true)}
               className={classes.cta}

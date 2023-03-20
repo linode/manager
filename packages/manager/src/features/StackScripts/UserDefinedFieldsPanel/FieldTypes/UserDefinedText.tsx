@@ -2,11 +2,7 @@ import classNames from 'classnames';
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
@@ -30,6 +26,8 @@ interface Props {
   placeholder?: string;
   error?: string;
   value: string;
+  tooltip?: JSX.Element;
+  tooltipInteractive?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -51,7 +49,15 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
   };
 
   renderPasswordField = () => {
-    const { error, field, placeholder, isOptional, classes } = this.props;
+    const {
+      error,
+      field,
+      placeholder,
+      isOptional,
+      tooltip,
+      tooltipInteractive,
+      classes,
+    } = this.props;
 
     return (
       <AccessPanel
@@ -67,6 +73,8 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         })}
         isOptional={isOptional}
         password={this.props.value}
+        disabledReason={tooltip}
+        tooltipInteractive={tooltipInteractive}
       />
     );
   };

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme, useTheme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';

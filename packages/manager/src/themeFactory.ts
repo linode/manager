@@ -2,7 +2,7 @@ import { ThemeOptions } from '@mui/material/styles';
 import createBreakpoints from '@mui/system/createTheme/createBreakpoints';
 import { customDarkModeOptions } from './themes';
 
-type ThemeName = 'lightTheme' | 'darkTheme';
+export type ThemeName = 'light' | 'dark';
 
 type Fonts = typeof primaryFonts;
 
@@ -247,7 +247,7 @@ const graphTransparency = '0.7';
 const spacing = 8;
 
 export const base: ThemeOptions = {
-  name: 'lightTheme', // we really should just leverage pallete.mode
+  name: 'light', // we really should just leverage pallete.mode
   breakpoints,
   shadows: [
     'none',
@@ -461,6 +461,27 @@ export const base: ThemeOptions = {
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          backgroundColor: bg.white,
+          border: `1px solid ${primaryColors.main}`,
+        },
+        endAdornment: {
+          top: 'unset',
+          paddingRight: 8,
+        },
+        inputRoot: {
+          paddingLeft: 8,
+        },
+        loading: {
+          border: `1px solid ${primaryColors.main}`,
+        },
+        noOptions: {
+          border: `1px solid ${primaryColors.main}`,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -497,7 +518,7 @@ export const base: ThemeOptions = {
           backgroundColor: 'transparent',
           color: textColors.linkActiveLight,
           '&:hover, &:focus': {
-            backgroundColor: 'transparent !important',
+            backgroundColor: 'transparent',
             color: textColors.linkActiveLight,
           },
           '&:active': {
@@ -521,7 +542,7 @@ export const base: ThemeOptions = {
           color: textColors.linkActiveLight,
           minHeight: 34,
           '&:hover, &:focus': {
-            backgroundColor: '#f5f8ff !important',
+            backgroundColor: '#f5f8ff',
             border: '1px solid #d7dfed',
             color: '#2575d0',
           },

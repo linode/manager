@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Events from 'src/features/NotificationCenter/Events';
 import { NotificationData } from 'src/features/NotificationCenter/NotificationData/useNotificationData';
 import Notifications from 'src/features/NotificationCenter/Notifications';

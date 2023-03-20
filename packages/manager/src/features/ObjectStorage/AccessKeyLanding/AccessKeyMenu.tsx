@@ -2,7 +2,8 @@ import { ObjectStorageKey } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import ActionMenu from 'src/components/ActionMenu';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import InlineAction from 'src/components/InlineMenuAction';
 import { OpenAccessDrawer } from './types';
 

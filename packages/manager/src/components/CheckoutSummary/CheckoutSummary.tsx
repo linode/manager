@@ -1,6 +1,9 @@
 import * as React from 'react';
 import Paper from '../core/Paper';
-import { makeStyles, Theme, useMediaQuery, useTheme } from '../core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles, useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+
 import Typography from '../core/Typography';
 import Grid from '../Grid';
 import { SummaryItem } from './SummaryItem';
@@ -15,6 +18,8 @@ interface Props {
 export interface SummaryItem {
   title?: string;
   details?: string | number;
+  monthly?: number;
+  hourly?: number;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -37,12 +42,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const CheckoutSummary: React.FC<Props> = (props) => {
+export const CheckoutSummary = (props: Props) => {
   const classes = useStyles();
   const theme = useTheme<Theme>();
   const matchesSmDown = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { heading, agreement, displaySections } = props;
+  const { heading, agreement, displaySections, children } = props;
 
   return (
     <Paper data-qa-summary className={classes.paper}>
@@ -68,7 +73,7 @@ export const CheckoutSummary: React.FC<Props> = (props) => {
           <SummaryItem key={`${item.title}-${item.details}`} {...item} />
         ))}
       </Grid>
-      {props.children}
+      {children}
       {agreement ? agreement : null}
     </Paper>
   );
