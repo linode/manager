@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { ImportGroupsAsTags } from './ImportGroupsAsTags';
+import ImportGroupsAsTags from './ImportGroupsAsTags';
 
 const classes = { root: '', helperText: '' };
 
