@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { TooltipProps } from 'src/components/core/Tooltip';
 import TextField from 'src/components/TextField';
 
 interface Props {
@@ -10,19 +11,7 @@ interface Props {
   error?: string;
   textFieldStyles?: string;
   tooltipClasses?: string;
-  tooltipPosition?:
-    | 'bottom'
-    | 'bottom-end'
-    | 'bottom-start'
-    | 'left-end'
-    | 'left-start'
-    | 'left'
-    | 'right-end'
-    | 'right-start'
-    | 'right'
-    | 'top-end'
-    | 'top-start'
-    | 'top';
+  tooltipPosition?: TooltipProps['placement'];
   tooltipText?: string | JSX.Element;
 }
 
