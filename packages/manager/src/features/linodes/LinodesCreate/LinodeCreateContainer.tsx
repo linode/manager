@@ -17,8 +17,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
-import DocsLink from 'src/components/DocsLink';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { Tag } from 'src/components/TagsInput';
@@ -76,6 +74,7 @@ import {
   WithTypesProps,
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
+import LandingHeader from 'src/components/LandingHeader';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -357,9 +356,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
     const defaultImage = images.length === 1 ? images[0].id : undefined;
 
+    const stackScriptLabel = defaultData?.cluster_size
+      ? `${label} Cluster`
+      : label;
+
     this.setState({
       selectedStackScriptID: id,
-      selectedStackScriptLabel: label,
+      selectedStackScriptLabel: stackScriptLabel,
       selectedStackScriptUsername: username,
       availableUserDefinedFields: userDefinedFields,
       availableStackScriptImages: images,
@@ -667,6 +670,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         title: type.label,
         details: `$${type.price.monthly}/month`,
         monthly: type.price.monthly ?? 0,
+        hourly: type.price.hourly ?? 0,
         backupsMonthly: type.addons.backups.price.monthly,
       }
     );
@@ -685,7 +689,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
     return (
       selectedRegion && {
-        title: selectedRegion.display,
+        title: selectedRegion.label,
       }
     );
   };
@@ -744,30 +748,18 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Linode" />
         <Grid container spacing={0} className="m0">
-          <Grid item xs={10} className="p0">
-            <Breadcrumb
-              pathname={'/linodes/create'}
-              labelTitle="Create"
-              data-qa-create-linode-header
-            />
-          </Grid>
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', flexDirection: 'row-reverse' }}
-          >
-            <DocsLink
-              href="https://www.linode.com/docs/guides/platform/get-started/"
-              label="Getting Started"
-              onClick={() => {
-                sendEvent({
-                  category: 'Linode Create Flow',
-                  action: 'Click:link',
-                  label: 'Getting Started',
-                });
-              }}
-            />
-          </Grid>
+          <LandingHeader
+            title="Create"
+            docsLabel="Getting Started"
+            docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+            onDocsClick={() => {
+              sendEvent({
+                category: 'Linode Create Flow',
+                action: 'Click:link',
+                label: 'Getting Started',
+              });
+            }}
+          />
           <LinodeCreate
             regionDisplayInfo={this.getRegionInfo()}
             imageDisplayInfo={this.getImageInfo()}

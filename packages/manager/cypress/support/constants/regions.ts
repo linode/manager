@@ -13,8 +13,8 @@ export const regionsMap = {
   'eu-west': 'London, UK',
   'ap-south': 'Singapore, SG',
   'eu-central': 'Frankfurt, DE',
-  'ap-northeast': 'Tokyo 2, JP',
-  'ca-central': 'Toronto, ON',
+  'ap-northeast': 'Tokyo, JP',
+  'ca-central': 'Toronto, CA',
   'ap-west': 'Mumbai, IN',
   'ap-southeast': 'Sydney, AU',
 };

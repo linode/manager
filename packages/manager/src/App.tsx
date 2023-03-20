@@ -40,6 +40,7 @@ import withPreferences, {
   PreferencesStateProps,
 } from './containers/preferences.container';
 import { loadScript } from './hooks/useScript';
+import { getNextThemeValue } from './utilities/theme';
 
 interface Props {
   location: RouteComponentProps['location'];
@@ -96,28 +97,7 @@ export class App extends React.Component<CombinedProps, State> {
      * a key combination
      */
     // eslint-disable-next-line
-    document.addEventListener('keydown', (event: KeyboardEvent) => {
-      const isOSMac = navigator.userAgent.includes('Mac');
-      const letterForThemeShortcut = 'D';
-      const letterForGoToOpen = 'K';
-      const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
-      if (event[modifierKey] && event.shiftKey) {
-        switch (event.key) {
-          case letterForThemeShortcut:
-            this.props.updateUserPreferences({
-              theme:
-                this.props.preferences?.theme === 'dark' ? 'light' : 'dark',
-            });
-            break;
-          case letterForGoToOpen:
-            this.setState((prevState) => ({
-              ...prevState,
-              goToOpen: !prevState.goToOpen,
-            }));
-            break;
-        }
-      }
-    });
+    document.addEventListener('keydown', this.keyboardListener);
 
     /*
      * Send any Database events to the Database events handler in the queries file
@@ -190,6 +170,32 @@ export class App extends React.Component<CombinedProps, State> {
         }
       });
   }
+  componentWillUnmount(): void {
+    document.removeEventListener('keydown', this.keyboardListener);
+  }
+
+  keyboardListener = (event: KeyboardEvent) => {
+    const isOSMac = navigator.userAgent.includes('Mac');
+    const letterForThemeShortcut = 'D';
+    const letterForGoToOpen = 'K';
+    const modifierKey = isOSMac ? 'ctrlKey' : 'altKey';
+    if (event[modifierKey] && event.shiftKey) {
+      switch (event.key) {
+        case letterForThemeShortcut:
+          const currentTheme = this.props.preferences?.theme;
+          const newTheme = getNextThemeValue(currentTheme);
+
+          this.props.updateUserPreferences({ theme: newTheme });
+          break;
+        case letterForGoToOpen:
+          this.setState((prevState) => ({
+            ...prevState,
+            goToOpen: !prevState.goToOpen,
+          }));
+          break;
+      }
+    }
+  };
 
   goToClose = () => {
     this.setState({ goToOpen: false });

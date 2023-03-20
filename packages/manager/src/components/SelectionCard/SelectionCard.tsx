@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 import CardBase from './CardBase';
@@ -49,6 +50,7 @@ export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   renderVariant?: () => JSX.Element | null;
+  headingDecoration?: JSX.Element;
 }
 
 const SelectionCard: React.FC<Props> = (props) => {
@@ -63,6 +65,7 @@ const SelectionCard: React.FC<Props> = (props) => {
     onClick,
     renderIcon,
     renderVariant,
+    headingDecoration,
   } = props;
 
   const classes = useStyles();
@@ -86,6 +89,7 @@ const SelectionCard: React.FC<Props> = (props) => {
       heading={heading}
       subheadings={subheadings}
       renderVariant={renderVariant}
+      headingDecoration={headingDecoration}
     />
   );
 

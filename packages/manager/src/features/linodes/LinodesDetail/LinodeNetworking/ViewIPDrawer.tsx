@@ -2,15 +2,11 @@ import { IPAddress } from '@linode/api-v4/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import { formatRegion } from 'src/utilities';
+import { useRegionsQuery } from 'src/queries/regions';
 
 type ClassNames = 'root' | 'section';
 
@@ -33,52 +29,56 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const ViewIPDrawer: React.FC<CombinedProps> = (props) => {
-  const { classes } = props;
+  const { classes, ip } = props;
+
+  const { data: regions } = useRegionsQuery();
+
+  const actualRegion = regions?.find((r) => r.id === ip?.region);
 
   return (
     <Drawer open={props.open} onClose={props.onClose} title={`Details for IP`}>
-      {props.ip && (
+      {ip && (
         <React.Fragment>
           <div className={classes.section} data-qa-ip-address-heading>
             <Typography variant="h3">Address</Typography>
             <Typography variant="body1" data-qa-ip-address>
-              {props.ip.address}
+              {ip.address}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-gateway-heading>
             <Typography variant="h3">Gateway</Typography>
             <Typography variant="body1" data-qa-gateway>
-              {props.ip.gateway}
+              {ip.gateway}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-subnet-heading>
             <Typography variant="h3">Subnet Mask</Typography>
             <Typography variant="body1" data-qa-subnet>
-              {props.ip.subnet_mask}
+              {ip.subnet_mask}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-type-heading>
             <Typography variant="h3">Type</Typography>
             <Typography variant="body1" data-qa-type>
-              {props.ip.type}
+              {ip.type}
             </Typography>
           </div>
 
           <div className={classes.section} data-qa-public-heading>
             <Typography variant="h3">Public</Typography>
             <Typography variant="body1" data-qa-public>
-              {props.ip.public ? 'Yes' : 'No'}
+              {ip.public ? 'Yes' : 'No'}
             </Typography>
           </div>
 
-          {props.ip.rdns && (
+          {ip.rdns && (
             <div className={classes.section} data-qa-rdns-heading>
               <Typography variant="h3">RDNS</Typography>
               <Typography variant="body1" data-qa-rdns>
-                {props.ip.rdns}
+                {ip.rdns}
               </Typography>
             </div>
           )}
@@ -90,7 +90,7 @@ const ViewIPDrawer: React.FC<CombinedProps> = (props) => {
           >
             <Typography variant="h3">Region</Typography>
             <Typography variant="body1" data-qa-region>
-              {formatRegion(props.ip.region)}
+              {actualRegion?.label ?? ip.region}
             </Typography>
           </div>
 

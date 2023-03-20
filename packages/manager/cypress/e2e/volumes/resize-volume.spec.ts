@@ -2,7 +2,7 @@ import { createVolume } from '@linode/api-v4/lib/volumes';
 import { Volume } from '@linode/api-v4/types';
 import { volumeRequestPayloadFactory } from 'src/factories/volume';
 import { authenticate } from 'support/api/authentication';
-import { apiMatcher } from 'support/util/intercepts';
+import { interceptResizeVolume } from 'support/intercepts/volumes';
 import { randomNumber, randomLabel } from 'support/util/random';
 
 // Local storage override to force volume table to list up to 100 items.
@@ -29,7 +29,7 @@ describe('volume resize flow', () => {
     });
 
     cy.defer(createVolume(volumeRequest)).then((volume: Volume) => {
-      cy.intercept('POST', apiMatcher('volumes/*/resize')).as('resizeVolume');
+      interceptResizeVolume(volume.id).as('resizeVolume');
       cy.visitWithLogin('/volumes', {
         localStorageOverrides: pageSizeOverride,
       });

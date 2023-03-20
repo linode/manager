@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useClientToken } from 'src/queries/accountPayment';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import CircleProgress from 'src/components/CircleProgress';
 import { queryClient } from 'src/queries/base';
 import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';

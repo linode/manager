@@ -6,7 +6,8 @@ import DownloadIcon from 'src/assets/icons/lke-download.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/Grid';
@@ -64,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   connectionDetailsCtn: {
     padding: '8px 15px',
     background: theme.bg.bgAccessRow,
-    border: `1px solid ${theme.name === 'lightTheme' ? '#ccc' : '#222'}`,
+    border: `1px solid ${theme.name === 'light' ? '#ccc' : '#222'}`,
     '& p': {
       lineHeight: '1.5rem',
       '& span': {

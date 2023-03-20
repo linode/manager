@@ -3,19 +3,21 @@ import {
   NotificationSeverity,
   NotificationType,
 } from '@linode/api-v4/lib/account';
+import { Region } from '@linode/api-v4/lib/regions';
 import { DateTime } from 'luxon';
 import { path } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { Link } from 'src/components/Link';
-import { dcDisplayNames } from 'src/constants';
 import { complianceUpdateContext } from 'src/context/complianceUpdateContext';
 import { reportException } from 'src/exceptionReporting';
 import { useStyles } from 'src/features/NotificationCenter/NotificationData/RenderNotification';
 import useDismissibleNotifications from 'src/hooks/useDismissibleNotifications';
 import useNotifications from 'src/hooks/useNotifications';
+import { useRegionsQuery } from 'src/queries/regions';
 import { formatDate } from 'src/utilities/formatDate';
 import { notificationContext as _notificationContext } from '../NotificationContext';
 import { NotificationItem } from '../NotificationSection';
@@ -34,6 +36,8 @@ export const useFormattedNotifications = (
     dismissNotifications,
     hasDismissedNotifications,
   } = useDismissibleNotifications();
+
+  const { data: regions } = useRegionsQuery();
 
   const notifications = givenNotifications ?? useNotifications();
 
@@ -85,7 +89,7 @@ export const useFormattedNotifications = (
 
   return filteredNotifications.map((notification, idx) =>
     formatNotificationForDisplay(
-      interceptNotification(notification, handleClose, classes),
+      interceptNotification(notification, handleClose, classes, regions ?? []),
       idx,
       handleClose,
       !hasDismissedNotifications([notification], 'notificationMenu')
@@ -105,7 +109,8 @@ export const useFormattedNotifications = (
 const interceptNotification = (
   notification: Notification,
   onClose: () => void,
-  classes: any
+  classes: any,
+  regions: Region[]
 ): ExtendedNotification => {
   // Ticket interceptions
   if (notification.type === 'ticket_abuse') {
@@ -231,14 +236,14 @@ const interceptNotification = (
       notification.type === 'outage' &&
       notification.entity?.type === 'region'
     ) {
-      const convertedRegion = dcDisplayNames[notification.entity.id];
+      // @ts-expect-error Are the API docs wrong?
+      const region = regions.find((r) => r.id === notification.entity?.id);
 
-      if (!convertedRegion) {
+      if (!region) {
         reportException(
           'Could not find the DC name for the outage notification',
           {
-            rawRegion: notification.entity.id,
-            convertedRegion,
+            region: notification.entity.id,
           }
         );
       }
@@ -246,7 +251,7 @@ const interceptNotification = (
       const jsx = (
         <Typography>
           We are aware of an issue affecting service in{' '}
-          {convertedRegion || 'one of our facilities'}. If you are experiencing
+          {region?.label || 'one of our facilities'}. If you are experiencing
           service issues in this facility, there is no need to open a support
           ticket at this time. Please monitor our status blog at{' '}
           <Link to={'https://status.linode.com/'}>

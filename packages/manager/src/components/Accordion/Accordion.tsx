@@ -7,7 +7,7 @@ import AccordionDetails, {
 import AccordionSummary, {
   AccordionSummaryProps,
 } from 'src/components/core/AccordionSummary';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';

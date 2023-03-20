@@ -1,21 +1,22 @@
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   removeDisabledStyles: {
     '& .MuiInput-input': {
-      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
+      borderColor: theme.name === 'light' ? '#ccc' : '#222',
       color:
-        theme.name === 'lightTheme'
+        theme.name === 'light'
           ? `${theme.palette.text.primary} !important`
           : '#fff !important',
       opacity: 1,
       '-webkit-text-fill-color': 'unset !important',
     },
     '& .MuiInput-root': {
-      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
+      borderColor: theme.name === 'light' ? '#ccc' : '#222',
       opacity: 1,
     },
   },

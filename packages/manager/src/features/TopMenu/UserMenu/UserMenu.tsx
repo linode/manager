@@ -11,7 +11,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { GravatarByEmail } from 'src/components/GravatarByEmail';
@@ -106,7 +107,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     '&:hover, &:focus': {
-      backgroundColor: theme.name === 'lightTheme' ? '#3a3f46' : '#23262a',
+      backgroundColor: theme.name === 'light' ? '#3a3f46' : '#23262a',
       color: 'white',
     },
   },
