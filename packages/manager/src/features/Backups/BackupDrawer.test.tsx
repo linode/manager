@@ -145,8 +145,14 @@ describe('BackupDrawer component', () => {
   describe('adding type and error info to Linodes', () => {
     it('should add type info to a list of Linodes', () => {
       const withTypes = addTypeInfo(cachedTypesData, linodes);
-      expect(withTypes[0].typeInfo).toHaveProperty('label', 'Nanode 1 GB');
-      expect(withTypes[1].typeInfo).toHaveProperty('label', 'Linode 4 GB');
+      expect(withTypes[0].typeInfo).toHaveProperty(
+        'formattedLabel',
+        'Nanode 1 GB'
+      );
+      expect(withTypes[1].typeInfo).toHaveProperty(
+        'formattedLabel',
+        'Linode 4 GB'
+      );
     });
     it('should attach an error to a Linode', () => {
       const withErrors = addErrors([error], linodes);
