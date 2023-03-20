@@ -15,6 +15,7 @@ import { MAXIMUM_PAYMENT_METHODS } from 'src/constants';
 import { PayPalChip } from '../PayPalChip';
 import PayPalErrorBoundary from '../PayPalErrorBoundary';
 import HelpIcon from 'src/components/HelpIcon';
+import Box from '@mui/material/Box';
 
 interface Props {
   open: boolean;
@@ -28,14 +29,6 @@ export interface PaymentMessage {
 }
 
 const useStyles = makeStyles()((theme: Theme) => ({
-  methodGroup: {
-    marginTop: theme.spacing(),
-    marginBottom: theme.spacing(),
-  },
-  root: {
-    marginTop: 4,
-    marginBottom: 4,
-  },
   progress: {
     marginBottom: 18,
     width: '100%',
@@ -73,6 +66,11 @@ const useStyles = makeStyles()((theme: Theme) => ({
     },
   },
 }));
+
+const sxBox = {
+  paddingTop: '8px',
+  paddingBottom: '8px',
+};
 
 export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
@@ -125,58 +123,62 @@ export const AddPaymentMethodDrawer = (props: Props) => {
       ) : null}
       <>
         <Divider />
-        <Grid className={classes.root} container>
-          <Grid item xs={8} md={9}>
-            <Typography variant="h3">Google Pay</Typography>
-            <Typography>
-              You&rsquo;ll be taken to Google Pay to complete sign up.
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            item
-            xs={4}
-            md={3}
-            justifyContent="flex-end"
-            alignContent="center"
-          >
-            <GooglePayChip
-              disabled={disabled}
-              setMessage={setMessage}
-              onClose={onClose}
-              setProcessing={setIsProcessing}
-              renderError={renderError}
-            />
-          </Grid>
-        </Grid>
-      </>
-      <>
-        <Divider />
-        <Grid className={classes.root} container>
-          <Grid item xs={8} md={9}>
-            <Typography variant="h3">PayPal</Typography>
-            <Typography>
-              You&rsquo;ll be taken to PayPal to complete sign up.
-            </Typography>
-          </Grid>
-          <Grid
-            container
-            item
-            xs={4}
-            md={3}
-            justifyContent="flex-end"
-            alignContent="center"
-          >
-            <PayPalErrorBoundary renderError={renderError}>
-              <PayPalChip
+        <Box sx={sxBox}>
+          <Grid container spacing={2}>
+            <Grid item xs={8} md={9}>
+              <Typography variant="h3">Google Pay</Typography>
+              <Typography>
+                You&rsquo;ll be taken to Google Pay to complete sign up.
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              item
+              xs={4}
+              md={3}
+              justifyContent="flex-end"
+              alignContent="center"
+            >
+              <GooglePayChip
+                disabled={disabled}
+                setMessage={setMessage}
                 onClose={onClose}
                 setProcessing={setIsProcessing}
                 renderError={renderError}
-                disabled={disabled}
               />
-            </PayPalErrorBoundary>
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
+      </>
+      <>
+        <Divider />
+        <Box sx={sxBox}>
+          <Grid container spacing={2}>
+            <Grid item xs={8} md={9}>
+              <Typography variant="h3">PayPal</Typography>
+              <Typography>
+                You&rsquo;ll be taken to PayPal to complete sign up.
+              </Typography>
+            </Grid>
+            <Grid
+              container
+              item
+              xs={4}
+              md={3}
+              justifyContent="flex-end"
+              alignContent="center"
+            >
+              <PayPalErrorBoundary renderError={renderError}>
+                <PayPalChip
+                  onClose={onClose}
+                  setProcessing={setIsProcessing}
+                  renderError={renderError}
+                  disabled={disabled}
+                />
+              </PayPalErrorBoundary>
+            </Grid>
+          </Grid>
+        </Box>
       </>
       <>
         <Divider spacingBottom={16} />

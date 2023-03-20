@@ -186,7 +186,7 @@ const useStyles = makeStyles({ name: { PaymentInformation } })(
     paymentMethodNoticeContainer: {
       fontSize: '0.875rem',
       marginTop: theme.spacing(2),
-      padding: `8px 0px`,
+      padding: '8px 0px',
       '& button': {
         marginLeft: theme.spacing(),
       },
