@@ -23,11 +23,10 @@ import {
   executePaypalPayment,
   stagePaypalPayment,
 } from '@linode/api-v4/lib/account';
-import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
@@ -41,7 +40,7 @@ import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/accountBilling';
 
 // @TODO: remove unused code and feature flag logic once google pay is released
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   header: {
     fontSize: '1.1rem',
   },
@@ -98,9 +97,9 @@ export const paypalScriptSrc = () => {
   return `https://www.paypal.com/sdk/js?client-id=${client[PAYPAL_CLIENT_ENV]}${paypalSrcQueryParams}`;
 };
 
-export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
+export const PayPalDisplay = (props: CombinedProps) => {
   const { isScriptLoaded, usd, setSuccess, disabled } = props;
-  const classes = useStyles();
+  const { classes, cx } = useStyles();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
   const [isStagingPayment, setStaging] = React.useState<boolean>(false);
@@ -292,7 +291,7 @@ export const PayPalDisplay: React.FC<CombinedProps> = (props) => {
         )}
         <div
           data-qa-paypal-button
-          className={classNames({
+          className={cx({
             [classes.paypalButtonWrapper]: true,
             [classes.PaypalHidden]: !enabled || disabled,
           })}

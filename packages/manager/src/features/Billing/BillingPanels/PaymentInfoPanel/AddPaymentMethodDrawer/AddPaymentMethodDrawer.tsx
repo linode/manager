@@ -2,7 +2,7 @@ import * as React from 'react';
 import { PaymentMethod } from '@linode/api-v4/lib/account';
 import { VariantType } from 'notistack';
 import Divider from 'src/components/core/Divider';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from 'tss-react/mui';
 import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
@@ -27,7 +27,7 @@ export interface PaymentMessage {
   variant: VariantType;
 }
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()((theme: Theme) => ({
   methodGroup: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(),
@@ -74,10 +74,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const AddPaymentMethodDrawer: React.FC<Props> = (props) => {
+export const AddPaymentMethodDrawer = (props: Props) => {
   const { onClose, open, paymentMethods } = props;
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [isProcessing, setIsProcessing] = React.useState<boolean>(false);
   const [noticeMessage, setNoticeMessage] = React.useState<
