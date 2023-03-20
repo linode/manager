@@ -47,7 +47,19 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
 
   const classes = useStyles();
 
-  const strength = React.useMemo(() => maybeStrength(value), [value]);
+  const [zxcvbnLoaded, setZxcvbnLoaded] = React.useState(false);
+  const strength = React.useMemo(() => {
+    if (!zxcvbnLoaded) {
+      return null;
+    }
+    return maybeStrength(value);
+  }, [value, zxcvbnLoaded]);
+
+  React.useEffect(() => {
+    import('zxcvbn').then(() => {
+      setZxcvbnLoaded(true);
+    });
+  }, []);
 
   return (
     <Grid container className={classes.container}>

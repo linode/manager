@@ -1,13 +1,13 @@
 import { string } from 'yup';
 import { MINIMUM_PASSWORD_STRENGTH } from 'src/constants';
 import { object } from 'yup';
-import zxcvbn from 'zxcvbn';
 
-export const validatePassword = (password: string) => {
-  // This method does not evaluate whether a password is required.
+export const validatePassword = async (password: string) => {
   if (!password) {
     return null;
   }
+
+  const { default: zxcvbn } = await import('zxcvbn');
 
   return zxcvbn(password).score >= MINIMUM_PASSWORD_STRENGTH
     ? null
@@ -29,8 +29,8 @@ export const extendValidationSchema = (schema: any) => {
         .test({
           name: 'root-password-strength',
           // eslint-disable-next-line object-shorthand
-          test: function (value = '') {
-            const passwordError = validatePassword(value);
+          test: async function (value = '') {
+            const passwordError = await validatePassword(value);
             return passwordError !== null
               ? this.createError({
                   message: passwordError,
