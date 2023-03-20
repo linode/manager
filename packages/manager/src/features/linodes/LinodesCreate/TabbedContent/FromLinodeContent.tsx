@@ -1,7 +1,8 @@
 import * as React from 'react';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import Placeholder from 'src/components/Placeholder';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

@@ -128,7 +128,7 @@ const genericTableHeaderStyle = {
 };
 
 const darkThemeOptions: ThemeOptions = {
-  name: 'darkTheme',
+  name: 'dark',
   breakpoints,
   bg: customDarkModeOptions.bg,
   color: customDarkModeOptions.color,
@@ -210,6 +210,17 @@ const darkThemeOptions: ThemeOptions = {
       styleOverrides: {
         root: {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        listbox: {
+          backgroundColor: customDarkModeOptions.bg.white,
+          border: `1px solid ${primaryColors.main}`,
+        },
+        loading: {
+          color: '#fff',
         },
       },
     },

@@ -3,15 +3,13 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DocsLink from 'src/components/DocsLink';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import Notice from 'src/components/Notice';
 import SafeTabPanel from 'src/components/SafeTabPanel';
@@ -37,6 +35,7 @@ import MySQLLanding from './DetailTabs/MySQL';
 import NetworkLanding from './DetailTabs/Network';
 import NGINX from './DetailTabs/NGINX';
 import ProcessesLanding from './DetailTabs/Processes/ProcessesLanding';
+import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   tabList: {
@@ -207,26 +206,16 @@ export const LongviewDetail: React.FC<CombinedProps> = (props) => {
 
   return (
     <React.Fragment>
-      <Grid
-        container
-        className="m0"
-        alignItems="center"
-        justifyContent="space-between"
-      >
-        <Grid item className="p0">
-          <Breadcrumb
-            pathname={props.location.pathname}
-            firstAndLastOnly
-            labelTitle={client.label}
-            labelOptions={{ noCap: true }}
-          />
-        </Grid>
-        <Grid item className="p0">
-          <DocsLink
-            href={'https://www.linode.com/docs/platform/longview/longview/'}
-          />
-        </Grid>
-      </Grid>
+      <LandingHeader
+        title={client.label}
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/platform/longview/longview/"
+        breadcrumbProps={{
+          firstAndLastOnly: true,
+          labelOptions: { noCap: true },
+          pathname: props.location.pathname,
+        }}
+      />
       {notifications.map((thisNotification, idx) => (
         <Notice
           key={`lv-warning-${idx}`}

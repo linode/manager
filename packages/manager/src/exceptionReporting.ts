@@ -17,7 +17,7 @@ export const reportException = (
   }
 
   // Log the error to the console in non-production environments.
-  if (process.env.NODE_ENV !== 'production') {
+  if (import.meta.env.DEV) {
     /* eslint-disable */
     console.error('====================================');
     console.error(error);

@@ -3,10 +3,10 @@ import classNames from 'classnames';
 import * as React from 'react';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import HighlightedMarkdown from 'src/components/HighlightedMarkdown';
-import { Link } from 'src/components/Link';
 import { GravatarByUsername } from 'src/components/GravatarByUsername';
 import { parseAPIDate } from 'src/utilities/date';
 import useEventInfo from './useEventInfo';
@@ -26,16 +26,12 @@ export const useStyles = makeStyles((theme: Theme) => ({
     color: theme.textColors.tableHeader,
     '&:hover': {
       backgroundColor: theme.bg.app,
-      cursor: 'pointer',
       // Extends the hover state to the edges of the drawer
       marginLeft: -20,
       marginRight: -20,
       paddingLeft: 20,
       paddingRight: 20,
       width: 'calc(100% + 40px)',
-      '& a': {
-        textDecoration: 'none',
-      },
     },
   },
   eventMessage: {
@@ -55,8 +51,8 @@ interface Props {
 export const RenderEvent: React.FC<Props> = (props) => {
   const classes = useStyles();
 
-  const { event, onClose } = props;
-  const { message, linkTarget } = useEventInfo(event);
+  const { event } = props;
+  const { message } = useEventInfo(event);
 
   if (message === null) {
     return null;
@@ -77,7 +73,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
       <Box
         className={classNames({
           [classes.root]: true,
-          [classes.event]: !!linkTarget,
+          [classes.event]: true,
         })}
         display="flex"
         data-test-id={event.action}
@@ -87,13 +83,7 @@ export const RenderEvent: React.FC<Props> = (props) => {
           className={classes.icon}
         />
         <div className={classes.eventMessage}>
-          {linkTarget ? (
-            <Link to={linkTarget} onClick={onClose}>
-              {eventMessage}
-            </Link>
-          ) : (
-            eventMessage
-          )}
+          {eventMessage}
           <Typography
             className={classNames({ [classes.unseenEvent]: !event.seen })}
           >

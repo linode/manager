@@ -106,7 +106,7 @@ describe('ObjectStorageLanding', () => {
 
     await waitForElementToBeRemoved(screen.getByTestId('circle-progress'));
 
-    screen.getByText(/^There was an error loading buckets in us-west/);
+    screen.getByText(/^There was an error loading buckets in Fremont, CA/);
   });
 
   it('renders general error state', async () => {

@@ -1,70 +1,65 @@
+import { FirewallDevice } from '@linode/api-v4';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import Notice from 'src/components/Notice';
+import { useRemoveFirewallDeviceMutation } from 'src/queries/firewalls';
 
 export interface Props {
   open: boolean;
-  error?: string;
-  loading: boolean;
-  deviceLabel: string;
-  firewallLabel: string;
   onClose: () => void;
-  onRemove: () => void;
+  device: FirewallDevice | undefined;
+  firewallLabel: string;
+  firewallId: number;
 }
 
-export const RemoveDeviceDialog: React.FC<Props> = (props) => {
-  const {
-    deviceLabel,
-    error,
-    firewallLabel,
-    loading,
-    onClose,
-    onRemove,
-    open,
-  } = props;
+export const RemoveDeviceDialog = (props: Props) => {
+  const { device, firewallLabel, firewallId, onClose, open } = props;
+
+  const { mutateAsync, isLoading, error } = useRemoveFirewallDeviceMutation(
+    firewallId,
+    device?.id ?? -1
+  );
+
+  const onDelete = async () => {
+    await mutateAsync();
+    onClose();
+  };
+
   return (
     <ConfirmationDialog
-      title={`Remove ${deviceLabel} from ${firewallLabel}?`}
+      title={`Remove ${device?.entity.label} from ${firewallLabel}?`}
       open={open}
       onClose={onClose}
-      actions={renderActions(loading, onClose, onRemove)}
+      error={error?.[0]?.reason}
+      actions={
+        <ActionsPanel style={{ padding: 0 }}>
+          <Button
+            buttonType="secondary"
+            onClick={onClose}
+            data-qa-cancel
+            data-testid={'dialog-cancel'}
+          >
+            Cancel
+          </Button>
+          <Button
+            buttonType="primary"
+            onClick={onDelete}
+            loading={isLoading}
+            data-qa-confirm
+            data-testid={'dialog-confirm'}
+          >
+            Remove
+          </Button>
+        </ActionsPanel>
+      }
     >
-      {error && <Notice error text={error} />}
       <Typography>
-        Are you sure you want to remove {deviceLabel} from {firewallLabel}?
+        Are you sure you want to remove {device?.entity.label} from{' '}
+        {firewallLabel}?
       </Typography>
     </ConfirmationDialog>
-  );
-};
-
-const renderActions = (
-  loading: boolean,
-  onClose: () => void,
-  onDelete: () => void
-) => {
-  return (
-    <ActionsPanel style={{ padding: 0 }}>
-      <Button
-        buttonType="secondary"
-        onClick={onClose}
-        data-qa-cancel
-        data-testid={'dialog-cancel'}
-      >
-        Cancel
-      </Button>
-      <Button
-        buttonType="primary"
-        onClick={onDelete}
-        loading={loading}
-        data-qa-confirm
-        data-testid={'dialog-confirm'}
-      >
-        Remove
-      </Button>
-    </ActionsPanel>
   );
 };
 

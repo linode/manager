@@ -17,7 +17,6 @@ import MongoDBIcon from 'src/assets/icons/mongodb.svg';
 import MySQLIcon from 'src/assets/icons/mysql.svg';
 import PostgreSQLIcon from 'src/assets/icons/postgresql.svg';
 import BetaChip from 'src/components/BetaChip';
-import BreadCrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
@@ -25,7 +24,8 @@ import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -62,6 +62,7 @@ import {
 } from 'src/utilities/ipUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
+import LandingHeader from 'src/components/LandingHeader';
 
 const useStyles = makeStyles((theme: Theme) => ({
   formControlLabel: {
@@ -442,19 +443,21 @@ const DatabaseCreate: React.FC<{}> = () => {
   return (
     <form onSubmit={handleSubmit}>
       <ProductInformationBanner bannerLocation="Databases" warning important />
-      <BreadCrumb
-        labelTitle="Create"
-        pathname={location.pathname}
-        crumbOverrides={[
-          {
-            position: 1,
-            label: 'Database Clusters',
+      <LandingHeader
+        title="Create"
+        breadcrumbProps={{
+          pathname: location.pathname,
+          crumbOverrides: [
+            {
+              position: 1,
+              label: 'Database Clusters',
+            },
+          ],
+          labelOptions: {
+            suffixComponent: flags.databaseBeta ? (
+              <BetaChip className={classes.chip} component="span" />
+            ) : null,
           },
-        ]}
-        labelOptions={{
-          suffixComponent: flags.databaseBeta ? (
-            <BetaChip className={classes.chip} component="span" />
-          ) : null,
         }}
       />
       <Paper>

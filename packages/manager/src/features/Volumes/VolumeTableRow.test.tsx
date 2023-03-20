@@ -2,7 +2,6 @@ import * as React from 'react';
 import { volumeFactory } from 'src/factories';
 import { VolumeTableRow } from './VolumeTableRow';
 import { renderWithTheme, wrapWithTableBody } from 'src/utilities/testHelpers';
-import { dcDisplayNames } from 'src/constants';
 
 const attachedVolume = volumeFactory.build({
   region: 'us-east',
@@ -27,14 +26,14 @@ const handlers = {
 
 describe('Volume table row', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByText } = renderWithTheme(
+    const { getByText, getByTestId } = renderWithTheme(
       wrapWithTableBody(<VolumeTableRow {...handlers} {...attachedVolume} />)
     );
 
     // Check row for basic values
     expect(getByText(attachedVolume.label));
     expect(getByText(attachedVolume.size, { exact: false }));
-    expect(getByText(dcDisplayNames[attachedVolume.region]));
+    expect(getByTestId('region'));
     expect(getByText(attachedVolume.linode_label!));
 
     // Make sure there is a detach button
@@ -53,7 +52,7 @@ describe('Volume table row', () => {
 
 describe('Volume table row - for linodes detail page', () => {
   it("should show the attached Linode's label if present", () => {
-    const { getByText, queryByText } = renderWithTheme(
+    const { getByText, queryByText, queryByTestId } = renderWithTheme(
       wrapWithTableBody(
         <VolumeTableRow {...handlers} {...attachedVolume} isDetailsPageRow />
       )
@@ -65,7 +64,7 @@ describe('Volume table row - for linodes detail page', () => {
 
     // Because we are on a Linode details page that has the region, we don't need to show
     // the volume's region. A Volume attached to a Linode must be in the same region.
-    expect(queryByText(dcDisplayNames[attachedVolume.region])).toBeNull();
+    expect(queryByTestId('region')).toBeNull();
 
     // Because we are on a Linode details page, we don't need to show the Linode label
     expect(queryByText(attachedVolume.linode_label!)).toBeNull();

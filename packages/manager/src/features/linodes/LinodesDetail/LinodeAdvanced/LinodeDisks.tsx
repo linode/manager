@@ -8,16 +8,13 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -41,10 +38,16 @@ import userSSHKeyHoc, {
   UserSSHKeyProps,
 } from 'src/features/linodes/userSSHKeyHoc';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendEvent } from 'src/utilities/ga';
 import LinodeDiskDrawer from './LinodeDiskDrawer';
 import LinodeDiskRow from './LinodeDiskRow';
 
-type ClassNames = 'root' | 'headline' | 'addNewWrapper' | 'emptyCell';
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'addNewWrapper'
+  | 'addNewWrapperContainer'
+  | 'emptyCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -59,10 +62,13 @@ const styles = (theme: Theme) =>
       marginLeft: 15,
       lineHeight: '1.5rem',
     },
+    addNewWrapperContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+    },
     addNewWrapper: {
       [theme.breakpoints.down('sm')]: {
         marginLeft: `-${theme.spacing(1.5)}`,
-        marginTop: `-${theme.spacing(1)}`,
       },
       '&.MuiGrid-item': {
         padding: 5,
@@ -170,16 +176,27 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
               Disks
             </Typography>
           </Grid>
-          <Grid item className={classes.addNewWrapper}>
-            <AddNewLink
-              onClick={this.openDrawerForCreation}
-              label="Add a Disk"
-              disabled={readOnly || !freeDiskSpace}
-              disabledReason={
-                !freeDiskSpace ? noFreeDiskSpaceWarning : undefined
-              }
-            />
-          </Grid>
+          <span className={classes.addNewWrapperContainer}>
+            {!freeDiskSpace ? (
+              <HelpIcon
+                text={noFreeDiskSpaceWarning}
+                tooltipGAEvent={() =>
+                  sendEvent({
+                    category: `Disk Resize Flow`,
+                    action: `Open:tooltip`,
+                    label: `Add a Disk help icon tooltip`,
+                  })
+                }
+              />
+            ) : undefined}
+            <Grid item className={classes.addNewWrapper}>
+              <AddNewLink
+                onClick={this.openDrawerForCreation}
+                label="Add a Disk"
+                disabled={readOnly || !freeDiskSpace}
+              />
+            </Grid>
+          </span>
         </Grid>
         <OrderBy
           data={disks}

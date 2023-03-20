@@ -11,7 +11,8 @@
 
 import * as React from 'react';
 import clsx from 'clsx';
-import { Theme, withStyles } from './styles';
+import { withStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { Breakpoint } from '@mui/material';
 import type { GridProps } from '@mui/material/Grid';
 import { breakpoints } from 'src/themeFactory';

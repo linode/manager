@@ -7,7 +7,7 @@ import {
   fbtVisible,
   getClick,
 } from 'support/helpers';
-import { assertToast } from 'support/ui/events';
+import { ui } from 'support/ui';
 import { apiMatcher } from 'support/util/intercepts';
 
 describe('linode backups', () => {
@@ -70,7 +70,7 @@ describe('linode backups', () => {
         getClick('[data-qa-confirm="true"]');
       }
       cy.wait('@enableBackups').its('response.statusCode').should('eq', 200);
-      assertToast('A snapshot is being taken');
+      ui.toast.assertMessage('A snapshot is being taken');
       deleteLinodeById(linode.id);
     });
   });

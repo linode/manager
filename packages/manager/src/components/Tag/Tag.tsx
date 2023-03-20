@@ -4,7 +4,8 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Chip, { ChipProps } from 'src/components/core/Chip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { truncateEnd } from 'src/utilities/truncate';
 
 type Variants = 'blue' | 'lightBlue';
@@ -41,10 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderRadius: 3,
       borderTopRightRadius: 0,
       borderBottomRightRadius: 0,
-      borderRight: `1px solid ${
-        theme.name === 'lightTheme' ? '#fff' : '#2e3238'
-      }`,
-      color: theme.name === 'lightTheme' ? '#3a3f46' : '#9caec9',
+      borderRight: `1px solid ${theme.name === 'light' ? '#fff' : '#2e3238'}`,
+      color: theme.name === 'light' ? '#3a3f46' : '#9caec9',
       fontSize: '0.875rem',
       padding: '7px 10px',
     },

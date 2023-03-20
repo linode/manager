@@ -1,12 +1,8 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'groupBox' | 'groupItem';

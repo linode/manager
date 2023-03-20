@@ -1,7 +1,7 @@
 import * as React from 'react';
 import classNames from 'classnames';
 import UserIcon from 'src/assets/icons/account.svg';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import Avatar from '@mui/material/Avatar';
 

@@ -1,14 +1,7 @@
-import { Linode, LinodeType } from '@linode/api-v4/lib/linodes';
-import { NodeBalancer } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
-import { Volume } from '@linode/api-v4/lib/volumes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
-import {
-  EntityError,
-  MappedEntityState2 as MappedEntityState,
-  RequestableDataWithEntityError,
-} from 'src/store/types';
+import { RequestableDataWithEntityError } from 'src/store/types';
 
 type State = ApplicationState['__resources'];
 
@@ -36,14 +29,7 @@ const isInitialLoad = (
   e: Resource<any, any> | RequestableDataWithEntityError<any>
 ) => e.loading && e.lastUpdated === 0;
 
-export default createSelector<
-  State,
-  MappedEntityState<Linode, EntityError>,
-  Resource<Volume[]>,
-  Resource<NodeBalancer[][]>,
-  Resource<LinodeType[]>,
-  boolean
->(
+export default createSelector(
   linodesSelector,
   volumesSelector,
   nodeBalsSelector,

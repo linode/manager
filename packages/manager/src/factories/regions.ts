@@ -1,6 +1,5 @@
 import * as Factory from 'factory.ts';
 import { DNSResolvers, Region } from '@linode/api-v4/lib/regions/types';
-import { dcDisplayNames } from 'src/constants';
 
 export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
   ipv4: '1.1.1.1',
@@ -8,10 +7,8 @@ export const resolverFactory = Factory.Sync.makeFactory<DNSResolvers>({
 });
 
 export const regionFactory = Factory.Sync.makeFactory<Region>({
-  id: Factory.each((id) => Object.keys(dcDisplayNames)[id] || `region-${id}`),
-  label: Factory.each(
-    (id) => Object.values(dcDisplayNames)[id] || `region-${id}`
-  ),
+  id: Factory.each((id) => `us-${id}`),
+  label: Factory.each((id) => `${id}, NJ`),
   status: 'ok',
   country: 'US',
   capabilities: ['Block Storage'],

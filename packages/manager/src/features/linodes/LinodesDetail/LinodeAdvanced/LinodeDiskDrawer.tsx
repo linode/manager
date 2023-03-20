@@ -9,20 +9,25 @@ import * as React from 'react';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import Code from 'src/components/Code';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Drawer from 'src/components/Drawer';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
+import { Link } from 'src/components/Link';
 import ModeSelect, { Mode } from 'src/components/ModeSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
+import TextTooltip from 'src/components/TextTooltip';
 import {
   handleFieldErrors,
   handleGeneralErrors,
 } from 'src/utilities/formikErrorUtils';
+import { sendEvent } from 'src/utilities/ga';
 import { extendValidationSchema } from 'src/utilities/validatePassword';
 import { object, string } from 'yup';
 
@@ -34,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   divider: {
     margin: `${theme.spacing(2)} ${theme.spacing(1)} 0 `,
     width: `calc(100% - ${theme.spacing(2)})`,
+  },
+  formHelperTextLink: {
+    display: 'block',
+    marginTop: theme.spacing(1),
   },
 }));
 
@@ -102,6 +111,14 @@ const getTitle = (v: DrawerMode) => {
     case 'resize':
       return 'Resize Disk';
   }
+};
+
+const handleLinkClick = (label: string) => {
+  sendEvent({
+    category: 'Disk Resize Flow',
+    action: `Click:link`,
+    label,
+  });
 };
 
 export const DiskDrawer: React.FC<CombinedProps> = (props) => {
@@ -204,6 +221,25 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
         </Grid>
         <Grid item xs={12} className={classes.section}>
           <form>
+            {mode === 'resize' ? (
+              <FormHelperText>
+                The size of a Linode Compute Instance&rsquo;s disk can be
+                increased or decreased as needed.
+                <Link
+                  to={
+                    'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+                  }
+                  onClick={() => {
+                    handleLinkClick(
+                      'Learn more about restrictions to keep in mind.'
+                    );
+                  }}
+                  className={classes.formHelperTextLink}
+                >
+                  Learn more about restrictions to keep in mind.
+                </Link>
+              </FormHelperText>
+            ) : null}
             <TextField
               disabled={['resize'].includes(props.mode)}
               label="Label"
@@ -279,9 +315,21 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
               }}
               data-qa-disk-size
             />
-            <FormHelperText style={{ marginTop: 8 }}>
-              Maximum Size: {props.maximumSize} MB
-            </FormHelperText>
+            {mode !== 'rename' ? (
+              <FormHelperText style={{ marginTop: 8 }}>
+                Maximum size: {props.maximumSize} MB
+              </FormHelperText>
+            ) : null}
+            {mode === 'resize' ? (
+              <FormHelperText>
+                Minimum size is determined by how much space the files on the
+                disk are using.{' '}
+                <TextTooltip
+                  displayText="Check disk usage."
+                  tooltipText={MaxSizeTooltipText}
+                />
+              </FormHelperText>
+            ) : null}
           </form>
         </Grid>
       </Grid>
@@ -308,3 +356,28 @@ export const DiskDrawer: React.FC<CombinedProps> = (props) => {
 };
 
 export default React.memo(DiskDrawer);
+
+const MaxSizeTooltipText = (
+  <>
+    Run the command <Code>df -h</Code> within the Linode&rsquo;s command line
+    (through{' '}
+    <Link
+      to="https://www.linode.com/docs/guides/connect-to-server-over-ssh/"
+      onClick={() => {
+        handleLinkClick('SSH');
+      }}
+    >
+      SSH
+    </Link>{' '}
+    or{' '}
+    <Link
+      to="https://www.linode.com/docs/products/compute/compute-instances/guides/lish/"
+      onClick={() => {
+        handleLinkClick('Lish');
+      }}
+    >
+      Lish
+    </Link>
+    ).
+  </>
+);

@@ -1,7 +1,8 @@
 import { Stats } from '@linode/api-v4/lib/linodes';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
-import { makeStyles, Theme, useTheme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme, useTheme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import {

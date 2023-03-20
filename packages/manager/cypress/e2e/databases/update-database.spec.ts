@@ -12,7 +12,6 @@ import {
 } from 'support/util/random';
 import { databaseFactory } from 'src/factories/databases';
 import { ui } from 'support/ui';
-import { assertToast } from 'support/ui/events';
 import {
   mockGetDatabase,
   mockGetDatabaseCredentials,
@@ -240,7 +239,7 @@ describe('Update database clusters', () => {
       .click();
 
     cy.wait('@updateDatabaseMaintenance');
-    assertToast('Maintenance Window settings saved successfully.');
+    ui.toast.assertMessage('Maintenance Window settings saved successfully.');
   });
 
   /*

@@ -2,11 +2,7 @@ import { Linode } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 
 import { Props as TextFieldProps } from 'src/components/TextField';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';

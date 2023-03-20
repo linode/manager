@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import Tooltip from 'src/components/core/Tooltip';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   btnRoot: {
@@ -49,6 +49,7 @@ interface Props {
   tooltip?: string;
   loading?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void;
+  tooltipGAEvent?: () => void;
 }
 
 type CombinedProps = Props;
@@ -62,6 +63,7 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
     tooltip,
     onClick,
     loading,
+    tooltipGAEvent,
   } = props;
 
   const classes = useStyles();
@@ -74,23 +76,16 @@ const InlineMenuAction: React.FC<CombinedProps> = (props) => {
     );
   } else {
     return (
-      <Tooltip
-        title={tooltip ?? ''}
-        disableTouchListener
-        enterDelay={500}
-        leaveDelay={0}
+      <Button
+        className={`${className} ${classes.btnRoot}`}
+        onClick={onClick}
+        disabled={disabled}
+        loading={loading}
+        tooltipText={tooltip}
+        tooltipGAEvent={tooltipGAEvent}
       >
-        <>
-          <Button
-            className={`${className} ${classes.btnRoot}`}
-            onClick={onClick}
-            disabled={disabled}
-            loading={loading}
-          >
-            {actionText}
-          </Button>
-        </>
-      </Tooltip>
+        {actionText}
+      </Button>
     );
   }
 };

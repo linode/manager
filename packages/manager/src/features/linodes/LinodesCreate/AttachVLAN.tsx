@@ -1,12 +1,13 @@
 import { Interface } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import { queryClient } from 'src/queries/base';
-import { ExtendedRegion, useRegionsQuery } from 'src/queries/regions';
+import { useRegionsQuery } from 'src/queries/regions';
 import { queryKey as vlansQueryKey } from 'src/queries/vlans';
 import arrayToList from 'src/utilities/arrayToDelimiterSeparatedList';
 import {
@@ -71,7 +72,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
   );
 
   const regionsThatSupportVLANs = regionsWithFeature(regions, 'Vlans').map(
-    (region: ExtendedRegion) => region.display
+    (region) => region.label
   );
 
   const regionalAvailabilityMessage = `VLANs are currently available in ${arrayToList(

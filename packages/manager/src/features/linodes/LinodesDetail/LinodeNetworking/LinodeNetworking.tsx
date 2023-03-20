@@ -22,16 +22,11 @@ import CircleProgress from 'src/components/CircleProgress';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
-import EntityHeader from 'src/components/EntityHeader';
 import ErrorState from 'src/components/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import Table from 'src/components/Table';
@@ -57,8 +52,12 @@ import { IPTypes } from './types';
 import ViewIPDrawer from './ViewIPDrawer';
 import ViewRangeDrawer from './ViewRangeDrawer';
 import ViewRDNSDrawer from './ViewRDNSDrawer';
+import Grid from 'src/components/Grid';
 
 type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'addNewWrapper'
   | 'action'
   | 'multipleRDNSButton'
   | 'multipleRDNSText'
@@ -68,6 +67,27 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
+    root: {
+      backgroundColor: theme.color.white,
+      margin: 0,
+      width: '100%',
+    },
+    headline: {
+      marginTop: 8,
+      marginBottom: 8,
+      marginLeft: 15,
+      lineHeight: '1.5rem',
+    },
+    addNewWrapper: {
+      [theme.breakpoints.down('sm')]: {
+        marginLeft: `-${theme.spacing(1.5)}`,
+        marginTop: `-${theme.spacing(1)}`,
+      },
+      '&.MuiGrid-item': {
+        padding: 5,
+      },
+    },
+
     action: {
       display: 'flex',
       alignItems: 'center',
@@ -709,62 +729,40 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPTable = () => {
     const ipDisplay = ipResponseToDisplayRows(this.state.linodeIPs);
+    const { classes } = this.props;
 
     return (
       <div style={{ marginTop: 20 }}>
-        <EntityHeader
-          title="IP Addresses"
-          isSecondary
-          // @todo: Clean these props when EntityHeader is refactored.
-          body={
-            <Hidden mdUp>
-              <div style={{ padding: 5 }}>
-                <Hidden smDown>
-                  <Button
-                    onClick={this.openTransferDialog}
-                    buttonType="secondary"
-                  >
-                    IP Transfer
-                  </Button>
-                  <Button
-                    style={{ marginRight: 16 }}
-                    onClick={this.openSharingDialog}
-                    buttonType="secondary"
-                  >
-                    IP Sharing
-                  </Button>
-                </Hidden>
-                <AddNewLink
-                  label="Add an IP Address"
-                  onClick={this.openAddIPDrawer}
-                />
-              </div>
+        <Grid
+          container
+          justifyContent="space-between"
+          alignItems="flex-end"
+          className={classes.root}
+        >
+          <Grid item className="p0">
+            <Typography variant="h3" className={classes.headline}>
+              Volumes
+            </Typography>
+          </Grid>
+          <Grid item className={classes.addNewWrapper}>
+            <Hidden smDown>
+              <Button onClick={this.openTransferDialog} buttonType="secondary">
+                IP Transfer
+              </Button>
+              <Button
+                style={{ marginRight: 16 }}
+                onClick={this.openSharingDialog}
+                buttonType="secondary"
+              >
+                IP Sharing
+              </Button>
             </Hidden>
-          }
-          actions={
-            <Hidden mdDown>
-              <div style={{ padding: 5 }}>
-                <Button
-                  onClick={this.openTransferDialog}
-                  buttonType="secondary"
-                >
-                  IP Transfer
-                </Button>
-                <Button
-                  style={{ marginRight: 16 }}
-                  onClick={this.openSharingDialog}
-                  buttonType="secondary"
-                >
-                  IP Sharing
-                </Button>
-                <AddNewLink
-                  label="Add an IP Address"
-                  onClick={this.openAddIPDrawer}
-                />
-              </div>
-            </Hidden>
-          }
-        />
+            <AddNewLink
+              label="Add an IP Address"
+              onClick={this.openAddIPDrawer}
+            />
+          </Grid>
+        </Grid>
         <Paper style={{ padding: 0 }}>
           {/* @todo: It'd be nice if we could always sort by public -> private. */}
           <OrderBy data={ipDisplay} orderBy="type" order="asc">

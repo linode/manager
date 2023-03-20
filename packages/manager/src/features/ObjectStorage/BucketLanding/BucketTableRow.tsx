@@ -2,13 +2,15 @@ import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
+import { useObjectStorageClusters } from 'src/queries/objectStorage';
+import { useRegionsQuery } from 'src/queries/regions';
 import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu';
 
@@ -53,7 +55,6 @@ export type CombinedProps = BucketTableRowProps;
 
 export const BucketTableRow: React.FC<CombinedProps> = (props) => {
   const classes = useStyles();
-
   const {
     label,
     cluster,
@@ -64,6 +65,12 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
     objects,
     onDetails,
   } = props;
+
+  const { data: clusters } = useObjectStorageClusters();
+  const { data: regions } = useRegionsQuery();
+
+  const actualCluster = clusters?.find((c) => c.id === cluster);
+  const region = regions?.find((r) => r.id === actualCluster?.region);
 
   return (
     <TableRow
@@ -93,7 +100,7 @@ export const BucketTableRow: React.FC<CombinedProps> = (props) => {
       <Hidden smDown>
         <TableCell className={classes.bucketRegion}>
           <Typography variant="body1" data-qa-region>
-            {formatObjectStorageCluster(cluster) || cluster}
+            {region?.label ?? cluster}
           </Typography>
         </TableCell>
       </Hidden>

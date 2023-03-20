@@ -3,7 +3,7 @@ import * as React from 'react';
 import Minus from 'src/assets/icons/LKEminusSign.svg';
 import Plus from 'src/assets/icons/LKEplusSign.svg';
 import Button from 'src/components/Button';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles(() => ({

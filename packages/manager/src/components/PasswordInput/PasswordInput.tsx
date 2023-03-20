@@ -1,16 +1,17 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Grid from 'src/components/Grid';
 import { Props as TextFieldProps } from 'src/components/TextField';
-import * as zxcvbn from 'zxcvbn';
+import zxcvbn from 'zxcvbn';
 import StrengthIndicator from '../PasswordInput/StrengthIndicator';
 import HideShowText from './HideShowText';
 
 type Props = TextFieldProps & {
   value?: string | undefined;
   required?: boolean;
-  disabledReason?: string;
+  disabledReason?: string | JSX.Element;
+  tooltipInteractive?: boolean;
   hideStrengthLabel?: boolean;
   hideValidation?: boolean;
 };
@@ -38,6 +39,7 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
     value,
     required,
     disabledReason,
+    tooltipInteractive,
     hideStrengthLabel,
     hideValidation,
     ...rest
@@ -62,6 +64,7 @@ const PasswordInput: React.FC<CombinedProps> = (props) => {
         <HideShowText
           {...rest}
           tooltipText={disabledReason}
+          tooltipInteractive={tooltipInteractive}
           value={value}
           onChange={onChange}
           fullWidth

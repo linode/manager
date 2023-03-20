@@ -15,6 +15,7 @@ export interface Props extends ButtonProps {
   compactY?: boolean;
   loading?: boolean;
   tooltipText?: string;
+  tooltipGAEvent?: () => void;
 }
 
 const StyledButton = styled(_Button, {
@@ -66,6 +67,7 @@ const Button = ({
   loading,
   sx,
   tooltipText,
+  tooltipGAEvent,
   ...rest
 }: Props) => {
   const theme = useTheme();
@@ -95,7 +97,13 @@ const Button = ({
       >
         <Span data-testid="loadingIcon">{loading ? <Reload /> : children}</Span>
       </StyledButton>
-      {tooltipText && <HelpIcon sx={sxHelpIcon} text={tooltipText} />}
+      {tooltipText && (
+        <HelpIcon
+          sx={sxHelpIcon}
+          text={tooltipText}
+          tooltipGAEvent={tooltipGAEvent}
+        />
+      )}
     </React.Fragment>
   );
 };

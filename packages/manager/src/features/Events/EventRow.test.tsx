@@ -27,15 +27,4 @@ describe('EventRow component', () => {
     );
     expect(container.closest('tr')).toBeNull();
   });
-
-  it('should display the message with a username if one exists', () => {
-    const username = 'banks';
-    const propsWithUsername = { ...props, username };
-
-    const { getByText } = renderWithTheme(
-      wrapWithTableBody(<Row {...propsWithUsername} />)
-    );
-
-    expect(getByText(`this is a message by ${username}.`)).toBeInTheDocument();
-  });
 });

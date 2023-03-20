@@ -6,7 +6,8 @@ import { PaymentMethod } from '@linode/api-v4/lib/account/types';
 import CreditCard from 'src/features/Billing/BillingPanels/BillingSummary/PaymentDrawer/CreditCard';
 import ThirdPartyPayment from './ThirdPartyPayment';
 import Grid from '../Grid';
-import { makeStyles, Theme } from '../core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   item: {

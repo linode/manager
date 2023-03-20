@@ -1,11 +1,7 @@
 import { Link } from '@reach/router';
 import classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 
 type ClassNames = 'root' | 'selected';
 

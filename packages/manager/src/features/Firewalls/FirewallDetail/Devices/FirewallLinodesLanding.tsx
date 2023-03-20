@@ -4,19 +4,21 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withLinodes, {
   Props as LinodesProps,
 } from 'src/containers/withLinodes.container';
-import { useDialog } from 'src/hooks/useDialog';
-import useFirewallDevices from 'src/hooks/useFirewallDevices';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddDeviceDrawer from './AddDeviceDrawer';
 import FirewallDevicesTable from './FirewallDevicesTable';
 import RemoveDeviceDialog from './RemoveDeviceDialog';
+import {
+  useAddFirewallDeviceMutation,
+  useAllFirewallDevicesQuery,
+} from 'src/queries/firewalls';
 
 const useStyles = makeStyles((theme: Theme) => ({
   copy: {
@@ -51,37 +53,23 @@ type CombinedProps = RouteComponentProps & Props & LinodesProps;
 const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
   const { firewallID, firewallLabel, disabled } = props;
   const classes = useStyles();
-  const {
-    devices,
-    requestDevices,
-    removeDevice,
-    addDevice,
-  } = useFirewallDevices(firewallID);
 
-  const deviceList = Object.values(devices.itemsById ?? {}); // Gives the devices as an array or [] if nothing is found
-  React.useEffect(() => {
-    if (devices.lastUpdated === 0 && !(devices.loading || devices.error.read)) {
-      requestDevices();
-    }
-  }, [
-    devices.error,
-    devices.lastUpdated,
-    devices.loading,
-    firewallID,
-    requestDevices,
-  ]);
+  const { data: devices, isLoading, error } = useAllFirewallDevicesQuery(
+    firewallID
+  );
 
-  const {
-    dialog,
-    openDialog,
-    closeDialog,
-    handleError,
-    submitDialog,
-  } = useDialog<number>(removeDevice);
+  const { mutateAsync: addDevice } = useAddFirewallDeviceMutation(firewallID);
 
-  const _openDialog = React.useCallback(openDialog, [dialog, openDialog]);
-  const _closeDialog = React.useCallback(closeDialog, [dialog, closeDialog]);
-  const _submitDialog = React.useCallback(submitDialog, [dialog, submitDialog]);
+  const [
+    isRemoveDeviceDialogOpen,
+    setIsRemoveDeviceDialogOpen,
+  ] = React.useState<boolean>(false);
+
+  const [selectedDeviceId, setSelectedDeviceId] = React.useState<number>(-1);
+
+  const selectedDevice = devices?.find(
+    (device) => device.id === selectedDeviceId
+  );
 
   const [addDeviceDrawerOpen, setDeviceDrawerOpen] = React.useState<boolean>(
     false
@@ -134,12 +122,6 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
     setDeviceSubmitting(false);
   };
 
-  const handleRemoveDevice = () => {
-    _submitDialog(dialog.entityID).catch((e) =>
-      handleError(getAPIErrorOrDefault(e, 'Error removing Device')[0].reason)
-    );
-  };
-
   return (
     <>
       {disabled ? (
@@ -170,30 +152,30 @@ const FirewallLinodesLanding: React.FC<CombinedProps> = (props) => {
         </Grid>
       </Grid>
       <FirewallDevicesTable
-        devices={deviceList}
-        error={devices.error.read}
-        lastUpdated={devices.lastUpdated}
-        loading={devices.loading}
+        devices={devices ?? []}
+        error={error ?? undefined}
+        loading={isLoading}
         disabled={disabled}
-        triggerRemoveDevice={_openDialog}
+        triggerRemoveDevice={(id) => {
+          setSelectedDeviceId(id);
+          setIsRemoveDeviceDialogOpen(true);
+        }}
       />
       <AddDeviceDrawer
         open={addDeviceDrawerOpen}
         error={addDeviceError}
         isSubmitting={deviceSubmitting}
-        currentDevices={deviceList.map((thisDevice) => thisDevice.entity.id)}
+        currentDevices={devices?.map((device) => device.entity.id) ?? []}
         firewallLabel={firewallLabel}
         onClose={handleClose}
         addDevice={handleAddDevice}
       />
       <RemoveDeviceDialog
-        open={dialog.isOpen}
-        loading={dialog.isLoading}
-        error={dialog.error}
-        onClose={_closeDialog}
-        onRemove={handleRemoveDevice}
-        deviceLabel={dialog.entityLabel ?? 'this device'}
+        open={isRemoveDeviceDialogOpen}
+        onClose={() => setIsRemoveDeviceDialogOpen(false)}
+        device={selectedDevice}
         firewallLabel={firewallLabel}
+        firewallId={firewallID}
       />
     </>
   );

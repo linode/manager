@@ -1,7 +1,8 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
@@ -122,10 +123,9 @@ const CardView: React.FC<CombinedProps> = (props) => {
           <React.Fragment key={`linode-card-${idx}`}>
             <Grid item xs={12} className={`${classes.summaryOuter} py0`}>
               <LinodeEntityDetail
-                variant="landing"
                 id={linode.id}
                 linode={linode}
-                isDetailLanding
+                isSummaryView
                 numVolumes={getVolumesByLinode(linode.id)}
                 username={profile?.username}
                 linodeConfigs={linodeConfigs}

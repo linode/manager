@@ -5,7 +5,8 @@ import FileUploadComplete from 'src/assets/icons/fileUploadComplete.svg';
 import UploadPending from 'src/assets/icons/uploadPending.svg';
 import Button from 'src/components/Button';
 import LinearProgress from 'src/components/core/LinearProgress';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1,
   },
   barColorPrimary: {
-    backgroundColor: theme.name === 'lightTheme' ? '#cce2ff' : '#243142',
+    backgroundColor: theme.name === 'light' ? '#cce2ff' : '#243142',
   },
   container: {
     display: 'flex',

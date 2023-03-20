@@ -6,6 +6,7 @@ import { createLinode } from '@linode/api-v4/lib/linodes';
 import { getProfile } from '@linode/api-v4/lib/profile';
 import { EntityTransfer, Linode, Profile } from '@linode/api-v4/types';
 import { entityTransferFactory } from 'src/factories/entityTransfers';
+import { linodeFactory } from 'src/factories';
 import { createLinodeRequestFactory } from 'src/factories/linodes';
 import { formatDate } from 'src/utilities/formatDate';
 import { authenticate } from 'support/api/authentication';
@@ -15,10 +16,13 @@ import {
   mockAcceptEntityTransfer,
   mockGetEntityTransfers,
   mockReceiveEntityTransfer,
+  mockInitiateEntityTransferError,
 } from 'support/intercepts/account';
+import { mockGetLinodes } from 'support/intercepts/linodes';
 import { ui } from 'support/ui';
 import { pollLinodeStatus } from 'support/util/polling';
 import { randomItem, randomLabel, randomUuid } from 'support/util/random';
+import { visitUrlWithManagedEnabled } from 'support/api/managed';
 
 // Service transfer landing page URL.
 const serviceTransferLandingUrl = '/account/service-transfers';
@@ -421,5 +425,38 @@ describe('Account service transfers', () => {
       .within(() => {
         cy.findByText(token).should('be.visible');
       });
+  });
+
+  /*
+   * - Confirms that the managed users are not able to initiate service transfers.
+   */
+  it('can not initiate a service transfer by managed users', () => {
+    // Mock Linodes to initiate a service transfer.
+    const mockLinodes = new Array(5).fill(null).map(
+      (item: null, index: number): Linode => {
+        return linodeFactory.build({
+          label: `Linode ${index}`,
+          region: regions[index],
+        });
+      }
+    );
+
+    mockGetLinodes(mockLinodes).as('getLinodes');
+    const errorMessage = 'You cannot initiate transfers with Managed enabled.';
+    mockInitiateEntityTransferError(errorMessage);
+
+    // Navigate to Service Transfer landing page, initiate transfer.
+    visitUrlWithManagedEnabled(serviceTransferLandingUrl);
+    cy.wait('@getLinodes');
+    ui.button
+      .findByTitle('Make a Service Transfer')
+      .should('be.visible')
+      .should('be.enabled')
+      .click();
+
+    cy.findByText('Make a Service Transfer').should('be.visible');
+    cy.url().should('endWith', serviceTransferCreateUrl);
+    initiateLinodeTransfer(mockLinodes[0].label);
+    cy.findByText(errorMessage).should('be.visible');
   });
 });

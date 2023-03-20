@@ -11,6 +11,8 @@ export interface OCA {
   website?: string;
   colors: Colors;
   categories: AppCategory[];
+  cluster_name?: string;
+  cluster_guides?: Doc[];
 }
 
 export interface Doc {
@@ -567,6 +569,35 @@ export const oneClickApps: OCA[] = [
     colors: {
       start: '2997f8',
       end: '1d52ad',
+    },
+  },
+  {
+    name: 'Galera',
+    alt_name: 'SQL database',
+    alt_description: 'SQL database.',
+    categories: ['Databases'],
+    cluster_name: 'Galera Cluster',
+    description: `Galera provides a performant multi-master/active-active database solution with synchronous replication, to achieve high availability.`,
+    summary: `Multi-master MariaDB database cluster.`,
+    related_guides: [
+      {
+        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+      },
+    ],
+    cluster_guides: [
+      {
+        title: 'Deploy Galera Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/galera-cluster/',
+      },
+    ],
+    website: 'https://galeracluster.com/',
+    logo_url: 'galera.svg',
+    colors: {
+      start: 'EC7704',
+      end: '000000',
     },
   },
   {
@@ -1178,6 +1209,7 @@ export const oneClickApps: OCA[] = [
     alt_name: 'NoSQL database',
     alt_description: 'Popular document database.',
     categories: ['Databases'],
+    cluster_name: 'MongoDB Cluster',
     description: `MongoDB provides an alternative to traditional relational database management systems (RDBMS). In addition to its schema-free design and scalable architecture, MongoDB provides JSON output and specialized language-specific bindings that make it particularly attractive for use in custom application development and rapid prototyping.`,
     summary: `MongoDB is a database engine that provides access to non-relational, document-oriented databases.`,
     related_guides: [
@@ -1185,6 +1217,13 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy MongoDB with Marketplace Apps',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb/',
+      },
+    ],
+    cluster_guides: [
+      {
+        title: 'Deploy MongoDB Cluster with Marketplace Apps',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/mongodb-cluster/',
       },
     ],
     website: 'https://www.mongodb.com/',
@@ -1635,6 +1674,7 @@ export const oneClickApps: OCA[] = [
     alt_name: 'SQL database',
     alt_description: 'MySQL alternative for SQL database.',
     categories: ['Databases'],
+    cluster_name: 'PostgreSQL Cluster',
     description: `PostgreSQL is a popular open source relational database system that provides many advanced configuration options that can help optimize your database’s performance in a production environment.`,
     summary: `The PostgreSQL relational database system is a powerful, scalable, and standards-compliant open-source database platform.`,
     related_guides: [
@@ -1642,6 +1682,13 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy PostgreSQL through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql/',
+      },
+    ],
+    cluster_guides: [
+      {
+        title: 'Deploy PostgreSQL Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/postgresql-cluster/',
       },
     ],
     website: 'https://www.postgresql.org/',
@@ -1741,6 +1788,7 @@ export const oneClickApps: OCA[] = [
     alt_name: 'High performance database',
     alt_description: 'In-memory caching database.',
     categories: ['Databases'],
+    cluster_name: 'Redis Sentinel Cluster',
     description: `Redis is an open-source, in-memory, data-structure store, with the optional ability to write and persist data to a disk, which can be used as a key-value database, cache, and message broker. Redis features built-in transactions, replication, and support for a variety of data structures such as strings, hashes, lists, sets, and others.`,
     summary:
       'Flexible, in-memory, NoSQL database service supported in many different coding languages.',
@@ -1749,6 +1797,13 @@ export const oneClickApps: OCA[] = [
         title: 'Deploy Redis through the Linode Marketplace',
         href:
           'https://www.linode.com/docs/products/tools/marketplace/guides/redis/',
+      },
+    ],
+    cluster_guides: [
+      {
+        title: 'Deploy Redis Sentinel Cluster through the Linode Marketplace',
+        href:
+          'https://www.linode.com/docs/products/tools/marketplace/guides/redis-cluster/',
       },
     ],
     website: 'https://redis.io/',

@@ -8,7 +8,7 @@ import {
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
 import * as React from 'react';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';

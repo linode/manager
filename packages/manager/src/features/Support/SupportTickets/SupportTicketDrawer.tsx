@@ -11,7 +11,8 @@ import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Dialog from 'src/components/Dialog';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -47,8 +48,7 @@ import SupportTicketSMTPFields, {
 
 const useStyles = makeStyles((theme: Theme) => ({
   expPanelSummary: {
-    backgroundColor:
-      theme.name === 'darkTheme' ? theme.bg.main : theme.bg.white,
+    backgroundColor: theme.name === 'dark' ? theme.bg.main : theme.bg.white,
     paddingTop: theme.spacing(1),
     borderTop: `1px solid ${theme.bg.main}`,
   },

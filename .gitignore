@@ -72,6 +72,7 @@ jspm_packages/
 
 # Typescript v1 declaration files
 typings/
+tsconfig.tsbuildinfo
 
 # Optional npm cache directory
 .npm
@@ -109,6 +110,7 @@ localStorage.json
 
 # storybook static files
 .out
+packages/manager/storybook-static/
 
 # Vim users
 *.swp

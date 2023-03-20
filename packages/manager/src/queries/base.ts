@@ -159,7 +159,7 @@ export const itemInListMutationHandler = <
 };
 
 export const itemInListCreationHandler = <T, V, E = APIError[]>(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (createdEntity) => {
@@ -181,7 +181,7 @@ export const itemInListDeletionHandler = <
   V extends { id?: number | string },
   E = APIError[]
 >(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (_, variables) => {

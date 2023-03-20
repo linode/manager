@@ -19,10 +19,8 @@ export type VolumeStatus =
   | 'creating'
   | 'active'
   | 'resizing'
-  | 'deleting'
-  | 'deleted'
   | 'migrating'
-  | 'contact_support';
+  | 'offline';
 
 export interface VolumeRequestPayload {
   label: string;

@@ -3,7 +3,7 @@ version: '3.4'
 
 x-e2e-env:
   &default-env
-  BUILD_ID: ${BUILD_ID}
+  BUILD_ID: "${GIT_BRANCH}-${BUILD_NUMBER}"
   BUILD_URL: ${BUILD_URL}
   BUILD_NUMBER: ${BUILD_NUMBER}
   COMMIT_INFO_BRANCH: ${GIT_BRANCH}

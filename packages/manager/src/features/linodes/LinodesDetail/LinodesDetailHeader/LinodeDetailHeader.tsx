@@ -26,10 +26,16 @@ import LinodeRebuildDialog from '../LinodeRebuild/LinodeRebuildDialog';
 import RescueDialog from '../LinodeRescue';
 import LinodeResize from '../LinodeResize/LinodeResize';
 import HostMaintenance from './HostMaintenance';
-import LinodeDetailsBreadcrumb from './LinodeDetailsBreadcrumb';
 import MutationNotification from './MutationNotification';
 import Notifications from './Notifications';
 import { UpgradeVolumesDialog } from './UpgradeVolumesDialog';
+import LandingHeader from 'src/components/LandingHeader';
+import { sendEvent } from 'src/utilities/ga';
+import useEditableLabelState from 'src/hooks/useEditableLabelState';
+import { APIError } from '@linode/api-v4/lib/types';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { ACCESS_LEVELS } from 'src/constants';
 
 interface Props {
   numVolumes: number;
@@ -275,14 +281,70 @@ const LinodeDetailHeader: React.FC<CombinedProps> = (props) => {
     // Non null assertion because we assume that these kinds of notifications will always have an entity attached.
     .map((notification) => notification.entity!.id);
 
+  const {
+    editableLabelError,
+    setEditableLabelError,
+    resetEditableLabel,
+  } = useEditableLabelState();
+  const disabled = linode._permissions === ACCESS_LEVELS.readOnly;
+
+  const updateLinodeLabel = async (linodeId: number, label: string) => {
+    try {
+      await updateLinode({ linodeId, label });
+    } catch (updateError) {
+      const errors: APIError[] = getAPIErrorOrDefault(
+        updateError,
+        'An error occurred while updating label',
+        'label'
+      );
+      const errorReasons: string[] = errors.map((error) => error.reason);
+      throw new Error(errorReasons[0]);
+    }
+  };
+
+  const handleLinodeLabelUpdate = (label: string) => {
+    const linodeId = linode.id;
+    return updateLinodeLabel(linodeId, label)
+      .then(() => {
+        resetEditableLabel();
+      })
+      .catch((updateError) => {
+        const errorReasons: string[] = [updateError.message];
+        setEditableLabelError(errorReasons[0]);
+        scrollErrorIntoView();
+        return Promise.reject(errorReasons[0]);
+      });
+  };
+
   return (
     <>
       <HostMaintenance linodeStatus={linodeStatus} />
       <MutationNotification disks={linodeDisks} />
       <Notifications />
-      <LinodeDetailsBreadcrumb />
+      <LandingHeader
+        title="Create"
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/guides/platform/get-started/"
+        breadcrumbProps={{
+          pathname: `/linodes/${linode.label}`,
+          onEditHandlers: !disabled
+            ? {
+                editableTextTitle: linode.label,
+                onEdit: handleLinodeLabelUpdate,
+                onCancel: resetEditableLabel,
+                errorText: editableLabelError,
+              }
+            : undefined,
+        }}
+        onDocsClick={() => {
+          sendEvent({
+            category: 'Linode Create Flow',
+            action: 'Click:link',
+            label: 'Getting Started',
+          });
+        }}
+      />
       <LinodeEntityDetail
-        variant="details"
         id={linode.id}
         linode={linode}
         numVolumes={numAttachedVolumes}

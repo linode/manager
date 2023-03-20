@@ -1,7 +1,8 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/core/Button';
-import { createStyles, Theme, makeStyles } from 'src/components/core/styles';
+import { createStyles, makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Notice from 'src/components/Notice';

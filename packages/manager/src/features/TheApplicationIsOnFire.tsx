@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Dialog from 'src/components/core/Dialog';
 import DialogContent from 'src/components/core/DialogContent';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DialogTitle from 'src/components/DialogTitle';
 

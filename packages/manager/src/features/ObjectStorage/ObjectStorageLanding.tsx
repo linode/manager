@@ -10,7 +10,8 @@ import { compose } from 'recompose';
 import { Dispatch } from 'redux';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DismissibleBanner from 'src/components/DismissibleBanner';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -139,8 +140,6 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
     ? 'Create Access Key'
     : 'Create Bucket';
 
-  const createButtonWidth = matchesAccessKeys ? 180 : 152;
-
   const createButtonAction = () => {
     if (matchesAccessKeys) {
       setMode('creating');
@@ -158,9 +157,8 @@ export const ObjectStorageLanding: React.FC<CombinedProps> = (props) => {
         title="Object Storage"
         entity="Object Storage"
         createButtonText={createButtonText}
-        createButtonWidth={createButtonWidth}
         docsLink="https://www.linode.com/docs/platform/object-storage/"
-        onAddNew={createButtonAction}
+        onButtonClick={createButtonAction}
         removeCrumbX={1}
         breadcrumbProps={{ pathname: '/object-storage' }}
       />

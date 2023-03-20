@@ -22,6 +22,7 @@ describe('reducer', () => {
     arrayBuffer: jest.fn(),
     stream: jest.fn(),
     text: jest.fn(),
+    webkitRelativePath: '',
   };
   const file2: File = {
     name: 'my-file2',
@@ -32,6 +33,7 @@ describe('reducer', () => {
     arrayBuffer: jest.fn(),
     stream: jest.fn(),
     text: jest.fn(),
+    webkitRelativePath: '',
   };
 
   it('enqueues new files and updates the count', () => {

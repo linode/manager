@@ -1,4 +1,5 @@
 import { Linode } from '@linode/api-v4/lib/linodes';
+import { Region } from '@linode/api-v4/lib/regions';
 import { APIError } from '@linode/api-v4/lib/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
@@ -11,7 +12,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
 import { useReduxLoad } from 'src/hooks/useReduxLoad';
-import { formatRegion } from 'src/utilities';
+import { useRegionsQuery } from 'src/queries/regions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithLinodesProps {
@@ -77,6 +78,8 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
     ...rest
   } = props;
 
+  const { data: regions } = useRegionsQuery();
+
   const onChange = React.useCallback(
     (selected: Item<number> | null) => {
       if (selected === null) {
@@ -97,6 +100,7 @@ const LinodeSelect: React.FC<CombinedProps> = (props) => {
   const options = groupByRegion
     ? linodesToGroupedItems(
         linodes,
+        regions ?? [],
         valueOverride,
         labelOverride,
         filterCondition
@@ -202,6 +206,7 @@ export const linodeFromItems = (
 // Grouped by Region
 export const linodesToGroupedItems = (
   linodes: Linode[],
+  regions: Region[],
   valueOverride?: Override,
   labelOverride?: Override,
   filterCondition?: (linodes: Linode) => boolean
@@ -218,7 +223,7 @@ export const linodesToGroupedItems = (
 
   return Object.keys(groupedByRegion).map((region) => {
     return {
-      label: formatRegion(region),
+      label: regions.find((r) => r.id === region)?.label ?? region,
       options: linodesToItems(
         groupedByRegion[region],
         valueOverride,

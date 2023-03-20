@@ -3,12 +3,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Hidden from 'src/components/core/Hidden';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -26,7 +22,7 @@ import { TableRowLoading } from 'src/components/TableRowLoading/TableRowLoading'
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { parseAPIDate } from 'src/utilities/date';
-import fingerprint from 'src/utilities/ssh-fingerprint';
+import { getSSHKeyFingerprint } from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
 type ClassNames = 'sshKeysHeader' | 'addNewWrapper' | 'createdCell';
@@ -254,7 +250,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
 const updateResponseData = (keys: SSHKey[]) =>
   keys.map((key) => ({
     ...key,
-    fingerprint: fingerprint(key.ssh_key),
+    fingerprint: getSSHKeyFingerprint(key.ssh_key),
     created: parseAPIDate(key.created).toRelative(),
   }));
 

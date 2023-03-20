@@ -28,12 +28,8 @@ import Accordion from 'src/components/Accordion';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -867,13 +863,16 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   afterProtocolUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(set(L.sslCertificateLens, ''), set(L.privateKeyLens, ''))
+      compose<State, State, State>(
+        set(L.sslCertificateLens, ''),
+        set(L.privateKeyLens, '')
+      )
     );
   };
 
   afterHealthCheckTypeUpdate = (L: { [key: string]: Lens }) => () => {
     this.setState(
-      compose(
+      compose<State, State, State, State, State>(
         set(
           L.checkBodyLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0].check_body
@@ -887,7 +886,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           L.healthCheckIntervalLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]
             .check_interval
-        ) as () => string,
+        ),
         set(
           L.healthCheckTimeoutLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]

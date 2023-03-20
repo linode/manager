@@ -1,11 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
 const PasswordInput = React.lazy(() => import('src/components/PasswordInput'));
 import RenderGuard from 'src/components/RenderGuard';

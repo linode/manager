@@ -3,16 +3,15 @@ import { Event } from '@linode/api-v4/lib/account';
 import { Status } from 'src/components/StatusIcon/StatusIcon';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import StatusIcon from 'src/components/StatusIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { formatRegion } from 'src/utilities';
 import VolumesActionMenu, { ActionHandlers } from './VolumesActionMenu';
-import SupportLink from 'src/components/SupportLink';
 import { Volume } from '@linode/api-v4/lib/volumes/types';
+import { useRegionsQuery } from 'src/queries/regions';
 // import useEvents from 'src/hooks/useEvents';
 
 export const useStyles = makeStyles({
@@ -60,13 +59,12 @@ export const volumeStatusIconMap: Record<Volume['status'], Status> = {
   resizing: 'other',
   migrating: 'other',
   creating: 'other',
-  contact_support: 'error',
-  deleting: 'other',
-  deleted: 'inactive',
+  offline: 'inactive',
 };
 
 export const VolumeTableRow = (props: CombinedProps) => {
   const classes = useStyles();
+  const { data: regions } = useRegionsQuery();
   const {
     isDetailsPageRow,
     openForClone,
@@ -88,7 +86,8 @@ export const VolumeTableRow = (props: CombinedProps) => {
   } = props;
 
   const isVolumesLanding = !isDetailsPageRow;
-  const formattedRegion = formatRegion(region);
+
+  const regionLabel = regions?.find((r) => r.id === region)?.label ?? region;
   // const { events } = useEvents();
 
   // const recentEvent = events.find((event) => event.entity?.id === id);
@@ -96,18 +95,6 @@ export const VolumeTableRow = (props: CombinedProps) => {
   // Use this to show a progress bar
   // const isUpdating = isVolumeUpdating(recentEvent);
   // const progress = progressFromEvent(recentEvent);
-
-  const volumeStatusMap: Record<Volume['status'], string | JSX.Element> = {
-    active: 'Active',
-    resizing: 'Resizing',
-    creating: 'Creating',
-    contact_support: (
-      <SupportLink text="Contact Support" entity={{ type: 'volume_id', id }} />
-    ),
-    deleting: 'Deleting',
-    deleted: 'Deleted',
-    migrating: 'Migrating',
-  };
 
   return (
     <TableRow key={`volume-row-${id}`} data-qa-volume-cell={id}>
@@ -125,11 +112,11 @@ export const VolumeTableRow = (props: CombinedProps) => {
       </TableCell>
       <TableCell statusCell>
         <StatusIcon status={volumeStatusIconMap[status]} />
-        {volumeStatusMap[status]}
+        {status.replace('_', ' ')}
       </TableCell>
       {isVolumesLanding && region ? (
-        <TableCell data-qa-volume-region noWrap>
-          {formattedRegion}
+        <TableCell data-qa-volume-region data-testid="region" noWrap>
+          {regionLabel}
         </TableCell>
       ) : null}
       <TableCell data-qa-volume-size>{size} GB</TableCell>

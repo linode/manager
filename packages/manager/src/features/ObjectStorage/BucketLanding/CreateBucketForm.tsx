@@ -3,7 +3,8 @@ import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
 import { CreateBucketSchema } from '@linode/validation/lib/buckets.schema';
 import * as React from 'react';
 import Form from 'src/components/core/Form';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 // @todo: Extract ActionPanel out of Volumes

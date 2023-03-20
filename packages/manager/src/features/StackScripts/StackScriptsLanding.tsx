@@ -35,10 +35,9 @@ export const StackScriptsLanding = () => {
       <LandingHeader
         title="StackScripts"
         entity="StackScript"
-        createButtonWidth={180}
         removeCrumbX={1}
         docsLink="https://www.linode.com/docs/platform/stackscripts"
-        onAddNew={goToCreateStackScript}
+        onButtonClick={goToCreateStackScript}
       />
       <Grid container className="m0">
         {_loading ? (

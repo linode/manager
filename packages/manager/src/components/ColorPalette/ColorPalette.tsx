@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { useTheme } from '@mui/material';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 

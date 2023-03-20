@@ -1,11 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  makeStyles,
-  Theme,
-  WithTheme,
-  withTheme,
-} from 'src/components/core/styles';
+import { makeStyles, WithTheme, withTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import LongviewLineGraph from 'src/components/LongviewLineGraph';
 import {

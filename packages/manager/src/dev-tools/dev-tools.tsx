@@ -21,7 +21,7 @@ function install() {
           <Grid item xs={4} sm={2}>
             <FeatureFlagTool />
           </Grid>
-          {process.env.NODE_ENV === 'development' && (
+          {import.meta.env.DEV && (
             <Grid item xs={4} sm={5} md={3}>
               <EnvironmentToggleTool />
             </Grid>

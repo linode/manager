@@ -89,26 +89,26 @@ class LinodeSettingsPasswordPanel extends React.Component<
     }
 
     this.setState(
-      compose(
+      compose<State, State, State, State>(
         set(lensPath(['submitting']), true),
         set(lensPath(['success']), undefined),
-        set(lensPath(['errors']), undefined) as () => APIError[]
+        set(lensPath(['errors']), undefined)
       )
     );
 
     const handleSuccess = () => {
       this.setState(
-        compose(
+        compose<State, State, State, State>(
           set(lensPath(['success']), `Linode password changed successfully.`),
           set(lensPath(['submitting']), false),
-          set(lensPath(['value']), '') as () => string
+          set(lensPath(['value']), '')
         )
       );
     };
 
     const handleError = (errors: APIError[]) => {
       this.setState(
-        compose(
+        compose<State, State, State>(
           set(lensPath(['errors']), errors),
           set(lensPath(['submitting']), false)
         ),

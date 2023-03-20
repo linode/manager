@@ -1,6 +1,9 @@
 /* eslint-disable no-console */
 import { defineConfig } from 'cypress';
 import { resolve } from 'path';
+// switch to import syntax when esModuleInterop": true
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const vitePreprocessor = require('cypress-vite');
 import * as dotenv from 'dotenv';
 
 /**
@@ -38,7 +41,7 @@ const loadConfiguration = () => {
  * Displays a warning if tests are running on an unsupported version of Node JS.
  */
 const nodeVersionCheck = () => {
-  const recommendedVersions = [14];
+  const recommendedVersions = [18];
   const versionString = process.version.substr(1, process.version.length - 1);
   const currentVersion = versionString
     .split('.')
@@ -77,6 +80,11 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       // Display warning if running an unsupported version of Node JS.
       nodeVersionCheck();
+
+      on(
+        'file:preprocessor',
+        vitePreprocessor(resolve(__dirname, 'cypress', 'vite.config.ts'))
+      );
 
       /*
        * Disable requests to Google's safe browsing API.

@@ -1,4 +1,5 @@
-import { createStyles, Theme } from 'src/components/core/styles';
+import { createStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 
 export type ClassNames =
   | 'root'

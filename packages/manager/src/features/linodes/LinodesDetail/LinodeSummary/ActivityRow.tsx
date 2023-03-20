@@ -1,16 +1,11 @@
 import { Event } from '@linode/api-v4/lib/account';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { formatEventWithUsername } from 'src/features/Events/Event.helpers';
 
 import { formatEventSeconds } from 'src/utilities/minute-conversion/minute-conversion';
 
@@ -47,12 +42,6 @@ export const ActivityRow: React.FC<CombinedProps> = (props) => {
     return null;
   }
 
-  const displayedMessage = formatEventWithUsername(
-    event.action,
-    event.username,
-    message
-  );
-
   return (
     <Grid
       className={classes.root}
@@ -64,7 +53,7 @@ export const ActivityRow: React.FC<CombinedProps> = (props) => {
     >
       <Grid item>
         <Typography>
-          {displayedMessage} {duration && `(${duration})`}
+          {message} {duration && `(${duration})`}
         </Typography>
       </Grid>
       <Grid item>

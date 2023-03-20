@@ -8,17 +8,25 @@ import PointerIcon from 'src/assets/icons/pointer.svg';
 import YoutubeIcon from 'src/assets/icons/youtube.svg';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Link from 'src/components/Link';
 import Placeholder from 'src/components/Placeholder';
+import {
+  docsLink,
+  getLinkOnClick,
+  guidesMoreLinkText,
+  youtubeChannelLink,
+  youtubeMoreLinkLabel,
+  youtubeMoreLinkText,
+} from 'src/utilities/emptyStateLandingUtils';
 import { sendEvent } from 'src/utilities/ga';
 import AppsSection from './AppsSection';
 import LinksSection from './LinksSection';
 import LinksSubSection from './LinksSubSection';
 
 const gaCategory = 'Linodes landing page empty';
-
 const linkGAEventTemplate = {
   category: gaCategory,
   action: 'Click:link',
@@ -64,18 +72,14 @@ const youtubeLinksData = [
   },
 ];
 
-const getLinkOnClick = (linkText: string) => () => {
-  sendEvent({
-    ...linkGAEventTemplate,
-    label: linkText,
-  });
-};
-
 const guideLinks = (
   <List>
     {gettingStartedGuideLinksData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link to={linkData.to} onClick={getLinkOnClick(linkData.text)}>
+        <Link
+          to={linkData.to}
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+        >
           {linkData.text}
         </Link>
       </ListItem>
@@ -83,18 +87,16 @@ const guideLinks = (
   </List>
 );
 
-const guidesMoreLinkText = 'Check out all our Docs';
 const appsMoreLinkText = 'See all Marketplace apps';
-const youtubeMoreLinkText = 'View our YouTube channel';
-
-// retaining the old label for tracking
-const youtubeMoreLinkLabel = 'View the complete playlist';
 
 const youtubeLinks = (
   <List>
     {youtubeLinksData.map((linkData) => (
       <ListItem key={linkData.to}>
-        <Link onClick={getLinkOnClick(linkData.text)} to={linkData.to}>
+        <Link
+          onClick={getLinkOnClick(linkGAEventTemplate, linkData.text)}
+          to={linkData.to}
+        >
           {linkData.text}
           <ExternalLinkIcon />
         </Link>
@@ -144,8 +146,11 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             icon={<DocsIcon />}
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(guidesMoreLinkText)}
-                to="https://www.linode.com/docs/"
+                onClick={getLinkOnClick(
+                  linkGAEventTemplate,
+                  guidesMoreLinkText
+                )}
+                to={docsLink}
                 {...props}
               >
                 {guidesMoreLinkText}
@@ -160,7 +165,7 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             icon={<MarketplaceIcon />}
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(appsMoreLinkText)}
+                onClick={getLinkOnClick(linkGAEventTemplate, appsMoreLinkText)}
                 to="/linodes/create?type=One-Click"
                 {...props}
               >
@@ -177,8 +182,11 @@ export const ListLinodesEmptyState: React.FC<{}> = (_) => {
             external
             MoreLink={(props) => (
               <Link
-                onClick={getLinkOnClick(youtubeMoreLinkLabel)}
-                to="https://www.youtube.com/playlist?list=PLTnRtjQN5ieb4XyvC9OUhp7nxzBENgCxJ"
+                onClick={getLinkOnClick(
+                  linkGAEventTemplate,
+                  youtubeMoreLinkLabel
+                )}
+                to={youtubeChannelLink}
                 {...props}
               >
                 {youtubeMoreLinkText}

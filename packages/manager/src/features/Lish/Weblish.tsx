@@ -5,11 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import { Linode } from '@linode/api-v4/lib/linodes';
 import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from './lishUtils';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 
 type ClassNames = 'errorState';
 

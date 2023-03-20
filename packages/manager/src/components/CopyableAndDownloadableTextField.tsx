@@ -2,14 +2,15 @@ import * as React from 'react';
 import _ from 'lodash';
 import CopyTooltip from 'src/components/CopyTooltip';
 import DownloadTooltip from 'src/components/DownloadTooltip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   removeDisabledStyles: {
     '&.Mui-disabled': {
-      borderColor: theme.name === 'lightTheme' ? '#ccc' : '#222',
-      color: theme.name === 'lightTheme' ? 'inherit' : '#fff !important',
+      borderColor: theme.name === 'light' ? '#ccc' : '#222',
+      color: theme.name === 'light' ? 'inherit' : '#fff !important',
       background: theme.bg.main,
       opacity: 1,
     },

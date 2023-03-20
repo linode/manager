@@ -5,16 +5,10 @@ import { assocPath } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
-import { AppsDocs } from 'src/documentation';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';
 import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
@@ -102,15 +96,17 @@ const errorResources = {
   stackscript_id: 'The selected App',
 };
 
-type InnerProps = AppsData &
+interface Props {
+  setNumberOfNodesForAppCluster: (num: number) => void;
+}
+
+type InnerProps = Props &
+  AppsData &
   ReduxStateProps &
   StackScriptFormStateHandlers &
   WithTypesRegionsAndImages;
 
-type CombinedProps = WithStyles<ClassNames> &
-  InnerProps &
-  StateProps &
-  SetDocsProps;
+type CombinedProps = WithStyles<ClassNames> & InnerProps & StateProps;
 
 interface State {
   detailDrawerOpen: boolean;
@@ -223,17 +219,25 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
         .split(' ');
 
       const matchingOCALabels = oneClickApps.reduce(
-        (acc: string[], { categories, name, alt_name, alt_description }) => {
-          const ocaAppString = `${name} ${alt_name} ${categories.join(
-            ' '
-          )} ${alt_description}`.toLocaleLowerCase();
+        (
+          acc: string[],
+          { categories, name, alt_name, alt_description, cluster_name }
+        ) => {
+          const ocaAppString = `${name} ${alt_name} ${
+            cluster_name || ''
+          } ${categories.join(' ')} ${alt_description}`.toLocaleLowerCase();
 
           const hasMatchingOCA = queryWords.every((queryWord) =>
             ocaAppString.includes(queryWord)
           );
 
           if (hasMatchingOCA) {
-            acc.push(name.trim());
+            if (!queryWords.includes('cluster') || /cluster/i.test(name)) {
+              acc.push(name.trim());
+            }
+            if (cluster_name) {
+              acc.push(cluster_name.trim());
+            }
           }
 
           return acc;
@@ -263,7 +267,13 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       const appsInCategory = oneClickApps.filter((oca) =>
         oca.categories?.includes(categoryItem.value)
       );
-      const appLabels = appsInCategory.map((app) => app.name.trim());
+      const appLabels = appsInCategory.reduce((acc: string[], app: any) => {
+        if (app.cluster_name) {
+          acc.push(app.cluster_name.trim());
+        }
+        acc.push(app.name.trim());
+        return acc;
+      }, []);
       instancesInCategory = this.props.appInstances?.filter((instance) => {
         return appLabels.includes(instance.label.trim());
       });
@@ -292,9 +302,10 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
       appInstancesError,
       appInstancesLoading,
       userCannotCreateLinode,
+      setNumberOfNodesForAppCluster,
     } = this.props;
 
-    //ramda's curry placehodler conflicts with lodash so the lodash curry and placeholder is used here
+    // ramda's curry placeholder conflicts with lodash so the lodash curry and placeholder is used here
     const handleSelectStackScript = curriedHandleSelectStackScript(
       curry.placeholder,
       curry.placeholder,
@@ -379,6 +390,7 @@ class FromAppsContent extends React.Component<CombinedProps, State> {
               udf_data={udf_data || {}}
               appLogo={appLogo}
               openDrawer={this.openDrawer}
+              setNumberOfNodesForAppCluster={setNumberOfNodesForAppCluster}
             />
           ) : null}
           {!userCannotCreateLinode &&
@@ -423,32 +435,7 @@ const mapStateToProps: MapStateToProps<
 
 const connected = connect(mapStateToProps);
 
-const generateDocs = (ownProps: InnerProps & StateProps) => {
-  const { selectedStackScriptLabel } = ownProps;
-  if (!!selectedStackScriptLabel) {
-    const foundDocs = AppsDocs.filter((eachDoc) => {
-      return eachDoc.title
-        .toLowerCase()
-        .includes(
-          selectedStackScriptLabel
-            .substr(0, selectedStackScriptLabel.indexOf(' '))
-            .toLowerCase()
-        );
-    });
-    return foundDocs.length ? foundDocs : [];
-  }
-  return [];
-};
-
-const updateCond = (
-  prevProps: InnerProps & StateProps,
-  nextProps: InnerProps & StateProps
-) => {
-  return prevProps.selectedStackScriptID !== nextProps.selectedStackScriptID;
-};
-
 export default compose<CombinedProps, InnerProps>(
   connected,
-  setDocs(generateDocs, updateCond),
   styled
 )(FromAppsContent);

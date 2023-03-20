@@ -2,7 +2,7 @@
 import * as React from 'react';
 import Check from 'src/assets/icons/monitor-ok.svg';
 import Radio from 'src/components/Radio';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
   checkIcon: {

@@ -4,12 +4,7 @@ import ReactSelect, { Props as SelectProps } from 'react-select';
 import CreatableSelect, {
   Props as CreatableSelectProps,
 } from 'react-select/creatable';
-import {
-  withStyles,
-  WithStyles,
-  withTheme,
-  WithTheme,
-} from 'src/components/core/styles';
+import { withStyles, WithStyles, withTheme, WithTheme } from '@mui/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 /* TODO will be refactoring enhanced select to be an abstraction.

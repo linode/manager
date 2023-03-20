@@ -2,6 +2,11 @@ import { Event } from '@linode/api-v4/lib/account';
 import { path } from 'ramda';
 import { isProductionBuild } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import createLinkHandlerForNotification from 'src/utilities/getEventsActionLink';
+import {
+  formatEventWithUsername,
+  formatEventWithAppendedText,
+} from './features/Events/Event.helpers';
 
 type EventMessageCreator = (e: Event) => string;
 
@@ -158,7 +163,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   disk_resize: {
     scheduled: (e) => `A disk on ${e.entity!.label} is scheduled for resizing.`,
     started: (e) => `A disk on Linode ${e.entity!.label} is being resized.`,
-    failed: (e) => `A disk on Linode ${e.entity!.label} could not be resized.`,
+    failed: (e) =>
+      `${formatEventWithAppendedText(
+        e,
+        `A disk on Linode ${e.entity!.label} could not be resized.`,
+        'Learn more',
+        'https://www.linode.com/docs/products/compute/compute-instances/guides/disks-and-storage/'
+      )}`,
     finished: (e) => `A disk on Linode ${e.entity!.label} has been resized`,
     // notification: e => ``,
   },
@@ -770,8 +781,16 @@ export default (e: Event): string => {
     });
   }
 
-  /** return either the message or an empty string */
-  return applyBolding(e, message);
+  /** add the username to message; if it already contains the username, return the original message **/
+  const messageWithUsername = formatEventWithUsername(
+    e.action,
+    e.username,
+    message
+  );
+
+  /** return either the formatted message or an empty string */
+  const formattedMessage = applyLinking(e, messageWithUsername);
+  return applyBolding(e, formattedMessage);
 };
 
 function applyBolding(event: Event, message: string) {
@@ -807,18 +826,43 @@ function applyBolding(event: Event, message: string) {
     'upgraded',
   ];
 
-  if (event.entity) {
-    wordsToBold.push(event.entity.label);
-  }
-
-  if (event.secondary_entity) {
-    wordsToBold.push(event.secondary_entity.label);
-  }
-
   let newMessage = message;
 
   for (const word of wordsToBold) {
     newMessage = newMessage.replace(word, `**${word}**`);
+  }
+
+  return newMessage;
+}
+
+function applyLinking(event: Event, message: string) {
+  if (!message) {
+    return '';
+  }
+
+  const entityLinkTarget = createLinkHandlerForNotification(
+    event.action,
+    event.entity,
+    false
+  );
+  const secondaryEntityLinkTarget = createLinkHandlerForNotification(
+    event.action,
+    event.secondary_entity,
+    false
+  );
+  let newMessage = message;
+
+  if (event.entity && entityLinkTarget) {
+    newMessage = newMessage.replace(
+      event.entity.label,
+      `<a href="${entityLinkTarget}">${event.entity.label}</a>`
+    );
+  }
+  if (event.secondary_entity && secondaryEntityLinkTarget) {
+    newMessage = newMessage.replace(
+      event.secondary_entity.label,
+      `<a href="${secondaryEntityLinkTarget}">${event.secondary_entity.label}</a>`
+    );
   }
 
   return newMessage;

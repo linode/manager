@@ -2,7 +2,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
-import { withStyles, WithStyles } from 'src/components/core/styles';
+import { withStyles, WithStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';

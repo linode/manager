@@ -6,12 +6,8 @@ import { Config, LinodeStatus } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
 import { linodeInTransition } from 'src/features/linodes/transitions';

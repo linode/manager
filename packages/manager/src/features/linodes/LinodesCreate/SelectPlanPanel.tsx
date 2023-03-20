@@ -14,7 +14,8 @@ import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -30,7 +31,7 @@ import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { dcDisplayNames, LINODE_NETWORK_IN } from 'src/constants';
+import { LINODE_NETWORK_IN } from 'src/constants';
 import withRegions, {
   DefaultProps as RegionsProps,
 } from 'src/containers/regions.container';
@@ -191,7 +192,7 @@ export const SelectPlanPanel: React.FC<CombinedProps> = (props) => {
     const regions = props.regionsData ?? [];
     const withCapability = regions
       .filter((thisRegion) => thisRegion.capabilities.includes(capability))
-      .map((thisRegion) => dcDisplayNames[thisRegion.id]);
+      .map((thisRegion) => thisRegion.label);
     return arrayToList(withCapability);
   };
 

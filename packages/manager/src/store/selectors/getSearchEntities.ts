@@ -11,8 +11,8 @@ import { SearchableItem } from 'src/features/Search/search.interfaces';
 import { ApplicationState } from 'src/store';
 import { getLinodeDescription } from 'src/utilities/getLinodeDescription';
 import { ObjectStorageBucket } from '@linode/api-v4/lib/object-storage';
-import { objectStorageClusterDisplay } from 'src/constants';
 import { readableBytes } from 'src/utilities/unitConversions';
+import { Region } from '@linode/api-v4/lib/regions';
 
 export type State = ApplicationState['__resources'];
 
@@ -129,7 +129,8 @@ export const nodeBalToSearchableItem = (
 });
 
 export const kubernetesClusterToSearchableItem = (
-  kubernetesCluster: KubernetesCluster
+  kubernetesCluster: KubernetesCluster,
+  regions: Region[]
 ): SearchableItem => ({
   label: kubernetesCluster.label,
   value: kubernetesCluster.id,
@@ -144,7 +145,7 @@ export const kubernetesClusterToSearchableItem = (
     region: kubernetesCluster.region,
     k8s_version: kubernetesCluster.k8s_version,
     tags: kubernetesCluster.tags,
-    description: getDescriptionForCluster(kubernetesCluster),
+    description: getDescriptionForCluster(kubernetesCluster, regions),
   },
 });
 
@@ -159,7 +160,7 @@ export const bucketToSearchableItem = (
     path: `/object-storage/buckets/${bucket.cluster}/${bucket.label}`,
     created: bucket.created,
     label: bucket.label,
-    region: objectStorageClusterDisplay[bucket.cluster],
+    cluster: bucket.cluster,
     description: readableBytes(bucket.size).formatted,
   },
 });
@@ -167,11 +168,8 @@ export const bucketToSearchableItem = (
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 
-export default createSelector<State, NodeBalancer[], SearchableItem[]>(
-  nodebalSelector,
-  (nodebalancers) => {
-    const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
+export default createSelector(nodebalSelector, (nodebalancers) => {
+  const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
 
-    return [...searchableNodebalancers];
-  }
-);
+  return [...searchableNodebalancers];
+});

@@ -12,22 +12,15 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
-import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withImages, {
   DefaultProps as ImagesProps,
@@ -47,10 +40,11 @@ import { debounce } from 'throttle-debounce';
 import { queryClient } from 'src/queries/base';
 import { queryKey } from 'src/queries/profile';
 import withProfile, { ProfileProps } from 'src/components/withProfile';
+import LandingHeader from 'src/components/LandingHeader';
 
 type ClassNames = 'backButton' | 'createTitle';
 
-const styles = (theme: Theme) =>
+const styles = () =>
   createStyles({
     backButton: {
       margin: '5px 0 0 -16px',
@@ -58,10 +52,6 @@ const styles = (theme: Theme) =>
         width: 34,
         height: 34,
       },
-    },
-    createTitle: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
     },
   });
 
@@ -433,7 +423,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      classes,
       location,
       imagesData,
       mode,
@@ -500,22 +489,21 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={pageTitle} />
         {generalError && <Notice error text={generalError} />}
-        <Grid container justifyContent="space-between">
-          <Grid item className="py0">
-            <Breadcrumb
-              pathname={location.pathname}
-              labelTitle={pageTitle}
-              className={classes.createTitle}
-              crumbOverrides={[
-                {
-                  position: 1,
-                  label: 'StackScripts',
-                },
-              ]}
-              data-qa-create-stackscript-breadcrumb
-            />
-          </Grid>
-        </Grid>
+        <LandingHeader
+          title={pageTitle}
+          breadcrumbProps={{
+            pathname: location.pathname,
+            breadcrumbDataAttrs: {
+              'data-qa-create-stackscript-breadcrumb': true,
+            },
+            crumbOverrides: [
+              {
+                position: 1,
+                label: 'StackScripts',
+              },
+            ],
+          }}
+        />
         {shouldDisable && (
           <Notice
             text={`You don't have permission to ${

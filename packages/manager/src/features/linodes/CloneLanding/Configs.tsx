@@ -1,7 +1,7 @@
 import { Config } from '@linode/api-v4/lib/linodes';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
-import { makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import Paginate from 'src/components/Paginate';

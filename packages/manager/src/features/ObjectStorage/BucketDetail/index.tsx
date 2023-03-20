@@ -1,31 +1,16 @@
 import { ObjectStorageClusterID } from '@linode/api-v4/lib/object-storage';
 import * as React from 'react';
 import { matchPath, RouteComponentProps } from 'react-router-dom';
-import Breadcrumb from 'src/components/Breadcrumb';
-import Box from 'src/components/core/Box';
 import TabPanels from 'src/components/core/ReachTabPanels';
 import Tabs from 'src/components/core/ReachTabs';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import DocsLink from 'src/components/DocsLink';
 import SafeTabPanel from 'src/components/SafeTabPanel';
 import SuspenseLoader from 'src/components/SuspenseLoader';
 import TabLinkList from 'src/components/TabLinkList';
 import { BucketAccess } from './BucketAccess';
+import LandingHeader from 'src/components/LandingHeader';
 
 const ObjectList = React.lazy(() => import('./BucketDetail'));
-// const Access = React.lazy(() => import('./BucketAccess'));
 const BucketSSL = React.lazy(() => import('./BucketSSL'));
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    [theme.breakpoints.down('md')]: {
-      paddingRight: theme.spacing(),
-    },
-    [theme.breakpoints.down('sm')]: {
-      paddingLeft: theme.spacing(),
-    },
-  },
-}));
 
 interface MatchProps {
   clusterId: ObjectStorageClusterID;
@@ -35,8 +20,6 @@ interface MatchProps {
 type CombinedProps = RouteComponentProps<MatchProps>;
 
 export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
-  const classes = useStyles();
-
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
@@ -68,27 +51,21 @@ export const BucketDetailLanding: React.FC<CombinedProps> = (props) => {
 
   return (
     <>
-      <Box
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        className={classes.root}
-      >
-        <Breadcrumb
-          // The actual pathname doesn't match what we want in the Breadcrumb,
-          // so we create a custom one.
-          pathname={`/object-storage/${bucketName}`}
-          crumbOverrides={[
+      <LandingHeader
+        // Purposefully not using the title prop here because we want to use the `bucketName` override.
+        docsLabel="Docs"
+        docsLink="https://www.linode.com/docs/platform/object-storage/"
+        breadcrumbProps={{
+          pathname: `/object-storage/${bucketName}`,
+          labelOptions: { noCap: true },
+          crumbOverrides: [
             {
               position: 1,
               label: 'Object Storage',
             },
-          ]}
-          labelOptions={{ noCap: true }}
-        />
-        <DocsLink href="https://www.linode.com/docs/platform/object-storage/" />
-      </Box>
+          ],
+        }}
+      />
 
       <Tabs index={index} onChange={handleTabChange}>
         <TabLinkList tabs={tabs} />

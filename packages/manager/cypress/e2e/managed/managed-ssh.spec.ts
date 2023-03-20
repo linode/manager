@@ -2,6 +2,7 @@
  * @file Integration tests for Managed SSH access.
  */
 
+import type { ManagedLinodeSetting } from '@linode/api-v4/types';
 import {
   managedLinodeSettingFactory,
   managedSSHSettingFactory,
@@ -48,19 +49,18 @@ describe('Managed SSH Access tab', () => {
    */
   it('shows Managed SSH access info and list of Linodes', () => {
     const sshKey = randomPublicSshKey();
+    const mockManagedLinodes = managedLinodeSettingFactory.buildList(5);
 
     // Confirm that public SSH key is shown, and managed Linodes are shown.
     mockGetSshPublicKey(sshKey).as('getSshPublicKey');
-    mockGetLinodeSettings(managedLinodeSettingFactory.buildList(5)).as(
-      'getLinodeSettings'
-    );
+    mockGetLinodeSettings(mockManagedLinodes).as('getLinodeSettings');
+
     visitUrlWithManagedEnabled('/managed/ssh-access');
     cy.wait(['@getSshPublicKey', '@getLinodeSettings']);
 
     cy.findByText(sshKey).should('be.visible');
-
-    [0, 1, 2, 3, 4].forEach((managedLinodeId) => {
-      cy.findByText(`Managed Linode ${managedLinodeId}`).should('be.visible');
+    mockManagedLinodes.forEach((mockManagedLinode: ManagedLinodeSetting) => {
+      cy.findByText(mockManagedLinode.label).should('be.visible');
     });
 
     // Reset mocks, reload page, confirm that no managed Linodes are shown.

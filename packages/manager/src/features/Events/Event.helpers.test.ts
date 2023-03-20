@@ -1,7 +1,9 @@
 import { EventAction } from '@linode/api-v4/lib/account';
+import { eventFactory } from 'src/factories/events';
 import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import {
   filterUniqueEvents,
+  formatEventWithAppendedText,
   formatEventWithUsername,
   maybeRemoveTrailingPeriod,
   percentCompleteHasUpdated,
@@ -121,6 +123,46 @@ describe('Utility Functions', () => {
           message
         )
       ).toEqual(message);
+    });
+
+    it('should not reappend a username to any event already containing one', () => {
+      const message = 'a message by **test-user-001**';
+      expect(
+        formatEventWithUsername(
+          'resize_disk' as EventAction,
+          'test-user-001',
+          message
+        )
+      ).toEqual(message);
+    });
+  });
+
+  describe('formatEventWithAppendedText utility', () => {
+    it('should append text to the end of an existing event message', () => {
+      const message = 'a message by **test-user-001**.';
+      const appendedText = 'Text to append.';
+      const mockEvent = eventFactory.build({
+        username: 'test-user-001',
+      });
+
+      expect(
+        formatEventWithAppendedText(mockEvent, message, appendedText)
+      ).toEqual(`${message} ${appendedText}`);
+    });
+
+    it('should append hyperlinked text to the end of an existing event message', () => {
+      const message = 'a message.';
+      const appendedText = 'Link to append.';
+      const link = 'https://cloud.linode.com';
+      const mockEvent = eventFactory.build({
+        username: null,
+      });
+
+      expect(
+        formatEventWithAppendedText(mockEvent, message, appendedText, link)
+      ).toEqual(
+        `${message} <a href=\"${link}\" target=_blank>${appendedText}</a>.`
+      );
     });
   });
 

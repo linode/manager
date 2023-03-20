@@ -1,19 +1,21 @@
-import { StyledEngineProvider } from '@mui/material/styles';
 import * as React from 'react';
-import { ThemeProvider, Theme } from 'src/components/core/styles';
-import { dark, light } from 'src/themes';
+import { StyledEngineProvider } from '@mui/material/styles';
 import { isProductionBuild } from './constants';
 import { useAuthentication } from './hooks/useAuthentication';
 import { usePreferences } from './queries/preferences';
+import { ThemeName } from './themeFactory';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { ThemeProvider, Theme } from '@mui/material/styles';
+import {
+  getThemeFromPreferenceValue,
+  ThemeChoice,
+  themes,
+} from './utilities/theme';
 
 declare module '@mui/styles/defaultTheme' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface DefaultTheme extends Theme {}
 }
-
-export type ThemeChoice = 'light' | 'dark';
-
-const themes: Record<ThemeChoice, Theme> = { light, dark };
 
 const setActiveHighlightTheme = (value: ThemeChoice) => {
   /**
@@ -56,28 +58,29 @@ const setActiveHighlightTheme = (value: ThemeChoice) => {
   });
 };
 
-const isThemeChoice = (value: unknown): value is ThemeChoice => {
-  return typeof value === 'string' && themes[value] !== undefined;
-};
+interface Props {
+  children: React.ReactNode;
+  /** Allows theme to be overwritten. Used for Storybook theme switching */
+  theme?: ThemeName;
+}
 
-const LinodeThemeWrapper: React.FC = ({ children }) => {
+const LinodeThemeWrapper = ({ children, theme }: Props) => {
   // fallback to default when rendering themed components pre-authentication
   const isAuthenticated = !!useAuthentication().token;
   const { data: preferences } = usePreferences(isAuthenticated);
+  const isSystemInDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-  const themePreference = preferences?.theme;
-
-  const themeChoice: ThemeChoice = isThemeChoice(themePreference)
-    ? themePreference
-    : 'light';
+  const selectedTheme =
+    theme ??
+    getThemeFromPreferenceValue(preferences?.theme, isSystemInDarkMode);
 
   React.useEffect(() => {
-    toggleTheme(themeChoice);
-  }, [themeChoice]);
+    toggleTheme(selectedTheme);
+  }, [selectedTheme]);
 
   return (
     <StyledEngineProvider injectFirst>
-      <ThemeProvider theme={themes[themeChoice]}>{children}</ThemeProvider>
+      <ThemeProvider theme={themes[selectedTheme]}>{children}</ThemeProvider>
     </StyledEngineProvider>
   );
 };
