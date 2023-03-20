@@ -4,7 +4,7 @@ import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
 import CloseAccountDialog from './CloseAccountDialog';
 
-const CloseAccountSetting: React.FC<{}> = () => {
+const CloseAccountSetting = () => {
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   return (

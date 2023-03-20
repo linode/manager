@@ -8,13 +8,16 @@ export interface AgreementsProps {
   agreements: UseQueryResult<Agreements, APIError[]>;
 }
 
-export default (Component: React.ComponentType<any>) => {
-  return (props: any) => {
+// P represents the props of the component we're wrapping
+export default <P extends AgreementsProps>(
+  Component: React.ComponentType<P>
+) => {
+  return (props: Omit<P, keyof AgreementsProps>) => {
     const agreements = useAccountAgreements();
 
     return React.createElement(Component, {
       ...props,
       agreements,
-    });
+    } as P);
   };
 };
