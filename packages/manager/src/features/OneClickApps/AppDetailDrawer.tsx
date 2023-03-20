@@ -4,7 +4,7 @@ import { Theme } from '@mui/material/styles';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import { oneClickApps } from './FakeSpec';
 import Close from '@mui/icons-material/Close';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import Button from 'src/components/Button/Button';
 import Box from 'src/components/core/Box';
 import Drawer from 'src/components/core/Drawer';
