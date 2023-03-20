@@ -4,7 +4,10 @@ import Bell from 'src/assets/icons/notification.svg';
 import { makeStyles } from '@mui/styles';
 import { Theme } from '@mui/material/styles';
 import { NotificationMenu } from 'src/features/NotificationCenter';
-import { menuId } from '../NotificationCenter/NotificationContext';
+import {
+  menuId,
+  notificationContext as _notificationContext,
+} from '../NotificationCenter/NotificationContext';
 import { useStyles } from './iconStyles';
 import TopMenuIcon from './TopMenuIcon';
 import { useFormattedNotifications } from '../NotificationCenter/NotificationData/useFormattedNotifications';
@@ -57,6 +60,7 @@ export const NotificationButton = () => {
 
   const formattedNotifications = useFormattedNotifications();
   const eventNotifications = useEventNotifications();
+  const notificationContext = React.useContext(_notificationContext);
 
   const numNotifications =
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
@@ -64,30 +68,40 @@ export const NotificationButton = () => {
 
   return (
     <Menu id={menuId}>
-      {({ isExpanded }) => (
-        <>
-          <TopMenuIcon title="Notifications">
-            <MenuButton
-              aria-label="Notifications"
-              className={`${iconClasses.icon} ${classes.menuButton} ${
-                isExpanded ? iconClasses.hover : ''
-              }`}
-            >
-              <Bell />
-              {numNotifications > 0 ? (
-                <div className={iconClasses.badge}>
-                  <p>{numNotifications}</p>
-                </div>
-              ) : null}
-            </MenuButton>
-          </TopMenuIcon>
-          <MenuPopover className={classes.menuPopover}>
-            <MenuItems className={classes.menuItem}>
-              <NotificationMenu open={isExpanded} />
-            </MenuItems>
-          </MenuPopover>
-        </>
-      )}
+      <>
+        <TopMenuIcon title="Notifications">
+          <MenuButton
+            aria-label="Notifications"
+            className={`${iconClasses.icon} ${classes.menuButton} ${
+              notificationContext.menuOpen ? iconClasses.hover : ''
+            }`}
+            onClick={
+              notificationContext.menuOpen
+                ? notificationContext.closeMenu
+                : notificationContext.openMenu
+            }
+            onKeyDown={(e) =>
+              e.key === 'Enter'
+                ? notificationContext.menuOpen
+                  ? notificationContext.closeMenu
+                  : notificationContext.openMenu
+                : null
+            }
+          >
+            <Bell />
+            {numNotifications > 0 ? (
+              <div className={iconClasses.badge}>
+                <p>{numNotifications}</p>
+              </div>
+            ) : null}
+          </MenuButton>
+        </TopMenuIcon>
+        <MenuPopover className={classes.menuPopover}>
+          <MenuItems className={classes.menuItem}>
+            <NotificationMenu open={notificationContext.menuOpen} />
+          </MenuItems>
+        </MenuPopover>
+      </>
     </Menu>
   );
 };
