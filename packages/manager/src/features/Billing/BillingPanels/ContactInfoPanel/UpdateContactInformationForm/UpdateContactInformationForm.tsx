@@ -40,10 +40,7 @@ interface State {
   errResponse: APIError[] | undefined;
 }
 
-type CombinedProps = Props &
-  // WithStyles<ClassNames> &
-  WithNotifications &
-  FeatureFlagConsumerProps;
+type CombinedProps = Props & WithNotifications & FeatureFlagConsumerProps;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
