@@ -27,7 +27,6 @@ export const cancelAllTestEntityTransfers = async (): Promise<void> => {
       entityTransfer?.entities?.linodes
     );
     if (isTest) {
-      console.log(`entityTransfer - details: ${entityTransfer}`);
       // We want to send these requests sequentially
       // to avoid overloading the API.
       // eslint-disable-next-line no-await-in-loop
