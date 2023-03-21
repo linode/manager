@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { useInfiniteQuery, useMutation, useQuery } from 'react-query';
 import { queryClient, queryPresets } from './base';
@@ -70,7 +70,7 @@ export const useObjectStorageBuckets = (
     }
   );
 
-export const useObjectStorageAccessKeys = (params: any) =>
+export const useObjectStorageAccessKeys = (params: Params) =>
   useQuery<ResourcePage<ObjectStorageKey>, APIError[]>(
     [`${queryKey}-access-keys`, params],
     () => getObjectStorageKeys(params),

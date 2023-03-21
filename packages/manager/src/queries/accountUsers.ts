@@ -1,15 +1,15 @@
 import { getUser, getUsers, User } from '@linode/api-v4/lib/account';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { useProfile } from 'src/queries/profile';
 
 export const queryKey = 'account-users';
 
-export const useAccountUsers = (params?: any) => {
+export const useAccountUsers = (params?: Params) => {
   const { data: profile } = useProfile();
 
   return useQuery<ResourcePage<User>, APIError[]>(
-    [queryKey, params.page, params.page_size],
+    [queryKey, params?.page, params?.page_size],
     () => getUsers(params),
     {
       enabled: !profile?.restricted,

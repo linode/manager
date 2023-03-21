@@ -1,4 +1,9 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { doesItemExistInPaginatedStore, queryClient } from './base';
 import { EntityEvent } from '@linode/api-v4';
@@ -20,7 +25,7 @@ import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'domains';
 
-export const useDomainsQuery = (params: any, filter: any) =>
+export const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>(
     [`${queryKey}-list`, params, filter],
     () => getDomains(params, filter),

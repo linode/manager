@@ -10,14 +10,14 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { StackScript, StackScriptPayload } from './types';
 
 /**
  * Returns a paginated list of StackScripts.
  *
  */
-export const getStackScripts = (params?: any, filter?: any) =>
+export const getStackScripts = (params?: Params, filter?: Filter) =>
   Request<Page<StackScript>>(
     setURL(`${API_ROOT}/linode/stackscripts`),
     setMethod('GET'),

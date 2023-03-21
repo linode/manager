@@ -1,3 +1,5 @@
+import { Filter } from '@linode/api-v4';
+
 /**
  * Generates a "found in filter" list filter for the API.
  * @example
@@ -30,7 +32,7 @@ export const generatePollingFilter = (
   inIds: number[] = [],
   neqIds: number[] = []
 ) => {
-  let filter: any = { created: { '+gte': timestamp } };
+  let filter: Filter = { created: { '+gte': timestamp } };
 
   if (neqIds.length > 0) {
     filter = {

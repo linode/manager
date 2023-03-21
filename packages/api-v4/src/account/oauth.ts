@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import { OAuthClient, OAuthClientRequest } from './types';
 
 /**
@@ -19,7 +19,7 @@ import { OAuthClient, OAuthClientRequest } from './types';
  * Returns a paginated list of OAuth apps authorized on your account.
  *
  */
-export const getOAuthClients = (params?: any, filter?: any) =>
+export const getOAuthClients = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<OAuthClient>>(
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('GET'),

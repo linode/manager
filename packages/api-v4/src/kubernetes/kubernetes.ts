@@ -7,7 +7,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   CreateKubeClusterPayload,
   KubeConfigResponse,
@@ -22,7 +22,7 @@ import {
  *
  * Gets a list of a user's Kubernetes clusters
  */
-export const getKubernetesClusters = (params?: any, filters?: any) =>
+export const getKubernetesClusters = (params?: Params, filters?: Filter) =>
   Request<Page<KubernetesCluster>>(
     setMethod('GET'),
     setParams(params),
@@ -112,7 +112,7 @@ export const resetKubeConfig = (clusterId: number) =>
  *
  */
 
-export const getKubernetesVersions = (params?: any, filters?: any) =>
+export const getKubernetesVersions = (params?: Params, filters?: Filter) =>
   Request<Page<KubernetesVersion>>(
     setMethod('GET'),
     setXFilter(filters),
@@ -140,8 +140,8 @@ export const getKubernetesVersion = (versionID: string) =>
 
 export const getKubernetesClusterEndpoints = (
   clusterID: number,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filters?: Filter
 ) =>
   Request<Page<KubernetesEndpointResponse>>(
     setMethod('GET'),

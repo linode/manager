@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import {
   createLinode as _createLinode,
   deleteLinode as _deleteLinode,
@@ -64,7 +65,7 @@ export const rebootLinode = createRequestThunk(
   ({ linodeId, configId }) => _rebootLinode(linodeId, configId)
 );
 
-const getAllLinodes = (payload: { params?: any; filter?: any }) =>
+const getAllLinodes = (payload: { params?: Params; filter?: Filter }) =>
   getAll<Linode>((passedParams, passedFilter) =>
     getLinodes(passedParams, passedFilter)
   )(payload.params, payload.filter);

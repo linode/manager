@@ -11,7 +11,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   ObjectStorageBucket,
   ObjectStorageBucketAccessRequest,
@@ -40,7 +40,7 @@ export const getBucket = (clusterId: string, bucketName: string) =>
  *
  * Gets a list of a user's Object Storage Buckets.
  */
-export const getBuckets = (params?: any, filters?: any) =>
+export const getBuckets = (params?: Params, filters?: Filter) =>
   Request<Page<ObjectStorageBucket>>(
     setMethod('GET'),
     setParams(params),
@@ -55,8 +55,8 @@ export const getBuckets = (params?: any, filters?: any) =>
  */
 export const getBucketsInCluster = (
   clusterId: string,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filters?: Filter
 ) =>
   Request<Page<ObjectStorageBucket>>(
     setMethod('GET'),

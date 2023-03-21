@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   CreateDatabasePayload,
   Database,
@@ -31,12 +31,12 @@ import {
  * Return a paginated list of databases on this account.
  *
  */
-export const getDatabases = (params?: any, filters?: any) =>
+export const getDatabases = (params?: Params, filter?: Filter) =>
   Request<Page<DatabaseInstance>>(
     setURL(`${API_ROOT}/databases/instances`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filter)
   );
 
 /**
@@ -45,12 +45,12 @@ export const getDatabases = (params?: any, filters?: any) =>
  * Return a paginated list of available plans/types for databases
  *
  */
-export const getDatabaseTypes = (params?: any, filters?: any) =>
+export const getDatabaseTypes = (params?: Params, filter?: Filter) =>
   Request<Page<DatabaseType>>(
     setURL(`${API_ROOT}/databases/types`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filter)
   );
 
 /**
@@ -71,12 +71,12 @@ export const getDatabaseType = (typeSlug: string) =>
  * Return information on available versions per engine that we offer
  *
  */
-export const getDatabaseEngines = (params?: any, filters?: any) =>
+export const getDatabaseEngines = (params?: Params, filter?: Filter) =>
   Request<Page<DatabaseEngine>>(
     setURL(`${API_ROOT}/databases/engines`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filter)
   );
 
 /**
@@ -115,14 +115,14 @@ export const createDatabase = (
  */
 export const getEngineDatabases = (
   engine: Engine,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   Request<Page<Database>>(
     setURL(`${API_ROOT}/databases/${engine}/instances`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filter)
   );
 
 /**
@@ -175,14 +175,14 @@ export const deleteDatabase = (engine: Engine, databaseID: number) =>
 export const getDatabaseBackups = (
   engine: Engine,
   databaseID: number,
-  params?: any,
-  filters?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   Request<Page<DatabaseBackup>>(
     setURL(`${API_ROOT}/databases/${engine}/instances/${databaseID}/backups`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filter)
   );
 
 /**

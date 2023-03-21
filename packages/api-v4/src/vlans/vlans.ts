@@ -1,6 +1,6 @@
 import { BETA_API_ROOT as API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 
 import { VLAN } from './types';
 
@@ -10,7 +10,7 @@ import { VLAN } from './types';
  * Return a paginated list of Virtual LANS (VLANS) on this account.
  *
  */
-export const getVlans = (params?: any, filters?: any) =>
+export const getVlans = (params?: Params, filters?: Filter) =>
   Request<Page<VLAN>>(
     setURL(`${API_ROOT}/networking/vlans`),
     setMethod('GET'),

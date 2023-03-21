@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Token } from './types';
 
 /**
@@ -9,7 +9,7 @@ import { Token } from './types';
  * Returns list of apps that have been authorized to access your account.
  *
  */
-export const getAppTokens = (params?: any, filters?: any) =>
+export const getAppTokens = (params?: Params, filters?: Filter) =>
   Request<Page<Token>>(
     setMethod('GET'),
     setParams(params),

@@ -11,7 +11,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   CloneDomainPayload,
   CreateDomainPayload,
@@ -24,12 +24,12 @@ import {
  * Returns a paginated list of Domains.
  *
  */
-export const getDomains = (params?: any, filters?: any) =>
+export const getDomains = (params?: Params, filter?: Filter) =>
   Request<Page<Domain>>(
     setURL(`${API_ROOT}/domains`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filter)
   );
 
 /**

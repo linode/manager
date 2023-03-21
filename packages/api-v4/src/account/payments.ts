@@ -13,7 +13,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import {
   ClientToken,
   ExecutePayload,
@@ -34,7 +34,7 @@ import {
  * on your account.
  *
  */
-export const getPayments = (params?: any, filter?: any) =>
+export const getPayments = (params?: Params, filter?: Filter) =>
   Request<ResourcePage<Payment>>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
@@ -153,7 +153,7 @@ export const saveCreditCard = (data: SaveCreditCardData) => {
  * on a user's account
  *
  */
-export const getPaymentMethods = (params?: any) => {
+export const getPaymentMethods = (params?: Params) => {
   return Request<ResourcePage<PaymentMethod>>(
     setURL(`${API_ROOT}/account/payment-methods`),
     setMethod('GET'),

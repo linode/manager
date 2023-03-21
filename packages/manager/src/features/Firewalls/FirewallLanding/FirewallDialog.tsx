@@ -2,16 +2,12 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
-import { DispatchProps } from 'src/containers/firewalls.container';
+import { useDeleteFirewall, useMutateFirewall } from 'src/queries/firewalls';
 import { capitalize } from 'src/utilities/capitalize';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export type Mode = 'enable' | 'disable' | 'delete';
-interface Props
-  extends Pick<
-    DispatchProps,
-    'enableFirewall' | 'disableFirewall' | 'deleteFirewall'
-  > {
+interface Props {
   open: boolean;
   mode: Mode;
   closeDialog: () => void;
@@ -29,12 +25,20 @@ const FirewallDialog: React.FC<CombinedProps> = (props) => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
 
+  const { mutateAsync: updateFirewall } = useMutateFirewall();
+  const { mutateAsync: deleteFirewall } = useDeleteFirewall();
+
+  const enableFirewall = ({ id }: { id: number }) => {
+    return updateFirewall({ id, payload: { status: 'enabled' } });
+  };
+
+  const disableFirewall = ({ id }: { id: number }) => {
+    return updateFirewall({ id, payload: { status: 'disabled' } });
+  };
+
   const {
     open,
     closeDialog,
-    deleteFirewall,
-    disableFirewall,
-    enableFirewall,
     mode,
     selectedFirewallID,
     selectedFirewallLabel: label,
@@ -71,7 +75,7 @@ const FirewallDialog: React.FC<CombinedProps> = (props) => {
 
     const request = determineRequest();
 
-    request(selectedFirewallID)
+    request({ id: selectedFirewallID })
       .then((_) => {
         setSubmitting(false);
         closeDialog();

@@ -2,6 +2,7 @@
  * @note Make sure you add the linode_id to the disk object!`
  */
 
+import { Filter, Params } from '@linode/api-v4';
 import {
   createLinodeDisk as _createLinodeDisk,
   deleteLinodeDisk as _deleteLinodeDisk,
@@ -47,7 +48,7 @@ export const getLinodeDisks = createRequestThunk(
 export const getAllLinodeDisks = createRequestThunk(
   getAllLinodeDisksActions,
   ({ linodeId }) =>
-    getAll<Entity>((diskParams: any, filter: any) =>
+    getAll<Entity>((diskParams: Params, filter: Filter) =>
       _getLinodeDisks(linodeId, diskParams, filter)
     )().then((result) => ({
       results: result.results,

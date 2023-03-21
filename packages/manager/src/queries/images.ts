@@ -11,7 +11,12 @@ import {
   updateImage,
   UploadImageResponse,
 } from '@linode/api-v4';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import {
   doesItemExistInPaginatedStore,
@@ -22,7 +27,7 @@ import { getAll } from 'src/utilities/getAll';
 
 export const queryKey = 'images';
 
-export const useImagesQuery = (params: any, filters: any) =>
+export const useImagesQuery = (params: Params, filters: Filter) =>
   useQuery<ResourcePage<Image>, APIError[]>(
     [`${queryKey}-list`, params, filters],
     () => getImages(params, filters),
@@ -79,14 +84,17 @@ export const removeImageFromCache = () =>
   queryClient.invalidateQueries(`${queryKey}-list`);
 
 // Get all Images
-export const getAllImages = (passedParams: any = {}, passedFilter: any = {}) =>
+export const getAllImages = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
   getAll<Image>((params, filter) =>
     getImages({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
 
 export const useAllImagesQuery = (
-  params: any = {},
-  filters: any = {},
+  params: Params = {},
+  filters: Filter = {},
   enabled = true
 ) =>
   useQuery<Image[], APIError[]>(
