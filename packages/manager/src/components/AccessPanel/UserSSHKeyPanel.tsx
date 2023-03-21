@@ -88,7 +88,7 @@ const UserSSHKeyPanel = (props: Props) => {
     data: sshKeys,
     isLoading: isSSHKeysLoading,
     error: sshKeysError,
-  } = useSSHKeysQuery(undefined, undefined, isRestricted);
+  } = useSSHKeysQuery({}, {}, isRestricted);
 
   const sshKeyLabels = sshKeys?.data.map((key) => key.label) ?? [];
   const sshKeyTotal = sshKeys?.results ?? 0;

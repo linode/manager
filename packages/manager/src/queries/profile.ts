@@ -17,7 +17,7 @@ import {
   deleteSSHKey,
   updateSSHKey,
 } from '@linode/api-v4/lib/profile';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
@@ -85,7 +85,11 @@ export const useVerifyPhoneVerificationCodeMutation = () =>
     verifyPhoneNumberCode
   );
 
-export const useSSHKeysQuery = (params?: any, filter?: any, enabled = true) =>
+export const useSSHKeysQuery = (
+  params?: Params,
+  filter?: Filter,
+  enabled = true
+) =>
   useQuery(
     [queryKey, 'ssh-keys', params, filter],
     () => getSSHKeys(params, filter),
