@@ -7,8 +7,10 @@ import CircleProgress from 'src/components/CircleProgress';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
-import { makeStyles, Theme, WithTheme } from 'src/components/core/styles';
+import { makeStyles, WithTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
+import { TooltipProps as _TooltipProps } from 'src/components/core/Tooltip';
 import HelpIcon from 'src/components/HelpIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
@@ -88,33 +90,28 @@ interface BaseProps {
   noMarginTop?: boolean;
   optional?: boolean;
   required?: boolean;
-  tooltipPosition?:
-    | 'bottom'
-    | 'bottom-end'
-    | 'bottom-start'
-    | 'left-end'
-    | 'left-start'
-    | 'left'
-    | 'right-end'
-    | 'right-start'
-    | 'right'
-    | 'top-end'
-    | 'top-start'
-    | 'top';
-  tooltipText?: string | JSX.Element;
-  tooltipClasses?: string;
-  tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement> | undefined;
   value?: Value;
 }
 
 type Value = string | number | undefined | null;
+
+interface ToolTipProps {
+  tooltipPosition?: _TooltipProps['placement'];
+  tooltipText?: string | JSX.Element;
+  tooltipInteractive?: boolean;
+  tooltipClasses?: string;
+  tooltipOnMouseEnter?: React.MouseEventHandler<HTMLDivElement>;
+}
 
 interface TextFieldPropsOverrides extends TextFieldProps {
   // We override this prop to make it required
   label: string;
 }
 
-export type Props = BaseProps & TextFieldProps & TextFieldPropsOverrides;
+export type Props = BaseProps &
+  TextFieldProps &
+  TextFieldPropsOverrides &
+  ToolTipProps;
 
 type CombinedProps = Props & WithTheme;
 
@@ -152,6 +149,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
     tooltipPosition,
     tooltipText,
     tooltipClasses,
+    tooltipInteractive,
     tooltipOnMouseEnter,
     type,
     value,
@@ -337,6 +335,7 @@ export const LinodeTextField: React.FC<CombinedProps> = (props) => {
             classes={{ popper: tooltipClasses }}
             text={tooltipText}
             tooltipPosition={tooltipPosition}
+            interactive={tooltipInteractive}
             onMouseEnter={tooltipOnMouseEnter}
           />
         )}

@@ -3,12 +3,8 @@ import * as React from 'react';
 import { useParams } from 'react-router-dom';
 import PendingIcon from 'src/assets/icons/pending.svg';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  makeStyles,
-  Theme,
-  useTheme,
-} from 'src/components/core/styles';
+import { createStyles, makeStyles, useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';

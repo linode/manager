@@ -3,7 +3,8 @@ import { SecurityQuestion } from '@linode/api-v4/lib/profile';
 import Box from 'src/components/core/Box';
 import { Question } from './Question';
 import { Answer } from './Answer';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { Item } from 'src/components/EnhancedSelect';
 
 interface Props {

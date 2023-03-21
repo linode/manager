@@ -6,7 +6,8 @@ import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Tag from 'src/components/Tag';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { Theme, makeStyles } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import { updateTagsSuggestionsData, useTagSuggestions } from 'src/queries/tags';
 import { useProfile } from 'src/queries/profile';
 

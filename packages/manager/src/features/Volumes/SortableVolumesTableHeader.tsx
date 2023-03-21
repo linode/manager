@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';

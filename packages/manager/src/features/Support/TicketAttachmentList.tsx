@@ -3,12 +3,8 @@ import InsertPhoto from '@mui/icons-material/InsertPhoto';
 import { isEmpty, slice } from 'ramda';
 import * as React from 'react';
 import { compose, withStateHandlers } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';

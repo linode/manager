@@ -3,12 +3,8 @@ import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { assocPath, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import ImageEmptyState from 'src/features/linodes/LinodesCreate/TabbedContent/ImageEmptyState';

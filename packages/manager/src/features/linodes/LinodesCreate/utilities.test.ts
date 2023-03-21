@@ -6,6 +6,7 @@ import {
   extendLinodes,
   formatLinodeSubheading,
   getRegionIDFromLinodeID,
+  getMonthlyAndHourlyNodePricing,
 } from './utilities';
 
 const linodeImage = imageFactory.build({
@@ -46,5 +47,21 @@ describe('getRegionIDFromLinodeID', () => {
     expect(getRegionIDFromLinodeID([linode1, linode2], 2020425)).toBe(
       'us-east'
     );
+  });
+});
+
+describe('Marketplace cluster pricing', () => {
+  it('should return the monthly and hourly price multipled by the number of nodes', () => {
+    expect(getMonthlyAndHourlyNodePricing(30, 0.045, 3)).toEqual({
+      monthlyPrice: 90,
+      hourlyPrice: 0.135,
+    });
+  });
+
+  it('should round the hourly price to 3 digits', () => {
+    expect(getMonthlyAndHourlyNodePricing(30, 0.045, 5)).toEqual({
+      monthlyPrice: 150,
+      hourlyPrice: 0.225,
+    });
   });
 });

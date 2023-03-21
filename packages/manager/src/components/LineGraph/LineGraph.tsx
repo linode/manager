@@ -10,12 +10,9 @@ import 'chartjs-adapter-luxon';
 import { curry } from 'ramda';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import {
-  makeStyles,
-  Theme,
-  useMediaQuery,
-  useTheme,
-} from 'src/components/core/styles';
+import { makeStyles, useTheme } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';

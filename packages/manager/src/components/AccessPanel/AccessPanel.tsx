@@ -2,12 +2,8 @@ import classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SuspenseLoader from 'src/components/SuspenseLoader';
@@ -45,7 +41,8 @@ interface Props {
   users?: UserSSHKeyObject[];
   requestKeys?: () => void;
   disabled?: boolean;
-  disabledReason?: string;
+  disabledReason?: string | JSX.Element;
+  tooltipInteractive?: boolean;
   hideStrengthLabel?: boolean;
   className?: string;
   small?: boolean;
@@ -78,6 +75,7 @@ class AccessPanel extends React.Component<CombinedProps> {
       users,
       disabled,
       disabledReason,
+      tooltipInteractive,
       hideStrengthLabel,
       className,
       isOptional,
@@ -104,6 +102,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             required={required}
             disabled={disabled}
             disabledReason={disabledReason || ''}
+            tooltipInteractive={tooltipInteractive}
             autoComplete="off"
             value={this.props.password || ''}
             label={label || 'Root Password'}

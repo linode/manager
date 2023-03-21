@@ -2,7 +2,8 @@ import * as React from 'react';
 import _ from 'lodash';
 import CopyTooltip from 'src/components/CopyTooltip';
 import DownloadTooltip from 'src/components/DownloadTooltip';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({

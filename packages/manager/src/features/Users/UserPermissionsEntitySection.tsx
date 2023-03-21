@@ -1,6 +1,7 @@
 import React from 'react';
 import { Grant, GrantLevel, GrantType } from '@linode/api-v4/lib/account';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Table from 'src/components/Table/Table';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/TableRow/TableRow';

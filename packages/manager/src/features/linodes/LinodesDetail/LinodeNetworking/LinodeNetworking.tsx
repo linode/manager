@@ -22,12 +22,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles,
-} from 'src/components/core/styles';
+import { createStyles, withStyles, WithStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';

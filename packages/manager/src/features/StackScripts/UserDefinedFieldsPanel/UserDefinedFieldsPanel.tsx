@@ -1,18 +1,21 @@
 import { UserDefinedField } from '@linode/api-v4/lib/stackscripts';
 import { APIError } from '@linode/api-v4/lib/types';
+import classnames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { makeStyles } from '@mui/styles';
+import { Theme } from '@mui/material/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Box from 'src/components/core/Box';
+import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
+import AppInfo from '../../linodes/LinodesCreate/AppInfo';
 import UserDefinedMultiSelect from './FieldTypes/UserDefinedMultiSelect';
 import UserDefinedSelect from './FieldTypes/UserDefinedSelect';
 import UserDefinedText from './FieldTypes/UserDefinedText';
-import AppInfo from '../../linodes/LinodesCreate/AppInfo';
-import classnames from 'classnames';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -44,6 +47,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: theme.spacing(),
     paddingBottom: theme.spacing(),
   },
+  clusterNotice: {
+    paddingTop: '1rem',
+  },
 }));
 
 interface Props {
@@ -55,6 +61,7 @@ interface Props {
   selectedUsername: string;
   appLogo?: JSX.Element;
   openDrawer?: (stackScriptLabel: string) => void;
+  setNumberOfNodesForAppCluster?: (num: number) => void;
 }
 
 type CombinedProps = Props;
@@ -107,6 +114,7 @@ const renderField = (
     );
   }
   if (isPasswordField(field.name)) {
+    const isTokenPassword = field.name === 'token_password';
     return (
       <Grid item xs={12} lg={5} key={field.name}>
         <UserDefinedText
@@ -134,8 +142,18 @@ const renderField = (
           field={field}
           updateFor={[field.label, udf_data[field.name], error]}
           isOptional={isOptional}
-          placeholder={field.example}
+          placeholder={isTokenPassword ? 'Enter your token' : field.example}
           error={error}
+          tooltip={
+            isTokenPassword ? (
+              <>
+                {' '}
+                To create an API token, go to{' '}
+                <Link to="/profile/tokens">your profile.</Link>
+              </>
+            ) : undefined
+          }
+          tooltipInteractive={isTokenPassword}
         />
       </Grid>
     );
@@ -173,11 +191,26 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
     udf_data,
     errors,
     appLogo,
+    setNumberOfNodesForAppCluster,
   } = props;
 
-  const [requiredUDFs, optionalUDFs] = seperateUDFsByRequiredStatus(
+  const [requiredUDFs, optionalUDFs] = separateUDFsByRequiredStatus(
     userDefinedFields!
   );
+
+  const isCluster = userDefinedFields?.some(
+    (udf) => udf.name === 'cluster_size'
+  );
+  const numberOfNodes =
+    udf_data['cluster_size'] !== undefined && udf_data['cluster_size'] !== null
+      ? Number(udf_data['cluster_size'])
+      : 0;
+
+  React.useEffect(() => {
+    if (setNumberOfNodesForAppCluster) {
+      setNumberOfNodesForAppCluster(numberOfNodes);
+    }
+  }, [setNumberOfNodesForAppCluster, numberOfNodes]);
 
   const isDrawerOpenable = openDrawer !== undefined;
 
@@ -197,12 +230,24 @@ const UserDefinedFieldsPanel = (props: CombinedProps) => {
         ) : null}
       </Box>
 
+      {isCluster ? (
+        <div
+          className={classes.clusterNotice}
+          data-testid="create-cluster-notice"
+        >
+          <Notice success>
+            <strong>
+              You are creating a cluster with {numberOfNodes} nodes.
+            </strong>
+          </Notice>
+        </div>
+      ) : null}
+
       {/* Required Fields */}
       {requiredUDFs.map((field: UserDefinedField) => {
         const error = getError(field, errors);
         return renderField(udf_data, handleChange, field, error);
       })}
-
       {/* Optional Fields */}
       {optionalUDFs.length !== 0 && (
         <ShowMoreExpansion name="Advanced Options" defaultExpanded={true}>
@@ -253,13 +298,16 @@ const isHeader = (udf: UserDefinedField) => {
  *
  * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
-const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
+const separateUDFsByRequiredStatus = (udfs: UserDefinedField[] = []) => {
   return udfs.reduce(
     (accum, eachUDF) => {
       /**
        * if the "default" key exists, it's optional
        */
-      if (eachUDF.hasOwnProperty('default')) {
+      if (
+        eachUDF.hasOwnProperty('default') &&
+        !eachUDF.hasOwnProperty('required')
+      ) {
         return [[...accum[0]], [...accum[1], eachUDF]];
       } else {
         return [[...accum[0], eachUDF], [...accum[1]]];
