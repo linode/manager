@@ -7,7 +7,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import {
   ObjectStorageKey,
   ObjectStorageKeyRequest,
@@ -19,7 +19,7 @@ import {
  *
  * Gets a list of a user's Object Storage Keys
  */
-export const getObjectStorageKeys = (params?: any, filters?: any) =>
+export const getObjectStorageKeys = (params?: Params, filters?: Filter) =>
   Request<Page<ObjectStorageKey>>(
     setMethod('GET'),
     setParams(params),

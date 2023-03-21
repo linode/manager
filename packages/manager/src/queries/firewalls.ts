@@ -1,4 +1,4 @@
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
@@ -60,8 +60,8 @@ export const useRemoveFirewallDeviceMutation = (
 
 const getAllFirewallDevices = (
   id: number,
-  passedParams: any = {},
-  passedFilter: any = {}
+  passedParams: Params = {},
+  passedFilter: Filter = {}
 ) =>
   getAll<FirewallDevice>((params, filter) =>
     getFirewallDevices(

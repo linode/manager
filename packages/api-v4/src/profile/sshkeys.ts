@@ -7,7 +7,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { SSHKey } from './types';
 
 /**
@@ -16,7 +16,7 @@ import { SSHKey } from './types';
  * Returns a collection of SSH Keys you've added to your Profile.
  *
  */
-export const getSSHKeys = (params?: any, filters?: any) =>
+export const getSSHKeys = (params?: Params, filters?: Filter) =>
   Request<Page<SSHKey>>(
     setMethod('GET'),
     setParams(params),
