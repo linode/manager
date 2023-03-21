@@ -1,4 +1,9 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { getAll } from 'src/utilities/getAll';
 import {
@@ -55,7 +60,7 @@ export const useRemoveFirewallDeviceMutation = (
     }
   );
 
-export const useFirewallsQuery = (params?: any, filter?: any) => {
+export const useFirewallsQuery = (params?: Params, filter?: Filter) => {
   return useQuery<ResourcePage<Firewall>, APIError[]>(
     [queryKey, 'paginated', params, filter],
     () => getFirewalls(params, filter),
@@ -135,8 +140,8 @@ export const useUpdateFirewallRulesMutation = (firewallId: number) => {
 
 const getAllFirewallDevices = (
   id: number,
-  passedParams: any = {},
-  passedFilter: any = {}
+  passedParams: Params = {},
+  passedFilter: Filter = {}
 ) =>
   getAll<FirewallDevice>((params, filter) =>
     getFirewallDevices(

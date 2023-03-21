@@ -1,3 +1,13 @@
+
+## [2023-03-20] - v0.20.0
+
+### Changed:
+- Domain length validation from 255 characters to 253 characters to match API's domain length validation [#8853](https://github.com/linode/manager/pull/8853)
+- Updated `tsup` [#8838](https://github.com/linode/manager/pull/8838)
+
+### Removed:
+- Unused packages + update lint-staged [#8860](https://github.com/linode/manager/pull/8860)
+
 ## [2023-02-13] - v0.19.0
 
 ### Changed:

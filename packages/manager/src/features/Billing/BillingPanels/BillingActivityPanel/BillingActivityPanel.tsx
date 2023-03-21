@@ -40,7 +40,7 @@ import {
 } from 'src/queries/accountBilling';
 import { isAfter, parseAPIDate } from 'src/utilities/date';
 import formatDate from 'src/utilities/formatDate';
-import { getAllWithArguments } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import { getTaxID } from '../../billingUtils';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -238,11 +238,10 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
       pdfErrors.delete(id);
       pdfLoading.add(id);
 
-      getAllInvoiceItems([invoiceId])
-        .then((response) => {
+      getAllInvoiceItems(invoiceId)
+        .then((invoiceItems) => {
           pdfLoading.delete(id);
 
-          const invoiceItems = response.data;
           const result = printInvoice(account!, invoice, invoiceItems, taxes);
 
           if (result.status === 'error') {
@@ -345,6 +344,7 @@ export const BillingActivityPanel: React.FC<Props> = (props) => {
             <TextTooltip
               displayText="Usage History may not reflect finalized invoice"
               tooltipText={AkamaiBillingInvoiceText}
+              sxTypography={{ paddingLeft: '4px' }}
             />
           </div>
         ) : null}
@@ -567,7 +567,10 @@ export const ActivityFeedItem: React.FC<ActivityFeedItemProps> = React.memo(
 // =============================================================================
 // Utilities
 // =============================================================================
-const getAllInvoiceItems = getAllWithArguments<InvoiceItem>(getInvoiceItems);
+const getAllInvoiceItems = (invoiceId: number) =>
+  getAll<InvoiceItem>((params, filter) =>
+    getInvoiceItems(invoiceId, params, filter)
+  )().then((data) => data.data);
 
 export const invoiceToActivityFeedItem = (
   invoice: Invoice

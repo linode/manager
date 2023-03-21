@@ -1,6 +1,11 @@
 import { NetworkTransfer } from '@linode/api-v4/lib/account/types';
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
 import { useInfiniteQuery, useQuery } from 'react-query';
+import {
+  APIError,
+  Filter,
+  Params,
+  ResourcePage,
+} from '@linode/api-v4/lib/types';
 import { getAll } from 'src/utilities/getAll';
 import { listToItemsByID, queryPresets } from './base';
 import { parseAPIDate } from 'src/utilities/date';
@@ -35,8 +40,8 @@ interface LinodeData {
 }
 
 export const useLinodesQuery = (
-  params: any = {},
-  filter: any = {},
+  params: Params = {},
+  filter: Filter = {},
   enabled: boolean = true
 ) => {
   return useQuery<ResourcePage<Linode>, APIError[]>(
@@ -48,8 +53,8 @@ export const useLinodesQuery = (
 
 // @todo get rid of "byId". It adds yet another manipulation of API that a dev must understand
 export const useLinodesByIdQuery = (
-  params: any = {},
-  filter: any = {},
+  params: Params = {},
+  filter: Filter = {},
   enabled: boolean = true
 ) => {
   return useQuery<LinodeData, APIError[]>(
@@ -60,8 +65,8 @@ export const useLinodesByIdQuery = (
 };
 
 export const useAllLinodesQuery = (
-  params: any = {},
-  filter: any = {},
+  params: Params = {},
+  filter: Filter = {},
   enabled: boolean = true
 ) => {
   return useQuery<Linode[], APIError[]>(
@@ -71,7 +76,7 @@ export const useAllLinodesQuery = (
   );
 };
 
-export const useInfiniteLinodesQuery = (filter: any) =>
+export const useInfiniteLinodesQuery = (filter: Filter) =>
   useInfiniteQuery<ResourcePage<Linode>, APIError[]>(
     [queryKey, filter],
     ({ pageParam }) => getLinodes({ page: pageParam, page_size: 25 }, filter),
@@ -182,12 +187,18 @@ export const useLinodeFirewalls = (linodeID: number) =>
   );
 
 /** Use with care; originally added to request all Linodes in a given region for IP sharing and transfer */
-const getAllLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
+const getAllLinodesRequest = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
   getAll<Linode>((params, filter) =>
     getLinodes({ ...params, ...passedParams }, { ...filter, ...passedFilter })
   )().then((data) => data.data);
 
-const getLinodesRequest = (passedParams: any = {}, passedFilter: any = {}) =>
+const getLinodesRequest = (
+  passedParams: Params = {},
+  passedFilter: Filter = {}
+) =>
   getLinodes(passedParams, passedFilter).then((data) => ({
     linodes: listToItemsByID(data.data),
     results: data.results,
@@ -205,8 +216,8 @@ const getAllLinodeTypes = () =>
 
 export const getAllLinodeFirewalls = (
   linodeId: number,
-  passedParams: any = {},
-  passedFilter: any = {}
+  passedParams: Params = {},
+  passedFilter: Filter = {}
 ) =>
   getAll<Firewall>((params, filter) =>
     getLinodeFirewalls(
