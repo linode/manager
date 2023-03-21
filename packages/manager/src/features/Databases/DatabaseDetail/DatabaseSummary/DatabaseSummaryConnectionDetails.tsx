@@ -45,33 +45,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: 'flex-end',
     padding: `${theme.spacing(1)} 0`,
   },
-  actionBtn: {
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    borderRight: '1px solid #c4c4c4',
-    '&:hover': {
-      opacity: 0.7,
-    },
-    '&:last-child': {
-      borderRight: 'none',
-    },
-    marginLeft: theme.spacing(2),
-  },
-  actionBtnDisabled: {
-    display: 'flex',
-    '& g': {
-      stroke: theme.color.disabledText,
-    },
-  },
-  actionText: {
-    color: theme.textColors.linkActiveLight,
-    whiteSpace: 'nowrap',
-  },
-  actionTextDisabled: {
-    color: theme.color.disabledText,
-    whiteSpace: 'nowrap',
-  },
   connectionDetailsCtn: {
     padding: '8px 15px',
     background: theme.bg.bgAccessRow,
@@ -107,6 +80,37 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 0,
     marginLeft: 4,
   },
+  caCertBtn: {
+    '& svg': {
+      marginRight: theme.spacing(),
+    },
+    '&:hover': {
+      opacity: 0.7,
+      backgroundColor: 'transparent',
+    },
+    color: theme.palette.primary.main,
+    marginLeft: theme.spacing(),
+    fontFamily: theme.font.normal,
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: '0.875rem',
+    lineHeight: '1.125rem',
+    minHeight: 'auto',
+    minWidth: 'auto',
+    padding: 0,
+    '&[disabled]': {
+      // Override disabled background color defined for dark mode
+      backgroundColor: 'transparent',
+      color: '#cdd0d5',
+      cursor: 'default',
+      '&:hover': {
+        backgroundColor: 'inherit',
+        textDecoration: 'none',
+      },
+      '& g': {
+        stroke: '#cdd0d5',
+      },
+    },
+  },
   provisioningText: {
     fontStyle: 'italic',
     fontWeight: 'lighter !important' as 'lighter',
@@ -127,7 +131,11 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   const { database } = props;
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
+
   const [showCredentials, setShowPassword] = React.useState<boolean>(false);
+  const [isCACertDownloading, setIsCACertDownloading] = React.useState<boolean>(
+    false
+  );
 
   const {
     data: credentials,
@@ -153,16 +161,19 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
   }, [credentials, getDatabaseCredentials, showCredentials]);
 
   const handleDownloadCACertificate = () => {
+    setIsCACertDownloading(true);
     getSSLFields(database.engine, database.id)
       .then((response: SSLFields) => {
         // Convert to utf-8 from base64
         try {
           const decodedFile = window.atob(response.ca_certificate);
           downloadFile(`${database.label}-ca-certificate.crt`, decodedFile);
+          setIsCACertDownloading(false);
         } catch (e) {
           enqueueSnackbar('Error parsing your CA Certificate file', {
             variant: 'error',
           });
+          setIsCACertDownloading(false);
           return;
         }
       })
@@ -171,6 +182,7 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
           errorResponse,
           'Unable to download your CA Certificate'
         );
+        setIsCACertDownloading(false);
         enqueueSnackbar(error, { variant: 'error' });
       });
   };
@@ -193,42 +205,15 @@ export const DatabaseSummaryConnectionDetails: React.FC<Props> = (props) => {
 
   const caCertificateJSX = (
     <>
-      <Grid
-        item
-        onClick={() => {
-          if (disableDownloadCACertificateBtn) {
-            return;
-          }
-
-          handleDownloadCACertificate();
-        }}
-        role="button"
-        onKeyDown={(e) => {
-          if (disableDownloadCACertificateBtn) {
-            return;
-          }
-          if (e.key === 'Enter') {
-            handleDownloadCACertificate();
-          }
-        }}
-        tabIndex={0}
-        className={
-          disableDownloadCACertificateBtn
-            ? classes.actionBtnDisabled
-            : classes.actionBtn
-        }
+      <Button
+        onClick={handleDownloadCACertificate}
+        className={classes.caCertBtn}
+        disabled={disableDownloadCACertificateBtn}
+        loading={isCACertDownloading}
       >
-        <DownloadIcon style={{ marginRight: 8 }} />
-        <Typography
-          className={
-            disableDownloadCACertificateBtn
-              ? classes.actionTextDisabled
-              : classes.actionText
-          }
-        >
-          Download CA Certificate
-        </Typography>
-      </Grid>
+        <DownloadIcon />
+        Download CA Certificate
+      </Button>
       {disableDownloadCACertificateBtn ? (
         <HelpIcon
           className={classes.helpIcon}
