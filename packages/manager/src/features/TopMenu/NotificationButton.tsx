@@ -66,6 +66,12 @@ export const NotificationButton = () => {
     eventNotifications.filter((thisEvent) => thisEvent.countInTotal).length +
     formattedNotifications.filter((thisEvent) => thisEvent.countInTotal).length;
 
+  const handleMenuToggle = () => {
+    return notificationContext.menuOpen
+      ? notificationContext.closeMenu
+      : notificationContext.openMenu;
+  };
+
   return (
     <Menu id={menuId}>
       <>
@@ -75,18 +81,12 @@ export const NotificationButton = () => {
             className={`${iconClasses.icon} ${classes.menuButton} ${
               notificationContext.menuOpen ? iconClasses.hover : ''
             }`}
-            onClick={
-              notificationContext.menuOpen
-                ? notificationContext.closeMenu
-                : notificationContext.openMenu
-            }
-            onKeyDown={(e) =>
-              e.key === 'Enter'
-                ? notificationContext.menuOpen
-                  ? notificationContext.closeMenu
-                  : notificationContext.openMenu
-                : null
-            }
+            onClick={handleMenuToggle()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                handleMenuToggle();
+              }
+            }}
           >
             <Bell />
             {numNotifications > 0 ? (
