@@ -5,7 +5,7 @@ import {
   getEntityTransfer,
   getEntityTransfers,
 } from '@linode/api-v4/lib/entity-transfers';
-import { APIError } from '@linode/api-v4/lib/types';
+import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { useProfile } from 'src/queries/profile';
 import { creationHandlers, listToItemsByID, queryPresets } from './base';
@@ -35,15 +35,18 @@ export const TRANSFER_FILTERS = {
 };
 
 const getAllEntityTransfersRequest = (
-  passedParams: any = {},
-  passedFilter: any = {}
+  passedParams: Params = {},
+  passedFilter: Filter = {}
 ) =>
   getEntityTransfers(passedParams, passedFilter).then((data) => ({
     entityTransfers: listToItemsByID(data.data, 'token'),
     results: data.results,
   }));
 
-export const useEntityTransfersQuery = (params: any = {}, filter: any = {}) => {
+export const useEntityTransfersQuery = (
+  params: Params = {},
+  filter: Filter = {}
+) => {
   const { data: profile } = useProfile();
 
   return useQuery<EntityTransfersData, APIError[]>(

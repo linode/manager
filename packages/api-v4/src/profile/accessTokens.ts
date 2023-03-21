@@ -7,7 +7,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage as Page } from '../types';
+import { Filter, Params, ResourcePage as Page } from '../types';
 import { Token, TokenRequest } from './types';
 
 /**
@@ -16,7 +16,7 @@ import { Token, TokenRequest } from './types';
  * Returns a paginated list of Personal Access Tokens currently active for your User.
  *
  */
-export const getPersonalAccessTokens = (params?: any, filters?: any) =>
+export const getPersonalAccessTokens = (params?: Params, filters?: Filter) =>
   Request<Page<Token>>(
     setMethod('GET'),
     setParams(params),

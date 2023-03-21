@@ -15,6 +15,7 @@ import {
 import { deleteAllTestStackscripts } from '../api/stackscripts';
 import { deleteAllTestVolumes } from '../api/volumes';
 import { deleteAllTestTags } from '../api/tags';
+import { cancelAllTestEntityTransfers } from '../api/entityTransfer';
 import { apiMatcher } from 'support/util/intercepts';
 
 const attempt = (fn, attemptsRemaining, delayBetweenAttemptsMs) => {
@@ -75,6 +76,7 @@ export const deleteAllTestData = () => {
     deleteAllTestAccessKeys(),
     deleteAllTestTags(),
     deleteAllTestLkeClusters(),
+    cancelAllTestEntityTransfers(),
   ]);
 
   // Remaining deletion functions then run sequentially.

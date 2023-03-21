@@ -2,6 +2,7 @@
  * @note Make sure you add the linode_id to the config object!`
  */
 
+import { Filter, Params } from '@linode/api-v4';
 import {
   Config,
   createLinodeConfig as _createLinodeConfig,
@@ -70,7 +71,7 @@ export const getAllLinodeConfigs: ThunkActionCreator<
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeConfigsActions;
   dispatch(started(params));
-  const req = getAll<Entity>((configParams?: any, filter?: any) =>
+  const req = getAll<Entity>((configParams?: Params, filter?: Filter) =>
     _getLinodeConfigs(linodeId, configParams, filter)
   );
 

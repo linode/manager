@@ -1,6 +1,6 @@
 import { Grant } from '@linode/api-v4/lib/account';
 import { getStackScripts, StackScript } from '@linode/api-v4/lib/stackscripts';
-import { ResourcePage } from '@linode/api-v4/lib/types';
+import { Filter, Params, ResourcePage } from '@linode/api-v4/lib/types';
 import { StackScriptsRequest } from './types';
 
 export type StackScriptCategory = 'account' | 'community';
@@ -135,13 +135,13 @@ const oneClickFilter = [
   { '+order_by': 'ordinal' },
 ];
 
-export const getOneClickApps = (params?: any) =>
+export const getOneClickApps = (params?: Params) =>
   getStackScripts(params, oneClickFilter);
 
 export const getStackScriptsByUser: StackScriptsRequest = (
   username: string,
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) =>
   getStackScripts(params, {
     ...filter,
@@ -149,8 +149,8 @@ export const getStackScriptsByUser: StackScriptsRequest = (
   });
 
 export const getMineAndAccountStackScripts: StackScriptsRequest = (
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) => {
   return getStackScripts(params, { ...filter, mine: true });
 };
@@ -160,8 +160,8 @@ export const getMineAndAccountStackScripts: StackScriptsRequest = (
  * and do not belong to any users on the current account
  */
 export const getCommunityStackscripts: StackScriptsRequest = (
-  params?: any,
-  filter?: any
+  params?: Params,
+  filter?: Filter
 ) => {
   return getStackScripts(params, {
     ...filter,

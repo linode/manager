@@ -10,7 +10,7 @@ import Request, {
   setURL,
   setXFilter,
 } from '../request';
-import { ResourcePage } from '../types';
+import { Filter, Params, ResourcePage } from '../types';
 import { Grants, User } from './types';
 
 /**
@@ -19,7 +19,7 @@ import { Grants, User } from './types';
  * Returns a paginated list of users on this account.
  *
  */
-export const getUsers = (params?: any, filters?: any) =>
+export const getUsers = (params?: Params, filters?: Filter) =>
   Request<ResourcePage<User>>(
     setURL(`${API_ROOT}/account/users`),
     setMethod('GET'),
