@@ -20,6 +20,11 @@ export interface LkePlanDescription {
   tab: string;
 }
 
+/**
+ * Delete all LKE clusters whose labels are prefixed with "cy-test-".
+ *
+ * @returns Promise that resolves when test LKE clusters have been deleted.
+ */
 export const deleteAllTestLkeClusters = async (): Promise<any[]> => {
   const clusters = await depaginate<KubernetesCluster>((page: number) =>
     getKubernetesClusters({ page_size: 500, page })
