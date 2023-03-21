@@ -5,7 +5,7 @@ import {
   ResourcePage,
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { doesItemExistInPaginatedStore, queryClient } from './base';
+import { queryClient } from './base';
 import { EntityEvent } from '@linode/api-v4';
 import {
   cloneDomain,
@@ -27,24 +27,24 @@ export const queryKey = 'domains';
 
 export const useDomainsQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<Domain>, APIError[]>(
-    [`${queryKey}-list`, params, filter],
+    [queryKey, 'paginated', params, filter],
     () => getDomains(params, filter),
     { keepPreviousData: true }
   );
 
 export const useAllDomainsQuery = (enabled: boolean = false) =>
-  useQuery<Domain[], APIError[]>(`${queryKey}-all-list`, getAllDomains, {
+  useQuery<Domain[], APIError[]>([queryKey, 'all'], getAllDomains, {
     enabled,
   });
 
 export const useDomainQuery = (id: number) =>
-  useQuery<Domain, APIError[]>([queryKey, id], () => getDomain(id));
+  useQuery<Domain, APIError[]>([queryKey, 'domain', id], () => getDomain(id));
 
 export const useCreateDomainMutation = () =>
   useMutation<Domain, APIError[], CreateDomainPayload>(createDomain, {
     onSuccess: (domain) => {
-      invalidatePaginatedStore();
-      queryClient.setQueryData([queryKey, domain.id], domain);
+      queryClient.invalidateQueries([queryKey]);
+      queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
     },
   });
 
@@ -53,8 +53,8 @@ export const useCloneDomainMutation = (id: number) =>
     (data) => cloneDomain(id, data),
     {
       onSuccess: (domain) => {
-        invalidatePaginatedStore();
-        queryClient.setQueryData([queryKey, domain.id], domain);
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
       },
     }
   );
@@ -64,8 +64,8 @@ export const useImportZoneMutation = () =>
     (data) => importZone(data),
     {
       onSuccess: (domain) => {
-        invalidatePaginatedStore();
-        queryClient.setQueryData([queryKey, domain.id], domain);
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData([queryKey, 'domain', domain.id], domain);
       },
     }
   );
@@ -73,8 +73,8 @@ export const useImportZoneMutation = () =>
 export const useDeleteDomainMutation = (id: number) =>
   useMutation<{}, APIError[]>(() => deleteDomain(id), {
     onSuccess: () => {
-      invalidatePaginatedStore();
-      queryClient.removeQueries([queryKey, id], { exact: true });
+      queryClient.invalidateQueries([queryKey]);
+      queryClient.removeQueries([queryKey, 'domain', id]);
     },
   });
 
@@ -85,71 +85,21 @@ export const useUpdateDomainMutation = () =>
       return updateDomain(id, rest);
     },
     {
-      onSuccess: (data, vars) => {
-        updatePaginatedDomainsStore(vars.id, data);
-        queryClient.setQueryData<Domain>([queryKey, data.id], data);
+      onSuccess: (domain) => {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData<Domain>(
+          [queryKey, 'domain', domain.id],
+          domain
+        );
       },
     }
   );
 
-// @TODO: make this generic
-const updatePaginatedDomainsStore = (id: number, newData: Partial<Domain>) => {
-  queryClient.setQueriesData<ResourcePage<Domain> | undefined>(
-    `${queryKey}-list`,
-    (oldData) => {
-      if (oldData === undefined) {
-        return undefined;
-      }
-
-      const domainToUpdateIndex = oldData.data.findIndex(
-        (domain) => domain.id === id
-      );
-
-      const isDomainOnPage = domainToUpdateIndex !== -1;
-
-      if (!isDomainOnPage) {
-        return oldData;
-      }
-
-      oldData.data[domainToUpdateIndex] = {
-        ...oldData.data[domainToUpdateIndex],
-        ...newData,
-      };
-
-      return oldData;
-    }
-  );
-};
-
-// @TODO: make this generic
-const doesDomainExistInStore = (id: number) => {
-  const data = queryClient.getQueryData<Domain | undefined>([queryKey, id]);
-
-  return data !== undefined;
-};
-
-const invalidatePaginatedStore = () => {
-  queryClient.invalidateQueries(`${queryKey}-list`);
-};
-
 export const domainEventsHandler = (event: EntityEvent) => {
-  const { action, entity } = event;
-  const { id } = entity;
+  const { status } = event;
 
-  if (
-    action === 'domain_create' &&
-    !doesItemExistInPaginatedStore(`${queryKey}-list`, id)
-  ) {
-    invalidatePaginatedStore();
-  }
-
-  if (action === 'domain_delete') {
-    if (doesItemExistInPaginatedStore(`${queryKey}-list`, id)) {
-      invalidatePaginatedStore();
-    }
-    if (doesDomainExistInStore(id)) {
-      queryClient.removeQueries([queryKey, id], { exact: true });
-    }
+  if (['notification', 'failed', 'finished'].includes(status)) {
+    queryClient.invalidateQueries([queryKey]);
   }
 };
 

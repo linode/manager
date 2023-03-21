@@ -86,7 +86,7 @@ export const EntityTransfersCreate: React.FC<{}> = (_) => {
         const entityCount = countByEntity(transfer.entities);
         sendEntityTransferCreateEvent(entityCount);
 
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         push({ pathname: '/account/service-transfers', state: { transfer } });
       },
     }).catch((_) => null);

@@ -11,7 +11,7 @@ import { queryClient, queryPresets } from './base';
 export const queryKey = 'preferences';
 
 export const usePreferences = (enabled = true) =>
-  useQuery<UserPreferences, APIError[]>(queryKey, getUserPreferences, {
+  useQuery<UserPreferences, APIError[]>([queryKey], getUserPreferences, {
     ...queryPresets.oneTimeFetch,
     enabled,
   });
@@ -40,7 +40,7 @@ export const updatePreferenceData = (
   replace?: boolean
 ): void => {
   queryClient.setQueryData<ManagerPreferences>(
-    queryKey,
+    [queryKey],
     (oldData: ManagerPreferences) => ({
       ...(!replace ? oldData : {}),
       ...newData,

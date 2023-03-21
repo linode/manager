@@ -22,6 +22,7 @@ import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { Country } from './types';
+import { queryKey } from 'src/queries/account';
 
 type ClassNames = 'mainFormContainer' | 'actions';
 
@@ -99,7 +100,7 @@ class UpdateContactInformationForm extends React.Component<
   emailRef = React.createRef<HTMLInputElement>();
 
   async componentDidMount() {
-    const account = queryClient.getQueryData<Account>('account');
+    const account = queryClient.getQueryData<Account>([queryKey]);
 
     // 'account' has all data returned form the /v4/account endpoint.
     // We need to pick only editable fields and fields we want to
@@ -624,11 +625,8 @@ class UpdateContactInformationForm extends React.Component<
       submitting: true,
     });
 
-    queryClient.executeMutation({
-      variables: this.state.fields,
-      mutationFn: updateAccountInfo,
-      mutationKey: 'account',
-      onSuccess: (data) => {
+    updateAccountInfo(this.state.fields)
+      .then((data) => {
         // If there's a "billing_email_bounce" notification on the account, and
         // the user has just updated their email, re-request notifications to
         // potentially clear the email bounce notification.
@@ -641,7 +639,7 @@ class UpdateContactInformationForm extends React.Component<
 
         // If we refactor this component to a functional component,
         // this is something we would look into cleaning up
-        queryClient.setQueryData('account', (oldData: Account) => ({
+        queryClient.setQueryData([queryKey], (oldData: Account) => ({
           ...oldData,
           ...data,
         }));
@@ -652,16 +650,15 @@ class UpdateContactInformationForm extends React.Component<
           errResponse: undefined,
         });
         this.props.onClose();
-      },
-      onError: (error: APIError[]) => {
+      })
+      .catch((error: APIError[]) => {
         this.setState({
           submitting: false,
           success: undefined,
           errResponse: error,
         });
         scrollErrorIntoView();
-      },
-    });
+      });
   };
 }
 

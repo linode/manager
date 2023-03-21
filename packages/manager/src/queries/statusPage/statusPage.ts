@@ -44,12 +44,11 @@ const getAllMaintenance = () => {
     });
 };
 
-const incidentKey = 'status-page-incidents';
-const maintenanceKey = 'status-page-maintenance';
+const queryKey = 'status';
 
 export const useIncidentQuery = () => {
   return useQuery<IncidentResponse, APIError[]>(
-    incidentKey,
+    [queryKey, 'incidents'],
     getIncidents,
     queryPresets.shortLived
   );
@@ -57,7 +56,7 @@ export const useIncidentQuery = () => {
 
 export const useMaintenanceQuery = (options?: UseQueryOptions<any>) => {
   return useQuery<MaintenanceResponse, APIError[]>(
-    maintenanceKey,
+    [queryKey, 'maintenance'],
     getAllMaintenance,
     { ...queryPresets.shortLived, ...(options ?? {}) }
   );

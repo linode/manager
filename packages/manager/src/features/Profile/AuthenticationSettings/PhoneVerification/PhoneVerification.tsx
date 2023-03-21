@@ -89,7 +89,7 @@ export const PhoneVerification = () => {
       });
     } else {
       // Cloud Manager does not know about the country, so lets refetch the user's phone number so we know it's displaying correctly
-      queryClient.invalidateQueries(queryKey);
+      queryClient.invalidateQueries([queryKey]);
     }
 
     // reset form states

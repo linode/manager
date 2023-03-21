@@ -50,7 +50,7 @@ const PromoDialog: React.FC<Props> = (props) => {
         enqueueSnackbar('Successfully applied promo to your account.', {
           variant: 'success',
         });
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
         onClose();
       })
       .catch((error: APIError[]) => {

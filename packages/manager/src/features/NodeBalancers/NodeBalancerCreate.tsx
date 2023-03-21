@@ -53,13 +53,11 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest,
 } from './utils';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
-import {
-  queryKey,
-  reportAgreementSigningError,
-} from 'src/queries/accountAgreements';
+import { queryClient } from 'src/queries/base';
+import { reportAgreementSigningError } from 'src/queries/accountAgreements';
 import LandingHeader from 'src/components/LandingHeader';
 import { Region } from '@linode/api-v4/lib/regions';
+import { queryKey } from 'src/queries/account';
 
 type ClassNames = 'title' | 'sidebar';
 
@@ -330,13 +328,19 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           `${nodeBalancer.label}: ${nodeBalancer.region}`
         );
         if (signedAgreement) {
-          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
-            variables: { eu_model: true, privacy_policy: true },
-            mutationFn: signAgreement,
-            mutationKey: queryKey,
-            onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(queryKey),
-          });
+          signAgreement({ eu_model: true, privacy_policy: true })
+            .then(() => {
+              queryClient.setQueryData<Agreements>(
+                [queryKey, 'agreements'],
+                (oldData) => {
+                  if (!oldData) {
+                    return undefined;
+                  }
+                  return { ...oldData, eu_model: true, privacy_policy: true };
+                }
+              );
+            })
+            .catch(reportAgreementSigningError);
         }
       })
       .catch((errorResponse) => {

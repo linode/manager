@@ -285,7 +285,7 @@ const FileUploader: React.FC<CombinedProps> = (props) => {
             redirectToLogin('/images');
           }, 3000);
         } else {
-          queryClient.invalidateQueries(`${queryKey}-list`);
+          queryClient.invalidateQueries([queryKey]);
           history.push('/images');
         }
       };

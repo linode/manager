@@ -15,10 +15,10 @@ import Link from 'src/components/Link';
 import DeletePaymentMethodDialog from 'src/components/PaymentMethodRow/DeletePaymentMethodDialog';
 import styled from 'src/containers/SummaryPanels.styles';
 import PaymentMethods from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PaymentMethods';
-import { queryKey } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import AddPaymentMethodDrawer from './AddPaymentMethodDrawer';
+import { queryKey } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
@@ -113,7 +113,7 @@ const PaymentInformation: React.FC<Props> = (props) => {
       .then(() => {
         setDeleteLoading(false);
         closeDeleteDialog();
-        queryClient.invalidateQueries(`${queryKey}-all`);
+        queryClient.invalidateQueries([queryKey, 'payment-methods']);
       })
       .catch((e: APIError[]) => {
         setDeleteLoading(false);

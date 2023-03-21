@@ -350,7 +350,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
           (thisInterface) => thisInterface.purpose === 'vlan'
         )
       ) {
-        queryClient.invalidateQueries('vlans');
+        queryClient.invalidateQueries([vlansQueryKey]);
       }
       onClose();
     };
@@ -398,7 +398,7 @@ const LinodeConfigDialog: React.FC<CombinedProps> = (props) => {
   React.useEffect(() => {
     if (open) {
       // Ensure VLANs are fresh.
-      queryClient.invalidateQueries(vlansQueryKey);
+      queryClient.invalidateQueries([vlansQueryKey]);
 
       /**
        * If config is defined, we're editing. Set the state

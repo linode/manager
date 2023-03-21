@@ -3,7 +3,6 @@ import { useClientToken } from 'src/queries/accountPayment';
 import { makeStyles } from '@mui/styles';
 import CircleProgress from 'src/components/CircleProgress';
 import { queryClient } from 'src/queries/base';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
 import { addPaymentMethod } from '@linode/api-v4/lib/account/payments';
 import { useSnackbar } from 'notistack';
 import { APIError } from '@linode/api-v4/lib/types';
@@ -18,6 +17,7 @@ import {
   OnApproveBraintreeActions,
   usePayPalScriptReducer,
 } from '@paypal/react-paypal-js';
+import { queryKey } from 'src/queries/account';
 
 const useStyles = makeStyles(() => ({
   disabled: {
@@ -114,7 +114,7 @@ export const PayPalChip: React.FC<Props> = (props) => {
       is_default: true,
     })
       .then(() => {
-        queryClient.invalidateQueries(`${accountPaymentKey}-all`);
+        queryClient.invalidateQueries([queryKey, 'payment-methods']);
 
         onClose();
 

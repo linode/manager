@@ -68,7 +68,7 @@ export const listToItemsByID = <E extends {}[]>(
 };
 
 export const mutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
@@ -83,7 +83,7 @@ export const mutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const simpleMutationHandlers = <T, V, E = APIError[]>(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables: V) => {
@@ -96,7 +96,7 @@ export const simpleMutationHandlers = <T, V, E = APIError[]>(
 };
 
 export const creationHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
@@ -111,7 +111,7 @@ export const creationHandlers = <T, V, E = APIError[]>(
 };
 
 export const deletionHandlers = <T, V, E = APIError[]>(
-  queryKey: string,
+  queryKey: QueryKey,
   indexer: string = 'id'
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
@@ -131,7 +131,7 @@ export const itemInListMutationHandler = <
   V,
   E = APIError[]
 >(
-  queryKey: string
+  queryKey: QueryKey
 ): UseMutationOptions<T, E, V, () => void> => {
   return {
     onSuccess: (updatedEntity, variables) => {

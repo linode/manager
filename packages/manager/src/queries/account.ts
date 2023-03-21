@@ -13,7 +13,7 @@ export const queryKey = 'account';
 export const useAccount = () => {
   const { data: profile } = useProfile();
 
-  return useQuery<Account, APIError[]>(queryKey, getAccountInfo, {
+  return useQuery<Account, APIError[]>([queryKey], getAccountInfo, {
     ...queryPresets.oneTimeFetch,
     ...queryPresets.noRetry,
     enabled: !profile?.restricted,
@@ -23,5 +23,5 @@ export const useAccount = () => {
 export const useMutateAccount = () => {
   return useMutation<Account, APIError[], Partial<Account>>((data) => {
     return updateAccountInfo(data);
-  }, mutationHandlers(queryKey));
+  }, mutationHandlers([queryKey]));
 };

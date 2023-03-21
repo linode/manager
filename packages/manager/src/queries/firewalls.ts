@@ -83,7 +83,7 @@ const getAllPlainFirewallsRequest = () =>
 
 export const useFirewallQuery = () => {
   return useQuery<Record<string, Firewall>, APIError[]>(
-    queryKey,
+    [queryKey],
     getAllFirewallsRequest,
     queryPresets.longLived
   );
@@ -91,7 +91,7 @@ export const useFirewallQuery = () => {
 
 export const useAllFirewallsQuery = (enabled: boolean = true) => {
   return useQuery<Firewall[], APIError[]>(
-    `${queryKey}-all`,
+    [`${queryKey}-all`],
     getAllPlainFirewallsRequest,
     { enabled }
   );
@@ -102,7 +102,7 @@ type MutateFirewall = { id: number; payload: Partial<Firewall> };
 export const useMutateFirewall = () => {
   return useMutation<Firewall, APIError[], MutateFirewall>((mutateData) => {
     return updateFirewall(mutateData.id, mutateData.payload);
-  }, mutationHandlers(queryKey));
+  }, mutationHandlers([queryKey]));
 };
 
 export const useCreateFirewall = () => {
@@ -110,20 +110,20 @@ export const useCreateFirewall = () => {
     (createData) => {
       return createFirewall(createData);
     },
-    creationHandlers(queryKey)
+    creationHandlers([queryKey])
   );
 };
 
 export const useDeleteFirewall = () => {
   return useMutation<{}, APIError[], { id: number }>((payload) => {
     return deleteFirewall(payload.id);
-  }, deletionHandlers(queryKey));
+  }, deletionHandlers([queryKey]));
 };
 
 export const updateFirewallRules = (id: number, rules: FirewallRules) => {
   return _updateFirewallRules(id, rules).then((updatedRules) => {
     queryClient.setQueryData<ItemsByID<Firewall>>(
-      queryKey,
+      [queryKey],
       (oldData: ItemsByID<Firewall>) => ({
         ...oldData,
         [id]: { ...oldData[id], rules: updatedRules },

@@ -32,56 +32,41 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient, queryPresets, updateInPaginatedStore } from './base';
+import { queryClient, queryPresets } from './base';
 import { Event } from '@linode/api-v4/lib/account/types';
 
 export const queryKey = 'databases';
 
 export const useDatabaseQuery = (engine: Engine, id: number) =>
-  useQuery<Database, APIError[]>(
-    [queryKey, id],
-    () => getEngineDatabase(engine, id),
-    // @TODO Consider removing polling
-    // The refetchInterval will poll the API for this Database. We will do this
-    // to ensure we have up to date information. We do this polling because the events
-    // API does not provide us every feature we need currently.
-    { refetchInterval: 20000 }
+  useQuery<Database, APIError[]>([queryKey, 'database', id], () =>
+    getEngineDatabase(engine, id)
   );
 
 export const useDatabasesQuery = (params: Params, filter: Filter) =>
   useQuery<ResourcePage<DatabaseInstance>, APIError[]>(
-    [`${queryKey}-list`, params, filter],
+    [queryKey, 'paginated', params, filter],
     () => getDatabases(params, filter),
-    // @TODO Consider removing polling
-    { keepPreviousData: true, refetchInterval: 20000 }
+    { keepPreviousData: true }
   );
 
 export const useAllDatabasesQuery = (enabled: boolean = true) =>
-  useQuery<DatabaseInstance[], APIError[]>(
-    `${queryKey}-all-list`,
-    getAllDatabases,
-    { enabled }
-  );
+  useQuery<DatabaseInstance[], APIError[]>([queryKey, 'all'], getAllDatabases, {
+    enabled,
+  });
 
 export const useDatabaseMutation = (engine: Engine, id: number) =>
   useMutation<UpdateDatabaseResponse, APIError[], UpdateDatabasePayload>(
     (data) => updateDatabase(engine, id, data),
     {
       onSuccess: (data) => {
-        queryClient.setQueryData<Database | undefined>(
-          [queryKey, Number(id)],
-          (oldEntity) => {
-            if (oldEntity === undefined) {
+        queryClient.invalidateQueries([queryKey]);
+        queryClient.setQueryData<Database>(
+          [queryKey, 'database', id],
+          (oldData) => {
+            if (!oldData) {
               return undefined;
             }
-
-            if (oldEntity.label !== data.label) {
-              updateInPaginatedStore<Database>(`${queryKey}-list`, id, {
-                label: data.label,
-              });
-            }
-
-            return { ...oldEntity, ...data };
+            return { ...oldData, ...data };
           }
         );
       },
@@ -96,9 +81,9 @@ export const useCreateDatabaseMutation = () =>
         // Invalidate useDatabasesQuery to show include the new database.
         // We choose to refetch insted of manually mutate the cache because it
         // is API paginated.
-        queryClient.invalidateQueries(`${queryKey}-list`);
+        queryClient.invalidateQueries([queryKey]);
         // Add database to the cache
-        queryClient.setQueryData([queryKey, data.id], data);
+        queryClient.setQueryData([queryKey, 'database', data.id], data);
       },
     }
   );
@@ -109,13 +94,14 @@ export const useDeleteDatabaseMutation = (engine: Engine, id: number) =>
       // Invalidate useDatabasesQuery to remove the deleted database.
       // We choose to refetch insted of manually mutate the cache because it
       // is API paginated.
-      queryClient.invalidateQueries(`${queryKey}-list`);
+      queryClient.invalidateQueries([queryKey]);
+      queryClient.removeQueries([queryKey, 'database', id]);
     },
   });
 
 export const useDatabaseBackupsQuery = (engine: Engine, id: number) =>
   useQuery<ResourcePage<DatabaseBackup>, APIError[]>(
-    [`${queryKey}-backups`, id],
+    [queryKey, 'database', id, 'backups'],
     () => getDatabaseBackups(engine, id)
   );
 
@@ -131,7 +117,7 @@ export const getAllDatabaseEngines = () =>
 
 export const useDatabaseEnginesQuery = () =>
   useQuery<DatabaseEngine[], APIError[]>(
-    `${queryKey}-versions`,
+    [queryKey, 'versions'],
     getAllDatabaseEngines
   );
 
@@ -142,7 +128,7 @@ export const getAllDatabaseTypes = () =>
 
 export const useDatabaseTypesQuery = () =>
   useQuery<DatabaseType[], APIError[]>(
-    `${queryKey}-types`,
+    [queryKey, 'types'],
     getAllDatabaseTypes
   );
 
@@ -152,7 +138,7 @@ export const useDatabaseCredentialsQuery = (
   enabled: boolean = false
 ) =>
   useQuery<DatabaseCredentials, APIError[]>(
-    [`${queryKey}-credentials`, id],
+    [queryKey, 'database', id, 'credentials'],
     () => getDatabaseCredentials(engine, id),
     { ...queryPresets.oneTimeFetch, enabled }
   );
@@ -160,8 +146,8 @@ export const useDatabaseCredentialsQuery = (
 export const useDatabaseCredentialsMutation = (engine: Engine, id: number) =>
   useMutation<{}, APIError[]>(() => resetDatabaseCredentials(engine, id), {
     onSuccess: () => {
-      queryClient.invalidateQueries([`${queryKey}-credentials`, id]);
-      queryClient.removeQueries([`${queryKey}-credentials`, id]);
+      queryClient.invalidateQueries([queryKey, 'database', id, 'credentials']);
+      queryClient.removeQueries([queryKey, 'database', id, 'credentials']);
     },
   });
 
@@ -179,32 +165,10 @@ export const useRestoreFromBackupMutation = (
   );
 
 export const databaseEventsHandler = (event: Event) => {
-  const { action, status, entity } = event;
+  const { status } = event;
 
-  switch (action) {
-    case 'database_create':
-      switch (status) {
-        case 'failed':
-        case 'finished':
-          // Database status will change from `provisioning` to `active` (or `failed`) and
-          // the host fields will populate. We need to refetch to get the hostnames.
-          queryClient.invalidateQueries([queryKey, entity!.id]);
-          queryClient.invalidateQueries(`${queryKey}-list`);
-        case 'notification':
-          // In this case, the API let us know the user initialized a Database create event.
-          // We use this logic for the case a user created a Database from outside Cloud Manager,
-          // they would expect to see their database populate without a refresh.
-          const storedDatabase = queryClient.getQueryData<Database>([
-            queryKey,
-            entity!.id,
-          ]);
-          if (!storedDatabase) {
-            queryClient.invalidateQueries(`${queryKey}-list`);
-          }
-        case 'scheduled':
-        case 'started':
-          return;
-      }
+  if (['notification', 'failed', 'finished'].includes(status)) {
+    queryClient.invalidateQueries([queryKey]);
   }
 };
 
@@ -213,7 +177,7 @@ const updateStoreForDatabase = (
   data: Partial<Database> & Partial<DatabaseInstance>
 ) => {
   updateDatabaseStore(id, data);
-  updateInPaginatedStore<Database>(`${queryKey}-list`, id, data);
+  queryClient.invalidateQueries([queryKey, 'paginated']);
 };
 
 const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
@@ -223,7 +187,7 @@ const updateDatabaseStore = (id: number, newData: Partial<Database>) => {
   // This is an odd edge case.
   if (previousValue) {
     queryClient.setQueryData<Database | undefined>(
-      [queryKey, id],
+      [queryKey, 'database', id],
       (oldData) => {
         if (oldData === undefined) {
           return undefined;

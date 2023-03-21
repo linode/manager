@@ -20,8 +20,7 @@ import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 import TextField from 'src/components/TextField';
 import PayPalErrorBoundary from 'src/features/Billing/BillingPanels/PaymentInfoPanel/PayPalErrorBoundary';
-import { useAccount } from 'src/queries/account';
-import { queryKey } from 'src/queries/accountBilling';
+import { queryKey, useAccount } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import isCreditCardExpired from 'src/utilities/creditCard';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -181,7 +180,7 @@ export const PaymentDrawer: React.FC<Props> = (props) => {
           true,
           response.warnings
         );
-        queryClient.invalidateQueries(`${queryKey}-payments`);
+        queryClient.invalidateQueries([queryKey, 'billing', 'payments']);
       })
       .catch((errorResponse) => {
         setSubmitting(false);

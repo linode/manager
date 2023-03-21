@@ -20,7 +20,7 @@ import { queryClient, queryPresets } from './base';
 export const queryKey = 'profile';
 
 export const useProfile = (givenProfile?: Profile) =>
-  useQuery<Profile, APIError[]>(queryKey, getProfile, {
+  useQuery<Profile, APIError[]>([queryKey], getProfile, {
     ...queryPresets.oneTimeFetch,
     initialData: givenProfile,
   });
@@ -44,7 +44,7 @@ export const useCreatePersonalAccessTokenMutation = () => {
 };
 
 export const updateProfileData = (newData: Partial<Profile>): void => {
-  queryClient.setQueryData(queryKey, (oldData: Profile) => ({
+  queryClient.setQueryData([queryKey], (oldData: Profile) => ({
     ...oldData,
     ...newData,
   }));
@@ -52,14 +52,15 @@ export const updateProfileData = (newData: Partial<Profile>): void => {
 
 export const useGrants = () =>
   useQuery<Grants, APIError[]>(
-    `${queryKey}-grants`,
+    [queryKey, 'grants'],
     listGrants,
     queryPresets.oneTimeFetch
   );
 
-export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
+export const getProfileData = () =>
+  queryClient.getQueryData<Profile>([queryKey]);
 export const getGrantData = () =>
-  queryClient.getQueryData<Grants>(`${queryKey}-grants`);
+  queryClient.getQueryData<Grants>([queryKey, 'grants']);
 
 export const useSMSOptOutMutation = () =>
   useMutation<{}, APIError[]>(smsOptOut, {

@@ -8,8 +8,7 @@ import { VariantType } from 'notistack';
 import { GPAY_CLIENT_ENV, GPAY_MERCHANT_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 import { PaymentMessage } from 'src/features/Billing/BillingPanels/PaymentInfoPanel/AddPaymentMethodDrawer/AddPaymentMethodDrawer';
-import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
-import { queryKey as accountPaymentKey } from 'src/queries/accountPayment';
+import { queryKey } from 'src/queries/account';
 import { queryClient } from 'src/queries/base';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
@@ -114,7 +113,7 @@ export const gPay = async (
       nonce,
       usd: transactionInfo.totalPrice as string,
     });
-    queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+    queryClient.invalidateQueries([queryKey, 'billing', 'payments']);
     const message = {
       text: `Payment for $${transactionInfo.totalPrice} successfully submitted with Google Pay`,
       variant: 'success' as VariantType,
@@ -128,7 +127,7 @@ export const gPay = async (
       data: { nonce },
       is_default: true,
     });
-    queryClient.invalidateQueries(`${accountPaymentKey}-all`);
+    queryClient.invalidateQueries([queryKey, 'payment-methods']);
     setMessage({
       text: 'Successfully added Google Pay',
       variant: 'success',

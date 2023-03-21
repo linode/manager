@@ -86,7 +86,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
    */
   const handleEnableSuccess = (scratchCode: string) => {
     // Refetch Profile with React Query so profile is up to date
-    queryClient.invalidateQueries(queryKey);
+    queryClient.invalidateQueries([queryKey]);
     setSuccess('Two-factor authentication has been enabled.');
     setShowQRCode(false);
     setTwoFactorEnabled(true);
@@ -99,7 +99,7 @@ export const TwoFactor: React.FC<Props> = (props) => {
    */
   const handleDisableSuccess = () => {
     // Refetch Profile with React Query so profile is up to date
-    queryClient.invalidateQueries(queryKey);
+    queryClient.invalidateQueries([queryKey]);
     setErrors(undefined);
     setSuccess('Two-factor authentication has been disabled.');
     setTwoFactorEnabled(false);

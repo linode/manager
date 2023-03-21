@@ -47,7 +47,7 @@ export const getAllObjectStorageBuckets = () =>
 
 export const useObjectStorageClusters = (enabled: boolean = true) =>
   useQuery<ObjectStorageCluster[], APIError[]>(
-    `${queryKey}-clusters`,
+    [queryKey, 'clusters'],
     getAllObjectStorageClusters,
     { ...queryPresets.oneTimeFetch, enabled }
   );
@@ -57,7 +57,7 @@ export const useObjectStorageBuckets = (
   enabled: boolean = true
 ) =>
   useQuery<BucketsResponce, APIError[]>(
-    `${queryKey}-buckets`,
+    [queryKey, 'buckets'],
     // Ideally we would use the line below, but if a cluster is down, the buckets on that
     // cluster don't show up in the responce. We choose to fetch buckets per-cluster so
     // we can tell the user which clusters are having issues.
@@ -72,7 +72,7 @@ export const useObjectStorageBuckets = (
 
 export const useObjectStorageAccessKeys = (params: Params) =>
   useQuery<ResourcePage<ObjectStorageKey>, APIError[]>(
-    [`${queryKey}-access-keys`, params],
+    [queryKey, 'access-keys', params],
     () => getObjectStorageKeys(params),
     { keepPreviousData: true }
   );
@@ -85,7 +85,7 @@ export const useCreateBucketMutation = () => {
   >(createBucket, {
     onSuccess: (newEntity) => {
       queryClient.setQueryData<BucketsResponce>(
-        `${queryKey}-buckets`,
+        [queryKey, 'buckets'],
         (oldData) => ({
           buckets: [...(oldData?.buckets || []), newEntity],
           errors: oldData?.errors || [],
@@ -101,7 +101,7 @@ export const useDeleteBucketMutation = () => {
     {
       onSuccess: (_, variables) => {
         queryClient.setQueryData<BucketsResponce>(
-          `${queryKey}-buckets`,
+          [queryKey, 'buckets'],
           (oldData) => {
             return {
               buckets:
@@ -192,7 +192,7 @@ export const prefixToQueryKey = (prefix: string) => {
 export const updateBucket = async (cluster: string, bucketName: string) => {
   const bucket = await getBucket(cluster, bucketName);
   queryClient.setQueryData<BucketsResponce | undefined>(
-    `${queryKey}-buckets`,
+    [queryKey, 'buckets'],
     (oldData) => {
       if (oldData === undefined) {
         return undefined;

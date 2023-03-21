@@ -112,7 +112,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       },
     } = this.props;
     const valuesFromStorage = storage.stackScriptInProgress.get();
-    const account = queryClient.getQueryData<Account>('account');
+    const account = queryClient.getQueryData<Account>(['account']);
 
     if (stackScriptID) {
       // If we have a stackScriptID we're in the edit flow and
@@ -188,7 +188,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         params: { stackScriptID },
       },
     } = this.props;
-    const account = queryClient.getQueryData<Account>('account');
+    const account = queryClient.getQueryData<Account>(['account']);
 
     if (account) {
       // Use the euuid if we're creating to avoid loading another user's data
@@ -308,7 +308,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         if (profile.data?.restricted) {
-          queryClient.invalidateQueries(`${queryKey}-grants`);
+          queryClient.invalidateQueries([queryKey, 'grants']);
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();

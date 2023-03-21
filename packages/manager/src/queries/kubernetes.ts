@@ -33,13 +33,13 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAll } from 'src/utilities/getAll';
-import { queryClient, queryPresets, updateInPaginatedStore } from './base';
+import { queryClient, queryPresets } from './base';
 
 export const queryKey = `kubernetes`;
 
 export const useKubernetesClustersQuery = (params: Params, filter: Filter) => {
   return useQuery<ResourcePage<KubernetesCluster>, APIError[]>(
-    [`${queryKey}-list`, params, filter],
+    [queryKey, 'paginated', params, filter],
     () => getKubernetesClusters(params, filter),
     { keepPreviousData: true }
   );
@@ -57,7 +57,7 @@ export const useKubernetesClusterMutation = (id: number) => {
     (data) => updateKubernetesCluster(id, data),
     {
       onSuccess(data) {
-        updateInPaginatedStore<KubernetesCluster>(`${queryKey}-list`, id, data);
+        queryClient.invalidateQueries([queryKey]);
         queryClient.setQueryData([queryKey, 'cluster', id], data);
       },
     }
@@ -112,7 +112,7 @@ export const useDeleteKubernetesClusterMutation = () => {
     ({ id }) => deleteKubernetesCluster(id),
     {
       onSuccess() {
-        queryClient.invalidateQueries([`${queryKey}-list`]);
+        queryClient.invalidateQueries([queryKey]);
       },
     }
   );
@@ -123,7 +123,7 @@ export const useCreateKubernetesClusterMutation = () => {
     createKubernetesCluster,
     {
       onSuccess() {
-        queryClient.invalidateQueries([`${queryKey}-list`]);
+        queryClient.invalidateQueries([queryKey]);
       },
     }
   );
@@ -247,7 +247,7 @@ export const useKubernetesVersionQuery = () =>
  */
 export const useAllKubernetesClustersQuery = (enabled = false) => {
   return useQuery<KubernetesCluster[], APIError[]>(
-    [`${queryKey}-all`],
+    [queryKey, 'all'],
     getAllKubernetesClusters,
     { enabled }
   );

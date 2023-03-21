@@ -10,10 +10,8 @@ import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
 import {
   getAccountBackupsEnabled,
-  queryKey,
   updateAccountSettingsData,
 } from 'src/queries/accountSettings';
-import { queryClient } from 'src/queries/base';
 import { updateAccountSettings } from '@linode/api-v4/lib';
 
 export interface BackupError {
@@ -311,21 +309,17 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
 
   dispatch(handleAutoEnroll());
 
-  queryClient.executeMutation({
-    mutationFn: updateAccountSettings,
-    mutationKey: queryKey,
-    variables: { backups_enabled: shouldEnableBackups },
-    onSuccess: (data) => {
+  updateAccountSettings({ backups_enabled: shouldEnableBackups })
+    .then((data) => {
       updateAccountSettingsData(data);
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
-    },
-    onError: (errors: APIError[]) => {
+    })
+    .catch((errors) => {
       const finalError = getErrorStringOrDefault(
         errors,
         'Your account settings could not be updated. Please try again.'
       );
       dispatch(handleAutoEnrollError(finalError));
-    },
-  });
+    });
 };

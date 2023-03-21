@@ -7,9 +7,8 @@ import {
 import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useQuery } from '@tanstack/react-query';
 import { getAll } from 'src/utilities/getAll';
+import { queryKey } from './account';
 import { queryPresets } from './base';
-
-export const queryKey = 'account-billing';
 
 const getAllAccountInvoices = async (
   passedParams: Params = {},
@@ -36,7 +35,7 @@ export const useAllAccountInvoices = (
   filter: Filter = {}
 ) => {
   return useQuery<Invoice[], APIError[]>(
-    [`${queryKey}-invoices`, params, filter],
+    [queryKey, 'billing', 'invoices', params, filter],
     () => getAllAccountInvoices(params, filter),
     {
       ...queryPresets.oneTimeFetch,
@@ -50,7 +49,7 @@ export const useAllAccountPayments = (
   filter: Filter = {}
 ) => {
   return useQuery<Payment[], APIError[]>(
-    [`${queryKey}-payments`, params, filter],
+    [queryKey, 'billing', 'payments', params, filter],
     () => getAllAccountPayments(params, filter),
     {
       ...queryPresets.oneTimeFetch,

@@ -59,7 +59,7 @@ const AttachVLAN: React.FC<CombinedProps> = (props) => {
 
   React.useEffect(() => {
     // Ensure VLANs are fresh.
-    queryClient.invalidateQueries(vlansQueryKey);
+    queryClient.invalidateQueries([vlansQueryKey]);
   }, []);
 
   const regions = useRegionsQuery().data ?? [];

@@ -39,6 +39,7 @@ import Tab from 'src/components/core/ReachTab';
 import SafeTabPanel from 'src/components/SafeTabPanel/SafeTabPanel';
 import TabList from 'src/components/core/ReachTabList';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { queryKey } from 'src/queries/account';
 
 type ClassNames =
   | 'title'
@@ -367,7 +368,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           // unconditionally sets this.state.loadingGrants to false
           this.getUserGrants();
           // refresh the data on /account/users so it is accurate
-          queryClient.invalidateQueries('account-users');
+          queryClient.invalidateQueries([queryKey, 'users']);
         })
         .catch((errResponse) => {
           this.setState({

@@ -62,7 +62,7 @@ export const ConfirmTransferCancelDialog: React.FC<Props> = (props) => {
         sendEntityTransferCancelEvent();
 
         // Refresh the query for Entity Transfers.
-        queryClient.invalidateQueries(queryKey);
+        queryClient.invalidateQueries([queryKey]);
 
         onClose();
         setSubmitting(false);

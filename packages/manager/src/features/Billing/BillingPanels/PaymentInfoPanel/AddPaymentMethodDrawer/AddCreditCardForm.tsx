@@ -15,6 +15,7 @@ import { handleAPIErrors } from 'src/utilities/formikErrorUtils';
 import NumberFormat, { NumberFormatProps } from 'react-number-format';
 import { parseExpiryYear } from 'src/utilities/creditCard';
 import { InputBaseComponentProps } from '@mui/material/InputBase/InputBase';
+import { queryKey } from 'src/queries/account';
 
 const useStyles = makeStyles((theme: Theme) => ({
   error: {
@@ -80,7 +81,7 @@ const AddCreditCardForm: React.FC<Props> = (props) => {
       enqueueSnackbar('Successfully added Credit Card', {
         variant: 'success',
       });
-      queryClient.invalidateQueries('account-payment-methods-all');
+      queryClient.invalidateQueries([queryKey, 'payment-methods']);
       onClose();
     } catch (errors) {
       handleAPIErrors(errors, setFieldError, setError);

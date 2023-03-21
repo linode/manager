@@ -84,7 +84,7 @@ const FirewallLanding: React.FC<CombinedProps> = () => {
   ): Promise<Firewall> => {
     return _createFirewall(payload).then((firewall) => {
       if (profile?.restricted) {
-        queryClient.invalidateQueries(`${queryKey}-grants`);
+        queryClient.invalidateQueries([queryKey, 'grants']);
       }
       return firewall;
     });

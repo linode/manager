@@ -13,13 +13,12 @@ import Tooltip from 'src/components/core/Tooltip';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/Grid';
 import { reportException } from 'src/exceptionReporting';
-import { queryKey as accountBillingKey } from 'src/queries/accountBilling';
 import { useClientToken } from 'src/queries/accountPayment';
 import { queryClient } from 'src/queries/base';
 import { SetSuccess } from './types';
 import { APIError } from '@linode/api-v4/lib/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { useAccount } from 'src/queries/account';
+import { queryKey, useAccount } from 'src/queries/account';
 import { getPaymentLimits } from 'src/features/Billing/billingUtils';
 
 const useStyles = makeStyles(() => ({
@@ -176,7 +175,7 @@ export const PayPalButton: React.FC<Props> = (props) => {
         setProcessing(false);
       });
       if (response) {
-        queryClient.invalidateQueries(`${accountBillingKey}-payments`);
+        queryClient.invalidateQueries([queryKey, 'billing', 'payments']);
 
         setSuccess(
           `Payment for $${response.usd} successfully submitted with PayPal`,

@@ -7,13 +7,16 @@ import {
 import { APIError } from '@linode/api-v4/lib/types';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryPresets, queryClient } from './base';
-
-export const queryKey = 'securityQuestions';
+import { queryKey } from './profile';
 
 export const useSecurityQuestions = () =>
-  useQuery<SecurityQuestionsData, APIError[]>(queryKey, getSecurityQuestions, {
-    ...queryPresets.oneTimeFetch,
-  });
+  useQuery<SecurityQuestionsData, APIError[]>(
+    [queryKey, 'security-questions'],
+    getSecurityQuestions,
+    {
+      ...queryPresets.oneTimeFetch,
+    }
+  );
 
 export const useMutateSecurityQuestions = () => {
   return useMutation<
@@ -27,7 +30,7 @@ export const useMutateSecurityQuestions = () => {
     {
       onSuccess: (response) => {
         queryClient.setQueryData<SecurityQuestionsData | undefined>(
-          queryKey,
+          [queryKey, 'security-questions'],
           (oldData) => {
             if (oldData === undefined) {
               return undefined;

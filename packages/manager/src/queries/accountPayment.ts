@@ -13,16 +13,15 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { useGrants } from 'src/queries/profile';
 import { getAll } from 'src/utilities/getAll';
+import { queryKey } from './account';
 import { queryPresets } from './base';
-
-export const queryKey = 'account-payment-methods';
 
 export const usePaymentMethodsQuery = (
   params: Params = {},
   filter: Filter = {}
 ) => {
   return useQuery<ResourcePage<PaymentMethod>, APIError[]>(
-    [queryKey, params, filter],
+    [queryKey, 'payment-methods', 'paginated', params, filter],
     () => getPaymentMethods(params),
     {
       ...queryPresets.oneTimeFetch,
@@ -34,7 +33,7 @@ export const useAllPaymentMethodsQuery = () => {
   const { data: grants } = useGrants();
 
   return useQuery<PaymentMethod[], APIError[]>(
-    queryKey + '-all',
+    [queryKey, 'payment-methods', 'all'],
     getAllPaymentMethodsRequest,
     {
       ...queryPresets.oneTimeFetch,
@@ -54,7 +53,7 @@ export const getAllPaymentMethodsRequest = () =>
 
 export const useClientToken = () =>
   useQuery<ClientToken, APIError[]>(
-    queryKey + '-client-token',
+    [queryKey, 'client-token'],
     getClientToken,
     queryPresets.longLived
   );

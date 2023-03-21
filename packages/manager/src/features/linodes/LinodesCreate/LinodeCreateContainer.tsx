@@ -42,12 +42,9 @@ import userSSHKeyHoc, {
 } from 'src/features/linodes/userSSHKeyHoc';
 import { hasGrant } from 'src/features/Profile/permissionsHelpers';
 import { baseApps } from 'src/features/StackScripts/stackScriptUtils';
-import {
-  queryKey as accountAgreementsQueryKey,
-  reportAgreementSigningError,
-} from 'src/queries/accountAgreements';
+import { reportAgreementSigningError } from 'src/queries/accountAgreements';
 import { getAccountBackupsEnabled } from 'src/queries/accountSettings';
-import { queryClient, simpleMutationHandlers } from 'src/queries/base';
+import { queryClient } from 'src/queries/base';
 import { getAllOCAsRequest } from 'src/queries/stackscripts';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
 import {
@@ -75,6 +72,7 @@ import {
 } from './types';
 import { getRegionIDFromLinodeID } from './utilities';
 import LandingHeader from 'src/components/LandingHeader';
+import { queryKey } from 'src/queries/account';
 
 const DEFAULT_IMAGE = 'linode/debian11';
 
@@ -233,7 +231,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ appInstancesLoading: true });
 
     queryClient
-      .fetchQuery('stackscripts-oca-all', () => getAllOCAsRequest())
+      .fetchQuery(['stackscripts-oca-all'], () => getAllOCAsRequest())
       .then((res: StackScript[]) => {
         // Don't display One-Click Helpers to the user
         // Filter out any apps that we don't have info for
@@ -585,13 +583,19 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         this.setState({ formIsSubmitting: false });
 
         if (signedAgreement) {
-          queryClient.executeMutation<{}, APIError[], Partial<Agreements>>({
-            variables: { eu_model: true, privacy_policy: true },
-            mutationFn: signAgreement,
-            mutationKey: accountAgreementsQueryKey,
-            onError: reportAgreementSigningError,
-            ...simpleMutationHandlers(accountAgreementsQueryKey),
-          });
+          signAgreement({ eu_model: true, privacy_policy: true })
+            .then(() => {
+              queryClient.setQueryData<Agreements>(
+                [queryKey, 'agreements'],
+                (oldData) => {
+                  if (!oldData) {
+                    return undefined;
+                  }
+                  return { ...oldData, eu_model: true, privacy_policy: true };
+                }
+              );
+            })
+            .catch(reportAgreementSigningError);
         }
 
         /** if cloning a Linode, upsert Linode in redux */

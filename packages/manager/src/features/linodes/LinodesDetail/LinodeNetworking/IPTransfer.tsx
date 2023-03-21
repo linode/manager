@@ -26,10 +26,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import usePrevious from 'src/hooks/usePrevious';
 import { ipv6RangeQueryKey } from 'src/queries/networking';
-import {
-  queryKey as linodesQueryKey,
-  useAllLinodesQuery,
-} from 'src/queries/linodes';
+import { queryKey, useAllLinodesQuery } from 'src/queries/linodes';
 import { queryClient } from 'src/queries/base';
 import { useIpv6RangesQuery } from 'src/queries/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -443,8 +440,8 @@ const LinodeNetworkingIPTransferPanel: React.FC<CombinedProps> = (props) => {
             setError(undefined);
             setSuccessMessage('IP transferred successfully.');
             // get updated route_target for ipv6 ranges
-            queryClient.invalidateQueries(ipv6RangeQueryKey);
-            queryClient.invalidateQueries(`${linodesQueryKey}-all`);
+            queryClient.invalidateQueries([ipv6RangeQueryKey]);
+            queryClient.invalidateQueries([queryKey]);
           })
           .catch((err) => {
             setError(

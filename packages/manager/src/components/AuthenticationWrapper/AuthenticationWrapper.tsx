@@ -13,6 +13,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { startEventsInterval } from 'src/events';
 import { queryKey as accountQueryKey } from 'src/queries/account';
+import { queryKey as profileQueryKey } from 'src/queries/profile';
 import { queryClient } from 'src/queries/base';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -62,18 +63,18 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       // Fetch user's account information
       queryClient.prefetchQuery({
         queryFn: getAccountInfo,
-        queryKey: accountQueryKey,
+        queryKey: [accountQueryKey],
       }),
 
       // Username and whether a user is restricted
       queryClient.prefetchQuery({
         queryFn: getProfile,
-        queryKey: 'profile',
+        queryKey: [profileQueryKey],
       }),
 
       // Is a user managed
       queryClient.prefetchQuery({
-        queryKey: 'account-settings',
+        queryKey: [accountQueryKey, 'settings'],
         queryFn: getAccountSettings,
       }),
 

@@ -7,8 +7,10 @@ import { getAll } from 'src/utilities/getAll';
 
 const cachedData = data.data as Region[];
 
+const queryKey = 'regions';
+
 export const useRegionsQuery = () =>
-  useQuery<Region[], APIError[]>('regions', getAllRegionsRequest, {
+  useQuery<Region[], APIError[]>([queryKey], getAllRegionsRequest, {
     ...queryPresets.longLived,
     placeholderData: cachedData,
   });

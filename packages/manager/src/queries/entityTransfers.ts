@@ -72,6 +72,6 @@ export const useCreateTransfer = () => {
     (createData) => {
       return createEntityTransfer(createData);
     },
-    creationHandlers(queryKey, 'token')
+    creationHandlers([queryKey], 'token')
   );
 };
