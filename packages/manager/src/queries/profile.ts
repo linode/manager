@@ -8,9 +8,6 @@ import {
   updateProfile,
   verifyPhoneNumberCode,
   VerifyVerificationCodePayload,
-  Token,
-  TokenRequest,
-  createPersonalAccessToken,
   getSSHKeys,
   createSSHKey,
   SSHKey,
@@ -21,7 +18,7 @@ import { APIError, Filter, Params } from '@linode/api-v4/lib/types';
 import { useMutation, useQuery } from 'react-query';
 import { Grants } from '../../../api-v4/lib';
 import { queryClient, queryPresets } from './base';
-import { queryKey as accountUsersQueryKey } from './accountUsers';
+import { queryKey as accountQueryKey } from './account';
 import { Event } from '@linode/api-v4';
 
 export const queryKey = 'profile';
@@ -39,17 +36,6 @@ export const useMutateProfile = () => {
   );
 };
 
-export const useCreatePersonalAccessTokenMutation = () => {
-  return useMutation<Token, APIError[], TokenRequest>(
-    createPersonalAccessToken,
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([queryKey, 'personal-access-tokens']);
-      },
-    }
-  );
-};
-
 export const updateProfileData = (newData: Partial<Profile>): void => {
   queryClient.setQueryData(queryKey, (oldData: Profile) => ({
     ...oldData,
@@ -59,14 +45,14 @@ export const updateProfileData = (newData: Partial<Profile>): void => {
 
 export const useGrants = () =>
   useQuery<Grants, APIError[]>(
-    `${queryKey}-grants`,
+    [queryKey, 'grants'],
     listGrants,
     queryPresets.oneTimeFetch
   );
 
 export const getProfileData = () => queryClient.getQueryData<Profile>(queryKey);
 export const getGrantData = () =>
-  queryClient.getQueryData<Grants>(`${queryKey}-grants`);
+  queryClient.getQueryData<Grants>([queryKey, 'grants']);
 
 export const useSMSOptOutMutation = () =>
   useMutation<{}, APIError[]>(smsOptOut, {
@@ -91,7 +77,7 @@ export const useSSHKeysQuery = (
   enabled = true
 ) =>
   useQuery(
-    [queryKey, 'ssh-keys', params, filter],
+    [queryKey, 'ssh-keys', 'paginated', params, filter],
     () => getSSHKeys(params, filter),
     {
       keepPreviousData: true,
@@ -106,7 +92,7 @@ export const useCreateSSHKeyMutation = () =>
       onSuccess() {
         queryClient.invalidateQueries([queryKey, 'ssh-keys']);
         // also invalidate the /account/users data because that endpoint returns some SSH key data
-        queryClient.invalidateQueries([accountUsersQueryKey]);
+        queryClient.invalidateQueries([accountQueryKey, 'users']);
       },
     }
   );
@@ -118,7 +104,7 @@ export const useUpdateSSHKeyMutation = (id: number) =>
       onSuccess() {
         queryClient.invalidateQueries([queryKey, 'ssh-keys']);
         // also invalidate the /account/users data because that endpoint returns some SSH key data
-        queryClient.invalidateQueries([accountUsersQueryKey]);
+        queryClient.invalidateQueries([accountQueryKey, 'users']);
       },
     }
   );
@@ -128,7 +114,7 @@ export const useDeleteSSHKeyMutation = (id: number) =>
     onSuccess() {
       queryClient.invalidateQueries([queryKey, 'ssh-keys']);
       // also invalidate the /account/users data because that endpoint returns some SSH key data
-      queryClient.invalidateQueries([accountUsersQueryKey]);
+      queryClient.invalidateQueries([accountQueryKey, 'users']);
     },
   });
 
@@ -138,5 +124,5 @@ export const sshKeyEventHandler = (event: Event) => {
 
   queryClient.invalidateQueries([queryKey, 'ssh-keys']);
   // also invalidate the /account/users data because that endpoint returns some SSH key data
-  queryClient.invalidateQueries([accountUsersQueryKey]);
+  queryClient.invalidateQueries([accountQueryKey, 'users']);
 };

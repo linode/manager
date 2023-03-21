@@ -7,14 +7,13 @@ import {
 } from '@linode/api-v4/lib/types';
 import { useQuery } from 'react-query';
 import { useProfile } from 'src/queries/profile';
-
-export const queryKey = 'account-users';
+import { queryKey } from './account';
 
 export const useAccountUsers = (params?: Params, filters?: Filter) => {
   const { data: profile } = useProfile();
 
   return useQuery<ResourcePage<User>, APIError[]>(
-    [queryKey, params, filters],
+    [queryKey, 'users', 'paginated', params, filters],
     () => getUsers(params, filters),
     {
       enabled: !profile?.restricted,
@@ -24,7 +23,7 @@ export const useAccountUsers = (params?: Params, filters?: Filter) => {
 
 export const useAccountUser = (username: string) => {
   return useQuery<User, APIError[]>(
-    [queryKey, username],
+    [queryKey, 'users', 'user', username],
     () => getUser(username),
     // Enable the query if the user is not on the blocklist
     { enabled: !getIsBlocklistedUser(username) }

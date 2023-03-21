@@ -308,7 +308,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
           return;
         }
         if (profile.data?.restricted) {
-          queryClient.invalidateQueries(`${queryKey}-grants`);
+          queryClient.invalidateQueries([queryKey, 'grants']);
         }
         this.setState({ isSubmitting: false });
         this.resetAllFields();
