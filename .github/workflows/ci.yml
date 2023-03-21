@@ -253,7 +253,7 @@ jobs:
 
   build-storybook:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs:
       - build-sdk
     env:
@@ -285,7 +285,7 @@ jobs:
 
   publish-storybook:
     runs-on: ubuntu-latest
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     needs:
       - build-storybook
     steps:
