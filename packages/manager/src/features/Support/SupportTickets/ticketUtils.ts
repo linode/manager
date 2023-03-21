@@ -1,3 +1,4 @@
+import { Filter, Params } from '@linode/api-v4';
 import { getTickets } from '@linode/api-v4/lib/support';
 
 /**
@@ -34,8 +35,8 @@ export const getStatusFilter = (ticketStatus: 'open' | 'closed' | 'all') => {
  * @example getTicketsPage({page: 1, pageSize: 25}, false);
  */
 export const getTicketsPage = (
-  params: any,
-  filters: any,
+  params: Params,
+  filters: Filter,
   ticketStatus: 'open' | 'closed' | 'all'
 ) => {
   const status = getStatusFilter(ticketStatus);

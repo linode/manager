@@ -1,4 +1,4 @@
-import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
+import { APIError, Filter, ResourcePage } from '@linode/api-v4/lib/types';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { storage } from 'src/utilities/storage';
@@ -42,7 +42,7 @@ interface State<T = {}> {
   data?: T[];
   orderBy?: OrderBy;
   order: Order;
-  filter: any;
+  filter: Filter;
   searching: boolean;
 }
 
@@ -59,7 +59,7 @@ export interface PaginationProps<T> extends State<T> {
   handlePageSizeChange: (v: number) => void;
   request: <U = {}>(update?: (v: T[]) => U) => Promise<void>;
   handleOrderChange: HandleOrderChange;
-  handleSearch: (newFilter: any) => void;
+  handleSearch: (newFilter: Filter) => void;
   onDelete: () => void;
 }
 
@@ -114,6 +114,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       return this.request();
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-types
     private request = (map?: Function) => {
       /**
        * we might potentially have a search term to filter by
@@ -178,7 +179,7 @@ export default (requestFn: PaginatedRequest, options: Options = {}) => (
       );
     };
 
-    public handleSearch = (filter: any) => {
+    public handleSearch = (filter: Filter) => {
       this.setState({ filter, page: 1, searching: true }, () => this.request());
     };
 
