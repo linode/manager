@@ -1,7 +1,9 @@
+import { LkePlanDescription } from 'support/api/lke';
+
 /**
  * Subset of LKE cluster plans as shown on Cloud Manager.
  */
-export const lkeClusterPlans = [
+export const lkeClusterPlans: LkePlanDescription[] = [
   { type: 'Dedicated', size: 4, tab: 'Dedicated CPU' },
   { type: 'Dedicated', size: 16, tab: 'Dedicated CPU' },
   { type: 'Linode', size: 2, tab: 'Shared CPU' },
