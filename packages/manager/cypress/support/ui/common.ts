@@ -7,6 +7,7 @@ import { deleteAllTestImages } from '../api/images';
 import { deleteAllTestLinodes } from '../api/linodes';
 import { deleteAllTestClients } from '../api/longview';
 import { deleteAllTestNodeBalancers } from '../api/nodebalancers';
+import { deleteAllTestLkeClusters } from 'support/api/lke';
 import {
   deleteAllTestAccessKeys,
   deleteAllTestBuckets,
@@ -73,9 +74,11 @@ export const deleteAllTestData = () => {
     deleteAllTestBuckets(),
     deleteAllTestAccessKeys(),
     deleteAllTestTags(),
+    deleteAllTestLkeClusters(),
   ]);
 
   // Remaining deletion functions then run sequentially.
+
   cy.defer(asyncDeletionPromise).then(() => {
     deleteAllTestLinodes();
     deleteAllTestNodeBalancers();
