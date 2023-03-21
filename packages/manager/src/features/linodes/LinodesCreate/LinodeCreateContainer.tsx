@@ -477,7 +477,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (_payload, linodeID?: number) => {
+  submitForm: HandleSubmit = async (_payload, linodeID?: number) => {
     const { createType } = this.props;
     const { signedAgreement } = this.state;
     const payload = { ..._payload };
@@ -494,7 +494,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      */
 
     if (payload.root_pass) {
-      const passwordError = validatePassword(payload.root_pass);
+      const passwordError = await validatePassword(payload.root_pass);
       if (passwordError) {
         this.setState(
           {
