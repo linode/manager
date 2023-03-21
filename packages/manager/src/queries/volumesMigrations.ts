@@ -1,5 +1,5 @@
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryPresets } from './base';
 import { VolumesMigrationQueue } from '@linode/api-v4/lib/volumes/types';
 import {

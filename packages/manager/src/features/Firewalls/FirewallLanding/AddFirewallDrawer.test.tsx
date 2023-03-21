@@ -8,7 +8,7 @@ import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { linodeFactory } from 'src/factories/linodes';
 import { profileFactory } from 'src/factories';
 import { grantsFactory } from 'src/factories/grants';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 jest.mock('src/components/EnhancedSelect/Select');
 

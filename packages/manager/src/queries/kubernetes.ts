@@ -31,7 +31,7 @@ import {
   Params,
   ResourcePage,
 } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getAll } from 'src/utilities/getAll';
 import { queryClient, queryPresets, updateInPaginatedStore } from './base';
 

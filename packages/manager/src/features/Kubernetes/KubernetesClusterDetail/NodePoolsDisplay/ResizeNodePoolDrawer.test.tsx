@@ -6,7 +6,7 @@ import { ResizeNodePoolDrawer, Props } from './ResizeNodePoolDrawer';
 import { rest, server } from 'src/mocks/testServer';
 import { linodeTypeFactory } from 'src/factories';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 const pool = nodePoolFactory.build({
   type: 'g6-standard-1',

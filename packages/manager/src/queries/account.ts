@@ -4,7 +4,7 @@ import {
   updateAccountInfo,
 } from '@linode/api-v4/lib/account';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useProfile } from 'src/queries/profile';
 import { mutationHandlers, queryPresets } from './base';
 

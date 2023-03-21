@@ -5,7 +5,7 @@ import { StackScriptCreate } from './StackScriptCreate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { imageFactory, normalizeEntities, profileFactory } from 'src/factories';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import { Grants, Profile } from '@linode/api-v4/lib';
 import { APIError } from '@linode/api-v4/lib/types';
 

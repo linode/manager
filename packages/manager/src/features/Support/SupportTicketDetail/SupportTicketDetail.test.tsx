@@ -11,7 +11,7 @@ import { supportTicketFactory } from 'src/factories/support';
 import { rest, server } from 'src/mocks/testServer';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { profileFactory } from 'src/factories';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import { APIError } from '@linode/api-v4/lib/types';
 import { Grants, Profile } from '@linode/api-v4/lib';
 

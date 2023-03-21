@@ -1,6 +1,6 @@
 import { getIPv6Ranges, IPRange } from '@linode/api-v4/lib/networking';
 import { APIError, ResourcePage } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { queryPresets } from './base';
 
 export const ipv6RangeQueryKey = 'networking-ipv6-ranges';

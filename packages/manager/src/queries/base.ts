@@ -4,7 +4,7 @@ import {
   QueryKey,
   UseMutationOptions,
   UseQueryOptions,
-} from 'react-query';
+} from '@tanstack/react-query';
 import { isEmpty } from '@linode/api-v4/lib/request';
 
 // =============================================================================

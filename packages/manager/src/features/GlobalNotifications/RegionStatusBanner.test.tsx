@@ -5,7 +5,7 @@ import { RegionStatusBanner } from './RegionStatusBanner';
 import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { waitFor } from '@testing-library/react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 describe('Region status banner', () => {
   it('should render null if there are no warnings', () => {

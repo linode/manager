@@ -1,6 +1,6 @@
 import { getVlans, VLAN } from '@linode/api-v4/lib/vlans';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { queryPresets } from './base';
 import { getAll } from 'src/utilities/getAll';
 

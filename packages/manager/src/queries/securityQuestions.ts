@@ -5,7 +5,7 @@ import {
   SecurityQuestionsPayload,
 } from '@linode/api-v4/lib/profile';
 import { APIError } from '@linode/api-v4/lib/types';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryPresets, queryClient } from './base';
 
 export const queryKey = 'securityQuestions';

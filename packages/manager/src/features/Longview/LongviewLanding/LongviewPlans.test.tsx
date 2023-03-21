@@ -17,7 +17,7 @@ import {
 import { rest, server } from 'src/mocks/testServer';
 import { profileFactory } from 'src/factories/profile';
 import { grantsFactory } from 'src/factories/grants';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { queryPresets } from 'src/queries/base';
 
 const mockLongviewSubscriptions = longviewSubscriptionFactory.buildList(4);

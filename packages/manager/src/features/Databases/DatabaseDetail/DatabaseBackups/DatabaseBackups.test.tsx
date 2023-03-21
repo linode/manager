@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import DatabaseBackups from './DatabaseBackups';
 import { rest, server } from 'src/mocks/testServer';

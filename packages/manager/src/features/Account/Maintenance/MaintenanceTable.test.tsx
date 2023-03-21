@@ -5,7 +5,7 @@ import { MaintenanceTable } from './MaintenanceTable';
 import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
 import { queryPresets } from 'src/queries/base';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { parseAPIDate } from 'src/utilities/date';
 import { formatDate } from 'src/utilities/formatDate';
 import {

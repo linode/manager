@@ -4,7 +4,7 @@ import {
 } from '@linode/api-v4/lib/nodebalancers';
 import { APIError } from '@linode/api-v4/lib/types';
 import { DateTime } from 'luxon';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { parseAPIDate } from 'src/utilities/date';
 
 const queryKey = 'nodebalancers';

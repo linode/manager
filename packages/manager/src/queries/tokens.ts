@@ -7,7 +7,7 @@ import {
 } from '@linode/api-v4/lib/profile';
 import { Token, TokenRequest } from '@linode/api-v4/lib/profile/types';
 import { Event } from '@linode/api-v4';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { queryClient, updateInPaginatedStore } from './base';
 import { queryKey } from './profile';
 import {

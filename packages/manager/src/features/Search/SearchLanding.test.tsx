@@ -9,7 +9,7 @@ import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
 import { rest, server } from 'src/mocks/testServer';
 import { makeResourcePage } from 'src/mocks/serverHandlers';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 const props: Props = {
   entities: [],

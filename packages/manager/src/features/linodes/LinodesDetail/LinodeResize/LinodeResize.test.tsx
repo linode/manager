@@ -1,6 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { UseQueryResult } from 'react-query';
+import { UseQueryResult } from '@tanstack/react-query';
 import { profileFactory } from 'src/factories';
 import { mockMatchMedia } from 'src/utilities/testHelpers';
 import { extDisk, swapDisk } from 'src/__data__/disks';

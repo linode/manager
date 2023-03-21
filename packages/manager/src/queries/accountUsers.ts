@@ -1,6 +1,6 @@
 import { getUser, getUsers, User } from '@linode/api-v4/lib/account';
 import { APIError, Params, ResourcePage } from '@linode/api-v4/lib/types';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useProfile } from 'src/queries/profile';
 
 export const queryKey = 'account-users';

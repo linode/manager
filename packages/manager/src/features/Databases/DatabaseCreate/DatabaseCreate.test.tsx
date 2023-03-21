@@ -1,7 +1,7 @@
 import * as React from 'react';
 import DatabaseCreate from './DatabaseCreate';
 import { renderWithTheme } from 'src/utilities/testHelpers';
-import { QueryClient } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { waitForElementToBeRemoved, fireEvent } from '@testing-library/react';
 import { rest, server } from 'src/mocks/testServer';
 import { databaseTypeFactory } from 'src/factories';
