@@ -10,7 +10,8 @@ import {
 import { getAll } from 'src/utilities/getAll';
 import { queryPresets } from './base';
 
-export const queryKey = 'types';
+const queryKey = 'types';
+const queryKeySpecificTypes = queryKey + '-specificTypes';
 
 const getAllTypes = () =>
   getAll(getLinodeTypes)().then((results) => results.data);
@@ -37,7 +38,7 @@ export const useSpecificTypes = (types: string[], enabled = true) => {
   const queryClient = useQueryClient();
   return useQueries(
     types.map<UseQueryOptions<LinodeType, APIError[]>>((type) => ({
-      queryKey: [queryKey, type],
+      queryKey: [queryKeySpecificTypes, type],
       queryFn: () => getSingleType(type, queryClient),
       enabled,
       ...queryPresets.oneTimeFetch,

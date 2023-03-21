@@ -165,7 +165,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
       .then((_) => {
         this.setState({
-          selectedId: '',
+          selectedId: null,
           submitting: false,
         });
         resetEventsPolling();
@@ -237,9 +237,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   updateRequestedTypes = () => {
     this.props.setRequestedTypes(
-      [this.props.linodeType, this.state.selectedId].filter(
-        isNotNullOrUndefined
-      )
+      [this.props.linodeType, this.state.selectedId]
+        .filter(isNotNullOrUndefined)
+        .filter((type) => type.length > 0)
     );
   };
 
